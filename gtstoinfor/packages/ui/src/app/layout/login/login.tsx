@@ -1,10 +1,7 @@
 import { Button, Card, Col, Divider, Form, Input, Row, Typography,message,theme } from 'antd'
 import React from 'react';
 import './login.css'
-import { useRecoilState } from 'recoil';
-import { LoginDto, authAtom } from '@project-management-system/shared-models';
 import { useNavigate } from 'react-router-dom';
-import { UserManagementServices } from '@project-management-system/shared-services';
 const { Text, Link, Title } = Typography;
 const {useToken} = theme
 
@@ -12,27 +9,26 @@ const {useToken} = theme
 export default function Login() {
     const [loginForm] = Form.useForm()
     const {token:{colorPrimary,colorPrimaryActive,colorBgTextHover}} = useToken()
-    const [authState, setAuthState] = useRecoilState(authAtom);
     const navigate  = useNavigate();
-    const service = new UserManagementServices()
 
     const onLogin = () => {
         console.log('login called')
-        loginForm.validateFields().then((values) => {
-            console.log(values)
-            const loginDto = new LoginDto(values.username,values.password)
-            service.login(loginDto).then((res) => {
-                if(res.status){
-                    localStorage.setItem('auth',JSON.stringify(res.data))
-                    setAuthState([{userName:values.username,isAuthenticated:true,plant:1}]);
-                    message.success(res.internalMessage)
-                    navigate('/')
-                }else{
-                    message.error(res.internalMessage)
-                }
-            })
+        // loginForm.validateFields().then((values) => {
+        //     console.log(values)
+        //     const loginDto = new LoginDto(values.username,values.password)
+        //     service.login(loginDto).then((res) => {
+        //         if(res.status){
+        //             localStorage.setItem('auth',JSON.stringify(res.data))
+        //             setAuthState([{userName:values.username,isAuthenticated:true,plant:1}]);
+        //             message.success(res.internalMessage)
+        //             navigate('/')
+        //         }else{
+        //             message.error(res.internalMessage)
+        //         }
+        //     })
             
-        })
+        // })
+        navigate('/')
     }
     return (
         <Card style={{background:colorBgTextHover}}>

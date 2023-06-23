@@ -5,9 +5,9 @@ import { useRecoilState } from 'recoil';
 export const ChildProtectionWrapper = ({ children }: { children: JSX.Element }) => {
     const userId = 1;
     let location = useLocation();
-    const user : any = JSON.parse(localStorage.getItem('auth'))
+    // const user : any = JSON.parse(localStorage.getItem('auth'))
 
-    if (!user) {
+    if (!userId) {
         // Redirect them to the /login page, but save the current location they were
         // trying to go to when they were redirected. This allows us to send them
         // along to that page after they login, which is a nicer user experience

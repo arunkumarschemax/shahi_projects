@@ -1,10 +1,10 @@
-import { Route, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
+import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import { ChildProtectionWrapper } from "./common/protected-child-wrapper"
 import { ExceptionComponent } from "./common/exception-handling/exception-component"
 import BasicLayout from "./layout/basic-layout/layout"
 import Login from "./layout/login/login"
 
-const Routes = () => {
+export const AppRoutes = () => {
     const router = createBrowserRouter(createRoutesFromElements(
         <Route  >
             <Route path='/' key='/' element={
@@ -20,4 +20,8 @@ const Routes = () => {
             <Route path="/login" key='/login' element={<Login />} />
         </Route>
     ))
+
+    return (
+        <RouterProvider router={router} />
+    )
 }
