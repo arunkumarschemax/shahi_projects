@@ -90,7 +90,7 @@ export const CommonHeader = (props: IProps) => {
         </Col>
         <Col span={7} style={{ textAlign: 'right' }}>
           <Dropdown menu={{ items }}>
-            <Avatar style={{ marginBottom: '40px' }} size={45} shape="circle" icon={<UserOutlined style={{ fontSize: '25px' }} />} />
+            <Avatar style={{ marginBottom: '5px', cursor:'pointer' }} size={45} shape="circle" icon={<UserOutlined style={{ fontSize: '25px' }} />} />
           </Dropdown>
         </Col>
         <Col></Col>
