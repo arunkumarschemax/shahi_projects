@@ -49,11 +49,3 @@
     /* animation: shine 1s linear infinite; */
   }
   
-  .ant-dropdown-link .ant-avatar {
-    height: 40px;
-    width: 40px;
-  }
-
-  .header-search .ant-select-selector{
-    border-radius:15px !important
-  }

@@ -1,1 +1,1 @@
-export * from './lib/libs-shared-services';
+export * from './user-management'

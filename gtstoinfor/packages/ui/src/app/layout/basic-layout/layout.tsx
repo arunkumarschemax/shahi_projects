@@ -41,22 +41,10 @@ export default function BasicLayout() {
     const authdata: any = { roleId: 0 }
 
     const items: MenuProps['items'] = [
-        getItem('Projects Dashboard', 'project-Dashboard', <ProjectOutlined />),
         getItem('Master', 'masters', <UserOutlined />, [
-            getItem('Department', 'Departmentgrid'),
+            getItem('Add User', 'user-creation-from'),
             // getItem('Plant', 'plant'),
         ]),
-
-        getItem('Project Creation', 'project-creation-page', <ProjectOutlined />,),
-        getItem('Projects View', 'project-list-grid', <UserOutlined />),
-        authdata.roleId === 7 ?
-            getItem('Projects Streamline', 'project-status-info-form', <ProjectOutlined />) : null,
-        authdata.roleId === 7 ?
-            getItem('Approved Projects', 'project-status-info-grid', <ProjectOutlined />) : null,
-        getItem('Projects report', 'project-creation-reports', <ProjectOutlined />),
-        authdata.roleId === 7 ?
-            getItem('Project Action Items', 'project-action-items-form', <DollarOutlined />) : null,
-        // getItem('CEO Approval', 'ceo-approval-form', <SolutionOutlined />),
     ];
 
 
@@ -64,7 +52,7 @@ export default function BasicLayout() {
     return (
         <Layout style={{ minHeight: '100vh' }}>
             {/* <Router> */}
-            <Layout className="site-layout" style={{ background: ' #f0f2f5' }}>
+            <Layout className="site-layout" style={{ background: '#E3F4F4' }}>
                 <Sider
                     className='layout'
                     trigger={null}
@@ -76,7 +64,6 @@ export default function BasicLayout() {
                         position: 'fixed',
                         left: 0,
                         background: '#fff',
-                        marginTop: '83px',
                         borderRadius: '5px'
                     }}
                 >
@@ -88,7 +75,7 @@ export default function BasicLayout() {
                         selectedKeys={[selectedMenu]}
                         onOpenChange={onOpenChange}
                         defaultSelectedKeys={['/']}
-                    // style={{ paddingTop: '83px' }}
+                    style={{ paddingTop: '60px' }}
                     />
                     {/* <Menu mode="inline"
                             defaultSelectedKeys={['/']}
