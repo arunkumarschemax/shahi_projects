@@ -5,6 +5,8 @@ import BasicLayout from "./layout/basic-layout/layout"
 import Login from "./layout/login/login"
 import UserCreationForm from "./user-management/users/users-form"
 import UsersView from "./user-management/users/users-view"
+import FactoriesView from "./masters/factories/factories-view"
+import FactoriesForm from "./masters/factories/factories-form"
 
 export const AppRoutes = () => {
     const router = createBrowserRouter(createRoutesFromElements(
@@ -16,9 +18,12 @@ export const AppRoutes = () => {
                     </>
                 </ChildProtectionWrapper>
             } >
-                <Route path='/user-management/users-from' key='/*' element={<UserCreationForm />} />
-                <Route path='/user-management/users-view' key='/*' element={<UsersView />} />
-
+                <Route path='/user-management/users-from' key='/user-management/users-from' element={<UserCreationForm />} />
+                <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
+                <Route path='/masters'>
+                    <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
+                    <Route path='factories/factories-forn' key='/factories/factories-forn' element={<FactoriesForm />} />
+                </Route>
                 <Route path='/*' key='/*' element={<ExceptionComponent statusCode={403} statusMessage='Page Under Development' />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>

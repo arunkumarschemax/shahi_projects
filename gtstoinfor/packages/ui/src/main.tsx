@@ -17,6 +17,7 @@ root.render(
                 borderRadius: 1
             }
         }}
+        componentSize='small'
     >
         <App />
     </ConfigProvider >

@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { Input, Layout, Menu, MenuProps, Switch, Tooltip } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined } from '@ant-design/icons'
+import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { CommonHeader } from '../header/header';
 import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
 import logo from './logo.png'
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
-import ProLayout, { DefaultFooter, MenuDataItem } from '@ant-design/pro-layout';
+import ProLayout, { DefaultFooter, MenuDataItem, SettingDrawer } from '@ant-design/pro-layout';
 import { getOperatingSystem, treeRouter } from '../../utils/common';
 import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
 import { useToken } from 'antd/es/theme/internal';
@@ -43,6 +43,20 @@ export const baseRouterList = [
         }
         ]
     },
+    {
+        label: 'Masters',
+        key: 'masters',
+        path: 'masters',
+        icon: <PicCenterOutlined />,
+        filepath: 'masters',
+        children: [{
+            label: 'Factories',
+            key: 'factories',
+            path: 'factories/factories-view',
+            filepath: 'factories/factories-view',
+
+        }]
+    }
 ];
 
 
@@ -50,8 +64,11 @@ export default function BasicLayout() {
     const [pathname, setPathname] = useState(location.pathname);
     const [dark, setDark] = useState(false);
     const navigate = useNavigate();
+    const [settings, setSettings] = useState<any>({ colorPrimary: '1890ff', fixedHeader: true })
+
     return (
         <ProConfigProvider dark={dark}  >
+
             <div
                 id="main-layout"
                 style={{
@@ -61,12 +78,13 @@ export default function BasicLayout() {
                 <ProLayout
                     title='Shahi'
                     locale='en-US'
-                    siderWidth={200}
+                    siderWidth={240}
                     colorPrimary='#29397d'
-                    headerContentRender={() => <ProBreadcrumb />}
+                    headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
                     logo={<img src={logo} />}
                     fixSiderbar
                     layout='mix'
+                    token={{ header: { colorBgHeader: 'transparent' } }}
                     route={{
                         path: '/',
                         routes: treeRouter(baseRouterList),
@@ -80,7 +98,7 @@ export default function BasicLayout() {
                         title: 'admin',
                     }}
                     actionsRender={(props) => {
-                        if (props.isMobile) return [];
+                        // if (props.isMobile) return [];
                         return [
 
                             // <div
@@ -140,8 +158,9 @@ export default function BasicLayout() {
                             </Tooltip>,
                         ];
                     }}
-                    menuItemRender={(item, dom) => (
-                        <Link
+
+                    menuItemRender={(item, dom) => {
+                        return <Link
                             to={item?.path || '/'}
                             onClick={() => {
                                 setPathname(item.path || '/');
@@ -149,12 +168,14 @@ export default function BasicLayout() {
                         >
                             {dom}
                         </Link>
-                    )}
-                    onMenuHeaderClick={() => navigate('/')}
+                    }
+                    }
 
+                    onMenuHeaderClick={() => navigate('/')}
                 >
                     <Outlet />
                 </ProLayout>
+
             </div>
         </ProConfigProvider >
     )
