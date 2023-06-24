@@ -1,132 +1,161 @@
 import React, { useState } from 'react'
-import { Layout, Menu, MenuProps } from 'antd';
+import { Input, Layout, Menu, MenuProps, Switch, Tooltip } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons'
+import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { CommonHeader } from '../header/header';
+import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
+import logo from './logo.png'
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
+import ProLayout, { DefaultFooter, MenuDataItem } from '@ant-design/pro-layout';
+import { getOperatingSystem, treeRouter } from '../../utils/common';
+import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
+import { useToken } from 'antd/es/theme/internal';
 
+export const baseRouterList = [
+    {
+        label: 'Dashboard',
+        key: 'dashboard',
+        path: 'dashboard',
+        icon: <DashboardOutlined />,
+        filepath: 'pages/dashboard/index.tsx',
+    },
+    {
+        label: 'User Management',
+        key: 'user-management',
+        path: 'user-management',
+        icon: <UserOutlined />,
+        filepath: '../',
+        children: [{
+            label: 'Add User',
+            key: 'users-from',
+            path: 'users-from',
+            icon: <UserOutlined />,
+            filepath: 'users-form.tsx',
+        },
+        {
+            label: 'View User',
+            key: 'users-view',
+            path: 'users-view',
+            icon: <UserOutlined />,
+            filepath: 'users-view.tsx',
+        }
+        ]
+    },
+];
 
 
 export default function BasicLayout() {
-    const [collapsed, setCollapsed] = useState(true);
-    const [selectedMenu, setselectedMenu] = useState('/');
-    const [subMenu, setSubmenu] = useState<string[]>([]);
+    const [pathname, setPathname] = useState(location.pathname);
+    const [dark, setDark] = useState(false);
     const navigate = useNavigate();
-    type MenuItem = Required<MenuProps>['items'][number];
-
-
-    const toggle = () => {
-        setCollapsed(prevCollapsed => !prevCollapsed);
-    };
-
-    const menu = (e: any) => {
-        console.log(e)
-        if (e.keyPath.length < 2) {
-            setSubmenu([])
-            setselectedMenu(e.key)
-        } else {
-            setSubmenu(e.keyPath)
-            setselectedMenu(e.key)
-        }
-        navigate(e.key)
-    }
-    const onOpenChange = (openKeys: string[]) => {
-        setSubmenu(openKeys)
-    }
-    function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode, children?: MenuItem[], type?: 'group',): MenuItem {
-        return { key, icon, children, label, type, } as MenuItem;
-    }
-    const authdata: any = { roleId: 0 }
-
-    const items: MenuProps['items'] = [
-        getItem('Master', 'masters', <UserOutlined />, [
-            getItem('Add User', 'user-creation-from'),
-            // getItem('Plant', 'plant'),
-        ]),
-    ];
-
-
-
     return (
-        <Layout style={{ minHeight: '100vh' }}>
-            {/* <Router> */}
-            <Layout className="site-layout" style={{ background: '#E3F4F4' }}>
-                <Sider
-                    className='layout'
-                    trigger={null}
-                    breakpoint='lg'
-                    collapsedWidth='60'
-                    style={{
-                        overflow: 'auto',
-                        height: '100vh',
-                        position: 'fixed',
-                        left: 0,
-                        background: '#fff',
-                        borderRadius: '5px'
+        <ProConfigProvider dark={dark}  >
+            <div
+                id="main-layout"
+                style={{
+                    height: '100vh',
+                }}
+            >
+                <ProLayout
+                    title='Shahi'
+                    locale='en-US'
+                    siderWidth={200}
+                    colorPrimary='#29397d'
+                    headerContentRender={() => <ProBreadcrumb />}
+                    logo={<img src={logo} />}
+                    fixSiderbar
+                    layout='mix'
+                    route={{
+                        path: '/',
+                        routes: treeRouter(baseRouterList),
                     }}
-                >
-                    <Menu mode="inline"
-                        items={items}
-                        onClick={menu}
-                        openKeys={subMenu}
-                        defaultOpenKeys={[]}
-                        selectedKeys={[selectedMenu]}
-                        onOpenChange={onOpenChange}
-                        defaultSelectedKeys={['/']}
-                    style={{ paddingTop: '60px' }}
-                    />
-                    {/* <Menu mode="inline"
-                            defaultSelectedKeys={['/']}
-                            style={{ paddingTop: '20px' }}
-                        >
-                            <Menu.Item >
-                                <span>
-                                    <Link to='/project-user-creation-page' />
-                                </span>
-                                <span><UserOutlined /></span>
-                                <span>User Creation</span>
-                            </Menu.Item>
-                            <Menu.Item >
-                            <span>
-                                <Link to='/project-Dashboard' />
-                            </span>
-                            <span><ProjectOutlined /></span>
-                            <span>Projects Dashboard</span>
-                        </Menu.Item>
-                        </Menu> */}
-
-                    {/* <Menu mode="inline"
-                            defaultSelectedKeys={['/']}
-                            style={{ paddingTop: '20px' }}
-                        >
-                            <Menu.Item >
-                                <span>
-                                    <Link to='/project-creation-reports' />
-                                </span>
-                                <span><UserOutlined /></span>
-                                <span>Project Creation Reports</span>
-                            </Menu.Item>
-                        </Menu> */}
-
-
-                </Sider>
-                <CommonHeader key={Date.now()} toggle={toggle} collapsed={collapsed} />
-                <Content
-                    className="site-layout-background"
-                    style={{
-                        marginTop: '70px',
-                        padding: 14,
-                        height: '100%',
-                        marginLeft: 198
+                    location={{
+                        pathname,
                     }}
+                    avatarProps={{
+                        src: 'https://hzdjs.cn/blog/logo.jpg',
+                        size: 'small',
+                        title: 'admin',
+                    }}
+                    actionsRender={(props) => {
+                        if (props.isMobile) return [];
+                        return [
+
+                            // <div
+                            //     key="SearchOutlined"
+                            //     aria-hidden
+                            //     style={{
+                            //         display: 'flex',
+                            //         alignItems: 'center',
+                            //         marginInlineEnd: 24,
+                            //     }}
+                            //     onMouseDown={(e) => {
+                            //         e.stopPropagation();
+                            //         e.preventDefault();
+                            //     }}
+                            // >
+                            //     <Input
+                            //         style={{
+                            //             borderRadius: 4,
+                            //             marginInlineEnd: 12,
+                            //             backgroundColor: 'rgba(0,0,0,0.03)',
+                            //         }}
+                            //         prefix={
+                            //             <SearchOutlined
+                            //                 style={{
+                            //                     color: 'rgba(0, 0, 0, 0.15)',
+                            //                 }}
+                            //             />
+                            //         }
+                            //         placeholder="Search"
+                            //         bordered={false}
+                            //     />
+                            //     <PlusCircleFilled
+                            //         style={{
+                            //             color: 'var(--ant-primary-color)',
+                            //             fontSize: 24,
+                            //         }}
+                            //     />
+                            // </div>
+                            <Tooltip placement="bottom" title={'Switch mode'}>
+                                <Switch
+                                    checkedChildren="🌜"
+                                    unCheckedChildren="🌞"
+                                    checked={dark}
+                                    onChange={(v) => setDark(v)}
+                                />
+                            </Tooltip>
+                            ,
+                            <Tooltip placement="bottom" title={'Sign Out'}>
+                                <a>
+                                    <LoginOutlined
+                                        onClick={async () => {
+                                            // await signOut(dispatch);
+                                            navigate('/login');
+                                        }}
+                                    />
+                                </a>
+                            </Tooltip>,
+                        ];
+                    }}
+                    menuItemRender={(item, dom) => (
+                        <Link
+                            to={item?.path || '/'}
+                            onClick={() => {
+                                setPathname(item.path || '/');
+                            }}
+                        >
+                            {dom}
+                        </Link>
+                    )}
+                    onMenuHeaderClick={() => navigate('/')}
+
                 >
                     <Outlet />
-                </Content>
-                {/* <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>©2023 Design and Developed by SchemaX</Footer> */}
-            </Layout>
-            {/* </Router> */}
-        </Layout>
+                </ProLayout>
+            </div>
+        </ProConfigProvider >
     )
 }

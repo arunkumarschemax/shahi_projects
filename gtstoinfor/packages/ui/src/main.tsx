@@ -9,16 +9,15 @@ import App from './app/app';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
     <ConfigProvider
+        locale={{ locale: 'en-US' }}
         theme={{
             algorithm: theme.compactAlgorithm,
             token: {
-                colorPrimary: '#47A992',
-                colorBgLayout:'#7A3E3E',
-                colorFillSecondary:'#E3F4F4',
-                colorFill:'#EEEEEE'
+                colorPrimary: '#29397d',
+                borderRadius: 1
             }
         }}
     >
         <App />
-    </ConfigProvider>
+    </ConfigProvider >
 );
