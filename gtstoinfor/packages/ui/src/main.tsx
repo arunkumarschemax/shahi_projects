@@ -19,7 +19,6 @@ root.render(
         }}
         
         
-        componentSize='small'
     >
         <App />
     </ConfigProvider >

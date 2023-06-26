@@ -1,110 +1,135 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Card, Row, Col, theme } from 'antd';
-import { UserManagementServices } from '@project-management-system/shared-services'
-import { ProForm, ProFormSelect } from '@ant-design/pro-components';
-const { useToken } = theme
+import {
+  FooterToolbar,
+  PageContainer,
+  ProForm,
+} from "@ant-design/pro-components";
+import { Card, Form, Input, Select } from "antd";
 
-const { Option } = Select;
+const factoryOptions = [
+  {
+    value: "unit-1",
+    label: "Unit-1",
+  },
+  {
+    value: "unit-2",
+    label: "Unit-2",
+  },
+  {
+    value: "unit-3",
+    label: "Unit-3",
+  },
+  {
+    value: "unit-4",
+    label: "Unit-4",
+  },
+  {
+    value: "unit-5",
+    label: "Unit-5",
+  },
+  {
+    value: "unit-6",
+    label: "Unit-6",
+  },
+  {
+    value: "unit-7",
+    label: "Unit-7",
+  },
+  {
+    value: "unit-8",
+    label: "Unit-8",
+  },
+  {
+    value: "unit-9",
+    label: "Unit-9",
+  },
+  {
+    value: "unit-10",
+    label: "Unit-10",
+  },
+];
 
-export function UserCreationForm() {
-    const service = new UserManagementServices();
-    const [form] = Form.useForm();
-    const { token: { colorPrimary } } = useToken()
+const roleOptions = [
+  {
+    value: "admin",
+    label: "Admin",
+  },
+  {
+    value: "generaluser",
+    label: "General User",
+  },
+];
 
-
-
-    useEffect(() => {
-        form.resetFields();
-    }, []);
-
-
-
-    const onFinish = (values: any) => {
-        console.log(values, 'aaaaaaaaaaa');
-        // service.createUser(values)
-        //     .then((res) => {
-        //         // Handle success
-        //     })
-        //     .catch((error) => {
-        //         // Handle error
-        //     });
-    };
-
-    const onReset = () => {
-        form.resetFields();
-    };
-
-    return (
-        // <Card title={"User Creation"} headStyle={{background:colorPrimary}}>
-        //     <Form form={form} onFinish={onFinish} layout="vertical">
-        //         {/* <Row>
-        //             <Col> */}
-        //         <Form.Item
-        //             label="Name"
-        //             name="name"
-        //             rules={[{ required: true, message: 'Please enter a name' }]}
-        //         >
-        //             <Input />
-        //         </Form.Item>
-        //         <Form.Item
-        //             label="Password"
-        //             name="password"
-        //             rules={[{ required: true, message: 'Please enter a password' }]}
-        //         >
-        //             <Input.Password />
-        //         </Form.Item>
-        //         {/* </Col>
-        //             <Col> */}
-        //         <Form.Item
-        //             label="Contact"
-        //             name="contact"
-        //             rules={[{ required: true, message: 'Please enter a contact' }]}
-        //         >
-        //             <Input />
-        //         </Form.Item>
-        //         {/* </Col>
-        //         </Row>
-        //         <Row>
-        //             <Col> */}
-        //         <Form.Item
-        //             label="Email"
-        //             name="email"
-        //             rules={[{ required: true, message: 'Please enter an email' }]}
-        //         >
-        //             <Input />
-        //         </Form.Item>
-        //         {/* </Col>
-        //             <Col> */}
-
-        //         {/* </Col>
-        //         </Row>
-        //         <Row>
-        //             <Col> */}
-
-        //         {/* </Col>
-        //             <Col> */}
-        //         <Form.Item>
-        //             <Button type="primary" htmlType="submit">
-        //                 Submit
-        //             </Button>
-        //             <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
-        //                 Reset
-        //             </Button>
-        //         </Form.Item>
-        //         {/* </Col>
-        //         </Row> */}
-        //     </Form>
-        // </Card>
-        <ProForm title='User form' labelCol={{span:4}} wrapperCol={{span:4}} layout='vertical'>
-            <ProForm.Item label='Username' name='username'  >
-                <Input />
-            </ProForm.Item>
-            <ProForm.Item label='Passwor' name='password'  >
-                <Input.Password />
-            </ProForm.Item>
-        </ProForm >
-
-    );
-};
-
-export default UserCreationForm;
+export default function UserCreationForm() {
+  return (
+    <div>
+      <PageContainer title="Add User">
+        <Card>
+          <ProForm
+            submitter={{
+              render: (_, dom) => (
+                <FooterToolbar style={{ height: "10%" }}>{dom}</FooterToolbar>
+              ),
+            }}
+            onFinish={async (values) => console.log(values)}
+          >
+            <Form.Item
+              name="username"
+              label="User Name"
+              style={{ color: "#ffff" }}
+              rules={[
+                {
+                  required: true,
+                  message: "please enter username",
+                },
+              ]}
+            >
+              <Input placeholder="enter username" />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              label="Passowrd"
+              style={{ color: "#ffff" }}
+              rules={[
+                {
+                  required: true,
+                  message: "please enter username",
+                },
+              ]}
+            >
+              <Input.Password
+                //  style={{ width: "46.5%", paddingLeft:'20px' }}
+                placeholder="enter password"
+              />
+            </Form.Item>
+            <Form.Item
+              name="factory"
+              label="Factory"
+              style={{ color: "#ffff" }}
+              rules={[
+                {
+                  required: true,
+                  message: "please select factory",
+                },
+              ]}
+            >
+              <Select options={factoryOptions} />
+            </Form.Item>
+            <Form.Item
+              name="role"
+              label="Role"
+              style={{ color: "#ffff" }}
+              rules={[
+                {
+                  required: true,
+                  message: "please select role",
+                },
+              ]}
+            >
+              <Select options={roleOptions} />
+            </Form.Item>
+          </ProForm>
+        </Card>
+      </PageContainer>
+    </div>
+  );
+}
