@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Input, Layout, Menu, MenuProps, Switch, Tooltip } from 'antd';
+import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined } from '@ant-design/icons'
+import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { CommonHeader } from '../header/header';
 import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
@@ -12,6 +12,8 @@ import ProLayout, { DefaultFooter, MenuDataItem, SettingDrawer } from '@ant-desi
 import { getOperatingSystem, treeRouter } from '../../utils/common';
 import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
 import { useToken } from 'antd/es/theme/internal';
+import { DarkModeIcon } from '../../icons/darkmode.icon';
+import { LightModeIcon } from '../../icons/lightmode.icon';
 
 export const baseRouterList = [
     {
@@ -138,23 +140,22 @@ export default function BasicLayout() {
                             //     />
                             // </div>
                             <Tooltip placement="bottom" title={'Switch mode'}>
-                                <Switch
+                                {/* <Switch
                                     checkedChildren="🌜"
                                     unCheckedChildren="🌞"
                                     checked={dark}
                                     onChange={(v) => setDark(v)}
-                                />
+                                /> */}
+                                <Button size='middle' style={{ borderRadius: '5px' }} onClick={() => { setDark(!dark) }} icon={!dark ? <DarkModeIcon /> : <LightModeIcon />} ></Button>
                             </Tooltip>
                             ,
                             <Tooltip placement="bottom" title={'Sign Out'}>
-                                <a>
-                                    <LoginOutlined
+                                    <Button size='middle' style={{ borderRadius: '5px' }} icon={<LoginOutlined
                                         onClick={async () => {
                                             // await signOut(dispatch);
                                             navigate('/login');
                                         }}
-                                    />
-                                </a>
+                                    />}></Button>
                             </Tooltip>,
                         ];
                     }}
