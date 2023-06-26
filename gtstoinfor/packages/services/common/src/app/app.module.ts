@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import windowsDriver = require('mssql/msnodesqlv8');
+import { ManualConnection } from './manual-connection';
 
 
 @Module({
@@ -11,6 +12,6 @@ import windowsDriver = require('mssql/msnodesqlv8');
    
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,ManualConnection],
 })
 export class AppModule {}

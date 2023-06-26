@@ -1,15 +1,21 @@
 import { DataSource } from "typeorm"
 
-const AppDataSource = new DataSource({
-    type: 'mssql',
-    host: '172.25.23.4',
-    username: 'sa',
-    password: 'manager@123',
-    database: 'SEPLScanDB',
+export const AppDataSource = new DataSource({
+    type: "mssql",
+    host: "172.25.23.4",
+    username: "sa",
+    password: "manager@123",
+    database: "SEPL_Scan",
     synchronize: false,
     extra: {
+        validateConnection: true,
         trustServerCertificate: true,
-      }
+    },
+    options: {
+        cryptoCredentialsDetails: {
+            minVersion: "TLSv1",
+        },
+    }
 })
 
 
