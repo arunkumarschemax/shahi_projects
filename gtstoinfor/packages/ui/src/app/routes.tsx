@@ -22,7 +22,7 @@ export const AppRoutes = () => {
                 <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
                 <Route path='/masters'>
                     <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
-                    <Route path='factories/factories-forn' key='/factories/factories-forn' element={<FactoriesForm />} />
+                    <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm />} />
                 </Route>
                 <Route path='/*' key='/*' element={<ExceptionComponent statusCode={403} statusMessage='Page Under Development' />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

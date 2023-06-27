@@ -14,12 +14,12 @@ root.render(
             algorithm: theme.compactAlgorithm,
             token: {
                 colorPrimary: '#29397d',
-                borderRadius: 1,
+                borderRadius: 5,
             }  
         }}
         
         
-        componentSize='small'
+        // componentSize='small'
     >
         <App />
     </ConfigProvider >

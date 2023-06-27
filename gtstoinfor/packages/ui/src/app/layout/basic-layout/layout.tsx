@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip } from 'antd';
+import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip ,theme} from 'antd';
 import { Footer } from 'antd/es/layout/layout';
 import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
@@ -11,9 +11,11 @@ const { SubMenu } = Menu;
 import ProLayout, { DefaultFooter, MenuDataItem, SettingDrawer } from '@ant-design/pro-layout';
 import { getOperatingSystem, treeRouter } from '../../utils/common';
 import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
-import { useToken } from 'antd/es/theme/internal';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
+const { useToken } = theme
+
+
 
 export const baseRouterList = [
     {
@@ -67,6 +69,9 @@ export default function BasicLayout() {
     const [dark, setDark] = useState(false);
     const navigate = useNavigate();
     const [settings, setSettings] = useState<any>({ colorPrimary: '1890ff', fixedHeader: true })
+    const { token: { colorPrimary,colorPrimaryActive,colorPrimaryBg } } = useToken()
+
+
 
     return (
         <ProConfigProvider dark={dark}  >
@@ -86,7 +91,7 @@ export default function BasicLayout() {
                     logo={<img src={logo} />}
                     fixSiderbar
                     layout='mix'
-                    token={{ header: { colorBgHeader: 'transparent' } }}
+                    token={{ header: { colorBgHeader: 'transparent' },sider:{colorBgMenuItemSelected:colorPrimaryBg} }}
                     route={{
                         path: '/',
                         routes: treeRouter(baseRouterList),
@@ -99,6 +104,7 @@ export default function BasicLayout() {
                         size: 'small',
                         title: 'admin',
                     }}
+                    contentStyle={{paddingBlock:'10px',paddingInline:'10px'}}
                     actionsRender={(props) => {
                         // if (props.isMobile) return [];
                         return [

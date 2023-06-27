@@ -1,12 +1,16 @@
 import { ProTable } from '@ant-design/pro-components'
-import { Button } from 'antd'
+import { Button, Space } from 'antd'
 import {forEachObject} from 'for-each'
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function FactoriesView() {
-  const  columns = [{title:'Factory Name'},{title:'Address'},{title:'Status'},{title:'Action'}]
+  const navigate = useNavigate()
+  const  columns = [{title:'Factory name'},{title:'Address'},{title:'Status'},{title:'Action'}]
   forEachObject
   return (
-        <ProTable cardBordered   cardProps={{extra:<span><Button type={'primary'}>New</Button></span>}}  search={false} headerTitle={'Factories'} columns={columns} />
+   
+      <ProTable size='small' cardBordered   cardProps={{extra:<span><Button onClick={() => navigate('/masters/factories/factories-form')} type={'primary'}>New</Button></span>}}  search={false} headerTitle={'Factories'} columns={columns} />
+   
   )
 }

@@ -5,7 +5,7 @@ export const AppDataSource = new DataSource({
     host: "172.25.23.4",
     username: "sa",
     password: "manager@123",
-    database: "SEPL_Scan",
+    database: "PRS",
     synchronize: false,
     extra: {
         validateConnection: true,
