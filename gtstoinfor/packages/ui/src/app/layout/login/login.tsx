@@ -71,7 +71,6 @@ export default function Login() {
                         India's Largest exporter of readymade garments, working with the world's biggest brands
                     </Text> */}
           </div>
-          
         </Col>
         <Divider style={{ height: "90vh" }} type="vertical" />
         <Col
@@ -88,7 +87,9 @@ export default function Login() {
               paddingTop: "10px",
               height: "55%",
               width: "55%",
-              backgroundColor: colorPrimary,
+              borderRadius: "10px",
+              boxShadow: "1px 1px 5px 5px lightgrey",
+              backgroundColor: "#29397d",
             }}
           >
             <div className="login-title">
@@ -103,26 +104,33 @@ export default function Login() {
                 name="username"
                 label={<label style={{ color: "white" }}>Username</label>}
               >
-                <Input style={{ borderColor: colorPrimary }} />
+                <Input
+                  style={{ borderColor: colorPrimary, borderRadius: 5 }}
+                  placeholder="enter your username"
+                />
               </Form.Item>
               <Form.Item
                 name="password"
                 label={<label style={{ color: "white" }}>Passowrd</label>}
                 style={{ color: "#ffff" }}
               >
-                <Input.Password style={{ borderColor: colorPrimary }} />
+                <Input.Password
+                  style={{ borderColor: colorPrimary, borderRadius: 5 }}
+                  placeholder="enter your password"
+                />
               </Form.Item>
             </Form>
             <Row justify={"end"}>
               <Link style={{ color: "white" }}>Forgot password ?</Link>
             </Row>
-            <Row style={{ paddingTop: "5px" }}>
+            <Row style={{ paddingTop: "20px", justifyContent: "center" }}>
               <Button
                 onClick={onLogin}
                 style={{
-                  width: "100%",
+                  width: "60%",
                   backgroundColor: "#BBD6EA",
                   color: "black",
+                  borderRadius: 5,
                 }}
                 type={"primary"}
               >
@@ -153,3 +161,4 @@ export default function Login() {
     </Card>
   );
 }
+

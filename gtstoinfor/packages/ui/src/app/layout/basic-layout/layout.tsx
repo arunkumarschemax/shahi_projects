@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip ,theme} from 'antd';
+import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined } from '@ant-design/icons'
+import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { CommonHeader } from '../header/header';
 import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
@@ -19,57 +19,58 @@ const { useToken } = theme
 
 export const baseRouterList = [
     {
-        label: 'Dashboard',
-        key: 'dashboard',
-        path: 'dashboard',
+        label: "Dashboard",
+        key: "dashboard",
+        path: "dashboard",
         icon: <DashboardOutlined />,
-        filepath: 'pages/dashboard/index.tsx',
+        filepath: "pages/dashboard/index.tsx",
     },
     {
-        label: 'User Management',
-        key: 'user-management',
-        path: 'user-management',
+        label: "User Management",
+        key: "user-management",
+        path: "user-management",
         icon: <UserOutlined />,
-        filepath: '../',
-        children: [{
-            label: 'Add User',
-            key: 'users-from',
-            path: 'users-from',
-            icon: <UserOutlined />,
-            filepath: 'users-form.tsx',
-        },
-        {
-            label: 'View User',
-            key: 'users-view',
-            path: 'users-view',
-            icon: <UserOutlined />,
-            filepath: 'users-view.tsx',
-        }
-        ]
+        filepath: "../",
+        children: [
+            {
+                label: "Add User",
+                key: "users-from",
+                path: "users-from",
+                icon: <UserOutlined />,
+                filepath: "users-form.tsx",
+            },
+            {
+                label: "View User",
+                key: "users-view",
+                path: "users-view",
+                icon: <UserOutlined />,
+                filepath: "users-view.tsx",
+            },
+        ],
     },
     {
-        label: 'Masters',
-        key: 'masters',
-        path: 'masters',
+        label: "Masters",
+        key: "masters",
+        path: "masters",
         icon: <PicCenterOutlined />,
-        filepath: 'masters',
-        children: [{
-            label: 'Factories',
-            key: 'factories',
-            path: 'factories/factories-view',
-            filepath: 'factories/factories-view',
-
-        }]
-    }
+        filepath: "masters",
+        children: [
+            {
+                label: "Factories",
+                key: "factories",
+                path: "factories/factories-view",
+                filepath: "factories/factories-view",
+            },
+        ],
+    },
 ];
-
 
 export default function BasicLayout() {
     const [pathname, setPathname] = useState(location.pathname);
     const [dark, setDark] = useState(false);
     const navigate = useNavigate();
     const [settings, setSettings] = useState<any>({ colorPrimary: '1890ff', fixedHeader: true })
-    const { token: { colorPrimary,colorPrimaryActive,colorPrimaryBg } } = useToken()
+    const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
 
 
 
@@ -91,7 +92,7 @@ export default function BasicLayout() {
                     logo={<img src={logo} />}
                     fixSiderbar
                     layout='mix'
-                    token={{ header: { colorBgHeader: 'transparent' },sider:{colorBgMenuItemSelected:colorPrimaryBg} }}
+                    token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg } }}
                     route={{
                         path: '/',
                         routes: treeRouter(baseRouterList),
@@ -104,7 +105,7 @@ export default function BasicLayout() {
                         size: 'small',
                         title: 'admin',
                     }}
-                    contentStyle={{paddingBlock:'10px',paddingInline:'10px'}}
+                    contentStyle={{ paddingBlock: '10px', paddingInline: '10px' }}
                     actionsRender={(props) => {
                         // if (props.isMobile) return [];
                         return [
@@ -152,38 +153,48 @@ export default function BasicLayout() {
                                     checked={dark}
                                     onChange={(v) => setDark(v)}
                                 /> */}
-                                <Button size='middle' style={{ borderRadius: '5px' }} onClick={() => { setDark(!dark) }} icon={!dark ? <DarkModeIcon /> : <LightModeIcon />} ></Button>
-                            </Tooltip>
-                            ,
-                            <Tooltip placement="bottom" title={'Sign Out'}>
-                                    <Button size='middle' style={{ borderRadius: '5px' }} icon={<LoginOutlined
-                                        onClick={async () => {
-                                            // await signOut(dispatch);
-                                            navigate('/login');
-                                        }}
-                                    />}></Button>
+                                <Button
+                                    size="middle"
+                                    style={{ borderRadius: "5px" }}
+                                    onClick={() => {
+                                        setDark(!dark);
+                                    }}
+                                    icon={!dark ? <DarkModeIcon /> : <LightModeIcon />}
+                                ></Button>
+                            </Tooltip>,
+                            <Tooltip placement="bottom" title={"Sign Out"}>
+                                <Button
+                                    size="middle"
+                                    style={{ borderRadius: "5px" }}
+                                    icon={
+                                        <LogoutOutlined
+                                            onClick={async () => {
+                                                // await signOut(dispatch);
+                                                navigate("/login");
+                                            }}
+                                        />
+                                    }
+                                ></Button>
                             </Tooltip>,
                         ];
                     }}
-
                     menuItemRender={(item, dom) => {
-                        return <Link
-                            to={item?.path || '/'}
-                            onClick={() => {
-                                setPathname(item.path || '/');
-                            }}
-                        >
-                            {dom}
-                        </Link>
-                    }
-                    }
-
-                    onMenuHeaderClick={() => navigate('/')}
+                        return (
+                            <Link
+                                to={item?.path || "/"}
+                                onClick={() => {
+                                    setPathname(item.path || "/");
+                                }}
+                            >
+                                {dom}
+                            </Link>
+                        );
+                    }}
+                    onMenuHeaderClick={() => navigate("/")}
                 >
                     <Outlet />
                 </ProLayout>
-
             </div>
-        </ProConfigProvider >
-    )
+        </ProConfigProvider>
+    );
 }
