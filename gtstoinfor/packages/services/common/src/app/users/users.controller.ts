@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { UsersDto } from './dto/users.dto';
@@ -12,10 +12,12 @@ export class UsersController {
     ){}
 
     @Post('/createUser')
-    async createUser(@Body() usersDto:UsersDto):Promise<UsersResponseModel> {
+    async createUser(@Body() usersDto:any):Promise<UsersResponseModel> {
+        console.log(usersDto,'uesr dto--');        
        try{
         return await this.usersService.createUser(usersDto)
        }catch(error){
+        console.log(error);
         return this.applicationExceptionhandler.returnException(UsersResponseModel,error)
        }
     }

@@ -3,7 +3,11 @@ import {
   PageContainer,
   ProForm,
 } from "@ant-design/pro-components";
-import { Card, Form, Input, Select } from "antd";
+import { Card, Form, Input, Select, message } from "antd";
+
+import { UsersService } from '@project-management-system/shared-services'
+import { UsersDto } from "@project-management-system/shared-models";
+import { useNavigate } from "react-router-dom";
 
 const factoryOptions = [
   {
@@ -59,18 +63,45 @@ const roleOptions = [
   },
 ];
 
+
+
 export default function UserCreationForm() {
+
+  const services = new UsersService
+  const pathToreDirect = '/user-management/users-view'
+  const [formRef] = Form.useForm()
+  const navigate = useNavigate();
+
+
+  const handleFinish = async (values: any) => {
+    const userDto = new UsersDto(null, values.username, values.password, values.factory, values.role, 'admin')
+    services.createUser(userDto).then(res => {
+      if (res.status) {
+        message.success(res.internalMessage)
+        formRef.resetFields()
+        setTimeout(() => {
+          navigate(pathToreDirect);
+      }, 500);
+      } else {
+        message.error(res.internalMessage)
+      }
+    }).catch(err => {
+      console.log(err.message);
+    })
+  }
+
   return (
     <div>
       <PageContainer title="Add User">
         <Card>
           <ProForm
+            form={formRef}
             submitter={{
               render: (_, dom) => (
                 <FooterToolbar style={{ height: "10%" }}>{dom}</FooterToolbar>
               ),
             }}
-            onFinish={async (values) => console.log(values)}
+            onFinish={handleFinish}
           >
             <Form.Item
               name="username"
@@ -87,7 +118,7 @@ export default function UserCreationForm() {
             </Form.Item>
             <Form.Item
               name="password"
-              label="Passowrd"
+              label="Password"
               style={{ color: "#ffff" }}
               rules={[
                 {

@@ -51,6 +51,7 @@ export class CommonColumns {
   @Column("bit", {
     nullable: false,
     name: "is_active",
+    default:1
   })
   isActive: boolean;
 }
