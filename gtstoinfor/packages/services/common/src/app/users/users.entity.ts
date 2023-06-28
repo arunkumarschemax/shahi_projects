@@ -2,7 +2,7 @@ import { CommonColumns } from "packages/services/common/common-columns.entity";
 import { Column, Entity } from "typeorm";
 
 @Entity("user")
-export class UserEntity extends CommonColumns {
+export class UsersEntity extends CommonColumns {
   @Column({
     name: "username",
     length: 100,

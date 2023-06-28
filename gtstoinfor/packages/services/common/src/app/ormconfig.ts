@@ -5,7 +5,7 @@ const config: SqlServerConnectionOptions = {
     host: '172.25.23.4',
     username: 'sa',
     password: 'manager@123',
-    database: 'SEPLScanDB',
+    database: 'PRS',
     synchronize: false,
     extra: {
         trustServerCertificate: true,

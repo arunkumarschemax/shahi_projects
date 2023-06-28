@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
-
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { FactoriesController } from './factories/factories.controller';
 import { FactoriesModule } from './factories/factories.module';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
+import { AppDataSource } from './app-datasource';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppDataSourceModule } from './app-datasource.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
