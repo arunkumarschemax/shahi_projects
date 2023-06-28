@@ -6,6 +6,7 @@ import { FactoryResponseModel } from 'packages/libs/shared-models/src/common/fac
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object'
 import { FactoriesEntity } from './factories.entity';
 import { Not } from 'typeorm';
+import { AllFactoriesResponseModel,FactoryDto as NewFactoriesDto } from '@project-management-system/shared-models';
 
 @Injectable()
 export class FactoriesService {
@@ -38,6 +39,16 @@ export class FactoriesService {
             await this.factoryRepository.save(adapterData);
             return new FactoryResponseModel(true, 200, "Updated Succesufully")
         }
+    }
+
+    async getFactories():Promise<AllFactoriesResponseModel>{
+        const data = await this.factoryRepository.find()
+        const factoriesData : NewFactoriesDto[] = []
+        for(const record of data ){
+            const adapterData  = this.adaptor.convertEntityToDto(record)
+            factoriesData.push(adapterData)
+        }
+        return new AllFactoriesResponseModel(true,1111,'Data retreived',factoriesData)
     }
 
 }

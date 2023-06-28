@@ -4,4 +4,9 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
-export class FactoryRepository extends Repository<FactoriesEntity> {}
+export class FactoryRepository extends Repository<FactoriesEntity> {
+    constructor(@InjectRepository(FactoriesEntity) private userRepository: Repository<FactoriesEntity>
+    ) {
+        super(userRepository.target, userRepository.manager, userRepository.queryRunner);
+    }
+}

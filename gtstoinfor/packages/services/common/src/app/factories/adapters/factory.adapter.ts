@@ -21,7 +21,8 @@ export class FactoryAdapter {
         const dto = new FactoryDto()
         dto.id = entity.id;
         dto.name = entity.name;
-        dto.address = entity.address
+        dto.address = entity.address;
+        dto.isActive = entity.isActive;
 
         return dto
     }

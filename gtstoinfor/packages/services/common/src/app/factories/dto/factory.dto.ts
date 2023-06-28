@@ -1,8 +1,8 @@
 export class FactoryDto {
-  id?: number;
+  id: number;
   name: string;
   address: string;
   createdUser: any;
-  username: any;
+  isActive:boolean;
 }
 

@@ -10,10 +10,11 @@ export class UsersEntity extends CommonColumns {
   username: string;
 
   @Column({
+    type:'binary',
     name: "password",
     length: 100,
   })
-  password: string;
+  password: any;
 
   @Column({
     name: "factory",
