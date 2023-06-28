@@ -11,7 +11,6 @@ import { AppDataSourceModule } from './app-datasource.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-import windowsDriver = require('mssql/msnodesqlv8');
 import { JwtModule, JwtService } from '@nestjs/jwt';
 
 
@@ -23,7 +22,8 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
       username: "sa",
       password: "manager@123",
       database: "PRS",
-      synchronize: false,
+      synchronize: true,
+      autoLoadEntities: true,
       extra: {
         validateConnection: true,
         trustServerCertificate: true,
@@ -37,7 +37,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
     FactoriesModule,
     UsersModule,
     AuthModule, JwtModule],
-  controllers: [AppController, FactoriesController, AuthController],
-  providers: [AppService, UsersService, AuthService, JwtService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule { }

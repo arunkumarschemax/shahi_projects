@@ -10,8 +10,9 @@ import { AppDataSource } from '../app-datasource';
 import { AppDataSourceModule } from '../app-datasource.module';
 
 @Module({
-  providers: [FactoriesService, ApplicationExceptionHandler,FactoryRepository],
-  imports: [AppDataSourceModule,FactoryAdapter, TypeOrmModule.forFeature([
+  providers: [FactoriesService, ApplicationExceptionHandler,FactoryRepository,FactoryAdapter],
+  imports: [
+    TypeOrmModule.forFeature([
     FactoriesEntity
   ])],
   controllers: [FactoriesController],

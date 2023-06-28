@@ -10,9 +10,10 @@ import { AppDataSourceModule } from '../app-datasource.module';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService, ApplicationExceptionHandler,UsersRepository],
-  imports: [UsersAdaptor, TypeOrmModule.forFeature([
-    UsersEntity,AppDataSourceModule
+  providers: [UsersService, ApplicationExceptionHandler,UsersRepository,UsersAdaptor],
+  imports: [TypeOrmModule.forFeature([
+    UsersEntity,UsersRepository
   ])],
+  exports:[UsersService]
 })
 export class UsersModule { }
