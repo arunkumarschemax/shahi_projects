@@ -1,4 +1,4 @@
-import { CommonAxiosServiceUms } from "./common-axios-service-ums";
+import { CommonAxiosServiceUms } from "./common-axios-service-prs";
 import {LoginDto,AuthResponseModel} from '@project-management-system/shared-models'
 
 export class UserManagementServices extends CommonAxiosServiceUms {

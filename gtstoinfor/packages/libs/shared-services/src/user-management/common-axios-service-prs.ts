@@ -2,7 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 import { config as configs} from '../../config';
 import { AxiosInstance } from '../axios-instance';
 
-export class CommonAxiosServiceUms {
+export class CommonAxiosServicePrs {
     async axiosPostCall(urlEndPoint: string | {urlEndPoint: string, serviceUrl: string}, data?: any, config?: AxiosRequestConfig) {
         let hostIp = '';
         let queryString = '';

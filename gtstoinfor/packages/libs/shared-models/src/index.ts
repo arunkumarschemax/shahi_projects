@@ -1,2 +1,6 @@
 export * from './auth/index'
 export * from './common/index'
+export * from './common/factory/factory.dto'
+export * from './common/factory/factory-response-objects'
+export * from './common/users/users-response-objects'
+export * from './common/users/users.dto'

@@ -9,7 +9,7 @@ export class AppController {
   @Get()
   async getData() {
     try{
-      return await this.appService.testInsert();
+      return this.appService.getData();
     }catch(err){
       return err
     }
