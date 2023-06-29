@@ -9,4 +9,8 @@ export class UsersService extends CommonAxiosServicePrs {
         return this.axiosPostCall(this.UsersController + "/createUser", payload)
     }
 
+    async getAllUsers():Promise<UsersResponseModel>{
+        return this.axiosPostCall(this.UsersController+"/getAllUsers")
+    }
+
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersAdaptor } from './adapters/users.adapter';
 import { UsersRepository } from './repository/users.repository';
 import { UsersDto } from './dto/users.dto';
-import { UsersResponseModel } from '@project-management-system/shared-models';
+import { UsersResponseModel, AllUsersResponseModel } from '@project-management-system/shared-models';
 import { UsersEntity } from './users.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -62,4 +62,17 @@ export class UsersService {
     }
   }
 
+
+  async getAllUsers(): Promise<AllUsersResponseModel> {
+
+    const data = await this.userRepository.find()
+    const UsersData: UsersDto[] = []
+    for (const record of data) {
+      const adapterData = this.adaptor.convertEntityToDto(record)
+      UsersData.push(adapterData)
+    }
+    console.log(data, '////////////////////////////');
+    return new AllUsersResponseModel(true, 200, "Data retreived succesufully", UsersData)
+
+  }
 }

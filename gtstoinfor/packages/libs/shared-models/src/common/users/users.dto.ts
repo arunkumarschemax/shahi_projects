@@ -5,6 +5,7 @@ export class UsersDto {
     factory: string;
     role: string;
     createdUser: string;
+    isActive?: boolean;
 
     constructor(
         id: number,
@@ -13,6 +14,7 @@ export class UsersDto {
         factory: string,
         role: string,
         createdUser: string,
+        isActive?: boolean,
     ) {
         this.id = id;
         this.username = username;
@@ -20,6 +22,7 @@ export class UsersDto {
         this.factory = factory;
         this.role = role;
         this.createdUser = createdUser
+        this.isActive = isActive;
     }
 
 }

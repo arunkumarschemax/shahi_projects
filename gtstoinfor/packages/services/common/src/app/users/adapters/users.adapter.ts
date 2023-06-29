@@ -26,6 +26,7 @@ export class UsersAdaptor {
         dto.password = entity.password
         dto.role = entity.role
         dto.factory = entity.factory
+        dto.isActive = entity.isActive
 
         return dto;
     }
