@@ -23,6 +23,7 @@ export class FactoryAdapter {
         dto.name = entity.name;
         dto.address = entity.address;
         dto.isActive = entity.isActive;
+        dto.versionFlag = entity.versionFlag;
 
         return dto
     }

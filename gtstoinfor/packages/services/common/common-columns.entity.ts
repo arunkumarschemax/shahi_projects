@@ -48,7 +48,13 @@ export class CommonColumns {
   })
   versionFlag: number;
 
-  @Column("bit", {
+  // @Column("bit", {
+  //   nullable: false,
+  //   name: "is_active",
+  //   default:1
+  // })
+  // isActive: boolean;
+  @Column({
     nullable: false,
     name: "is_active",
     default:1

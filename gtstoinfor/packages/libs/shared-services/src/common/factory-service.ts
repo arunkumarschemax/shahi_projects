@@ -1,5 +1,6 @@
 import {
     AllFactoriesResponseModel,
+    FactoryActivateDeactivateDto,
     FactoryDto,
     FactoryResponseModel,
 } from "@project-management-system/shared-models";
@@ -14,6 +15,14 @@ export class FactoryService extends CommonAxiosServicePrs {
 
     async getFactories(): Promise<AllFactoriesResponseModel> {
         return this.axiosPostCall(this.FactoryController + "/getFactories")
+    }
+
+    async getActiveFactories(): Promise<AllFactoriesResponseModel> {
+        return this.axiosPostCall(this.FactoryController + "/getActiveFactories")
+    }
+
+    async activateOrDeactivate(payload: FactoryActivateDeactivateDto): Promise<FactoryResponseModel> {
+        return this.axiosPostCall(this.FactoryController + "/activateOrDeactivate", payload)
     }
 
 }

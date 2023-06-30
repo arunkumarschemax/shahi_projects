@@ -17,22 +17,22 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: "mssql",
-      host: "172.25.23.4",
-      username: "sa",
-      password: "manager@123",
-      database: "PRS",
+      type: "mysql",
+      host: "localhost",
+      username: "root",
+      password: "",
+      database: "shahi_prs",
       synchronize: true,
       autoLoadEntities: true,
-      extra: {
-        validateConnection: true,
-        trustServerCertificate: true,
-      },
-      options: {
-        cryptoCredentialsDetails: {
-          minVersion: "TLSv1",
-        },
-      }
+      // extra: {
+      //   validateConnection: true,
+      //   trustServerCertificate: true,
+      // },
+      // options: {
+      //   cryptoCredentialsDetails: {
+      //     minVersion: "TLSv1",
+      //   },
+      // }
     }),
     FactoriesModule,
     UsersModule,

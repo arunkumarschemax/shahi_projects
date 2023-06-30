@@ -4,5 +4,6 @@ export class FactoryDto {
   address: string;
   createdUser: any;
   isActive:boolean;
+  versionFlag: number;
 }
 

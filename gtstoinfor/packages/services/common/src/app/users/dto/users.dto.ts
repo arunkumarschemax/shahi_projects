@@ -5,5 +5,6 @@ export class UsersDto {
   factory: string;
   role: string;
   createdUser: string;
-  isActive?: boolean
+  isActive?: boolean;
+  versionFlag?: number;
 }
