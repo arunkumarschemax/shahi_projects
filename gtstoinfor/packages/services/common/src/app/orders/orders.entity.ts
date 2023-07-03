@@ -4,54 +4,54 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 export class ShahiEntities {
     @PrimaryGeneratedColumn("increment", {
         name: "id",
-        
+
     })
     id: number;
 
     @Column({
-        name:'production_plan_id',
-        type:'varchar',
+        name: 'production_plan_id',
+        type: 'varchar',
         unique: true,
-        nullable:false
+        nullable: false
     })
-    productionPlanId:string
+    productionPlanId: string
 
     @Column('varchar', {
         name: "year",
-        length:'5'
+        length: '5'
     })
     year: string;
 
     @Column('varchar', {
         name: "planning_season",
-        length:'5'
+        length: '5'
     })
     planningSeason: string;
 
     @Column('varchar', {
         name: "season",
-        length:'5'
+        length: '5'
     })
     season: string;
 
 
     @Column('varchar', {
         name: "item_brand",
-        length:'10'
+        length: '10'
     })
     itemBrand: string;
 
 
     @Column('varchar', {
         name: "business_unit",
-        length:'4'
+        length: '4'
     })
     businessUnit: string;
 
 
     @Column('varchar', {
         name: "item_code",
-        length:'6'
+        length: '6'
 
     })
     itemCode: string;
@@ -65,7 +65,7 @@ export class ShahiEntities {
 
     @Column('varchar', {
         name: "main_sample_code",
-        length:'11'
+        length: '11'
     })
     mainSampleCode: string;
 
@@ -90,7 +90,7 @@ export class ShahiEntities {
 
     @Column('varchar', {
         name: "vendor_code",
-        length:4
+        length: 4
     })
     vendorCode: string;
 
@@ -103,7 +103,7 @@ export class ShahiEntities {
 
     @Column('varchar', {
         name: "management_factory_code",
-        length:5
+        length: 5
     })
     managementFactoryCode: string;
 
@@ -116,7 +116,7 @@ export class ShahiEntities {
 
     @Column('varchar', {
         name: "branch_factory_code",
-        length:4
+        length: 4
     })
     branchFactoryCode: string;
 
@@ -135,32 +135,32 @@ export class ShahiEntities {
 
     @Column('varchar', {
         name: "rm_supplier_name",
-       
+
     })
     rmSupplierName: string;
 
 
-    @Column('decimal', { precision: 10, scale: 2,name:'sewing_difficulty' })
+    @Column('decimal', { precision: 10, scale: 2, name: 'sewing_difficulty' })
     sewingDifficulty: number;
 
 
     @Column('varchar', {
         name: "department_code",
-        length:1
+        length: 1
     })
     departmentCode: string;
 
 
     @Column('varchar', {
         name: "department_name",
-        length:'12'
+        length: '12'
     })
     departmentName: string;
 
 
     @Column('varchar', {
         name: "class1_code",
-        length:2
+        length: 2
     })
     class1Code: string;
 
@@ -173,7 +173,7 @@ export class ShahiEntities {
 
     @Column('varchar', {
         name: "prod_plan_type_name",  // prodoction plan type name
-        length:20
+        length: 20
     })
     productionPlanTypeName: string;
 
@@ -204,14 +204,14 @@ export class ShahiEntities {
 
     @Column('varchar', {
         name: "transport_method_name",
-        length:20
+        length: 20
     })
     transportMethodName: string;
 
 
     @Column('varchar', {
         name: "logistics_type_name",
-        length:3
+        length: 3
     })
     logisticsTypeName: string;
 
@@ -223,313 +223,321 @@ export class ShahiEntities {
 
 
     @Column('int', {
-        name: "order_qty_pcs"
+        name: "order_qty_pcs",
     })
     orderQtyPcs: number;
 
-
     @Column('varchar', {
-        name: "yarnOrderAcceptance"
+        name: "yarn_order_acceptance",
+        length: 3
     })
     yarnOrderAcceptance: string;
 
 
     @Column('date', {
-        name: "yarnOrderRequestDate"
+        name: "yarn_order_req_date"
     })
     yarnOrderRequestDate: Date;
 
 
     @Column('date', {
-        name: "yarnOrderAnswerDate"
+        name: "yarn_order_ans_date"
     })
     yarnOrderAnswerDate: Date;
 
 
     @Column('date', {
-        name: "yarnOrderActualDate"
+        name: "yarn_order_actual_ate"
     })
     yarnOrderActualDate: Date;
 
 
     @Column('varchar', {
-        name: "yarnOrderNO"
+        name: "yarn_order_no",
+        length: 21
     })
     yarnOrderNO: string;
 
 
     @Column('int', {
-        name: "yarnActualOrderQtyPcs"
+        name: "yarn_actual_order_qty_pcs"
     })
     yarnActualOrderQtyPcs: number;
 
 
     @Column('date', {
-        name: "yarnUpdateDate"
+        name: "yarn_update_date"
     })
     yarnUpdateDate: Date;
 
 
     @Column('varchar', {
-        name: "fabricOrderAcceptance"
+        name: "fabric_order_acceptance",
+        length: 3
     })
     fabricOrderAcceptance: string;
 
 
     @Column('date', {
-        name: "fabricOrderRequestDate"
+        name: "fabric_order_req_date"
     })
     fabricOrderRequestDate: Date;
 
 
     @Column('date', {
-        name: "fabricOrderAnswerDate"
+        name: "fabric_order_ans_date"
     })
     fabricOrderAnswerDate: Date;
 
 
     @Column('date', {
-        name: "fabricOrderActualDate"
+        name: "fabric_order_actual_date"
     })
     fabricOrderActualDate: Date;
 
 
     @Column('varchar', {
-        name: "fabricOrderNO"
+        name: "fabric_order_no",
+        length: 21
     })
     fabricOrderNO: string;
 
 
     @Column('int', {
-        name: "fabricActualOrderQtyPcs"
+        name: "fabric_actual_order_qty_pcs"
     })
     fabricActualOrderQtyPcs: number;
 
 
     @Column('date', {
-        name: "fabricUpdateDate"
+        name: "fabric_update_date"
     })
     fabricUpdateDate: Date;
 
 
     @Column('varchar', {
-        name: "colorOrderAcceptance"
+        name: "color_order_acceptance",
+        length: 3
     })
     colorOrderAcceptance: string;
 
 
     @Column('date', {
-        name: "colorOrderRequestDate"
+        name: "color_order_req_date"
     })
     colorOrderRequestDate: Date;
 
 
     @Column('date', {
-        name: "colorOrderAnswerDate"
+        name: "color_order_ans_date"
     })
     colorOrderAnswerDate: Date;
 
 
     @Column('date', {
-        name: "colorOrderActualDate"
+        name: "color_order_actual_date"
     })
     colorOrderActualDate: Date;
 
 
     @Column('varchar', {
-        name: "colorOrderNO"
+        name: "color_order_no",
+        length: 20
     })
     colorOrderNO: string;
 
 
     @Column('int', {
-        name: "colorActualOrderQtyPcs"
+        name: "color_actual_order_qty_pcs"
     })
     colorActualOrderQtyPcs: number;
 
 
     @Column('date', {
-        name: "colorUpdateDate"
+        name: "color_update_date"
     })
     colorUpdateDate: Date;
 
 
     @Column('varchar', {
-        name: "trimOrderAcceptance"
+        name: "trim_order_acceptance",
+        length: 3
     })
     trimOrderAcceptance: string;
 
 
     @Column('date', {
-        name: "trimOrderRequestDate"
+        name: "trim_order_req_date"
     })
     trimOrderRequestDate: Date;
 
 
     @Column('date', {
-        name: "trimOrderAnswerDate"
+        name: "trim_order_ans_date"
     })
     trimOrderAnswerDate: Date;
 
 
     @Column('date', {
-        name: "trimOrderActualDate"
+        name: "trim_order_actual_date"
     })
     trimOrderActualDate: Date;
 
 
     @Column('varchar', {
-        name: "trimOrderNO"
+        name: "trim_order_no",
+        length: 20
     })
     trimOrderNO: string;
 
 
     @Column('int', {
-        name: "trimActualOrderQtyPcs"
+        name: "trim_actual_order_qty_pcs"
     })
     trimActualOrderQtyPcs: number;
 
 
     @Column('date', {
-        name: "trimUpdateDate"
+        name: "trim_update_date"
     })
     trimUpdateDate: Date;
 
 
     @Column('varchar', {
-        name: "POOrderAcceptance"
+        name: "po_order_acceptance",
+        length: 3
     })
     POOrderAcceptance: string;
 
 
     @Column('date', {
-        name: "POOrderRequestDate"
+        name: "po_order_req_date"
     })
     POOrderRequestDate: Date;
 
 
     @Column('date', {
-        name: "POOrderAnswerDate"
+        name: "po_order_ans_date"
     })
     POOrderAnswerDate: Date;
 
 
     @Column('date', {
-        name: "POOrderActualDate"
+        name: "po_order_actual_date"
     })
     POOrderActualDate: Date;
 
 
     @Column('int', {
-        name: "POOrderNO"
+        name: "po_order_no"
     })
     POOrderNO: number;
 
 
     @Column('int', {
-        name: "POActualOrderQtyPcs"
+        name: "po_actual_order_qty_pcs"
     })
     POActualOrderQtyPcs: number;
 
 
     @Column('date', {
-        name: "POUpdateDate"
+        name: "po_update_date"
     })
     POUpdateDate: Date;
 
 
     @Column('int', {
-        name: "orderQtyPcsOld"
+        name: "order_qty_pcs_old"
     })
     orderQtyPcsOld: number;
 
 
     @Column('varchar', {
-        name: "transportMethodNameOld"
+        name: "transport_method_name_old"
     })
     transportMethodNameOld: string;
 
 
     @Column('varchar', {
-        name: "logisticsTypeNameOld"
+        name: "logistics_type_name_old"
     })
     logisticsTypeNameOld: string;
 
 
     @Column('date', {
-        name: "yarnOrderRequestDateOld"
+        name: "yarn_order_req_date_old"
     })
     yarnOrderRequestDateOld: Date;
 
 
     @Column('date', {
-        name: "fabricOrderRequestDateOld"
+        name: "fabric_order_req_date_old"
     })
     fabricOrderRequestDateOld: Date;
 
 
     @Column('date', {
-        name: "colorOrderRequestDateOld"
+        name: "color_order_req_date_old"
     })
     colorOrderRequestDateOld: Date;
 
 
     @Column('date', {
-        name: "trimOrderRequestDateOld"
+        name: "trim_order_req_date_old"
     })
     trimOrderRequestDateOld: Date;
 
 
     @Column('date', {
-        name: "POOrderRequestDateOld"
+        name: "po_order_req_date_old"
     })
     POOrderRequestDateOld: Date;
 
 
     @Column('int', {
-        name: "number"
+        name: "status"
     })
     status: string;
 
-
-    @Column('date', {
-        name: "displayMonthWK"
+    @Column('varchar', {
+        name: "display_month_wk",
+        length: 15
     })
-    displayMonthWK: Date;
-
+    displayMonthWK: string;
 
     @Column('int', {
-        name: "displayMonthWKColumn"
+        name: "display_month_wk_column"
     })
     displayMonthWKColumn: number;
 
 
-    @Column('int', {
-        name: "groupCd"
+    @Column('varchar', {
+        name: "group_cd",
+        length: 5
     })
-    groupCd: number;
+    groupCd: string;
 
 
     @Column('int', {
-        name: "showColorFlag"
+        name: "show_color_flag"
     })
     showColorFlag: number;
 
 
     @Column('int', {
-        name: "orderQtyCoeff"
+        name: "orderqty_coeff"
     })
     orderQtyCoeff: number;
 
 
     @Column('varchar', {
-        name: "factoryComment"
+        name: "factory_comment"
     })
     factoryComment: string;
 
 
     @Column('date', {
-        name: "factoryCommentUpdateDate"
+        name: "factory_comment_update_date"
     })
     factoryCommentUpdateDate: Date;
 
@@ -541,290 +549,302 @@ export class ShahiEntities {
 
 
     @Column('varchar', {
-        name: "FRFabricName"
+        name: "fr_fabric_name",
+        length: 12
     })
     FRFabricName: string;
 
 
     @Column('varchar', {
-        name: "Ph1FirstDiscriminationFlagOld"
+        name: "ph1_first_disc_flag_old",
+        length: 3
     })
     Ph1FirstDiscriminationFlagOld: string;
 
 
     @Column('varchar', {
-        name: "Ph1FirstDiscriminationFlag"
+        name: "ph1_first_disc_flag",
+        length: 3
     })
     Ph1FirstDiscriminationFlag: string;
 
 
     @Column('varchar', {
-        name: "orderTimingDisplayValueOld"
+        name: "order_timing_display_value_old",
+        length: 4
     })
     orderTimingDisplayValueOld: string;
 
 
     @Column('varchar', {
-        name: "orderTimingDisplayValue"
+        name: "order_timing_display_value",
+        length: 4
     })
     orderTimingDisplayValue: string;
 
-
     @Column('varchar', {
-        name: "expressLineFlagOld"
+        name: "express_line_flag_old",
+        length: 3
     })
     expressLineFlagOld: string;
 
 
     @Column('varchar', {
-        name: "expressLineFlag"
+        name: "express_line_flag",
+        length: 3
     })
     expressLineFlag: string;
 
 
     @Column('varchar', {
-        name: "manualLockFlagOld"
+        name: "manual_lock_flag_old",
+        length: 3
     })
     manualLockFlagOld: string;
 
 
     @Column('varchar', {
-        name: "manualLockFlag"
+        name: "manual_lock_flag",
+        length: 3
     })
     manualLockFlag: string;
 
 
     @Column('varchar', {
-        name: "Ph1FirstDiscriminationFlagNow"
+        name: "ph1_first_disc_flag_now",
+        length: 3
     })
     Ph1FirstDiscriminationFlagNow: string;
 
 
     @Column('varchar', {
-        name: "orderTimingDisplayValueNow"
+        name: "order_timing_display_value_now",
+        length: 4
     })
     orderTimingDisplayValueNow: string;
 
 
     @Column('varchar', {
-        name: "expressLineFlagNow"
+        name: "express_line_flag_now",
+        length: 2
     })
     expressLineFlagNow: string;
 
 
     @Column('varchar', {
-        name: "ManualLockFlagNow"
+        name: "manual_lock_flag_now",
+        length: 2
     })
     ManualLockFlagNow: string;
 
 
     @Column('date', {
-        name: "requestedWhDateOld"
+        name: "req_wh_date_old"
     })
     requestedWhDateOld: Date;
 
 
     @Column('date', {
-        name: "EXF2"
+        name: "exf2"
     })
     EXF2: Date;
 
 
     @Column('date', {
-        name: "colorRecommend"
+        name: "color_recommend"
     })
     colorRecommend: Date;
 
 
     @Column('date', {
-        name: "trimRecommend"
+        name: "trim_recommend"
     })
     trimRecommend: Date;
 
 
     @Column('date', {
-        name: "PORecommend"
+        name: "po_recommend"
     })
     PORecommend: Date;
 
 
     @Column('int', {
-        name: "BD_EXF_DLSettingLTBeforeCal"
+        name: "bd_exf_dlsetting_ltbefore_cal"
     })
     BD_EXF_DLSettingLTBeforeCal: number;
 
 
     @Column('int', {
-        name: "PO_EXF_DLSettingLTBeforeCal"
+        name: "po_exf_dlsetting_ltbefore_cal"
     })
     PO_EXF_DLSettingLTBeforeCal: number;
 
 
 
     @Column('int', {
-        name: "materialSupplierHolidayExcluding"
+        name: "material_supl_holiday_excl"
     })
     materialSupplierHolidayExcluding: number;
 
 
     @Column('int', {
-        name: "sewingFTYHolidayExcluding"
+        name: "sewing_fty_holiday_excl"
     })
     sewingFTYHolidayExcluding: number;
 
 
     @Column('int', {
-        name: "BD_EXF_DLSettingLT"
+        name: "bd_exf_dlsetting_lt"
     })
     BD_EXF_DLSettingLT: number;
 
 
     @Column('int', {
-        name: "PO_EXF_DLSettingLT"
+        name: "po_exf_dlsetting_lt"
     })
     PO_EXF_DLSettingLT: number;
 
 
     @Column('int', {
-        name: "BD_EXFRegisteredLT"
+        name: "bd_exf_reg_lt"
     })
     BD_EXFRegisteredLT: number;
 
 
     @Column('int', {
-        name: "PO_EXFRegisteredLT"
+        name: "po_exf_reg_lt"
     })
     PO_EXFRegisteredLT: number;
 
 
     @Column('int', {
-        name: "BD_EXFtotalAbnormalLT"
+        name: "bd_exf_total_abnormal_lt"
     })
     BD_EXFtotalAbnormalLT: number;
 
 
     @Column('int', {
-        name: "PO_EXFtotalAbnormalLT"
+        name: "po_exf_total_abnormal_lt"
     })
     PO_EXFtotalAbnormalLT: number;
 
 
     @Column('int', {
-        name: "abnormalLTReasonBD1"
+        name: "abnormal_lt_reason_bd1"
     })
     abnormalLTReasonBD1: number;
 
 
     @Column('int', {
-        name: "abnormalLTReasonBD2"
+        name: "abnormal_lt_reason_bd2"
     })
     abnormalLTReasonBD2: number;
 
 
     @Column('int', {
-        name: "abnormalLTReasonBD3"
+        name: "abnormal_lt_reason_bd3"
     })
     abnormalLTReasonBD3: number;
 
 
     @Column('int', {
-        name: "abnormalLTReasonBD4"
+        name: "abnormal_lt_reason_bd4"
     })
     abnormalLTReasonBD4: number;
 
 
     @Column('int', {
-        name: "abnormalLTReasonBD5"
+        name: "abnormal_lt_reason_bd5"
     })
     abnormalLTReasonBD5: number;
 
 
     @Column('int', {
-        name: "abnormalLTBD1"
+        name: "abnormal_lt_bd1"
     })
     abnormalLTBD1: number;
 
 
     @Column('int', {
-        name: "abnormalLTBD2"
+        name: "abnormal_lt_bd2"
     })
     abnormalLTBD2: number;
 
 
     @Column('int', {
-        name: "abnormalLTBD3"
+        name: "abnormal_lt_bd3"
     })
     abnormalLTBD3: number;
 
 
     @Column('int', {
-        name: "abnormalLTBD4"
+        name: "abnormal_lt_bd4"
     })
     abnormalLTBD4: number;
 
 
     @Column('int', {
-        name: "abnormalLTBD5"
+        name: "abnormal_lt_bd5"
     })
     abnormalLTBD5: number;
 
 
     @Column('int', {
-        name: "abnormalLTReasonPO1"
+        name: "abnormal_lt_reason_po1"
     })
     abnormalLTReasonPO1: number;
 
 
     @Column('int', {
-        name: "abnormalLTReasonPO2"
+        name: "abnormal_lt_reason_po2"
     })
     abnormalLTReasonPO2: number;
 
 
     @Column('int', {
-        name: "abnormalLTReasonPO3"
+        name: "abnormal_lt_reason_po3"
     })
     abnormalLTReasonPO3: number;
 
 
     @Column('int', {
-        name: "abnormalLTReasonPO4"
+        name: "abnormal_lt_reason_po4"
     })
     abnormalLTReasonPO4: number;
 
 
     @Column('int', {
-        name: "abnormalLTReasonPO5"
+        name: "abnormal_lt_reason_po5"
     })
     abnormalLTReasonPO5: number;
 
 
     @Column('int', {
-        name: "abnormalLTPO1"
+        name: "abnormal_lt_po1"
     })
     abnormalLTPO1: number;
 
 
     @Column('int', {
-        name: "abnormalLTPO2"
+        name: "abnormal_lt_po2"
     })
     abnormalLTPO2: number;
 
 
     @Column('int', {
-        name: "abnormalLTPO3"
+        name: "abnormal_lt_po3"
     })
     abnormalLTPO3: number;
 
 
     @Column('int', {
-        name: "abnormalLTPO4"
+        name: "abnormal_lt_po4"
     })
     abnormalLTPO4: number;
 
 
     @Column('int', {
-        name: "abnormalLTPO5"
+        name: "abnormal_lt_po5"
     })
     abnormalLTPO5: number;
 
