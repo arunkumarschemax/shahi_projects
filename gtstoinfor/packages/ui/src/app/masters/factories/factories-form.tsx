@@ -15,6 +15,7 @@ export default function FactoriesForm() {
     const factoriesDto = new FactoryDto(null,values.name,values.address,'admin',true)
     factoryService.createFactory(factoriesDto).then((res) => {
       if(res.status){
+        form.resetFields()
         message.success(res.internalMessage)
       }else{
         message.error(res.internalMessage)

@@ -63,6 +63,21 @@ export const baseRouterList = [
             },
         ],
     },
+    {
+        label: "Excel",
+        key: "excel-import",
+        path: "excel-import",
+        icon: <PicCenterOutlined />,
+        filepath: "excel-import",
+        children: [
+            {
+                label: "Add Excel",
+                key: "excel-import",
+                path: "excel-import",
+                filepath: "excel-import",
+            },
+        ],
+    },
 ];
 
 export default function BasicLayout() {

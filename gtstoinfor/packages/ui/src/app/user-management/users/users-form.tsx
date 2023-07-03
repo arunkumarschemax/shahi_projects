@@ -3,54 +3,14 @@ import {
   PageContainer,
   ProForm,
 } from "@ant-design/pro-components";
-import { Card, Form, Input, Select, message } from "antd";
+import { Button, Card, Form, Input, Select, message } from "antd";
 
-import { UsersService } from '@project-management-system/shared-services'
-import { UsersDto } from "@project-management-system/shared-models";
+import { FactoryService, UsersService } from '@project-management-system/shared-services'
+import { AllFactoriesResponseModel, FactoryDto, UsersDto } from "@project-management-system/shared-models";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const factoryOptions = [
-  {
-    value: "unit-1",
-    label: "Unit-1",
-  },
-  {
-    value: "unit-2",
-    label: "Unit-2",
-  },
-  {
-    value: "unit-3",
-    label: "Unit-3",
-  },
-  {
-    value: "unit-4",
-    label: "Unit-4",
-  },
-  {
-    value: "unit-5",
-    label: "Unit-5",
-  },
-  {
-    value: "unit-6",
-    label: "Unit-6",
-  },
-  {
-    value: "unit-7",
-    label: "Unit-7",
-  },
-  {
-    value: "unit-8",
-    label: "Unit-8",
-  },
-  {
-    value: "unit-9",
-    label: "Unit-9",
-  },
-  {
-    value: "unit-10",
-    label: "Unit-10",
-  },
-];
+
 
 const roleOptions = [
   {
@@ -67,21 +27,39 @@ const roleOptions = [
 
 export default function UserCreationForm() {
 
-  const services = new UsersService
+  const [activeFactoryData, setActiveFactoryData] = useState<FactoryDto[]>()
+
+  const userServices = new UsersService
+  const factoryServices = new FactoryService
   const pathToreDirect = '/user-management/users-view'
   const [formRef] = Form.useForm()
   const navigate = useNavigate();
 
+  const getActiveFactories = async () => {
+    try {
+      await factoryServices.getActiveFactories().then(res => {
+        if (res.status) {
+          console.log(res.data, '/////////////////////');
+          setActiveFactoryData(res.data)
+        } else {
+          message.error(res.internalMessage)
+        }
+      })
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
 
   const handleFinish = async (values: any) => {
     const userDto = new UsersDto(null, values.username, values.password, values.factory, values.role, 'admin')
-    services.createUser(userDto).then(res => {
+    userServices.createUser(userDto).then(res => {
       if (res.status) {
         message.success(res.internalMessage)
         formRef.resetFields()
         setTimeout(() => {
           navigate(pathToreDirect);
-      }, 500);
+        }, 500);
       } else {
         message.error(res.internalMessage)
       }
@@ -90,9 +68,25 @@ export default function UserCreationForm() {
     })
   }
 
+  const factoryOptions = [
+
+    // activeFactoryData.map((item:any) => {
+
+    // })
+
+    // {
+    //   value: "unit-1",
+    //   label: "Unit-1",
+    // },
+  ]
+
+  useEffect(() => {
+    getActiveFactories()
+  }, [])
+
   return (
     <div>
-      <PageContainer title="Add User">
+      <PageContainer title="Add User" extra={<Button onClick={() => navigate('/user-management/users-view')} type={'primary'}>View</Button>} >
         <Card>
           <ProForm
             form={formRef}
@@ -143,7 +137,11 @@ export default function UserCreationForm() {
                 },
               ]}
             >
-              <Select options={factoryOptions} />
+              <Select>
+                {activeFactoryData?.map((item: any) => (
+                  <Select.Option key={item.id}> {item.name},   {item.address} </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
             <Form.Item
               name="role"

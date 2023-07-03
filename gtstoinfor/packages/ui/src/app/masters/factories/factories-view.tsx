@@ -1,16 +1,13 @@
-import { EditOutlined } from '@ant-design/icons'
 import { ProColumns, ProTable } from '@ant-design/pro-components'
-import { FactoryDto } from '@project-management-system/shared-models'
+import { FactoryActivateDeactivateDto, FactoryDto } from '@project-management-system/shared-models'
 import { FactoryService } from '@project-management-system/shared-services'
-import { Button, Popconfirm, Space, Tag } from 'antd'
+import { Button, Tag } from 'antd'
 import { forEachObject } from 'for-each'
-import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TableActions from '../../common/table-actions/table-actions'
 
 export default function FactoriesView() {
   const navigate = useNavigate()
-  const [factoriesData, setFactoriesData] = useState<FactoryDto[]>()
   const factoryService = new FactoryService()
 
 
@@ -19,9 +16,13 @@ export default function FactoriesView() {
 
   }
 
-  function onSwitchClick() {
-
+  async function onSwitchClick(item: any) { 
+    const dto = new FactoryActivateDeactivateDto(item.id, !item.isActive, item.versionFlag, 'admin')
+    await factoryService.activateOrDeactivate(dto);
+    window.location.reload();
   }
+
+
   const getData = async (params = {}, sort, filter) => {
     const res = await factoryService.getFactories()
     if (res.status) {
@@ -36,10 +37,10 @@ export default function FactoriesView() {
       dataIndex: 'index',
       valueType: 'indexBorder',
       width: 48,
-      align:'center'
+      align: 'center'
     },
-    { title: 'Factory name', dataIndex: 'name', sorter: true },
-    { title: 'Address', dataIndex: "address", },
+    { title: 'Factory name', dataIndex: 'name', sorter: true, align: 'center' },
+    { title: 'Address', dataIndex: "address", align: 'center' },
     {
       title: 'Status',
       filters: true,
@@ -56,9 +57,10 @@ export default function FactoriesView() {
           status: 'Success',
         },
       },
+      align: 'center',
       render: (dom, entity) => { return <Tag color={entity.isActive ? 'green' : 'red'}>{entity.isActive ? 'Active' : 'Inactive'}</Tag> }
     },
-    { title: 'Action', render: (dom, entity) => { return <TableActions isActive={entity.isActive} onEditClick={onEditClick} onSwitchClick={onSwitchClick} /> } }
+    { title: 'Action', align: 'center', render: (dom, entity) => { return <TableActions isActive={entity.isActive} onEditClick={onEditClick} onSwitchClick={() => onSwitchClick(entity)} /> } }
   ]
   forEachObject
   return (

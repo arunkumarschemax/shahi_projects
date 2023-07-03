@@ -1,6 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { FactoriesService } from './factories.service';
-import { FactoryDto } from './dto/factory.dto';
 import {FactoryResponseModel} from '../../../../../libs/shared-models/src/common/factory/factory-response-objects'
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
 import { AllFactoriesResponseModel } from '@project-management-system/shared-models';
@@ -30,4 +29,23 @@ export class FactoriesController {
         }
     }
 
+    @Post('/getActiveFactories')
+    async getActiveFactories() : Promise<AllFactoriesResponseModel>{
+        try{
+            return await this.factoriesService.getActiveFactories()
+        }catch(error){
+            return this.applicationExceptionhandler.returnException(AllFactoriesResponseModel, error);
+        }
+    }
+
+    @Post("/activateOrDeactivate")
+  async activateOrDeactivate(@Body() activateDeactivateReq:any) : Promise<FactoryResponseModel>{
+    console.log(activateDeactivateReq, '[[[[[[[[[[[[[[[[[[[[[[[[[[[[[');
+    try{
+        await this.factoriesService.activateOrDeactivate(activateDeactivateReq)
+    }catch(error){
+        return this.applicationExceptionhandler.returnException(FactoryResponseModel,error)
+    }
+  }
+    
 }
