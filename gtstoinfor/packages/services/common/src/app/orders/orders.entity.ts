@@ -1,45 +1,60 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('Shahi-Schemax') //change the name
+@Entity('orders') //change the name
 export class ShahiEntities {
     @PrimaryGeneratedColumn("increment", {
-        name: "productionPlanId"
+        name: "id",
+        
     })
-    productionPlanId: number;
+    id: number;
 
-
-    @Column('int', {
-        name: "year"
+    @Column({
+        name:'production_plan_id',
+        type:'varchar',
+        unique: true,
+        nullable:false
     })
-    year: number;
+    productionPlanId:string
 
     @Column('varchar', {
-        name: "planningSeason"
+        name: "year",
+        length:'5'
+    })
+    year: string;
+
+    @Column('varchar', {
+        name: "planning_season",
+        length:'5'
     })
     planningSeason: string;
 
     @Column('varchar', {
-        name: "season"
+        name: "season",
+        length:'5'
     })
     season: string;
 
 
     @Column('varchar', {
-        name: "itemBrand"
+        name: "item_brand",
+        length:'10'
     })
     itemBrand: string;
 
 
     @Column('varchar', {
-        name: "businessUnit"
+        name: "business_unit",
+        length:'4'
     })
     businessUnit: string;
 
 
-    @Column('int', {
-        name: "itemCode"
+    @Column('varchar', {
+        name: "item_code",
+        length:'6'
+
     })
-    itemCode: number;
+    itemCode: string;
 
 
     @Column('varchar', {
@@ -49,145 +64,154 @@ export class ShahiEntities {
 
 
     @Column('varchar', {
-        name: "mainSampleCode"
+        name: "main_sample_code",
+        length:'11'
     })
     mainSampleCode: string;
 
 
     @Column('varchar', {
-        name: "mainSampleName"
+        name: "main_sample_name"
     })
     mainSampleName: string;
 
 
     @Column('varchar', {
-        name: "supplierRawMaterialCode"
+        name: "supplier_rm_code",
     })
-    supplierRawMaterialCode: string;
+    supplierRMCode: string;
 
 
     @Column('varchar', {
-        name: "supplierRawMaterialName"
+        name: "supplier_rm_name"
     })
-    supplierRawMaterialName: string;
-
-
-    @Column('int', {
-        name: "vendorCode"
-    })
-    vendorCode: number;
+    supplierRMName: string;
 
 
     @Column('varchar', {
-        name: "vendorName"
+        name: "vendor_code",
+        length:4
+    })
+    vendorCode: string;
+
+
+    @Column('varchar', {
+        name: "vendor_name",
     })
     vendorName: string;
 
 
     @Column('varchar', {
-        name: "managementFactoryCode"
+        name: "management_factory_code",
+        length:5
     })
     managementFactoryCode: string;
 
 
     @Column('varchar', {
-        name: "managementFactoryName"
+        name: "management_factory_name"
     })
     managementFactoryName: string;
 
 
     @Column('varchar', {
-        name: "branchFactoryCode"
+        name: "branch_factory_code",
+        length:4
     })
     branchFactoryCode: string;
 
 
     @Column('varchar', {
-        name: "branchFactoryName"
+        name: "branch_factory_name"
     })
     branchFactoryName: string;
 
 
     @Column('varchar', {
-        name: "rawMaterialSupplierCode"
+        name: "rm_supplier_code"
     })
-    rawMaterialSupplierCode: string;
+    rmSupplierCode: string;
 
 
     @Column('varchar', {
-        name: "rawMaterialSupplierName"
+        name: "rm_supplier_name",
+       
     })
-    rawMaterialSupplierName: string;
+    rmSupplierName: string;
 
 
-    @Column('int', {
-        name: "sewingDifficulty"
-    })
+    @Column('decimal', { precision: 10, scale: 2,name:'sewing_difficulty' })
     sewingDifficulty: number;
 
 
-    @Column('int', {
-        name: "departmentCode"
+    @Column('varchar', {
+        name: "department_code",
+        length:1
     })
-    departmentCode: number;
+    departmentCode: string;
 
 
     @Column('varchar', {
-        name: "departmentName"
+        name: "department_name",
+        length:'12'
     })
     departmentName: string;
 
 
-    @Column('int', {
-        name: "class1Code"
+    @Column('varchar', {
+        name: "class1_code",
+        length:2
     })
-    class1Code: number;
+    class1Code: string;
 
 
     @Column('varchar', {
-        name: "Class1Name"
+        name: "class1_name"
     })
     Class1Name: string;
 
 
     @Column('varchar', {
-        name: "productionPlanTypeName"
+        name: "prod_plan_type_name",  // prodoction plan type name
+        length:20
     })
     productionPlanTypeName: string;
 
 
-    @Column('int', {
-        name: "monthWeekFlag"
+    @Column('boolean', {
+        name: "month_week_flag"
     })
-    monthWeekFlag: number;
+    monthWeekFlag: boolean;
 
 
     @Column('date', {
-        name: "lastUpdateDate"
+        name: "last_update_date"
     })
     lastUpdateDate: Date;
 
 
     @Column('date', {
-        name: "requestedWhDate"
+        name: "requested_wh_date"
     })
     requestedWhDate: Date;
 
 
     @Column('date', {
-        name: "contractedDate"
+        name: "contracted_date"
     })
     contractedDate: Date;
 
 
     @Column('varchar', {
-        name: "transportMethodName"
+        name: "transport_method_name",
+        length:20
     })
     transportMethodName: string;
 
 
     @Column('varchar', {
-        name: "logisticsTypeName"
+        name: "logistics_type_name",
+        length:3
     })
     logisticsTypeName: string;
 
@@ -199,7 +223,7 @@ export class ShahiEntities {
 
 
     @Column('int', {
-        name: "orderQtyPcs"
+        name: "order_qty_pcs"
     })
     orderQtyPcs: number;
 

@@ -1,37 +1,29 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { FactoriesController } from './factories/factories.controller';
 import { FactoriesModule } from './factories/factories.module';
-import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
-import { AppDataSource } from './app-datasource';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppDataSourceModule } from './app-datasource.module';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
+import { appConfig } from '../../config';
 
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: "mssql",
-      host: "172.25.23.4",
-      username: "sa",
-      password: "manager@123",
-      database: "PRS",
-      synchronize: true,
+      type: "mysql",
+      timezone: 'Z',
+      host: appConfig.database.host,
+      port: appConfig.database.port,
+      username: appConfig.database.username,
+      password: appConfig.database.password,
+      database: appConfig.database.dbName,
       autoLoadEntities: true,
+      synchronize: false,
+      logging: true,
       extra: {
-        validateConnection: true,
-        trustServerCertificate: true,
-      },
-      options: {
-        cryptoCredentialsDetails: {
-          minVersion: "TLSv1",
-        },
+        connectionLimit: 20
       }
     }),
     FactoriesModule,

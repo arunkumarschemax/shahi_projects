@@ -23,7 +23,7 @@ export default function ExcelImport() {
   const handleUpload = async () => {
     if (selectedFile) {
       setLoading(true);
-
+      console.log(selectedFile)
       try {
         const formData = new FormData();
         formData.append("file", selectedFile);
@@ -33,7 +33,6 @@ export default function ExcelImport() {
             "Content-Type": "multipart/form-data",
           },
         });
-
         // File uploaded successfully
         console.log("File uploaded successfully");
       } catch (error) {
@@ -48,10 +47,11 @@ export default function ExcelImport() {
   return (
     <Card title="Excel Import">
       <Upload.Dragger
-        accept=".xlsx"
+        accept=".csv"
         fileList={selectedFile ? [selectedFile] : []}
         beforeUpload={() => false}
         onChange={handleFileChange}
+        
       >
         <p className="ant-upload-drag-icon">
           <UploadOutlined />

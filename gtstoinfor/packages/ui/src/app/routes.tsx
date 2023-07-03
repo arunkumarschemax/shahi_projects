@@ -7,6 +7,7 @@ import UserCreationForm from "./user-management/users/users-form"
 import UsersView from "./user-management/users/users-view"
 import FactoriesView from "./masters/factories/factories-view"
 import FactoriesForm from "./masters/factories/factories-form"
+import ExcelImport from "./excel-import/excel-import"
 
 export const AppRoutes = () => {
     const router = createBrowserRouter(createRoutesFromElements(
@@ -23,6 +24,9 @@ export const AppRoutes = () => {
                 <Route path='/masters'>
                     <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
                     <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm />} />
+                </Route>
+                <Route path='/excel-import' key='/excel-import'>
+                    <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
                 </Route>
                 <Route path='/*' key='/*' element={<ExceptionComponent statusCode={403} statusMessage='Page Under Development' />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
