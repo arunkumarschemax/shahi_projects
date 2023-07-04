@@ -1,8 +1,8 @@
 import { AxiosRequestConfig } from 'axios';
-import { config as configs} from '../../config';
-import { AxiosInstance } from '../axios-instance';
+import { config as configs} from '../config';
+import { AxiosInstance } from './axios-instance';
 
-export class CommonAxiosServicePrs {
+export class CommonAxiosService {
     async axiosPostCall(urlEndPoint: string | {urlEndPoint: string, serviceUrl: string}, data?: any, config?: AxiosRequestConfig) {
         let hostIp = '';
         let queryString = '';

@@ -4,9 +4,9 @@ import {
     FactoryDto,
     FactoryResponseModel,
 } from "@project-management-system/shared-models";
-import { CommonAxiosServicePrs } from "../user-management/common-axios-service-prs";
+import { CommonAxiosService } from "../common-axios-service-prs";
 
-export class FactoryService extends CommonAxiosServicePrs {
+export class FactoryService extends CommonAxiosService {
     private FactoryController = "/factories";
 
     async createFactory(payload: FactoryDto): Promise<FactoryResponseModel> {

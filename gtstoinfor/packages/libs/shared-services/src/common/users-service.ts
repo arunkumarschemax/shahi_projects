@@ -1,9 +1,9 @@
-import { CommonAxiosServicePrs } from "../user-management/common-axios-service-prs";
 import { UsersDto, } from '../../../shared-models/src/common/users/users.dto'
 import {UsersResponseModel} from '../../../shared-models/src/common/users/users-response-objects'
 import { AllUsersResponseModel, UsersActivateDeactivateDto } from "@project-management-system/shared-models";
+import { CommonAxiosService } from '../common-axios-service-prs';
 
-export class UsersService extends CommonAxiosServicePrs {
+export class UsersService extends CommonAxiosService {
     private UsersController = "/users"
 
     async createUser(payload: UsersDto):Promise<UsersResponseModel> {
