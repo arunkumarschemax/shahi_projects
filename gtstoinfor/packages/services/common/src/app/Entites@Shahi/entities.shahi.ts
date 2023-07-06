@@ -191,13 +191,6 @@ export class ShahiEntities {
     })
     logisticsTypeName: string;
 
-
-    @Column('date', {
-        name: "EXF"
-    })
-    EXF: Date;
-
-
     @Column('int', {
         name: "orderQtyPcs"
     })
@@ -399,7 +392,7 @@ export class ShahiEntities {
     @Column('int', {
         name: "POOrderNO"
     })
-    POOrderNO: number;
+    POOrderNO: string;
 
 
     @Column('int', {
@@ -513,7 +506,7 @@ export class ShahiEntities {
     @Column('int', {
         name: "FRFabricCode"
     })
-    FRFabricCode: number;
+    FRFabricCode: string;
 
 
     @Column('varchar', {
@@ -601,9 +594,9 @@ export class ShahiEntities {
 
 
     @Column('date', {
-        name: "EXF2"
+        name: "EXF"
     })
-    EXF2: Date;
+    EXF: Date;
 
 
     @Column('date', {

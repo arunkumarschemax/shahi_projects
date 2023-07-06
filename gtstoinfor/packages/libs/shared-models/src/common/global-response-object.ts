@@ -28,9 +28,6 @@ export class GlobalResponseObject {
 // }
 
 export class CommonResponseModel extends GlobalResponseObject {
-    status: boolean;
-    errorCode: number;
-    internalMessage: string;
     data?: any
     /**
      *
@@ -46,9 +43,6 @@ export class CommonResponseModel extends GlobalResponseObject {
 
 export function generateResponseModel(dataClass: any, name?: string) {
     class GeneratedClass extends GlobalResponseObject {
-        status: boolean;
-        errorCode: number;
-        internalMessage: string;
         data: typeof dataClass;
 
         /**

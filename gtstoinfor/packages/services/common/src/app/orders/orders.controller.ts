@@ -13,8 +13,8 @@ export class OrdersController {
     ) { }
 
 
-    @Post('/saveOrdersData')
-    async saveOrdersData(@Body() dto:any): Promise<CommonResponseModel> {
+    @Post('/saveOrder')
+    async saveOrder(@Body() dto: any[]): Promise<CommonResponseModel> {
         try {
             return this.ordersService.saveOrdersData(dto);
         } catch (err) {

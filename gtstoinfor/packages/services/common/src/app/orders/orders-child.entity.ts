@@ -1,13 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { OrdersChildEntity } from "./orders-child.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { OrdersEntity } from "./orders.entity";
 
-@Entity('orders') //change the name
-export class OrdersEntity {
+@Entity('orders_child') //change the name
+export class OrdersChildEntity {
 
-    @PrimaryGeneratedColumn({
-        name: 'production_plan_id',
+    @PrimaryGeneratedColumn("increment", {
+        name: "id",
     })
-    productionPlanId: string
+    id: number;
 
     @Column('varchar', {
         nullable: true,
@@ -448,12 +448,14 @@ export class OrdersEntity {
     })
     POOrderAnswerDate: string;
 
+
     @Column('varchar', {
         nullable: true,
         name: "po_order_actual_date",
         length: 10
     })
     POOrderActualDate: string;
+
 
     @Column('varchar', {
         nullable: true,
@@ -467,7 +469,6 @@ export class OrdersEntity {
         name: "po_actual_order_qty_pcs"
     })
     POActualOrderQtyPcs: number;
-
 
     @Column('varchar', {
         nullable: true,
@@ -554,6 +555,7 @@ export class OrdersEntity {
     })
     displayMonthWKColumn: number;
 
+
     @Column('varchar', {
         nullable: true,
         name: "group_cd",
@@ -561,11 +563,13 @@ export class OrdersEntity {
     })
     groupCd: string;
 
+
     @Column('int', {
         nullable: true,
         name: "show_color_flag"
     })
     showColorFlag: number;
+
 
     @Column('int', {
         nullable: true,
@@ -573,11 +577,13 @@ export class OrdersEntity {
     })
     orderQtyCoeff: number;
 
+
     @Column('varchar', {
         nullable: true,
         name: "factory_comment"
     })
     factoryComment: string;
+
 
     @Column('varchar', {
         nullable: true,
@@ -605,12 +611,14 @@ export class OrdersEntity {
     })
     Ph1FirstDiscriminationFlagOld: string;
 
+
     @Column('varchar', {
         nullable: true,
         name: "ph1_first_disc_flag",
         length: 3
     })
     Ph1FirstDiscriminationFlag: string;
+
 
     @Column('varchar', {
         nullable: true,
@@ -934,6 +942,7 @@ export class OrdersEntity {
     })
     abnormalLTPO5: number;
 
-    @OneToMany(() => OrdersChildEntity, ordersChild => ordersChild.orders)
-    ordersChild: OrdersChildEntity;
+    @ManyToOne(() => OrdersEntity, orders => orders.ordersChild)
+    @JoinColumn({ name: 'production_plan_id' })
+    orders: OrdersEntity;
 }

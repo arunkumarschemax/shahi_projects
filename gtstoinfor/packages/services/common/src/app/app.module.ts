@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { appConfig } from '../../config';
+import { OrdersModule } from './orders/orders.module';
 
 
 @Module({
@@ -28,6 +29,7 @@ import { appConfig } from '../../config';
     }),
     FactoriesModule,
     UsersModule,
+    OrdersModule,
     AuthModule, JwtModule],
   controllers: [AppController],
   providers: [AppService],
