@@ -22,4 +22,14 @@ export class OrdersController {
 
         }
     }
+
+    @Post('/getSavedData')
+    async getSavedData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getSavedData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
 }

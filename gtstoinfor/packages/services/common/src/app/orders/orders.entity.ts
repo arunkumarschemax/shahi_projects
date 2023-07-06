@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { OrdersChildEntity } from "./orders-child.entity";
 
 @Entity('orders') //change the name
@@ -933,6 +933,11 @@ export class OrdersEntity {
         name: "abnormal_lt_po5"
     })
     abnormalLTPO5: number;
+
+    @CreateDateColumn({
+        name: 'created_at'
+    })
+    createdAt: string;
 
     @OneToMany(() => OrdersChildEntity, ordersChild => ordersChild.orders)
     ordersChild: OrdersChildEntity;

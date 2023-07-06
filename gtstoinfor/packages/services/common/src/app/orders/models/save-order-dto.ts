@@ -268,5 +268,6 @@ export class SaveOrderDto {
     abnormalLTPO4: number;
     @ApiProperty()
     abnormalLTPO5: number;
-
+    @ApiProperty()
+    version?: number;
 }

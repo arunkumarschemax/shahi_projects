@@ -6,7 +6,6 @@ export class OrdersChildAdapter {
 
     public convertDtoToEntity(dto: SaveOrderDto): OrdersChildEntity {
         const entity = new OrdersChildEntity()
-        // entity.productionPlanId = dto.productionPlanId;
         entity.year = dto.year;
         entity.planningSeason = dto.planningSeason
         entity.season = dto.season
@@ -139,6 +138,7 @@ export class OrdersChildAdapter {
         entity.abnormalLTPO3 = dto.abnormalLTPO3
         entity.abnormalLTPO4 = dto.abnormalLTPO4
         entity.abnormalLTPO5 = dto.abnormalLTPO5
+        entity.version = dto.version
         const ordersEntity = new OrdersEntity();
         ordersEntity.productionPlanId = dto.productionPlanId;
         entity.orders = ordersEntity;
@@ -281,6 +281,7 @@ export class OrdersChildAdapter {
         dto.abnormalLTPO3 = entity.abnormalLTPO3
         dto.abnormalLTPO4 = entity.abnormalLTPO4
         dto.abnormalLTPO5 = entity.abnormalLTPO5
+        dto.version = entity.version
         return dto
     }
 }

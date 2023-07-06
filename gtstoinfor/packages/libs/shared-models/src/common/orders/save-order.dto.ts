@@ -134,6 +134,7 @@ export class SaveOrderDto {
     abnormalLTPO3: number;
     abnormalLTPO4: number;
     abnormalLTPO5: number;
+    version: number;
 
     constructor(productionPlanId: string,
         year: string,
@@ -267,7 +268,7 @@ export class SaveOrderDto {
         abnormalLTPO2: number,
         abnormalLTPO3: number,
         abnormalLTPO4: number,
-        abnormalLTPO5: number) {
+        abnormalLTPO5: number, version?: number) {
 
         this.productionPlanId = productionPlanId;
         this.year = year;
@@ -402,6 +403,7 @@ export class SaveOrderDto {
         this.abnormalLTPO3 = abnormalLTPO3
         this.abnormalLTPO4 = abnormalLTPO4
         this.abnormalLTPO5 = abnormalLTPO5
+        this.version = version
     }
 
 }

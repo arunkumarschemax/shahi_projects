@@ -8,4 +8,8 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/saveOrder", payload)
     }
 
+    async getSavedData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getSavedData")
+    }
+
 }

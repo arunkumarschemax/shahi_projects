@@ -9,4 +9,12 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     ) {
         super(orderChildRepository.target, orderChildRepository.manager, orderChildRepository.queryRunner);
     }
+
+    async getVersion(productionPlanId: string): Promise<any[]> {
+        const query = this.createQueryBuilder('oc')
+            .select(`id,production_plan_id, version`)
+            .where(` production_plan_id = ${productionPlanId}`)
+            .orderBy(` version`, 'DESC')
+        return await query.getRawMany();
+    }
 }

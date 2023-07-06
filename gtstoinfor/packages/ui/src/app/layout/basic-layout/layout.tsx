@@ -76,6 +76,12 @@ export const baseRouterList = [
                 path: "excel-import",
                 filepath: "excel-import",
             },
+            {
+                label: "Grid View",
+                key: "grid-view",
+                path: "grid-view",
+                filepath: "grid-view",
+            },
         ],
     },
 ];
