@@ -9,14 +9,17 @@ import { OrdersChildAdapter } from './adapters/orders-child.adapter';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersChildRepository } from './repository/orders-child.repository';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
+import { OrdersDifferenceEntity } from './orders-difference-info.entity';
+import { OrderDifferenceRepository } from './repository/order-difference.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       OrdersEntity,
-      OrdersChildEntity
+      OrdersChildEntity,
+      OrdersDifferenceEntity
     ])],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, ApplicationExceptionHandler]
+  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository,OrderDifferenceRepository, ApplicationExceptionHandler]
 })
 export class OrdersModule { }
