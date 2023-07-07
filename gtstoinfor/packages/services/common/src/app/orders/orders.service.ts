@@ -110,13 +110,8 @@ export class OrdersService {
     // }
 
     async getQtyChangeData(): Promise<CommonResponseModel> {
-        const details = await this.ordersRepository.find()
-        const totalData: any[] = [];
-        for (const detail of details) {
-            const data = await this.ordersChildRepo.getQtyChangeData(detail.productionPlanId)
-            totalData.push(data)
-        }
-        return new CommonResponseModel(true, 1, 'data retrived', totalData)
+        const data = await this.ordersChildRepo.getQtyChangeData()
+        return new CommonResponseModel(true, 1, 'data retrived', data)
     }
 
     async getContractDateChangeData(): Promise<CommonResponseModel> {

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Form, Row, Table, Tabs, TabsProps, Tag } from 'antd';
+import { Card, Col, DatePicker, Form, Row, Select, Table, Tabs, TabsProps, Tag } from 'antd';
 import TabPane from 'antd/es/tabs/TabPane';
 import { OrdersService } from '@project-management-system/shared-services';
 
 const ChangesGrid = () => {
 
     const service = new OrdersService()
-    const [contractDateData,setContractDateData] = useState([])
-    const [qtyData,setQtyData] = useState([])
-    const [warehouseDateData,setWarehouseDateDate] = useState()
-    const [tableData,setTableData] = useState([])
+    const [contractDateData, setContractDateData] = useState([])
+    const [qtyData, setQtyData] = useState([])
+    const [warehouseDateData, setWarehouseDateDate] = useState([])
+    const [tableData, setTableData] = useState([])
+    const { RangePicker } = DatePicker
 
     const getContractDateChangeData = () => {
         service.getContractDateChangeData().then((res) => {
@@ -18,10 +19,10 @@ const ChangesGrid = () => {
     }
 
     const getQtyChangeData = () => {
-            service.getQtyChangeData().then((res) => {
-                setQtyData(res.data)
-                
-            })
+        service.getQtyChangeData().then((res) => {
+            setQtyData(res.data)
+
+        })
     }
 
     const getData = () => {
@@ -32,9 +33,9 @@ const ChangesGrid = () => {
 
     useEffect(() => {
         getContractDateChangeData()
-    },[])
+    }, [])
 
-  
+
 
     const columns = [
         {
@@ -50,33 +51,33 @@ const ChangesGrid = () => {
             title: 'Item code',
             dataIndex: 'itemCode'
         },
-      
+
     ];
 
-    const contractDateColumns= [
+    const contractDateColumns = [
         {
-            title:'Contract Date'
+            title: 'Contract Date'
         },
         {
-            title:'Revised Contract Date'
+            title: 'Revised Contract Date'
         }
     ]
 
-    const wareHouseDateColumns= [
+    const wareHouseDateColumns = [
         {
-            title:'Warehouse Date'
+            title: 'Warehouse Date'
         },
         {
-            title:'Revised Warehouse Date'
+            title: 'Revised Warehouse Date'
         }
     ]
 
-    const FabricOrderDateColumns= [
+    const FabricOrderDateColumns = [
         {
-            title:'FabricOrder Date'
+            title: 'FabricOrder Date'
         },
         {
-            title:'Revised FabricOrder Date'
+            title: 'Revised FabricOrder Date'
         }
     ]
 
@@ -84,17 +85,17 @@ const ChangesGrid = () => {
         {
             key: '1',
             label: <b>Contract date : 5 </b>,
-            children: <Table dataSource={contractDateData} columns={[...columns,...contractDateColumns]} />,
+            children: <Table dataSource={contractDateData} columns={[...columns, ...contractDateColumns]} />,
         },
         {
             key: '2',
             label: <b >Order Qty : 12</b>,
-            children: <Table dataSource={qtyData} columns={[...columns,...wareHouseDateColumns]} />,
+            children: <Table dataSource={qtyData} columns={[...columns, ...wareHouseDateColumns]} />,
         },
         {
             key: '3',
             label: <b>Fabric Order Date : 15</b>,
-            children: <Table dataSource={warehouseDateData} columns={[...columns,...FabricOrderDateColumns]} />,
+            children: <Table dataSource={warehouseDateData} columns={[...columns, ...FabricOrderDateColumns]} />,
         },
     ];
 
@@ -103,23 +104,25 @@ const ChangesGrid = () => {
             <Form layout={"vertical"} >
                 <Row gutter={[24, 24]}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                        <Form.Item name=""
-                            label=""
+                        <Form.Item name="contractDate"
+                            label="Contract Date"
                         >
+                            <RangePicker />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                        <Form.Item name="orderStatus"
+                            label="Order Status"
+                        >
+                            <Select></Select>
+                        </Form.Item>
+                    </Col>
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                         <Form.Item name=""
                             label=""
                         >
                         </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                        <Form.Item name=""
-                            label=""
-                        >
-                        </Form.Item>
-                    </Col>
+                    </Col> */}
                 </Row>
             </Form>
             <Tabs items={items} />
