@@ -3,8 +3,7 @@ import { AppDataSource } from "./app-datasource";
 import { OrdersModule } from './orders/orders.module';
 
 @Module({
-    providers : [...AppDataSource],
-    exports : [...AppDataSource],
+
     imports: [OrdersModule]
 })
 
