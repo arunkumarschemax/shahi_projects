@@ -109,17 +109,17 @@ export class OrdersService {
     // }
 
     async getQtyChangeData(): Promise<CommonResponseModel> {
-        const data = await this.ordersChildRepo.getQtyChangeData()
+        const data = await this.ordersRepository.getQtyChangeData()
         return new CommonResponseModel(true, 1, 'data retrived', data)
     }
 
     async getContractDateChangeData(): Promise<CommonResponseModel> {
-        const data = await this.ordersChildRepo.getContractDateChangeData()
+        const data = await this.ordersRepository.getContractDateChangeData()
         return new CommonResponseModel(true, 1, 'data retrived', data)
     }
 
     async getWharehouseDateChangeData(): Promise<CommonResponseModel> {
-        const data = await this.ordersChildRepo.getWharehouseDateChangeData()
+        const data = await this.ordersRepository.getWharehouseDateChangeData()
         return new CommonResponseModel(true, 1, 'data retrived', data)
     }
 }

@@ -9,7 +9,8 @@ const ChangesGrid = () => {
     const [contractDateData, setContractDateData] = useState([])
     const [qtyData, setQtyData] = useState([])
     const [warehouseDateData, setWarehouseDateDate] = useState([])
-    // const [tableData, setTableData] = useState([])
+    const [pageSize, setPageSize] = useState<number>(null);
+    const [page, setPage] = React.useState(1);
     const { RangePicker } = DatePicker
     const { Option } = Select
 
@@ -42,48 +43,48 @@ const ChangesGrid = () => {
 
     const columns = [
         {
-            title: 'S.No',
-            dataIndex: 'S.No',
-            key: 'S.No',
+            title: 'S No',
+            key: 'sno',
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
             title: 'Production plan id',
-            dataIndex: 'productionPlanId'
+            dataIndex: 'production_plan_id'
         },
         {
             title: 'Item code',
-            dataIndex: 'itemCode'
+            dataIndex: 'item_code'
         },
         {
             title: 'Order Quantity Pieces',
             children: [
                 {
                     title: 'Previous Value',
-                    dataIndex: 'oldValue',
-                    key: 'oldValue',
+                    dataIndex: 'old_val',
+                    key: 'old_val',
                 },
                 {
                     title: 'Revised Value',
-                    dataIndex: 'newValue',
-                    key: 'newValue',
+                    dataIndex: 'new_val',
+                    key: 'new_val',
                 },
             ],
         },
         {
             title: 'Contract Date',
-            dataIndex: 'contractDate'
+            dataIndex: 'contracted_date'
         },
         {
             title: 'Requested Warehouse Date',
-            dataIndex: 'requestedWarehuse Date'
+            dataIndex: 'requested_wh_date'
         }
     ];
 
     const columns1 = [
         {
-            title: 'S.No',
-            dataIndex: 'S.No',
-            key: 'S.No',
+            title: 'S No',
+            key: 'sno',
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
             title: 'Production plan id',
@@ -91,38 +92,38 @@ const ChangesGrid = () => {
         },
         {
             title: 'Item code',
-            dataIndex: 'itemCode'
+            dataIndex: 'item_code'
         },
         {
             title: 'Requested Warehouse Date',
             children: [
                 {
                     title: 'Previous Value',
-                    dataIndex: 'oldValue',
-                    key: 'oldValue',
+                    dataIndex: 'old_val',
+                    key: 'old_val',
                 },
                 {
                     title: 'Revised Value',
-                    dataIndex: 'newValue',
-                    key: 'newValue',
+                    dataIndex: 'new_val',
+                    key: 'new_val',
                 },
             ],
         },
         {
             title: 'Order Quantity Pieces',
-            dataIndex: 'orderQtyPcs'
+            dataIndex: 'order_qty_pcs'
         },
         {
             title: 'Contract Date',
-            dataIndex: 'contractDate'
+            dataIndex: 'contracted_date'
         }
     ];
 
     const columns2 = [
         {
-            title: 'S.No',
-            dataIndex: 'S.No',
-            key: 'S.No',
+            title: 'S No',
+            key: 'sno',
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
             title: 'Production plan id',
@@ -130,30 +131,30 @@ const ChangesGrid = () => {
         },
         {
             title: 'Item code',
-            dataIndex: 'itemCode'
+            dataIndex: 'item_code'
         },
         {
             title: 'Contract Date',
             children: [
                 {
                     title: 'Previous Value',
-                    dataIndex: 'oldValue',
-                    key: 'oldValue',
+                    dataIndex: 'old_val',
+                    key: 'old_val',
                 },
                 {
                     title: 'Revised Value',
-                    dataIndex: 'newValue',
-                    key: 'newValue',
+                    dataIndex: 'new_val',
+                    key: 'new_val',
                 },
             ],
         },
         {
             title: 'Order Quantity Pieces',
-            dataIndex: 'orderQtyPcs'
+            dataIndex: 'order_qty_pcs'
         },
         {
             title: 'Requested Warehouse Date',
-            dataIndex: 'requestedWarehuse Date'
+            dataIndex: 'requested_wh_date'
         }
     ];
 
