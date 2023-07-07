@@ -1,50 +1,26 @@
-// import { DataSource } from "typeorm"
+import { DataSource } from "typeorm"
+import { appConfig } from "../../config"
 
-// export const AppDataSource = new DataSource({
-//     type: "mssql",
-//     host: "172.25.23.4",
-//     username: "sa",
-//     password: "manager@123",
-//     database: "PRS",
-//     synchronize: false,
-    // extra: {
-    //     validateConnection: true,
-    //     trustServerCertificate: true,
-    // },
-    // options: {
-    //     cryptoCredentialsDetails: {
-    //         minVersion: "TLSv1",
-    //     },
-//     }
-// })  
+export const AppDataSource = new DataSource({
+    type: "mysql",
+      timezone: 'Z',
+      host: appConfig.database.host,
+      port: appConfig.database.port,
+      username: appConfig.database.username,
+      password: appConfig.database.password,
+      database: appConfig.database.dbName,
+      synchronize: false,
+      logging: true,
+      extra: {
+        connectionLimit: 20
+      }
+   
+})
 
-
-
-import { DataSource } from 'typeorm';
-
-export const AppDataSource = [
-    {
-        provide: 'DATA_SOURCE',
-        useFactory: async () => {
-            const dataSource = new DataSource({
-                type: 'mysql',
-                host: '172.25.23.4',
-                username: 'sa',
-                password: 'manager@123',
-                database: 'PRS',
-                synchronize: false,
-                extra: {
-                    validateConnection: true,
-                    trustServerCertificate: true,
-                },
-            });
-            return dataSource.initialize()
-                .then(() => {
-                    console.log("Data Source has been initialized!")
-                })
-                .catch((err) => {
-                    console.error("Error during Data Source initialization", err)
-                })
-        },
-    },
-];
+AppDataSource.initialize()
+    .then(() => {
+        console.log("Data Source has been initialized!")
+    })
+    .catch((err) => {
+        console.error("Error during Data Source initialization", err)
+    })

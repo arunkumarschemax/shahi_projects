@@ -7,6 +7,7 @@ import { OrdersAdapter } from './adapters/orders.adapter';
 import { OrdersChildRepository } from './repository/orders-child.repository';
 import { OrdersChildEntity } from './orders-child.entity';
 import { OrdersChildAdapter } from './adapters/orders-child.adapter';
+import { AppDataSource } from '../app-datasource';
 
 @Injectable()
 export class OrdersService {
@@ -69,7 +70,7 @@ export class OrdersService {
     }
 
     async getContractDateChangeData(): Promise<CommonResponseModel> {
-        const details = await this.ordersRepository.find()
+        const details = await AppDataSource.query('SELECT production_plan_id FROM orders_child   ORDER BY date(created_at) DESC LIMIT 2 ')
         const totalData: any[] = [];
         for (const detail of details) {
             const data = await this.ordersChildRepo.getContractDateChangeData(detail.productionPlanId)

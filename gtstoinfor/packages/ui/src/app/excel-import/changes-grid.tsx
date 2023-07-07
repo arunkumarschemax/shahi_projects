@@ -4,23 +4,38 @@ import TabPane from 'antd/es/tabs/TabPane';
 import { OrdersService } from '@project-management-system/shared-services';
 
 const ChangesGrid = () => {
-    const service = new OrdersService();
-    const [qtyData, setQtyData] = useState<any[]>([])
-    const [reqWhrDateData, setReqWhrDateData] = useState<any[]>([])
-    const [contDateData, setContDateData] = useState<any[]>([])
+
+    const service = new OrdersService()
+    const [contractDateData, setContractDateData] = useState([])
+    const [qtyData, setQtyData] = useState([])
+    const [warehouseDateData, setWarehouseDateDate] = useState([])
+    const [tableData, setTableData] = useState([])
     const { RangePicker } = DatePicker
 
-    useEffect(() => {
-        getQtyChangedData()
-    }, [])
-
-    const getQtyChangedData = () => {
-        service.getQtyChangeData().then(res => {
-            if (res.status) {
-                setQtyData(res.data)
-            }
+    const getContractDateChangeData = () => {
+        service.getContractDateChangeData().then((res) => {
+            setContractDateData(res.data)
         })
     }
+
+    const getQtyChangeData = () => {
+        service.getQtyChangeData().then((res) => {
+            setQtyData(res.data)
+
+        })
+    }
+
+    const getData = () => {
+        service.getWharehouseDateChangeData().then((res) => {
+            setWarehouseDateDate(res.data)
+        })
+    }
+
+    useEffect(() => {
+        getContractDateChangeData()
+    }, [])
+
+
 
     const columns = [
         {
@@ -36,124 +51,51 @@ const ChangesGrid = () => {
             title: 'Item code',
             dataIndex: 'itemCode'
         },
-        {
-            title: 'Quantity',
-            children: [
-                {
-                    title: 'Previous Value',
-                    dataIndex: 'oldValue',
-                    key: 'oldValue',
-                },
-                {
-                    title: 'Revised Value',
-                    dataIndex: 'newValue',
-                    key: 'newValue',
-                },
-            ],
-        },
-        {
-            title: 'Contract Date',
-            dataIndex: 'contractDate'
-        },
-        {
-            title: 'Requested Warehouse Date',
-            dataIndex: 'requestedWarehuse Date'
-        }
+
     ];
 
-    const columns1 = [
+    const contractDateColumns = [
         {
-            title: 'S.No',
-            dataIndex: 'S.No',
-            key: 'S.No',
+            title: 'Contract Date'
         },
         {
-            title: 'Production plan id',
-            dataIndex: 'productionPlanId'
-        },
-        {
-            title: 'Item code',
-            dataIndex: 'itemCode'
-        },
-        {
-            title: 'Requested Warehouse Date',
-            children: [
-                {
-                    title: 'Previous Value',
-                    dataIndex: 'oldValue',
-                    key: 'oldValue',
-                },
-                {
-                    title: 'Revised Value',
-                    dataIndex: 'newValue',
-                    key: 'newValue',
-                },
-            ],
-        },
-        {
-            title: 'Contract Date',
-            dataIndex: 'contractDate'
-        },
-        {
-            title: 'Quantity',
-            dataIndex: 'orderQtyPcs'
+            title: 'Revised Contract Date'
         }
-    ];
+    ]
 
-    const columns2 = [
+    const wareHouseDateColumns = [
         {
-            title: 'S.No',
-            dataIndex: 'S.No',
-            key: 'S.No',
+            title: 'Warehouse Date'
         },
         {
-            title: 'Production plan id',
-            dataIndex: 'productionPlanId'
-        },
-        {
-            title: 'Item code',
-            dataIndex: 'itemCode'
-        },
-        {
-            title: 'Contract Date',
-            children: [
-                {
-                    title: 'Previous Value',
-                    dataIndex: 'oldValue',
-                    key: 'oldValue',
-                },
-                {
-                    title: 'Revised Value',
-                    dataIndex: 'newValue',
-                    key: 'newValue',
-                },
-            ],
-        },
-        {
-            title: 'Quantity',
-            dataIndex: 'orderQtyPcs'
-        },
-        {
-            title: 'Requested Warehouse Date',
-            dataIndex: 'requestedWarehuse Date'
+            title: 'Revised Warehouse Date'
         }
-    ];
+    ]
+
+    const FabricOrderDateColumns = [
+        {
+            title: 'FabricOrder Date'
+        },
+        {
+            title: 'Revised FabricOrder Date'
+        }
+    ]
 
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: 'Order Quantity',
-            children: <Table dataSource={qtyData} columns={columns} />,
+            label: <b>Contract date : 5 </b>,
+            children: <Table dataSource={contractDateData} columns={[...columns, ...contractDateColumns]} />,
         },
         {
             key: '2',
-            label: 'Requested Warehouse Date',
-            children: <Table dataSource={reqWhrDateData} columns={columns1} />,
+            label: <b >Order Qty : 12</b>,
+            children: <Table dataSource={qtyData} columns={[...columns, ...wareHouseDateColumns]} />,
         },
         {
             key: '3',
-            label: 'Contract Date',
-            children: <Table dataSource={contDateData} columns={columns2} />,
+            label: <b>Fabric Order Date : 15</b>,
+            children: <Table dataSource={warehouseDateData} columns={[...columns, ...FabricOrderDateColumns]} />,
         },
     ];
 
