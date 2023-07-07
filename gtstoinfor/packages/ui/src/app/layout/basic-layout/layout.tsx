@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined } from '@ant-design/icons'
+import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { CommonHeader } from '../header/header';
 import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
@@ -64,20 +64,20 @@ export const baseRouterList = [
         ],
     },
     {
-        label: "Excel",
+        label: "Orders",
         key: "excel-import",
         path: "excel-import",
-        icon: <PicCenterOutlined />,
+        icon: <FileExcelOutlined />,
         filepath: "excel-import",
         children: [
             {
-                label: "Add Excel",
+                label: "Add Orders",
                 key: "excel-import",
                 path: "excel-import",
                 filepath: "excel-import",
             },
             {
-                label: "Grid View",
+                label: "View Orders",
                 key: "grid-view",
                 path: "grid-view",
                 filepath: "grid-view",

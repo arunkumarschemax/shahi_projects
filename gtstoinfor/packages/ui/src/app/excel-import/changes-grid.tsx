@@ -1,10 +1,12 @@
 import React from 'react';
-import { Card, Col, Form, Row, Table } from 'antd';
+import { Card, Col, Form, Row, Table, Tabs, TabsProps, Tag } from 'antd';
+import TabPane from 'antd/es/tabs/TabPane';
 
 const ChangesGrid = () => {
     const dataSource = [
         {
             'S.No': '1',
+            'productionPlanId': '123',
             'Column 1': '100',
             'Column 1 Changed': '150',
             'Column 2': 'Yes',
@@ -12,6 +14,7 @@ const ChangesGrid = () => {
         },
         {
             'S.No': '2',
+            'productionPlanId': '123',
             'Column 1': '150',
             'Column 1 Changed': '200',
             'Column 2': 'Done',
@@ -24,6 +27,14 @@ const ChangesGrid = () => {
             title: 'S.No',
             dataIndex: 'S.No',
             key: 'S.No',
+        },
+        {
+            title: 'Production plan id',
+            dataIndex: 'productionPlanId'
+        },
+        {
+            title: 'Item code',
+            dataIndex: 'itemCode'
         },
         {
             title: 'Quantity',
@@ -40,55 +51,29 @@ const ChangesGrid = () => {
                 },
             ],
         },
+        
+    ];
+
+    const items: TabsProps['items'] = [
         {
-            title: 'Contract Date',
-            children: [
-                {
-                    title: 'Previous Value',
-                    dataIndex: 'Column 2',
-                    key: 'Column 2',
-                },
-                {
-                    title: 'Revised Value',
-                    dataIndex: 'Column 2 Changed',
-                    key: 'Column 2 Changed',
-                },
-            ],
+            key: '1',
+            label: <Tag color='blue'>Column 1</Tag>,
+            children: <Table dataSource={dataSource} columns={columns} />,
         },
         {
-            title: 'Phase',
-            children: [
-                {
-                    title: 'Previous Value',
-                    dataIndex: 'Column 1',
-                    key: 'Column 1',
-                },
-                {
-                    title: 'Revised Value',
-                    dataIndex: 'Column 1 Changed',
-                    key: 'Column 1 Changed',
-                },
-            ],
+            key: '2',
+            label: <Tag color='blue'>Column 1</Tag>,
+            children: <Table dataSource={dataSource} columns={columns} />,
         },
         {
-            title: 'Warehouse Date',
-            children: [
-                {
-                    title: 'Previous Value',
-                    dataIndex: 'Column 2',
-                    key: 'Column 2',
-                },
-                {
-                    title: 'Revised Value',
-                    dataIndex: 'Column 2 Changed',
-                    key: 'Column 2 Changed',
-                },
-            ],
+            key: '3',
+            label: <Tag color='blue'>Column 1</Tag>,
+            children: <Table dataSource={dataSource} columns={columns} />,
         },
     ];
 
     return (
-        <Card>
+        <Card title='Revised orders'>
             <Form layout={"vertical"} >
                 <Row gutter={[24, 24]}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
@@ -111,7 +96,7 @@ const ChangesGrid = () => {
                     </Col>
                 </Row>
             </Form>
-            <Table dataSource={dataSource} columns={columns} bordered />
+            <Tabs items={items} />
         </Card>
     );
 };

@@ -67,7 +67,7 @@ export default function ExcelImport() {
           type="primary"
           onClick={handleUpload}
           loading={loading}
-          disabled={!formData}
+          disabled={formData.length == 0}
         >
           Upload
         </Button>
