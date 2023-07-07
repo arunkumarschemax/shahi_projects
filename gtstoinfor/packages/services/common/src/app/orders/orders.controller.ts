@@ -23,10 +23,40 @@ export class OrdersController {
         }
     }
 
-    @Post('/getSavedData')
-    async getSavedData(): Promise<CommonResponseModel> {
+    // @Post('/getSavedData')
+    // async getSavedData(): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.getSavedData();
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+    //     }
+    // }
+
+    @Post('/getQtyChangeData')
+    async getQtyChangeData(): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getSavedData();
+            return this.ordersService.getQtyChangeData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+    @Post('/getContractDateChangeData')
+    async getContractDateChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getContractDateChangeData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+    @Post('/getWharehouseDateChangeData')
+    async getWharehouseDateChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getWharehouseDateChangeData();
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
