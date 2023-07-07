@@ -46,7 +46,6 @@ export default function ExcelImport() {
       }
       ordersService.saveOrder(reqObj).then((res) => {
         if (res.status) {
-
           message.success(res.internalMessage)
         }
       }).finally(() => {
@@ -71,9 +70,6 @@ export default function ExcelImport() {
         >
           Upload
         </Button>
-      </Card>
-      <Card title='Data'>
-
       </Card>
     </>
   );

@@ -39,7 +39,6 @@ export default function UserCreationForm() {
     try {
       await factoryServices.getActiveFactories().then(res => {
         if (res.status) {
-          console.log(res.data, '/////////////////////');
           setActiveFactoryData(res.data)
         } else {
           message.error(res.internalMessage)

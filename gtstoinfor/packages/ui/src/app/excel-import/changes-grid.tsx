@@ -9,8 +9,15 @@ const ChangesGrid = () => {
     const [contractDateData, setContractDateData] = useState([])
     const [qtyData, setQtyData] = useState([])
     const [warehouseDateData, setWarehouseDateDate] = useState([])
-    const [tableData, setTableData] = useState([])
+    // const [tableData, setTableData] = useState([])
     const { RangePicker } = DatePicker
+    const { Option } = Select
+
+    useEffect(() => {
+        getContractDateChangeData()
+        getQtyChangeData()
+        getWharehouseDateChangeData()
+    }, [])
 
     const getContractDateChangeData = () => {
         service.getContractDateChangeData().then((res) => {
@@ -25,17 +32,13 @@ const ChangesGrid = () => {
         })
     }
 
-    const getData = () => {
+    const getWharehouseDateChangeData = () => {
         service.getWharehouseDateChangeData().then((res) => {
             setWarehouseDateDate(res.data)
         })
     }
 
-    useEffect(() => {
-        getContractDateChangeData()
-    }, [])
-
-
+    console.log(contractDateData)
 
     const columns = [
         {
@@ -51,51 +54,124 @@ const ChangesGrid = () => {
             title: 'Item code',
             dataIndex: 'itemCode'
         },
-
+        {
+            title: 'Order Quantity Pieces',
+            children: [
+                {
+                    title: 'Previous Value',
+                    dataIndex: 'oldValue',
+                    key: 'oldValue',
+                },
+                {
+                    title: 'Revised Value',
+                    dataIndex: 'newValue',
+                    key: 'newValue',
+                },
+            ],
+        },
+        {
+            title: 'Contract Date',
+            dataIndex: 'contractDate'
+        },
+        {
+            title: 'Requested Warehouse Date',
+            dataIndex: 'requestedWarehuse Date'
+        }
     ];
 
-    const contractDateColumns = [
+    const columns1 = [
         {
-            title: 'Contract Date'
+            title: 'S.No',
+            dataIndex: 'S.No',
+            key: 'S.No',
         },
         {
-            title: 'Revised Contract Date'
+            title: 'Production plan id',
+            dataIndex: 'productionPlanId'
+        },
+        {
+            title: 'Item code',
+            dataIndex: 'itemCode'
+        },
+        {
+            title: 'Requested Warehouse Date',
+            children: [
+                {
+                    title: 'Previous Value',
+                    dataIndex: 'oldValue',
+                    key: 'oldValue',
+                },
+                {
+                    title: 'Revised Value',
+                    dataIndex: 'newValue',
+                    key: 'newValue',
+                },
+            ],
+        },
+        {
+            title: 'Order Quantity Pieces',
+            dataIndex: 'orderQtyPcs'
+        },
+        {
+            title: 'Contract Date',
+            dataIndex: 'contractDate'
         }
-    ]
+    ];
 
-    const wareHouseDateColumns = [
+    const columns2 = [
         {
-            title: 'Warehouse Date'
+            title: 'S.No',
+            dataIndex: 'S.No',
+            key: 'S.No',
         },
         {
-            title: 'Revised Warehouse Date'
-        }
-    ]
-
-    const FabricOrderDateColumns = [
-        {
-            title: 'FabricOrder Date'
+            title: 'Production plan id',
+            dataIndex: 'productionPlanId'
         },
         {
-            title: 'Revised FabricOrder Date'
+            title: 'Item code',
+            dataIndex: 'itemCode'
+        },
+        {
+            title: 'Contract Date',
+            children: [
+                {
+                    title: 'Previous Value',
+                    dataIndex: 'oldValue',
+                    key: 'oldValue',
+                },
+                {
+                    title: 'Revised Value',
+                    dataIndex: 'newValue',
+                    key: 'newValue',
+                },
+            ],
+        },
+        {
+            title: 'Order Quantity Pieces',
+            dataIndex: 'orderQtyPcs'
+        },
+        {
+            title: 'Requested Warehouse Date',
+            dataIndex: 'requestedWarehuse Date'
         }
-    ]
+    ];
 
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <b>Contract date : 5 </b>,
-            children: <Table dataSource={contractDateData} columns={[...columns, ...contractDateColumns]} />,
+            label: <b>Order Qty : {qtyData?.length} </b>,
+            children: <Table dataSource={qtyData} columns={columns} />,
         },
         {
             key: '2',
-            label: <b >Order Qty : 12</b>,
-            children: <Table dataSource={qtyData} columns={[...columns, ...wareHouseDateColumns]} />,
+            label: <b >Requested Warehouse Date : {warehouseDateData?.length}</b>,
+            children: <Table dataSource={warehouseDateData} columns={columns1} />,
         },
         {
             key: '3',
-            label: <b>Fabric Order Date : 15</b>,
-            children: <Table dataSource={warehouseDateData} columns={[...columns, ...FabricOrderDateColumns]} />,
+            label: <b>Contract date : {contractDateData?.length}</b>,
+            children: <Table dataSource={contractDateData} columns={columns2} />,
         },
     ];
 
@@ -114,15 +190,12 @@ const ChangesGrid = () => {
                         <Form.Item name="orderStatus"
                             label="Order Status"
                         >
-                            <Select></Select>
+                            <Select>
+                                <Option key='new' value="new">New</Option>
+                                <Option key='unaccepted' value="unaccepted">Unaccepted</Option>
+                            </Select>
                         </Form.Item>
                     </Col>
-                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                        <Form.Item name=""
-                            label=""
-                        >
-                        </Form.Item>
-                    </Col> */}
                 </Row>
             </Form>
             <Tabs items={items} />
