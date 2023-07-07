@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col, DatePicker, Form, Row, Select, Table, Tabs, TabsProps, Tag } from 'antd';
-import TabPane from 'antd/es/tabs/TabPane';
+import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, TabsProps, Tooltip } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
 
 const ChangesGrid = () => {
@@ -56,19 +55,19 @@ const ChangesGrid = () => {
             dataIndex: 'item_code'
         },
         {
+            title: 'Item Name',
+            dataIndex: 'itemName'
+        },
+        {
             title: 'Order Quantity Pieces',
-            children: [
-                {
-                    title: 'Previous Value',
-                    dataIndex: 'old_val',
-                    key: 'old_val',
-                },
-                {
-                    title: 'Revised Value',
-                    dataIndex: 'new_val',
-                    key: 'new_val',
-                },
-            ],
+            dataIndex: 'new_val',
+            render: (text, record) => (
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '150px' }} title={`Previous Value:  ${record.old_val} Revised Value:  ${record.new_val}`}>
+                    <span style={{ color: 'red' }}>
+                        {record.new_val}
+                    </span>
+                </Tooltip>
+            )
         },
         {
             title: 'Contract Date',
@@ -77,6 +76,10 @@ const ChangesGrid = () => {
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'requested_wh_date'
+        },
+        {
+            title: 'Order Status',
+            dataIndex: 'order_status'
         }
     ];
 
@@ -88,26 +91,26 @@ const ChangesGrid = () => {
         },
         {
             title: 'Production plan id',
-            dataIndex: 'productionPlanId'
+            dataIndex: 'production_plan_id'
         },
         {
             title: 'Item code',
             dataIndex: 'item_code'
         },
         {
+            title: 'Item Name',
+            dataIndex: 'itemName'
+        },
+        {
             title: 'Requested Warehouse Date',
-            children: [
-                {
-                    title: 'Previous Value',
-                    dataIndex: 'old_val',
-                    key: 'old_val',
-                },
-                {
-                    title: 'Revised Value',
-                    dataIndex: 'new_val',
-                    key: 'new_val',
-                },
-            ],
+            dataIndex: 'new_val',
+            render: (text, record) => (
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Value:  ${record.old_val} Revised Value:  ${record.new_val}`}>
+                    <span style={{ color: 'red' }}>
+                        {record.new_val}
+                    </span>
+                </Tooltip>
+            )
         },
         {
             title: 'Order Quantity Pieces',
@@ -116,6 +119,10 @@ const ChangesGrid = () => {
         {
             title: 'Contract Date',
             dataIndex: 'contracted_date'
+        },
+        {
+            title: 'Order Status',
+            dataIndex: 'order_status'
         }
     ];
 
@@ -127,34 +134,39 @@ const ChangesGrid = () => {
         },
         {
             title: 'Production plan id',
-            dataIndex: 'productionPlanId'
+            dataIndex: 'production_plan_id'
         },
         {
             title: 'Item code',
             dataIndex: 'item_code'
         },
         {
+            title: 'Item Name',
+            dataIndex: 'itemName'
+        },
+        {
             title: 'Contract Date',
-            children: [
-                {
-                    title: 'Previous Value',
-                    dataIndex: 'old_val',
-                    key: 'old_val',
-                },
-                {
-                    title: 'Revised Value',
-                    dataIndex: 'new_val',
-                    key: 'new_val',
-                },
-            ],
+            dataIndex: 'new_val',
+            render: (text, record) => (
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Value:  ${record.old_val} Revised Value:  ${record.new_val}`}>
+                    <span style={{ color: 'red' }}>
+                        {record.new_val}
+                    </span>
+                </Tooltip>
+            )
         },
         {
             title: 'Order Quantity Pieces',
-            dataIndex: 'order_qty_pcs'
+            dataIndex: 'order_qty_pcs',
+
         },
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'requested_wh_date'
+        },
+        {
+            title: 'Order Status',
+            dataIndex: 'order_status'
         }
     ];
 
@@ -191,11 +203,17 @@ const ChangesGrid = () => {
                         <Form.Item name="orderStatus"
                             label="Order Status"
                         >
-                            <Select>
+                            <Select
+                                allowClear
+                                placeholder='select order status'
+                            >
                                 <Option key='new' value="new">New</Option>
                                 <Option key='unaccepted' value="unaccepted">Unaccepted</Option>
                             </Select>
                         </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                        <Button type="primary" style={{ marginTop: '25px' }}>Search</Button>
                     </Col>
                 </Row>
             </Form>
