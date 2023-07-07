@@ -10,6 +10,7 @@ import { OrdersChildAdapter } from './adapters/orders-child.adapter';
 
 @Injectable()
 export class OrdersService {
+    ordersChildRepository: any;
 
     constructor(
         private ordersAdapter: OrdersAdapter,
@@ -57,9 +58,38 @@ export class OrdersService {
         }
     }
 
-    async getSavedData(): Promise<CommonResponseModel> {
+    // async getSavedData(): Promise<CommonResponseModel> {
+    //     const details = await this.ordersChildRepo.getData()
+    //     return new CommonResponseModel(true, 1, 'data retrived', details)
+    // }
+
+    async getQtyChangeData(): Promise<CommonResponseModel> {
         const details = await this.ordersRepository.find()
-        return new CommonResponseModel(true, 1, 'data retrived', details)
+        const totalData: any[] = [];
+        for (const detail of details) {
+            const data = await this.ordersChildRepo.getQtyChangeData(detail.productionPlanId)
+            totalData.push(data)
+        }
+        return new CommonResponseModel(true, 1, 'data retrived', totalData)
     }
 
+    async getContractDateChangeData(): Promise<CommonResponseModel> {
+        const details = await this.ordersRepository.find()
+        const totalData: any[] = [];
+        for (const detail of details) {
+            const data = await this.ordersChildRepo.getContractDateChangeData(detail.productionPlanId)
+            totalData.push(data)
+        }
+        return new CommonResponseModel(true, 1, 'data retrived', totalData)
+    }
+
+    async getWharehouseDateChangeData(): Promise<CommonResponseModel> {
+        const details = await this.ordersRepository.find()
+        const totalData: any[] = [];
+        for (const detail of details) {
+            const data = await this.ordersChildRepo.getWharehouseDateChangeData(detail.productionPlanId)
+            totalData.push(data)
+        }
+        return new CommonResponseModel(true, 1, 'data retrived', totalData)
+    }
 }
