@@ -103,10 +103,10 @@ export class OrdersService {
         }
     }
 
-    // async getSavedData(): Promise<CommonResponseModel> {
-    //     const details = await this.ordersChildRepo.getData()
-    //     return new CommonResponseModel(true, 1, 'data retrived', details)
-    // }
+    async getOrdersData(): Promise<CommonResponseModel> {
+        const details = await this.ordersRepository.getOrdersData()
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+    }
 
     async getQtyChangeData(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getQtyChangeData()

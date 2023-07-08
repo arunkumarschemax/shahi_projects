@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, TabsProps, Tooltip } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
-import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 
 const ChangesGrid = () => {
 
@@ -54,7 +54,7 @@ const ChangesGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Production plan id',
+            title: 'Production Plan Id',
             dataIndex: 'production_plan_id'
         },
         {
@@ -81,7 +81,7 @@ const ChangesGrid = () => {
             )
         },
         {
-            title: 'Contract Date',
+            title: 'Contracted Date',
             dataIndex: 'contracted_date'
         },
         {
@@ -105,7 +105,7 @@ const ChangesGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Production plan id',
+            title: 'Production Plan Id',
             dataIndex: 'production_plan_id'
         },
         {
@@ -136,7 +136,7 @@ const ChangesGrid = () => {
             dataIndex: 'order_qty_pcs'
         },
         {
-            title: 'Contract Date',
+            title: 'Contracted Date',
             dataIndex: 'contracted_date'
         },
         {
@@ -156,7 +156,7 @@ const ChangesGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Production plan id',
+            title: 'Production Plan Id',
             dataIndex: 'production_plan_id'
         },
         {
@@ -168,7 +168,7 @@ const ChangesGrid = () => {
             dataIndex: 'itemName'
         },
         {
-            title: 'Contract Date',
+            title: 'Contracted Date',
             dataIndex: 'new_val',
             render: (text, record) => (
                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.old_val} Revised Date:  ${record.new_val}`}>
@@ -249,7 +249,7 @@ const ChangesGrid = () => {
         },
         {
             key: '3',
-            label: <b>Contract date : {filteredContractDateData?.length}</b>,
+            label: <b>Contracted date : {filteredContractDateData?.length}</b>,
             children: <Table dataSource={filteredContractDateData} columns={columns2} />,
         },
     ];
@@ -269,7 +269,7 @@ const ChangesGrid = () => {
                 <Row gutter={[24, 24]}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                         <Form.Item name="contractDate"
-                            label="Contract Date"
+                            label="Contracted Date"
                         >
                             <RangePicker onChange={EstimatedETDDate} />
                         </Form.Item>
@@ -287,11 +287,18 @@ const ChangesGrid = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 2 }}>
-                        <Button type="primary" style={{ marginTop: '25px' }} onClick={getFilterdData}>Search</Button>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                        <Button onClick={onReset} style={{ marginTop: '25px' }}>Reset</Button>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ marginTop: 22 }}>
+                        <Button
+                            type="primary"
+                            icon={<SearchOutlined />}
+                            style={{ marginRight: 50, width: 80 }}
+                            htmlType="button"
+                            onClick={getFilterdData}>Search</Button>
+                        <Button
+                            type="primary"
+                            icon={<UndoOutlined />}
+                            htmlType="submit"
+                            onClick={onReset}>Reset</Button>
                     </Col>
                 </Row>
             </Form>

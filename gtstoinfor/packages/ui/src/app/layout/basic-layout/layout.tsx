@@ -77,6 +77,12 @@ export const baseRouterList = [
                 filepath: "excel-import",
             },
             {
+                label: "Revised Orders",
+                key: "changes-view",
+                path: "changes-view",
+                filepath: "changes-view",
+            },
+            {
                 label: "View Orders",
                 key: "grid-view",
                 path: "grid-view",
@@ -105,7 +111,7 @@ export default function BasicLayout() {
                 }}
             >
                 <ProLayout
-                    title='Shahi'
+                    title='SHAHI'
                     locale='en-US'
                     siderWidth={240}
                     colorPrimary='#29397d'

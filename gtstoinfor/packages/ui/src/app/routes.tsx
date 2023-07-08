@@ -9,6 +9,7 @@ import FactoriesView from "./masters/factories/factories-view"
 import FactoriesForm from "./masters/factories/factories-form"
 import ExcelImport from "./excel-import/excel-import"
 import ChangesGrid from "./excel-import/changes-grid"
+import AllOrdersGridView from "./excel-import/orders-view-grid"
 
 export const AppRoutes = () => {
     const router = createBrowserRouter(createRoutesFromElements(
@@ -28,7 +29,8 @@ export const AppRoutes = () => {
                 </Route>
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
-                    <Route path='grid-view' key='/grid-view' element={<ChangesGrid />} />
+                    <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
+                    <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
                 </Route>
                 <Route path='/*' key='/*' element={<ExceptionComponent statusCode={403} statusMessage='Page Under Development' />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

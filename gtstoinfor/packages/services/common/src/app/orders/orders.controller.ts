@@ -23,15 +23,15 @@ export class OrdersController {
         }
     }
 
-    // @Post('/getSavedData')
-    // async getSavedData(): Promise<CommonResponseModel> {
-    //     try {
-    //         return this.ordersService.getSavedData();
-    //     } catch (err) {
-    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    @Post('/getOrdersData')
+    async getOrdersData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getOrdersData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
-    //     }
-    // }
+        }
+    }
 
     @Post('/getQtyChangeData')
     async getQtyChangeData(): Promise<CommonResponseModel> {
