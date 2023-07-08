@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, TabsProps, Tooltip } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
+import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 
 const ChangesGrid = () => {
 
@@ -72,6 +73,10 @@ const ChangesGrid = () => {
                     <span style={{ color: 'red' }}>
                         {record.new_val}
                     </span>
+                    &nbsp;&nbsp;
+                    <span>
+                        {Number(record.old_val) < Number(record.new_val) ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                    </span>
                 </Tooltip>
             )
         },
@@ -115,9 +120,13 @@ const ChangesGrid = () => {
             title: 'Requested Warehouse Date',
             dataIndex: 'new_val',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Value:  ${record.old_val} Revised Value:  ${record.new_val}`}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.old_val} Revised Date:  ${record.new_val}`}>
                     <span style={{ color: 'red' }}>
                         {record.new_val}
+                    </span>
+                    &nbsp;&nbsp;
+                    <span>
+                        {record.old_val < record.new_val ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
                     </span>
                 </Tooltip>
             )
@@ -162,9 +171,13 @@ const ChangesGrid = () => {
             title: 'Contract Date',
             dataIndex: 'new_val',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Value:  ${record.old_val} Revised Value:  ${record.new_val}`}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.old_val} Revised Date:  ${record.new_val}`}>
                     <span style={{ color: 'red' }}>
                         {record.new_val}
+                    </span>
+                    &nbsp;&nbsp;
+                    <span>
+                        {record.old_val < record.new_val ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
                     </span>
                 </Tooltip>
             )
@@ -214,7 +227,7 @@ const ChangesGrid = () => {
             setFilteredWarehouseDateDate(filteredReqWhData)
         }
         if (startDate && endDate) {
-            filteredContractData = filteredContractData.filter(record => record.contracted_date >= startDate && record.contracted_date <= endDate);
+            filteredContractData = filteredContractData.filter(record => record.new_val >= startDate && record.new_val <= endDate);
             filteredQtyData = filteredQtyData.filter(record => record.contracted_date >= startDate && record.contracted_date <= endDate)
             filteredReqWhData = filteredReqWhData.filter(record => record.contracted_date >= startDate && record.contracted_date <= endDate)
             setFilteredContractDateData(filteredContractData);
