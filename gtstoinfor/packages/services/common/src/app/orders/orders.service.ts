@@ -122,4 +122,14 @@ export class OrdersService {
         const data = await this.ordersRepository.getWharehouseDateChangeData()
         return new CommonResponseModel(true, 1, 'data retrived', data)
     }
+
+    async getUnitWiseOrders(): Promise<CommonResponseModel>{
+        const data = await this.ordersRepository.getUnitCount()
+        return new CommonResponseModel(true,222,'data retrieved',data)
+    }
+
+    async getDivisionWiseOrders(): Promise<CommonResponseModel>{
+        const data = await this.ordersRepository.getDivisionCount()
+        return new CommonResponseModel(true,222,'data retrieved',data)
+    }
 }

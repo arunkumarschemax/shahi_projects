@@ -10,6 +10,7 @@ import FactoriesForm from "./masters/factories/factories-form"
 import ExcelImport from "./excel-import/excel-import"
 import ChangesGrid from "./excel-import/changes-grid"
 import AllOrdersGridView from "./excel-import/orders-view-grid"
+import { Dashboard } from "./common/dashboards/dashboard"
 
 export const AppRoutes = () => {
     const router = createBrowserRouter(createRoutesFromElements(
@@ -32,7 +33,7 @@ export const AppRoutes = () => {
                     <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
                     <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
                 </Route>
-                <Route path='/*' key='/*' element={<ExceptionComponent statusCode={403} statusMessage='Page Under Development' />} />
+                <Route path='/dashboard' key='/dashboard' element={<Dashboard/> } />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
             <Route path="/login" key='/login' element={<Login />} />

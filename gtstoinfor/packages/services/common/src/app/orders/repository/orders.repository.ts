@@ -42,4 +42,18 @@ export class OrdersRepository extends Repository<OrdersEntity> {
             .where(` column_name='contracted_date' ORDER BY od.created_at DESC`)
         return await query.getRawMany();
     }
+
+    async getUnitCount(): Promise<any[]> {
+        const query = this.createQueryBuilder('orders')
+            .select(`business_unit , COUNT(business_unit) AS count`)
+            .groupBy(`business_unit`)
+        return await query.getRawMany();
+    }
+
+    async getDivisionCount(): Promise<any[]> {
+        const query = this.createQueryBuilder('orders')
+            .select(`department_name , COUNT(department_name) AS count`)
+            .groupBy(`department_name`)
+        return await query.getRawMany();
+    }
 }

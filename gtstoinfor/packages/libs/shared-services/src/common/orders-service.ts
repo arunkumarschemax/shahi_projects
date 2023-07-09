@@ -24,4 +24,12 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getWharehouseDateChangeData")
     }
 
+    async getUnitWiseOrders(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getUnitWiseOrders")
+    }
+
+    async getDivisionWiseOrders(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getDivisionWiseOrders")
+    }
+
 }

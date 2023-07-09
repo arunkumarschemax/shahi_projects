@@ -62,4 +62,24 @@ export class OrdersController {
 
         }
     }
+
+    @Post('/getUnitWiseOrders')
+    async getUnitWiseOrders(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getUnitWiseOrders();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+    @Post('/getDivisionWiseOrders')
+    async getDivisionWiseOrders(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getDivisionWiseOrders();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
 }

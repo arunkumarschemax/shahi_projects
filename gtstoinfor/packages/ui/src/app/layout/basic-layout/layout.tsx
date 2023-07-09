@@ -23,7 +23,7 @@ export const baseRouterList = [
         key: "dashboard",
         path: "dashboard",
         icon: <DashboardOutlined />,
-        filepath: "pages/dashboard/index.tsx",
+        filepath: "/dashboard.tsx",
     },
     {
         label: "User Management",
