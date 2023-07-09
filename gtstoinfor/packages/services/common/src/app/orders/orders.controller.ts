@@ -82,4 +82,14 @@ export class OrdersController {
 
         }
     }
+
+    @Post('/getMaximumChangedOrders')
+    async getMaximumChangedOrders(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getMaximumChangedOrders();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
 }

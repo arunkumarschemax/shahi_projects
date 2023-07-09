@@ -32,4 +32,8 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getDivisionWiseOrders")
     }
 
+    async getMaximumChangedOrders(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getMaximumChangedOrders")
+    }
+
 }

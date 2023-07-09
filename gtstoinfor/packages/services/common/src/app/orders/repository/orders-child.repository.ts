@@ -23,6 +23,13 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return await query.getRawMany();
     }
 
-    
+    async getNoOfChangedItem(): Promise<any[]> {
+        const query = this.createQueryBuilder('oc')
+            .select(`oc.item_code,oc.itemName,oc.production_plan_id,GROUP_CONCAT(oc.version),MAX(oc.version) AS count`)
+            .groupBy(`oc.item_code`)
+            .orderBy(` MAX(oc.version) `, 'DESC')
+            .limit(10)
+        return await query.getRawMany();
+    }
 
 }

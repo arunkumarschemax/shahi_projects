@@ -3,6 +3,7 @@ import { Card, Col, Row, theme } from "antd"
 import { UnitWiseOrderGraph } from "./unit-wise-orders"
 import { DivisionWiseOrders } from "./division-wise-orders"
 import ChangesGrid from "../../excel-import/changes-grid"
+import ItemChanges from "./item-change"
 const { useToken } = theme
 
 export const Dashboard = () => {
@@ -26,9 +27,14 @@ export const Dashboard = () => {
                         </div>
                     </Col>
                 </Row>
-                <Row>
-                    <Col xs={24} sm={24} md={24} xl={24}>
+            </Card>
+            <Card>
+                <Row gutter={24}>
+                    <Col xs={24} sm={24} md={24} xl={14}>
                         <ChangesGrid />
+                    </Col>
+                    <Col xs={24} sm={24} md={24} xl={10}>
+                        <ItemChanges/>
                     </Col>
                 </Row>
             </Card>

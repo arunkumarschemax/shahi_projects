@@ -240,7 +240,7 @@ const ChangesGrid = () => {
         {
             key: '1',
             label: <b>Order Qty : {filteredQtyData?.length} </b>,
-            children: <Table dataSource={filteredQtyData} columns={columns} />,
+            children: <Table  dataSource={filteredQtyData} columns={columns} />,
         },
         {
             key: '2',
@@ -267,7 +267,7 @@ const ChangesGrid = () => {
         <Card title='Revised orders'>
             <Form form={form} layout={"vertical"} >
                 <Row gutter={[24, 24]}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                         <Form.Item name="contractDate"
                             label="Contracted Date"
                         >
@@ -287,13 +287,15 @@ const ChangesGrid = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ marginTop: 22 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 22 }}>
                         <Button
                             type="primary"
                             icon={<SearchOutlined />}
                             style={{ marginRight: 50, width: 80 }}
                             htmlType="button"
                             onClick={getFilterdData}>Search</Button>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 22 }}>
                         <Button
                             type="primary"
                             icon={<UndoOutlined />}
@@ -302,7 +304,7 @@ const ChangesGrid = () => {
                     </Col>
                 </Row>
             </Form>
-            <Tabs items={items} />
+            <Tabs items={items} style={{ height: 220 }}/>
         </Card>
     );
 };

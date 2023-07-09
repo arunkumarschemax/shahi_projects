@@ -132,4 +132,9 @@ export class OrdersService {
         const data = await this.ordersRepository.getDivisionCount()
         return new CommonResponseModel(true,222,'data retrieved',data)
     }
+
+    async getMaximumChangedOrders(): Promise<CommonResponseModel>{
+        const data = await this.ordersChildRepo.getNoOfChangedItem()
+        return new CommonResponseModel(true,22,'data retrieved',data)
+    }
 }
