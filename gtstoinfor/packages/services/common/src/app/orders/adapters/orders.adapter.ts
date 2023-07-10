@@ -138,6 +138,7 @@ export class OrdersAdapter {
         entity.abnormalLTPO3 = dto.abnormalLTPO3
         entity.abnormalLTPO4 = dto.abnormalLTPO4
         entity.abnormalLTPO5 = dto.abnormalLTPO5
+        entity.createdUser = dto.userName
         return entity
     }
 
@@ -277,6 +278,7 @@ export class OrdersAdapter {
         dto.abnormalLTPO3 = entity.abnormalLTPO3
         dto.abnormalLTPO4 = entity.abnormalLTPO4
         dto.abnormalLTPO5 = entity.abnormalLTPO5
+        dto.userName = entity.createdUser
         return dto
     }
 }

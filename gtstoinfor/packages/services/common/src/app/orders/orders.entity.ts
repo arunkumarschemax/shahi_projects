@@ -1,10 +1,10 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { OrdersChildEntity } from "./orders-child.entity";
 
 @Entity('orders') //change the name
 export class OrdersEntity {
 
-    @PrimaryGeneratedColumn({
+    @PrimaryGeneratedColumn('increment', {
         name: 'production_plan_id',
     })
     productionPlanId: string
@@ -934,11 +934,36 @@ export class OrdersEntity {
     })
     abnormalLTPO5: number;
 
+    @Column('varchar', {
+        nullable: true,
+        length: 40,
+        name: 'created_user'
+    })
+    createdUser: string | null;
+
+    @Column('varchar', {
+        nullable: true,
+        length: 40,
+        name: 'updated_user'
+    })
+    updatedUser: string | null;
+
     @CreateDateColumn({
         name: 'created_at'
     })
     createdAt: string;
 
-    @OneToMany(() => OrdersChildEntity, ordersChild => ordersChild.orders)
+    @UpdateDateColumn({
+        name: 'updated_at'
+    })
+    updatedAt: string;
+
+    @Column('int', {
+        nullable: true,
+        name: 'version',
+    })
+    version: number;
+
+    @OneToMany(() => OrdersChildEntity, (ordersChild) => { ordersChild.orders }, { cascade: true })
     ordersChild: OrdersChildEntity;
 }
