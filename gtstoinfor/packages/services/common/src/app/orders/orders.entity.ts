@@ -935,6 +935,13 @@ export class OrdersEntity {
     abnormalLTPO5: number;
 
     @Column('varchar', {
+        name: 'order_status',
+        length: 15,
+        nullable: true
+    })
+    orderStatus: string;
+
+    @Column('varchar', {
         nullable: true,
         length: 40,
         name: 'created_user'

@@ -1,4 +1,4 @@
-import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
+import { Route, HashRouter as Router, Routes, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import { ChildProtectionWrapper } from "./common/protected-child-wrapper"
 import { ExceptionComponent } from "./common/exception-handling/exception-component"
 import BasicLayout from "./layout/basic-layout/layout"
@@ -33,7 +33,7 @@ export const AppRoutes = () => {
                     <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
                     <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
                 </Route>
-                <Route path='/dashboard' key='/dashboard' element={<Dashboard/> } />
+                <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
             <Route path="/login" key='/login' element={<Login />} />
@@ -41,6 +41,31 @@ export const AppRoutes = () => {
     ))
 
     return (
-        <RouterProvider router={router} />
+        <Router>
+            <Routes>
+                <Route path='/' element={
+                    <ChildProtectionWrapper>
+                        <>
+                            <BasicLayout />
+                        </>
+                    </ChildProtectionWrapper>
+                } >
+                    <Route path='/user-management/users-from' element={<UserCreationForm />} />
+                    <Route path='/user-management/users-view' element={<UsersView />} />
+                    <Route path='/masters'>
+                        <Route path='factories/factories-view' element={<FactoriesView />} />
+                        <Route path='factories/factories-form' element={<FactoriesForm />} />
+                    </Route>
+                    <Route path='/excel-import'>
+                        <Route path='excel-import' element={<ExcelImport />} />
+                        <Route path='changes-view' element={<ChangesGrid />} />
+                        <Route path='grid-view' element={<AllOrdersGridView />} />
+                    </Route>
+                    <Route path='/dashboard' element={<Dashboard />} />
+                    <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
+                </Route>
+                <Route path="/login" element={<Login />} />
+            </Routes>
+        </Router>
     )
 }

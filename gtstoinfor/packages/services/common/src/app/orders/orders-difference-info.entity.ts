@@ -47,4 +47,9 @@ export class OrdersDifferenceEntity {
         name: 'created_at'
     })
     createdAt: string;
+
+    @Column('int', {
+        name: 'version',
+    })
+    version: number;
 }
