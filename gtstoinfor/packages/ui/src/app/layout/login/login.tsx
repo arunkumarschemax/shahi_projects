@@ -65,7 +65,7 @@ export default function Login() {
               SHAHI
             </h1>
             <h2 style={{ color: colorPrimary }} className="pro-name">
-              PRODUCTION REPORTING SYSTEM
+              ORDER MANAGEMENT SYSTEM
             </h2>
             {/* <Text style={{ maxWidth: '200px' }} type="secondary">
                         India's Largest exporter of readymade garments, working with the world's biggest brands

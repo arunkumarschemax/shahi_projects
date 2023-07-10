@@ -948,6 +948,13 @@ export class OrdersChildEntity {
     })
     version: number;
 
+    @Column('varchar', {
+        nullable: true,
+        length: 40,
+        name: 'created_user'
+    })
+    createdUser: string | null;
+
     @CreateDateColumn({
         name: 'created_at'
     })

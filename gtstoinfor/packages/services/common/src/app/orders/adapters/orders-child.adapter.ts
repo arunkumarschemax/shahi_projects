@@ -62,7 +62,7 @@ export class OrdersChildAdapter {
         entity.trimOrderAcceptance = dto.trimOrderAcceptance
         entity.trimOrderRequestDate = dto.trimOrderRequestDate
         entity.trimOrderAnswerDate = dto.trimOrderAnswerDate
-        entity.trimOrderAnswerDate = dto.trimOrderAnswerDate
+        entity.trimOrderActualDate = dto.trimOrderActualDate
         entity.trimOrderNO = dto.trimOrderNO
         entity.trimActualOrderQtyPcs = dto.trimActualOrderQtyPcs
         entity.trimUpdateDate = dto.trimUpdateDate
@@ -205,7 +205,7 @@ export class OrdersChildAdapter {
         dto.trimOrderAcceptance = entity.trimOrderAcceptance
         dto.trimOrderRequestDate = entity.trimOrderRequestDate
         dto.trimOrderAnswerDate = entity.trimOrderAnswerDate
-        dto.trimOrderAnswerDate = entity.trimOrderAnswerDate
+        dto.trimOrderActualDate = entity.trimOrderActualDate
         dto.trimOrderNO = entity.trimOrderNO
         dto.trimActualOrderQtyPcs = entity.trimActualOrderQtyPcs
         dto.trimUpdateDate = entity.trimUpdateDate
