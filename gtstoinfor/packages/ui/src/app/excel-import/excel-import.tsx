@@ -41,9 +41,10 @@ export default function ExcelImport() {
 
   const handleUpload = async () => {
     try {
-      // const formData = new FormData();
-      // console.log(selectedFile)
-      // formData.append('file', selectedFile);
+      const formData = new FormData();
+      console.log(selectedFile)
+      formData.append('file', selectedFile);
+      console.log(selectedFile);
       ordersService.saveOrder(data).then((res) => {
         if (res.status) {
           message.success(res.internalMessage)
@@ -52,7 +53,7 @@ export default function ExcelImport() {
         setLoading(false);
       })
     } catch (error) {
-      console.error('Error uploading file:', error);
+      message.error(error.message)
     }
   }
 

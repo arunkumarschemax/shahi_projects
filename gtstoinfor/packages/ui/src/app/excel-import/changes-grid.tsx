@@ -240,17 +240,17 @@ const ChangesGrid = () => {
         {
             key: '1',
             label: <b>Order Qty : {filteredQtyData?.length} </b>,
-            children: <Table scroll={{y:300}} dataSource={filteredQtyData} columns={columns} />,
+            children: <Table scroll={{ y: 400 }} dataSource={filteredQtyData} columns={columns} />,
         },
         {
             key: '2',
             label: <b >Requested Warehouse Date : {filteredWarehouseDateData?.length}</b>,
-            children: <Table scroll={{y:300}} dataSource={filteredWarehouseDateData} columns={columns1} />,
+            children: <Table scroll={{ y: 400 }} dataSource={filteredWarehouseDateData} columns={columns1} />,
         },
         {
             key: '3',
             label: <b>Contracted date : {filteredContractDateData?.length}</b>,
-            children: <Table scroll={{y:300}} dataSource={filteredContractDateData} columns={columns2} />,
+            children: <Table scroll={{ y: 400 }} dataSource={filteredContractDateData} columns={columns2} />,
         },
     ];
 
@@ -291,7 +291,7 @@ const ChangesGrid = () => {
                         <Button
                             type="primary"
                             icon={<SearchOutlined />}
-                            style={{ marginRight: 50, width: 80 }}
+                            style={{ marginRight: 50, width: 100 }}
                             htmlType="button"
                             onClick={getFilterdData}>Search</Button>
                     </Col>
@@ -304,7 +304,7 @@ const ChangesGrid = () => {
                     </Col>
                 </Row>
             </Form>
-            <Tabs items={items} style={{ height: 220 }}/>
+            <Tabs items={items} style={{ height: 220 }} />
         </Card>
     );
 };

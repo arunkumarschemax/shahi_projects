@@ -139,6 +139,7 @@ export class OrdersAdapter {
         entity.abnormalLTPO4 = dto.abnormalLTPO4
         entity.abnormalLTPO5 = dto.abnormalLTPO5
         entity.createdUser = dto.userName
+        entity.version = dto.version ? dto.version : 1
         return entity
     }
 
