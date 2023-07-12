@@ -240,17 +240,17 @@ const ChangesGrid = () => {
         {
             key: '1',
             label: <b>Order Qty : {filteredQtyData?.length} </b>,
-            children: <Table  dataSource={filteredQtyData} columns={columns} />,
+            children: <Table scroll={{y:300}} dataSource={filteredQtyData} columns={columns} />,
         },
         {
             key: '2',
             label: <b >Requested Warehouse Date : {filteredWarehouseDateData?.length}</b>,
-            children: <Table dataSource={filteredWarehouseDateData} columns={columns1} />,
+            children: <Table scroll={{y:300}} dataSource={filteredWarehouseDateData} columns={columns1} />,
         },
         {
             key: '3',
             label: <b>Contracted date : {filteredContractDateData?.length}</b>,
-            children: <Table dataSource={filteredContractDateData} columns={columns2} />,
+            children: <Table scroll={{y:300}} dataSource={filteredContractDateData} columns={columns2} />,
         },
     ];
 
