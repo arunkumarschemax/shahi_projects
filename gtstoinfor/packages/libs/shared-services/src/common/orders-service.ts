@@ -4,8 +4,8 @@ import { CommonAxiosService } from "../common-axios-service-prs"
 export class OrdersService extends CommonAxiosService {
     private ordersController = "/orders"
 
-    async saveOrder(payload: SaveOrderDto[]): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/saveOrder", payload)
+    async saveOrder(data: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/saveOrder", data)
     }
 
     async getOrdersData(): Promise<CommonResponseModel> {
