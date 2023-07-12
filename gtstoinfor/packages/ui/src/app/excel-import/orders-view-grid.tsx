@@ -8,7 +8,7 @@ import { OrdersService } from '@project-management-system/shared-services';
 
 const AllOrdersGridView = () => {
     const [page, setPage] = useState<number>(1)
-    const [pageSize, setPageSize] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(10)
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
@@ -144,6 +144,10 @@ const AllOrdersGridView = () => {
         excel.saveAs(`Orders-Report-${currentDate}.xlsx`);
     };
 
+    const onChange = (pagination, filters, sorter, extra) => {
+        console.log('params', pagination, filters, sorter, extra);
+    }
+
     return (
         <div>
             <Card
@@ -193,7 +197,12 @@ const AllOrdersGridView = () => {
                         </Col>
                     </Row>
                 </Form>
-                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1000 }} bordered />
+                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1000 }} pagination={{
+                    onChange(current) {
+                        setPage(current);
+                    }
+
+                }} onChange={onChange} bordered />
             </Card>
         </div>
     )
