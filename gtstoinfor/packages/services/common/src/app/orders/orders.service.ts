@@ -53,7 +53,6 @@ export class OrdersService {
             const dtoData = new SaveOrderDto((data.Production_Plan_ID), data.Year, data.Planning_Season, data.Season, data.Item_Brand, data.Business_Unit, data.Item_Code, data.Item_Name, data.Main_Sample_Code, data.Main_Sample_Name, data.Supplier_Raw_Material_Code, data.Supplier_Raw_Material_Name, data.Vendor_Code, data.Vendor_Name, data.Management_Factory_Code, data.Management_Factory_Name, data.Branch_Factory_Code, data.Branch_Factory_Name, data.Raw_Material_Supplier_Code, data.Raw_Material_Supplier_Name, data.Sewing_Difficulty, data.Department_Code, data.Department_Name, data.Class1_Code, data.Class1_Name, data.Production_Plan_Type_Name, data.Month_Week_Flag, data.Last_Update_Date, data.Requested_Wh_Date, data.Contracted_Date, data.Transport_Method_Name, data.Logistics_Type_Name, data.Order_Qty_Pcs, data.Yarn_Order_Acceptance, data.Yarn_Order_Request_Date, data.Yarn_Order_Answer_Date, data.Yarn_Order_Actual_Date, data.Yarn_Order_NO, Number(data.Yarn_Actual_Order_Qty_Pcs), data.Yarn_Update_Date, data.Fabric_Order_Acceptance, data.Fabric_Order_Request_Date, data.Fabric_Order_Answer_Date, data.Fabric_Order_Actual_Date, data.Fabric_Order_NO, data.Fabric_Actual_Order_Qty_Pcs, data.Fabric_Update_Date, data.Color_Order_Acceptance, data.Color_Order_Request_Date, data.Color_Order_Answer_Date, data.Color_Order_Actual_Date, data.Color_Order_NO, data.Color_Actual_Order_Qty_Pcs, data.Color_Update_Date, data.Trim_Order_Acceptance, data.Trim_Order_Request_Date, data.Trim_Order_Answer_Date, data.Trim_Order_Actual_Date, data.Trim_Order_NO, data.Trim_Actual_Order_Qty_Pcs, data.Trim_Update_Date, data.PO_Order_Acceptance, data.PO_Order_Request_Date, data.PO_Order_Answer_Date, data.PO_Order_Actual_Date, data.PO_Order_NO, data.PO_Actual_Order_Qty_Pcs, data.PO_Update_Date, data.Order_Qty_Pcs_Old, data.Transport_Method_Name_Old, data.Logistics_Type_Name_Old, data.Yarn_Order_Request_Date_Old, data.Fabric_Order_Request_Date_Old, data.Color_Order_Request_Date_Old, data.Trim_Order_Request_Date_Old, data.PO_Order_Request_Date_Old, data.Status, data.Display_Month_WK, data.Display_Month_WK_Column, data.Group_Cd, data.Show_Color_Flag, data.Order_Qty_Coeff, data.Factory_Comment, data.Factory_Comment_Update_Date, data.FR_Fabric_Code, data.FR_Fabric_Name, data.Ph1_First_Discrimination_Flag_Old, data.Ph1_First_Discrimination_Flag, data.Order_Timing_Display_Value_Old, data.Order_Timing_Display_Value, data.Express_Line_Flag_Old, data.Express_Line_Flag, data.Manual_Lock_Flag_Old, data.Manual_Lock_Flag, data.Ph1_First_Discrimination_Flag_Now, data.Order_Timing_Display_Value_Now, data.Express_Line_Flag_Now, data.Manual_Lock_Flag_Now, data.Requested_Wh_DateOld, data.EXF, data.Color_Recommend, data.Trim_Recommend, data.PORecommend, data.BD_EXF_DL_Setting_LTBefore_Cal, data.PO_EXF_DL_Setting_LTBefore_Cal, data.Material_Supplier_Holiday_Excluding, data.Sewing_FTY_Holiday_Excluding, data.BD_EXF_DL_Setting_LT, data.PO_EXF_DL_Setting_LT, data.BD_EXF_Registered_LT, data.PO_EXF_Registered_LT, data.BD_EXFtotal_Abnormal_LT, data.PO_EXFtotal_Abnormal_LT, data.Abnormal_LT_Reason_BD1, data.Abnormal_LT_Reason_BD2, data.Abnormal_LT_Reason_BD3, data.Abnormal_LT_Reason_BD4, data.Abnormal_LT_Reason_BD5, data.Abnormal_LT_BD1, data.Abnormal_LT_BD2, data.Abnormal_LT_BD3, data.Abnormal_LT_BD4, data.Abnormal_LT_BD5, data.Abnormal_LT_Reason_PO1, data.Abnormal_LT_Reason_PO2, data.Abnormal_LT_Reason_PO3, data.Abnormal_LT_Reason_PO4, data.Abnormal_LT_Reason_PO5, data.Abnormal_LT_PO1, data.Abnormal_LT_PO2, data.Abnormal_LT_PO3, data.Abnormal_LT_PO4, data.Abnormal_LT_PO5, 'Bidhun', 1)
             saveData.push(dtoData)
         }
-        console.log(saveData)
         for (const data of saveData) {
             const details = await this.ordersRepository.findOne({ where: { productionPlanId: data.productionPlanId } })
             const versionDetails = await this.ordersChildRepo.getVersion(data.productionPlanId)
@@ -93,8 +92,8 @@ export class OrdersService {
                     const existingDataKeys = Object.keys(details)
                     const currentDataKeys = Object.keys(formData)
                     for (const existingDataKey of existingDataKeys) {
-                        if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version') {
-                            // console.log(existingDataKey, 'existingDataKey')
+                        if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser') {
+                            console.log(existingDataKey, 'existingDataKey')
                             // console.log(data[existingDataKey], 'dataujiu')
                             // console.log(details[existingDataKey], 'ppppppp')
                             // console.log(details[existingDataKey], 'ppppppp')
@@ -117,9 +116,9 @@ export class OrdersService {
                 const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(data);
                 const saveChildExcelEntity: OrdersChildEntity = await this.ordersChildRepo.save(convertedChildExcelEntity);
                 // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
-                // if (!saveExcelDto) {
-                //     flag.add(false)
-                // }
+                if (!saveChildExcelEntity) {
+                    flag.add(false)
+                }
             }
         }
         if (!flag.has(false)) {
