@@ -174,9 +174,8 @@ const AllOrdersGridView = () => {
                                         placeholder="Select Project Status"
                                         optionFilterProp="children"
                                         allowClear>
-                                        {/* {Object.values(ProjectStatusEnum).map((val) => {
-                                            return <Option key={val} value={val}>{val}</Option>
-                                        })} */}
+                                        <Option key='new' value="NEW">NEW</Option>
+                                        <Option key='unaccepted' value="UNACCEPTED">UNACCEPTED</Option>
                                     </Select>
                                 </Form.Item>
                             </div>
