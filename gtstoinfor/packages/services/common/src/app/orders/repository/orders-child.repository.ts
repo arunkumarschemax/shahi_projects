@@ -32,4 +32,12 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return await query.getRawMany();
     }
 
+    async getLatestRecord (): Promise<any[]> {
+        const query = this.createQueryBuilder('oc')
+        .select(`oc.production_plan_id`)
+        .orderBy(`oc.created_at`, 'DESC')
+        .limit(1)
+        return await query.getRawMany();
+    }
+
 }

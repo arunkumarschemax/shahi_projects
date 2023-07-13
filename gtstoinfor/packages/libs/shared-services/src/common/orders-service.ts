@@ -35,5 +35,7 @@ export class OrdersService extends CommonAxiosService {
     async getMaximumChangedOrders(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getMaximumChangedOrders")
     }
-
+    async fileUpload(file: any): Promise<CommonResponseModel> {
+        return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
+      }
 }
