@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, TabsProps, Tooltip } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
 import { ArrowDownOutlined, ArrowUpOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 const ChangesGrid = () => {
 
@@ -82,11 +83,17 @@ const ChangesGrid = () => {
         },
         {
             title: 'Contracted Date',
-            dataIndex: 'contracted_date'
+            dataIndex: 'contracted_date',
+            render: (text, record) => {
+                return record.contracted_date ? moment(record.contracted_date).format('YYYY-MM-DD') : '-'
+            }
         },
         {
             title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date'
+            dataIndex: 'requested_wh_date',
+            render: (text, record) => {
+                return record.requested_wh_date ? moment(record.requested_wh_date).format('YYYY-MM-DD') : '-'
+            }
         },
         {
             title: 'Color Code',
@@ -120,13 +127,13 @@ const ChangesGrid = () => {
             title: 'Requested Warehouse Date',
             dataIndex: 'new_val',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.old_val} Revised Date:  ${record.new_val}`}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
                     <span style={{ color: 'red' }}>
-                        {record.new_val}
+                        {moment(record.new_val).format('YYYY-MM-DD')}
                     </span>
                     &nbsp;&nbsp;
                     <span>
-                        {record.old_val < record.new_val ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                        {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
                     </span>
                 </Tooltip>
             )
@@ -171,13 +178,13 @@ const ChangesGrid = () => {
             title: 'Contracted Date',
             dataIndex: 'new_val',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.old_val} Revised Date:  ${record.new_val}`}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
                     <span style={{ color: 'red' }}>
-                        {record.new_val}
+                        {moment(record.new_val).format('YYYY-MM-DD')}
                     </span>
                     &nbsp;&nbsp;
                     <span>
-                        {record.old_val < record.new_val ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                        {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
                     </span>
                 </Tooltip>
             )
