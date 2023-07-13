@@ -81,6 +81,7 @@ export class OrdersService {
                         if (saveExcelEntity) {
                             //difference insertion to order diff table
                             const existingDataKeys = Object.keys(details)
+                            const currentDataKeys = Object.keys(dtoData)
                             for (const existingDataKey of existingDataKeys) {
                                 if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser') {
                                     const orderDiffObj = new OrdersDifferenceEntity();
@@ -90,7 +91,9 @@ export class OrdersService {
                                     orderDiffObj.displayName = existingDataKey
                                     orderDiffObj.productionPlanId = dtoData.productionPlanId
                                     orderDiffObj.version = dtoData.version
-                                    const orderDiffSave = await this.orderDiffRepo.save(orderDiffObj);
+                                    if (orderDiffObj.oldValue != orderDiffObj.newValue) {
+                                        const orderDiffSave = await this.orderDiffRepo.save(orderDiffObj);
+                                    }
                                 }
                             }
                         }

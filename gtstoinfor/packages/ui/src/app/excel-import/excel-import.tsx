@@ -1,23 +1,20 @@
 import { useState } from 'react';
-import { Upload, Button, Card, Form, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import * as XLSX from 'xlsx';
+import { Button, Card, Form, message } from 'antd';
 import { RcFile } from 'antd/lib/upload/interface';
 import { OrdersService } from '@project-management-system/shared-services';
-import { SaveOrderDto } from '@project-management-system/shared-models';
 import Papa from 'papaparse'
+import { useNavigate } from 'react-router-dom';
 
 
-interface CustomUploadFile extends RcFile {
-  uid: string;
-}
 export default function ExcelImport() {
   const [loading, setLoading] = useState(false);
   const ordersService = new OrdersService();
   const [selectedFile, setSelectedFile] = useState(null);
   const [data, setData] = useState([])
   const [columns, setColumns] = useState([]);
-  const [values, setValues] = useState([])
+  const [values, setValues] = useState([]);
+  let navigate = useNavigate();
+
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -48,6 +45,7 @@ export default function ExcelImport() {
       ordersService.saveOrder(formData, data).then((res) => {
         if (res.status) {
           message.success(res.internalMessage)
+          navigate("/excel-import/grid-view");
         } else {
           message.error(res.internalMessage)
         }
@@ -69,6 +67,7 @@ export default function ExcelImport() {
           type="primary"
           onClick={handleUpload}
           loading={loading}
+          disabled={!selectedFile}
         >
           Upload
         </Button>
