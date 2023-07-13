@@ -4,6 +4,7 @@ import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { OrdersService } from '@project-management-system/shared-services';
+import moment from 'moment';
 
 
 const AllOrdersGridView = () => {
@@ -98,11 +99,17 @@ const AllOrdersGridView = () => {
         },
         {
             title: 'Contracted Date',
-            dataIndex: 'contracted_date'
+            dataIndex: 'contracted_date',
+            render: (text, record) => {
+                return record.contracted_date ? moment(record.contracted_date).format('YYYY-MM-DD') : '-'
+            }
         },
         {
             title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date'
+            dataIndex: 'requested_wh_date',
+            render: (text, record) => {
+                return record.requested_wh_date ? moment(record.requested_wh_date).format('YYYY-MM-DD') : '-'
+            }
         },
         {
             title: 'Color Code',
@@ -174,9 +181,8 @@ const AllOrdersGridView = () => {
                                         placeholder="Select Project Status"
                                         optionFilterProp="children"
                                         allowClear>
-                                        {/* {Object.values(ProjectStatusEnum).map((val) => {
-                                            return <Option key={val} value={val}>{val}</Option>
-                                        })} */}
+                                        <Option key='new' value="NEW">NEW</Option>
+                                        <Option key='unaccepted' value="UNACCEPTED">UNACCEPTED</Option>
                                     </Select>
                                 </Form.Item>
                             </div>

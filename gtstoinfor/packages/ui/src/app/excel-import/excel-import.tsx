@@ -20,6 +20,7 @@ export default function ExcelImport() {
   const [values, setValues] = useState([])
 
   const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
     Papa.parse(event.target.files[0], {
       header: true,
       complete: function (result) {
@@ -41,18 +42,20 @@ export default function ExcelImport() {
 
   const handleUpload = async () => {
     try {
-      // const formData = new FormData();
-      // console.log(selectedFile)
-      // formData.append('file', selectedFile);
-      ordersService.saveOrder(data).then((res) => {
+      const formData = new FormData();
+      console.log(selectedFile)
+      formData.append('file', selectedFile);
+      ordersService.saveOrder(formData, data).then((res) => {
         if (res.status) {
           message.success(res.internalMessage)
+        } else {
+          message.error(res.internalMessage)
         }
       }).finally(() => {
         setLoading(false);
       })
     } catch (error) {
-      console.error('Error uploading file:', error);
+      message.error(error.message)
     }
   }
 

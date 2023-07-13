@@ -1,6 +1,6 @@
 import { SaveOrderDto } from "../models/save-order-dto";
-import { OrdersChildEntity } from "../orders-child.entity";
-import { OrdersEntity } from "../orders.entity";
+import { OrdersChildEntity } from "../entities/orders-child.entity";
+import { OrdersEntity } from "../entities/orders.entity";
 
 export class OrdersChildAdapter {
 

@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { OrdersEntity } from "./orders.entity";
+import { OrdersEntity } from "./entities/orders.entity";
 
 @Entity('order_diff') //change the name
 export class OrdersDifferenceEntity {

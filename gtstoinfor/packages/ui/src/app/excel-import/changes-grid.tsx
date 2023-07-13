@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, TabsProps, Tooltip } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
 import { ArrowDownOutlined, ArrowUpOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 const ChangesGrid = () => {
 
@@ -82,11 +83,17 @@ const ChangesGrid = () => {
         },
         {
             title: 'Contracted Date',
-            dataIndex: 'contracted_date'
+            dataIndex: 'contracted_date',
+            render: (text, record) => {
+                return record.contracted_date ? moment(record.contracted_date).format('YYYY-MM-DD') : '-'
+            }
         },
         {
             title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date'
+            dataIndex: 'requested_wh_date',
+            render: (text, record) => {
+                return record.requested_wh_date ? moment(record.requested_wh_date).format('YYYY-MM-DD') : '-'
+            }
         },
         {
             title: 'Color Code',
@@ -120,13 +127,13 @@ const ChangesGrid = () => {
             title: 'Requested Warehouse Date',
             dataIndex: 'new_val',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.old_val} Revised Date:  ${record.new_val}`}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
                     <span style={{ color: 'red' }}>
-                        {record.new_val}
+                        {moment(record.new_val).format('YYYY-MM-DD')}
                     </span>
                     &nbsp;&nbsp;
                     <span>
-                        {record.old_val < record.new_val ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                        {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
                     </span>
                 </Tooltip>
             )
@@ -171,13 +178,13 @@ const ChangesGrid = () => {
             title: 'Contracted Date',
             dataIndex: 'new_val',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.old_val} Revised Date:  ${record.new_val}`}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
                     <span style={{ color: 'red' }}>
-                        {record.new_val}
+                        {moment(record.new_val).format('YYYY-MM-DD')}
                     </span>
                     &nbsp;&nbsp;
                     <span>
-                        {record.old_val < record.new_val ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                        {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
                     </span>
                 </Tooltip>
             )
@@ -240,17 +247,17 @@ const ChangesGrid = () => {
         {
             key: '1',
             label: <b>Order Qty : {filteredQtyData?.length} </b>,
-            children: <Table scroll={{y:300}} dataSource={filteredQtyData} columns={columns} />,
+            children: <Table scroll={{ y: 400 }} dataSource={filteredQtyData} columns={columns} />,
         },
         {
             key: '2',
             label: <b >Requested Warehouse Date : {filteredWarehouseDateData?.length}</b>,
-            children: <Table scroll={{y:300}} dataSource={filteredWarehouseDateData} columns={columns1} />,
+            children: <Table scroll={{ y: 400 }} dataSource={filteredWarehouseDateData} columns={columns1} />,
         },
         {
             key: '3',
             label: <b>Contracted date : {filteredContractDateData?.length}</b>,
-            children: <Table scroll={{y:300}} dataSource={filteredContractDateData} columns={columns2} />,
+            children: <Table scroll={{ y: 400 }} dataSource={filteredContractDateData} columns={columns2} />,
         },
     ];
 
@@ -291,7 +298,7 @@ const ChangesGrid = () => {
                         <Button
                             type="primary"
                             icon={<SearchOutlined />}
-                            style={{ marginRight: 50, width: 80 }}
+                            style={{ marginRight: 50, width: 100 }}
                             htmlType="button"
                             onClick={getFilterdData}>Search</Button>
                     </Col>
@@ -304,7 +311,7 @@ const ChangesGrid = () => {
                     </Col>
                 </Row>
             </Form>
-            <Tabs items={items} style={{ height: 220 }}/>
+            <Tabs items={items} style={{ height: 220 }} />
         </Card>
     );
 };

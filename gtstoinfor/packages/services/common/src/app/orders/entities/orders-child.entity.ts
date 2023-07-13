@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { OrdersEntity } from "./orders.entity";
 
 @Entity('orders_child') //change the name
@@ -959,6 +959,18 @@ export class OrdersChildEntity {
         name: 'created_at'
     })
     createdAt: string;
+
+    @Column('varchar', {
+        nullable: true,
+        length: 40,
+        name: 'updated_user'
+    })
+    updatedUser: string | null;
+
+    @UpdateDateColumn({
+        name: 'updated_at'
+    })
+    updatedAt: string;
 
     @ManyToOne(() => OrdersEntity, orders => orders.ordersChild)
     @JoinColumn({ name: 'production_plan_id' })
