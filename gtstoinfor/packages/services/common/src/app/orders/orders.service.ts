@@ -154,4 +154,31 @@ export class OrdersService {
         const data = await this.ordersChildRepo.getNoOfChangedItem()
         return new CommonResponseModel(true, 22, 'data retrieved', data)
     }
+
+    async revertFileData(): Promise<CommonResponseModel>{
+        const latestData = await this.ordersChildRepo.getLatestRecord()
+        return new CommonResponseModel(true, 22, 'data retrieved', latestData)
+    }
+
+    async updatePath(filePath: string, filename: string, id: number): Promise<CommonResponseModel> {
+        console.log('upload service id---------------', id)
+        try {
+            // const filePathUpdate = await this.projRepo.update(
+            //     { id: id },
+            //     { filePath: filePath, fileName: filename },
+            // );
+            // const result = await this.projRepo.findOne({ where: { id: id } })
+            // console.log('************result************', result)
+            // if (filePathUpdate.affected > 0) {
+            //     return new CommonResponseModel(true, 11, 'uploaded successfully', filePath);
+            // }
+            // else {
+            //     return new CommonResponseModel(false, 11, 'uploaded failed', filePath);
+            // }
+            return
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 }

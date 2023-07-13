@@ -4,6 +4,9 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { CommonResponseModel } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
+import { ApiConsumes } from '@nestjs/swagger';
+import { diskStorage } from 'multer';
+import { extname } from 'path';''
 
 @Controller('orders')
 export class OrdersController {
@@ -104,5 +107,48 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
         }
+    }
+
+    @Post('/revertFileData')
+    async revertFileData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.revertFileData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+    @Post('/fileUpload')
+    @ApiConsumes('multipart/form-data')
+    @UseInterceptors(FileInterceptor('file', {
+      limits: { files: 1 },
+      storage: diskStorage({
+        destination: './upload-files',
+        filename: (req, file, callback) => {
+          const name = file.originalname.split('.')[0];
+          const fileExtName = extname(file.originalname);
+          const randomName = Array(4)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+          callback(null, `${name}-${randomName}${fileExtName}`);
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|xls|xlsx|csv)$/)) {
+          return callback(new Error('Only png,jpeg,PNG,jpg,JPG,xls,xlsx and csv files are allowed!'), false);
+        }
+        callback(null, true);
+      },
+    }))
+  
+    async fileUpload(@UploadedFile() file, @Body() uploadData: any): Promise<CommonResponseModel> {
+        console.log('-------controller------------',file)
+      try {
+        // return await this.projectService.updatePath(file.path,file.filename, uploadData.id)
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
     }
 }
