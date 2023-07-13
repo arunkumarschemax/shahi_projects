@@ -1,8 +1,8 @@
 import { Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { OrdersChildEntity } from "../orders-child.entity";
-import { OrdersEntity } from "../orders.entity";
+import { OrdersChildEntity } from "../entities/orders-child.entity";
+import { OrdersEntity } from "../entities/orders.entity";
 import { AppDataSource } from "../../app-datasource";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 
@@ -28,7 +28,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             .select(`oc.item_code,oc.itemName,oc.production_plan_id,GROUP_CONCAT(oc.version),MAX(oc.version) AS count`)
             .groupBy(`oc.item_code`)
             .orderBy(` MAX(oc.version) `, 'DESC')
-            .limit(10) 
+            .limit(10)
         return await query.getRawMany();
     }
 

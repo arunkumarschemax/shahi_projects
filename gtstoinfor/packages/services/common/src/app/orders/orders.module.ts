@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
-import { OrdersEntity } from './orders.entity';
+import { OrdersEntity } from './entities/orders.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { OrdersChildEntity } from './orders-child.entity';
+import { OrdersChildEntity } from './entities/orders-child.entity';
 import { OrdersAdapter } from './adapters/orders.adapter';
 import { OrdersChildAdapter } from './adapters/orders-child.adapter';
 import { OrdersRepository } from './repository/orders.repository';
@@ -20,6 +20,6 @@ import { OrderDifferenceRepository } from './repository/order-difference.reposit
       OrdersDifferenceEntity
     ])],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository,OrderDifferenceRepository, ApplicationExceptionHandler]
+  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler]
 })
 export class OrdersModule { }

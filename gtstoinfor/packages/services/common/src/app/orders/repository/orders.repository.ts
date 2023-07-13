@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { OrdersEntity } from "../orders.entity";
+import { OrdersEntity } from "../entities/orders.entity";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 import { AppDataSource } from "../../app-datasource";
 

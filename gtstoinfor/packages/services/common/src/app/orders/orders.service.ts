@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { CommonResponseModel, orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
-import { OrdersEntity } from './orders.entity';
+import { OrdersEntity } from './entities/orders.entity';
 import { OrdersAdapter } from './adapters/orders.adapter';
 import { OrdersChildRepository } from './repository/orders-child.repository';
-import { OrdersChildEntity } from './orders-child.entity';
+import { OrdersChildEntity } from './entities/orders-child.entity';
 import { OrdersChildAdapter } from './adapters/orders-child.adapter';
 import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
@@ -76,8 +76,8 @@ export class OrdersService {
                         if (!updateOrder.affected) {
                             return new CommonResponseModel(false, 0, 'Something went wrong in order update')
                         }
-                        // const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData);
-                        const saveExcelEntity: OrdersChildEntity = await this.ordersChildRepo.save(dtoData);
+                        const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData);
+                        const saveExcelEntity: OrdersChildEntity = await this.ordersChildRepo.save(convertedExcelEntity);
                         if (saveExcelEntity) {
                             //difference insertion to order diff table
                             const existingDataKeys = Object.keys(details)
@@ -96,9 +96,11 @@ export class OrdersService {
                         }
                     } else {
                         dtoData.version = 1
-                        // const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData);
-                        const saveExcelEntity: OrdersEntity = await this.ordersRepository.save(dtoData);
-                        const saveChildExcelEntity: OrdersChildEntity = await this.ordersChildRepo.save(dtoData);
+                        const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData);
+                        const saveExcelEntity: OrdersEntity = await this.ordersRepository.save(convertedExcelEntity);
+                        const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData);
+                        const saveChildExcelEntity: OrdersChildEntity = await this.ordersChildRepo.save(convertedChildExcelEntity);
+                        // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
                         if (!saveChildExcelEntity) {
                             flag.add(false)
                         }
