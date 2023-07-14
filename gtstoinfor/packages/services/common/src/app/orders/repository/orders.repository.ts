@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { OrdersEntity } from "../entities/orders.entity";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 import { AppDataSource } from "../../app-datasource";
+import { FileIdReq } from "../models/file-id.req";
 
 @Injectable()
 export class OrdersRepository extends Repository<OrdersEntity> {
@@ -56,4 +57,12 @@ export class OrdersRepository extends Repository<OrdersEntity> {
             .groupBy(`department_name`)
         return await query.getRawMany();
     }
+
+    // async getOrdersByFileId(req:FileIdReq):Promise<any[]>{
+    //     console.log('req',req)
+    //     console.log('----------------',req.fileId)
+    //     const query = this.createQueryBuilder('o')
+    //     .select(`*`)
+    //     return await query.getRawMany();
+    // }
 }
