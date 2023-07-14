@@ -6,7 +6,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiConsumes } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
-import { extname } from 'path';''
+import { extname } from 'path';import { FileIdReq } from './models/file-id.req';
+''
 
 @Controller('orders')
 export class OrdersController {
@@ -109,9 +110,9 @@ export class OrdersController {
     }
 
     @Post('/revertFileData')
-    async revertFileData(): Promise<CommonResponseModel> {
+    async revertFileData(@Body() req:FileIdReq): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.revertFileData();
+            return this.ordersService.revertFileData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
