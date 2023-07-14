@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, TabsProps, Tooltip } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
-import { ArrowDownOutlined, ArrowUpOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, DownloadOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { color } from 'highcharts';
+import { Excel } from 'antd-table-saveas-excel';
 
 const ChangesGrid = () => {
 
@@ -47,6 +49,131 @@ const ChangesGrid = () => {
             setFilteredWarehouseDateDate(res.data)
         })
     }
+    const exportExcel = () => {
+        const excel = new Excel();
+        excel
+          .addSheet('order Qty')
+          .addColumns(data1)
+          .addDataSource(filteredQtyData, { str2num: true })
+          .addSheet('Requested Warehouse Date')
+          .addColumns(data2)
+          .addDataSource(filteredWarehouseDateData, { str2num: true })
+          .addSheet('Contracted date')
+          .addColumns(data3)
+          .addDataSource(contractDateData, { str2num: true })
+          .saveAs('revisedOrders.xlsx');
+      }
+      const data1 =[
+        
+        {
+            title: 'Production Plan Id',
+            dataIndex: 'production_plan_id'
+        },
+        {
+            title: 'Item code',
+            dataIndex: 'item_code'
+        },
+        {
+            title: 'Item Name',
+            dataIndex: 'itemName'
+        },
+        {
+            title: 'Order Quantity Pieces',
+            dataIndex: 'new_val',
+            
+        },
+        {
+            title: 'Contracted Date',
+            dataIndex: 'contracted_date',
+           
+        },
+        {
+            title: 'Requested Warehouse Date',
+            dataIndex: 'requested_wh_date',
+           
+        },
+        {
+            title: 'Color Code',
+            dataIndex: 'color_code'
+        },
+        {
+            title: 'Order Status',
+            dataIndex: 'order_status'
+        }
+      ]
+      const data2 = [
+        {
+            title: 'Production Plan Id',
+            dataIndex: 'production_plan_id'
+        },
+        {
+            title: 'Item code',
+            dataIndex: 'item_code'
+        },
+        {
+            title: 'Item Name',
+            dataIndex: 'itemName'
+        },
+        {
+            title: 'Requested Warehouse Date',
+            dataIndex: 'new_val',
+            
+        },
+        {
+            title: 'Order Quantity Pieces',
+            dataIndex: 'order_qty_pcs'
+        },
+        {
+            title: 'Contracted Date',
+            dataIndex: 'contracted_date'
+        },
+        {
+            title: 'Color Code',
+            dataIndex: 'color_code'
+        },
+        {
+            title: 'Order Status',
+            dataIndex: 'order_status'
+        }
+    ];
+    const data3 = [
+      
+        {
+            title: 'Production Plan Id',
+            dataIndex: 'production_plan_id'
+        },
+        {
+            title: 'Item code',
+            dataIndex: 'item_code'
+        },
+        {
+            title: 'Item Name',
+            dataIndex: 'itemName'
+        },
+        {
+            title: 'Contracted Date',
+            dataIndex: 'new_val',
+            
+        },
+        {
+            title: 'Order Quantity Pieces',
+            dataIndex: 'order_qty_pcs',
+
+        },
+        {
+            title: 'Requested Warehouse Date',
+            dataIndex: 'requested_wh_date'
+        },
+        {
+            title: 'Color Code',
+            dataIndex: 'color_code'
+        },
+        {
+            title: 'Order Status',
+            dataIndex: 'order_status'
+        }
+    ];
+
 
     const columns = [
         {
@@ -70,13 +197,16 @@ const ChangesGrid = () => {
             title: 'Order Quantity Pieces',
             dataIndex: 'new_val',
             render: (text, record) => (
+                
                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '150px' }} title={`Previous Value:  ${record.old_val} Revised Value:  ${record.new_val}`}>
-                    <span style={{ color: 'red' }}>
-                        {record.new_val}
-                    </span>
+                    <>
+                     {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
+                     {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
+                 </>
+                    
                     &nbsp;&nbsp;
                     <span>
-                        {Number(record.old_val) < Number(record.new_val) ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                        {Number(record.old_val) < Number(record.new_val) ? <ArrowUpOutlined  style={{ color: 'green' }} /> : <ArrowDownOutlined  style={{ color: 'red' }} />}
                     </span>
                 </Tooltip>
             )
@@ -128,9 +258,8 @@ const ChangesGrid = () => {
             dataIndex: 'new_val',
             render: (text, record) => (
                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
-                    <span style={{ color: 'red' }}>
-                        {moment(record.new_val).format('YYYY-MM-DD')}
-                    </span>
+                    {moment(record.old_val).format('YYYY-MM-DD')  < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
+                     {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
                     &nbsp;&nbsp;
                     <span>
                         {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
@@ -179,9 +308,8 @@ const ChangesGrid = () => {
             dataIndex: 'new_val',
             render: (text, record) => (
                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
-                    <span style={{ color: 'red' }}>
-                        {moment(record.new_val).format('YYYY-MM-DD')}
-                    </span>
+                    {moment(record.old_val).format('YYYY-MM-DD')  < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
+                     {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
                     &nbsp;&nbsp;
                     <span>
                         {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
@@ -311,7 +439,17 @@ const ChangesGrid = () => {
                     </Col>
                 </Row>
             </Form>
-            <Tabs items={items} style={{ height: 220 }} />
+            {filteredQtyData || filteredContractDateData || filteredWarehouseDateData ? <>
+                <Row gutter={24}>
+                    <Col>
+                        <Button icon={<DownloadOutlined />} style={{ marginTop: '30px', }} onClick={() => { exportExcel(); }}>
+                            Get Excel
+                        </Button>
+                    </Col>
+                </Row>
+                <Tabs items={items} style={{ height: 220 }} />
+            </> : <></>}
+
         </Card>
     );
 };
