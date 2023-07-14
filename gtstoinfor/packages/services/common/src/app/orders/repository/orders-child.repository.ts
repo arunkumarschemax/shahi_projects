@@ -5,6 +5,7 @@ import { OrdersChildEntity } from "../entities/orders-child.entity";
 import { OrdersEntity } from "../entities/orders.entity";
 import { AppDataSource } from "../../app-datasource";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
+import { FileIdReq } from "../models/file-id.req";
 
 @Injectable()
 export class OrdersChildRepository extends Repository<OrdersChildEntity> {
@@ -32,12 +33,12 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return await query.getRawMany();
     }
 
-    async getLatestRecord (): Promise<any[]> {
-        const query = this.createQueryBuilder('oc')
-        .select(`oc.production_plan_id`)
-        .orderBy(`oc.created_at`, 'DESC')
-        .limit(1)
-        return await query.getRawMany();
-    }
+   
+
+    async deleteChildData(req:FileIdReq): Promise<void> {
+        const queryBuilder = this.createQueryBuilder('oc');
+        queryBuilder.where(`file_id = '${req}'`);
+        await queryBuilder.delete().execute();
+      }
 
 }

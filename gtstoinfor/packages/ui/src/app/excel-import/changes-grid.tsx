@@ -179,6 +179,7 @@ const ChangesGrid = () => {
         {
             title: 'S No',
             key: 'sno',
+            width:'60px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
@@ -221,6 +222,7 @@ const ChangesGrid = () => {
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'requested_wh_date',
+            width :'190px',
             render: (text, record) => {
                 return record.requested_wh_date ? moment(record.requested_wh_date).format('YYYY-MM-DD') : '-'
             }
@@ -239,6 +241,7 @@ const ChangesGrid = () => {
         {
             title: 'S No',
             key: 'sno',
+            width:'60px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
@@ -256,6 +259,7 @@ const ChangesGrid = () => {
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'new_val',
+            width :'190px',
             render: (text, record) => (
                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
                     {moment(record.old_val).format('YYYY-MM-DD')  < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
@@ -289,6 +293,7 @@ const ChangesGrid = () => {
         {
             title: 'S No',
             key: 'sno',
+            width:'60px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
@@ -324,7 +329,8 @@ const ChangesGrid = () => {
         },
         {
             title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date'
+            dataIndex: 'requested_wh_date',
+            width :'190px'
         },
         {
             title: 'Color Code',

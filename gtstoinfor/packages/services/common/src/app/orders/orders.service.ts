@@ -9,6 +9,10 @@ import { OrdersChildEntity } from './entities/orders-child.entity';
 import { OrdersChildAdapter } from './adapters/orders-child.adapter';
 import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
+import { FileUploadRepository } from './repository/upload.repository';
+import { FileUploadEntity } from './entities/upload-file.entity';
+import { Entity } from 'typeorm';
+import { FileIdReq } from './models/file-id.req';
 
 @Injectable()
 export class OrdersService {
@@ -19,10 +23,12 @@ export class OrdersService {
         private ordersRepository: OrdersRepository,
         private ordersChildRepo: OrdersChildRepository,
         private ordersChildAdapter: OrdersChildAdapter,
-        private orderDiffRepo: OrderDifferenceRepository
+        private orderDiffRepo: OrderDifferenceRepository,
+        private fileUploadRepo: FileUploadRepository
     ) { }
 
-    async saveOrdersData(formData: any): Promise<CommonResponseModel> {
+    async saveOrdersData(formData: any, id: number): Promise<CommonResponseModel> {
+        console.log('---id---', id)
         try {
             const flag = new Set()
             const updatedArray = formData.map((obj) => {
@@ -48,8 +54,7 @@ export class OrdersService {
             });
 
             for (const data of convertedData) {
-                const dtoData = new SaveOrderDto(data.Production_Plan_ID, data.Year, data.Planning_Season, data.Season, data.Item_Brand, data.Business_Unit, data.Item_Code, data.Item_Name, data.Main_Sample_Code, data.Main_Sample_Name, data.Supplier_Raw_Material_Code, data.Supplier_Raw_Material_Name, data.Vendor_Code, data.Vendor_Name, data.Management_Factory_Code, data.Management_Factory_Name, data.Branch_Factory_Code, data.Branch_Factory_Name, data.Raw_Material_Supplier_Code, data.Raw_Material_Supplier_Name, Number(data.Sewing_Difficulty), data.Department_Code, data.Department_Name, data.Class1_Code, data.Class1_Name, data.Production_Plan_Type_Name, data.Month_Week_Flag, data.Last_Update_Date, data.Requested_Wh_Date, data.Contracted_Date, data.Transport_Method_Name, data.Logistics_Type_Name, Number(data.Order_Qty_Pcs), data.Yarn_Order_Acceptance, data.Yarn_Order_Request_Date, data.Yarn_Order_Answer_Date, data.Yarn_Order_Actual_Date, data.Yarn_Order_NO, Number(data.Yarn_Actual_Order_Qty_Pcs), data.Yarn_Update_Date, data.Fabric_Order_Acceptance, data.Fabric_Order_Request_Date, data.Fabric_Order_Answer_Date, data.Fabric_Order_Actual_Date, data.Fabric_Order_NO, Number(data.Fabric_Actual_Order_Qty_Pcs), data.Fabric_Update_Date, data.Color_Order_Acceptance, data.Color_Order_Request_Date, data.Color_Order_Answer_Date, data.Color_Order_Actual_Date, data.Color_Order_NO, Number(data.Color_Actual_Order_Qty_Pcs), data.Color_Update_Date, data.Trim_Order_Acceptance, data.Trim_Order_Request_Date, data.Trim_Order_Answer_Date, data.Trim_Order_Actual_Date, data.Trim_Order_NO, Number(data.Trim_Actual_Order_Qty_Pcs), data.Trim_Update_Date, data.PO_Order_Acceptance, data.PO_Order_Request_Date, data.PO_Order_Answer_Date, data.PO_Order_Actual_Date, data.PO_Order_NO, Number(data.PO_Actual_Order_Qty_Pcs), data.PO_Update_Date, Number(data.Order_Qty_Pcs_Old), data.Transport_Method_Name_Old, data.Logistics_Type_Name_Old, data.Yarn_Order_Request_Date_Old, data.Fabric_Order_Request_Date_Old, data.Color_Order_Request_Date_Old, data.Trim_Order_Request_Date_Old, data.PO_Order_Request_Date_Old, data.Status, data.Display_Month_WK, Number(data.Display_Month_WK_Column), data.Group_Cd, Number(data.Show_Color_Flag), Number(data.Order_Qty_Coeff), data.Factory_Comment, data.Factory_Comment_Update_Date, data.FR_Fabric_Code, data.FR_Fabric_Name, data.Ph1_First_Discrimination_Flag_Old, data.Ph1_First_Discrimination_Flag, data.Order_Timing_Display_Value_Old, data.Order_Timing_Display_Value, data.Express_Line_Flag_Old, data.Express_Line_Flag, data.Manual_Lock_Flag_Old, data.Manual_Lock_Flag, data.Ph1_First_Discrimination_Flag_Now, data.Order_Timing_Display_Value_Now, data.Express_Line_Flag_Now, data.Manual_Lock_Flag_Now, data.Requested_Wh_DateOld, data.EXF, data.Color_Recommend, data.Trim_Recommend, data.PORecommend, Number(data.BD_EXF_DL_Setting_LTBefore_Cal), Number(data.PO_EXF_DL_Setting_LTBefore_Cal), Number(data.Material_Supplier_Holiday_Excluding), Number(data.Sewing_FTY_Holiday_Excluding), Number(data.BD_EXF_DL_Setting_LT), Number(data.PO_EXF_DL_Setting_LT), Number(data.BD_EXF_Registered_LT), Number(data.PO_EXF_Registered_LT), Number(data.BD_EXFtotal_Abnormal_LT), Number(data.PO_EXFtotal_Abnormal_LT), Number(data.Abnormal_LT_Reason_BD1), Number(data.Abnormal_LT_Reason_BD2), Number(data.Abnormal_LT_Reason_BD3), Number(data.Abnormal_LT_Reason_BD4), Number(data.Abnormal_LT_Reason_BD5), Number(data.Abnormal_LT_BD1), Number(data.Abnormal_LT_BD2), Number(data.Abnormal_LT_BD3), Number(data.Abnormal_LT_BD4), Number(data.Abnormal_LT_BD5), Number(data.Abnormal_LT_Reason_PO1), Number(data.Abnormal_LT_Reason_PO2), Number(data.Abnormal_LT_Reason_PO3), Number(data.Abnormal_LT_Reason_PO4), Number(data.Abnormal_LT_Reason_PO5), Number(data.Abnormal_LT_PO1), Number(data.Abnormal_LT_PO2), Number(data.Abnormal_LT_PO3), Number(data.Abnormal_LT_PO4), Number(data.Abnormal_LT_PO5), 'Bidhun', 1)
-
+                const dtoData = new SaveOrderDto(data.Production_Plan_ID, data.Year, data.Planning_Season, data.Season, data.Item_Brand, data.Business_Unit, data.Item_Code, data.Item_Name, data.Main_Sample_Code, data.Main_Sample_Name, data.Supplier_Raw_Material_Code, data.Supplier_Raw_Material_Name, data.Vendor_Code, data.Vendor_Name, data.Management_Factory_Code, data.Management_Factory_Name, data.Branch_Factory_Code, data.Branch_Factory_Name, data.Raw_Material_Supplier_Code, data.Raw_Material_Supplier_Name, Number(data.Sewing_Difficulty), data.Department_Code, data.Department_Name, data.Class1_Code, data.Class1_Name, data.Production_Plan_Type_Name, data.Month_Week_Flag, data.Last_Update_Date, data.Requested_Wh_Date, data.Contracted_Date, data.Transport_Method_Name, data.Logistics_Type_Name, Number(data.Order_Qty_Pcs), data.Yarn_Order_Acceptance, data.Yarn_Order_Request_Date, data.Yarn_Order_Answer_Date, data.Yarn_Order_Actual_Date, data.Yarn_Order_NO, Number(data.Yarn_Actual_Order_Qty_Pcs), data.Yarn_Update_Date, data.Fabric_Order_Acceptance, data.Fabric_Order_Request_Date, data.Fabric_Order_Answer_Date, data.Fabric_Order_Actual_Date, data.Fabric_Order_NO, Number(data.Fabric_Actual_Order_Qty_Pcs), data.Fabric_Update_Date, data.Color_Order_Acceptance, data.Color_Order_Request_Date, data.Color_Order_Answer_Date, data.Color_Order_Actual_Date, data.Color_Order_NO, Number(data.Color_Actual_Order_Qty_Pcs), data.Color_Update_Date, data.Trim_Order_Acceptance, data.Trim_Order_Request_Date, data.Trim_Order_Answer_Date, data.Trim_Order_Actual_Date, data.Trim_Order_NO, Number(data.Trim_Actual_Order_Qty_Pcs), data.Trim_Update_Date, data.PO_Order_Acceptance, data.PO_Order_Request_Date, data.PO_Order_Answer_Date, data.PO_Order_Actual_Date, data.PO_Order_NO, Number(data.PO_Actual_Order_Qty_Pcs), data.PO_Update_Date, Number(data.Order_Qty_Pcs_Old), data.Transport_Method_Name_Old, data.Logistics_Type_Name_Old, data.Yarn_Order_Request_Date_Old, data.Fabric_Order_Request_Date_Old, data.Color_Order_Request_Date_Old, data.Trim_Order_Request_Date_Old, data.PO_Order_Request_Date_Old, data.Status, data.Display_Month_WK, Number(data.Display_Month_WK_Column), data.Group_Cd, Number(data.Show_Color_Flag), Number(data.Order_Qty_Coeff), data.Factory_Comment, data.Factory_Comment_Update_Date, data.FR_Fabric_Code, data.FR_Fabric_Name, data.Ph1_First_Discrimination_Flag_Old, data.Ph1_First_Discrimination_Flag, data.Order_Timing_Display_Value_Old, data.Order_Timing_Display_Value, data.Express_Line_Flag_Old, data.Express_Line_Flag, data.Manual_Lock_Flag_Old, data.Manual_Lock_Flag, data.Ph1_First_Discrimination_Flag_Now, data.Order_Timing_Display_Value_Now, data.Express_Line_Flag_Now, data.Manual_Lock_Flag_Now, data.Requested_Wh_DateOld, data.EXF, data.Color_Recommend, data.Trim_Recommend, data.PORecommend, Number(data.BD_EXF_DL_Setting_LTBefore_Cal), Number(data.PO_EXF_DL_Setting_LTBefore_Cal), Number(data.Material_Supplier_Holiday_Excluding), Number(data.Sewing_FTY_Holiday_Excluding), Number(data.BD_EXF_DL_Setting_LT), Number(data.PO_EXF_DL_Setting_LT), Number(data.BD_EXF_Registered_LT), Number(data.PO_EXF_Registered_LT), Number(data.BD_EXFtotal_Abnormal_LT), Number(data.PO_EXFtotal_Abnormal_LT), Number(data.Abnormal_LT_Reason_BD1), Number(data.Abnormal_LT_Reason_BD2), Number(data.Abnormal_LT_Reason_BD3), Number(data.Abnormal_LT_Reason_BD4), Number(data.Abnormal_LT_Reason_BD5), Number(data.Abnormal_LT_BD1), Number(data.Abnormal_LT_BD2), Number(data.Abnormal_LT_BD3), Number(data.Abnormal_LT_BD4), Number(data.Abnormal_LT_BD5), Number(data.Abnormal_LT_Reason_PO1), Number(data.Abnormal_LT_Reason_PO2), Number(data.Abnormal_LT_Reason_PO3), Number(data.Abnormal_LT_Reason_PO4), Number(data.Abnormal_LT_Reason_PO5), Number(data.Abnormal_LT_PO1), Number(data.Abnormal_LT_PO2), Number(data.Abnormal_LT_PO3), Number(data.Abnormal_LT_PO4), Number(data.Abnormal_LT_PO5), 'Bidhun', 1, id)
                 if (dtoData.productionPlanId != null) {
                     const details = await this.ordersRepository.findOne({ where: { productionPlanId: dtoData.productionPlanId } })
                     const versionDetails = await this.ordersChildRepo.getVersion(dtoData.productionPlanId)
@@ -71,12 +76,12 @@ export class OrdersService {
                             manualLockFlagOld: dtoData.manualLockFlagOld, manualLockFlag: dtoData.manualLockFlag, Ph1FirstDiscriminationFlagNow: dtoData.Ph1FirstDiscriminationFlagNow, orderTimingDisplayValueNow: dtoData.orderTimingDisplayValueNow, expressLineFlagNow: dtoData.expressLineFlagNow, ManualLockFlagNow: dtoData.ManualLockFlagNow, requestedWhDateOld: dtoData.requestedWhDateOld, EXF: dtoData.EXF, colorRecommend: dtoData.colorRecommend, trimRecommend: dtoData.trimRecommend, PORecommend: dtoData.PORecommend, BD_EXF_DLSettingLTBeforeCal: dtoData.BD_EXF_DLSettingLTBeforeCal,
                             PO_EXF_DLSettingLTBeforeCal: dtoData.PO_EXF_DLSettingLTBeforeCal, materialSupplierHolidayExcluding: dtoData.materialSupplierHolidayExcluding, sewingFTYHolidayExcluding: dtoData.sewingFTYHolidayExcluding, BD_EXF_DLSettingLT: dtoData.BD_EXF_DLSettingLT, PO_EXF_DLSettingLT: dtoData.PO_EXF_DLSettingLT, BD_EXFRegisteredLT: dtoData.BD_EXFRegisteredLT, PO_EXFRegisteredLT: dtoData.PO_EXFRegisteredLT, BD_EXFtotalAbnormalLT: dtoData.BD_EXFtotalAbnormalLT, PO_EXFtotalAbnormalLT: dtoData.PO_EXFtotalAbnormalLT, abnormalLTReasonBD1: dtoData.abnormalLTReasonBD1,
                             abnormalLTReasonBD2: dtoData.abnormalLTReasonBD2, abnormalLTReasonBD3: dtoData.abnormalLTReasonBD3, abnormalLTReasonBD4: dtoData.abnormalLTReasonBD4, abnormalLTReasonBD5: dtoData.abnormalLTReasonBD5, abnormalLTBD1: dtoData.abnormalLTBD1, abnormalLTBD2: dtoData.abnormalLTBD2, abnormalLTBD3: dtoData.abnormalLTBD3, abnormalLTBD4: dtoData.abnormalLTBD4, abnormalLTBD5: dtoData.abnormalLTBD5, abnormalLTReasonPO1: dtoData.abnormalLTReasonPO1, abnormalLTReasonPO2: dtoData.abnormalLTReasonPO2, abnormalLTReasonPO3: dtoData.abnormalLTReasonPO3, abnormalLTReasonPO4: dtoData.abnormalLTReasonPO4,
-                            abnormalLTReasonPO5: dtoData.abnormalLTReasonPO5, abnormalLTPO1: dtoData.abnormalLTPO1, abnormalLTPO2: dtoData.abnormalLTPO2, abnormalLTPO3: dtoData.abnormalLTPO3, abnormalLTPO4: dtoData.abnormalLTPO4, abnormalLTPO5: dtoData.abnormalLTPO5, version: dtoData.version, updatedUser: dtoData.userName, orderStatus: 'UNACCEPTED'
+                            abnormalLTReasonPO5: dtoData.abnormalLTReasonPO5, abnormalLTPO1: dtoData.abnormalLTPO1, abnormalLTPO2: dtoData.abnormalLTPO2, abnormalLTPO3: dtoData.abnormalLTPO3, abnormalLTPO4: dtoData.abnormalLTPO4, abnormalLTPO5: dtoData.abnormalLTPO5, version: dtoData.version, updatedUser: dtoData.userName, orderStatus: 'UNACCEPTED', fileId: id
                         })
                         if (!updateOrder.affected) {
                             return new CommonResponseModel(false, 0, 'Something went wrong in order update')
                         }
-                        const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData);
+                        const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
                         const saveExcelEntity: OrdersChildEntity = await this.ordersChildRepo.save(convertedExcelEntity);
                         if (saveExcelEntity) {
                             //difference insertion to order diff table
@@ -99,9 +104,9 @@ export class OrdersService {
                         }
                     } else {
                         dtoData.version = 1
-                        const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData);
+                        const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
                         const saveExcelEntity: OrdersEntity = await this.ordersRepository.save(convertedExcelEntity);
-                        const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData);
+                        const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
                         const saveChildExcelEntity: OrdersChildEntity = await this.ordersChildRepo.save(convertedChildExcelEntity);
                         // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
                         if (!saveChildExcelEntity) {
@@ -155,30 +160,38 @@ export class OrdersService {
         return new CommonResponseModel(true, 22, 'data retrieved', data)
     }
 
-    async revertFileData(): Promise<CommonResponseModel>{
-        const latestData = await this.ordersChildRepo.getLatestRecord()
-        return new CommonResponseModel(true, 22, 'data retrieved', latestData)
+    async revertFileData(req:FileIdReq): Promise<CommonResponseModel> {
+        if(req){
+            const latestFileId = await this.fileUploadRepo.deleteChildData(req.fileId)
+        }
+        if(req){
+            const deleteChildData = await this.ordersChildRepo.deleteChildData(req)
+        }
+
+        return new CommonResponseModel(true, 22, 'data retrieved', req)
     }
 
-    async updatePath(filePath: string, filename: string, id: number): Promise<CommonResponseModel> {
-        console.log('upload service id---------------', id)
-        try {
-            // const filePathUpdate = await this.projRepo.update(
-            //     { id: id },
-            //     { filePath: filePath, fileName: filename },
-            // );
-            // const result = await this.projRepo.findOne({ where: { id: id } })
-            // console.log('************result************', result)
-            // if (filePathUpdate.affected > 0) {
-            //     return new CommonResponseModel(true, 11, 'uploaded successfully', filePath);
-            // }
-            // else {
-            //     return new CommonResponseModel(false, 11, 'uploaded failed', filePath);
-            // }
-            return
+    async updatePath(filePath: string, filename: string): Promise<CommonResponseModel> {
+        const entity = new FileUploadEntity()
+        entity.fileName = filename;
+        entity.filePath = filePath;
+        const save = await this.fileUploadRepo.save(entity)
+        if (save) {
+            return new CommonResponseModel(true, 11, 'uploaded successfully', save);
         }
-        catch (error) {
-            console.log(error);
+        else {
+            return new CommonResponseModel(false, 11, 'uploaded failed', save);
+        }
+    }
+
+    async getUploadFilesData():Promise <CommonResponseModel>{
+        const data = await this.fileUploadRepo.getFilesData()
+        console.log('-----------------------upload data',data)
+        if(data){
+            return new CommonResponseModel(true, 11, 'uploaded files data retrived successfully', data);
+        }
+        else {
+            return new CommonResponseModel(false, 11, 'Error Occured', data);
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { CommonResponseModel } from '@project-management-system/shared-models';
@@ -6,7 +6,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiConsumes } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
-import { extname } from 'path';''
+import { extname } from 'path';import { FileIdReq } from './models/file-id.req';
+''
 
 @Controller('orders')
 export class OrdersController {
@@ -28,11 +29,11 @@ export class OrdersController {
     //     }
     // }
 
-    @Post('/saveOrder')
-    async saveOrder(@Body() data: any): Promise<CommonResponseModel> {
-        console.log('--------file------', data)
+    @Post('/saveOrder/:id')
+    async saveOrder( @Param('id') id:number,@Body() data: any ): Promise<CommonResponseModel> {
+        console.log('----------control--------',id)
         try {
-            return this.ordersService.saveOrdersData(data);
+            return this.ordersService.saveOrdersData(data,id);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -105,14 +106,13 @@ export class OrdersController {
             return this.ordersService.getMaximumChangedOrders();
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-
         }
     }
 
     @Post('/revertFileData')
-    async revertFileData(): Promise<CommonResponseModel> {
+    async revertFileData(@Body() req:FileIdReq): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.revertFileData();
+            return this.ordersService.revertFileData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -143,12 +143,21 @@ export class OrdersController {
       },
     }))
   
-    async fileUpload(@UploadedFile() file, @Body() uploadData: any): Promise<CommonResponseModel> {
-        console.log('-------controller------------',file)
+    async fileUpload(@UploadedFile() file): Promise<CommonResponseModel> {
       try {
-        // return await this.projectService.updatePath(file.path,file.filename, uploadData.id)
+        return await this.ordersService.updatePath(file.path,file.filename)
       } catch (error) {
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
+    }
+
+    @Post('/getUploadFilesData')
+    async getUploadFilesData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getUploadFilesData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
     }
 }
