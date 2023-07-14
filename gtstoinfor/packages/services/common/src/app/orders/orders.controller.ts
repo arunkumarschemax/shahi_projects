@@ -32,7 +32,7 @@ export class OrdersController {
     async saveOrder(@Body() data: any): Promise<CommonResponseModel> {
         console.log('--------file------', data)
         try {
-            return this.ordersService.saveOrdersData(data);
+            return this.ordersService.saveOrdersData(data); 
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
