@@ -973,4 +973,10 @@ export class OrdersEntity {
 
     @OneToMany(() => OrdersChildEntity, (ordersChild) => { ordersChild.orders }, { cascade: true })
     ordersChild: OrdersChildEntity;
+
+    @Column('int', {
+        nullable:true,
+        name: 'file_id',
+    })
+    fileId : number;
 }

@@ -3,7 +3,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 
 export class OrdersAdapter {
 
-    public convertDtoToEntity(dto: SaveOrderDto): OrdersEntity {
+    public convertDtoToEntity(dto: SaveOrderDto , id:number): OrdersEntity {
         const entity = new OrdersEntity()
         entity.productionPlanId = dto.productionPlanId;
         entity.year = dto.year;
@@ -140,146 +140,7 @@ export class OrdersAdapter {
         entity.abnormalLTPO5 = dto.abnormalLTPO5
         entity.createdUser = dto.userName
         entity.version = dto.version ? dto.version : 1
+        entity.fileId = id
         return entity
     }
-
-    // public convertEntityToDto(entity: OrdersEntity): SaveOrderDto {
-
-    //     const dto = new SaveOrderDto()
-    //     dto.productionPlanId = entity.productionPlanId;
-    //     dto.year = entity.year;
-    //     dto.planningSeason = entity.planningSeason
-    //     dto.season = entity.season
-    //     dto.itemBrand = entity.itemBrand
-    //     dto.businessUnit = entity.businessUnit
-    //     dto.itemCode = entity.itemCode
-    //     dto.itemName = entity.itemName
-    //     dto.mainSampleCode = entity.mainSampleCode
-    //     dto.mainSampleName = entity.mainSampleName
-    //     dto.supplierRMCode = entity.supplierRMCode
-    //     dto.supplierRMName = entity.supplierRMName
-    //     dto.vendorCode = entity.vendorCode
-    //     dto.vendorName = entity.vendorName
-    //     dto.managementFactoryCode = entity.managementFactoryCode
-    //     dto.managementFactoryName = entity.managementFactoryName
-    //     dto.branchFactoryCode = entity.branchFactoryCode
-    //     dto.branchFactoryName = entity.branchFactoryName
-    //     dto.rmSupplierCode = entity.rmSupplierCode
-    //     dto.rmSupplierName = entity.rmSupplierName
-    //     dto.sewingDifficulty = entity.sewingDifficulty
-    //     dto.departmentCode = entity.departmentCode
-    //     dto.departmentName = entity.departmentName
-    //     dto.class1Code = entity.class1Code
-    //     dto.Class1Name = entity.Class1Name
-    //     dto.productionPlanTypeName = entity.productionPlanTypeName
-    //     dto.monthWeekFlag = entity.monthWeekFlag
-    //     dto.lastUpdateDate = entity.lastUpdateDate
-    //     dto.requestedWhDate = entity.requestedWhDate
-    //     dto.contractedDate = entity.contractedDate
-    //     dto.transportMethodName = entity.transportMethodName
-    //     dto.logisticsTypeName = entity.logisticsTypeName
-    //     dto.orderQtyPcs = entity.orderQtyPcs
-    //     dto.yarnOrderAcceptance = entity.yarnOrderAcceptance
-    //     dto.yarnOrderRequestDate = entity.yarnOrderRequestDate
-    //     dto.yarnOrderAnswerDate = entity.yarnOrderActualDate
-    //     dto.yarnOrderActualDate = entity.yarnOrderActualDate
-    //     dto.yarnOrderNO = entity.yarnOrderNO
-    //     dto.yarnActualOrderQtyPcs = entity.yarnActualOrderQtyPcs
-    //     dto.yarnUpdateDate = entity.yarnUpdateDate
-    //     dto.fabricOrderAcceptance = entity.fabricOrderAcceptance
-    //     dto.fabricOrderRequestDate = entity.fabricOrderRequestDate
-    //     dto.fabricOrderAnswerDate = entity.fabricOrderAnswerDate
-    //     dto.fabricOrderActualDate = entity.fabricOrderActualDate
-    //     dto.fabricOrderNO = entity.fabricOrderNO
-    //     dto.fabricActualOrderQtyPcs = entity.fabricActualOrderQtyPcs
-    //     dto.fabricUpdateDate = entity.fabricUpdateDate
-    //     dto.colorOrderAcceptance = entity.colorOrderAcceptance
-    //     dto.colorOrderRequestDate = entity.colorOrderRequestDate
-    //     dto.colorOrderAnswerDate = entity.colorOrderAnswerDate
-    //     dto.colorOrderActualDate = entity.colorOrderActualDate
-    //     dto.colorOrderNO = entity.colorOrderNO
-    //     dto.colorActualOrderQtyPcs = entity.colorActualOrderQtyPcs
-    //     dto.colorUpdateDate = entity.colorUpdateDate
-    //     dto.trimOrderAcceptance = entity.trimOrderAcceptance
-    //     dto.trimOrderRequestDate = entity.trimOrderRequestDate
-    //     dto.trimOrderAnswerDate = entity.trimOrderAnswerDate
-    //     dto.trimOrderAnswerDate = entity.trimOrderAnswerDate
-    //     dto.trimOrderNO = entity.trimOrderNO
-    //     dto.trimActualOrderQtyPcs = entity.trimActualOrderQtyPcs
-    //     dto.trimUpdateDate = entity.trimUpdateDate
-    //     dto.POOrderAcceptance = entity.POOrderAcceptance
-    //     dto.POOrderRequestDate = entity.POOrderRequestDate
-    //     dto.POOrderAnswerDate = entity.POOrderAnswerDate
-    //     dto.POOrderActualDate = entity.POOrderActualDate
-    //     dto.POOrderNO = entity.POOrderNO
-    //     dto.POActualOrderQtyPcs = entity.POActualOrderQtyPcs
-    //     dto.POUpdateDate = entity.POUpdateDate
-    //     dto.orderQtyPcsOld = entity.orderQtyPcsOld
-    //     dto.transportMethodNameOld = entity.transportMethodNameOld
-    //     dto.logisticsTypeNameOld = entity.logisticsTypeNameOld
-    //     dto.yarnOrderRequestDateOld = entity.yarnOrderRequestDateOld
-    //     dto.fabricOrderRequestDateOld = entity.fabricOrderRequestDateOld
-    //     dto.colorOrderRequestDateOld = entity.colorOrderRequestDateOld
-    //     dto.trimOrderRequestDateOld = entity.trimOrderRequestDateOld
-    //     dto.POOrderRequestDateOld = entity.POOrderRequestDateOld
-    //     dto.status = entity.status
-    //     dto.displayMonthWK = entity.displayMonthWK
-    //     dto.displayMonthWKColumn = entity.displayMonthWKColumn
-    //     dto.groupCd = entity.groupCd
-    //     dto.showColorFlag = entity.showColorFlag
-    //     dto.orderQtyCoeff = entity.orderQtyCoeff
-    //     dto.factoryComment = entity.factoryComment
-    //     dto.factoryCommentUpdateDate = entity.factoryCommentUpdateDate
-    //     dto.FRFabricCode = entity.FRFabricCode
-    //     dto.FRFabricName = entity.FRFabricName
-    //     dto.Ph1FirstDiscriminationFlagOld = entity.Ph1FirstDiscriminationFlagOld
-    //     dto.Ph1FirstDiscriminationFlag = entity.Ph1FirstDiscriminationFlag
-    //     dto.orderTimingDisplayValueOld = entity.orderTimingDisplayValueOld
-    //     dto.orderTimingDisplayValue = entity.orderTimingDisplayValue
-    //     dto.expressLineFlagOld = entity.expressLineFlagOld
-    //     dto.expressLineFlag = entity.expressLineFlag
-    //     dto.manualLockFlagOld = entity.manualLockFlagOld
-    //     dto.manualLockFlag = entity.manualLockFlag
-    //     dto.Ph1FirstDiscriminationFlagNow = entity.Ph1FirstDiscriminationFlagNow
-    //     dto.orderTimingDisplayValueNow = entity.orderTimingDisplayValueNow
-    //     dto.expressLineFlagNow = entity.expressLineFlagNow
-    //     dto.ManualLockFlagNow = entity.ManualLockFlagNow
-    //     dto.requestedWhDateOld = entity.requestedWhDateOld
-    //     dto.EXF = entity.EXF
-    //     dto.colorRecommend = entity.colorRecommend
-    //     dto.trimRecommend = entity.trimRecommend
-    //     dto.PORecommend = entity.PORecommend
-    //     dto.BD_EXF_DLSettingLTBeforeCal = entity.BD_EXF_DLSettingLTBeforeCal
-    //     dto.PO_EXF_DLSettingLTBeforeCal = entity.PO_EXF_DLSettingLTBeforeCal
-    //     dto.materialSupplierHolidayExcluding = entity.materialSupplierHolidayExcluding
-    //     dto.sewingFTYHolidayExcluding = entity.sewingFTYHolidayExcluding
-    //     dto.BD_EXF_DLSettingLT = entity.BD_EXF_DLSettingLT
-    //     dto.PO_EXF_DLSettingLT = entity.PO_EXF_DLSettingLT
-    //     dto.BD_EXFRegisteredLT = entity.BD_EXFRegisteredLT
-    //     dto.PO_EXFRegisteredLT = entity.PO_EXFRegisteredLT
-    //     dto.BD_EXFtotalAbnormalLT = entity.BD_EXFtotalAbnormalLT
-    //     dto.PO_EXFtotalAbnormalLT = entity.PO_EXFtotalAbnormalLT
-    //     dto.abnormalLTReasonBD1 = entity.abnormalLTReasonBD1
-    //     dto.abnormalLTReasonBD2 = entity.abnormalLTReasonBD2
-    //     dto.abnormalLTReasonBD3 = entity.abnormalLTReasonBD3
-    //     dto.abnormalLTReasonBD4 = entity.abnormalLTReasonBD4
-    //     dto.abnormalLTReasonBD5 = entity.abnormalLTReasonBD5
-    //     dto.abnormalLTBD1 = entity.abnormalLTBD1
-    //     dto.abnormalLTBD2 = entity.abnormalLTBD2
-    //     dto.abnormalLTBD3 = entity.abnormalLTBD3
-    //     dto.abnormalLTBD4 = entity.abnormalLTBD4
-    //     dto.abnormalLTBD5 = entity.abnormalLTBD5
-    //     dto.abnormalLTReasonPO1 = entity.abnormalLTReasonPO1
-    //     dto.abnormalLTReasonPO2 = entity.abnormalLTReasonPO2
-    //     dto.abnormalLTReasonPO3 = entity.abnormalLTReasonPO3
-    //     dto.abnormalLTReasonPO4 = entity.abnormalLTReasonPO4
-    //     dto.abnormalLTReasonPO5 = entity.abnormalLTReasonPO5
-    //     dto.abnormalLTPO1 = entity.abnormalLTPO1
-    //     dto.abnormalLTPO2 = entity.abnormalLTPO2
-    //     dto.abnormalLTPO3 = entity.abnormalLTPO3
-    //     dto.abnormalLTPO4 = entity.abnormalLTPO4
-    //     dto.abnormalLTPO5 = entity.abnormalLTPO5
-    //     dto.userName = entity.createdUser
-    //     return dto
-    // }
 }

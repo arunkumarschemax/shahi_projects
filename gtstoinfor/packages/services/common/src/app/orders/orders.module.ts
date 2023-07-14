@@ -11,15 +11,18 @@ import { OrdersChildRepository } from './repository/orders-child.repository';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
+import { FileUploadRepository } from './repository/upload.repository';
+import { FileUploadEntity } from './entities/upload-file.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       OrdersEntity,
       OrdersChildEntity,
-      OrdersDifferenceEntity
+      OrdersDifferenceEntity,
+      FileUploadEntity
     ])],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler]
+  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository]
 })
 export class OrdersModule { }
