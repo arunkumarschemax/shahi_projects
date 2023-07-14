@@ -88,6 +88,12 @@ export const baseRouterList = [
                 path: "grid-view",
                 filepath: "grid-view",
             },
+            {
+                label: "Revert Orders",
+                key: "revert-orders",
+                path: "revert-orders",
+                filepath: "revert-orders",
+            }
         ],
     },
 ];

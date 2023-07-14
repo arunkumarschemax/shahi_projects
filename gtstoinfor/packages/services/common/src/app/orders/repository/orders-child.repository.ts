@@ -5,6 +5,7 @@ import { OrdersChildEntity } from "../entities/orders-child.entity";
 import { OrdersEntity } from "../entities/orders.entity";
 import { AppDataSource } from "../../app-datasource";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
+import { FileIdReq } from "../models/file-id.req";
 
 @Injectable()
 export class OrdersChildRepository extends Repository<OrdersChildEntity> {
@@ -31,5 +32,13 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             .limit(10)
         return await query.getRawMany();
     }
+
+   
+
+    async deleteChildData(req:FileIdReq): Promise<void> {
+        const queryBuilder = this.createQueryBuilder('oc');
+        queryBuilder.where(`file_id = '${req}'`);
+        await queryBuilder.delete().execute();
+      }
 
 }

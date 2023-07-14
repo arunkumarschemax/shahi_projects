@@ -1,16 +1,14 @@
 import { useState } from 'react';
-import { Upload, Button, Card, Form, message } from 'antd';
+import { Upload, Button, Card, Form, message, UploadProps, Typography, Row, Col } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import { RcFile } from 'antd/lib/upload/interface';
 import { OrdersService } from '@project-management-system/shared-services';
-import { SaveOrderDto } from '@project-management-system/shared-models';
 import Papa from 'papaparse'
+import AlertMessages from '../common/common-functions/alert-messages';
+import { useNavigate } from 'react-router-dom';
 
 
-interface CustomUploadFile extends RcFile {
-  uid: string;
-}
 export default function ExcelImport() {
   const [loading, setLoading] = useState(false);
   const ordersService = new OrdersService();
@@ -18,6 +16,8 @@ export default function ExcelImport() {
   const [data, setData] = useState([])
   const [columns, setColumns] = useState([]);
   const [values, setValues] = useState([])
+  const [filelist, setFilelist] = useState([]);
+  let navigate = useNavigate();
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -39,25 +39,70 @@ export default function ExcelImport() {
       }
     });
   };
+  console.log(selectedFile)
 
   const handleUpload = async () => {
     try {
-      const formData = new FormData();
-      console.log(selectedFile)
-      formData.append('file', selectedFile);
-      ordersService.saveOrder(formData, data).then((res) => {
-        if (res.status) {
-          message.success(res.internalMessage)
-        } else {
-          message.error(res.internalMessage)
-        }
-      }).finally(() => {
-        setLoading(false);
-      })
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        ordersService.fileUpload(formData).then((fileRes) => {
+          ordersService.saveOrder(data, fileRes?.data?.id).then((res) => {
+            console.log(res.status)
+            if (res.status) {
+              message.success(res.internalMessage)
+              navigate("/excel-import/grid-view");
+            } else {
+              message.error(res.internalMessage)
+            }
+
+          }).finally(() => {
+            setLoading(false);
+          })
+        });
+      }
     } catch (error) {
       message.error(error.message)
     }
   }
+
+  const uploadFieldProps: UploadProps = {
+    multiple: false,
+    onRemove: file => {
+      setFilelist([]);
+      // uploadFileList([]);
+    },
+    beforeUpload: (file: any) => {
+      if (!file.name.match(/\.(csv)$/)) {
+        AlertMessages.getErrorMessage("Only csv files are allowed!");
+        return true;
+      }
+      var reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onload = data => {
+        if (filelist.length === 1) {
+          AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+          return true;
+        } else {
+          setFilelist([...filelist, file]);
+          // uploadFileList([...filelist, file]);
+          return false;
+        }
+      };
+
+      // Add a default return value for cases where none of the conditions are met
+      return false;
+    },
+    progress: {
+      strokeColor: {
+        '0%': '#108ee9',
+        '100%': '#87d068',
+      },
+      strokeWidth: 3,
+      format: percent => `${parseFloat(percent.toFixed(2))}%`,
+    },
+    fileList: filelist
+  };
 
   return (
     <>
@@ -69,6 +114,7 @@ export default function ExcelImport() {
           type="primary"
           onClick={handleUpload}
           loading={loading}
+          disabled={!selectedFile}
         >
           Upload
         </Button>

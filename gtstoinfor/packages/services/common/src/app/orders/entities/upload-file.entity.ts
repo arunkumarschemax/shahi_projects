@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('file_upload') //change the name
-export class OrdersEntity {
+export class FileUploadEntity {
 
     @PrimaryGeneratedColumn('increment', {
         name: 'id',
@@ -20,12 +20,6 @@ export class OrdersEntity {
         name: "file_path",
     })
     filePath: string;
-
-    @Column('varchar', {
-        name: 'uploaded_date',
-        length: 10
-    })
-    uploadedDate: string;
 
     @Column('varchar', {
         nullable: true,

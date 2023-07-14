@@ -1,9 +1,13 @@
-import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { CommonResponseModel } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
+import { ApiConsumes } from '@nestjs/swagger';
+import { diskStorage } from 'multer';
+import { extname } from 'path';import { FileIdReq } from './models/file-id.req';
+''
 
 @Controller('orders')
 export class OrdersController {
@@ -25,11 +29,11 @@ export class OrdersController {
     //     }
     // }
 
-    @Post('/saveOrder')
-    async saveOrder(@Body() data: any): Promise<CommonResponseModel> {
-        console.log('--------file------', data)
+    @Post('/saveOrder/:id')
+    async saveOrder( @Param('id') id:number,@Body() data: any ): Promise<CommonResponseModel> {
+        console.log('----------control--------',id)
         try {
-            return this.ordersService.saveOrdersData(data);
+            return this.ordersService.saveOrdersData(data,id);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -100,6 +104,57 @@ export class OrdersController {
     async getMaximumChangedOrders(): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getMaximumChangedOrders();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/revertFileData')
+    async revertFileData(@Body() req:FileIdReq): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.revertFileData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+    @Post('/fileUpload')
+    @ApiConsumes('multipart/form-data')
+    @UseInterceptors(FileInterceptor('file', {
+      limits: { files: 1 },
+      storage: diskStorage({
+        destination: './upload-files',
+        filename: (req, file, callback) => {
+          const name = file.originalname.split('.')[0];
+          const fileExtName = extname(file.originalname);
+          const randomName = Array(4)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+          callback(null, `${name}-${randomName}${fileExtName}`);
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|xls|xlsx|csv)$/)) {
+          return callback(new Error('Only png,jpeg,PNG,jpg,JPG,xls,xlsx and csv files are allowed!'), false);
+        }
+        callback(null, true);
+      },
+    }))
+  
+    async fileUpload(@UploadedFile() file): Promise<CommonResponseModel> {
+      try {
+        return await this.ordersService.updatePath(file.path,file.filename)
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
+
+    @Post('/getUploadFilesData')
+    async getUploadFilesData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getUploadFilesData();
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 

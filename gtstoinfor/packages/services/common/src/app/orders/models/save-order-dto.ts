@@ -272,6 +272,8 @@ export class SaveOrderDto {
     userName: string;
     @ApiProperty()
     version?: number;
+    @ApiProperty()
+    fileId?:number;
 
     constructor(
         productionPlanId: string,
@@ -408,7 +410,8 @@ export class SaveOrderDto {
         abnormalLTPO4: number,
         abnormalLTPO5: number,
         userName: string,
-        version?: number) {
+        version?: number,
+        fileId?:number) {
         this.productionPlanId = productionPlanId
         this.year = year
         this.planningSeason = planningSeason
@@ -544,5 +547,6 @@ export class SaveOrderDto {
         this.abnormalLTPO5 = abnormalLTPO5
         this.userName = userName
         this.version = version
+        this.fileId = fileId;
     }
 }

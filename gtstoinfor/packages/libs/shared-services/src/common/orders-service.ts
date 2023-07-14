@@ -1,11 +1,33 @@
 import { CommonResponseModel, SaveOrderDto } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
+import axios from "axios";
 
 export class OrdersService extends CommonAxiosService {
+    revertFileData() {
+        throw new Error('Method not implemented.');
+    }
+    getrevertFileData() {
+        throw new Error('Method not implemented.');
+    }
     private ordersController = "/orders"
 
-    async saveOrder(formData: any, data: any): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/saveOrder", data)
+    // async saveOrder(data: any, id:number): Promise<CommonResponseModel> {
+    //     return this.axiosPostCall(this.ordersController + "/saveOrder", data,{id})
+    // }
+
+    async saveOrder(data: any, id: number): Promise<CommonResponseModel> {
+
+        const idn = id; // Replace with the desired id value
+        const url = `/orders/saveOrder/${idn}`;
+        axios.post(url, data)
+            .then((response) => {
+                // Handle the response
+            })
+            .catch((error) => {
+                // Handle errors
+            });
+        
+        return this.axiosPostCall(url, data);
     }
 
     async getOrdersData(): Promise<CommonResponseModel> {
@@ -35,5 +57,10 @@ export class OrdersService extends CommonAxiosService {
     async getMaximumChangedOrders(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getMaximumChangedOrders")
     }
-
+    async fileUpload(file: any): Promise<CommonResponseModel> {
+        return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
+    }
+    async getUploadFilesData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getUploadFilesData")
+    }
 }
