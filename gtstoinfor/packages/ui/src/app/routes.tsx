@@ -11,6 +11,8 @@ import ExcelImport from "./excel-import/excel-import"
 import ChangesGrid from "./excel-import/changes-grid"
 import AllOrdersGridView from "./excel-import/orders-view-grid"
 import { Dashboard } from "./common/dashboards/dashboard"
+import { FileRevert } from "./excel-import/file-revert"
+
 
 export const AppRoutes = () => {
     const router = createBrowserRouter(createRoutesFromElements(
@@ -32,6 +34,7 @@ export const AppRoutes = () => {
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
                     <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
                     <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
+                    <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
                 </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
@@ -60,6 +63,7 @@ export const AppRoutes = () => {
                         <Route path='excel-import' element={<ExcelImport />} />
                         <Route path='changes-view' element={<ChangesGrid />} />
                         <Route path='grid-view' element={<AllOrdersGridView />} />
+                        <Route path='revert-orders' element={<FileRevert />} />
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

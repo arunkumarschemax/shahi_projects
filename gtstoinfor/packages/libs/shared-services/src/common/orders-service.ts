@@ -3,6 +3,12 @@ import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
 export class OrdersService extends CommonAxiosService {
+    revertFileData() {
+        throw new Error('Method not implemented.');
+    }
+    getrevertFileData() {
+        throw new Error('Method not implemented.');
+    }
     private ordersController = "/orders"
 
     // async saveOrder(data: any, id:number): Promise<CommonResponseModel> {
@@ -53,5 +59,8 @@ export class OrdersService extends CommonAxiosService {
     }
     async fileUpload(file: any): Promise<CommonResponseModel> {
         return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
+    }
+    async getUploadFilesData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getUploadFilesData")
     }
 }

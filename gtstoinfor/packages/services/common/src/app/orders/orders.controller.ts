@@ -150,4 +150,14 @@ export class OrdersController {
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
     }
+
+    @Post('/getUploadFilesData')
+    async getUploadFilesData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getUploadFilesData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
 }

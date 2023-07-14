@@ -205,4 +205,15 @@ export class OrdersService {
             return new CommonResponseModel(false, 11, 'uploaded failed', save);
         }
     }
+
+    async getUploadFilesData():Promise <CommonResponseModel>{
+        const data = await this.fileUploadRepo.getFilesData()
+        console.log('-----------------------upload data',data)
+        if(data){
+            return new CommonResponseModel(true, 11, 'uploaded files data retrived successfully', data);
+        }
+        else {
+            return new CommonResponseModel(false, 11, 'Error Occured', data);
+        }
+    }
 }
