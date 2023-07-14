@@ -4,14 +4,11 @@ import { UploadOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import { RcFile } from 'antd/lib/upload/interface';
 import { OrdersService } from '@project-management-system/shared-services';
-import { SaveOrderDto } from '@project-management-system/shared-models';
 import Papa from 'papaparse'
 import AlertMessages from '../common/common-functions/alert-messages';
+import { useNavigate } from 'react-router-dom';
 
 
-interface CustomUploadFile extends RcFile {
-  uid: string;
-}
 export default function ExcelImport() {
   const [loading, setLoading] = useState(false);
   const ordersService = new OrdersService();
@@ -20,6 +17,7 @@ export default function ExcelImport() {
   const [columns, setColumns] = useState([]);
   const [values, setValues] = useState([])
   const [filelist, setFilelist] = useState([]);
+  let navigate = useNavigate();
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -47,16 +45,13 @@ export default function ExcelImport() {
     try {
       if (selectedFile) {
         const formData = new FormData();
-        console.log(selectedFile)
         formData.append('file', selectedFile);
-        console.log(formData)
         ordersService.fileUpload(formData).then((fileRes) => {
-          console.log(fileRes?.data?.id)
           ordersService.saveOrder(data, fileRes?.data?.id).then((res) => {
             console.log(res.status)
             if (res.status) {
-              console.log('11111111111111')
               message.success(res.internalMessage)
+              navigate("/excel-import/grid-view");
             } else {
               message.error(res.internalMessage)
             }
@@ -119,31 +114,10 @@ export default function ExcelImport() {
           type="primary"
           onClick={handleUpload}
           loading={loading}
+          disabled={!selectedFile}
         >
           Upload
         </Button>
-        {/* <Row gutter={24}>
-          <Col span={6}>
-            <Form.Item name="fileUpload"
-            >
-              <Upload {...uploadFieldProps} onChange={handleFileChange}>
-                <br /><Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}  >Upload File</Button>
-                <br /><Typography.Text type="secondary">
-                  (Supported formats csv)
-                </Typography.Text>
-              </Upload>
-            </Form.Item>
-          </Col>
-          <Col span={3} style={{marginTop:'14px'}}>
-            <Button
-              type="primary"
-              onClick={handleUpload}
-              loading={loading}
-            >
-              Upload
-            </Button>
-          </Col>
-        </Row> */}
       </Card>
     </>
   );
