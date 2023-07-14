@@ -52,6 +52,7 @@ const ChangesGrid = () => {
         {
             title: 'S No',
             key: 'sno',
+            width:'30px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
@@ -311,7 +312,7 @@ const ChangesGrid = () => {
                     </Col>
                 </Row>
             </Form>
-            <Tabs items={items} style={{ height: 220 }} />
+            <Tabs items={items} />
         </Card>
     );
 };
