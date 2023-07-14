@@ -11,11 +11,10 @@ export class FileUploadRepository extends Repository<FileUploadEntity> {
         super(fileUpload.target, fileUpload.manager, fileUpload.queryRunner);
     }
 
-    async getLatestRecord (): Promise<any[]> {
+    async getFilesData (): Promise<any[]> {
         const query = this.createQueryBuilder('fup')
-        .select(`fup.id as fileId`)
+        .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath, fup.created_at as uploadedDate`)
         .orderBy(`fup.created_at`, 'DESC')
-        .limit(1)
         return await query.getRawMany();
     }
 
