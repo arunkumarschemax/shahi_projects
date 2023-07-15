@@ -34,7 +34,7 @@ const ItemChanges = () =>{
         },
        
         {
-            title: 'Count',
+            title: 'No.of Change Count',
             dataIndex: 'count'
         },
         
