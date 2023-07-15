@@ -219,22 +219,12 @@ export class OrdersService {
 
     async getUploadFilesData():Promise <CommonResponseModel>{
         const data = await this.fileUploadRepo.getFilesData()
-        if(data){
+        if(data.length > 0){
             return new CommonResponseModel(true, 11, 'uploaded files data retrived successfully', data);
         }
         else {
-            return new CommonResponseModel(false, 11, 'Error Occured', data);
+            return new CommonResponseModel(false, 11, 'No data found', data);
         }
     }
 
-    async getData():Promise<CommonResponseModel>{
-        const data = await this.ordersChildRepo.find({where : {fileId : 21} ,
-            relations :['orders']})
-        if(data){
-            return new CommonResponseModel(true, 11, 'uploaded files data retrived successfully', data);
-        }
-        else {
-            return new CommonResponseModel(false, 11, 'Error Occured', data);
-        }
-    }
 }

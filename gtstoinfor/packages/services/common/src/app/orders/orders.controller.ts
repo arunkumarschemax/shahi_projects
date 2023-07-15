@@ -161,14 +161,4 @@ export class OrdersController {
 
         }
     }
-
-    @Post('/getData')
-    async getData(): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.getData();
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-
-        }
-    }
 }
