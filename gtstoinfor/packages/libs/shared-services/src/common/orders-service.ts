@@ -1,14 +1,8 @@
-import { CommonResponseModel, SaveOrderDto } from "@project-management-system/shared-models"
+import { CommonResponseModel, FileIdReq, SaveOrderDto } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
 export class OrdersService extends CommonAxiosService {
-    revertFileData() {
-        throw new Error('Method not implemented.');
-    }
-    getrevertFileData() {
-        throw new Error('Method not implemented.');
-    }
     private ordersController = "/orders"
 
     // async saveOrder(data: any, id:number): Promise<CommonResponseModel> {
@@ -62,5 +56,10 @@ export class OrdersService extends CommonAxiosService {
     }
     async getUploadFilesData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getUploadFilesData")
+    }
+
+    async revertFileData(req:FileIdReq): Promise<CommonResponseModel> {
+        console.log(req)
+        return this.axiosPostCall(this.ordersController + "/revertFileData" , req)
     }
 }
