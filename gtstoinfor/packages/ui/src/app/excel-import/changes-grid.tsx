@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, TabsProps, Tooltip } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tabs, TabsProps, Tag, Tooltip } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
-import { ArrowDownOutlined, ArrowUpOutlined, DownloadOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, DownloadOutlined, FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { color } from 'highcharts';
 import { Excel } from 'antd-table-saveas-excel';
@@ -285,7 +285,8 @@ const ChangesGrid = () => {
         },
         {
             title: 'Order Status',
-            dataIndex: 'order_status'
+            dataIndex: 'order_status',
+            render:(value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
         }
     ];
 
@@ -381,17 +382,17 @@ const ChangesGrid = () => {
         {
             key: '1',
             label: <b>Order Qty : {filteredQtyData?.length} </b>,
-            children: <Table scroll={{ y: 400 }} dataSource={filteredQtyData} columns={columns} />,
+            children: <Table bordered scroll={{ y: 400 }} dataSource={filteredQtyData} columns={columns} />,
         },
         {
             key: '2',
             label: <b >Requested Warehouse Date : {filteredWarehouseDateData?.length}</b>,
-            children: <Table scroll={{ y: 400 }} dataSource={filteredWarehouseDateData} columns={columns1} />,
+            children: <Table bordered scroll={{ y: 400 }} dataSource={filteredWarehouseDateData} columns={columns1} />,
         },
         {
             key: '3',
             label: <b>Contracted date : {filteredContractDateData?.length}</b>,
-            children: <Table scroll={{ y: 400 }} dataSource={filteredContractDateData} columns={columns2} />,
+            children: <Table bordered scroll={{ y: 400 }} dataSource={filteredContractDateData} columns={columns2} />,
         },
     ];
 
@@ -405,17 +406,21 @@ const ChangesGrid = () => {
     }
 
     return (
-        <Card title='Revised orders'>
+        <Card title='Revised orders'  extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData  ? (<Button
+            type="default"
+            style={{ color: 'green' }}
+            onClick={exportExcel}
+            icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
             <Form form={form} layout={"vertical"} >
                 <Row gutter={[24, 24]}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
                         <Form.Item name="contractDate"
                             label="Contracted Date"
                         >
                             <RangePicker onChange={EstimatedETDDate} />
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name="orderStatus"
                             label="Order Status"
                         >
@@ -428,7 +433,7 @@ const ChangesGrid = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 22 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
                         <Button
                             type="primary"
                             icon={<SearchOutlined />}
@@ -436,7 +441,7 @@ const ChangesGrid = () => {
                             htmlType="button"
                             onClick={getFilterdData}>Search</Button>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 22 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
                         <Button
                             type="primary"
                             icon={<UndoOutlined />}
@@ -446,14 +451,14 @@ const ChangesGrid = () => {
                 </Row>
             </Form>
             {filteredQtyData || filteredContractDateData || filteredWarehouseDateData ? <>
-                <Row gutter={24}>
+                {/* <Row gutter={24}>
                     <Col>
                         <Button icon={<DownloadOutlined />} style={{ marginTop: '30px', }} onClick={() => { exportExcel(); }}>
                             Get Excel
                         </Button>
                     </Col>
-                </Row>
-                <Tabs items={items} />
+                </Row> */}
+                <Tabs type='card' items={items} />
             </> : <></>}
 
         </Card>
