@@ -34,8 +34,9 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     }
 
     async deleteChildData(req:FileIdReq): Promise<void> {
+        console.log(req)
         const queryBuilder = this.createQueryBuilder('oc');
-        queryBuilder.where(`file_id = '${req}'`);
+        queryBuilder.where(`file_id = '${req.fileId}'`);
         await queryBuilder.delete().execute();
       }
 
