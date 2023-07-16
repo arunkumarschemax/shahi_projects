@@ -342,7 +342,7 @@ const ChangesGrid = () => {
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'requested_wh_date',
-            width :'190px',
+            // width :'190px',
             render: (text, record) => {
                 return record.requested_wh_date ? moment(record.requested_wh_date).format('YYYY-MM-DD') : '-'
             }
@@ -379,7 +379,7 @@ const ChangesGrid = () => {
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'new_val',
-            width :'190px',
+            // width :'190px',
             render: (text, record) => (
                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
                     {moment(record.old_val).format('YYYY-MM-DD')  < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
@@ -451,7 +451,7 @@ const ChangesGrid = () => {
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'requested_wh_date',
-            width :'190px'
+            // width :'190px'
         },
         {
             title: 'Color Code',
@@ -597,7 +597,7 @@ const ChangesGrid = () => {
     }
 
     return (
-        <Card title='Compare Orders'  extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData  ? (<Button
+        <Card title='Compare Orders'  extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData ||differenceQtyData ? (<Button
             type="default"
             style={{ color: 'green' }}
             onClick={exportExcel}
@@ -641,7 +641,7 @@ const ChangesGrid = () => {
                     </Col>
                 </Row>
             </Form>
-            {filteredQtyData || filteredContractDateData || filteredWarehouseDateData ? <>
+            {filteredQtyData || filteredContractDateData || filteredWarehouseDateData ||differenceQtyData? <>
                 {/* <Row gutter={24}>
                     <Col>
                         <Button icon={<DownloadOutlined />} style={{ marginTop: '30px', }} onClick={() => { exportExcel(); }}>

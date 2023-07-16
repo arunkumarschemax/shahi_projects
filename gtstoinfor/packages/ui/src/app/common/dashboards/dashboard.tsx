@@ -30,10 +30,10 @@ export const Dashboard = () => {
             </Card>
             <Card>
                 <Row gutter={24}>
-                    <Col xs={24} sm={24} md={24} xl={14}>
+                    <Col xs={24} sm={24} md={24} xl={16}>
                         <ChangesGrid />
                     </Col>
-                    <Col xs={24} sm={24} md={24} xl={10}>
+                    <Col xs={24} sm={24} md={24} xl={8}>
                         <ItemChanges/>
                     </Col>
                 </Row>
