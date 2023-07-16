@@ -135,6 +135,11 @@ export class OrdersService {
         return new CommonResponseModel(true, 1, 'data retrived', data)
     }
 
+    async getQtyDifChangeData(): Promise<CommonResponseModel> {
+        const data = await this.ordersRepository.getItemQtyChangeData()
+        return new CommonResponseModel(true, 1, 'data retrieved', data)
+    }
+
     async getContractDateChangeData(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getContractDateChangeData()
         return new CommonResponseModel(true, 1, 'data retrived', data)

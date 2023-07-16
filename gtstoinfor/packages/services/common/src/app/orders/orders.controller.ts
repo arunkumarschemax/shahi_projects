@@ -60,6 +60,16 @@ export class OrdersController {
         }
     }
 
+    @Post('/getQtyDifChangeData')
+    async getQtyDifChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getQtyDifChangeData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
     @Post('/getContractDateChangeData')
     async getContractDateChangeData(): Promise<CommonResponseModel> {
         try {

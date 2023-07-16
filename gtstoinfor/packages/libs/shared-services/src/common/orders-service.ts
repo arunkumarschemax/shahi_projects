@@ -38,6 +38,10 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getQtyChangeData")
     }
 
+    async getQtyDifChangeData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getQtyDifChangeData")
+    }
+
     async getContractDateChangeData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getContractDateChangeData")
     }
