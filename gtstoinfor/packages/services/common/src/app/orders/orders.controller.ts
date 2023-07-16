@@ -120,7 +120,8 @@ export class OrdersController {
     }
 
     @Post('/revertFileData')
-    async revertFileData(@Body() req:FileIdReq): Promise<CommonResponseModel> {
+    async revertFileData(@Body() req:any): Promise<CommonResponseModel> {
+        console.log('------------controller----------------',req)
         try {
             return this.ordersService.revertFileData(req);
         } catch (err) {
