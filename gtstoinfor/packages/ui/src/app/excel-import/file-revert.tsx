@@ -1,6 +1,6 @@
 import { Button, Card, Popconfirm, Table, message } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, UndoOutlined } from '@ant-design/icons';
 import { OrdersService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 import moment from 'moment';
@@ -73,12 +73,12 @@ export function FileRevert() {
                     <>
                         {isFirstRecord && (
                             <Popconfirm
-                                title="Are you sure you want to delete this file?"
+                                title="Are you sure to revert this file?"
                                 okText="Yes"
                                 cancelText="No"
                                 onConfirm={() => revertFileData(record?.fileId)}
                             >
-                                <Button icon={<DeleteOutlined style={{ color: 'red' }} />} />
+                                <Button icon={<UndoOutlined  style={{ color: 'red' }} />} />
                             </Popconfirm>
                         )}
                         {!isFirstRecord && <></>}
