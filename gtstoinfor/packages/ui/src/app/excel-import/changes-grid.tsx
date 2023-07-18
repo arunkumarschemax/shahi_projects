@@ -102,6 +102,11 @@ const ChangesGrid = () => {
            
         },
         {
+            title: 'Last Updated Date',
+            dataIndex: 'last_update_date',
+           
+        },
+        {
             title: 'Requested Warehouse Date',
             dataIndex: 'requested_wh_date',
            
@@ -142,6 +147,11 @@ const ChangesGrid = () => {
             dataIndex: 'contracted_date'
         },
         {
+            title: 'Last Updated Date',
+            dataIndex: 'last_update_date',
+           
+        },
+        {
             title: 'Color Code',
             dataIndex: 'color_code'
         },
@@ -168,6 +178,11 @@ const ChangesGrid = () => {
             title: 'Contracted Date',
             dataIndex: 'new_val',
             
+        },
+        {
+            title: 'Last Updated Date',
+            dataIndex: 'last_update_date',
+           
         },
         {
             title: 'Order Quantity Pieces',
@@ -333,10 +348,24 @@ const ChangesGrid = () => {
             )
         },
         {
+            title: 'Version',
+            dataIndex: 'version',
+
+            sorter: (a, b) => a.version - b.version,
+            sortDirections: ['descend', 'ascend'],
+        },
+        {
             title: 'Contracted Date',
             dataIndex: 'contracted_date',
             render: (text, record) => {
                 return record.contracted_date ? moment(record.contracted_date).format('YYYY-MM-DD') : '-'
+            }
+        },
+        {
+            title: 'Last Updated Date',
+            dataIndex: 'last_update_date',
+            render: (text, record) => {
+                return record.last_update_date ? moment(record.last_update_date).format('YYYY-MM-DD') : '-'
             }
         },
         {
@@ -400,6 +429,11 @@ const ChangesGrid = () => {
             dataIndex: 'contracted_date'
         },
         {
+            title: 'Last Updated Date',
+            dataIndex: 'last_update_date',
+           
+        },
+        {
             title: 'Color Code',
             dataIndex: 'color_code'
         },
@@ -447,6 +481,11 @@ const ChangesGrid = () => {
             title: 'Order Quantity Pieces',
             dataIndex: 'order_qty_pcs',
 
+        },
+        {
+            title: 'Last Updated Date',
+            dataIndex: 'last_update_date',
+           
         },
         {
             title: 'Requested Warehouse Date',
