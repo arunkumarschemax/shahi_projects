@@ -88,7 +88,7 @@ export class OrdersService {
                             const existingDataKeys = Object.keys(details)
                             const currentDataKeys = Object.keys(dtoData)
                             for (const existingDataKey of existingDataKeys) {
-                                if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser') {
+                                if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId') {
                                     const orderDiffObj = new OrdersDifferenceEntity();
                                     orderDiffObj.columnName = orderColumnValues[existingDataKey]
                                     orderDiffObj.oldValue = details[existingDataKey]
@@ -165,24 +165,26 @@ export class OrdersService {
         return new CommonResponseModel(true, 22, 'data retrieved', data)
     }
 
-    async revertFileData(req:FileIdReq): Promise<CommonResponseModel> {
-        console.log('-----------------service---------------------',req)
-        if(req){
-            const latestFileId = await this.fileUploadRepo.update({id : req.fileId},{isActive : false})
+    async revertFileData(req: FileIdReq): Promise<CommonResponseModel> {
+        console.log('-----------------service---------------------', req)
+        if (req) {
+            const latestFileId = await this.fileUploadRepo.update({ id: req.fileId }, { isActive: false })
         }
-        if(req){
+        if (req) {
             const deleteChildData = await this.ordersChildRepo.deleteChildData(req)
         }
         const updatedData = await this.ordersChildRepo.getUpdatedData()
-        const data = await this.ordersChildRepo.find({where : {fileId : updatedData[0]?.fileId} ,
-        relations :['orders']})
-        console.log('************data',data)
+        const data = await this.ordersChildRepo.find({
+            where: { fileId: updatedData[0]?.fileId },
+            relations: ['orders']
+        })
+        console.log('************data', data)
         const flag = new Set()
-        for(const dtoData of data){
+        for (const dtoData of data) {
             const prodPlanId = new OrdersEntity();
             prodPlanId.productionPlanId = dtoData.orders.productionPlanId
-            console.log('OrdersEntity************',prodPlanId)
-            const updateOrder = await this.ordersRepository.update({ productionPlanId : prodPlanId.productionPlanId}, {
+            console.log('OrdersEntity************', prodPlanId)
+            const updateOrder = await this.ordersRepository.update({ productionPlanId: prodPlanId.productionPlanId }, {
                 year: dtoData.year, planningSeason: dtoData.planningSeason, season: dtoData.season, itemBrand: dtoData.itemBrand, businessUnit: dtoData.businessUnit, itemCode: dtoData.itemCode, itemName: dtoData.itemName, mainSampleCode: dtoData.mainSampleCode, mainSampleName: dtoData.mainSampleName, supplierRMCode: dtoData.supplierRMCode, supplierRMName: dtoData.supplierRMName, vendorCode: dtoData.vendorCode, vendorName: dtoData.vendorName, managementFactoryCode: dtoData.managementFactoryCode, managementFactoryName: dtoData.managementFactoryName, branchFactoryCode: dtoData.branchFactoryCode,
                 branchFactoryName: dtoData.branchFactoryName, rmSupplierCode: dtoData.rmSupplierCode, rmSupplierName: dtoData.rmSupplierName, sewingDifficulty: dtoData.sewingDifficulty, departmentCode: dtoData.departmentCode, departmentName: dtoData.departmentName, class1Code: dtoData.class1Code, Class1Name: dtoData.Class1Name, productionPlanTypeName: dtoData.productionPlanTypeName, monthWeekFlag: dtoData.monthWeekFlag, lastUpdateDate: dtoData.lastUpdateDate, requestedWhDate: dtoData.requestedWhDate, contractedDate: dtoData.contractedDate, transportMethodName: dtoData.transportMethodName,
                 logisticsTypeName: dtoData.logisticsTypeName, orderQtyPcs: dtoData.orderQtyPcs, yarnOrderAcceptance: dtoData.yarnOrderAcceptance, yarnOrderRequestDate: dtoData.yarnOrderRequestDate, yarnOrderAnswerDate: dtoData.yarnOrderActualDate, yarnOrderActualDate: dtoData.yarnOrderActualDate, yarnOrderNO: dtoData.yarnOrderNO, yarnActualOrderQtyPcs: dtoData.yarnActualOrderQtyPcs, yarnUpdateDate: dtoData.yarnUpdateDate, fabricOrderAcceptance: dtoData.fabricOrderAcceptance, fabricOrderRequestDate: dtoData.fabricOrderRequestDate, fabricOrderAnswerDate: dtoData.fabricOrderAnswerDate,
@@ -196,15 +198,15 @@ export class OrdersService {
                 abnormalLTReasonPO5: dtoData.abnormalLTReasonPO5, abnormalLTPO1: dtoData.abnormalLTPO1, abnormalLTPO2: dtoData.abnormalLTPO2, abnormalLTPO3: dtoData.abnormalLTPO3, abnormalLTPO4: dtoData.abnormalLTPO4, abnormalLTPO5: dtoData.abnormalLTPO5, version: dtoData.version, updatedUser: dtoData.updatedUser, orderStatus: 'UNACCEPTED', fileId: dtoData.fileId
             })
             if (!updateOrder.affected) {
-                return new CommonResponseModel(false, 0, 'Something went wrong in order update',updateOrder)
+                return new CommonResponseModel(false, 0, 'Something went wrong in order update', updateOrder)
             }
             if (!updateOrder.affected) {
                 flag.add(false)
-            }else{
+            } else {
                 flag.add(true)
             }
         }
-        if(flag.has(true)){
+        if (flag.has(true)) {
             return new CommonResponseModel(true, 0, 'File Reverted Successfully')
         }
     }
@@ -222,9 +224,9 @@ export class OrdersService {
         }
     }
 
-    async getUploadFilesData():Promise <CommonResponseModel>{
+    async getUploadFilesData(): Promise<CommonResponseModel> {
         const data = await this.fileUploadRepo.getFilesData()
-        if(data.length > 0){
+        if (data.length > 0) {
             return new CommonResponseModel(true, 11, 'uploaded files data retrived successfully', data);
         }
         else {

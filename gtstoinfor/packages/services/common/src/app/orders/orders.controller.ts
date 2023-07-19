@@ -6,7 +6,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiConsumes } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
-import { extname } from 'path';import { FileIdReq } from './models/file-id.req';
+import { extname } from 'path'; import { FileIdReq } from './models/file-id.req';
 ''
 
 @Controller('orders')
@@ -17,23 +17,10 @@ export class OrdersController {
 
     ) { }
 
-    // @Post('/saveOrder')
-    // @UseInterceptors(FileInterceptor('csvFile'))
-    // async upload(@UploadedFile() file: MulterFile) {
-    //     console.log('----------------------', file)
-    //     try {
-    //         await this.ordersService.saveOrdersData(file.buffer.toString());
-    //         return { message: 'CSV file uploaded and data saved successfully' };
-    //     } catch (error) {
-    //         return { error: 'Failed to save CSV data to the database' };
-    //     }
-    // }
-
     @Post('/saveOrder/:id')
-    async saveOrder( @Param('id') id:number,@Body() data: any ): Promise<CommonResponseModel> {
-        console.log('----------control--------',id)
+    async saveOrder(@Param('id') id: number, @Body() data: any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.saveOrdersData(data,id);
+            return this.ordersService.saveOrdersData(data, id);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -120,8 +107,8 @@ export class OrdersController {
     }
 
     @Post('/revertFileData')
-    async revertFileData(@Body() req:any): Promise<CommonResponseModel> {
-        console.log('------------controller----------------',req)
+    async revertFileData(@Body() req: any): Promise<CommonResponseModel> {
+        console.log('------------controller----------------', req)
         try {
             return this.ordersService.revertFileData(req);
         } catch (err) {
@@ -133,33 +120,33 @@ export class OrdersController {
     @Post('/fileUpload')
     @ApiConsumes('multipart/form-data')
     @UseInterceptors(FileInterceptor('file', {
-      limits: { files: 1 },
-      storage: diskStorage({
-        destination: './upload-files',
-        filename: (req, file, callback) => {
-          const name = file.originalname.split('.')[0];
-          const fileExtName = extname(file.originalname);
-          const randomName = Array(4)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          callback(null, `${name}-${randomName}${fileExtName}`);
+        limits: { files: 1 },
+        storage: diskStorage({
+            destination: './upload-files',
+            filename: (req, file, callback) => {
+                const name = file.originalname.split('.')[0];
+                const fileExtName = extname(file.originalname);
+                const randomName = Array(4)
+                    .fill(null)
+                    .map(() => Math.round(Math.random() * 16).toString(16))
+                    .join('');
+                callback(null, `${name}-${randomName}${fileExtName}`);
+            },
+        }),
+        fileFilter: (req, file, callback) => {
+            if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|xls|xlsx|csv)$/)) {
+                return callback(new Error('Only png,jpeg,PNG,jpg,JPG,xls,xlsx and csv files are allowed!'), false);
+            }
+            callback(null, true);
         },
-      }),
-      fileFilter: (req, file, callback) => {
-        if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|xls|xlsx|csv)$/)) {
-          return callback(new Error('Only png,jpeg,PNG,jpg,JPG,xls,xlsx and csv files are allowed!'), false);
-        }
-        callback(null, true);
-      },
     }))
-  
+
     async fileUpload(@UploadedFile() file): Promise<CommonResponseModel> {
-      try {
-        return await this.ordersService.updatePath(file.path,file.filename)
-      } catch (error) {
-        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
-      }
+        try {
+            return await this.ordersService.updatePath(file.path, file.filename)
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+        }
     }
 
     @Post('/getUploadFilesData')
