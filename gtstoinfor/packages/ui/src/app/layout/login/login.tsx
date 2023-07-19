@@ -1,47 +1,36 @@
-import {
-  Button,
-  Card,
-  Col,
-  Divider,
-  Form,
-  Input,
-  Row,
-  Typography,
-  message,
-  theme,
-} from "antd";
+import { Button, Card, Col, Divider, Form, Input, Row, Typography, message, theme} from "antd";
 import React from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
+import { LoginDto, authAtom } from "@project-management-system/shared-models";
+import { UserManagementServices } from "@project-management-system/shared-services";
+import { useRecoilState } from "recoil";
 const { Text, Link, Title } = Typography;
 const { useToken } = theme;
 
 export default function Login() {
   const [loginForm] = Form.useForm();
-  const {
-    token: { colorPrimary, colorPrimaryActive, colorBgTextHover },
-  } = useToken();
+  const { token: { colorPrimary, colorPrimaryActive, colorBgTextHover }} = useToken();
   const navigate = useNavigate();
+  const [authState, setAuthState] = useRecoilState(authAtom);
+  const service = new UserManagementServices()
 
   const onLogin = () => {
-    console.log("login called");
-    // loginForm.validateFields().then((values) => {
-    //     console.log(values)
-    //     const loginDto = new LoginDto(values.username,values.password)
-    //     service.login(loginDto).then((res) => {
-    //         if(res.status){
-    //             localStorage.setItem('auth',JSON.stringify(res.data))
-    //             setAuthState([{userName:values.username,isAuthenticated:true,plant:1}]);
-    //             message.success(res.internalMessage)
-    //             navigate('/')
-    //         }else{
-    //             message.error(res.internalMessage)
-    //         }
-    //     })
-
-    // })
-    navigate("/");
-  };
+    loginForm.validateFields().then((values) => {
+        const loginDto = new LoginDto(values.username,values.password)
+        service.login(loginDto).then((res) => {
+            if(res.status){
+                localStorage.setItem('auth',JSON.stringify(res.data))
+                setAuthState([{userName:values.username,isAuthenticated:true,plant:1}]);
+                message.success(res.internalMessage)
+                navigate('/dashboard')
+            }else{
+                message.error(res.internalMessage)
+            }
+        })
+        
+    })
+}
   return (
     <Card className="hero">
       <Row gutter={24} justify={"center"} className="content">

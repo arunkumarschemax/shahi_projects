@@ -5,9 +5,11 @@ import { ConfigProvider, theme } from 'antd';
 
 
 import App from './app/app';
+import { RecoilRoot } from 'recoil';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
+    <RecoilRoot>
     <ConfigProvider
         locale={{ locale: 'en-US' }}
         theme={{
@@ -16,10 +18,9 @@ root.render(
                 colorPrimary: '#29397d',
                 borderRadius: 5,
             }  
-        }}
-        
-        
+        }}  
     >
         <App />
     </ConfigProvider >
+    </RecoilRoot>
 );

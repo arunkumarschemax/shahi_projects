@@ -4,6 +4,7 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { UsersDto } from "./dto/users.dto";
 import {
   AllUsersResponseModel,
+  AuthResponseModel,
   UsersActivateDeactivateDto,
   UsersResponseModel,
 } from "@project-management-system/shared-models";
@@ -50,6 +51,16 @@ export class UsersController {
         UsersResponseModel,
         error
       );
+    }
+  }
+
+  @Post('/login')
+  async login(@Body() dto: any): Promise<AuthResponseModel> {
+    try {
+      return await this.usersService.login(dto);
+    } catch (error) {
+      console.log(error,'err')
+      return this.applicationExceptionhandler.returnException(AuthResponseModel, error);
     }
   }
 }

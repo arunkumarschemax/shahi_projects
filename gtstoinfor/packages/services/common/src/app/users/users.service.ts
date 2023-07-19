@@ -6,10 +6,14 @@ import {
   UsersResponseModel,
   AllUsersResponseModel,
   UsersActivateDeactivateDto,
+  LoginDto,
+  AuthResponseModel,
+  AuthModel,
 } from "@project-management-system/shared-models";
 import { UsersEntity } from "./users.entity";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { InjectRepository } from "@nestjs/typeorm";
+import { OrderDataSource } from "./app-data-source";
 
 // This should be a real class/interface representing a user entity
 export type User = any;
@@ -111,4 +115,18 @@ export class UsersService {
       return error;
     }
   }
+
+  async login(dto:LoginDto):Promise<AuthResponseModel>{
+    console.log(dto)
+      const validateUser = await OrderDataSource.manager.findOneBy(UsersEntity,{username:dto.userName,password:dto.password})
+      console.log(validateUser,'user data')
+      // if(!validateUser) return new AuthResponseModel(false,1111,'Please check your credentials')
+      // const rolesQuery = `select  urp.role_id as roleId,r.role,r.company_id as companyId  from user_role_mapping urp left join role r on  r.id= urp.role_id where urp.user_id = ${validateUser.id}` 
+      // const rolesData = await OrderDataSource.query(rolesQuery);
+      // console.log(rolesData)
+      const rolesData = [{role:'', roleId:1, companyId:1}]
+      const authModel = new AuthModel( validateUser.username,rolesData[0]?.role,'companey',rolesData[0]?.companyId,validateUser.id,rolesData[0]?.roleId)
+      return new AuthResponseModel(true,1111,'Sucessfully logged in',authModel)
+  }
+  
 }

@@ -2,7 +2,7 @@ import { CommonAxiosService } from "../common-axios-service-prs";
 import {LoginDto,AuthResponseModel} from '@project-management-system/shared-models'
 
 export class UserManagementServices extends CommonAxiosService {
-    private userManagementController = '/user-management';
+    private userManagementController = '/users';
 
     // async getAllCompanies(): Promise<CompanyResponse> {
     //     return await this.axiosPostCall(this.userManagementController + '/getAllCompanies')

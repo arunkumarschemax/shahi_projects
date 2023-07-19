@@ -1,12 +1,7 @@
 import React from 'react'
 import { Layout, Row, Col, Menu, Dropdown, Button, Avatar, MenuProps, Select, SelectProps, theme, Divider } from 'antd';
 
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  UserOutlined,
-  SearchOutlined,
-} from '@ant-design/icons';
+import { MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, SearchOutlined } from '@ant-design/icons';
 import './header.css';
 import Search from 'antd/es/input/Search';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +15,7 @@ interface IProps {
 export const CommonHeader = (props: IProps) => {
   const navigate = useNavigate();
   const { token: { colorPrimary } } = useToken()
-
+  const authdata = JSON.parse(localStorage.getItem('auth'))
 
   const logoutHandler = async () => {
     localStorage.clear()
@@ -37,19 +32,26 @@ export const CommonHeader = (props: IProps) => {
     // }
   }
 
-
+  const menu = (
+    <Menu >
+      <Menu.Item>
+        UserName:
+      </Menu.Item>
+      <Menu.Item key='logout'>
+        <Button
+          onClick={() => logoutHandler()}
+        >
+          logout
+        </Button>
+      </Menu.Item>
+    </Menu>
+  );
   const items: MenuProps['items'] = [
     {
       key: '1',
-      label: 'Username'
-    },
-    {
-      key: '2',
-      label: 'Role:'
-    },
-    {
-      key: '3',
-      label: 'Plant:'
+      label: `Username:
+      
+      ${authdata?.userName}`
     },
     {
       key: '4',
@@ -64,7 +66,7 @@ export const CommonHeader = (props: IProps) => {
     },
   ];
 
-  const options: SelectProps['options'] = [{ value: 'project-creation-page', label: 'Project Creation' }, { value: 'project-list-grid', label: 'Project View' }];
+  // const options: SelectProps['options'] = [{ value: 'project-creation-page', label: 'Project Creation' }, { value: 'project-list-grid', label: 'Project View' }];
 
 
 
@@ -85,9 +87,9 @@ export const CommonHeader = (props: IProps) => {
           </span> */}
         </Col>
         <Col span={4}></Col>
-        <Col span={6}>
-          {/* <Select  onSelect={(e) => {navigate('/'+e)}} className='header-search' showSearch  allowClear style={{width:'100%',marginBottom:'60px'}}  placeholder='search for forms and views' options={options} suffixIcon={<SearchOutlined style={{color:colorPrimary}}/>} /> */}
-        </Col>
+        {/* <Col span={6}>
+          <Select  onSelect={(e) => {navigate('/'+e)}} className='header-search' showSearch  allowClear style={{width:'100%',marginBottom:'60px'}}  placeholder='search for forms and views' options={options} suffixIcon={<SearchOutlined style={{color:colorPrimary}}/>} />
+        </Col> */}
         <Col span={7} style={{ textAlign: 'right' }}>
           <Dropdown menu={{ items }}>
             <Avatar style={{ marginBottom: '5px', cursor:'pointer' }} size={45} shape="circle" icon={<UserOutlined style={{ fontSize: '25px' }} />} />

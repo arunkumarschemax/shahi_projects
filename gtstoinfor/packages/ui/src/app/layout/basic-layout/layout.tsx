@@ -105,7 +105,21 @@ export default function BasicLayout() {
     const [settings, setSettings] = useState<any>({ colorPrimary: '1890ff', fixedHeader: true })
     const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
 
-
+    const authdata = JSON.parse(localStorage.getItem('auth'))
+    const logoutHandler = async () => {
+        localStorage.clear()
+        navigate('/login')
+        // try {
+        //   const saltRes = await service.logOut({ username: authContext.user.username, password: `SaiResources${Math.random()}` })
+        //   if (saltRes.status) {
+        //     logout(dispatch);
+        //   } else {
+        //     throw Error(saltRes.internalMessage);
+        //   }
+        // } catch (error: any) {
+        //   AlertMessages.getErrorMessage(error.message);
+        // }
+      }
 
     return (
         <ProConfigProvider dark={dark}  >
@@ -136,7 +150,7 @@ export default function BasicLayout() {
                     avatarProps={{
                         src: 'https://hzdjs.cn/blog/logo.jpg',
                         size: 'small',
-                        title: 'admin',
+                        title: `${authdata?.userName}`,
                     }}
                     contentStyle={{ paddingBlock: '10px', paddingInline: '10px' }}
                     actionsRender={(props) => {
@@ -201,10 +215,7 @@ export default function BasicLayout() {
                                     style={{ borderRadius: "5px" }}
                                     icon={
                                         <LogoutOutlined
-                                            onClick={async () => {
-                                                // await signOut(dispatch);
-                                                navigate("/login");
-                                            }}
+                                            onClick={() => logoutHandler()}
                                         />
                                     }
                                 ></Button>
