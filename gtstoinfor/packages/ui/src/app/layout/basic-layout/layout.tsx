@@ -77,7 +77,7 @@ export const baseRouterList = [
                 filepath: "excel-import",
             },
             {
-                label: "Revised Orders",
+                label: "Compare Orders",
                 key: "changes-view",
                 path: "changes-view",
                 filepath: "changes-view",

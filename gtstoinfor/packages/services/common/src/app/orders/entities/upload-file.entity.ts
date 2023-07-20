@@ -6,7 +6,7 @@ export class FileUploadEntity {
     @PrimaryGeneratedColumn('increment', {
         name: 'id',
     })
-    id: string
+    id: number
 
     @Column('varchar', {
         nullable: true,
@@ -44,5 +44,12 @@ export class FileUploadEntity {
         name: 'updated_at'
     })
     updatedAt: string;
+
+    @Column("boolean", {
+        default: true,
+        nullable: true,
+        name: "is_active"
+    })
+    isActive: boolean;
 
 }

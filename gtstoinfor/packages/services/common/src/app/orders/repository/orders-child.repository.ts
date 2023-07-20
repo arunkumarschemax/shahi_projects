@@ -33,12 +33,19 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return await query.getRawMany();
     }
 
-   
-
     async deleteChildData(req:FileIdReq): Promise<void> {
+        console.log(req)
         const queryBuilder = this.createQueryBuilder('oc');
-        queryBuilder.where(`file_id = '${req}'`);
+        queryBuilder.where(`file_id = '${req.fileId}'`);
         await queryBuilder.delete().execute();
       }
+
+      async getUpdatedData(): Promise<any[]> {
+        const query = this.createQueryBuilder('oc')
+            .select(`oc.file_id as fileId`)
+            .orderBy(` oc.created_at`, 'DESC')
+            .limit(1)
+        return await query.getRawMany();
+    }
 
 }
