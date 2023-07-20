@@ -100,6 +100,7 @@ export class OrdersService {
                                     orderDiffObj.displayName = existingDataKey
                                     orderDiffObj.productionPlanId = dtoData.productionPlanId
                                     orderDiffObj.version = dtoData.version
+                                    orderDiffObj.fileId = id
                                     if (orderDiffObj.oldValue != orderDiffObj.newValue) {
                                         const orderDiffSave = await this.orderDiffRepo.save(orderDiffObj);
                                     }

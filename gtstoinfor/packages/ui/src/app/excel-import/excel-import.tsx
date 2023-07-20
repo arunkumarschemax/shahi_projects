@@ -132,7 +132,7 @@ export default function ExcelImport() {
               {filesData[0]?.fileName}
             </Descriptions.Item>
             <Descriptions.Item label={<b>Uploaded Date</b>}>
-              {moment(filesData[0]?.uploadedDate).format('YYYY-MM-DD HH:mm:ss')}
+              {moment(filesData[0]?.uploadedDate).utc().format('YYYY-MM-DD HH:mm:ss')}
             </Descriptions.Item>
           </Descriptions>
         </span>
