@@ -1,4 +1,4 @@
-import { Button, Card, Popconfirm, Table, message } from 'antd'
+import { Button, Card, Popconfirm, Table, Tooltip, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { UndoOutlined } from '@ant-design/icons';
 import { OrdersService } from '@project-management-system/shared-services';
@@ -81,7 +81,7 @@ export function FileRevert() {
                                 cancelText="No"
                                 onConfirm={() => revertFileData(record?.fileId)}
                             >
-                                <Button icon={<UndoOutlined style={{ color: 'red' }} />} />
+                                <Button icon={<UndoOutlined style={{ color: 'red' }} />}>Revert File</Button>
                             </Popconfirm>
                         )}
                         {!isFirstRecord && <></>}
@@ -94,7 +94,7 @@ export function FileRevert() {
     return (
         <>
             <Card
-                title="Revert Uploaded Files">
+                title="Uploaded Files List">
                 <Table
                     columns={columns}
                     dataSource={data}

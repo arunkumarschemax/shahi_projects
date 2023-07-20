@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, TabsProps, Tag, Tooltip, Typography } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
-import { ArrowDownOutlined, ArrowUpOutlined, DownloadOutlined, FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { color } from 'highcharts';
 import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
 
@@ -102,7 +101,7 @@ const ChangesGrid = () => {
 
         },
         {
-            title: 'Last Updated Date',
+            title: 'Order Revised Date',
             dataIndex: 'last_update_date',
 
         },
@@ -143,7 +142,7 @@ const ChangesGrid = () => {
             dataIndex: 'contracted_date'
         },
         {
-            title: 'Last Updated Date',
+            title: 'Order Revised Date',
             dataIndex: 'last_update_date',
 
         },
@@ -172,7 +171,7 @@ const ChangesGrid = () => {
 
         },
         {
-            title: 'Last Updated Date',
+            title: 'Order Revised Date',
             dataIndex: 'last_update_date',
 
         },
@@ -350,7 +349,7 @@ const ChangesGrid = () => {
             }
         },
         {
-            title: 'Last Updated Date',
+            title: 'Order Revised Date',
             dataIndex: 'last_update_date',
             render: (text, record) => {
                 return record.last_update_date ? moment(record.last_update_date).format('YYYY-MM-DD') : '-'
@@ -365,12 +364,9 @@ const ChangesGrid = () => {
             }
         },
         {
-            title: 'Color Code',
-            dataIndex: 'color_code'
-        },
-        {
             title: 'Order Status',
-            dataIndex: 'order_status'
+            dataIndex: 'order_status',
+            render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
         }
     ];
 
@@ -414,16 +410,17 @@ const ChangesGrid = () => {
         },
         {
             title: 'Contracted Date',
-            dataIndex: 'contracted_date'
+            dataIndex: 'contracted_date',
+            render: (text, record) => {
+                return record.contracted_date ? moment(record.contracted_date).format('YYYY-MM-DD') : '-'
+            }
         },
         {
-            title: 'Last Updated Date',
+            title: 'Order Revised Date',
             dataIndex: 'last_update_date',
-
-        },
-        {
-            title: 'Color Code',
-            dataIndex: 'color_code'
+            render: (text, record) => {
+                return record.last_update_date ? moment(record.last_update_date).format('YYYY-MM-DD') : '-'
+            }
         },
         {
             title: 'Order Status',
@@ -456,8 +453,8 @@ const ChangesGrid = () => {
             dataIndex: 'new_val',
             render: (text, record) => (
                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
-                    {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
-                    {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
+                    {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{moment(record.new_val).format('YYYY-MM-DD')}</span> : ''}
+                    {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{moment(record.new_val).format('YYYY-MM-DD')}</span> : ''}
                     &nbsp;&nbsp;
                     <span>
                         {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
@@ -471,24 +468,28 @@ const ChangesGrid = () => {
 
         },
         {
-            title: 'Last Updated Date',
+            title: 'Order Revised Date',
             dataIndex: 'last_update_date',
+            render: (text, record) => {
+                return record.last_update_date ? moment(record.last_update_date).format('YYYY-MM-DD') : '-'
+            }
 
         },
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'requested_wh_date',
             // width :'190px'
-        },
-        {
-            title: 'Color Code',
-            dataIndex: 'color_code'
+            render: (text, record) => {
+                return record.requested_wh_date ? moment(record.requested_wh_date).format('YYYY-MM-DD') : '-'
+            }
         },
         {
             title: 'Order Status',
-            dataIndex: 'order_status'
+            dataIndex: 'order_status',
+            render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
         }
     ];
+
     const columns3: any = [
         {
             title: 'S No',
@@ -551,9 +552,10 @@ const ChangesGrid = () => {
             setFilteredWarehouseDateDate(filteredReqWhData)
         }
         if (startDate && endDate) {
-            filteredContractData = filteredContractData.filter(record => record.new_val >= startDate && record.new_val <= endDate);
-            filteredQtyData = filteredQtyData.filter(record => record.contracted_date >= startDate && record.contracted_date <= endDate)
-            filteredReqWhData = filteredReqWhData.filter(record => record.contracted_date >= startDate && record.contracted_date <= endDate)
+            console.log(filteredQtyData)
+            filteredContractData = filteredContractData.filter(record => moment(record.last_update_date).format('YYYY-MM-DD') >= startDate && moment(record.last_update_date).format('YYYY-MM-DD') <= endDate);
+            filteredQtyData = filteredQtyData.filter(record => moment(record.last_update_date).format('YYYY-MM-DD') >= startDate && moment(record.last_update_date).format('YYYY-MM-DD') <= endDate)
+            filteredReqWhData = filteredReqWhData.filter(record => moment(record.last_update_date).format('YYYY-MM-DD') >= startDate && moment(record.last_update_date).format('YYYY-MM-DD') <= endDate)
             setFilteredContractDateData(filteredContractData);
             setFilteredQtyData(filteredQtyData)
             setFilteredWarehouseDateDate(filteredReqWhData)
@@ -564,12 +566,12 @@ const ChangesGrid = () => {
         {
             key: '1',
             label: <b>Order Qty Revised Orders : {filteredQtyData?.length} </b>,
-            children: <Table bordered scroll={{ y: 400 }} dataSource={filteredQtyData} columns={columns} />,
+            children: <Table bordered dataSource={filteredQtyData} columns={columns} />,
         },
         {
             key: '2',
             label: <b>Group Of ItemCode  : {differenceQtyData?.length}</b>,
-            children: <Table scroll={{ y: 400 }} dataSource={differenceQtyData} columns={columns3} pagination={false}
+            children: <Table dataSource={differenceQtyData} columns={columns3} pagination={false}
                 summary={(differenceQtyData) => {
                     let totalLastQty = 0;
                     let totalRecQty = 0;
@@ -605,12 +607,12 @@ const ChangesGrid = () => {
         {
             key: '3',
             label: <b >Requested Warehouse Date Revised Orders: {filteredWarehouseDateData?.length}</b>,
-            children: <Table bordered scroll={{ y: 400 }} dataSource={filteredWarehouseDateData} columns={columns1} />,
+            children: <Table bordered dataSource={filteredWarehouseDateData} columns={columns1} />,
         },
         {
             key: '4',
             label: <b>Contracted Date Revised Orders : {filteredContractDateData?.length}</b>,
-            children: <Table bordered scroll={{ y: 400 }} dataSource={filteredContractDateData} columns={columns2} />,
+            children: <Table bordered dataSource={filteredContractDateData} columns={columns2} />,
         },
 
     ];
@@ -634,7 +636,7 @@ const ChangesGrid = () => {
                 <Row gutter={[24, 24]}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
                         <Form.Item name="contractDate"
-                            label="Contracted Date"
+                            label="Order Revised Date"
                         >
                             <RangePicker onChange={EstimatedETDDate} />
                         </Form.Item>

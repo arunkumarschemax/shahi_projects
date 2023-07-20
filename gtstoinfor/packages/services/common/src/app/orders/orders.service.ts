@@ -141,7 +141,6 @@ export class OrdersService {
 
     async getQtyDifChangeData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
-        console.log(files)
         const data = await this.ordersChildRepo.getItemQtyChangeData(files[1].fileId, files[0].fileId)
         return new CommonResponseModel(true, 1, 'data retrieved', data)
     }
@@ -235,6 +234,21 @@ export class OrdersService {
         else {
             return new CommonResponseModel(false, 11, 'No data found', data);
         }
+    }
+
+    async getVersionWiseData(): Promise<CommonResponseModel> {
+        let query = `SELECT
+        GROUP_CONCAT(DISTINCT
+          CONCAT('ifnull(max(case when oc.version = ''',oc.version,''' then order_qty_pcs end),0) AS "',oc.version, '"')
+        ) INTO @sql
+      FROM
+        orders_child oc;`;
+        query += ` SET @sql = CONCAT('SELECT production_plan_id,item_code,itemName, ', @sql, ' FROM orders_child oc GROUP BY production_plan_id');`;
+        query += ` PREPARE stmt1 FROM @sql;`;
+        query += ` EXECUTE stmt1;`;
+        const result = await this.ordersChildRepo.query(query);
+
+        return new CommonResponseModel(true, 123, 'retrieved successfully', result);
     }
 
 }

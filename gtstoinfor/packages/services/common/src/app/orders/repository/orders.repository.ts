@@ -15,7 +15,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getOrdersData(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(`o.production_plan_id, o.item_code, o.itemName, o.order_status, o.fr_fabric_name,o.order_qty_pcs, o.contracted_date, o.requested_wh_date, o.created_at`)
+            .select(`o.production_plan_id, o.item_code, o.itemName, o.order_status, o.fr_fabric_name,o.order_qty_pcs, o.contracted_date, o.requested_wh_date, o.last_update_date, o.created_at`)
             .orderBy(` o.created_at`, 'DESC')
         return await query.getRawMany();
     }

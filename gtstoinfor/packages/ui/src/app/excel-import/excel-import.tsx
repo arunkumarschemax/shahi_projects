@@ -1,42 +1,64 @@
-import { useState } from 'react';
-import { Button, Card, Form, message, UploadProps } from 'antd';
+import { useEffect, useState } from 'react';
+import { Button, Card, Descriptions, Divider, Form, message, UploadProps } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
+import { UndoOutlined } from '@ant-design/icons';
 
 
 export default function ExcelImport() {
   const [loading, setLoading] = useState(false);
   const ordersService = new OrdersService();
   const [selectedFile, setSelectedFile] = useState(null);
+  const [filesData, setFilesData] = useState([])
   const [data, setData] = useState([])
   const [columns, setColumns] = useState([]);
   const [values, setValues] = useState([])
   const [filelist, setFilelist] = useState([]);
   let navigate = useNavigate();
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-    Papa.parse(event.target.files[0], {
-      header: true,
-      complete: function (result) {
-        {
-          const columnArray = [];
-          const valueArray = [];
+  useEffect(() => {
+    getUploadFilesData();
+  }, [])
 
-          result.data.map((d) => {
-            columnArray.push(Object.keys(d))
-            valueArray.push(Object.values(d))
-          });
-          setData(result.data)
-          setColumns(columnArray[0])
-          setValues(valueArray)
-        }
+  const getUploadFilesData = () => {
+    ordersService.getUploadFilesData().then((res) => {
+      if (res.status) {
+        setFilesData(res.data)
+        // message.success(res.internalMessage)
       }
-    });
+    })
+  }
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === 'text/csv') {
+      setSelectedFile(event.target.files[0]);
+      Papa.parse(event.target.files[0], {
+        header: true,
+        complete: function (result) {
+          {
+            const columnArray = [];
+            const valueArray = [];
+
+            result.data.map((d) => {
+              columnArray.push(Object.keys(d))
+              valueArray.push(Object.values(d))
+            });
+            setData(result.data)
+            setColumns(columnArray[0])
+            setValues(valueArray)
+          }
+        }
+      });
+    } else {
+      // Display an error message or take appropriate action for invalid file type
+      alert('Please select a valid .csv file.');
+      setSelectedFile(null);
+    }
   };
-  console.log(selectedFile)
 
   const handleUpload = async () => {
     try {
@@ -45,7 +67,7 @@ export default function ExcelImport() {
         formData.append('file', selectedFile);
         ordersService.fileUpload(formData).then((fileRes) => {
           ordersService.saveOrder(data, fileRes?.data?.id).then((res) => {
-            console.log(res.status)
+            setLoading(true)
             if (res.status) {
               message.success(res.internalMessage)
               navigate("/excel-import/grid-view");
@@ -103,17 +125,31 @@ export default function ExcelImport() {
   return (
     <>
       <Card title="Excel Import">
-        <Form.Item>
-          <input type="file" onChange={handleFileChange} />
-        </Form.Item>
-        <Button
-          type="primary"
-          onClick={handleUpload}
-          loading={loading}
-          disabled={!selectedFile}
-        >
-          Upload
-        </Button>
+        <span>
+          <Descriptions style={{ alignItems: 'right' }}>
+            <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item>
+            <Descriptions.Item label={<b>File Name</b>}>
+              {filesData[0]?.fileName}
+            </Descriptions.Item>
+            <Descriptions.Item label={<b>Uploaded Date</b>}>
+              {moment(filesData[0]?.uploadedDate).format('YYYY-MM-DD HH:mm:ss')}
+            </Descriptions.Item>
+          </Descriptions>
+        </span>
+        <Divider></Divider>
+        <>
+          <Form.Item>
+            <input type="file" accept=".csv" onChange={handleFileChange} />
+          </Form.Item>
+          <Button
+            type="primary"
+            onClick={handleUpload}
+            loading={loading}
+            disabled={!selectedFile}
+          >
+            Upload
+          </Button>
+        </>
       </Card>
     </>
   );
