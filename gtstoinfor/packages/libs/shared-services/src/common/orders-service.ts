@@ -11,7 +11,7 @@ export class OrdersService extends CommonAxiosService {
     }
     private ordersController = "/orders"
 
-    // async saveOrder(data: any, id:number): Promise<CommonResponseModel> {
+    // async saveOrder(data: any, id:number): Promise<CommonResponseModel> {       
     //     return this.axiosPostCall(this.ordersController + "/saveOrder", data,{id})
     // }
 

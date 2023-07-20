@@ -119,7 +119,7 @@ const AllOrdersGridView = () => {
             title: 'Order Status',
             dataIndex: 'order_status'
         }
-    ];
+    ];   
 
     const handleExport = (e: any) => {
         e.preventDefault();
@@ -141,7 +141,7 @@ const AllOrdersGridView = () => {
             { title: 'Start Date', dataIndex: 'startDate' },
             { title: 'End Date', dataIndex: 'endDate' },
             { title: 'Currency', dataIndex: 'currency' },
-            { title: 'Cost', dataIndex: 'cost' },
+            { title: 'Cost', dataIndex: 'cost' },   
         ]
         const excel = new Excel();
         excel.addSheet("Sheet1");
