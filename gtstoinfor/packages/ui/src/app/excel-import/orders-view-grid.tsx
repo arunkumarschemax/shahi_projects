@@ -112,10 +112,6 @@ const AllOrdersGridView = () => {
             }
         },
         {
-            title: 'Color Code',
-            dataIndex: 'color_code'
-        },
-        {
             title: 'Order Status',
             dataIndex: 'order_status'
         }
@@ -132,16 +128,16 @@ const AllOrdersGridView = () => {
 
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
-            { title: 'Unit', dataIndex: 'company' },
-            { title: 'Project Type', dataIndex: 'projectType' },
-            { title: 'Project Name', dataIndex: 'projectName' },
-            { title: 'Department Name', dataIndex: 'departmentName' },
-            { title: 'Project Description', dataIndex: 'projectDesc' },
-            { title: 'Project Status', dataIndex: 'projectStatus' },
-            { title: 'Start Date', dataIndex: 'startDate' },
-            { title: 'End Date', dataIndex: 'endDate' },
-            { title: 'Currency', dataIndex: 'currency' },
-            { title: 'Cost', dataIndex: 'cost' },
+            { title: 'Production Plan Id', dataIndex: 'production_plan_id' },
+            { title: 'Item code', dataIndex: 'item_code' },
+            { title: 'Item Name', dataIndex: 'itemName' },
+            { title: 'Order Quantity Pieces', dataIndex: 'order_qty_pcs' },
+            { title: 'Contracted Date', dataIndex: 'contracted_date' },
+            { title: 'Requested Warehouse Date', dataIndex: 'requested_wh_date' },
+            { title: 'Order Status', dataIndex: 'order_status' },
+            // { title: 'End Date', dataIndex: 'endDate' },
+            // { title: 'Currency', dataIndex: 'currency' },
+            // { title: 'Cost', dataIndex: 'cost' },
         ]
         const excel = new Excel();
         excel.addSheet("Sheet1");

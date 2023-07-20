@@ -27,14 +27,6 @@ export class OrdersRepository extends Repository<OrdersEntity> {
             .where(` column_name='order_qty_pcs' ORDER BY o.prod_plan_type_name ASC`)
         return await query.getRawMany();
     }
-    async getItemQtyChangeData(): Promise<any[]> {
-        const query = this.createQueryBuilder('o')
-            .select(` o.item_code, o.itemName , SUM(od.old_val) AS sumOfOldVal, SUM(od.new_val) AS sumOfNewVal , (SUM(od.old_val) - SUM(od.new_val) ) AS diffVal `)
-            .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
-            .where(` column_name='order_qty_pcs'`)
-            .groupBy(`o.item_code`)
-        return await query.getRawMany();
-    }
 
     async getWharehouseDateChangeData(): Promise<any> {
         const query = this.createQueryBuilder('o')

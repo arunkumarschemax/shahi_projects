@@ -11,12 +11,10 @@ import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
 import { FileUploadRepository } from './repository/upload.repository';
 import { FileUploadEntity } from './entities/upload-file.entity';
-import { Entity } from 'typeorm';
 import { FileIdReq } from './models/file-id.req';
 
 @Injectable()
 export class OrdersService {
-    ordersChildRepository: any;
 
     constructor(
         private ordersAdapter: OrdersAdapter,
@@ -47,14 +45,20 @@ export class OrdersService {
                     if (value === "") {
                         updatedObj[key] = null;
                     } else {
-                        updatedObj[key] = value;
+                        // updatedObj[key] = value;
+                        console.log(value)
+                        var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
+                        updatedObj[key] = value.replace(regexPattern, null);
+                        updatedObj[key] = Buffer.from(value, 'utf-8').toString()
                     }
                 }
                 return updatedObj;
             });
 
             for (const data of convertedData) {
+                console.log(data.Supplier_Raw_Material_Name)
                 const dtoData = new SaveOrderDto(data.Production_Plan_ID, data.Year, data.Planning_Season, data.Season, data.Item_Brand, data.Business_Unit, data.Item_Code, data.Item_Name, data.Main_Sample_Code, data.Main_Sample_Name, data.Supplier_Raw_Material_Code, data.Supplier_Raw_Material_Name, data.Vendor_Code, data.Vendor_Name, data.Management_Factory_Code, data.Management_Factory_Name, data.Branch_Factory_Code, data.Branch_Factory_Name, data.Raw_Material_Supplier_Code, data.Raw_Material_Supplier_Name, Number(data.Sewing_Difficulty), data.Department_Code, data.Department_Name, data.Class1_Code, data.Class1_Name, data.Production_Plan_Type_Name, data.Month_Week_Flag, data.Last_Update_Date, data.Requested_Wh_Date, data.Contracted_Date, data.Transport_Method_Name, data.Logistics_Type_Name, Number(data.Order_Qty_Pcs), data.Yarn_Order_Acceptance, data.Yarn_Order_Request_Date, data.Yarn_Order_Answer_Date, data.Yarn_Order_Actual_Date, data.Yarn_Order_NO, Number(data.Yarn_Actual_Order_Qty_Pcs), data.Yarn_Update_Date, data.Fabric_Order_Acceptance, data.Fabric_Order_Request_Date, data.Fabric_Order_Answer_Date, data.Fabric_Order_Actual_Date, data.Fabric_Order_NO, Number(data.Fabric_Actual_Order_Qty_Pcs), data.Fabric_Update_Date, data.Color_Order_Acceptance, data.Color_Order_Request_Date, data.Color_Order_Answer_Date, data.Color_Order_Actual_Date, data.Color_Order_NO, Number(data.Color_Actual_Order_Qty_Pcs), data.Color_Update_Date, data.Trim_Order_Acceptance, data.Trim_Order_Request_Date, data.Trim_Order_Answer_Date, data.Trim_Order_Actual_Date, data.Trim_Order_NO, Number(data.Trim_Actual_Order_Qty_Pcs), data.Trim_Update_Date, data.PO_Order_Acceptance, data.PO_Order_Request_Date, data.PO_Order_Answer_Date, data.PO_Order_Actual_Date, data.PO_Order_NO, Number(data.PO_Actual_Order_Qty_Pcs), data.PO_Update_Date, Number(data.Order_Qty_Pcs_Old), data.Transport_Method_Name_Old, data.Logistics_Type_Name_Old, data.Yarn_Order_Request_Date_Old, data.Fabric_Order_Request_Date_Old, data.Color_Order_Request_Date_Old, data.Trim_Order_Request_Date_Old, data.PO_Order_Request_Date_Old, data.Status, data.Display_Month_WK, Number(data.Display_Month_WK_Column), data.Group_Cd, Number(data.Show_Color_Flag), Number(data.Order_Qty_Coeff), data.Factory_Comment, data.Factory_Comment_Update_Date, data.FR_Fabric_Code, data.FR_Fabric_Name, data.Ph1_First_Discrimination_Flag_Old, data.Ph1_First_Discrimination_Flag, data.Order_Timing_Display_Value_Old, data.Order_Timing_Display_Value, data.Express_Line_Flag_Old, data.Express_Line_Flag, data.Manual_Lock_Flag_Old, data.Manual_Lock_Flag, data.Ph1_First_Discrimination_Flag_Now, data.Order_Timing_Display_Value_Now, data.Express_Line_Flag_Now, data.Manual_Lock_Flag_Now, data.Requested_Wh_DateOld, data.EXF, data.Color_Recommend, data.Trim_Recommend, data.PORecommend, Number(data.BD_EXF_DL_Setting_LTBefore_Cal), Number(data.PO_EXF_DL_Setting_LTBefore_Cal), Number(data.Material_Supplier_Holiday_Excluding), Number(data.Sewing_FTY_Holiday_Excluding), Number(data.BD_EXF_DL_Setting_LT), Number(data.PO_EXF_DL_Setting_LT), Number(data.BD_EXF_Registered_LT), Number(data.PO_EXF_Registered_LT), Number(data.BD_EXFtotal_Abnormal_LT), Number(data.PO_EXFtotal_Abnormal_LT), Number(data.Abnormal_LT_Reason_BD1), Number(data.Abnormal_LT_Reason_BD2), Number(data.Abnormal_LT_Reason_BD3), Number(data.Abnormal_LT_Reason_BD4), Number(data.Abnormal_LT_Reason_BD5), Number(data.Abnormal_LT_BD1), Number(data.Abnormal_LT_BD2), Number(data.Abnormal_LT_BD3), Number(data.Abnormal_LT_BD4), Number(data.Abnormal_LT_BD5), Number(data.Abnormal_LT_Reason_PO1), Number(data.Abnormal_LT_Reason_PO2), Number(data.Abnormal_LT_Reason_PO3), Number(data.Abnormal_LT_Reason_PO4), Number(data.Abnormal_LT_Reason_PO5), Number(data.Abnormal_LT_PO1), Number(data.Abnormal_LT_PO2), Number(data.Abnormal_LT_PO3), Number(data.Abnormal_LT_PO4), Number(data.Abnormal_LT_PO5), 'Bidhun', 1, id)
+                console.log(dtoData.supplierRMName)
                 if (dtoData.productionPlanId != null) {
                     const details = await this.ordersRepository.findOne({ where: { productionPlanId: dtoData.productionPlanId } })
                     const versionDetails = await this.ordersChildRepo.getVersion(dtoData.productionPlanId)
@@ -136,7 +140,9 @@ export class OrdersService {
     }
 
     async getQtyDifChangeData(): Promise<CommonResponseModel> {
-        const data = await this.ordersRepository.getItemQtyChangeData()
+        const files = await this.fileUploadRepo.getFilesData()
+        console.log(files)
+        const data = await this.ordersChildRepo.getItemQtyChangeData(files[1].fileId, files[0].fileId)
         return new CommonResponseModel(true, 1, 'data retrieved', data)
     }
 
@@ -166,7 +172,6 @@ export class OrdersService {
     }
 
     async revertFileData(req: FileIdReq): Promise<CommonResponseModel> {
-        console.log('-----------------service---------------------', req)
         if (req) {
             const latestFileId = await this.fileUploadRepo.update({ id: req.fileId }, { isActive: false })
         }
@@ -178,12 +183,10 @@ export class OrdersService {
             where: { fileId: updatedData[0]?.fileId },
             relations: ['orders']
         })
-        console.log('************data', data)
         const flag = new Set()
         for (const dtoData of data) {
             const prodPlanId = new OrdersEntity();
             prodPlanId.productionPlanId = dtoData.orders.productionPlanId
-            console.log('OrdersEntity************', prodPlanId)
             const updateOrder = await this.ordersRepository.update({ productionPlanId: prodPlanId.productionPlanId }, {
                 year: dtoData.year, planningSeason: dtoData.planningSeason, season: dtoData.season, itemBrand: dtoData.itemBrand, businessUnit: dtoData.businessUnit, itemCode: dtoData.itemCode, itemName: dtoData.itemName, mainSampleCode: dtoData.mainSampleCode, mainSampleName: dtoData.mainSampleName, supplierRMCode: dtoData.supplierRMCode, supplierRMName: dtoData.supplierRMName, vendorCode: dtoData.vendorCode, vendorName: dtoData.vendorName, managementFactoryCode: dtoData.managementFactoryCode, managementFactoryName: dtoData.managementFactoryName, branchFactoryCode: dtoData.branchFactoryCode,
                 branchFactoryName: dtoData.branchFactoryName, rmSupplierCode: dtoData.rmSupplierCode, rmSupplierName: dtoData.rmSupplierName, sewingDifficulty: dtoData.sewingDifficulty, departmentCode: dtoData.departmentCode, departmentName: dtoData.departmentName, class1Code: dtoData.class1Code, Class1Name: dtoData.Class1Name, productionPlanTypeName: dtoData.productionPlanTypeName, monthWeekFlag: dtoData.monthWeekFlag, lastUpdateDate: dtoData.lastUpdateDate, requestedWhDate: dtoData.requestedWhDate, contractedDate: dtoData.contractedDate, transportMethodName: dtoData.transportMethodName,

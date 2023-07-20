@@ -63,22 +63,22 @@ const ChangesGrid = () => {
     const exportExcel = () => {
         const excel = new Excel();
         excel
-          .addSheet('order Qty')
-          .addColumns(data1)
-          .addDataSource(filteredQtyData, { str2num: true })
-          .addSheet('GroupBy ItemCode Qty')
-          .addColumns(data4)
-          .addDataSource(differenceQtyData, { str2num: true })
-          .addSheet('Requested Warehouse Date')
-          .addColumns(data2)
-          .addDataSource(filteredWarehouseDateData, { str2num: true })
-          .addSheet('Contracted date')
-          .addColumns(data3)
-          .addDataSource(contractDateData, { str2num: true })
-          .saveAs('revisedOrders.xlsx');
-      }
-      const data1 =[
-        
+            .addSheet('order Qty')
+            .addColumns(data1)
+            .addDataSource(filteredQtyData, { str2num: true })
+            .addSheet('GroupBy ItemCode Qty')
+            .addColumns(data4)
+            .addDataSource(differenceQtyData, { str2num: true })
+            .addSheet('Requested Warehouse Date')
+            .addColumns(data2)
+            .addDataSource(filteredWarehouseDateData, { str2num: true })
+            .addSheet('Contracted date')
+            .addColumns(data3)
+            .addDataSource(contractDateData, { str2num: true })
+            .saveAs('revisedOrders.xlsx');
+    }
+    const data1 = [
+
         {
             title: 'Production Plan Id',
             dataIndex: 'production_plan_id'
@@ -94,33 +94,29 @@ const ChangesGrid = () => {
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'new_val',
-            
+
         },
         {
             title: 'Contracted Date',
             dataIndex: 'contracted_date',
-           
+
         },
         {
             title: 'Last Updated Date',
             dataIndex: 'last_update_date',
-           
+
         },
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'requested_wh_date',
-           
-        },
-        {
-            title: 'Color Code',
-            dataIndex: 'color_code'
+
         },
         {
             title: 'Order Status',
             dataIndex: 'order_status'
         }
-      ]
-      const data2 = [
+    ]
+    const data2 = [
         {
             title: 'Production Plan Id',
             dataIndex: 'production_plan_id'
@@ -136,7 +132,7 @@ const ChangesGrid = () => {
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'new_val',
-            
+
         },
         {
             title: 'Order Quantity Pieces',
@@ -149,11 +145,7 @@ const ChangesGrid = () => {
         {
             title: 'Last Updated Date',
             dataIndex: 'last_update_date',
-           
-        },
-        {
-            title: 'Color Code',
-            dataIndex: 'color_code'
+
         },
         {
             title: 'Order Status',
@@ -161,7 +153,7 @@ const ChangesGrid = () => {
         }
     ];
     const data3 = [
-      
+
         {
             title: 'Production Plan Id',
             dataIndex: 'production_plan_id'
@@ -177,12 +169,12 @@ const ChangesGrid = () => {
         {
             title: 'Contracted Date',
             dataIndex: 'new_val',
-            
+
         },
         {
             title: 'Last Updated Date',
             dataIndex: 'last_update_date',
-           
+
         },
         {
             title: 'Order Quantity Pieces',
@@ -194,18 +186,14 @@ const ChangesGrid = () => {
             dataIndex: 'requested_wh_date'
         },
         {
-            title: 'Color Code',
-            dataIndex: 'color_code'
-        },
-        {
             title: 'Order Status',
             dataIndex: 'order_status'
         }
     ];
 
     const data4 = [
-      
-       
+
+
         {
             title: 'Item code',
             dataIndex: 'item_code'
@@ -217,18 +205,18 @@ const ChangesGrid = () => {
         {
             title: ' sum Of Qrd Qty last Week',
             dataIndex: 'sumOfOldVal',
-            
+
         },
         {
             title: 'Sum Of Qrd Qty this Week',
             dataIndex: 'sumOfNewVal',
-            
+
         },
         {
             title: 'Difference Ord Qty Revised',
             dataIndex: 'diffVal'
         },
-        
+
     ];
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
@@ -302,11 +290,11 @@ const ChangesGrid = () => {
     })
 
 
-    const columns:any = [
+    const columns: any = [
         {
             title: 'S No',
             key: 'sno',
-            width:'60px',
+            width: '60px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
@@ -314,7 +302,7 @@ const ChangesGrid = () => {
             dataIndex: 'production_plan_id',
             ...getColumnSearchProps('production_plan_id')
         },
-        
+
         {
             title: 'Production Plan Name',
             dataIndex: 'prod_plan_type_name'
@@ -324,7 +312,7 @@ const ChangesGrid = () => {
             dataIndex: 'item_code',
             ...getColumnSearchProps('item_code')
         },
-        
+
         {
             title: 'Item Name',
             dataIndex: 'itemName'
@@ -333,16 +321,16 @@ const ChangesGrid = () => {
             title: 'Order Quantity Pieces',
             dataIndex: 'new_val',
             render: (text, record) => (
-                
+
                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '150px' }} title={`Previous Value:  ${record.old_val} Revised Value:  ${record.new_val}`}>
                     <>
-                     {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
-                     {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
-                 </>
-                    
+                        {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
+                        {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
+                    </>
+
                     &nbsp;&nbsp;
                     <span>
-                        {Number(record.old_val) < Number(record.new_val) ? <ArrowUpOutlined  style={{ color: 'green' }} /> : <ArrowDownOutlined  style={{ color: 'red' }} />}
+                        {Number(record.old_val) < Number(record.new_val) ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
                     </span>
                 </Tooltip>
             )
@@ -386,11 +374,11 @@ const ChangesGrid = () => {
         }
     ];
 
-    const columns1:any = [
+    const columns1: any = [
         {
             title: 'S No',
             key: 'sno',
-            width:'60px',
+            width: '60px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
@@ -411,8 +399,8 @@ const ChangesGrid = () => {
             // width :'190px',
             render: (text, record) => (
                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
-                    {moment(record.old_val).format('YYYY-MM-DD')  < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
-                     {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
+                    {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
+                    {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
                     &nbsp;&nbsp;
                     <span>
                         {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
@@ -431,7 +419,7 @@ const ChangesGrid = () => {
         {
             title: 'Last Updated Date',
             dataIndex: 'last_update_date',
-           
+
         },
         {
             title: 'Color Code',
@@ -440,15 +428,15 @@ const ChangesGrid = () => {
         {
             title: 'Order Status',
             dataIndex: 'order_status',
-            render:(value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
+            render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
         }
     ];
 
-    const columns2:any = [
+    const columns2: any = [
         {
             title: 'S No',
             key: 'sno',
-            width:'60px',
+            width: '60px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
@@ -468,8 +456,8 @@ const ChangesGrid = () => {
             dataIndex: 'new_val',
             render: (text, record) => (
                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
-                    {moment(record.old_val).format('YYYY-MM-DD')  < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
-                     {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
+                    {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
+                    {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
                     &nbsp;&nbsp;
                     <span>
                         {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
@@ -485,7 +473,7 @@ const ChangesGrid = () => {
         {
             title: 'Last Updated Date',
             dataIndex: 'last_update_date',
-           
+
         },
         {
             title: 'Requested Warehouse Date',
@@ -501,11 +489,11 @@ const ChangesGrid = () => {
             dataIndex: 'order_status'
         }
     ];
-    const columns3:any = [
+    const columns3: any = [
         {
             title: 'S No',
             key: 'sno',
-            width:'60px',
+            width: '60px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
@@ -518,20 +506,23 @@ const ChangesGrid = () => {
         },
         {
             title: ' Sum Of Qrd Qty last Week',
-            dataIndex: 'sumOfOldVal',
-            align:'right'
+            dataIndex: 'old_qty_value',
+            align: 'right'
         },
         {
             title: 'Sum Of Qrd Qty this Week',
-            dataIndex: 'sumOfNewVal',
-            align:'right'
+            dataIndex: 'new_qty_value',
+            align: 'right'
         },
         {
             title: 'Difference Ord Qty Revised',
             dataIndex: 'diffVal',
-            align:'right'
+            align: 'right',
+            render: (text: any, record: any) => {
+                return Number(Number(record.new_qty_value) - Number(record.old_qty_value)) != 0 ? Number(Number(record.new_qty_value) - Number(record.old_qty_value)) : '-'
+            }
         },
-        
+
     ];
 
     const EstimatedETDDate = (value) => {
@@ -572,58 +563,56 @@ const ChangesGrid = () => {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <b>Order Qty : {filteredQtyData?.length} </b>,
+            label: <b>Order Qty Revised Orders : {filteredQtyData?.length} </b>,
             children: <Table bordered scroll={{ y: 400 }} dataSource={filteredQtyData} columns={columns} />,
         },
         {
             key: '2',
             label: <b>Group Of ItemCode  : {differenceQtyData?.length}</b>,
             children: <Table scroll={{ y: 400 }} dataSource={differenceQtyData} columns={columns3} pagination={false}
-            summary={(differenceQtyData) => {
-                let totalLastQty = 0;
-                let totalRecQty = 0;
-                let defData = 0;
-                differenceQtyData.forEach(({ sumOfOldVal }) => {
-                    totalLastQty += Number(sumOfOldVal);
-    
-                });
-                differenceQtyData.forEach(({ sumOfNewVal }) => {
-                    totalRecQty += Number(sumOfNewVal);
-    
-                });
-                differenceQtyData.forEach(({ diffVal }) => {
-                    defData += Number(diffVal);
-    
-                });
-    
-                return (
-                  <>
-                    <Table.Summary.Row className='tableFooter'>
-                    {/* <Table.Summary.Cell index={0} ><Text ></Text></Table.Summary.Cell> */}
-                    <Table.Summary.Cell index={1} ><Text ></Text></Table.Summary.Cell>
-                    <Table.Summary.Cell index={3} ><Text ></Text></Table.Summary.Cell>
-                      <Table.Summary.Cell index={4}  ><div style={{ textAlign: 'right', fontWeight:'bold'}}>Summary</div></Table.Summary.Cell>
-                      <Table.Summary.Cell index={5} ><div style={{ textAlign: 'right', fontWeight:'bold' }}>{totalLastQty}</div></Table.Summary.Cell>
-                      <Table.Summary.Cell index={6}><div style={{ textAlign: 'right', fontWeight:'bold' }}>{totalRecQty}</div></Table.Summary.Cell>
-                      <Table.Summary.Cell index={7} ><div style={{ textAlign: 'right' , fontWeight:'bold'}}>{defData}</div></Table.Summary.Cell>
-                    </Table.Summary.Row>
-                  </>
-                );
-              }
-              }
+                summary={(differenceQtyData) => {
+                    let totalLastQty = 0;
+                    let totalRecQty = 0;
+                    let defData = 0;
+                    differenceQtyData.forEach(({ old_qty_value }) => {
+                        totalLastQty += Number(old_qty_value);
+
+                    });
+                    differenceQtyData.forEach(({ new_qty_value }) => {
+                        totalRecQty += Number(new_qty_value);
+
+                    });
+
+                    defData = totalRecQty - totalLastQty;
+
+                    return (
+                        <>
+                            <Table.Summary.Row className='tableFooter'>
+                                {/* <Table.Summary.Cell index={0} ><Text ></Text></Table.Summary.Cell> */}
+                                <Table.Summary.Cell index={1} ><Text ></Text></Table.Summary.Cell>
+                                <Table.Summary.Cell index={3} ><Text ></Text></Table.Summary.Cell>
+                                <Table.Summary.Cell index={4}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Summary</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={5} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{totalLastQty}</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={6}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{totalRecQty}</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={7} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{defData}</div></Table.Summary.Cell>
+                            </Table.Summary.Row>
+                        </>
+                    );
+                }
+                }
             />,
         },
         {
             key: '3',
-            label: <b >Requested Warehouse Date : {filteredWarehouseDateData?.length}</b>,
+            label: <b >Requested Warehouse Date Revised Orders: {filteredWarehouseDateData?.length}</b>,
             children: <Table bordered scroll={{ y: 400 }} dataSource={filteredWarehouseDateData} columns={columns1} />,
         },
         {
             key: '4',
-            label: <b>Contracted date : {filteredContractDateData?.length}</b>,
+            label: <b>Contracted Date Revised Orders : {filteredContractDateData?.length}</b>,
             children: <Table bordered scroll={{ y: 400 }} dataSource={filteredContractDateData} columns={columns2} />,
         },
-       
+
     ];
 
     const onReset = () => {
@@ -636,7 +625,7 @@ const ChangesGrid = () => {
     }
 
     return (
-        <Card title='Compare Orders'  extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData ||differenceQtyData ? (<Button
+        <Card title='Compare Orders' extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData ? (<Button
             type="default"
             style={{ color: 'green' }}
             onClick={exportExcel}
@@ -680,7 +669,7 @@ const ChangesGrid = () => {
                     </Col>
                 </Row>
             </Form>
-            {filteredQtyData || filteredContractDateData || filteredWarehouseDateData ||differenceQtyData? <>
+            {filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData ? <>
                 {/* <Row gutter={24}>
                     <Col>
                         <Button icon={<DownloadOutlined />} style={{ marginTop: '30px', }} onClick={() => { exportExcel(); }}>

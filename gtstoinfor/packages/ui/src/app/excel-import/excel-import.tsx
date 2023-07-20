@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { Upload, Button, Card, Form, message, UploadProps, Typography, Row, Col } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import * as XLSX from 'xlsx';
-import { RcFile } from 'antd/lib/upload/interface';
+import { Button, Card, Form, message, UploadProps } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 import AlertMessages from '../common/common-functions/alert-messages';
@@ -53,9 +50,8 @@ export default function ExcelImport() {
               message.success(res.internalMessage)
               navigate("/excel-import/grid-view");
             } else {
-              message.error(res.internalMessage)
+              message.error('File upload failed')
             }
-
           }).finally(() => {
             setLoading(false);
           })
