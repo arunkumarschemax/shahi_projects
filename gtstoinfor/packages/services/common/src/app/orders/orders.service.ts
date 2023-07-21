@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
@@ -11,8 +11,11 @@ import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
 import { FileUploadRepository } from './repository/upload.repository';
 import { FileUploadEntity } from './entities/upload-file.entity';
-import { Entity } from 'typeorm';
+import { DataSource, Entity, EntityManager, getConnection, getManager, getRepository } from 'typeorm';
 import { FileIdReq } from './models/file-id.req';
+import { promises } from 'dns';
+import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
+
 
 @Injectable()
 export class OrdersService {
@@ -24,7 +27,11 @@ export class OrdersService {
         private ordersChildRepo: OrdersChildRepository,
         private ordersChildAdapter: OrdersChildAdapter,
         private orderDiffRepo: OrderDifferenceRepository,
-        private fileUploadRepo: FileUploadRepository
+        private fileUploadRepo: FileUploadRepository,
+        @InjectDataSource()
+        private dataSource: DataSource,
+        @InjectEntityManager() private readonly entityManager: EntityManager
+
     ) { }
 
     async saveOrdersData(formData: any, id: number): Promise<CommonResponseModel> {
@@ -233,5 +240,73 @@ export class OrdersService {
             return new CommonResponseModel(false, 11, 'No data found', data);
         }
     }
+
+    // async getVersionWiseData():Promise<CommonResponseModel>{
+
+
+    //     let query = 'SET @sql = NULL';
+    //     query += ` SELECT GROUP_CONCAT(DISTINCT CONCAT('IFNULL(max(case when oc.version = ''',oc.version,''' then order_qty_pcs end),0) AS "',oc.version, '"')) INTO @sql FROM orders_child oc`;
+    //     query += ` SET @sql = CONCAT('SELECT production_plan_id,item_code,itemName, ', @sql, ' FROM orders_child oc GROUP BY production_plan_id')`;
+    //       query += ` PREPARE stmt1 FROM @sql`;
+    //       query += ` EXECUTE stmt1`;
+    //   const result = await this.entityManager.query(query);
+
+    //     return new CommonResponseModel(true, 123, 'retrieved successfully', result);
+    // }
+
+    // async getVersionWiseData(): Promise<CommonResponseModel> {
+    //     let query = `SET @sql = NULL;SELECT
+    //     GROUP_CONCAT(DISTINCT
+    //       CONCAT('ifnull(max(case when oc.version = ''',oc.version,''' then order_qty_pcs end),0) AS "',oc.version, '"')
+    //     ) INTO @sql
+    //   FROM
+    //     orders_child oc; SET @sql = CONCAT('SELECT production_plan_id,item_code,itemName, ', @sql, ' FROM orders_child oc GROUP BY production_plan_id');
+    //      PREPARE stmt1 FROM @sql; EXECUTE stmt1;`
+
+    //     const result = await this.dataSource.query(query);
+
+    //     return new CommonResponseModel(true, 123, 'retrieved successfully', result);
+    // }
+    // async  getVersionWiseData(): Promise<CommonResponseModel> {
+    //     const orderChildRepository = getRepository(OrdersChildEntity);
+
+    //     const subquery = orderChildRepository.createQueryBuilder('oc')
+    //       .select('DISTINCT CONCAT(\'IFNULL(max(case when oc.version = :version then order_qty_pcs end), 0) AS :version\')', {
+    //         version: 'oc.version',
+    //       });
+
+    //     const subquerySql = await subquery.getQuery();
+
+    //     const query = orderChildRepository.createQueryBuilder('oc')
+    //       .select('production_plan_id, item_code, itemName')
+    //       .addSelect(subquerySql, 'versions')
+    //       .groupBy('production_plan_id, item_code, itemName');
+
+    //     const result = await query.getRawMany();
+
+    //     return new CommonResponseModel(true, 123, 'retrieved successfully', result);
+    //   }
+
+
+    async getVersionWiseData(): Promise<CommonResponseModel> {
+        const records = await this.ordersChildRepo.getVersionWiseQty()
+        const versionDataMap = new Map<number, VersionDataModel>();
+        if (records.length == 0) {
+            throw new CommonResponseModel(false, 0, 'No data found');
+        }
+        for (const record of records) {
+            if (!versionDataMap.has(record.production_plan_id)) {
+                versionDataMap.set(record.production_plan_id, new VersionDataModel(record.production_plan_id, record.item_code, record.itemName, []));
+            }
+            versionDataMap.get(record.production_plan_id).versionWiseData.push(new VersionAndQtyModel(record.version, record.order_qty_pcs));
+        }
+        const versionDataModelArray: VersionDataModel[] = [];
+        versionDataMap.forEach(version => versionDataModelArray.push(version));
+        return new CommonResponseModel(true, 1, 'Data retrived successfully', versionDataModelArray);
+    }
+
+
+
+
 
 }

@@ -158,4 +158,14 @@ export class OrdersController {
 
         }
     }
+
+    @Post('/getVersionWiseData')
+    async getVersionWiseData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getVersionWiseData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
 }

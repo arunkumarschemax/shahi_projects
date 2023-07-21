@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { Repository, getConnection } from "typeorm";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { OrdersChildEntity } from "../entities/orders-child.entity";
@@ -6,6 +6,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 import { AppDataSource } from "../../app-datasource";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 import { FileIdReq } from "../models/file-id.req";
+import { CommonResponseModel } from "@project-management-system/shared-models";
 
 @Injectable()
 export class OrdersChildRepository extends Repository<OrdersChildEntity> {
@@ -47,5 +48,12 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             .limit(1)
         return await query.getRawMany();
     }
+    async getVersionWiseQty(): Promise<any[]> {
+        const query = this.createQueryBuilder('oc')
+        .select('production_plan_id ,item_code,itemName,version,order_qty_pcs')
+        return await query.getRawMany();
+    }
+
+
 
 }

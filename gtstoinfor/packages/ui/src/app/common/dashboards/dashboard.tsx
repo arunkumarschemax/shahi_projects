@@ -4,6 +4,7 @@ import { UnitWiseOrderGraph } from "./unit-wise-orders"
 import { DivisionWiseOrders } from "./division-wise-orders"
 import ChangesGrid from "../../excel-import/changes-grid"
 import ItemChanges from "./item-change"
+import VersionChanges from "../../excel-import/version-wise-table"
 const { useToken } = theme
 
 export const Dashboard = () => {
@@ -30,11 +31,17 @@ export const Dashboard = () => {
             </Card>
             <Card>
                 <Row gutter={24}>
-                    <Col xs={24} sm={24} md={24} xl={16}>
+                    <Col xs={24} sm={24} md={24} xl={24}>
                         <ChangesGrid />
                     </Col>
-                    <Col xs={24} sm={24} md={24} xl={8}>
+                    
+                </Row>
+                <Row gutter={24}>
+                <Col xs={24} sm={24} md={24} xl={12}>
                         <ItemChanges/>
+                    </Col>
+                    <Col xs={24} sm={24} md={24} xl={12}>
+                        {/* <VersionChanges/> */}
                     </Col>
                 </Row>
             </Card>
