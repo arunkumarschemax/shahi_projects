@@ -48,13 +48,12 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             .limit(1)
         return await query.getRawMany();
     }
+
     async getVersionWiseQty(): Promise<any[]> {
         const query = this.createQueryBuilder('oc')
-        .select('production_plan_id ,item_code,itemName,version,order_qty_pcs')
+            .select('production_plan_id, item_code, itemName, file_id as version, created_at,order_qty_pcs')
         return await query.getRawMany();
     }
-
-
 
     async getItemQtyChangeData(fileId1: number, fileId2: number): Promise<any[]> {
         const query = this.createQueryBuilder('o')

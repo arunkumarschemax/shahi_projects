@@ -34,14 +34,15 @@ export const Dashboard = () => {
                     <Col xs={24} sm={24} md={24} xl={24}>
                         <ChangesGrid />
                     </Col>
-                    
+
                 </Row>
+                <br />
                 <Row gutter={24}>
-                <Col xs={24} sm={24} md={24} xl={12}>
-                        <ItemChanges/>
+                    <Col xs={24} sm={24} md={24} xl={10}>
+                        <ItemChanges />
                     </Col>
-                    <Col xs={24} sm={24} md={24} xl={12}>
-                        {/* <VersionChanges/> */}
+                    <Col xs={24} sm={24} md={24} xl={14}>
+                        <VersionChanges />
                     </Col>
                 </Row>
             </Card>
