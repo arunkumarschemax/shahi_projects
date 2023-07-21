@@ -15,7 +15,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getOrdersData(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(`o.production_plan_id, o.item_code, o.itemName, o.order_status, o.fr_fabric_name,o.order_qty_pcs, o.contracted_date, o.requested_wh_date, o.created_at`)
+            .select(`o.production_plan_id, o.item_code, o.itemName, o.order_status, o.fr_fabric_name,o.order_qty_pcs, o.contracted_date, o.requested_wh_date, o.last_update_date, o.created_at`)
             .orderBy(` o.created_at`, 'DESC')
         return await query.getRawMany();
     }
@@ -25,14 +25,6 @@ export class OrdersRepository extends Repository<OrdersEntity> {
             .select(`o.production_plan_id, o.item_code, o.itemName,o.prod_plan_type_name , o.order_status, o.fr_fabric_name, o.contracted_date,o.last_update_date,o.requested_wh_date, od.created_at, od.old_val, od.new_val, od.version`)
             .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
             .where(` column_name='order_qty_pcs' ORDER BY o.prod_plan_type_name ASC`)
-        return await query.getRawMany();
-    }
-    async getItemQtyChangeData(): Promise<any[]> {
-        const query = this.createQueryBuilder('o')
-            .select(` o.item_code, o.itemName , SUM(od.old_val) AS sumOfOldVal, SUM(od.new_val) AS sumOfNewVal , (SUM(od.old_val) - SUM(od.new_val) ) AS diffVal `)
-            .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
-            .where(` column_name='order_qty_pcs'`)
-            .groupBy(`o.item_code`)
         return await query.getRawMany();
     }
 

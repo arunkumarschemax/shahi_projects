@@ -1,8 +1,7 @@
-import { Button, Card, Popconfirm, Table, message } from 'antd'
+import { Button, Card, Popconfirm, Table, Tooltip, message } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { DeleteOutlined, UndoOutlined } from '@ant-design/icons';
+import { UndoOutlined } from '@ant-design/icons';
 import { OrdersService } from '@project-management-system/shared-services';
-import AlertMessages from '../common/common-functions/alert-messages';
 import moment from 'moment';
 import { ColumnProps } from 'antd/es/table';
 import { FileIdReq } from '@project-management-system/shared-models';
@@ -56,13 +55,17 @@ export function FileRevert() {
             dataIndex: 'uploadedDate',
             render: (value, record) => {
                 return (
-                    moment(value).format('YYYY-MM-DD')
+                    moment(value).format('YYYY-MM-DD HH:mm:ss')
                 )
             }
         },
         {
             title: 'File Name',
             dataIndex: 'fileName'
+        },
+        {
+            title: 'Uploaded User',
+            dataIndex: 'createdUser'
         },
         {
             title: 'Action',
@@ -78,7 +81,7 @@ export function FileRevert() {
                                 cancelText="No"
                                 onConfirm={() => revertFileData(record?.fileId)}
                             >
-                                <Button icon={<UndoOutlined  style={{ color: 'red' }} />} />
+                                <Button icon={<UndoOutlined style={{ color: 'red' }} />}>Revert File</Button>
                             </Popconfirm>
                         )}
                         {!isFirstRecord && <></>}
@@ -91,7 +94,7 @@ export function FileRevert() {
     return (
         <>
             <Card
-                title="Revert Uploaded Files">
+                title="Uploaded Files List">
                 <Table
                     columns={columns}
                     dataSource={data}

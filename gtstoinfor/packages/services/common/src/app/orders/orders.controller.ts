@@ -158,7 +158,6 @@ export class OrdersController {
 
         }
     }
-
     @Post('/getVersionWiseData')
     async getVersionWiseData(): Promise<CommonResponseModel> {
         try {
