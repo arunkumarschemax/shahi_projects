@@ -95,7 +95,7 @@ export const baseRouterList = [
                 filepath: "revert-orders",
             },
             {
-                label: "Versions Grid",
+                label: "Versions Data",
                 key: "version-grid",
                 path: "version-grid",
                 filepath: "version-grid",
