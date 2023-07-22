@@ -28,6 +28,7 @@ const roleOptions = [
 export default function UserCreationForm() {
 
   const [activeFactoryData, setActiveFactoryData] = useState<FactoryDto[]>()
+  const [selectedFactoryName, setSelectedFactoryName] = useState<string>('');
 
   const userServices = new UsersService
   const factoryServices = new FactoryService
@@ -40,6 +41,7 @@ export default function UserCreationForm() {
       await factoryServices.getActiveFactories().then(res => {
         if (res.status) {
           setActiveFactoryData(res.data)
+          setSelectedFactoryName(res.data[0]?.name || ''); 
         } else {
           message.error(res.internalMessage)
         }
@@ -54,8 +56,40 @@ export default function UserCreationForm() {
     const userDto = new UsersDto(null, values.username, values.password, values.factory, values.role, 'admin')
     userServices.createUser(userDto).then(res => {
       if (res.status) {
-        message.success(res.internalMessage)
+        message.success(res.internalMessage);
+        // setSelectedFactoryName(values.factory);
+
+        
+
+        // if (activeFactoryData && activeFactoryData.length > 0 && values.factory === activeFactoryData[0].name) {
+        //   // Redirect to the dashboard page if the first option is selected in the factory dropdown
+        //   navigate('/dashboard');
+        // } else {
+        //   // Redirect to the factory page if any other factory option is selected
+        //   navigate(`/factory/${values.factory}`);
+        // }
+
+
+
         formRef.resetFields()
+
+        // if (res.data.[0]) {
+        //   // Redirect to the dashboard page if res.data[0] exists
+        //   navigate('/dashboard');
+        // } else {
+        //   // Redirect to the factory page if res.data[0] does not exist
+        //   navigate(`/factory/${values.factory}`);
+        // }
+        // Check if the selected factory id is equal to 2
+        if (values.factory === "2") {
+          // Redirect to the dashboard page if the factory id is equal to 2
+          navigate('/dashboard');
+        } else {
+          // Redirect to the blank page with the selected factory id
+          navigate(`/blank/${values.factory}`);
+        }
+
+
         setTimeout(() => {
           navigate(pathToreDirect);
         }, 500);

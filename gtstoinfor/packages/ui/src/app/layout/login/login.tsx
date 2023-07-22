@@ -1,8 +1,8 @@
-import { Button, Card, Col, Divider, Form, Input, Row, Typography, message, theme} from "antd";
-import React from "react";
+import { Button, Card, Col, Divider, Form, Input, Row, Typography, message, theme } from "antd";
+import React, { useState } from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
-import { LoginDto, authAtom } from "@project-management-system/shared-models";
+import { FactoryDto, LoginDto, authAtom } from "@project-management-system/shared-models";
 import { UserManagementServices } from "@project-management-system/shared-services";
 import { useRecoilState } from "recoil";
 const { Text, Link, Title } = Typography;
@@ -10,27 +10,47 @@ const { useToken } = theme;
 
 export default function Login() {
   const [loginForm] = Form.useForm();
-  const { token: { colorPrimary, colorPrimaryActive, colorBgTextHover }} = useToken();
+  const { token: { colorPrimary, colorPrimaryActive, colorBgTextHover } } = useToken();
   const navigate = useNavigate();
   const [authState, setAuthState] = useRecoilState(authAtom);
+  const [company, setCompany] = useState<any>([])
   const service = new UserManagementServices()
+
+    
+  const [activeFactoryData, setActiveFactoryData] = useState<FactoryDto[]>()
 
   const onLogin = () => {
     loginForm.validateFields().then((values) => {
-        const loginDto = new LoginDto(values.username,values.password)
-        service.login(loginDto).then((res) => {
-            if(res.status){
-                localStorage.setItem('auth',JSON.stringify(res.data))
-                setAuthState([{userName:values.username,isAuthenticated:true,plant:1}]);
-                message.success(res.internalMessage)
-                navigate('/dashboard')
-            }else{
-                message.error(res.internalMessage)
-            }
-        })
-        
+      const loginDto = new LoginDto(values.username, values.password)
+      service.login(loginDto).then((res) => {
+        if (res.status) {
+          console.log(res.data)
+          localStorage.setItem('auth', JSON.stringify(res.data))
+          setAuthState([{ userName: values.username, isAuthenticated: true, plant: 1 }]);
+          message.success(res.internalMessage)
+          // if (activeFactoryData && activeFactoryData.length > 0 && values.factory === activeFactoryData[0].name) {
+          //   // Redirect to the dashboard page if the first option is selected in the factory dropdown
+          //   navigate('/dashboard'); 
+          // } else {
+          //   // Redirect to the factory page if any other factory option is selected
+          //   navigate(`/factory/${values.factory}`);
+          // }
+          // Check if the selected factory id is equal to 2
+          if (res.data.company === "2") {
+            // Redirect to the dashboard page if the factory id is equal to 2
+            navigate('/dashboard');
+          } else {
+            // Redirect to the factory page with the selected factory id
+            navigate(`/factory/${values.factory}`);
+          }
+
+        } else {
+          message.error(res.internalMessage)
+        }
+      })
+
     })
-}
+  }
   return (
     <Card className="hero">
       <Row gutter={24} justify={"center"} className="content">

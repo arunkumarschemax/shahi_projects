@@ -4,16 +4,33 @@ import { UnitWiseOrderGraph } from "./unit-wise-orders"
 import { DivisionWiseOrders } from "./division-wise-orders"
 import ChangesGrid from "../../excel-import/changes-grid"
 import ItemChanges from "./item-change"
+import { useEffect, useState } from "react"
 const { useToken } = theme
 
 export const Dashboard = () => {
-    const { token: { colorPrimary } } = useToken()
+    const { token: { colorPrimary } } = useToken();
+    const [user, setUser]= useState<any>();
+
+    // useEffect({
+    //     getFactoryById()
+    // },[])
+
+    // const getFactoryById = ()=>{
+    //     setUser(res.data)
+    // }
+
+
+
+
     return (
         <>
-            {/* <div>
+            <div>
                 <Card title={<span style={{ color: 'white' }}>Dashboard</span>} headStyle={{ backgroundColor: colorPrimary, border: 0 }}>
                 </Card>
-            </div> */}
+            </div>
+            {/* {user === "uniqlo"(
+
+            ): user === nike(null)} */}
             <Card>
                 <Row gutter={24}>
                     <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>

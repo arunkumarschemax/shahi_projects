@@ -14,6 +14,8 @@ import { UsersEntity } from "./users.entity";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { InjectRepository } from "@nestjs/typeorm";
 import { OrderDataSource } from "./app-data-source";
+import { useLocation } from 'react-router-dom';
+import { FactoriesEntity } from "../factories/factories.entity";
 
 // This should be a real class/interface representing a user entity
 export type User = any;
@@ -124,9 +126,17 @@ export class UsersService {
       // const rolesQuery = `select  urp.role_id as roleId,r.role,r.company_id as companyId  from user_role_mapping urp left join role r on  r.id= urp.role_id where urp.user_id = ${validateUser.id}` 
       // const rolesData = await OrderDataSource.query(rolesQuery);
       // console.log(rolesData)
+      const user = await this.userRepository.getdata(validateUser.factory)
       const rolesData = [{role:'', roleId:1, companyId:1}]
-      const authModel = new AuthModel( validateUser.username,rolesData[0]?.role,'companey',rolesData[0]?.companyId,validateUser.id,rolesData[0]?.roleId)
-      return new AuthResponseModel(true,1111,'Sucessfully logged in',authModel)
+      const authModel = new AuthModel( validateUser.username,rolesData[0]?.role, validateUser.factory, rolesData[0]?.companyId, validateUser.id,rolesData[0]?.roleId);
+      const state={selectedFactoryName:user.name};
+
+      // const location = useLocation();
+      // const selectedFactory = location.state?.selectedFactory 
+      
+      return new AuthResponseModel(true,1111,`Sucessfully logined with`+ ' ' + user.address , authModel )
   }
+  
+
   
 }
