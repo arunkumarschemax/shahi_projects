@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Form, Row, Select, Table, message } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tag, message } from 'antd';
 import { useEffect, useState, } from 'react';
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
@@ -60,7 +60,7 @@ const AllOrdersGridView = () => {
             setFilteredData(filteredData);
         }
         if (startDate && endDate) {
-            filteredData = filteredData.filter(record => record.contracted_date >= startDate && record.contracted_date <= endDate);
+            filteredData = filteredData.filter(record => moment(record.last_update_date).format('YYYY-MM-DD') >= startDate && moment(record.last_update_date).format('YYYY-MM-DD') <= endDate);
             if (filteredData.length === 0) {
                 message.error("No Data Found")
             }
@@ -112,12 +112,16 @@ const AllOrdersGridView = () => {
             }
         },
         {
-            title: 'Color Code',
-            dataIndex: 'color_code'
+            title: 'Order Revised Date',
+            dataIndex: 'last_update_date',
+            render: (text, record) => {
+                return record.last_update_date ? moment(record.last_update_date).format('YYYY-MM-DD') : '-'
+            }
         },
         {
             title: 'Order Status',
-            dataIndex: 'order_status'
+            dataIndex: 'order_status',
+            render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
         }
     ];
 
@@ -132,16 +136,16 @@ const AllOrdersGridView = () => {
 
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
-            { title: 'Unit', dataIndex: 'company' },
-            { title: 'Project Type', dataIndex: 'projectType' },
-            { title: 'Project Name', dataIndex: 'projectName' },
-            { title: 'Department Name', dataIndex: 'departmentName' },
-            { title: 'Project Description', dataIndex: 'projectDesc' },
-            { title: 'Project Status', dataIndex: 'projectStatus' },
-            { title: 'Start Date', dataIndex: 'startDate' },
-            { title: 'End Date', dataIndex: 'endDate' },
-            { title: 'Currency', dataIndex: 'currency' },
-            { title: 'Cost', dataIndex: 'cost' },
+            { title: 'Production Plan Id', dataIndex: 'production_plan_id' },
+            { title: 'Item code', dataIndex: 'item_code' },
+            { title: 'Item Name', dataIndex: 'itemName' },
+            { title: 'Order Quantity Pieces', dataIndex: 'order_qty_pcs' },
+            { title: 'Contracted Date', dataIndex: 'contracted_date' },
+            { title: 'Requested Warehouse Date', dataIndex: 'requested_wh_date' },
+            { title: 'Order Revised Date', dataIndex: 'last_update_date' },
+            { title: 'Order Status', dataIndex: 'order_status' },
+            // { title: 'Currency', dataIndex: 'currency' },
+            // { title: 'Cost', dataIndex: 'cost' },
         ]
         const excel = new Excel();
         excel.addSheet("Sheet1");
@@ -167,7 +171,7 @@ const AllOrdersGridView = () => {
                 <Form form={form} layout={'vertical'}>
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
-                            <Form.Item label="Contract Date" name="fromDate">
+                            <Form.Item label="Order Revised Date" name="fromDate">
                                 <RangePicker onChange={EstimatedETDDate} />
                             </Form.Item>
                         </Col>

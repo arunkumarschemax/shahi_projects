@@ -49,6 +49,11 @@ export class OrdersDifferenceEntity {
     createdAt: string;
 
     @Column('int', {
+        name: 'file_id',
+    })
+    fileId: number;
+
+    @Column('int', {
         name: 'version',
     })
     version: number;

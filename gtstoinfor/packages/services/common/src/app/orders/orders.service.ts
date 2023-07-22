@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
@@ -11,12 +11,14 @@ import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
 import { FileUploadRepository } from './repository/upload.repository';
 import { FileUploadEntity } from './entities/upload-file.entity';
-import { Entity } from 'typeorm';
+import { DataSource, Entity, EntityManager, getConnection, getManager, getRepository } from 'typeorm';
 import { FileIdReq } from './models/file-id.req';
+import { promises } from 'dns';
+import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
+
 
 @Injectable()
 export class OrdersService {
-    ordersChildRepository: any;
 
     constructor(
         private ordersAdapter: OrdersAdapter,
@@ -24,11 +26,14 @@ export class OrdersService {
         private ordersChildRepo: OrdersChildRepository,
         private ordersChildAdapter: OrdersChildAdapter,
         private orderDiffRepo: OrderDifferenceRepository,
-        private fileUploadRepo: FileUploadRepository
+        private fileUploadRepo: FileUploadRepository,
+        @InjectDataSource()
+        private dataSource: DataSource,
+        @InjectEntityManager() private readonly entityManager: EntityManager
+
     ) { }
 
     async saveOrdersData(formData: any, id: number): Promise<CommonResponseModel> {
-        console.log('---id---', id)
         try {
             const flag = new Set()
             const updatedArray = formData.map((obj) => {
@@ -47,7 +52,10 @@ export class OrdersService {
                     if (value === "") {
                         updatedObj[key] = null;
                     } else {
-                        updatedObj[key] = value;
+                        // updatedObj[key] = value;
+                        var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
+                        updatedObj[key] = value.replace(regexPattern, null);
+                        updatedObj[key] = Buffer.from(value, 'utf-8').toString()
                     }
                 }
                 return updatedObj;
@@ -96,6 +104,7 @@ export class OrdersService {
                                     orderDiffObj.displayName = existingDataKey
                                     orderDiffObj.productionPlanId = dtoData.productionPlanId
                                     orderDiffObj.version = dtoData.version
+                                    orderDiffObj.fileId = id
                                     if (orderDiffObj.oldValue != orderDiffObj.newValue) {
                                         const orderDiffSave = await this.orderDiffRepo.save(orderDiffObj);
                                     }
@@ -136,7 +145,8 @@ export class OrdersService {
     }
 
     async getQtyDifChangeData(): Promise<CommonResponseModel> {
-        const data = await this.ordersRepository.getItemQtyChangeData()
+        const files = await this.fileUploadRepo.getFilesData()
+        const data = await this.ordersChildRepo.getItemQtyChangeData(files[1].fileId, files[0].fileId)
         return new CommonResponseModel(true, 1, 'data retrieved', data)
     }
 
@@ -166,7 +176,6 @@ export class OrdersService {
     }
 
     async revertFileData(req: FileIdReq): Promise<CommonResponseModel> {
-        console.log('-----------------service---------------------', req)
         if (req) {
             const latestFileId = await this.fileUploadRepo.update({ id: req.fileId }, { isActive: false })
         }
@@ -178,12 +187,10 @@ export class OrdersService {
             where: { fileId: updatedData[0]?.fileId },
             relations: ['orders']
         })
-        console.log('************data', data)
         const flag = new Set()
         for (const dtoData of data) {
             const prodPlanId = new OrdersEntity();
             prodPlanId.productionPlanId = dtoData.orders.productionPlanId
-            console.log('OrdersEntity************', prodPlanId)
             const updateOrder = await this.ordersRepository.update({ productionPlanId: prodPlanId.productionPlanId }, {
                 year: dtoData.year, planningSeason: dtoData.planningSeason, season: dtoData.season, itemBrand: dtoData.itemBrand, businessUnit: dtoData.businessUnit, itemCode: dtoData.itemCode, itemName: dtoData.itemName, mainSampleCode: dtoData.mainSampleCode, mainSampleName: dtoData.mainSampleName, supplierRMCode: dtoData.supplierRMCode, supplierRMName: dtoData.supplierRMName, vendorCode: dtoData.vendorCode, vendorName: dtoData.vendorName, managementFactoryCode: dtoData.managementFactoryCode, managementFactoryName: dtoData.managementFactoryName, branchFactoryCode: dtoData.branchFactoryCode,
                 branchFactoryName: dtoData.branchFactoryName, rmSupplierCode: dtoData.rmSupplierCode, rmSupplierName: dtoData.rmSupplierName, sewingDifficulty: dtoData.sewingDifficulty, departmentCode: dtoData.departmentCode, departmentName: dtoData.departmentName, class1Code: dtoData.class1Code, Class1Name: dtoData.Class1Name, productionPlanTypeName: dtoData.productionPlanTypeName, monthWeekFlag: dtoData.monthWeekFlag, lastUpdateDate: dtoData.lastUpdateDate, requestedWhDate: dtoData.requestedWhDate, contractedDate: dtoData.contractedDate, transportMethodName: dtoData.transportMethodName,
@@ -232,6 +239,23 @@ export class OrdersService {
         else {
             return new CommonResponseModel(false, 11, 'No data found', data);
         }
+    }
+
+    async getVersionWiseData(): Promise<CommonResponseModel> {
+        const records = await this.ordersChildRepo.getVersionWiseQty()
+        const versionDataMap = new Map<number, VersionDataModel>();
+        if (records.length == 0) {
+            throw new CommonResponseModel(false, 0, 'No data found');
+        }
+        for (const record of records) {
+            if (!versionDataMap.has(record.production_plan_id)) {
+                versionDataMap.set(record.production_plan_id, new VersionDataModel(record.production_plan_id, record.item_code, record.itemName, []));
+            }
+            versionDataMap.get(record.production_plan_id).versionWiseData.push(new VersionAndQtyModel(record.version, record.order_qty_pcs));
+        }
+        const versionDataModelArray: VersionDataModel[] = [];
+        versionDataMap.forEach(version => versionDataModelArray.push(version));
+        return new CommonResponseModel(true, 1, 'Data retrived successfully', versionDataModelArray);
     }
 
 }
