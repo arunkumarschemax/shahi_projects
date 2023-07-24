@@ -4,7 +4,7 @@ import {FactoryResponseModel} from '../../../../../libs/shared-models/src/common
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
 import { AllFactoriesResponseModel } from '@project-management-system/shared-models';
 
-@Controller('factories')
+@Controller('/factories')
 export class FactoriesController {
     constructor(
         private factoriesService: FactoriesService,
