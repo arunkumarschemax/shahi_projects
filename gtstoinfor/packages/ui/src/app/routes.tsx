@@ -13,6 +13,7 @@ import AllOrdersGridView from "./excel-import/orders-view-grid"
 import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
+import SupplierForm from "./masters/supplier/supplier-form"
 
 
 export const AppRoutes = () => {
@@ -30,6 +31,7 @@ export const AppRoutes = () => {
                 <Route path='/masters'>
                     <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
                     <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm />} />
+                    <Route path='supplier/supplier-form' key='supplier/supplier-form' element={<SupplierForm />} />
                 </Route>
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
@@ -37,6 +39,7 @@ export const AppRoutes = () => {
                     <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
                     <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
                     <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
+                    
                 </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
@@ -60,6 +63,7 @@ export const AppRoutes = () => {
                     <Route path='/masters'>
                         <Route path='factories/factories-view' element={<FactoriesView />} />
                         <Route path='factories/factories-form' element={<FactoriesForm />} />
+                        <Route path='supplier/supplier-form' element={<SupplierForm />} />
                     </Route>
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
