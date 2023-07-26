@@ -508,20 +508,36 @@ const ChangesGrid = () => {
         {
             title: ' Sum Of Qrd Qty last Week',
             dataIndex: 'old_qty_value',
-            align: 'right'
+            align: 'right',
+            // render:(text,record) => {
+            //     record.old_qty_value
+            // }
+            
         },
         {
             title: 'Sum Of Qrd Qty this Week',
             dataIndex: 'new_qty_value',
-            align: 'right'
+            align: 'right',
+            render: (text, record) => (
+                <span  {...record.new_qty_value}>
+                <>
+                {Number(record.old_qty_value) === Number(record.new_qty_value) ? <span style={{ color: '' }}>{record.new_qty_value}</span> : ''}
+                {Number(record.old_qty_value) < Number(record.new_qty_value) ? <span style={{ color: 'green' }}>{record.new_qty_value}</span> : ''}
+                {Number(record.old_qty_value) > Number(record.new_qty_value) ? <span style={{ color: 'red' }}>{record.new_qty_value}</span> : ''}
+            </>
+                </span>
+                
+            )
         },
         {
             title: 'Difference Ord Qty Revised',
             dataIndex: 'diffVal',
             align: 'right',
             render: (text: any, record: any) => {
+                
                 return Number(Number(record.new_qty_value) - Number(record.old_qty_value)) != 0 ? Number(Number(record.new_qty_value) - Number(record.old_qty_value)) : '-'
             }
+            
         },
 
     ];
