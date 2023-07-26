@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { appConfig } from '../../config';
 import { OrdersModule } from './orders/orders.module';
+import { SupplierModule } from './supplier/supplier.module';
 
 
 @Module({
@@ -15,11 +16,11 @@ import { OrdersModule } from './orders/orders.module';
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
-      host: appConfig.database.host,
-      port: appConfig.database.port,
-      username: appConfig.database.username,
-      password: appConfig.database.password,
-      database: appConfig.database.dbName,
+      host: 'localhost',
+      port: 3307,
+      username: 'root',
+      password: '',
+      database: 'shahi_orders',
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -30,7 +31,7 @@ import { OrdersModule } from './orders/orders.module';
     FactoriesModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule],
+    AuthModule, JwtModule , SupplierModule],
   controllers: [AppController],
   providers: [AppService],
 })
