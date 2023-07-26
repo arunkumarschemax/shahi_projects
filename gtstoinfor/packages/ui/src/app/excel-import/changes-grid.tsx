@@ -642,9 +642,15 @@ const ChangesGrid = () => {
                                 <Table.Summary.Cell index={1} ><Text ></Text></Table.Summary.Cell>
                                 <Table.Summary.Cell index={3} ><Text ></Text></Table.Summary.Cell>
                                 <Table.Summary.Cell index={4}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Summary</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={5} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{totalLastQty}</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={6}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{totalRecQty}</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={7} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{defData}</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={5} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalLastQty).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })}</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={6}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalRecQty).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })}</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={7} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(defData).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })}</div></Table.Summary.Cell>
                             </Table.Summary.Row>
                         </>
                     );
