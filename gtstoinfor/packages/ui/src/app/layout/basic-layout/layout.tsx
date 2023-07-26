@@ -67,6 +67,12 @@ export const baseRouterList = [
                 path: "currencies/currency-view",
                 filepath: "currencies/currency-view",
             },
+            {
+                label: "Payment Terms",
+                key: "paymentTerms",
+                path: "payment-terms/payment-terms-view",
+                filepath: "payment-terms/payment-terms-view",
+            }
         ],
     },
     {

@@ -15,6 +15,9 @@ import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
+import { PaymentTermsForm } from "./masters/payments-terms/payment-terms-form"
+import PaymentTermsGrid from "./masters/payments-terms/payment-terms-grid"
+import { PaymentTermsDto } from "@project-management-system/shared-models"
 
 
 export const AppRoutes = () => {
@@ -71,6 +74,10 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
+                        <Route path='payment-terms/payment-terms-form' element={<PaymentTermsForm paymentTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }} />} />
+                        <Route path='payment-terms/payment-terms-view' element={<PaymentTermsGrid />} />
+
+
                     </Route>
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
