@@ -2,9 +2,10 @@ import { AllCurrencyResponseModel, CurrencyDto, CurrencyRequest, CurrencyRespons
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class CurrencyService extends CommonAxiosService{
-  URL = '/currencies';
+  URL = "/currencies";
 
   async createCurrency(currency: CurrencyDto): Promise<CurrencyResponseModel> {
+    console.log('testss',currency)
     return this.axiosPostCall(this.URL + "/createCurrency", currency)
 }
 

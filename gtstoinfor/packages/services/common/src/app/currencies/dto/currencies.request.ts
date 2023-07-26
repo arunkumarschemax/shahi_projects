@@ -4,7 +4,6 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CurrencyRequest {
     @ApiProperty()
     @IsNotEmpty()
-    @IsAlphanumeric()
     currencyId: number;
 
     @ApiProperty()

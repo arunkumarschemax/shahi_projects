@@ -4,7 +4,6 @@ import { OneToMany } from 'typeorm';
 export class CurrenciesDTO {
   @ApiProperty()
   @IsNotEmpty({message:"currencyId should not be empty"})
-  @IsAlphanumeric()
   @IsOptional()
   currencyId: number;
 

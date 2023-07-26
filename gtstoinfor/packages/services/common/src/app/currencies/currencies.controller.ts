@@ -18,6 +18,7 @@ export class CurrenciesController {
     @Post('/createCurrency')
     async createCurrency(@Body() currenciesDto:CurrenciesDTO,isUpdate:boolean=false): Promise<CurrencyResponseModel> {
     try {
+      console.log('createCurrency',currenciesDto)
         return await this.currenciesService.createCurrency(currenciesDto, false);
       } catch (error) {
         return this.applicationExceptionHandler.returnException(CurrencyResponseModel, error);

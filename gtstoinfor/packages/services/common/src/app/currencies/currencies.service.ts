@@ -31,7 +31,7 @@ export class CurrenciesService {
       }
 
       async createCurrency(currenciesDto: CurrenciesDTO, isUpdate: boolean): Promise<CurrencyResponseModel> {
-        // console.log(statesDto);
+        console.log(currenciesDto,'nnnnnh');
         
         try {
           let previousValue

@@ -42,7 +42,8 @@ export const CurrenciesForm = (props:CurrenciesFormProps) => {
 
   let createdUser="";
   if(!props.isUpdate){
-    createdUser= localStorage.getItem("createdUser");
+    // createdUser= localStorage.getItem("createdUser");
+    createdUser= 'admin';
   }
   
   const saveCurrency = (currencyData: CurrencyDto) => {
@@ -94,7 +95,7 @@ export const CurrenciesForm = (props:CurrenciesFormProps) => {
   return (
 <Card title={<span style={{color:'white'}}>Currencies</span>}
     style={{textAlign:'center'}} 
-     extra={props.isUpdate==true?"":<Link to='/Currencies-view' ><span ><Button className='panel_button' >View </Button> </span></Link>}
+     extra={props.isUpdate==true?"":<Link to='/masters/currencies/currency-view' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
 
 

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { ColumnProps } from 'antd/lib/table';
+import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -54,58 +54,115 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
    * used for column filter
    * @param dataIndex column data index
    */
+  // const getColumnSearchProps = (dataIndex: string) => ({
+  //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+  //     <div style={{ padding: 8 }}>
+  //       <Input
+  //         ref={searchInput}
+  //         placeholder={`Search ${dataIndex}`}
+  //         value={selectedKeys[0]}
+  //         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+  //         onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+  //         style={{ width: 188, marginBottom: 8, display: 'block' }}
+  //       />
+  //       <Button
+  //         type="primary"
+  //         onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+  //         icon={<SearchOutlined />}
+  //         size="small"
+  //         style={{ width: 90, marginRight: 8 }}
+  //       >
+  //         Search
+  //       </Button>
+  //       <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+  //         Reset
+  //       </Button>
+  //     </div>
+  //   ),
+  //   filterIcon: filtered => (
+  //     <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+  //   ),
+  //   onFilter: (value, record) =>
+  //     record[dataIndex]
+  //       ? record[dataIndex]
+  //         .toString()
+  //         .toLowerCase()
+  //         .includes(value.toLowerCase())
+  //       : false,
+  //   onFilterDropdownVisibleChange: visible => {
+  //     if (visible) { setTimeout(() => searchInput.current.select()); }
+  //   },
+  //   render: text =>
+  //     text ? (
+  //       searchedColumn === dataIndex ? (
+  //         <Highlighter
+  //           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+  //           searchWords={[searchText]}
+  //           autoEscape
+  //           textToHighlight={text.toString()}
+  //         />
+  //       ) : text
+  //     )
+  //       : null
+
+  // });
+
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Button
-          type="primary"
-          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          icon={<SearchOutlined />}
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-          Reset
-        </Button>
-      </div>
+        <div style={{ padding: 8 }}>
+            <Input
+                ref={searchInput}
+                placeholder={`Search ${dataIndex}`}
+                value={selectedKeys[0]}
+                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                style={{ width: 188, marginBottom: 8, display: 'block' }}
+            />
+            <Button
+                type="primary"
+                onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90, marginRight: 8 }}
+            >
+                Search
+            </Button>
+            <Button size="small" style={{ width: 90 }}
+                onClick={() => {
+                    handleReset(clearFilters)
+                    setSearchedColumn(dataIndex);
+                    confirm({ closeDropdown: true });
+                }}>
+                Reset
+            </Button>
+        </div>
     ),
     filterIcon: filtered => (
-      <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+        <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex]
-        ? record[dataIndex]
-          .toString()
-          .toLowerCase()
-          .includes(value.toLowerCase())
-        : false,
+        record[dataIndex]
+            ? record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes(value.toLowerCase())
+            : false,
     onFilterDropdownVisibleChange: visible => {
-      if (visible) { setTimeout(() => searchInput.current.select()); }
+        if (visible) { setTimeout(() => searchInput.current.select()); }
     },
     render: text =>
-      text ? (
-        searchedColumn === dataIndex ? (
-          <Highlighter
-            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-            searchWords={[searchText]}
-            autoEscape
-            textToHighlight={text.toString()}
-          />
-        ) : text
-      )
-        : null
-
-  });
+        text ? (
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text.toString()}
+                />
+            ) : text
+        )
+            : null
+})
 
   /**
    * 
@@ -123,7 +180,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
     clearFilters();
     setSearchText('');
   };
-  const columnsSkelton: ProColumns<any>[] = [
+  const columnsSkelton: any = [
     {
       title: 'S No',
       key: 'sno',
@@ -136,8 +193,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
       dataIndex: "currencyName",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
-      // ...getColumnSearchProps("source"),
-
+      ...getColumnSearchProps("currencyName"),
     },
     {
       title: 'Status',
@@ -211,34 +267,34 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   }
-  // useEffect(() => {getAllCurrencys();}, [])
+  useEffect(() => {getAllCurrencys();}, [])
 
-  const getAllCurrencys = async (params = {}, sort, filter) => {
-    const res = await service.getAllCurrencies()
-    if (res.status) {
-      return { data: res.data, sucess: true, total: res.data.length }
-    } else {
-      return { data: [], sucess: false, total: 0 }
-    }
-  }
-
-  // const getAllCurrencys= () => {
-  //   service.getAllCurrencies().then(res => {
-  //     if (res.status) {setVariantData(res.data);
-  //     } else {
-  //       // if (res.intlCode) {
-  //       //   setVariantData([]);
-  //       //   // console.log(res);
-  //       //   AlertMessages.getErrorMessage(res.internalMessage);
-  //       // } else {
-  //         AlertMessages.getErrorMessage(res.internalMessage);
-  //       // }
-  //     }
-  //   }).catch(err => {
-  //     AlertMessages.getErrorMessage(err.message);
-  //     setVariantData([]);
-  //   })
+  // const getAllCurrencys = async (params = {}, sort, filter) => {
+  //   const res = await service.getAllCurrencies()
+  //   if (res.status) {
+  //     return { data: res.data, sucess: true, total: res.data.length }
+  //   } else {
+  //     return { data: [], sucess: false, total: 0 }
+  //   }
   // }
+
+  const getAllCurrencys= () => {
+    service.getAllCurrencies().then(res => {
+      if (res.status) {setVariantData(res.data);
+      } else {
+        // if (res.intlCode) {
+        //   setVariantData([]);
+        //   // console.log(res);
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // } else {
+          AlertMessages.getErrorMessage(res.internalMessage);
+        // }
+      }
+    }).catch(err => {
+      AlertMessages.getErrorMessage(err.message);
+      setVariantData([]);
+    })
+  }
 
 
   //drawer related
@@ -353,7 +409,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
       </Row><br></br>
       <Card >
         {/* <GetCumulatives cumulativeColumns={cumulativeSkelton} data={variantData}/> */}
-        <ProTable
+        {/* <ProTable
           request={getAllCurrencys}
           bordered size='small'
           cardBordered
@@ -367,11 +423,11 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
           search={false} headerTitle={'Currencies'}
           columns={columnsSkelton}
 
-        />
+        /> */}
 
-        {/* <Table
+        <Table
         size='small'
-          rowKey={record => record.variantId}
+          // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
           pagination={{
@@ -381,7 +437,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
           }}
           scroll={{x:true}}
           onChange={onChange}
-          bordered /> */}
+          bordered />
       </Card>
       <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
