@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { appConfig } from '../../config';
 import { OrdersModule } from './orders/orders.module';
+import { CurrenciesModule } from './currencies/currencies.module';
 
 
 @Module({
@@ -28,6 +29,7 @@ import { OrdersModule } from './orders/orders.module';
       }
     }),
     FactoriesModule,
+    CurrenciesModule,
     UsersModule,
     OrdersModule,
     AuthModule, JwtModule],

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Descriptions, Divider, Form, message, UploadProps } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
-import Papa from 'papaparse'
+// import Papa from 'papaparse'
 import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
@@ -36,23 +36,23 @@ export default function ExcelImport() {
     const file = event.target.files[0];
     if (file && file.type === 'text/csv') {
       setSelectedFile(event.target.files[0]);
-      Papa.parse(event.target.files[0], {
-        header: true,
-        complete: function (result) {
-          {
-            const columnArray = [];
-            const valueArray = [];
+      // Papa.parse(event.target.files[0], {
+      //   header: true,
+      //   complete: function (result) {
+      //     {
+      //       const columnArray = [];
+      //       const valueArray = [];
 
-            result.data.map((d) => {
-              columnArray.push(Object.keys(d))
-              valueArray.push(Object.values(d))
-            });
-            setData(result.data)
-            setColumns(columnArray[0])
-            setValues(valueArray)
-          }
-        }
-      });
+      //       result.data.map((d) => {
+      //         columnArray.push(Object.keys(d))
+      //         valueArray.push(Object.values(d))
+      //       });
+      //       setData(result.data)
+      //       setColumns(columnArray[0])
+      //       setValues(valueArray)
+      //     }
+      //   }
+      // });
     } else {
       // Display an error message or take appropriate action for invalid file type
       alert('Please select a valid .csv file.');

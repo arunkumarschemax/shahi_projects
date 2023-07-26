@@ -13,6 +13,8 @@ import AllOrdersGridView from "./excel-import/orders-view-grid"
 import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
+import CurrenciesForm from "./masters/currencies/currency-form"
+import CurrenciesGrid from "./masters/currencies/currencies-grid"
 
 
 export const AppRoutes = () => {
@@ -30,6 +32,10 @@ export const AppRoutes = () => {
                 <Route path='/masters'>
                     <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
                     <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm />} />
+                    <Route path='currencies/currency-form' key='/currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
                 </Route>
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
@@ -60,6 +66,11 @@ export const AppRoutes = () => {
                     <Route path='/masters'>
                         <Route path='factories/factories-view' element={<FactoriesView />} />
                         <Route path='factories/factories-form' element={<FactoriesForm />} />
+                        <Route path='currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                        <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
                     </Route>
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
