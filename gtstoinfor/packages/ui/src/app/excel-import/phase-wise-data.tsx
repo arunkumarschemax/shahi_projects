@@ -12,7 +12,7 @@ import React from 'react';
 
 const PhaseWiseData = () => {
     const [page, setPage] = React.useState(1)
-    const [pageSize, setPageSize] = useState<number>()
+    const [pageSize, setPageSize] = useState<number>(null)
     const [gridData, setGridData] = useState<any[]>([]);
     const service = new OrdersService();
 
