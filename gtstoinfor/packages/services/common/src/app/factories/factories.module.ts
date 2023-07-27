@@ -16,5 +16,6 @@ import { AppDataSourceModule } from '../app-datasource.module';
     FactoriesEntity
   ])],
   controllers: [FactoriesController],
+  exports:[FactoriesService]
 })
 export class FactoriesModule { }
