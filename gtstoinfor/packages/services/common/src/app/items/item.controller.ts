@@ -20,4 +20,12 @@ export class ItemsController{
         return this.applicationExceptionHandler.returnException(AllItemsResponseModel, error);
       }
     }
+    @Post('/ActivateOrDeactivateItem')
+    async ActivateOrDeactivateItem(@Body() dto:any,isUpdate:boolean=false): Promise<AllItemsResponseModel> {
+    try {
+        return await this.itemsService.ActivateOrDeactivateItem(dto);
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(AllItemsResponseModel, error);
+      }
+    }
 }

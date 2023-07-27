@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ItemsRepository } from './dto/item-repository';
 import { AllItemsResponseModel, ItemsDto } from '@project-management-system/shared-models';
 import { Item } from './item-entity';
+import { ItemIdReq } from './dto/item-id-req';
 
 @Injectable()
 
@@ -37,6 +38,35 @@ export class ItemsService{
         catch(error){
             throw error
         }
+    }
+    async ActivateOrDeactivateItem(req: ItemIdReq): Promise<AllItemsResponseModel> {
+        const itemdetails = await this.itemsRepo.findOne({ where: { itemId: req.itemId } })
+        if (itemdetails) {
+            if (req.versionFlag != itemdetails.versionFlag) {
+                throw new AllItemsResponseModel(false, 1, 'SomeOne updated. Referesh and try again', [])
+            } else {
+                const itemUpdate = await this.itemsRepo.update({ itemId: req.itemId }, { isActive: req.isActive})
+                if (itemdetails.isActive) {
+                    console.log('activeeeee')
+                    if (itemUpdate.affected) {
+                        return new AllItemsResponseModel(true, 0, 'Item is de-activated successfully', [])
+                    } else {
+                        throw new AllItemsResponseModel(false, 1, 'Item already deactivated', [])
+                    }
+                } else {
+                    if (itemUpdate.affected) {
+                        return new AllItemsResponseModel(true, 0, 'Item is activated successfully', [])
+                    } else {
+                        throw new AllItemsResponseModel(false, 1, 'Item already activated', [])
+                    }
+                }
+            }
+        }
+        else {
+            throw new AllItemsResponseModel(false, 1, 'No record found', [])
+
+        }
+
     }
     
 }
