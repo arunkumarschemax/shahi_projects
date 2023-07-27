@@ -153,7 +153,9 @@ export class OrdersService {
     async getQtyDifChangeData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
         let data;
-        if (files.length == 1) {
+        if (files.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        } else if (files.length == 1) {
             data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId)
         } else {
             data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId)
@@ -291,7 +293,14 @@ export class OrdersService {
 
     async getPhaseWiseData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData();
-        const records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
+        let records;
+        if (files.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        } else if (files.length == 1) {
+            records = await this.ordersChildRepo.getPhaseWiseData1(files[0].fileId)
+        } else {
+            records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
+        }
         const phaseWiseDataMap = new Map<number, PhaseWiseDataModel>();
         if (records.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');

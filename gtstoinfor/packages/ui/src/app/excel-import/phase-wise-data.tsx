@@ -224,7 +224,7 @@ const PhaseWiseData = () => {
                         setPage(current);
                         setPageSize(pageSize)
                     }
-                }} />
+                }} bordered />
             </Card>
         </div>
     )
