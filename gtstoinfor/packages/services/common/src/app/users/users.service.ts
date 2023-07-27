@@ -70,9 +70,8 @@ export class UsersService {
   }
 
   async getAllUsers(): Promise<AllUsersResponseModel> {
-    
     const query = this.userRepository.createQueryBuilder('u')
-      .select(`u.id, u.username, u.role, u.is_active,CONCAT(f.name, ' ( ', f.address,' )') as factory`)  
+      .select(`u.id, u.username, u.role, u.is_active,CONCAT(f.name, ' ( ', f.address,' )') as factory`)
       .leftJoin(FactoriesEntity, 'f', 'u.factory = f.id')
       .groupBy('u.id');
     const data = await query.getRawMany()

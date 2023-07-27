@@ -13,7 +13,8 @@ import AllOrdersGridView from "./excel-import/orders-view-grid"
 import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
-import SupplierForm from "./masters/supplier/supplier-form"
+import SupplierView from "./masters/supplier/supplier-view"
+import {SupplierForm} from "./masters/supplier/supplier-form"
 
 
 export const AppRoutes = () => {
@@ -31,7 +32,8 @@ export const AppRoutes = () => {
                 <Route path='/masters'>
                     <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
                     <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm />} />
-                    <Route path='supplier/supplier-form' key='supplier/supplier-form' element={<SupplierForm />} />
+                    <Route path='supplier/supplier-view' key='/supplier/supplier-view' element={<SupplierView />} />
+                    <Route path='supplier/supplier-form' key='/supplier/supplier-form' element={<SupplierForm />} />
                 </Route>
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
@@ -64,6 +66,7 @@ export const AppRoutes = () => {
                         <Route path='factories/factories-view' element={<FactoriesView />} />
                         <Route path='factories/factories-form' element={<FactoriesForm />} />
                         <Route path='supplier/supplier-form' element={<SupplierForm />} />
+                        <Route path='supplier/supplier-view' element={<SupplierView />} />
                     </Route>
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />

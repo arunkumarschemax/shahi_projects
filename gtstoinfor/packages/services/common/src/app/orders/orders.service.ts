@@ -136,43 +136,72 @@ export class OrdersService {
 
     async getOrdersData(): Promise<CommonResponseModel> {
         const details = await this.ordersRepository.getOrdersData()
-        return new CommonResponseModel(true, 1, 'data retrived', details)
+        if (details)
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getQtyChangeData(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getQtyChangeData()
-        return new CommonResponseModel(true, 1, 'data retrived', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getQtyDifChangeData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
-        const data = await this.ordersChildRepo.getItemQtyChangeData(files[1].fileId, files[0].fileId)
-        return new CommonResponseModel(true, 1, 'data retrieved', data)
+        let data;
+        if (files.length == 1) {
+            data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId)
+        } else {
+            data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId)
+        }
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getContractDateChangeData(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getContractDateChangeData()
-        return new CommonResponseModel(true, 1, 'data retrived', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getWharehouseDateChangeData(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getWharehouseDateChangeData()
-        return new CommonResponseModel(true, 1, 'data retrived', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getUnitWiseOrders(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getUnitCount()
-        return new CommonResponseModel(true, 222, 'data retrieved', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getDivisionWiseOrders(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getDivisionCount()
-        return new CommonResponseModel(true, 222, 'data retrieved', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getMaximumChangedOrders(): Promise<CommonResponseModel> {
         const data = await this.ordersChildRepo.getNoOfChangedItem()
-        return new CommonResponseModel(true, 22, 'data retrieved', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async revertFileData(req: FileIdReq): Promise<CommonResponseModel> {
@@ -214,7 +243,9 @@ export class OrdersService {
             }
         }
         if (flag.has(true)) {
-            return new CommonResponseModel(true, 0, 'File Reverted Successfully')
+            return new CommonResponseModel(true, 1, 'File Reverted Successfully')
+        } else {
+            return new CommonResponseModel(false, 0, 'failed to revert file data')
         }
     }
 
@@ -227,7 +258,7 @@ export class OrdersService {
             return new CommonResponseModel(true, 11, 'uploaded successfully', save);
         }
         else {
-            return new CommonResponseModel(false, 11, 'uploaded failed', save);
+            return new CommonResponseModel(false, 0, 'uploaded failed', save);
         }
     }
 
@@ -237,7 +268,7 @@ export class OrdersService {
             return new CommonResponseModel(true, 11, 'uploaded files data retrived successfully', data);
         }
         else {
-            return new CommonResponseModel(false, 11, 'No data found', data);
+            return new CommonResponseModel(false, 0, 'No data found', data);
         }
     }
 
@@ -245,7 +276,7 @@ export class OrdersService {
         const records = await this.ordersChildRepo.getVersionWiseQty()
         const versionDataMap = new Map<number, VersionDataModel>();
         if (records.length == 0) {
-            throw new CommonResponseModel(false, 0, 'No data found');
+            return new CommonResponseModel(false, 0, 'No data found');
         }
         for (const record of records) {
             if (!versionDataMap.has(record.production_plan_id)) {
