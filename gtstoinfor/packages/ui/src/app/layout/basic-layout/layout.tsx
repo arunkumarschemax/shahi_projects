@@ -67,6 +67,18 @@ export const baseRouterList = [
                 path: "currencies/currency-view",
                 filepath: "currencies/currency-view",
             },
+            // {
+            //     label: "Employee Details",
+            //     key: "employee-details",
+            //     path: "employee-details/employee-details-form",
+            //     filepath: "employee-details/employee-details-form",
+            // },
+            {
+                label: "Employee Details",
+                key: "employee-details-grid",
+                path: "employee-details/employee-details-grid",
+                filepath: "employee-details/employee-details-grid",
+            },
         ],
     },
     {
