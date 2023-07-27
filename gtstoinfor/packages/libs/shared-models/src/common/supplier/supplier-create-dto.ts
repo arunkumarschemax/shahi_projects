@@ -19,7 +19,7 @@ export declare class SupplierCreateDto{
     email: string;
     creditPaymentPeriod: string;
     constructor(
-        category: string,
+     category: string,
     supplierCode: number, 
     supplierPhone: string,  
     GSTNumber: number,

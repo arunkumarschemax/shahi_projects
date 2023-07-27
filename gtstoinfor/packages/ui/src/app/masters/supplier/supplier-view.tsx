@@ -12,7 +12,7 @@ const SupplierView = () => {
 
 
   useEffect(() => {
-    getSupplierData()
+    getSupplierData() 
   }, []);
 
   const getSupplierData = () => {
