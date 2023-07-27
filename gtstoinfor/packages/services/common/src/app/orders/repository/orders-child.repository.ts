@@ -62,4 +62,10 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return await query.getRawMany();
     }
 
+    async getItemQtyChangeData1(fileId2: number): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(` item_code, itemName , 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
+            .groupBy(` item_code`)
+        return await query.getRawMany();
+    }
 }

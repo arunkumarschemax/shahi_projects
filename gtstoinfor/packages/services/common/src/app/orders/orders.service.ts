@@ -152,7 +152,12 @@ export class OrdersService {
 
     async getQtyDifChangeData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
-        const data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId)
+        let data;
+        if (files.length == 1) {
+            data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId)
+        } else {
+            data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId)
+        }
         if (data)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else

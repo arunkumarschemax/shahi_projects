@@ -35,8 +35,6 @@ const AllOrdersGridView = () => {
         })
     }
 
-    console.log(gridData)
-
     const EstimatedETDDate = (value) => {
         if (value) {
             console.log(value)
