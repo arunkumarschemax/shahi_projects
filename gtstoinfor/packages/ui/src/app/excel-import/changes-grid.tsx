@@ -396,7 +396,7 @@ const ChangesGrid = () => {
             dataIndex: 'new_val',
             // width :'190px',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')} DAYS Difference : ${Math.floor((new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}`}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')} Difference : ${Math.floor((new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1} Days`}>
                     {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
                     {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
                     &nbsp;&nbsp;
@@ -460,7 +460,7 @@ const ChangesGrid = () => {
             title: 'Contracted Date',
             dataIndex: 'new_val',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')} Days Difference : ${Math.floor((new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1} `}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}Difference : ${Math.floor((new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
                     {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{moment(record.new_val).format('YYYY-MM-DD')}</span> : ''}
                     {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{moment(record.new_val).format('YYYY-MM-DD')}</span> : ''}
                     &nbsp;&nbsp;
