@@ -4,4 +4,6 @@ export * from './common-request-attr.model';
 export * from './factory/index'
 export * from './orders'
 export * from './currency'
+export * from './employee-details'
+export * from './items'
 export * from './payment-terms'
