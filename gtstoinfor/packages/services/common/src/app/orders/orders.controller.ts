@@ -108,7 +108,6 @@ export class OrdersController {
 
     @Post('/revertFileData')
     async revertFileData(@Body() req: any): Promise<CommonResponseModel> {
-        console.log('------------controller----------------', req)
         try {
             return this.ordersService.revertFileData(req);
         } catch (err) {
@@ -124,13 +123,9 @@ export class OrdersController {
         storage: diskStorage({
             destination: './upload-files',
             filename: (req, file, callback) => {
-                const name = file.originalname.split('.')[0];
-                const fileExtName = extname(file.originalname);
-                const randomName = Array(4)
-                    .fill(null)
-                    .map(() => Math.round(Math.random() * 16).toString(16))
-                    .join('');
-                callback(null, `${name}-${randomName}${fileExtName}`);
+                console.log(file.originalname);
+                const name = file.originalname;
+                callback(null, `${name}`);
             },
         }),
         fileFilter: (req, file, callback) => {
