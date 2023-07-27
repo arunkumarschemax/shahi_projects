@@ -15,6 +15,7 @@ import { DataSource, Entity, EntityManager, getConnection, getManager, getReposi
 import { FileIdReq } from './models/file-id.req';
 import { promises } from 'dns';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
+import GenericTransactionManager from '../../typeorm-transactions/generic-transaction-manager';
 
 
 @Injectable()
@@ -34,7 +35,10 @@ export class OrdersService {
     ) { }
 
     async saveOrdersData(formData: any, id: number): Promise<CommonResponseModel> {
+        
+        const transactionManager = new GenericTransactionManager()
         try {
+            await transactionManager.startTransaction()
             const flag = new Set()
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
@@ -73,7 +77,7 @@ export class OrdersService {
                     dtoData.version = version
                     if (details) {
                         // const updatedData = this.ordersAdapter.convertDtoToEntity(data);
-                        const updateOrder = await this.ordersRepository.update({ productionPlanId: dtoData.productionPlanId }, {
+                        const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ productionPlanId: dtoData.productionPlanId }, {
                             year: dtoData.year, planningSeason: dtoData.planningSeason, season: dtoData.season, itemBrand: dtoData.itemBrand, businessUnit: dtoData.businessUnit, itemCode: dtoData.itemCode, itemName: dtoData.itemName, mainSampleCode: dtoData.mainSampleCode, mainSampleName: dtoData.mainSampleName, supplierRMCode: dtoData.supplierRMCode, supplierRMName: dtoData.supplierRMName, vendorCode: dtoData.vendorCode, vendorName: dtoData.vendorName, managementFactoryCode: dtoData.managementFactoryCode, managementFactoryName: dtoData.managementFactoryName, branchFactoryCode: dtoData.branchFactoryCode,
                             branchFactoryName: dtoData.branchFactoryName, rmSupplierCode: dtoData.rmSupplierCode, rmSupplierName: dtoData.rmSupplierName, sewingDifficulty: dtoData.sewingDifficulty, departmentCode: dtoData.departmentCode, departmentName: dtoData.departmentName, class1Code: dtoData.class1Code, Class1Name: dtoData.Class1Name, productionPlanTypeName: dtoData.productionPlanTypeName, monthWeekFlag: dtoData.monthWeekFlag, lastUpdateDate: dtoData.lastUpdateDate, requestedWhDate: dtoData.requestedWhDate, contractedDate: dtoData.contractedDate, transportMethodName: dtoData.transportMethodName,
                             logisticsTypeName: dtoData.logisticsTypeName, orderQtyPcs: dtoData.orderQtyPcs, yarnOrderAcceptance: dtoData.yarnOrderAcceptance, yarnOrderRequestDate: dtoData.yarnOrderRequestDate, yarnOrderAnswerDate: dtoData.yarnOrderActualDate, yarnOrderActualDate: dtoData.yarnOrderActualDate, yarnOrderNO: dtoData.yarnOrderNO, yarnActualOrderQtyPcs: dtoData.yarnActualOrderQtyPcs, yarnUpdateDate: dtoData.yarnUpdateDate, fabricOrderAcceptance: dtoData.fabricOrderAcceptance, fabricOrderRequestDate: dtoData.fabricOrderRequestDate, fabricOrderAnswerDate: dtoData.fabricOrderAnswerDate,
@@ -90,7 +94,7 @@ export class OrdersService {
                             return new CommonResponseModel(false, 0, 'Something went wrong in order update')
                         }
                         const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
-                        const saveExcelEntity: OrdersChildEntity = await this.ordersChildRepo.save(convertedExcelEntity);
+                        const saveExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedExcelEntity);
                         if (saveExcelEntity) {
                             //difference insertion to order diff table
                             const existingDataKeys = Object.keys(details)
@@ -106,7 +110,7 @@ export class OrdersService {
                                     orderDiffObj.version = dtoData.version
                                     orderDiffObj.fileId = id
                                     if (orderDiffObj.oldValue != orderDiffObj.newValue) {
-                                        const orderDiffSave = await this.orderDiffRepo.save(orderDiffObj);
+                                        const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
                                     }
                                 }
                             }
@@ -114,9 +118,9 @@ export class OrdersService {
                     } else {
                         dtoData.version = 1
                         const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
-                        const saveExcelEntity: OrdersEntity = await this.ordersRepository.save(convertedExcelEntity);
+                        const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
                         const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
-                        const saveChildExcelEntity: OrdersChildEntity = await this.ordersChildRepo.save(convertedChildExcelEntity);
+                        const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
                         // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
                         if (!saveChildExcelEntity) {
                             flag.add(false)
@@ -125,11 +129,14 @@ export class OrdersService {
                 }
             }
             if (!flag.has(false)) {
+                await transactionManager.releaseTransaction()
                 return new CommonResponseModel(true, 1, 'Data saved sucessfully')
             } else {
+                await transactionManager.completeTransaction()
                 return new CommonResponseModel(false, 0, 'Something went wrong')
             }
         } catch (error) {
+            await transactionManager.releaseTransaction()
             return new CommonResponseModel(false, 0, error)
         }
     }
