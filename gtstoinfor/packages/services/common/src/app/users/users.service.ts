@@ -10,6 +10,7 @@ import {
 import { UsersEntity } from "./users.entity";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { InjectRepository } from "@nestjs/typeorm";
+import { FactoriesEntity } from "../factories/factories.entity";
 
 // This should be a real class/interface representing a user entity
 export type User = any;
@@ -69,7 +70,14 @@ export class UsersService {
   }
 
   async getAllUsers(): Promise<AllUsersResponseModel> {
-    const data = await this.userRepository.find();
+    
+    const query = this.userRepository.createQueryBuilder('u')
+      .select(`u.id, u.username, u.role, u.is_active,CONCAT(f.name, ' ( ', f.address,' )') as factory`)  
+      .leftJoin(FactoriesEntity, 'f', 'u.factory = f.id')
+      .groupBy('u.id');
+    const data = await query.getRawMany()
+
+    // const data = await this.userRepository.find();
     const UsersData: UsersDto[] = [];
     for (const record of data) {
       const adapterData = this.adaptor.convertEntityToDto(record);
