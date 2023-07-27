@@ -16,7 +16,7 @@ export class SupplierController{
     ){ }
 
     @Post('/createSupplier')
-    async createSupplier(@Body() supplierDto: any) :Promise<CommonResponseModel>{
+    async createSupplier(@Body() supplierDto: SupplierDto) :Promise<CommonResponseModel>{
       return await this.supplierService.createSupplier(supplierDto);
     }
   
