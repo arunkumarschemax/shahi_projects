@@ -10,6 +10,7 @@ import { appConfig } from '../../config';
 import { OrdersModule } from './orders/orders.module';
 import { CurrenciesModule } from './currencies/currencies.module';
 import { EmployeeDetailsModule } from './employee-details/employee-details-module';
+import { ItemsModule } from './items/items.module';
 
 
 @Module({
@@ -33,7 +34,7 @@ import { EmployeeDetailsModule } from './employee-details/employee-details-modul
     CurrenciesModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule,EmployeeDetailsModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule],
   controllers: [AppController],
   providers: [AppService],
 })
