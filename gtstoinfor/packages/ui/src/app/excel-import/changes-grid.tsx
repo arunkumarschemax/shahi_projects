@@ -319,12 +319,14 @@ const ChangesGrid = () => {
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'new_val',
+            align:'right',
             render: (text, record) => (
 
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '150px' }} title={`Previous Value:  ${record.old_val} Revised Value:  ${record.new_val}`}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '150px' }} title={`Previous Value:  ${record.old_val} Revised Value:  ${record.new_val} Difference: ${ record.new_val - record.old_val  }`}>
                     <>
-                        {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
-                        {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
+                        {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{Number(record.new_val).toLocaleString('en-IN', {maximumFractionDigits: 0 })}</span> : ''}
+                        {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{Number(record.new_val).toLocaleString('en-IN', {maximumFractionDigits: 0 })}</span> : ''}
+
                     </>
 
                     &nbsp;&nbsp;
@@ -394,7 +396,7 @@ const ChangesGrid = () => {
             dataIndex: 'new_val',
             // width :'190px',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')} DAYS Difference : ${Math.floor((new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}`}>
                     {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
                     {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
                     &nbsp;&nbsp;
@@ -406,7 +408,13 @@ const ChangesGrid = () => {
         },
         {
             title: 'Order Quantity Pieces',
-            dataIndex: 'order_qty_pcs'
+            dataIndex: 'order_qty_pcs',
+            align:'right',
+            render: (text, record) => (
+                <>
+                    {Number(record.order_qty_pcs).toLocaleString('en-IN', {maximumFractionDigits: 0 })}
+                </>
+            )
         },
         {
             title: 'Contracted Date',
@@ -452,7 +460,7 @@ const ChangesGrid = () => {
             title: 'Contracted Date',
             dataIndex: 'new_val',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}`}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')} Days Difference : ${Math.floor((new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1} `}>
                     {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{moment(record.new_val).format('YYYY-MM-DD')}</span> : ''}
                     {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{moment(record.new_val).format('YYYY-MM-DD')}</span> : ''}
                     &nbsp;&nbsp;
@@ -465,6 +473,12 @@ const ChangesGrid = () => {
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'order_qty_pcs',
+            align:'right',
+            render: (text, record) => (
+                <>
+                    {Number(record.order_qty_pcs).toLocaleString('en-IN', {maximumFractionDigits: 0 })}
+                </>
+            )
 
         },
         {
@@ -509,35 +523,53 @@ const ChangesGrid = () => {
             title: ' Sum Of Qrd Qty last Week',
             dataIndex: 'old_qty_value',
             align: 'right',
-            // render:(text,record) => {
-            //     record.old_qty_value
-            // }
-            
+            render: (text, record) => (
+                <>
+                    {Number(record.old_qty_value).toLocaleString('en-IN', {maximumFractionDigits: 0 })}
+                </>
+            )
+
         },
+            
+        
         {
             title: 'Sum Of Qrd Qty this Week',
             dataIndex: 'new_qty_value',
             align: 'right',
             render: (text, record) => (
                 <span  {...record.new_qty_value}>
-                <>
-                {Number(record.old_qty_value) === Number(record.new_qty_value) ? <span style={{ color: '' }}>{record.new_qty_value}</span> : ''}
-                {Number(record.old_qty_value) < Number(record.new_qty_value) ? <span style={{ color: 'green' }}>{record.new_qty_value}</span> : ''}
-                {Number(record.old_qty_value) > Number(record.new_qty_value) ? <span style={{ color: 'red' }}>{record.new_qty_value}</span> : ''}
-            </>
+                    <>
+                        {Number(record.old_qty_value) === Number(record.new_qty_value) ? <span style={{ color: '' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
+                            maximumFractionDigits: 0
+                        })}</span> : ''}
+                        {Number(record.old_qty_value) < Number(record.new_qty_value) ? <span style={{ color: 'green' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
+                            maximumFractionDigits: 0
+                        })}</span> : ''}
+                        {Number(record.old_qty_value) > Number(record.new_qty_value) ? <span style={{ color: 'red' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
+                            maximumFractionDigits: 0
+                        })}</span> : ''}
+                    </>
                 </span>
-                
+
             )
         },
         {
             title: 'Difference Ord Qty Revised',
-            dataIndex: 'diffVal',
+            dataIndex: 'diff',
             align: 'right',
-            render: (text: any, record: any) => {
-                
-                return Number(Number(record.new_qty_value) - Number(record.old_qty_value)) != 0 ? Number(Number(record.new_qty_value) - Number(record.old_qty_value)) : '-'
-            }
-            
+            render: (text, record) => (
+                < >
+
+                    {Number(record.diff) === 0 ? '-' : ''}
+                    {Number(record.diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.diff).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })} </span> : ''}
+                    {Number(record.diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.diff).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })} </span> : ''}
+
+                </>
+            )
         },
 
     ];
@@ -610,9 +642,15 @@ const ChangesGrid = () => {
                                 <Table.Summary.Cell index={1} ><Text ></Text></Table.Summary.Cell>
                                 <Table.Summary.Cell index={3} ><Text ></Text></Table.Summary.Cell>
                                 <Table.Summary.Cell index={4}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Summary</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={5} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{totalLastQty}</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={6}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{totalRecQty}</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={7} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{defData}</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={5} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalLastQty).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })}</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={6}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalRecQty).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })}</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={7} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(defData).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })}</div></Table.Summary.Cell>
                             </Table.Summary.Row>
                         </>
                     );
