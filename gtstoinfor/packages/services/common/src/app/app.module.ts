@@ -11,6 +11,8 @@ import { OrdersModule } from './orders/orders.module';
 import { CurrenciesModule } from './currencies/currencies.module';
 import { EmployeeDetailsModule } from './employee-details/employee-details-module';
 import { ItemsModule } from './items/items.module';
+import { VendorsModule } from './vendors/vendors.module';
+import { BuyersModule } from './buyers/buyers.module';
 
 
 @Module({
@@ -34,7 +36,7 @@ import { ItemsModule } from './items/items.module';
     CurrenciesModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule],
   controllers: [AppController],
   providers: [AppService],
 })
