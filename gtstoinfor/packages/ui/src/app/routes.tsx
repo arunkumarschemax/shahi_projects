@@ -15,6 +15,10 @@ import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
+import BuyersForm from "./masters/buyers/buyers-form"
+import BuyersView from "./masters/buyers/buyers-view"
+import VendorsForm from "./masters/vendors/vendors-form"
+import VendorsView from "./masters/vendors/vendors-view"
 import EmployeeDetsilsForm from "./masters/employee-details/employee-details-form"
 import EmployeeDetailsGrid from "./masters/employee-details/employee-details-grid"
 
@@ -38,6 +42,11 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+                <Route path='buyers/buyers-view' element={<BuyersView />} />
+                <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                <Route path='vendors/vendors-form' key='/vendors/vendors-form' element={<VendorsForm vendorsData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                <Route path='vendors/vendors-view' element={<VendorsView />} />
+
                   <Route path="employee-details/employee-details-form" key='/employee-details/employee-details-form' element= {
                     <EmployeeDetsilsForm employeeData={undefined}
                     isUpdate={false}
@@ -82,6 +91,10 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
+                        <Route path='buyers/buyers-view' element={<BuyersView />} />
+                        <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                        <Route path='vendors/vendors-form' key='/vendors/vendors-form' element={<VendorsForm vendorsData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                        <Route path='vendors/vendors-view' element={<VendorsView />} />
                         <Route path='employee-details/employee-details-form' element={<EmployeeDetsilsForm employeeData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
