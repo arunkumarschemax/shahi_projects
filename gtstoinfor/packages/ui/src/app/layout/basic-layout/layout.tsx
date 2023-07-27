@@ -100,12 +100,12 @@ export const baseRouterList = [
                 path: "version-grid",
                 filepath: "version-grid",
             },
-            {
-                label: "Phase Wise Data",
-                key: "phase-wise-grid",
-                path: "phase-wise-grid",
-                filepath: "phase-wise-grid",
-            }
+            // {
+            //     label: "Phase Wise Data",
+            //     key: "phase-wise-grid",
+            //     path: "phase-wise-grid",
+            //     filepath: "phase-wise-grid",
+            // }
         ],
     },
 ];

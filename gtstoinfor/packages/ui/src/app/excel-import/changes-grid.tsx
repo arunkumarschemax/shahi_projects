@@ -5,6 +5,7 @@ import { ArrowDownOutlined, ArrowUpOutlined, FileExcelFilled, SearchOutlined, Un
 import moment from 'moment';
 import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
+import { IExcelColumn } from 'antd-table-saveas-excel/app';
 
 const ChangesGrid = () => {
 
@@ -17,6 +18,7 @@ const ChangesGrid = () => {
     const [filteredWarehouseDateData, setFilteredWarehouseDateDate] = useState([])
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
     const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
+    const [phaseData, setPhaseWiseData] = useState<any[]>([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [differenceQtyData, setDifferenceQtyData] = useState([])
     const [page, setPage] = React.useState(1);
@@ -30,6 +32,7 @@ const ChangesGrid = () => {
         getQtyChangeData()
         getWharehouseDateChangeData()
         getQtyDifChangeData()
+        getPhaseWiseData()
     }, [])
 
     const getContractDateChangeData = () => {
@@ -59,6 +62,15 @@ const ChangesGrid = () => {
             setFilteredWarehouseDateDate(res.data)
         })
     }
+    const getPhaseWiseData = () => {
+        service.getPhaseWiseData().then(res => {
+            if (res.status) {
+                setPhaseWiseData(res.data)
+            }
+        }).catch(err => {
+            console.log(err.message)
+        })
+    }
     const exportExcel = () => {
         const excel = new Excel();
         excel
@@ -74,6 +86,9 @@ const ChangesGrid = () => {
             .addSheet('Contracted date')
             .addColumns(data3)
             .addDataSource(contractDateData, { str2num: true })
+            .addSheet('Phase Wise data')
+            .addColumns(exportingColumns)
+            .addDataSource(phaseData, { str2num: true })
             .saveAs('revisedOrders.xlsx');
     }
     const data1 = [
@@ -217,6 +232,14 @@ const ChangesGrid = () => {
         },
 
     ];
+    let exportingColumns: IExcelColumn[] = []
+        exportingColumns = [
+            { title: 'Item code', dataIndex: 'item_code' },
+            { title: 'Item Name', dataIndex: 'itemName' },
+            { title: 'Production Plan Type Name', dataIndex: 'prod_plan_type_name' },
+            { title: 'Sum of Ord Qty last week', dataIndex: 'old_qty_value' },
+            { title: 'Sum of Ord Qty this week', dataIndex: 'new_qty_value' },
+        ]
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState('');
@@ -419,20 +442,46 @@ const ChangesGrid = () => {
             dataIndex: 'itemName'
         },
         {
-            title: 'Requested Warehouse Date',
+            title: 'Previous Requested Warehouse Date',
+            dataIndex: 'old_val',
+            // width :'190px',
+            render: (text, record) => (
+                <span>{moment(record.old_val).format('DD-MM-YYYY')}</span>
+            )
+        },
+        {
+            title: 'Revised Requested Warehouse Date',
             dataIndex: 'new_val',
             // width :'190px',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')} Difference : ${Math.floor((new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1} Days`}>
-                    {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
-                    {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
-                    &nbsp;&nbsp;
-                    <span>
-                        {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
-                    </span>
-                </Tooltip>
+
+                <span>
+                    <>
+                        {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
+
+                        {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
+                        &nbsp;&nbsp;
+                        <span>
+                            {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                        </span>
+                    </>
+                </span>
+
             )
         },
+        {
+            title: 'Days Difference',
+            dataIndex: 'diff',
+            // width :'190px',
+            render: (text, record) => {
+                const obj: any = {
+                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div> )
+                };
+                return obj;
+            }
+        },
+
+     
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'order_qty_pcs',
@@ -483,8 +532,17 @@ const ChangesGrid = () => {
             title: 'Item Name',
             dataIndex: 'itemName'
         },
+
         {
-            title: 'Contracted Date',
+            title: 'Previous Contracted Date',
+            dataIndex: 'old_val',
+            render: (text, record) => {
+                return record.old_val ? moment(record.old_val).format('YYYY-MM-DD') : '-'
+            }
+        },
+
+        {
+            title: 'Revised Contracted Date',
             dataIndex: 'new_val',
             render: (text, record) => (
                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}Difference : ${Math.floor((new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
@@ -496,6 +554,17 @@ const ChangesGrid = () => {
                     </span>
                 </Tooltip>
             )
+        },
+        {
+            title: 'Days Difference',
+            dataIndex: 'diff',
+            // width :'190px',
+            render: (text, record) => {
+                const obj: any = {
+                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div> )
+                };
+                return obj;
+            }
         },
         {
             title: 'Order Quantity Pieces',
@@ -597,6 +666,80 @@ const ChangesGrid = () => {
         },
 
     ];
+    const childColumns: any = [
+        {
+            title: 'Production Plan Type Name',
+            dataIndex: 'prodPlanTypeName',
+            key: 'prodPlanTypeName',
+        },
+        {
+            title: 'Sum of Ord Qty last week',
+            dataIndex: 'oldOrderQtyPcs',
+            key: 'oldOrderQtyPcs',
+            render: (text: any, record: any) => {
+                return Number(record.oldOrderQtyPcs).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                })
+            }
+        },
+        {
+            title: 'Sum of Ord Qty this week',
+            dataIndex: 'newOrderQtyPcs',
+            key: 'newOrderQtyPcs',
+            render: (text: any, record: any) => {
+                return Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                })
+            }
+        },
+        {
+            title: 'Difference',
+            dataIndex: 'diff',
+            render: (text: any, record: any) => (
+                < >
+
+                    {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) === 0 ? '-' : ''}
+                    {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) < 0 ? <span style={{ color: 'red' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })} </span> : ''}
+                    {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) > 0 ? <span style={{ color: 'green' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })} </span> : ''}
+
+                </>
+            )
+        }
+    ]
+    const columns4: any = [
+        {
+            title: 'S No',
+            key: 'sno',
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+        },
+        {
+            title: 'Item code',
+            dataIndex: 'itemCode',
+            ...getColumnSearchProps('itemCode')
+        },
+        {
+            title: 'Item Name',
+            dataIndex: 'itemName',
+            ...getColumnSearchProps('itemName')
+        },
+        {
+            title: 'Phase Wise Data',
+            dataIndex: 'prod_plan_type_name',
+            align: 'center',
+            render: (text: any, record: any) => (
+                <Table
+                    dataSource={record.phaseWiseData}
+                    columns={childColumns}
+                    pagination={false} // Hide pagination for child table
+                    rowKey={record => record.itemCode}
+                />
+            ),
+        }
+    ];
 
     const EstimatedETDDate = (value) => {
         if (value) {
@@ -692,6 +835,11 @@ const ChangesGrid = () => {
             label: <b>Contracted Date Revised Orders : {filteredContractDateData?.length}</b>,
             children: <Table bordered dataSource={filteredContractDateData} columns={columns2} />,
         },
+        {
+            key: '5',
+            label: <b>Phase Wise Sum of Order Quantity : {phaseData?.length}</b>,
+            children: <Table bordered dataSource={phaseData} columns={columns4} />,
+        },
 
     ];
 
@@ -705,7 +853,7 @@ const ChangesGrid = () => {
     }
 
     return (
-        <Card title='Compare Orders' extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData ? (<Button
+        <Card title='Compare Orders' extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData || phaseData? (<Button
             type="default"
             style={{ color: 'green' }}
             onClick={exportExcel}
