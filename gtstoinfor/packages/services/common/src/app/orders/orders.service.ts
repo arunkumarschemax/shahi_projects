@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, PhaseAndQtyModel, PhaseWiseDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
@@ -153,7 +153,9 @@ export class OrdersService {
     async getQtyDifChangeData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
         let data;
-        if (files.length == 1) {
+        if (files.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        } else if (files.length == 1) {
             data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId)
         } else {
             data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId)
@@ -287,6 +289,31 @@ export class OrdersService {
         const versionDataModelArray: VersionDataModel[] = [];
         versionDataMap.forEach(version => versionDataModelArray.push(version));
         return new CommonResponseModel(true, 1, 'Data retrived successfully', versionDataModelArray);
+    }
+
+    async getPhaseWiseData(): Promise<CommonResponseModel> {
+        const files = await this.fileUploadRepo.getFilesData();
+        let records;
+        if (files.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        } else if (files.length == 1) {
+            records = await this.ordersChildRepo.getPhaseWiseData1(files[0].fileId)
+        } else {
+            records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
+        }
+        const phaseWiseDataMap = new Map<number, PhaseWiseDataModel>();
+        if (records.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        }
+        for (const record of records) {
+            if (!phaseWiseDataMap.has(record.item_code)) {
+                phaseWiseDataMap.set(record.item_code, new PhaseWiseDataModel(record.item_code, record.itemName, []));
+            }
+            phaseWiseDataMap.get(record.item_code).phaseWiseData.push(new PhaseAndQtyModel(record.prod_plan_type_name, record.old_qty_value, record.new_qty_value));
+        }
+        const phaseDataModelArray: PhaseWiseDataModel[] = [];
+        phaseWiseDataMap.forEach(phase => phaseDataModelArray.push(phase));
+        return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
     }
 
 }

@@ -84,6 +84,10 @@ const AllOrdersGridView = () => {
             dataIndex: 'production_plan_id'
         },
         {
+            title: 'Production Plan Name',
+            dataIndex: 'prod_plan_type_name'
+        },
+        {
             title: 'Item code',
             dataIndex: 'item_code'
         },
