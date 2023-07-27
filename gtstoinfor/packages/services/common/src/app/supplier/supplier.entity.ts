@@ -83,19 +83,19 @@ postalCode: number;
   name: 'commission',
  
 })
-commission: string;
+commision: string;
 
 @Column('int', {
   name: 'bank_account_number',
  
 })
-bankAccountNumber: number;
+bankAccountNo: number;
 
 @Column('varchar', {
   name: 'bank_ifsc',
  
 })
-bankIfsc: string;
+bankIFSC: string;
 
 @Column('varchar', {
   name: 'bank_name',
@@ -121,16 +121,16 @@ contactNumber: number;
 })
 email: string;
 
-@Column('boolean',{
-  name:'is_active'
-})
-isActive:boolean;
-
 @Column('varchar', {
   name: 'credit_payment_method',
  
 })
-creditPaymentMethod: number;
+creditPaymentPeriod: number;
+
+@Column('boolean',{
+  name:'is_active'
+})
+isActive:boolean;
 
 @Column('int', {
   name: 'version_flag',

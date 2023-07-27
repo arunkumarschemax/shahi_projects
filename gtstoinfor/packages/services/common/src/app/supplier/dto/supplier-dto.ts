@@ -24,11 +24,11 @@ export class SupplierDto {
     @ApiProperty()
     postalCode: number;
     @ApiProperty()
-    commission: string;
+    commision: string;
     @ApiProperty()
-    bankAccountNumber: number;
+    bankAccountNo: number;
     @ApiProperty()
-    bankIfsc: string;
+    bankIFSC: string;
     @ApiProperty()
     bankName: string;
     @ApiProperty()
@@ -38,7 +38,7 @@ export class SupplierDto {
     @ApiProperty()
     email: string;
     @ApiProperty()
-    creditPaymentMethod: number;
+    creditPaymentPeriod: number;
     @ApiProperty()
     id?: number;
 }

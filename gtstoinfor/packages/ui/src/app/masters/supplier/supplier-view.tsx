@@ -130,13 +130,13 @@ const SupplierView = () => {
     {
       key: '13',
       title: "BankAccountNo",
-      dataIndex: 'bankAccountNumber',
+      dataIndex: 'bankAccountNo',
       width: 50
     },
     {
       key: '14',
       title: "BankIFSC",
-      dataIndex: 'bankIfsc',
+      dataIndex: 'bankIFSC',
       width: 50
     },
     {

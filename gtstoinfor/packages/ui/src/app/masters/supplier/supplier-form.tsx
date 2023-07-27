@@ -48,10 +48,8 @@ export function SupplierForm( ) {
                         </Form.Item>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ paddingBottom: '12px' }}>
                             <Form.Item style={{ marginBottom: "-30px" }} name="category" label="Category"
-                                rules={[
-                                    { required: true },
-                                ]}
-                            >
+                                // rules={[{ required: true },]}
+                                >
                             </Form.Item>
                             <Select placeholder="Select Category" style={{ width: 150 }}>
                                 <Select.Option value="">''</Select.Option>
@@ -66,15 +64,13 @@ export function SupplierForm( ) {
 
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item style={{ marginBottom: "-30px" }} name="supplierName" label="Supplier Name"
-                                rules={[
-                                    { required: true },
-                                ]}
-                            >
+                                // rules={[{ required: true },]}
+                                >
                             </Form.Item>
                             <Input />
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                            <Form.Item style={{ marginBottom: "-30px" }} name="GSTNumber" label="GST Number" >
+                            <Form.Item style={{ marginBottom: "-30px" }} name="GstNumber" label="GST Number" >
                             </Form.Item>
                             <Input />
                         </Col>
