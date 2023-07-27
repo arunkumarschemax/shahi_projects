@@ -170,7 +170,9 @@ const VersionChanges = () => {
                         const prodPlanId = record.productionPlanId;
                         const fbConsInfo = versionWiseDataMap.get(prodPlanId);
                         if (fbConsInfo) {
-                            return versionWiseDataMap.get(prodPlanId).get(version) ?? '-';
+                            return Number(versionWiseDataMap.get(prodPlanId).get(version)).toLocaleString('en-IN', {
+                                maximumFractionDigits: 0
+                            }) ?? '-';
                         } else {
                             return 0;
                         }
@@ -182,8 +184,10 @@ const VersionChanges = () => {
                     const prodPlanId = record.productionPlanId;
                     const fbConsInfo = versionWiseDataMap.get(prodPlanId);
                     if (fbConsInfo) {
-                        const val = versionWiseDataMap.get(prodPlanId).get(version) ?? '-';
-                        return Number(val);
+                        const val = Number(versionWiseDataMap.get(prodPlanId).get(version)).toLocaleString('en-IN', {
+                            maximumFractionDigits: 0
+                        }) ?? '-';
+                        return val;
                     } else {
                         return 0;
                     }

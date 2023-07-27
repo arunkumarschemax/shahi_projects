@@ -150,16 +150,24 @@ export class OrdersController {
             return this.ordersService.getUploadFilesData();
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-
         }
     }
+
     @Post('/getVersionWiseData')
     async getVersionWiseData(): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getVersionWiseData();
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 
+    @Post('/getPhaseWiseData')
+    async getPhaseWiseData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getPhaseWiseData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
 }
