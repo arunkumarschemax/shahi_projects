@@ -1,4 +1,5 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { Vendors } from "../vendors/vendors.entity";
 
 @Entity('currencies')
 export class Currencies {
@@ -58,7 +59,7 @@ updatedUser: string | null;
   // @OneToMany(type=>EndCustomers, endCustomers=>endCustomers.currencyInfo,{cascade: true})
   // endCustomerInfo:EndCustomers[];
 
-  // @OneToMany(type=>Vendors, vendor=>vendor.currencyInfo,{cascade: true})
-  // vendorInfo:Vendors[];
+  @OneToMany(type=>Vendors, vendor=>vendor.currencyInfo,{cascade: true})
+  vendorInfo:Vendors[];
 
 }
