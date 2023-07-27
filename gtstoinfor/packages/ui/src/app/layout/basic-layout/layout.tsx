@@ -67,6 +67,18 @@ export const baseRouterList = [
                 path: "currencies/currency-view",
                 filepath: "currencies/currency-view",
             },
+            {
+                label: "Buyers",
+                key: "buyers",
+                path: "buyers/buyers-form",
+                filepath: "buyers/buyers-form",
+            },
+            {
+                label: "Vendors",
+                key: "vendors",
+                path: "vendors/vendors-form",
+                filepath: "vendors/buyers-form",
+            },
             // {
             //     label: "Employee Details",
             //     key: "employee-details",
