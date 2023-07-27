@@ -3,17 +3,12 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class PaymentTermsRequest {
     @ApiProperty()
-    @IsNotEmpty()
-    @IsAlphanumeric()
     paymentTermsId: number;
 
     @ApiProperty()
-    @IsOptional()
     updatedUser: string;
 
     @ApiProperty()
-    @IsOptional()
-    @IsNumber()
     versionFlag: number;
 
     @ApiProperty()

@@ -22,7 +22,8 @@ export class PaymentTermsService {
      * @param isUpdate 
      * @param request 
      */
-    async createPaymentTerms(paymentTermsDTO: PaymentTermsDTO, isUpdate: boolean,request:Request): Promise<PaymentTermsResponseModel> {
+    async createPaymentTerms(paymentTermsDTO: any, isUpdate: boolean): Promise<PaymentTermsResponseModel> {
+        console.log(paymentTermsDTO,"dto88880")
         try {
           let previousValue
             // to check whether PaymentTerms exists with the passed  PaymentTerms  or not. if isUpdate is false, a check will be done whether a record with the passed PaymentTerms is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed PaymentTerms  then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
@@ -35,7 +36,7 @@ export class PaymentTermsService {
             }
             else{
                 const certificatePrevious = await this.paymentTermsRepository.findOne({where:{paymentTermsId:paymentTermsDTO.paymentTermsId}})
-                previousValue =(certificatePrevious.PaymentTermsCategory+","+certificatePrevious.paymentTermsName)
+                previousValue =(certificatePrevious.paymentTermsCategory+","+certificatePrevious.paymentTermsName)
                 const PaymentTermsEntity = await this.getPaymentTermsDetailsWithoutRelations(paymentTermsDTO.paymentTermsName);
                 if (PaymentTermsEntity) {
                     if(PaymentTermsEntity.paymentTermsId != paymentTermsDTO.paymentTermsId ){
@@ -52,7 +53,7 @@ export class PaymentTermsService {
             );
             const savedPaymentTermsDto: PaymentTermsDTO = this.paymentTermsAdapter.convertEntityToDto(savedPaymentTermsEntity);
             if (savedPaymentTermsDto) {
-                const presentValue = savedPaymentTermsDto.PaymentTermsCategory+","+savedPaymentTermsDto.paymentTermsName;
+                const presentValue = savedPaymentTermsDto.paymentTermsCategory+","+savedPaymentTermsDto.paymentTermsName;
             // generating resposnse
             const response = new PaymentTermsResponseModel(true,isUpdate ? 11101 : 11100,isUpdate? 'PaymentTerms Updated Successfully': 'PaymentTerms Created Successfully',savedPaymentTermsDto);
             const name=isUpdate?'updated':'created'
@@ -145,7 +146,9 @@ export class PaymentTermsService {
      * @returns true or false
      */
     // @LogActions({isAsync: true})
-    async activateOrDeactivatePaymentTerms(paymentTermsReq: PaymentTermsRequest): Promise<PaymentTermsResponseModel> {
+    async activateOrDeactivatePaymentTerms(paymentTermsReq: any): Promise<PaymentTermsResponseModel> {
+
+        console.log(paymentTermsReq,"activate")
       try {
           const paymentTermsExists = await this.getPaymentTermsById(paymentTermsReq.paymentTermsId);
           if (paymentTermsExists) {
@@ -156,7 +159,7 @@ export class PaymentTermsService {
                       const paymentTermsStatus =  await this.paymentTermsRepository.update(
                           { paymentTermsId: paymentTermsReq.paymentTermsId },
                           { isActive: paymentTermsReq.isActive,updatedUser: paymentTermsReq.updatedUser });
-                     
+                      console.log(paymentTermsStatus,"pay////////")
                       if (paymentTermsExists.isActive) {
                           if (paymentTermsStatus.affected) {
                               const paymentTermsResponse: PaymentTermsResponseModel = new PaymentTermsResponseModel(true, 10115, 'PaymentTerms is de-activated successfully');
@@ -219,7 +222,7 @@ export class PaymentTermsService {
     async getAllPaymentTermsDropDown(): Promise<PaymentTermsDropDownResponseModel> {
         try {
             const paymentTermsDTO: PaymentTermsDropDownDto[] = [];
-            const paymentTermsEntities: PaymentTerms[] = await this.paymentTermsRepository.find({ select: ['paymentTermsId', 'paymentTermsName'], where: { isActive: true,PaymentTermsCategory:PaymentTermsCategory.Customer }, order: {paymentTermsName: 'ASC' } });
+            const paymentTermsEntities: PaymentTerms[] = await this.paymentTermsRepository.find({ select: ['paymentTermsId', 'paymentTermsName'], where: { isActive: true,paymentTermsCategory:PaymentTermsCategory.Customer }, order: {paymentTermsName: 'ASC' } });
             if (paymentTermsEntities && paymentTermsEntities.length > 0) {
                 paymentTermsEntities.forEach(paymentTermsEntity => {
                     paymentTermsDTO.push(new PaymentTermsDropDownDto(paymentTermsEntity.paymentTermsId, paymentTermsEntity.paymentTermsName));
@@ -238,7 +241,7 @@ export class PaymentTermsService {
     async getAllVendorPaymentTermsDropDown(): Promise<PaymentTermsDropDownResponseModel> {
         try {
             const paymentTermsDTO: PaymentTermsDropDownDto[] = [];
-            const paymentTermsEntities: PaymentTerms[] = await this.paymentTermsRepository.find({ select: ['paymentTermsId', 'paymentTermsName'], where: { isActive: true,PaymentTermsCategory:PaymentTermsCategory.Vendor }, order: {paymentTermsName: 'ASC' } });
+            const paymentTermsEntities: PaymentTerms[] = await this.paymentTermsRepository.find({ select: ['paymentTermsId', 'paymentTermsName'], where: { isActive: true,paymentTermsCategory:PaymentTermsCategory.Vendor }, order: {paymentTermsName: 'ASC' } });
             if (paymentTermsEntities && paymentTermsEntities.length > 0) {
                 paymentTermsEntities.forEach(paymentTermsEntity => {
                     paymentTermsDTO.push(new PaymentTermsDropDownDto(paymentTermsEntity.paymentTermsId, paymentTermsEntity.paymentTermsName));

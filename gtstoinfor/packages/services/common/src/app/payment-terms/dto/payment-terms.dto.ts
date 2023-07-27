@@ -5,12 +5,10 @@ export class PaymentTermsDTO {
   @ApiProperty()
   // @MaxLength(7, { message: "Payment Term id allows maximum 7 characters" })
   //  @Matches(new RegExp("^[a-zA-Z0-9]+$"), '', { message: "Payment Terms Code should not include these Charecters !@#$%^&*()_+{}[]:\";'<>?,./~` " })
-  @IsNotEmpty({message:"Payment Terms id should not be empty"})
-  @IsAlphanumeric()
-  @IsOptional()
+  // @IsNotEmpty({message:"Payment Terms id should not be empty"})
   paymentTermsId: number;
   @ApiProperty()
-  PaymentTermsCategory:PaymentTermsCategory;
+  paymentTermsCategory:PaymentTermsCategory;
   @ApiProperty()
   @MaxLength(15, { message: "Payment Terms Name allows maximum 50 characters" })
   @IsNotEmpty()
@@ -38,6 +36,7 @@ export class PaymentTermsDTO {
   versionFlag : number;
     static paymentTermsId: number;
     static paymentTermsName: string;
+    static paymentTermscategory: PaymentTermsCategory;
     static isActive: boolean;
     static updatedUser: string;
     static createdUser: string;

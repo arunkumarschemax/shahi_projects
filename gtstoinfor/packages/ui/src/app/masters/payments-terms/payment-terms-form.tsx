@@ -44,11 +44,11 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
 
   const save = (Data: PaymentTermsDto) => {
     setDisable(true)
-       service.create(Data).then(res => {
+       service.createPaymentTerms(Data).then(res => {
         setDisable(false)
       if (res.status) {
         AlertMessages.getSuccessMessage('Created Successfully');
-        navigate("/payment-terms-view")
+        navigate('/masters/payment-terms/payment-terms-view')
         onReset();
       } else {
         if (res.status) {
@@ -66,6 +66,7 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
 
   
   const saveData = (values: PaymentTermsDto) => {
+    console.log(values,"paaaaaaaa")
     setDisable(false)
     // console.log(values);
     if(props.isUpdate){
@@ -80,7 +81,7 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
     form.resetFields();
   };
 
-
+ console.log(PaymentTermsDto,"999999")
 
   return (
     <Card title='Payment Terms' extra={<span><Button onClick={() => navigate('/masters/payment-terms/payment-terms-view')} type={'primary'}>View</Button></span>}>
@@ -95,7 +96,7 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
       </Form.Item>      
       <Col xs={{span:24}} sm={{span:24}} md={{span:5,offset:1}} lg={{span:5,offset:1}} xl={{span:5,offset:1}} style={{margin:'1%'}}>
         <Form.Item
-          name="PaymentTermsCategory"
+          name="paymentTermsCategory"
           label="Category"
           rules={[
             {

@@ -21,10 +21,10 @@ export class PaymentTermsController {
      * @returns paymentTermsResponse
      */
     @Post('/createPaymentTerms')
-    async createPaymentTerms(@Body() paymentTermsDTO:PaymentTermsDTO,isUpdate:boolean=false,@Req() request:Request): Promise<PaymentTermsResponseModel> {
+    async createPaymentTerms(@Body() paymentTermsDTO:any,isUpdate:boolean=false): Promise<PaymentTermsResponseModel> {
         try {
-            // console.log(paymentTermsDTO);
-            return await this.paymentTermsService.createPaymentTerms(paymentTermsDTO, false,request);
+            console.log(paymentTermsDTO,'pppppp');
+            return await this.paymentTermsService.createPaymentTerms(paymentTermsDTO, false);
         } catch (error) {
             return this.applicationExceptionhandler.returnException(PaymentTermsResponseModel, error)
         }
@@ -38,7 +38,7 @@ export class PaymentTermsController {
     @Post('/updatePaymentTerms')
     async updatePaymentTerms(@Body() paymentTermsDTO: PaymentTermsDTO,@Req() request:Request): Promise<PaymentTermsResponseModel> {
         try {
-        return await this.paymentTermsService.createPaymentTerms(paymentTermsDTO, true,request);
+        return await this.paymentTermsService.createPaymentTerms(paymentTermsDTO, true);
         } catch (error) {
             return this.applicationExceptionhandler.returnException(PaymentTermsResponseModel, error)
         }
@@ -51,6 +51,7 @@ export class PaymentTermsController {
     @Post('/getAllPaymentTerms')
     async getAllPaymentTerms(@Body() req?:UserRequestDto): Promise<AllPaymentTermsResponseModel> {
         try {
+            console.log('yessss')
         return await this.paymentTermsService.getAllPaymentTerms(req);
         } catch (error) {
             return this.applicationExceptionhandler.returnException(AllPaymentTermsResponseModel, error)
@@ -72,7 +73,8 @@ export class PaymentTermsController {
      * @returns Value PaymentTerms
      */
     @Post('/activateOrDeactivatePaymentTerms')
-    async activateOrDeactivatePaymentTerms(@Body() paymentTermsReq: PaymentTermsRequest): Promise<PaymentTermsResponseModel> {
+    async activateOrDeactivatePaymentTerms(@Body() paymentTermsReq: any): Promise<PaymentTermsResponseModel> {
+        console.log(paymentTermsReq,"controller")
         try {
             return await this.paymentTermsService.activateOrDeactivatePaymentTerms(paymentTermsReq);
         } catch (err) {

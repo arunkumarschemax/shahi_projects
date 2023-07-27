@@ -34,7 +34,7 @@ export function PaymentTermsGrid(
     getAll();
   }, []);
   const getAll= () => {
-  service.getAll(new UserRequestDto(JSON.parse(localStorage.getItem('username')))).then(res => {
+  service.getAllPaymentTerms().then(res => {
       if (res.status) {
        setPaymentTermsData(res.data);
       } else {
@@ -117,7 +117,7 @@ export function PaymentTermsGrid(
  
   const deleteTerm = (Data:PaymentTermsDto) => {
     Data.isActive=Data.isActive?false:true;
-    service.activatedeActivate(Data).then(res => { console.log(res);
+    service.activateOrDeactivatePaymentTerms(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
         AlertMessages.getSuccessMessage('Success'); 
@@ -133,7 +133,7 @@ export function PaymentTermsGrid(
     })
   }
 
-  const columnsSkelton: ColumnProps<any>[] = [
+  const columnsSkelton: any[] = [
     {
       title: 'S No',
       key: 'sno',
@@ -143,7 +143,7 @@ export function PaymentTermsGrid(
     },
     {
       title: 'Category',
-      dataIndex:'PaymentTermsCategory',
+      dataIndex:'paymentTermsCategory',
       responsive: ['sm'],
       filters: [
         {
@@ -158,17 +158,35 @@ export function PaymentTermsGrid(
       filterMultiple: false,
       onFilter: (value, record) => 
       {
-        // === is not work
-        return record.PaymentTermsCategory === value;
+        return record.paymentTermsCategory == value;
       },
     },
+    // {
+    //   title: 'Category',
+    //   dataIndex: 'paymentTermsCategory',
+    //   responsive: ['sm'],
+    //   filters: [
+    //     {
+    //       text: 'Customer',
+    //       value: PaymentTermsCategory.Customer, // Assuming PaymentTermsCategory.Customer is a string
+    //     },
+    //     {
+    //       text: 'Vendor',
+    //       value: PaymentTermsCategory.Vendor , // Assuming PaymentTermsCategory.Vendor is a string
+    //     },
+    //   ],
+    //   filterMultiple: false,
+    //   onFilter: (value, record) => {
+    //     return record['paymentTermsCategory'] === value; // Use === for strict equality
+    //   },
+    //       },
     {
       title: 'Payment Term Name',
       dataIndex: 'paymentTermsName',
       //  responsive: ['lg'],
        sorter: (a, b) => a.paymentTermsName.length - b.paymentTermsName.length,
        sortDirections: ['descend', 'ascend'],
-        // ...getColumnSearchProps('paymentTermsName')
+        ...getColumnSearchProps('paymentTermsName')
     },
        {
       title: 'Status',
@@ -206,6 +224,7 @@ export function PaymentTermsGrid(
               onClick={() => {
                 if (rowData.isActive) {
                    openFormWithData(rowData);
+                   console.log(rowData,"rowData")
                 } else {
                    AlertMessages.getErrorMessage('You Cannot Edit Deactivated Payment term');
                 }
@@ -237,7 +256,7 @@ export function PaymentTermsGrid(
 
   const updateTerm = (Data: PaymentTermsDto) => {
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
-    service.update(Data).then(res => { console.log(res);
+    service.updatePaymentTerms(Data).then(res => { console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         getAll();
@@ -266,13 +285,13 @@ export function PaymentTermsGrid(
      <br></br>
       <Row gutter={40}>
          <Col>
-          <Card title={'Total Payment Terms: ' + ""} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+         <Card title={'Total Payment Terms: ' + paymentTermsData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
-           <Card title={'Active: '  } style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          <Card title={'Active: ' + paymentTermsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
            </Col>
            <Col>
-           <Card title={'In-Active: ' } style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+           <Card title={'In-Active: ' + paymentTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
            </Col>
            <Col>
         <span><Button onClick={() => navigate('/masters/payment-terms/payment-terms-form')}
@@ -281,7 +300,6 @@ export function PaymentTermsGrid(
           </Row> 
           <br></br>
           <Table
-          rowKey={record => record.productId}
           columns={columnsSkelton}
           dataSource={paymentTermsData}
           scroll={{x:true}}

@@ -12,7 +12,7 @@ export class PaymentTerms {
     default: PaymentTermsCategory.Customer,
     name:'payment_terms_category'
 })
-PaymentTermsCategory: PaymentTermsCategory;
+paymentTermsCategory: PaymentTermsCategory;
 
   @Column("varchar",{
       nullable:false,

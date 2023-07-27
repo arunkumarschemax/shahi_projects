@@ -3,7 +3,7 @@ import { PaymentTermsCategory } from "@project-management-system/shared-models";
 
 export class PaymentTermsDto{
     paymentTermsId : number;
-    PaymentTermsCategory:PaymentTermsCategory;
+    paymentTermsCategory:PaymentTermsCategory;
     paymentTermsName : string;
     isActive: boolean;
     createdUser : string;
@@ -19,9 +19,9 @@ export class PaymentTermsDto{
      * @param updatedUser string
      * 
      */
-    constructor(paymentTermsId : number,PaymentTermsCategory:PaymentTermsCategory,paymentTermsName : string,isActive: boolean,createdUser : string,updatedUser:string){
+    constructor(paymentTermsId : number,paymentTermsCategory:PaymentTermsCategory,paymentTermsName : string,isActive: boolean,createdUser : string,updatedUser:string){
         this.paymentTermsId = paymentTermsId;
-        this.PaymentTermsCategory=PaymentTermsCategory;
+        this.paymentTermsCategory=paymentTermsCategory;
         this.paymentTermsName = paymentTermsName;
         this.isActive= isActive;
         this.createdUser= createdUser;

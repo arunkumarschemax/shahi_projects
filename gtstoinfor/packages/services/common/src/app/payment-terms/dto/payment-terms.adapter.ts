@@ -13,7 +13,7 @@ export class PaymentTermsAdapter {
     const paymentTerms = new PaymentTerms();
     paymentTerms.paymentTermsId=paymentTermsDTO.paymentTermsId;
     paymentTerms.paymentTermsName=paymentTermsDTO.paymentTermsName;
-    paymentTerms.PaymentTermsCategory=paymentTermsDTO.PaymentTermsCategory;
+    paymentTerms.paymentTermsCategory=paymentTermsDTO.paymentTermsCategory;
     paymentTerms.isActive=paymentTermsDTO.isActive==undefined?true:paymentTermsDTO.isActive;
     if (isUpdate) {
       paymentTerms.updatedUser = paymentTermsDTO.updatedUser;
@@ -26,7 +26,7 @@ export class PaymentTermsAdapter {
   public convertEntityToDto(paymentTermsObject: PaymentTerms): PaymentTermsDTO {
     const paymentTermsDTO= new PaymentTermsDTO;
     paymentTermsDTO.paymentTermsId = paymentTermsObject.paymentTermsId;
-    paymentTermsDTO.PaymentTermsCategory=paymentTermsObject.PaymentTermsCategory;
+    paymentTermsDTO.paymentTermsCategory=paymentTermsObject.paymentTermsCategory;
     paymentTermsDTO.paymentTermsName = paymentTermsObject.paymentTermsName;
     paymentTermsDTO.isActive = paymentTermsObject.isActive;
     paymentTermsDTO.createdAt = paymentTermsObject.createdAt;
