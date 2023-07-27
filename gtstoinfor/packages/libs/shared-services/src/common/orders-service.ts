@@ -62,4 +62,8 @@ export class OrdersService extends CommonAxiosService {
     async getVersionWiseData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getVersionWiseData")
     }
+
+    async getPhaseWiseData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getPhaseWiseData")
+    }
 }

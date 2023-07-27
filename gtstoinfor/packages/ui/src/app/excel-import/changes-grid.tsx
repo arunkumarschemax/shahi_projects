@@ -317,24 +317,51 @@ const ChangesGrid = () => {
             dataIndex: 'itemName'
         },
         {
-            title: 'Order Quantity Pieces',
+            title: 'Previous Order Quantity Pieces',
+            dataIndex: 'old_val',
+            align:'right',
+            
+        },
+        {
+            title: 'Revised Order Quantity Pieces',
             dataIndex: 'new_val',
+            align: 'right',
+            render: (text, record) => (
+                <span  {...record.new_val}>
+                    <>
+                        {Number(record.old_val) === Number(record.new_val) ? <span style={{ color: '' }}>{Number(record.new_val).toLocaleString('en-IN', {
+                            maximumFractionDigits: 0
+                        })}</span> : ''}
+                        {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{Number(record.new_val).toLocaleString('en-IN', {
+                            maximumFractionDigits: 0
+                        })}</span> : ''}
+                        {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{Number(record.new_val).toLocaleString('en-IN', {
+                            maximumFractionDigits: 0
+                        })}</span> : ''}
+                    </>
+                </span>
+
+            )
+            
+        },
+        {
+            title: 'Difference',
+            dataIndex: 'Diff',
             align:'right',
             render: (text, record) => (
+                < >
+                    
+                    {Number(record.Diff) === 0 ? '-' : ''}
+                    {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })} </span> : ''}
+                    {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    })} </span> : ''}
 
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '150px' }} title={`Previous Value:  ${record.old_val} Revised Value:  ${record.new_val} Difference: ${ record.new_val - record.old_val  }`}>
-                    <>
-                        {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{Number(record.new_val).toLocaleString('en-IN', {maximumFractionDigits: 0 })}</span> : ''}
-                        {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{Number(record.new_val).toLocaleString('en-IN', {maximumFractionDigits: 0 })}</span> : ''}
-
-                    </>
-
-                    &nbsp;&nbsp;
-                    <span>
-                        {Number(record.old_val) < Number(record.new_val) ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
-                    </span>
-                </Tooltip>
+                </>
             )
+             
         },
         {
             title: 'Version',
@@ -409,10 +436,10 @@ const ChangesGrid = () => {
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'order_qty_pcs',
-            align:'right',
+            align: 'right',
             render: (text, record) => (
                 <>
-                    {Number(record.order_qty_pcs).toLocaleString('en-IN', {maximumFractionDigits: 0 })}
+                    {Number(record.order_qty_pcs).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </>
             )
         },
@@ -473,10 +500,10 @@ const ChangesGrid = () => {
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'order_qty_pcs',
-            align:'right',
+            align: 'right',
             render: (text, record) => (
                 <>
-                    {Number(record.order_qty_pcs).toLocaleString('en-IN', {maximumFractionDigits: 0 })}
+                    {Number(record.order_qty_pcs).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </>
             )
 
@@ -525,13 +552,11 @@ const ChangesGrid = () => {
             align: 'right',
             render: (text, record) => (
                 <>
-                    {Number(record.old_qty_value).toLocaleString('en-IN', {maximumFractionDigits: 0 })}
+                    {Number(record.old_qty_value).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </>
             )
 
         },
-            
-        
         {
             title: 'Sum Of Qrd Qty this Week',
             dataIndex: 'new_qty_value',
@@ -550,7 +575,6 @@ const ChangesGrid = () => {
                         })}</span> : ''}
                     </>
                 </span>
-
             )
         },
         {
@@ -643,14 +667,14 @@ const ChangesGrid = () => {
                                 <Table.Summary.Cell index={3} ><Text ></Text></Table.Summary.Cell>
                                 <Table.Summary.Cell index={4}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Summary</div></Table.Summary.Cell>
                                 <Table.Summary.Cell index={5} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalLastQty).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })}</div></Table.Summary.Cell>
+                                    maximumFractionDigits: 0
+                                })}</div></Table.Summary.Cell>
                                 <Table.Summary.Cell index={6}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalRecQty).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })}</div></Table.Summary.Cell>
+                                    maximumFractionDigits: 0
+                                })}</div></Table.Summary.Cell>
                                 <Table.Summary.Cell index={7} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(defData).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })}</div></Table.Summary.Cell>
+                                    maximumFractionDigits: 0
+                                })}</div></Table.Summary.Cell>
                             </Table.Summary.Row>
                         </>
                     );
