@@ -50,10 +50,10 @@ export function SupplierForm() {
                     </Form.Item>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ paddingBottom: '12px' }}>
                         <Form.Item name="category" label="Category"
-                        // rules={[{ required: true },]}
+                        rules={[{ required: true },]}
                         >
                             <Select placeholder="Select Category" style={{ width: 150 }}>
-                                <Select.Option value="">''</Select.Option>
+                                <Select.Option value=" Supplier">Supplier</Select.Option>
                             </Select>
                         </Form.Item>
 
@@ -61,98 +61,186 @@ export function SupplierForm() {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name="supplierCode" label="Supplier Code"
                         >
-                            <Input />
+                            <Input placeholder='Enter Supplier Code' />
                         </Form.Item>
 
                     </Col>
 
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name="supplierName" label="Supplier Name"
-                        // rules={[{ required: true },]}
+                            rules={[{ required: true },
+                            { min: 3, message: 'Supplier Name must be at least 3 characters' }
+
+                            ]}
                         >
-                            <Input />
+                            <Input placeholder='Enter Supplier Name' />
                         </Form.Item>
 
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="GstNumber" label="GST Number" >
-                            <Input />
+                        <Form.Item name="GstNumber" label="GST Number"
+                            rules={[
+                                {
+                                    pattern: /^[a-zA-Z0-9]+$/,
+                                    message: 'Please enter valid GstNumber',
+                                },
+                            ]}
+                        >
+                            <Input placeholder='Enter GstNumber ' />
 
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="contactPerson" label="Contact Person" >
-                            <Input />
+                        <Form.Item name="contactPerson" label="Contact Person"
+                            rules={[{ required: true },
+                            { min: 3, message: 'Contact Person must be at least 3 characters' }
+
+                            ]} >
+                            <Input placeholder='Enter Contact person' />
                         </Form.Item>
 
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="street" label="Street" >
-                            <Input />
+                        <Form.Item name="street" label="Street"
+                            rules={[
+                                {
+                                    min: 3,
+                                    message: 'Street Name contains atleast 3 characters ',
+                                },
+
+                            ]}
+                        >
+                            <Input placeholder='Enter Street Name ' />
                         </Form.Item>
 
                     </Col>
                 </Row>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ paddingBottom: '12px' }}>
-                        <Form.Item name="apartment" label="Apartment" >
-                            <Input />
+                        <Form.Item name="apartment" label="Apartment"
+                            rules={[
+                                {
+                                    min: 3,
+                                    message: 'Apartment Name contains atleast 3 characters ',
+                                },
+
+                            ]}
+                        >
+                            <Input placeholder='Enter Apartment Name' />
                         </Form.Item>
 
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="city" label="City" >
-                            <Input />
+                        <Form.Item name="city" label="City"
+                            rules={[
+                                {
+                                    min: 3,
+                                    message: 'City Name contains atleast 3 characters ',
+                                },
+
+                            ]}
+                        >
+                            <Input placeholder=' Enter city Name' />
                         </Form.Item>
 
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="state" label="State" >
-                            <Input />
+                        <Form.Item name="state" label="State"
+                            rules={[
+                                {
+                                    min: 3,
+                                    message: 'State Name contains atleast 3 characters ',
+                                },
+
+                            ]}
+
+                        >
+                            <Input placeholder='Enter State Name' />
                         </Form.Item>
 
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="district" label="District" >
-                            <Input />
+                        <Form.Item name="district" label="District"
+                            rules={[
+                                {
+                                    min: 3,
+                                    message: 'District Name contains atleast 3 characters ',
+                                },
+
+                            ]} >
+                            <Input placeholder='Enter District Name' />
                         </Form.Item>
 
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="postalCode" label="Postal Code" >
-                            <Input />
+                        <Form.Item name="postalCode" label="Postal Code"
+                            rules={[
+                                {
+                                    pattern: /^[0-9]+$/,
+                                    message: 'Postal Code can only contain numbers',
+                                },
+                            ]}
+
+                        >
+                            <Input placeholder='Enter PostalCode' />
                         </Form.Item>
 
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="commision" label="Commision" >
-                            <Input />
+                        <Form.Item name="commision" label="Commision"
+                            rules={[
+                                {
+                                    pattern: /^[0-9]+(%?)$/,
+                                    message: 'Commission must be a number, optionally followed by a percentage sign (%)',
+                                },
+                            ]}
+                        >
+                            <Input placeholder='Enter Commision' />
                         </Form.Item>
 
                     </Col>
                 </Row>
                 <Row gutter={24} >
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ paddingBottom: '12px' }}>
-                        <Form.Item name="bankAccountNo" label="Bank Account No" >
-                            <Input />
+                        <Form.Item name="bankAccountNo" label="Bank Account No"
+                            rules={[
+                                {
+                                    pattern: /^[a-zA-Z0-9]+$/,
+                                    message: 'Please enter valid bankAccountNo',
+                                },
+                            ]}
+                        >
+                            <Input placeholder='Enter Bank Account No' />
                         </Form.Item>
 
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name="bankIFSC" label="Bank IFSC" >
-                            <Input />
+                            <Input placeholder='Enter Bank IFSC code' />
                         </Form.Item>
 
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="bankName" label="Bank Name" >
-                            <Input />
+                        <Form.Item name="bankName" label="Bank Name"
+                            rules={[
+                                {
+                                    pattern: /^[A-Z][a-zA-Z\s]+$/,
+                                    message: 'Bank Name should start with a capital letter and can only contain letters and spaces',
+                                },
+                            ]} >
+                            <Input placeholder='Enter Bank Name' />
                         </Form.Item>
 
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="bankBranch" label="Bank Branch" >
-                            <Input />
+                        <Form.Item name="bankBranch" label="Bank Branch"
+                            rules={[
+                                {
+                                    pattern: /^[A-Z][a-zA-Z\s]+$/,
+                                    message: 'Bank Branch should start with a capital letter and can only contain letters and spaces',
+                                },
+                            ]} >
+                            <Input placeholder='Enter  Bank Branch' />
 
                         </Form.Item>
                     </Col>
@@ -161,13 +249,20 @@ export function SupplierForm() {
                             rules={[
                                 { pattern: /^\d{10}$/ }
                             ]} >
-                            <Input />
+                            <Input placeholder='Enter contact Number' />
                         </Form.Item>
 
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="email" label="Email" >
-                            <Input />
+                        <Form.Item name="email" label="Email"
+                            rules={[
+                                {
+                                    pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                    message: 'Please enter a valid email address',
+                                },
+                            ]}
+                        >
+                            <Input placeholder='Enter Email' />
                         </Form.Item>
 
                     </Col>
@@ -176,8 +271,15 @@ export function SupplierForm() {
                 <Row gutter={24}>
 
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="creditPaymentPeriod" label="Credit Payment Period" >
-                            <Input />
+                        <Form.Item name="creditPaymentPeriod" label="Credit Payment Period"
+                            rules={[
+                                {
+                                    pattern: /^[a-zA-Z0-9]+$/,
+                                    message: 'Credit Payment Period should contain only numbers',
+                                },
+                            ]}
+                        >
+                            <Input placeholder='Enter  creditPaymentPeriod' />
                         </Form.Item>
 
                     </Col>

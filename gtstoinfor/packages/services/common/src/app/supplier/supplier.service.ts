@@ -5,7 +5,7 @@ import { SupplierDto } from "./dto/supplier-dto";
 import { SupplierEntity } from './supplier.entity';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, SupplierResponse } from "@project-management-system/shared-models";
 
 @Injectable()
 export class SupplierService {
@@ -45,7 +45,7 @@ export class SupplierService {
         );
 
         return 
-        // new SupplierResponse(true, 1,`${record.isActive === true ? 'Deactivated' : 'Activated'} Successfully`)
+         new SupplierResponse(true, 1,`${record.isActive === true ? 'Deactivated' : 'Activated'} Successfully`)
     }
 
     async updateSuppliers(createsupplierDto: any): Promise<any> {

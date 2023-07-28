@@ -85,8 +85,8 @@ postalCode: number;
 })
 commision: string;
 
-@Column('int', {
-  name: 'bank_account_number',
+@Column('varchar', {
+  name: 'bank_account_no',
  
 })
 bankAccountNo: number;
@@ -122,7 +122,7 @@ contactNumber: number;
 email: string;
 
 @Column('varchar', {
-  name: 'credit_payment_method',
+  name: 'credit_payment_period',
  
 })
 creditPaymentPeriod: number;
