@@ -88,8 +88,8 @@ export const baseRouterList = [
             {
                 label: "Items",
                 key: "items",
-                path: "items/items-form",
-                filepath: "items/items-form",
+                path: "items/item-grid",
+                filepath:"items/item-grid",
             },
             {
                 label: "Delivery Method",

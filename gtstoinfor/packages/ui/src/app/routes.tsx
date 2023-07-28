@@ -27,6 +27,7 @@ import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
 import ItemCategoriesGrid from "./masters/item-categories/item-categories-grid"
 import ItemSubCategoriesGrid from "./masters/item-sub-categories/item-sub-categories-grid"
 import ItemSubCategoriesForm from "./masters/item-sub-categories/item-sub-categories-form"
+import ItemsGrid from "./masters/items/item-grid"
 
 
 export const AppRoutes = () => {
@@ -66,6 +67,8 @@ export const AppRoutes = () => {
                     closeForm={() => { }}
                     updateItem={(undefined) => { }}/>
                 } />
+                <Route path='items/item-grid' element={<ItemsGrid />} />
+
                 </Route>
               
                 <Route path='/excel-import' key='/excel-import'>
@@ -101,6 +104,7 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+                <Route path='items/item-grid' element={<ItemsGrid />} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
                         <Route path='buyers/buyers-view' element={<BuyersView />} />
                         <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
