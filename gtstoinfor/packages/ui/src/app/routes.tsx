@@ -22,6 +22,11 @@ import VendorsView from "./masters/vendors/vendors-view"
 import EmployeeDetsilsForm from "./masters/employee-details/employee-details-form"
 import EmployeeDetailsGrid from "./masters/employee-details/employee-details-grid"
 import ItemsForm from "./masters/items/items-form"
+import DeliveryMethodForm from "./masters/delivery-methods/delivery-method-form"
+import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
+import ItemCategoriesGrid from "./masters/item-categories/item-categories-grid"
+import ItemSubCategoriesGrid from "./masters/item-sub-categories/item-sub-categories-grid"
+import ItemSubCategoriesForm from "./masters/item-sub-categories/item-sub-categories-form"
 
 
 export const AppRoutes = () => {
@@ -112,6 +117,17 @@ export const AppRoutes = () => {
                     closeForm={() => { }}
                     updateItem={(undefined) => { }}/>
                 } />
+                        <Route path='delivery-methods/delivery-method-form' element={<DeliveryMethodForm deliveryMethodData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateDeliveryMethod={(undefined) => { }}/>}/>
+                        <Route path='delivery-methods/delivery-method-view' element={<DeliveryMethodGrid/>}/>
+                        <Route path="item-categories/item-categories-view" element = {<ItemCategoriesGrid/>}/>
+                        <Route path='item-sub-categories/item-sub-categories-form' element={<ItemSubCategoriesForm subCategoryData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateData={(undefined) => { }}/>}/>
+                        <Route path='item-sub-categories/item-sub-categories-view' element={<ItemSubCategoriesGrid/>}/>
                     </Route>
 
                     
