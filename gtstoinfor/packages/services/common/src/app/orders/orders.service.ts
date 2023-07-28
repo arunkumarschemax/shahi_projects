@@ -314,7 +314,7 @@ export class OrdersService {
         }
         for (const record of records) {
             if (!versionDataMap.has(record.production_plan_id)) {
-                versionDataMap.set(record.production_plan_id, new VersionDataModel(record.production_plan_id, record.item_code, record.itemName, []));
+                versionDataMap.set(record.production_plan_id, new VersionDataModel(record.production_plan_id, record.prod_plan_type_name, record.item_code, record.itemName, []));
             }
             versionDataMap.get(record.production_plan_id).versionWiseData.push(new VersionAndQtyModel(record.version, record.order_qty_pcs));
         }

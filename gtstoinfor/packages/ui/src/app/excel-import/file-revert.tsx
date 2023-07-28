@@ -9,14 +9,13 @@ import { FileIdReq } from '@project-management-system/shared-models';
 export function FileRevert() {
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = useState(1);
+    const service = new OrdersService()
+    const [data, setData] = useState<any[]>([])
+
 
     useEffect(() => {
         getUploadFilesData()
     }, [])
-
-    const service = new OrdersService()
-
-    const [data, setData] = useState<any[]>([])
 
     const getUploadFilesData = () => {
         service.getUploadFilesData().then((res) => {

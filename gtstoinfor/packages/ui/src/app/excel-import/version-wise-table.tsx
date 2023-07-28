@@ -133,6 +133,7 @@ const VersionChanges = () => {
         const versionWiseDataMap = getEmpDayWiseConsumptionMap(data);
         excelTitles = [
             { title: "Production Plan Id", dataIndex: "productionPlanId" },
+            { title: "Production Plan Type Name", dataIndex: "prodPlanTypeName" },
             { title: "Item Code", dataIndex: "itemCode" },
             { title: "Item Name", dataIndex: "itemName" },
             // { title: "Token Type", dataIndex: "tokenType" }
@@ -148,6 +149,11 @@ const VersionChanges = () => {
                 title: 'Production Plan Id',
                 dataIndex: 'productionPlanId',
                 ...getColumnSearchProps('productionPlanId')
+            },
+            {
+                title: 'Production Plan Type Name',
+                dataIndex: 'prodPlanTypeName',
+                ...getColumnSearchProps('prodPlanTypeName')
             },
             {
                 title: 'Item Code',
