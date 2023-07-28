@@ -23,15 +23,14 @@ export class SupplierService {
     }
 
 
-    async getAllSuppliers(): Promise<any> {
+    async getAllSuppliers(): Promise<CommonResponseModel> {
         const details = await this.supplierRepository.find();
         const data: SupplierDto[] = [];
         for (const entity of details) {
             const conversion = this.supplierAdapter.convertEntityToDto(entity);;
             data.push(conversion)
         }
-        return
-        // new SupplierResponse(true, 1, 'data retrived', details)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
     }
 
     async activateOrDeactivateSuppliers(

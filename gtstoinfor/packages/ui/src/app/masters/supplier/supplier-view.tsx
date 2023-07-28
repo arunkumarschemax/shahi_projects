@@ -202,8 +202,8 @@ const SupplierView = () => {
           <Popconfirm onConfirm={e => { activateOrDeactivate(record.id); }}
             title={
               record.isActive
-                ? 'Are you sure to activated ?'
-                : 'Are you sure to deactivated ?'
+                ? 'Are you sure to deactivated ?'
+                : 'Are you sure to activated ?'
             }
           >
             <Switch size="default"
