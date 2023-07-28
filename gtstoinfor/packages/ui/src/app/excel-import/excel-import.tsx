@@ -6,6 +6,7 @@ import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { UndoOutlined } from '@ant-design/icons';
+import WebSocketClient from 'packages/libs/shared-services/src/web-socket-service';
 
 
 export default function ExcelImport() {
@@ -22,6 +23,16 @@ export default function ExcelImport() {
   useEffect(() => {
     getUploadFilesData();
   }, [])
+
+  useEffect(() => {
+    // Connect to the WebSocket server when the component mounts
+    WebSocketClient.connect();
+
+    // Cleanup: Disconnect from the WebSocket server when the component unmounts
+    return () => {
+      WebSocketClient.disconnect();
+    };
+  }, []);
 
   const getUploadFilesData = () => {
     ordersService.getUploadFilesData().then((res) => {

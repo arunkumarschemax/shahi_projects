@@ -13,6 +13,7 @@ import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
 import { FileUploadRepository } from './repository/upload.repository';
 import { FileUploadEntity } from './entities/upload-file.entity';
+import { ProgressGateway } from '../progress.gateway';
 
 @Module({
   imports: [
@@ -23,6 +24,6 @@ import { FileUploadEntity } from './entities/upload-file.entity';
       FileUploadEntity
     ])],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository]
+  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository,ProgressGateway]
 })
 export class OrdersModule { }
