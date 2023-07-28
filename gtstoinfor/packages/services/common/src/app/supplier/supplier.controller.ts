@@ -4,7 +4,7 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { SupplierDto } from "./dto/supplier-dto";
 import { SupplierAdapter } from "./adapters/adapters/supplier.adapter";
 import { SupplierEntity } from "./supplier.entity";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, SupplierResponse, SupplierResponseObject } from "@project-management-system/shared-models";
 
 
 @Controller("supplier")
@@ -22,7 +22,7 @@ export class SupplierController{
   
  
   @Post('/getAllSuppliers')
-  async getAllSuppliers(): Promise<any> {
+  async getAllSuppliers(): Promise<SupplierResponseObject> {
       try {
           return this.supplierService.getAllSuppliers();
       } catch (err) {
@@ -33,12 +33,12 @@ export class SupplierController{
 
 
   @Post('activateOrDeactivateSuppliers')
-  async activateOrDeactivateSuppliers(@Body() supplierDto: SupplierDto):Promise<any>{
+  async activateOrDeactivateSuppliers(@Body() supplierDto: SupplierDto):Promise<SupplierResponse>{
     return await this.supplierService.activateOrDeactivateSuppliers(supplierDto);
   }
 
   @Post('/updateSuppliers')
-  async updateSuppliers(@Body() supplierDto: SupplierDto ):Promise<any>{
+  async updateSuppliers(@Body() supplierDto: SupplierDto ):Promise<CommonResponseModel>{
     return await this.supplierService.updateSuppliers(supplierDto);
   }
 }

@@ -54,7 +54,7 @@ export function SupplierForm( ) {
                             >
                             </Form.Item>
                             <Select placeholder="Select Category" style={{ width: 150 }}>
-                                <Select.Option value="">''</Select.Option>
+                                <Select.Option value="suplier">Suplier</Select.Option>
                             </Select>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
