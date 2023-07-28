@@ -11,6 +11,13 @@ import { OrdersModule } from './orders/orders.module';
 import { CurrenciesModule } from './currencies/currencies.module';
 import { MasterBrandsModule } from './master-brands/master-brands.module';
 import { OperationsModule } from './operations/operations.module';
+import { EmployeeDetailsModule } from './employee-details/employee-details-module';
+import { ItemsModule } from './items/items.module';
+import { VendorsModule } from './vendors/vendors.module';
+import { BuyersModule } from './buyers/buyers.module';
+import { DeliveryMethodModule } from './delivery-method/delivery-method.module';
+import { ItemCategoriesModule } from './item-categories/item-categories.module';
+import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categories.module';
 
 
 @Module({
@@ -34,9 +41,12 @@ import { OperationsModule } from './operations/operations.module';
     CurrenciesModule,
     MasterBrandsModule,
     OperationsModule,
+    DeliveryMethodModule,
+    ItemCategoriesModule,
+    ItemSubCategoriesModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule],
   controllers: [AppController],
   providers: [AppService],
 })
