@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { CompanyDto } from '@project-management-system/shared-models';
@@ -39,14 +39,17 @@ export interface CompanyGridProps { }
 
 export const CompanyGrid = (props: CompanyGridProps) => {
   const [searchText, setSearchText] = useState('');
+  const [selectedData, setSelectedData] = useState<any>([]);
   const [searchedColumn, setSearchedColumn] = useState('');
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [variantData, setVariantData] = useState<CompanyDto[]>([]);
   const [selectedVariant, setSelectedVariant] = useState<any>(undefined);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const columns = useState('');
   const navigate = useNavigate()
+  const [form] = Form.useForm();
 
   // const { formatMessage: fm } = useIntl();
   const service = new CompanyService();
@@ -107,63 +110,66 @@ export const CompanyGrid = (props: CompanyGridProps) => {
   //       : null
 
   // });
+  const showModal = (id: number) => {
+    setIsModalVisible(true);
 
+  };
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div style={{ padding: 8 }}>
-            <Input
-                ref={searchInput}
-                placeholder={`Search ${dataIndex}`}
-                value={selectedKeys[0]}
-                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                style={{ width: 188, marginBottom: 8, display: 'block' }}
-            />
-            <Button
-                type="primary"
-                onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                icon={<SearchOutlined />}
-                size="small"
-                style={{ width: 90, marginRight: 8 }}
-            >
-                Search
-            </Button>
-            <Button size="small" style={{ width: 90 }}
-                onClick={() => {
-                    handleReset(clearFilters)
-                    setSearchedColumn(dataIndex);
-                    confirm({ closeDropdown: true });
-                }}>
-                Reset
-            </Button>
-        </div>
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button size="small" style={{ width: 90 }}
+          onClick={() => {
+            handleReset(clearFilters)
+            setSearchedColumn(dataIndex);
+            confirm({ closeDropdown: true });
+          }}>
+          Reset
+        </Button>
+      </div>
     ),
     filterIcon: filtered => (
-        <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+      <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
     onFilter: (value, record) =>
-        record[dataIndex]
-            ? record[dataIndex]
-                .toString()
-                .toLowerCase()
-                .includes(value.toLowerCase())
-            : false,
+      record[dataIndex]
+        ? record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
+        : false,
     onFilterDropdownVisibleChange: visible => {
-        if (visible) { setTimeout(() => searchInput.current.select()); }
+      if (visible) { setTimeout(() => searchInput.current.select()); }
     },
     render: text =>
-        text ? (
-            searchedColumn === dataIndex ? (
-                <Highlighter
-                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                    searchWords={[searchText]}
-                    autoEscape
-                    textToHighlight={text.toString()}
-                />
-            ) : text
-        )
-            : null
-})
+      text ? (
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text.toString()}
+          />
+        ) : text
+      )
+        : null
+  })
 
   /**
    * 
@@ -203,7 +209,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("companyCode"),
-    },,
+    }, ,
     {
       title: "Organisation Name",
       dataIndex: "organizationCode",
@@ -239,7 +245,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
     {
       title: `Action`,
       dataIndex: 'action',
-      render: (text, rowData) => (
+      render: (record, rowData) => (
         <span>
           <EditOutlined className={'editSamplTypeIcon'} type="edit"
             onClick={() => {
@@ -268,6 +274,16 @@ export const CompanyGrid = (props: CompanyGridProps) => {
             />
 
           </Popconfirm>
+          <Divider type='vertical' />
+          <Button
+            type="primary"
+            shape="round"
+            size="small"
+            onClick={() => openPrint(rowData)}
+          >
+            Add Division
+          </Button>
+
         </span>
       )
     }
@@ -283,7 +299,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   }
-  useEffect(() => {getAllCompany();}, [])
+  useEffect(() => { getAllCompany(); }, [])
 
   // const getAllCurrencys = async (params = {}, sort, filter) => {
   //   const res = await service.getAllCurrencies()
@@ -294,16 +310,17 @@ export const CompanyGrid = (props: CompanyGridProps) => {
   //   }
   // }
 
-  const getAllCompany= () => {
+  const getAllCompany = () => {
     service.getAllCompany().then(res => {
-      if (res.status) {setVariantData(res.data);
+      if (res.status) {
+        setVariantData(res.data);
       } else {
         // if (res.intlCode) {
         //   setVariantData([]);
         //   // console.log(res);
         //   AlertMessages.getErrorMessage(res.internalMessage);
         // } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+        AlertMessages.getErrorMessage(res.internalMessage);
         // }
       }
     }).catch(err => {
@@ -405,9 +422,60 @@ export const CompanyGrid = (props: CompanyGridProps) => {
   //   //   }
 
   // ]
+  const save = (val) => {
+    // form.validateFields().then(() => {
+    //  const req = new Inspection(val.indentCode, val.indentId, val.vehicleId, val.pickRequestLineTruckId, val.vehicleNumber, selectedOptions,val.status, val.remarks)
+    //   service.vehicleInspection(req).then(res => {
+    //     if (res.status) {
+    //       message.success('Inspected successfully')
+    //     //  navigate("/vehicle-models-dimensions")
+    //       onReset();
+    //       setIsModalVisible(false);
+    //       // setDisable(true)
+
+    //     } else {
+    //       message.error(res.internalMessage)
+
+    //     }
+    //   })
+    // })
+  }
+  const openPrint = (rowData: any) => {
+    setSelectedData(rowData)
+    setIsModalVisible(true);
+
+  }
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  const DivisionForm = () => {
+    return (
+      <Card title="Division">
+        <Form form={form} layout="vertical" onFinish={save}>
+          <Row gutter={24}>
+            <Col span={4}>
+              <Form.Item label="Company Id" name="companyId" initialValue={selectedData.companyId}>
+                <Input disabled />
+              </Form.Item>
+            </Col>
+            <Col span={4}>
+              <Form.Item label="Division Name" name="divisionName">
+                <Input  />
+              </Form.Item>
+            </Col>
+            <Col span={4}>
+              <Form.Item label="Division Code" name="divisionCode">
+                <Input  />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </Card>
+    );
+  };
   return (
 
-      <>
+    <>
       <Row gutter={40}>
         <Col>
           <Card title={'Total Company: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
@@ -419,8 +487,8 @@ export const CompanyGrid = (props: CompanyGridProps) => {
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
         <Col>
-        <span><Button onClick={() => navigate('/masters/company/company-form')}
-              type={'primary'}>New</Button></span>
+          <span><Button onClick={() => navigate('/masters/company/company-form')}
+            type={'primary'}>New</Button></span>
         </Col>
       </Row><br></br>
       <Card >
@@ -442,7 +510,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
         /> */}
 
         <Table
-        size='small'
+          size='small'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
@@ -451,7 +519,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll={{ x: true }}
           onChange={onChange}
           bordered />
       </Card>
@@ -466,7 +534,22 @@ export const CompanyGrid = (props: CompanyGridProps) => {
             closeForm={closeDrawer} />
         </Card>
       </Drawer>
-      </>
+      <Modal
+        className='print-docket-modal'
+        // key={'modal' + Date.now()}
+        width={'90%'}
+        style={{ top: 30, alignContent: 'right' }}
+        visible={isModalVisible}
+        title={<React.Fragment>
+        </React.Fragment>}
+        onCancel={handleCancel}
+        footer={[
+
+        ]}
+      >
+        {<DivisionForm />}
+      </Modal>
+    </>
   );
 }
 
