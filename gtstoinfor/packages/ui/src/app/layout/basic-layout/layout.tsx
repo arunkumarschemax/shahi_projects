@@ -80,7 +80,7 @@ export const baseRouterList = [
                 filepath: "vendors/buyers-form",
             },
             {
-                label: "Employee Details",
+                label: "Employees",
                 key: "employee-details-grid",
                 path: "employee-details/employee-details-grid",
                 filepath: "employee-details/employee-details-grid",
