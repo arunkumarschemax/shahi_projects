@@ -100,12 +100,14 @@ export function BuyersForm(props: BuyersFormProps) {
   }
 
   const saveBuyer = (buyersData: BuyersDto) => {
+    buyersData.createdUser = 'admin'
     setDisable(true)
     buyerService.createBuyer(buyersData).then(res => {
       setDisable(false)
       if (res.status) {
         message.success('Customer Details Created Successfully')
         onReset();
+        navigate('/masters/buyers/buyers-view')
       } else {
         message.error(res.internalMessage)
       }
@@ -155,7 +157,8 @@ export function BuyersForm(props: BuyersFormProps) {
   };
   let createdUser = "";
   if (!props.isUpdate) {
-    createdUser = localStorage.getItem("createdUser");
+    // createdUser = localStorage.getItem("createdUser");
+    createdUser= 'admin'
   }
   const onFocus = () => {
     console.log('focus');
@@ -172,7 +175,7 @@ export function BuyersForm(props: BuyersFormProps) {
  // props.customersData.currency=Number(props.customersData.currency);
   return (
     <>
-    <Card title='Add Buyer' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Update Buyer' : 'Add Buyer'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
         <Form form={form} onFinish={saveData} initialValues={props.buyersData} layout="vertical">
           <Form.Item name="buyerId" style={{ display: "none" }} >
             <Input hidden />
@@ -180,24 +183,28 @@ export function BuyersForm(props: BuyersFormProps) {
           <Form.Item style={{ display: "none" }} name="createdUser" initialValue={createdUser}>
             <Input hidden />
           </Form.Item>
-          <Row gutter={24}>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item
-                name="clientCode"
-                label="Buyer Code"
-                rules={[
-                  {
-                    required: true, message: 'Missing buyer code',
-                  },
-                  {
-                    pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z\\0-9\[\]()@#$_\-+/`~{}:";'<>,.?|\s-]*$/,
-                    message: `Invalid buyer code`
-                  }
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
+          <Row gutter={16}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 14 }}>
+            <Card size='small' bordered={false}>
+              <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>PERSONAL DETAILS</h1>
+              <Row gutter={8}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item
+                  name="clientCode"
+                  label="Buyer Code"
+                  rules={[
+                    {
+                      required: true, message: 'Missing buyer code',
+                    },
+                    {
+                      pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z\\0-9\[\]()@#$_\-+/`~{}:";'<>,.?|\s-]*$/,
+                      message: `Invalid buyer code`
+                    }
+                  ]}
+                >
+                  <Input placeholder='Enter Buyer Code'/>
+                </Form.Item>
+              </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item
                 name="clientName"
@@ -212,48 +219,8 @@ export function BuyersForm(props: BuyersFormProps) {
                   }
                 ]}
               >
-                <Input />
+                <Input placeholder='Enter Buyer Name'/>
               </Form.Item>  
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item
-                name="accountType"
-                label="Account Type"
-                rules={[
-                  {
-                    required: false, message: 'Missing Account Type',
-                  },
-                ]}
-              >
-                <Select
-                  showSearch
-                  allowClear
-                  optionFilterProp="children"
-                >
-                    {BuyerACcountTypes.map((e) => {
-                        return(
-                            <Option key={e.value} value={e.value}>{e.name}</Option>
-                        )
-                    })}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item
-                name="gstNumber"
-                label="GST No"
-                rules={[
-                  {
-                    required: false, message: 'Missing GST Number',
-                  },
-                  {
-                    pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
-                    message: `Don't Allow Spaces`
-                  }
-                ]}
-              >
-                <Input />
-              </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item
@@ -269,7 +236,7 @@ export function BuyersForm(props: BuyersFormProps) {
                   }
                 ]}
               >
-                <Input />
+                <Input placeholder='Enter Contact Person'/>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
@@ -291,9 +258,30 @@ export function BuyersForm(props: BuyersFormProps) {
 
                 ]}
               >
-                <Input />
+                <Input placeholder='Enter Mobile Number'/>
               </Form.Item>
             </Col>
+           
+            </Row>
+            <Row gutter={8}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+              <Form.Item
+                name="gstNumber"
+                label="GST No"
+                rules={[
+                  {
+                    required: false, message: 'Missing GST Number',
+                  },
+                  {
+                    pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
+                    message: `Don't Allow Spaces`
+                  }
+                ]}
+              >
+                <Input placeholder='Enter GST Number'/>
+              </Form.Item>
+            </Col>
+          
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item
                 name="email"
@@ -308,10 +296,10 @@ export function BuyersForm(props: BuyersFormProps) {
                   }
                 ]}
               >
-                <Input />
+                <Input placeholder='Enter Email'/>
               </Form.Item>
             </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item
                 name="currency"
                 label="Currency"
@@ -339,117 +327,6 @@ export function BuyersForm(props: BuyersFormProps) {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item
-                name="countryId"
-                label="Country"
-                rules={[
-                  {
-                    required: true, message: 'Missing country',
-                  },
-                ]}
-              >
-                {/* <Select
-                  placeholder="Select Country"
-                  // onChange={getSkuCode}
-                  allowClear
-                >
-                  {countries.map(dropData => {
-                    return <Option value={dropData.countryId}>{dropData.countryName}</Option>
-                  })}
-                </Select> */}
-                <Input/>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item
-                name="state"
-                label="State"
-                rules={[
-                  {
-                    required: true, message: 'Missing state',
-                  },
-                ]}
-              >
-                <Input/>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item
-                name="district"
-                label="District"
-                rules={[
-                  {
-                    required: true, message: 'Missing district',
-                  },
-                ]}
-              >
-                <Input/>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item
-                name="city"
-                label="City"
-                rules={[
-                  {
-                    required: true, message: 'Missing city',
-                  },
-                ]}
-              >
-                <Input/>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item
-                name="landmark"
-                label="Landmark"
-                rules={[
-                  {
-                    required: true, message: 'Missing landmark',
-                  },
-                ]}
-              >
-                <Input/>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item
-                name="lane1"
-                label="Lane 1"
-                rules={[
-                  {
-                    required: true, message: 'Missing lane1',
-                  },
-                ]}
-              >
-                <Input/>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item
-                name="lane2"
-                label="Lane 2"
-              >
-                <Input/>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item
-                name="pincode"
-                label="Pincode"
-                rules={[
-                  {
-                    required: true, message: 'Missing pincode',
-                  },
-                ]}
-              >
-                <Input/>
-              </Form.Item>
-            </Col>
-          {/* </Row>
-
-          <Row gutter={24}> */}
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item
                 name="paymentTerms"
                 label="Payment Terms"
                 rules={[
@@ -462,6 +339,8 @@ export function BuyersForm(props: BuyersFormProps) {
                 <Input  />
               </Form.Item>
             </Col>
+            </Row>
+            <Row gutter={8}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item
                 name="shipmentTerms"
@@ -523,8 +402,8 @@ export function BuyersForm(props: BuyersFormProps) {
                 <TextArea rows={1} placeholder="Enter Public Note" />
               </Form.Item>
             </Col>
-          {/* </Row>
-          <Row gutter={24}> */}
+            </Row>
+            <Row gutter={8}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 12 }}>
               <Form.Item
                 name="privateNote"
@@ -542,9 +421,137 @@ export function BuyersForm(props: BuyersFormProps) {
                 <TextArea rows={1} placeholder="Enter Private Note" />
               </Form.Item>
             </Col>
+
+            </Row>
+            </Card>
+            </Col>
+            <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }}>
+            <Card size='small' bordered={false}>
+              <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>ADDRESS</h1>
+              <Row gutter={8}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+              <Form.Item
+                name="countryId"
+                label="Country"
+                rules={[
+                  {
+                    required: true, message: 'Missing country',
+                  },
+                ]}
+              >
+                {/* <Select
+                  placeholder="Select Country"
+                  // onChange={getSkuCode}
+                  allowClear
+                >
+                  {countries.map(dropData => {
+                    return <Option value={dropData.countryId}>{dropData.countryName}</Option>
+                  })}
+                </Select> */}
+                <Input/>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+              <Form.Item
+                name="state"
+                label="State"
+                rules={[
+                  {
+                    required: true, message: 'Missing state',
+                  },
+                ]}
+              >
+                <Input placeholder='Enter State'/>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+              <Form.Item
+                name="district"
+                label="District"
+                // rules={[
+                //   {
+                //     required: true, message: 'Missing district',
+                //   },
+                // ]}
+              >
+                <Input placeholder='Enter District'/>
+              </Form.Item>
+            </Col>
+              </Row>
+              <Row gutter={8}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+              <Form.Item
+                name="city"
+                label="City"
+                rules={[
+                  {
+                    required: true, message: 'Missing city',
+                  },
+                ]}
+              >
+                <Input placeholder='Enter City'/>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+              <Form.Item
+                name="landmark"
+                label="Landmark"
+                rules={[
+                  {
+                    required: true, message: 'Missing landmark',
+                  },
+                ]}
+              >
+                <Input placeholder='Enter Landmark'/>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+              <Form.Item
+                name="lane1"
+                label="Lane 1"
+                rules={[
+                  {
+                    required: true, message: 'Missing lane1',
+                  },
+                ]}
+              >
+                <Input placeholder='Enter Lane 1'/>
+              </Form.Item>
+            </Col>
+              </Row>
+              <Row gutter={8}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+              <Form.Item
+                name="lane2"
+                label="Lane 2"
+              >
+                <Input placeholder='Enter Lane 2'/>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+              <Form.Item
+                name="pincode"
+                label="Pincode"
+                rules={[
+                  {
+                    required: true, message: 'Missing pincode',
+                  },
+                ]}
+              >
+                <Input placeholder='Enter Pincode'/>
+              </Form.Item>
+            </Col>
+              </Row>
+              </Card>
+            </Col>
+          
+    
           </Row>
           <Row  gutter={24} justify={'end'}>
+            { props.isUpdate === false && 
+            
               <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset}>Reset</Button></Col>
+            }
               <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span:2  }}><Button type='primary' htmlType='submit'>Submit</Button></Col>
             </Row>
         </Form>

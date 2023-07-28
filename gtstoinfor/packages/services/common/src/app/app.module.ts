@@ -13,6 +13,7 @@ import { EmployeeDetailsModule } from './employee-details/employee-details-modul
 import { ItemsModule } from './items/items.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { BuyersModule } from './buyers/buyers.module';
+import { OperationGroupsModule } from './operation-groups/operation-groups.module';
 
 
 @Module({
@@ -36,7 +37,7 @@ import { BuyersModule } from './buyers/buyers.module';
     CurrenciesModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule],
   controllers: [AppController],
   providers: [AppService],
 })
