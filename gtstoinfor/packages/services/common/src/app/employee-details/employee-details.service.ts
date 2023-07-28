@@ -38,7 +38,7 @@ export class EmployeeDetailsService {
           
             const save = await this.employeeDetailsRepo.save(employeeEntity)
             if (save) {
-                return new AllEmployeeDetailsResponseModel(true, 0, isUpdate ? 'Routes Updated Sucessfully' : 'Routes creted sucessfuly', [])
+                return new AllEmployeeDetailsResponseModel(true, 0, isUpdate ? 'Employee Updated Sucessfully' : 'Employee creted sucessfuly', [])
             }
         } catch (err) {
             throw err

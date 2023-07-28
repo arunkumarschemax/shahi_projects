@@ -79,14 +79,8 @@ export const baseRouterList = [
                 path: "vendors/vendors-view",
                 filepath: "vendors/vendors-view",
             },
-            // {
-            //     label: "Employee Details",
-            //     key: "employee-details",
-            //     path: "employee-details/employee-details-form",
-            //     filepath: "employee-details/employee-details-form",
-            // },
             {
-                label: "Employee Details",
+                label: "Employees",
                 key: "employee-details-grid",
                 path: "employee-details/employee-details-grid",
                 filepath: "employee-details/employee-details-grid",
@@ -97,6 +91,30 @@ export const baseRouterList = [
                 path: "operationgroups/operationgroups-view",
                 filepath: "operationgroups/operationgroups-view",
             },
+            {
+                label: "Items",
+                key: "items",
+                path: "items/items-form",
+                filepath: "items/items-form",
+            },
+            {
+                label: "Delivery Method",
+                key: "delivery-methods",
+                path: "delivery-methods/delivery-method-view",
+                filepath: "delivery-methods/delivery-method-view",
+            },
+            {
+                label: "Item Categories",
+                key: "item-categories",
+                path: "item-categories/item-categories-view",
+                filepath: "item-categories/item-categories-view",
+            },
+            {
+                label: "Item Sub Categories",
+                key: "item-sub-categories",
+                path: "item-sub-categories/item-sub-categories-view",
+                filepath: "item-sub-categories/item-sub-categories-view",
+            }
         ],
     },
     {
