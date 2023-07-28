@@ -12,11 +12,11 @@ export class OperationsAdapter {
    */
   public convertDtoToEntity( operationsDto: OperationDTO, isUpdate: boolean = false): Operations {
     const operations = new Operations();
-    operations.operationId = operationsDto.operationId;
     operations.operationName = operationsDto.operationName;
-    operations.operationCode = operations.operationCode;
+    operations.operationCode = operationsDto.operationCode;
     operations.isActive = operationsDto.isActive == undefined?true:operationsDto.isActive;
     if(isUpdate){
+      operations.operationId = operationsDto.operationId;
         operations.updatedUser = operations.updatedUser;
     } else {
         operations.isActive = true;

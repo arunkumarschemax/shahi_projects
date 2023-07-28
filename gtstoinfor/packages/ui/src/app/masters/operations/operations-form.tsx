@@ -30,7 +30,7 @@ export function OperationsForm(
 
 
 
-  const createOperation = (operationsData) => {
+  const createOperation = (operationsData : OperationsDTO) => {
     setDisable(true)
     operationService.createOperations(operationsData).then(res => {
       setDisable(false)

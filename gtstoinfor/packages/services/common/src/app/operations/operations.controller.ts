@@ -8,6 +8,7 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { type } from 'os';
 import { OperationsService } from './operation.service';
 import { OperationRequest } from './dto/operation.request';
+import { OperationDTO } from './dto/operations.dto';
 
 @ApiTags('operations')
 @Controller('operations')
@@ -20,6 +21,7 @@ export class OperationsController {
       ) {}
 
       @Post('/createOperation')
+      @ApiBody({type:OperationDTO})
       async createOperation(@Body() operattionDto :any): Promise<OperationsResponseModel> {
         console.log('hi--------')
           try {

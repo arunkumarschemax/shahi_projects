@@ -9,9 +9,9 @@ export class OperationDTO {
   operationId:number;
 
   @ApiProperty()
-  @IsNotEmpty({message:"operationCode should not be empty"})
-  @IsAlphanumeric()
-  @IsOptional()
+  // @IsNotEmpty({message:"operationCode should not be empty"})
+  // @IsAlphanumeric()
+  // @IsOptional()
   operationCode: string;
 
   @ApiProperty()
