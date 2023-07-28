@@ -6,3 +6,4 @@ export * from './buyer-service'
 export * from './vendors.services';
 export * from './employee-details-service';
 export * from './payment-terms.service'
+export * from './package-terms.service'

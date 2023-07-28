@@ -14,6 +14,7 @@ import { ItemsModule } from './items/items.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { BuyersModule } from './buyers/buyers.module';
 import { PaymentTermsModule } from './payment-terms/payment-terms.module';
+import { PackageTermsModule } from './packages-terms/package-terms.module';
 
 
 @Module({
@@ -36,6 +37,7 @@ import { PaymentTermsModule } from './payment-terms/payment-terms.module';
     FactoriesModule,
     CurrenciesModule,
     PaymentTermsModule,
+    PackageTermsModule,
     UsersModule,
     OrdersModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule],
