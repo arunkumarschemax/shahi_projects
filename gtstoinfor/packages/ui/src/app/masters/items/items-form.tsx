@@ -3,7 +3,7 @@ import { Form, Input, Button, Select, Card, Row, Col, DatePicker, message } from
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { EmployeeDetailsResponse, EmployeeMarritalStatusEnum, ItemsDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
-import { CurrencyService, EmployeeDetailsService, ItemsService } from '@project-management-system/shared-services';
+import { CurrencyService, EmployeeDetailsService, ItemCategoryService, ItemSubCategoryService, ItemsService } from '@project-management-system/shared-services';
 import dayjs from 'dayjs';
 
 
@@ -17,8 +17,13 @@ export interface ItemFormProps {
 export const ItemsForm = (props:ItemFormProps) => {
   const [form] = Form.useForm();
   const [disable, setDisable] = useState<boolean>(false)
+  const [itemCategory,setIteCategory] = useState<any[]>([])
+  const [itemSubCategory,setIteSubCategory] = useState<any[]>([])
+
   const {Option} =Select
   const service = new ItemsService();
+  const itemCategoryService = new ItemCategoryService()
+  const itemSubCategoryService = new ItemSubCategoryService()
   let history = useLocation();
   let navigate = useNavigate();
 
@@ -61,6 +66,33 @@ export const ItemsForm = (props:ItemFormProps) => {
   const onReset = () => {
     form.resetFields();
   };
+
+  useEffect(() =>{
+    getItemCategoryDropDown()
+  },[])
+
+const getItemCategoryDropDown =()=>{
+  itemCategoryService.getActiveItemCategories().then((res) =>{
+    if(res.status){
+      setIteCategory(res.data)
+    }else{
+      setIteCategory([])
+    }
+  })
+}
+const getItemSubCategoryDropDown =(value)=>{
+  itemSubCategoryService.getItemSubCategoriesForCategoryDropDown({itemCategoryId:value}).then((res) =>{
+    if(res.status){
+      setIteSubCategory(res.data)
+    }else{
+      setIteSubCategory([])
+    }
+  })
+}
+const itemCategoryOnchange = (value) =>{
+  console.log(value)
+  getItemSubCategoryDropDown(value)
+}
   return (
  <Card title={<span style={{color:'black'}}>Items</span>}
     style={{textAlign:'center'}} 
@@ -105,7 +137,11 @@ export const ItemsForm = (props:ItemFormProps) => {
            <Form.Item  name="itemCategoryId" label="Item Category"
             rules={[ { required: true, message: 'Please select Item Sub Category' }]}
                >
-              <Input/>
+              <Select placeholder={"Select Item Category"} showSearch onChange={value =>itemCategoryOnchange(value)}>
+                    {itemCategory.map(dropData => {
+                    return <Option key={dropData.itemCategoryId} value={dropData.itemCategoryId}>{dropData.itemCategory}</Option>
+                         })}
+                </Select>
                </Form.Item>
            </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> <Form.Item
@@ -118,7 +154,12 @@ export const ItemsForm = (props:ItemFormProps) => {
             }
           ]}
         >
-          <Input />
+          <Select placeholder={"Select Item Category"} showSearch >
+                    {itemSubCategory.map(dropData => {
+                    return <Option key={dropData.itemSubCategoryId} value={dropData.itemSubCategoryId}>{dropData.itemSubCategory}</Option>
+                         })}
+                </Select>
+          {/* <Input /> */}
           </Form.Item>
           </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:5}} style={{margin:'1%'}}> 

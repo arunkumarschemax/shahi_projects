@@ -77,7 +77,7 @@ export class ItemSubCategoriesController {
 
 
      @Post('/getItemSubCategoriesForCategoryDropDown')
-    async getItemSubCategoriesForCategoryDropDown(@Body() req:ItemCategoryRequest): Promise<ItemSubCategoriesDropDownResponse> {
+    async getItemSubCategoriesForCategoryDropDown(@Body() req:any): Promise<ItemSubCategoriesDropDownResponse> {
         try {
          return await this.itemCategoryService.getItemSubCategoriesForCategoryDropDown(req);
        } catch (error) {
