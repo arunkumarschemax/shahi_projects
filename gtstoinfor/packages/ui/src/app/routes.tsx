@@ -15,6 +15,9 @@ import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
+import CompanyForm from "./masters/company/company-form"
+import CompanyGrid from "./masters/company/company-grid"
+import { CompanyDto, CurrencyDto } from "@project-management-system/shared-models"
 
 
 export const AppRoutes = () => {
@@ -71,6 +74,12 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
+                        <Route path='company/company-form' element={<CompanyForm currencyData={undefined} updateItem={function (companyData: CompanyDto): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } } />} />
+                        <Route path='company/company-grid' element={<CompanyGrid />} />
                     </Route>
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
