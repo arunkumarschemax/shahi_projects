@@ -10,17 +10,8 @@ export class OrdersService extends CommonAxiosService {
     // }
 
     async saveOrder(data: any, id: number): Promise<CommonResponseModel> {
-
-        const idn = id; // Replace with the desired id value
+        const idn = id;
         const url = `/orders/saveOrder/${idn}`;
-        axios.post(url, data)
-            .then((response) => {
-                // Handle the response
-            })
-            .catch((error) => {
-                // Handle errors
-            });
-        
         return this.axiosPostCall(url, data);
     }
 
@@ -55,20 +46,24 @@ export class OrdersService extends CommonAxiosService {
     async getMaximumChangedOrders(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getMaximumChangedOrders")
     }
+
     async fileUpload(file: any): Promise<CommonResponseModel> {
         return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
     }
+
     async getUploadFilesData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getUploadFilesData")
     }
 
-    async revertFileData(req:FileIdReq): Promise<CommonResponseModel> {
-        console.log(req)
-        return this.axiosPostCall(this.ordersController + "/revertFileData" , req)
+    async revertFileData(req: FileIdReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/revertFileData", req)
     }
 
     async getVersionWiseData(): Promise<CommonResponseModel> {
-        console.log()
-        return this.axiosPostCall(this.ordersController + "/getVersionWiseData" )
+        return this.axiosPostCall(this.ordersController + "/getVersionWiseData")
+    }
+
+    async getPhaseWiseData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getPhaseWiseData")
     }
 }
