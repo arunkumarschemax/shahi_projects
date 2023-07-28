@@ -123,7 +123,7 @@ export function VendorsForm(
         <Row gutter={8}>
              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12}}>
              <Card size='small' bordered={false}>
-             <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>Personal Details</h1>
+             <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>PERSONAL DETAILS</h1>
                 <Row gutter={8}>
                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                   <Form.Item
@@ -275,7 +275,7 @@ export function VendorsForm(
             </Col> 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Card size='small' bordered={false}>
-              <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>Bank Details</h1>
+              <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>BANK DETAILS</h1>
               <Row gutter={8}>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 18 }}>
             <Form.Item
@@ -344,7 +344,7 @@ export function VendorsForm(
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Card size='small' bordered={false}>
-              <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>Address</h1>
+              <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>ADDRESS</h1>
               <Row gutter={24}>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 18 }}>
             <Form.Item
