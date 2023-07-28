@@ -25,6 +25,8 @@ import VendorsForm from "./masters/vendors/vendors-form"
 import VendorsView from "./masters/vendors/vendors-view"
 import EmployeeDetsilsForm from "./masters/employee-details/employee-details-form"
 import EmployeeDetailsGrid from "./masters/employee-details/employee-details-grid"
+import OperationGroupForm from "./masters/operation-groups/operation-groups-form"
+import OperationGroupsGrid from "./masters/operation-groups/operation-group-view"
 import ItemsForm from "./masters/items/items-form"
 import DeliveryMethodForm from "./masters/delivery-methods/delivery-method-form"
 import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
@@ -135,6 +137,8 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                     <Route path='employee-details/employee-details-grid' element={<EmployeeDetailsGrid />} />
+                    <Route path='operationgroups/operationgroups-form' key='/operationgroups/operationgroups-form' element={<OperationGroupForm operationGroupData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                    <Route path='operationgroups/operationgroups-view' element={<OperationGroupsGrid />} />
                     <Route path="items/items-form" key='/items/items-form' element= {
                     <ItemsForm itemData={undefined}
                     isUpdate={false}

@@ -82,20 +82,26 @@ export const baseRouterList = [
             {
                 label: "Buyers",
                 key: "buyers",
-                path: "buyers/buyers-form",
-                filepath: "buyers/buyers-form",
+                path: "buyers/buyers-view",
+                filepath: "buyers/buyers-view",
             },
             {
                 label: "Vendors",
                 key: "vendors",
-                path: "vendors/vendors-form",
-                filepath: "vendors/buyers-form",
+                path: "vendors/vendors-view",
+                filepath: "vendors/vendors-view",
             },
             {
                 label: "Employees",
                 key: "employee-details-grid",
                 path: "employee-details/employee-details-grid",
                 filepath: "employee-details/employee-details-grid",
+            },
+            {
+                label: "Operation Groups",
+                key: "operation-groups",
+                path: "operationgroups/operationgroups-view",
+                filepath: "operationgroups/operationgroups-view",
             },
             {
                 label: "Items",
