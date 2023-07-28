@@ -70,4 +70,8 @@ export class OrdersService extends CommonAxiosService {
     async getPhaseWiseData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getPhaseWiseData")
     }
+
+    async getPhaseWiseExcelData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getPhaseWiseExcelData")
+    }
 }

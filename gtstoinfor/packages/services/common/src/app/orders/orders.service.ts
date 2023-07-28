@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, PhaseAndQtyModel, PhaseWiseDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
@@ -345,6 +345,27 @@ export class OrdersService {
         }
         const phaseDataModelArray: PhaseWiseDataModel[] = [];
         phaseWiseDataMap.forEach(phase => phaseDataModelArray.push(phase));
+        return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
+    }
+
+    async getPhaseWiseExcelData(): Promise<CommonResponseModel> {
+        const files = await this.fileUploadRepo.getFilesData();
+        let records;
+        if (files.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        } else if (files.length == 1) {
+            records = await this.ordersChildRepo.getPhaseWiseData1(files[0].fileId)
+        } else {
+            records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
+        }
+        const phaseDataModelArray: PhaseWiseExcelDataModel[] = [];
+        if (records.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        }
+        for (const record of records) {
+
+            phaseDataModelArray.push(new PhaseWiseExcelDataModel(record.item_code, record.itemName, record.prod_plan_type_name, record.old_qty_value, record.new_qty_value, record.new_qty_value - record.old_qty_value));
+        }
         return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
     }
 

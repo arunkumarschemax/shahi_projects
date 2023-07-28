@@ -19,6 +19,7 @@ const ChangesGrid = () => {
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
     const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
     const [phaseData, setPhaseWiseData] = useState<any[]>([]);
+    const [phaseExcelData, setPhaseWiseExcelData] = useState<any[]>([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [differenceQtyData, setDifferenceQtyData] = useState([])
     const [page, setPage] = React.useState(1);
@@ -33,6 +34,7 @@ const ChangesGrid = () => {
         getWharehouseDateChangeData()
         getQtyDifChangeData()
         getPhaseWiseData()
+        getPhaseWiseExcelData()
     }, [])
 
     const getContractDateChangeData = () => {
@@ -73,6 +75,17 @@ const ChangesGrid = () => {
         })
     }
 
+    const getPhaseWiseExcelData = () => {
+        service.getPhaseWiseExcelData().then(res => {
+            if (res.status) {
+                const data = res.data.sort((a, b) => a.itemCode - b.itemCode);
+                setPhaseWiseExcelData(data)
+            }
+        }).catch(err => {
+            console.log(err.message)
+        })
+    }
+
     const exportExcel = () => {
         const excel = new Excel();
         excel
@@ -90,37 +103,11 @@ const ChangesGrid = () => {
             .addDataSource(contractDateData, { str2num: true })
             .addSheet('Phase Wise data')
             .addColumns(exportingColumns)
-            .addDataSource(phaseData, { str2num: true })
-
-        const childRows = [];
-
-        // Assuming 'phaseData' is an array of objects where each object has 'phaseWiseData' array (child table)
-        phaseData.forEach((rowData) => {
-            if (rowData.phaseWiseData && rowData.phaseWiseData.length > 0) {
-                rowData.phaseWiseData.forEach((childRowData) => {
-                    // Calculate the difference
-                    const difference = Number(childRowData['newOrderQtyPcs']) - Number(childRowData['oldOrderQtyPcs']);
-                    // Prepare the child row data as an object
-                    const childRow = {
-                        'Production Plan Type Name': childRowData['prodPlanTypeName'],
-                        'Sum of Ord Qty last week': Number(childRowData['oldOrderQtyPcs']).toLocaleString('en-IN', { maximumFractionDigits: 0 }),
-                        'Sum of Ord Qty this week': Number(childRowData['newOrderQtyPcs']).toLocaleString('en-IN', { maximumFractionDigits: 0 }),
-                        'Difference': difference === 0 ? '-' : difference < 0 ? difference.toLocaleString('en-IN', { maximumFractionDigits: 0 }) : difference.toLocaleString('en-IN', { maximumFractionDigits: 0 }),
-                    };
-                    // Add the child row data to the array
-                    childRows.push(childRow);
-                });
-            }
-        });
-
-        // Add the child table data to the Excel sheet
-        excel.addDataSource(childRows);
-
+            .addDataSource(phaseExcelData, { str2num: true })
         excel.saveAs('revisedOrders.xlsx');
     }
 
     const data1 = [
-
         {
             title: 'Production Plan Id',
             dataIndex: 'production_plan_id'
@@ -136,28 +123,25 @@ const ChangesGrid = () => {
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'new_val',
-
         },
         {
             title: 'Contracted Date',
             dataIndex: 'contracted_date',
-
         },
         {
             title: 'Order Revised Date',
             dataIndex: 'last_update_date',
-
         },
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'requested_wh_date',
-
         },
         {
             title: 'Order Status',
             dataIndex: 'order_status'
         }
     ]
+
     const data2 = [
         {
             title: 'Production Plan Id',
@@ -174,7 +158,6 @@ const ChangesGrid = () => {
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'new_val',
-
         },
         {
             title: 'Order Quantity Pieces',
@@ -187,15 +170,14 @@ const ChangesGrid = () => {
         {
             title: 'Order Revised Date',
             dataIndex: 'last_update_date',
-
         },
         {
             title: 'Order Status',
             dataIndex: 'order_status'
         }
     ];
-    const data3 = [
 
+    const data3 = [
         {
             title: 'Production Plan Id',
             dataIndex: 'production_plan_id'
@@ -211,17 +193,14 @@ const ChangesGrid = () => {
         {
             title: 'Contracted Date',
             dataIndex: 'new_val',
-
         },
         {
             title: 'Order Revised Date',
             dataIndex: 'last_update_date',
-
         },
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'order_qty_pcs',
-
         },
         {
             title: 'Requested Warehouse Date',
@@ -256,17 +235,17 @@ const ChangesGrid = () => {
         },
 
     ];
+
     let exportingColumns: IExcelColumn[] = []
     exportingColumns = [
         { title: 'Item code', dataIndex: 'itemCode' },
-        { title: 'Item Name', dataIndex: 'itemName' }
-    ]
-    exportingColumns.push(
+        { title: 'Item Name', dataIndex: 'itemName' },
         { title: 'Production Plan Type Name', dataIndex: 'prodPlanTypeName' },
         { title: 'Sum of Ord Qty last week', dataIndex: 'oldOrderQtyPcs' },
         { title: 'Sum of Ord Qty this week', dataIndex: 'newOrderQtyPcs' },
         { title: 'Difference Qty', dataIndex: 'difference' }
-    )
+    ]
+
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState('');

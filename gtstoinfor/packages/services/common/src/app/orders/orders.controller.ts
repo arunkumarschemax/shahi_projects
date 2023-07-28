@@ -179,4 +179,13 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getPhaseWiseExcelData')
+    async getPhaseWiseExcelData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getPhaseWiseExcelData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
