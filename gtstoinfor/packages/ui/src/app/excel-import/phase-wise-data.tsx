@@ -190,11 +190,11 @@ const PhaseWiseData = () => {
 
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
-            { title: 'Item code', dataIndex: 'item_code' },
+            { title: 'Item code', dataIndex: 'itemCode' },
             { title: 'Item Name', dataIndex: 'itemName' },
-            { title: 'Production Plan Type Name', dataIndex: 'prod_plan_type_name' },
-            { title: 'Sum of Ord Qty last week', dataIndex: 'old_qty_value' },
-            { title: 'Sum of Ord Qty this week', dataIndex: 'new_qty_value' },
+            { title: 'Production Plan Type Name', dataIndex: 'prodPlanTypeName' },
+            { title: 'Sum of Ord Qty last week', dataIndex: 'oldOrderQtyPcs' },
+            { title: 'Sum of Ord Qty this week', dataIndex: 'newOrderQtyPcs' },
         ]
 
         const excel = new Excel();

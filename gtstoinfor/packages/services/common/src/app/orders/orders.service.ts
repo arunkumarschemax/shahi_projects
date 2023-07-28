@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, PhaseAndQtyModel, PhaseWiseDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, PhaseAndQtyModel, PhaseWiseDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
@@ -11,11 +11,10 @@ import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
 import { FileUploadRepository } from './repository/upload.repository';
 import { FileUploadEntity } from './entities/upload-file.entity';
-import { DataSource, Entity, EntityManager, getConnection, getManager, getRepository } from 'typeorm';
+import { DataSource, Entity, EntityManager } from 'typeorm';
 import { FileIdReq } from './models/file-id.req';
-import { promises } from 'dns';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
-import GenericTransactionManager from '../../typeorm-transactions/generic-transaction-manager';
+import { GenericTransactionManager } from '../../typeorm-transactions';
 
 
 @Injectable()
@@ -35,8 +34,7 @@ export class OrdersService {
     ) { }
 
     async saveOrdersData(formData: any, id: number): Promise<CommonResponseModel> {
-        
-        const transactionManager = new GenericTransactionManager()
+        const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
             await transactionManager.startTransaction()
             const flag = new Set()
@@ -91,6 +89,7 @@ export class OrdersService {
                             abnormalLTReasonPO5: dtoData.abnormalLTReasonPO5, abnormalLTPO1: dtoData.abnormalLTPO1, abnormalLTPO2: dtoData.abnormalLTPO2, abnormalLTPO3: dtoData.abnormalLTPO3, abnormalLTPO4: dtoData.abnormalLTPO4, abnormalLTPO5: dtoData.abnormalLTPO5, version: dtoData.version, updatedUser: dtoData.userName, orderStatus: 'UNACCEPTED', fileId: id
                         })
                         if (!updateOrder.affected) {
+                            await transactionManager.releaseTransaction();
                             return new CommonResponseModel(false, 0, 'Something went wrong in order update')
                         }
                         const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
@@ -111,6 +110,11 @@ export class OrdersService {
                                     orderDiffObj.fileId = id
                                     if (orderDiffObj.oldValue != orderDiffObj.newValue) {
                                         const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
+                                        if (!orderDiffSave) {
+                                            flag.add(false)
+                                            await transactionManager.releaseTransaction();
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -122,17 +126,19 @@ export class OrdersService {
                         const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
                         const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
                         // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
-                        if (!saveChildExcelEntity) {
+                        if (!saveExcelEntity || !saveChildExcelEntity) {
                             flag.add(false)
+                            await transactionManager.releaseTransaction();
+                            break;
                         }
                     }
                 }
             }
             if (!flag.has(false)) {
-                await transactionManager.releaseTransaction()
+                await transactionManager.completeTransaction()
                 return new CommonResponseModel(true, 1, 'Data saved sucessfully')
             } else {
-                await transactionManager.completeTransaction()
+                await transactionManager.releaseTransaction()
                 return new CommonResponseModel(false, 0, 'Something went wrong')
             }
         } catch (error) {
@@ -220,6 +226,9 @@ export class OrdersService {
         if (req) {
             const deleteChildData = await this.ordersChildRepo.deleteChildData(req)
         }
+        if (req) {
+            const deleteDiffData = await this.orderDiffRepo.deleteDiffData(req)
+        }
         const updatedData = await this.ordersChildRepo.getUpdatedData()
         const data = await this.ordersChildRepo.find({
             where: { fileId: updatedData[0]?.fileId },
@@ -262,19 +271,35 @@ export class OrdersService {
         const entity = new FileUploadEntity()
         entity.fileName = filename;
         entity.filePath = filePath;
+        entity.status = 'uploading';
         const save = await this.fileUploadRepo.save(entity)
         if (save) {
-            return new CommonResponseModel(true, 11, 'uploaded successfully', save);
+            return new CommonResponseModel(true, 1, 'uploaded successfully', save);
         }
         else {
             return new CommonResponseModel(false, 0, 'uploaded failed', save);
         }
     }
 
+    async updateFileStatus(req: FileStatusReq): Promise<CommonResponseModel> {
+        let update
+        if (req.status === 'Failed') {
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false });
+        } else {
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status })
+        }
+        if (update.affected) {
+            return new CommonResponseModel(true, 1, 'updated successfully');
+        } else {
+            return new CommonResponseModel(false, 0, 'update failed');
+
+        }
+    }
+
     async getUploadFilesData(): Promise<CommonResponseModel> {
         const data = await this.fileUploadRepo.getFilesData()
         if (data.length > 0) {
-            return new CommonResponseModel(true, 11, 'uploaded files data retrived successfully', data);
+            return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
         }
         else {
             return new CommonResponseModel(false, 0, 'No data found', data);

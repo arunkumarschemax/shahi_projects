@@ -62,6 +62,7 @@ const ChangesGrid = () => {
             setFilteredWarehouseDateDate(res.data)
         })
     }
+
     const getPhaseWiseData = () => {
         service.getPhaseWiseData().then(res => {
             if (res.status) {
@@ -71,6 +72,7 @@ const ChangesGrid = () => {
             console.log(err.message)
         })
     }
+
     const exportExcel = () => {
         const excel = new Excel();
         excel
@@ -89,8 +91,34 @@ const ChangesGrid = () => {
             .addSheet('Phase Wise data')
             .addColumns(exportingColumns)
             .addDataSource(phaseData, { str2num: true })
-            .saveAs('revisedOrders.xlsx');
+
+        const childRows = [];
+
+        // Assuming 'phaseData' is an array of objects where each object has 'phaseWiseData' array (child table)
+        phaseData.forEach((rowData) => {
+            if (rowData.phaseWiseData && rowData.phaseWiseData.length > 0) {
+                rowData.phaseWiseData.forEach((childRowData) => {
+                    // Calculate the difference
+                    const difference = Number(childRowData['newOrderQtyPcs']) - Number(childRowData['oldOrderQtyPcs']);
+                    // Prepare the child row data as an object
+                    const childRow = {
+                        'Production Plan Type Name': childRowData['prodPlanTypeName'],
+                        'Sum of Ord Qty last week': Number(childRowData['oldOrderQtyPcs']).toLocaleString('en-IN', { maximumFractionDigits: 0 }),
+                        'Sum of Ord Qty this week': Number(childRowData['newOrderQtyPcs']).toLocaleString('en-IN', { maximumFractionDigits: 0 }),
+                        'Difference': difference === 0 ? '-' : difference < 0 ? difference.toLocaleString('en-IN', { maximumFractionDigits: 0 }) : difference.toLocaleString('en-IN', { maximumFractionDigits: 0 }),
+                    };
+                    // Add the child row data to the array
+                    childRows.push(childRow);
+                });
+            }
+        });
+
+        // Add the child table data to the Excel sheet
+        excel.addDataSource(childRows);
+
+        excel.saveAs('revisedOrders.xlsx');
     }
+
     const data1 = [
 
         {
@@ -206,8 +234,6 @@ const ChangesGrid = () => {
     ];
 
     const data4 = [
-
-
         {
             title: 'Item code',
             dataIndex: 'item_code'
@@ -219,12 +245,10 @@ const ChangesGrid = () => {
         {
             title: ' sum Of Qrd Qty last Week',
             dataIndex: 'sumOfOldVal',
-
         },
         {
             title: 'Sum Of Qrd Qty this Week',
             dataIndex: 'sumOfNewVal',
-
         },
         {
             title: 'Difference Ord Qty Revised',
@@ -233,13 +257,16 @@ const ChangesGrid = () => {
 
     ];
     let exportingColumns: IExcelColumn[] = []
-        exportingColumns = [
-            { title: 'Item code', dataIndex: 'item_code' },
-            { title: 'Item Name', dataIndex: 'itemName' },
-            { title: 'Production Plan Type Name', dataIndex: 'prod_plan_type_name' },
-            { title: 'Sum of Ord Qty last week', dataIndex: 'old_qty_value' },
-            { title: 'Sum of Ord Qty this week', dataIndex: 'new_qty_value' },
-        ]
+    exportingColumns = [
+        { title: 'Item code', dataIndex: 'itemCode' },
+        { title: 'Item Name', dataIndex: 'itemName' }
+    ]
+    exportingColumns.push(
+        { title: 'Production Plan Type Name', dataIndex: 'prodPlanTypeName' },
+        { title: 'Sum of Ord Qty last week', dataIndex: 'oldOrderQtyPcs' },
+        { title: 'Sum of Ord Qty this week', dataIndex: 'newOrderQtyPcs' },
+        { title: 'Difference Qty', dataIndex: 'difference' }
+    )
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState('');
@@ -324,7 +351,6 @@ const ChangesGrid = () => {
             dataIndex: 'production_plan_id',
             ...getColumnSearchProps('production_plan_id')
         },
-
         {
             title: 'Production Plan Name',
             dataIndex: 'prod_plan_type_name'
@@ -334,7 +360,6 @@ const ChangesGrid = () => {
             dataIndex: 'item_code',
             ...getColumnSearchProps('item_code')
         },
-
         {
             title: 'Item Name',
             dataIndex: 'itemName'
@@ -342,8 +367,7 @@ const ChangesGrid = () => {
         {
             title: 'Previous Order Quantity Pieces',
             dataIndex: 'old_val',
-            align:'right',
-            
+            align: 'right',
         },
         {
             title: 'Revised Order Quantity Pieces',
@@ -363,17 +387,14 @@ const ChangesGrid = () => {
                         })}</span> : ''}
                     </>
                 </span>
-
             )
-            
         },
         {
             title: 'Difference',
             dataIndex: 'Diff',
-            align:'right',
+            align: 'right',
             render: (text, record) => (
                 < >
-                    
                     {Number(record.Diff) === 0 ? '-' : ''}
                     {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
                         maximumFractionDigits: 0
@@ -381,10 +402,8 @@ const ChangesGrid = () => {
                     {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
                         maximumFractionDigits: 0
                     })} </span> : ''}
-
                 </>
             )
-             
         },
         {
             title: 'Version',
@@ -444,7 +463,6 @@ const ChangesGrid = () => {
         {
             title: 'Previous Requested Warehouse Date',
             dataIndex: 'old_val',
-            // width :'190px',
             render: (text, record) => (
                 <span>{moment(record.old_val).format('DD-MM-YYYY')}</span>
             )
@@ -454,7 +472,6 @@ const ChangesGrid = () => {
             dataIndex: 'new_val',
             // width :'190px',
             render: (text, record) => (
-
                 <span>
                     <>
                         {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
@@ -466,7 +483,6 @@ const ChangesGrid = () => {
                         </span>
                     </>
                 </span>
-
             )
         },
         {
@@ -475,13 +491,13 @@ const ChangesGrid = () => {
             // width :'190px',
             render: (text, record) => {
                 const obj: any = {
-                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div> )
+                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div>)
                 };
                 return obj;
             }
         },
 
-     
+
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'order_qty_pcs',
@@ -561,7 +577,7 @@ const ChangesGrid = () => {
             // width :'190px',
             render: (text, record) => {
                 const obj: any = {
-                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div> )
+                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div>)
                 };
                 return obj;
             }
@@ -853,7 +869,7 @@ const ChangesGrid = () => {
     }
 
     return (
-        <Card title='Compare Orders' extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData || phaseData? (<Button
+        <Card title='Compare Orders' extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData || phaseData ? (<Button
             type="default"
             style={{ color: 'green' }}
             onClick={exportExcel}

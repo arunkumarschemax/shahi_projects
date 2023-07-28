@@ -63,6 +63,10 @@ export function FileRevert() {
             dataIndex: 'fileName'
         },
         {
+            title: 'Upload Status',
+            dataIndex: 'status'
+        },
+        {
             title: 'Uploaded User',
             dataIndex: 'createdUser'
         },

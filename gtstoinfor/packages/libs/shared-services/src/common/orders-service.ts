@@ -51,6 +51,10 @@ export class OrdersService extends CommonAxiosService {
         return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
     }
 
+    async updateFileStatus(req: any): Promise<CommonResponseModel> {
+        return await this.axiosPostCall(this.ordersController + '/updateFileStatus', req);
+    }
+
     async getUploadFilesData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getUploadFilesData")
     }
