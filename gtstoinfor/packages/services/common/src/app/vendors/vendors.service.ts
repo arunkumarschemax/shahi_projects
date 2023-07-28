@@ -102,7 +102,7 @@ export class VendorsService {
           console.log(req,'------------req')
           vendorsEntities = await this.vendorsRepository.find({order :{vendorName:'ASC'}, relations:['currencyInfo']});
           if(req){
-          vendorsEntities = await this.vendorsRepository.find({where:{vendorCode:req.vendorCode,contactNumber:req.contactNumber,city:req.city},order :{vendorName:'ASC'}, relations:['currencyInfo']});
+          vendorsEntities = await this.vendorsRepository.find({where:{vendorCode:req.vendorCode,contactNumber:req.contactNumber,city:req.city,gstNumber:req.gstNumber},order :{vendorName:'ASC'}, relations:['currencyInfo']});
           }
           if (vendorsEntities) {
             // converts the data fetched from the database which of type companies array to type StateDto array.
@@ -305,7 +305,7 @@ export class VendorsService {
     try {
       const vendorsDtos: VendorsDTO[] = [];
       //retrieves all companies
-      const vendorsEntities: Vendors[] = await this.vendorsRepository.find({select:{contactNumber:true},order:{vendorCode:'ASC'},relations:['currencyInfo']});
+      const vendorsEntities: Vendors[] = await this.vendorsRepository.find({select:{contactNumber:true},order:{vendorCode:'ASC'}, relations:['currencyInfo']});
    console.log(vendorsEntities)
       if (vendorsEntities) {
           // converts the data fetched from the database which of type companies array to type StateDto array.

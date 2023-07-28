@@ -68,22 +68,40 @@ export const baseRouterList = [
                 filepath: "currencies/currency-view",
             },
             {
+                label: "Brands",
+                key: "brands",
+                path: "brands/brand-view",
+                filepath: "brands/brand-view",
+            },
+            {
+                label: "Operations",
+                key: "operations",
+                path: "operations/operation-view",
+                filepath: "operations/operation-view",
+            },
+            {
                 label: "Buyers",
                 key: "buyers",
-                path: "buyers/buyers-form",
-                filepath: "buyers/buyers-form",
+                path: "buyers/buyers-view",
+                filepath: "buyers/buyers-view",
             },
             {
                 label: "Vendors",
                 key: "vendors",
-                path: "vendors/vendors-form",
-                filepath: "vendors/buyers-form",
+                path: "vendors/vendors-view",
+                filepath: "vendors/vendors-view",
             },
             {
                 label: "Employees",
                 key: "employee-details-grid",
                 path: "employee-details/employee-details-grid",
                 filepath: "employee-details/employee-details-grid",
+            },
+            {
+                label: "Operation Groups",
+                key: "operation-groups",
+                path: "operationgroups/operationgroups-view",
+                filepath: "operationgroups/operationgroups-view",
             },
             {
                 label: "Items",
@@ -147,7 +165,13 @@ export const baseRouterList = [
                 key: "version-grid",
                 path: "version-grid",
                 filepath: "version-grid",
-            }
+            },
+            // {
+            //     label: "Phase Wise Data",
+            //     key: "phase-wise-grid",
+            //     path: "phase-wise-grid",
+            //     filepath: "phase-wise-grid",
+            // }
         ],
     },
 ];

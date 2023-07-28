@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, PhaseAndQtyModel, PhaseWiseDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
@@ -15,6 +15,7 @@ import { DataSource, Entity, EntityManager, getConnection, getManager, getReposi
 import { FileIdReq } from './models/file-id.req';
 import { promises } from 'dns';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
+import GenericTransactionManager from '../../typeorm-transactions/generic-transaction-manager';
 
 
 @Injectable()
@@ -34,7 +35,10 @@ export class OrdersService {
     ) { }
 
     async saveOrdersData(formData: any, id: number): Promise<CommonResponseModel> {
+        
+        const transactionManager = new GenericTransactionManager()
         try {
+            await transactionManager.startTransaction()
             const flag = new Set()
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
@@ -73,7 +77,7 @@ export class OrdersService {
                     dtoData.version = version
                     if (details) {
                         // const updatedData = this.ordersAdapter.convertDtoToEntity(data);
-                        const updateOrder = await this.ordersRepository.update({ productionPlanId: dtoData.productionPlanId }, {
+                        const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ productionPlanId: dtoData.productionPlanId }, {
                             year: dtoData.year, planningSeason: dtoData.planningSeason, season: dtoData.season, itemBrand: dtoData.itemBrand, businessUnit: dtoData.businessUnit, itemCode: dtoData.itemCode, itemName: dtoData.itemName, mainSampleCode: dtoData.mainSampleCode, mainSampleName: dtoData.mainSampleName, supplierRMCode: dtoData.supplierRMCode, supplierRMName: dtoData.supplierRMName, vendorCode: dtoData.vendorCode, vendorName: dtoData.vendorName, managementFactoryCode: dtoData.managementFactoryCode, managementFactoryName: dtoData.managementFactoryName, branchFactoryCode: dtoData.branchFactoryCode,
                             branchFactoryName: dtoData.branchFactoryName, rmSupplierCode: dtoData.rmSupplierCode, rmSupplierName: dtoData.rmSupplierName, sewingDifficulty: dtoData.sewingDifficulty, departmentCode: dtoData.departmentCode, departmentName: dtoData.departmentName, class1Code: dtoData.class1Code, Class1Name: dtoData.Class1Name, productionPlanTypeName: dtoData.productionPlanTypeName, monthWeekFlag: dtoData.monthWeekFlag, lastUpdateDate: dtoData.lastUpdateDate, requestedWhDate: dtoData.requestedWhDate, contractedDate: dtoData.contractedDate, transportMethodName: dtoData.transportMethodName,
                             logisticsTypeName: dtoData.logisticsTypeName, orderQtyPcs: dtoData.orderQtyPcs, yarnOrderAcceptance: dtoData.yarnOrderAcceptance, yarnOrderRequestDate: dtoData.yarnOrderRequestDate, yarnOrderAnswerDate: dtoData.yarnOrderActualDate, yarnOrderActualDate: dtoData.yarnOrderActualDate, yarnOrderNO: dtoData.yarnOrderNO, yarnActualOrderQtyPcs: dtoData.yarnActualOrderQtyPcs, yarnUpdateDate: dtoData.yarnUpdateDate, fabricOrderAcceptance: dtoData.fabricOrderAcceptance, fabricOrderRequestDate: dtoData.fabricOrderRequestDate, fabricOrderAnswerDate: dtoData.fabricOrderAnswerDate,
@@ -90,7 +94,7 @@ export class OrdersService {
                             return new CommonResponseModel(false, 0, 'Something went wrong in order update')
                         }
                         const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
-                        const saveExcelEntity: OrdersChildEntity = await this.ordersChildRepo.save(convertedExcelEntity);
+                        const saveExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedExcelEntity);
                         if (saveExcelEntity) {
                             //difference insertion to order diff table
                             const existingDataKeys = Object.keys(details)
@@ -106,7 +110,7 @@ export class OrdersService {
                                     orderDiffObj.version = dtoData.version
                                     orderDiffObj.fileId = id
                                     if (orderDiffObj.oldValue != orderDiffObj.newValue) {
-                                        const orderDiffSave = await this.orderDiffRepo.save(orderDiffObj);
+                                        const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
                                     }
                                 }
                             }
@@ -114,9 +118,9 @@ export class OrdersService {
                     } else {
                         dtoData.version = 1
                         const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
-                        const saveExcelEntity: OrdersEntity = await this.ordersRepository.save(convertedExcelEntity);
+                        const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
                         const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
-                        const saveChildExcelEntity: OrdersChildEntity = await this.ordersChildRepo.save(convertedChildExcelEntity);
+                        const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
                         // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
                         if (!saveChildExcelEntity) {
                             flag.add(false)
@@ -125,54 +129,88 @@ export class OrdersService {
                 }
             }
             if (!flag.has(false)) {
+                await transactionManager.releaseTransaction()
                 return new CommonResponseModel(true, 1, 'Data saved sucessfully')
             } else {
+                await transactionManager.completeTransaction()
                 return new CommonResponseModel(false, 0, 'Something went wrong')
             }
         } catch (error) {
+            await transactionManager.releaseTransaction()
             return new CommonResponseModel(false, 0, error)
         }
     }
 
     async getOrdersData(): Promise<CommonResponseModel> {
         const details = await this.ordersRepository.getOrdersData()
-        return new CommonResponseModel(true, 1, 'data retrived', details)
+        if (details)
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getQtyChangeData(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getQtyChangeData()
-        return new CommonResponseModel(true, 1, 'data retrived', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getQtyDifChangeData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
-        const data = await this.ordersChildRepo.getItemQtyChangeData(files[1].fileId, files[0].fileId)
-        return new CommonResponseModel(true, 1, 'data retrieved', data)
+        let data;
+        if (files.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        } else if (files.length == 1) {
+            data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId)
+        } else {
+            data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId)
+        }
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getContractDateChangeData(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getContractDateChangeData()
-        return new CommonResponseModel(true, 1, 'data retrived', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getWharehouseDateChangeData(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getWharehouseDateChangeData()
-        return new CommonResponseModel(true, 1, 'data retrived', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getUnitWiseOrders(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getUnitCount()
-        return new CommonResponseModel(true, 222, 'data retrieved', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getDivisionWiseOrders(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getDivisionCount()
-        return new CommonResponseModel(true, 222, 'data retrieved', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async getMaximumChangedOrders(): Promise<CommonResponseModel> {
         const data = await this.ordersChildRepo.getNoOfChangedItem()
-        return new CommonResponseModel(true, 22, 'data retrieved', data)
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     async revertFileData(req: FileIdReq): Promise<CommonResponseModel> {
@@ -214,7 +252,9 @@ export class OrdersService {
             }
         }
         if (flag.has(true)) {
-            return new CommonResponseModel(true, 0, 'File Reverted Successfully')
+            return new CommonResponseModel(true, 1, 'File Reverted Successfully')
+        } else {
+            return new CommonResponseModel(false, 0, 'failed to revert file data')
         }
     }
 
@@ -227,7 +267,7 @@ export class OrdersService {
             return new CommonResponseModel(true, 11, 'uploaded successfully', save);
         }
         else {
-            return new CommonResponseModel(false, 11, 'uploaded failed', save);
+            return new CommonResponseModel(false, 0, 'uploaded failed', save);
         }
     }
 
@@ -237,7 +277,7 @@ export class OrdersService {
             return new CommonResponseModel(true, 11, 'uploaded files data retrived successfully', data);
         }
         else {
-            return new CommonResponseModel(false, 11, 'No data found', data);
+            return new CommonResponseModel(false, 0, 'No data found', data);
         }
     }
 
@@ -245,7 +285,7 @@ export class OrdersService {
         const records = await this.ordersChildRepo.getVersionWiseQty()
         const versionDataMap = new Map<number, VersionDataModel>();
         if (records.length == 0) {
-            throw new CommonResponseModel(false, 0, 'No data found');
+            return new CommonResponseModel(false, 0, 'No data found');
         }
         for (const record of records) {
             if (!versionDataMap.has(record.production_plan_id)) {
@@ -256,6 +296,31 @@ export class OrdersService {
         const versionDataModelArray: VersionDataModel[] = [];
         versionDataMap.forEach(version => versionDataModelArray.push(version));
         return new CommonResponseModel(true, 1, 'Data retrived successfully', versionDataModelArray);
+    }
+
+    async getPhaseWiseData(): Promise<CommonResponseModel> {
+        const files = await this.fileUploadRepo.getFilesData();
+        let records;
+        if (files.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        } else if (files.length == 1) {
+            records = await this.ordersChildRepo.getPhaseWiseData1(files[0].fileId)
+        } else {
+            records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
+        }
+        const phaseWiseDataMap = new Map<number, PhaseWiseDataModel>();
+        if (records.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        }
+        for (const record of records) {
+            if (!phaseWiseDataMap.has(record.item_code)) {
+                phaseWiseDataMap.set(record.item_code, new PhaseWiseDataModel(record.item_code, record.itemName, []));
+            }
+            phaseWiseDataMap.get(record.item_code).phaseWiseData.push(new PhaseAndQtyModel(record.prod_plan_type_name, record.old_qty_value, record.new_qty_value));
+        }
+        const phaseDataModelArray: PhaseWiseDataModel[] = [];
+        phaseWiseDataMap.forEach(phase => phaseDataModelArray.push(phase));
+        return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
     }
 
 }

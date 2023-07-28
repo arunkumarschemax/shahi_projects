@@ -10,7 +10,6 @@ export function FileRevert() {
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = useState(1);
 
-
     useEffect(() => {
         getUploadFilesData()
     }, [])
@@ -26,7 +25,6 @@ export function FileRevert() {
                 message.success(res.internalMessage)
             } else {
                 message.error(res.internalMessage)
-
             }
         })
     }
@@ -36,6 +34,7 @@ export function FileRevert() {
         req.fileId = value
         service.revertFileData(req).then((res) => {
             if (res.status) {
+                getUploadFilesData()
                 message.success(res.internalMessage)
             } else {
                 message.error(res.internalMessage)
@@ -55,7 +54,7 @@ export function FileRevert() {
             dataIndex: 'uploadedDate',
             render: (value, record) => {
                 return (
-                    moment(value).format('YYYY-MM-DD HH:mm:ss')
+                    moment(value).utc().format('YYYY-MM-DD HH:mm:ss')
                 )
             }
         },

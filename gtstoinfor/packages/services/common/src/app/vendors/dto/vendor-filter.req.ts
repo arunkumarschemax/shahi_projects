@@ -9,4 +9,7 @@ export class VendorFilterRequest{
 
     @ApiProperty()
     city : string;
+
+    @ApiProperty()
+    gstNumber: string;
 }

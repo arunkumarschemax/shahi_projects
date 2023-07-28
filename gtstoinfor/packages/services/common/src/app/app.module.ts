@@ -9,13 +9,17 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { appConfig } from '../../config';
 import { OrdersModule } from './orders/orders.module';
 import { CurrenciesModule } from './currencies/currencies.module';
+import { MasterBrandsModule } from './master-brands/master-brands.module';
+import { OperationsModule } from './operations/operations.module';
 import { EmployeeDetailsModule } from './employee-details/employee-details-module';
 import { ItemsModule } from './items/items.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { BuyersModule } from './buyers/buyers.module';
+import { OperationGroupsModule } from './operation-groups/operation-groups.module';
 import { DeliveryMethodModule } from './delivery-method/delivery-method.module';
 import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categories.module';
+import { CountriesModule } from './countries/countries.module';
 
 
 @Module({
@@ -37,12 +41,14 @@ import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categori
     }),
     FactoriesModule,
     CurrenciesModule,
+    MasterBrandsModule,
+    OperationsModule,
     DeliveryMethodModule,
     ItemCategoriesModule,
     ItemSubCategoriesModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule],
   controllers: [AppController],
   providers: [AppService],
 })
