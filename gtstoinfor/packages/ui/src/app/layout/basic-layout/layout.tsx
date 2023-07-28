@@ -67,8 +67,16 @@ export const baseRouterList = [
                 path: "currencies/currency-view",
                 filepath: "currencies/currency-view",
             },
+            {
+                label: "PaymentMethod",
+                key: "paymentmethod",
+                path: "paymentmethod/paymentmethod-view",
+                filepath: "paymentmethod/paymentmethod-view",
+            },
         ],
     },
+
+    
     {
         label: "Orders",
         key: "excel-import",

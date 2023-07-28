@@ -15,6 +15,8 @@ import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
+import { PaymentMethodForm } from "./masters/payment-method/payment-method-form"
+import { PaymentMethodGrid } from "./masters/payment-method/payment-method-grid"
 
 
 export const AppRoutes = () => {
@@ -36,7 +38,13 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+                <Route path='paymentmethod/paymentmethod-form' key ='/paymentmethod/paymentmethod-form' element={< PaymentMethodForm paymentMethodData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
                 </Route>
+
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
                     <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
@@ -71,7 +79,14 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
+                    <Route path='paymentmethod/paymentmethod-form' element={<PaymentMethodForm paymentMethodData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                    <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
                     </Route>
+                   
+
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
                         <Route path='changes-view' element={<ChangesGrid />} />
