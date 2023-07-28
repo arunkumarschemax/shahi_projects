@@ -35,8 +35,6 @@ const AllOrdersGridView = () => {
         })
     }
 
-    console.log(gridData)
-
     const EstimatedETDDate = (value) => {
         if (value) {
             console.log(value)
@@ -84,6 +82,10 @@ const AllOrdersGridView = () => {
         {
             title: 'Production Plan Id',
             dataIndex: 'production_plan_id'
+        },
+        {
+            title: 'Production Plan Name',
+            dataIndex: 'prod_plan_type_name'
         },
         {
             title: 'Item code',

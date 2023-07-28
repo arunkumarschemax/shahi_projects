@@ -68,6 +68,18 @@ export const baseRouterList = [
                 filepath: "currencies/currency-view",
             },
             {
+                label: "Brands",
+                key: "brands",
+                path: "brands/brand-view",
+                filepath: "brands/brand-view",
+            },
+            {
+                label: "Operations",
+                key: "operations",
+                path: "operations/operation-view",
+                filepath: "operations/operation-view",
+            },
+            {
                 label: "Buyers",
                 key: "buyers",
                 path: "buyers/buyers-view",
@@ -153,7 +165,13 @@ export const baseRouterList = [
                 key: "version-grid",
                 path: "version-grid",
                 filepath: "version-grid",
-            }
+            },
+            // {
+            //     label: "Phase Wise Data",
+            //     key: "phase-wise-grid",
+            //     path: "phase-wise-grid",
+            //     filepath: "phase-wise-grid",
+            // }
         ],
     },
 ];

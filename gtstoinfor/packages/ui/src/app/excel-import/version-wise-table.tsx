@@ -97,7 +97,7 @@ const VersionChanges = () => {
 
     const getVersionHeaders = (data: VersionDataModel[]) => {
         const versionHeaders = new Set<string>();
-        data.forEach(rec => rec.versionWiseData.forEach(version => {
+        data?.forEach(rec => rec.versionWiseData?.forEach(version => {
             versionHeaders.add('Version ' + version.version);
         }))
         return Array.from(versionHeaders);
@@ -105,11 +105,11 @@ const VersionChanges = () => {
 
     const getEmpDayWiseConsumptionMap = (data: VersionDataModel[]) => {
         const versionWiseMap = new Map<number, Map<string, number>>();
-        data.forEach(rec => {
+        data?.forEach(rec => {
             if (!versionWiseMap.has(rec.productionPlanId)) {
                 versionWiseMap.set(rec.productionPlanId, new Map<string, number>());
             }
-            rec.versionWiseData.forEach(version => {
+            rec.versionWiseData?.forEach(version => {
                 versionWiseMap.get(rec.productionPlanId).set('Version ' + version.version, version.orderQtyPcs);
             })
         });
@@ -160,7 +160,7 @@ const VersionChanges = () => {
             }
         ];
 
-        versionHeaders.forEach(version => {
+        versionHeaders?.forEach(version => {
             columns.push(
                 {
                     title: version,
@@ -170,7 +170,9 @@ const VersionChanges = () => {
                         const prodPlanId = record.productionPlanId;
                         const fbConsInfo = versionWiseDataMap.get(prodPlanId);
                         if (fbConsInfo) {
-                            return versionWiseDataMap.get(prodPlanId).get(version) ?? '-';
+                            return Number(versionWiseDataMap.get(prodPlanId).get(version)).toLocaleString('en-IN', {
+                                maximumFractionDigits: 0
+                            }) ?? '-';
                         } else {
                             return 0;
                         }
@@ -182,8 +184,10 @@ const VersionChanges = () => {
                     const prodPlanId = record.productionPlanId;
                     const fbConsInfo = versionWiseDataMap.get(prodPlanId);
                     if (fbConsInfo) {
-                        const val = versionWiseDataMap.get(prodPlanId).get(version) ?? '-';
-                        return Number(val);
+                        const val = Number(versionWiseDataMap.get(prodPlanId).get(version)).toLocaleString('en-IN', {
+                            maximumFractionDigits: 0
+                        }) ?? '-';
+                        return val;
                     } else {
                         return 0;
                     }
