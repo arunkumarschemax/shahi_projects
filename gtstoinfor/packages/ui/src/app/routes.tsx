@@ -18,6 +18,13 @@ import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
 import { CompanyDto, CurrencyDto } from "@project-management-system/shared-models"
+import BuyersForm from "./masters/buyers/buyers-form"
+import BuyersView from "./masters/buyers/buyers-view"
+import VendorsForm from "./masters/vendors/vendors-form"
+import VendorsView from "./masters/vendors/vendors-view"
+import EmployeeDetsilsForm from "./masters/employee-details/employee-details-form"
+import EmployeeDetailsGrid from "./masters/employee-details/employee-details-grid"
+import ItemsForm from "./masters/items/items-form"
 
 
 export const AppRoutes = () => {
@@ -39,7 +46,26 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+                <Route path='buyers/buyers-view' element={<BuyersView />} />
+                <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                <Route path='vendors/vendors-form' key='/vendors/vendors-form' element={<VendorsForm vendorsData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                <Route path='vendors/vendors-view' element={<VendorsView />} />
+
+                  <Route path="employee-details/employee-details-form" key='/employee-details/employee-details-form' element= {
+                    <EmployeeDetsilsForm employeeData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateItem={(undefined) => { }}/>
+                } />
+                <Route path='employee-details/employee-details-grid' element={<EmployeeDetailsGrid />} />
+                <Route path="items/items-form" key='/items/items-form' element= {
+                    <ItemsForm itemData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateItem={(undefined) => { }}/>
+                } />
                 </Route>
+              
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
                     <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
@@ -80,7 +106,25 @@ export const AppRoutes = () => {
                             throw new Error("Function not implemented.")
                         } } />} />
                         <Route path='company/company-grid' element={<CompanyGrid />} />
+                        <Route path='buyers/buyers-view' element={<BuyersView />} />
+                        <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                        <Route path='vendors/vendors-form' key='/vendors/vendors-form' element={<VendorsForm vendorsData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                        <Route path='vendors/vendors-view' element={<VendorsView />} />
+                        <Route path='employee-details/employee-details-form' element={<EmployeeDetsilsForm employeeData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                    <Route path='employee-details/employee-details-grid' element={<EmployeeDetailsGrid />} />
+                    <Route path="items/items-form" key='/items/items-form' element= {
+                    <ItemsForm itemData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateItem={(undefined) => { }}/>
+                } />
                     </Route>
+
+                    
+
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
                         <Route path='changes-view' element={<ChangesGrid />} />
