@@ -9,6 +9,8 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { appConfig } from '../../config';
 import { OrdersModule } from './orders/orders.module';
 import { CurrenciesModule } from './currencies/currencies.module';
+import { MasterBrandsModule } from './master-brands/master-brands.module';
+import { OperationsModule } from './operations/operations.module';
 
 
 @Module({
@@ -22,7 +24,7 @@ import { CurrenciesModule } from './currencies/currencies.module';
       password: appConfig.database.password,
       database: appConfig.database.dbName,
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       logging: true,
       extra: {
         connectionLimit: 20
@@ -30,6 +32,8 @@ import { CurrenciesModule } from './currencies/currencies.module';
     }),
     FactoriesModule,
     CurrenciesModule,
+    MasterBrandsModule,
+    OperationsModule,
     UsersModule,
     OrdersModule,
     AuthModule, JwtModule],

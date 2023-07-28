@@ -15,6 +15,10 @@ import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
+import MasterBrandsForm from "./masters/master-brands/master-brands-form"
+import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
+import OperationsForm from "./masters/operations/operations-form"
+import OperationsGrid from "./masters/operations/operations-gridt"
 
 
 export const AppRoutes = () => {
@@ -36,7 +40,16 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+                       <Route path='brands/brand-form' key='/brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateMasterBrand={(undefined) => { }}/>} />
+                  <Route path='operations/operation-form' key='/operations/operation-form' element={<OperationsForm operationData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateOperation={(undefined) => { }}/>} />
                 </Route>
+                
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
                     <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
@@ -71,6 +84,17 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
+                        <Route path='brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateMasterBrand={(undefined) => { }}/>} />
+                        <Route path='brands/brand-view' element={<MasterBrandsGrid />} />
+                        <Route path='operations/operation-form' element={<OperationsForm operationData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateOperation={(undefined) => { }}/>} />
+                        <Route path='operations/operation-view' element={<OperationsGrid />} />
+
                     </Route>
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
