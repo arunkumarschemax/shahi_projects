@@ -4,7 +4,7 @@ export class MasterBrandsDto{
     // createdUser:string;
     updatedUser:string;
     isActive:boolean;
-    // filePath:string;
+    filePath:string;
     fileName:string;
     versionFlag:number;
 
@@ -15,15 +15,15 @@ export class MasterBrandsDto{
      * @param isActive This is a boolean
      * @param fileName This is a string
      * @param versionFlag This is a string
-
+     * @param versionFlag This is a string
      */
     
-    constructor(brandId:number,updatedUser:string,isActive:boolean,fileName:string,versionFlag:number){
+    constructor(brandId:number,updatedUser:string,isActive:boolean,fileName:string,filePath:string,versionFlag:number){
         this.brandId = brandId;
         // this.brandName = brandName;
         // this.createdUser = createdUser;
         this.updatedUser = updatedUser;
-        // this.filePath =filePath;
+        this.filePath =filePath;
         this.fileName = fileName
         this.isActive = isActive;
         this.versionFlag = versionFlag

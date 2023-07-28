@@ -55,13 +55,13 @@ export class Brands {
   versionFlag: number;
 
   @Column({
-    nullable: false,
+    nullable: true,
     name: "file_path"
   })
   filePath: string;
 
   @Column({
-    nullable: false,
+    nullable: true,
     name: "file_name"
   })
   fileName: string;

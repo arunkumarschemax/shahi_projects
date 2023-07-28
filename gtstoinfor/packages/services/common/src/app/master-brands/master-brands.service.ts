@@ -83,7 +83,7 @@ export class MasterBrandsService {
         } catch (error) {
           // when error occures while saving the data , the execution will come to catch block.
           // tslint:disable-next-line: typedef
-          return error;
+          return  new MasterBrandsResponseModel(false,11108,'Brand is not created due to invalid file');
         }
       }  
   
