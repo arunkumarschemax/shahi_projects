@@ -23,7 +23,7 @@ export class SupplierController{
  
   @Post('/getAllSuppliers')
   async getAllSuppliers(): Promise<SupplierResponseObject> {
-      try {
+      try { 
           return this.supplierService.getAllSuppliers();
       } catch (err) {
           return this.applicationExceptionHandler.returnException(err);
@@ -31,7 +31,7 @@ export class SupplierController{
       }
   }
 
-
+   
   @Post('activateOrDeactivateSuppliers')
   async activateOrDeactivateSuppliers(@Body() supplierDto: SupplierDto):Promise<SupplierResponse>{
     return await this.supplierService.activateOrDeactivateSuppliers(supplierDto);
