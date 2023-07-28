@@ -15,6 +15,11 @@ import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
+import DeliveryMethodForm from "./masters/delivery-methods/delivery-method-form"
+import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
+import ItemCategoriesGrid from "./masters/item-categories/item-categories-grid"
+import ItemSubCategoriesGrid from "./masters/item-sub-categories/item-sub-categories-grid"
+import ItemSubCategoriesForm from "./masters/item-sub-categories/item-sub-categories-form"
 
 
 export const AppRoutes = () => {
@@ -71,6 +76,17 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
+                        <Route path='delivery-methods/delivery-method-form' element={<DeliveryMethodForm deliveryMethodData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateDeliveryMethod={(undefined) => { }}/>}/>
+                        <Route path='delivery-methods/delivery-method-view' element={<DeliveryMethodGrid/>}/>
+                        <Route path="item-categories/item-categories-view" element = {<ItemCategoriesGrid/>}/>
+                        <Route path='item-sub-categories/item-sub-categories-form' element={<ItemSubCategoriesForm subCategoryData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateData={(undefined) => { }}/>}/>
+                        <Route path='item-sub-categories/item-sub-categories-view' element={<ItemSubCategoriesGrid/>}/>
                     </Route>
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />

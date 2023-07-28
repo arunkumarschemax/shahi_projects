@@ -2,3 +2,6 @@ export * from './factory-service';
 export * from './orders-service';
 export * from './users-service'
 export * from './currency-service-master'
+export * from './delivery-method-services'
+export * from './item-category-service'
+export * from './item-sub-category-service'

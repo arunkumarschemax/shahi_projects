@@ -67,6 +67,24 @@ export const baseRouterList = [
                 path: "currencies/currency-view",
                 filepath: "currencies/currency-view",
             },
+            {
+                label: "Delivery Method",
+                key: "delivery-methods",
+                path: "delivery-methods/delivery-method-view",
+                filepath: "delivery-methods/delivery-method-view",
+            },
+            {
+                label: "Item Categories",
+                key: "item-categories",
+                path: "item-categories/item-categories-view",
+                filepath: "item-categories/item-categories-view",
+            },
+            {
+                label: "Item Sub Categories",
+                key: "item-sub-categories",
+                path: "item-sub-categories/item-sub-categories-view",
+                filepath: "item-sub-categories/item-sub-categories-view",
+            }
         ],
     },
     {

@@ -9,6 +9,9 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { appConfig } from '../../config';
 import { OrdersModule } from './orders/orders.module';
 import { CurrenciesModule } from './currencies/currencies.module';
+import { DeliveryMethodModule } from './delivery-method/delivery-method.module';
+import { ItemCategoriesModule } from './item-categories/item-categories.module';
+import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categories.module';
 
 
 @Module({
@@ -30,6 +33,9 @@ import { CurrenciesModule } from './currencies/currencies.module';
     }),
     FactoriesModule,
     CurrenciesModule,
+    DeliveryMethodModule,
+    ItemCategoriesModule,
+    ItemSubCategoriesModule,
     UsersModule,
     OrdersModule,
     AuthModule, JwtModule],
