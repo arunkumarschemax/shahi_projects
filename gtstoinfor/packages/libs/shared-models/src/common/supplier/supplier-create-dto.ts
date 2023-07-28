@@ -1,8 +1,8 @@
 export declare class SupplierCreateDto{
     category: string;
     supplierCode: number;  
-    supplierPhone: string;  
-    GSTNumber: number;
+    supplierName: string;  
+    GstNumber: number;
     contactPerson: string;
     street: string;
     apartment: string;
@@ -11,7 +11,7 @@ export declare class SupplierCreateDto{
     district: string;
     postalCode: number;
     commision: string;
-    bankAcountNo: string;
+    bankAccountNo: string;
     bankIFSC: string;
     bankName: string;
     bankBranch: string;
@@ -19,10 +19,10 @@ export declare class SupplierCreateDto{
     email: string;
     creditPaymentPeriod: string;
     constructor(
-        category: string,
+    category: string,
     supplierCode: number, 
-    supplierPhone: string,  
-    GSTNumber: number,
+    supplierName: string,  
+    GstNumber: number,
     contactPerson: string,
     street: string,
     apartment: string,
@@ -31,7 +31,7 @@ export declare class SupplierCreateDto{
     district: string,
     postalCode: number,
     commision: string,
-    bankAcountNo: string,
+    bankAccountNo: string,
     bankIFSC: string,
     bankName: string,
     bankBranch: string,

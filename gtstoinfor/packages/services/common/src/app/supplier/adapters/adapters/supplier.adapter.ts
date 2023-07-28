@@ -17,14 +17,14 @@ export class SupplierAdapter {
     entity.state = dto.state;
     entity.district = dto.district;
     entity.postalCode = dto.postalCode;
-    entity.commission = dto.commission;
-    entity.bankAccountNumber = dto.bankAccountNumber;
-    entity.bankIfsc = dto.bankIfsc;
+    entity.commision = dto.commision;
+    entity.bankAccountNo = dto.bankAccountNo;
+    entity.bankIFSC = dto.bankIFSC;
     entity.bankName = dto.bankName;
     entity.bankBranch = dto.bankBranch;
     entity.contactNumber = dto.contactNumber;
     entity.email = dto.email;
-    entity.creditPaymentMethod = dto.creditPaymentMethod;
+    entity.creditPaymentPeriod = dto.creditPaymentPeriod;
     // Map any other fields as needed
     console.log(entity);
     return entity;
@@ -45,14 +45,14 @@ export class SupplierAdapter {
     dto.state = entity.state;
     dto.district = entity.district;
     dto.postalCode = entity.postalCode;
-    dto.commission = entity.commission;
-    dto.bankAccountNumber = entity.bankAccountNumber;
-    dto.bankIfsc = entity.bankIfsc;
+    dto.commision = entity.commision;
+    dto.bankAccountNo = entity.bankAccountNo;
+    dto.bankIFSC = entity.bankIFSC;
     dto.bankName = entity.bankName;
     dto.bankBranch = entity.bankBranch;
     dto.contactNumber = entity.contactNumber;
     dto.email = entity.email;
-    dto.creditPaymentMethod = entity.creditPaymentMethod;
+    dto.creditPaymentPeriod = entity.creditPaymentPeriod;
     // Map any other fields as needed
     return dto;
   }
