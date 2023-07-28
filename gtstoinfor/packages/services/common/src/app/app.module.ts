@@ -17,6 +17,7 @@ import { OperationGroupsModule } from './operation-groups/operation-groups.modul
 import { DeliveryMethodModule } from './delivery-method/delivery-method.module';
 import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categories.module';
+import { CountriesModule } from './countries/countries.module';
 
 
 @Module({
@@ -43,7 +44,7 @@ import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categori
     ItemSubCategoriesModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule],
   controllers: [AppController],
   providers: [AppService],
 })
