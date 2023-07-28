@@ -15,6 +15,13 @@ import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
+import BuyersForm from "./masters/buyers/buyers-form"
+import BuyersView from "./masters/buyers/buyers-view"
+import VendorsForm from "./masters/vendors/vendors-form"
+import VendorsView from "./masters/vendors/vendors-view"
+import EmployeeDetsilsForm from "./masters/employee-details/employee-details-form"
+import EmployeeDetailsGrid from "./masters/employee-details/employee-details-grid"
+import ItemsForm from "./masters/items/items-form"
 import DeliveryMethodForm from "./masters/delivery-methods/delivery-method-form"
 import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
 import ItemCategoriesGrid from "./masters/item-categories/item-categories-grid"
@@ -41,7 +48,26 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+                <Route path='buyers/buyers-view' element={<BuyersView />} />
+                <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                <Route path='vendors/vendors-form' key='/vendors/vendors-form' element={<VendorsForm vendorsData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                <Route path='vendors/vendors-view' element={<VendorsView />} />
+
+                  <Route path="employee-details/employee-details-form" key='/employee-details/employee-details-form' element= {
+                    <EmployeeDetsilsForm employeeData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateItem={(undefined) => { }}/>
+                } />
+                <Route path='employee-details/employee-details-grid' element={<EmployeeDetailsGrid />} />
+                <Route path="items/items-form" key='/items/items-form' element= {
+                    <ItemsForm itemData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateItem={(undefined) => { }}/>
+                } />
                 </Route>
+              
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
                     <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
@@ -76,6 +102,21 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
+                        <Route path='buyers/buyers-view' element={<BuyersView />} />
+                        <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                        <Route path='vendors/vendors-form' key='/vendors/vendors-form' element={<VendorsForm vendorsData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
+                        <Route path='vendors/vendors-view' element={<VendorsView />} />
+                        <Route path='employee-details/employee-details-form' element={<EmployeeDetsilsForm employeeData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                    <Route path='employee-details/employee-details-grid' element={<EmployeeDetailsGrid />} />
+                    <Route path="items/items-form" key='/items/items-form' element= {
+                    <ItemsForm itemData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateItem={(undefined) => { }}/>
+                } />
                         <Route path='delivery-methods/delivery-method-form' element={<DeliveryMethodForm deliveryMethodData={undefined}
                         isUpdate={false}
                         closeForm={()=> {}}
@@ -88,6 +129,9 @@ export const AppRoutes = () => {
                         updateData={(undefined) => { }}/>}/>
                         <Route path='item-sub-categories/item-sub-categories-view' element={<ItemSubCategoriesGrid/>}/>
                     </Route>
+
+                    
+
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
                         <Route path='changes-view' element={<ChangesGrid />} />
