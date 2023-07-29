@@ -97,7 +97,6 @@ const ChangesGrid = () => {
                 break;
             }
         }
-
         return formattedDate;
     }
 
