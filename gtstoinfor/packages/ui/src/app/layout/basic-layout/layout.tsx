@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
-import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
+import { Button, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
+import { UserOutlined, DashboardOutlined, PicCenterOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
-import { CommonHeader } from '../header/header';
-import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
+import { ProBreadcrumb, ProConfigProvider } from '@ant-design/pro-components';
 import logo from './logo.png'
-const { Sider, Content } = Layout;
-const { SubMenu } = Menu;
-import ProLayout, { DefaultFooter, MenuDataItem, SettingDrawer } from '@ant-design/pro-layout';
-import { getOperatingSystem, treeRouter } from '../../utils/common';
-import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
+import ProLayout from '@ant-design/pro-layout';
+import { treeRouter } from '../../utils/common';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShirt} from '@fortawesome/free-solid-svg-icons';
+
 const { useToken } = theme
 
 
@@ -68,29 +67,65 @@ export const baseRouterList = [
                 filepath: "currencies/currency-view",
             },
             {
+                label: "Brands",
+                key: "brands",
+                path: "brands/brand-view",
+                filepath: "brands/brand-view",
+            },
+            {
+                label: "Operations",
+                key: "operations",
+                path: "operations/operation-view",
+                filepath: "operations/operation-view",
+            },
+            {
                 label: "Buyers",
                 key: "buyers",
-                path: "buyers/buyers-form",
-                filepath: "buyers/buyers-form",
+                path: "buyers/buyers-view",
+                filepath: "buyers/buyers-view",
             },
             {
                 label: "Vendors",
                 key: "vendors",
-                path: "vendors/vendors-form",
-                filepath: "vendors/buyers-form",
+                path: "vendors/vendors-view",
+                filepath: "vendors/vendors-view",
             },
-            // {
-            //     label: "Employee Details",
-            //     key: "employee-details",
-            //     path: "employee-details/employee-details-form",
-            //     filepath: "employee-details/employee-details-form",
-            // },
             {
-                label: "Employee Details",
+                label: "Employees",
                 key: "employee-details-grid",
                 path: "employee-details/employee-details-grid",
                 filepath: "employee-details/employee-details-grid",
             },
+            {
+                label: "Operation Groups",
+                key: "operation-groups",
+                path: "operationgroups/operationgroups-view",
+                filepath: "operationgroups/operationgroups-view",
+            },
+            {
+                label: "Items",
+                key: "items",
+                path: "items/item-grid",
+                filepath:"items/item-grid",
+            },
+            {
+                label: "Delivery Method",
+                key: "delivery-methods",
+                path: "delivery-methods/delivery-method-view",
+                filepath: "delivery-methods/delivery-method-view",
+            },
+            {
+                label: "Item Categories",
+                key: "item-categories",
+                path: "item-categories/item-categories-view",
+                filepath: "item-categories/item-categories-view",
+            },
+            {
+                label: "Item Sub Categories",
+                key: "item-sub-categories",
+                path: "item-sub-categories/item-sub-categories-view",
+                filepath: "item-sub-categories/item-sub-categories-view",
+            }
             {
                 label: "Payment Terms",
                 key: "paymentTerms",
@@ -104,6 +139,22 @@ export const baseRouterList = [
                 filepath: "package-terms/package-terms-view",
             }
         ],
+    },
+    {
+        label: "Style Management",
+        key: "style-management",
+        path: "style-management",
+        icon:<FontAwesomeIcon icon={faShirt} />,
+        filepath: "style-management",
+        children: [
+            {
+                label: "Style",
+                key: "style",
+                path: "style/style-form",
+                filepath: "style/style-form",
+            },
+        ]
+
     },
     {
         label: "Orders",
@@ -141,7 +192,13 @@ export const baseRouterList = [
                 key: "version-grid",
                 path: "version-grid",
                 filepath: "version-grid",
-            }
+            },
+            // {
+            //     label: "Phase Wise Data",
+            //     key: "phase-wise-grid",
+            //     path: "phase-wise-grid",
+            //     filepath: "phase-wise-grid",
+            // }
         ],
     },
 ];

@@ -88,13 +88,10 @@ export class BuyersService {
      * get All Customers Details
      */
     async getAllBuyers(): Promise<AllBuyersResponseModel> {
-        // const page: number = 1;
         try {
             const buyersDTO: BuyersDTO[] = [];
-            //retrieves all companies
-            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'clientName': 'ASC' },
+            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'clientName': 'ASC' },relations:['countryInfo']
          });
-         console.log(buyersEntities)
             if (buyersEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 buyersEntities.forEach(buyerEntity => {
@@ -103,7 +100,7 @@ export class BuyersService {
                     );
                     buyersDTO.push(convertedbuyersDto);
                 });
-                const response = new AllBuyersResponseModel(true, 11108, "Customers retrieved successfully", buyersDTO);
+                const response = new AllBuyersResponseModel(true, 11108, "Buyers retrieved successfully", buyersDTO);
                 // if(req?.createdUser){
                 //     const newLogDto = new LogsDto(1,'view', 'Customers', 0, true, 'Customers retrieved successfully',req.createdUser,'','')
                 //     let res = await this.logService.createLog(newLogDto);
@@ -138,7 +135,7 @@ export class BuyersService {
                     );
                     buyersDTO.push(convertedbuyersDto);
                 });
-                const response = new AllBuyersResponseModel(true, 11108, "Customers retrieved successfully", buyersDTO);
+                const response = new AllBuyersResponseModel(true, 11108, "Buyers retrieved successfully", buyersDTO);
                 return response;
             } else {
                 throw new ErrorResponse(99998, 'Data not found'); 

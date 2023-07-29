@@ -36,7 +36,7 @@ export class BuyersController {
      * @param request 
      */
     @Post('/updateBuyer')
-    async updateBuyer(@Body() buyersDTO: BuyersDTO): Promise<BuyersResponseModel> {
+    async updateBuyer(@Body() buyersDTO: any): Promise<BuyersResponseModel> {
         try {
             return await this.buyersService.createBuyer(buyersDTO, true);
         } catch (error) {
@@ -66,7 +66,7 @@ export class BuyersController {
     }
 
     @Post('/getBuyerDataById')
-    async getBuyerDataById(@Body() buyerRequest:BuyersRequest,@Req() request: Request): Promise<BuyersResponseModel> {
+    async getBuyerDataById(@Body() buyerRequest:any,@Req() request: Request): Promise<BuyersResponseModel> {
         try {
 
         return await this.buyersService.getBuyerDataById(buyerRequest);
@@ -81,7 +81,7 @@ export class BuyersController {
      * @param buyerReq 
      */
     @Post('/activateOrDeactivateBuyer')
-    async activateOrDeactivateBuyer(@Body() buyerReq: BuyersRequest): Promise<BuyersResponseModel> {
+    async activateOrDeactivateBuyer(@Body() buyerReq: any): Promise<BuyersResponseModel> {
         try {
             return await this.buyersService.activateOrDeactivateBuyer(buyerReq);
         } catch (err) {

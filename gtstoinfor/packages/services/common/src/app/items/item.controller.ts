@@ -20,4 +20,32 @@ export class ItemsController{
         return this.applicationExceptionHandler.returnException(AllItemsResponseModel, error);
       }
     }
+
+    @Post('/updateItem')
+    async updateItem(@Body() dto: any,@Req() request:Request): Promise<AllItemsResponseModel> {
+      try {
+        return await this.itemsService.creteItems(dto, true);
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(AllItemsResponseModel, error);
+      }
+    }
+
+    @Post('/ActivateOrDeactivateItem')
+    async ActivateOrDeactivateItem(@Body() dto:any,isUpdate:boolean=false): Promise<AllItemsResponseModel> {
+    try {
+        return await this.itemsService.ActivateOrDeactivateItem(dto);
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(AllItemsResponseModel, error);
+      }
+    }
+
+    @Post('/getAllItems')
+    async getAllItems():Promise<AllItemsResponseModel>{
+      try{
+        return await this.itemsService.getAllItems()
+      }catch(error){
+        return this.applicationExceptionHandler.returnException(AllItemsResponseModel,error)
+      }
+
+    }
 }
