@@ -142,7 +142,7 @@ export function PackageTermsGrid() {
     {
       title: 'Package Term Name',
       dataIndex: 'packageTermsName',
-      width: '400px',
+      // width: '400px',
        sorter: (a, b) => a.packageTermsName.length - b.packageTermsName.length,
        sortDirections: ['descend', 'ascend'],
         ...getColumnSearchProps('packageTermsName')
@@ -242,7 +242,7 @@ export function PackageTermsGrid() {
   }
 
   return (
-    <Card>
+    <Card title = "Package Terms">
      <br></br>
       <Row gutter={40}>
          <Col>

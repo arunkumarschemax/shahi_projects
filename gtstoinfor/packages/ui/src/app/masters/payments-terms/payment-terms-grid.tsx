@@ -283,7 +283,7 @@ export function PaymentTermsGrid(
   }
 
   return (
-    <Card>
+    <Card title ="Payment Terms">
      <br></br>
       <Row gutter={40}>
          <Col>
