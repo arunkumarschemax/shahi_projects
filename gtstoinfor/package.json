@@ -9,6 +9,8 @@
     "@ant-design/plots": "1.2.2",
     "@ant-design/pro-components": "^2.6.2",
     "@ant-design/pro-layout": "^7.15.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@nestjs/common": "9.0.0",
     "@nestjs/core": "9.0.0",
     "@nestjs/jwt": "10.0.2",
