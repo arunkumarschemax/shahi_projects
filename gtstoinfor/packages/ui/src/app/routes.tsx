@@ -36,6 +36,7 @@ import ItemSubCategoriesForm from "./masters/item-sub-categories/item-sub-catego
 import ItemsGrid from "./masters/items/item-grid"
 import PhaseWiseData from "./excel-import/phase-wise-data"
 import StyleForm from "./style-management/style/style-form"
+import StyleGrid from "./style-management/style/style-grid"
 
 
 export const AppRoutes = () => {
@@ -91,6 +92,8 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateDetails={(undefined) => { }}/>} />
+                        <Route path='style/style-grid' element={<StyleGrid />} />
+
                 </Route>
               
                 <Route path='/excel-import' key='/excel-import'>
@@ -175,6 +178,8 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateDetails={(undefined) => { }}/>} />
+                        <Route path='style/style-grid' element={<StyleGrid />} />
+
                 </Route>
 
                     <Route path='/excel-import'>

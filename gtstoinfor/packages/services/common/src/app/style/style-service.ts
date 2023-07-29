@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { StyleRepository } from './dto/style-repo';
-import { AllStyleResponseModel, UploadResponse } from '@project-management-system/shared-models';
+import { AllStyleResponseModel, StyleIdReq, UploadResponse } from '@project-management-system/shared-models';
 import { Style } from './dto/style-entity';
 import { StyleReq } from './dto/style-dto';
 
@@ -35,7 +35,6 @@ export class StyleService{
             throw error
         }
     }
-
     
     async updateStylePath(filePath: string, filename: string, styleId: number): Promise<UploadResponse> {
         console.log('upload service id---------------', styleId)
@@ -57,5 +56,44 @@ export class StyleService{
         }
     }
    
+    async getAllStyle():Promise<AllStyleResponseModel>{
+        const style = await this.styleRepo.find({order:{createdAt:'ASC'}})
+        if(style.length >0){
+            return new AllStyleResponseModel(true,1,'Employees Retrived Sucessfully',style)
+        }else{
+            return new AllStyleResponseModel(false,0,'No  Employees Found ',[])
+
+        }
+
+    }
+
     
+    async ActivateOrDeactivateStyle(req: StyleIdReq): Promise<AllStyleResponseModel> {
+        const StyleDetails = await this.styleRepo.findOne({ where: { styleId: req.styleId } })
+        if (StyleDetails) {
+            if (req.versionFlag != StyleDetails.versionFlag) {
+                throw new AllStyleResponseModel(false, 1, 'SomeOne updated. Referesh and try again', [])
+            } else {
+                const StyleUpdate = await this.styleRepo.update({ styleId: req.styleId }, { isActive: req.isActive})
+                if (StyleDetails.isActive) {
+                    console.log('activeeeee')
+                    if (StyleUpdate.affected) {
+                        return new AllStyleResponseModel(true, 0, 'Style is de-activated successfully', [])
+                    } else {
+                        throw new AllStyleResponseModel(false, 1, 'Style already deactivated', [])
+                    }
+                } else {
+                    if (StyleUpdate.affected) {
+                        return new AllStyleResponseModel(true, 0, 'Style is activated successfully', [])
+                    } else {
+                        throw new AllStyleResponseModel(false, 1, 'Style already activated', [])
+                    }
+                }
+            }
+        }
+        else {
+            throw new AllStyleResponseModel(false, 1, 'No record found', [])
+
+        }
+    }
 }

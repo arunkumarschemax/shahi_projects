@@ -57,6 +57,26 @@ export class StyleController{
         }
       }
 
+    @Post('/ActivateOrDeactivateStyle')
+    async ActivateOrDeactivateStyle(@Body() dto:any,isUpdate:boolean=false): Promise<AllStyleResponseModel> {
+    try {
+        return await this.styleService.ActivateOrDeactivateStyle(dto);
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(AllStyleResponseModel, error);
+      }
+    }
+
+    
+    @Post('/getAllStyle')
+    async getAllStyle():Promise<AllStyleResponseModel>{
+      try{
+        return await this.styleService.getAllStyle()
+      }catch(error){
+        return this.applicationExceptionHandler.returnException(AllStyleResponseModel,error)
+      }
+
+    }
+
     // @Post('/updateStyle')
     // async updateItem(@Body() dto: any,@Req() request:Request): Promise<AllStyleResponseModel> {
     //   try {
@@ -66,24 +86,7 @@ export class StyleController{
     //   }
     // }
 
-    // @Post('/ActivateOrDeactivateStyle')
-    // async ActivateOrDeactivateStyle(@Body() dto:any,isUpdate:boolean=false): Promise<AllStyleResponseModel> {
-    // try {
-    //     return await this.styleService.ActivateOrDeactivateStyle(dto);
-    //   } catch (error) {
-    //     return this.applicationExceptionHandler.returnException(AllStyleResponseModel, error);
-    //   }
-    // }
 
-    // @Post('/getAllStyles')
-    // async getAllStyles():Promise<AllStyleResponseModel>{
-    //   try{
-    //     return await this.styleService.getAllStyles()
-    //   }catch(error){
-    //     return this.applicationExceptionHandler.returnException(AllStyleResponseModel,error)
-    //   }
-
-    // }
 
 
 }

@@ -100,7 +100,7 @@ const service = new StyleService()
                 res.data[0].styleFilePath = fileres.data
             })
           }
-          // navigate("/masters/employee-details/employee-details-grid")
+          navigate("/style-management/style/style-grid")
           onReset();
         } else {
             AlertMessages.getErrorMessage(res.internalMessage);
@@ -126,7 +126,7 @@ const service = new StyleService()
   
   return (
     <>
-    <Card title={props.isUpdate ? 'Update Stle' : 'Add Stle'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Update Stle' : 'Add Stle'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/style-management/style/style-grid')} type={'primary'}>View</Button></span>}>
         <Form form={form}
          onFinish={saveData}
           initialValues={props.styleData} layout="vertical">

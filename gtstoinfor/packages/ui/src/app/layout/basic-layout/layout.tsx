@@ -137,10 +137,11 @@ export const baseRouterList = [
         children: [
             {
                 label: "Style",
-                key: "style",
-                path: "style/style-form",
-                filepath: "style/style-form",
+                key: "style-view",
+                path: 'style/style-grid',
+                filepath: 'style/style-grid',
             },
+            
         ]
 
     },
