@@ -4,8 +4,8 @@ import { Form, Input, Button, Select, Card, Row, Col, Space, message, Upload, Ty
 import { LoadingOutlined, MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import TextArea from 'antd/lib/input/TextArea';
-import { BuyerACcountTypes, BuyersDto, CountryDto, CurrencyDto } from '@project-management-system/shared-models';
-import { BuyersService, CountryService, CurrencyService } from '@project-management-system/shared-services';
+import { BuyerACcountTypes, BuyersDto, CountryDto, CurrencyDto, StyleDto } from '@project-management-system/shared-models';
+import { BuyersService, CountryService, CurrencyService, StyleService } from '@project-management-system/shared-services';
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
@@ -26,6 +26,7 @@ export function StyleForm(props: StyleFormProps) {
   const [filelist, setfilelist] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+const service = new StyleService()
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -76,18 +77,60 @@ export function StyleForm(props: StyleFormProps) {
     reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
   }
+   const onReset = () =>{
+    form.resetFields()
+    setImageUrl('');
+    setfilelist([]);
 
+   }
 
+  const saveEmployee = (data: StyleDto) => {
+    service.creteStyle(data).then((res) => {
+        if (res.status) {
+          AlertMessages.getSuccessMessage('Style Created Successfully');
+          if(filelist.length >0){
+            console.log(res.data[0].styleId)
+            const formData = new FormData();
+            filelist.forEach((file: any) => {
+                formData.append('file', file);
+            });
 
+            formData.append('styleId', `${res.data[0].styleId}`)
+            service.fileUpload(formData).then(fileres => {
+                res.data[0].styleFilePath = fileres.data
+            })
+          }
+          // navigate("/masters/employee-details/employee-details-grid")
+          onReset();
+        } else {
+            AlertMessages.getErrorMessage(res.internalMessage);
+        }
+      })
+      .catch((err) => {
+        // setDisable(false)
+        AlertMessages.getErrorMessage(err.message);
+      });
+   
+  };
+  const saveData = (values: StyleDto) => {
+    console.log(values)
+      if (props.isUpdate) {
+        console.log(props.isUpdate)
+        // props.updateItem(values);
+      } else {
+        saveEmployee(values);
+      }
+    
+  };
 
   
   return (
     <>
     <Card title={props.isUpdate ? 'Update Stle' : 'Add Stle'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
         <Form form={form}
-        //  onFinish={saveData}
+         onFinish={saveData}
           initialValues={props.styleData} layout="vertical">
-          <Form.Item name="buyerId" style={{ display: "none" }} >
+          <Form.Item name="styleId" style={{ display: "none" }} >
             <Input hidden />
           </Form.Item>
           <Form.Item style={{ display: "none" }} name="createdUser" initialValue={''}>
@@ -98,7 +141,7 @@ export function StyleForm(props: StyleFormProps) {
             <Card>
             <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
-                        <Form.Item name='location' label='Location'>
+                        <Form.Item name='locationId' label='Location'>
                             <Input/>
                         </Form.Item>
                 </Col>
@@ -130,6 +173,18 @@ export function StyleForm(props: StyleFormProps) {
                         </Form.Item>
                 </Col>
             </Row> 
+            <Row>
+          <Col span={24} style={{ textAlign: 'right' }}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+            {/* {(props.isUpdate===false) && */}
+         <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
+            Reset
+          </Button>
+          {/* } */}
+          </Col>
+        </Row>
             </Card>  
          </Col>
          {imageUrl &&
