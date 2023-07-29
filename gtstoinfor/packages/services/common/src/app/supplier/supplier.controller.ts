@@ -4,7 +4,7 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { SupplierDto } from "./dto/supplier-dto";
 import { SupplierAdapter } from "./adapters/adapters/supplier.adapter";
 import { SupplierEntity } from "./supplier.entity";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, SupplierActivateDeactivateDto, SupplierResponse } from "@project-management-system/shared-models";
 
 
 @Controller("supplier")
@@ -30,11 +30,24 @@ export class SupplierController{
 
       }
   }
+  @Post('/getActiveSuppliers')
+    async getActiveSuppliers() : Promise<SupplierResponse>{
+        try{
+            return await this.supplierService.getActiveSuppliers()
+        }catch(error){
+            return this.applicationExceptionhandler.returnException(SupplierResponse, error);
+        }
+    }
 
 
-  @Post('activateOrDeactivateSuppliers')
-  async activateOrDeactivateSuppliers(@Body() supplierDto: SupplierDto):Promise<any>{
-    return await this.supplierService.activateOrDeactivateSuppliers(supplierDto);
+  @Post("/activateOrDeactivate")
+  async activateOrDeactivate(@Body() activateDeactivateReq:any) : Promise<SupplierResponse>{
+    console.log(activateDeactivateReq, '[[[[[[[[[[[[[[[[[[[[[[[[[[[[[');
+    try{
+        await this.supplierService.activateOrDeactivate(activateDeactivateReq)
+    }catch(error){
+        return this.applicationExceptionhandler.returnException(SupplierResponse,error)
+    }
   }
 
   @Post('/updateSuppliers')

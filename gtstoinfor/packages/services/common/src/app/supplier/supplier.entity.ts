@@ -1,11 +1,11 @@
-// // import { CommonColumns } from "packages/services/common/common-columns.entity";
 // import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { CommonColumns } from 'packages/services/common/common-columns.entity';
 import { Column, Entity, JoinColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, VersionColumn,PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('supplier') 
-export class SupplierEntity {
+export class SupplierEntity  extends CommonColumns {
 
-    @PrimaryGeneratedColumn("increment", { name: 'id' })
+    @PrimaryGeneratedColumn("uuid", { name: 'id' })
     id: number;
 
     @Column('varchar', {
@@ -126,17 +126,5 @@ email: string;
  
 })
 creditPaymentPeriod: number;
-
-@Column('boolean',{
-  name:'is_active'
-})
-isActive:boolean;
-
-@Column('int', {
-  name: 'version_flag',
- 
-})
-versionFlag: number;
-
 
 }

@@ -37,9 +37,9 @@ export function SupplierForm() {
 
 
         <Card
-            extra={<span><Button type='primary' onClick={() => navigate('/masters/supplier/supplier-view')}>View</Button></span>} headStyle={{ backgroundColor: 'lightblue', height: '50px' }}
+            extra={<span><Button type='primary' onClick={() => navigate('/masters/supplier/supplier-view')}>View</Button></span>} headStyle={{  height: '40px' }}
             bodyStyle={{ paddingTop: '2px', paddingBottom: '12px' }}
-            title={<h4 style={{ textAlign: 'center' }}>Suppliers</h4>}>
+            title={<h4 style={{ textAlign: 'left', padding: '20px' }}>Suppliers</h4>}>
             <Form layout="vertical"
                 form={form}
                 onFinish={onFinish}

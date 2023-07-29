@@ -1,10 +1,11 @@
+import { GlobalResponseObject } from "../global-response-object";
 import { SupplierCreateDto } from "./supplier-create-dto";
-import { SupplierResponseObject } from "./supplier-response-objects";
 
 
 
 
-export class SupplierResponse extends SupplierResponseObject {
+
+export class SupplierResponse extends GlobalResponseObject {
     data?:  SupplierCreateDto;
 
     /**

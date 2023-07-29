@@ -64,8 +64,8 @@ export const baseRouterList = [
             {
                 label: "Supplier",
                 key: "supplier",
-                path: "supplier/supplier-form",
-                filepath: "supplier/supplier-form",
+                path: "supplier/supplier-view",
+                filepath: "supplier/supplier-view",
             },
         ],
     },

@@ -1,9 +1,11 @@
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined } from '@ant-design/icons';
+import { SupplierActivateDeactivateDto } from '@project-management-system/shared-models';
 import { Button, Card, Divider, Popconfirm, Switch, Table, Tag } from 'antd';
 import SupplierService from 'packages/libs/shared-services/src/supplier/supplier-service';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
+import TableActions from '../../common/table-actions/table-actions';
 
 const SupplierView = () => {
   const [supplier, setSupllier] = useState([]);
@@ -33,24 +35,31 @@ const SupplierView = () => {
     navigate('/', { state: { data: record } })
 
   }
-  const activateOrDeactivate = (id: string) => {
-    service.activateOrDeactivate({ id: id }).then(res => {
-      if (res.status) {
-        console.log(res, "PPPPPPPPPPPPPPp")
-        AlertMessages.getSuccessMessage(res.data.internalMessage);
-        getSupplierData();
-      } else {
-        if (res.intlCode) {
-          AlertMessages.getErrorMessage(res.internalMessage)
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage)
-        }
-      }
-    }).catch(err => {
-      AlertMessages.getErrorMessage(err.message)
-    })
-  }
+  // const activateOrDeactivate = () => {
+  //   const dto = new SupplierActivateDeactivateDto()
+  //   service.activateOrDeactivate(dto).then(res => {
+  //     if (res.status) {
+  //       console.log(res, "PPPPPPPPPPPPPPp")
+  //       AlertMessages.getSuccessMessage(res.data.internalMessage);
+  //       getSupplierData();
+  //     } else {
+  //       if (res.intlCode) {
+  //         AlertMessages.getErrorMessage(res.internalMessage)
+  //       } else {
+  //         AlertMessages.getErrorMessage(res.internalMessage)
+  //       }
+  //     }
+  //   }).catch(err => {
+  //     AlertMessages.getErrorMessage(err.message)
+  //   })
+  // }
+ 
 
+  async function onSwitchClick(item: any) { 
+    const dto = new SupplierActivateDeactivateDto(item.id, !item.isActive, item.versionFlag, 'admin')
+    await service.activateOrDeactivate(dto);
+    window.location.reload();
+  }
 
 
   const Columns: any = [
@@ -170,62 +179,34 @@ const SupplierView = () => {
       width: 50
     },
     {
-      key: '5',
-      title: "Status",
-      dataIndex: "isActive",
-      width: 50,
-      render: (isActive: any, rowData: any) => (
-        <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-        </>
-      ),
-      filters: [
-        {
+      title: 'Status',
+      filters: true,
+      onFilter: true,
+      ellipsis: true,
+      valueType: 'select',
+      valueEnum: {
+        open: {
           text: 'Active',
-          value: true,
+          status: 'Error',
         },
-        {
-          text: 'In Active',
-          value: false,
-        },
-      ]
+        closed: {
+          text: 'Inactive',
+          status: 'Success',
+        }, 
+      },
+      align: 'center',
+      render: (dom, entity) => { return <Tag color={entity.isActive ? 'green' : 'red'}>{entity.isActive ? 'Active' : 'Inactive'}</Tag> }
     },
-    {
-      key: '6',
-      title: "Actions",
-      width: 50,
-      render: (value: any, record: any) => {
-        return <>
-          <EditOutlined style={{ color: 'blue' }} onClick={() => { onEdit(record) }} type="edit" />
-
-          <Divider type="vertical" />
-          <Popconfirm onConfirm={e => { activateOrDeactivate(record.id); }}
-            title={
-              record.isActive
-                ? 'Are you sure to deactivated ?'
-                : 'Are you sure to activated ?'
-            }
-          >
-            <Switch size="default"
-              className={record.isActive ? 'toggle-activated' : 'toggle-deactivated'}
-              checkedChildren={<RightSquareOutlined type="check" />}
-              unCheckedChildren={<RightSquareOutlined type="close" />}
-              checked={record.isActive}
-            />
-          </Popconfirm>
-        </>
-
-      }
-    },
+    { title: 'Action', align: 'center', render: (dom, entity) => { return <TableActions isActive={entity.isActive} onEditClick={onEdit} onSwitchClick={() => onSwitchClick(entity)} /> } }
 
   ]
   return (
     <div>
       <Card
-        extra={<span><Button onClick={() => navigate('/masters/supplier/supplier-form')} type={'primary'}>Create</Button></span>}
-        headStyle={{ backgroundColor: 'lightblue', height: '50px' }}
+        extra={<span><Button onClick={() => navigate('/masters/supplier/supplier-form')} type={'primary'}>New</Button></span>}
+        headStyle={{ height: '50px' }}
         bodyStyle={{ height: '300px', paddingTop: '2px', paddingBottom: '5px' }}
-        title={<h4 style={{ textAlign: 'center' }}>SupplierView</h4>}
+        title={<h4 style={{ textAlign: 'left' }}>SupplierView</h4>}
 
       >
 
