@@ -20,7 +20,7 @@ export class SupplierService {
         const entity= await this.supplierAdapter.convertDtoToEntity(supplierDto);
         const savedEntity = await this.supplierRepository.save(entity);
         const saveDto: SupplierDto = this.supplierAdapter.convertEntityToDto(savedEntity);
-        return new CommonResponseModel(true,1, 'data saved successfully', saveDto);
+        return new CommonResponseModel(true, 1, 'data saved successfully', saveDto);
     }
 
 
@@ -59,8 +59,27 @@ export class SupplierService {
         } else {
             new ErrorResponse(99999, 'No records found')
         }
-
     }
+    // async getAllSuppliers(): Promise<any> {
+    //     const data = await this.supplierRepository.find();
+    //     console.log(data,'dataaaaa')
+    //     return data
+    //     // const data: SupplierCreateDto = [];
+    //     // for (const entity of details) {
+    //     //     const conversion = this.supplierAdapter.convertEntityToDto(entity);
+    //     //     data.push(conversion);
+    //     // }
+    //     // return new SupplierResponse(true, 1, 'data retrived',details);
+    // } 
+
+    // async activateOrDeactivateSuppliers( supplierReq: SupplierDto ): Promise<SupplierResponse> {
+    //     const record = await this.supplierRepository.findOne({  where: { id: supplierReq.id },  });
+    //     await this.supplierRepository.update(
+    //         { id: supplierReq.id },
+    //         { isActive: !record.isActive }
+    //     );
+
+    // }
     async updateSuppliers(createsupplierDto: any): Promise<any> {
         const records = await this.supplierRepository.findOne({
             where: { id: createsupplierDto.id },
