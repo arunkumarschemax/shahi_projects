@@ -113,12 +113,19 @@ const ChangesGrid = () => {
             .addSheet('GroupBy ItemCode Qty')
             .addColumns(data4)
             .addDataSource(differenceQtyData, { str2num: true })
-            .addSheet('Requested Warehouse Date')
-            .addColumns(data2)
-            .addDataSource(filteredWarehouseDateData, { str2num: true })
-            .addSheet('Contracted date')
-            .addColumns(data3)
-            .addDataSource(contractDateData, { str2num: true })
+        if (filteredWarehouseDateData.length > 0) {
+            excel
+                .addSheet('Requested Warehouse Date')
+                .addColumns(data2)
+                .addDataSource(filteredWarehouseDateData, { str2num: true })
+        }
+        if (contractDateData.length > 0) {
+            excel
+                .addSheet('Contracted date')
+                .addColumns(data3)
+                .addDataSource(contractDateData, { str2num: true })
+        }
+        excel
             .addSheet('Phase Wise data')
             .addColumns(exportingColumns)
             .addDataSource(phaseExcelData, { str2num: true })
@@ -241,15 +248,15 @@ const ChangesGrid = () => {
         },
         {
             title: ' sum Of Qrd Qty last Week',
-            dataIndex: 'sumOfOldVal',
+            dataIndex: 'old_qty_value',
         },
         {
             title: 'Sum Of Qrd Qty this Week',
-            dataIndex: 'sumOfNewVal',
+            dataIndex: 'new_qty_value',
         },
         {
             title: 'Difference Ord Qty Revised',
-            dataIndex: 'diffVal'
+            dataIndex: 'diff'
         },
 
     ];
