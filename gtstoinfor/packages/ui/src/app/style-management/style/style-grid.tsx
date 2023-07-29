@@ -226,21 +226,34 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
   }
 
 
-//   const updateEmployee = (data: EmployeeDetailsResponse) => {
-//     // data.updateUser = JSON.parse(localStorage.getItem('username'))
-//     service.updateEmployee(data).then(res => {
-//       console.log(res);
-//       if (res.status) {
-//         AlertMessages.getSuccessMessage('Updated Successfully');
-//         getAllEmployees();
-//         setDrawerVisible(false);
-//       } else {     
-//         AlertMessages.getErrorMessage(res.internalMessage);
-//       }
-//     }).catch(err => {
-//       AlertMessages.getErrorMessage(err.message);
-//     })
-//   }
+  const updateStyle = (data: StyleDto,filelist:any) => {
+    // data.updateUser = JSON.parse(localStorage.getItem('username'))
+    service.updateStyle(data).then(res => {
+      console.log(res);
+      if (res.status) {
+        console.log(res.data[0].styleId,'updatee')
+        if (filelist.length > 0) {
+          const formData = new FormData();
+          filelist.forEach((file: any) => {
+            formData.append('file', file);
+          });
+          formData.append('styleId', `${res.data[0].styleId}`)
+          console.log(formData)
+          service.fileUpload(formData).then(fileres => {
+            res.data[0].styleFilePath = fileres.data;
+            getAllStyles();
+
+          })
+        }
+        AlertMessages.getSuccessMessage('Updated Successfully');
+        setDrawerVisible(false);
+      } else {     
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+      AlertMessages.getErrorMessage(err.message);
+    })
+  }
 
   const deleteStyle = (data:StyleIdReq ) => {
     data.isActive = data.isActive ? false : true;
@@ -258,9 +271,9 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
     })
   }
 
-  const updateStyle = () =>{
+  // const updateStyle = () =>{
 
-  }
+  // }
 
   return (
       <>
