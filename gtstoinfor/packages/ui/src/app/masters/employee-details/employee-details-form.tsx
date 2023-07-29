@@ -76,8 +76,8 @@ const alertNativeOnchange = (value) =>{
     form.resetFields();
   };
   return (
- <Card title={<span style={{color:'black'}}>Employee Details</span>}
-    style={{textAlign:'center'}} 
+ <Card title={<span style={{color:'black'}}>Add Employee</span>}
+    style={{textAlign:'left'}} 
      extra={props.isUpdate==true?"":<Link to='/masters/employee-details/employee-details-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
 
@@ -143,7 +143,7 @@ const alertNativeOnchange = (value) =>{
           <Input />
           </Form.Item>
           </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:5}} style={{margin:'1%'}}> 
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> 
           <Form.Item
           name="alterNativeMobileNumber"
           label="Alter Native Number"
@@ -177,23 +177,11 @@ const alertNativeOnchange = (value) =>{
           <Input />
         </Form.Item>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
-          name="address"
-          label="Address"
-          rules={[
-            {
-              required: true,
-              message:'Address Is Required'
-            }
-          ]}
-        >
-          <Input.TextArea rows={3}/>
-        </Form.Item>
-        </Col>
+       
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}>
            <Form.Item
           name="pinCode"
-          label="Pin Code"
+          label="Postal Code"
           rules={[
             {
               required: true,
@@ -205,6 +193,19 @@ const alertNativeOnchange = (value) =>{
           ]}
         >
           <Input type='Number'/>
+        </Form.Item>
+        </Col>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}} style={{margin:'1%'}}> <Form.Item
+          name="address"
+          label="Address"
+          rules={[
+            {
+              required: true,
+              message:'Address Is Required'
+            }
+          ]}
+        >
+          <Input.TextArea rows={2}/>
         </Form.Item>
         </Col>
         </Row>

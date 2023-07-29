@@ -1,6 +1,7 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 // import { Countries } from "../countries/countries.entity";
 import { Currencies } from "../currencies/currencies.entity";
+import { Countries } from "../countries/countries.entity";
 // import { VendorsPriceList } from "../vendors-price-list/entities/vendor-price-list.entity";
 
 @Entity('vendors')
@@ -172,7 +173,7 @@ emailId:string;
   @JoinColumn({ name:"currency_id"})
   currencyInfo: Currencies;
 
-//   @ManyToOne(type=>Countries, country=>country.vendorInfo,{  nullable:false, })
-//   @JoinColumn({ name:"country_id"})
-//   countryInfo: Countries;
+  @ManyToOne(type=>Countries, country=>country.vendorInfo,{  nullable:false, })
+  @JoinColumn({ name:"country_id"})
+  countryInfo: Countries;
 }
