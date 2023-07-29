@@ -22,6 +22,8 @@ import VendorsView from "./masters/vendors/vendors-view"
 import EmployeeDetsilsForm from "./masters/employee-details/employee-details-form"
 import EmployeeDetailsGrid from "./masters/employee-details/employee-details-grid"
 import ItemsForm from "./masters/items/items-form"
+import GarmentsForm from "./masters/garments/garments-form"
+import GarmentsView from "./masters/garments/garments-view"
 
 
 export const AppRoutes = () => {
@@ -108,6 +110,13 @@ export const AppRoutes = () => {
                     <Route path='employee-details/employee-details-grid' element={<EmployeeDetailsGrid />} />
                     <Route path="items/items-form" key='/items/items-form' element= {
                     <ItemsForm itemData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateItem={(undefined) => { }}/>
+                } />
+                <Route path='garments/garments-view' element={<GarmentsView />} />
+                 <Route path="garments/garments-form" key='garments/garments-form' element= {
+                    <GarmentsForm garmentData={undefined}
                     isUpdate={false}
                     closeForm={() => { }}
                     updateItem={(undefined) => { }}/>

@@ -91,6 +91,12 @@ export const baseRouterList = [
                 path: "items/items-form",
                 filepath: "items/items-form",
             },
+            {
+                label: "Garments",
+                key: "garments",
+                path: "garments/garments-view",
+                filepath: "garments/garments-view",
+            },
         ],
     },
     {
