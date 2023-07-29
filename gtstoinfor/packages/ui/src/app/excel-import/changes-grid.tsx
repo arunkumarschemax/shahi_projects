@@ -86,12 +86,30 @@ const ChangesGrid = () => {
         })
     }
 
+    function convertToYYYYMMDD(inputDate) {
+        const formatsToTry = ['DD-MM-YYYY', 'MM/DD/YYYY'];
+        let formattedDate = null;
+
+        for (const format of formatsToTry) {
+            const parsedDate = moment(inputDate, format, true);
+            if (parsedDate.isValid()) {
+                formattedDate = parsedDate.format('YYYY-MM-DD');
+                break;
+            }
+        }
+
+        return formattedDate;
+    }
+
     const exportExcel = () => {
         const excel = new Excel();
+        if (filteredQtyData.length > 0) {
+            excel
+                .addSheet('order Qty')
+                .addColumns(data1)
+                .addDataSource(filteredQtyData, { str2num: true })
+        }
         excel
-            .addSheet('order Qty')
-            .addColumns(data1)
-            .addDataSource(filteredQtyData, { str2num: true })
             .addSheet('GroupBy ItemCode Qty')
             .addColumns(data4)
             .addDataSource(differenceQtyData, { str2num: true })
@@ -395,14 +413,14 @@ const ChangesGrid = () => {
             title: 'Contracted Date',
             dataIndex: 'contracted_date',
             render: (text, record) => {
-                return record.contracted_date ? moment(record.contracted_date).format('YYYY-MM-DD') : '-'
+                return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
             }
         },
         {
             title: 'Order Revised Date',
             dataIndex: 'last_update_date',
             render: (text, record) => {
-                return record.last_update_date ? moment(record.last_update_date).format('YYYY-MM-DD') : '-'
+                return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
             }
         },
         {
@@ -410,7 +428,7 @@ const ChangesGrid = () => {
             dataIndex: 'requested_wh_date',
             // width :'190px',
             render: (text, record) => {
-                return record.requested_wh_date ? moment(record.requested_wh_date).format('YYYY-MM-DD') : '-'
+                return record.requested_wh_date ? convertToYYYYMMDD(record.requested_wh_date) : '-'
             }
         },
         {
@@ -443,7 +461,7 @@ const ChangesGrid = () => {
             title: 'Previous Requested Warehouse Date',
             dataIndex: 'old_val',
             render: (text, record) => (
-                <span>{moment(record.old_val).format('DD-MM-YYYY')}</span>
+                <span>{convertToYYYYMMDD(record.old_val)}</span>
             )
         },
         {
@@ -453,12 +471,12 @@ const ChangesGrid = () => {
             render: (text, record) => (
                 <span>
                     <>
-                        {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{record.new_val}</span> : ''}
+                        {convertToYYYYMMDD(record.old_val) < convertToYYYYMMDD(record.new_val) ? <span style={{ color: 'green' }}>{convertToYYYYMMDD(record.new_val)}</span> : ''}
 
-                        {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{record.new_val}</span> : ''}
+                        {convertToYYYYMMDD(record.old_val) > convertToYYYYMMDD(record.new_val) ? <span style={{ color: 'red' }}>{convertToYYYYMMDD(record.new_val)}</span> : ''}
                         &nbsp;&nbsp;
                         <span>
-                            {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                            {convertToYYYYMMDD(record.old_val) < convertToYYYYMMDD(record.new_val) ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
                         </span>
                     </>
                 </span>
@@ -470,7 +488,7 @@ const ChangesGrid = () => {
             // width :'190px',
             render: (text, record) => {
                 const obj: any = {
-                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div>)
+                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div>)
                 };
                 return obj;
             }
@@ -491,14 +509,14 @@ const ChangesGrid = () => {
             title: 'Contracted Date',
             dataIndex: 'contracted_date',
             render: (text, record) => {
-                return record.contracted_date ? moment(record.contracted_date).format('YYYY-MM-DD') : '-'
+                return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
             }
         },
         {
             title: 'Order Revised Date',
             dataIndex: 'last_update_date',
             render: (text, record) => {
-                return record.last_update_date ? moment(record.last_update_date).format('YYYY-MM-DD') : '-'
+                return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
             }
         },
         {
@@ -532,7 +550,7 @@ const ChangesGrid = () => {
             title: 'Previous Contracted Date',
             dataIndex: 'old_val',
             render: (text, record) => {
-                return record.old_val ? moment(record.old_val).format('YYYY-MM-DD') : '-'
+                return record.old_val ? convertToYYYYMMDD(record.old_val) : '-'
             }
         },
 
@@ -540,12 +558,12 @@ const ChangesGrid = () => {
             title: 'Revised Contracted Date',
             dataIndex: 'new_val',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.old_val).format('YYYY-MM-DD')} Revised Date:  ${moment(record.new_val).format('YYYY-MM-DD')}Difference : ${Math.floor((new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
-                    {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'green' }}>{moment(record.new_val).format('YYYY-MM-DD')}</span> : ''}
-                    {moment(record.old_val).format('YYYY-MM-DD') > moment(record.new_val).format('YYYY-MM-DD') ? <span style={{ color: 'red' }}>{moment(record.new_val).format('YYYY-MM-DD')}</span> : ''}
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${convertToYYYYMMDD(record.old_val)} Revised Date:  ${convertToYYYYMMDD(record.new_val)}Difference : ${Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
+                    {convertToYYYYMMDD(record.old_val) < convertToYYYYMMDD(record.new_val) ? <span style={{ color: 'green' }}>{convertToYYYYMMDD(record.new_val)}</span> : ''}
+                    {convertToYYYYMMDD(record.old_val) > convertToYYYYMMDD(record.new_val) ? <span style={{ color: 'red' }}>{convertToYYYYMMDD(record.new_val)}</span> : ''}
                     &nbsp;&nbsp;
                     <span>
-                        {moment(record.old_val).format('YYYY-MM-DD') < moment(record.new_val).format('YYYY-MM-DD') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                        {convertToYYYYMMDD(record.old_val) < convertToYYYYMMDD(record.new_val) ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
                     </span>
                 </Tooltip>
             )
@@ -556,7 +574,7 @@ const ChangesGrid = () => {
             // width :'190px',
             render: (text, record) => {
                 const obj: any = {
-                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(moment(record.old_val).format('YYYY/MM/DD')).getTime() - new Date(moment(record.new_val).format('YYYY/MM/DD')).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div>)
+                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div>)
                 };
                 return obj;
             }
@@ -576,7 +594,7 @@ const ChangesGrid = () => {
             title: 'Order Revised Date',
             dataIndex: 'last_update_date',
             render: (text, record) => {
-                return record.last_update_date ? moment(record.last_update_date).format('YYYY-MM-DD') : '-'
+                return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
             }
 
         },
@@ -585,7 +603,7 @@ const ChangesGrid = () => {
             dataIndex: 'requested_wh_date',
             // width :'190px'
             render: (text, record) => {
-                return record.requested_wh_date ? moment(record.requested_wh_date).format('YYYY-MM-DD') : '-'
+                return record.requested_wh_date ? convertToYYYYMMDD(record.requested_wh_date) : '-'
             }
         },
         {
@@ -671,6 +689,7 @@ const ChangesGrid = () => {
             title: 'Sum of Ord Qty last week',
             dataIndex: 'oldOrderQtyPcs',
             key: 'oldOrderQtyPcs',
+            align: 'right',
             render: (text: any, record: any) => {
                 return Number(record.oldOrderQtyPcs).toLocaleString('en-IN', {
                     maximumFractionDigits: 0
@@ -681,6 +700,7 @@ const ChangesGrid = () => {
             title: 'Sum of Ord Qty this week',
             dataIndex: 'newOrderQtyPcs',
             key: 'newOrderQtyPcs',
+            align: 'right',
             render: (text: any, record: any) => {
                 return Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
                     maximumFractionDigits: 0
@@ -690,6 +710,7 @@ const ChangesGrid = () => {
         {
             title: 'Difference',
             dataIndex: 'diff',
+            align: 'right',
             render: (text: any, record: any) => (
                 < >
 
@@ -739,8 +760,8 @@ const ChangesGrid = () => {
     const EstimatedETDDate = (value) => {
         if (value) {
             console.log(value)
-            const fromDate = value[0].format('YYYY-MM-DD');
-            const toDate = value[1].format('YYYY-MM-DD');
+            const fromDate = value[0];
+            const toDate = value[1];
             setSelectedEstimatedFromDate(fromDate)
             setSelectedEstimatedToDate(toDate)
         }
@@ -763,9 +784,9 @@ const ChangesGrid = () => {
         }
         if (startDate && endDate) {
             console.log(filteredQtyData)
-            filteredContractData = filteredContractData.filter(record => moment(record.last_update_date).format('YYYY-MM-DD') >= startDate && moment(record.last_update_date).format('YYYY-MM-DD') <= endDate);
-            filteredQtyData = filteredQtyData.filter(record => moment(record.last_update_date).format('YYYY-MM-DD') >= startDate && moment(record.last_update_date).format('YYYY-MM-DD') <= endDate)
-            filteredReqWhData = filteredReqWhData.filter(record => moment(record.last_update_date).format('YYYY-MM-DD') >= startDate && moment(record.last_update_date).format('YYYY-MM-DD') <= endDate)
+            filteredContractData = filteredContractData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
+            filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
+            filteredReqWhData = filteredReqWhData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
             setFilteredContractDateData(filteredContractData);
             setFilteredQtyData(filteredQtyData)
             setFilteredWarehouseDateDate(filteredReqWhData)
