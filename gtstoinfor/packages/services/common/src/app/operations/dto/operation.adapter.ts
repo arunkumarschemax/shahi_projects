@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { OperationDTO } from "./operations.dto";
 import { Operations } from "../operation.entity";
+import { OperationGroups } from "../../operation-groups/operation-groups.entity";
 
 @Injectable()
 export class OperationsAdapter {
@@ -12,8 +13,11 @@ export class OperationsAdapter {
    */
   public convertDtoToEntity( operationsDto: OperationDTO, isUpdate: boolean = false): Operations {
     const operations = new Operations();
+    const operationgroup = new OperationGroups()
     operations.operationName = operationsDto.operationName;
     operations.operationCode = operationsDto.operationCode;
+    operationgroup.operationGroupId = operationsDto.operationGroupId
+    operations.operationGroupInfo = operationgroup
     operations.isActive = operationsDto.isActive == undefined?true:operationsDto.isActive;
     if(isUpdate){
       operations.operationId = operationsDto.operationId;
@@ -28,6 +32,7 @@ export class OperationsAdapter {
     const operationsDto = new OperationDTO();
     operationsDto.operationId = operationsObject.operationId;
     operationsDto.operationName = operationsObject.operationName;
+    operationsDto.operationGroupId = (operationsObject.operationGroupInfo)?.operationGroupId;
     operationsDto.isActive = operationsObject.isActive;
     operationsDto.createdAt = operationsObject.createdAt;
     operationsDto.createdUser = operationsObject.createdUser;
