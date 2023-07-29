@@ -51,6 +51,10 @@ export class OrdersService extends CommonAxiosService {
         return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
     }
 
+    async updateFileStatus(req: any): Promise<CommonResponseModel> {
+        return await this.axiosPostCall(this.ordersController + '/updateFileStatus', req);
+    }
+
     async getUploadFilesData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getUploadFilesData")
     }
@@ -61,5 +65,13 @@ export class OrdersService extends CommonAxiosService {
 
     async getVersionWiseData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getVersionWiseData")
+    }
+
+    async getPhaseWiseData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getPhaseWiseData")
+    }
+
+    async getPhaseWiseExcelData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getPhaseWiseExcelData")
     }
 }

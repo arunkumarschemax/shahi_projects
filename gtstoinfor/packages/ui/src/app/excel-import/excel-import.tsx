@@ -6,6 +6,7 @@ import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { UndoOutlined } from '@ant-design/icons';
+import { FileStatusReq } from '@project-management-system/shared-models';
 
 
 export default function ExcelImport() {
@@ -69,9 +70,17 @@ export default function ExcelImport() {
           ordersService.saveOrder(data, fileRes?.data?.id).then((res) => {
             setLoading(true)
             if (res.status) {
+              const req = new FileStatusReq()
+              req.fileId = fileRes?.data?.id;
+              req.status = 'Success'
+              ordersService.updateFileStatus(req)
               message.success(res.internalMessage)
               navigate("/excel-import/grid-view");
             } else {
+              const req = new FileStatusReq()
+              req.fileId = fileRes?.data?.id;
+              req.status = 'Failed'
+              ordersService.updateFileStatus(req)
               message.error('File upload failed')
             }
           }).finally(() => {
@@ -133,6 +142,9 @@ export default function ExcelImport() {
             </Descriptions.Item>
             <Descriptions.Item label={<b>Uploaded Date</b>}>
               {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).utc().format('YYYY-MM-DD HH:mm:ss') : '-'}
+            </Descriptions.Item>
+            <Descriptions.Item label={<b>Uploaded User</b>}>
+              {filesData[0]?.createdUser}
             </Descriptions.Item>
           </Descriptions>
         </span>

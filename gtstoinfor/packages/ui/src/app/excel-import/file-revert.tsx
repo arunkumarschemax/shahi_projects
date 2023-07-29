@@ -9,15 +9,13 @@ import { FileIdReq } from '@project-management-system/shared-models';
 export function FileRevert() {
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = useState(1);
+    const service = new OrdersService()
+    const [data, setData] = useState<any[]>([])
 
 
     useEffect(() => {
         getUploadFilesData()
     }, [])
-
-    const service = new OrdersService()
-
-    const [data, setData] = useState<any[]>([])
 
     const getUploadFilesData = () => {
         service.getUploadFilesData().then((res) => {
@@ -26,7 +24,6 @@ export function FileRevert() {
                 message.success(res.internalMessage)
             } else {
                 message.error(res.internalMessage)
-
             }
         })
     }
@@ -36,6 +33,7 @@ export function FileRevert() {
         req.fileId = value
         service.revertFileData(req).then((res) => {
             if (res.status) {
+                getUploadFilesData()
                 message.success(res.internalMessage)
             } else {
                 message.error(res.internalMessage)
@@ -55,13 +53,17 @@ export function FileRevert() {
             dataIndex: 'uploadedDate',
             render: (value, record) => {
                 return (
-                    moment(value).format('YYYY-MM-DD HH:mm:ss')
+                    moment(value).utc().format('YYYY-MM-DD HH:mm:ss')
                 )
             }
         },
         {
             title: 'File Name',
             dataIndex: 'fileName'
+        },
+        {
+            title: 'Upload Status',
+            dataIndex: 'status'
         },
         {
             title: 'Uploaded User',
