@@ -13,8 +13,8 @@ import AlertMessages from '../../common/common-functions/alert-messages';
 const { Option } = Select;
 
 export interface StyleFormProps {
-  styleData: BuyersDto;
-  updateDetails: (customers: BuyersDto) => void;
+  styleData: StyleDto;
+  updateDetails: (customers: StyleDto,filelist:any) => void;
   isUpdate: boolean;
   closeForm: () => void;
 }
@@ -23,8 +23,14 @@ export function StyleForm(props: StyleFormProps) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [imageUrl, setImageUrl] = useState('');
-  const [filelist, setfilelist] = useState<any>([]);
+  // const [filelist, setfilelist] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [filelist, setfilelist] = useState<any>(props.isUpdate?[{
+    name: props.styleData.styleFileName,
+    status: 'done',
+    url:props.styleData.styleFileName,
+  }]:[]);
 
 const service = new StyleService()
   const uploadButton = (
@@ -115,14 +121,14 @@ const service = new StyleService()
   const saveData = (values: StyleDto) => {
     console.log(values)
       if (props.isUpdate) {
-        console.log(props.isUpdate)
-        // props.updateItem(values);
+        props.updateDetails(values,filelist);
       } else {
         saveEmployee(values);
       }
     
   };
 
+  
   
   return (
     <>
@@ -165,8 +171,9 @@ const service = new StyleService()
                             rules={[
                                 {required:true,message:'Upload Style'}
                             ]}  
+                            initialValue={props.isUpdate ? props.styleData.styleFilePath:''}
                         >
-                           <Upload {...uploadFieldProps} style={{  width:'100%' }} listType="picture-card">
+                           <Upload  {...uploadFieldProps} style={{  width:'100%' }} listType="picture-card">
                             
                             {uploadButton}
                             </Upload>
@@ -187,15 +194,17 @@ const service = new StyleService()
         </Row>
             </Card>  
          </Col>
-         {imageUrl &&
-         ( <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }} >
+         {/* {imageUrl &&
+         (  */}
+         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }} >
             <Card style={{height:'314px'}}>
-                    <Form.Item label='Style'>
-                    <img src={imageUrl} alt="Default Preview"  style={{ width: '50%',objectFit: 'cover',marginRight:'100px' }} height={'260px'} width={'2000px'}/> 
+                    <Form.Item label='Style' initialValue={props.isUpdate ? props.styleData.styleFilePath:''}>
+                    <img src={props.isUpdate ? props.styleData.styleFilePath:imageUrl} alt="Default Preview"  style={{ width: '50%',objectFit: 'cover',marginRight:'100px' }} height={'260px'} width={'2000px'}/> 
                     </Form.Item>        
             </Card>
-         </Col>)
-         }
+         </Col>
+        {/* //  )
+        //  } */}
         
          </Row>
         </Form>

@@ -76,16 +76,14 @@ export class StyleController{
       }
 
     }
-
-    // @Post('/updateStyle')
-    // async updateItem(@Body() dto: any,@Req() request:Request): Promise<AllStyleResponseModel> {
-    //   try {
-    //     return await this.styleService.updateStyle(dto, true);
-    //   } catch (error) {
-    //     return this.applicationExceptionHandler.returnException(AllStyleResponseModel, error);
-    //   }
-    // }
-
+    @Post('/updateStyle')
+    async updateStyle(@Body() dto: any,@Req() request:Request): Promise<AllStyleResponseModel> {
+      try {
+        return await this.styleService.creteStyle(dto, true);
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(AllStyleResponseModel, error);
+      }
+    }
 
 
 
