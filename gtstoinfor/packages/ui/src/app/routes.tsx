@@ -33,7 +33,9 @@ import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
 import ItemCategoriesGrid from "./masters/item-categories/item-categories-grid"
 import ItemSubCategoriesGrid from "./masters/item-sub-categories/item-sub-categories-grid"
 import ItemSubCategoriesForm from "./masters/item-sub-categories/item-sub-categories-form"
+import ItemsGrid from "./masters/items/item-grid"
 import PhaseWiseData from "./excel-import/phase-wise-data"
+import StyleForm from "./style-management/style/style-form"
 
 
 export const AppRoutes = () => {
@@ -81,8 +83,15 @@ export const AppRoutes = () => {
                     closeForm={() => { }}
                     updateItem={(undefined) => { }}/>
                 } />
+                <Route path='items/item-grid' element={<ItemsGrid />} />
+
                 </Route>
-                
+                <Route path="style-management">
+                    <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateDetails={(undefined) => { }}/>} />
+                </Route>
               
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
@@ -118,6 +127,7 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+                <Route path='items/item-grid' element={<ItemsGrid />} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
                         <Route path='brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
                 isUpdate={false}
@@ -160,7 +170,12 @@ export const AppRoutes = () => {
                         <Route path='item-sub-categories/item-sub-categories-view' element={<ItemSubCategoriesGrid/>}/>
                     </Route>
 
-                    
+                    <Route path="style-management">
+                    <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateDetails={(undefined) => { }}/>} />
+                </Route>
 
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />

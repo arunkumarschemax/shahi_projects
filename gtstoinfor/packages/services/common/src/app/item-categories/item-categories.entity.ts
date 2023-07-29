@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { ItemSubCategory } from "../item-sub-categories/item-sub-category.entity";
+import { Item } from "../items/item-entity";
 
 
 @Entity('item_categories')
@@ -74,7 +75,8 @@ export class ItemCategory {
   itemSubCategories: ItemSubCategory[];
 
   
-
+    @OneToMany(() => Item,item =>item.itemCategory)
+    item:Item[]
   // @ManyToOne(type => Sizes, sizes => sizes.itemCategoryInfo, { nullable: true, })
   // @JoinColumn({ name: "size_id" })
   // sizeInfo: Sizes;
