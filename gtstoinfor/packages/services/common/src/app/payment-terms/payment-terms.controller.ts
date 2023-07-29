@@ -36,7 +36,7 @@ export class PaymentTermsController {
      * @returns paymentTermsResponse
      */
     @Post('/updatePaymentTerms')
-    async updatePaymentTerms(@Body() paymentTermsDTO: PaymentTermsDTO,@Req() request:Request): Promise<PaymentTermsResponseModel> {
+    async updatePaymentTerms(@Body() paymentTermsDTO:any,@Req() request:Request): Promise<PaymentTermsResponseModel> {
         try {
         return await this.paymentTermsService.createPaymentTerms(paymentTermsDTO, true);
         } catch (error) {

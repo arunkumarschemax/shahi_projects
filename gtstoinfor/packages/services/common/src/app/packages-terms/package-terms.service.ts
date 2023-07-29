@@ -17,7 +17,7 @@ export class PackageTermsService {
         private packageTermsAdapter: PackageTermsAdapter,
       ) {}
    
-    async createPackageTerms(packageTermsDTO: PackageTermsDTO, isUpdate: boolean): Promise<PackageTermsResponseModel> {
+    async createPackageTerms(packageTermsDTO: any, isUpdate: boolean): Promise<PackageTermsResponseModel> {
         console.log(packageTermsDTO,"dto88880")
         try {
           let previousValue
@@ -31,7 +31,7 @@ export class PackageTermsService {
             }
             else{
                 const certificatePrevious = await this.packageTermsRepository.findOne({where:{packageTermsId:packageTermsDTO.packageTermsId}})
-                // previousValue =(certificatePrevious.paymentTermsCategory+","+certificatePrevious.paymentTermsName)
+                previousValue =(certificatePrevious.packageTermsName)
                 const PackageTermsEntity = await this.getPackageTermsDetailsWithoutRelations(packageTermsDTO.packageTermsName);
                 if (PackageTermsEntity) {
                     if(PackageTermsEntity.packageTermsId != packageTermsDTO.packageTermsId ){
@@ -48,7 +48,7 @@ export class PackageTermsService {
             );
             const savedPackageTermsDto: PackageTermsDTO = this.packageTermsAdapter.convertEntityToDto(savedPackageTermsEntity);
             if (savedPackageTermsDto) {
-                // const presentValue = savedPackageTermsDto.paymentTermsCategory+","+savedPaymentTermsDto.paymentTermsName;
+                const presentValue = savedPackageTermsDto.packageTermsName;
             // generating resposnse
             const response = new PackageTermsResponseModel(true,isUpdate ? 11101 : 11100,isUpdate? 'PackageTerms Updated Successfully': 'PackageTerms Created Successfully',savedPackageTermsDto);
             const name=isUpdate?'updated':'created'
@@ -141,7 +141,7 @@ export class PackageTermsService {
           const packageTermsExists = await this.getPackageTermsById(packageTermsReq.packageTermsId);
           if (packageTermsExists) {
               if (packageTermsReq.versionFlag !== packageTermsExists.versionFlag) {
-                  throw new PackageTermsResponseModel(false,10113, 'Someone updated the current PackageTerms information.Refresh and try again');
+                  throw new PackageTermsResponseModel(false, 10113, 'Someone updated the current PackageTerms information.Refresh and try again');
               } else {
                   
                       const packageTermsStatus =  await this.packageTermsRepository.update(

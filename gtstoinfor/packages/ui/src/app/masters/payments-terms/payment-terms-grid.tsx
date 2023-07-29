@@ -219,7 +219,8 @@ export function PaymentTermsGrid(
       dataIndex: 'action',
       render: (text, rowData) => (
         rowData.paymentTermsName.trim()=="N/A"?<span></span>:
-        <span>         
+        <span>
+          <Tooltip title="Edit">      
             <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
               onClick={() => {
                 if (rowData.isActive) {
@@ -231,6 +232,7 @@ export function PaymentTermsGrid(
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}
             />
+            </Tooltip>
           
           <Divider type="vertical" />
               <Popconfirm onConfirm={e =>{deleteTerm(rowData);}}

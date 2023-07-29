@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Select,Card, Row, Col } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { PaymentTermsDto } from '@project-management-system/shared-models';
-import { PaymentTermsService } from '@project-management-system/shared-services';
+import { PackageTermsDto, PaymentTermsDto } from '@project-management-system/shared-models';
+import { PackageTermsService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
 
@@ -26,25 +26,25 @@ const tailLayout = {
 };
 /* eslint-disable-next-line */
 export interface PackagesTermsFormProps {
-//   paymentTermsData: PaymentTermsDto;
-//   updateDetails:(paymentdto:PaymentTermsDto)=>void;
-//  isUpdate:boolean;
-// closeForm: () => void;
+    packageTermsData: PackageTermsDto;
+    updateDetails:(packagedto:PackageTermsDto)=>void;
+    isUpdate:boolean;
+    closeForm: () => void;
 
 }
 
-export function PackagesTermsForm() {
+export function PackagesTermsForm(props:PackagesTermsFormProps) {
 
   const [form] = Form.useForm();
   const [disable, setDisable] = useState<boolean>(false)
   const navigate = useNavigate()
-  const service = new PaymentTermsService;
+  const service = new PackageTermsService;
 
   let history = useLocation();
 
-  const save = (Data: PaymentTermsDto) => {
+  const save = (Data: PackageTermsDto) => {
     setDisable(true)
-       service.createPaymentTerms(Data).then(res => {
+       service.createPackageTerms(Data).then(res => {
         setDisable(false)
       if (res.status) {
         AlertMessages.getSuccessMessage('Created Successfully');
@@ -65,18 +65,18 @@ export function PackagesTermsForm() {
 
 
   
-//   const saveData = (values: PaymentTermsDto) => {
-//     console.log(values,"paaaaaaaa")
-//     setDisable(false)
-//     // console.log(values);
-//     if(props.isUpdate){
-//       props.updateDetails(values);
-//     }else{
-//       setDisable(false)
-//       save(values);
-//     }
+  const saveData = (values: PackageTermsDto) => {
+    console.log(values,"paaaaaaaa")
+    setDisable(false)
+    console.log(values);
+    if(props.isUpdate){
+      props.updateDetails(values);
+    }else{
+      setDisable(false)
+      save(values);
+    }
   
-//   };
+  };
   const onReset = () => {
     form.resetFields();
   };
@@ -85,9 +85,9 @@ export function PackagesTermsForm() {
 
   return (
     <Card title='Package Terms' extra={<span><Button onClick={() => navigate('/masters/package-terms/package-terms-view')} type={'primary'}>View</Button></span>}>
-    <Form layout="vertical" form={form} >
+    <Form layout="vertical" form={form}  onFinish={saveData}  initialValues={props.packageTermsData}>
     <Row>
-    <Form.Item name="paymentTermsId" style={{ display: 'none' }}>
+    <Form.Item name="packageTermsId" style={{ display: 'none' }}>
         <Input hidden />
       </Form.Item>
   
@@ -121,11 +121,11 @@ export function PackagesTermsForm() {
             <Button type="primary" disabled={disable} htmlType="submit" >
             Submit
           </Button>
-          {/* {(props.isUpdate === false) && */}
-     <Button htmlType="button" style={{ margin: '0 8px' }} onClick={onReset}>
+          {(props.isUpdate === false) &&
+              <Button htmlType="button" style={{ margin: '0 8px' }} onClick={onReset}>
             Reset
           </Button>
-           {/* }  */}
+           }   
          
           </Col>
           

@@ -4,52 +4,49 @@ import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,
 import { ColumnProps } from 'antd/lib/table';
 import { Link, useNavigate } from 'react-router-dom';
 import Highlighter from 'react-highlight-words';
-// import PaymentTermsForm from './payment-terms-form';
-import { PaymentTermsCategory, PaymentTermsDto } from '@project-management-system/shared-models';
-import { PaymentTermsService, UserRequestDto } from '@project-management-system/shared-services';
+import { PackageTermsDto } from '@project-management-system/shared-models';
+import { PackageTermsService,  UserRequestDto } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
+import PackageTermsForm from './package-terms-form';
 
-/* eslint-disable-next-line */
-export interface PaymentTermsGridProps {}
 
-export function PackagesTermsGrid(
-  props: PaymentTermsGridProps
-) {
+
+export function PackageTermsGrid() {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const navigate = useNavigate()
-  const service = new PaymentTermsService();
-  const [selectedPaymentTermsData, setSelectedPaymentTermsData] = useState<any>(undefined);
-  const [paymentTermsData, setPaymentTermsData] = useState<PaymentTermsDto[]>([]);
+  const service = new PackageTermsService();
+  const [selectedPackageTermsData, setSelectedPackageTermsData] = useState<any>(undefined);
+  const [packageTermsData, setPackageTermsData] = useState<PackageTermsDto[]>([]);
 
 
-  const openFormWithData=(viewData: PaymentTermsDto)=>{
+  const openFormWithData=(viewData: PackageTermsDto)=>{
     setDrawerVisible(true);
-    setSelectedPaymentTermsData(viewData);
+    setSelectedPackageTermsData(viewData);
   }
   useEffect(() => {
-    // getAll();
+    getAll();
   }, []);
-//   const getAll= () => {
-//   service.getAllPaymentTerms().then(res => {
-//       if (res.status) {
-//        setPaymentTermsData(res.data);
-//       } else {
-//         if (res.status) {
-//          setPaymentTermsData([]);
-//             AlertMessages.getErrorMessage(res.internalMessage);
-//         } else {
-//          AlertMessages.getErrorMessage(res.internalMessage);
-//         }
-//       }
-//     }).catch(err => {
-//      setPaymentTermsData([]);
-//       AlertMessages.getErrorMessage(err.message);
-//     })
-//   }
+  const getAll= () => {
+  service.getAllPackageTerms().then(res => {
+      if (res.status) {
+       setPackageTermsData(res.data);
+      } else {
+        if (res.status) {
+         setPackageTermsData([]);
+            AlertMessages.getErrorMessage(res.internalMessage);
+        } else {
+         AlertMessages.getErrorMessage(res.internalMessage);
+        }
+      }
+    }).catch(err => {
+     setPackageTermsData([]);
+      AlertMessages.getErrorMessage(err.message);
+    })
+  }
 
 
   const getColumnSearchProps = (dataIndex:string) => ({
@@ -115,11 +112,11 @@ export function PackagesTermsGrid(
     setSearchText('');
   };
  
-  const deleteTerm = (Data:PaymentTermsDto) => {
+  const deleteTerm = (Data:PackageTermsDto) => {
     Data.isActive=Data.isActive?false:true;
-    service.activateOrDeactivatePaymentTerms(Data).then(res => { console.log(res);
+    service.activateOrDeactivatePackageTerms(Data).then(res => { console.log(res);
       if (res.status) {
-        // getAll();
+        getAll();
         AlertMessages.getSuccessMessage('Success'); 
       } else {
         if (res.status) {
@@ -141,52 +138,14 @@ export function PackagesTermsGrid(
       responsive: ['sm'],
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
-    {
-      title: 'Category',
-      dataIndex:'paymentTermsCategory',
-      responsive: ['sm'],
-      filters: [
-        {
-          text: 'Customer',
-          value: PaymentTermsCategory.Customer,
-        },
-        {
-          text: 'Vendor',
-          value: PaymentTermsCategory.Vendor,
-        },
-      ],
-      filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        return record.paymentTermsCategory == value;
-      },
-    },
-    // {
-    //   title: 'Category',
-    //   dataIndex: 'paymentTermsCategory',
-    //   responsive: ['sm'],
-    //   filters: [
-    //     {
-    //       text: 'Customer',
-    //       value: PaymentTermsCategory.Customer, // Assuming PaymentTermsCategory.Customer is a string
-    //     },
-    //     {
-    //       text: 'Vendor',
-    //       value: PaymentTermsCategory.Vendor , // Assuming PaymentTermsCategory.Vendor is a string
-    //     },
-    //   ],
-    //   filterMultiple: false,
-    //   onFilter: (value, record) => {
-    //     return record['paymentTermsCategory'] === value; // Use === for strict equality
-    //   },
-    //       },
+   
     {
       title: 'Package Term Name',
-      dataIndex: 'paymentTermsName',
-      //  responsive: ['lg'],
-       sorter: (a, b) => a.paymentTermsName.length - b.paymentTermsName.length,
+      dataIndex: 'packageTermsName',
+      width: '400px',
+       sorter: (a, b) => a.packageTermsName.length - b.packageTermsName.length,
        sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('paymentTermsName')
+        ...getColumnSearchProps('packageTermsName')
     },
        {
       title: 'Status',
@@ -209,7 +168,7 @@ export function PackagesTermsGrid(
       filterMultiple: false,
       onFilter: (value, record) => 
       {
-        // === is not work
+      
         return record.isActive === value;
       },
       
@@ -218,19 +177,21 @@ export function PackagesTermsGrid(
       title:`Action`,
       dataIndex: 'action',
       render: (text, rowData) => (
-        rowData.paymentTermsName.trim()=="N/A"?<span></span>:
-        <span>         
+        rowData.packageTermsName.trim()=="N/A"?<span></span>:
+        <span> 
+           <Tooltip title="Edit">     
             <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
               onClick={() => {
                 if (rowData.isActive) {
                    openFormWithData(rowData);
                    console.log(rowData,"rowData")
                 } else {
-                   AlertMessages.getErrorMessage('You Cannot Edit Deactivated Payment term');
+                   AlertMessages.getErrorMessage('You Cannot Edit Deactivated Package term');
                 }
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}
             />
+            </Tooltip>  
           
           <Divider type="vertical" />
               <Popconfirm onConfirm={e =>{deleteTerm(rowData);}}
@@ -254,12 +215,12 @@ export function PackagesTermsGrid(
   ];
 
 
-  const updateTerm = (Data: PaymentTermsDto) => {
+  const updateTerm = (Data: PackageTermsDto) => {
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
-    service.updatePaymentTerms(Data).then(res => { console.log(res);
+    service.updatePackageTerms(Data).then(res => { console.log(res,"update");
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
-        // getAll();
+        getAll();
         setDrawerVisible(false);
       } else {
         if (res.status) {
@@ -285,13 +246,13 @@ export function PackagesTermsGrid(
      <br></br>
       <Row gutter={40}>
          <Col>
-         <Card title={'Total Package Terms: ' + paymentTermsData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+         <Card title={'Total Package Terms: ' + packageTermsData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
-          <Card title={'Active: ' + paymentTermsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          <Card title={'Active: ' + packageTermsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
            </Col>
            <Col>
-           <Card title={'In-Active: ' + paymentTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+           <Card title={'In-Active: ' + packageTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
            </Col>
            <Col>
         <span><Button onClick={() => navigate('/masters/package-terms/package-terms-form')}
@@ -301,7 +262,7 @@ export function PackagesTermsGrid(
           <br></br>
           <Table
           columns={columnsSkelton}
-          dataSource={paymentTermsData}
+          dataSource={packageTermsData}
           scroll={{x:true}}
           pagination={{
             onChange(current) {
@@ -313,16 +274,16 @@ export function PackagesTermsGrid(
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
              <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
-              {/* <PaymentTermsForm key={Date.now()}
+              <PackageTermsForm key={Date.now()}
                 updateDetails={updateTerm}
                 isUpdate={true}
-                paymentTermsData={selectedPaymentTermsData}
+                packageTermsData={selectedPackageTermsData}
                 closeForm={closeDrawer}
-                 /> */}
+                 />
             </Card> 
           </Drawer>
      </Card>
   );
 }
 
-export default PackagesTermsGrid;
+export default PackageTermsGrid;

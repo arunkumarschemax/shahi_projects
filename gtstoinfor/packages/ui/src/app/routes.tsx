@@ -23,9 +23,8 @@ import EmployeeDetsilsForm from "./masters/employee-details/employee-details-for
 import EmployeeDetailsGrid from "./masters/employee-details/employee-details-grid"
 import { PaymentTermsForm } from "./masters/payments-terms/payment-terms-form"
 import PaymentTermsGrid from "./masters/payments-terms/payment-terms-grid"
-import { PaymentTermsDto } from "@project-management-system/shared-models"
-import PackagesTermsForm from "./masters/packages-terms/packages-terms-form"
-import PackagesTermsGrid from "./masters/packages-terms/packages-terms-grid"
+import { PackageTermsGrid } from "./masters/packages-terms/package-terms-grid"
+import PackageTermsForm from "./masters/packages-terms/package-terms-form"
 
 
 export const AppRoutes = () => {
@@ -108,8 +107,8 @@ export const AppRoutes = () => {
 
                         <Route path='payment-terms/payment-terms-form' element={<PaymentTermsForm paymentTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }} />} />
                         <Route path='payment-terms/payment-terms-view' element={<PaymentTermsGrid />} />
-                        <Route path='package-terms/package-terms-form' element={<PackagesTermsForm />} />
-                        <Route path='package-terms/package-terms-view' element={<PackagesTermsGrid/>} />
+                        <Route path='package-terms/package-terms-form' element={<PackageTermsForm  packageTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }}/>} />
+                        <Route path='package-terms/package-terms-view' element={<PackageTermsGrid/>} />
                         
 
 

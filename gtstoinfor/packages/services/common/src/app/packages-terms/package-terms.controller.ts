@@ -9,6 +9,7 @@ import { PackageTermsDTO } from './dto/package-terms.dto';
 @ApiTags('package-terms')
 @Controller('package-terms')
 export class PackageTermsController {
+
     constructor(
         private packageTermsService: PackageTermsService,
         private readonly applicationExceptionhandler: ApplicationExceptionHandler,
@@ -16,7 +17,7 @@ export class PackageTermsController {
       ){}
    
     @Post('/createPackageTerms')
-    async createPackageTerms(@Body() packageTermsDTO:PackageTermsDTO,isUpdate:boolean=false): Promise<PackageTermsResponseModel> {
+    async createPackageTerms(@Body() packageTermsDTO:any,isUpdate:boolean=false): Promise<PackageTermsResponseModel> {
         try {
             console.log(packageTermsDTO,'pppppp');
             return await this.packageTermsService.createPackageTerms(packageTermsDTO, false);
@@ -27,7 +28,7 @@ export class PackageTermsController {
 
     
     @Post('/updatePackageTerms')
-    async updatePackageTerms(@Body() packageTermsDTO: PackageTermsDTO,@Req() request:Request): Promise<PackageTermsResponseModel> {
+    async updatePackageTerms(@Body() packageTermsDTO: any,@Req() request:Request): Promise<PackageTermsResponseModel> {
         try {
         return await this.packageTermsService.createPackageTerms(packageTermsDTO, true);
         } catch (error) {
