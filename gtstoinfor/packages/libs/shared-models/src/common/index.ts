@@ -1,3 +1,4 @@
+import { from } from 'rxjs';
 
 export * from './global-response-object';
 export * from './common-request-attr.model';
@@ -12,3 +13,4 @@ export * from './vendors'
 export * from './global-variables'
 export * from './employee-details'
 export * from './items'
+export * from './garments'

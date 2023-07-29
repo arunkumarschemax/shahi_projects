@@ -61,11 +61,7 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
         // getAllDeliveryMethods();
         AlertMessages.getSuccessMessage('Success'); 
       } else {
-        // if (res.status) {
-        //   AlertMessages.getErrorMessage(res.internalMessage);
-        // } else {
           AlertMessages.getErrorMessage(res.internalMessage);
-        // }
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);
@@ -81,14 +77,10 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
       deliveryMethodDataService.updateDeliveryMethod(deliveryMethodData).then(res => { console.log(res);
         if (res.status) {
           AlertMessages.getSuccessMessage('Updated Successfully');
-          // getAllDeliveryMethods();
+          getAllDeliveryMethods();
           setDrawerVisible(false);
         } else {
-          // if (res.status) {
-          //   AlertMessages.getErrorMessage(res.internalMessage);
-          // } else {
             AlertMessages.getErrorMessage(res.internalMessage);
-          // }
         }
       }).catch(err => {
         AlertMessages.getErrorMessage(err.message);

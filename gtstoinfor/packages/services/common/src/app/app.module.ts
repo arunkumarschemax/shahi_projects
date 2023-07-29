@@ -16,6 +16,7 @@ import { BuyersModule } from './buyers/buyers.module';
 import { DeliveryMethodModule } from './delivery-method/delivery-method.module';
 import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categories.module';
+import { GarmentsModule } from './garments/garments.module';
 
 
 @Module({
@@ -40,6 +41,7 @@ import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categori
     DeliveryMethodModule,
     ItemCategoriesModule,
     ItemSubCategoriesModule,
+    GarmentsModule,
     UsersModule,
     OrdersModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule],

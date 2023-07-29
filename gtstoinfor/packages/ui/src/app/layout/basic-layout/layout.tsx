@@ -108,6 +108,12 @@ export const baseRouterList = [
                 key: "item-sub-categories",
                 path: "item-sub-categories/item-sub-categories-view",
                 filepath: "item-sub-categories/item-sub-categories-view",
+            },
+            {
+                label: "Garments",
+                key: "garments",
+                path: "garments/garments-view",
+                filepath: "garments/garments-view",
             }
         ],
     },

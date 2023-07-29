@@ -9,3 +9,4 @@ export * from './items.service';
 export * from './delivery-method-services'
 export * from './item-category-service'
 export * from './item-sub-category-service'
+export * from './garment-service'

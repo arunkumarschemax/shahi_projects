@@ -27,6 +27,8 @@ import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
 import ItemCategoriesGrid from "./masters/item-categories/item-categories-grid"
 import ItemSubCategoriesGrid from "./masters/item-sub-categories/item-sub-categories-grid"
 import ItemSubCategoriesForm from "./masters/item-sub-categories/item-sub-categories-form"
+import GarmentGrid, { GarmentsGrid } from "./masters/garments/garments-grid"
+import GarmentsForm from "./masters/garments/garments-form"
 
 
 export const AppRoutes = () => {
@@ -128,6 +130,12 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateData={(undefined) => { }}/>}/>
                         <Route path='item-sub-categories/item-sub-categories-view' element={<ItemSubCategoriesGrid/>}/>
+                        <Route path='garments/garments-view' element={<GarmentsGrid/>}/>
+                        <Route path='garments/garments-form' element={<GarmentsForm 
+                        garmentData={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateData={(undefined)=>{}}/>}/>
                     </Route>
 
                     

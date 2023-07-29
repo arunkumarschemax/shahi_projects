@@ -33,9 +33,8 @@ export class DeliveryMethodService {
       
       try {
         let previousValue
-        // to check whether State exists with the passed  State code or not. if isUpdate is false, a check will be done whether a record with the passed Statecode is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed State code then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
         if (!isUpdate) {
-          const deliveryMethodEntity = await this.deliveryMethodRepository.findOne({where:{deliveryMethodId:deliveryMethodDTO.deliveryMethodId}})
+          const deliveryMethodEntity = await this.deliveryMethodRepository.findOne({where:{deliveryMethod:deliveryMethodDTO.deliveryMethod}})
           if (deliveryMethodEntity) {
             //return new InformationMessageError(11104, "State already exists");
             throw new DeliveryMethodResponseModel(false,11104, 'Delivery Method already exists');
@@ -78,13 +77,10 @@ export class DeliveryMethodService {
     }
 
     async getAllDeliveryMethods(): Promise<AllDeliveryResponseModel> {
-      // const page: number = 1;
-      // const response = new AllDeliveryResponseModel();
       try {
         const deliveryMethodDTO: DeliveryMethodDTO[] = [];
-        //retrieves all companies
-        const DeliveryMethodEntity: DeliveryMethod[] = await this.deliveryMethodRepository.find({ order :{deliveryMethod:'ASC'}});
-        //console.log(statesEntities);
+        const DeliveryMethodEntity: DeliveryMethod[] = await this.deliveryMethodRepository.find({ 
+          order :{deliveryMethod:'ASC'}});
         if (DeliveryMethodEntity) {
           // converts the data fetched from the database which of type companies array to type StateDto array.
           DeliveryMethodEntity.forEach(DeliveryMethodEntity => {
@@ -93,9 +89,7 @@ export class DeliveryMethodService {
             );
             deliveryMethodDTO.push(convertedDeliveryMethodDto);
           });
-  
           //generated response
-
           const response = new AllDeliveryResponseModel(true,1,'Delivery Method retrieved successfully',deliveryMethodDTO);
           return response;
         } else {
