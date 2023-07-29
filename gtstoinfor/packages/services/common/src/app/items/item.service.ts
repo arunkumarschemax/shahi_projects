@@ -3,6 +3,8 @@ import { ItemsRepository } from './dto/item-repository';
 import { AllItemsResponseModel, ItemsDto } from '@project-management-system/shared-models';
 import { Item } from './item-entity';
 import { ItemIdReq } from './dto/item-id-req';
+import { ItemCategory } from '../item-categories/item-categories.entity';
+import { ItemSubCategory } from '../item-sub-categories/item-sub-category.entity';
 
 @Injectable()
 
@@ -16,9 +18,16 @@ export class ItemsService{
             const itemEntity = new Item()
             itemEntity.itemName=req.itemName
             itemEntity.itemCode=req.itemCode
-            itemEntity.itemCategoryId=req.itemCategoryId
-            itemEntity.itemSubCategoryId=req.itemSubCategoryId
-            itemEntity.itemSubCategoryId=req.itemSubCategoryId
+            const itemCategoryEntity = new ItemCategory()
+            itemCategoryEntity.itemCategoryId =req.itemCategoryId
+            itemEntity.itemCategory=itemCategoryEntity
+
+            const itemSubcategoryEntity = new ItemSubCategory()
+            itemSubcategoryEntity.itemSubCategoryId=req.itemSubCategoryId
+
+            itemSubcategoryEntity.itemSubCategoryId=req.itemSubCategoryId
+            itemEntity.itemSubCategory=itemSubcategoryEntity
+            
             itemEntity.brandId=req.brandId
             itemEntity.minQuantity=req.minQuantity
             itemEntity.uomId=req.uomId
@@ -67,6 +76,21 @@ export class ItemsService{
 
         }
 
+    }
+
+    async getAllItems():Promise<AllItemsResponseModel>{
+        let items:ItemsDto[]=[]
+        const data = await this.itemsRepo.getItem();
+        for( const res of data){
+            console.log(res.itemId,'itemId')
+            items.push(new ItemsDto(res.itemId,res.itemName,res.itemCode,res.itemCategoryId,res.itemSubCategoryId,res.brandId,res.minQuantity,res.uomId,res.remarks,res.isActive,res.itemCategory,res.itemSubCategory,'brand','uom'))
+        }
+        if(data.length >0){
+            return new AllItemsResponseModel(true,1,'Items Retrived Sucessfully..',data)
+        }else{
+            return new AllItemsResponseModel(false,0,'No Items Found..',[])
+
+        }
     }
     
 }

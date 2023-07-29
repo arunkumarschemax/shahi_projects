@@ -35,6 +35,8 @@ import ItemSubCategoriesGrid from "./masters/item-sub-categories/item-sub-catego
 import ItemSubCategoriesForm from "./masters/item-sub-categories/item-sub-categories-form"
 import DeliveryTermsForm from "./masters/delivery-terms/delivery-terms-form"
 import DeliveryTermsGrid from "./masters/delivery-terms/delivery-terms-grid"
+import ItemsGrid from "./masters/items/item-grid"
+import PhaseWiseData from "./excel-import/phase-wise-data"
 
 
 export const AppRoutes = () => {
@@ -82,6 +84,8 @@ export const AppRoutes = () => {
                     closeForm={() => { }}
                     updateItem={(undefined) => { }}/>
                 } />
+                <Route path='items/item-grid' element={<ItemsGrid />} />
+
                 </Route>
                 
               
@@ -91,6 +95,7 @@ export const AppRoutes = () => {
                     <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
                     <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
                     <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
+                    {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
                 </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
@@ -118,6 +123,7 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+                <Route path='items/item-grid' element={<ItemsGrid />} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
                         <Route path='brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
                 isUpdate={false}
@@ -173,6 +179,7 @@ export const AppRoutes = () => {
                         <Route path='grid-view' element={<AllOrdersGridView />} />
                         <Route path='revert-orders' element={<FileRevert />} />
                         <Route path='version-grid' element={<VersionChanges />} />
+                        {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />

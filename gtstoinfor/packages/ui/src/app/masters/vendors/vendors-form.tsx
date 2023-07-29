@@ -114,8 +114,8 @@ export function VendorsForm(
         <Form.Item style={{ display: "none" }} name="createdUser" initialValue={props.vendorsData}>
           <Input hidden />
         </Form.Item>
-        <Form.Item style={{ display: "none" }} name="country" initialValue={'India'}>
-          <Input hidden defaultValue={'India'}/>
+        <Form.Item style={{ display: "none" }} name="country" initialValue={GlobalVariables.countryId}>
+          <Input hidden defaultValue={GlobalVariables.countryId}/>
         </Form.Item>
         <Form.Item style={{ display: "none" }} name="currencyId" initialValue={GlobalVariables.currencyId}>
           <Input hidden defaultValue={GlobalVariables.currencyId}/>

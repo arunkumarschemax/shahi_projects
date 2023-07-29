@@ -106,8 +106,8 @@ export const baseRouterList = [
             {
                 label: "Items",
                 key: "items",
-                path: "items/items-form",
-                filepath: "items/items-form",
+                path: "items/item-grid",
+                filepath:"items/item-grid",
             },
             {
                 label: "Delivery Method",
@@ -171,7 +171,13 @@ export const baseRouterList = [
                 key: "version-grid",
                 path: "version-grid",
                 filepath: "version-grid",
-            }
+            },
+            // {
+            //     label: "Phase Wise Data",
+            //     key: "phase-wise-grid",
+            //     path: "phase-wise-grid",
+            //     filepath: "phase-wise-grid",
+            // }
         ],
     },
 ];

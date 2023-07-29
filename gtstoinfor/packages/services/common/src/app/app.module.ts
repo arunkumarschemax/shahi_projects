@@ -19,6 +19,7 @@ import { DeliveryMethodModule } from './delivery-method/delivery-method.module';
 import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categories.module';
 import { DeliveryTermsModule } from './delivery-terms/delivery-terms.module';
+import { CountriesModule } from './countries/countries.module';
 
 
 @Module({
@@ -48,7 +49,7 @@ import { DeliveryTermsModule } from './delivery-terms/delivery-terms.module';
     UsersModule,
     OrdersModule,
     DeliveryTermsModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CountriesModule],
   controllers: [AppController],
   providers: [AppService],
 })

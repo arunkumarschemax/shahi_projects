@@ -200,7 +200,7 @@ export const  BuyersView = () => {
         render:(text,record) => {
           return(
             <>
-            {record.state ? `${record.state}-${record.city}` : '-'}
+            {record.state ? `${record.countryName}-${record.state}-${record.city}` : '-'}
             </>
           )
         }

@@ -1,4 +1,6 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { ItemCategory } from "../item-categories/item-categories.entity";
+import { ItemSubCategory } from "../item-sub-categories/item-sub-category.entity";
 
 @Entity('items')
 export class Item {
@@ -20,19 +22,15 @@ export class Item {
     name: "item_code"
   })
   itemCode: string;
- 
- 
-  @Column("int", {
-    nullable: false,
-    name: "item_category_id" ///// need to add foriegn key
-  })
-  itemCategoryId: number;
 
-  @Column("int", {
-    nullable: false,
-    name: "item_sub_category_id" /// foregn key
-  })
-  itemSubCategoryId: number;
+  @ManyToOne(() => ItemCategory, (item) => item.item)
+  @JoinColumn({ name: 'item_category_id' })
+  itemCategory: ItemCategory;
+
+
+  @ManyToOne(() => ItemSubCategory, (itemSubCat) => itemSubCat.item)
+  @JoinColumn({ name: 'item_sub_category_id' })
+  itemSubCategory: ItemSubCategory;
 
   @Column("int", {
     nullable: false,
