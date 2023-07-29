@@ -2,9 +2,9 @@ import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { GarmentDto } from './dto/garments.dto';
 import { GarmentsService } from './garments.service';
-import { GarmentsRequest } from './dto/garments.request';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { AllGarmentsResponse, GarmentResponse } from '@project-management-system/shared-models';
+import { GarmentsRequest } from './dto/garments.request';
 
 
 

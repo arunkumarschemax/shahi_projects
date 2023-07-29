@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Currencies } from '../../currencies/currencies.entity';
 import { Vendors } from '../vendors.entity';
 import { VendorsDTO } from './vendors.dto';
+import { Countries } from '../../countries/countries.entity';
 
 @Injectable()
 export class VendorsAdapter {
@@ -23,8 +24,8 @@ export class VendorsAdapter {
     vendors.city=vendorsDto.city;
     vendors.apartment=vendorsDto.apartment;
     vendors.postalCode=vendorsDto.postalCode;
-    // vendors.countryInfo = new Countries();
-    // vendors.countryInfo.countryId=vendorsDto.countryId;
+    vendors.countryInfo = new Countries();
+    vendors.countryInfo.countryId=vendorsDto.countryId;
     vendors.currencyInfo = new Currencies();
     vendors.currencyInfo.currencyId=vendorsDto.currencyId;
     vendors.privateNote=vendorsDto.privateNote;
@@ -58,8 +59,8 @@ export class VendorsAdapter {
     vendorsDto.city=vendorObject.city;
     vendorsDto.apartment = vendorObject.apartment;
     vendorsDto.postalCode=vendorObject.postalCode;
-    // vendorsDto.countryId=vendorObject.countryInfo.countryId;
-    // vendorsDto.countryName=vendorObject.countryInfo.countryName;
+    vendorsDto.countryId=vendorObject.countryInfo.countryId;
+    vendorsDto.countryName=vendorObject.countryInfo.countryName;
     vendorsDto.currencyId=vendorObject.currencyInfo.currencyId;
     vendorsDto.currencyName=vendorObject.currencyInfo.currencyName;
     vendorsDto.privateNote=vendorObject.privateNote;

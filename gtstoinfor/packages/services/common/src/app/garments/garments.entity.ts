@@ -1,5 +1,4 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
-import { ItemCategory } from "../item-categories/item-categories.entity";
 
 
 @Entity('garments')

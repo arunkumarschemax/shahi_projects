@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ItemCategoryRequest } from '../item-categories/dto/item-categories.request';
 import { GarmentsAdapter } from './dto/garments.adapter';
 import { GarmentDto } from './dto/garments.dto';
-import { GarmentsRequest } from './dto/garments.request';
 import { Garments } from './garments.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { AllGarmentsResponse, GarmentRequest, GarmentResponse } from '@project-management-system/shared-models';
+import { GarmentsRequest } from './dto/garments.request';
 
 @Injectable()
 export class GarmentsService {

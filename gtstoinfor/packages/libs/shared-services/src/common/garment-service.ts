@@ -1,7 +1,7 @@
 import axios from "axios";
 import { from } from "rxjs";
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { ItemSubCategoriesDto, ItemSubCategoryResponse, AllItemSubCategoryResponse, ItemCategoryRequest, ItemSubCategoriesDropDownResponse, ItemSubCategoryRequest, ItemSubCategoryDropDownDto, SubCatReqForCategoryId, GarmentsDto, GarmentResponse, AllGarmentsResponse } from "@project-management-system/shared-models";
+import { GarmentsDto, GarmentResponse, AllGarmentsResponse } from "@project-management-system/shared-models";
 
 export class GarmentService extends CommonAxiosService{
     URL = '/garments';
