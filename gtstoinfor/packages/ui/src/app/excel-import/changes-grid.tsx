@@ -488,7 +488,7 @@ const ChangesGrid = () => {
             // width :'190px',
             render: (text, record) => {
                 const obj: any = {
-                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div>)
+                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + 1 + ' Days'}</div>)
                 };
                 return obj;
             }
@@ -558,7 +558,7 @@ const ChangesGrid = () => {
             title: 'Revised Contracted Date',
             dataIndex: 'new_val',
             render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${convertToYYYYMMDD(record.old_val)} Revised Date:  ${convertToYYYYMMDD(record.new_val)}Difference : ${Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
+                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} >
                     {convertToYYYYMMDD(record.old_val) < convertToYYYYMMDD(record.new_val) ? <span style={{ color: 'green' }}>{convertToYYYYMMDD(record.new_val)}</span> : ''}
                     {convertToYYYYMMDD(record.old_val) > convertToYYYYMMDD(record.new_val) ? <span style={{ color: 'red' }}>{convertToYYYYMMDD(record.new_val)}</span> : ''}
                     &nbsp;&nbsp;
@@ -569,12 +569,12 @@ const ChangesGrid = () => {
             )
         },
         {
-            title: 'Days Difference',
+            title: 'Difference',
             dataIndex: 'diff',
             // width :'190px',
             render: (text, record) => {
                 const obj: any = {
-                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + 1}</div>)
+                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + 1 + ' Days'}</div>)
                 };
                 return obj;
             }
