@@ -17,7 +17,7 @@ import { SupplierModule } from './supplier/supplier.module';
       type: "mysql",
       timezone: 'Z',
       host: 'localhost',
-      port: 3307,
+      port: 3308,
       username: 'root',
       password: '',
       database: 'shahi_orders',

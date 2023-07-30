@@ -13,9 +13,9 @@ import AllOrdersGridView from "./excel-import/orders-view-grid"
 import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
-import SupplierView from "./masters/supplier/supplier-view"
-import {SupplierForm} from "./masters/supplier/supplier-form"
 import PhaseWiseData from "./excel-import/phase-wise-data"
+import SupplierForm from "./masters/supplier/supplier-form"
+import SupplierView from "./masters/supplier/supplier-view"
 
 
 export const AppRoutes = () => {

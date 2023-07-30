@@ -5,7 +5,7 @@ import { Column, Entity, JoinColumn, ManyToOne, CreateDateColumn, UpdateDateColu
 @Entity('supplier') 
 export class SupplierEntity  extends CommonColumns {
 
-    @PrimaryGeneratedColumn("uuid", { name: 'id' })
+    @PrimaryGeneratedColumn("increment", { name: 'id' })
     id: number;
 
     @Column('varchar', {

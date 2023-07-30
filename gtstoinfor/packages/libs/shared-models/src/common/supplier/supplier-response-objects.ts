@@ -3,7 +3,6 @@ import { SupplierCreateDto } from "./supplier-create-dto";
 
 export class SupplierResponse extends  GlobalResponseObject {
     data?:  SupplierCreateDto;
-
     status: boolean;
     errorCode: number;
     internalMessage: string;
