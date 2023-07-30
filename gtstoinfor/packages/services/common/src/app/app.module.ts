@@ -20,6 +20,7 @@ import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categories.module';
 import { DeliveryTermsModule } from './delivery-terms/delivery-terms.module';
 import { CountriesModule } from './countries/countries.module';
+import { StyleModule } from './style/style-module';
 
 
 @Module({
@@ -49,7 +50,7 @@ import { CountriesModule } from './countries/countries.module';
     UsersModule,
     OrdersModule,
     DeliveryTermsModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CountriesModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CountriesModule,StyleModule],
   controllers: [AppController],
   providers: [AppService],
 })

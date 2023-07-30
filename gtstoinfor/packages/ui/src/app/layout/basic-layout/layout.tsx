@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
-import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
+import { Button, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
+import { UserOutlined, DashboardOutlined, PicCenterOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
-import { CommonHeader } from '../header/header';
-import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
+import { ProBreadcrumb, ProConfigProvider } from '@ant-design/pro-components';
 import logo from './logo.png'
-const { Sider, Content } = Layout;
-const { SubMenu } = Menu;
-import ProLayout, { DefaultFooter, MenuDataItem, SettingDrawer } from '@ant-design/pro-layout';
-import { getOperatingSystem, treeRouter } from '../../utils/common';
-import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
+import ProLayout from '@ant-design/pro-layout';
+import { treeRouter } from '../../utils/common';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShirt} from '@fortawesome/free-solid-svg-icons';
+
 const { useToken } = theme
 
 
@@ -134,6 +133,23 @@ export const baseRouterList = [
                 filepath: "delivery-terms/delivery-terms-view",
             },
         ],
+    },
+    {
+        label: "Style Management",
+        key: "style-management",
+        path: "style-management",
+        icon:<FontAwesomeIcon icon={faShirt} />,
+        filepath: "style-management",
+        children: [
+            {
+                label: "Style",
+                key: "style-view",
+                path: 'style/style-grid',
+                filepath: 'style/style-grid',
+            },
+            
+        ]
+
     },
     {
         label: "Orders",

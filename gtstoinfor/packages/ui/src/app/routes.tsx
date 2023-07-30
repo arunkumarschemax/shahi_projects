@@ -37,6 +37,8 @@ import DeliveryTermsForm from "./masters/delivery-terms/delivery-terms-form"
 import DeliveryTermsGrid from "./masters/delivery-terms/delivery-terms-grid"
 import ItemsGrid from "./masters/items/item-grid"
 import PhaseWiseData from "./excel-import/phase-wise-data"
+import StyleForm from "./style-management/style/style-form"
+import StyleGrid from "./style-management/style/style-grid"
 
 
 export const AppRoutes = () => {
@@ -87,7 +89,14 @@ export const AppRoutes = () => {
                 <Route path='items/item-grid' element={<ItemsGrid />} />
 
                 </Route>
-                
+                <Route path="style-management">
+                    <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateDetails={(undefined) => { }}/>} />
+                        <Route path='style/style-grid' element={<StyleGrid />} />
+
+                </Route>
               
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
@@ -171,7 +180,14 @@ export const AppRoutes = () => {
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
                     </Route>
 
-                    
+                    <Route path="style-management">
+                    <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateDetails={(undefined) => { }}/>} />
+                        <Route path='style/style-grid' element={<StyleGrid />} />
+
+                </Route>
 
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
