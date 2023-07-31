@@ -4,8 +4,8 @@ import { Form, Input, Button, Select, Card, Row, Col, Space, message, Upload, Ty
 import { LoadingOutlined, MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import TextArea from 'antd/lib/input/TextArea';
-import { BuyerACcountTypes, BuyersDto, CountryDto, CurrencyDto } from '@project-management-system/shared-models';
-import { BuyersService, CountryService, CurrencyService } from '@project-management-system/shared-services';
+import { BuyerACcountTypes, BuyersDto, CountryDto, CurrencyDto, StyleDto } from '@project-management-system/shared-models';
+import { BuyersService, CountryService, CurrencyService, StyleService } from '@project-management-system/shared-services';
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
@@ -13,8 +13,8 @@ import AlertMessages from '../../common/common-functions/alert-messages';
 const { Option } = Select;
 
 export interface StyleFormProps {
-  styleData: BuyersDto;
-  updateDetails: (customers: BuyersDto) => void;
+  styleData: StyleDto;
+  updateDetails: (customers: StyleDto,filelist:any) => void;
   isUpdate: boolean;
   closeForm: () => void;
 }
@@ -23,9 +23,16 @@ export function StyleForm(props: StyleFormProps) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [imageUrl, setImageUrl] = useState('');
-  const [filelist, setfilelist] = useState<any>([]);
+  // const [filelist, setfilelist] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [filelist, setfilelist] = useState<any>(props.isUpdate?[{
+    name: props.styleData.styleFileName,
+    status: 'done',
+    url:props.styleData.styleFileName,
+  }]:[]);
+
+const service = new StyleService()
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -76,18 +83,60 @@ export function StyleForm(props: StyleFormProps) {
     reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
   }
+   const onReset = () =>{
+    form.resetFields()
+    setImageUrl('');
+    setfilelist([]);
 
+   }
 
+  const saveEmployee = (data: StyleDto) => {
+    service.creteStyle(data).then((res) => {
+        if (res.status) {
+          AlertMessages.getSuccessMessage('Style Created Successfully');
+          if(filelist.length >0){
+            console.log(res.data[0].styleId)
+            const formData = new FormData();
+            filelist.forEach((file: any) => {
+                formData.append('file', file);
+            });
 
+            formData.append('styleId', `${res.data[0].styleId}`)
+            service.fileUpload(formData).then(fileres => {
+                res.data[0].styleFilePath = fileres.data
+            })
+          }
+          navigate("/style-management/style/style-grid")
+          onReset();
+        } else {
+            AlertMessages.getErrorMessage(res.internalMessage);
+        }
+      })
+      .catch((err) => {
+        // setDisable(false)
+        AlertMessages.getErrorMessage(err.message);
+      });
+   
+  };
+  const saveData = (values: StyleDto) => {
+    console.log(values)
+      if (props.isUpdate) {
+        props.updateDetails(values,filelist);
+      } else {
+        saveEmployee(values);
+      }
+    
+  };
 
+  
   
   return (
     <>
-    <Card title={props.isUpdate ? 'Update Stle' : 'Add Stle'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Update Stle' : 'Add Stle'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/style-management/style/style-grid')} type={'primary'}>View</Button></span>}>
         <Form form={form}
-        //  onFinish={saveData}
+         onFinish={saveData}
           initialValues={props.styleData} layout="vertical">
-          <Form.Item name="buyerId" style={{ display: "none" }} >
+          <Form.Item name="styleId" style={{ display: "none" }} >
             <Input hidden />
           </Form.Item>
           <Form.Item style={{ display: "none" }} name="createdUser" initialValue={''}>
@@ -98,7 +147,7 @@ export function StyleForm(props: StyleFormProps) {
             <Card>
             <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
-                        <Form.Item name='location' label='Location'>
+                        <Form.Item name='locationId' label='Location'>
                             <Input/>
                         </Form.Item>
                 </Col>
@@ -122,25 +171,40 @@ export function StyleForm(props: StyleFormProps) {
                             rules={[
                                 {required:true,message:'Upload Style'}
                             ]}  
+                            initialValue={props.isUpdate ? props.styleData.styleFilePath:''}
                         >
-                           <Upload {...uploadFieldProps} style={{  width:'100%' }} listType="picture-card">
+                           <Upload  {...uploadFieldProps} style={{  width:'100%' }} listType="picture-card">
                             
                             {uploadButton}
                             </Upload>
                         </Form.Item>
                 </Col>
             </Row> 
+            <Row>
+          <Col span={24} style={{ textAlign: 'right' }}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+            {/* {(props.isUpdate===false) && */}
+         <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
+            Reset
+          </Button>
+          {/* } */}
+          </Col>
+        </Row>
             </Card>  
          </Col>
-         {imageUrl &&
-         ( <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }} >
+         {/* {imageUrl &&
+         (  */}
+         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }} >
             <Card style={{height:'314px'}}>
-                    <Form.Item label='Style'>
-                    <img src={imageUrl} alt="Default Preview"  style={{ width: '50%',objectFit: 'cover',marginRight:'100px' }} height={'260px'} width={'2000px'}/> 
+                    <Form.Item label='Style' initialValue={props.isUpdate ? props.styleData.styleFilePath:''}>
+                    <img src={props.isUpdate ? props.styleData.styleFilePath:imageUrl} alt="Default Preview"  style={{ width: '50%',objectFit: 'cover',marginRight:'100px' }} height={'260px'} width={'2000px'}/> 
                     </Form.Item>        
             </Card>
-         </Col>)
-         }
+         </Col>
+        {/* //  )
+        //  } */}
         
          </Row>
         </Form>

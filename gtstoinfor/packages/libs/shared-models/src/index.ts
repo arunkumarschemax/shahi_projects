@@ -9,3 +9,4 @@ export * from './common/users/users-active-deactive.dto'
 export * from './common/factory/factory-activate-deactivate.dto'
 export * from './common/payment_terms_category/payment_terms_category.enum'
 
+export * from './common/delivery-terms'

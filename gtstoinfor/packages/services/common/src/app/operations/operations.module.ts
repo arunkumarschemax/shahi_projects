@@ -5,11 +5,12 @@ import { Operations } from './operation.entity';
 import { OperationsController } from './operations.controller';
 import { OperationsService } from './operation.service';
 import { OperationsAdapter } from './dto/operation.adapter';
+import { OperationGroups } from '../operation-groups/operation-groups.entity';
  
 @Module({
   imports: [
     
-    TypeOrmModule.forFeature([Operations]),
+    TypeOrmModule.forFeature([Operations,OperationGroups]),
     // forwardRef(() => ClusterModule),
   ],
   controllers: [OperationsController],

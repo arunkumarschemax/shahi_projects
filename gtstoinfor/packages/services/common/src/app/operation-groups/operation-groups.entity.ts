@@ -1,4 +1,5 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { Operations } from "../operations/operation.entity";
 
 @Entity('operation_groups')
 export class OperationGroups {
@@ -61,7 +62,7 @@ updatedUser: string | null;
   })
   versionFlag: number;
 
-//   @OneToMany(type=>Operation, operation=>operation.operationGroupInfo,{cascade: true})
-//   operationInfo:Operation[];
+  @OneToMany(type=>Operations, operation=>operation.operationGroupInfo,{cascade: true})
+  operationInfo:Operations;
 
 }
