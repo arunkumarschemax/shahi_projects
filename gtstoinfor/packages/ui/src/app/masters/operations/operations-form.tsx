@@ -4,7 +4,7 @@ import {Form, Input, Button, Select, Card, Row, Col, InputNumber} from 'antd';
 
 import TextArea from 'antd/lib/input/TextArea';
 import { OperationsDTO } from '@project-management-system/shared-models';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { OperationsService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
@@ -77,6 +77,7 @@ export function OperationsForm(
   const saveData = (values: OperationsDTO) => {
     setDisable(false)
     if(props.isUpdate){
+      // form.setFieldValue({'operationGroup'})
       console.log(values,'===========')
       props.updateOperation(values);
     }else{
@@ -86,16 +87,17 @@ export function OperationsForm(
     }
   
   };
+  let navigate = useNavigate()
   return (
-    <Card title={<span style={{color:'white'}}>Operation</span>}
-    style={{textAlign:'center'}} 
-     extra={props.isUpdate==true?"":<Link to='/masters/operations/operation-view' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
-      >
+    <Card title={props.isUpdate ? 'Update Operation' : 'Add LOperation'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/operations/operation-view')} type={'primary'}>View</Button></span>}>
+
       <Form layout="vertical" form={form} initialValues={props.operationData} name="control-hooks" onFinish={saveData}>
       <Form.Item name="operationId" style={{ display: "none" }} >
         <Input hidden />
       </Form.Item>
-      
+      <Form.Item name="operationGroupId" style={{ display: "none" }}initialValue={1} >
+        <Input hidden  defaultValue={1} />
+      </Form.Item>
       <Row gutter={24}>
         <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}}>
           <Form.Item

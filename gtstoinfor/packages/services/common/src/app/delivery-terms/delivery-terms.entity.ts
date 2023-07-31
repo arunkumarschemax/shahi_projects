@@ -1,25 +1,18 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
-import { Operations } from "../operations/operation.entity";
 
-@Entity('operation_groups')
-export class OperationGroups {
+@Entity('delivery_terms')
+export class DeliveryTerms {
 
-  @PrimaryGeneratedColumn("increment",{name:'operation_group_id'})
-  operationGroupId:number;
-
+  @PrimaryGeneratedColumn("increment",{name:'delivery_terms_id'})
+  deliveryTermsId:number;
+  
   @Column("varchar",{
       nullable:false,
       length:50,
-      name:"operation_group_code"
+      name:"delivery_terms_name"
       })
-  operationGroupCode:string;
-
-  @Column("varchar",{
-    nullable:false,
-    length:50,
-    name:"operation_group_name"
-    })
-    operationGroupName:string;
+  // @Index({unique:true})
+    deliveryTermsName:string;
 
   @Column("boolean",{
     nullable:false,
@@ -27,7 +20,7 @@ export class OperationGroups {
     name:"is_active"
     })
   isActive:boolean;
-  
+
   @CreateDateColumn({
     name: "created_at",
     type:"datetime"
@@ -35,11 +28,11 @@ export class OperationGroups {
   createdAt: Date;
 
   @Column("varchar", {
-    nullable: false,
-    name: "created_user",
-    length:50
-})
-createdUser: string | null;
+      nullable: true,
+      name: "created_user",
+      length:50
+  })
+  createdUser: string | null;
 
 
   @UpdateDateColumn({
@@ -49,20 +42,16 @@ createdUser: string | null;
   updatedAt: Date;
 
   @Column("varchar", {
-    nullable: true,
-    name: "updated_user",
-    length:50
-})
-updatedUser: string | null;
-
+      nullable: true,
+      name: "updated_user",
+      length:50
+  })
+  updatedUser: string | null;
 
   @VersionColumn({
       default:1,
       name: "version_flag"
   })
   versionFlag: number;
-
-  @OneToMany(type=>Operations, operation=>operation.operationGroupInfo,{cascade: true})
-  operationInfo:Operations;
-
+ 
 }

@@ -33,6 +33,8 @@ import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
 import ItemCategoriesGrid from "./masters/item-categories/item-categories-grid"
 import ItemSubCategoriesGrid from "./masters/item-sub-categories/item-sub-categories-grid"
 import ItemSubCategoriesForm from "./masters/item-sub-categories/item-sub-categories-form"
+import DeliveryTermsForm from "./masters/delivery-terms/delivery-terms-form"
+import DeliveryTermsGrid from "./masters/delivery-terms/delivery-terms-grid"
 import ItemsGrid from "./masters/items/item-grid"
 import PhaseWiseData from "./excel-import/phase-wise-data"
 import StyleForm from "./style-management/style/style-form"
@@ -57,7 +59,7 @@ export const AppRoutes = () => {
                     <Route path='currencies/currency-form' key='/currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
-                updateItem={(undefined) => { }}/>} />
+                updateItem={(undefined) => {}}/>} />
                        <Route path='brands/brand-form' key='/brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
@@ -65,7 +67,7 @@ export const AppRoutes = () => {
                   <Route path='operations/operation-form' key='/operations/operation-form' element={<OperationsForm operationData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
-                updateOperation={(undefined) => { }}/>} />
+                updateOperation={(undefined) => {}}/>} />
                 <Route path='buyers/buyers-view' element={<BuyersView />} />
                 <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                 <Route path='vendors/vendors-form' key='/vendors/vendors-form' element={<VendorsForm vendorsData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
@@ -171,6 +173,11 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateData={(undefined) => { }}/>}/>
                         <Route path='item-sub-categories/item-sub-categories-view' element={<ItemSubCategoriesGrid/>}/>
+                        <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateDetails={(undefined) => { }}/>}/>
+                        <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
                     </Route>
 
                     <Route path="style-management">

@@ -125,7 +125,13 @@ export const baseRouterList = [
                 key: "item-sub-categories",
                 path: "item-sub-categories/item-sub-categories-view",
                 filepath: "item-sub-categories/item-sub-categories-view",
-            }
+            },
+            {
+                label: "Delivery Terms",
+                key: "delivery-terms",
+                path: "delivery-terms/delivery-terms-view",
+                filepath: "delivery-terms/delivery-terms-view",
+            },
         ],
     },
     {

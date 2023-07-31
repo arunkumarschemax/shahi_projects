@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { ColumnProps } from 'antd/lib/table';
+import { ColumnProps, ColumnType } from 'antd/lib/table';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { MasterBrandsService } from '@project-management-system/shared-services';
 import { MasterBrandsDto } from '@project-management-system/shared-models';
@@ -107,58 +107,58 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
    * used for column filter
    * @param dataIndex column data index
    */
-  const getColumnSearchProps = (dataIndex:string) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          ref={ searchInput }
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Button
-          type="primary"
-          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          icon={<SearchOutlined />}
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-          Reset
-        </Button>
-      </div>
-    ),
-    filterIcon: filtered => (
-      <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-    ),
-    onFilter: (value, record) =>
-    record[dataIndex]
-    ? record[dataIndex]
-       .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase())
-        : false,
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {    setTimeout(() => searchInput.current.select());   }
-    },
-    render: text =>
-      text ?(
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text.toString()}
-        />
-      ) :text
-      )
-      : null
+  // const getColumnSearchProps = (dataIndex:string) => ({
+  //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+  //     <div style={{ padding: 8 }}>
+  //       <Input
+  //         ref={ searchInput }
+  //         placeholder={`Search ${dataIndex}`}
+  //         value={selectedKeys[0]}
+  //         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+  //         onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+  //         style={{ width: 188, marginBottom: 8, display: 'block' }}
+  //       />
+  //       <Button
+  //         type="primary"
+  //         onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+  //         icon={<SearchOutlined />}
+  //         size="small"
+  //         style={{ width: 90, marginRight: 8 }}
+  //       >
+  //         Search
+  //       </Button>
+  //       <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+  //         Reset
+  //       </Button>
+  //     </div>
+  //   ),
+  //   filterIcon: filtered => (
+  //     <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+  //   ),
+  //   onFilter: (value, record) =>
+  //   record[dataIndex]
+  //   ? record[dataIndex]
+  //      .toString()
+  //       .toLowerCase()
+  //       .includes(value.toLowerCase())
+  //       : false,
+  //   onFilterDropdownVisibleChange: visible => {
+  //     if (visible) {    setTimeout(() => searchInput.current.select());   }
+  //   },
+  //   render: text =>
+  //     text ?(
+  //     searchedColumn === dataIndex ? (
+  //       <Highlighter
+  //         highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+  //         searchWords={[searchText]}
+  //         autoEscape
+  //         textToHighlight={text.toString()}
+  //       />
+  //     ) :text
+  //     )
+  //     : null
      
-  });
+  // });
 
   /**
    * 
@@ -172,10 +172,73 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
     setSearchedColumn(dataIndex);
   };
 
-  function handleReset(clearFilters) {
+  function handleReset(clearFilters:() => void) {
     clearFilters();
     setSearchText('');
   };
+
+  const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() =>{
+              handleReset(clearFilters)
+              setSearchedColumn(dataIndex)
+              confirm({closeDropdown:true})
+            }
+               }
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+         
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex] ?record[dataIndex]     
+         .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()):false,
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
 
     //drawer related
     const closeDrawer=()=>{
@@ -208,26 +271,29 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
         {
           title: 'Status',
           dataIndex: 'isActive',
-          render: (isActive, rowData) => (
-            <>
-              {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-            </>
-          ),
-          filters: [
-            {
-              text: 'Active',
-              value: true,
-            },
-            {
-              text: 'InActive',
-              value: false,
-            },
-          ],
-          filterMultiple: false,
-          onFilter: (value, record) => {
-            // === is not work
-            return record.isActive === value;
-          },
+          sorter: (a, b) => a.isActive.localeCompare(b.isActive),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps("isActive"),
+          // render: (isActive, rowData) => (
+          //   <>
+          //     {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          //   </>
+          // ),
+          // filters: [
+          //   {
+          //     text: 'Active',
+          //     value: true,
+          //   },
+          //   {
+          //     text: 'InActive',
+          //     value: false,
+          //   },
+          // ],
+          // filterMultiple: false,
+          // onFilter: (value, record) => {
+          //   // === is not work
+          //   return record.isActive === value;
+          // },
     
         },
         {
@@ -286,7 +352,7 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
     
     // >
     //  <br></br>
-    <>
+<Card title='Delivery Terms' extra={<span><Button onClick={() => navigate('/masters/masters-brands/master-brands-form')} type={'primary'}>New</Button></span>}>
      <Row gutter={40} >
       <Col>
           <Card title={'Total Brands: ' + masterBrandData.length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#bfbfbf'}}></Card>
@@ -297,10 +363,10 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
           <Col>
            <Card title={'In-Active: ' + masterBrandData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
           </Col>
-          <Col>
+          {/* <Col>
         <span><Button onClick={() => navigate('/masters/brands/brand-form')}
               type={'primary'}>New</Button></span>
-        </Col>
+        </Col> */}
           </Row>
           <br></br>
           <Table
@@ -325,8 +391,8 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
                 closeForm={closeDrawer} />
             </Card>
           </Drawer> 
-     {/* </Card> */}
-     </>
+      </Card> 
+     
   );
 }
 
