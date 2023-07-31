@@ -1,4 +1,4 @@
-import { BuyerRequest, BuyersDto, BuyersResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerRequest, BuyersDto, BuyersResponseModel } from '@project-management-system/shared-models';
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class BuyersService extends CommonAxiosService{
@@ -15,11 +15,11 @@ export class BuyersService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + "/updateBuyer", req)
     }
 
-    async getAllBuyer(): Promise<BuyersResponseModel> {
+    async getAllBuyer(): Promise<AllBuyersResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllBuyer")
     }
 
-    async getAllActiveBuyers(): Promise<BuyersResponseModel> {
+    async getAllActiveBuyers(): Promise<AllBuyersResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllActiveBuyers")
     }
 

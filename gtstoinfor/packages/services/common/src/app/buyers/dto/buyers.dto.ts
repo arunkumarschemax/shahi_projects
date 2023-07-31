@@ -68,6 +68,7 @@ export class BuyersDTO {
 
   @ApiProperty()
   countryId:number;
+  countryName: string;
   
   @ApiProperty()
   isActive: boolean;

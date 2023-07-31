@@ -53,7 +53,7 @@ export function VendorsView(
       if(res.status){
         setVendorCodeData(res.data)
       } else{
-        message.error(res.internalMessage)
+        // message.error(res.internalMessage)
       }
     })
   }
@@ -63,7 +63,7 @@ export function VendorsView(
       if(res.status){
         setVendorContactData(res.data)
       } else{
-        message.error(res.internalMessage)
+        // message.error(res.internalMessage)
       }
     })
   }
@@ -73,7 +73,7 @@ export function VendorsView(
       if(res.status){
         setVendorCityData(res.data)
       } else{
-        message.error(res.internalMessage)
+        // message.error(res.internalMessage)
       }
     })
   }
@@ -88,6 +88,9 @@ export function VendorsView(
     }
     if(form.getFieldValue('city') != undefined){
       req.city = form.getFieldValue('city')
+    }
+    if(form.getFieldValue('gstNumber') != undefined){
+      req.gstNumber = form.getFieldValue('gstNumber')
     }
     vendorsService.getAllVendors(req).then(res => {
       if (res.status) {
@@ -507,14 +510,15 @@ export function VendorsView(
           </Col>
           </Row>
           <br></br>
-          <Form form={form} layout='vertical' onFinish={getAllVendors}>
+          {/* <Form form={form} layout='vertical' onFinish={getAllVendors}>
             <Row gutter={24}>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 6}}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 4}}>
             <Form.Item label='Vendor Code' name='vendorCode'>
               <Select
                 showSearch
                 allowClear
                 optionFilterProp='children'
+                placeholder='Select Vendor Code'
               >
                 {
                   vendorCodeData.map((e)=>{
@@ -526,12 +530,13 @@ export function VendorsView(
               </Select>
             </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 6}}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 4}}>
             <Form.Item label='Vendor Contact' name='contactNumber'>
               <Select
                 showSearch
                 allowClear
                 optionFilterProp='children'
+                placeholder='Select Vendor Contact'
               >
                 {
                   vendorContactData.map((e)=>{
@@ -543,12 +548,13 @@ export function VendorsView(
               </Select>
             </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 6}}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 4}}>
             <Form.Item label='City' name='city'>
               <Select
                 showSearch
                 allowClear
                 optionFilterProp='children'
+                placeholder='Select City'
               >
                 {
                   vendorCityData.map((e)=>{
@@ -560,19 +566,37 @@ export function VendorsView(
               </Select>
             </Form.Item>
               </Col>
-            </Row>
-            <Row>
-          <Col span={24} style={{ textAlign: 'right' }}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 4}}>
+            <Form.Item label='GST Number' name='gstNumber'>
+              <Select
+                showSearch
+                allowClear
+                optionFilterProp='children'
+                placeholder='Select GST Number'
+              >
+                {
+                  vendorCityData.map((e)=>{
+                    return(
+                      <Option key={e.city} value={e.city}>{e.city}</Option>
+                    )
+                  })
+                }
+              </Select>
+            </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 2}} style={{marginTop:'2%'}}>
 
             <Button type="primary" htmlType="submit" >
               Search
                 </Button>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 2}} style={{marginTop:'2%'}}>
               <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
                 Reset
           </Button>
           </Col>
-        </Row>
-          </Form>
+            </Row>
+          </Form> */}
           <Table
           rowKey={record => record.deptId}
           columns={columnsSkelton}
