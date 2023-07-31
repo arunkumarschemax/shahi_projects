@@ -26,13 +26,13 @@ export interface PaymentMethodFormProps{
           createdUser= 'admin';
         }
 
-        const saveCurrency = (paymentMethodData:PaymentMethodDto ) => {
-            setDisable(true)
+        const savePayment = (paymentMethodData:PaymentMethodDto ) => {
+            // setDisable(true)
             paymentMethodData.paymentMethodId= 0;
             service.createPaymentMethod(paymentMethodData).then((res) => {
               setDisable(false)
                 if (res.status) {
-                  AlertMessages.getSuccessMessage('Currency Created Successfully');
+                  AlertMessages.getSuccessMessage('Payment Created Successfully');
                 //   location.push("/Currencies-view");
                   onReset();
                 } else {
@@ -51,7 +51,7 @@ export interface PaymentMethodFormProps{
                 props.updateItem(values);
               } else {
                 setDisable(false)
-                saveCurrency(values);
+                savePayment(values);
               }
           }
           const onReset = () => {
@@ -59,9 +59,8 @@ export interface PaymentMethodFormProps{
           };
 
           return(
-            <Card title={<span style={{color:'white'}}>PaymentMethod</span>}
-            style={{textAlign:'center'}} 
-            extra={props.isUpdate==true?"":<Link to='/masters/paymentmethod/paymentmethod-view' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+            <Card title={<span >Payment Method </span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+            extra={props.isUpdate==true?"":<Link to='/masters/paymentmethod/paymentmethod-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
 >
     <Form 
     layout={'vertical'}
@@ -92,7 +91,8 @@ export interface PaymentMethodFormProps{
         >
           <Input />
         </Form.Item>
-        </Col></Row>
+        </Col>
+        </Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
             <Button type="primary" disabled={disable} htmlType="submit">

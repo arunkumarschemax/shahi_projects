@@ -1,35 +1,33 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer } from 'antd';
+import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
+import { ColumnProps } from 'antd/lib/table';
+import { GarmentCategoryService } from '@project-management-system/shared-services';
+import { GarmentCategoryDto } from '@project-management-system/shared-models';
 import Highlighter from 'react-highlight-words';
-import { ColumnProps } from 'antd/es/table';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import { ProColumns, ProTable } from '@ant-design/pro-components';
-import { PaymentMethodDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
-// import {PaymentMethodService} from '@project-management-system/shared-services'
-import { PaymentMethodService } from '@project-management-system/shared-services';
-import PaymentMethodForm from './payment-method-form';
+import { GarmentCategoryForm } from './garment-category-form';
 
-export interface PaymentMethodGridProps{ }
 
-export const PaymentMethodGrid =(Props:PaymentMethodGridProps)=>{
+export interface GarmentCategoryProps{}
+
+export function GarmentCategoryGrid(
+    Props:GarmentCategoryProps
+)
+{
     const [searchText, setSearchText] = useState('');
-    const [searchedColumn, setSearchedColumn] = useState('');
-    const [drawerVisible, setDrawerVisible] = useState(false);
-    const [variantData, setVariantData] = useState<PaymentMethodDto[]>([]);
-    const [selectedVariant, setSelectedVariant] = useState<any>(undefined);
-    const [selectedPaymentmethodData, setSelectedPaymentmethodData] = useState<any>(undefined);
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+  const [page, setPage] = React.useState(1);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+const service = new GarmentCategoryService();
 
-    const searchInput = useRef(null);
-    const [page, setPage] = React.useState(1);
-    const columns = useState('');
-    const navigate = useNavigate()
+const [selectedVariant, setSelectedVariant] = useState<any>(undefined);
+const [variantData, setVariantData] = useState<GarmentCategoryDto[]>([]);
+const navigate = useNavigate()
 
-const service = new PaymentMethodService();
-
-
-const getColumnSearchProps = (dataIndex: string) => ({
+  const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8 }}>
             <Input
@@ -91,55 +89,70 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-  
+   
   function handleReset(clearFilters) {
     clearFilters();
     setSearchText('');
   };
-  const openFormWithData=(viewData: PaymentMethodDto)=>{
+  const openFormWithData=(viewData: GarmentCategoryDto)=>{
     setDrawerVisible(true);
     setSelectedVariant(viewData);
   }
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   }
-  useEffect(() => {getAllPaymentMethods();}, [])
+  
+  useEffect(() => {
+    getAllGarmentCategory()
+  }, [])
 
-const getAllPaymentMethods=()=>{
-    service.getAllPaymentMethods().then(res=>{
+  const getAllGarmentCategory=()=>{
+    service.getAllGarmentCategories().then(res=>{
+      console.log(res,'11000000000000')
         if(res.status){
-            setVariantData(res.data)
-            console.log(res,'dataaaaaaaaaaaaa')
+          setVariantData(res.data)
         }else{
             AlertMessages.getErrorMessage(res.internalMessage);
-        }
+
+        } 
     }).catch(err => {
         AlertMessages.getErrorMessage(err.message);
-        setVariantData([]);
+        setSelectedVariant([]);
       })
-}
-const closeDrawer = () => {
+  }
+  const closeDrawer = () => {
     setDrawerVisible(false);
   }
 
-  const saveVariant=(variantData:PaymentMethodDto)=>{
-variantData.paymentMethodId=0;
-service.createPaymentMethod(variantData).then(res=>{
-    if(res.status){
-        AlertMessages.getSuccessMessage('PaymentMethod Created Successfully');
+  const saveVariant =(variantData:GarmentCategoryDto)=>{
+    variantData.garmentCategoryId=0;
+    service.createGarmentCategories(variantData).then(res=>{
+        if(res.status){
+            AlertMessages.getSuccessMessage('GarmentCategory Created Successfully');
 
-    }
+        }
+    }).catch(err => {
+        AlertMessages.getErrorMessage(err.message);
+      })
+  }
+const deleteGarmentCategory=(garment:GarmentCategoryDto)=>{
+    garment.isActive=garment.isActive?false:true;
+    service.activateDeActivateGarmentCategory(garment).then(res=>{console.log(res)
+    if(res.status){
+        AlertMessages.getSuccessMessage('Success'); 
+
+}else{
+    AlertMessages.getErrorMessage(res.internalMessage);
+}
 }).catch(err => {
     AlertMessages.getErrorMessage(err.message);
   })
-  }
-
-  const updatePaymentMethod=(paymentMethod: PaymentMethodDto)=>{
-    paymentMethod.updatedUser=JSON.parse(localStorage.getItem('username'))
-    service.updatePaymentMethod(paymentMethod).then(res=>{
+}
+const updateGarmentCategory =(garment:GarmentCategoryDto)=>{
+    garment.updatedUser=JSON.parse(localStorage.getItem('username'))
+    service.updateGarmentCaregories(garment).then(res=>{
         if(res.status){
-            AlertMessages.getSuccessMessage('Updated Successfully');
-            setDrawerVisible(false);
+            AlertMessages.getSuccessMessage('Success'); 
 
         }else{
             AlertMessages.getErrorMessage(res.internalMessage);
@@ -148,68 +161,62 @@ service.createPaymentMethod(variantData).then(res=>{
     }).catch(err => {
         AlertMessages.getErrorMessage(err.message);
       })
-  }
-  const deletePaymentmode = (paymentmethodData:PaymentMethodDto) => {
-    paymentmethodData.isActive=paymentmethodData.isActive?false:true;
-    service.activateDeActivatePaymentMethod(paymentmethodData).then(res => { console.log(res);
-      if (res.status) {
-        // getAllPaymentmethod();
-        AlertMessages.getSuccessMessage('Success'); 
-      } else {
-        // if (res.intlCode) {
-        //   AlertMessages.getErrorMessage(res.internalMessage);
-        // } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
-      
-    }).catch(err => {
-      AlertMessages.getErrorMessage(err.message);
-    })
-  }
-   const columnsSkelton: any =[
-    
-        {
-            title: 'S No',
-            key: 'sno',
-            width: '70px',
-            responsive: ['sm'],
-            render: (text, object, index) => (page - 1) * 10 + (index + 1)
-          },
+}
 
-          {
-            title: 'Payment Method',
-            dataIndex: 'paymentMethod',
-            sorter: (a, b) => a.paymentMethod.localeCompare(b.paymentMethod),
-            sortDirections: ['descend', 'ascend'],
-            ...getColumnSearchProps('paymentMethod')
-          },
-          {
-            title: 'Status',
-            dataIndex: 'isActive',
-            render: (isActive, rowData) => (
-              <>
-                {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-              </>
-            ),
-            filters: [
-              {
-                text: 'Active',
-                value: true,
-              },
-              {
-                text: 'InActive',
-                value: false,
-              },
-            ],
-            filterMultiple: false,
-            onFilter: (value, record) => 
-            {
-              // === is not work
-              return record.isActive === value;
-            },
-            
-          },
+const columnsSkelton:any=[
+
     {
+        title: 'S No',
+        key: 'sno',
+        width: '70px',
+        responsive: ['sm'],
+        render: (text, object, index) => (page - 1) * 10 + (index + 1)
+      },
+
+      {
+        title: 'Garment Category',
+        dataIndex: 'garmentCategory',
+        sorter: (a, b) => a.garmentCategory.localeCompare(b.garmentCategory),
+        sortDirections: ['descend', 'ascend'],
+        ...getColumnSearchProps('garmentCategory')
+      },
+    
+    {
+      title: 'Remarks',
+      dataIndex: 'remarks',
+      responsive: ['sm'],
+      sorter: (a, b) => String(a.remarks).localeCompare(String(b.remarks)),
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('remarks')
+    },
+    {
+        title: 'Status',
+        dataIndex: 'isActive',
+        render: (isActive, rowData) => (
+          <>
+            {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          </>
+        ),
+        filters: [
+          {
+            text: 'Active',
+            value: true,
+          },
+          {
+            text: 'InActive',
+            value: false,
+          },
+        ],
+        filterMultiple: false,
+        onFilter: (value, record) => 
+        {
+          // === is not work
+          return record.isActive === value;
+        },
+        
+      },
+
+      {
         title:`Action`,
         dataIndex: 'action',
         render: (text, rowData) => (
@@ -227,11 +234,11 @@ service.createPaymentMethod(variantData).then(res=>{
               
             
             <Divider type="vertical" />
-              <Popconfirm onConfirm={e =>{deletePaymentmode(rowData);}}
+              <Popconfirm onConfirm={e =>{deleteGarmentCategory(rowData);}}
               title={
                 rowData.isActive
-                  ? 'Are you sure to Deactivate Paymentmethod ?'
-                  :  'Are you sure to Activate Paymentmethod ?'
+                  ? 'Are you sure to Deactivate Garment Category ?'
+                  :  'Are you sure to Activate  Garment Category  ?'
               }
             >
               <Switch  size="default"
@@ -245,12 +252,13 @@ service.createPaymentMethod(variantData).then(res=>{
           </span>
         )
       }
-    ];
 
-return (
-  <Card title={<span>Payment Method</span>}
-  style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/garmentcategory/garmentcategory-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
-  <br></br>
+]
+return(
+  <Card title={<span>Garment Category</span>}
+        style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/garmentcategory/garmentcategory-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+        <br></br>
+
     <>
     <Row gutter={40}>
     <Col>
@@ -263,12 +271,12 @@ return (
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
         {/* <Col>
-        <span><Button onClick={() => navigate('/masters/paymentmethod/paymentmethod-form')}
+        <span><Button onClick={() => navigate('/masters/garmentcategory/garmentcategory-form')}
               type={'primary'}>New</Button></span>
         </Col> */}
     </Row>
     <Card>
-  <Table
+    <Table
         size='small'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
@@ -285,11 +293,11 @@ return (
     <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
-          <PaymentMethodForm key={Date.now()}
-            updateItem={updatePaymentMethod}
+          <GarmentCategoryForm key={Date.now()}
+            updateItem={updateGarmentCategory}
             isUpdate={true}
             // saveItem={saveVariant}
-            paymentMethodData={selectedVariant}
+            GarmentCategoryData={selectedVariant}
             closeForm={closeDrawer} />
         </Card>
       </Drawer>
@@ -297,4 +305,3 @@ return (
     </Card>
 )
 }
-export default PaymentMethodGrid;
