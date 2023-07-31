@@ -35,12 +35,14 @@ const SupplierView = () => {
     navigate('/', { state: { data: record } })
 
   }
-  const activateOrDeactivate = (id: string) => {
-    service.activateOrDeactivate({ id: id }).then(res => {
+  
+  const activateOrDeactivate = (req: SupplierActivateDeactivateDto) => {
+    req.isActive = req.isActive? false : true;
+    service.ActivateOrDeactivate(req).then(res => {
         if (res.status) {
             console.log(res, "PPPPPPPPPPPPPPp")
             AlertMessages.getSuccessMessage(res.data.internalMessage);
-            getSupplierData();
+            // getSupplierData();
         } else {
             if (res.intlCode) {
                 AlertMessages.getErrorMessage(res.internalMessage)
@@ -51,34 +53,11 @@ const SupplierView = () => {
     }).catch(err => {
         AlertMessages.getErrorMessage(err.message)
     })
+
+
+  
 }
-  // const activateOrDeactivate = () => {
-  //   // const dto = new SupplierActivateDeactivateDto()
-  //   service.activateOrDeactivate(dto).then(res => {
-  //     if (res.status) {
-  //       console.log(res, "PPPPPPPPPPPPPPp")
-  //       AlertMessages.getSuccessMessage(res.data.internalMessage);
-  //       getSupplierData();
-  //     } else {
-  //       if (res.intlCode) {
-  //         AlertMessages.getErrorMessage(res.internalMessage)
-  //       } else {
-  //         AlertMessages.getErrorMessage(res.internalMessage)
-  //       }
-  //     }
-  //   }).catch(err => {
-  //     AlertMessages.getErrorMessage(err.message)
-  //   })
-  // }
- 
-
-  // async function onSwitchClick(item: any) { 
-  //   const dto = new SupplierActivateDeactivateDto(item.id, !item.isActive, item.versionFlag, 'admin')
-  //   await service.activateOrDeactivate(dto);
-  //   window.location.reload();
-  // }
-
-
+  
   const Columns: any = [
 
     {
@@ -214,16 +193,16 @@ const SupplierView = () => {
       key: '6',
       title: "Actions",
       width: 50,
-      render: (value: any, record: any) => {
+      render: (value, record) => {
           return <>
               <EditOutlined style={{ color: 'blue' }} onClick={() => { onEdit(record) }} type="edit" />
 
               <Divider type="vertical" />
-              <Popconfirm onConfirm={e => { activateOrDeactivate(record.any); }}
+              <Popconfirm onConfirm={e => { activateOrDeactivate(record); }}
                   title={
                       record.isActive
-                          ? 'Are you sure to activated ?'
-                          : 'Are you sure to deactivated ?'
+                          ? 'Are you sure to deactivated ?'
+                          : 'Are you sure to activated ?'
                   }
               >
                   <Switch size="default"
@@ -237,29 +216,6 @@ const SupplierView = () => {
 
       }
   },
-    // {
-    //   title: 'Status',
-    //   filters: true,
-    //   onFilter: true,
-    //   ellipsis: true,
-    //   valueType: 'select',
-    //   valueEnum: {
-    //     open: {
-    //       text: 'Active',
-    //       status: 'Error',
-    //     },
-    //     closed: {
-    //       text: 'Inactive',
-    //       status: 'Success',
-    //     }, 
-    //   },
-    //   align: 'center',
-    //   render: (dom, entity) => { return <Tag color={entity.isActive ? 'green' : 'red'}>{entity.isActive ? 'Active' : 'Inactive'}</Tag> }
-    // },
-    // { title: 'Action', align: 'center', render: (dom, entity) => { return <TableActions isActive={entity.isActive} onEditClick={onEdit} onSwitchClick={() => onSwitchClick(entity)} /> } }
-
-    
-
   ]
   return (
     <div>
@@ -274,6 +230,7 @@ const SupplierView = () => {
         <Table columns={Columns} dataSource={supplier}
           scroll={{ x: 1500 }} />
       </Card>
+      
 
     </div>
   )

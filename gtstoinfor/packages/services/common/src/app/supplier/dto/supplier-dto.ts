@@ -41,4 +41,11 @@ export class SupplierDto {
     creditPaymentPeriod: number;
     @ApiProperty()
     id?: number;
+    @ApiProperty()
+    isActive?: boolean;
+    @ApiProperty()
+    versionFlag?: number;
+    @ApiProperty()
+    updatedUser?: string;   
+   
 }

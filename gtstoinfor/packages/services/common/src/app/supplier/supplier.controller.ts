@@ -4,7 +4,8 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { SupplierDto } from "./dto/supplier-dto";
 import { SupplierAdapter } from "./adapters/adapters/supplier.adapter";
 import { SupplierEntity } from "./supplier.entity";
-import { CommonResponseModel, SupplierActivateDeactivateDto, SupplierResponse } from "@project-management-system/shared-models";
+import { CommonResponseModel, SupplierActivateDeactivateDto, SupplierCreateDto, SupplierResponse } from "@project-management-system/shared-models";
+import { SupplierCreatDto } from "./dto/supplier-create-dto";
 
 
 @Controller("supplier")
@@ -15,17 +16,9 @@ export class SupplierController{
    private readonly applicationExceptionhandler: ApplicationExceptionHandler
     ){ }
 
-    // @Post('/createSupplier')
-    // async createSupplier(@Body() supplierDto: any) :Promise<CommonResponseModel>{
-    //   return await this.supplierService.createSupplier(supplierDto);
-    // }
     @Post('/createSupplier')
-    async createSupplier(@Body() factoryDto:any): Promise<CommonResponseModel>{
-        try{
-            return await this.supplierService.createSupplier(SupplierDto)
-        }catch(error){
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
-        }
+    async createSupplier(@Body() supplierDto: any) :Promise<CommonResponseModel>{
+      return await this.supplierService.createSupplier(supplierDto);
     }
  
   // @Post('/getAllSuppliers')
@@ -55,11 +48,11 @@ export class SupplierController{
   }
 
 
-  @Post("/activateOrDeactivate")
-  async activateOrDeactivate(@Body() activateDeactivateReq:any) : Promise<SupplierResponse>{
+  @Post("/ActivateOrDeactivate")
+  async ActivateOrDeactivate(@Body() activateDeactivateReq:SupplierCreatDto) : Promise<SupplierResponse>{
     console.log(activateDeactivateReq, '[[[[[[[[[[[[[[[[[[[[[[[[[[[[[');
     try{
-        await this.supplierService.activateOrDeactivate(activateDeactivateReq)
+        await this.supplierService.ActivateOrDeactivate(activateDeactivateReq)
     }catch(error){
         return this.applicationExceptionhandler.returnException(SupplierResponse,error)
     }
