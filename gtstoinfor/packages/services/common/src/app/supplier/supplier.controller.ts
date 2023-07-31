@@ -15,21 +15,28 @@ export class SupplierController{
    private readonly applicationExceptionhandler: ApplicationExceptionHandler
     ){ }
 
+    // @Post('/createSupplier')
+    // async createSupplier(@Body() supplierDto: any) :Promise<CommonResponseModel>{
+    //   return await this.supplierService.createSupplier(supplierDto);
+    // }
     @Post('/createSupplier')
-    async createSupplier(@Body() supplierDto: any) :Promise<CommonResponseModel>{
-      return await this.supplierService.createSupplier(supplierDto);
+    async createSupplier(@Body() factoryDto:any): Promise<CommonResponseModel>{
+        try{
+            return await this.supplierService.createSupplier(SupplierDto)
+        }catch(error){
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
     }
-  
  
-  @Post('/getAllSuppliers')
-  async getAllSuppliers(): Promise<any> {
-      try { 
-          return this.supplierService.getAllSuppliers();
-      } catch (err) {
-          return this.applicationExceptionHandler.returnException(err);
+  // @Post('/getAllSuppliers')
+  // async getAllSuppliers(): Promise<any> {
+  //     try { 
+  //         return this.supplierService.getAllSuppliers();
+  //     } catch (err) {
+  //         return this.applicationExceptionHandler.returnException(err);
 
-      }
-  }
+  //     }
+  // }
   @Post('/getActiveSuppliers')
     async getActiveSuppliers() : Promise<SupplierResponse>{
         try{
@@ -38,6 +45,14 @@ export class SupplierController{
             return this.applicationExceptionhandler.returnException(SupplierResponse, error);
         }
     }
+  @Post('/getAllSuppliers')
+  async getAllSuppliers(): Promise<CommonResponseModel>{
+      try{
+          return await this.supplierService.getAllSuppliers()
+      }catch(error){
+          return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+      }
+  }
 
 
   @Post("/activateOrDeactivate")

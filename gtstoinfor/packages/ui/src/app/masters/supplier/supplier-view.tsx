@@ -35,8 +35,25 @@ const SupplierView = () => {
     navigate('/', { state: { data: record } })
 
   }
+  const activateOrDeactivate = (id: string) => {
+    service.activateOrDeactivate({ id: id }).then(res => {
+        if (res.status) {
+            console.log(res, "PPPPPPPPPPPPPPp")
+            AlertMessages.getSuccessMessage(res.data.internalMessage);
+            getSupplierData();
+        } else {
+            if (res.intlCode) {
+                AlertMessages.getErrorMessage(res.internalMessage)
+            } else {
+                AlertMessages.getErrorMessage(res.internalMessage)
+            }
+        }
+    }).catch(err => {
+        AlertMessages.getErrorMessage(err.message)
+    })
+}
   // const activateOrDeactivate = () => {
-  //   const dto = new SupplierActivateDeactivateDto()
+  //   // const dto = new SupplierActivateDeactivateDto()
   //   service.activateOrDeactivate(dto).then(res => {
   //     if (res.status) {
   //       console.log(res, "PPPPPPPPPPPPPPp")
@@ -55,149 +72,193 @@ const SupplierView = () => {
   // }
  
 
-  async function onSwitchClick(item: any) { 
-    const dto = new SupplierActivateDeactivateDto(item.id, !item.isActive, item.versionFlag, 'admin')
-    await service.activateOrDeactivate(dto);
-    window.location.reload();
-  }
+  // async function onSwitchClick(item: any) { 
+  //   const dto = new SupplierActivateDeactivateDto(item.id, !item.isActive, item.versionFlag, 'admin')
+  //   await service.activateOrDeactivate(dto);
+  //   window.location.reload();
+  // }
 
 
   const Columns: any = [
 
     {
-      key: '1',
+      
       title: "Category",
       dataIndex: 'category',
       width: 50
     },
     {
-      key: '2',
       title: "SupplierCode",
       dataIndex: 'supplierCode',
       width: 50
     },
     {
-      key: '3',
       title: "SupplierName",
       dataIndex: 'supplierName',
       width: 100
     },
     {
-      key: '4',
       title: "GSTNumber",
       dataIndex: 'GstNumber',
       width: 50
     },
     {
-      key: '5',
       title: "ContactPerson",
       dataIndex: 'contactPerson',
       width: 50
     },
     {
-      key: '6',
       title: "Street",
       dataIndex: 'street',
       width: 50
     },
     {
-      key: '7',
       title: "Apartment",
       dataIndex: 'apartment',
       width: 50
     },
     {
-      key: '8',
       title: "City",
       dataIndex: 'city',
       width: 50
     },
     {
-      key: '9',
       title: "State",
       dataIndex: 'state',
       width: 50
     },
     {
-      key: '10',
+      
       title: "District",
       dataIndex: 'district',
       width: 50
     },
     {
-      key: '11',
+      
       title: "PostalCode",
       dataIndex: 'postalCode',
       width: 50
     },
     {
-      key: '12',
+      
       title: "Commision",
       dataIndex: 'commision',
       width: 50
     },
     {
-      key: '13',
+      
       title: "BankAccountNo",
       dataIndex: 'bankAccountNo',
       width: 50
     },
     {
-      key: '14',
+      
       title: "BankIFSC",
       dataIndex: 'bankIFSC',
       width: 50
     },
     {
-      key: '15',
+      
       title: "BankName",
       dataIndex: 'bankName',
       width: 50
     },
     {
-      key: '16',
+      
       title: "BankBranch",
       dataIndex: 'bankBranch',
       width: 50
     },
     {
-      key: '17',
+      
       title: "ContactNumber",
       dataIndex: 'contactNumber',
       width: 50
     },
     {
-      key: '18',
+      
       title: "Email",
       dataIndex: 'email',
       width: 50
     },
     {
-      key: '19',
+      
       title: "CreditPaymentPeriod",
       dataIndex: 'creditPaymentPeriod',
       width: 50
     },
     {
-      title: 'Status',
-      filters: true,
-      onFilter: true,
-      ellipsis: true,
-      valueType: 'select',
-      valueEnum: {
-        open: {
-          text: 'Active',
-          status: 'Error',
-        },
-        closed: {
-          text: 'Inactive',
-          status: 'Success',
-        }, 
-      },
-      align: 'center',
-      render: (dom, entity) => { return <Tag color={entity.isActive ? 'green' : 'red'}>{entity.isActive ? 'Active' : 'Inactive'}</Tag> }
-    },
-    { title: 'Action', align: 'center', render: (dom, entity) => { return <TableActions isActive={entity.isActive} onEditClick={onEdit} onSwitchClick={() => onSwitchClick(entity)} /> } }
+      key: '5',
+      title: "Status",
+      dataIndex: "isActive",
+      width: 50,
+      render: (isActive: any, rowData: any) => (
+          <>
+              {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
+          </>
+      ),
+      filters: [
+          {
+              text: 'Active',
+              value: true,
+          },
+          {
+              text: 'InActive',
+              value: false,
+          },
+      ]
+  
+
+  },
+  {
+      key: '6',
+      title: "Actions",
+      width: 50,
+      render: (value: any, record: any) => {
+          return <>
+              <EditOutlined style={{ color: 'blue' }} onClick={() => { onEdit(record) }} type="edit" />
+
+              <Divider type="vertical" />
+              <Popconfirm onConfirm={e => { activateOrDeactivate(record.any); }}
+                  title={
+                      record.isActive
+                          ? 'Are you sure to activated ?'
+                          : 'Are you sure to deactivated ?'
+                  }
+              >
+                  <Switch size="default"
+                      className={record.isActive ? 'toggle-activated' : 'toggle-deactivated'}
+                      checkedChildren={<RightSquareOutlined type="check" />}
+                      unCheckedChildren={<RightSquareOutlined type="close" />}
+                      checked={record.isActive}
+                  />
+              </Popconfirm>
+          </>
+
+      }
+  },
+    // {
+    //   title: 'Status',
+    //   filters: true,
+    //   onFilter: true,
+    //   ellipsis: true,
+    //   valueType: 'select',
+    //   valueEnum: {
+    //     open: {
+    //       text: 'Active',
+    //       status: 'Error',
+    //     },
+    //     closed: {
+    //       text: 'Inactive',
+    //       status: 'Success',
+    //     }, 
+    //   },
+    //   align: 'center',
+    //   render: (dom, entity) => { return <Tag color={entity.isActive ? 'green' : 'red'}>{entity.isActive ? 'Active' : 'Inactive'}</Tag> }
+    // },
+    // { title: 'Action', align: 'center', render: (dom, entity) => { return <TableActions isActive={entity.isActive} onEditClick={onEdit} onSwitchClick={() => onSwitchClick(entity)} /> } }
+
+    
 
   ]
   return (
