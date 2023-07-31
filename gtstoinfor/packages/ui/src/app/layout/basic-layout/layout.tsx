@@ -127,6 +127,12 @@ export const baseRouterList = [
                 filepath: "item-sub-categories/item-sub-categories-view",
             },
             {
+                label: "Garments",
+                 key: "garments",
+                 path: "garments/garments-view",
+                 filepath: "garments/garments-view",
+            },
+            {
                 label: "Delivery Terms",
                 key: "delivery-terms",
                 path: "delivery-terms/delivery-terms-view",
