@@ -21,7 +21,6 @@ export function FileRevert() {
         service.getUploadFilesData().then((res) => {
             if (res.status) {
                 setData(res.data)
-                message.success(res.internalMessage)
             } else {
                 message.error(res.internalMessage)
             }

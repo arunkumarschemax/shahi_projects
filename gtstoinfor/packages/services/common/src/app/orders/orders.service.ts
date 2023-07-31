@@ -11,10 +11,11 @@ import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
 import { FileUploadRepository } from './repository/upload.repository';
 import { FileUploadEntity } from './entities/upload-file.entity';
-import { DataSource, Entity, EntityManager } from 'typeorm';
+import { DataSource, Entity, EntityManager, getManager } from 'typeorm';
 import { FileIdReq } from './models/file-id.req';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { GenericTransactionManager } from '../../typeorm-transactions';
+import { AppDataSource } from '../app-datasource';
 let moment = require('moment');
 moment().format();
 
@@ -255,6 +256,9 @@ export class OrdersService {
         }
         if (req) {
             const deleteDiffData = await this.orderDiffRepo.deleteDiffData(req)
+        }
+        if(req){
+            const deleteOrdersData = await this.ordersRepository.deleteData(req)
         }
         const updatedData = await this.ordersChildRepo.getUpdatedData()
         const data = await this.ordersChildRepo.find({
