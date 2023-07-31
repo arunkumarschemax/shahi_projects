@@ -91,7 +91,7 @@ const ChangesGrid = () => {
         let formattedDate = null;
 
         for (const format of formatsToTry) {
-            const parsedDate = moment(inputDate, format, true);
+            const parsedDate = moment(inputDate, format);
             if (parsedDate.isValid()) {
                 formattedDate = parsedDate.format('YYYY-MM-DD');
                 break;
@@ -494,7 +494,7 @@ const ChangesGrid = () => {
             // width :'190px',
             render: (text, record) => {
                 const obj: any = {
-                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + 1 + ' Days'}</div>)
+                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + ' Days'}</div>)
                 };
                 return obj;
             }
@@ -580,7 +580,7 @@ const ChangesGrid = () => {
             // width :'190px',
             render: (text, record) => {
                 const obj: any = {
-                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + 1 + ' Days'}</div>)
+                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + ' Days'}</div>)
                 };
                 return obj;
             }

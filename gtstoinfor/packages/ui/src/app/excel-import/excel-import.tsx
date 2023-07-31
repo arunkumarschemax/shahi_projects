@@ -67,25 +67,29 @@ export default function ExcelImport() {
         const formData = new FormData();
         formData.append('file', selectedFile);
         ordersService.fileUpload(formData).then((fileRes) => {
-          ordersService.saveOrder(data, fileRes?.data?.id).then((res) => {
-            setLoading(true)
-            if (res.status) {
-              const req = new FileStatusReq()
-              req.fileId = fileRes?.data?.id;
-              req.status = 'Success'
-              ordersService.updateFileStatus(req)
-              message.success(res.internalMessage)
-              navigate("/excel-import/grid-view");
-            } else {
-              const req = new FileStatusReq()
-              req.fileId = fileRes?.data?.id;
-              req.status = 'Failed'
-              ordersService.updateFileStatus(req)
-              message.error('File upload failed')
-            }
-          }).finally(() => {
-            setLoading(false);
-          })
+          if (fileRes.status) {
+            ordersService.saveOrder(data, fileRes?.data?.id).then((res) => {
+              setLoading(true)
+              if (res.status) {
+                const req = new FileStatusReq()
+                req.fileId = fileRes?.data?.id;
+                req.status = 'Success'
+                ordersService.updateFileStatus(req)
+                message.success(res.internalMessage)
+                navigate("/excel-import/grid-view");
+              } else {
+                const req = new FileStatusReq()
+                req.fileId = fileRes?.data?.id;
+                req.status = 'Failed'
+                ordersService.updateFileStatus(req)
+                message.error('File upload failed')
+              }
+            }).finally(() => {
+              setLoading(false);
+            })
+          } else {
+            message.error(fileRes.internalMessage)
+          }
         });
       }
     } catch (error) {
