@@ -15,8 +15,8 @@ import { DataSource, Entity, EntityManager } from 'typeorm';
 import { FileIdReq } from './models/file-id.req';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { GenericTransactionManager } from '../../typeorm-transactions';
-import * as dayjs from 'dayjs';
-
+let moment = require('moment');
+moment().format();
 
 @Injectable()
 export class OrdersService {
@@ -104,10 +104,10 @@ export class OrdersService {
                                     const orderDiffObj = new OrdersDifferenceEntity();
                                     if (existingDataKey === 'lastUpdateDate' || existingDataKey === 'requestedWhDate' || existingDataKey === 'contractedDate' || existingDataKey === 'EXF') {
                                         console.log(details[existingDataKey], 'existingOld')
-                                        const oldValue = dayjs(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
+                                        const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
                                         console.log(oldValue, 'oldValue');
                                         console.log(dtoData[existingDataKey], 'existingNew')
-                                        const newValue = dayjs(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
+                                        const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
                                         console.log(newValue, 'newValue')
                                         orderDiffObj.oldValue = details[existingDataKey]
                                         orderDiffObj.newValue = dtoData[existingDataKey]
