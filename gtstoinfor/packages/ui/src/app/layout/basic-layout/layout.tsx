@@ -131,7 +131,13 @@ export const baseRouterList = [
                  key: "garments",
                  path: "garments/garments-view",
                  filepath: "garments/garments-view",
-                            },
+            },
+            {
+                label: "Delivery Terms",
+                key: "delivery-terms",
+                path: "delivery-terms/delivery-terms-view",
+                filepath: "delivery-terms/delivery-terms-view",
+            },
         ],
     },
     {
@@ -143,10 +149,11 @@ export const baseRouterList = [
         children: [
             {
                 label: "Style",
-                key: "style",
-                path: "style/style-form",
-                filepath: "style/style-form",
+                key: "style-view",
+                path: 'style/style-grid',
+                filepath: 'style/style-grid',
             },
+            
         ]
 
     },
