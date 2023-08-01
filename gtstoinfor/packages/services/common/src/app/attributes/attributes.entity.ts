@@ -1,25 +1,19 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { AttributeAgainstEnum } from "packages/libs/shared-models/src/enum";
 
 
-@Entity('garments')
-export class Garments {
+@Entity('attributes')
+export class Attributes {
 
-  @PrimaryGeneratedColumn("increment", { name: 'garment_id' })
-  garmentId: number;
+  @PrimaryGeneratedColumn("increment", { name: 'attribute_id' })
+  attributeId: number;
 
   @Column("varchar", {
     nullable: false,
     length: 40,
-    name: "garment_name"
+    name: "attribute_name"
   })
-  garmentName: string;
-
-  @Column("varchar", {
-    nullable: true,
-    length: 50,
-    name: "remarks"
-  })
-  remarks: string;
+  attributeName: string;
 
   @Column("boolean", {
     nullable: false,
@@ -60,8 +54,10 @@ export class Garments {
   })
   versionFlag: number;
 
-  // @ManyToOne(() => GarmentCategory, garmentCategory => garmentCategory.garmentCategory)
-  // @JoinColumn({ name: 'garment_category_id' })
-  // garmentCategory: GarmentCategory;
+  @Column("enum", {
+    name: "attribute_against",
+    enum: AttributeAgainstEnum
+  })
+  attributeAgainst: AttributeAgainstEnum;
 
 }

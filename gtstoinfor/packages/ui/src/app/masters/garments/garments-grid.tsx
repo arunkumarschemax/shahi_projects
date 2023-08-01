@@ -4,16 +4,16 @@ import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,
 import { ColumnProps } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
 import { Link } from 'react-router-dom';
-import { ItemSubCategoriesDto } from '@project-management-system/shared-models';
-import { ItemSubCategoryService } from '@project-management-system/shared-services';
+import { GarmentsDto } from '@project-management-system/shared-models';
+import { GarmentService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
-import ItemSubCategoriesForm from './item-sub-categories-form';
+import GarmentsForm from './garments-form';
 
 /* eslint-disable-next-line */
-export interface ItemSubCategoriesGridProps {}
+export interface GarmentGridProps {}
 
-export function ItemSubCategoriesGrid(
-  props: ItemSubCategoriesGridProps
+export function GarmentsGrid(
+  props: GarmentGridProps
 ) {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -21,29 +21,29 @@ export function ItemSubCategoriesGrid(
   const [page, setPage] = React.useState(1);
   const [drawerVisible, setDrawerVisible] = useState(false);
 
-  const subCategoryService = new ItemSubCategoryService();
-  const [selectedSubCategoryData, setSelectedSubCategoryData] = useState<any>(undefined);
-  const [subCategoryData, setSubCategoryData] = useState<ItemSubCategoriesDto[]>([]);
+  const garmentService = new GarmentService();
+  const [selectedGarmentData, setSelectedGarmentData] = useState<any>(undefined);
+  const [garmentData, setGarmentData] = useState<GarmentsDto[]>([]);
 
   useEffect(() => {
     getAll();
   },[]);
 
   const getAll = () => {
-    subCategoryService.getAll().then(res =>{
+    garmentService.getAllGarments().then(res =>{
       console.log(res,'asdfghj')
       if(res.status){
-        setSubCategoryData(res.data);
+        setGarmentData(res.data)
       }else{
         if(res.status) {
-          setSubCategoryData([]);
+          setGarmentData([]);
           AlertMessages.getErrorMessage(res.internalMessage);
         } else {
           AlertMessages.getErrorMessage(res.internalMessage);
         }
       }
     }).catch(err => {
-      setSubCategoryData([]);
+      setGarmentData([]);
       AlertMessages.getErrorMessage(err.message);
     })
   }
@@ -118,9 +118,9 @@ export function ItemSubCategoriesGrid(
     setSearchText('');
   };
 
-  const deleteItem = (Data:ItemSubCategoriesDto) => {
+  const deleteItem = (Data:GarmentsDto) => {
     Data.isActive=Data.isActive?false:true;
-    subCategoryService.activateOrDeactivateItemSubCategory(Data).then(res => { console.log(res);
+    garmentService.activateOrDeactivateGarment(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
         AlertMessages.getSuccessMessage('Success'); 
@@ -136,8 +136,8 @@ export function ItemSubCategoriesGrid(
     })
   }
 
-  const updateItem = (Data: ItemSubCategoriesDto) => {
-    subCategoryService.update(Data).then(res => { console.log(res);
+  const updateItem = (Data: GarmentsDto) => {
+    garmentService.updateGarment(Data).then(res => { console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         getAll();
@@ -162,9 +162,9 @@ export function ItemSubCategoriesGrid(
     console.log('params', pagination, filters, sorter, extra);
   }
 
-  const openFormWithData=(viewData: ItemSubCategoriesDto)=>{
+  const openFormWithData=(viewData: GarmentsDto)=>{
     setDrawerVisible(true);
-    setSelectedSubCategoryData(viewData);
+    setSelectedGarmentData(viewData);
 
   }
 
@@ -177,29 +177,21 @@ export function ItemSubCategoriesGrid(
        render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Item Category',
-      dataIndex: 'itemCategoryName',
+      title: 'Garment Category',
+      dataIndex: 'garmentCategoryName',
       //  responsive: ['lg'],
-      sorter: (a, b) => a.itemCategoryName.localeCompare(b.itemCategoryName),
+      sorter: (a, b) => a.garmentCategoryName.localeCompare(b.garmentCategoryName),
        sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('itemCategoryName')
+        ...getColumnSearchProps('garmentCategoryName')
     },
    
     {
-      title: 'Item Sub Category',
-      dataIndex: 'itemSubCategory',
+      title: 'Garment',
+      dataIndex: 'garmentName',
       //  responsive: ['lg'],
-      sorter: (a, b) => a.itemSubCategory.localeCompare(b.itemSubCategory),
+      sorter: (a, b) => a.garmentName.localeCompare(b.garmentName),
        sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('itemSubCategory')
-    },
-    {
-    title: 'Item Sub Category Code',
-      dataIndex: 'itemSubCategoryCode',
-      responsive: ['sm'],
-      sorter: (a, b) => a.itemSubCategoryCode.localeCompare(b.itemSubCategoryCode),
-       sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('itemSubCategoryCode')
+        ...getColumnSearchProps('garment')
     },
     {
       title: 'Remarks',
@@ -239,7 +231,7 @@ export function ItemSubCategoriesGrid(
       title:`Action`,
       dataIndex: 'action',
       render: (text, rowData) => (
-        rowData.itemSubCategory.trim()=='Packing Material' || rowData.itemSubCategory.trim()=='Raw Material' ? <span> </span>:
+        rowData.garmentName.trim()=='Packing Material' || rowData.garmentName.trim()=='Raw Material' ? <span> </span>:
         <span>         
             <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
               onClick={() => {
@@ -278,25 +270,25 @@ export function ItemSubCategoriesGrid(
   ];
 
   return (
-    <Card title={<span >Item Sub Categories</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/item-sub-categories/item-sub-categories-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+    <Card title={<span >Garments</span>}
+    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/garments/garments-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
      <br></br>
       <Row gutter={40}>
       <Col>
-          <Card title={'Total Item Sub Categories : ' + subCategoryData.length} style={{textAlign: 'left', width: 290, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          <Card title={'Total Garments : ' + garmentData.length} style={{textAlign: 'left', width: 290, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
-           <Card title={'Active: ' + subCategoryData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#52c41a'}}></Card>
+           <Card title={'Active: ' + garmentData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#52c41a'}}></Card>
           </Col>
           <Col>
-           <Card title={'In-Active :' + subCategoryData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#f5222d'}}></Card>
+           <Card title={'In-Active :' + garmentData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#f5222d'}}></Card>
           </Col>
           </Row> 
           <br></br>
           <Table
           // rowKey={record => record.productId}
           columns={columnsSkelton}
-          dataSource={subCategoryData}
+          dataSource={garmentData}
           pagination={{
             onChange(current) {
               setPage(current);
@@ -308,10 +300,10 @@ export function ItemSubCategoriesGrid(
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
              <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
-              <ItemSubCategoriesForm key={Date.now()}
+              <GarmentsForm key={Date.now()}
                 updateData={updateItem}
                 isUpdate={true}
-                subCategoryData={selectedSubCategoryData }
+                garmentData={selectedGarmentData }
                 closeForm={closeDrawer} />
             </Card> 
           </Drawer>
@@ -319,4 +311,4 @@ export function ItemSubCategoriesGrid(
   );
 }
 
-export default ItemSubCategoriesGrid;
+export default GarmentsGrid;
