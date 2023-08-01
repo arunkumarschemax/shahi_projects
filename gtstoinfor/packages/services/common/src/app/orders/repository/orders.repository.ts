@@ -58,11 +58,9 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         return await query.getRawMany();
     }
 
-    // async getOrdersByFileId(req:FileIdReq):Promise<any[]>{
-    //     console.log('req',req)
-    //     console.log('----------------',req.fileId)
-    //     const query = this.createQueryBuilder('o')
-    //     .select(`*`)
-    //     return await query.getRawMany();
-    // }
+    async deleteData( req: FileIdReq) : Promise<void>{
+        const queryBuilder = this.createQueryBuilder('orders');
+        queryBuilder.where(`file_id = '${req.fileId}' AND version = 1`);
+        await queryBuilder.delete().execute();
+    }
 }

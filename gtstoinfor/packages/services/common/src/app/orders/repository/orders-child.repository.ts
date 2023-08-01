@@ -32,7 +32,6 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     }
 
     async deleteChildData(req: FileIdReq): Promise<void> {
-        console.log(req)
         const queryBuilder = this.createQueryBuilder('oc');
         queryBuilder.where(`file_id = '${req.fileId}'`);
         await queryBuilder.delete().execute();
@@ -48,7 +47,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
 
     async getVersionWiseQty(): Promise<any[]> {
         const query = this.createQueryBuilder('oc')
-            .select('production_plan_id, item_code, itemName, file_id as version, created_at,order_qty_pcs')
+            .select('production_plan_id, prod_plan_type_name, item_code, itemName, file_id as version, created_at,order_qty_pcs')
         return await query.getRawMany();
     }
 
