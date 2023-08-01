@@ -1,24 +1,25 @@
-import { SupplierActivateDeactivateDto, SupplierCreateDto, SupplierResponse } from "@project-management-system/shared-models";
+import { CommonResponseModel, FactoryResponseModel, SupplierActivateDeactivateDto, SupplierCreateDto, SupplierResponse } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
 export default class SupplierService extends CommonAxiosService {
     private supplierController = '/supplier';
       
-    async create( payload: SupplierCreateDto): Promise<SupplierResponse> {
-        console.log(payload,"qqqqqqqqqqqq")
-        return this.axiosPostCall(this.supplierController + '/createSupplier', payload)
+    async createSupplier( dto: SupplierCreateDto): Promise<CommonResponseModel> {
+        console.log(dto,"qqqqqqqqqqqq")
+        return this.axiosPostCall(this.supplierController + '/createSupplier', dto)
     }
 
     async getAllSuppliers(): Promise<any> {
         return await this.axiosPostCall(this.supplierController + '/getAllSuppliers')
     }
 
-    async update(payload:any): Promise<any> {
-        return await this.axiosPostCall(this.supplierController + '/update',payload)
+    async updateSuppliers(dto:SupplierCreateDto): Promise<CommonResponseModel> {
+        console.log(dto,"update")
+        return await this.axiosPostCall(this.supplierController + '/updateSuppliers',dto)
     }
 
-    async ActivateOrDeactivate(req:SupplierActivateDeactivateDto): Promise<any> {
+    async ActivateOrDeactivate(req:SupplierActivateDeactivateDto): Promise<FactoryResponseModel> {
         return await this.axiosPostCall(this.supplierController +'/ActivateOrDeactivate', req)
     }
 }

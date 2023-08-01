@@ -1,11 +1,12 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req } from "@nestjs/common";
 import { SupplierService } from "./supplier.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { SupplierDto } from "./dto/supplier-dto";
 import { SupplierAdapter } from "./adapters/adapters/supplier.adapter";
 import { SupplierEntity } from "./supplier.entity";
-import { CommonResponseModel, SupplierActivateDeactivateDto, SupplierCreateDto, SupplierResponse } from "@project-management-system/shared-models";
-import { SupplierCreatDto } from "./dto/supplier-create-dto";
+import { CommonResponseModel, SupplierActivateDeactivateDto, SupplierCreateDto } from "@project-management-system/shared-models";
+import { SupplierCreatDto } from "./dto/supplier-creat-dto";
+
 
 
 @Controller("supplier")
@@ -16,10 +17,10 @@ export class SupplierController{
    private readonly applicationExceptionhandler: ApplicationExceptionHandler
     ){ }
 
-    @Post('/createSupplier')
-    async createSupplier(@Body() supplierDto: any) :Promise<CommonResponseModel>{
-      return await this.supplierService.createSupplier(supplierDto);
-    }
+    // @Post('/createSupplier')
+    // async createSupplier(@Body() supplierDto: any) :Promise<CommonResponseModel>{
+    //   return await this.supplierService.createSupplier(supplierDto);
+    // }
  
   // @Post('/getAllSuppliers')
   // async getAllSuppliers(): Promise<any> {
@@ -30,12 +31,29 @@ export class SupplierController{
 
   //     }
   // }
+  @Post('/createSupplier')
+    async createSupplier(@Body() supplierDto:SupplierDto,isUpdate:boolean=false): Promise<CommonResponseModel> {
+    try {
+        return await this.supplierService.createSupplier(supplierDto, false);
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
+    @Post('/updateSuppliers')
+  async updateSuppliers(@Body() supplierDto: SupplierDto,@Req() request:any): Promise<CommonResponseModel> {
+    try {
+       
+      return await this.supplierService.createSupplier(supplierDto, true);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
   @Post('/getActiveSuppliers')
-    async getActiveSuppliers() : Promise<SupplierResponse>{
+    async getActiveSuppliers() : Promise<CommonResponseModel>{
         try{
             return await this.supplierService.getActiveSuppliers()
         }catch(error){
-            return this.applicationExceptionhandler.returnException(SupplierResponse, error);
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
         }
     }
   @Post('/getAllSuppliers')
@@ -49,17 +67,23 @@ export class SupplierController{
 
 
   @Post("/ActivateOrDeactivate")
-  async ActivateOrDeactivate(@Body() activateDeactivateReq:SupplierCreatDto) : Promise<SupplierResponse>{
+  async ActivateOrDeactivate(@Body() activateDeactivateReq:any) : Promise<CommonResponseModel>{
     console.log(activateDeactivateReq, '[[[[[[[[[[[[[[[[[[[[[[[[[[[[[');
     try{
         await this.supplierService.ActivateOrDeactivate(activateDeactivateReq)
     }catch(error){
-        return this.applicationExceptionhandler.returnException(SupplierResponse,error)
+        return this.applicationExceptionhandler.returnException(CommonResponseModel,error)
     }
   }
 
-  @Post('/updateSuppliers')
-  async updateSuppliers(@Body() supplierDto: SupplierDto ):Promise<CommonResponseModel>{
-    return await this.supplierService.updateSuppliers(supplierDto);
-  }
+  // @Post('/updateSuppliers')
+  // async updateSuppliers(@Body() supplierDto: any ):Promise<CommonResponseModel>{
+  //   try{
+  //     return await this.supplierService.createSupplier(supplierDto);
+
+  //   }catch(error){
+  //     return this.applicationExceptionhandler.returnException(CommonResponseModel,error)
+  // }
+
+  // }
 }

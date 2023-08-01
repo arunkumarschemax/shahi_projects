@@ -3,8 +3,10 @@ import { SupplierEntity } from "../../supplier.entity";
 
 
 export class SupplierAdapter {
+
   // static toDto: any;
-  convertDtoToEntity(dto: SupplierDto): SupplierEntity {
+  public convertDtoToEntity(dto: SupplierDto,isUpdate:boolean = false): SupplierEntity {
+    
     const entity = new SupplierEntity;
     entity.category = dto.category;
     entity.supplierCode = dto.supplierCode;
@@ -25,6 +27,13 @@ export class SupplierAdapter {
     entity.contactNumber = dto.contactNumber;
     entity.email = dto.email;
     entity.creditPaymentPeriod = dto.creditPaymentPeriod;
+    entity.isActive = dto.isActive == undefined?true:dto.isActive;
+    if(isUpdate){
+      entity.updatedUser = dto.updatedUser;
+    }else{
+      entity.isActive = true;
+      entity.createdUser = dto.createdUser
+    }
     // Map any other fields as needed
     console.log(entity);
     return entity;
@@ -53,6 +62,7 @@ export class SupplierAdapter {
     dto.contactNumber = entity.contactNumber;
     dto.email = entity.email;
     dto.creditPaymentPeriod = entity.creditPaymentPeriod;
+    dto.isActive = entity.isActive;
     // Map any other fields as needed
     return dto;
   }

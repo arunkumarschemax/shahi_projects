@@ -1,16 +1,19 @@
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined } from '@ant-design/icons';
-import { SupplierActivateDeactivateDto } from '@project-management-system/shared-models';
-import { Button, Card, Divider, Popconfirm, Switch, Table, Tag } from 'antd';
+import { SupplierActivateDeactivateDto, SupplierCreateDto } from '@project-management-system/shared-models';
+import { Button, Card, Divider, Drawer, Popconfirm, Switch, Table, Tag } from 'antd';
 import SupplierService from 'packages/libs/shared-services/src/supplier/supplier-service';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import TableActions from '../../common/table-actions/table-actions';
+import SupplierForm from './supplier-form';
 
 const SupplierView = () => {
   const [supplier, setSupllier] = useState([]);
   const navigate = useNavigate();
   const service = new SupplierService();
+  const [ data, setData ] = useState<any>(undefined);
+  const [ drawerVisible, setDrawerVisible] = useState(false);
 
 
   useEffect(() => {
@@ -30,21 +33,45 @@ const SupplierView = () => {
         console.log(error.response)
       })
   };
-  const onEdit = (record: any) => {
-    console.log(record)
-    navigate('/', { state: { data: record } })
-
+  const closeDrawer = () => {
+    setDrawerVisible(false);
   }
+ const openFormwithData = (ViewData:SupplierCreateDto) => {
+  setDrawerVisible(true);
+  setData(ViewData);
+  console.log(ViewData,"viewData")
+ }
+
+
+ const updateSupplier = (Data:SupplierCreateDto) => {
+  service.updateSuppliers(Data).then(res=> {
+    console.log(res,"ressssssssssss");
+    if(res.status) {
+      AlertMessages.getSuccessMessage('Upadted Succesfully');
+      getSupplierData()
+      setDrawerVisible(false);
+      
+    }
+    else {
+      AlertMessages.getErrorMessage(res.internalMessage)
+    }
+  }).catch(err => {
+    AlertMessages.getErrorMessage(err.message)
+  })
+
+
+ }
+
   
   const activateOrDeactivate = (req: SupplierActivateDeactivateDto) => {
     req.isActive = req.isActive? false : true;
     service.ActivateOrDeactivate(req).then(res => {
         if (res.status) {
             console.log(res, "PPPPPPPPPPPPPPp")
-            AlertMessages.getSuccessMessage(res.data.internalMessage);
+            AlertMessages.getSuccessMessage(res.internalMessage);
             // getSupplierData();
         } else {
-            if (res.intlCode) {
+            if (res.internalMessage) {
                 AlertMessages.getErrorMessage(res.internalMessage)
             } else {
                 AlertMessages.getErrorMessage(res.internalMessage)
@@ -53,9 +80,6 @@ const SupplierView = () => {
     }).catch(err => {
         AlertMessages.getErrorMessage(err.message)
     })
-
-
-  
 }
   
   const Columns: any = [
@@ -193,9 +217,9 @@ const SupplierView = () => {
       key: '6',
       title: "Actions",
       width: 50,
-      render: (value, record) => {
+      render: (rowData, record) => {
           return <>
-              <EditOutlined style={{ color: 'blue' }} onClick={() => { onEdit(record) }} type="edit" />
+              <EditOutlined style={{ color: 'blue' }} onClick={() => { openFormwithData(rowData) }} type="edit" />
 
               <Divider type="vertical" />
               <Popconfirm onConfirm={e => { activateOrDeactivate(record); }}
@@ -230,8 +254,13 @@ const SupplierView = () => {
         <Table columns={Columns} dataSource={supplier}
           scroll={{ x: 1500 }} />
       </Card>
-      
-
+      <Drawer bodyStyle={{ paddingBottom:80}}  title='update' width={window.innerWidth > 768 ? '75%' : '85%'}
+      onClose={closeDrawer} visible={drawerVisible} closable={true}>
+        <Card headStyle={{textAlign:'center', fontWeight:500, fontSize:16}} size='small' >
+          <SupplierForm 
+            updateItem={updateSupplier} Data={data} isUpdate={true} closeForm= {closeDrawer}   />
+        </Card>
+      </Drawer>
     </div>
   )
 }

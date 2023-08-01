@@ -1,18 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class SupplierCreatDto {
-
     @ApiProperty()
-    id: number;
+    id?: number;
     @ApiProperty()
-    isActive: boolean;
+    isActive?: boolean;
     @ApiProperty()
-    versionFlag: number;
+    versionFlag?: number;
     @ApiProperty()
-    updatedUser: string;   
-   
-   
+    updatedUser?: string;   
+    createdUser: any;
 }
-
-
-

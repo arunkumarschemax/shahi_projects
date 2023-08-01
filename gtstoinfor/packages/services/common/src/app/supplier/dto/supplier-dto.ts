@@ -47,5 +47,6 @@ export class SupplierDto {
     versionFlag?: number;
     @ApiProperty()
     updatedUser?: string;   
+    createdUser: any;
    
 }

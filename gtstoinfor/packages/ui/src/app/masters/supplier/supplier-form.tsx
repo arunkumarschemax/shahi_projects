@@ -1,34 +1,70 @@
+import { ProSkeleton } from '@ant-design/pro-components';
+import { SupplierCreateDto } from '@project-management-system/shared-models';
 import { Button, Card, Col, Form, Input, Row, Select } from 'antd';
 import { offset } from 'highcharts';
 import SupplierService from 'packages/libs/shared-services/src/supplier/supplier-service';
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
-export function SupplierForm() {
+
+export interface SupplierFormprops {
+    Data: SupplierCreateDto;
+    updateItem: (Data:SupplierCreateDto ) => void;
+    isUpdate: boolean;
+    closeForm: () => void;
+}
+
+export function SupplierForm(props:SupplierFormprops) {
     const navigate = useNavigate();
     const pathToreDirect = '/masters/supplier/supplier-view'
 
     const service = new SupplierService();
     const [form] = Form.useForm();
+    const [disable,setDisable] = useState<boolean>(false)
 
-
-    const onFinish = (values) => {
-        form.validateFields().then(values => {
-            service.create(values).then(res => {
-                console.log(values, "valuessssssssssssssssssssss")
-
-                if (res.status) {
-                    AlertMessages.getSuccessMessage("Created Successfully")
+    const create = (data: SupplierCreateDto) =>{
+        setDisable(true)
+        service.createSupplier(data).then(res => {
+          setDisable(false)
+          if(res.status){
+            AlertMessages.getSuccessMessage("Created Successfully")
                     setTimeout(() => {
                         navigate(pathToreDirect)
                     }, 500);
-                } else {
-                    AlertMessages.getErrorMessage("Failed")
-                }
-            }).catch(err => console.log(err.message, "err message"));
+          }else {
+            AlertMessages.getErrorMessage("Failed")
+        }
+        }).catch(err => {
+          setDisable(false)
+          AlertMessages.getErrorMessage(err.message);
         })
-    }
+      }
+      const saveData = (values: SupplierCreateDto) => {
+        setDisable(false)
+        if(props.isUpdate){
+          props.updateItem(values);
+        }else{
+          setDisable(false)
+          create(values);
+        }
+      };
+
+     const onFinish = (values : SupplierCreateDto ) =>{
+        setDisable(false)
+
+        if(props.isUpdate){
+          props.updateItem(values)
+        } else {
+            setDisable(false)
+            saveData(values)
+
+        }
+
+     }
+
+
+
     const handleReset = () => {
         form.resetFields();
     }
@@ -43,6 +79,7 @@ export function SupplierForm() {
             <Form layout="vertical"
                 form={form}
                 onFinish={onFinish}
+                initialValues={props.Data}
             >
                 <Row gutter={24}>
                     <Form.Item name="id" hidden={true} >
@@ -289,8 +326,9 @@ export function SupplierForm() {
                     <Col span={24}>
                         <Form.Item>
                             <Button htmlType='submit' style={{ marginRight: '18px', backgroundColor: ' green' }}>Submit</Button>
-
+                            {(props.isUpdate !==true) &&
                             <Button htmlType='reset' onClick={handleReset} style={{ backgroundColor: ' red' }} >Reset</Button>
+}
                         </Form.Item>
                     </Col>
 
