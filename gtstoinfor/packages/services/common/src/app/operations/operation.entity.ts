@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { OperationGroups } from "../operation-groups/operation-groups.entity";
 
 @Entity('operations')
 export class Operations {
@@ -60,5 +61,10 @@ export class Operations {
       name: "version_flag"
   })
   versionFlag: number;
+   
+  @ManyToOne(type=>OperationGroups, operationGroups=>operationGroups.operationInfo,{  nullable:false, })
+  @JoinColumn({ name:"operation_group_id"})
+  operationGroupInfo: OperationGroups;
+  
 
 }

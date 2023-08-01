@@ -92,7 +92,7 @@ export class OperationsService {
         try {
           const OperationsDtos: OperationDTO[] = [];
           //retrieves all companies
-          const operationsEntities: Operations[] = await this.OperationsRepository.find({order :{'operationName':'ASC'}});
+          const operationsEntities: Operations[] = await this.OperationsRepository.find({order :{'operationName':'ASC'}, relations:["operationGroupInfo"]});
           //console.log(statesEntities);
           if (operationsEntities) {
             // converts the data fetched from the database which of type companies array to type StateDto array.

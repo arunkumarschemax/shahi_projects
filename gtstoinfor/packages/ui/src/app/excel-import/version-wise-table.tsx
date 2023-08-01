@@ -133,6 +133,7 @@ const VersionChanges = () => {
         const versionWiseDataMap = getEmpDayWiseConsumptionMap(data);
         excelTitles = [
             { title: "Production Plan Id", dataIndex: "productionPlanId" },
+            { title: "Production Plan Type Name", dataIndex: "prodPlanTypeName" },
             { title: "Item Code", dataIndex: "itemCode" },
             { title: "Item Name", dataIndex: "itemName" },
             // { title: "Token Type", dataIndex: "tokenType" }
@@ -148,6 +149,11 @@ const VersionChanges = () => {
                 title: 'Production Plan Id',
                 dataIndex: 'productionPlanId',
                 ...getColumnSearchProps('productionPlanId')
+            },
+            {
+                title: 'Production Plan Type Name',
+                dataIndex: 'prodPlanTypeName',
+                ...getColumnSearchProps('prodPlanTypeName')
             },
             {
                 title: 'Item Code',
@@ -166,13 +172,14 @@ const VersionChanges = () => {
                     title: version,
                     key: version,
                     width: 130,
+                    align: 'right',
                     render: (value, record: any, index) => {
                         const prodPlanId = record.productionPlanId;
                         const fbConsInfo = versionWiseDataMap.get(prodPlanId);
                         if (fbConsInfo) {
-                            return Number(versionWiseDataMap.get(prodPlanId).get(version)).toLocaleString('en-IN', {
+                            return versionWiseDataMap.get(prodPlanId).get(version) ? Number(versionWiseDataMap.get(prodPlanId).get(version)).toLocaleString('en-IN', {
                                 maximumFractionDigits: 0
-                            }) ?? '-';
+                            }) : '-';
                         } else {
                             return 0;
                         }
@@ -184,9 +191,9 @@ const VersionChanges = () => {
                     const prodPlanId = record.productionPlanId;
                     const fbConsInfo = versionWiseDataMap.get(prodPlanId);
                     if (fbConsInfo) {
-                        const val = Number(versionWiseDataMap.get(prodPlanId).get(version)).toLocaleString('en-IN', {
+                        const val = versionWiseDataMap.get(prodPlanId).get(version) ? Number(versionWiseDataMap.get(prodPlanId).get(version)).toLocaleString('en-IN', {
                             maximumFractionDigits: 0
-                        }) ?? '-';
+                        }) : '-';
                         return val;
                     } else {
                         return 0;

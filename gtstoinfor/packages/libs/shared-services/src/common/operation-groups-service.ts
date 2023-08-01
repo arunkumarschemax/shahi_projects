@@ -2,7 +2,7 @@ import { AllCurrencyResponseModel, AllOperationGroupsResponseModel, CurrencyDto,
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class OperationGroupsService extends CommonAxiosService{
-  URL = "/operation-groups-controller";
+  URL = "/operationgroups";
 
   async createOperationGroup(req: OperationGroupsDto): Promise<OperationGroupsResponseModel> {
     return this.axiosPostCall(this.URL + "/createOperationGroup", req)
