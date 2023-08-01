@@ -7,3 +7,6 @@ export * from './all-buyers-model';
 export * from './buyers.response.model';
 export * from './buyer.request';
 export * from './account-types.input';
+export * from './buyers-general-atrribute-response'
+export * from './buyers-general-attribute-dto'
+export * from './buyers-general-attribute-info.dto'

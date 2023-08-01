@@ -25,10 +25,6 @@ export const ComponentsMappingForm = () => {
 
     const options = ['Front', 'Back', 'Collar', 'Sleeves', 'Pockets', 'Logo On Pocket'];
 
-    const handleClearButtonClick = () => {
-        setComponents([]); // Clear the selection by setting an empty array
-      };
-
     const onFinish = (values) => {
         const req = new ComponentMappingDto(0,values.styleId,values.garmentCategoryId,values.garmentId,components)
         console.log(req,'-------------req')
