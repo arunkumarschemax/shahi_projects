@@ -147,6 +147,12 @@ export const baseRouterList = [
                 path: 'style/style-grid',
                 filepath: 'style/style-grid',
             },
+            {
+                label: "Component Mapping",
+                key: "component-mapping",
+                path: 'component-mapping/component-mapping-form',
+                filepath: 'component-mapping/component-mapping-form',
+            },
             
         ]
 

@@ -39,6 +39,7 @@ import ItemsGrid from "./masters/items/item-grid"
 import PhaseWiseData from "./excel-import/phase-wise-data"
 import StyleForm from "./style-management/style/style-form"
 import StyleGrid from "./style-management/style/style-grid"
+import ComponentsMappingForm from "./components-mapping/components-mapping-form"
 
 
 export const AppRoutes = () => {
@@ -95,6 +96,7 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateDetails={(undefined) => { }}/>} />
                         <Route path='style/style-grid' element={<StyleGrid />} />
+                        <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
 
                 </Route>
               
@@ -186,6 +188,8 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateDetails={(undefined) => { }}/>} />
                         <Route path='style/style-grid' element={<StyleGrid />} />
+                        <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
+
 
                 </Route>
 
