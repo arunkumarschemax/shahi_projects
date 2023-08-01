@@ -269,13 +269,13 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
     <Card title={<span >Delivery Method</span>}
     style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     extra={<Link to='/masters/delivery-methods/delivery-method-form' >
-      <span style={{color:'white'}} ><Button type={'primary'} >Create </Button> </span>
+      <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >
      <br></br>
      <Row gutter={40}>
       
         <Col>
-          <Card title={'Total Delivery Methods: ' + deliveryMethodData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+          <Card title={'Total Delivery Methods: ' + deliveryMethodData.length} style={{ textAlign: 'left', width: 220, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
           <Card title={'Active: ' + deliveryMethodData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>

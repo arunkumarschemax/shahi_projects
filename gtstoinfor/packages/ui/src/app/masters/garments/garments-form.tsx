@@ -85,7 +85,7 @@ export function GarmentsForm(
     <Card title={<span >Garments</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }} extra={props.isUpdate == true ? "" : <Link to='/masters/garments/garments-view' ><Button type={'primary'} >View </Button></Link>}
     >
       <Form layout="vertical" form={form} initialValues={props.garmentData} name="control-hooks" onFinish={saveData}>
-        <Form.Item name="garmentId" style={{ display: "none" }} >
+        <Form.Item name="garmentCategoryId" style={{ display: "none" }} >
           <Input hidden />
         </Form.Item>
         <Form.Item style={{ display: "none" }} name="createdUser" initialValue={props.garmentData}>

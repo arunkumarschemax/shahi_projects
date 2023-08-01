@@ -271,7 +271,7 @@ export function GarmentsGrid(
 
   return (
     <Card title={<span >Garments</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/garments/garments-form"  ><span><Button type={'primary'} >Create </Button> </span></Link>} >
+    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/garments/garments-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
      <br></br>
       <Row gutter={40}>
       <Col>

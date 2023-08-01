@@ -70,7 +70,7 @@ export class DeliveryMethodController {
   }
 
   @Post('/getDeliveryMethodById')
-  async getCurrencyById(@Body() deliveryMethodReq: DeliveryMethodRequest ): Promise<DeliveryMethodResponseModel> {
+  async getDeliveryMethodById(@Body() deliveryMethodReq: DeliveryMethodRequest ): Promise<DeliveryMethodResponseModel> {
       try {
           return await this.deliveryMethodService.getActiveDeliveryMethodById(deliveryMethodReq);
       } catch (err) {
