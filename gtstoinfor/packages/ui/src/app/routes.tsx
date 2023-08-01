@@ -42,9 +42,14 @@ import DeliveryTermsGrid from "./masters/delivery-terms/delivery-terms-grid"
 import ItemsGrid from "./masters/items/item-grid"
 import PhaseWiseData from "./excel-import/phase-wise-data"
 import StyleForm from "./style-management/style/style-form"
+import { PaymentTermsForm } from "./masters/payments-terms/payment-terms-form"
+import PaymentTermsGrid from "./masters/payments-terms/payment-terms-grid"
+import { PackageTermsGrid } from "./masters/packages-terms/package-terms-grid"
+import PackageTermsForm from "./masters/packages-terms/package-terms-form"
 import StyleGrid from "./style-management/style/style-grid"
 import { GarmentCategoryForm } from "./masters/garment category/garment-category-form"
 import { GarmentCategoryGrid } from "./masters/garment category/garment-category-grid"
+import ComponentsMappingForm from "./components-mapping/components-mapping-form"
 
 
 export const AppRoutes = () => {
@@ -111,6 +116,7 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateDetails={(undefined) => { }}/>} />
                         <Route path='style/style-grid' element={<StyleGrid />} />
+                        <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
 
                 </Route>
 
@@ -208,6 +214,13 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateData={(undefined) => { }}/>}/>
                         <Route path='item-sub-categories/item-sub-categories-view' element={<ItemSubCategoriesGrid/>}/>
+                        <Route path='payment-terms/payment-terms-form' element={<PaymentTermsForm paymentTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }} />} />
+                        <Route path='payment-terms/payment-terms-view' element={<PaymentTermsGrid />} />
+                        <Route path='package-terms/package-terms-form' element={<PackageTermsForm  packageTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }}/>} />
+                        <Route path='package-terms/package-terms-view' element={<PackageTermsGrid/>} />
+                        
+
+
                         <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}
                         isUpdate={false}
                         closeForm={()=> {}}
@@ -215,7 +228,9 @@ export const AppRoutes = () => {
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
                     </Route>
 
-                    
+                                            <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
+
+
 
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />

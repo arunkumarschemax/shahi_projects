@@ -1,7 +1,7 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import { BuyerRequest, BuyersDto, FactoryActivateDeactivateDto, FactoryDto, OperationGroupsDto } from '@project-management-system/shared-models'
 import { BuyersService, FactoryService } from '@project-management-system/shared-services'
-import { Button, Card, Col, Divider, Drawer, Form, Input, Popconfirm, Row, Switch, Table, Tag, message } from 'antd'
+import { Button, Card, Col, Divider, Drawer, Form, Input, Popconfirm, Row, Space, Switch, Table, Tag, message } from 'antd'
 import { forEachObject } from 'for-each'
 import { useNavigate } from 'react-router-dom'
 import TableActions from '../../common/table-actions/table-actions'
@@ -42,58 +42,121 @@ export const  BuyersView = () => {
     })
   }
 
-  const getColumnSearchProps = (dataIndex:any): ColumnType<string> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
+  // const getColumnSearchProps = (dataIndex:any): ColumnType<string> => ({
+  //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+  //     <div style={{ padding: 8 }}>
+  //       <Input
+  //         ref={ searchInput }
+  //         placeholder={`Search ${dataIndex}`}
+  //         value={selectedKeys[0]}
+  //         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+  //         onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+  //         style={{ width: 188, marginBottom: 8, display: 'block' }}
+  //       />
+  //       <Button
+  //         type="primary"
+  //         onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+  //         icon={<SearchOutlined />}
+  //         size="small"
+  //         style={{ width: 90, marginRight: 8 }}
+  //       >
+  //         Search
+  //       </Button>
+  //       <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+  //         Reset
+  //       </Button>
+  //     </div>
+  //   ),
+  //   filterIcon: filtered => (
+  //     <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+  //   ),
+  //   onFilter: (value, record) =>
+  //   record[dataIndex]
+  //   ? record[dataIndex]
+  //      .toString()
+  //       .toLowerCase()
+  //       .includes((value as string).toLowerCase()):false,
+  //   onFilterDropdownVisibleChange: visible => {
+  //     if (visible) {    setTimeout(() => searchInput.current.select());   }
+  //   },
+  //   render: text =>
+  //     text ?(
+  //     searchedColumn === dataIndex ? (
+  //       <Highlighter
+  //         highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+  //         searchWords={[searchText]}
+  //         autoEscape
+  //         textToHighlight={text.toString()}
+  //       />
+  //     ) :text
+  //     )
+  //     : null
+     
+  // });
+
+  const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
-          ref={ searchInput }
+          ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
         />
-        <Button
-          type="primary"
-          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          icon={<SearchOutlined />}
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-          Reset
-        </Button>
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() =>{
+              handleReset(clearFilters)
+              setSearchedColumn(dataIndex)
+              confirm({closeDropdown:true})
+            }
+               }
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+         
+        </Space>
       </div>
     ),
-    filterIcon: filtered => (
-      <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
     ),
     onFilter: (value, record) =>
-    record[dataIndex]
-    ? record[dataIndex]
-       .toString()
+      record[dataIndex] ?record[dataIndex]     
+         .toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()):false,
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {    setTimeout(() => searchInput.current.select());   }
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
     },
-    render: text =>
-      text ?(
+    render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text.toString()}
+          textToHighlight={text ? text.toString() : ''}
         />
-      ) :text
-      )
-      : null
-     
+      ) : (
+        text
+      ),
   });
-
+  
   function handleSearch(selectedKeys, confirm, dataIndex) {
     confirm();
     setSearchText(selectedKeys[0]);

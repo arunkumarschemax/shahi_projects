@@ -139,6 +139,18 @@ export const baseRouterList = [
                 filepath: "/masters/garmentcategory/garmentcategory-view",
             },
             {
+                label: "Payment Terms",
+                key: "paymentTerms",
+                path: "payment-terms/payment-terms-view",
+                filepath: "payment-terms/payment-terms-view",
+            },
+            {
+                label: "Package Terms",
+                key: "packageTerms",
+                path: "package-terms/package-terms-view",
+                filepath: "package-terms/package-terms-view",
+            },
+            {
                 label: "Garments",
                  key: "garments",
                  path: "garments/garments-view",
@@ -166,6 +178,12 @@ export const baseRouterList = [
                 key: "style-view",
                 path: 'style/style-grid',
                 filepath: 'style/style-grid',
+            },
+            {
+                label: "Component Mapping",
+                key: "component-mapping",
+                path: 'component-mapping/component-mapping-form',
+                filepath: 'component-mapping/component-mapping-form',
             },
             
         ]
