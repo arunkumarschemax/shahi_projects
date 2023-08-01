@@ -138,6 +138,12 @@ export const baseRouterList = [
                 path: "delivery-terms/delivery-terms-view",
                 filepath: "delivery-terms/delivery-terms-view",
             },
+            {
+                label: "Liscence Type",
+                key: "liscence-type",
+                path: "liscence-type/liscence-type-grid",
+                filepath: "liscence-type/liscence-type-grid",
+            },
         ],
     },
     {

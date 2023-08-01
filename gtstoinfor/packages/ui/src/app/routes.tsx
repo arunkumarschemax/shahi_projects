@@ -41,6 +41,8 @@ import ItemsGrid from "./masters/items/item-grid"
 import PhaseWiseData from "./excel-import/phase-wise-data"
 import StyleForm from "./style-management/style/style-form"
 import StyleGrid from "./style-management/style/style-grid"
+import LiscenceTypesGrid from "./masters/Liscence Types/liscence_types_grid"
+import LiscenceTypesForm from "./masters/Liscence Types/liscence_types_form"
 
 
 export const AppRoutes = () => {
@@ -186,8 +188,14 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
-                        <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
+                        <Route path='liscence-type/liscence-type-grid' element={<LiscenceTypesGrid/>}/>
+                        <Route path='liscence-type/liscence-type-form' element={<LiscenceTypesForm liscenceData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateData={(undefined) => { }}/>}/>
                     </Route>
+                    
+                        <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
 
                     <Route path="style-management">
                     <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
