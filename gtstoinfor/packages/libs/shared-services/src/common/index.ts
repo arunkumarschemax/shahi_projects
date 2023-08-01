@@ -13,5 +13,6 @@ export * from './item-sub-category-service'
 export * from './countries-services';
 export * from './master-brands-service';
 export * from './operations-service '
-export * from './style-service';;
+export * from './style-service';
 export * from './delivery-terms.service';
+export * from './location.service'

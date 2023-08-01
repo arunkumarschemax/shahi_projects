@@ -21,6 +21,7 @@ import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categori
 import { DeliveryTermsModule } from './delivery-terms/delivery-terms.module';
 import { CountriesModule } from './countries/countries.module';
 import { StyleModule } from './style/style-module';
+import { LocationsModule } from './locations/location.module';
 
 
 @Module({
@@ -50,6 +51,7 @@ import { StyleModule } from './style/style-module';
     UsersModule,
     OrdersModule,
     DeliveryTermsModule,
+    LocationsModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CountriesModule,StyleModule],
   controllers: [AppController],
   providers: [AppService],

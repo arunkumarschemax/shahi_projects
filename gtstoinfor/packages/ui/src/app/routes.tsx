@@ -39,6 +39,8 @@ import ItemsGrid from "./masters/items/item-grid"
 import PhaseWiseData from "./excel-import/phase-wise-data"
 import StyleForm from "./style-management/style/style-form"
 import StyleGrid from "./style-management/style/style-grid"
+import LocationsForm from "./masters/locations/locations-form"
+import LocationsGrid from "./masters/locations/locations-grid"
 
 
 export const AppRoutes = () => {
@@ -178,6 +180,12 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
+                        <Route path='locations/locations-form' element={<LocationsForm locationsData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateDetails={(undefined) => { }}/>}/>
+                         <Route path='locations/locations-view' element={<LocationsGrid/>}/>
+
                     </Route>
 
                     <Route path="style-management">

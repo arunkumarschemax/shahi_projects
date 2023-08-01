@@ -132,6 +132,12 @@ export const baseRouterList = [
                 path: "delivery-terms/delivery-terms-view",
                 filepath: "delivery-terms/delivery-terms-view",
             },
+            {
+                label: "Locations",
+                key: "locations",
+                path: "locations/locations-view",
+                filepath: "locations/locations-view",
+            },
         ],
     },
     {
