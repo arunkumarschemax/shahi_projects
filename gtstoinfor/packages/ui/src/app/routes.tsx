@@ -47,6 +47,8 @@ import PaymentTermsGrid from "./masters/payments-terms/payment-terms-grid"
 import { PackageTermsGrid } from "./masters/packages-terms/package-terms-grid"
 import PackageTermsForm from "./masters/packages-terms/package-terms-form"
 import StyleGrid from "./style-management/style/style-grid"
+import LiscenceTypesGrid from "./masters/Liscence Types/liscence_types_grid"
+import LiscenceTypesForm from "./masters/Liscence Types/liscence_types_form"
 import { GarmentCategoryForm } from "./masters/garment category/garment-category-form"
 import { GarmentCategoryGrid } from "./masters/garment category/garment-category-grid"
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
@@ -177,8 +179,14 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
-                        <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
+                        <Route path='liscence-type/liscence-type-grid' element={<LiscenceTypesGrid/>}/>
+                        <Route path='liscence-type/liscence-type-form' element={<LiscenceTypesForm liscenceData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateData={(undefined) => { }}/>}/>
                     </Route>
+                    
+                        <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
                     <Route path="style-management">
                     <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
                 isUpdate={false}
