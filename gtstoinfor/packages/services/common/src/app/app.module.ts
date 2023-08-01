@@ -15,6 +15,8 @@ import { EmployeeDetailsModule } from './employee-details/employee-details-modul
 import { ItemsModule } from './items/items.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { BuyersModule } from './buyers/buyers.module';
+import { PaymentTermsModule } from './payment-terms/payment-terms.module';
+import { PackageTermsModule } from './packages-terms/package-terms.module';
 import { GarmentsModule } from './garments/garments.module';
 import { OperationGroupsModule } from './operation-groups/operation-groups.module';
 import { DeliveryMethodModule } from './delivery-method/delivery-method.module';
@@ -45,6 +47,8 @@ import { OperationGroupsModule } from './operation-groups/operation-groups.modul
     }),
     FactoriesModule,
     CurrenciesModule,
+    PaymentTermsModule,
+    PackageTermsModule,
     MasterBrandsModule,
     OperationsModule,
     DeliveryMethodModule,

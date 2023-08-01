@@ -5,6 +5,8 @@ export * from './currency-service-master';
 export * from './buyer-service'
 export * from './vendors.services';
 export * from './employee-details-service';
+export * from './payment-terms.service';
+export * from './package-terms.service';
 export * from './items.service';
 export * from './garment-service-master'
 export * from './operation-groups-service'
