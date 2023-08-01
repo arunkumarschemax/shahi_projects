@@ -102,6 +102,10 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
     setSearchText('');
   };
 
+  const onAddOperation = (rowData) => {
+    navigate('/masters/operations/operation-form',{state:{id:rowData.operationGroupId}})
+  }
+
   const columnsSkelton: any = [
     {
       title: 'S No',
@@ -181,6 +185,11 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
             />
 
           </Popconfirm>
+          <Divider type='vertical'/>
+          <Tooltip title={'Add Operation'}>
+
+          <Button onClick={() => onAddOperation(rowData)}>Add</Button>
+          </Tooltip>
         </span>
       )
     }
@@ -196,6 +205,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   }
+
   useEffect(() => {getAllOperationGroups();}, [])
 
   const getAllOperationGroups= () => {

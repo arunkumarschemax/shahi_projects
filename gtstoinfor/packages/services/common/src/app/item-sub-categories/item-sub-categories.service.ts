@@ -103,7 +103,6 @@ export class ItemSubCategoriesService {
     async getAllItemSubCategories(): Promise<AllItemSubCategoryResponse> {
         try {
             const iteCatDto: ItemSubCategoryDto[] = [];
-            // retrieves all plants
             const itemCatEntities: ItemSubCategory[] = await this.ItemSubCategoryRepository.find({
                 order: { itemSubCategory: "ASC" },
                 relations: ['itemCategory']

@@ -67,6 +67,12 @@ export const baseRouterList = [
                 filepath: "currencies/currency-view",
             },
             {
+                label: "PaymentMethod",
+                key: "paymentmethod",
+                path: "paymentmethod/paymentmethod-view",
+                filepath: "paymentmethod/paymentmethod-view",
+            },
+            {
                 label: "Brands",
                 key: "brands",
                 path: "brands/brand-view",
@@ -127,6 +133,30 @@ export const baseRouterList = [
                 filepath: "item-sub-categories/item-sub-categories-view",
             },
             {
+                label: "Garments",
+                key: "garments",
+                path: "garments/garments-view",
+                filepath: "garments/garments-view",
+            },
+            {
+                label: "Garment Categories",
+                key: "Garment-categories",
+                path: "/masters/garmentcategory/garmentcategory-view",
+                filepath: "/masters/garmentcategory/garmentcategory-view",
+            },
+            {
+                label: "Payment Terms",
+                key: "paymentTerms",
+                path: "payment-terms/payment-terms-view",
+                filepath: "payment-terms/payment-terms-view",
+            },
+            {
+                label: "Package Terms",
+                key: "packageTerms",
+                path: "package-terms/package-terms-view",
+                filepath: "package-terms/package-terms-view",
+            },
+            {
                 label: "Delivery Terms",
                 key: "delivery-terms",
                 path: "delivery-terms/delivery-terms-view",
@@ -138,8 +168,16 @@ export const baseRouterList = [
                 path: "locations/locations-view",
                 filepath: "locations/locations-view",
             },
+            {
+                label: "Liscence Type",
+                key: "liscence-type",
+                path: "liscence-type/liscence-type-grid",
+                filepath: "liscence-type/liscence-type-grid",
+            },
         ],
     },
+
+    
     {
         label: "Style Management",
         key: "style-management",
@@ -152,6 +190,12 @@ export const baseRouterList = [
                 key: "style-view",
                 path: 'style/style-grid',
                 filepath: 'style/style-grid',
+            },
+            {
+                label: "Component Mapping",
+                key: "component-mapping",
+                path: 'component-mapping/component-mapping-form',
+                filepath: 'component-mapping/component-mapping-form',
             },
             
         ]
