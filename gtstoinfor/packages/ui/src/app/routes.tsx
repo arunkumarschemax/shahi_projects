@@ -19,6 +19,8 @@ import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
 import OperationsGrid from "./masters/operations/operations-gridt"
+import { PaymentMethodForm } from "./masters/payment-method/payment-method-form"
+import { PaymentMethodGrid } from "./masters/payment-method/payment-method-grid"
 import BuyersForm from "./masters/buyers/buyers-form"
 import BuyersView from "./masters/buyers/buyers-view"
 import VendorsForm from "./masters/vendors/vendors-form"
@@ -45,6 +47,8 @@ import PaymentTermsGrid from "./masters/payments-terms/payment-terms-grid"
 import { PackageTermsGrid } from "./masters/packages-terms/package-terms-grid"
 import PackageTermsForm from "./masters/packages-terms/package-terms-form"
 import StyleGrid from "./style-management/style/style-grid"
+import { GarmentCategoryForm } from "./masters/garment category/garment-category-form"
+import { GarmentCategoryGrid } from "./masters/garment category/garment-category-grid"
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
 
 
@@ -75,6 +79,16 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateOperation={(undefined) => {}}/>} />
+                <Route path='paymentmethod/paymentmethod-form' key ='/paymentmethod/paymentmethod-form' element={< PaymentMethodForm paymentMethodData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
+                <Route path='garmentcategory/garmentcategory-view' key ='garmentcategory/garmentcategory-view' element={< GarmentCategoryForm GarmentCategoryData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                <Route path='masters/garmentcategory/garmentcategory-form' element={<GarmentCategoryGrid/>} />
                 <Route path='buyers/buyers-view' element={<BuyersView />} />
                 <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                 <Route path='vendors/vendors-form' key='/vendors/vendors-form' element={<VendorsForm vendorsData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
@@ -105,6 +119,7 @@ export const AppRoutes = () => {
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
 
                 </Route>
+
               
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
@@ -153,6 +168,12 @@ export const AppRoutes = () => {
                 updateOperation={(undefined) => { }}/>} />
                         <Route path='operations/operation-view' element={<OperationsGrid />} />
 
+                    <Route path='paymentmethod/paymentmethod-form' element={<PaymentMethodForm paymentMethodData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                    <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
+
                         <Route path='buyers/buyers-view' element={<BuyersView />} />
                         <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                         <Route path='vendors/vendors-form' key='/vendors/vendors-form' element={<VendorsForm vendorsData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
@@ -182,6 +203,11 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateDeliveryMethod={(undefined) => { }}/>}/>
                         <Route path='delivery-methods/delivery-method-view' element={<DeliveryMethodGrid/>}/>
+                        <Route path='garmentcategory/garmentcategory-form' key ='garmentcategory/garmentcategory-form' element={< GarmentCategoryForm GarmentCategoryData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                <Route path='garmentcategory/garmentcategory-view' element={<GarmentCategoryGrid/>} />
                         <Route path="item-categories/item-categories-view" element = {<ItemCategoriesGrid/>}/>
                         <Route path='item-sub-categories/item-sub-categories-form' element={<ItemSubCategoriesForm subCategoryData={undefined}
                         isUpdate={false}
@@ -202,16 +228,9 @@ export const AppRoutes = () => {
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
                     </Route>
 
-                    <Route path="style-management">
-                    <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
-                isUpdate={false}
-                closeForm={() => { }}
-                updateDetails={(undefined) => { }}/>} />
-                        <Route path='style/style-grid' element={<StyleGrid />} />
-                        <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
+                                            <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
 
 
-                </Route>
 
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
