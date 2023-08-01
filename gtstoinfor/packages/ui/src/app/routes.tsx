@@ -60,51 +60,6 @@ export const AppRoutes = () => {
             } >
                 <Route path='/user-management/users-from' key='/user-management/users-from' element={<UserCreationForm />} />
                 <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
-                <Route path='/masters'>
-                    <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
-                    <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm />} />
-                    <Route path='currencies/currency-form' key='/currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
-                isUpdate={false}
-                closeForm={() => { }}
-                updateItem={(undefined) => {}}/>} />
-                       <Route path='brands/brand-form' key='/brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
-                isUpdate={false}
-                closeForm={() => { }}
-                updateMasterBrand={(undefined) => { }}/>} />
-                  <Route path='operations/operation-form' key='/operations/operation-form' element={<OperationsForm operationData={undefined}
-                isUpdate={false}
-                closeForm={() => { }}
-                updateOperation={(undefined) => {}}/>} />
-                <Route path='buyers/buyers-view' element={<BuyersView />} />
-                <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
-                <Route path='vendors/vendors-form' key='/vendors/vendors-form' element={<VendorsForm vendorsData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
-                <Route path='vendors/vendors-view' element={<VendorsView />} />
-
-                  <Route path="employee-details/employee-details-form" key='/employee-details/employee-details-form' element= {
-                    <EmployeeDetsilsForm employeeData={undefined}
-                    isUpdate={false}
-                    closeForm={() => { }}
-                    updateItem={(undefined) => { }}/>
-                } />
-                <Route path='employee-details/employee-details-grid' element={<EmployeeDetailsGrid />} />
-                <Route path="items/items-form" key='/items/items-form' element= {
-                    <ItemsForm itemData={undefined}
-                    isUpdate={false}
-                    closeForm={() => { }}
-                    updateItem={(undefined) => { }}/>
-                } />
-                <Route path='items/item-grid' element={<ItemsGrid />} />
-
-                </Route>
-                <Route path="style-management">
-                    <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
-                isUpdate={false}
-                closeForm={() => { }}
-                updateDetails={(undefined) => { }}/>} />
-                        <Route path='style/style-grid' element={<StyleGrid />} />
-                        <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
-
-                </Route>
               
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />

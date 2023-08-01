@@ -353,7 +353,10 @@ export const  BuyersView = () => {
           </Col>
           </Row>
           <br></br>
+          <div style={{overflowX :'auto' }}>
+
     <Table columns={columnsSkelton} dataSource={buyersData}/>
+          </div>
     <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
