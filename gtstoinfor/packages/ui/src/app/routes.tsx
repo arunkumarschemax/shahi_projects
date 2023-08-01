@@ -171,8 +171,16 @@ export const AppRoutes = () => {
                         updateDetails={(undefined) => { }}/>}/>
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
                     </Route>
+                    <Route path="style-management">
+                    <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateDetails={(undefined) => { }}/>} />
+                        <Route path='style/style-grid' element={<StyleGrid />} />
+                        <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
 
-                                            <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
+                </Route>
+
 
 
 

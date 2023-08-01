@@ -130,7 +130,7 @@ export const ComponentsMappingForm = () => {
                             <Row gutter={24}>
                                 {components.map((e) => {
                                     return(
-                                        <Card style={{marginLeft:'1%'}}>
+                                        <Card style={{marginLeft:'1%',backgroundColor:'#FFDAB9'}}>
                                         <Descriptions.Item>{e}</Descriptions.Item>
                                         </Card>
                                     )
