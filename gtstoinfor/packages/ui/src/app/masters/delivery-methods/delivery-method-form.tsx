@@ -22,6 +22,8 @@ export function DeliveryMethodForm(props: DeliveryMethodFormProps) {
   const deliveryMethodService = new DeliveryMethodService()
 
   const createDeliveryMethod=(deliveryMethodDto:DeliveryMethodDto)=>{
+    console.log(deliveryMethodDto,'--------deliveryMethodDto')
+    deliveryMethodDto.createdUser = 'admin'
     deliveryMethodService.createDeliveryMethod(deliveryMethodDto).then(res => {
       if (res.status) {
         AlertMessages.getSuccessMessage('Delivery Method Created Successfully');
@@ -44,6 +46,7 @@ export function DeliveryMethodForm(props: DeliveryMethodFormProps) {
   }
 
   const saveData = (values: DeliveryMethodDto) => {
+    console.log(values,'----------va')
     if(props.isUpdate){
       props.updateDeliveryMethod(values);
     }else{

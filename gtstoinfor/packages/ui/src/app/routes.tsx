@@ -52,6 +52,8 @@ import LiscenceTypesForm from "./masters/Liscence Types/liscence_types_form"
 import { GarmentCategoryForm } from "./masters/garment category/garment-category-form"
 import { GarmentCategoryGrid } from "./masters/garment category/garment-category-grid"
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
+import GarmentGrid, { GarmentsGrid } from "./masters/garments/garments-grid"
+import GarmentsForm from "./masters/garments/garments-form"
 
 
 export const AppRoutes = () => {
@@ -160,6 +162,12 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateData={(undefined) => { }}/>}/>
                         <Route path='item-sub-categories/item-sub-categories-view' element={<ItemSubCategoriesGrid/>}/>
+                        <Route path='garments/garments-view' element={<GarmentsGrid/>}/>
+                        <Route path='garments/garments-form' element={<GarmentsForm 
+                        garmentData={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateData={(undefined)=>{}}/>}/>
                         <Route path='payment-terms/payment-terms-form' element={<PaymentTermsForm paymentTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }} />} />
                         <Route path='payment-terms/payment-terms-view' element={<PaymentTermsGrid />} />
                         <Route path='package-terms/package-terms-form' element={<PackageTermsForm  packageTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }}/>} />
