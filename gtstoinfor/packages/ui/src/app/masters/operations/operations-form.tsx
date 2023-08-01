@@ -24,9 +24,15 @@ export function OperationsForm(
   const [display, setDisplay] = useState<string>('none');
   let history = useLocation();
   const operationService = new OperationsService();
-  const [disable, setDisable] = useState<boolean>(false)
+  const [disable, setDisable] = useState<boolean>(false);
+  const { state } = useLocation();
+
+
   useEffect(() => {
-  },[])
+    if(state?.id){
+      form.setFieldsValue({operationGroupId:state?.id})
+    }
+  },[state])
 
 
 
@@ -95,8 +101,8 @@ export function OperationsForm(
       <Form.Item name="operationId" style={{ display: "none" }} >
         <Input hidden />
       </Form.Item>
-      <Form.Item name="operationGroupId" style={{ display: "none" }}initialValue={1} >
-        <Input hidden  defaultValue={1} />
+      <Form.Item name="operationGroupId" style={{ display: "none" }} >
+        <Input hidden />
       </Form.Item>
       <Row gutter={24}>
         <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}}>

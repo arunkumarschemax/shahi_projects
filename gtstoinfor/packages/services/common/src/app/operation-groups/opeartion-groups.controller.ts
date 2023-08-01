@@ -7,7 +7,7 @@ import { AllOperationGroupsResponseModel, OperationGroupsResponseModel } from "@
 import { OperationGroupsRequest } from "./dto/operation-groups.req";
 
 @ApiTags('OperationGroups')
-@Controller('operation-groups-controller')
+@Controller('operationgroups')
 export class OperationGroupsController{
     constructor(
         private operationGroupsService: OperationGroupsService,
