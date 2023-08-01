@@ -15,6 +15,8 @@ import { EmployeeDetailsModule } from './employee-details/employee-details-modul
 import { ItemsModule } from './items/items.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { BuyersModule } from './buyers/buyers.module';
+import { GarmentsModule } from './garments/garments.module';
+import { OperationGroupsModule } from './operation-groups/operation-groups.module';
 import { DeliveryMethodModule } from './delivery-method/delivery-method.module';
 import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categories.module';
@@ -50,8 +52,7 @@ import { OperationGroupsModule } from './operation-groups/operation-groups.modul
     ItemSubCategoriesModule,
     UsersModule,
     OrdersModule,
-    DeliveryTermsModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CountriesModule,StyleModule,OperationGroupsModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentsModule,StyleModule],
   controllers: [AppController],
   providers: [AppService],
 })

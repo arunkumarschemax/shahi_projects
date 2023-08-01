@@ -28,6 +28,8 @@ import EmployeeDetailsGrid from "./masters/employee-details/employee-details-gri
 import OperationGroupForm from "./masters/operation-groups/operation-groups-form"
 import OperationGroupsGrid from "./masters/operation-groups/operation-group-view"
 import ItemsForm from "./masters/items/items-form"
+import GarmentsForm from "./masters/garments/garments-form"
+import GarmentsView from "./masters/garments/garments-view"
 import DeliveryMethodForm from "./masters/delivery-methods/delivery-method-form"
 import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
 import ItemCategoriesGrid from "./masters/item-categories/item-categories-grid"
@@ -160,6 +162,13 @@ export const AppRoutes = () => {
                     <Route path='operationgroups/operationgroups-view' element={<OperationGroupsGrid />} />
                     <Route path="items/items-form" key='/items/items-form' element= {
                     <ItemsForm itemData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateItem={(undefined) => { }}/>
+                } />
+                <Route path='garments/garments-view' element={<GarmentsView />} />
+                 <Route path="garments/garments-form" key='garments/garments-form' element= {
+                    <GarmentsForm garmentData={undefined}
                     isUpdate={false}
                     closeForm={() => { }}
                     updateItem={(undefined) => { }}/>
