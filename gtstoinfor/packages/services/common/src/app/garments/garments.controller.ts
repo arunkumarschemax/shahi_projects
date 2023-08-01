@@ -1,70 +1,110 @@
-import { ApiTags } from '@nestjs/swagger';
-import { Controller, Post, Body, Logger, Get, UseGuards,Req} from '@nestjs/common';
-import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
-import { GarmentsDTO } from './dto/garments.dto';
+import { Body, Controller, Post, Req } from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { GarmentDto } from './dto/garments.dto';
 import { GarmentsService } from './garments.service';
-// import { CurrencyResponseModel, AllCurrencyResponseModel } from '@gtpl/shared-models/masters';
-// import { CurrencyRequest } from './dto/currencies.request';
-// import { UserRequestDto } from './dto/user-logs-dto';
-import { AllCurrencyResponseModel, AllGarmentResponseModel, CurrencyResponseModel, GarmentResponseModel } from '@project-management-system/shared-models';
-import { GarmentRequest } from './dto/garments.request';
+import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
+import { AllGarmentsResponse, GarmentResponse } from '@project-management-system/shared-models';
+import { GarmentsRequest } from './dto/garments.request';
 
-@ApiTags('garments')
+
+
 @Controller('garments')
+@ApiTags('garments')
 export class GarmentsController {
     constructor(
-        private garmentsService: GarmentsService,
-        private readonly applicationExceptionHandler: ApplicationExceptionHandler
+        private garmentService: GarmentsService,
+        private readonly applicationExceptionHandler: ApplicationExceptionHandler,
     ){}
-    @Post('/createGarment')
-    async createGarment(@Body() garmentDto:GarmentsDTO,isUpdate:boolean=false): Promise<GarmentResponseModel> {
-    try {
-    //   console.log('createCurrency',currenciesDto)
-        return await this.garmentsService.createGarment(garmentDto, false);
-      } catch (error) {
-        return this.applicationExceptionHandler.returnException(GarmentResponseModel, error);
+
+      /**
+     * creates  a Item SubCategory
+     * @param ItemSubCategory Item SubCategory DTO
+     * @returns Item SubCategoryResponse
+     */
+       @Post('/createGarment')
+       @ApiBody({type:GarmentDto})
+       async createGarment(@Body() garmentDto:any,isUpdate:boolean=false,@Req() request:Request): Promise<GarmentResponse> {
+           try {
+            return await this.garmentService.createGarment(garmentDto,false);
+          } catch (error) {
+               return this.applicationExceptionHandler.returnException(GarmentResponse, error);
+          }
+        }
+
+
+         /**
+     *  updates a  value Item Subcategory
+     * @param ItemSubCategory ItemSubCategory DTO
+     * @returns ItemSubCategoryResponse
+     */
+     @Post('/updateGarment')
+     @ApiBody({type:GarmentDto})
+     async updateGarment(@Body() GarmentDto:any,isUpdate:boolean=true,@Req() request:Request): Promise<GarmentResponse> {
+         try {
+          return await this.garmentService.createGarment(GarmentDto,true);
+        } catch (error) {
+             return this.applicationExceptionHandler.returnException(GarmentResponse, error);
+        }
       }
-    }
-    @Post('/updateGarment')
-    async updateGarment(@Body() garmentDto: GarmentsDTO,@Req() request:Request): Promise<GarmentResponseModel> {
-      try {
-        // console.log('update Currency');
-        console.log(request);
-        return await this.garmentsService.createGarment(garmentDto, true);
-      } catch (error) {
-        return this.applicationExceptionHandler.returnException(GarmentResponseModel, error);
-      }
-    }
+
+           /**
+     * gets all the Value Item sub Categories
+     * @returns AllIte,CategoryResponseModel which returns all the Value Item sub Categories  along with status (true/false), errortype, errorCode, internal message which provides message to the calling function.
+     */
+
     @Post('/getAllGarments')
-  async getAllGarments(): Promise<AllGarmentResponseModel> {
-    try {
-          return await this.garmentsService.getAllGarments();
-    } catch (error) {
-      return this.applicationExceptionHandler.returnException(AllGarmentResponseModel, error);
+    async getAllGarments(): Promise<AllGarmentsResponse> {
+        try {
+            return await this.garmentService.getAllGarments();
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(AllGarmentsResponse, error);
+        }
     }
-  }
-  @Post('/getAllActiveGarments')
-  async getAllActiveGarments(): Promise<AllGarmentResponseModel> {
-      try {
-          return await this.garmentsService.getAllActiveGarments();
-      } catch (error) {
-          return this.applicationExceptionHandler.returnException(AllGarmentResponseModel, error)
-      }
-  }
-  @Post('/activateOrDeactivateGarment')
-  async activateOrDeactivateGarment(@Body() garmentreq: GarmentRequest): Promise<GarmentResponseModel> {
-      try {
-          return await this.garmentsService.activateOrDeactivateGarment(garmentreq);
-      } catch (err) {
-          return this.applicationExceptionHandler.returnException(GarmentResponseModel, err);
-      }
-  }
-  @Post('/getGarmentById')
-  async getGarmentById(@Body() garmentreq: GarmentRequest): Promise<GarmentResponseModel> {
-      try {
-          return await this.garmentsService.getActiveGarmentById(garmentreq);
-      } catch (err) {
-          return this.applicationExceptionHandler.returnException(GarmentResponseModel, err);
-      }
-  }
+
+
+    //     /**
+    //  *  get all active sub categories 
+    //  * @param ItemCategory ItemSubCategory DTO
+    //  * @returns ItemSubCategoryResponse
+    //  */
+    // @Post('/getAllItemSubCategoriesDropDown')
+    // async getAllItemSubCategoriesDropDown(): Promise<ItemSubCategoriesDropDownResponse> {
+    //     try {
+    //      return await this.itemCategoryService.getAllItemSubCategoriesDropDown();
+    //    } catch (error) {
+    //         return this.applicationExceptionHandler.returnException(ItemSubCategoriesDropDownResponse, error);
+    //    }
+    //  }
+
+
+    //  @Post('/getItemSubCategoriesForCategoryDropDown')
+    // async getItemSubCategoriesForCategoryDropDown(@Body() req:ItemCategoryRequest): Promise<ItemSubCategoriesDropDownResponse> {
+    //     try {
+    //      return await this.itemCategoryService.getItemSubCategoriesForCategoryDropDown(req);
+    //    } catch (error) {
+    //         return this.applicationExceptionHandler.returnException(ItemSubCategoriesDropDownResponse, error);
+    //    }
+    //  }
+
+    //  @Post('/getItemSubCategoryForId')
+    //  async getItemSubCategoryForId(@Body() req:ItemSubCategoryRequest): Promise<ItemSubCategoryDropDownDto> {
+    //      try {
+    //       return await this.itemCategoryService.getItemSubCategoryForId(req.itemSubCategoryId);
+    //     } catch (error) {
+    //          return error;
+    //     }
+    //   }
+
+      @Post('/activateOrDeactivateGarment')
+      @ApiBody({type:GarmentsRequest})
+      async activateOrDeactivateGarment(@Body()req: any): Promise<GarmentResponse> {
+          try {
+           return await this.garmentService.activateOrDeactivateGarment(req);
+         } catch (error) {
+              return error;
+         }
+       }
+
+
+
 }

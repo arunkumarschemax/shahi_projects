@@ -1,58 +1,67 @@
-import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+
 
 @Entity('garments')
 export class Garments {
 
-  @PrimaryGeneratedColumn("increment",{name:'garment_id'})
-  garmentId:number;
+  @PrimaryGeneratedColumn("increment", { name: 'garment_id' })
+  garmentId: number;
 
-  @Column("char",{
-      nullable:false,
-      length:50,
-      name:"garment_name"
-      })
-  // @Index({ unique: true })
-  garmentName:string;
+  @Column("varchar", {
+    nullable: false,
+    length: 40,
+    name: "garment_name"
+  })
+  garmentName: string;
 
-  @Column("boolean",{
-    nullable:false,
-    default:true,
-    name:"is_active"
-    })
-  isActive:boolean;
-  
+  @Column("varchar", {
+    nullable: true,
+    length: 50,
+    name: "remarks"
+  })
+  remarks: string;
+
+  @Column("boolean", {
+    nullable: false,
+    default: true,
+    name: "is_active"
+  })
+  isActive: boolean;
+
   @CreateDateColumn({
     name: "created_at",
-    type:"datetime"
+    type: "datetime"
   })
   createdAt: Date;
 
   @Column("varchar", {
-    nullable: false,
-    name: "created_user",
-    length:50
-})
-createdUser: string | null;
+    nullable: true,
+    name: "created_user"
+  })
+  createdUser: string | null;
 
 
   @UpdateDateColumn({
-      name: "updated_at",
-      type:'datetime'
+    name: "updated_at",
+    type: 'datetime'
   })
   updatedAt: Date;
 
   @Column("varchar", {
     nullable: true,
-    name: "updated_user",
-    length:50
-})
-updatedUser: string | null;
+    name: "updated_user"
+  })
+  updatedUser: string | null;
 
 
   @VersionColumn({
-      default:1,
-      name: "version_flag"
+    default: 1,
+    name: "version_flag"
   })
   versionFlag: number;
+
+  // @ManyToOne(() => GarmentCategory, garmentCategory => garmentCategory.garmentCategory)
+  // @JoinColumn({ name: 'garment_category_id' })
+  // garmentCategory: GarmentCategory;
 
 }

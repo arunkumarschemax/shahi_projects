@@ -1,38 +1,40 @@
-import { Injectable } from '@nestjs/common';
-import { GarmentsDTO } from './garments.dto';
-import { Garments } from '../garments.entity';
+import { Garments } from "../garments.entity";
+import { GarmentDto } from "./garments.dto";
 
-@Injectable()
 export class GarmentsAdapter {
-  /**
-   * 
-   * @param GarmentsDTO 
-   * @param isUpdate 
-   * @returns 
-   */
-  public convertDtoToEntity(  garmentsDto: GarmentsDTO,  isUpdate: boolean = false ): Garments {
-    const garments = new Garments();
-    garments.garmentId=garmentsDto.garmentId;
-    garments.garmentName=garmentsDto.garmentName;
-    garments.isActive=garmentsDto.isActive==undefined?true:garmentsDto.isActive;
-    if (isUpdate) {
-        garments.updatedUser = garmentsDto.updatedUser;
-    } else {
-        garments.isActive = true;
-        garments.createdUser = garmentsDto.createdUser;
+    convertDtoToEntity(dtoObj: GarmentDto,  isUpdate: boolean = false ): Garments {
+        try {
+            const entityObj = new Garments();
+            entityObj.createdUser = dtoObj.createdUser;
+            entityObj.garmentName = dtoObj.garmentName;
+            // entityObj.garmentCategory = new GarmentCategory();
+            // entityObj.garmentCategory.garmentCategoryId = dtoObj.garmentCategoryId;
+            // entityObj.garmentCategory.itemCategory = dtoObj.garmentCategoryName;
+            entityObj.remarks = dtoObj.remarks;
+            if (dtoObj.garmentId) {
+                entityObj.garmentId = dtoObj.garmentId;
+                entityObj.updatedUser = dtoObj.updatedUser;
+            }
+            entityObj.isActive = dtoObj.isActive;
+            return entityObj;
+        } catch (Error) {
+            throw Error;
+        }
     }
-   return garments;
-  }
-  public convertEntityToDto(garments: Garments): GarmentsDTO {
-    const garmentsDto= new GarmentsDTO;
-    garmentsDto.garmentId=garments.garmentId;
-    garmentsDto.garmentName=garments.garmentName;
-    garmentsDto.isActive = garments.isActive;
-    garmentsDto.createdAt = garments.createdAt;
-    garmentsDto.updatedAt = garments.updatedAt;
-    garmentsDto.createdUser = garments.createdUser;
-    garmentsDto.updatedUser = garments.updatedUser;
-    garmentsDto.versionFlag = garments.versionFlag;
-    return garmentsDto;
-  }
+
+    public convertEntityToDto(itemObj: Garments): GarmentDto {
+        const foodTypeDetailsDTO= new GarmentDto;
+        foodTypeDetailsDTO.garmentId = itemObj.garmentId;
+        foodTypeDetailsDTO.garmentName = itemObj.garmentName;
+        // foodTypeDetailsDTO.garmentCategoryId = (itemObj.garmentCategory)?.garmentCategoryId;
+        // foodTypeDetailsDTO.garmentCategoryName = (itemObj.garmentCategory)?.garmentCategory;
+        foodTypeDetailsDTO.remarks = itemObj.remarks;
+        foodTypeDetailsDTO.isActive = itemObj.isActive;
+        foodTypeDetailsDTO.createdAt = itemObj.createdAt;
+        foodTypeDetailsDTO.updatedAt = itemObj.updatedAt;
+        foodTypeDetailsDTO.createdUser = itemObj.createdUser;
+        foodTypeDetailsDTO.updatedUser = itemObj.updatedUser;
+        foodTypeDetailsDTO.versionFlag = itemObj.versionFlag;
+        return foodTypeDetailsDTO;
+      }
 }

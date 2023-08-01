@@ -1,20 +1,21 @@
 import {  IsNotEmpty, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class GarmentRequest {
+export class GarmentsRequest {
     @ApiProperty()
-    @IsNotEmpty()
+    // @IsNotEmpty()
+    // @IsAlphanumeric()
     garmentId: number;
 
     @ApiProperty()
-    @IsOptional()
-    updatedUser: string;
+    // @IsOptional()
+    updatedUser?: string;
 
     @ApiProperty()
-    @IsOptional()
-    @IsNumber()
-    versionFlag: number;
+    // @IsOptional()
+    // @IsNumber()
+    versionFlag?: number;
 
     @ApiProperty()
-    isActive: boolean;
+    isActive?: boolean;
 }

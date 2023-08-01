@@ -1,71 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, Raw, getConnection } from 'typeorm';
-// import { CurrenciesDTO } from '../currencies/dto/currencies.dto';
-import { GarmentsDTO } from './dto/garments.dto';
-import { Currencies} from '../currencies/currencies.entity';
-import { CurrenciesAdapter } from '../currencies/dto/currencies.adapter';
-import { AllGarmentResponseModel, GarmentResponseModel } from '@project-management-system/shared-models';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Garments } from './garments.entity';
+import { Repository } from 'typeorm';
 import { GarmentsAdapter } from './dto/garments.adapter';
-import { GarmentRequest } from './dto/garments.request';
-// import { CurrencyRequest } from './dto/currencies.request';
-// import { UserRequestDto } from './dto/user-logs-dto';
+import { GarmentDto } from './dto/garments.dto';
+import { Garments } from './garments.entity';
+import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
+import { AllGarmentsResponse, GarmentRequest, GarmentResponse } from '@project-management-system/shared-models';
+import { GarmentsRequest } from './dto/garments.request';
 
 @Injectable()
 export class GarmentsService {
-  
     constructor(
-      
-        @InjectRepository(Garments)
-        private garmentsRepository: Repository<Garments>,
+        @InjectRepository(Garments) private garmentsRepository: Repository<Garments>,
         private garmentsAdapter: GarmentsAdapter,
-    ){}
+    ) { }
 
-    async getGramentDetailsWithoutRelations(garmentName: string): Promise<Garments> {
-        const currenciesResponse = await this.garmentsRepository.findOne({
-          where: {garmentId: Raw(alias => `garment_name = '${garmentName}'`)},
-        });
-        if (currenciesResponse) {
-          return currenciesResponse;
-        } else {
-          return null;
-        }
-      }
-
-      async createGarment(garmemtsDto: GarmentsDTO, isUpdate: boolean): Promise<GarmentResponseModel> {
-        // console.log(currenciesDto,'nnnnnh');
-        
+    async createGarment(garmentDto: GarmentDto, isUpdate: boolean): Promise<GarmentResponse> {
         try {
           let previousValue
-          // to check whether State exists with the passed  State code or not. if isUpdate is false, a check will be done whether a record with the passed Statecode is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed State code then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
           if (!isUpdate) {
-            const garmentsEntity = await this.getGramentDetailsWithoutRelations(garmemtsDto.garmentName);
-            if (garmentsEntity) {
-              //return new InformationMessageError(11104, "State already exists");
-              throw new GarmentResponseModel(false,11104, 'Garment already exists');
+            const garmentEntity = await this.garmentsRepository.findOne({where:{garmentName:garmentDto.garmentName}})
+                if (garmentEntity) {
+                    throw new GarmentResponse(false,11104, 'Garment already exists');
+                }
             }
-          }
-          else{
-            const certificatePrevious = await this.garmentsRepository.findOne({where:{garmentId:garmemtsDto.garmentId}})
-            previousValue = certificatePrevious.garmentName
-            const garmentsEntity = await this.getGramentDetailsWithoutRelations(garmemtsDto.garmentName);
-            if (garmentsEntity) {
-              if(garmentsEntity.garmentId!=garmemtsDto.garmentId) {
-                throw new GarmentResponseModel(false,11104, 'Garment already exists');      
-              }
+            else {
+                const garmentEntity = await this.garmentsRepository.findOne({where:{garmentId:garmentDto.garmentId}})
+                if (garmentEntity) {
+                    if (!garmentDto) {
+                        throw new ErrorResponse(11104, 'Garment already exists');
+                    }
+                }
             }
-          }
-          const convertedGarmentEntity: Garments = this.garmentsAdapter.convertDtoToEntity(garmemtsDto,isUpdate);
-          const savedCurrencyEntity: Garments = await this.garmentsRepository.save(
-            convertedGarmentEntity
-          );
-          const savedGarmentDto: GarmentsDTO = this.garmentsAdapter.convertEntityToDto(convertedGarmentEntity);
+          const convertedGarment: Garments = this.garmentsAdapter.convertDtoToEntity(garmentDto,isUpdate);
+          console.log(convertedGarment);
+          const savedGarmentEntity: Garments = await this.garmentsRepository.save(convertedGarment);
+          const savedGarmentDto: GarmentDto = this.garmentsAdapter.convertEntityToDto(convertedGarment);
             // console.log(savedStateDto);
           if (savedGarmentDto) {
             const presentValue = savedGarmentDto.garmentName;
            // generating resposnse
-           const response = new GarmentResponseModel(true,1,isUpdate? 'Garment Updated Successfully': 'Garment Created Successfully');
+           const response = new GarmentResponse(true,1,isUpdate? 'Garment Updated Successfully': 'Garment Created Successfully');
            const name=isUpdate?'updated':'created'
            const displayValue = isUpdate? 'Garment Updated Successfully': 'Garment Created Successfully'
            const userName = isUpdate? savedGarmentDto.updatedUser :savedGarmentDto.createdUser;
@@ -75,44 +50,133 @@ export class GarmentsService {
            return response
           } else {
             //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
-            throw new GarmentResponseModel(false,11106,'Garment saved but issue while transforming into DTO');
+            throw new GarmentResponse(false,11106,'Garment saved but issue while transforming into DTO');
           }
         } catch (error) {
           // when error occures while saving the data , the execution will come to catch block.
           // tslint:disable-next-line: typedef
           return error;
         }
-      }  
-      
-      async getAllGarments():Promise<AllGarmentResponseModel>{
-        const garment = await this.garmentsRepository.find({
-            // where:{isActive:true},
-            order:{garmentName:'ASC'}})
-        if(garment.length >0){
-            return new AllGarmentResponseModel(true,1,'Garments Retrived Sucessfully',garment)
-        }else{
-            return new AllGarmentResponseModel(false,0,'No Garments Found ')
-
-        }
-    }
-    async getAllActiveGarments():Promise<AllGarmentResponseModel>{
-      const garment = await this.garmentsRepository.find({
-          where:{isActive:true},
-          order:{garmentName:'ASC'}})
-      if(garment.length >0){
-          return new AllGarmentResponseModel(true,1,'Garments Retrived Sucessfully',garment)
-      }else{
-          return new AllGarmentResponseModel(false,0,'No Garments Found ')
-
       }
 
-  }
-  async activateOrDeactivateGarment(garmentReq: GarmentRequest): Promise<GarmentResponseModel> {
+    /**
+    * gets all   Item categories details  
+    * @returns all the  Item category details .
+    */
+    // @LogActions({ isAsync: true })
+    
+    async getAllGarments(): Promise<AllGarmentsResponse> {
+        try {
+            const garmentDto: GarmentDto[] = [];
+            const garmentEntities: Garments[] = await this.garmentsRepository.find({
+                order: { garmentName: "ASC" },
+                // relations: ['garment']
+            });
+            if (garmentEntities.length > 0) {
+                garmentEntities.forEach(garmentEntity => {
+                    const convertedGarmentDto: GarmentDto = this.garmentsAdapter.convertEntityToDto(garmentEntity);
+                    garmentDto.push(convertedGarmentDto);
+                });
+                console.log(garmentDto);
+                const response = new AllGarmentsResponse(true, 11208, "Garments retrieved successfully", garmentDto);
+                return response;
+            } else {
+                throw new ErrorResponse(99998, 'No Records Found');
+            }
+        } catch (err) {
+            return err;
+        }
+    }
+
+
+//     /**
+//    * gets all item sub category details  
+//    * @returns all item sub category details .
+//    */
+//     async getAllItemSubCategoriesDropDown(): Promise<ItemSubCategoriesDropDownResponse> {
+//         try {
+//             const itemSubcategoryDTO: ItemSubCategoryDropDownDto[] = [];
+//             const itemSubCategoryEntities: Garments[] = await this.ItemSubCategoryRepository.find({ select: ['itemSubCategoryId', 'itemSubCategory', 'itemSubCategoryCode'], where: { isActive: true }, order: { itemSubCategory: 'ASC' } });
+//             if (itemSubCategoryEntities && itemSubCategoryEntities.length > 0) {
+//                 itemSubCategoryEntities.forEach(itemSubCatEntity => {
+//                     itemSubcategoryDTO.push(new ItemSubCategoryDropDownDto(itemSubCatEntity.itemSubCategoryId, itemSubCatEntity.itemSubCategory, itemSubCatEntity.itemSubCategoryCode));
+//                 });
+//                 const response = new ItemSubCategoriesDropDownResponse(true, 11108, "Item sub categories retrieved successfully", itemSubcategoryDTO);
+//                 return response;
+//             } else {
+//                 throw new ErrorResponse(99998, 'Data not found');
+//             }
+//         } catch (err) {
+//             return err;
+//         }
+//     }
+
+//     async getItemSubCategory(itemSubCategory: string): Promise<Garments> {
+//         //  console.log(employeeId);
+//         const response = await this.ItemSubCategoryRepository.findOne({
+//             where: { itemSubCategory: itemSubCategory },
+//         });
+//         // console.log(response);
+//         if (response) {
+//             return response;
+//         } else {
+//             return null;
+//         }
+//     }
+
+//     async getItemSubCategoryForBomItem(itemSubCategory: string, category:string): Promise<Garments> {
+//         //  console.log(employeeId);
+//         const type = (category)?'packing':'raw';
+//         const response = await this.ItemSubCategoryRepository.findOne({
+//             where: { itemSubCategory: itemSubCategory, itemSubCategoryCode: type},
+//         });
+//         // console.log(response);
+//         if (response) {
+//             return response;
+//         } else {
+//             return null;
+//         }
+//     }
+
+//     async getItemSubCategoryForId(itemSubCategoryId: number): Promise<ItemSubCategoryDropDownDto> {
+//         const response = await this.ItemSubCategoryRepository.findOne({
+//             select: ['itemSubCategoryId', 'itemSubCategory', 'itemSubCategoryCode'],
+//             where: { itemSubCategoryId: itemSubCategoryId },
+//         });
+//         if (response) {
+//             return new ItemSubCategoryDropDownDto(response.itemSubCategoryId, response.itemSubCategory, response.itemSubCategoryCode);
+//         } else {
+//             return null;
+//         }
+//     }
+
+
+//     async getItemSubCategoriesForCategoryDropDown(req: ItemCategoryRequest): Promise<ItemSubCategoriesDropDownResponse> {
+//         try {
+//             const itemSubCategoryEntities: ItemSubCategoryDropDownDto[] = await this.ItemSubCategoryRepository
+//                 .createQueryBuilder('item_sub_categories')
+//                 .select('item_sub_category_id as itemSubCategoryId, item_sub_category as itemSubCategory, category_code as itemSubCategoryCode')
+//                 .where(`is_active=1 and item_category_id='${req.itemCategoryId}'`)
+//                 .orderBy('item_sub_category')
+//                 .getRawMany();
+
+//             if (itemSubCategoryEntities && itemSubCategoryEntities.length > 0) {
+//                 const response = new ItemSubCategoriesDropDownResponse(true, 11108, "Item sub categories retrieved successfully", itemSubCategoryEntities);
+//                 return response;
+//             } else {
+//                 throw new ErrorResponse(99998, 'Data not found');
+//             }
+//         } catch (err) {
+//             return err;
+//         }
+//     }
+
+    async activateOrDeactivateGarment(garmentReq: GarmentsRequest): Promise<GarmentResponse> {
         try {
             const garmentExists = await this.getGarmentById(garmentReq.garmentId);
             if (garmentExists) {
-                if (garmentReq.versionFlag !== garmentExists.versionFlag) {
-                    throw new GarmentResponseModel(false,10113, 'Someone updated the current Garment information.Refresh and try again');
+                if (!garmentExists) {
+                    throw new ErrorResponse(10113, 'Someone updated the current garment information.Refresh and try again');
                 } else {
                     
                         const garmentStatus =  await this.garmentsRepository.update(
@@ -121,57 +185,36 @@ export class GarmentsService {
                        
                         if (garmentExists.isActive) {
                             if (garmentStatus.affected) {
-                                const GarmentResponse: GarmentResponseModel = new GarmentResponseModel(true, 10115, 'Garment is de-activated successfully');
-                                return GarmentResponse;
+                                const garmentResponse: GarmentResponse = new GarmentResponse(true, 10115, 'Garment is de-activated successfully');
+                                return garmentResponse;
                             } else {
-                                throw new GarmentResponseModel(false,10111, 'Garment is already deactivated');
+                                throw new ErrorResponse(10111, 'Garment is already deactivated');
                             }
                         } else {
                             if (garmentStatus.affected) {
-                                const GarmentResponse: GarmentResponseModel = new GarmentResponseModel(true, 10114, 'Garment is activated successfully');
-                                return GarmentResponse;
+                                const garmentResponse: GarmentResponse = new GarmentResponse(true, 10114, 'Garment is activated successfully');
+                                return garmentResponse;
                             } else {
-                                throw new GarmentResponseModel(false,10112, 'Garment is already  activated');
+                                throw new ErrorResponse(10112, 'Garment is already  activated');
                             }
                         }
                     // }
                 }
             } else {
-                throw new GarmentResponseModel(false,99998, 'No Records Found');
+                throw new ErrorResponse(99998, 'No Records Found');
             }
         } catch (err) {
             return err;
         }
     }
-    async getActiveGarmentById(garmentReq: GarmentRequest): Promise<GarmentResponseModel> {
-      try {
-          //retrieves all companies
-          const garmentEntities: Garments = await this.garmentsRepository.findOne({
-            where:{garmentId:garmentReq.garmentId}
-            });
-            
-            const garmentData: GarmentsDTO = this.garmentsAdapter.convertEntityToDto(garmentEntities);
-            if (garmentData) {
-                const response = new GarmentResponseModel(true, 11101 , 'Garment retrived Successfully',garmentData);
-                return response;
-            }
-            else{
-                throw new GarmentResponseModel(false,11106,'Something went wrong');
-            }
-            // generating resposnse
-      } catch (err) {
-          return err;
-      }
-  }
 
     async getGarmentById(garmentId: number): Promise<Garments> {
         //  console.log(employeeId);
-            const Response = await this.garmentsRepository.findOne({
+            const response = await this.garmentsRepository.findOne({
             where: {garmentId: garmentId},
             });
-            // console.log(employeeResponse);
-            if (Response) {
-            return Response;
+            if (response) {
+            return response;
             } else {
             return null;
             }

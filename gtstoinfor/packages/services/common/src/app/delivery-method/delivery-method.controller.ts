@@ -16,8 +16,12 @@ export class DeliveryMethodController {
       ) {}
 
     @Post('/createDeliveryMethod')
-    @ApiBody({type:DeliveryMethodDTO})
-    async createDeliveryMethod(@Body() deliveryMethodDTO:any,isUpdate:boolean=false): Promise<DeliveryMethodResponseModel> {
+    // @ApiBody({type:DeliveryMethodDTO})
+    async createDeliveryMethod(@Body() deliveryMethodDTO:any): Promise<DeliveryMethodResponseModel> {
+      console.log('--------------------------------------')
+      console.log(deliveryMethodDTO)
+      console.log('--------------------------------------')
+
     try {
         return await this.deliveryMethodService.createDeliveryMethod(deliveryMethodDTO, false);
     } catch (error) {
@@ -66,7 +70,7 @@ export class DeliveryMethodController {
   }
 
   @Post('/getDeliveryMethodById')
-  async getCurrencyById(@Body() deliveryMethodReq: DeliveryMethodRequest ): Promise<DeliveryMethodResponseModel> {
+  async getDeliveryMethodById(@Body() deliveryMethodReq: DeliveryMethodRequest ): Promise<DeliveryMethodResponseModel> {
       try {
           return await this.deliveryMethodService.getActiveDeliveryMethodById(deliveryMethodReq);
       } catch (err) {

@@ -133,6 +133,12 @@ export const baseRouterList = [
                 filepath: "item-sub-categories/item-sub-categories-view",
             },
             {
+                label: "Garments",
+                key: "garments",
+                path: "garments/garments-view",
+                filepath: "garments/garments-view",
+            },
+            {
                 label: "Garment Categories",
                 key: "Garment-categories",
                 path: "/masters/garmentcategory/garmentcategory-view",
@@ -151,16 +157,16 @@ export const baseRouterList = [
                 filepath: "package-terms/package-terms-view",
             },
             {
-                label: "Garments",
-                 key: "garments",
-                 path: "garments/garments-view",
-                 filepath: "garments/garments-view",
-            },
-            {
                 label: "Delivery Terms",
                 key: "delivery-terms",
                 path: "delivery-terms/delivery-terms-view",
                 filepath: "delivery-terms/delivery-terms-view",
+            },
+            {
+                label: "Liscence Type",
+                key: "liscence-type",
+                path: "liscence-type/liscence-type-grid",
+                filepath: "liscence-type/liscence-type-grid",
             },
         ],
     },

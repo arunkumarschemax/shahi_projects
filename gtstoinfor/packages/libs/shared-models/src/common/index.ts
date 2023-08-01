@@ -1,3 +1,4 @@
+import { from } from 'rxjs';
 
 export * from './global-response-object';
 export * from './common-request-attr.model';
@@ -15,7 +16,7 @@ export * from './vendors'
 export * from './global-variables'
 export * from './employee-details'
 export * from './items'
-export * from './garment-category';
+export * from './garment-category'
 export * from './payment-terms'
 export * from './package-terms'
 export * from './garments'
@@ -23,3 +24,6 @@ export * from './operation-groups'
 export * from './countries'
 export * from './style-management'
 export * from './component-mapping'
+export * from './liscence-type'
+export * from './liscence-type'
+export * from './garments'

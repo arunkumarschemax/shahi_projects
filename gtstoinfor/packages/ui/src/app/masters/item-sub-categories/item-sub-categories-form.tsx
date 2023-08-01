@@ -152,6 +152,19 @@ export function ItemSubCategoriesForm(
               <Input placeholder='Enter Item Sub Category Code'/>
             </Form.Item>
           </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Form.Item
+              name="remarks"
+              label="Remarks"
+              rules={[
+                {
+                  pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z\\0-9\[\]()@#$_\-+/`~{}:";'<>,.?|\s-]*$/,
+                  message: `Invalid Remarks`
+                }
+              ]}>
+              <Input placeholder='Enter Remarks'/>
+            </Form.Item>
+          </Col>
 
         </Row>
 
