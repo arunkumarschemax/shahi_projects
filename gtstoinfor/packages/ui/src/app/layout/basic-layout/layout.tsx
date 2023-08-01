@@ -67,6 +67,12 @@ export const baseRouterList = [
                 filepath: "currencies/currency-view",
             },
             {
+                label: "PaymentMethod",
+                key: "paymentmethod",
+                path: "paymentmethod/paymentmethod-view",
+                filepath: "paymentmethod/paymentmethod-view",
+            },
+            {
                 label: "Brands",
                 key: "brands",
                 path: "brands/brand-view",
@@ -127,6 +133,12 @@ export const baseRouterList = [
                 filepath: "item-sub-categories/item-sub-categories-view",
             },
             {
+                label: "Garment Categories",
+                key: "Garment-categories",
+                path: "/masters/garmentcategory/garmentcategory-view",
+                filepath: "/masters/garmentcategory/garmentcategory-view",
+            },
+            {
                 label: "Payment Terms",
                 key: "paymentTerms",
                 path: "payment-terms/payment-terms-view",
@@ -152,6 +164,8 @@ export const baseRouterList = [
             },
         ],
     },
+
+    
     {
         label: "Style Management",
         key: "style-management",

@@ -30,14 +30,14 @@ export class OrdersDifferenceEntity {
     displayName: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "old_val",
         length: 150
     })
     oldValue: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "new_val",
         length: 150
     })
@@ -49,6 +49,7 @@ export class OrdersDifferenceEntity {
     createdAt: string;
 
     @Column('int', {
+        nullable: false,
         name: 'file_id',
     })
     fileId: number;
