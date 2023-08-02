@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { AttributeAgainstEnum } from "packages/libs/shared-models/src/enum";
+import { BuyerGeneralAttributesEntity } from "../buyers/buyers-general.entity";
 
 
 @Entity('attributes')
@@ -59,5 +60,8 @@ export class Attributes {
     enum: AttributeAgainstEnum
   })
   attributeAgainst: AttributeAgainstEnum;
+
+  @OneToMany(type => BuyerGeneralAttributesEntity, attribute => attribute.buyerInfo,{cascade: true})
+  generalAttributesInfo : BuyerGeneralAttributesEntity
 
 }
