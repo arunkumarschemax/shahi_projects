@@ -5,7 +5,7 @@ import { SupplierDto } from "./dto/supplier-dto";
 import { SupplierEntity } from './supplier.entity';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Raw, Repository } from "typeorm";
-import { CommonResponseModel, SupplierActivateDeactivateDto, SupplierCreateDto} from "@project-management-system/shared-models";
+import { CommonResponseModel, SupplierActivateDeactivateDto, SupplierCreateDto, SupplierResponse} from "@project-management-system/shared-models";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { SupplierCreatDto } from "./dto/supplier-creat-dto";
 
@@ -119,35 +119,39 @@ import { SupplierCreatDto } from "./dto/supplier-creat-dto";
         }
         return new CommonResponseModel(true, 1111, 'Data retreived', activeSuppliersData)
     }
-    async ActivateOrDeactivate(req: SupplierActivateDeactivateDto): Promise<CommonResponseModel> {
-        const supllierDetails = await this.supplierRepository.findOne({ where: { id: req.id } })
-        if (supllierDetails) {
-            if (req.versionFlag != supllierDetails.versionFlag) {
-                throw new CommonResponseModel(false, 1, 'SomeOne updated. Referesh and try again', undefined)
-            } else {
-                const supplierUpdate = await this.supplierRepository.update({ id: req.id }, { isActive: req.isActive})
-                if (supllierDetails.isActive) {
-                    console.log(supplierUpdate,'activeeeee')
-                    if (supplierUpdate.affected) {
-                        return new CommonResponseModel(true, 0, 'Employee is de-activated successfully', undefined)
-                    } else {
-                        throw new CommonResponseModel(false, 1, 'Employee already deactivated', undefined)
-                    }
-                } else {
-                    if (supplierUpdate.affected) {
-                        return new CommonResponseModel(true, 0, 'Employee is activated successfully', undefined)
-                    } else {
-                        throw new CommonResponseModel(false, 1, 'Employee already activated', undefined)
-                    }
-                }
-            }
-        }
-        else {
-            throw new CommonResponseModel(false, 1, 'No record found', undefined)
 
-        }
+    
+    // async ActivateOrDeactivate(req: SupplierActivateDeactivateDto): Promise<CommonResponseModel> {
+    //     const supllierDetails = await this.supplierRepository.findOne({ where: { id: req.id } })
+    //     console.log(supllierDetails,'supllierDetails')
+    //     if (supllierDetails) {
+    //         if (req.versionFlag != supllierDetails.versionFlag) {
+    //           console.log('---------')
+    //             return new CommonResponseModel(false, 1, 'SomeOne updated. Referesh and try again')
+    //         } else {
+    //             const supplierUpdate = await this.supplierRepository.update({ id: req.id }, { isActive: req.isActive})
+    //             if (supllierDetails.isActive) {
+    //                 console.log(supplierUpdate,'activeeeee')
+    //                 if (supplierUpdate.affected) {
+    //                     return new CommonResponseModel(true, 0, 'Supplier is de-activated successfully')
+    //                 } else {
+    //                     throw new CommonResponseModel(false, 1, 'Supplier already deactivated')
+    //                 }
+    //             } else {
+    //                 if (supplierUpdate.affected) {
+    //                     return new CommonResponseModel(true, 0, 'Supplier is activated successfully')
+    //                 } else {
+    //                     throw new CommonResponseModel(false, 1, 'Supplier already activated')
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     else {
+    //         throw new CommonResponseModel(false, 1, 'No record found', undefined)
 
-    }
+    //     }
+
+    // }
 
      
     // async updateSuppliers(createsupplierDto: SupplierDto): Promise<any> {
@@ -162,4 +166,62 @@ import { SupplierCreatDto } from "./dto/supplier-creat-dto";
     //         return 'record not found';
     //     }
     // }
+
+
+    async ActivateOrDeactivate(
+      Req: SupplierDto
+    ): Promise<CommonResponseModel> {
+      try {
+        const roleExists = await this.getsupplierById(
+          Req.id
+        );
+        if (roleExists) {
+          const roleStatus = await this.supplierRepository.update(
+            { id: Req.id },
+            {
+              isActive: !roleExists.isActive,
+              updatedUser: Req.supplierName,
+            }
+          );
+          const internalMessage: string = !roleExists.isActive
+            ? "Activated Successfully"
+            : "Daectivated Successfully";
+          return new CommonResponseModel(true, 54654, internalMessage);
+        } else {
+          return new CommonResponseModel(false, 654695, "Data Not Found");
+        }
+      } catch (err) {
+        return err;
+      }
+    }
+  
+    async LocationActivateDeactivateUnitDto(
+      Req: SupplierDto
+    ): Promise<CommonResponseModel> {
+      const record = await this.supplierRepository.findOne({
+        where: { id: Req.id },
+      });
+  
+      await this.supplierRepository.update(
+        { id: Req.id },
+        { isActive: !record.isActive }
+      );
+      const internalMessage: string = !record.isActive
+        ? "Activated Sucessfully"
+        : "Deactivated Successfully";
+      return new CommonResponseModel(true, 6876, internalMessage);
+    }
+  
+    async getsupplierById(
+      id: number
+    ): Promise<SupplierEntity> {
+      const Response = await this.supplierRepository.findOne({
+        where: { id: id },
+      });
+      if (Response) {
+        return Response;
+      } else {
+        return null;
+      }
+    }
 }

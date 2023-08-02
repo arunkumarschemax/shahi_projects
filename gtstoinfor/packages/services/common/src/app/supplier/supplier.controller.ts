@@ -4,7 +4,7 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { SupplierDto } from "./dto/supplier-dto";
 import { SupplierAdapter } from "./adapters/adapters/supplier.adapter";
 import { SupplierEntity } from "./supplier.entity";
-import { CommonResponseModel, SupplierActivateDeactivateDto, SupplierCreateDto } from "@project-management-system/shared-models";
+import { CommonResponseModel, SupplierActivateDeactivateDto, SupplierCreateDto, SupplierResponse } from "@project-management-system/shared-models";
 import { SupplierCreatDto } from "./dto/supplier-creat-dto";
 
 
@@ -32,7 +32,7 @@ export class SupplierController{
   //     }
   // }
   @Post('/createSupplier')
-    async createSupplier(@Body() supplierDto:SupplierDto,isUpdate:boolean=false): Promise<CommonResponseModel> {
+    async createSupplier(@Body() supplierDto:any,isUpdate:boolean=false): Promise<CommonResponseModel> {
     try {
         return await this.supplierService.createSupplier(supplierDto, false);
       } catch (error) {
@@ -40,7 +40,7 @@ export class SupplierController{
       }
     }
     @Post('/updateSuppliers')
-  async updateSuppliers(@Body() supplierDto: SupplierDto,@Req() request:any): Promise<CommonResponseModel> {
+  async updateSuppliers(@Body() supplierDto: any,@Req() request:any): Promise<CommonResponseModel> {
     try {
        
       return await this.supplierService.createSupplier(supplierDto, true);
@@ -68,13 +68,8 @@ export class SupplierController{
 
   @Post("/ActivateOrDeactivate")
   async ActivateOrDeactivate(@Body() activateDeactivateReq:any) : Promise<CommonResponseModel>{
-    console.log(activateDeactivateReq, '[[[[[[[[[[[[[[[[[[[[[[[[[[[[[');
-    try{
-        await this.supplierService.ActivateOrDeactivate(activateDeactivateReq)
-    }catch(error){
-        return this.applicationExceptionhandler.returnException(CommonResponseModel,error)
+    return await this.supplierService.ActivateOrDeactivate(activateDeactivateReq)
     }
-  }
 
   // @Post('/updateSuppliers')
   // async updateSuppliers(@Body() supplierDto: any ):Promise<CommonResponseModel>{

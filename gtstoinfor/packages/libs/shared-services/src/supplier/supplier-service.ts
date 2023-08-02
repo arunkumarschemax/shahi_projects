@@ -19,7 +19,7 @@ export default class SupplierService extends CommonAxiosService {
         return await this.axiosPostCall(this.supplierController + '/updateSuppliers',dto)
     }
 
-    async ActivateOrDeactivate(req:SupplierActivateDeactivateDto): Promise<FactoryResponseModel> {
+    async ActivateOrDeactivate(req:SupplierActivateDeactivateDto): Promise<SupplierResponse> {
         return await this.axiosPostCall(this.supplierController +'/ActivateOrDeactivate', req)
     }
 }

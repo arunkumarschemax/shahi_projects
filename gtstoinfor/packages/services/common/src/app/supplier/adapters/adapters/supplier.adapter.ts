@@ -28,7 +28,10 @@ export class SupplierAdapter {
     entity.email = dto.email;
     entity.creditPaymentPeriod = dto.creditPaymentPeriod;
     entity.isActive = dto.isActive == undefined?true:dto.isActive;
+    entity.versionFlag = dto.versionFlag;
     if(isUpdate){
+      // if ur update the rowdata give against id data
+      entity.id = dto.id
       entity.updatedUser = dto.updatedUser;
     }else{
       entity.isActive = true;
@@ -63,6 +66,7 @@ export class SupplierAdapter {
     dto.email = entity.email;
     dto.creditPaymentPeriod = entity.creditPaymentPeriod;
     dto.isActive = entity.isActive;
+    dto.versionFlag = entity.versionFlag;
     // Map any other fields as needed
     return dto;
   }

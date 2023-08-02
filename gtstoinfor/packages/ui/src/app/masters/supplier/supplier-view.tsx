@@ -1,6 +1,6 @@
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined } from '@ant-design/icons';
 import { SupplierActivateDeactivateDto, SupplierCreateDto } from '@project-management-system/shared-models';
-import { Button, Card, Divider, Drawer, Popconfirm, Switch, Table, Tag } from 'antd';
+import { Button, Card, Divider, Drawer, message, Popconfirm, Switch, Table, Tag } from 'antd';
 import SupplierService from 'packages/libs/shared-services/src/supplier/supplier-service';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
@@ -12,12 +12,12 @@ const SupplierView = () => {
   const [supplier, setSupllier] = useState([]);
   const navigate = useNavigate();
   const service = new SupplierService();
-  const [ data, setData ] = useState<any>(undefined);
-  const [ drawerVisible, setDrawerVisible] = useState(false);
+  const [data, setData] = useState<any>(undefined);
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
 
   useEffect(() => {
-    getSupplierData() 
+    getSupplierData()
   }, []);
 
   const getSupplierData = () => {
@@ -36,56 +36,48 @@ const SupplierView = () => {
   const closeDrawer = () => {
     setDrawerVisible(false);
   }
- const openFormwithData = (ViewData:SupplierCreateDto) => {
-  setDrawerVisible(true);
-  setData(ViewData);
-  console.log(ViewData,"viewData")
- }
+  const openFormwithData = (ViewData: SupplierCreateDto) => {
+    setDrawerVisible(true);
+    setData(ViewData);
+    console.log(ViewData, "viewData")
+  }
 
 
- const updateSupplier = (Data:SupplierCreateDto) => {
-  service.updateSuppliers(Data).then(res=> {
-    console.log(res,"ressssssssssss");
-    if(res.status) {
-      AlertMessages.getSuccessMessage('Upadted Succesfully');
-      getSupplierData()
-      setDrawerVisible(false);
-      
-    }
-    else {
-      AlertMessages.getErrorMessage(res.internalMessage)
-    }
-  }).catch(err => {
-    AlertMessages.getErrorMessage(err.message)
-  })
+  const updateSupplier = (Data: SupplierCreateDto) => {
+    service.updateSuppliers(Data).then(res => {
+      console.log(res, "ressssssssssss");
+      if (res.status) {
+        AlertMessages.getSuccessMessage('Upadted Succesfully');
+        getSupplierData()
+        setDrawerVisible(false);
+
+      }
+      else {
+        AlertMessages.getErrorMessage(res.internalMessage)
+      }
+    }).catch(err => {
+      AlertMessages.getErrorMessage(err.message)
+    })
 
 
- }
+  }
 
-  
-  const activateOrDeactivate = (req: SupplierActivateDeactivateDto) => {
-    req.isActive = req.isActive? false : true;
+
+  const activateOrDeactivate = (values: SupplierActivateDeactivateDto) => {
+    values.isActive = values.isActive ? false : true
+    const req = new SupplierActivateDeactivateDto(values.id, values.isActive, values.versionFlag, )
     service.ActivateOrDeactivate(req).then(res => {
         if (res.status) {
-            console.log(res, "PPPPPPPPPPPPPPp")
-            AlertMessages.getSuccessMessage(res.internalMessage);
-            // getSupplierData();
-        } else {
-            if (res.internalMessage) {
-                AlertMessages.getErrorMessage(res.internalMessage)
-            } else {
-                AlertMessages.getErrorMessage(res.internalMessage)
-            }
+          message.success(res.internalMessage)
+          getSupplierData();
         }
-    }).catch(err => {
-        AlertMessages.getErrorMessage(err.message)
     })
-}
-  
+  }
+
   const Columns: any = [
 
     {
-      
+
       title: "Category",
       dataIndex: 'category',
       width: 50
@@ -131,61 +123,61 @@ const SupplierView = () => {
       width: 50
     },
     {
-      
+
       title: "District",
       dataIndex: 'district',
       width: 50
     },
     {
-      
+
       title: "PostalCode",
       dataIndex: 'postalCode',
       width: 50
     },
     {
-      
+
       title: "Commision",
       dataIndex: 'commision',
       width: 50
     },
     {
-      
+
       title: "BankAccountNo",
       dataIndex: 'bankAccountNo',
       width: 50
     },
     {
-      
+
       title: "BankIFSC",
       dataIndex: 'bankIFSC',
       width: 50
     },
     {
-      
+
       title: "BankName",
       dataIndex: 'bankName',
       width: 50
     },
     {
-      
+
       title: "BankBranch",
       dataIndex: 'bankBranch',
       width: 50
     },
     {
-      
+
       title: "ContactNumber",
       dataIndex: 'contactNumber',
       width: 50
     },
     {
-      
+
       title: "Email",
       dataIndex: 'email',
       width: 50
     },
     {
-      
+
       title: "CreditPaymentPeriod",
       dataIndex: 'creditPaymentPeriod',
       width: 50
@@ -196,50 +188,50 @@ const SupplierView = () => {
       dataIndex: "isActive",
       width: 50,
       render: (isActive: any, rowData: any) => (
-          <>
-              {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
-          </>
+        <>
+          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
+        </>
       ),
       filters: [
-          {
-              text: 'Active',
-              value: true,
-          },
-          {
-              text: 'InActive',
-              value: false,
-          },
+        {
+          text: 'Active',
+          value: true,
+        },
+        {
+          text: 'InActive',
+          value: false,
+        },
       ]
-  
 
-  },
-  {
+
+    },
+    {
       key: '6',
       title: "Actions",
       width: 50,
       render: (rowData, record) => {
-          return <>
-              <EditOutlined style={{ color: 'blue' }} onClick={() => { openFormwithData(rowData) }} type="edit" />
+        return <>
+          <EditOutlined style={{ color: 'blue' }} onClick={() => { openFormwithData(rowData) }} type="edit" />
 
-              <Divider type="vertical" />
-              <Popconfirm onConfirm={e => { activateOrDeactivate(record); }}
-                  title={
-                      record.isActive
-                          ? 'Are you sure to deactivated ?'
-                          : 'Are you sure to activated ?'
-                  }
-              >
-                  <Switch size="default"
-                      className={record.isActive ? 'toggle-activated' : 'toggle-deactivated'}
-                      checkedChildren={<RightSquareOutlined type="check" />}
-                      unCheckedChildren={<RightSquareOutlined type="close" />}
-                      checked={record.isActive}
-                  />
-              </Popconfirm>
-          </>
+          <Divider type="vertical" />
+          <Popconfirm onConfirm={e => { activateOrDeactivate(record); }}
+            title={
+              record.isActive
+                ? 'Are you sure to deactivated ?'
+                : 'Are you sure to activated ?'
+            }
+          >
+            <Switch size="default"
+              className={record.isActive ? 'toggle-activated' : 'toggle-deactivated'}
+              checkedChildren={<RightSquareOutlined type="check" />}
+              unCheckedChildren={<RightSquareOutlined type="close" />}
+              checked={record.isActive}
+            />
+          </Popconfirm>
+        </>
 
       }
-  },
+    },
   ]
   return (
     <div>
@@ -254,11 +246,11 @@ const SupplierView = () => {
         <Table columns={Columns} dataSource={supplier}
           scroll={{ x: 1500 }} />
       </Card>
-      <Drawer bodyStyle={{ paddingBottom:80}}  title='update' width={window.innerWidth > 768 ? '75%' : '85%'}
-      onClose={closeDrawer} visible={drawerVisible} closable={true}>
-        <Card headStyle={{textAlign:'center', fontWeight:500, fontSize:16}} size='small' >
-          <SupplierForm 
-            updateItem={updateSupplier} Data={data} isUpdate={true} closeForm= {closeDrawer}   />
+      <Drawer bodyStyle={{ paddingBottom: 80 }} title='update' width={window.innerWidth > 768 ? '75%' : '85%'}
+        onClose={closeDrawer} visible={drawerVisible} closable={true}>
+        <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small' >
+          <SupplierForm
+            updateItem={updateSupplier} Data={data} isUpdate={true} closeForm={closeDrawer} />
         </Card>
       </Drawer>
     </div>
