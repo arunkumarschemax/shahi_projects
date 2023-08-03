@@ -6,7 +6,9 @@ import { BuyersRequest } from './dto/buyers.request';
 import { BuyersDTO } from './dto/buyers.dto';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { BuyersResponseModel } from 'packages/libs/shared-models/src/common/buyers/buyers.response.model';
-import { AllBuyersResponseModel, BuyerRequest } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel } from '@project-management-system/shared-models';
+import { BuyersGeneralAttributeDto } from './dto/buyers-general-attributes.dto';
+import { BuyersGeneralAttributeService } from './buyers-general-attributes.service';
 
 @ApiTags('Buyers')
 @Controller('buyers')
@@ -14,6 +16,7 @@ export class BuyersController {
     constructor(
         private buyersService: BuyersService,
         private readonly applicationExceptionhandler: ApplicationExceptionHandler,
+        private buyersGeneralAttributeService : BuyersGeneralAttributeService
 
     ) { }
     /**
@@ -101,4 +104,13 @@ export class BuyersController {
     //         return this.applicationExceptionhandler.returnException(CustomersDropDownDataResponseModel, error)
     //     }
     // }
+
+    @Post('/createGeneralAttribute')
+    async createGeneralAttribute(@Body() req: any): Promise<BuyersGeneralAttributeResponseModel> {
+        try {
+            return await this.buyersGeneralAttributeService.createGeneralAttribute(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(BuyersGeneralAttributeResponseModel, err);
+        }
+    }
 }

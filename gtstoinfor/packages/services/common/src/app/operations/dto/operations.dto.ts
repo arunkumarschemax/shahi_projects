@@ -1,6 +1,7 @@
 import {IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate,IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { OneToMany } from 'typeorm';
+import { OperationGroupsDto } from '../../operation-groups/dto/operation-groups.dto';
 
 export class OperationDTO {
   @ApiProperty()
@@ -41,6 +42,9 @@ export class OperationDTO {
 
   @ApiProperty()
   versionFlag : number;
+
+  @ApiProperty()
+  operationGroupId: number;
 
 
 }

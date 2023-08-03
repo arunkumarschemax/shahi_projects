@@ -61,11 +61,7 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
         // getAllDeliveryMethods();
         AlertMessages.getSuccessMessage('Success'); 
       } else {
-        // if (res.status) {
-        //   AlertMessages.getErrorMessage(res.internalMessage);
-        // } else {
           AlertMessages.getErrorMessage(res.internalMessage);
-        // }
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);
@@ -81,14 +77,10 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
       deliveryMethodDataService.updateDeliveryMethod(deliveryMethodData).then(res => { console.log(res);
         if (res.status) {
           AlertMessages.getSuccessMessage('Updated Successfully');
-          // getAllDeliveryMethods();
+          getAllDeliveryMethods();
           setDrawerVisible(false);
         } else {
-          // if (res.status) {
-          //   AlertMessages.getErrorMessage(res.internalMessage);
-          // } else {
             AlertMessages.getErrorMessage(res.internalMessage);
-          // }
         }
       }).catch(err => {
         AlertMessages.getErrorMessage(err.message);
@@ -277,13 +269,13 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
     <Card title={<span >Delivery Method</span>}
     style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     extra={<Link to='/masters/delivery-methods/delivery-method-form' >
-      <span style={{color:'white'}} ><Button type={'primary'} >Create </Button> </span>
+      <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >
      <br></br>
      <Row gutter={40}>
       
         <Col>
-          <Card title={'Total Delivery Methods: ' + deliveryMethodData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+          <Card title={'Total Delivery Methods: ' + deliveryMethodData.length} style={{ textAlign: 'left', width: 220, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
           <Card title={'Active: ' + deliveryMethodData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>

@@ -15,12 +15,17 @@ import { EmployeeDetailsModule } from './employee-details/employee-details-modul
 import { ItemsModule } from './items/items.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { BuyersModule } from './buyers/buyers.module';
+import { PaymentTermsModule } from './payment-terms/payment-terms.module';
+import { PackageTermsModule } from './packages-terms/package-terms.module';
 import { OperationGroupsModule } from './operation-groups/operation-groups.module';
 import { DeliveryMethodModule } from './delivery-method/delivery-method.module';
 import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categories.module';
+import { DeliveryTermsModule } from './delivery-terms/delivery-terms.module';
 import { CountriesModule } from './countries/countries.module';
 import { StyleModule } from './style/style-module';
+import { GarmentsModule } from './garments/garments.module';
+import { AttributeModule } from './attributes/attribute.module';
 
 
 @Module({
@@ -42,14 +47,18 @@ import { StyleModule } from './style/style-module';
     }),
     FactoriesModule,
     CurrenciesModule,
+    PaymentTermsModule,
+    PackageTermsModule,
     MasterBrandsModule,
     OperationsModule,
     DeliveryMethodModule,
     ItemCategoriesModule,
     ItemSubCategoriesModule,
+    GarmentsModule,
+    AttributeModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,StyleModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentsModule,StyleModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { ColumnProps } from 'antd/lib/table';
+import { ColumnProps, ColumnType } from 'antd/lib/table';
 import { TimeoutError } from 'rxjs';
 import { OperationsService } from '@project-management-system/shared-services';
 import { OperationsDTO } from '@project-management-system/shared-models';
@@ -82,59 +82,68 @@ export function OperationsGrid(
    * used for column filter
    * @param dataIndex column data index
    */
-   const getColumnSearchProps = (dataIndex:string) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
+  const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
-          ref={ searchInput }
+          ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
         />
-        <Button
-          type="primary"
-          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          icon={<SearchOutlined />}
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-          Reset
-        </Button>
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() =>{
+              handleReset(clearFilters)
+              setSearchedColumn(dataIndex)
+              confirm({closeDropdown:true})
+            }
+               }
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+         
+        </Space>
       </div>
     ),
-    filterIcon: filtered => (
-      <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
     ),
     onFilter: (value, record) =>
-    record[dataIndex]
-    ? record[dataIndex]
-       .toString()
+      record[dataIndex] ?record[dataIndex]     
+         .toString()
         .toLowerCase()
-        .includes(value.toLowerCase())
-        : false,
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {    setTimeout(() => searchInput.current.select());   }
+        .includes((value as string).toLowerCase()):false,
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
     },
-    render: text =>
-      text ?(
+    render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
           highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text.toString()}
+          textToHighlight={text ? text.toString() : ''}
         />
-      ) :text
-      )
-      : null
-     
+      ) : (
+        text
+      ),
   });
-
   /**
    * 
    * @param selectedKeys 
@@ -178,42 +187,46 @@ export function OperationsGrid(
         dataIndex: "operationName",
         sorter: (a, b) => a.operationName.localeCompare(b.operationName),
         sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps("operationName"),
+        ...getColumnSearchProps("operationName"),
       },
       {
         title: "Operation Code",
         dataIndex: "operationCode",
         sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
         sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps("operationCode"),
+        ...getColumnSearchProps("operationCode"),
       },
       {
         title: 'Status',
         dataIndex: 'isActive',
-        render: (isActive, rowData) => (
-          <>
-            {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+        ...getColumnSearchProps('isActive'),
+        sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
+        sortDirections: ["ascend", "descend"],
+        // render: (isActive, rowData) => (
+        //   <>
+        //     {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
             
-          </>
-        ),
-        filters: [
-          {
-            text: 'Active',
-            value: true,
-          },
-          {
-            text: 'InActive',
-            value: false,
-          },
-        ],
-        filterMultiple: false,
-        onFilter: (value, record) => 
-        {
-          // === is not work
-          return record.isActive === value;
-        },
+        //   </>
+        // ),
+        // filters: [
+        //   {
+        //     text: 'Active',
+        //     value: true,
+        //   },
+        //   {
+        //     text: 'InActive',
+        //     value: false,
+        //   },
+        // ],
+        // filterMultiple: false,
+        // onFilter: (value, record) => 
+        // {
+        //   // === is not work
+        //   return record.isActive === value;
+        // },
         
       },
+      
       {
         title:`Action`,
         dataIndex: 'action',
@@ -263,27 +276,25 @@ export function OperationsGrid(
   } 
 
   return (
-    <Card 
-    // title={<span style={{color:'white'}}>Operations</span>}
-    // style={{textAlign:'center'}} headStyle={{backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/operations-form' ><Button className='panel_button' >Create </Button></Link>}
-    
-    >
+    <Card title='Operations' extra={<span><Button onClick={() => navigate('/masters/operations/operation-form')} type={'primary'}>New</Button></span>}>
+
      <br></br>
      <Row gutter={24} >
       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
 
           <Card title={'Total Operations: ' + operationsData.length} style={{textAlign: 'left', height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+          
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
         <span><Button onClick={() => navigate('/masters/operations/operation-form')}
               type={'primary'}>New</Button></span>
-        </Col>
-          {/* <Col>
+        </Col> */}
+          <Col>
            <Card title={'Active: ' + operationsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
           </Col>
           <Col>
            <Card title={'In-Active :' + operationsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
-          </Col> */}
+          </Col>
           </Row>
           <br></br>
           <Table
