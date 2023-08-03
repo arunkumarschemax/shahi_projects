@@ -183,11 +183,10 @@ const SupplierView = () => {
       width: 50
     },
     {
-      key: '5',
       title: "Status",
       dataIndex: "isActive",
       width: 50,
-      render: (isActive: any, rowData: any) => (
+      render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
         </>
@@ -201,31 +200,34 @@ const SupplierView = () => {
           text: 'InActive',
           value: false,
         },
-      ]
+      ],
+      filterMultiple:false,
+      onfilter:(value, recod)=>{
+        return recod.isActive === value;
+      }
 
 
     },
     {
-      key: '6',
       title: "Actions",
       width: 50,
-      render: (rowData, record) => {
+      render: (text,rowData,index:number) => {
         return <>
           <EditOutlined style={{ color: 'blue' }} onClick={() => { openFormwithData(rowData) }} type="edit" />
 
           <Divider type="vertical" />
-          <Popconfirm onConfirm={e => { activateOrDeactivate(record); }}
+          <Popconfirm onConfirm={e => { activateOrDeactivate(rowData) }}
             title={
-              record.isActive
+              rowData.isActive
                 ? 'Are you sure to deactivated ?'
                 : 'Are you sure to activated ?'
             }
           >
             <Switch size="default"
-              className={record.isActive ? 'toggle-activated' : 'toggle-deactivated'}
+              className={rowData.isActive ? 'toggle-activated' : 'toggle-deactivated'}
               checkedChildren={<RightSquareOutlined type="check" />}
               unCheckedChildren={<RightSquareOutlined type="close" />}
-              checked={record.isActive}
+              checked={rowData.isActive}
             />
           </Popconfirm>
         </>
