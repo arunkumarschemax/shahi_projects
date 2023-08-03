@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn, Entity } from "typeorm";
+import { Garments } from "../garments/garments.entity";
 
 @Entity('garment_categories')
 export class GarmentCategory {
@@ -56,4 +57,7 @@ export class GarmentCategory {
         name: "version_flag"
       })
       versionFlag: number;
+
+      @OneToMany(() => Garments, garment => garment.garmentCategory,{cascade:true})
+      garments: Garments[];
 }

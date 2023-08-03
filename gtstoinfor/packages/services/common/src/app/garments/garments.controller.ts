@@ -24,6 +24,7 @@ export class GarmentsController {
        @Post('/createGarment')
        @ApiBody({type:GarmentDto})
        async createGarment(@Body() garmentDto:any,isUpdate:boolean=false,@Req() request:Request): Promise<GarmentResponse> {
+        console.log(garmentDto,'aaaaaaaaaaaaaaaaaaaaa')
            try {
             return await this.garmentService.createGarment(garmentDto,false);
           } catch (error) {

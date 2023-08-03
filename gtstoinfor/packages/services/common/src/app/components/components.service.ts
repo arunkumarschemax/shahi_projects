@@ -34,8 +34,8 @@ export class ComponentsService {
       try {
         let previousValue
         if (!isUpdate) {
-          const deliveryMethodEntity = await this.componentsRepository.findOne({where:{componentName:componentsDTO.componentName}})
-          if (deliveryMethodEntity) {
+          const componentEntity = await this.componentsRepository.findOne({where:{componentName:componentsDTO.componentName}})
+          if (componentEntity) {
             //return new InformationMessageError(11104, "State already exists");
             throw new ComponentResponseModel(false,11104, 'Component already exists');
           }

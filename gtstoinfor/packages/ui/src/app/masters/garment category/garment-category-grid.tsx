@@ -163,6 +163,10 @@ const updateGarmentCategory =(garment:GarmentCategoryDto)=>{
       })
 }
 
+const onAddOperation = (rowData) => {
+  navigate('/masters/garments/garments-form',{state:{id:rowData.garmentCategoryId}})
+}
+
 const columnsSkelton:any=[
 
     {
@@ -249,6 +253,10 @@ const columnsSkelton:any=[
                 />
               
             </Popconfirm>
+            <Divider type='vertical'/>
+            <Tooltip title={'Add Operation'}>
+              <Button onClick={() => onAddOperation(rowData)}>Add</Button>
+            </Tooltip>
           </span>
         )
       }

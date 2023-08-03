@@ -27,6 +27,7 @@ import { StyleModule } from './style/style-module';
 import { GarmentsModule } from './garments/garments.module';
 import { AttributeModule } from './attributes/attribute.module';
 import { ComponentsModule } from './components/components.module';
+import { GarmentCategoriesModule } from './garment-category/garment-category.module';
 
 
 @Module({
@@ -56,6 +57,7 @@ import { ComponentsModule } from './components/components.module';
     ItemCategoriesModule,
     ItemSubCategoriesModule,
     GarmentsModule,
+    GarmentCategoriesModule,
     ComponentsModule,
     AttributeModule,
     UsersModule,

@@ -52,6 +52,8 @@ import { GarmentCategoryGrid } from "./masters/garment category/garment-category
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
 import { GarmentsGrid } from "./masters/garments/garments-grid"
 import GarmentsForm from "./masters/garments/garments-form"
+import ComponentsForm from "./masters/Components/components-form"
+import ComponentsGrid from "./masters/Components/components-grid"
 
 
 export const AppRoutes = () => {
@@ -163,7 +165,12 @@ export const AppRoutes = () => {
                         <Route path='payment-terms/payment-terms-view' element={<PaymentTermsGrid />} />
                         <Route path='package-terms/package-terms-form' element={<PackageTermsForm  packageTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }}/>} />
                         <Route path='package-terms/package-terms-view' element={<PackageTermsGrid/>} />
-                        
+                        <Route path="components/components-view" element ={<ComponentsGrid/>}/>
+                        <Route path='components/components-form' element={<ComponentsForm
+                        componentsData={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateComponent={(undefined)=>{}}/>}/>
 
 
                         <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}

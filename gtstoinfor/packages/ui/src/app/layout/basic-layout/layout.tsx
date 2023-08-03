@@ -168,6 +168,12 @@ export const baseRouterList = [
                 path: "liscence-type/liscence-type-grid",
                 filepath: "liscence-type/liscence-type-grid",
             },
+            {
+                label: "Components",
+                key: "components",
+                path: "components/components-view",
+                filepath: "components/components-view",
+            },
         ],
     },
 

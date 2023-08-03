@@ -2,6 +2,8 @@ import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { AttributeService } from './attribute.service';
+import { AttributeDto } from './dto/attribute.dto';
+import { AttributeResponse } from '@project-management-system/shared-models';
 
 
 
@@ -9,16 +11,29 @@ import { AttributeService } from './attribute.service';
 @ApiTags('attributes')
 export class AttributeController {
     constructor(
-        private AttributeService: AttributeService,
+        private attributeService: AttributeService,
         private readonly applicationExceptionHandler: ApplicationExceptionHandler,
     ){}
 
-      /**
-     * creates  a Item SubCategory
-     * @param ItemSubCategory Item SubCategory DTO
-     * @returns Item SubCategoryResponse
-     */
-       
+    @Post('/createAttribute')
+    @ApiBody({type: AttributeDto})
+    async createAttribute(@Body() req: any): Promise<AttributeResponse>{
+        try{
+            return await this.attributeService.createAttribute(req, false)
+        }catch (error){
+            return this.applicationExceptionHandler.returnException(AttributeResponse,error)
+        }
+    }
+
+    @Post('/updateAttribute')
+    @ApiBody({type: AttributeDto})
+    async updateAttribute(@Body() req: any): Promise<AttributeResponse>{
+        try{
+            return await this.attributeService.createAttribute(req, true)
+        }catch (error){
+            return this.applicationExceptionHandler.returnException(AttributeResponse,error)
+        }
+    }
 
 
 

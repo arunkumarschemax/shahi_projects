@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { GarmentCategory } from "../garment-category/garment-category.entity";
 
 
 @Entity('garments')
@@ -60,8 +61,12 @@ export class Garments {
   })
   versionFlag: number;
 
-  // @ManyToOne(() => GarmentCategory, garmentCategory => garmentCategory.garmentCategory)
+  // @ManyToOne(() => GarmentCategory, garmentCategory => garmentCategory.garments)
   // @JoinColumn({ name: 'garment_category_id' })
   // garmentCategory: GarmentCategory;
+
+  @ManyToOne(type => GarmentCategory,garmentCategory => garmentCategory.garments,{nullable:false})
+  @JoinColumn({name:'garment_category_id'})
+  garmentCategory: GarmentCategory
 
 }
