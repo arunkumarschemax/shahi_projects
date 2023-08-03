@@ -21,4 +21,5 @@ export * from './master-brands-service';
 export * from './operations-service '
 export * from './style-service';;
 export * from './delivery-terms.service';
-export * from './component-mapping-service'
+export * from './component-mapping-service';
+export * from './profit-center-service';

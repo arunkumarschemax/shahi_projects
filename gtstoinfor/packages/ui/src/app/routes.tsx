@@ -50,6 +50,8 @@ import StyleGrid from "./style-management/style/style-grid"
 import { GarmentCategoryForm } from "./masters/garment category/garment-category-form"
 import { GarmentCategoryGrid } from "./masters/garment category/garment-category-grid"
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
+import ProfitCenterGrid from "./masters/profit-center/profit-center-grid"
+import { ProfitCenterForm } from "./masters/profit-center/profit-center-form"
 
 
 export const AppRoutes = () => {
@@ -88,7 +90,12 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
-                <Route path='masters/garmentcategory/garmentcategory-form' element={<GarmentCategoryGrid/>} />
+                <Route path='profit-center/profit-center-form' element={<ProfitCenterGrid/>} />
+                <Route path='profit-center/profit-center-grid' key ='profit-center/profit-center-grid' element={< ProfitCenterForm profitCenterData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                <Route path='garmentcategory/garmentcategory-form' element={<GarmentCategoryGrid/>} />
                 <Route path='buyers/buyers-view' element={<BuyersView />} />
                 <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
                 <Route path='vendors/vendors-form' key='/vendors/vendors-form' element={<VendorsForm vendorsData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
@@ -218,7 +225,11 @@ export const AppRoutes = () => {
                         <Route path='payment-terms/payment-terms-view' element={<PaymentTermsGrid />} />
                         <Route path='package-terms/package-terms-form' element={<PackageTermsForm  packageTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }}/>} />
                         <Route path='package-terms/package-terms-view' element={<PackageTermsGrid/>} />
-                        
+                        <Route path='profit-center/profit-center-view' element={<ProfitCenterGrid/>} />
+                         <Route path='profit-center/profit-center-form' key ='profit-center/profit-center-form' element={< ProfitCenterForm profitCenterData={undefined}
+                 isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
 
 
                         <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}
