@@ -139,4 +139,34 @@ export class GarmentsService {
             }
         }
 
+
+        async getAllActiveGarments(): Promise<AllGarmentsResponse> {
+            try {
+              const garmentDto: GarmentDto[] = [];
+              //retrieves all companies
+              const garmentsEntity: Garments[] = await this.garmentsRepository.find({where:{"isActive":true},order :{garmentName:'ASC'}});
+              //console.log(statesEntities);
+              
+              if (garmentsEntity) {
+                // converts the data fetched from the database which of type companies array to type StateDto array.
+                garmentsEntity.forEach(garmentsEntity => {
+                  const convertedGarmentsDto: GarmentDto = this.garmentsAdapter.convertEntityToDto(
+                    garmentsEntity
+                  );
+                  garmentDto.push(convertedGarmentsDto);
+                });
+        
+                //generated response
+      
+                const response = new AllGarmentsResponse(true,1,'Garments retrieved successfully',garmentDto);
+                return response;
+              } else {
+                throw new ErrorResponse(99998, 'Data not found');
+              }
+              // return response;
+            } catch (err) {
+              return err;
+            }
+          }  
+
 }

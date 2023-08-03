@@ -107,7 +107,7 @@ export class ComponentsService {
       try {
         const componentsDTO: ComponentsDTO[] = [];
         //retrieves all companies
-        const componentsEntity: ComponentsDTO[] = await this.componentsRepository.find({where:{"isActive":true},order :{componentName:'ASC'}});
+        const componentsEntity: Components[] = await this.componentsRepository.find({where:{"isActive":true},order :{componentName:'ASC'}});
         //console.log(statesEntities);
         
         if (componentsEntity) {
