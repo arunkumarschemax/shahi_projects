@@ -539,10 +539,19 @@ export function BuyersForm(props: BuyersFormProps) {
               </Form.Item>
             </Col>
               </Row>
+              <Row gutter={8}>
+              <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>Add Attributes</h1>
+              </Row>
+              <Row>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                <Button>General</Button>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                <Button>Order</Button>
+              </Col>
+              </Row>
               </Card>
             </Col>
-          
-    
           </Row>
           <Row  gutter={24} justify={'end'}>
             { props.isUpdate === false && 
