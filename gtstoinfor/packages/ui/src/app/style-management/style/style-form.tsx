@@ -4,8 +4,8 @@ import { Form, Input, Button, Select, Card, Row, Col, Space, message, Upload, Ty
 import { LoadingOutlined, MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import TextArea from 'antd/lib/input/TextArea';
-import { BuyerACcountTypes, BuyersDto, CountryDto, CurrencyDto, StyleDto } from '@project-management-system/shared-models';
-import { BuyersService, CountryService, CurrencyService, StyleService } from '@project-management-system/shared-services';
+import { StyleDto } from '@project-management-system/shared-models';
+import { StyleService } from '@project-management-system/shared-services';
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
@@ -31,6 +31,18 @@ export function StyleForm(props: StyleFormProps) {
     status: 'done',
     url:props.styleData.styleFileName,
   }]:[]);
+  let image
+
+// const image ='C:/Users/Renuka/OneDrive/project/gts/gts-to-infor/gtstoinfor/'+props.styleData.styleFilePath
+// const imagee ='/upload-files/miracle-58d9.jpg'
+// console.log(imagee)
+
+// console.log(image)
+
+  // useEffect(() => {
+  //   setImageUrl(imagee)
+  // }, [])
+
 
 const service = new StyleService()
   const uploadButton = (
@@ -129,7 +141,6 @@ const service = new StyleService()
   };
 
   
-  
   return (
     <>
     <Card title={props.isUpdate ? 'Update Stle' : 'Add Stle'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/style-management/style/style-grid')} type={'primary'}>View</Button></span>}>
@@ -147,17 +158,38 @@ const service = new StyleService()
             <Card>
             <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
-                        <Form.Item name='locationId' label='Location'>
+                        <Form.Item name='locationId' label='Location'
+                          rules={[
+                            {
+                              required: true,
+                              message:'Location Is Required'
+                            }
+                          ]}
+                        >
                             <Input/>
                         </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
-                        <Form.Item name='pch' label='PCH'>
+                        <Form.Item name='pch' label='PCH'
+                         rules={[
+                          {
+                            required: true,
+                            message:'pch Is Required'
+                          }
+                        ]}
+                        >
                             <Input/>
                         </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
-                        <Form.Item name='style' label='Style'>
+                        <Form.Item name='style' label='Style'
+                         rules={[
+                          {
+                            required: true,
+                            message:'Location Is Required'
+                          }
+                        ]}
+                        >
                             <Input/>
                         </Form.Item>
                 </Col>
@@ -197,9 +229,13 @@ const service = new StyleService()
          {/* {imageUrl &&
          (  */}
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }} >
-            <Card style={{height:'314px'}}>
-                    <Form.Item label='Style' initialValue={props.isUpdate ? props.styleData.styleFilePath:''}>
-                    <img src={props.isUpdate ? props.styleData.styleFilePath:imageUrl} alt="Default Preview"  style={{ width: '50%',objectFit: 'cover',marginRight:'100px' }} height={'260px'} width={'2000px'}/> 
+            <Card style={{height:'331px'}}>
+                    <Form.Item  initialValue={props.isUpdate ? image:''}>
+                    <img src={props.isUpdate? image:imageUrl} alt="Preview"  
+                     height={'300px'} 
+                    width={'500px'}   
+                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                    /> 
                     </Form.Item>        
             </Card>
          </Col>

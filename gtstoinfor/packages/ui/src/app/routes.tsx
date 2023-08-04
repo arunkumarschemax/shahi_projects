@@ -53,7 +53,7 @@ import { GarmentCategoryForm } from "./masters/garment category/garment-category
 import { GarmentCategoryGrid } from "./masters/garment category/garment-category-grid"
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
 import GarmentGrid, { GarmentsGrid } from "./masters/garments/garments-grid"
-import GarmentsForm from "./masters/garments/garments-form"
+// import GarmentsForm from "./masters/garments/garments-form"
 
 
 export const AppRoutes = () => {
@@ -144,7 +144,7 @@ export const AppRoutes = () => {
                     <GarmentsForm garmentData={undefined}
                     isUpdate={false}
                     closeForm={() => { }}
-                    updateItem={(undefined) => { }}/>
+                    updateData={(undefined) => { }}/>
                 } />
                         <Route path='delivery-methods/delivery-method-form' element={<DeliveryMethodForm deliveryMethodData={undefined}
                         isUpdate={false}
