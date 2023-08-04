@@ -4,7 +4,7 @@ import React from 'react';
 
 type TableActionsType = {
     isActive : boolean,
-    onEditClick : (value:any) => void,
+    onClick : (value:any) => void,
     onSwitchClick : (value:any) => void
 }
 
@@ -15,7 +15,7 @@ export default function TableActions(props : TableActionsType) {
             <Switch size='small' checked={props.isActive}/>
         </Popconfirm>
         <Divider type='vertical'/>
-        <EditOutlined  onClick={props.onEditClick} />
+        <EditOutlined  onClick={props.onClick} />
    </span>
   )
 }
