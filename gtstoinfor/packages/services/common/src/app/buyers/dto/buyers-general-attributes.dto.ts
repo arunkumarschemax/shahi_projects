@@ -6,8 +6,25 @@ export class BuyersGeneralAttributeDto{
     buyerGeneralAttributeId: number;
 
     @ApiProperty()
-    vendorId: number;
+    buyerId: number;
 
     @ApiProperty()
-    attributeInfo: BuyerGeneralAttributeInfo[]
+    attributeInfo: BuyerGeneralAttributeInfo[];
+
+    @ApiProperty()
+    isActive: boolean;
+  
+    createdAt : Date;
+  
+    @ApiProperty()
+    createdUser : string;
+  
+    updatedAt : Date;
+    @ApiProperty()
+    updatedUser : string;
+  
+    @ApiProperty()
+    versionFlag : number;
+
+
 }

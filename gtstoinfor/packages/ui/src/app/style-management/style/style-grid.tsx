@@ -109,6 +109,13 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
         sorter: (a, b) => a.style.localeCompare(b.style),
       ...getColumnSearchProps("style"),
       },
+      {
+        title: "File Name",
+        dataIndex: "styleFileName",
+        width:'150px',
+        sorter: (a, b) => a.styleFileName.localeCompare(b.styleFileName),
+      ...getColumnSearchProps("styleFileName"),
+      },
     {
       title: "Location",
       dataIndex: "location",

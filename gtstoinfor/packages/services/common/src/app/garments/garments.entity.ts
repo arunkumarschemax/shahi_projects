@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { ComponentMappingEntity } from "../components-mapping/component-mapping.entity";
 
 
 @Entity('garments')
@@ -63,5 +64,8 @@ export class Garments {
   // @ManyToOne(() => GarmentCategory, garmentCategory => garmentCategory.garmentCategory)
   // @JoinColumn({ name: 'garment_category_id' })
   // garmentCategory: GarmentCategory;
+
+  @OneToMany(type => ComponentMappingEntity,commap => commap.garmentInfo,{cascade:true})
+  componentMappingInfo : ComponentMappingEntity;
 
 }

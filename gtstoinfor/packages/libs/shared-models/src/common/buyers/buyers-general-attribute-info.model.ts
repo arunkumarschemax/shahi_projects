@@ -1,4 +1,4 @@
-export class BuyersGeneralAttributeInfo{
+export class BuyersGeneralAttributeInfoModel{
     attributeId: number;
     attributeName: string;
     attributeValue: string;
