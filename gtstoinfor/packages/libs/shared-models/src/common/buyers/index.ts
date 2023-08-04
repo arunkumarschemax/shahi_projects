@@ -10,3 +10,6 @@ export * from './account-types.input';
 export * from './buyers-general-atrribute-response'
 export * from './buyers-general-attribute-dto'
 export * from './buyers-general-attribute-info.dto'
+export * from './buyers-order-atrribute-response'
+export * from './buyers-order-attribute-dto'
+export * from './buyers-order-attribute-info.dto'

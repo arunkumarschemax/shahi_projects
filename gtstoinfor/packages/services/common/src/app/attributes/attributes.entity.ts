@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { AttributeAgainstEnum } from "packages/libs/shared-models/src/enum";
 import { BuyerGeneralAttributesEntity } from "../buyers/buyers-general.entity";
+import { BuyerOrderAttributesEntity } from "../buyers/buyers-order.entity";
 
 
 @Entity('attributes')
@@ -63,5 +64,10 @@ export class Attributes {
 
   @OneToMany(type => BuyerGeneralAttributesEntity, attribute => attribute.buyerInfo,{cascade: true})
   generalAttributesInfo : BuyerGeneralAttributesEntity
+
+  @OneToMany(type => BuyerOrderAttributesEntity, attribute => attribute.buyerInfo,{cascade: true})
+  orderAttributesInfo : BuyerOrderAttributesEntity
+
+  
 
 }

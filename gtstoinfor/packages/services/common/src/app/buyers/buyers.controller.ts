@@ -6,9 +6,11 @@ import { BuyersRequest } from './dto/buyers.request';
 import { BuyersDTO } from './dto/buyers.dto';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { BuyersResponseModel } from 'packages/libs/shared-models/src/common/buyers/buyers.response.model';
-import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel, BuyersOrderAttributeResponseModel } from '@project-management-system/shared-models';
 import { BuyersGeneralAttributeDto } from './dto/buyers-general-attributes.dto';
 import { BuyersGeneralAttributeService } from './buyers-general-attributes.service';
+import { BuyersOrderAttributeService } from './buyers-order-attributes.service';
+import { BuyersOrderAttributeDto } from './dto/buyers-order-attributes.dto';
 
 @ApiTags('Buyers')
 @Controller('buyers')
@@ -16,7 +18,8 @@ export class BuyersController {
     constructor(
         private buyersService: BuyersService,
         private readonly applicationExceptionhandler: ApplicationExceptionHandler,
-        private buyersGeneralAttributeService : BuyersGeneralAttributeService
+        private buyersGeneralAttributeService : BuyersGeneralAttributeService,
+        private buyersOrderAttributeService : BuyersOrderAttributeService
 
     ) { }
     /**
@@ -111,6 +114,15 @@ export class BuyersController {
             return await this.buyersGeneralAttributeService.createGeneralAttribute(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(BuyersGeneralAttributeResponseModel, err);
+        }
+    }
+
+    @Post('/createOrderAttribute')
+    async createOrderAttribute(@Body() req: BuyersOrderAttributeDto): Promise<BuyersOrderAttributeResponseModel> {
+        try {
+            return await this.buyersOrderAttributeService.createOrderAttribute(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(BuyersOrderAttributeResponseModel, err);
         }
     }
 }
