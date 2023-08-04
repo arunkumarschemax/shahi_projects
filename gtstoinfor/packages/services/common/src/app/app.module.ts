@@ -26,6 +26,8 @@ import { CountriesModule } from './countries/countries.module';
 import { StyleModule } from './style/style-module';
 import { GarmentsModule } from './garments/garments.module';
 import { AttributeModule } from './attributes/attribute.module';
+import { GarmentCategoriesModule } from './garment-category/garment-category.module';
+import { ComponentMappingModule } from './components-mapping/component-mapping.module';
 
 
 @Module({
@@ -58,7 +60,7 @@ import { AttributeModule } from './attributes/attribute.module';
     AttributeModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentsModule,StyleModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,9 +1,9 @@
 import { GlobalResponseObject } from '../global-response-object';
-import { ComponentMappingDto } from './component-mapping-dto';
+import { ComponentMappingModel } from './component-mapping-model';
 
 export class ComponentMappingResponseModel extends GlobalResponseObject {
-    data?: ComponentMappingDto[];
-    constructor(status: boolean, intlCode: number, internalMessage: string, data?: ComponentMappingDto[]){
+    data?: ComponentMappingModel[];
+    constructor(status: boolean, intlCode: number, internalMessage: string, data?: ComponentMappingModel[]){
         super(status,intlCode,internalMessage)
         this.status = status;
         // this.intlCode = intlCode;
