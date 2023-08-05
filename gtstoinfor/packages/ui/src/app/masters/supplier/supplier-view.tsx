@@ -1,8 +1,9 @@
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from '@ant-design/icons';
 import { SupplierActivateDeactivateDto, SupplierCreateDto } from '@project-management-system/shared-models';
-import { Button, Card, Divider, Drawer, message, Popconfirm, Switch, Table, Tag } from 'antd';
+import { Button, Card, Col, Divider, Drawer, Input, message, Popconfirm, Row, Switch, Table, Tag } from 'antd';
 import SupplierService from 'packages/libs/shared-services/src/supplier/supplier-service';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import Highlighter from 'react-highlight-words';
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import TableActions from '../../common/table-actions/table-actions';
@@ -11,6 +12,9 @@ import SupplierForm from './supplier-form';
 const SupplierView = () => {
   const [supplier, setSupllier] = useState([]);
   const navigate = useNavigate();
+  const searchInput = useRef(null);
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState(''); 
   const service = new SupplierService();
   const [data, setData] = useState<any>(undefined);
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -57,135 +61,216 @@ const SupplierView = () => {
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message)
-    })
-
-
-  }
-
-
+    }) 
+  } 
   const activateOrDeactivate = (values: SupplierActivateDeactivateDto) => {
     values.isActive = values.isActive ? false : true
-    const req = new SupplierActivateDeactivateDto(values.id, values.isActive, values.versionFlag, )
+    const req = new SupplierActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
     service.ActivateOrDeactivate(req).then(res => {
-        if (res.status) {
-          message.success(res.internalMessage)
-          getSupplierData();
-        }
+      if (res.status) {
+        message.success(res.internalMessage)
+        getSupplierData();
+      }
     })
   }
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput} 
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => (
+      <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
+        : false,
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) { setTimeout(() => searchInput.current.select()); }
+    },
+    render: text =>
+      text ? (
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text.toString()}
+          />
+        ) : text
+      )
+        : null
+
+  });
+   
+
+  function handleSearch(selectedKeys, confirm, dataIndex) {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  function handleReset(clearFilters) {
+    clearFilters();
+    setSearchText('');
+  };
 
   const Columns: any = [
+
+    {
+      title: "SL",
+      render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
+
+    },
 
     {
 
       title: "Category",
       dataIndex: 'category',
-      width: 50
+      align: 'center'
+
     },
     {
       title: "SupplierCode",
-      dataIndex: 'supplierCode',
-      width: 50
+      dataIndex: 'supplierCode', 
+      align: 'center'
     },
     {
       title: "SupplierName",
       dataIndex: 'supplierName',
-      width: 100
+      sorter: (a, b) => a.supplierName.length - b.supplierName.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('supplierName'),
+      align: 'center'
     },
     {
       title: "GSTNumber",
       dataIndex: 'GstNumber',
-      width: 50
+      align: 'center'
     },
     {
       title: "ContactPerson",
       dataIndex: 'contactPerson',
-      width: 50
+      align: 'center'
     },
     {
       title: "Street",
       dataIndex: 'street',
-      width: 50
+      align: 'center'
     },
     {
       title: "Apartment",
       dataIndex: 'apartment',
-      width: 50
+      align: 'center'
     },
     {
       title: "City",
       dataIndex: 'city',
-      width: 50
+      align: 'center'
+
     },
     {
       title: "State",
-      dataIndex: 'state',
-      width: 50
+      dataIndex: 'state', 
+      align: 'center'
+
     },
     {
 
       title: "District",
-      dataIndex: 'district',
-      width: 50
+      dataIndex: 'district', 
+      align: 'center'
+
     },
     {
 
       title: "PostalCode",
       dataIndex: 'postalCode',
-      width: 50
+      align: 'center'
+
     },
     {
 
       title: "Commision",
       dataIndex: 'commision',
-      width: 50
+      align: 'center'
+
     },
     {
 
       title: "BankAccountNo",
-      dataIndex: 'bankAccountNo',
-      width: 50
+      dataIndex: 'bankAccountNo', 
+      align: 'center'
+
     },
     {
 
       title: "BankIFSC",
-      dataIndex: 'bankIFSC',
-      width: 50
+      dataIndex: 'bankIFSC', 
+      align: 'center'
+
     },
     {
 
       title: "BankName",
-      dataIndex: 'bankName',
-      width: 50
+      dataIndex: 'bankName', 
+      align: 'center'
+
     },
     {
 
       title: "BankBranch",
-      dataIndex: 'bankBranch',
-      width: 50
+      dataIndex: 'bankBranch', 
+      align: 'center'
+
     },
     {
 
       title: "ContactNumber",
       dataIndex: 'contactNumber',
-      width: 50
+      align: 'center'
+
     },
     {
 
       title: "Email",
       dataIndex: 'email',
-      width: 50
+      align: 'center'
+
     },
     {
 
       title: "CreditPaymentPeriod",
-      dataIndex: 'creditPaymentPeriod',
-      width: 50
+      dataIndex: 'creditPaymentPeriod', 
+      align: 'center'
+
     },
     {
       title: "Status",
       dataIndex: "isActive",
-      width: 50,
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
@@ -201,8 +286,8 @@ const SupplierView = () => {
           value: false,
         },
       ],
-      filterMultiple:false,
-      onfilter:(value, recod)=>{
+      filterMultiple: false,
+      onFilter: (value, recod) => {
         return recod.isActive === value;
       }
 
@@ -211,7 +296,7 @@ const SupplierView = () => {
     {
       title: "Actions",
       width: 50,
-      render: (text,rowData,index:number) => {
+      render: (text, rowData, index: number) => {
         return <>
           <EditOutlined style={{ color: 'blue' }} onClick={() => { openFormwithData(rowData) }} type="edit" />
 
@@ -236,26 +321,44 @@ const SupplierView = () => {
     },
   ]
   return (
-    <div>
-      <Card
-        extra={<span><Button onClick={() => navigate('/masters/supplier/supplier-form')} type={'primary'}>New</Button></span>}
-        headStyle={{ height: '50px' }}
-        bodyStyle={{ height: '300px', paddingTop: '2px', paddingBottom: '5px' }}
-        title={<h4 style={{ textAlign: 'left' }}>SupplierView</h4>}
+    <>
+      <Row gutter={40}>
+        <Col>
+          <Card title={'Total Suppliers: ' + supplier.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+        </Col>
+        <Col>
+          <Card title={'Active: ' + supplier.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        </Col>
+        <Col>
+          <Card title={'In-Active: ' + supplier.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        </Col>
 
-      >
+      </Row><br></br>
 
-        <Table columns={Columns} dataSource={supplier}
-          scroll={{ x: 1500 }} />
-      </Card>
-      <Drawer bodyStyle={{ paddingBottom: 80 }} title='update' width={window.innerWidth > 768 ? '75%' : '85%'}
-        onClose={closeDrawer} visible={drawerVisible} closable={true}>
-        <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small' >
-          <SupplierForm
-            updateItem={updateSupplier} Data={data} isUpdate={true} closeForm={closeDrawer} />
+
+
+
+      <div>
+        <Card
+          extra={<span><Button onClick={() => navigate('/masters/supplier/supplier-form')} type={'primary'}>New</Button></span>}
+          headStyle={{ height: '50px' }}
+          bodyStyle={{ height: '300px', paddingTop: '2px', paddingBottom: '5px' }}
+          title={<h4 style={{ textAlign: 'left' }}>SupplierView</h4>}
+
+        >
+
+          <Table columns={Columns} dataSource={supplier}
+            scroll={{ x: 1500 }} />
         </Card>
-      </Drawer>
-    </div>
+        <Drawer bodyStyle={{ paddingBottom: 80 }} title='update' width={window.innerWidth > 768 ? '75%' : '85%'}
+          onClose={closeDrawer} visible={drawerVisible} closable={true}>
+          <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small' >
+            <SupplierForm
+              updateItem={updateSupplier} Data={data} isUpdate={true} closeForm={closeDrawer} />
+          </Card>
+        </Drawer>
+      </div>
+    </>
   )
 }
 
