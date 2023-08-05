@@ -1,4 +1,4 @@
-import { AllBuyersResponseModel, BuyerRequest, BuyersDto, BuyersResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerRequest, BuyersDto, BuyersGeneralAttributeModel, BuyersGeneralAttributeRequest, BuyersResponseModel } from '@project-management-system/shared-models';
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class BuyersService extends CommonAxiosService{
@@ -30,5 +30,11 @@ export class BuyersService extends CommonAxiosService{
     async activateOrDeactivateBuyer(req:BuyerRequest): Promise<BuyersResponseModel> {
         return this.axiosPostCall(this.URL + "/activateOrDeactivateBuyer",req)
     }
+
+    async createGeneralAttribute(req:BuyersGeneralAttributeRequest): Promise<BuyersResponseModel> {
+        return this.axiosPostCall(this.URL + "/createGeneralAttribute",req)
+    }
+
+    
 
 }

@@ -1,12 +1,13 @@
-import { ComponentMappingDto } from "@project-management-system/shared-models";
-import { ComponentMappingService } from "@project-management-system/shared-services";
-import { Button, Card, Checkbox, Col, Descriptions, Form, Input, Row } from "antd"
+import { ComponentMappingModel } from "@project-management-system/shared-models";
+import { ComponentMappingService, GarmentCategoryService, GarmentService, StyleService } from "@project-management-system/shared-services";
+import { Button, Card, Checkbox, Col, Descriptions, Form, Input, Row, Select } from "antd"
 import { CheckboxValueType } from "antd/es/checkbox/Group";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 const CheckboxGroup = Checkbox.Group;
+const {Option}= Select;
 
 
 export const ComponentsMappingForm = () => {
@@ -15,8 +16,48 @@ export const ComponentsMappingForm = () => {
     const [garmentCategory,setGarmentCategory] = useState<string>('');
     const [garment,setGarment] = useState<string>('');
     const [components,setComponents] = useState<any[]>([]);
+    const [styleInfo,setStyleInfo] = useState<any[]>([]);
+    const [garmentCategoryInfo,setGarmentCategoryInfo] = useState<any[]>([])
+    const [garmentInfo,setGarmentInfo] = useState<any[]>([])
+
 
     const servcie = new ComponentMappingService()
+    const styleService = new StyleService()
+    const garmentCategoryService = new GarmentCategoryService()
+    const germentService = new GarmentService()
+
+    useEffect(() => {
+        getStyles();
+        getGarmentCategories();
+        getGarments()
+    },[])
+
+    const getStyles = () => {
+        styleService.getAllStyle().then(res => {
+            if(res.status){
+                setStyleInfo(res.data)
+            }
+        })
+
+    }
+
+    const getGarmentCategories = () => {
+        garmentCategoryService.getActiveGarmentCategories().then(res => {
+            if(res.status){
+                setGarmentCategoryInfo(res.data)
+            }
+        })
+
+    }
+
+    const getGarments = () => {
+        germentService.getAllGarments().then(res => {
+            if(res.status){
+                setGarmentInfo(res.data)
+            }
+        })
+
+    }
 
     const onChange = (checkedValues: CheckboxValueType[]) => {
         console.log('checked = ', checkedValues);
@@ -26,7 +67,7 @@ export const ComponentsMappingForm = () => {
     const options = ['Front', 'Back', 'Collar', 'Sleeves', 'Pockets', 'Logo On Pocket'];
 
     const onFinish = (values) => {
-        const req = new ComponentMappingDto(0,values.styleId,values.garmentCategoryId,values.garmentId,components)
+        const req = new ComponentMappingModel(0,values.styleId,values.garmentCategoryId,values.garmentId,components,'admin','',true,1)
         console.log(req,'-------------req')
         servcie.createComponentMap(req).then(res => {
             if(res.status){
@@ -35,19 +76,20 @@ export const ComponentsMappingForm = () => {
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
         })
-
     }
 
-    const onStyleChange = (val) => {
-        setStyle(val)
+
+    const onStyleChange = (val,option) => {
+        console.log(option,'------------option')
+        setStyle(option?.key)
     }
 
-    const onGarmentCategoryChange = (val) => {
-        setGarmentCategory(val)
+    const onGarmentCategoryChange = (val,option) => {
+        setGarmentCategory(option?.key)
     }
 
-    const onGarmentChange = (val) => {
-        setGarment(val)
+    const onGarmentChange = (val,option) => {
+        setGarment(option?.key)
     }
 
     const onReset = () => {
@@ -62,17 +104,62 @@ export const ComponentsMappingForm = () => {
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item label='Style' name='styleId'>
-                        <Input onChange={(val) => onStyleChange(val)}/>
+                        {/* <Input onChange={(val) => onStyleChange(val)}/> */}
+                        <Select
+                        showSearch
+                        allowClear
+                        optionFilterProp="children"
+                        placeholder='Select Style'
+                        onChange={onStyleChange}
+                        >
+                            {
+                                styleInfo.map((e) => {
+                                    return(
+                                        <Option key={e.style} value={e.styleId}>{e.style}--{e.description}</Option>
+                                    )
+                                })
+                            }
+                        </Select>
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item label='Garment Category' name='garmentCategoryId'>
-                        <Input onChange={onGarmentCategoryChange}/>
+                        {/* <Input onChange={onGarmentCategoryChange}/> */}
+                        <Select
+                        showSearch
+                        allowClear
+                        optionFilterProp="children"
+                        onChange={onGarmentCategoryChange}
+                        placeholder='Select Garment Category'
+                        >
+                            {
+                                garmentCategoryInfo.map((e) => {
+                                    return(
+                                        <Option key={e.garmentCategory} value={e.garmentCategoryId}>{e.garmentCategory}</Option>
+                                    )
+                                })
+                            }
+                        </Select>
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                       <Form.Item label='Garment' name='garmentId'>
-                        <Input onChange={onGarmentChange}/>
+                        {/* <Input onChange={onGarmentChange}/> */}
+                        <Select
+                        showSearch
+                        allowClear
+                        optionFilterProp="children"
+                        onChange={onGarmentChange}
+                        placeholder='Select Garment'
+                        >
+                            {
+                                garmentInfo.map((e) => {
+                                    return(
+                                        <Option key={e.garmentName} value={e.garmentId}>{e.garmentName}</Option>
+                                    )
+                                })
+                            }
+                        </Select>
                       </Form.Item>
                     </Col>
                 </Row>

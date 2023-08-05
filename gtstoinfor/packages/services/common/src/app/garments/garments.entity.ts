@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { GarmentCategory } from "../garment-category/garment-category.entity";
+import { ComponentMappingEntity } from "../components-mapping/component-mapping.entity";
 
 
 @Entity('garments')
@@ -68,5 +69,8 @@ export class Garments {
   @ManyToOne(type => GarmentCategory,garmentCategory => garmentCategory.garments,{nullable:false})
   @JoinColumn({name:'garment_category_id'})
   garmentCategory: GarmentCategory
+
+  @OneToMany(type => ComponentMappingEntity,commap => commap.garmentInfo,{cascade:true})
+  componentMappingInfo : ComponentMappingEntity;
 
 }

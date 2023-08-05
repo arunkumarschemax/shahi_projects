@@ -108,7 +108,7 @@ export class BuyersController {
     @Post('/createGeneralAttribute')
     async createGeneralAttribute(@Body() req: any): Promise<BuyersGeneralAttributeResponseModel> {
         try {
-            return await this.buyersGeneralAttributeService.createGeneralAttribute(req);
+            return await this.buyersGeneralAttributeService.createGeneralAttribute(req,false);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(BuyersGeneralAttributeResponseModel, err);
         }

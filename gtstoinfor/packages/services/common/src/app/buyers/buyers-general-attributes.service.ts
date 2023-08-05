@@ -14,18 +14,25 @@ export class BuyersGeneralAttributeService {
         private buyerGeneralAttrRepo: Repository<BuyerGeneralAttributesEntity>,
     ){}
 
-    async createGeneralAttribute(req:BuyersGeneralAttributeDto ): Promise<BuyersGeneralAttributeResponseModel>{
+    async createGeneralAttribute(req:BuyersGeneralAttributeDto,isUpdate:boolean ): Promise<BuyersGeneralAttributeResponseModel>{
+        console.log(req,'---------------req')
         try{
             for(const rec of req.attributeInfo){
                 const entity = new BuyerGeneralAttributesEntity()
                 const buyer = new Buyers()
-                buyer.buyerId = req.vendorId;
+                buyer.buyerId = req.buyerId;
                 entity.buyerInfo = buyer;
                 const attribute = new Attributes()
                 attribute.attributeId = rec.attributeId
                 entity.attributeInfo = attribute
                 entity.attributeName = rec.attributeName;
                 entity.attributeValue = rec.attributeValue;
+                if(isUpdate){
+                    entity.buyerGeneralAttributeId = req.buyerGeneralAttributeId;
+                    entity.updatedUser = req.updatedUser;
+                } else{
+                    entity.createdUser = req.createdUser
+                }
                 const attributeSave = await this.buyerGeneralAttrRepo.save(entity)
             }
             return new BuyersGeneralAttributeResponseModel(true,1,'Created Successfully')
