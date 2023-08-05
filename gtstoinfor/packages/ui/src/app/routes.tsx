@@ -52,6 +52,7 @@ import { GarmentCategoryGrid } from "./masters/garment category/garment-category
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
 import GarmentGrid, { GarmentsGrid } from "./masters/garments/garments-grid"
 import GarmentsForm from "./masters/garments/garments-form"
+import BuyersGeneralAttributeForm from "./masters/buyers/buyers-general-attribute-form"
 // import GarmentsForm from "./masters/garments/garments-form"
 
 
@@ -164,9 +165,6 @@ export const AppRoutes = () => {
                         <Route path='payment-terms/payment-terms-view' element={<PaymentTermsGrid />} />
                         <Route path='package-terms/package-terms-form' element={<PackageTermsForm  packageTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }}/>} />
                         <Route path='package-terms/package-terms-view' element={<PackageTermsGrid/>} />
-                        
-
-
                         <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}
                         isUpdate={false}
                         closeForm={()=> {}}
@@ -176,9 +174,11 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateData={(undefined) => { }}/>}/>
+                        <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
                     </Route>
                     
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
+
                     <Route path="style-management">
                     <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
                 isUpdate={false}
