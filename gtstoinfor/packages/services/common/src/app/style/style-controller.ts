@@ -74,8 +74,17 @@ export class StyleController{
       }catch(error){
         return this.applicationExceptionHandler.returnException(AllStyleResponseModel,error)
       }
-
     }
+
+    @Post('/getAllActiveStyle')
+    async getAllActiveStyle():Promise<AllStyleResponseModel>{
+      try{
+        return await this.styleService.getAllActiveStyle()
+      }catch(error){
+        return this.applicationExceptionHandler.returnException(AllStyleResponseModel,error)
+      }
+    }
+
     @Post('/updateStyle')
     async updateStyle(@Body() dto: any,@Req() request:Request): Promise<AllStyleResponseModel> {
       try {
