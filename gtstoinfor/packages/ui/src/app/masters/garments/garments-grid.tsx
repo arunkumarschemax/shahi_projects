@@ -178,11 +178,11 @@ export function GarmentsGrid(
     },
     {
       title: 'Garment Category',
-      dataIndex: 'garmentCategoryName',
+      dataIndex: 'garmentCategory',
       //  responsive: ['lg'],
-      sorter: (a, b) => a.garmentCategoryName.localeCompare(b.garmentCategoryName),
+      sorter: (a, b) => a.garmentCategory.localeCompare(b.garmentCategory),
        sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('garmentCategoryName')
+        ...getColumnSearchProps('garmentCategory')
     },
    
     {

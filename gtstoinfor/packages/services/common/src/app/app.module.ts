@@ -26,6 +26,7 @@ import { CountriesModule } from './countries/countries.module';
 import { StyleModule } from './style/style-module';
 import { GarmentsModule } from './garments/garments.module';
 import { AttributeModule } from './attributes/attribute.module';
+import { ComponentsModule } from './components/components.module';
 import { GarmentCategoriesModule } from './garment-category/garment-category.module';
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
 
@@ -57,6 +58,8 @@ import { ComponentMappingModule } from './components-mapping/component-mapping.m
     ItemCategoriesModule,
     ItemSubCategoriesModule,
     GarmentsModule,
+    GarmentCategoriesModule,
+    ComponentsModule,
     AttributeModule,
     UsersModule,
     OrdersModule,

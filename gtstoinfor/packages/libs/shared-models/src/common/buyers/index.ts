@@ -9,8 +9,8 @@ export * from './buyer.request';
 export * from './account-types.input';
 export * from './buyers-general-atrribute-response'
 export * from './buyers-general-attribute-model'
-export * from './buyers-general-attribute-info.model'
 export * from './buyers-general-attribute-request'
 export * from './buyers-order-atrribute-response'
 export * from './buyers-order-attribute-dto'
 export * from './buyers-order-attribute-info.dto'
+export * from  './buyers-general-attribute-info.model'

@@ -50,9 +50,13 @@ import LiscenceTypesForm from "./masters/Liscence Types/liscence_types_form"
 import { GarmentCategoryForm } from "./masters/garment category/garment-category-form"
 import { GarmentCategoryGrid } from "./masters/garment category/garment-category-grid"
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
-import GarmentGrid, { GarmentsGrid } from "./masters/garments/garments-grid"
+import { GarmentsGrid } from "./masters/garments/garments-grid"
 import GarmentsForm from "./masters/garments/garments-form"
-// import GarmentsForm from "./masters/garments/garments-form"
+import BuyersGeneralAttributeForm from "./masters/buyers/buyers-general-attribute-form"
+import ComponentsForm from "./masters/Components/components-form"
+import ComponentsGrid from "./masters/Components/components-grid"
+import AttributesGrid from "./masters/attributes/attributes-grid"
+import AttributesForm from "./masters/attributes/attributes-form"
 
 
 export const AppRoutes = () => {
@@ -164,7 +168,18 @@ export const AppRoutes = () => {
                         <Route path='payment-terms/payment-terms-view' element={<PaymentTermsGrid />} />
                         <Route path='package-terms/package-terms-form' element={<PackageTermsForm  packageTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }}/>} />
                         <Route path='package-terms/package-terms-view' element={<PackageTermsGrid/>} />
-                        
+                        <Route path="components/components-view" element ={<ComponentsGrid/>}/>
+                        <Route path='components/components-form' element={<ComponentsForm
+                        componentsData={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateComponent={(undefined)=>{}}/>}/>
+                        <Route path="attributes/attributes-view" element ={<AttributesGrid/>}/>
+                        <Route path='attributes/attributes-form' element={<AttributesForm
+                        attributesData={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateAttribute={(undefined)=>{}}/>}/>
 
 
                         <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}
@@ -176,9 +191,11 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateData={(undefined) => { }}/>}/>
+                        <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
                     </Route>
                     
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
+
                     <Route path="style-management">
                     <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
                 isUpdate={false}

@@ -16,6 +16,7 @@ export class GarmentsService {
     ) { }
 
     async createGarment(garmentDto: GarmentDto, isUpdate: boolean): Promise<GarmentResponse> {
+        console.log('garmentDto',garmentDto)
         try {
           let previousValue
           if (!isUpdate) {
@@ -33,7 +34,7 @@ export class GarmentsService {
                 }
             }
           const convertedGarment: Garments = this.garmentsAdapter.convertDtoToEntity(garmentDto,isUpdate);
-          console.log(convertedGarment);
+          console.log(convertedGarment,'----------------------------------------');
           const savedGarmentEntity: Garments = await this.garmentsRepository.save(convertedGarment);
           const savedGarmentDto: GarmentDto = this.garmentsAdapter.convertEntityToDto(convertedGarment);
             // console.log(savedStateDto);
@@ -70,7 +71,7 @@ export class GarmentsService {
             const garmentDto: GarmentDto[] = [];
             const garmentEntities: Garments[] = await this.garmentsRepository.find({
                 order: { garmentName: "ASC" },
-                // relations: ['garment']
+                relations: ['garmentCategory']
             });
             if (garmentEntities.length > 0) {
                 garmentEntities.forEach(garmentEntity => {
@@ -88,88 +89,6 @@ export class GarmentsService {
         }
     }
 
-
-//     /**
-//    * gets all item sub category details  
-//    * @returns all item sub category details .
-//    */
-//     async getAllItemSubCategoriesDropDown(): Promise<ItemSubCategoriesDropDownResponse> {
-//         try {
-//             const itemSubcategoryDTO: ItemSubCategoryDropDownDto[] = [];
-//             const itemSubCategoryEntities: Garments[] = await this.ItemSubCategoryRepository.find({ select: ['itemSubCategoryId', 'itemSubCategory', 'itemSubCategoryCode'], where: { isActive: true }, order: { itemSubCategory: 'ASC' } });
-//             if (itemSubCategoryEntities && itemSubCategoryEntities.length > 0) {
-//                 itemSubCategoryEntities.forEach(itemSubCatEntity => {
-//                     itemSubcategoryDTO.push(new ItemSubCategoryDropDownDto(itemSubCatEntity.itemSubCategoryId, itemSubCatEntity.itemSubCategory, itemSubCatEntity.itemSubCategoryCode));
-//                 });
-//                 const response = new ItemSubCategoriesDropDownResponse(true, 11108, "Item sub categories retrieved successfully", itemSubcategoryDTO);
-//                 return response;
-//             } else {
-//                 throw new ErrorResponse(99998, 'Data not found');
-//             }
-//         } catch (err) {
-//             return err;
-//         }
-//     }
-
-//     async getItemSubCategory(itemSubCategory: string): Promise<Garments> {
-//         //  console.log(employeeId);
-//         const response = await this.ItemSubCategoryRepository.findOne({
-//             where: { itemSubCategory: itemSubCategory },
-//         });
-//         // console.log(response);
-//         if (response) {
-//             return response;
-//         } else {
-//             return null;
-//         }
-//     }
-
-//     async getItemSubCategoryForBomItem(itemSubCategory: string, category:string): Promise<Garments> {
-//         //  console.log(employeeId);
-//         const type = (category)?'packing':'raw';
-//         const response = await this.ItemSubCategoryRepository.findOne({
-//             where: { itemSubCategory: itemSubCategory, itemSubCategoryCode: type},
-//         });
-//         // console.log(response);
-//         if (response) {
-//             return response;
-//         } else {
-//             return null;
-//         }
-//     }
-
-//     async getItemSubCategoryForId(itemSubCategoryId: number): Promise<ItemSubCategoryDropDownDto> {
-//         const response = await this.ItemSubCategoryRepository.findOne({
-//             select: ['itemSubCategoryId', 'itemSubCategory', 'itemSubCategoryCode'],
-//             where: { itemSubCategoryId: itemSubCategoryId },
-//         });
-//         if (response) {
-//             return new ItemSubCategoryDropDownDto(response.itemSubCategoryId, response.itemSubCategory, response.itemSubCategoryCode);
-//         } else {
-//             return null;
-//         }
-//     }
-
-
-//     async getItemSubCategoriesForCategoryDropDown(req: ItemCategoryRequest): Promise<ItemSubCategoriesDropDownResponse> {
-//         try {
-//             const itemSubCategoryEntities: ItemSubCategoryDropDownDto[] = await this.ItemSubCategoryRepository
-//                 .createQueryBuilder('item_sub_categories')
-//                 .select('item_sub_category_id as itemSubCategoryId, item_sub_category as itemSubCategory, category_code as itemSubCategoryCode')
-//                 .where(`is_active=1 and item_category_id='${req.itemCategoryId}'`)
-//                 .orderBy('item_sub_category')
-//                 .getRawMany();
-
-//             if (itemSubCategoryEntities && itemSubCategoryEntities.length > 0) {
-//                 const response = new ItemSubCategoriesDropDownResponse(true, 11108, "Item sub categories retrieved successfully", itemSubCategoryEntities);
-//                 return response;
-//             } else {
-//                 throw new ErrorResponse(99998, 'Data not found');
-//             }
-//         } catch (err) {
-//             return err;
-//         }
-//     }
 
     async activateOrDeactivateGarment(garmentReq: GarmentsRequest): Promise<GarmentResponse> {
         try {
@@ -219,5 +138,35 @@ export class GarmentsService {
             return null;
             }
         }
+
+
+        async getAllActiveGarments(): Promise<AllGarmentsResponse> {
+            try {
+              const garmentDto: GarmentDto[] = [];
+              //retrieves all companies
+              const garmentsEntity: Garments[] = await this.garmentsRepository.find({where:{"isActive":true},order :{garmentName:'ASC'}});
+              //console.log(statesEntities);
+              
+              if (garmentsEntity) {
+                // converts the data fetched from the database which of type companies array to type StateDto array.
+                garmentsEntity.forEach(garmentsEntity => {
+                  const convertedGarmentsDto: GarmentDto = this.garmentsAdapter.convertEntityToDto(
+                    garmentsEntity
+                  );
+                  garmentDto.push(convertedGarmentsDto);
+                });
+        
+                //generated response
+      
+                const response = new AllGarmentsResponse(true,1,'Garments retrieved successfully',garmentDto);
+                return response;
+              } else {
+                throw new ErrorResponse(99998, 'Data not found');
+              }
+              // return response;
+            } catch (err) {
+              return err;
+            }
+          }  
 
 }

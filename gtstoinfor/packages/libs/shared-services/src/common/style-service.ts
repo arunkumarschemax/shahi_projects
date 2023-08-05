@@ -15,7 +15,10 @@ export class StyleService extends CommonAxiosService{
   }
   async getAllStyle(): Promise<AllStyleResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllStyle")
-}
+   }
+ async getAllActiveStyle(): Promise<AllStyleResponseModel> {
+   return this.axiosPostCall(this.URL + "/getAllActiveStyle")
+  }
 async ActivateOrDeactivateStyle(dto: StyleIdReq): Promise<AllStyleResponseModel> {
   return this.axiosPostCall(this.URL + "/ActivateOrDeactivateStyle", dto)
 }
