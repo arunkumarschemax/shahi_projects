@@ -54,6 +54,8 @@ import { GarmentsGrid } from "./masters/garments/garments-grid"
 import GarmentsForm from "./masters/garments/garments-form"
 import ComponentsForm from "./masters/Components/components-form"
 import ComponentsGrid from "./masters/Components/components-grid"
+import AttributesGrid from "./masters/attributes/attributes-grid"
+import AttributesForm from "./masters/attributes/attributes-form"
 
 
 export const AppRoutes = () => {
@@ -171,6 +173,12 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=>{}}
                         updateComponent={(undefined)=>{}}/>}/>
+                        <Route path="attributes/attributes-view" element ={<AttributesGrid/>}/>
+                        <Route path='attributes/attributes-form' element={<AttributesForm
+                        attributesData={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateAttribute={(undefined)=>{}}/>}/>
 
 
                         <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}

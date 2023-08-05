@@ -6,6 +6,7 @@ import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res
 import { Attributes } from './attributes.entity';
 import { AttributeAdapter } from './dto/attribute.adapter';
 import { AttributeDto } from './dto/attribute.dto';
+import { AttributeRequest } from './dto/attribute.request';
 
 @Injectable()
 export class AttributeService {
@@ -45,95 +46,99 @@ export class AttributeService {
       }
 
 
-    //   async getAllAttributes(): Promise<AllAttributesResponse> {
-    //     try {
-    //       const attributeDto: AttributeDto[] = [];
-    //       const attributeEntity: Attributes[] = await this.attributeRepository.find({ order :{attributeName:'ASC'}});
-    //       if (attributeEntity) {
-    //         attributeEntity.forEach(attributeEntity => {
-    //           const convertedAttributesDto: AttributeDto = this.attributeAdapter.convertEntityToDto( attributeEntity );
-    //           attributeDto.push(convertedAttributesDto);
-    //         });
-    //         const response = new AllAttributesResponse(true,1,'Attributes retrieved successfully',attributeDto);
-    //         return response;
-    //       } else {
-    //         throw new ErrorResponse(99998, 'Data not found');
-    //       }
-    //       // return response;
-    //     } catch (err) {
-    //       return err;
-    //     }
-    //   }  
+      async getAllAttributes(): Promise<AllAttributesResponse> {
+        try {
+          const attributeDto: AttributeDto[] = [];
+          const attributeEntity: Attributes[] = await this.attributeRepository.find({ order :{attributeName:'ASC'}});
+          if (attributeEntity) {
+            attributeEntity.forEach(attributeEntity => {
+              const convertedAttributesDto: AttributeDto = this.attributeAdapter.convertEntityToDto( attributeEntity );
+              attributeDto.push(convertedAttributesDto);
+            });
+            const response = new AllAttributesResponse(true,1,'Attributes retrieved successfully',attributeDto);
+            return response;
+          } else {
+            throw new ErrorResponse(99998, 'Data not found');
+          }
+          // return response;
+        } catch (err) {
+          return err;
+        }
+      }
+
+      async activateOrDeactivateAttributes(req: AttributeRequest): Promise<AttributeResponse> {
+        console.log(req,'hoioooo')
+        try {
+            const attributeExists = await this.getAttributeById(req.attributeId);
+            console.log(attributeExists,'sdfghjk')
+            if (attributeExists) {
+                if (!attributeExists) {
+                    throw new ErrorResponse(10113, 'Someone updated the current Attribute information. Refresh and try again');
+                } else {
+                    
+                        const attributeStatus =  await this.attributeRepository.update(
+                            { attributeId: req.attributeId },
+                            { isActive: req.isActive,updatedUser: req.updatedUser });
+                       
+                        if (attributeExists.isActive) {
+                            if (attributeStatus.affected) {
+                                const componentResponse: AttributeResponse = new AttributeResponse(true, 10115, 'Attribute is de-activated successfully');
+                                return componentResponse;
+                            } else {
+                                throw new AttributeResponse(false,10111, 'Attribute is already deactivated');
+                            }
+                        } else {
+                            if (attributeStatus.affected) {
+                                const componentResponse: AttributeResponse = new AttributeResponse(true, 10114, 'Component is activated successfully');
+                                return componentResponse;
+                            } else {
+                                throw new AttributeResponse(false,10112, 'Attribute is already  activated');
+                            }
+                        }
+                    // }
+                }
+            } else {
+                throw new AttributeResponse(false,99998, 'No Records Found');
+            }
+        } catch (err) {
+            return err;
+        }
+      }
+
+
+      async getAttributeById(attributeId: number): Promise<Attributes> {
+        //  console.log(employeeId);
+            const Response = await this.attributeRepository.findOne({ where: {attributeId: attributeId}});
+            // console.log(employeeResponse);
+            if (Response) {
+            return Response;
+            } else {
+            return null;
+            }
+        }
   
-//       async getAllActiveComponents(): Promise<AllComponentsResponseModel> {
-//         // const page: number = 1;
-//         // const response = new AllDeliveryResponseModel();
-//         try {
-//           const componentsDTO: ComponentsDTO[] = [];
-//           //retrieves all companies
-//           const componentsEntity: ComponentsDTO[] = await this.componentsRepository.find({where:{"isActive":true},order :{componentName:'ASC'}});
-//           //console.log(statesEntities);
+      async getAllActiveAttributes(): Promise<AllAttributesResponse> {
+        try {
+          const attributeDto: AttributeDto[] = [];
+          const attributeEntity: Attributes[] = await this.attributeRepository.find({where:{"isActive":true},order :{attributeName:'ASC'}});
           
-//           if (componentsEntity) {
-//             // converts the data fetched from the database which of type companies array to type StateDto array.
-//             componentsEntity.forEach(componentsEntity => {
-//               const convertedComponentDto: ComponentsDTO = this.componentsAdapter.convertEntityToDto(
-//                 componentsEntity
-//               );
-//               componentsDTO.push(convertedComponentDto);
-//             });
-    
-//             //generated response
+          if (attributeEntity) {
+            attributeEntity.forEach(attributeEntity => {
+              const convertedComponentDto: AttributeDto = this.attributeAdapter.convertEntityToDto( attributeEntity );
+              attributeDto.push(convertedComponentDto);
+            });
   
-//             const response = new AllComponentsResponseModel(true,1,'Components retrieved successfully',componentsDTO);
-//             return response;
-//           } else {
-//             throw new ErrorResponse(99998, 'Data not found');
-//           }
-//           // return response;
-//         } catch (err) {
-//           return err;
-//         }
-//       }  
+            const response = new AllAttributesResponse(true,1,'Attributes retrieved successfully',attributeDto);
+            return response;
+          } else {
+            throw new ErrorResponse(99998, 'Data not found');
+          }
+        } catch (err) {
+          return err;
+        }
+      }  
   
-//   async activateOrDeactivateComponent(req: ComponentRequest): Promise<ComponentResponseModel> {
-//     console.log(req,'hoioooo')
-//     try {
-//         const componentsExists = await this.getComponentById(req.componentId);
-//         console.log(componentsExists,'sdfghjk')
-//         if (componentsExists) {
-//             if (!componentsExists) {
-//                 throw new ErrorResponse(10113, 'Someone updated the current Components information. Refresh and try again');
-//             } else {
-                
-//                     const componentStatus =  await this.componentsRepository.update(
-//                         { componentId: req.componentId },
-//                         { isActive: req.isActive,updatedUser: req.updatedUser });
-                   
-//                     if (componentsExists.isActive) {
-//                         if (componentStatus.affected) {
-//                             const componentResponse: ComponentResponseModel = new ComponentResponseModel(true, 10115, 'Component is de-activated successfully');
-//                             return componentResponse;
-//                         } else {
-//                             throw new ComponentResponseModel(false,10111, 'Component is already deactivated');
-//                         }
-//                     } else {
-//                         if (componentStatus.affected) {
-//                             const componentResponse: ComponentResponseModel = new ComponentResponseModel(true, 10114, 'Component is activated successfully');
-//                             return componentResponse;
-//                         } else {
-//                             throw new ComponentResponseModel(false,10112, 'Component is already  activated');
-//                         }
-//                     }
-//                 // }
-//             }
-//         } else {
-//             throw new ComponentResponseModel(false,99998, 'No Records Found');
-//         }
-//     } catch (err) {
-//         return err;
-//     }
-//   }
+
   
 //   async getActiveComponentById(req: ComponentRequest): Promise<ComponentResponseModel> {
 //     try {
@@ -156,18 +161,7 @@ export class AttributeService {
 //     }
 //   }
   
-//   async getComponentById(componentId: number): Promise<Components> {
-//     //  console.log(employeeId);
-//         const Response = await this.componentsRepository.findOne({
-//         where: {componentId: componentId},
-//         });
-//         // console.log(employeeResponse);
-//         if (Response) {
-//         return Response;
-//         } else {
-//         return null;
-//         }
-//     }
+  
       
 
 }

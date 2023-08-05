@@ -174,6 +174,12 @@ export const baseRouterList = [
                 path: "components/components-view",
                 filepath: "components/components-view",
             },
+            {
+                label: "Attributes",
+                key: "attributes",
+                path: "attributes/attributes-view",
+                filepath: "attributes/attributes-view",
+            },
         ],
     },
 
