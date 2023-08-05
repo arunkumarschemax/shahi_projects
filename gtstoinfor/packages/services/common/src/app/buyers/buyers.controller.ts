@@ -113,4 +113,22 @@ export class BuyersController {
             return this.applicationExceptionhandler.returnException(BuyersGeneralAttributeResponseModel, err);
         }
     }
+
+    @Post('/updateGeneralAttribute')
+    async updateGeneralAttribute(@Body() req: any): Promise<BuyersGeneralAttributeResponseModel> {
+        try {
+            return await this.buyersGeneralAttributeService.createGeneralAttribute(req,true);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(BuyersGeneralAttributeResponseModel, err);
+        }
+    }
+
+    @Post('/getByBuyerId')
+    async getByBuyerId(@Body() req:any): Promise<BuyersGeneralAttributeResponseModel> {
+        try {
+            return await this.buyersGeneralAttributeService.getByBuyerId(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(BuyersGeneralAttributeResponseModel, err);
+        }
+    }
 }
