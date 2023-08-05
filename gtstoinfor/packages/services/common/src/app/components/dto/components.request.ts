@@ -1,10 +1,10 @@
 import {  IsNotEmpty, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AttributeRequest {
+export class ComponentRequest {
     @ApiProperty()
     @IsNotEmpty()
-    attributeId: number;
+    componentId: number;
 
     @ApiProperty()
     @IsOptional()

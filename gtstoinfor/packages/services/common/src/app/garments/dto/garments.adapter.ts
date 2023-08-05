@@ -1,3 +1,4 @@
+import { GarmentCategory } from "../../garment-category/garment-category.entity";
 import { Garments } from "../garments.entity";
 import { GarmentDto } from "./garments.dto";
 
@@ -7,9 +8,8 @@ export class GarmentsAdapter {
             const entityObj = new Garments();
             entityObj.createdUser = dtoObj.createdUser;
             entityObj.garmentName = dtoObj.garmentName;
-            // entityObj.garmentCategory = new GarmentCategory();
-            // entityObj.garmentCategory.garmentCategoryId = dtoObj.garmentCategoryId;
-            // entityObj.garmentCategory.itemCategory = dtoObj.garmentCategoryName;
+            entityObj.garmentCategory = new GarmentCategory();
+            entityObj.garmentCategory.garmentCategoryId = dtoObj.garmentCategoryId;
             entityObj.remarks = dtoObj.remarks;
             if (dtoObj.garmentId) {
                 entityObj.garmentId = dtoObj.garmentId;
@@ -26,8 +26,8 @@ export class GarmentsAdapter {
         const foodTypeDetailsDTO= new GarmentDto;
         foodTypeDetailsDTO.garmentId = itemObj.garmentId;
         foodTypeDetailsDTO.garmentName = itemObj.garmentName;
-        // foodTypeDetailsDTO.garmentCategoryId = (itemObj.garmentCategory)?.garmentCategoryId;
-        // foodTypeDetailsDTO.garmentCategoryName = (itemObj.garmentCategory)?.garmentCategory;
+        foodTypeDetailsDTO.garmentCategoryId = (itemObj.garmentCategory)?.garmentCategoryId;
+        foodTypeDetailsDTO.garmentCategory = (itemObj.garmentCategory)?.garmentCategory;
         foodTypeDetailsDTO.remarks = itemObj.remarks;
         foodTypeDetailsDTO.isActive = itemObj.isActive;
         foodTypeDetailsDTO.createdAt = itemObj.createdAt;

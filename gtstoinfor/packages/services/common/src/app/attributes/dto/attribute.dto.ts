@@ -4,7 +4,7 @@ import { AttributeAgainstEnum } from '@project-management-system/shared-models';
 export class AttributeDto {
 
     @ApiProperty()
-    attributeId?: number;
+    attributeId: number;
 
     @ApiProperty()
     attributeName: string;
