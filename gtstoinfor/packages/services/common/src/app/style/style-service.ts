@@ -59,14 +59,26 @@ export class StyleService{
     async getAllStyle():Promise<AllStyleResponseModel>{
         const style = await this.styleRepo.find({order:{createdAt:'ASC'}})
         if(style.length >0){
-            return new AllStyleResponseModel(true,1,'Employees Retrived Sucessfully',style)
+            return new AllStyleResponseModel(true,1,'Styles Retrived Sucessfully',style)
+        }else{
+            return new AllStyleResponseModel(false,0,'No  Styles Found ',[])
+
+        }
+
+    }
+    async getAllActiveStyle():Promise<AllStyleResponseModel>{
+        const style = await this.styleRepo.find({
+            where:{isActive:true},
+            order:{createdAt:'ASC'}
+        })
+        if(style.length >0){
+            return new AllStyleResponseModel(true,1,'Active Styles Retrived Sucessfully',style)
         }else{
             return new AllStyleResponseModel(false,0,'No  Employees Found ',[])
 
         }
 
     }
-
     
     async ActivateOrDeactivateStyle(req: StyleIdReq): Promise<AllStyleResponseModel> {
         const StyleDetails = await this.styleRepo.findOne({ where: { styleId: req.styleId } })

@@ -332,6 +332,17 @@ export const  BuyersView = () => {
             </Popconfirm>
           </span>
         )
+      },
+      {
+        title:'Attributes',
+        dataIndex:'attributes',
+        render:(text,rowData) => (
+          <span>
+            <Button onClick={() => navigate('/masters/buyers/buyers-general-attributes-form',{state:{id:rowData.buyerId}})}>General</Button>
+            <Divider type="vertical"/>
+            <Button>Order</Button>
+          </span>
+        )
       }
     ];
   
