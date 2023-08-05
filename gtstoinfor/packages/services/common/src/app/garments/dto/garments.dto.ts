@@ -9,9 +9,9 @@ export class GarmentDto {
     // @IsNotEmpty({message:"Item sub Category should not be empty"})
     garmentName: string;
 
-    // @ApiProperty()
-    // garmentCategoryId: number;
-    // garmentCategoryName?: string;
+    @ApiProperty()
+    garmentCategoryId: number;
+    garmentCategory?: string;
 
     @ApiProperty()
     remarks: string;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Card, Row, Col, Select } from 'antd';
 import { GarmentsDto } from '@project-management-system/shared-models';
 import { GarmentService } from '@project-management-system/shared-services';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
  
 
@@ -22,15 +22,19 @@ export function GarmentsForm(
   const [form] = Form.useForm();
   const service = new GarmentService;
   let navigate = useNavigate();
+  const { state } = useLocation();
 
   // const [garmentCategoryData, setGarmentCategoryData] = useState<GarmentCategoriesDto[]>([]);
   // const garmentCategoryService = new GarmentCategoryService();
   const [selectedGarmentCategory, setSelectedGarmentCategory] = useState<number>(null);
 
-  // useEffect(() => {
-  //   getAllItemCategories();
-  // }, []);
+  
 
+  useEffect(() => {
+    if(state?.id){
+      form.setFieldsValue({garmentCategoryId:state?.id})
+    }
+  },[state])
   // const getAllGarmentCategories = () => {
   //   garmentCategoryService.getActiveItemCategories().then(res => {
   //     if (res.status) {
@@ -92,31 +96,6 @@ export function GarmentsForm(
           <Input hidden />
         </Form.Item>
         <Row gutter={24}>
-
-          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-            <Form.Item
-              name="garmentId"
-              label="Garment Category"
-              rules={[
-                {
-                  required: true,
-                  message: 'Garment is required'
-                },
-              ]}>
-              <Select
-                placeholder="Select Garment Category"
-                onSelect={handleGarmentCategory}
-                showSearch
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
-              >
-                {garmentCategoryData?.map(dropData => {
-                  return <Option key={dropData.garmentCategoryId} value={dropData.garmentCategoryId}>{dropData.garmentCategory}</Option>
-                })}
-              </Select>
-            </Form.Item>
-          </Col> */}
 
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item

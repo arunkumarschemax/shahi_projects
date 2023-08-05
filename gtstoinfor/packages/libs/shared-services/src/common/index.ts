@@ -23,3 +23,5 @@ export * from './garment-service';
 export * from './delivery-terms.service';
 export * from './component-mapping-service'
 export * from './liscence-type.service';
+export * from './components-service'
+export * from  './attribute-service'

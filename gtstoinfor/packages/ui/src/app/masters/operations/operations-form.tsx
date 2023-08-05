@@ -95,7 +95,7 @@ export function OperationsForm(
   };
   let navigate = useNavigate()
   return (
-    <Card title={props.isUpdate ? 'Update Operation' : 'Add LOperation'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/operations/operation-view')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Update Operation' : 'Add Operation'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/operations/operation-view')} type={'primary'}>View</Button></span>}>
 
       <Form layout="vertical" form={form} initialValues={props.operationData} name="control-hooks" onFinish={saveData}>
       <Form.Item name="operationId" style={{ display: "none" }} >

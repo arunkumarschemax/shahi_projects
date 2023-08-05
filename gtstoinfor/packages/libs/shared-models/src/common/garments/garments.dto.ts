@@ -16,6 +16,8 @@ export class GarmentsDto {
 
 export const GarmentsDtoDefault : GarmentsDto = {
     garmentName: "",
+    garmentCategoryId:0,
+    garmentCategoryName:"",
     remarks: "",
     isActive: true,
     createdAt : new Date() ,
