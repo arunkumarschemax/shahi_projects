@@ -120,7 +120,7 @@ export class BuyersController {
     @Post('/createOrderAttribute')
     async createOrderAttribute(@Body() req: BuyersOrderAttributeDto): Promise<BuyersOrderAttributeResponseModel> {
         try {
-            return await this.buyersOrderAttributeService.createOrderAttribute(req);
+            return await this.buyersOrderAttributeService.createOrderAttribute(req,false);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(BuyersOrderAttributeResponseModel, err);
         }
@@ -141,6 +141,24 @@ export class BuyersController {
             return await this.buyersGeneralAttributeService.getByBuyerId(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(BuyersGeneralAttributeResponseModel, err);
+        }
+    }
+
+    @Post('/updateOrderAttribute')
+    async updateOrderAttribute(@Body() req: any): Promise<BuyersOrderAttributeResponseModel> {
+        try {
+            return await this.buyersOrderAttributeService.createOrderAttribute(req,true);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(BuyersOrderAttributeResponseModel, err);
+        }
+    }
+
+    @Post('/getBuyerId')
+    async getBuyerId(@Body() req:any): Promise<BuyersOrderAttributeResponseModel> {
+        try {
+            return await this.buyersOrderAttributeService.getBuyerId(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(BuyersOrderAttributeResponseModel, err);
         }
     }
 }

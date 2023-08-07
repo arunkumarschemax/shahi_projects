@@ -10,14 +10,10 @@ export class BuyerOrderAttributeInfo{
     @ApiProperty()
     attributeId: number;
 
+    @ApiProperty()
+    buyerGeneralAttributeId: number;
 
-    constructor(attributeName:string, attributeValue:string,
-        attributeId: number) {
-         
-         this.attributeName = attributeName,
-         this.attributeValue = attributeValue,
-         this.attributeId = attributeId
-   }
+
 
     
 }

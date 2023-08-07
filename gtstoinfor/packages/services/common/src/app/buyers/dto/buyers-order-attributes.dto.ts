@@ -8,18 +8,25 @@ export class BuyersOrderAttributeDto{
     @ApiProperty()
     buyerId: number;
 
-    @ApiProperty({type:BuyerOrderAttributeInfo})
+    // @ApiProperty({type:BuyerOrderAttributeInfo})
+    @ApiProperty()
     attributeInfo: BuyerOrderAttributeInfo[]
 
+    @ApiProperty()
+    isActive: boolean;
+  
+    createdAt : Date;
+  
+    @ApiProperty()
+    createdUser : string;
+  
+    updatedAt : Date;
+    @ApiProperty()
+    updatedUser : string;
+  
+    @ApiProperty()
+    versionFlag : number;
 
 
-    constructor(buyerOrderAttributeId : number,buyerId: number,
-     attributeInfo: BuyerOrderAttributeInfo[]) {
-      
-      this.buyerOrderAttributeId = buyerOrderAttributeId,
-      this.buyerId = buyerId,
-      this.attributeInfo = attributeInfo
 }
 
-
-}

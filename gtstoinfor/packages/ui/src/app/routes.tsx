@@ -57,6 +57,7 @@ import ComponentsForm from "./masters/Components/components-form"
 import ComponentsGrid from "./masters/Components/components-grid"
 import AttributesGrid from "./masters/attributes/attributes-grid"
 import AttributesForm from "./masters/attributes/attributes-form"
+import BuyersOrderAttributeForm from "./masters/buyers/buyers-order-attribute-form"
 
 
 export const AppRoutes = () => {
@@ -192,6 +193,8 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateData={(undefined) => { }}/>}/>
                         <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
+                        <Route path='buyers/buyers-order-attributes-form' key='buyers/buyers-order-attributes-form' element={<BuyersOrderAttributeForm/>} />
+
                     </Route>
                     
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>

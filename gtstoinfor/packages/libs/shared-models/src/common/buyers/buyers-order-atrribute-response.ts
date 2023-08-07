@@ -1,8 +1,8 @@
 import { GlobalResponseObject } from '../global-response-object';
-import { BuyersOrderAttributeDto } from './buyers-order-attribute-dto';
+import { BuyersOrderAttributeModel } from './buyers-order-attribute-model';
 
 export class BuyersOrderAttributeResponseModel extends GlobalResponseObject{
-    data?: BuyersOrderAttributeDto[];
+    data?: BuyersOrderAttributeModel[];
     /**
      * 
      * @param status 
@@ -10,7 +10,7 @@ export class BuyersOrderAttributeResponseModel extends GlobalResponseObject{
      * @param internalMessage 
      * @param data //BuyersDropDownData[]
      */
-     constructor(status: boolean, intlCode: number, internalMessage: string, data?: BuyersOrderAttributeDto[]) {
+     constructor(status: boolean, intlCode: number, internalMessage: string, data?: BuyersOrderAttributeModel[]) {
         super(status, intlCode, internalMessage);
         this.data = data;
     }

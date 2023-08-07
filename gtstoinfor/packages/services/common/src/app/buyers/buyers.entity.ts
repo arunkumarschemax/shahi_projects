@@ -27,7 +27,7 @@ export class Buyers {
   clientName:string;
 
   @Column("varchar",{
-    nullable:false,
+    // nullable:false,
     length:50,
     name:"account_type"
   })
