@@ -59,11 +59,11 @@ export class OperationsService {
               }
             }
           }
-          const convertedBrandEntity: Operations = this.operationsAdapter.convertDtoToEntity(operationsDto,isUpdate);
-          const savedCurrencyEntity: Operations = await this.OperationsRepository.save(
-            convertedBrandEntity
+          const convertedOperationEntity: Operations = this.operationsAdapter.convertDtoToEntity(operationsDto,isUpdate);
+          const savedOperationEntity: Operations = await this.OperationsRepository.save(
+            convertedOperationEntity
           );
-          const savedOperationsDto: OperationDTO = this.operationsAdapter.convertEntityToDto(convertedBrandEntity);
+          const savedOperationsDto: OperationDTO = this.operationsAdapter.convertEntityToDto(convertedOperationEntity);
             // console.log(savedStateDto);
           if (savedOperationsDto) {
             const presentValue = savedOperationsDto.operationName;
@@ -78,7 +78,7 @@ export class OperationsService {
            return response
           } else {
             //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
-            throw new OperationsResponseModel(false,11106,'Brand saved but issue while transforming into DTO');
+            throw new OperationsResponseModel(false,11106,'Operation saved but issue while transforming into DTO');
           }
         } catch (error) {
           // when error occures while saving the data , the execution will come to catch block.
@@ -152,7 +152,7 @@ export class OperationsService {
         const operationExists = await this.getOperationById(operationReq.operationId);
         if (operationExists) {
             if (!operationExists) {
-                throw new ErrorResponse(10113, 'Someone updated the current brand information.Refresh and try again');
+                throw new ErrorResponse(10113, 'Someone updated the current operation information.Refresh and try again');
             } else {
 
                 const operationStatus = await this.OperationsRepository.update(

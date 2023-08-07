@@ -96,21 +96,21 @@ export class LocationService {
     async getAllLocations(): Promise<AllLocationResponseModel> {
         // const page: number = 1;
         try {
-            const deliveryTermsDTO: LocationDTO[] = [];
+            const locationDTO: LocationDTO[] = [];
             //retrieves all companies
-            const deliveryTermsEntities: Location[] = await this.locationRepository.find({ order: { 'locationName': 'ASC' } });
-            //console.log(deliveryTermsEntities);
-            if (deliveryTermsEntities) {
+            const locationsEntities: Location[] = await this.locationRepository.find({ order: { 'locationName': 'ASC' } });
+            //console.log(locationsEntities);
+            if (locationsEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
-                deliveryTermsEntities.forEach(deliveryTermsEntity => {
+                locationsEntities.forEach(locationsEntity => {
                     const convertedstatesDto: LocationDTO = this.locationAdapter.convertEntityToDto(
-                        deliveryTermsEntity
+                        locationsEntity
                     );
-                    deliveryTermsDTO.push(convertedstatesDto);
+                    locationDTO.push(convertedstatesDto);
                 });
-                const response = new AllLocationResponseModel(true, 11108, "DeliveryTerms retrieved successfully", deliveryTermsDTO);
+                const response = new AllLocationResponseModel(true, 11108, "Locations retrieved successfully", locationDTO);
                 // if(req?.createdUser){
-                //     const newLogDto = new LogsDto(1,'view', 'DeliveryTerms', 0, true, 'DeliveryTerms retrieved successfully',req.createdUser,"",'')
+                //     const newLogDto = new LogsDto(1,'view', 'Locations', 0, true, 'Locations retrieved successfully',req.createdUser,"",'')
                 //     let res = await this.logService.createLog(newLogDto);
                 //     console.log(res);
                 // }
