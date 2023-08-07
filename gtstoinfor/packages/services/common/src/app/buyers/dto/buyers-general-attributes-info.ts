@@ -9,4 +9,8 @@ export class BuyerGeneralAttributeInfo{
 
     @ApiProperty()
     attributeId: number;
+
+    @ApiProperty()
+    buyerGeneralAttributeId: number;
+
 }

@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGenerat
 import { Style } from "../style/dto/style-entity";
 import { GarmentCategory } from "../garment-category/garment-category.entity";
 import { Garments } from "../garments/garments.entity";
+import { Components } from "../components/components.entity";
 
 @Entity('component_mapping')
 export class ComponentMappingEntity{
@@ -80,9 +81,9 @@ export class ComponentMappingEntity{
     @JoinColumn({ name:"garment_category_id"})
     garmentcategoryInfo: GarmentCategory;
 
-    //  @ManyToOne(type=>Components, component=>component.componentMappingInfo,{  nullable:false, })
-    // @JoinColumn({ name:"component_id"})
-    // componentInfo: Components;
+     @ManyToOne(type=>Components, component=>component.componentMappingInfo,{  nullable:false, })
+    @JoinColumn({ name:"component_id"})
+    componentInfo: Components;
     
 
 }

@@ -6,7 +6,10 @@ export class ComponentMappingService  extends CommonAxiosService{
 
     async createComponentMap(req:ComponentMappingModel):Promise<ComponentMappingResponseModel>{
         return this.axiosPostCall(this.URL + '/createComponentMapping',req)
+    }
 
+    async getMappedComponents():Promise<ComponentMappingResponseModel>{
+        return this.axiosPostCall(this.URL + '/getMappedComponents')
     }
 
 }
