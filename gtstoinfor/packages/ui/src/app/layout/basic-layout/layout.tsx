@@ -12,9 +12,6 @@ import { LightModeIcon } from '../../icons/lightmode.icon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShirt} from '@fortawesome/free-solid-svg-icons';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShirt} from '@fortawesome/free-solid-svg-icons';
-
 const { useToken } = theme
 
 
