@@ -7,6 +7,7 @@ import { ComponentInfoModel, ComponentMappingModel, ComponentMappingResponseMode
 import { Style } from "../style/dto/style-entity";
 import { GarmentCategory } from "../garment-category/garment-category.entity";
 import { Garments } from "../garments/garments.entity";
+import { Components } from "../components/components.entity";
 
 @Injectable()
 export class ComponentMappingService{
@@ -17,6 +18,7 @@ export class ComponentMappingService{
     ){}
 
     async createComponentMapping(req:ComponentMappingDto,isUpdate:boolean): Promise<ComponentMappingResponseModel>{
+        console.log(req,'-----------req')
         try{
             for(const rec of req.componentDeatils){
                 const entity = new ComponentMappingEntity()
@@ -30,6 +32,9 @@ export class ComponentMappingService{
                 const garmentEntity = new Garments()
                 garmentEntity.garmentId = req.garmentId;
                 entity.garmentInfo = garmentEntity;
+                const componentEntity = new Components()
+                componentEntity.componentId = rec.componentId;
+                entity.componentInfo = componentEntity;
                 if(isUpdate){
                     entity.componentMappingId = req.componentMappingId;
                     entity.updatedUser = req.updatedUser
@@ -49,10 +54,18 @@ export class ComponentMappingService{
     async getMappedComponents():Promise<ComponentMappingResponseModel> {
         try{
             let info = [];
-            const data = await this.componentMappingRepo.find({relations:['garmentInfo','garmentcategoryInfo','styleInfo']})
+            const data = await this.componentMappingRepo.find({relations:['garmentInfo','garmentcategoryInfo','styleInfo','componentInfo']})
+            console.log(data,'------------data')
             if(data){
                 for(const rec of data){
+                    // let previous
+                    // let componentInfo = []
+                    // if(previous.styleInfo == rec.styleInfo && previous.garmentcategoryInfo == rec.garmentcategoryInfo && previous.garmentInfo == rec.garmentInfo){
+                    //     componentInfo.push(new ComponentInfoModel(rec.componentInfo.componentId,rec.componentInfo.componentName))
+                    // }
                     info.push(new ComponentMappingModel(rec.componentMappingId,rec.styleInfo.styleId,rec.garmentcategoryInfo.garmentCategoryId,rec.garmentInfo.garmentId,[],rec.createdUser,rec.updatedUser,rec.isActive,rec.versionFlag,rec.styleInfo.style,rec.garmentcategoryInfo.garmentCategory,rec.garmentInfo.garmentName))
+                    // previous = rec
+
                 }
                 return new ComponentMappingResponseModel(true,1,'Data retrieved',info)
             } else {

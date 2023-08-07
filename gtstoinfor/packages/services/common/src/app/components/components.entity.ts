@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, ValidateIf } from 'class-validator';
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { ComponentMappingEntity } from '../components-mapping/component-mapping.entity';
 
 @Entity('components')
 export class Components {
@@ -53,4 +54,8 @@ export class Components {
       name: "version_flag"
   })
   versionFlag: number;
+
+  @OneToMany(type=>ComponentMappingEntity, e=>e.componentInfo,{cascade: true})
+  componentMappingInfo:ComponentMappingEntity[];
+
   }
