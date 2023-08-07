@@ -226,8 +226,6 @@ export const BuyersGeneralAttributeForm = () => {
     };
 
     const onSubmit = () => {
-        console.log(attributeValue,'-------attributeValue')
-        console.log(isUpdate,'-----------------------')
         if(isUpdate){
             const req = new BuyersGeneralAttributeRequest(0,state.state.id,attributeValue,'admin')
             service.updateGeneralAttribute(req).then(res => {
@@ -266,7 +264,7 @@ export const BuyersGeneralAttributeForm = () => {
     const [firstHalfData, secondHalfData] = splitData(attributes);
 
     return(
-        <Card title='Buyer General Settings'>
+        <Card title='Buyer General Settings' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
             {
                 attributes.length <= 10 ? (<>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>

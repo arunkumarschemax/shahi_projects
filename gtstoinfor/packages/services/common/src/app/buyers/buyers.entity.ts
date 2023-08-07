@@ -26,12 +26,12 @@ export class Buyers {
   @Index({unique:true})
   clientName:string;
 
-  @Column("varchar",{
-    // nullable:false,
-    length:50,
-    name:"account_type"
-  })
-  accountType:string;
+  // @Column("varchar",{
+  //   nullable:false,
+  //   length:50,
+  //   name:"account_type"
+  // })
+  // accountType:string;
     
   @Column("varchar",{
     nullable:true,
