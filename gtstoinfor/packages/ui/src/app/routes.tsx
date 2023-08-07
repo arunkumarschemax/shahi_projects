@@ -61,6 +61,8 @@ import ComponentsForm from "./masters/Components/components-form"
 import ComponentsGrid from "./masters/Components/components-grid"
 import AttributesGrid from "./masters/attributes/attributes-grid"
 import AttributesForm from "./masters/attributes/attributes-form"
+import WarehouseGrid from "./masters/warehouse/warehouse-grid"
+import WarehouseForm from "./masters/warehouse/warehouse-form"
 
 
 export const AppRoutes = () => {
@@ -113,12 +115,17 @@ export const AppRoutes = () => {
                 <Route path='items/item-grid' element={<ItemsGrid />} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
                         <Route path='company/company-form' element={<CompanyForm currencyData={undefined} updateItem={function (companyData: CompanyDto): void {
-                            throw new Error("Function not implemented.")
                         } } isUpdate={false} closeForm={function (): void {
-                            throw new Error("Function not implemented.")
+                            
                         } } />} />
                         <Route path='company/company-grid' element={<CompanyGrid />} />
                         <Route path='company/division-grid' element={<DivisionGrid />} />
+                        <Route path='warehouse/warehouse-form' element={<WarehouseForm Data={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                        <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
+
                         <Route path='brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}

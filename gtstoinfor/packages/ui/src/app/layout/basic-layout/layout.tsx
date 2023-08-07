@@ -78,6 +78,11 @@ export const baseRouterList = [
                 key: "division",
                 path: "company/division-grid",
                 filepath: "company/division-grid",
+            },  {
+                label: "Warehouse",
+                key: "warehouse",
+                path: "warehouse/warehouse-grid",
+                filepath: "warehouse/warehouse-grid",
             },
             {
                 label: "PaymentMethod",

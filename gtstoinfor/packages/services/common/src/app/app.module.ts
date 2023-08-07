@@ -33,6 +33,7 @@ import { AttributeModule } from './attributes/attribute.module';
 import { ComponentsModule } from './components/components.module';
 import { GarmentCategoriesModule } from './garment-category/garment-category.module';
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
+import { WarehouseModule } from './warehouse/warehouse.module';
 
 
 @Module({
@@ -68,7 +69,7 @@ import { ComponentMappingModule } from './components-mapping/component-mapping.m
     UsersModule,
     OrdersModule,
     DivisionModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule],
   controllers: [AppController],
   providers: [AppService],
 })
