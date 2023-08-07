@@ -13,3 +13,4 @@ export * from './item-category-service'
 export * from './item-sub-category-service';
 export * from './master-brands-service';
 export * from './operations-service '
+export * from './division-service-master';

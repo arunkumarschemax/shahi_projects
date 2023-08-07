@@ -36,6 +36,7 @@ import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
 import ItemCategoriesGrid from "./masters/item-categories/item-categories-grid"
 import ItemSubCategoriesGrid from "./masters/item-sub-categories/item-sub-categories-grid"
 import ItemSubCategoriesForm from "./masters/item-sub-categories/item-sub-categories-form"
+import DivisionGrid from "./masters/company/division-grid"
 
 
 export const AppRoutes = () => {
@@ -126,6 +127,7 @@ export const AppRoutes = () => {
                             throw new Error("Function not implemented.")
                         } } />} />
                         <Route path='company/company-grid' element={<CompanyGrid />} />
+                        <Route path='company/division-grid' element={<DivisionGrid />} />
                         <Route path='brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}

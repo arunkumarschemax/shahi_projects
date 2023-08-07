@@ -7,25 +7,6 @@ import { CompanyDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { CompanyService } from '@project-management-system/shared-services';
 
-
-/* eslint-disable-next-line */
-// const { Option } = Select;
-// const layout = {
-//   labelCol: {
-//     span: 10,
-//   },
-//   wrapperCol: {
-//     span: 8,
-//   },
-// };
-
-// const tailLayout = {
-//   wrapperCol: {
-//     offset: 10,
-//     span: 10,
-//   },
-// };
-
 export interface CompanyFormProps {
   currencyData: CompanyDto;
   updateItem: (currencyData: CompanyDto) => void;

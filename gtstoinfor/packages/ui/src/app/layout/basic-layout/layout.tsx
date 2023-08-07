@@ -73,6 +73,13 @@ export const baseRouterList = [
                 path: "company/company-grid",
                 filepath: "company/company-grid",
             },
+            ,
+            {
+                label: "Company-Division",
+                key: "division",
+                path: "company/division-grid",
+                filepath: "company/division-grid",
+            },
             {
                 label: "Brands",
                 key: "brands",

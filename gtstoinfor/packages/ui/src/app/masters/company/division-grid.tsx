@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Divider, Table, Popconfirm, Card, Tooltip, Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal } from 'antd';
 import Highlighter from 'react-highlight-words';
@@ -6,11 +7,11 @@ import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
-import { CompanyDto, DivisionDto } from '@project-management-system/shared-models';
-import { CompanyService, DivisionService } from '@project-management-system/shared-services';
+import {  DivisionDto } from '@project-management-system/shared-models';
+import {  DivisionService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
-import CompanyForm from './company-form';
 import DivisionForm from './division-form';
+
 
 
 
@@ -35,15 +36,14 @@ import DivisionForm from './division-form';
 
 
 /* eslint-disable-next-line */
-export interface CompanyGridProps { }
+export interface DivisionGridProps { }
 
-export const CompanyGrid = (props: CompanyGridProps) => {
+export const DivisionGrid = (props: DivisionGridProps) => {
   const [searchText, setSearchText] = useState('');
   const [selectedData, setSelectedData] = useState<any>([]);
-  const [disable, setDisable] = useState<boolean>(false)
   const [searchedColumn, setSearchedColumn] = useState('');
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [variantData, setVariantData] = useState<CompanyDto[]>([]);
+  const [variantData, setVariantData] = useState<DivisionDto[]>([]);
   const [selectedVariant, setSelectedVariant] = useState<any>(undefined);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const searchInput = useRef(null);
@@ -53,9 +53,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
   const [form] = Form.useForm();
 
   // const { formatMessage: fm } = useIntl();
-  const service = new CompanyService();
-  const Dservice = new DivisionService();
-
+  const service = new DivisionService();
 
   /**
    * used for column filter
@@ -199,26 +197,19 @@ export const CompanyGrid = (props: CompanyGridProps) => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
-      title: "Company Name",
-      dataIndex: "companyName",
+      title: "Division Name",
+      dataIndex: "divisionName",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps("companyName"),
+      ...getColumnSearchProps("divisionName"),
     },
     ,
     {
-      title: "Company Code",
-      dataIndex: "companyCode",
+      title: "Division Code",
+      dataIndex: "divisionCode",
       sorter: (a, b) => a.source.localeCompare(b.source),
       sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps("companyCode"),
-    }, ,
-    {
-      title: "Organisation Name",
-      dataIndex: "organizationCode",
-      sorter: (a, b) => a.source.localeCompare(b.source),
-      sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps("organizationCode"),
+      ...getColumnSearchProps("divisionCode"),
     },
     {
       title: 'Status',
@@ -277,15 +268,6 @@ export const CompanyGrid = (props: CompanyGridProps) => {
             />
 
           </Popconfirm>
-          <Divider type='vertical' />
-          <Button
-            type="primary"
-            shape="round"
-            size="small"
-            onClick={() => openPrint(rowData)}
-          >
-            Add Division
-          </Button>
 
         </span>
       )
@@ -302,7 +284,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   }
-  useEffect(() => { getAllCompany(); }, [])
+  useEffect(() => { getAllDivision(); }, [])
 
   // const getAllCurrencys = async (params = {}, sort, filter) => {
   //   const res = await service.getAllCurrencies()
@@ -313,8 +295,8 @@ export const CompanyGrid = (props: CompanyGridProps) => {
   //   }
   // }
 
-  const getAllCompany = () => {
-    service.getAllCompany().then(res => {
+  const getAllDivision = () => {
+    service.getAllDivision().then(res => {
       if (res.status) {
         setVariantData(res.data);
       } else {
@@ -339,16 +321,16 @@ export const CompanyGrid = (props: CompanyGridProps) => {
   }
 
   //TO open the form for updation
-  const openFormWithData = (ViewData: CompanyDto) => {
+  const openFormWithData = (ViewData: DivisionDto) => {
     setDrawerVisible(true);
     setSelectedVariant(ViewData);
   }
 
 
-  const saveVariant = (variantData: CompanyDto) => {
-    variantData.companyId = 0;
+  const saveVariant = (variantData: DivisionDto) => {
+    variantData.divisionId = 0;
     // variantData.isActive=true;
-    service.createCompany(variantData).then(res => {
+    service.createDivision(variantData).then(res => {
       if (res.status) {
         AlertMessages.getSuccessMessage('Company Created Successfully');
         // getAllCurrencys();
@@ -368,13 +350,13 @@ export const CompanyGrid = (props: CompanyGridProps) => {
    * 
    * @param variantData 
    */
-  const updateCompany = (Data: CompanyDto) => {
+  const updateDivision = (Data: DivisionDto) => {
     Data.updatedUser = JSON.parse(localStorage.getItem('username'))
-    service.updateCompany(Data).then(res => {
+    service.updateDivision(Data).then(res => {
       console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
-        // getAllCurrencys();
+        //  getAllDivision();
         setDrawerVisible(false);
       } else {
         // if (res.intlCode) {
@@ -391,12 +373,12 @@ export const CompanyGrid = (props: CompanyGridProps) => {
    * 
    * @param ViewData 
    */
-  const deleteVariant = (ViewData: CompanyDto) => {
+  const deleteVariant = (ViewData: DivisionDto) => {
     ViewData.isActive = ViewData.isActive ? false : true;
-    service.ActivatedeActivateCompany(ViewData).then(res => {
+    service.ActivatedeActivateDivision(ViewData).then(res => {
       console.log(res);
       if (res.status) {
-        // getAllCurrencys();
+        //  getAllDivision();
         AlertMessages.getSuccessMessage('Success');
       } else {
         // if (res.intlCode) {
@@ -425,138 +407,58 @@ export const CompanyGrid = (props: CompanyGridProps) => {
   //   //   }
 
   // ]
-  // const save = (val) => {
-  // form.validateFields().then(() => {
-  //  const req = new Inspection(val.indentCode, val.indentId, val.vehicleId, val.pickRequestLineTruckId, val.vehicleNumber, selectedOptions,val.status, val.remarks)
-  //   service.vehicleInspection(req).then(res => {
-  //     if (res.status) {
-  //       message.success('Inspected successfully')
-  //     //  navigate("/vehicle-models-dimensions")
-  //       onReset();
-  //       setIsModalVisible(false);
-  //       // setDisable(true)
-
-  //     } else {
-  //       message.error(res.internalMessage)
-
-  //     }
-  //   })
-  // })
-  // }
-  const openPrint = (rowData: any) => {
-    setSelectedData(rowData)
-    setIsModalVisible(true);
-
-  }
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-  const onReset = () => {
-    form.resetFields();
-  };
- 
-
-  const saveDivision = (Data: DivisionDto) => {
-    setDisable(true)
-    Data.divisionId = 0;
-    Dservice.createDivision(Data).then((res) => {
-      setDisable(false)
-      if (res.status) {
-        AlertMessages.getSuccessMessage('Division Created Successfully');
-        //   location.push("/Currencies-view");
-        onReset();
-      } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    })
-      .catch((err) => {
-        setDisable(false)
-        AlertMessages.getErrorMessage(err.message);
-      });
-  };
-  /**
-   *
-   * @param values //Dto values
-   */
-  const saveData = (values: DivisionDto) => {
-    setDisable(false)
-    // console.log(values);
-
-    // if(values.currencyName.startsWith(" "))
-    //   AlertMessages.getErrorMessage("Invalid Input");
-
-    saveDivision(values);
-  }
-
-
-
-
-  interface DivisionFormProps {
+  // interface DivisionFormProps {
     // updateItem: (Data: DivisionDto) => void;
     // isUpdate: boolean;
-    // Data: any;
+    // currencyData: any;
     // closeForm: () => void;
-  }
-const DivisionForm = (props:DivisionFormProps) => {
- 
+  // }
+  // const DivisionForm = (props:DivisionFormProps) => {
+  //   return (
+  //     <Card title="Division">
+  //       <Form form={form} layout="vertical" onFinish={save}>
+  //         <Row gutter={24}>
+  //           <Col>
+  //             <Form.Item style={{display:'none'}} label="Company Id" name="companyId" initialValue={selectedData.companyId}>
+  //               <Input disabled />
+  //             </Form.Item>
+  //           </Col>
+  //           <Col span={4}>
+  //             <Form.Item label="Division Name" name="divisionName">
+  //               <Input  />
+  //             </Form.Item>
+  //           </Col>
+  //           <Col span={4}>
+  //             <Form.Item label="Division Code" name="divisionCode">
+  //               <Input  />
+  //             </Form.Item>
+  //           </Col>
+  //         </Row>
+  //       </Form>
+  //     </Card>
+  //   );
+  // };
+  return (
 
-  return ( 
-    <Card title="Division">
-      <Form form={form} layout="vertical" onFinish={saveData}>
-        <Row gutter={24}>
-          <Col>
-            <Form.Item style={{display:'none'}} label="Company Id" name="companyId" initialValue={selectedData.companyId}>
-              <Input disabled />
-            </Form.Item>
-          </Col>
-          <Col span={4}>
-            <Form.Item label="Division Name" name="divisionName">
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={4}>
-            <Form.Item label="Division Code" name="divisionCode">
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24} style={{ textAlign: 'right' }}>
-            <Button type="primary" disabled={disable} htmlType="submit">
-              Submit
-            </Button>
-            {/* {(props.isUpdate===false) && */}
-            <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
-              Reset
-            </Button>
-            {/* } */}
-          </Col>
-        </Row>
-      </Form>
-    </Card>
-  );
-};
-return (
-
-  <>
-    <Row gutter={40}>
-      <Col>
-        <Card title={'Total Company: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
-      </Col>
-      <Col>
-        <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
-      </Col>
-      <Col>
-        <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
-      </Col>
-      <Col>
-        <span><Button onClick={() => navigate('/masters/company/company-form')}
-          type={'primary'}>New</Button></span>
-      </Col>
-    </Row><br></br>
-    <Card >
-      {/* <GetCumulatives cumulativeColumns={cumulativeSkelton} data={variantData}/> */}
-      {/* <ProTable
+    <>
+      <Row gutter={40}>
+        <Col>
+          <Card title={'Total Division: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+        </Col>
+        <Col>
+          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+        </Col>
+        <Col>
+          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+        </Col>
+        {/* <Col>
+          <span><Button onClick={() => navigate('/masters/company/company-form')}
+            type={'primary'}>New</Button></span>
+        </Col> */}
+      </Row><br></br>
+      <Card >
+        {/* <GetCumulatives cumulativeColumns={cumulativeSkelton} data={variantData}/> */}
+        {/* <ProTable
           request={getAllCurrencys}
           bordered size='small'
           cardBordered
@@ -572,48 +474,34 @@ return (
 
         /> */}
 
-      <Table
-        size='small'
-        // rowKey={record => record.variantId}
-        columns={columnsSkelton}
-        dataSource={variantData}
-        pagination={{
-          onChange(current) {
-            setPage(current);
-          }
-        }}
-        scroll={{ x: true }}
-        onChange={onChange}
-        bordered />
-    </Card>
-    <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
+        <Table
+          size='small'
+          // rowKey={record => record.variantId}
+          columns={columnsSkelton}
+          dataSource={variantData}
+          pagination={{
+            onChange(current) {
+              setPage(current);
+            }
+          }}
+          scroll={{ x: true }}
+          onChange={onChange}
+          bordered />
+      </Card>
+      <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
       onClose={closeDrawer} visible={drawerVisible} closable={true}>
       <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
-        <CompanyForm key={Date.now()}
-          updateItem={updateCompany}
+        <DivisionForm 
+          updateItem={updateDivision}
           isUpdate={true}
           // saveItem={saveVariant}
-          currencyData={selectedVariant}
+          Data={selectedVariant}
           closeForm={closeDrawer} />
       </Card>
     </Drawer>
-    <Modal
-      className='print-docket-modal'
-      // key={'modal' + Date.now()}
-      width={'90%'}
-      style={{ top: 30, alignContent: 'right' }}
-      visible={isModalVisible}
-      title={<React.Fragment>
-      </React.Fragment>}
-      onCancel={handleCancel}
-      footer={[
-
-      ]}
-    >
-      {<DivisionForm/>}
-    </Modal>
-  </>
-);
+     </>
+  );
 }
 
-export default CompanyGrid;
+
+export default DivisionGrid;
