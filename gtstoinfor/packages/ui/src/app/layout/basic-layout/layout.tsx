@@ -12,6 +12,9 @@ import { LightModeIcon } from '../../icons/lightmode.icon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShirt} from '@fortawesome/free-solid-svg-icons';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShirt} from '@fortawesome/free-solid-svg-icons';
+
 const { useToken } = theme
 
 
@@ -78,6 +81,12 @@ export const baseRouterList = [
                 key: "division",
                 path: "company/division-grid",
                 filepath: "company/division-grid",
+            },
+            {
+                label: "PaymentMethod",
+                key: "paymentmethod",
+                path: "paymentmethod/paymentmethod-view",
+                filepath: "paymentmethod/paymentmethod-view",
             },
             {
                 label: "PaymentMethod",
