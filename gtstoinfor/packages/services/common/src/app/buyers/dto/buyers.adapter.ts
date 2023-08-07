@@ -16,7 +16,7 @@ export class BuyersAdapter {
     console.log(buyersDTO);
     buyer.clientCode=buyersDTO.clientCode;
     buyer.clientName=buyersDTO.clientName;
-    buyer.accountType=buyersDTO.accountType;
+    // buyer.accountType=buyersDTO.accountType;
     buyer.gstNumber=buyersDTO.gstNumber;
     buyer.contactPerson=buyersDTO.contactPerson;
     buyer.phoneNo=buyersDTO.phoneNo;
@@ -56,7 +56,7 @@ export class BuyersAdapter {
     buyersDTO.buyerId=buyersObject.buyerId;
     buyersDTO.clientCode=buyersObject.clientCode;
     buyersDTO.clientName=buyersObject.clientName;
-    buyersDTO.accountType=buyersObject.accountType;
+    // buyersDTO.accountType=buyersObject.accountType;
     buyersDTO.gstNumber=buyersObject.gstNumber;
     buyersDTO.phoneNo=buyersObject.phoneNo;
     buyersDTO.contactPerson=buyersObject.contactPerson;
