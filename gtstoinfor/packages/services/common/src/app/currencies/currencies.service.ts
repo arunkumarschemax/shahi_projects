@@ -136,7 +136,7 @@ export class CurrenciesService {
             return err;
         }
     }
-      async activateOrDeactivateCurrency(currencyReq: CurrencyRequest): Promise<CurrencyResponseModel> {
+      async activateOrDeactivateCurrency(currencyReq: any): Promise<CurrencyResponseModel> {
         try {
             const currencyExists = await this.getCurrencyById(currencyReq.currencyId);
             if (currencyExists) {

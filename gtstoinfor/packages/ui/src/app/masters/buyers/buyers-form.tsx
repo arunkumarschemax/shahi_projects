@@ -4,11 +4,12 @@ import { Form, Input, Button, Select, Card, Row, Col, Space, message } from 'ant
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import TextArea from 'antd/lib/input/TextArea';
-import { BuyerACcountTypes, BuyersDto, CurrencyDto } from '@project-management-system/shared-models';
-import { BuyersService, CurrencyService } from '@project-management-system/shared-services';
+import { BuyerACcountTypes, BuyersDto, CountryDto, CurrencyDto } from '@project-management-system/shared-models';
+import { BuyersService, CountryService, CurrencyService } from '@project-management-system/shared-services';
 import { useNavigate } from 'react-router-dom';
+import AlertMessages from '../../common/common-functions/alert-messages';
 
-// const countryService = new CountryService();
+const countryService = new CountryService();
 // const currencyService = new CurrencyService();
 
 /* eslint-disable-next-line */
@@ -48,7 +49,7 @@ export function BuyersForm(props: BuyersFormProps) {
 //   const paymentModeService = new PaymentmodesService;
   const [selectedpaymentmode, setSelectedPaymentModes] = useState<number>(null);
 //   const [paymentModeData, setPaymentModeData] = useState<PaymentmodesDto[]>([]);
-//   const [countries, setCountries] = useState<CountryDto[]>([]);
+  const [countries, setCountries] = useState<CountryDto[]>([]);
   const currencyService = new CurrencyService()
   const [currencies, setCurrencies] = useState<CurrencyDto[]>([]);
   const [selectedCurrency, setSelectedCurrency] = useState<number>(null);
@@ -57,29 +58,25 @@ export function BuyersForm(props: BuyersFormProps) {
 
   useEffect(() => {
     // getAllActivePaymentModes()
-    // getAllActiveCountries()
+    getAllActiveCountries()
     getAllActiveCurrencys()
   }, [])
 
 
-//   const getAllActiveCountries = () => {
-//     countryService.getAllActiveCountries().then((res) => {
-//       if (res.status) {
-//         setCountries(res.data);
-//       } else {
-//         if (res.intlCode) {
-//           AlertMessages.getErrorMessage(res.internalMessage);
-//         } else {
-//           AlertMessages.getErrorMessage(res.internalMessage);
-//         }
-//         setCountries([]);
-//       }
-//     })
-//       .catch((err) => {
-//         AlertMessages.getErrorMessage(err.message);
-//         setCountries([]);
-//       });
-//   }
+  const getAllActiveCountries = () => {
+    countryService.getAllActiveCountries().then((res) => {
+      if (res.status) {
+        setCountries(res.data);
+      } else {
+          AlertMessages.getErrorMessage(res.internalMessage);
+        setCountries([]);
+      }
+    })
+      .catch((err) => {
+        AlertMessages.getErrorMessage(err.message);
+        setCountries([]);
+      });
+  }
 
   const getAllActiveCurrencys = () => {
     currencyService.getAllActiveCurrencys().then((res) => {
@@ -439,7 +436,7 @@ export function BuyersForm(props: BuyersFormProps) {
                   },
                 ]}
               >
-                {/* <Select
+                <Select
                   placeholder="Select Country"
                   // onChange={getSkuCode}
                   allowClear
@@ -447,8 +444,8 @@ export function BuyersForm(props: BuyersFormProps) {
                   {countries.map(dropData => {
                     return <Option value={dropData.countryId}>{dropData.countryName}</Option>
                   })}
-                </Select> */}
-                <Input/>
+                </Select>
+                {/* <Input/> */}
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -542,10 +539,19 @@ export function BuyersForm(props: BuyersFormProps) {
               </Form.Item>
             </Col>
               </Row>
+              {/* <Row gutter={8}>
+              <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>Add Attributes</h1>
+              </Row>
+              <Row>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                <Button onClick={() => navigate('/masters/buyers/buyers-general-attributes-form')}>General</Button>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                <Button>Order</Button>
+              </Col>
+              </Row> */}
               </Card>
             </Col>
-          
-    
           </Row>
           <Row  gutter={24} justify={'end'}>
             { props.isUpdate === false && 

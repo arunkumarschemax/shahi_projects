@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
-import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
+import { Button, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
+import { UserOutlined, DashboardOutlined, PicCenterOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
-import { CommonHeader } from '../header/header';
-import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
+import { ProBreadcrumb, ProConfigProvider } from '@ant-design/pro-components';
 import logo from './logo.png'
-const { Sider, Content } = Layout;
-const { SubMenu } = Menu;
-import ProLayout, { DefaultFooter, MenuDataItem, SettingDrawer } from '@ant-design/pro-layout';
-import { getOperatingSystem, treeRouter } from '../../utils/common';
-import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
+import ProLayout from '@ant-design/pro-layout';
+import { treeRouter } from '../../utils/common';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShirt} from '@fortawesome/free-solid-svg-icons';
+
 const { useToken } = theme
 
 
@@ -81,6 +80,12 @@ export const baseRouterList = [
                 filepath: "company/division-grid",
             },
             {
+                label: "PaymentMethod",
+                key: "paymentmethod",
+                path: "paymentmethod/paymentmethod-view",
+                filepath: "paymentmethod/paymentmethod-view",
+            },
+            {
                 label: "Brands",
                 key: "brands",
                 path: "brands/brand-view",
@@ -119,8 +124,8 @@ export const baseRouterList = [
             {
                 label: "Items",
                 key: "items",
-                path: "items/items-form",
-                filepath: "items/items-form",
+                path: "items/item-grid",
+                filepath:"items/item-grid",
             },
             {
                 label: "Delivery Method",
@@ -139,8 +144,81 @@ export const baseRouterList = [
                 key: "item-sub-categories",
                 path: "item-sub-categories/item-sub-categories-view",
                 filepath: "item-sub-categories/item-sub-categories-view",
-            }
+            },
+            {
+                label: "Garments",
+                key: "garments",
+                path: "garments/garments-view",
+                filepath: "garments/garments-view",
+            },
+            {
+                label: "Garment Categories",
+                key: "Garment-categories",
+                path: "/masters/garmentcategory/garmentcategory-view",
+                filepath: "/masters/garmentcategory/garmentcategory-view",
+            },
+            {
+                label: "Payment Terms",
+                key: "paymentTerms",
+                path: "payment-terms/payment-terms-view",
+                filepath: "payment-terms/payment-terms-view",
+            },
+            {
+                label: "Package Terms",
+                key: "packageTerms",
+                path: "package-terms/package-terms-view",
+                filepath: "package-terms/package-terms-view",
+            },
+            {
+                label: "Delivery Terms",
+                key: "delivery-terms",
+                path: "delivery-terms/delivery-terms-view",
+                filepath: "delivery-terms/delivery-terms-view",
+            },
+            {
+                label: "Liscence Type",
+                key: "liscence-type",
+                path: "liscence-type/liscence-type-grid",
+                filepath: "liscence-type/liscence-type-grid",
+            },
+            {
+                label: "Components",
+                key: "components",
+                path: "components/components-view",
+                filepath: "components/components-view",
+            },
+            {
+                label: "Attributes",
+                key: "attributes",
+                path: "attributes/attributes-view",
+                filepath: "attributes/attributes-view",
+            },
         ],
+    },
+
+    
+    {
+        label: "Style Management",
+        key: "style-management",
+        path: "style-management",
+        icon:<FontAwesomeIcon icon={faShirt} />,
+        filepath: "style-management",
+        children: [
+            {
+                label: "Style",
+                key: "style-view",
+                path: 'style/style-grid',
+                filepath: 'style/style-grid',
+            },
+            {
+                label: "Component Mapping",
+                key: "component-mapping",
+                path: 'component-mapping/component-mapping-form',
+                filepath: 'component-mapping/component-mapping-form',
+            },
+            
+        ]
+
     },
     {
         label: "Orders",
@@ -178,7 +256,13 @@ export const baseRouterList = [
                 key: "version-grid",
                 path: "version-grid",
                 filepath: "version-grid",
-            }
+            },
+            // {
+            //     label: "Phase Wise Data",
+            //     key: "phase-wise-grid",
+            //     path: "phase-wise-grid",
+            //     filepath: "phase-wise-grid",
+            // }
         ],
     },
 ];

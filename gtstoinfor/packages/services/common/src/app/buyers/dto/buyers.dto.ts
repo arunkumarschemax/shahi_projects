@@ -12,8 +12,8 @@ export class BuyersDTO {
   @ApiProperty()
   clientName: string;
 
-  @ApiProperty()
-  accountType: string;
+  // @ApiProperty()
+  // accountType: string;
 
   @ApiProperty()
   gstNumber: string;
@@ -68,6 +68,7 @@ export class BuyersDTO {
 
   @ApiProperty()
   countryId:number;
+  countryName: string;
   
   @ApiProperty()
   isActive: boolean;

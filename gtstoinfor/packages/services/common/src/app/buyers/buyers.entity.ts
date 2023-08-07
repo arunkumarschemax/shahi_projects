@@ -1,4 +1,6 @@
 import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { Countries } from "../countries/countries.entity";
+import { BuyerGeneralAttributesEntity } from "./buyers-general.entity";
 // import { PaymentMode } from "../payment-mode/payment-mode.entity";
 // import { ShippingTerms } from "../shipping-terms/shipping-terms.entity";
 
@@ -23,12 +25,12 @@ export class Buyers {
   @Index({unique:true})
   clientName:string;
 
-  @Column("varchar",{
-    nullable:false,
-    length:50,
-    name:"account_type"
-  })
-  accountType:string;
+  // @Column("varchar",{
+  //   nullable:false,
+  //   length:50,
+  //   name:"account_type"
+  // })
+  // accountType:string;
     
   @Column("varchar",{
     nullable:true,
@@ -195,6 +197,13 @@ export class Buyers {
 //   @ManyToOne(type=>ShippingTerms, shippingTerms=>shippingTerms.shippingTermsId,{  nullable:false, })
 //     @JoinColumn({ name:"shipment_terms"})
 //     shippingTermsInfo: ShippingTerms;
-   
+
+
+    @ManyToOne(type=>Countries, country=>country.vendorInfo,{  nullable:false, })
+    @JoinColumn({ name:"country_id"})
+    countryInfo: Countries;
+
+    @OneToMany(type => BuyerGeneralAttributesEntity, attribute => attribute.buyerInfo,{cascade: true})
+    generalAttributesInfo : BuyerGeneralAttributesEntity
 
 }

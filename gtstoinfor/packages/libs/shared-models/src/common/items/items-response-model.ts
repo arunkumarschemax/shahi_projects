@@ -10,6 +10,10 @@ export class ItemsDto{
   uomId: number;
   remarks?: string;
   isActive?: boolean;
+  itemCategory?:string
+  itemSubCategory?:string
+  brand?:string
+  uom?:string
   createdAt?: Date;
   createdUser?: string | null;
   updatedAt?: Date;
@@ -27,6 +31,10 @@ export class ItemsDto{
   uomId: number,
   remarks?: string,
   isActive?: boolean,
+  itemCategory?:string,
+  itemSubCategory?:string,
+  brand?:string,
+  uom?:string,
   createdAt?: Date,
   createdUser?: string | null,
   updatedAt?: Date,
@@ -43,6 +51,10 @@ export class ItemsDto{
     this.uomId=uomId
     this.remarks=remarks
     this.isActive=isActive
+    this.itemCategory=itemCategory
+    this.itemSubCategory=itemSubCategory
+    this.brand=brand
+    this.uom=uom
     this.createdAt=createdAt
     this.createdUser=createdUser
     this.updatedAt=updatedAt

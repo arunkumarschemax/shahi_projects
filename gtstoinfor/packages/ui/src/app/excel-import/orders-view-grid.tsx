@@ -35,8 +35,6 @@ const AllOrdersGridView = () => {
         })
     }
 
-    console.log(gridData)
-
     const EstimatedETDDate = (value) => {
         if (value) {
             console.log(value)
@@ -75,7 +73,20 @@ const AllOrdersGridView = () => {
         getData();
     }
 
-    const columns = [
+    function convertToYYYYMMDD(inputDate) {
+        const formatsToTry = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY', 'YYYY-MM-DD'];
+        let formattedDate = null;
+        for (const format of formatsToTry) {
+            const parsedDate = moment(inputDate, format);
+            if (parsedDate.isValid()) {
+                formattedDate = parsedDate.format('YYYY-MM-DD');
+                break;
+            }
+        }
+        return formattedDate;
+    }
+
+    const columns: any = [
         {
             title: 'S No',
             key: 'sno',
@@ -84,6 +95,10 @@ const AllOrdersGridView = () => {
         {
             title: 'Production Plan Id',
             dataIndex: 'production_plan_id'
+        },
+        {
+            title: 'Production Plan Name',
+            dataIndex: 'prod_plan_type_name'
         },
         {
             title: 'Item code',
@@ -96,26 +111,32 @@ const AllOrdersGridView = () => {
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'order_qty_pcs',
+            align: 'right',
+            render: (text, record) => (
+                <>
+                    {Number(record.order_qty_pcs).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                </>
+            )
         },
         {
             title: 'Contracted Date',
             dataIndex: 'contracted_date',
             render: (text, record) => {
-                return record.contracted_date ? moment(record.contracted_date).format('YYYY-MM-DD') : '-'
+                return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
             }
         },
         {
             title: 'Requested Warehouse Date',
             dataIndex: 'requested_wh_date',
             render: (text, record) => {
-                return record.requested_wh_date ? moment(record.requested_wh_date).format('YYYY-MM-DD') : '-'
+                return record.requested_wh_date ? convertToYYYYMMDD(record.requested_wh_date) : '-'
             }
         },
         {
             title: 'Order Revised Date',
             dataIndex: 'last_update_date',
             render: (text, record) => {
-                return record.last_update_date ? moment(record.last_update_date).format('YYYY-MM-DD') : '-'
+                return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
             }
         },
         {

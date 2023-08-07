@@ -52,7 +52,7 @@ export class CurrenciesController {
       }
   }
   @Post('/activateOrDeactivateCurrency')
-  async activateOrDeactivateCurrency(@Body() currencyreq: CurrencyRequest): Promise<CurrencyResponseModel> {
+  async activateOrDeactivateCurrency(@Body() currencyreq: any): Promise<CurrencyResponseModel> {
       try {
           return await this.currenciesService.activateOrDeactivateCurrency(currencyreq);
       } catch (err) {

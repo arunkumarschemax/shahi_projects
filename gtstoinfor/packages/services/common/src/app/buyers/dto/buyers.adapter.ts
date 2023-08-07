@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Buyers } from '../buyers.entity';
 import { BuyersDTO } from './buyers.dto';
+import { Countries } from '../../countries/countries.entity';
 
 
 @Injectable()
@@ -15,7 +16,7 @@ export class BuyersAdapter {
     console.log(buyersDTO);
     buyer.clientCode=buyersDTO.clientCode;
     buyer.clientName=buyersDTO.clientName;
-    buyer.accountType=buyersDTO.accountType;
+    // buyer.accountType=buyersDTO.accountType;
     buyer.gstNumber=buyersDTO.gstNumber;
     buyer.contactPerson=buyersDTO.contactPerson;
     buyer.phoneNo=buyersDTO.phoneNo;
@@ -30,7 +31,8 @@ export class BuyersAdapter {
     buyer.pincode = buyersDTO.pincode;
     buyer.publicNote=buyersDTO.publicNote;
     buyer.privateNote=buyersDTO.privateNote;
-    // buyer.countryId = buyersDTO.countryId;
+    buyer.countryInfo = new Countries()
+    buyer.countryInfo.countryId = Number(buyersDTO.countryId)
     // buyer.paymentTerms=buyersDTO.paymentTerms;
     // buyer.shipmentTerms=buyersDTO.shipmentTerms;
     // buyer.paymentModeId=buyersDTO.paymentModeId;
@@ -54,7 +56,7 @@ export class BuyersAdapter {
     buyersDTO.buyerId=buyersObject.buyerId;
     buyersDTO.clientCode=buyersObject.clientCode;
     buyersDTO.clientName=buyersObject.clientName;
-    buyersDTO.accountType=buyersObject.accountType;
+    // buyersDTO.accountType=buyersObject.accountType;
     buyersDTO.gstNumber=buyersObject.gstNumber;
     buyersDTO.phoneNo=buyersObject.phoneNo;
     buyersDTO.contactPerson=buyersObject.contactPerson;
@@ -69,7 +71,11 @@ export class BuyersAdapter {
     buyersDTO.pincode = buyersObject.pincode;
     buyersDTO.publicNote=buyersObject.publicNote;
     buyersDTO.privateNote=buyersObject.privateNote;
-    // buyersDTO.countryId = buyersObject.countryId;
+    // const entity = new Countries()
+    // entity.countryId = buyersDTO.countryId;
+    // buyersDTO.countryId = entity.countryId;
+    buyersDTO.countryId = buyersObject.countryInfo.countryId;
+    buyersDTO.countryName = buyersObject.countryInfo.countryName;
     // buyersDTO.paymentTerms=buyersObject.paymentTerms;
     // buyersDTO.shipmentTerms=buyersObject.shipmentTerms;
     // buyersDTO.paymentModeId=buyersObject.paymentModeId;

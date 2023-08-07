@@ -95,8 +95,8 @@ const itemCategoryOnchange = (value) =>{
 }
   return (
  <Card title={<span style={{color:'black'}}>Items</span>}
-    style={{textAlign:'center'}} 
-     extra={props.isUpdate==true?"":<Link to='/masters/employee-details/employee-details-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+    style={{textAlign:'left'}} 
+     extra={props.isUpdate==true?"":<Link to='/masters/items/item-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
 
       <Form layout={'vertical'} form={form} initialValues={props.itemData} name="control-hooks"   onFinish={saveData}
