@@ -11,7 +11,7 @@ export class BuyerOrderAttributeInfo{
     attributeId: number;
 
     @ApiProperty()
-    buyerGeneralAttributeId: number;
+    buyerOrderAttributeId: number;
 
 
 

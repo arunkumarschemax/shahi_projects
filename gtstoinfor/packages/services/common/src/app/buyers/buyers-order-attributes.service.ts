@@ -29,7 +29,7 @@ export class BuyersOrderAttributeService {
                 entity.attributeName = record.attributeName;
                 entity.attributeValue = record.attributeValue; 
                 if(isUpdate){
-                    entity.buyerOrderAttributeId = record.buyerGeneralAttributeId;
+                    entity.buyerOrderAttributeId = record.buyerOrderAttributeId;
                     entity.updatedUser = req.updatedUser;
                 } else{
                     entity.createdUser = req.createdUser

@@ -118,7 +118,7 @@ export class BuyersController {
     }
 
     @Post('/createOrderAttribute')
-    async createOrderAttribute(@Body() req: BuyersOrderAttributeDto): Promise<BuyersOrderAttributeResponseModel> {
+    async createOrderAttribute(@Body() req: any): Promise<BuyersOrderAttributeResponseModel> {
         try {
             return await this.buyersOrderAttributeService.createOrderAttribute(req,false);
         } catch (err) {

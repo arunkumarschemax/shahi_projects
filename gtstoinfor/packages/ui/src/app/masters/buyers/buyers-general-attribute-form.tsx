@@ -310,4 +310,3 @@ export const BuyersGeneralAttributeForm = () => {
 }
 
 export default BuyersGeneralAttributeForm
-

@@ -326,6 +326,8 @@ export const BuyersOrderAttributeForm = () => {
     const [attributes,setAttributes] = useState<any[]>([])
     const [isUpdate,setIsUpdate] = useState<boolean>(false);
 
+    console.log(state,"useLocation")
+
     // useEffect(() => {
     //     getAttributes()
     // },[])
@@ -339,9 +341,10 @@ export const BuyersOrderAttributeForm = () => {
 
     const getByBuyerId = (id) => {
         const req =new BuyerRequest(id,'')
-        service.getByBuyerId(req).then(res => {
+        service.getBuyerId(req).then(res => {
             if(res.status){
                 setAttributes(res.data)
+                console.log(res.data,"getbuyerfunc")
                 setIsUpdate(true)
             } else{
                 getAttributes()
@@ -356,30 +359,36 @@ export const BuyersOrderAttributeForm = () => {
     };
 
     const getAttributes = () => {
-        attributeService.getAllActiveAttributes().then(res => {
+        const req = {
+            "attributeAgainst": "ORDER",
+            "isActive": true
+          }
+        attributeService.getAttributeByAttributeAgainst(req).then(res => {
             if(res.status){
                 setAttributes(res.data)
+                
             }
         })
     }
-
+  
+    console.log(attributes,"attributennnnnnnnnnnnn")
     
 
     const setAttributeInfo = (e,index,rowData) => {
         console.log(rowData,'---------------rowdata')
-        const req = new BuyersOrderAttributeInfoModel(rowData.attributeId,rowData.attributeName,e.target.value,rowData.buyerOrderAttributeId)
+        const req:any = new BuyersOrderAttributeInfoModel(rowData.attributeId,rowData.attributeName,e.target.value,rowData.buyerOrderAttributeId)
         console.log(req,'--------------req')
         setAttributeValue([...attributeValue,req])
     }
 
     const columns : ColumnsType<DataType> = [
-        {
-            title: 'S No',
-            key: 'sno',
-            width: '70px',
-            responsive: ['sm'],
-            render: (text, object, index) => (page-1) * 10 +(index+1)
-        },
+        // {
+        //     title: 'S No',
+        //     key: 'sno',
+        //     width: '70px',
+        //     responsive: ['sm'],
+        //     render: (text, object, index) => (page-1) * 10 +(index+1)
+        // },
         {
             title:'Name',
             dataIndex: 'attributeName'
@@ -390,7 +399,8 @@ export const BuyersOrderAttributeForm = () => {
             render:(value,row,index) => {
                 return(
                     <>
-                    {row.attributeValue ? <Input key={index} placeholder="Enter value" defaultValue={row.attributeValue}
+                    {row.attributeValue ? <Input key={index} placeholder="Enter value" 
+                     defaultValue={row.attributeValue}
                         onBlur={e=> setAttributeInfo(e,index,row)}/> : (
                         <Input key={index}placeholder="Enter value"
                         onBlur={e=> setAttributeInfo(e,index,row)}/>
@@ -411,6 +421,7 @@ export const BuyersOrderAttributeForm = () => {
     const onSubmit = () => {
         if(isUpdate){
             const req = new BuyersOrderAttributeRequest(0,state.state.id,attributeValue,'admin')
+            console.log(req,'update req')
             service.updateOrderAttribute(req).then(res => {
                 if(res.status){
                     AlertMessages.getSuccessMessage('Updated successfully')
@@ -447,7 +458,7 @@ export const BuyersOrderAttributeForm = () => {
     const [firstHalfData, secondHalfData] = splitData(attributes);
 
     return(
-        <Card title='Buyer Order Settings' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
+        <Card title='Buyer Order Configuration' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
             {
                 attributes.length <= 10 ? (<>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>
