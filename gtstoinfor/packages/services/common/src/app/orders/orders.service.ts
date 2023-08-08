@@ -104,12 +104,8 @@ export class OrdersService {
                                 if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId') {
                                     const orderDiffObj = new OrdersDifferenceEntity();
                                     if (existingDataKey === 'lastUpdateDate' || existingDataKey === 'requestedWhDate' || existingDataKey === 'contractedDate' || existingDataKey === 'EXF') {
-                                        console.log(details[existingDataKey], 'existingOld')
                                         const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
-                                        console.log(oldValue, 'oldValue');
-                                        console.log(dtoData[existingDataKey], 'existingNew')
                                         const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
-                                        console.log(newValue, 'newValue')
                                         orderDiffObj.oldValue = details[existingDataKey]
                                         orderDiffObj.newValue = dtoData[existingDataKey]
                                         orderDiffObj.columnName = orderColumnValues[existingDataKey]
@@ -257,7 +253,7 @@ export class OrdersService {
         if (req) {
             const deleteDiffData = await this.orderDiffRepo.deleteDiffData(req)
         }
-        if(req){
+        if (req) {
             const deleteOrdersData = await this.ordersRepository.deleteData(req)
         }
         const updatedData = await this.ordersChildRepo.getUpdatedData()
