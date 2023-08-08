@@ -11,11 +11,13 @@ import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
 import { FileUploadRepository } from './repository/upload.repository';
 import { FileUploadEntity } from './entities/upload-file.entity';
-import { DataSource, Entity, EntityManager } from 'typeorm';
+import { DataSource, Entity, EntityManager, getManager } from 'typeorm';
 import { FileIdReq } from './models/file-id.req';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { GenericTransactionManager } from '../../typeorm-transactions';
-
+import { AppDataSource } from '../app-datasource';
+let moment = require('moment');
+moment().format();
 
 @Injectable()
 export class OrdersService {
@@ -101,19 +103,41 @@ export class OrdersService {
                             for (const existingDataKey of existingDataKeys) {
                                 if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId') {
                                     const orderDiffObj = new OrdersDifferenceEntity();
-                                    orderDiffObj.columnName = orderColumnValues[existingDataKey]
-                                    orderDiffObj.oldValue = details[existingDataKey]
-                                    orderDiffObj.newValue = dtoData[existingDataKey]
-                                    orderDiffObj.displayName = existingDataKey
-                                    orderDiffObj.productionPlanId = dtoData.productionPlanId
-                                    orderDiffObj.version = dtoData.version
-                                    orderDiffObj.fileId = id
-                                    if (orderDiffObj.oldValue != orderDiffObj.newValue) {
-                                        const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
-                                        if (!orderDiffSave) {
-                                            flag.add(false)
-                                            await transactionManager.releaseTransaction();
-                                            break;
+                                    if (existingDataKey === 'lastUpdateDate' || existingDataKey === 'requestedWhDate' || existingDataKey === 'contractedDate' || existingDataKey === 'EXF') {
+                                        const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
+                                        const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
+                                        orderDiffObj.oldValue = details[existingDataKey]
+                                        orderDiffObj.newValue = dtoData[existingDataKey]
+                                        orderDiffObj.columnName = orderColumnValues[existingDataKey]
+                                        orderDiffObj.displayName = existingDataKey
+                                        orderDiffObj.productionPlanId = dtoData.productionPlanId
+                                        orderDiffObj.version = dtoData.version
+                                        orderDiffObj.fileId = id
+                                        if (oldValue != newValue) {
+                                            const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
+                                            if (!orderDiffSave) {
+                                                flag.add(false)
+                                                await transactionManager.releaseTransaction();
+                                                break;
+                                            }
+                                        } else {
+                                            continue;
+                                        }
+                                    } else {
+                                        orderDiffObj.oldValue = details[existingDataKey]
+                                        orderDiffObj.newValue = dtoData[existingDataKey]
+                                        orderDiffObj.columnName = orderColumnValues[existingDataKey]
+                                        orderDiffObj.displayName = existingDataKey
+                                        orderDiffObj.productionPlanId = dtoData.productionPlanId
+                                        orderDiffObj.version = dtoData.version
+                                        orderDiffObj.fileId = id
+                                        if (orderDiffObj.oldValue != orderDiffObj.newValue) {
+                                            const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
+                                            if (!orderDiffSave) {
+                                                flag.add(false)
+                                                await transactionManager.releaseTransaction();
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -229,6 +253,9 @@ export class OrdersService {
         if (req) {
             const deleteDiffData = await this.orderDiffRepo.deleteDiffData(req)
         }
+        if (req) {
+            const deleteOrdersData = await this.ordersRepository.deleteData(req)
+        }
         const updatedData = await this.ordersChildRepo.getUpdatedData()
         const data = await this.ordersChildRepo.find({
             where: { fileId: updatedData[0]?.fileId },
@@ -272,12 +299,17 @@ export class OrdersService {
         entity.fileName = filename;
         entity.filePath = filePath;
         entity.status = 'uploading';
-        const save = await this.fileUploadRepo.save(entity)
-        if (save) {
-            return new CommonResponseModel(true, 1, 'uploaded successfully', save);
-        }
-        else {
-            return new CommonResponseModel(false, 0, 'uploaded failed', save);
+        const file = await this.fileUploadRepo.findOne({ where: { fileName: filename } })
+        if (file) {
+            return new CommonResponseModel(false, 0, 'File with same name already uploaded');
+        } else {
+            const save = await this.fileUploadRepo.save(entity)
+            if (save) {
+                return new CommonResponseModel(true, 1, 'uploaded successfully', save);
+            }
+            else {
+                return new CommonResponseModel(false, 0, 'uploaded failed', save);
+            }
         }
     }
 

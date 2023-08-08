@@ -17,6 +17,7 @@ import PhaseWiseData from "./excel-import/phase-wise-data"
 import SupplierForm from "./masters/supplier/supplier-form"
 import SupplierView from "./masters/supplier/supplier-view"
 import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared-models"
+import PoFileImport from "./nike/po-file-import"
 
 
 export const AppRoutes = () => {
@@ -53,6 +54,9 @@ export const AppRoutes = () => {
                     <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
                     {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
                 </Route>
+                <Route path='/nike'>
+                        <Route path='file-import' element={<PoFileImport />} />
+                    </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
@@ -94,6 +98,9 @@ export const AppRoutes = () => {
                         <Route path='version-grid' element={<VersionChanges />} />
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 
+                    </Route>
+                    <Route path='/nike'>
+                        <Route path='file-import' element={<PoFileImport />} />
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

@@ -74,11 +74,10 @@ const AllOrdersGridView = () => {
     }
 
     function convertToYYYYMMDD(inputDate) {
-        const formatsToTry = ['DD-MM-YYYY', 'MM/DD/YYYY'];
+        const formatsToTry = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY', 'YYYY-MM-DD'];
         let formattedDate = null;
-
         for (const format of formatsToTry) {
-            const parsedDate = moment(inputDate, format, true);
+            const parsedDate = moment(inputDate, format);
             if (parsedDate.isValid()) {
                 formattedDate = parsedDate.format('YYYY-MM-DD');
                 break;
