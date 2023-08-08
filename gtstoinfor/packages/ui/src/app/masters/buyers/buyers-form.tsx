@@ -172,7 +172,7 @@ export function BuyersForm(props: BuyersFormProps) {
  // props.customersData.currency=Number(props.customersData.currency);
   return (
     <>
-    <Card title={props.isUpdate ? 'Update Buyer' : 'Add Buyer'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Update Buyer' : 'Add Buyer'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>} size='small'>
         <Form form={form} onFinish={saveData} initialValues={props.buyersData} layout="vertical">
           <Form.Item name="buyerId" style={{ display: "none" }} >
             <Input hidden />
@@ -539,17 +539,17 @@ export function BuyersForm(props: BuyersFormProps) {
               </Form.Item>
             </Col>
               </Row>
-              <Row gutter={8}>
+              {/* <Row gutter={8}>
               <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>Add Attributes</h1>
               </Row>
               <Row>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                <Button>General</Button>
+                <Button onClick={() => navigate('/masters/buyers/buyers-general-attributes-form')}>General</Button>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                 <Button>Order</Button>
               </Col>
-              </Row>
+              </Row> */}
               </Card>
             </Col>
           </Row>

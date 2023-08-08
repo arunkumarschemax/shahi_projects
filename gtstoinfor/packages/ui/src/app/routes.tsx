@@ -52,6 +52,7 @@ import { GarmentCategoryGrid } from "./masters/garment category/garment-category
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
 import { GarmentsGrid } from "./masters/garments/garments-grid"
 import GarmentsForm from "./masters/garments/garments-form"
+import BuyersGeneralAttributeForm from "./masters/buyers/buyers-general-attribute-form"
 import ComponentsForm from "./masters/Components/components-form"
 import ComponentsGrid from "./masters/Components/components-grid"
 import AttributesGrid from "./masters/attributes/attributes-grid"
@@ -190,9 +191,11 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateData={(undefined) => { }}/>}/>
+                        <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
                     </Route>
                     
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
+
                     <Route path="style-management">
                     <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
                 isUpdate={false}

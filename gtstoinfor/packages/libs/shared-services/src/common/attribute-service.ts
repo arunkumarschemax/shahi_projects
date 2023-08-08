@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllAttributesResponse, AttributeResponse, AttributesDto } from '@project-management-system/shared-models';
+import { AllAttributesResponse, AttributeAgainstRequest, AttributeResponse, AttributesDto } from '@project-management-system/shared-models';
 
 
 export class AttributeService extends CommonAxiosService{
@@ -29,6 +29,9 @@ async  getAllActiveAttributes(): Promise<AllAttributesResponse> {
     return this.axiosPostCall(this.URL + '/getAllActiveAttributes')
 }
 
+async  getAttributeByAttributeAgainst(attributeAgainst: AttributeAgainstRequest): Promise<AllAttributesResponse> {
+    return this.axiosPostCall(this.URL + '/getAttributeByAttributeAgainst',attributeAgainst)
+}
 // async getActiveComponentById(req : ComponentRequest): Promise<ComponentResponseModel> {
 //     return this.axiosPostCall(this.URL + '/getDeliveryMethodById',req)
 //   }

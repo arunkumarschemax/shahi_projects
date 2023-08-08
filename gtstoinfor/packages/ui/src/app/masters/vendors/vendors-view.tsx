@@ -495,9 +495,7 @@ export function VendorsView(
     style={{textAlign:'center'}} headStyle={{backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/vendors-form' ><Button className='panel_button' >Create </Button></Link>}
     
     > */}
-    <Card title='Vendors' extra={<span><Button onClick={() => navigate('/masters/vendors/vendors-form')} type={'primary'}>New</Button></span>}>
-
-     <br></br>
+    <Card size='small' title='Vendors' extra={<span><Button onClick={() => navigate('/masters/vendors/vendors-form')} type={'primary'}>New</Button></span>}>
      <Row gutter={40}>
       <Col>
           <Card title={'Total Vendors : ' + vendorsData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
@@ -608,7 +606,8 @@ export function VendorsView(
             }
           }}
           onChange={onChange}
-          bordered />
+          bordered
+          size='small' />
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
             <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
