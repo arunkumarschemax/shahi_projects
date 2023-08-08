@@ -5,6 +5,7 @@ import { EmployeeDetailsResponse, EmployeeMarritalStatusEnum } from '@project-ma
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { CurrencyService, EmployeeDetailsService } from '@project-management-system/shared-services';
 import dayjs from 'dayjs';
+import moment from 'moment';
 
 
 export interface EmployeeDetailsFormProps {
@@ -26,11 +27,20 @@ export const EmployeeDetsilsForm = (props:EmployeeDetailsFormProps) => {
   if(!props.isUpdate){
     createdUser= 'admin';
   }
+
+  const dateOfBirth = moment().subtract(18, 'years');
+  const date = dayjs(moment(dateOfBirth).format('YYYY-MM-DD'))
+  console.log(dateOfBirth.format('YYYY-MM-DD'))
+
+
+  useEffect(() =>{
+    form.setFieldsValue({dateOfBirth:date})
+  },[])
   
   const saveEmployee = (data: EmployeeDetailsResponse) => {
     data.employeeId = 0;
-   if( data.mobileNumber == data.alterNativeMobileNumber){
-    message.info('Please Add alternative mobile number')
+   if((props.isUpdate && data.mobileNumber == data.alterNativeMobileNumber) || (!props.isUpdate && data.mobileNumber == data.alterNativeMobileNumber)){
+    message.info('Please Add alternate mobile number')
     form.resetFields(['alterNativeMobileNumber'])
    }else{
     service.createEmployee(data).then((res) => {
@@ -54,8 +64,12 @@ export const EmployeeDetsilsForm = (props:EmployeeDetailsFormProps) => {
   const saveData = (values: EmployeeDetailsResponse) => {
     setDisable(false)
       if (props.isUpdate) {
-        console.log(props.isUpdate)
-        props.updateItem(values);
+        if(values.mobileNumber == values.alterNativeMobileNumber){
+        form.resetFields(['alterNativeMobileNumber'])
+          message.info('must add alternate number not the same')
+        }else{
+          props.updateItem(values);
+        }
       } else {
         setDisable(false)
         saveEmployee(values);
@@ -67,7 +81,7 @@ const alertNativeOnchange = (value) =>{
   const number1= form.getFieldValue('mobileNumber')
   if(number1 == value){
   console.log('hiiii')
-    message.info('Enter alternative mobile number')
+    message.info('Enter alternate mobile number')
   }
   
 }
@@ -75,6 +89,11 @@ const alertNativeOnchange = (value) =>{
   const onReset = () => {
     form.resetFields();
   };
+
+  const disabledDate = (current) => {
+    return current && current > date;
+  };
+
   return (
  <Card title={<span style={{color:'black'}}>Add Employee</span>}
     style={{textAlign:'left'}} 
@@ -97,6 +116,10 @@ const alertNativeOnchange = (value) =>{
               {
                 required: true,
                 message:'First Name Is Required'
+              },
+              {
+                pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                message: `Should contain only alphabets.`
               }
             ]}>
           <Input />
@@ -121,9 +144,9 @@ const alertNativeOnchange = (value) =>{
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}>
            <Form.Item  name="dateOfBirth" label="Date of Birth"
-            rules={[ { required: true, message: 'Please select from date' }]}
+            rules={[ { required: true, message: 'Please select from DOB' }]}
                >
-                <DatePicker style={{ width: '95%', }} showToday/>
+                <DatePicker style={{ width: '95%', }} disabledDate={disabledDate}/>
                </Form.Item>
            </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> <Form.Item
@@ -132,12 +155,12 @@ const alertNativeOnchange = (value) =>{
           rules={[
             {
               required: true,
-              message:'Last Name Is Required'
+              message:'MobileNumber Is Required'
             },
             {
               pattern: /^[0-9]{10}$/, 
               message:'Invalid phone number'
-            }
+            },
           ]}
         >
           <Input />
@@ -146,11 +169,11 @@ const alertNativeOnchange = (value) =>{
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> 
           <Form.Item
           name="alterNativeMobileNumber"
-          label="Alter Native Number"
+          label="Alternate Number"
           rules={[
             {
               required: true,
-              message:'AlterNative number s Is Required'
+              message:'AlterNate number Is Required'
             },
             {
               pattern: /^[0-9]{10}$/, 
@@ -181,11 +204,11 @@ const alertNativeOnchange = (value) =>{
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}>
            <Form.Item
           name="pinCode"
-          label="Postal Code"
+          label="Postalcode"
           rules={[
             {
               required: true,
-              message:'PinCode Is Required'
+              message:'Postalcode Is Required'
             },{
               pattern: /^[0-9]{6}$/,
               message:'please enter a valid pin number'
