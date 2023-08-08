@@ -1,8 +1,7 @@
-import { Button, Card, Popconfirm, Table, message } from 'antd'
+import { Button, Card, Popconfirm, Table, Tooltip, message } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { DeleteOutlined, UndoOutlined } from '@ant-design/icons';
+import { UndoOutlined } from '@ant-design/icons';
 import { OrdersService } from '@project-management-system/shared-services';
-import AlertMessages from '../common/common-functions/alert-messages';
 import moment from 'moment';
 import { ColumnProps } from 'antd/es/table';
 import { FileIdReq } from '@project-management-system/shared-models';
@@ -10,24 +9,20 @@ import { FileIdReq } from '@project-management-system/shared-models';
 export function FileRevert() {
     const [page, setPage] = React.useState(1);
     const [pageSize, setPageSize] = useState(1);
+    const service = new OrdersService()
+    const [data, setData] = useState<any[]>([])
 
 
     useEffect(() => {
         getUploadFilesData()
     }, [])
 
-    const service = new OrdersService()
-
-    const [data, setData] = useState<any[]>([])
-
     const getUploadFilesData = () => {
         service.getUploadFilesData().then((res) => {
             if (res.status) {
                 setData(res.data)
-                message.success(res.internalMessage)
             } else {
                 message.error(res.internalMessage)
-
             }
         })
     }
@@ -37,6 +32,7 @@ export function FileRevert() {
         req.fileId = value
         service.revertFileData(req).then((res) => {
             if (res.status) {
+                getUploadFilesData()
                 message.success(res.internalMessage)
             } else {
                 message.error(res.internalMessage)
@@ -56,13 +52,21 @@ export function FileRevert() {
             dataIndex: 'uploadedDate',
             render: (value, record) => {
                 return (
-                    moment(value).format('YYYY-MM-DD')
+                    moment(value).utc().format('YYYY-MM-DD HH:mm:ss')
                 )
             }
         },
         {
             title: 'File Name',
             dataIndex: 'fileName'
+        },
+        {
+            title: 'Upload Status',
+            dataIndex: 'status'
+        },
+        {
+            title: 'Uploaded User',
+            dataIndex: 'createdUser'
         },
         {
             title: 'Action',
@@ -78,7 +82,7 @@ export function FileRevert() {
                                 cancelText="No"
                                 onConfirm={() => revertFileData(record?.fileId)}
                             >
-                                <Button icon={<UndoOutlined  style={{ color: 'red' }} />} />
+                                <Button icon={<UndoOutlined style={{ color: 'red' }} />}>Revert File</Button>
                             </Popconfirm>
                         )}
                         {!isFirstRecord && <></>}
@@ -91,7 +95,7 @@ export function FileRevert() {
     return (
         <>
             <Card
-                title="Revert Uploaded Files">
+                title="Uploaded Files List">
                 <Table
                     columns={columns}
                     dataSource={data}

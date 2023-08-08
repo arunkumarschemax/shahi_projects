@@ -11,17 +11,17 @@ export class FileUploadRepository extends Repository<FileUploadEntity> {
         super(fileUpload.target, fileUpload.manager, fileUpload.queryRunner);
     }
 
-    async getFilesData (): Promise<any[]> {
+    async getFilesData(): Promise<any[]> {
         const query = this.createQueryBuilder('fup')
-        .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath, fup.created_at as uploadedDate`)
-        .where(`fup.is_active = 1`)
-        .orderBy(`fup.created_at`, 'DESC')
+            .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath, fup.created_at as uploadedDate, fup.created_user as createdUser, fup.status as status`)
+            .where(`fup.is_active = 1`)
+            .orderBy(`fup.created_at`, 'DESC')
         return await query.getRawMany();
     }
 
-    async deleteChildData(id:number): Promise<void> {
+    async deleteChildData(id: number): Promise<void> {
         const queryBuilder = this.createQueryBuilder('fup');
         queryBuilder.where(`id = '${id}'`);
         await queryBuilder.delete().execute();
-      }
+    }
 }

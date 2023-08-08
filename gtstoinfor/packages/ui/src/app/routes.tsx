@@ -12,6 +12,9 @@ import ChangesGrid from "./excel-import/changes-grid"
 import AllOrdersGridView from "./excel-import/orders-view-grid"
 import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
+import VersionChanges from "./excel-import/version-wise-table"
+import PhaseWiseData from "./excel-import/phase-wise-data"
+import PoFileImport from "./nike/po-file-import"
 
 
 export const AppRoutes = () => {
@@ -35,7 +38,12 @@ export const AppRoutes = () => {
                     <Route path='changes-view' key='/changes-view' element={<ChangesGrid />} />
                     <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
                     <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
+                    <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
+                    {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
                 </Route>
+                <Route path='/nike'>
+                        <Route path='file-import' element={<PoFileImport />} />
+                    </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
@@ -64,6 +72,12 @@ export const AppRoutes = () => {
                         <Route path='changes-view' element={<ChangesGrid />} />
                         <Route path='grid-view' element={<AllOrdersGridView />} />
                         <Route path='revert-orders' element={<FileRevert />} />
+                        <Route path='version-grid' element={<VersionChanges />} />
+                        {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
+
+                    </Route>
+                    <Route path='/nike'>
+                        <Route path='file-import' element={<PoFileImport />} />
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

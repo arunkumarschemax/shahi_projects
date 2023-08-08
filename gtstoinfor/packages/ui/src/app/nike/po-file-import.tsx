@@ -9,7 +9,7 @@ import { UndoOutlined } from '@ant-design/icons';
 import { FileStatusReq } from '@project-management-system/shared-models';
 
 
-export default function ExcelImport() {
+export default function PoFileImport() {
   const [loading, setLoading] = useState(false);
   const ordersService = new OrdersService();
   const [selectedFile, setSelectedFile] = useState(null);

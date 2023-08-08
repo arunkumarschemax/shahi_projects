@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
+import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined, CheckOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { CommonHeader } from '../header/header';
 import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
@@ -89,11 +89,40 @@ export const baseRouterList = [
                 filepath: "grid-view",
             },
             {
-                label: "Revert Orders",
+                label: "Uploaded Files",
                 key: "revert-orders",
                 path: "revert-orders",
                 filepath: "revert-orders",
-            }
+            },
+            {
+                label: "Versions Data",
+                key: "version-grid",
+                path: "version-grid",
+                filepath: "version-grid",
+            },
+            // {
+            //     label: "Phase Wise Data",
+            //     key: "phase-wise-grid",
+            //     path: "phase-wise-grid",
+            //     filepath: "phase-wise-grid",
+            // }
+        ],
+    },
+    {
+        label: "Nike",
+        key: "nike",
+        path: "nike",
+        icon: <CheckOutlined />,
+        filepath: "nike",
+        children: [
+            {
+                label: "Add PO",
+                key: "file-import",
+                path: "file-import",
+                filepath: "file-import",
+            },
+           
+           
         ],
     },
 ];

@@ -52,4 +52,9 @@ export class FileUploadEntity {
     })
     isActive: boolean;
 
+    @Column("varchar", {
+        nullable: true,
+        name: "status"
+    })
+    status: string;
 }
