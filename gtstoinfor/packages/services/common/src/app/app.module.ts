@@ -29,6 +29,7 @@ import { AttributeModule } from './attributes/attribute.module';
 import { ComponentsModule } from './components/components.module';
 import { GarmentCategoriesModule } from './garment-category/garment-category.module';
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
+import { TaxesModule } from './taxes/taxes.module';
 
 
 @Module({
@@ -63,7 +64,7 @@ import { ComponentMappingModule } from './components-mapping/component-mapping.m
     AttributeModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,TaxesModule],
   controllers: [AppController],
   providers: [AppService],
 })

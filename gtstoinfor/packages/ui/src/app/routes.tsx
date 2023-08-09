@@ -58,6 +58,8 @@ import ComponentsGrid from "./masters/Components/components-grid"
 import AttributesGrid from "./masters/attributes/attributes-grid"
 import AttributesForm from "./masters/attributes/attributes-form"
 import ComponentMappingView from "./components-mapping/components-mapping-view"
+import TaxesForm from "./masters/taxes/taxes-form"
+import TaxesGrid from "./masters/taxes/taxes-grid"
 
 
 export const AppRoutes = () => {
@@ -124,6 +126,16 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+
+
+<Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateTax={(undefined) => { }}/>} />
+                    <Route path='taxes/taxes-grid' element={<TaxesGrid />} />
+
+
+                    
                     <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
 
                         <Route path='buyers/buyers-view' element={<BuyersView />} />
