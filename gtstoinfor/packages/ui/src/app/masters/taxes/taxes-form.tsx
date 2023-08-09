@@ -94,7 +94,7 @@ const onBlur=() =>{
     
    <Card title={'Taxes'}
     
-    extra={props.isUpdate==true?"":<Link to='/masters/taxes/taxes-grid' ><Button className='panel_button' >View </Button></Link>}
+    extra={props.isUpdate==true?"":<Link to='/masters/taxes/taxes-grid' ><Button className='panel_button' type={'primary'}>View </Button></Link>}
     >
 
       <Form form={form} onFinish={saveData} initialValues={props.taxesData} layout="vertical" name="control-hooks"> 
@@ -178,11 +178,11 @@ const onBlur=() =>{
           <Button type="primary"disabled={disable} htmlType="submit" >
             Submit
           </Button>
-          {(props.isUpdate===false) &&
+          {/* {(props.isUpdate===false) && */}
          <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
             Reset
           </Button>
-          }
+          {/* } */}
          </Col>
       </Row>
       </Form>

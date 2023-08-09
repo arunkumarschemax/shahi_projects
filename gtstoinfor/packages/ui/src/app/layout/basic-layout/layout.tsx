@@ -188,6 +188,12 @@ export const baseRouterList = [
                 filepath: "delivery-terms/delivery-terms-view",
             },
             {
+                label: "Locations",
+                key: "locations",
+                path: "locations/locations-view",
+                filepath: "locations/locations-view",
+            },
+            {
                 label: "Profit Center",
                 key: "profit-center",
                 path: "profit-center/profit-center-view",

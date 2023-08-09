@@ -183,6 +183,13 @@ export function OperationsGrid(
       render: (text, object, index) => (page-1) * 10 +(index+1)
       },
       {
+        title: "Group Name",
+        dataIndex: "operationGroupName",
+        sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
+        sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps("operationCode"),
+      },
+      {
         title: "Operation Name",
         dataIndex: "operationName",
         sorter: (a, b) => a.operationName.localeCompare(b.operationName),
@@ -202,12 +209,12 @@ export function OperationsGrid(
         ...getColumnSearchProps('isActive'),
         sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
         sortDirections: ["ascend", "descend"],
-        // render: (isActive, rowData) => (
-        //   <>
-        //     {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+        render: (isActive, rowData) => (
+          <>
+            {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
             
-        //   </>
-        // ),
+          </>
+        ),
         // filters: [
         //   {
         //     text: 'Active',
@@ -276,7 +283,9 @@ export function OperationsGrid(
   } 
 
   return (
-    <Card title='Operations' extra={<span><Button onClick={() => navigate('/masters/operations/operation-form')} type={'primary'}>New</Button></span>}>
+    <Card title='Operations' 
+    // extra={<span><Button onClick={() => navigate('/masters/operations/operation-form')} type={'primary'}>New</Button></span>}
+    >
 
      <br></br>
      <Row gutter={24} >
