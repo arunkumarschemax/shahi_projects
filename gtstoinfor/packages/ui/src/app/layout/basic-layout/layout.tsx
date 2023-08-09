@@ -121,7 +121,12 @@ export const baseRouterList = [
                 path: "file-import",
                 filepath: "file-import",
             },
-           
+            {
+                label: "Factory Report",
+                key: "factory-report",
+                path: "factory-report",
+                filepath: "factory-report",
+            },
            
         ],
     },
