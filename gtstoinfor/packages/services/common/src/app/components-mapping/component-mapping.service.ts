@@ -21,34 +21,37 @@ export class ComponentMappingService{
     ){}
 
     async createComponentMapping(req:ComponentMappingDto,isUpdate:boolean): Promise<ComponentMappingResponseModel>{
-        console.log(req,'-----------req')
         try{
-            for(const rec of req.componentDeatils){
-                const entity = new ComponentMappingEntity()
-                entity.componentMappingId = req.componentMappingId;
-                const styleEntity = new Style()
-                styleEntity.styleId = req.styleId;
-                entity.styleInfo =styleEntity;
-                const garmantCategoryEntity = new GarmentCategory()
-                garmantCategoryEntity.garmentCategoryId = req.garmentCategoryId;
-                entity.garmentcategoryInfo = garmantCategoryEntity;
-                const garmentEntity = new Garments()
-                garmentEntity.garmentId = req.garmentId;
-                entity.garmentInfo = garmentEntity;
-                const componentEntity = new Components()
-                componentEntity.componentId = rec.componentId;
-                entity.componentInfo = componentEntity;
-                if(isUpdate){
-                    entity.componentMappingId = req.componentMappingId;
-                    entity.updatedUser = req.updatedUser
-                } else {
-                    entity.createdUser = req.createdUser
-                }
-                
-                const componentSave = await this.componentMappingRepo.save(entity)
+            const checkStyle = await this.componentMappingRepo.find({where:{styleInfo:{styleId:req.styleId}}})
+            if(checkStyle.length > 0){
+              return new ComponentMappingResponseModel(false,0,'Style already exists')
+            } else {
+              for(const rec of req.componentDeatils){
+                  const entity = new ComponentMappingEntity()
+                  entity.componentMappingId = req.componentMappingId;
+                  const styleEntity = new Style()
+                  styleEntity.styleId = req.styleId;
+                  entity.styleInfo =styleEntity;
+                  const garmantCategoryEntity = new GarmentCategory()
+                  garmantCategoryEntity.garmentCategoryId = req.garmentCategoryId;
+                  entity.garmentcategoryInfo = garmantCategoryEntity;
+                  const garmentEntity = new Garments()
+                  garmentEntity.garmentId = req.garmentId;
+                  entity.garmentInfo = garmentEntity;
+                  const componentEntity = new Components()
+                  componentEntity.componentId = rec.componentId;
+                  entity.componentInfo = componentEntity;
+                  if(isUpdate){
+                      entity.componentMappingId = req.componentMappingId;
+                      entity.updatedUser = req.updatedUser
+                  } else {
+                      entity.createdUser = req.createdUser
+                  }
+                  
+                  const componentSave = await this.componentMappingRepo.save(entity)
+              }
+              return new ComponentMappingResponseModel(true,1,'Mapped Successfully')
             }
-            return new ComponentMappingResponseModel(true,1,'Mapped Successfully')
-
         } catch(err){
             throw err
         }

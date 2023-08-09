@@ -4,34 +4,15 @@ import { Form, Input, Button, Select, Card, Row, Col, Space, message } from 'ant
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import TextArea from 'antd/lib/input/TextArea';
-import { BuyerACcountTypes, BuyersDto, CountryDto, CurrencyDto } from '@project-management-system/shared-models';
-import { BuyersService, CountryService, CurrencyService } from '@project-management-system/shared-services';
+import { BuyerACcountTypes, BuyersDto, CountryDto, CurrencyDto, PaymentMethodDto, PaymentTermsDto } from '@project-management-system/shared-models';
+import { BuyersService, CountryService, CurrencyService, PaymentMethodService, PaymentTermsService } from '@project-management-system/shared-services';
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
-const countryService = new CountryService();
 // const currencyService = new CurrencyService();
 
 /* eslint-disable-next-line */
 const { Option } = Select;
-const layout = {
-  labelCol: {
-    span: 10,
-  },
-  wrapperCol: {
-    span: 8,
-  },
-};
-
-
-const tailLayout = {
-  wrapperCol: {
-    offset: 10,
-    span: 10,
-  },
-};
-
-
 
 export interface BuyersFormProps {
   buyersData: BuyersDto;
@@ -48,18 +29,23 @@ export function BuyersForm(props: BuyersFormProps) {
   const buyerService = new BuyersService;
 //   const paymentModeService = new PaymentmodesService;
   const [selectedpaymentmode, setSelectedPaymentModes] = useState<number>(null);
-//   const [paymentModeData, setPaymentModeData] = useState<PaymentmodesDto[]>([]);
+  const paymentMethodService =  new PaymentMethodService()
+  const [paymentMethodData, setPaymentMethodData] = useState<PaymentMethodDto[]>([]);
+  const countryService = new CountryService();
   const [countries, setCountries] = useState<CountryDto[]>([]);
   const currencyService = new CurrencyService()
   const [currencies, setCurrencies] = useState<CurrencyDto[]>([]);
   const [selectedCurrency, setSelectedCurrency] = useState<number>(null);
   const [disable, setDisable] = useState<boolean>(false)
-  // const [cusAccountTypes, setCusAccountTypes] = useState<any[]>([]);
+  const [paymentTerms,setPaymentTerms] = useState<PaymentTermsDto[]>([])
+  const paymentTermsService = new PaymentTermsService()
 
   useEffect(() => {
     // getAllActivePaymentModes()
     getAllActiveCountries()
     getAllActiveCurrencys()
+    getAllPaymentMethods()
+    getAllPaymentTerms()
   }, [])
 
 
@@ -92,6 +78,23 @@ export function BuyersForm(props: BuyersFormProps) {
         setCurrencies([]);
       });
   }
+
+  const getAllPaymentMethods = () => {
+    paymentMethodService.getAllActiveMethod().then(res => {
+      if(res.status){
+        setPaymentMethodData(res.data)
+      }
+    })
+  }
+
+  const getAllPaymentTerms = () => {
+    paymentTermsService.getAllPaymentTerms().then(res => {
+      if(res.status){
+        setPaymentTerms(res.data)
+      }
+    })
+  }
+
   const handleCurrency = (value) => {
     setSelectedCurrency(value);
   }
@@ -331,9 +334,17 @@ export function BuyersForm(props: BuyersFormProps) {
                     required: false,
                   },
                 ]}
-                initialValue='NA'
               >
-                <Input  />
+                 <Select
+                  placeholder="Select Payment Terms"
+                  allowClear
+                  showSearch
+                  optionFilterProp="children"
+                >
+                  {paymentTerms.map(e => {
+                    return <Option key={e.paymentTermsId} value={e.paymentTermsId} >{e.paymentTermsName}</Option>
+                  })}
+                </Select>
               </Form.Item>
             </Col>
             </Row>
@@ -354,18 +365,18 @@ export function BuyersForm(props: BuyersFormProps) {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item
-                name="paymentModeId"
-                label="Payment Mode"
+                name="paymentMethodId"
+                label="Payment Method"
                 rules={[
                   {
                     required: true, message: 'Missing payment mode',
                   },
                 ]}
               >
-                {/* <Select
+                <Select
                   showSearch
                   // style={{ width: 200 }}
-                  placeholder="Select Payment mode"
+                  placeholder="Select Payment method"
                   optionFilterProp="children"
                   onChange={handlePaymentMode}
                   onFocus={onFocus}
@@ -373,12 +384,11 @@ export function BuyersForm(props: BuyersFormProps) {
                   onSearch={onSearch}
                   
                 >
-                  <Option key={0} value={null}>Select Payment</Option>
-                  {paymentModeData.map((paymentMode) => {
-                    return <Option key={paymentMode.paymentModeId} value={paymentMode.paymentModeId}>{paymentMode.paymentMode}</Option>
+                  {/* <Option key={0} value={null}>Select Payment Method</Option> */}
+                  {paymentMethodData.map((e) => {
+                    return <Option key={e.paymentMethodId} value={e.paymentMethodId}>{e.paymentMethod}</Option>
                   })}
-                </Select> */}
-                <Input/>
+                </Select>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 12 }}>

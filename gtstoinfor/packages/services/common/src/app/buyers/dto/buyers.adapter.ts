@@ -33,9 +33,9 @@ export class BuyersAdapter {
     buyer.privateNote=buyersDTO.privateNote;
     buyer.countryInfo = new Countries()
     buyer.countryInfo.countryId = Number(buyersDTO.countryId)
-    // buyer.paymentTerms=buyersDTO.paymentTerms;
+    buyer.paymentTermsInfo.paymentTermsId=Number(buyersDTO.paymentTerms);
     // buyer.shipmentTerms=buyersDTO.shipmentTerms;
-    // buyer.paymentModeId=buyersDTO.paymentModeId;
+    buyer.paymentMethodInfo.paymentMethodId=Number(buyersDTO.paymentMethodId);
     // buyer.buyerAccountType=buyersDTO.buyerAccountType;
     buyer.isActive=buyersDTO.isActive==undefined?true:buyersDTO.isActive;
 
@@ -76,10 +76,11 @@ export class BuyersAdapter {
     // buyersDTO.countryId = entity.countryId;
     buyersDTO.countryId = buyersObject.countryInfo.countryId;
     buyersDTO.countryName = buyersObject.countryInfo.countryName;
-    // buyersDTO.paymentTerms=buyersObject.paymentTerms;
+    buyersDTO.paymentTermsId = buyersObject.paymentTermsInfo.paymentTermsId
+    buyersDTO.paymentTerms=buyersObject.paymentTermsInfo.paymentTermsName;
+    buyersDTO.paymentMethodId = buyersObject.paymentMethodInfo.paymentMethodId
+    buyersDTO.paymentMethod=buyersObject.paymentMethodInfo.paymentMethod;
     // buyersDTO.shipmentTerms=buyersObject.shipmentTerms;
-    // buyersDTO.paymentModeId=buyersObject.paymentModeId;
-    // buyersDTO.buyerAccountType=buyersObject.buyerAccountType;
     buyersDTO.isActive = buyersObject.isActive;
     buyersDTO.createdAt = buyersObject.createdAt;
     buyersDTO.updatedAt = buyersObject.updatedAt;
