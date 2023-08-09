@@ -7,6 +7,7 @@ import { Attributes } from './attributes.entity';
 import { AttributeAdapter } from './dto/attribute.adapter';
 import { AttributeDto } from './dto/attribute.dto';
 import { AttributeRequest } from './dto/attribute.request';
+import { AttributeAgainstRequest } from './dto/attribute-against.request';
 
 @Injectable()
 export class AttributeService {
@@ -160,6 +161,22 @@ export class AttributeService {
 //         return err;
 //     }
 //   }
+
+
+  async getAttributeByAttributeAgainst(attributeAgainst: AttributeAgainstRequest): Promise<AllAttributesResponse> {
+    console.log(attributeAgainst,'???????????????????????')
+      const Response = await this.attributeRepository.find({ where: {
+          attributeAgainst: attributeAgainst.attributeAgainst,
+          isActive: attributeAgainst.isActive
+      }});
+      // console.log(employeeResponse);
+      if (Response) {
+          const res = new AllAttributesResponse(true,1,'Attributes retrieved successfully',Response);
+          return res;
+      } else {
+          throw new ErrorResponse(99998, 'Data not found');
+        }
+  }
   
   
       
