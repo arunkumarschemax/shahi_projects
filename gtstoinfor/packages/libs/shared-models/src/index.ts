@@ -7,9 +7,7 @@ export * from './common/users/users.dto'
 export * from './common/users/all-users-response-models'
 export * from './common/users/users-active-deactive.dto'
 export * from './common/factory/factory-activate-deactivate.dto'
-
-
 export * from './common/payment_terms_category/payment_terms_category.enum'
-
 export * from './common/delivery-terms'
+export * from './common/profit-center'
 export * from './enum'

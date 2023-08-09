@@ -24,6 +24,9 @@ import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categori
 import { DeliveryTermsModule } from './delivery-terms/delivery-terms.module';
 import { CountriesModule } from './countries/countries.module';
 import { StyleModule } from './style/style-module';
+import { ProfitCenter } from './profit-center/profit-center-entity';
+import { ProfitCenterModule } from './profit-center/profit-center-module';
+import { PaymentMethodModule } from './payment-methods/paymeny-method-module';
 import { LocationsModule } from './locations/location.module';
 import { GarmentsModule } from './garments/garments.module';
 import { AttributeModule } from './attributes/attribute.module';
@@ -66,7 +69,7 @@ import { ComponentMappingModule } from './components-mapping/component-mapping.m
     OrdersModule,
     DeliveryTermsModule,
     LocationsModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ProfitCenterModule,PaymentMethodModule ,ComponentMappingModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -249,7 +249,7 @@ service.createPaymentMethod(variantData).then(res=>{
 
 return (
   <Card title={<span>Payment Method</span>}
-  style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/garmentcategory/garmentcategory-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+  style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/paymentmethod/paymentmethod-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
   <br></br>
     <>
     <Row gutter={40}>

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentMethodService } from './payment-method.service';
-describe('PaymentModeService', () => {
+describe('PaymentMethodService', () => {
   let service: PaymentMethodService;
 
   beforeEach(async () => {

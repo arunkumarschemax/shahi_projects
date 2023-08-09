@@ -156,6 +156,7 @@ export const baseRouterList = [
                 path: "package-terms/package-terms-view",
                 filepath: "package-terms/package-terms-view",
             },
+           
             {
                 label: "Delivery Terms",
                 key: "delivery-terms",
@@ -167,6 +168,12 @@ export const baseRouterList = [
                 key: "locations",
                 path: "locations/locations-view",
                 filepath: "locations/locations-view",
+            },
+            {
+                label: "Profit Center",
+                key: "profit-center",
+                path: "profit-center/profit-center-view",
+                filepath: "profit-center/profit-center-view",
             },
             {
                 label: "Liscence Type",
