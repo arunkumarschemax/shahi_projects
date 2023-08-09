@@ -151,12 +151,12 @@ export class PaymentMethodService {
     }  
 
 
-    async activateOrDeactivateCurrency(paymentreq: PaymentMethodRequest): Promise<PaymentMethodResponseModel> {
+    async activateOrDeactivatePaymentMethod(paymentreq: PaymentMethodRequest): Promise<PaymentMethodResponseModel> {
       try {
           const paymentExists = await this.getPaymentMethodById(paymentreq.paymentMethodId);
           if (paymentExists) {
               if (paymentreq.versionFlag !== paymentExists.versionFlag) {
-                  throw new PaymentMethodResponseModel(false,10113, 'Someone updated the current currency information.Refresh and try again');
+                  throw new PaymentMethodResponseModel(false,10113, 'Someone updated the current PaymentMethod information.Refresh and try again');
               } else {
                   
                       const PaymentStatus =  await this.PaymentMethodRepository.update(
@@ -197,7 +197,7 @@ export class PaymentMethodService {
           
           const paymentmethods: PaymentMethodDTO = this.PaymentMethodAdapter.convertEntityToDto(paymentmethodEntities);
           if (paymentmethods) {
-              const response = new PaymentMethodResponseModel(true, 11101 , 'Currency retrived Successfully',[paymentmethods]);
+              const response = new PaymentMethodResponseModel(true, 11101 , 'Payment Method retrived Successfully',[paymentmethods]);
               return response;
           }
           else{
