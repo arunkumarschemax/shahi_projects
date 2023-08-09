@@ -15,6 +15,9 @@ import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
+import CompanyForm from "./masters/company/company-form"
+import CompanyGrid from "./masters/company/company-grid"
+import { CurrencyDto } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -35,6 +38,7 @@ import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
 import ItemCategoriesGrid from "./masters/item-categories/item-categories-grid"
 import ItemSubCategoriesGrid from "./masters/item-sub-categories/item-sub-categories-grid"
 import ItemSubCategoriesForm from "./masters/item-sub-categories/item-sub-categories-form"
+import DivisionGrid from "./masters/company/division-grid"
 import DeliveryTermsForm from "./masters/delivery-terms/delivery-terms-form"
 import DeliveryTermsGrid from "./masters/delivery-terms/delivery-terms-grid"
 import ItemsGrid from "./masters/items/item-grid"
@@ -50,6 +54,8 @@ import LiscenceTypesForm from "./masters/Liscence Types/liscence_types_form"
 import { GarmentCategoryForm } from "./masters/garment category/garment-category-form"
 import { GarmentCategoryGrid } from "./masters/garment category/garment-category-grid"
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
+import ProfitCenterGrid from "./masters/profit-center/profit-center-grid"
+import { ProfitCenterForm } from "./masters/profit-center/profit-center-form"
 import { GarmentsGrid } from "./masters/garments/garments-grid"
 import GarmentsForm from "./masters/garments/garments-form"
 import BuyersGeneralAttributeForm from "./masters/buyers/buyers-general-attribute-form"
@@ -57,6 +63,8 @@ import ComponentsForm from "./masters/Components/components-form"
 import ComponentsGrid from "./masters/Components/components-grid"
 import AttributesGrid from "./masters/attributes/attributes-grid"
 import AttributesForm from "./masters/attributes/attributes-form"
+import WarehouseGrid from "./masters/warehouse/warehouse-grid"
+import WarehouseForm from "./masters/warehouse/warehouse-form"
 import ComponentMappingView from "./components-mapping/components-mapping-view"
 
 
@@ -109,6 +117,18 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
                 <Route path='items/item-grid' element={<ItemsGrid />} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
+                        <Route path='company/company-form' element={<CompanyForm currencyData={undefined} updateItem={function (companyData:undefined ): void {
+                        } } isUpdate={false} closeForm={function (): void {
+                            
+                        } } />} />
+                        <Route path='company/company-grid' element={<CompanyGrid />} />
+                        <Route path='company/division-grid' element={<DivisionGrid />} />
+                        <Route path='warehouse/warehouse-form' element={<WarehouseForm Data={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                        <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
+
                         <Route path='brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
@@ -169,7 +189,11 @@ export const AppRoutes = () => {
                         <Route path='payment-terms/payment-terms-view' element={<PaymentTermsGrid />} />
                         <Route path='package-terms/package-terms-form' element={<PackageTermsForm  packageTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }}/>} />
                         <Route path='package-terms/package-terms-view' element={<PackageTermsGrid/>} />
-                        <Route path="components/components-view" element ={<ComponentsGrid/>}/>
+                        <Route path='profit-center/profit-center-view' element={<ProfitCenterGrid/>} />
+                         <Route path='profit-center/profit-center-form' key ='profit-center/profit-center-form' element={< ProfitCenterForm profitCenterData={undefined}
+                 isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} /><Route path="components/components-view" element ={<ComponentsGrid/>}/>
                         <Route path='components/components-form' element={<ComponentsForm
                         componentsData={undefined}
                         isUpdate={false}

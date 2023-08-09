@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -256,9 +256,8 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
 
   const openFormWithData = (viewdata: EmployeeDetailsResponse) => {
     console.log(viewdata)
-     const date = viewdata.dateOfBirth?moment(viewdata.dateOfBirth).format("YYYY-MM-DD"):null
+     const date = viewdata.dateOfBirth?dayjs(moment(viewdata.dateOfBirth).format("YYYY-MM-DD")):null
      viewdata.dateOfBirth = dayjs(date)
-
     console.log(viewdata.dateOfBirth)
     setDrawerVisible(true);
     setSelectedVariant(viewdata);
@@ -266,11 +265,10 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
 
 
   const updateEmployee = (data: EmployeeDetailsResponse) => {
-    // data.updateUser = JSON.parse(localStorage.getItem('username'))
     service.updateEmployee(data).then(res => {
       console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+          AlertMessages.getSuccessMessage('Updated Successfully');
         getAllEmployees();
         setDrawerVisible(false);
       } else {     
@@ -287,7 +285,9 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
       console.log(res);
       if (res.status) {
         getAllEmployees();
-        AlertMessages.getSuccessMessage(res.internalMessage);
+        setTimeout(function() {
+        message.success(res.internalMessage)
+      }, -3000);
       } else {
         
         AlertMessages.getErrorMessage(res.internalMessage);
