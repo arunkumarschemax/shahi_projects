@@ -9,7 +9,6 @@ export * from './employee-details-service';
 export * from './payment-terms.service';
 export * from './package-terms.service';
 export * from './items.service';
-export * from './garment-service-master'
 export * from './operation-groups-service'
 export * from './items.service';
 export * from './delivery-method-services'
@@ -24,3 +23,5 @@ export * from './garment-service';
 export * from './delivery-terms.service';
 export * from './component-mapping-service';
 export * from './profit-center-service';export * from './liscence-type.service';
+export * from './components-service'
+export * from  './attribute-service'

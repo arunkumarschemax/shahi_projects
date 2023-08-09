@@ -29,6 +29,9 @@ import { ProfitCenterModule } from './profit-center/profit-center-module';
 import { PaymentMethodModule } from './payment-methods/paymeny-method-module';
 import { GarmentsModule } from './garments/garments.module';
 import { AttributeModule } from './attributes/attribute.module';
+import { ComponentsModule } from './components/components.module';
+import { GarmentCategoriesModule } from './garment-category/garment-category.module';
+import { ComponentMappingModule } from './components-mapping/component-mapping.module';
 
 
 @Module({
@@ -58,10 +61,12 @@ import { AttributeModule } from './attributes/attribute.module';
     ItemCategoriesModule,
     ItemSubCategoriesModule,
     GarmentsModule,
+    GarmentCategoriesModule,
+    ComponentsModule,
     AttributeModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentsModule,StyleModule,ProfitCenterModule,PaymentMethodModule ],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ProfitCenterModule,PaymentMethodModule ,ComponentMappingModule],
   controllers: [AppController],
   providers: [AppService],
 })

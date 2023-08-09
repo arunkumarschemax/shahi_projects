@@ -30,8 +30,6 @@ import EmployeeDetailsGrid from "./masters/employee-details/employee-details-gri
 import OperationGroupForm from "./masters/operation-groups/operation-groups-form"
 import OperationGroupsGrid from "./masters/operation-groups/operation-group-view"
 import ItemsForm from "./masters/items/items-form"
-import GarmentsForm from "./masters/garments/garments-form"
-import GarmentsView from "./masters/garments/garments-view"
 import DeliveryMethodForm from "./masters/delivery-methods/delivery-method-form"
 import DeliveryMethodGrid from "./masters/delivery-methods/delivery-method-grid"
 import ItemCategoriesGrid from "./masters/item-categories/item-categories-grid"
@@ -54,8 +52,14 @@ import { GarmentCategoryGrid } from "./masters/garment category/garment-category
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
 import ProfitCenterGrid from "./masters/profit-center/profit-center-grid"
 import { ProfitCenterForm } from "./masters/profit-center/profit-center-form"
-import GarmentGrid, { GarmentsGrid } from "./masters/garments/garments-grid"
-// import GarmentsForm from "./masters/garments/garments-form"
+import { GarmentsGrid } from "./masters/garments/garments-grid"
+import GarmentsForm from "./masters/garments/garments-form"
+import BuyersGeneralAttributeForm from "./masters/buyers/buyers-general-attribute-form"
+import ComponentsForm from "./masters/Components/components-form"
+import ComponentsGrid from "./masters/Components/components-grid"
+import AttributesGrid from "./masters/attributes/attributes-grid"
+import AttributesForm from "./masters/attributes/attributes-form"
+import ComponentMappingView from "./components-mapping/components-mapping-view"
 
 
 export const AppRoutes = () => {
@@ -141,13 +145,6 @@ export const AppRoutes = () => {
                     closeForm={() => { }}
                     updateItem={(undefined) => { }}/>
                 } />
-                <Route path='garments/garments-view' element={<GarmentsView />} />
-                 <Route path="garments/garments-form" key='garments/garments-form' element= {
-                    <GarmentsForm garmentData={undefined}
-                    isUpdate={false}
-                    closeForm={() => { }}
-                    updateData={(undefined) => { }}/>
-                } />
                         <Route path='delivery-methods/delivery-method-form' element={<DeliveryMethodForm deliveryMethodData={undefined}
                         isUpdate={false}
                         closeForm={()=> {}}
@@ -178,7 +175,18 @@ export const AppRoutes = () => {
                          <Route path='profit-center/profit-center-form' key ='profit-center/profit-center-form' element={< ProfitCenterForm profitCenterData={undefined}
                  isUpdate={false}
                 closeForm={() => { }}
-                updateItem={(undefined) => { }}/>} />
+                updateItem={(undefined) => { }}/>} /><Route path="components/components-view" element ={<ComponentsGrid/>}/>
+                        <Route path='components/components-form' element={<ComponentsForm
+                        componentsData={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateComponent={(undefined)=>{}}/>}/>
+                        <Route path="attributes/attributes-view" element ={<AttributesGrid/>}/>
+                        <Route path='attributes/attributes-form' element={<AttributesForm
+                        attributesData={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateAttribute={(undefined)=>{}}/>}/>
 
 
                         <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}
@@ -190,9 +198,11 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateData={(undefined) => { }}/>}/>
+                        <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
                     </Route>
                     
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
+
                     <Route path="style-management">
                     <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
                 isUpdate={false}
@@ -200,6 +210,7 @@ export const AppRoutes = () => {
                 updateDetails={(undefined) => { }}/>} />
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
+                        <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
 
                 </Route>
 

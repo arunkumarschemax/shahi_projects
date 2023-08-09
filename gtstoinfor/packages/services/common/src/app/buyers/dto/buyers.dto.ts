@@ -12,8 +12,8 @@ export class BuyersDTO {
   @ApiProperty()
   clientName: string;
 
-  @ApiProperty()
-  accountType: string;
+  // @ApiProperty()
+  // accountType: string;
 
   @ApiProperty()
   gstNumber: string;

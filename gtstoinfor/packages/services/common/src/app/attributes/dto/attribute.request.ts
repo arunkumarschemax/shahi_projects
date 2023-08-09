@@ -3,16 +3,18 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class AttributeRequest {
     @ApiProperty()
-    // @IsNotEmpty()
-    // @IsAlphanumeric()
+    @IsNotEmpty()
     attributeId: number;
 
     @ApiProperty()
-    updatedUser?: string;
+    @IsOptional()
+    updatedUser: string;
 
     @ApiProperty()
-    versionFlag?: number;
+    @IsOptional()
+    @IsNumber()
+    versionFlag: number;
 
     @ApiProperty()
-    isActive?: boolean;
+    isActive: boolean;
 }

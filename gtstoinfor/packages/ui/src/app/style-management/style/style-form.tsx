@@ -30,20 +30,18 @@ export function StyleForm(props: StyleFormProps) {
     name: props.styleData.styleFileName,
     status: 'done',
     url:props.styleData.styleFileName,
+    // url:'http://206.189.138.212/gts-to-infor/gtstoinfor/upload-files/'+props.styleData.styleFileName
+
   }]:[]);
-  let image
 
-// const image ='C:/Users/Renuka/OneDrive/project/gts/gts-to-infor/gtstoinfor/'+props.styleData.styleFilePath
-// const imagee ='/upload-files/miracle-58d9.jpg'
-// console.log(imagee)
+  useEffect(() => {
+   if( props.isUpdate){
+    const image ='http://206.189.138.212/gts-to-infor/gtstoinfor/upload-files/'+props.styleData.styleFileName
+    setImageUrl(image)
+   }
+  }, [])
 
-// console.log(image)
-
-  // useEffect(() => {
-  //   setImageUrl(imagee)
-  // }, [])
-
-
+// console.log(props.styleData.styleFileName)
 const service = new StyleService()
   const uploadButton = (
     <div>
@@ -230,8 +228,8 @@ const service = new StyleService()
          (  */}
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }} >
             <Card style={{height:'331px'}}>
-                    <Form.Item  initialValue={props.isUpdate ? image:''}>
-                    <img src={props.isUpdate? image:imageUrl} alt="Preview"  
+                    <Form.Item >
+                    <img src={imageUrl} alt="Preview"  
                      height={'300px'} 
                     width={'500px'}   
                     style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}

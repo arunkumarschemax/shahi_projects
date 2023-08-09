@@ -24,6 +24,7 @@ export class GarmentsController {
        @Post('/createGarment')
        @ApiBody({type:GarmentDto})
        async createGarment(@Body() garmentDto:any,isUpdate:boolean=false,@Req() request:Request): Promise<GarmentResponse> {
+        console.log(garmentDto,'aaaaaaaaaaaaaaaaaaaaa')
            try {
             return await this.garmentService.createGarment(garmentDto,false);
           } catch (error) {
@@ -62,38 +63,14 @@ export class GarmentsController {
     }
 
 
-    //     /**
-    //  *  get all active sub categories 
-    //  * @param ItemCategory ItemSubCategory DTO
-    //  * @returns ItemSubCategoryResponse
-    //  */
-    // @Post('/getAllItemSubCategoriesDropDown')
-    // async getAllItemSubCategoriesDropDown(): Promise<ItemSubCategoriesDropDownResponse> {
-    //     try {
-    //      return await this.itemCategoryService.getAllItemSubCategoriesDropDown();
-    //    } catch (error) {
-    //         return this.applicationExceptionHandler.returnException(ItemSubCategoriesDropDownResponse, error);
-    //    }
-    //  }
-
-
-    //  @Post('/getItemSubCategoriesForCategoryDropDown')
-    // async getItemSubCategoriesForCategoryDropDown(@Body() req:ItemCategoryRequest): Promise<ItemSubCategoriesDropDownResponse> {
-    //     try {
-    //      return await this.itemCategoryService.getItemSubCategoriesForCategoryDropDown(req);
-    //    } catch (error) {
-    //         return this.applicationExceptionHandler.returnException(ItemSubCategoriesDropDownResponse, error);
-    //    }
-    //  }
-
-    //  @Post('/getItemSubCategoryForId')
-    //  async getItemSubCategoryForId(@Body() req:ItemSubCategoryRequest): Promise<ItemSubCategoryDropDownDto> {
-    //      try {
-    //       return await this.itemCategoryService.getItemSubCategoryForId(req.itemSubCategoryId);
-    //     } catch (error) {
-    //          return error;
-    //     }
-    //   }
+     @Post('/getAllActiveGarments')
+    async getAllActiveGarments(): Promise<AllGarmentsResponse> {
+        try {
+         return await this.garmentService.getAllActiveGarments();
+       } catch (error) {
+            return this.applicationExceptionHandler.returnException(AllGarmentsResponse, error);
+       }
+     }
 
       @Post('/activateOrDeactivateGarment')
       @ApiBody({type:GarmentsRequest})
