@@ -66,6 +66,8 @@ import AttributesForm from "./masters/attributes/attributes-form"
 import WarehouseGrid from "./masters/warehouse/warehouse-grid"
 import WarehouseForm from "./masters/warehouse/warehouse-form"
 import ComponentMappingView from "./components-mapping/components-mapping-view"
+import LocationsForm from "./masters/locations/locations-form"
+import LocationsGrid from "./masters/locations/locations-grid"
 import TaxesForm from "./masters/taxes/taxes-form"
 import TaxesGrid from "./masters/taxes/taxes-grid"
 
@@ -229,6 +231,12 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateData={(undefined) => { }}/>}/>
                         <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
+                        <Route path='locations/locations-form' element={<LocationsForm locationsData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateDetails={(undefined) => { }}/>}/>
+                         <Route path='locations/locations-view' element={<LocationsGrid/>}/>
+
                     </Route>
                     
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>

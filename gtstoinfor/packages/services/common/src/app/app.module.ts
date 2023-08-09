@@ -31,6 +31,7 @@ import { StyleModule } from './style/style-module';
 import { ProfitCenter } from './profit-center/profit-center-entity';
 import { ProfitCenterModule } from './profit-center/profit-center-module';
 import { PaymentMethodModule } from './payment-methods/paymeny-method-module';
+import { LocationsModule } from './locations/location.module';
 import { GarmentsModule } from './garments/garments.module';
 import { AttributeModule } from './attributes/attribute.module';
 import { ComponentsModule } from './components/components.module';
@@ -72,6 +73,8 @@ import { WarehouseModule } from './warehouse/warehouse.module';
     AttributeModule,
     UsersModule,
     OrdersModule,
+    DeliveryTermsModule,
+    LocationsModule,
     DivisionModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ProfitCenterModule,PaymentMethodModule ,ComponentMappingModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],
