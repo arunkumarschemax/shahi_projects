@@ -1,4 +1,4 @@
-import { ComponentMappingModel, ComponentMappingResponseModel } from "@project-management-system/shared-models";
+import { ComponentMappingFilterReq, ComponentMappingModel, ComponentMappingResponseModel } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class ComponentMappingService  extends CommonAxiosService{
@@ -8,8 +8,20 @@ export class ComponentMappingService  extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/createComponentMapping',req)
     }
 
-    async getMappedComponents():Promise<ComponentMappingResponseModel>{
-        return this.axiosPostCall(this.URL + '/getMappedComponents')
+    async getMappedComponents(req:ComponentMappingFilterReq):Promise<ComponentMappingResponseModel>{
+        return this.axiosPostCall(this.URL + '/getMappedComponents',req)
+    }
+
+    async getStyleDropDown():Promise<ComponentMappingResponseModel>{
+        return this.axiosPostCall(this.URL + '/getStyleDropDown')
+    }
+
+    async getGarmentCategoryDropDown():Promise<ComponentMappingResponseModel>{
+        return this.axiosPostCall(this.URL + '/getGarmentCategoryDropDown')
+    }
+
+    async getGarmentDropDown():Promise<ComponentMappingResponseModel>{
+        return this.axiosPostCall(this.URL + '/getGarmentDropDown')
     }
 
 }
