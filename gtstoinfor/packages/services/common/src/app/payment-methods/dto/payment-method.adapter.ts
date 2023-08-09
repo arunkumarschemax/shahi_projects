@@ -27,7 +27,7 @@ export class PaymentMethodAdapter{
       }
 
      public convertEntityToDto ( paymentMethodData: PaymentMethod): PaymentMethodDTO{
-        const paymentMethod = new PaymentMethod();
+        const paymentMethod = new PaymentMethodDTO();
       paymentMethod.paymentMethodId=paymentMethodData.paymentMethodId;
       paymentMethod.paymentMethod=paymentMethodData.paymentMethod;
       paymentMethod.isActive=paymentMethodData.isActive;

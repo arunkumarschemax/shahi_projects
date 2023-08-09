@@ -3,10 +3,8 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { AttributeService } from './attribute.service';
 import { AttributeDto } from './dto/attribute.dto';
-import { AllAttributesResponse, AttributeAgainstEnum, AttributeResponse } from '@project-management-system/shared-models';
+import { AllAttributesResponse, AttributeResponse } from '@project-management-system/shared-models';
 import { AttributeRequest } from './dto/attribute.request';
-import { Attributes } from './attributes.entity';
-import { AttributeAgainstRequest } from './dto/attribute-against.request';
 
 
 
@@ -66,20 +64,5 @@ export class AttributeController {
             return this.applicationExceptionHandler.returnException(AttributeResponse,error)
         }
     }
-
-    @Post('/getAttributeByAttributeAgainst')
-    @ApiBody({type:AttributeAgainstRequest})
-    async getAttributeByAttributeAgainst(@Body() req: any): Promise<AllAttributesResponse>{
-        console.log(req,'________________________________')
-        try{
-            return await this.attributeService.getAttributeByAttributeAgainst(req)
-        }catch (error){
-            return this.applicationExceptionHandler.returnException(AllAttributesResponse,error)
-        }
-    }
-
-    
-
-
 
 }

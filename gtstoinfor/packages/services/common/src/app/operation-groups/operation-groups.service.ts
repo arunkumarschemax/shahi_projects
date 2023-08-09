@@ -32,10 +32,10 @@ export class OperationGroupsService{
       try {
         let previousValue;
         if (!isUpdate) {
-          const operationGroupsEntity = await this.getOperationGroupDetailsWithoutRelations(operationGroupDto.operationGroupId);
+          const operationGroupsEntity = await this.operationGroupsRepo.find({where:{operationGroupName:operationGroupDto.operationGroupName}});
           if (operationGroupsEntity) {
             //return new InformationMessageError(11104, "State already exists");
-            throw new OperationGroupsResponseModel(false,11104, 'Operation Group  already exists');
+            return new OperationGroupsResponseModel(false,11104, 'Operation Group  already exists');
           }
         }
         else{
@@ -45,7 +45,7 @@ export class OperationGroupsService{
           const operationGroupsEntity = await this.getOperationGroupDetailsWithoutRelations(operationGroupDto.operationGroupId);
           if (operationGroupsEntity) {
             if(operationGroupsEntity.operationGroupId!=operationGroupDto.operationGroupId) {
-              throw new OperationGroupsResponseModel(false,11104, 'Operation Group already exists');      
+              return new OperationGroupsResponseModel(false,11104, 'Operation Group already exists');      
             }
           }
         
@@ -77,7 +77,7 @@ export class OperationGroupsService{
 
         } else {
           //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
-          throw new OperationGroupsResponseModel(false,11106,'OPeration Group saved but issue while transforming into DTO');
+          return new OperationGroupsResponseModel(false,11106,'OPeration Group saved but issue while transforming into DTO');
         }
       //}
       } catch (error) {
