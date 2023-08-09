@@ -68,6 +68,8 @@ import WarehouseForm from "./masters/warehouse/warehouse-form"
 import ComponentMappingView from "./components-mapping/components-mapping-view"
 import LocationsForm from "./masters/locations/locations-form"
 import LocationsGrid from "./masters/locations/locations-grid"
+import TaxesForm from "./masters/taxes/taxes-form"
+import TaxesGrid from "./masters/taxes/taxes-grid"
 
 
 export const AppRoutes = () => {
@@ -146,6 +148,16 @@ export const AppRoutes = () => {
                 isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+
+
+<Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
+                    isUpdate={false}
+                    closeForm={() => { }}
+                    updateTax={(undefined) => { }}/>} />
+                    <Route path='taxes/taxes-grid' element={<TaxesGrid />} />
+
+
+                    
                     <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
 
                         <Route path='buyers/buyers-view' element={<BuyersView />} />

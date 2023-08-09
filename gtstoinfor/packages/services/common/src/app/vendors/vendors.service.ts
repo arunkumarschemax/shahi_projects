@@ -39,10 +39,10 @@ export class VendorsService {
           let previousValue;
           // to check whether State exists with the passed  State code or not. if isUpdate is false, a check will be done whether a record with the passed Statecode is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed State code then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
           if (!isUpdate) {
-            const vendorsEntity = await this.getVendorDetailsWithoutRelations(vendorsDto.vendorId);
+            const vendorsEntity = await this.vendorsRepository.find({where:{vendorCode:vendorsDto.vendorCode}});
             if (vendorsEntity) {
               //return new InformationMessageError(11104, "State already exists");
-              throw new VendorsResponseModel(false,11104, 'Vendor already exists');
+              return new VendorsResponseModel(false,11104, 'Vendor already exists');
             }
           }
           else{
@@ -52,7 +52,7 @@ export class VendorsService {
             const VendorEntity = await this.getVendorDetailsWithoutRelations(vendorsDto.vendorId);
             if (VendorEntity) {
               if(VendorEntity.vendorId!=vendorsDto.vendorId) {
-                throw new VendorsResponseModel(false,11104, 'Vendor already exists');      
+                return new VendorsResponseModel(false,11104, 'Vendor already exists');      
               }
             }
           
@@ -84,7 +84,7 @@ export class VendorsService {
 
           } else {
             //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
-            throw new VendorsResponseModel(false,11106,'Vendor saved but issue while transforming into DTO');
+            return new VendorsResponseModel(false,11106,'Vendor saved but issue while transforming into DTO');
           }
         //}
         } catch (error) {

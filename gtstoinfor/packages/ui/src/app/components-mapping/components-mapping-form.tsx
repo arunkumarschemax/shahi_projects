@@ -83,14 +83,13 @@ export const ComponentsMappingForm = () => {
         setComponents(selectedComponentDetails);
       };
 
-    const options = ['Front', 'Back', 'Collar', 'Sleeves', 'Pockets', 'Logo On Pocket'];
 
     const onFinish = (values) => {
         const req = new ComponentMappingModel(0,values.styleId,values.garmentCategoryId,values.garmentId,components,'admin','',true,1)
-        console.log(req,'-------------req')
         servcie.createComponentMap(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
+                onReset()
             } else{
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
@@ -99,7 +98,6 @@ export const ComponentsMappingForm = () => {
 
 
     const onStyleChange = (val,option) => {
-        console.log(option,'------------option')
         setStyle(option?.key)
     }
 
@@ -113,8 +111,10 @@ export const ComponentsMappingForm = () => {
 
     const onReset = () => {
         form.resetFields()
-        setComponents([]); // Clear the selection by setting an empty array
-
+        setComponents([]);
+        setStyle('')
+        setGarmentCategory('')
+        setGarment('')
     }
 
     return(
