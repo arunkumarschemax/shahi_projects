@@ -34,7 +34,11 @@ export const EmployeeDetsilsForm = (props:EmployeeDetailsFormProps) => {
 
 
   useEffect(() =>{
-    form.setFieldsValue({dateOfBirth:date})
+    if(props.isUpdate){
+      form.setFieldsValue({dateOfBirth:props.employeeData.dateOfBirth})
+    }else{
+      form.setFieldsValue({dateOfBirth:date})
+    }
   },[])
   
   const saveEmployee = (data: EmployeeDetailsResponse) => {
@@ -228,7 +232,7 @@ const alertNativeOnchange = (value) =>{
             }
           ]}
         >
-          <Input.TextArea rows={2}/>
+          <Input.TextArea rows={1}/>
         </Form.Item>
         </Col>
         </Row>
