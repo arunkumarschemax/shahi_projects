@@ -17,7 +17,7 @@ import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
-import { CompanyDto, CurrencyDto } from "@project-management-system/shared-models"
+import { CurrencyDto } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -117,7 +117,7 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
                 <Route path='items/item-grid' element={<ItemsGrid />} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
-                        <Route path='company/company-form' element={<CompanyForm currencyData={undefined} updateItem={function (companyData: CompanyDto): void {
+                        <Route path='company/company-form' element={<CompanyForm currencyData={undefined} updateItem={function (companyData:undefined ): void {
                         } } isUpdate={false} closeForm={function (): void {
                             
                         } } />} />
