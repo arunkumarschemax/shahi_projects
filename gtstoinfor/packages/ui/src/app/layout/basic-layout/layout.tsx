@@ -67,6 +67,30 @@ export const baseRouterList = [
                 filepath: "currencies/currency-view",
             },
             {
+                label: "Company",
+                key: "company",
+                path: "company/company-grid",
+                filepath: "company/company-grid",
+            },
+            ,
+            {
+                label: "Company-Division",
+                key: "division",
+                path: "company/division-grid",
+                filepath: "company/division-grid",
+            },  {
+                label: "Warehouse",
+                key: "warehouse",
+                path: "warehouse/warehouse-grid",
+                filepath: "warehouse/warehouse-grid",
+            },
+            {
+                label: "PaymentMethod",
+                key: "paymentmethod",
+                path: "paymentmethod/paymentmethod-view",
+                filepath: "paymentmethod/paymentmethod-view",
+            },
+            {
                 label: "PaymentMethod",
                 key: "paymentmethod",
                 path: "paymentmethod/paymentmethod-view",

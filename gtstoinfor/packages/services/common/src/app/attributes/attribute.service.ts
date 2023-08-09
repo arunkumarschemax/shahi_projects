@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AllAttributesResponse, AttributeAgainstEnum, AttributeResponse } from '@project-management-system/shared-models';
+import { AllAttributesResponse, AttributeResponse } from '@project-management-system/shared-models';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { Attributes } from './attributes.entity';
 import { AttributeAdapter } from './dto/attribute.adapter';
 import { AttributeDto } from './dto/attribute.dto';
 import { AttributeRequest } from './dto/attribute.request';
-import { AttributeAgainstRequest } from './dto/attribute-against.request';
 
 @Injectable()
 export class AttributeService {
@@ -117,23 +116,6 @@ export class AttributeService {
             return null;
             }
         }
-
-        async getAttributeByAttributeAgainst(attributeAgainst: AttributeAgainstRequest): Promise<AllAttributesResponse> {
-              console.log(attributeAgainst,'???????????????????????')
-                const Response = await this.attributeRepository.find({ where: {
-                    attributeAgainst: attributeAgainst.attributeAgainst,
-                    isActive: attributeAgainst.isActive
-                }});
-                // console.log(employeeResponse);
-                if (Response) {
-                    const res = new AllAttributesResponse(true,1,'Attributes retrieved successfully',Response);
-                    return res;
-                } else {
-                    throw new ErrorResponse(99998, 'Data not found');
-                  }
-            }
-
-        
   
       async getAllActiveAttributes(): Promise<AllAttributesResponse> {
         try {
@@ -183,3 +165,5 @@ export class AttributeService {
       
 
 }
+
+
