@@ -291,7 +291,7 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
   return (
     <>
     <Card title={'Taxes'}
-   extra={<Link to='/masters/taxes/taxes-form' ><span style={{color:'white'}} >{<Button className='panel_button' >Create </Button>}</span></Link>} >
+   extra={<Link to='/masters/taxes/taxes-form' ><span style={{color:'white'}} >{<Button className='panel_button' type={'primary'}>new </Button>}</span></Link>} >
   
     <Row gutter={40}>
      
