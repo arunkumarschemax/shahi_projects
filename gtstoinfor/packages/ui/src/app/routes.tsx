@@ -63,6 +63,7 @@ import AttributesGrid from "./masters/attributes/attributes-grid"
 import AttributesForm from "./masters/attributes/attributes-form"
 import WarehouseGrid from "./masters/warehouse/warehouse-grid"
 import WarehouseForm from "./masters/warehouse/warehouse-form"
+import ComponentMappingView from "./components-mapping/components-mapping-view"
 
 
 export const AppRoutes = () => {
@@ -221,6 +222,7 @@ export const AppRoutes = () => {
                 updateDetails={(undefined) => { }}/>} />
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
+                        <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
 
                 </Route>
 

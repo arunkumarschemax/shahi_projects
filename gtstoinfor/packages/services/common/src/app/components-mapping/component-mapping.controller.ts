@@ -4,6 +4,7 @@ import { ComponentMappingService } from "./component-mapping.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { ComponentMappingResponseModel } from "@project-management-system/shared-models";
 import { ComponentMappingDto } from "./dto/component-mapping.dto";
+import { ComponentMappingFilterReq } from "./dto/component-mapping-filter.req";
 
 @ApiTags('component-mapping')
 @Controller('component-mapping')
@@ -34,9 +35,36 @@ export class ComponentMappingController{
     }
 
     @Post('/getMappedComponents')
-    async getMappedComponents():Promise<ComponentMappingResponseModel>{
+    async getMappedComponents(@Body() req:any):Promise<ComponentMappingResponseModel>{
         try{
-            return await this.componentMappingService.getMappedComponents()
+            return await this.componentMappingService.getMappedComponents(req)
+        } catch(err){
+            return this.applicationExceptionHandler.returnException(ComponentMappingResponseModel, err);
+        }
+    }
+
+     @Post('/getStyleDropDown')
+    async getStyleDropDown():Promise<ComponentMappingResponseModel>{
+        try{
+            return await this.componentMappingService.getStyleDropDown()
+        } catch(err){
+            return this.applicationExceptionHandler.returnException(ComponentMappingResponseModel, err);
+        }
+    }
+
+    @Post('/getGarmentCategoryDropDown')
+    async getGarmentCategoryDropDown():Promise<ComponentMappingResponseModel>{
+        try{
+            return await this.componentMappingService.getGarmentCategoryDropDown()
+        } catch(err){
+            return this.applicationExceptionHandler.returnException(ComponentMappingResponseModel, err);
+        }
+    }
+
+    @Post('/getGarmentDropDown')
+    async getGarmentDropDown():Promise<ComponentMappingResponseModel>{
+        try{
+            return await this.componentMappingService.getGarmentDropDown()
         } catch(err){
             return this.applicationExceptionHandler.returnException(ComponentMappingResponseModel, err);
         }

@@ -5,6 +5,7 @@ import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { useNavigate } from "react-router-dom";
 
 const CheckboxGroup = Checkbox.Group;
 const {Option}= Select;
@@ -20,7 +21,7 @@ export const ComponentsMappingForm = () => {
     const [garmentCategoryInfo,setGarmentCategoryInfo] = useState<any[]>([])
     const [garmentInfo,setGarmentInfo] = useState<any[]>([])
     const [componentInfo,setComponentInfo] = useState<any[]>([])
-
+    const navigate = useNavigate()
     const servcie = new ComponentMappingService()
     const styleService = new StyleService()
     const garmentCategoryService = new GarmentCategoryService()
@@ -117,7 +118,7 @@ export const ComponentsMappingForm = () => {
     }
 
     return(
-        <Card title='Components Mapping'>
+        <Card title='Components Mapping' extra={<span><Button onClick={() => navigate('/style-management/component-mapping/component-mapping-view')} type={'primary'}>View</Button></span>}>
             <Form form={form} onFinish={onFinish}>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>

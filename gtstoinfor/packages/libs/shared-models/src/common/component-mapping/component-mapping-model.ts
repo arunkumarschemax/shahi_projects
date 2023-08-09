@@ -13,9 +13,10 @@ export class ComponentMappingModel{
     style?:string;
     garmentCategory ?: string;
     garment?: string;
+    styleDescription?: string;
 
 
-    constructor(componentMappingId: number,styleId: number,garmentCategoryId: number,garmentId: number,componentDeatils: ComponentInfoModel[],createdUser: string,updatedUser: string,isActive: boolean,versionFlag: number,style?:string,garmentCategory ?: string,garment?: string){
+    constructor(componentMappingId: number,styleId: number,garmentCategoryId: number,garmentId: number,componentDeatils: ComponentInfoModel[],createdUser: string,updatedUser: string,isActive: boolean,versionFlag: number,style?:string,garmentCategory ?: string,garment?: string,styleDescription?: string){
         this.componentMappingId = componentMappingId;
         this.styleId = styleId;
         this.garmentCategoryId = garmentCategoryId;
@@ -28,5 +29,6 @@ export class ComponentMappingModel{
         this.style = style
         this.garmentCategory = garmentCategory
         this.garment = garment
+        this.styleDescription = styleDescription
     }
 }

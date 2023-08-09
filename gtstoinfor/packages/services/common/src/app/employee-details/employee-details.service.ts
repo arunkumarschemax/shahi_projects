@@ -46,7 +46,7 @@ export class EmployeeDetailsService {
     }
 
     async getAllEmploee():Promise<AllEmployeeDetailsResponseModel>{
-        const employee = await this.employeeDetailsRepo.find({order:{firstName:'ASC'}})
+        const employee = await this.employeeDetailsRepo.find({order:{employeeId:'DESC'}})
         if(employee.length >0){
             return new AllEmployeeDetailsResponseModel(true,1,'Employees Retrived Sucessfully',employee)
         }else{
@@ -81,13 +81,13 @@ export class EmployeeDetailsService {
                 if (employeeDetails.isActive) {
                     console.log('activeeeee')
                     if (employeeUpdate.affected) {
-                        return new AllEmployeeDetailsResponseModel(true, 0, 'Employee is de-activated successfully', [])
+                        return new AllEmployeeDetailsResponseModel(true, 0, 'Employee de-activated successfully', [])
                     } else {
                         throw new AllEmployeeDetailsResponseModel(false, 1, 'Employee already deactivated', [])
                     }
                 } else {
                     if (employeeUpdate.affected) {
-                        return new AllEmployeeDetailsResponseModel(true, 0, 'Employee is activated successfully', [])
+                        return new AllEmployeeDetailsResponseModel(true, 0, 'Employee activated successfully', [])
                     } else {
                         throw new AllEmployeeDetailsResponseModel(false, 1, 'Employee already activated', [])
                     }
