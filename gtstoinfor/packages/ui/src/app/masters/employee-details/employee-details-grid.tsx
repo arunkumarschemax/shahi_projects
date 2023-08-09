@@ -130,7 +130,7 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
       ...getColumnSearchProps("mobileNumber"),
       },
       {
-        title: "Alter native Number",
+        title: "Alternate Number",
         dataIndex: "alterNativeMobileNumber",
        width:'60px',
         sorter: (a, b) => a.alterNativeMobileNumber.length-(b.alterNativeMobileNumber.length),
@@ -193,7 +193,7 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
               if (rowData.isActive) {
                 openFormWithData(rowData);
               } else {
-                AlertMessages.getErrorMessage('You Cannot Edit Deactivated employeee');
+                AlertMessages.getErrorMessage('You Cannot Edit Deactivated employee');
               }
             }}
             style={{ color: '#1890ff', fontSize: '14px' }}
@@ -299,6 +299,8 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
 
   return (
       <>
+      <Card title='Employees' extra={<span><Button onClick={() => navigate('/masters/employee-details/employee-details-form')}
+              type={'primary'}>New</Button></span>}>
       <Row gutter={40}>
         <Col>
           <Card title={'Total Employees: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
@@ -308,10 +310,6 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
         </Col>
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
-        </Col>
-        <Col>
-        <span><Button onClick={() => navigate('/masters/employee-details/employee-details-form')}
-              type={'primary'}>New</Button></span>
         </Col>
       </Row><br></br>
       <Card >
@@ -340,6 +338,7 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
             closeForm={closeDrawer} />
         </Card>
       </Drawer>
+      </Card>
       </>
   );
 }
