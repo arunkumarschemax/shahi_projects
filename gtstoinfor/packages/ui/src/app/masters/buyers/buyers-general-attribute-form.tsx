@@ -1,4 +1,4 @@
-import { BuyerRequest, BuyersGeneralAttributeInfoModel, BuyersGeneralAttributeModel, BuyersGeneralAttributeRequest } from "@project-management-system/shared-models";
+import { AttributeAgainstEnum, AttributeAgainstRequest, BuyerRequest, BuyersGeneralAttributeInfoModel, BuyersGeneralAttributeModel, BuyersGeneralAttributeRequest } from "@project-management-system/shared-models";
 import { Button, Card, Col, Form, Input, Row } from "antd";
 import Table, { ColumnsType } from "antd/es/table"
 import { useEffect, useState } from "react";
@@ -24,15 +24,11 @@ export const BuyersGeneralAttributeForm = () => {
     const [attributes,setAttributes] = useState<any[]>([])
     const [isUpdate,setIsUpdate] = useState<boolean>(false);
 
-    // useEffect(() => {
-    //     getAttributes()
-    // },[])
 
     useEffect(() => {
         if(state.state.id != undefined){
             getByBuyerId(state.state.id)
         }
-
     },[state.state.id])
 
     const getByBuyerId = (id) => {
@@ -47,140 +43,19 @@ export const BuyersGeneralAttributeForm = () => {
         })
     }
 
-
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
     };
 
     const getAttributes = () => {
-        attributeService.getAllActiveAttributes().then(res => {
+        const req = new AttributeAgainstRequest(AttributeAgainstEnum.GENERAL)
+        attributeService.getAttributeByAttributeAgainst(req).then(res => {
             if(res.status){
                 setAttributes(res.data)
             }
         })
     }
-
-    // const data: DataType[] = [
-    //     {
-    //         key:1,
-    //         attributeName:'GST',
-    //         attributeValue:'',
-    //         disable:true
-    //     },
-    //     {
-    //         key:2,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:3,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:4,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:5,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:6,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:7,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:8,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:9,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:10,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:11,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:12,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:13,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:14,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:15,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:16,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     },
-    //     {
-    //         key:17,
-    //         attributeName:'License',
-    //         attributeValue:'',
-    //         disable:true
-
-    //     }
-    // ]
 
     const setAttributeInfo = (e,index,rowData) => {
         console.log(rowData,'---------------rowdata')
@@ -264,12 +139,12 @@ export const BuyersGeneralAttributeForm = () => {
     const [firstHalfData, secondHalfData] = splitData(attributes);
 
     return(
-        <Card title='Buyer General Settings' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
+        <Card title='Buyer General Settings' size='small' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
             {
                 attributes.length <= 10 ? (<>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>
-                <Card >
-                <Table columns={columns} dataSource={attributes} pagination={false}/>
+                <Card size='small'>
+                <Table  size='small'  bordered columns={columns} dataSource={attributes} pagination={false}/>
                 </Card>
                 </Col>
                 </>): (<></>)
@@ -278,19 +153,19 @@ export const BuyersGeneralAttributeForm = () => {
             {
                 attributes.length > 10 ? (<> <Row gutter={24}>
                     <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                        <Card>
-                            <Table columns={columns} dataSource={firstHalfData} pagination={false}/>
+                        <Card size='small'>
+                            <Table  size='small'  bordered columns={columns} dataSource={firstHalfData} pagination={false}/>
                         </Card>
                     </Col>
                     <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                        <Card>
-                            <Table columns={columns} dataSource={secondHalfData} pagination={false}/>
+                        <Card size='small'>
+                            <Table  size='small'  bordered columns={columns} dataSource={secondHalfData} pagination={false}/>
                         </Card>
                     </Col>
                     </Row></>) : (<></>)
             }
            <br/>
-            <Form>
+            <Form size='small'>
                 <Row justify='end'>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
                     <Form.Item>
