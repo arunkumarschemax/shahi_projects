@@ -211,6 +211,12 @@ export const baseRouterList = [
                 path: "attributes/attributes-view",
                 filepath: "attributes/attributes-view",
             },
+            {
+                label: "Taxes",
+                key: "taxes",
+                path: "taxes/taxes-grid",
+                filepath: "taxes/taxes-grid",
+            },
         ],
     },
 

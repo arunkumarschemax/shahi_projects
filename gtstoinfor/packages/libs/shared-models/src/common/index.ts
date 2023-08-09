@@ -27,6 +27,7 @@ export * from './liscence-type'
 export * from './garments'
 export * from './components'
 export * from './attributes'
+export * from './taxes'
 export * from './division';
 export * from './countries'
 export * from './style-management'
