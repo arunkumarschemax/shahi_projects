@@ -298,7 +298,7 @@ export function VendorsForm(
               },
               {
                 pattern: /^[0-9.]*$/,
-                message: `Special charecters are not allowed`,
+                message: `Special charecters and alphabets are not allowed`,
               },
             ]}>
             
@@ -320,8 +320,8 @@ export function VendorsForm(
                 message:'IFSC Code should not be greater than 11'
               },
               {
-                pattern: /^[0-9.]*$/,
-                message: `Special charecters are not allowed`,
+                pattern: /^[0-9.A-Z]*$/,
+                message: `Invalid IFSC Code`,
               },
             ]}
             >

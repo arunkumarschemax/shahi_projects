@@ -32,7 +32,7 @@ export class OperationGroupsService{
         let previousValue;
         if (!isUpdate) {
           const operationGroupsEntity = await this.operationGroupsRepo.find({where:{operationGroupName:operationGroupDto.operationGroupName}});
-          if (operationGroupsEntity) {
+          if (operationGroupsEntity.length > 0) {
             //return new InformationMessageError(11104, "State already exists");
             return new OperationGroupsResponseModel(false,11104, 'Operation Group  already exists');
           }
