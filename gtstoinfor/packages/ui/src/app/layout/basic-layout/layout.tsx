@@ -223,6 +223,18 @@ export const baseRouterList = [
                 path: "taxes/taxes-grid",
                 filepath: "taxes/taxes-grid",
             },
+            {
+                label: "Sample Types",
+                key: "sampleTypes",
+                path: "sampleTypes/sampleTypes-grid",
+                filepath: "sampleTypes/sampleTypes-grid",
+            },
+            {
+                label: "Sample Sub Types",
+                key: "sampleSubTypes",
+                path: "sampleSubTypes/sampleSubTypes-grid",
+                filepath: "sampleSubTypes/sampleSubTypes-grid",
+            },
         ],
     },
 

@@ -70,6 +70,10 @@ import LocationsForm from "./masters/locations/locations-form"
 import LocationsGrid from "./masters/locations/locations-grid"
 import TaxesForm from "./masters/taxes/taxes-form"
 import TaxesGrid from "./masters/taxes/taxes-grid"
+import SampleTypesGrid from "./masters/sample-types/sample-type-grid"
+import SampleTypeForm from "./masters/sample-types/sample-type-form"
+import SampleSubTypesForm from "./masters/sample sub types/sample-sub-types-form"
+import SampleSubTypesGrid from "./masters/sample sub types/sample-sub-types-grid"
 
 
 export const AppRoutes = () => {
@@ -133,7 +137,7 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
                         <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
 
-                        <Route path='brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
+                        <Route path='masters-brands/master-brands-form' element={<MasterBrandsForm masterBrandData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
                 updateMasterBrand={(undefined) => { }}/>} />
@@ -236,7 +240,16 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
                          <Route path='locations/locations-view' element={<LocationsGrid/>}/>
-
+                         <Route path='sampleTypes/sampleTypes-grid' element={<SampleTypesGrid/>}/>
+                        <Route path='sampleTypes/sampleTypes-form' element={<SampleTypeForm sampleTypeData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateDetails={(undefined) => { }}/>}/>
+                            <Route path='sampleSubTypes/sampleSubTypes-grid' element={<SampleSubTypesGrid/>}/>
+                        <Route path='sampleSubTypes/sampleSubTypes-form' element={<SampleSubTypesForm SampleSubTypesData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateSampleSubTypes={(undefined) => { }}/>}/>
                     </Route>
                     
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>

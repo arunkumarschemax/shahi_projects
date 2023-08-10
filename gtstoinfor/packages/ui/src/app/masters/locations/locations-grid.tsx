@@ -268,11 +268,11 @@ export function LocationsGrid(props: LocationsGridProps) {
 
   return (
 <>
-<Card title='Delivery Terms' extra={<span><Button onClick={() => navigate('/masters/delivery-terms/delivery-terms-form')} type={'primary'}>New</Button></span>}>
+<Card title='Locations' extra={<span><Button onClick={() => navigate('/masters/delivery-terms/delivery-terms-form')} type={'primary'}>New</Button></span>}>
  <br></br>
       <Row gutter={40}>
       <Col>
-          <Card title={'Total Delivery Terms: ' + locationData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          <Card title={'Total Locations: ' + locationData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
            <Card title={'Active: ' + locationData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>

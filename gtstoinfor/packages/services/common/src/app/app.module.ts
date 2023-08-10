@@ -31,7 +31,6 @@ import { StyleModule } from './style/style-module';
 import { ProfitCenter } from './profit-center/profit-center-entity';
 import { ProfitCenterModule } from './profit-center/profit-center-module';
 import { PaymentMethodModule } from './payment-methods/paymeny-method-module';
-import { LocationsModule } from './locations/location.module';
 import { GarmentsModule } from './garments/garments.module';
 import { AttributeModule } from './attributes/attribute.module';
 import { ComponentsModule } from './components/components.module';
@@ -39,6 +38,9 @@ import { GarmentCategoriesModule } from './garment-category/garment-category.mod
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
 import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
+import { SampleTypesModule } from './sample Types/sample-types.module';
+import { LocationsModule } from './locations/location.module';
+import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module';
 
 
 @Module({
@@ -51,6 +53,7 @@ import { WarehouseModule } from './warehouse/warehouse.module';
       username: appConfig.database.username,
       password: appConfig.database.password,
       database: appConfig.database.dbName,
+     
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -76,6 +79,8 @@ import { WarehouseModule } from './warehouse/warehouse.module';
     DeliveryTermsModule,
     LocationsModule,
     DivisionModule,
+    SampleTypesModule,
+    SampleSubTypesModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ProfitCenterModule,PaymentMethodModule ,ComponentMappingModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],
   providers: [AppService],

@@ -1,11 +1,12 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { Operations } from "../operations/operation.entity";
+import { SampleSubTypes } from "../sample-sub-types/sample-sub-types.entity";
 
 @Entity('sample_types')
 export class SampleTypes {
 
-  @PrimaryGeneratedColumn("increment",{name:'smaple_type_id'})
-  smapleTypeId:number;
+  @PrimaryGeneratedColumn("increment",{name:'sample_type_id'})
+  sampleTypeId:number;
 
   @Column("varchar",{
     nullable:false,
@@ -55,7 +56,7 @@ updatedUser: string | null;
   })
   versionFlag: number;
 
-//   @OneToMany(type=>SampleSubTypes, subType=>subtype.sampleSubTypes,{cascade: true})
-//   subTypesInfo:SampleSubTypes;
+  @OneToMany(type=>SampleSubTypes, subType=>subType.sampleSubTypes,{cascade: true})
+  subTypesInfo:SampleSubTypes;
 
 }

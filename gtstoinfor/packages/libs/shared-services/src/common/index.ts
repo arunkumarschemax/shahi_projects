@@ -42,3 +42,5 @@ export * from './components-service'
 export * from  './attribute-service'
 export * from './taxes-service'
 export * from './warehouse-service'
+export * from './sample-types-service';
+export * from './sample-sub-types-service';
