@@ -9,6 +9,7 @@ import { AttributeDto } from './dto/attribute.dto';
 import { AttributeRequest } from './dto/attribute.request';
 import { AttributeAgainstRequest } from './dto/attribute-against.request';
 
+
 @Injectable()
 export class AttributeService {
     constructor(
@@ -20,7 +21,10 @@ export class AttributeService {
     async createAttribute(attributeDto: AttributeDto, isUpdate: boolean): Promise<AttributeResponse> {
         try {
           if (!isUpdate) {
-            const attributeEntity = await this.attributeRepository.findOne({ where: { attributeName: attributeDto.attributeName } });
+            const attributeEntity = await this.attributeRepository.findOne({ where: { 
+              attributeName: attributeDto.attributeName,
+              attributeAgainst: attributeDto.attributeAgainst
+            } });
             if (attributeEntity) {
               throw new AttributeResponse(false, 11104, 'Attribute already exists');
             }
@@ -28,6 +32,14 @@ export class AttributeService {
             const attributeEntity = await this.attributeRepository.findOne({ where: { attributeId: attributeDto.attributeId } });
             if (!attributeEntity) {
               throw new ErrorResponse(11104, 'Attribute not found');
+            }
+            const attributeWithSameName = await this.attributeRepository.findOne({ where: { 
+              attributeName: attributeDto.attributeName,
+              attributeAgainst: attributeDto.attributeAgainst
+             } });
+
+            if (attributeWithSameName && attributeWithSameName.attributeId !== attributeDto.attributeId) {
+                throw new AttributeResponse(false, 11104, 'Attribute already exists');
             }
           }
       

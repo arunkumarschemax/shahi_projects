@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
 import { Link } from 'react-router-dom';
 import { DeliveryMethodDto } from '@project-management-system/shared-models';
 import { DeliveryMethodService } from '@project-management-system/shared-services';
-import AlertMessages from '../../common/common-functions/alert-messages';
 import DeliveryMethodForm from './delivery-method-form';
 // import './payment-modes.css';
 
@@ -39,14 +38,14 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
       } else {
         if (res.data) {
           setDeliveryMethodData([]);
-            AlertMessages.getErrorMessage(res.internalMessage);
+            message.error(res.internalMessage,2);
         } else {
-         AlertMessages.getErrorMessage(res.internalMessage);
+         message.error(res.internalMessage,2);
         }
       }
     }).catch(err => {
       setDeliveryMethodData([]);
-      AlertMessages.getErrorMessage(err.message);
+      message.error(err.message,2);
     })
   }
   /**
@@ -59,12 +58,12 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
     deliveryMethodDataService.activateOrDeactivateDeliveryMethod(deliveryMethodData).then(res => { console.log(res);
       if (res.status) {
         // getAllDeliveryMethods();
-        AlertMessages.getSuccessMessage('Success'); 
+        message.success('Success',2); 
       } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage,2);
       }
     }).catch(err => {
-      AlertMessages.getErrorMessage(err.message);
+      message.error(err.message,2);
     })
   }
    
@@ -76,14 +75,14 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
       deliveryMethodData.updatedUser = JSON.parse(localStorage.getItem('username'))
       deliveryMethodDataService.updateDeliveryMethod(deliveryMethodData).then(res => { console.log(res);
         if (res.status) {
-          AlertMessages.getSuccessMessage('Updated Successfully');
+          message.success('Updated Successfully',2);
           getAllDeliveryMethods();
           setDrawerVisible(false);
         } else {
-            AlertMessages.getErrorMessage(res.internalMessage);
+            message.error(res.internalMessage,2);
         }
       }).catch(err => {
-        AlertMessages.getErrorMessage(err.message);
+        message.error(err.message,2);
       })
     }
    /**
@@ -200,6 +199,12 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
+      filterMultiple: false,
+      onFilter: (value, record) => 
+      {
+        // === is not work
+        return record.isActive === value;
+      },
       filters: [
         {
           text: 'Active',
@@ -210,13 +215,7 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
           value: false,
         },
       ],
-      filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
-      
+
     },
     {
       title:`Action`,
@@ -228,7 +227,7 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
                 if (rowData.isActive) {
                   openFormWithData(rowData);
                 } else {
-                  AlertMessages.getErrorMessage('You Cannot Edit Deactivated Delivery Method');
+                  message.error('You Cannot Edit Deactivated Delivery Method',2);
                 }
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}
@@ -286,6 +285,7 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
           </Row>
           <br></br>
           <Table
+          size='small'
           rowKey={record => record.deliveryMethodId}
           columns={columnsSkelton}
           dataSource={deliveryMethodData}

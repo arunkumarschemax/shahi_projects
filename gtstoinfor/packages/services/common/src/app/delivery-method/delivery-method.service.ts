@@ -29,52 +29,43 @@ export class DeliveryMethodService {
         }
       }
 
-    async createDeliveryMethod(deliveryMethodDTO: DeliveryMethodDTO, isUpdate: boolean): Promise<DeliveryMethodResponseModel> {
-      
-      try {
-        let previousValue
-        if (!isUpdate) {
-          const deliveryMethodEntity = await this.deliveryMethodRepository.findOne({where:{deliveryMethod:deliveryMethodDTO.deliveryMethod}})
-          if (deliveryMethodEntity) {
-            //return new InformationMessageError(11104, "State already exists");
-            throw new DeliveryMethodResponseModel(false,11104, 'Delivery Method already exists');
+      async createDeliveryMethod(deliveryMethodDTO: DeliveryMethodDTO, isUpdate: boolean): Promise<DeliveryMethodResponseModel> {
+        try {
+          let previousValue;
+          if (!isUpdate) {
+            const deliveryMethodEntity = await this.deliveryMethodRepository.findOne({ where: { deliveryMethod: deliveryMethodDTO.deliveryMethod } });
+            if (deliveryMethodEntity) {
+              throw new DeliveryMethodResponseModel(false, 11104, 'Delivery Method already exists');
+            }
+          } else {
+            const certificatePrevious = await this.deliveryMethodRepository.findOne({ where: { deliveryMethodId: deliveryMethodDTO.deliveryMethodId } });
+            if (!certificatePrevious) {
+              throw new ErrorResponse(0, 'Given delivery does not exist');
+            }
+            
+            if (certificatePrevious.deliveryMethod !== deliveryMethodDTO.deliveryMethod) {
+              throw new DeliveryMethodResponseModel(false, 11104, 'Cannot update to an existing delivery method');
+            }
+            
+            previousValue = certificatePrevious.deliveryMethod;
           }
-        } else{
-          console.log('came in');
-          const certificatePrevious = await this.deliveryMethodRepository.findOne({where:{deliveryMethodId:deliveryMethodDTO.deliveryMethodId}})
-          previousValue = certificatePrevious.deliveryMethod
-          console.log(certificatePrevious)
-          // const deliveryMethodEntities = await this.getDeliveryMethodWithoutRelations(deliveryMethodDTO.deliveryMethodId);
-          if(!certificatePrevious) {
-            throw new ErrorResponse(0, 'Given delivery does not exist');
+          
+          const convertedDeliveryMethod: DeliveryMethod = this.deliveryMethodAdapter.convertDtoToEntity(deliveryMethodDTO, isUpdate);
+          const savedDeliveryMethodEntity: DeliveryMethod = await this.deliveryMethodRepository.save(convertedDeliveryMethod);
+          const savedDeliveryMethodDto: DeliveryMethodDTO = this.deliveryMethodAdapter.convertEntityToDto(savedDeliveryMethodEntity);
+          
+          if (savedDeliveryMethodDto) {
+            const response = new DeliveryMethodResponseModel(true, 1, isUpdate ? 'Delivery Method Updated Successfully' : 'Delivery Method Created Successfully');
+            return response;
+          } else {
+            throw new DeliveryMethodResponseModel(false, 11106, 'Delivery Method saved but issue while transforming into DTO');
           }
+        } catch (error) {
+          return error;
         }
-        const convertedDeliveryMethod: DeliveryMethod = this.deliveryMethodAdapter.convertDtoToEntity(deliveryMethodDTO,isUpdate);
-        console.log(convertedDeliveryMethod);
-        const savedDeliveryMethodEntity: DeliveryMethod = await this.deliveryMethodRepository.save(convertedDeliveryMethod);
-        const savedDeliveryMethodDto: DeliveryMethodDTO = this.deliveryMethodAdapter.convertEntityToDto(convertedDeliveryMethod);
-          // console.log(savedStateDto);
-        if (savedDeliveryMethodDto) {
-          const presentValue = savedDeliveryMethodDto.deliveryMethod;
-         // generating resposnse
-         const response = new DeliveryMethodResponseModel(true,1,isUpdate? 'Delivery Method Updated Successfully': 'Delivery Method Created Successfully');
-         const name=isUpdate?'updated':'created'
-         const displayValue = isUpdate? 'Delivery Method Updated Successfully': 'Delivery Method Created Successfully'
-         const userName = isUpdate? savedDeliveryMethodDto.updatedUser :savedDeliveryMethodDto.createdUser;
-        //  const newLogDto = new LogsDto(1,name, 'Currencies', savedCurrencyDto.currencyId, true, displayValue,userName,previousValue,presentValue)
-        //  let res = await this.logService.createLog(newLogDto);
-        //  console.log(res);
-         return response
-        } else {
-          //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
-          throw new DeliveryMethodResponseModel(false,11106,'Delivery Method saved but issue while transforming into DTO');
-        }
-      } catch (error) {
-        // when error occures while saving the data , the execution will come to catch block.
-        // tslint:disable-next-line: typedef
-        return error;
       }
-    }
+      
+      
 
     async getAllDeliveryMethods(): Promise<AllDeliveryResponseModel> {
       try {

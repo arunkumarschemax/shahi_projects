@@ -16,7 +16,7 @@ export class DeliveryMethodController {
       ) {}
 
     @Post('/createDeliveryMethod')
-    // @ApiBody({type:DeliveryMethodDTO})
+    @ApiBody({type:DeliveryMethodDTO})
     async createDeliveryMethod(@Body() deliveryMethodDTO:any): Promise<DeliveryMethodResponseModel> {
       console.log('--------------------------------------')
       console.log(deliveryMethodDTO)
