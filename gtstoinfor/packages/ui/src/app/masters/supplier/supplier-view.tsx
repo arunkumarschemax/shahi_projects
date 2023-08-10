@@ -1,34 +1,36 @@
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from '@ant-design/icons';
-import { AlertMessages, FactoryActivateDeactivateDto, FactoryDto } from '@project-management-system/shared-models';
-import { FactoryService } from '@project-management-system/shared-services';
-import { Button, Card, Col, Divider, Drawer, Input, message, Popconfirm, Row, Switch, Table, Tag, Tooltip } from 'antd';
+import { SupplierActivateDeactivateDto, SupplierCreateDto } from '@project-management-system/shared-models';
+import { Button, Card, Col, Divider, Drawer, Input, message, Popconfirm, Row, Switch, Table, Tag } from 'antd';
+import SupplierService from 'packages/libs/shared-services/src/supplier/supplier-service';
 import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
 import { useNavigate } from 'react-router-dom';
-import FactoriesForm from './factories-form';
+import AlertMessages from '../../common/common-functions/alert-messages';
+import TableActions from '../../common/table-actions/table-actions';
+import SupplierForm from './supplier-form';
 
-const FactoriesView = () => {
+const SupplierView = () => {
+  const [supplier, setSupllier] = useState([]);
   const navigate = useNavigate();
-  const service = new FactoryService();
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const [factories, setFactories] = useState([]);
+  const [searchedColumn, setSearchedColumn] = useState(''); 
+  const service = new SupplierService();
+  const [data, setData] = useState<any>(undefined);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [factoryData, setFactoryData] = useState<any>(undefined);
 
 
   useEffect(() => {
-    getFactoryData()
+    getSupplierData()
   }, []);
 
-  const getFactoryData = () => {
-    service.getFactories().then((res) => {
+  const getSupplierData = () => {
+    service.getAllSuppliers().then((res) => {
       if (res.status) {
-        setFactories(res.data);
+        setSupllier(res.data);
       } else {
 
-        setFactories([])
+        setSupllier([])
       }
     })
       .catch((error) => {
@@ -38,21 +40,19 @@ const FactoriesView = () => {
   const closeDrawer = () => {
     setDrawerVisible(false);
   }
-
-  const openFormwithData = (ViewData: FactoryDto) => {
+  const openFormwithData = (ViewData: SupplierCreateDto) => {
     setDrawerVisible(true);
-    setFactoryData(ViewData);
+    setData(ViewData);
     console.log(ViewData, "viewData")
   }
-  const updateFactories = (Data: FactoryDto) => {
 
-    // const req = new FactoryDto (data.id,Data.name,Data.address) 
-    console.log(Data, 'vidya')
-    service.updateFactories(Data).then(res => {
+
+  const updateSupplier = (Data: SupplierCreateDto) => {
+    service.updateSuppliers(Data).then(res => {
       console.log(res, "ressssssssssss");
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Succesfully');
-        getFactoryData()
+        AlertMessages.getSuccessMessage('Upadted Succesfully');
+        getSupplierData()
         setDrawerVisible(false);
 
       }
@@ -61,26 +61,23 @@ const FactoriesView = () => {
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message)
-    })
-  }
-
-  console.log(factoryData, 'mmmmmmmmmmmm')
-  const activateOrDeactivate = (values: FactoryActivateDeactivateDto) => {
+    }) 
+  } 
+  const activateOrDeactivate = (values: SupplierActivateDeactivateDto) => {
     values.isActive = values.isActive ? false : true
-    const req = new FactoryActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
-    service.activateOrDeactivate(req).then(res => {
+    const req = new SupplierActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
+    service.ActivateOrDeactivate(req).then(res => {
       if (res.status) {
         message.success(res.internalMessage)
-        getFactoryData();
+        getSupplierData();
       }
     })
   }
-
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input
-          ref={searchInput}
+          ref={searchInput} 
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
@@ -128,7 +125,7 @@ const FactoriesView = () => {
         : null
 
   });
-
+   
 
   function handleSearch(selectedKeys, confirm, dataIndex) {
     confirm();
@@ -140,35 +137,143 @@ const FactoriesView = () => {
     clearFilters();
     setSearchText('');
   };
+
   const Columns: any = [
+
     {
       title: "SL",
       render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
 
     },
+
     {
-      title: 'Factory name',
-      dataIndex: 'name',
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('name'),
+
+      title: "Category",
+      dataIndex: 'category',
       align: 'center'
 
     },
-
     {
-      title: 'Address',
-      dataIndex: "address",
+      title: "SupplierCode",
+      dataIndex: 'supplierCode', 
+      align: 'center'
+    },
+    {
+      title: "SupplierName",
+      dataIndex: 'supplierName',
+      sorter: (a, b) => a.supplierName.length - b.supplierName.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('supplierName'),
+      align: 'center'
+    },
+    {
+      title: "GSTNumber",
+      dataIndex: 'GstNumber',
+      align: 'center'
+    },
+    {
+      title: "ContactPerson",
+      dataIndex: 'contactPerson',
+      align: 'center'
+    },
+    {
+      title: "Street",
+      dataIndex: 'street',
+      align: 'center'
+    },
+    {
+      title: "Apartment",
+      dataIndex: 'apartment',
+      align: 'center'
+    },
+    {
+      title: "City",
+      dataIndex: 'city',
+      align: 'center'
+
+    },
+    {
+      title: "State",
+      dataIndex: 'state', 
+      align: 'center'
+
+    },
+    {
+
+      title: "District",
+      dataIndex: 'district', 
+      align: 'center'
+
+    },
+    {
+
+      title: "PostalCode",
+      dataIndex: 'postalCode',
+      align: 'center'
+
+    },
+    {
+
+      title: "Commision",
+      dataIndex: 'commision',
+      align: 'center'
+
+    },
+    {
+
+      title: "BankAccountNo",
+      dataIndex: 'bankAccountNo', 
+      align: 'center'
+
+    },
+    {
+
+      title: "BankIFSC",
+      dataIndex: 'bankIFSC', 
+      align: 'center'
+
+    },
+    {
+
+      title: "BankName",
+      dataIndex: 'bankName', 
+      align: 'center'
+
+    },
+    {
+
+      title: "BankBranch",
+      dataIndex: 'bankBranch', 
+      align: 'center'
+
+    },
+    {
+
+      title: "ContactNumber",
+      dataIndex: 'contactNumber',
+      align: 'center'
+
+    },
+    {
+
+      title: "Email",
+      dataIndex: 'email',
+      align: 'center'
+
+    },
+    {
+
+      title: "CreditPaymentPeriod",
+      dataIndex: 'creditPaymentPeriod', 
       align: 'center'
 
     },
     {
       title: "Status",
       dataIndex: "isActive",
-
       render: (isActive, rowData) => (
         <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
         </>
       ),
       filters: [
@@ -182,20 +287,19 @@ const FactoriesView = () => {
         },
       ],
       filterMultiple: false,
-      onFilter: (value, record) => {
-        return record.isActive === value;
+      onFilter: (value, recod) => {
+        return recod.isActive === value;
       }
 
 
     },
     {
       title: "Actions",
+      width: 50,
       render: (text, rowData, index: number) => {
         return <>
-          <Tooltip title="Edit">
-            <EditOutlined style={{ color: 'blue' }} onClick={() => { openFormwithData(rowData) }} type="edit" />
-          </Tooltip>
-          <span></span>
+          <EditOutlined style={{ color: 'blue' }} onClick={() => { openFormwithData(rowData) }} type="edit" />
+
           <Divider type="vertical" />
           <Popconfirm onConfirm={e => { activateOrDeactivate(rowData) }}
             title={
@@ -215,49 +319,50 @@ const FactoriesView = () => {
 
       }
     },
-
   ]
   return (
     <>
       <Row gutter={40}>
         <Col>
-          <Card title={'Total Factories: ' + factories.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+          <Card title={'Total Suppliers: ' + supplier.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
-          <Card title={'Active: ' + factories.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
+          <Card title={'Active: ' + supplier.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
         </Col>
         <Col>
-          <Card title={'In-Active: ' + factories.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
+          <Card title={'In-Active: ' + supplier.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-
 
       </Row><br></br>
-      <div>
 
+
+
+
+      <div>
         <Card
-          extra={<span><Button onClick={() => navigate('/masters/factories/factories-form')} type={'primary'}>New</Button></span>}
+          extra={<span><Button onClick={() => navigate('/masters/supplier/supplier-form')} type={'primary'}>New</Button></span>}
           headStyle={{ height: '50px' }}
           bodyStyle={{ height: '300px', paddingTop: '2px', paddingBottom: '5px' }}
-          title={<h4 style={{ textAlign: 'left' }}>FactoryView</h4>}
+          title={<h4 style={{ textAlign: 'left' }}>SupplierView</h4>}
+
         >
 
-          <Table columns={Columns}
-            dataSource={factories}
-
-          />
+          <Table columns={Columns} dataSource={supplier}
+            scroll={{ x: 1500 }} />
         </Card>
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='update' width={window.innerWidth > 768 ? '75%' : '85%'}
           onClose={closeDrawer} visible={drawerVisible} closable={true}>
           <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small' >
-            <FactoriesForm
-              updateItem={updateFactories} Data={factoryData} isUpdate={true} closeForm={closeDrawer} />
+            <SupplierForm
+              updateItem={updateSupplier} Data={data} isUpdate={true} closeForm={closeDrawer} />
           </Card>
         </Drawer>
       </div>
     </>
-
   )
 }
 
-export default FactoriesView;
+export default SupplierView;
+
+
 

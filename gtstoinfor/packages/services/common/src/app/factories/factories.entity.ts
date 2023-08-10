@@ -3,6 +3,7 @@ import { Column, Entity } from "typeorm";
 
 @Entity('factory')
 export class FactoriesEntity extends CommonColumns {
+
   @Column({
     name: "name",
     length: 100,

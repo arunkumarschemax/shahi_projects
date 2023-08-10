@@ -13,7 +13,7 @@ import { getOperatingSystem, treeRouter } from '../../utils/common';
 import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
-const { useToken } = theme
+const { useToken } = theme 
 
 
 
@@ -60,6 +60,12 @@ export const baseRouterList = [
                 key: "factories",
                 path: "factories/factories-view",
                 filepath: "factories/factories-view",
+            },
+            {
+                label: "Supplier",
+                key: "supplier",
+                path: "supplier/supplier-view",
+                filepath: "supplier/supplier-view",
             },
         ],
     },
@@ -127,7 +133,12 @@ export const baseRouterList = [
                 path: "divert-report",
                 filepath: "divert-report",
             },
-           
+            {
+                label: "Factory Report",
+                key: "factory-report",
+                path: "factory-report",
+                filepath: "factory-report",
+            },
            
         ],
     },
