@@ -41,10 +41,9 @@ export function BuyersForm(props: BuyersFormProps) {
   const paymentTermsService = new PaymentTermsService()
 
   useEffect(() => {
-    // getAllActivePaymentModes()
     getAllActiveCountries()
     getAllActiveCurrencys()
-    getAllPaymentMethods()
+    // getAllPaymentMethods()
     getAllPaymentTerms()
   }, [])
 
@@ -100,8 +99,10 @@ export function BuyersForm(props: BuyersFormProps) {
   }
 
   const saveBuyer = (buyersData: BuyersDto) => {
+    buyersData.paymentMethodId = Number(buyersData.paymentMethodId)
     buyersData.createdUser = 'admin'
     setDisable(true)
+    console.log(buyersData,'-----------------------')
     buyerService.createBuyer(buyersData).then(res => {
       setDisable(false)
       if (res.status) {
@@ -116,23 +117,6 @@ export function BuyersForm(props: BuyersFormProps) {
       message.error(err)
     })
   }
-
-//   const getAllActivePaymentModes = () => {
-//     paymentModeService.getAllActivePaymentmodes().then(res => {
-//       if (res.status) {
-//         // AlertMessages.getSuccessMessage('PaymentModes Retrived successfully');
-//         setPaymentModeData(res.data);
-//       } else {
-//         if (res.intlCode) {
-//           AlertMessages.getErrorMessage(res.internalMessage);
-//         } else {
-//           AlertMessages.getErrorMessage(res.internalMessage);
-//         }
-//       }
-//     }).catch(err => {
-//       AlertMessages.getErrorMessage(err.message);
-//     })
-//   }
 
   const handlePaymentMode = (value) => {
     setSelectedPaymentModes(value);
@@ -327,7 +311,7 @@ export function BuyersForm(props: BuyersFormProps) {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item
-                name="paymentTerms"
+                name="paymentTermsId"
                 label="Payment Terms"
                 rules={[
                   {
@@ -373,7 +357,7 @@ export function BuyersForm(props: BuyersFormProps) {
                   },
                 ]}
               >
-                <Select
+                {/* <Select
                   showSearch
                   // style={{ width: 200 }}
                   placeholder="Select Payment method"
@@ -382,13 +366,13 @@ export function BuyersForm(props: BuyersFormProps) {
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onSearch={onSearch}
-                  
+                  defaultValue={'NA'}
                 >
-                  {/* <Option key={0} value={null}>Select Payment Method</Option> */}
                   {paymentMethodData.map((e) => {
                     return <Option key={e.paymentMethodId} value={e.paymentMethodId}>{e.paymentMethod}</Option>
                   })}
-                </Select>
+                </Select> */}
+                <Input/>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 12 }}>

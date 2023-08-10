@@ -4,26 +4,27 @@ import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,
 import { ColumnProps, ColumnType } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
 import { Link, useNavigate } from 'react-router-dom';
-import { DeliveryTermsDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
-import DeliveryTermsForm from './delivery-terms-form';
-import { DeliveryTermsService } from '@project-management-system/shared-services';
+
+import { LocationDto } from '@project-management-system/shared-models';
+import LocationsForm from './locations-form';
+import { LocationsService } from '@project-management-system/shared-services';
 
 /* eslint-disable-next-line */
-export interface DeliveryTermsGridProps {}
+export interface LocationsGridProps {}
 
-export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
+export function LocationsGrid(props: LocationsGridProps) {
   
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [selectedDeliveryTermsData, setDeliveryShippingTermsData] = useState<any>(undefined);
-  const [deliveryTermsData, setDeliveryTermsData] = useState<DeliveryTermsDto[]>([]);
-  const service = new DeliveryTermsService()
+  const [selectedlocationData, setDeliveryShippingTermsData] = useState<any>(undefined);
+  const [locationData, setlocationData] = useState<LocationDto[]>([]);
+  const service = new LocationsService()
   let navigate = useNavigate()
-  const openFormWithData=(viewData: DeliveryTermsDto)=>{
+  const openFormWithData=(viewData: LocationDto)=>{
     setDrawerVisible(true);
     setDeliveryShippingTermsData(viewData);
   }
@@ -36,21 +37,21 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
     service.getAll().then(res => {
 
       if (res.status) {
-       setDeliveryTermsData(res.data);
+       setlocationData(res.data);
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
 
 
       }
     }).catch(err => {
-     setDeliveryTermsData([]);
+     setlocationData([]);
       // AlertMessages.getErrorMessage(err.message);
     })
   }
 
 
  
-  const deleteUser = (Data:DeliveryTermsDto) => {
+  const deleteUser = (Data:LocationDto) => {
     Data.isActive=Data.isActive?false:true;
     service.activatedeActivate(Data).then(res => { console.log(res);
       if (res.status) {
@@ -157,19 +158,27 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
     //   dataIndex:'deliverytermId',
     // },
     {
-      title: 'Delivery Term Name',
-      dataIndex: 'deliveryTermsName',
+      title: 'Location Name',
+      dataIndex: 'locationName',
       //  responsive: ['lg'],
-       sorter: (a, b) => a.deliveryTermsName.localeCompare(b.deliveryTermsName),
+       sorter: (a, b) => a.locationName.localeCompare(b.locationName),
        sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('deliveryTermsName')
+      ...getColumnSearchProps('locationName')
+    },
+    {
+      title: 'Location Code',
+      dataIndex: 'locationCode',
+      //  responsive: ['lg'],
+       sorter: (a, b) => a.locationCode.localeCompare(b.locationCode),
+       sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('locationCode')
     },
     {
       title: 'Status',
       dataIndex: 'isActive',
-      sorter: (a, b) => a.deliveryTermsName.localeCompare(b.deliveryTermsName),
-       sortDirections: ['descend', 'ascend'],
-       ...getColumnSearchProps('deliveryTermsName'),
+      // sorter: (a, b) => a.locationName.localeCompare(b.locationName),
+      //  sortDirections: ['descend', 'ascend'],
+      //  ...getColumnSearchProps('locationName'),
       
        render: (isActive, rowData) => (
         <>
@@ -198,41 +207,40 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
       title:`Action`,
       dataIndex: 'action',
       render: (text, rowData) => (
-        rowData.deliveryTermsName.trim()=='N/A'?<span></span>:
         <span>         
             <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
               onClick={() => {
                 if (rowData.isActive) {
-                   openFormWithData(rowData);
+                  openFormWithData(rowData);
                 } else {
-                   AlertMessages.getErrorMessage('You Cannot Edit Deactivated Delivery term');
+                  AlertMessages.getErrorMessage('You Cannot Edit Deactivated Operation');
                 }
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}
             />
           
           <Divider type="vertical" />
-              <Popconfirm onConfirm={e =>{deleteUser(rowData);}}
+            <Popconfirm onConfirm={e =>{deleteUser(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate  ?'
-                :  'Are you sure to Activate  ?'
+                ? 'Are you sure to Deactivate Operation ?'
+                :  'Are you sure to Activate Operation ?'
             }
-          >  
-             <Switch  size="default"
+          >
+            <Switch  size="default"
                 className={ rowData.isActive ? 'toggle-activated' : 'toggle-deactivated' }
                 checkedChildren={<RightSquareOutlined type="check" />}
                 unCheckedChildren={<RightSquareOutlined type="close" />}
                 checked={rowData.isActive}
               />
             
-          </Popconfirm>  
+          </Popconfirm>
         </span>
       )
     }
   ];
 
-  const updateUser = (Data: DeliveryTermsDto) => {
+  const updateUser = (Data: LocationDto) => {
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
       service.update(Data).then(res => { console.log(res);
         if (res.status) {
@@ -264,20 +272,20 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
  <br></br>
       <Row gutter={40}>
       <Col>
-          <Card title={'Total Delivery Terms: ' + deliveryTermsData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          <Card title={'Total Delivery Terms: ' + locationData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
-           <Card title={'Active: ' + deliveryTermsData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+           <Card title={'Active: ' + locationData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
           </Col>
           <Col>
-           <Card title={'In-Active: ' + deliveryTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
+           <Card title={'In-Active: ' + locationData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
           </Col>
           </Row> 
           <br></br>
           <Table
           rowKey={record => record.Id}
           columns={columnsSkelton}
-          dataSource={deliveryTermsData}
+          dataSource={locationData}
           scroll={{x:true}}
           pagination={{
             onChange(current) {
@@ -289,10 +297,10 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
              <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
-              <DeliveryTermsForm key={Date.now()}
+              <LocationsForm key={Date.now()}
                 updateDetails={updateUser}
                 isUpdate={true}
-                deliverytermsData={selectedDeliveryTermsData}
+                locationsData={selectedlocationData}
                 closeForm={closeDrawer} />
             </Card> 
           </Drawer>
@@ -301,4 +309,4 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
   );
 }
    
-export default DeliveryTermsGrid;
+export default LocationsGrid;

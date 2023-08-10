@@ -274,11 +274,11 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
           sorter: (a, b) => a.isActive.localeCompare(b.isActive),
           sortDirections: ["ascend", "descend"],
           ...getColumnSearchProps("isActive"),
-          // render: (isActive, rowData) => (
-          //   <>
-          //     {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-          //   </>
-          // ),
+          render: (isActive, rowData) => (
+            <>
+              {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+            </>
+          ),
           // filters: [
           //   {
           //     text: 'Active',

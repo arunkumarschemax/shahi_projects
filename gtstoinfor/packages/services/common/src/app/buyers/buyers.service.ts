@@ -29,10 +29,9 @@ export class BuyersService {
           let previousValue
             console.log(isUpdate);
             if (!isUpdate) {
-            
                 const BuyerEntity = await this.getBuyerDetailsWithoutRelations(buyersDTO.clientCode);
-                if (BuyerEntity) {
-                    throw new ErrorResponse(11104, 'Buyer already exists');
+                if (BuyerEntity !== null) {
+                    return new BuyersResponseModel(false,11104, 'Buyer already exists');
                 }
             
                 // var notificationStatus='Created';
@@ -40,7 +39,6 @@ export class BuyersService {
                 const buyerPrevious = await this.buyersRepository.findOne({where:{buyerId:buyersDTO.buyerId}})
                 previousValue = buyerPrevious.clientName
             }
-        
             const convertedBuyerEntity: Buyers = this.buyersAdapter.convertDtoToEntity(buyersDTO, isUpdate);
             const savedBuyerEntity: Buyers = await this.buyersRepository.save(
                 convertedBuyerEntity
@@ -48,7 +46,6 @@ export class BuyersService {
             const savedBuyerDto: BuyersDTO = this.buyersAdapter.convertEntityToDto(savedBuyerEntity);
             if (savedBuyerDto) {
                 const certificatePresent = savedBuyerDto.clientName;
-                console.log(certificatePresent)
                 // generating resposnse
                 const response = new BuyersResponseModel(true, isUpdate ? 11101 : 11100, isUpdate ? 'Customer Updated Successfully' : 'Customer Created Successfully', savedBuyerDto);
                 const name=isUpdate?'updated':'created'
@@ -90,8 +87,7 @@ export class BuyersService {
     async getAllBuyers(): Promise<AllBuyersResponseModel> {
         try {
             const buyersDTO: BuyersDTO[] = [];
-            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'clientName': 'ASC' },relations:['countryInfo']
-         });
+            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'clientName': 'ASC' },relations:['countryInfo','paymentTermsInfo','paymentMethodInfo']});
             if (buyersEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 buyersEntities.forEach(buyerEntity => {
