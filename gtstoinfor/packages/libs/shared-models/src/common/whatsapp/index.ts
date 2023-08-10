@@ -5,3 +5,4 @@ export * from './message-response';
 export * from './message.req';
 export * from './whatsApp-message-req';
 export * from './whatsAppMessageTemplate.dto';
+export * from './error-response-object'
