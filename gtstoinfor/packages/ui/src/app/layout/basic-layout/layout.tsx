@@ -121,6 +121,12 @@ export const baseRouterList = [
                 path: "file-import",
                 filepath: "file-import",
             },
+            {
+                label: "Divert Report",
+                key: "divert-report",
+                path: "divert-report",
+                filepath: "divert-report",
+            },
            
            
         ],

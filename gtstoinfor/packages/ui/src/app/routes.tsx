@@ -15,6 +15,7 @@ import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import PhaseWiseData from "./excel-import/phase-wise-data"
 import PoFileImport from "./nike/po-file-import"
+import DivertReport from "./nike/divert-report"
 
 
 export const AppRoutes = () => {
@@ -43,6 +44,7 @@ export const AppRoutes = () => {
                 </Route>
                 <Route path='/nike'>
                         <Route path='file-import' element={<PoFileImport />} />
+                        <Route path='divert-report' element={<DivertReport />} />
                     </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
@@ -78,6 +80,7 @@ export const AppRoutes = () => {
                     </Route>
                     <Route path='/nike'>
                         <Route path='file-import' element={<PoFileImport />} />
+                        <Route path='divert-report' element={<DivertReport />} />
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
