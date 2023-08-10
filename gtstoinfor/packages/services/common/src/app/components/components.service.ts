@@ -29,52 +29,33 @@ export class ComponentsService {
         }
       }
 
-    async createComponent(componentsDTO: ComponentsDTO, isUpdate: boolean): Promise<ComponentResponseModel> {
-      
-      try {
-        let previousValue
-        if (!isUpdate) {
-          const componentEntity = await this.componentsRepository.findOne({where:{componentName:componentsDTO.componentName}})
-          if (componentEntity) {
-            //return new InformationMessageError(11104, "State already exists");
-            throw new ComponentResponseModel(false,11104, 'Component already exists');
+      async createComponent(componentsDTO: ComponentsDTO, isUpdate: boolean): Promise<ComponentResponseModel> {
+        try {
+          if (!isUpdate) {
+            const componentEntity = await this.componentsRepository.findOne({ where: { componentName: componentsDTO.componentName } });
+            if (componentEntity) {
+              throw new ComponentResponseModel(false, 11104, 'Component already exists');
+            }
+          } else {
+            const certificatePrevious = await this.componentsRepository.findOne({ where: { componentId: componentsDTO.componentId } });
+            if (!certificatePrevious) {
+              throw new ErrorResponse(0, 'Given component does not exist');
+            }
           }
-        } else{
-          console.log('came in');
-          const certificatePrevious = await this.componentsRepository.findOne({where:{componentId:componentsDTO.componentId}})
-          previousValue = certificatePrevious.componentName
-          console.log(certificatePrevious)
-          // const deliveryMethodEntities = await this.getDeliveryMethodWithoutRelations(deliveryMethodDTO.deliveryMethodId);
-          if(!certificatePrevious) {
-            throw new ErrorResponse(0, 'Given component does not exist');
+          const convertedComponents: Components = this.componentsAdapter.convertDtoToEntity(componentsDTO, isUpdate);
+          const savedComponentEntity: Components = await this.componentsRepository.save(convertedComponents);
+          const savedComponentDto: ComponentsDTO = this.componentsAdapter.convertEntityToDto(convertedComponents);
+          if (savedComponentDto) {
+            const response = new ComponentResponseModel(true, 1, isUpdate ? 'Component Updated Successfully' : 'Component Created Successfully');
+            return response;
+          } else {
+            throw new ComponentResponseModel(false, 11106, 'Component saved but issue while transforming into DTO');
           }
+        } catch (error) {
+          return error;
         }
-        const convertedComponents: Components = this.componentsAdapter.convertDtoToEntity(componentsDTO,isUpdate);
-        console.log(convertedComponents);
-        const savedComponentEntity: Components = await this.componentsRepository.save(convertedComponents);
-        const savedComponentDto: ComponentsDTO = this.componentsAdapter.convertEntityToDto(convertedComponents);
-          // console.log(savedStateDto);
-        if (savedComponentDto) {
-          const presentValue = savedComponentDto.componentName;
-         // generating resposnse
-         const response = new ComponentResponseModel(true,1,isUpdate? 'Component Updated Successfully': 'Component Created Successfully');
-         const name=isUpdate?'updated':'created'
-         const displayValue = isUpdate? 'Component Updated Successfully': 'Component Created Successfully'
-         const userName = isUpdate? savedComponentDto.updatedUser :savedComponentDto.createdUser;
-        //  const newLogDto = new LogsDto(1,name, 'Currencies', savedCurrencyDto.currencyId, true, displayValue,userName,previousValue,presentValue)
-        //  let res = await this.logService.createLog(newLogDto);
-        //  console.log(res);
-         return response
-        } else {
-          //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
-          throw new ComponentResponseModel(false,11106,'Component saved but issue while transforming into DTO');
-        }
-      } catch (error) {
-        // when error occures while saving the data , the execution will come to catch block.
-        // tslint:disable-next-line: typedef
-        return error;
       }
-    }
+      
 
     async getAllComponents(): Promise<AllComponentsResponseModel> {
       try {

@@ -228,20 +228,31 @@ export function AttributesGrid(props: AttributesProps) {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
+      title: "Attribute Against",
+      dataIndex: "attributeAgainst",
+      width :'250px',
+      // responsive: ['lg'],
+      sorter: (a, b) => a.attributeAgainst.localeCompare(b.attributeAgainst),
+      sortDirections: ["descend", "ascend"],
+      filters: [
+        {
+          text: "General",
+          value: 'GENERAL',
+        },
+        {
+          text: "Order",
+          value: 'ORDER',
+        },
+      ],
+      onFilter: (value,record) =>{ return record.attributeAgainst === value}
+    },
+    {
       title: "Attribute",
       dataIndex: "attributeName",
       // responsive: ['lg'],
       sorter: (a, b) => a.attributeName.localeCompare(b.attributeName),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("attributeName"),
-    },
-    {
-      title: "Attribute Against",
-      dataIndex: "attributeAgainst",
-      // responsive: ['lg'],
-      sorter: (a, b) => a.attributeAgainst.localeCompare(b.attributeAgainst),
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("attributeAgainst"),
     },
     {
       title: "Status",
@@ -334,7 +345,7 @@ export function AttributesGrid(props: AttributesProps) {
   return (
     <Card
       title={<span>Attributes</span>}
-      style={{ textAlign: "center" }}
+      style={{ textAlign: "center"}}
       headStyle={{ border: 0 }}
       extra={
         <Link to="/masters/attributes/attributes-form">
@@ -354,6 +365,7 @@ export function AttributesGrid(props: AttributesProps) {
               width: 220,
               height: 41,
               backgroundColor: "#bfbfbf",
+              borderBottom: "none"
             }}
           ></Card>
         </Col>
@@ -367,6 +379,7 @@ export function AttributesGrid(props: AttributesProps) {
               width: 200,
               height: 41,
               backgroundColor: "#52c41a",
+              borderBottom: 0,
             }}
           ></Card>
         </Col>
@@ -387,6 +400,7 @@ export function AttributesGrid(props: AttributesProps) {
       </Row>
       <br></br>
       <Table
+        size="small"
         rowKey={(record) => record.attributeId}
         columns={columnsSkelton}
         dataSource={attributesData}

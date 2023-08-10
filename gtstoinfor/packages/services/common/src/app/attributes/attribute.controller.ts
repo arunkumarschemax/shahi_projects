@@ -5,7 +5,6 @@ import { AttributeService } from './attribute.service';
 import { AttributeDto } from './dto/attribute.dto';
 import { AllAttributesResponse, AttributeAgainstEnum, AttributeResponse } from '@project-management-system/shared-models';
 import { AttributeRequest } from './dto/attribute.request';
-import { Attributes } from './attributes.entity';
 import { AttributeAgainstRequest } from './dto/attribute-against.request';
 
 
