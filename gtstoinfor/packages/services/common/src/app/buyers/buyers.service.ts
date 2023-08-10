@@ -27,7 +27,7 @@ export class BuyersService {
             // to check whether Customer exists with the passed  Customer  or not. if isUpdate is false, a check will be done whether a record with the passed Customer is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed Customer  then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
           let previousValue
             if (!isUpdate) {
-                const BuyerEntity = await this.getBuyerDetailsWithoutRelations(buyersDTO.clientCode);
+                const BuyerEntity = await this.getBuyerDetailsWithoutRelations(buyersDTO.buyerCode);
                 if (BuyerEntity !== null) {
                     return new BuyersResponseModel(false,11104, 'Buyer already exists');
                 }
@@ -35,7 +35,7 @@ export class BuyersService {
                 // var notificationStatus='Created';
             }else{
                 const buyerPrevious = await this.buyersRepository.findOne({where:{buyerId:buyersDTO.buyerId}})
-                previousValue = buyerPrevious.clientName
+                previousValue = buyerPrevious.buyerName
             }
             const convertedBuyerEntity: Buyers = this.buyersAdapter.convertDtoToEntity(buyersDTO, isUpdate);
             const savedBuyerEntity: Buyers = await this.buyersRepository.save(
@@ -43,7 +43,7 @@ export class BuyersService {
             );
             const savedBuyerDto: BuyersDTO = this.buyersAdapter.convertEntityToDto(savedBuyerEntity);
             if (savedBuyerDto) {
-                const certificatePresent = savedBuyerDto.clientName;
+                const certificatePresent = savedBuyerDto.buyerName;
                 // generating resposnse
                 const response = new BuyersResponseModel(true, isUpdate ? 11101 : 11100, isUpdate ? 'Customer Updated Successfully' : 'Customer Created Successfully', savedBuyerDto);
                 const name=isUpdate?'updated':'created'
@@ -64,13 +64,13 @@ export class BuyersService {
     }
     /**
      * get buyer by id
-     * @param clientCode 
+     * @param buyerCode 
      */
     // @LogActions({isAsync: true})
-    async getBuyerDetailsWithoutRelations(clientCode: string): Promise<Buyers> {
+    async getBuyerDetailsWithoutRelations(buyerCode: string): Promise<Buyers> {
         // tslint:disable-next-line: typedef
         const BuyersResponse = await this.buyersRepository.findOne({
-            where: { clientCode: Raw(alias => `client_code = '${clientCode}'`) },
+            where: { buyerCode: Raw(alias => `buyer_code = '${buyerCode}'`) },
         });
         if (BuyersResponse) {
             return BuyersResponse;
@@ -84,7 +84,7 @@ export class BuyersService {
     async getAllBuyers(): Promise<AllBuyersResponseModel> {
         try {
             const buyersDTO: BuyersDTO[] = [];
-            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'clientName': 'ASC' },relations:['countryInfo','paymentTermsInfo','paymentMethodInfo']});
+            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'buyerName': 'ASC' },relations:['countryInfo','paymentTermsInfo','paymentMethodInfo']});
             if (buyersEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 buyersEntities.forEach(buyerEntity => {
@@ -112,7 +112,7 @@ export class BuyersService {
         try {
             const buyersDTO: BuyersDTO[] = [];
             //retrieves all companies
-            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'clientName': 'ASC' },
+            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'buyerName': 'ASC' },
             relations: [
                 "cusAddressInfo",
               ],
