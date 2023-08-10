@@ -67,7 +67,6 @@ export function VendorsForm(
   }
 
   const save = (Data: VendorsDto) => {
-    console.log(Data,'--------data')
     Data.createdUser=localStorage.getItem('username')
     setDisable(true)
     service.create(Data).then(res => {
@@ -86,9 +85,7 @@ export function VendorsForm(
   }
 
   const saveData = (values: VendorsDto) => {
-    console.log(values,'------------val')
     setDisable(false)
-      console.log(values);
     if (props.isUpdate) {
       props.updateDetails(values);
     } else {
@@ -104,7 +101,7 @@ export function VendorsForm(
 
 
   return (
-    <Card title={props.isUpdate ? 'Update Vendor' : 'Add Vendor'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/vendors/vendors-view')} type={'primary'}>View</Button></span>}>
+    <Card size='small' title={props.isUpdate ? 'Update Vendor' : 'Add Vendor'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/vendors/vendors-view')} type={'primary'}>View</Button></span>}>
       <Form form={form} initialValues={props.vendorsData} name="control-hooks" onFinish={saveData}
         layout="vertical"
       >
@@ -208,7 +205,16 @@ export function VendorsForm(
                rules={[
               {
                 required: true,
+                message:'GST Number is required'
               },
+              {
+                max:15,
+                message:'GST Number should not be greater than 15 characters'
+              },
+              {
+                pattern:/[0-9a-zA-Z]/,
+                message:`Special characters not allowed`
+              }
             ]}
             >
               <Input placeholder='Enter GST Number'/>
@@ -286,8 +292,13 @@ export function VendorsForm(
                 required: true,
               },
               {
+                min:9,
+                max:18,
+                message:'Account Number should be in between 9 to 18 digits'
+              },
+              {
                 pattern: /^[0-9.]*$/,
-                message: `Letters , Spaces and Special charecters are not allowed`,
+                message: `Special charecters and alphabets are not allowed`,
               },
             ]}>
             
@@ -304,6 +315,14 @@ export function VendorsForm(
               {
                 required: true,
               },
+              {
+                max:11,
+                message:'IFSC Code should not be greater than 11'
+              },
+              {
+                pattern: /^[0-9.A-Z]*$/,
+                message: `Invalid IFSC Code`,
+              },
             ]}
             >
               <Input placeholder='Enter IFSC Code'/>
@@ -319,6 +338,10 @@ export function VendorsForm(
               {
                 required: true,
               },
+              {
+                pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=~{}:;<>,.?|][a-zA-Z.'"`\s ]*$/,
+                message: `Invalid Bank Name`
+                },
             ]}
             >
               <Input placeholder='Enter Bank Name' />
@@ -333,6 +356,10 @@ export function VendorsForm(
             rules={[
               {
                 required: true,
+              },
+              {
+                pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=~{}:;<>,.?|][a-zA-Z.'"`\s ]*$/,
+                message: `Invalid Branch Name`
               },
             ]}
             >

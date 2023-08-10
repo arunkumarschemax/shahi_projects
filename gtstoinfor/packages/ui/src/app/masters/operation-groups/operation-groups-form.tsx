@@ -31,7 +31,7 @@ export const OperationGroupForm = (props:OperationGroupsFormProps) => {
         service.createOperationGroup(operationGroupData).then((res) => {
           setDisable(false)
             if (res.status) {
-              AlertMessages.getSuccessMessage('Currency Created Successfully');
+              AlertMessages.getSuccessMessage('Operation Group Created Successfully');
               navigate('/masters/operationgroups/operationgroups-view')
               onReset();
             } else {
@@ -84,10 +84,10 @@ export const OperationGroupForm = (props:OperationGroupsFormProps) => {
                 required: true,
                 message:'Operation Group Code Is Required'
               },
-              {
-                pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-                message: `Should contain only alphabets.`
-              }
+              // {
+              //   pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+              //   message: `Should contain only alphabets.`
+              // }
             ]}
           >
             <Input placeholder="Enter Operation Group Code"/>

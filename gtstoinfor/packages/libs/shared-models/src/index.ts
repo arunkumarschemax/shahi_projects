@@ -10,6 +10,6 @@ export * from './common/factory/factory-activate-deactivate.dto'
 
 
 export * from './common/payment_terms_category/payment_terms_category.enum'
-
 export * from './common/delivery-terms'
+export * from './common/profit-center'
 export * from './enum'

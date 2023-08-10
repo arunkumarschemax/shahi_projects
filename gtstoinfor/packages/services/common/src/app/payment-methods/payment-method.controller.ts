@@ -62,7 +62,7 @@ export class PaymentMethodController {
   @ApiBody({type:PaymentMethodDTO})
   async activateOrDeactivatePaymentMethod( @Body()request:any ): Promise<AllPaymentMethodResponseModel> {
     try {
-      return await this.paymentMethodService.activateOrDeactivateCurrency(request);
+      return await this.paymentMethodService.activateOrDeactivatePaymentMethod(request);
     } catch (error) {
       // return errorHandler(AllPaymentResponseModel, error);
       return this.applicationExceptionHandler.returnException(AllPaymentMethodResponseModel, error);

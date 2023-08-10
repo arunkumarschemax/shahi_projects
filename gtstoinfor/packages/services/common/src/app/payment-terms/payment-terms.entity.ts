@@ -1,5 +1,6 @@
 import { PaymentTermsCategory } from "@project-management-system/shared-models";
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { Buyers } from "../buyers/buyers.entity";
 @Entity('payment_terms')
 export class PaymentTerms {
 
@@ -61,4 +62,7 @@ paymentTermsCategory: PaymentTermsCategory;
       name: "version_flag"
   })
   versionFlag: number;
+
+  @OneToMany(type => Buyers, buyer => buyer.paymentTermsInfo,{cascade:true})
+  buyerInfo : Buyers
 }

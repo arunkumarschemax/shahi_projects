@@ -183,8 +183,7 @@ export const  BuyersView = () => {
     const deleteBuyer = (data:BuyersDto) => {
       data.isActive=data.isActive?false:true;
       const req = new BuyerRequest(data.buyerId,'admin',data.versionFlag,data.isActive)
-      console.log(req,'--------req')
-      buyerService.activateOrDeactivateBuyer(req).then(res => { console.log(res);
+      buyerService.activateOrDeactivateBuyer(req).then(res => {
         if (res.status) {
           getBuyersData();
           message.success('Success');
@@ -199,7 +198,6 @@ export const  BuyersView = () => {
     const updateBuyer = (buyerData: BuyersDto) => {
       buyerData.updatedUser = JSON.parse(localStorage.getItem('username'))
       buyerService.updateBuyer(buyerData).then(res => {
-        console.log(res);
         if (res.status) {
           AlertMessages.getSuccessMessage('Updated Successfully');
           getBuyersData();
@@ -226,20 +224,20 @@ export const  BuyersView = () => {
         render: (text, object, index) => (page-1) * 10 +(index+1)
       },
       {
-        dataIndex:"clientCode",
+        dataIndex:"buyerCode",
         title:"Buyer Code",
         // responsive: ['lg'],
-        sorter: (a, b) => a.clientCode.localeCompare(b.clientCode),
+        sorter: (a, b) => a.buyerCode.localeCompare(b.buyerCode),
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('clientCode')
+        ...getColumnSearchProps('buyerCode')
       },
       {
-        dataIndex:"clientName",
+        dataIndex:"buyerName",
         title:"Buyer Name",
         // responsive: ['lg'],
-        sorter: (a, b) => a.clientName.localeCompare(b.clientName),
+        sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('clientName')
+        ...getColumnSearchProps('buyerName')
       },
       {
         dataIndex:"contactPerson",
@@ -305,7 +303,6 @@ export const  BuyersView = () => {
               <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
                 onClick={() => {
                   if (rowData.isActive) {
-                    console.log(rowData);
                     openFormWithData(rowData);
                   } else {
                     message.error('You Cannot Edit Deactivated Vendor');
@@ -350,9 +347,8 @@ export const  BuyersView = () => {
 
 
   return (
-    <Card title='Buyers' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-form')} type={'primary'}>New</Button></span>}>
-  <br></br>
-     <Row gutter={40}>
+    <Card title='Buyers' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-form')} type={'primary'}>New</Button></span>} size='small'>
+     <Row gutter={40} >
       <Col>
           <Card title={'Total Vendors : ' + buyersData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
@@ -366,7 +362,7 @@ export const  BuyersView = () => {
           <br></br>
           <div style={{overflowX :'auto' }}>
 
-    <Table columns={columnsSkelton} dataSource={buyersData}/>
+    <Table columns={columnsSkelton} dataSource={buyersData} size='small' bordered/>
           </div>
     <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>

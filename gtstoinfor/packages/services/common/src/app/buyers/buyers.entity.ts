@@ -1,6 +1,8 @@
 import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { Countries } from "../countries/countries.entity";
 import { BuyerGeneralAttributesEntity } from "./buyers-general.entity";
+import { PaymentMethod } from "../payment-methods/payment-method-entity";
+import { PaymentTerms } from "../payment-terms/payment-terms.entity";
 // import { PaymentMode } from "../payment-mode/payment-mode.entity";
 // import { ShippingTerms } from "../shipping-terms/shipping-terms.entity";
 
@@ -13,17 +15,17 @@ export class Buyers {
   @Column("varchar",{
     nullable:false,
     length:15,
-    name:"client_code"
+    name:"buyer_code"
   })
-  clientCode:string;
+  buyerCode:string;
 
   @Column("varchar",{
     nullable:false,
     length:50,
-    name:"client_name"
+    name:"buyer_name"
   })
   @Index({unique:true})
-  clientName:string;
+  buyerName:string;
 
   // @Column("varchar",{
   //   nullable:false,
@@ -191,15 +193,20 @@ export class Buyers {
   })
   versionFlag: number;
 
-  // @ManyToOne(type=>PaymentMode, paymentMode=>paymentMode.paymentModeId,{  nullable:false, })
-  //   @JoinColumn({ name:"payment_mode_id"})
-  //   paymentModeInfo: PaymentMode;
+  @ManyToOne(type=>PaymentMethod, paymentMethod=>paymentMethod.buyerInfo,{  nullable:false, })
+  @JoinColumn({ name:"payment_method_id"})
+  paymentMethodInfo: PaymentMethod;
+
+  @ManyToOne(type=>PaymentTerms, paymentTerms=>paymentTerms.buyerInfo,{  nullable:false, })
+  @JoinColumn({ name:"payment_terms_id"})
+  paymentTermsInfo: PaymentTerms;
+
 //   @ManyToOne(type=>ShippingTerms, shippingTerms=>shippingTerms.shippingTermsId,{  nullable:false, })
 //     @JoinColumn({ name:"shipment_terms"})
 //     shippingTermsInfo: ShippingTerms;
 
 
-    @ManyToOne(type=>Countries, country=>country.vendorInfo,{  nullable:false, })
+    @ManyToOne(type=>Countries, country=>country.buyersInfo,{  nullable:false, })
     @JoinColumn({ name:"country_id"})
     countryInfo: Countries;
 

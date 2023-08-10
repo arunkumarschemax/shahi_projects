@@ -169,13 +169,13 @@ export function DeliveryTermsGrid(props: DeliveryTermsGridProps) {
       dataIndex: 'isActive',
       sorter: (a, b) => a.deliveryTermsName.localeCompare(b.deliveryTermsName),
        sortDirections: ['descend', 'ascend'],
-       ...getColumnSearchProps('deliveryTermsName')
+       ...getColumnSearchProps('deliveryTermsName'),
       
-      //  render: (isActive, rowData) => (
-      //   <>
-      //     {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-      //   </>
-      // ),
+       render: (isActive, rowData) => (
+        <>
+          {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+        </>
+      ),
       // filters: [
       //   {
       //     text: 'Active',

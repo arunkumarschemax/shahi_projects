@@ -115,8 +115,7 @@ export function VendorsView(
   const deleteVendor = (vendorsData:VendorsDto) => {
     vendorsData.isActive=vendorsData.isActive?false:true;
     const req = new VendorRequest(vendorsData.vendorId,'admin',vendorsData.versionFlag,vendorsData.isActive)
-    console.log(req,'--------req')
-    vendorsService.activateOrDeactivateVendor(req).then(res => { console.log(res);
+    vendorsService.activateOrDeactivateVendor(req).then(res => { 
       if (res.status) {
         getAllVendors();
         message.success('Success');
@@ -130,7 +129,7 @@ export function VendorsView(
    
 
     const updateVendor = (vendorData: VendorsDto) => {
-      vendorsService.update(vendorData).then(res => { console.log(res);
+      vendorsService.update(vendorData).then(res => {
         if (res.status) {
           getAllVendors();
           setDrawerVisible(false);
@@ -442,7 +441,6 @@ export function VendorsView(
                 <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
                   onClick={() => {
                     if (rowData.isActive) {
-                      console.log(rowData);
                       openFormWithData(rowData);
                     } else {
                       message.error('You Cannot Edit Deactivated Vendor');
@@ -482,10 +480,6 @@ export function VendorsView(
       const onChange=(pagination, filters, sorter, extra)=> {
         console.log('params', pagination, filters, sorter, extra);
       }
-      const OpenFormTocreateRecord = () => {
-       console.log('redirect here');
-       
-      }
     
 
 
@@ -495,9 +489,7 @@ export function VendorsView(
     style={{textAlign:'center'}} headStyle={{backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/vendors-form' ><Button className='panel_button' >Create </Button></Link>}
     
     > */}
-    <Card title='Vendors' extra={<span><Button onClick={() => navigate('/masters/vendors/vendors-form')} type={'primary'}>New</Button></span>}>
-
-     <br></br>
+    <Card size='small' title='Vendors' extra={<span><Button onClick={() => navigate('/masters/vendors/vendors-form')} type={'primary'}>New</Button></span>}>
      <Row gutter={40}>
       <Col>
           <Card title={'Total Vendors : ' + vendorsData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
@@ -608,7 +600,8 @@ export function VendorsView(
             }
           }}
           onChange={onChange}
-          bordered />
+          bordered
+          size='small' />
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
             <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
