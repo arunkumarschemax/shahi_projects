@@ -16,7 +16,6 @@ export class BuyersGeneralAttributeService {
     ){}
 
     async createGeneralAttribute(req:BuyersGeneralAttributeDto,isUpdate:boolean ): Promise<BuyersGeneralAttributeResponseModel>{
-        console.log(req,'---------------req')
         try{
             for(const rec of req.attributeInfo){
                 const entity = new BuyerGeneralAttributesEntity()
@@ -43,12 +42,10 @@ export class BuyersGeneralAttributeService {
     }
 
     async getByBuyerId(req:BuyersRequest) : Promise<BuyersGeneralAttributeResponseModel>{
-        console.log(req,'------------------------')
         try{
             let info =[];
 
             const data = await this.buyerGeneralAttrRepo.find({where:{buyerInfo:{buyerId:req.buyerId}},relations:['buyerInfo','attributeInfo']})
-            console.log(data,'------------------------data')
             if(data.length > 0){
                 for(const rec of data){
                     info.push(new BuyersGeneralAttributeModel(rec.buyerGeneralAttributeId,rec.buyerInfo.buyerId,rec.attributeInfo.attributeId,rec.attributeName,rec.attributeValue,rec.isActive,rec.versionFlag))

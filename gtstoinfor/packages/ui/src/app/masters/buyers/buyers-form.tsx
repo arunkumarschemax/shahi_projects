@@ -102,7 +102,6 @@ export function BuyersForm(props: BuyersFormProps) {
     buyersData.paymentMethodId = Number(buyersData.paymentMethodId)
     buyersData.createdUser = 'admin'
     setDisable(true)
-    console.log(buyersData,'-----------------------')
     buyerService.createBuyer(buyersData).then(res => {
       setDisable(false)
       if (res.status) {
@@ -126,9 +125,7 @@ export function BuyersForm(props: BuyersFormProps) {
 
   const saveData = (values: BuyersDto) => {
     setDisable(false)
-    console.log(values);
     if (props.isUpdate) {
-      console.log('update')
       props.updateDetails(values);
     } else {
       setDisable(false)
@@ -144,16 +141,16 @@ export function BuyersForm(props: BuyersFormProps) {
     // createdUser = localStorage.getItem("createdUser");
     createdUser= 'admin'
   }
-  const onFocus = () => {
-    console.log('focus');
-  }
+  // const onFocus = () => {
+  //   console.log('focus');
+  // }
 
-  const onSearch = (val) => {
-    console.log('search:', val);
-  }
-  const onBlur = () => {
-    console.log('blur');
-  }
+  // const onSearch = (val) => {
+  //   console.log('search:', val);
+  // }
+  // const onBlur = () => {
+  //   console.log('blur');
+  // }
 
 
  // props.customersData.currency=Number(props.customersData.currency);
@@ -297,9 +294,6 @@ export function BuyersForm(props: BuyersFormProps) {
                   placeholder="Select Currency"
                   // onChange={getSkuCode}
                   onChange={handleCurrency}
-                  onFocus={onFocus}
-                  onBlur={onBlur}
-                  onSearch={onSearch}
                   allowClear
                 >
                   {currencies.map(curencyDropData => {

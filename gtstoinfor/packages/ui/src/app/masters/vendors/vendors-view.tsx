@@ -115,8 +115,7 @@ export function VendorsView(
   const deleteVendor = (vendorsData:VendorsDto) => {
     vendorsData.isActive=vendorsData.isActive?false:true;
     const req = new VendorRequest(vendorsData.vendorId,'admin',vendorsData.versionFlag,vendorsData.isActive)
-    console.log(req,'--------req')
-    vendorsService.activateOrDeactivateVendor(req).then(res => { console.log(res);
+    vendorsService.activateOrDeactivateVendor(req).then(res => { 
       if (res.status) {
         getAllVendors();
         message.success('Success');
@@ -130,7 +129,7 @@ export function VendorsView(
    
 
     const updateVendor = (vendorData: VendorsDto) => {
-      vendorsService.update(vendorData).then(res => { console.log(res);
+      vendorsService.update(vendorData).then(res => {
         if (res.status) {
           getAllVendors();
           setDrawerVisible(false);
@@ -442,7 +441,6 @@ export function VendorsView(
                 <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
                   onClick={() => {
                     if (rowData.isActive) {
-                      console.log(rowData);
                       openFormWithData(rowData);
                     } else {
                       message.error('You Cannot Edit Deactivated Vendor');
@@ -481,10 +479,6 @@ export function VendorsView(
        */
       const onChange=(pagination, filters, sorter, extra)=> {
         console.log('params', pagination, filters, sorter, extra);
-      }
-      const OpenFormTocreateRecord = () => {
-       console.log('redirect here');
-       
       }
     
 

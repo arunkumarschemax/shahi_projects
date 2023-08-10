@@ -23,11 +23,9 @@ export class BuyersService {
      * @param request 
      */
     async createBuyer(buyersDTO: BuyersDTO, isUpdate: boolean): Promise<BuyersResponseModel> {
-        console.log(buyersDTO,'---------------')
         try {
             // to check whether Customer exists with the passed  Customer  or not. if isUpdate is false, a check will be done whether a record with the passed Customer is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed Customer  then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
           let previousValue
-            console.log(isUpdate);
             if (!isUpdate) {
                 const BuyerEntity = await this.getBuyerDetailsWithoutRelations(buyersDTO.clientCode);
                 if (BuyerEntity !== null) {
@@ -53,7 +51,6 @@ export class BuyersService {
             const userName = isUpdate? savedBuyerDto.updatedUser :savedBuyerDto.createdUser;
             // const newLogDto = new LogsDto(1,name, 'Customers', savedCustomerDto.buyerId, true, displayValue,userName,previousValue,certificatePresent)
             // let res = await this.logService.createLog(newLogDto);
-            // console.log(res);
             
                 return response;
             } else {
@@ -100,7 +97,6 @@ export class BuyersService {
                 // if(req?.createdUser){
                 //     const newLogDto = new LogsDto(1,'view', 'Customers', 0, true, 'Customers retrieved successfully',req.createdUser,'','')
                 //     let res = await this.logService.createLog(newLogDto);
-                //     console.log(res);
                 // }
              
                 return response;
@@ -122,7 +118,6 @@ export class BuyersService {
               ],
               where:{isActive:true},
          });
-         console.log(buyersEntities)
             if (buyersEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 buyersEntities.forEach(buyerEntity => {
@@ -198,7 +193,6 @@ export class BuyersService {
       async getBuyerDataById(@Body() buyerRequest:BuyersRequest): Promise<BuyersResponseModel> {
         // const page: number = 1;
         try {
-//   console.log('hhhhhhhhhhhhhhhhhh Controller '+BuyerRequest.buyerId);  
 
           const buyersDTO: BuyersDTO[] = [];
           //retrieves all companies
@@ -208,8 +202,6 @@ export class BuyersService {
             });
             const buyersData: BuyersDTO = this.buyersAdapter.convertEntityToDto(buyersEntities);
             if (buyersData) {
-            console.log(buyersData);
-
                 const response = new BuyersResponseModel(true, 11101 , 'Buyer retrived Successfully',buyersData);
                 return response;
             }

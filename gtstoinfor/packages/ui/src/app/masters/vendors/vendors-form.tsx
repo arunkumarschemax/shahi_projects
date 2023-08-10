@@ -67,7 +67,6 @@ export function VendorsForm(
   }
 
   const save = (Data: VendorsDto) => {
-    console.log(Data,'--------data')
     Data.createdUser=localStorage.getItem('username')
     setDisable(true)
     service.create(Data).then(res => {
@@ -86,9 +85,7 @@ export function VendorsForm(
   }
 
   const saveData = (values: VendorsDto) => {
-    console.log(values,'------------val')
     setDisable(false)
-      console.log(values);
     if (props.isUpdate) {
       props.updateDetails(values);
     } else {

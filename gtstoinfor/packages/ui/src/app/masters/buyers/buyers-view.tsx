@@ -183,8 +183,7 @@ export const  BuyersView = () => {
     const deleteBuyer = (data:BuyersDto) => {
       data.isActive=data.isActive?false:true;
       const req = new BuyerRequest(data.buyerId,'admin',data.versionFlag,data.isActive)
-      console.log(req,'--------req')
-      buyerService.activateOrDeactivateBuyer(req).then(res => { console.log(res);
+      buyerService.activateOrDeactivateBuyer(req).then(res => {
         if (res.status) {
           getBuyersData();
           message.success('Success');
@@ -199,7 +198,6 @@ export const  BuyersView = () => {
     const updateBuyer = (buyerData: BuyersDto) => {
       buyerData.updatedUser = JSON.parse(localStorage.getItem('username'))
       buyerService.updateBuyer(buyerData).then(res => {
-        console.log(res);
         if (res.status) {
           AlertMessages.getSuccessMessage('Updated Successfully');
           getBuyersData();
@@ -305,7 +303,6 @@ export const  BuyersView = () => {
               <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
                 onClick={() => {
                   if (rowData.isActive) {
-                    console.log(rowData);
                     openFormWithData(rowData);
                   } else {
                     message.error('You Cannot Edit Deactivated Vendor');
