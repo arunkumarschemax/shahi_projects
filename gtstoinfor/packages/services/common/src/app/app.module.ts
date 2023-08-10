@@ -24,26 +24,24 @@ import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categori
 import { DeliveryTermsModule } from './delivery-terms/delivery-terms.module';
 import { CountriesModule } from './countries/countries.module';
 import { StyleModule } from './style/style-module';
-import { ProfitCenter } from './profit-center/profit-center-entity';
-import { ProfitCenterModule } from './profit-center/profit-center-module';
 import { PaymentMethodModule } from './payment-methods/paymeny-method-module';
 import { GarmentsModule } from './garments/garments.module';
 import { AttributeModule } from './attributes/attribute.module';
 import { ComponentsModule } from './components/components.module';
 import { GarmentCategoriesModule } from './garment-category/garment-category.module';
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
-
+import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
-      host: appConfig.database.host,
-      port: appConfig.database.port,
-      username: appConfig.database.username,
-      password: appConfig.database.password,
-      database: appConfig.database.dbName,
+      host: 'localhost',
+      port:3308,
+      username: 'root',
+      password: '',
+      database: 'crm',
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -66,7 +64,7 @@ import { ComponentMappingModule } from './components-mapping/component-mapping.m
     AttributeModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ProfitCenterModule,PaymentMethodModule ,ComponentMappingModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule],
   controllers: [AppController],
   providers: [AppService],
 })

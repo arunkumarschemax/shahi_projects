@@ -1,5 +1,4 @@
 import { from } from 'rxjs';
-
 export * from './global-response-object';
 export * from './common-request-attr.model';
 export * from './factory/index'
@@ -28,3 +27,4 @@ export * from './liscence-type'
 export * from './garments'
 export * from './components'
 export * from './attributes'
+export * from './profit-control-head'

@@ -50,8 +50,6 @@ import LiscenceTypesForm from "./masters/Liscence Types/liscence_types_form"
 import { GarmentCategoryForm } from "./masters/garment category/garment-category-form"
 import { GarmentCategoryGrid } from "./masters/garment category/garment-category-grid"
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
-import ProfitCenterGrid from "./masters/profit-center/profit-center-grid"
-import { ProfitCenterForm } from "./masters/profit-center/profit-center-form"
 import { GarmentsGrid } from "./masters/garments/garments-grid"
 import GarmentsForm from "./masters/garments/garments-form"
 import BuyersGeneralAttributeForm from "./masters/buyers/buyers-general-attribute-form"
@@ -60,6 +58,8 @@ import ComponentsGrid from "./masters/Components/components-grid"
 import AttributesGrid from "./masters/attributes/attributes-grid"
 import AttributesForm from "./masters/attributes/attributes-form"
 import ComponentMappingView from "./components-mapping/components-mapping-view"
+import ProfitControlHeadGrid from "./masters/profit-control-head/profit-control-head-grid"
+import { ProfitControlHeadForm } from "./masters/profit-control-head/profit-control-head-form"
 
 
 export const AppRoutes = () => {
@@ -171,8 +171,8 @@ export const AppRoutes = () => {
                         <Route path='payment-terms/payment-terms-view' element={<PaymentTermsGrid />} />
                         <Route path='package-terms/package-terms-form' element={<PackageTermsForm  packageTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }}/>} />
                         <Route path='package-terms/package-terms-view' element={<PackageTermsGrid/>} />
-                        <Route path='profit-center/profit-center-view' element={<ProfitCenterGrid/>} />
-                         <Route path='profit-center/profit-center-form' key ='profit-center/profit-center-form' element={< ProfitCenterForm profitCenterData={undefined}
+                        <Route path='profit-control-head/profit-control-head-view' element={<ProfitControlHeadGrid/>} />
+                         <Route path='profit-control-head/profit-control-head-form' key ='profit-control-head/profit-control-head-form' element={< ProfitControlHeadForm profitCenterData={undefined}
                  isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} /><Route path="components/components-view" element ={<ComponentsGrid/>}/>
