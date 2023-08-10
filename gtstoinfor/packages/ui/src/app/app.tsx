@@ -1,4 +1,4 @@
-
+  
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useState } from 'react';
 import './app.module.css';
@@ -6,7 +6,7 @@ import CustomSpinner from './common/custom-spinner/custom-spinner';
 import { Route, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AppRoutes } from './routes';
-
+  
 
 export function App() {
   const [load, setLoad] = useState<any>();

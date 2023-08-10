@@ -168,4 +168,24 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'Data retrived successfully')
         }
     }
+
+    async getFactoryReportData(): Promise<CommonResponseModel> {
+        // let query ='SELECT po_number , po_line_item_number ,  product_code FROM `dpom`';
+
+        const details = await this.dpomRepository.find();
+        console.log(details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+   
+    }
+
+    async getByFactoryStatus(req:DpomSaveDto){
+        const record=await this.dpomRepository.find({
+            where:{DPOMLineItemStatus:req.DPOMLineItemStatus},
+        });
+        if(record){
+            return record;
+        }else{
+            return 'no data found';
+        }
+    }
 }
