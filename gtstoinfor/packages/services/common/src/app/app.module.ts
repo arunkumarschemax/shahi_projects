@@ -8,7 +8,6 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { appConfig } from '../../config';
 import { OrdersModule } from './orders/orders.module';
-import { SupplierModule } from './supplier/supplier.module';
 import { DpomModule } from './dpom/nike-dpom.module';
 
 
@@ -17,11 +16,11 @@ import { DpomModule } from './dpom/nike-dpom.module';
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
-      host: 'localhost',
-      port: 3308,
-      username: 'root',
-      password: '',
-      database: 'shahi_orders',
+      host: appConfig.database.host,
+      port: appConfig.database.port,
+      username: appConfig.database.username,
+      password: appConfig.database.password,
+      database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -32,7 +31,7 @@ import { DpomModule } from './dpom/nike-dpom.module';
     FactoriesModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule , SupplierModule, DpomModule],
+    AuthModule, JwtModule, DpomModule],
   controllers: [AppController],
   providers: [AppService],
 })
