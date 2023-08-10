@@ -77,7 +77,7 @@ export default function UsersView() {
         return (
           <TableActions
             isActive={entity.isActive}
-            onEditClick={onEditClick}
+            onClick={onEditClick}
             onSwitchClick={() => { onSwitchClick(entity) }}
           />
         );

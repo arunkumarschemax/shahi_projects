@@ -2,17 +2,21 @@ import { FactoryDto } from "../dto/factory.dto";
 import { FactoriesEntity } from "../factories.entity";
 
 export class FactoryAdapter {
-    public convertDtoToEntity(dto: FactoryDto): FactoriesEntity {
+    public convertDtoToEntity(dto: FactoryDto,isUpdate:boolean=false): FactoriesEntity {
         const entity = new FactoriesEntity()
         entity.name = dto.name;
         entity.address = dto.address;
-        if (dto.id) {
-            entity.id = dto.id;
-            entity.updatedUser = dto.createdUser;
-        } else {
-            entity.createdUser = dto.createdUser;
-        }
-        return entity
+        if(isUpdate){
+            // if ur update the rowdata give against id data
+            entity.id = dto.id
+            entity.updatedUser = dto.updatedUser;
+          }else{
+            entity.isActive = true;
+            entity.createdUser = dto.createdUser
+          }
+          // Map any other fields as needed
+          console.log(entity);
+          return entity; 
     }
 
 

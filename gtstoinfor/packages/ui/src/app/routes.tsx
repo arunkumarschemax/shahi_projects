@@ -14,6 +14,9 @@ import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import PhaseWiseData from "./excel-import/phase-wise-data"
+import SupplierForm from "./masters/supplier/supplier-form"
+import SupplierView from "./masters/supplier/supplier-view"
+import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared-models"
 import PoFileImport from "./nike/po-file-import"
 import FactoryPPMReport from "./nike/factory-ppm-report"
 
@@ -32,7 +35,17 @@ export const AppRoutes = () => {
                 <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
                 <Route path='/masters'>
                     <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
-                    <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm />} />
+                    <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm   Data={undefined} updateItem={function (Data: FactoryDto): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } } />} />
+                    <Route path='supplier/supplier-view' key='/supplier/supplier-view' element={<SupplierView />} />
+                    <Route path='supplier/supplier-form' key='/supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
+                        throw new Error("Function not implemented.")
+                    } } isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } } />} />
                 </Route>
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
@@ -67,7 +80,17 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-view' element={<UsersView />} />
                     <Route path='/masters'>
                         <Route path='factories/factories-view' element={<FactoriesView />} />
-                        <Route path='factories/factories-form' element={<FactoriesForm />} />
+                        <Route path='factories/factories-form' element={<FactoriesForm Data={undefined} updateItem={function (Data: FactoryDto): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } }  />} />
+                        <Route path='supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } } />} />
+                        <Route path='supplier/supplier-view' element={<SupplierView />} />
                     </Route>
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
