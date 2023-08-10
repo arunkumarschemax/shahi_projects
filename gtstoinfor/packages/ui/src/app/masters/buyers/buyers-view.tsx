@@ -224,20 +224,20 @@ export const  BuyersView = () => {
         render: (text, object, index) => (page-1) * 10 +(index+1)
       },
       {
-        dataIndex:"clientCode",
+        dataIndex:"buyerCode",
         title:"Buyer Code",
         // responsive: ['lg'],
-        sorter: (a, b) => a.clientCode.localeCompare(b.clientCode),
+        sorter: (a, b) => a.buyerCode.localeCompare(b.buyerCode),
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('clientCode')
+        ...getColumnSearchProps('buyerCode')
       },
       {
-        dataIndex:"clientName",
+        dataIndex:"buyerName",
         title:"Buyer Name",
         // responsive: ['lg'],
-        sorter: (a, b) => a.clientName.localeCompare(b.clientName),
+        sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('clientName')
+        ...getColumnSearchProps('buyerName')
       },
       {
         dataIndex:"contactPerson",

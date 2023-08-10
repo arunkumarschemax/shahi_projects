@@ -171,7 +171,7 @@ export function BuyersForm(props: BuyersFormProps) {
               <Row gutter={8}>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item
-                  name="clientCode"
+                  name="buyerCode"
                   label="Buyer Code"
                   rules={[
                     {
@@ -188,7 +188,7 @@ export function BuyersForm(props: BuyersFormProps) {
               </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item
-                name="clientName"
+                name="buyerName"
                 label="Buyer Name"
                 rules={[
                   {
