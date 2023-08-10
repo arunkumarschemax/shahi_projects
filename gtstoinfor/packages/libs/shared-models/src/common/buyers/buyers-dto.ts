@@ -1,8 +1,8 @@
 
 export class BuyersDto{
     buyerId : number;
-    clientCode : string;            
-    clientName : string; 
+    buyerCode : string;            
+    buyerName : string; 
     // accountType : string;           
     gstNumber : string; 
     contactPerson : string;                       
@@ -31,8 +31,8 @@ export class BuyersDto{
     
     /**
     * @param buyerId  number
-    * @param clientCode  string            
-    * @param clientName  string  
+    * @param buyerCode  string            
+    * @param buyerName  string  
     * @param gstNumber  string   
     * @param contactPerson  string                     
     * @param phoneNo  string            
@@ -58,11 +58,11 @@ export class BuyersDto{
     * @param paymentMethod string
     * 
     */
-    constructor(buyerId : number,clientCode : string,clientName : string,gstNumber : string,contactPerson :string,phoneNo : string,email : string, currency : string,state:string,district:string,city : string,landmark:string,lane1:string,lane2:string,pincode:string, publicNote : string,privateNote : string, countryId:number, paymentTerms : string, shipmentTerms : string,paymentMethodId : number,isActive: boolean,createdUser : string,updatedUser : string,versionFlag:number,paymentTermsId: number,paymentMethod : string)
+    constructor(buyerId : number,buyerCode : string,buyerName : string,gstNumber : string,contactPerson :string,phoneNo : string,email : string, currency : string,state:string,district:string,city : string,landmark:string,lane1:string,lane2:string,pincode:string, publicNote : string,privateNote : string, countryId:number, paymentTerms : string, shipmentTerms : string,paymentMethodId : number,isActive: boolean,createdUser : string,updatedUser : string,versionFlag:number,paymentTermsId: number,paymentMethod : string)
     {
         this.buyerId = buyerId;
-        this.clientCode = clientCode;     
-        this.clientName = clientName;
+        this.buyerCode = buyerCode;     
+        this.buyerName = buyerName;
         // this.accountType = accountType;  
         this.gstNumber = gstNumber;
         this.contactPerson = contactPerson;                
@@ -93,8 +93,8 @@ export class BuyersDto{
 }
 export const BuyersDtoDefault : BuyersDto = {
     buyerId : 0,
-    clientCode : '',            
-    clientName : '',
+    buyerCode : '',            
+    buyerName : '',
     // accountType : '',            
     gstNumber : '',  
     contactPerson : '',                      

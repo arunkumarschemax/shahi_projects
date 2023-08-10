@@ -30,7 +30,8 @@ export * from './location.service'
 export * from './component-mapping-service'
 export * from './liscence-type.service';
 export * from './component-mapping-service';
-export * from './profit-center-service';export * from './liscence-type.service';
+export * from './profit-control-head.service';
+export * from './liscence-type.service';
 export * from './components-service'
 export * from  './attribute-service'
 export * from './style-service';

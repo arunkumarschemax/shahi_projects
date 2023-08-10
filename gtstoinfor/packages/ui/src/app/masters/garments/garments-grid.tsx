@@ -238,7 +238,7 @@ export function GarmentsGrid(
                 if (rowData.isActive) {
                   openFormWithData(rowData);
                 } else {
-                  AlertMessages.getErrorMessage('You Cannot Edit Deactivated Category');
+                  AlertMessages.getErrorMessage('You Cannot Edit Deactivated Garment');
                 }
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}
@@ -271,7 +271,9 @@ export function GarmentsGrid(
 
   return (
     <Card title={<span >Garments</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/garments/garments-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    // extra={<Link to = "/masters/garments/garments-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
+    >
      <br></br>
       <Row gutter={40}>
       <Col>

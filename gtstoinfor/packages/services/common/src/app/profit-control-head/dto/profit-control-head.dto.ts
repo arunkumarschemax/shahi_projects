@@ -1,16 +1,16 @@
 import {IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate,IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
  
-export class ProfitCenterDTO{
+export class ProfitControlHeadDTO{
     @ApiProperty()
-  @IsNotEmpty({message:"ProfitCenterId should not be empty"})
+  @IsNotEmpty({message:"profit Control head Id should not be empty"})
   @IsOptional()
-   profitCenterId: number;
+  profitControlHeadId: number;
 
 @ApiProperty()
-@MaxLength(15,{message:"Profit Center allows maxmum 15 characters"})
+@MaxLength(15,{message:"profit Control head allows maxmum 15 characters"})
 @IsNotEmpty()
-profitCenter:string;
+profitControlHead:string;
 
 @ApiProperty()
 isActive: boolean;
