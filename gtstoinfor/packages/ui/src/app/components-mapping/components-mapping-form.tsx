@@ -83,23 +83,25 @@ export const ComponentsMappingForm = () => {
         setComponents(selectedComponentDetails);
       };
 
-    const options = ['Front', 'Back', 'Collar', 'Sleeves', 'Pockets', 'Logo On Pocket'];
 
     const onFinish = (values) => {
-        const req = new ComponentMappingModel(0,values.styleId,values.garmentCategoryId,values.garmentId,components,'admin','',true,1)
-        console.log(req,'-------------req')
-        servcie.createComponentMap(req).then(res => {
-            if(res.status){
-                AlertMessages.getSuccessMessage(res.internalMessage)
-            } else{
-                AlertMessages.getErrorMessage(res.internalMessage)
-            }
-        })
+        if(components.length > 0){
+            const req = new ComponentMappingModel(0,values.styleId,values.garmentCategoryId,values.garmentId,components,'admin','',true,1)
+            servcie.createComponentMap(req).then(res => {
+                if(res.status){
+                    AlertMessages.getSuccessMessage(res.internalMessage)
+                    onReset()
+                } else{
+                    AlertMessages.getErrorMessage(res.internalMessage)
+                }
+            })
+        } else {
+            AlertMessages.getErrorMessage('Have to map atleast one component')
+        }
     }
 
 
     const onStyleChange = (val,option) => {
-        console.log(option,'------------option')
         setStyle(option?.key)
     }
 
@@ -113,8 +115,10 @@ export const ComponentsMappingForm = () => {
 
     const onReset = () => {
         form.resetFields()
-        setComponents([]); // Clear the selection by setting an empty array
-
+        setComponents([]);
+        setStyle('')
+        setGarmentCategory('')
+        setGarment('')
     }
 
     return(
@@ -122,7 +126,7 @@ export const ComponentsMappingForm = () => {
             <Form form={form} onFinish={onFinish}>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item label='Style' name='styleId'>
+                      <Form.Item label='Style' name='styleId' rules={[{required:true,message:'Style is required'}]}>
                         {/* <Input onChange={(val) => onStyleChange(val)}/> */}
                         <Select
                         showSearch
@@ -142,7 +146,7 @@ export const ComponentsMappingForm = () => {
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item label='Garment Category' name='garmentCategoryId'>
+                      <Form.Item label='Garment Category' name='garmentCategoryId'  rules={[{required:true,message:'Garment Category is required'}]}>
                         {/* <Input onChange={onGarmentCategoryChange}/> */}
                         <Select
                         showSearch
@@ -162,7 +166,7 @@ export const ComponentsMappingForm = () => {
                       </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                      <Form.Item label='Garment' name='garmentId'>
+                      <Form.Item label='Garment' name='garmentId' rules={[{required:true,message:'Garment is required'}]}>
                         {/* <Input onChange={onGarmentChange}/> */}
                         <Select
                         showSearch

@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Buyers } from '../buyers.entity';
 import { BuyersDTO } from './buyers.dto';
 import { Countries } from '../../countries/countries.entity';
+import { PaymentTerms } from '../../payment-terms/payment-terms.entity';
+import { PaymentMethod } from '../../payment-methods/payment-method-entity';
 
 
 @Injectable()
@@ -13,9 +15,8 @@ export class BuyersAdapter {
    */
   public convertDtoToEntity(  buyersDTO: BuyersDTO,  isUpdate: boolean = false ): Buyers {
     const buyer = new Buyers();
-    console.log(buyersDTO);
-    buyer.clientCode=buyersDTO.clientCode;
-    buyer.clientName=buyersDTO.clientName;
+    buyer.buyerCode=buyersDTO.buyerCode;
+    buyer.buyerName=buyersDTO.buyerName;
     // buyer.accountType=buyersDTO.accountType;
     buyer.gstNumber=buyersDTO.gstNumber;
     buyer.contactPerson=buyersDTO.contactPerson;
@@ -33,9 +34,10 @@ export class BuyersAdapter {
     buyer.privateNote=buyersDTO.privateNote;
     buyer.countryInfo = new Countries()
     buyer.countryInfo.countryId = Number(buyersDTO.countryId)
-    // buyer.paymentTerms=buyersDTO.paymentTerms;
-    // buyer.shipmentTerms=buyersDTO.shipmentTerms;
-    // buyer.paymentModeId=buyersDTO.paymentModeId;
+    buyer.paymentTermsInfo = new PaymentTerms()
+    buyer.paymentTermsInfo.paymentTermsId=Number(buyersDTO.paymentTermsId);
+    buyer.paymentMethodInfo = new PaymentMethod()
+    buyer.paymentMethodInfo.paymentMethodId=Number(buyersDTO.paymentMethodId);
     // buyer.buyerAccountType=buyersDTO.buyerAccountType;
     buyer.isActive=buyersDTO.isActive==undefined?true:buyersDTO.isActive;
 
@@ -46,16 +48,13 @@ export class BuyersAdapter {
       buyer.isActive = true;
       buyer.createdUser = buyersDTO.createdUser;
     }
-
-    console.log(buyersDTO);
-
    return buyer;
   }
   public convertEntityToDto(buyersObject: Buyers): BuyersDTO {
     const buyersDTO= new BuyersDTO;
     buyersDTO.buyerId=buyersObject.buyerId;
-    buyersDTO.clientCode=buyersObject.clientCode;
-    buyersDTO.clientName=buyersObject.clientName;
+    buyersDTO.buyerCode=buyersObject.buyerCode;
+    buyersDTO.buyerName=buyersObject.buyerName;
     // buyersDTO.accountType=buyersObject.accountType;
     buyersDTO.gstNumber=buyersObject.gstNumber;
     buyersDTO.phoneNo=buyersObject.phoneNo;
@@ -76,10 +75,11 @@ export class BuyersAdapter {
     // buyersDTO.countryId = entity.countryId;
     buyersDTO.countryId = buyersObject.countryInfo.countryId;
     buyersDTO.countryName = buyersObject.countryInfo.countryName;
-    // buyersDTO.paymentTerms=buyersObject.paymentTerms;
+    buyersDTO.paymentTermsId = buyersObject.paymentTermsInfo.paymentTermsId
+    buyersDTO.paymentTerms=buyersObject.paymentTermsInfo.paymentTermsName;
+    buyersDTO.paymentMethodId = buyersObject.paymentMethodInfo.paymentMethodId
+    buyersDTO.paymentMethod=buyersObject.paymentMethodInfo.paymentMethod;
     // buyersDTO.shipmentTerms=buyersObject.shipmentTerms;
-    // buyersDTO.paymentModeId=buyersObject.paymentModeId;
-    // buyersDTO.buyerAccountType=buyersObject.buyerAccountType;
     buyersDTO.isActive = buyersObject.isActive;
     buyersDTO.createdAt = buyersObject.createdAt;
     buyersDTO.updatedAt = buyersObject.updatedAt;

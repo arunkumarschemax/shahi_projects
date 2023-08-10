@@ -34,25 +34,23 @@ export class VendorsService {
       }
 
       async createVendor(vendorsDto: VendorsDTO, isUpdate: boolean): Promise<VendorsResponseModel> {
-        // console.log(statesDto);
         try {
           let previousValue;
           // to check whether State exists with the passed  State code or not. if isUpdate is false, a check will be done whether a record with the passed Statecode is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed State code then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
           if (!isUpdate) {
-            const vendorsEntity = await this.getVendorDetailsWithoutRelations(vendorsDto.vendorId);
-            if (vendorsEntity) {
+            const vendorsEntity = await this.vendorsRepository.find({where:{vendorCode:vendorsDto.vendorCode}});
+            if (vendorsEntity.length > 0) {
               //return new InformationMessageError(11104, "State already exists");
-              throw new VendorsResponseModel(false,11104, 'Vendor already exists');
+              return new VendorsResponseModel(false,11104, 'Vendor already exists');
             }
           }
           else{
             const previous = await this.vendorsRepository.findOne({where:{vendorId:vendorsDto.vendorId}})
             previousValue = previous.vendorCode+","+previous.vendorName;
-            console.log(previousValue)
             const VendorEntity = await this.getVendorDetailsWithoutRelations(vendorsDto.vendorId);
             if (VendorEntity) {
               if(VendorEntity.vendorId!=vendorsDto.vendorId) {
-                throw new VendorsResponseModel(false,11104, 'Vendor already exists');      
+                return new VendorsResponseModel(false,11104, 'Vendor already exists');      
               }
             }
           
@@ -67,24 +65,20 @@ export class VendorsService {
           );
           
           const savedHolidayDto: VendorsDTO = this.vendorsAdapter.convertEntityToDto(convertedVendorEntity);
-            // console.log(savedStateDto);
           if (savedHolidayDto) {
             const present = savedHolidayDto.vendorCode+","+savedHolidayDto.vendorName;
-            console.log(present)
             // generating resposnse
         const response = new VendorsResponseModel(true,1,isUpdate? 'Vendor Updated Successfully': 'Vendor Created Successfully',savedHolidayDto,);
-        console.log(response,'-response')
         const name =isUpdate ? 'update':'create'
         const userName = isUpdate ? savedHolidayDto.updatedUser : savedHolidayDto.createdUser
         const displayValue = isUpdate? 'Vendor Updated Successfully': 'Vendor Created Successfully'
       //  const newLogDto = new LogsDto(1,name, 'Vendors', savedHolidayDto.vendorId, true, displayValue,userName,previousValue,present)
       //  let res = await this.logService.createLog(newLogDto);
-      //  console.log(res);
         return response;
 
           } else {
             //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
-            throw new VendorsResponseModel(false,11106,'Vendor saved but issue while transforming into DTO');
+            return new VendorsResponseModel(false,11106,'Vendor saved but issue while transforming into DTO');
           }
         //}
         } catch (error) {
@@ -99,7 +93,6 @@ export class VendorsService {
           const vendorsDtos: VendorsDTO[] = [];
           //retrieves all companies
           let vendorsEntities: Vendors[] = [];
-          console.log(req,'------------req')
           vendorsEntities = await this.vendorsRepository.find({order :{vendorName:'ASC'}, relations:['currencyInfo']});
           if(req){
           vendorsEntities = await this.vendorsRepository.find({where:{vendorCode:req.vendorCode,contactNumber:req.contactNumber,city:req.city,gstNumber:req.gstNumber},order :{vendorName:'ASC'}, relations:['currencyInfo']});
@@ -117,7 +110,6 @@ export class VendorsService {
         const response = new AllVendorsResponseModel(true,1,'Vendors retrieved successfully',vendorsDtos);
         // const newLogDto = new LogsDto(1,'view', 'Vendors', 0, true, '','')
             // let res = await this.logService.createLog(newLogDto);
-            // console.log(res);
         return response;
         
           } else {
@@ -134,7 +126,6 @@ export class VendorsService {
             //retrieves all companies
             const vendorsEntities: Vendors[] = await this.vendorsRepository.find({ order: { vendorName: 'ASC' }, relations:['currencyInfo', 'countryInfo']
            });
-         console.log(vendorsEntities)
             if (vendorsEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 vendorsEntities.forEach(VendorEntity => {
@@ -190,11 +181,9 @@ export class VendorsService {
     }
 
     async getVendorById(vendorId: number): Promise<Vendors> {
-        //  console.log(employeeId);
             const Response = await this.vendorsRepository.findOne({
             where: {vendorId: vendorId},
             });
-            // console.log(employeeResponse);
             if (Response) {
             return Response;
             } else {
@@ -240,7 +229,6 @@ export class VendorsService {
                 const response = new VendorsDropDownResponseModel(true, 11108, "Vendors retrieved successfully", vendorsDetails);
                 // const newLogDto = new LogsDto(1,'view all vendors', 'Vendors', 0, true, '','')
                 // let res = await this.logService.createLog(newLogDto);
-                // console.log(res);
                 return response;
             } else {
                 throw new VendorsResponseModel(false,99998, 'Data not found'); 
@@ -257,7 +245,6 @@ export class VendorsService {
           
           const vendorEntity: Vendors[] = await this.vendorsRepository.find({ order: { vendorName: 'ASC' },where:{vendorId:vendorReq.vendorId,isActive:true},
          });
-       console.log(vendorEntity)
           if (vendorEntity) {
               // converts the data fetched from the database which of type companies array to type StateDto array.
               vendorEntity.forEach(vendorEntity => {
@@ -282,7 +269,6 @@ export class VendorsService {
       const vendorsDtos: VendorsDTO[] = [];
       //retrieves all companies
       const vendorsEntities: Vendors[] = await this.vendorsRepository.find({select:{vendorCode:true,vendorName:true},order:{vendorCode:'ASC'},relations:['currencyInfo']});
-   console.log(vendorsEntities)
       if (vendorsEntities) {
           // converts the data fetched from the database which of type companies array to type StateDto array.
           vendorsEntities.forEach(VendorEntity => {
@@ -306,7 +292,6 @@ export class VendorsService {
       const vendorsDtos: VendorsDTO[] = [];
       //retrieves all companies
       const vendorsEntities: Vendors[] = await this.vendorsRepository.find({select:{contactNumber:true},order:{vendorCode:'ASC'}, relations:['currencyInfo']});
-   console.log(vendorsEntities)
       if (vendorsEntities) {
           // converts the data fetched from the database which of type companies array to type StateDto array.
           vendorsEntities.forEach(VendorEntity => {
@@ -349,7 +334,6 @@ export class VendorsService {
       let dataQuery = `SELECT city from vendors GROUP BY city `
       const vendorsEntities: Vendors[] = await this.dataSource.query(dataQuery)
       // const vendorsEntities: Vendors[] = await this.vendorsRepository.find({select:{contactNumber:true},order:{vendorCode:'ASC'},relations:['currencyInfo']});
-   console.log(vendorsEntities)
       if (vendorsEntities) {
           // converts the data fetched from the database which of type companies array to type StateDto array.
           vendorsEntities.forEach(VendorEntity => {

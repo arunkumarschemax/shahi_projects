@@ -131,28 +131,28 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
     {
       title: 'Status',
       dataIndex: 'isActive',
-      ...getColumnSearchProps("isActive"),
+      // ...getColumnSearchProps("isActive"),
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
 
-      // filters: [
-      //   {
-      //     text: 'Active',
-      //     value: true,
-      //   },
-      //   {
-      //     text: 'InActive',
-      //     value: false,
-      //   },
-      // ],
-      // filterMultiple: false,
-      // onFilter: (value, record) => {
-      //   // === is not work
-      //   return record.isActive === value;
-      // },
+      filters: [
+        {
+          text: 'Active',
+          value: true,
+        },
+        {
+          text: 'InActive',
+          value: false,
+        },
+      ],
+      filterMultiple: false,
+      onFilter: (value, record) => {
+        // === is not work
+        return record.isActive === value;
+      },
 
 
     },
@@ -241,10 +241,8 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
    * @param variantData 
    */
   const updateOperationGroup = (operationGroupData: OperationGroupsDto) => {
-    console.log(operationGroupData,'------operationGroupData')
     operationGroupData.updatedUser = JSON.parse(localStorage.getItem('username'))
     service.updateOperationGroup(operationGroupData).then(res => {
-      console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         setDrawerVisible(false);
@@ -264,7 +262,6 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
     const req = new OperationGroupsRequest(data.operationGroupId,'admin',data.versionFlag)
     req.isActive = data.isActive ? false : true;
     service.activateOrDeactivateOperationGroup(req).then(res => {
-      console.log(res);
       if (res.status) {
         getAllOperationGroups();
         AlertMessages.getSuccessMessage(res.internalMessage);

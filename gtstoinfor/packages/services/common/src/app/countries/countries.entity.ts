@@ -57,7 +57,7 @@ export class Countries {
   versionFlag: number;
 
   @OneToMany(type => Buyers, Buyers => Buyers.countryInfo)
-  BuyersInfo: Buyers[];
+  buyersInfo: Buyers[];
   
   @OneToMany(type=>Vendors, vendor=>vendor.countryInfo,{cascade: true})
   vendorInfo:Vendors[];
