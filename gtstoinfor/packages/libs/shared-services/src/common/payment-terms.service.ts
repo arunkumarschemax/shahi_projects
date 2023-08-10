@@ -41,4 +41,9 @@ export class PaymentTermsService extends CommonAxiosService {
     async getPaymentById(paymentTermsRequest:PaymentTermsRequest): Promise<PaymentTermsResponseModel> {
         return this.axiosPostCall(this.URL + '/getPaymentById',paymentTermsRequest);
     }
+
+    async getAllActivePaymentTerms(): Promise<PaymentTermsResponseModel> {
+        return this.axiosPostCall(this.URL + '/getAllActivePaymentTerms');
+    }
 }
+

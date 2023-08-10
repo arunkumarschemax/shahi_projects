@@ -350,9 +350,8 @@ export const  BuyersView = () => {
 
 
   return (
-    <Card title='Buyers' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-form')} type={'primary'}>New</Button></span>}>
-  <br></br>
-     <Row gutter={40}>
+    <Card title='Buyers' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-form')} type={'primary'}>New</Button></span>} size='small'>
+     <Row gutter={40} >
       <Col>
           <Card title={'Total Vendors : ' + buyersData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
@@ -366,7 +365,7 @@ export const  BuyersView = () => {
           <br></br>
           <div style={{overflowX :'auto' }}>
 
-    <Table columns={columnsSkelton} dataSource={buyersData}/>
+    <Table columns={columnsSkelton} dataSource={buyersData} size='small' bordered/>
           </div>
     <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -130,7 +130,7 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
       ...getColumnSearchProps("mobileNumber"),
       },
       {
-        title: "Alter native Number",
+        title: "Alternate Number",
         dataIndex: "alterNativeMobileNumber",
        width:'60px',
         sorter: (a, b) => a.alterNativeMobileNumber.length-(b.alterNativeMobileNumber.length),
@@ -193,7 +193,7 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
               if (rowData.isActive) {
                 openFormWithData(rowData);
               } else {
-                AlertMessages.getErrorMessage('You Cannot Edit Deactivated employeee');
+                AlertMessages.getErrorMessage('You Cannot Edit Deactivated employee');
               }
             }}
             style={{ color: '#1890ff', fontSize: '14px' }}
@@ -256,9 +256,8 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
 
   const openFormWithData = (viewdata: EmployeeDetailsResponse) => {
     console.log(viewdata)
-     const date = viewdata.dateOfBirth?moment(viewdata.dateOfBirth).format("YYYY-MM-DD"):null
+     const date = viewdata.dateOfBirth?dayjs(moment(viewdata.dateOfBirth).format("YYYY-MM-DD")):null
      viewdata.dateOfBirth = dayjs(date)
-
     console.log(viewdata.dateOfBirth)
     setDrawerVisible(true);
     setSelectedVariant(viewdata);
@@ -266,11 +265,10 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
 
 
   const updateEmployee = (data: EmployeeDetailsResponse) => {
-    // data.updateUser = JSON.parse(localStorage.getItem('username'))
     service.updateEmployee(data).then(res => {
       console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
+          AlertMessages.getSuccessMessage('Updated Successfully');
         getAllEmployees();
         setDrawerVisible(false);
       } else {     
@@ -287,7 +285,9 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
       console.log(res);
       if (res.status) {
         getAllEmployees();
-        AlertMessages.getSuccessMessage(res.internalMessage);
+        setTimeout(function() {
+        message.success(res.internalMessage)
+      }, -3000);
       } else {
         
         AlertMessages.getErrorMessage(res.internalMessage);
@@ -299,6 +299,8 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
 
   return (
       <>
+      <Card title='Employees' extra={<span><Button onClick={() => navigate('/masters/employee-details/employee-details-form')}
+              type={'primary'}>New</Button></span>}>
       <Row gutter={40}>
         <Col>
           <Card title={'Total Employees: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
@@ -308,10 +310,6 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
         </Col>
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
-        </Col>
-        <Col>
-        <span><Button onClick={() => navigate('/masters/employee-details/employee-details-form')}
-              type={'primary'}>New</Button></span>
         </Col>
       </Row><br></br>
       <Card >
@@ -340,6 +338,7 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
             closeForm={closeDrawer} />
         </Card>
       </Drawer>
+      </Card>
       </>
   );
 }

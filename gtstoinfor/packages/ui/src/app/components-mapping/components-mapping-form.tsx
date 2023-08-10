@@ -1,10 +1,11 @@
 import { ComponentMappingModel } from "@project-management-system/shared-models";
-import { ComponentMappingService, GarmentCategoryService, GarmentService, StyleService } from "@project-management-system/shared-services";
+import { ComponentMappingService, ComponentService, GarmentCategoryService, GarmentService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Checkbox, Col, Descriptions, Form, Input, Row, Select } from "antd"
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { useNavigate } from "react-router-dom";
 
 const CheckboxGroup = Checkbox.Group;
 const {Option}= Select;
@@ -19,17 +20,19 @@ export const ComponentsMappingForm = () => {
     const [styleInfo,setStyleInfo] = useState<any[]>([]);
     const [garmentCategoryInfo,setGarmentCategoryInfo] = useState<any[]>([])
     const [garmentInfo,setGarmentInfo] = useState<any[]>([])
-
-
+    const [componentInfo,setComponentInfo] = useState<any[]>([])
+    const navigate = useNavigate()
     const servcie = new ComponentMappingService()
     const styleService = new StyleService()
     const garmentCategoryService = new GarmentCategoryService()
     const germentService = new GarmentService()
+    const componentService = new ComponentService()
 
     useEffect(() => {
         getStyles();
         getGarmentCategories();
-        getGarments()
+        getGarments();
+        getComponents()
     },[])
 
     const getStyles = () => {
@@ -59,19 +62,34 @@ export const ComponentsMappingForm = () => {
 
     }
 
-    const onChange = (checkedValues: CheckboxValueType[]) => {
-        console.log('checked = ', checkedValues);
-        setComponents(checkedValues)
-    };
+    const getComponents = () => {
+        componentService.getAllActiveComponents().then(res => {
+            if(res.status){
+                setComponentInfo(res.data)
+            }
+        })
+    }
 
-    const options = ['Front', 'Back', 'Collar', 'Sleeves', 'Pockets', 'Logo On Pocket'];
+    // const onChange = (checkedValues: CheckboxValueType[]) => {
+    //     console.log('checked = ', checkedValues);
+    //     setComponents(checkedValues)
+    // };
+
+    const onChange = (checkedValues) => {
+        const selectedComponentDetails = componentInfo.filter(
+          (option) => checkedValues.includes(option.componentId)
+        );
+    
+        setComponents(selectedComponentDetails);
+      };
+
 
     const onFinish = (values) => {
         const req = new ComponentMappingModel(0,values.styleId,values.garmentCategoryId,values.garmentId,components,'admin','',true,1)
-        console.log(req,'-------------req')
         servcie.createComponentMap(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
+                onReset()
             } else{
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
@@ -80,7 +98,6 @@ export const ComponentsMappingForm = () => {
 
 
     const onStyleChange = (val,option) => {
-        console.log(option,'------------option')
         setStyle(option?.key)
     }
 
@@ -94,12 +111,14 @@ export const ComponentsMappingForm = () => {
 
     const onReset = () => {
         form.resetFields()
-        setComponents([]); // Clear the selection by setting an empty array
-
+        setComponents([]);
+        setStyle('')
+        setGarmentCategory('')
+        setGarment('')
     }
 
     return(
-        <Card title='Components Mapping'>
+        <Card title='Components Mapping' extra={<span><Button onClick={() => navigate('/style-management/component-mapping/component-mapping-view')} type={'primary'}>View</Button></span>}>
             <Form form={form} onFinish={onFinish}>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -165,35 +184,13 @@ export const ComponentsMappingForm = () => {
                 </Row>
                 <Row gutter={24}>
                     <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                    <Card>
+                    <Card  style={{height:'100%'}}>
                         <h1>Map Components</h1>
-                    {/* <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
-                        <Row>
-                        <Col span={8}>
-                            <Checkbox value="Front">Front</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                            <Checkbox value="Back">Back</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                            <Checkbox value="Collar">Collar</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                            <Checkbox value="Sleeves">Sleeves</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                            <Checkbox value="Pockets">Pockets</Checkbox>
-                        </Col>
-                        <Col span={8}>
-                            <Checkbox value="Logo On Pocket">Logo On Pocket</Checkbox>
-                        </Col>
-                        </Row>
-                    </Checkbox.Group> */}
-                    <CheckboxGroup style={{ width: '100%' }} value={components} onChange={onChange}>
+                    <CheckboxGroup style={{ width: '100%' }} value={components.map((component) => component.componentId)} onChange={onChange}>
                     <Row>
-                        {options.map((option) => (
-                        <Col span={8} key={option}>
-                            <Checkbox value={option}>{option}</Checkbox>
+                        {componentInfo.map((option) => (
+                        <Col span={8} key={option.componentId}>
+                            <Checkbox value={option.componentId} key={option.componentName}>{option.componentName}</Checkbox>
                         </Col>
                         ))}
                     </Row>
@@ -201,7 +198,7 @@ export const ComponentsMappingForm = () => {
                     </Card>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                        <Card>
+                        <Card  style={{height:'100%'}}>
                             <h1>Mapped Components</h1>
                             <Row>
                                 <Col>
@@ -214,7 +211,7 @@ export const ComponentsMappingForm = () => {
                                 {components.map((e) => {
                                     return(
                                         <Card style={{marginLeft:'1%',backgroundColor:'#FFDAB9'}}>
-                                        <Descriptions.Item>{e}</Descriptions.Item>
+                                        <Descriptions.Item>{e.componentName}</Descriptions.Item>
                                         </Card>
                                     )
                                     

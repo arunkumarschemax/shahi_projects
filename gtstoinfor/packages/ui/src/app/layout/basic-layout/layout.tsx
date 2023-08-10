@@ -67,6 +67,30 @@ export const baseRouterList = [
                 filepath: "currencies/currency-view",
             },
             {
+                label: "Company",
+                key: "company",
+                path: "company/company-grid",
+                filepath: "company/company-grid",
+            },
+            ,
+            {
+                label: "Company-Division",
+                key: "division",
+                path: "company/division-grid",
+                filepath: "company/division-grid",
+            },  {
+                label: "Warehouse",
+                key: "warehouse",
+                path: "warehouse/warehouse-grid",
+                filepath: "warehouse/warehouse-grid",
+            },
+            {
+                label: "PaymentMethod",
+                key: "paymentmethod",
+                path: "paymentmethod/paymentmethod-view",
+                filepath: "paymentmethod/paymentmethod-view",
+            },
+            {
                 label: "PaymentMethod",
                 key: "paymentmethod",
                 path: "paymentmethod/paymentmethod-view",
@@ -156,11 +180,24 @@ export const baseRouterList = [
                 path: "package-terms/package-terms-view",
                 filepath: "package-terms/package-terms-view",
             },
+           
             {
                 label: "Delivery Terms",
                 key: "delivery-terms",
                 path: "delivery-terms/delivery-terms-view",
                 filepath: "delivery-terms/delivery-terms-view",
+            },
+            {
+                label: "Locations",
+                key: "locations",
+                path: "locations/locations-view",
+                filepath: "locations/locations-view",
+            },
+            {
+                label: "Profit Center",
+                key: "profit-center",
+                path: "profit-center/profit-center-view",
+                filepath: "profit-center/profit-center-view",
             },
             {
                 label: "Liscence Type",
@@ -179,6 +216,12 @@ export const baseRouterList = [
                 key: "attributes",
                 path: "attributes/attributes-view",
                 filepath: "attributes/attributes-view",
+            },
+            {
+                label: "Taxes",
+                key: "taxes",
+                path: "taxes/taxes-grid",
+                filepath: "taxes/taxes-grid",
             },
         ],
     },

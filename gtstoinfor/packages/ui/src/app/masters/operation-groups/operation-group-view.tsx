@@ -131,11 +131,13 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
     {
       title: 'Status',
       dataIndex: 'isActive',
+      // ...getColumnSearchProps("isActive"),
       render: (isActive, rowData) => (
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
+
       filters: [
         {
           text: 'Active',
@@ -151,6 +153,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
         // === is not work
         return record.isActive === value;
       },
+
 
     },
     {
@@ -264,7 +267,7 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
       console.log(res);
       if (res.status) {
         getAllOperationGroups();
-        AlertMessages.getSuccessMessage('Success');
+        AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);

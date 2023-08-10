@@ -57,7 +57,7 @@ lastName:string;
 
   @Column("char",{
     nullable:false,
-    length:50,
+    length:200,
     name:"Address"
     })
   address: string;
