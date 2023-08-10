@@ -206,10 +206,16 @@ export const baseRouterList = [
                 filepath: "locations/locations-view",
             },
             {
-                label: "Profit Center",
-                key: "profit-center",
-                path: "profit-center/profit-center-view",
-                filepath: "profit-center/profit-center-view",
+                label: "Locations",
+                key: "locations",
+                path: "locations/locations-view",
+                filepath: "locations/locations-view",
+            },
+            {
+                label: "Profit Control Head",
+                key: "profit-control-head",
+                path: "profit-control-head/profit-control-head-view",
+                filepath: "profit-control-head/profit-control-head-view",
             },
             {
                 label: "Liscence Type",
