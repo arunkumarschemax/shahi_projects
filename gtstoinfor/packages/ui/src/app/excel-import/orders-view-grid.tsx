@@ -144,7 +144,7 @@ const AllOrdersGridView = () => {
             dataIndex: 'order_status',
             render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
         }
-    ];
+    ];   
 
     const handleExport = (e: any) => {
         e.preventDefault();

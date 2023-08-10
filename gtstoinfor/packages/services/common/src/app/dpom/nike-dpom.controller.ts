@@ -2,6 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
 import { CommonResponseModel } from '@project-management-system/shared-models';
 import { DpomService } from './nike-dpom.service';
+import { DpomSaveDto } from './dto/dpom-save.dto';
 
 @Controller('/nike-dpom')
 export class DpomController {
@@ -39,4 +40,21 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
-}
+
+    @Post('/getFactoryReportData')
+    async getFactoryReportData(): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getFactoryReportData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+    @Post('/getByFactoryStatus')
+    async getByFactoryStatus(@Body()req:DpomSaveDto):Promise<any>{
+        return await this.dpomService.getByFactoryStatus(req);
+    }
+       
+    }
+
