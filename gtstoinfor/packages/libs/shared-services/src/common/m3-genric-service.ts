@@ -27,7 +27,7 @@ export class M3GenericService {
                     apiargs += apiargs + `${arg.key}=${arg.value}&`
                 }
             }
-            let urlWithArgs = baseUrl + '/' + program + api + '?' + apiargs
+            let urlWithArgs :string = baseUrl   + program + '/' + api + '?' + apiargs
             const response = await axios.get(urlWithArgs, { headers: this.headersRequest, httpsAgent: this.agent });
             return response
         } catch (err) {
