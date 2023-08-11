@@ -17,7 +17,7 @@ import { DocumentEntity } from './entities/documents.entity';
 import { DocumentRoleMapping } from "./models/document-role-mapping.dto";
 import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingResponseModel } from "@project-management-system/shared-models";
 import { DocumentRoleMappingService } from "./document_role_mapping.service";
-@ApiTags('Documents Upload')
+@ApiTags('doc-upload')
 @Controller('doc-upload')
 export class DocumentUploadController {
     constructor(private uploadDocservice:DocumentsListService,
@@ -98,9 +98,19 @@ export class DocumentUploadController {
       return await this.mapService.getAllDocMappings();
     }
 
-    @Post('./getPoNumberDropdown')
-    async getPoNumberDropdown(): Promise<UploadDocumentListResponseModel> {
-      return await this.uploadDocservice.getPoNumberDropdown();
-    }
+    // @Post('/getPoNumberDropdown')
+    // async getPoNumberDropdown(): Promise<UploadDocumentListResponseModel> {
+    //   console.log('dtaaaaaa')
+    //   return await this.uploadDocservice.getPoNumberDropdown();
+    // }
 
+
+    @Post('/getPoNumberDropdown')
+    async getPoNumberDropdown(): Promise<UploadDocumentListResponseModel> {
+        try {
+            return await this.uploadDocservice.getPoNumberDropdown();
+        } catch (error) {
+            return (this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error));
+        }
+    }
 }

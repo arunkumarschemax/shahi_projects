@@ -18,7 +18,7 @@ import { appConfig } from '../../../common/config';
       password: appConfig.database.password,
       database: appConfig.database.docdbName,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
       logging: true,
       extra: {
         connectionLimit: 20
