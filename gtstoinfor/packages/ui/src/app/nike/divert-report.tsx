@@ -193,75 +193,92 @@
                 // ...getColumnSearchProps("productCode"),
                 render: (text, record) => (record.section === 'old' ? record.productCode : ''),
 
-            },   {
+            },
+               {
                 title: "Line Status",
                 dataIndex: "lineStatus",
                 // ...getColumnSearchProps("lineStatus"),
+                render: (text, record) => (record.section === 'old' ? record.lineStatus : ''),
+
             },
             {
                 title: 'Document Date',
-                dataIndex: ' documentDate',
+                dataIndex: 'documentDate', 
                 render: (text, record) => {
-                    return record.documentDate
-                    ? moment(record.documentDate).format("YYYY-MM-DD")
-                    : "-";
+                    return record.section === 'old'
+                        ? (record.documentDate
+                            ? moment(record.documentDate).format("YYYY-MM-DD")
+                            : "-")
+                        : "";
                 }
             },
             {
                 title: 'Old Po',
                 dataIndex: 'poNumber',
+                render: (text, record) => (record.section === 'old' ? record.poNumber : ''),
+
                 
             },
             {
                 title: 'Old Po Line',
                 dataIndex: 'poLine',
+                render: (text, record) => (record.section === 'old' ? record.poLine : "-"),
+
                 
             },
             {
                 title: 'Balance Qty',
                 dataIndex: '-', 
+                render: (text, record) => (record.section === 'old' ? record.plant : "-"),
+
             },
             {
                 title: 'Destination',
-                dataIndex: 'destination', 
+                dataIndex: 'destination',
+                render: (text, record) => (record.section === 'old' ? record.destination : "-"),
+ 
             },
             {
                 title: 'Shipment Type',
                 dataIndex: 'shipmentType', 
+                render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
+
             },
             {
                 title: 'Inventory Segment Code',
-                dataIndex: ' inventorySegmentCode', 
+                dataIndex: ' inventorySegmentCode',
+                render: (text, record) => (record.section === 'old' ? record.inventorySegmentCode : "-"),
+ 
             },
             {
-                title: 'OGAC',
-                dataIndex: 'ogac',
+                title: 'OGAC Date',
+                dataIndex: 'ogac', 
                 render: (text, record) => {
-                    return record.ogac
-                    ? moment(record.ogac).format("YYYY-MM-DD")
-                    : "-";
+                    return record.section === 'old'
+                        ? (record.ogac
+                            ? moment(record.ogac).format("YYYY-MM-DD")
+                            : "-")
+                        : "";
                 }
             },
             {
-                title: 'GAC',
+                title: 'GAC Date',
                 dataIndex: 'gac', 
                 render: (text, record) => {
-                    return record.gac
-                    ? moment(record.gac).format("YYYY-MM-DD")
-                    : "-";
+                    return record.section === 'old'
+                        ? (record.gac
+                            ? moment(record.gac).format("YYYY-MM-DD")
+                            : "-")
+                        : "";
                 }
-            }
-            ,
-            {
-                title: 'Product Code',
-                dataIndex: 'productCode', 
             },
-            
             ,
             {
                 title: 'Item Vas',
-                dataIndex: 'item_vas_text', 
+                dataIndex: 'item_vas_text',
+                render: (text, record) => (record.section === 'old' ? (record.item_vas_text !== null ? record.item_vas_text : "null") : ""),
             },
+            
         
         ]  as unknown as null, 
         },
@@ -269,16 +286,16 @@
         { title: 'New',
         
         children:[
-            {
+           {
                 title: 'S.No',
                 key: 'sno',
                 responsive: ['sm'],
                 render: (text, object, index) => (page - 1) * pageSize + (index + 1)
-            },
+            }, 
             {
                 title: "Plant",
-                dataIndex: "",
-                // ...getColumnSearchProps("indentCode"),
+                dataIndex: "plant",
+                // ...getColumnSearchProps("plant"),
                 render: (text, record) => (record.section === 'new' ? record.plant : ''),
 
             },
@@ -293,93 +310,93 @@
             },
             {
                 title: "Line Status",
-                dataIndex: "",
-                sorter: (a, b) => a.indentType.localeCompare(b.indentType),
-                sortDirections: ["descend", "ascend"],
-                // ...getColumnSearchProps("indentType"),
+                render: (text, record) => (record.section === 'new' ? record.lineStatus : ''),
+
             },
             {
                 title: 'Document Date',
-                dataIndex: '',
-            //     render: (_, record) => {
-            //         const pickupDate = moment(record.pickRequestsInfo[0]?.pickupDate);
-            //         return (
-            //             <>
-            //                 {pickupDate.format('YYYY-MM-DD HH:MM:SS')}
-            //             </>
-            //         );
-            // }
+                dataIndex: 'documentDate', 
+                render: (text, record) => {
+                    return record.section === 'new'
+                        ? (record.documentDate
+                            ? moment(record.documentDate).format("YYYY-MM-DD")
+                            : "-")
+                        : "";
+                }
             },
             {
                 title: 'New Po',
-                dataIndex: 'dueDate',
+                dataIndex: 'poNumber',
+                render: (text, record) => (record.section === 'new' ? record.poLine : "-"),
+
                 
             },
             {
                 title: 'New Po Line',
-                dataIndex: 'dueDate',
+                dataIndex: 'poLine',
+                render: (text, record) => (record.section === 'new' ? record.poLine : "-"),
+
                 
             },
             {
                 title: 'Balance Qty',
                 dataIndex: '', 
+              //  render: (text, record) => (record.section === 'new' ? record.poLine : "-"),
+
             },
             {
                 title: 'Destination',
-                dataIndex: '', 
+                dataIndex: 'destination',
+                render: (text, record) => (record.section === 'new' ? record.destination : "-"),
+ 
             },
             {
                 title: 'Shipment Type',
-                dataIndex: '', 
+                dataIndex: 'shipmentType',
+                render: (text, record) => (record.section === 'new' ? record.shipmentType : "-"),
             },
             {
                 title: 'Inventory Segment Code',
-                dataIndex: '', 
+                dataIndex: 'inventorySegmentCode', 
+                render: (text, record) => (record.section === 'new' ? record.inventorySegmentCode : "-"),
             },
             {
-                title: 'OGAC',
-                dataIndex: '', 
+                title: 'OGAC Date',
+                dataIndex: 'ogac', 
+                render: (text, record) => {
+                    return record.section === 'new'
+                        ? (record.ogac
+                            ? moment(record.ogac).format("YYYY-MM-DD")
+                            : "-")
+                        : "";
+                }
             },
             {
-                title: 'GAC',
-                dataIndex: '', 
-            },
-            {
-                title: 'Product Code',
-                dataIndex: '', 
-            },
-            {
-                title: 'Line Status',
-                dataIndex: '', 
-            },
-            {
-                title: 'Document Date',
-                dataIndex: '', 
-            },
-            {
-                title: 'New Po',
-                dataIndex: '', 
-            },{
-                title: 'New Po Line',
-                dataIndex: '', 
+                title: 'GAC Date',
+                dataIndex: 'gac', 
+                render: (text, record) => {
+                    return record.section === 'new'
+                        ? (record.gac
+                            ? moment(record.gac).format("YYYY-MM-DD")
+                            : "-")
+                        : "";
+                }
             },
             {
                 title: 'Quantity',
                 dataIndex: '', 
             },{
                 title: 'Item Vas',
-                dataIndex: '', 
-            },{
-                title: 'Shipment Type',
-                dataIndex: '', 
+                dataIndex: 'item_vas_text',
+                render: (text, record) => (record.section === 'new' ? (record.item_vas_text !== null ? record.item_vas_text : "null") : ""),
             },
+            
         
         ]as unknown as null,}
         ]
         const combinedData = [
             ...acceptedItems.map(item => ({ ...item, section: 'old' })),
             ...unacceptedItems.map(item => ({ ...item, section: 'new' })),
-            // console.log(acceptedItems,"pppppppppppppppppppppppppppppppppppppp")
         ]
 
 
