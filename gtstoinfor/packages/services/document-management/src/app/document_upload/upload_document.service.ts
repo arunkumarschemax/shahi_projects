@@ -8,12 +8,14 @@ import { ErrorResponse } from "../../../../../libs/shared-models/src/common/what
 
 import {UploadDocumentListResponseModel} from '../../../../../libs/shared-models/src/document-management/upload-document-list-response-model';
 import {DocumentFileUploadResponse} from '../../../../../libs/shared-models/src/document-management/document-file-upload-response'
+import {OrdersRepository} from '../../../../common/src/app/orders/repository/orders.repository';
 @Injectable()
 export class DocumentsListService {
     constructor(
         @InjectRepository(DocumentsList)
         private documentsListRepository: DocumentsListRepository,
         private documentsListAdapter: UploadDocumentListAdapter,
+        private ordersRepo:OrdersRepository
       ) {}
 
       async createDocumentsList(documentsListRequest: DocumentsListRequest, isUpdate: boolean,): Promise<UploadDocumentListResponseModel> {
@@ -89,5 +91,16 @@ export class DocumentsListService {
 }
 
 
+    async getPoNumberDropdown():Promise<UploadDocumentListResponseModel>{
+        try{
+            const query ='select po_number as poNumber from orders'
+            const result = await this.ordersRepo.query(query)
+            return new UploadDocumentListResponseModel(true,1,'Data retrived Sucessfully',result)
+        }
+        catch(err){
+            throw err
+        }
+        
+    }
 
     }

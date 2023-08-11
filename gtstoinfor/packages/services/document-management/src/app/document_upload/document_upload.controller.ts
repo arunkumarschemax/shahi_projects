@@ -98,4 +98,9 @@ export class DocumentsListController {
       return await this.mapService.getAllDocMappings();
     }
 
+    @Post('./getPoNumberDropdown')
+    async getPoNumberDropdown(): Promise<UploadDocumentListResponseModel> {
+      return await this.uploadDocservice.getPoNumberDropdown();
+    }
+
 }

@@ -12,6 +12,7 @@ import { DocumentRoleMapping } from './models/document-role-mapping.dto';
 import { DocumentRoleMappingEntity } from './entities/document-role-entity';
 import { DocumentRoleMappingRepository } from './repository/document-role-repository';
 import { DocumentRoleMappingService } from './document_role_mapping.service';
+import { OrdersRepository } from 'packages/services/common/src/app/orders/repository/orders.repository';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { DocumentRoleMappingService } from './document_role_mapping.service';
         DocumentRoleMappingEntity
     ])],
   controllers: [DocumentsListController],
-  providers: [DocumentsListService,DocumentService,UploadDocumentListAdapter, ApplicationExceptionHandler,DocumentRepository,DocumentRoleMappingRepository,DocumentRoleMappingService]
+  providers: [DocumentsListService,DocumentService,UploadDocumentListAdapter, ApplicationExceptionHandler,DocumentRepository,DocumentRoleMappingRepository,DocumentRoleMappingService,OrdersRepository]
 })
 export class DocumentListModule { }
 
