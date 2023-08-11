@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class RoleDto{
-  id: number;
+  docMappingId: number;
   roleName: string;
   documentName: string;
   createdUser: string;

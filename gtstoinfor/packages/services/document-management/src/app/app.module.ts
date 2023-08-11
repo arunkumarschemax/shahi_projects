@@ -24,7 +24,7 @@ import { appConfig } from '../../../common/config';
         connectionLimit: 20
       }
     }),
-    DocumentListModule, JwtModule,],
+    DocumentListModule],
   controllers: [AppController],
   providers: [AppService],
 })

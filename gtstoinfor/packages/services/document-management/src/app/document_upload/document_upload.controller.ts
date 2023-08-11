@@ -14,12 +14,15 @@ import { DocumentDto } from './dto/document.dto';
 import { DeleteDto } from './dto/delete-dto';
 import { Entity } from 'typeorm';
 import { DocumentEntity } from './entities/documents.entity';
-import { DocumentUploadResponseModel } from "@project-management-system/shared-models";
+import { DocumentRoleMapping } from "./models/document-role-mapping.dto";
+import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingResponseModel } from "@project-management-system/shared-models";
+import { DocumentRoleMappingService } from "./document_role_mapping.service";
 @Controller('documents-list')
 @ApiTags('Document List ')
 export class DocumentsListController {
     constructor(private uploadDocservice:DocumentsListService,
       private readonly service: DocumentService,
+      private readonly mapService: DocumentRoleMappingService,
          private readonly applicationExceptionHandler: ApplicationExceptionHandler
          ){}
 
@@ -80,9 +83,19 @@ export class DocumentsListController {
       }
     }
   
-  
-    @Post('/activateOrDeactivateDepartment')
-    async activateOrDeactivateDepartment(@Body() req:DeleteDto): Promise<DocumentUploadResponseModel>{
-      return await this.service.activateOrDeactivateDepartment(req);
+    // @Post('/activateOrDeactivateDepartment')
+    // async activateOrDeactivateDepartment(@Body() req:DeleteDto): Promise<DocumentUploadResponseModel>{
+    //   return await this.service.activateOrDeactivateDepartment(req);
+    // }
+
+    @Post('/createDocMapping')
+    async createDocMapping(@Body() documentRoleMapping: DocumentRoleMapping): Promise<DocumentRoleMappingResponseModel> {
+      return await this.mapService.createDocMapping(documentRoleMapping);
     }
+
+    @Post('./getAllDocMappings')
+    async getAllDocMappings(): Promise<AllDocumentRoleMappingsResponseModel> {
+      return await this.mapService.getAllDocMappings();
+    }
+
 }

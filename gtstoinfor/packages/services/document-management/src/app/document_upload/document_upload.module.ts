@@ -8,15 +8,20 @@ import { UploadDocumentListAdapter } from './repository/upload-document-adapter'
 import { DocumentEntity } from './entities/documents.entity';
 import { DocumentService } from './document.service';
 import { DocumentRepository } from './repository/documents.repository';
+import { DocumentRoleMapping } from './models/document-role-mapping.dto';
+import { DocumentRoleMappingEntity } from './entities/document-role-entity';
+import { DocumentRoleMappingRepository } from './repository/document-role-repository';
+import { DocumentRoleMappingService } from './document_role_mapping.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
         DocumentsList,
-        DocumentEntity
+        DocumentEntity,
+        DocumentRoleMappingEntity
     ])],
   controllers: [DocumentsListController],
-  providers: [DocumentsListService,DocumentService,UploadDocumentListAdapter, ApplicationExceptionHandler,DocumentRepository]
+  providers: [DocumentsListService,DocumentService,UploadDocumentListAdapter, ApplicationExceptionHandler,DocumentRepository,DocumentRoleMappingRepository,DocumentRoleMappingService]
 })
 export class DocumentListModule { }
 
