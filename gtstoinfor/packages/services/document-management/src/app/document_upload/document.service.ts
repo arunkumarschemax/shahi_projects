@@ -7,6 +7,7 @@ import { DocumentDto } from './dto/document.dto';
 import { DeleteDto } from './dto/delete-dto';
 import {DocumentResponseModel} from '../../../../../libs/shared-models/src/document-management/document-response.model'
 import { DocumentRepository } from './repository/documents.repository';
+import { CommonResponseModel } from '@project-management-system/shared-models';
 
 @Injectable()
 export class DocumentService {
@@ -46,18 +47,22 @@ export class DocumentService {
         return data;
       }
 
-    async activateOrDeactivateDepartment(id: DeleteDto): Promise<DocumentResponseModel> {
-        const finding = await this.repository.findOne({ where: { id: id.id }, });
-        await this.repository.update(
-            { id: id.id },
-            { isActive: !finding.isActive }
-        );
-        return new DocumentResponseModel(
-            true,
-            6787,
-            `${finding.isActive === true ? 'Deactivated' : 'Activated'} succesfully`,
-
-        )
+      // async activateOrDeactivateModules(modulesReq: DocumentDto): Promise<CommonResponseModel> {
+      //   const record = await this.repository.findOne({ where: { moduleId: modulesReq.moduleId } });
+    
+      //   await this.repository.update({ moduleId: modulesReq.moduleId }, { isActive: !record.isActive });
+      //   const internalMessage: string = !record.isActive ? "Activated Sucessfully" : "Deactivated Successfully"
+      //   return new CommonResponseModel(true, 6876, internalMessage)
+      // }
+      // async getModulesById(moduleId: number): Promise<ModulesEntity> {
+      //   const Response = await this.repository.findOne({
+      //     where: { moduleId: moduleId },
+      //   });
+      //   if (Response) {
+      //     return Response;
+      //   } else {
+      //     return null;
+      //   }
+      // }
+   
     }
-}
-

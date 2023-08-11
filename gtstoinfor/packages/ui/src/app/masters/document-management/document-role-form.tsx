@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Form, Select, Button, Row, Col, Input, message, MessageArgsProps } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import DocumentService from 'packages/libs/shared-services/src/document-service/document-shared-service';
 const { Option } = Select;
 
-const DocumentForm = () => {
+const RoleMappingForm = () => {
     useEffect(() => {
         getDocuments();
 
@@ -15,6 +15,7 @@ const DocumentForm = () => {
 
 const services = new DocumentService ();
 const [form] = Form.useForm();
+const navigate=useNavigate();
 
     // const handleSubmit = (values: any) => {
     //     console.log('Form values:', values);
@@ -62,13 +63,9 @@ const [form] = Form.useForm();
     return (
         <div>
             <Card title="department Form"
-                extra={
-                    <Link to='/navpage/Department-data' >
-                        <span style={{ color: "white" }}>
-                            <Button>Grid</Button>
-                        </span>
-                    </Link>
-                }>
+        extra={<span><Button onClick={() => navigate('/masters/document-management/document-role-grid')} type={'primary'}>View</Button></span>}>
+               
+                
                 <Form
                     form={form}
                     onFinish={onFinish}>
@@ -95,12 +92,12 @@ const [form] = Form.useForm();
                                         pattern: /^[A-Za-z]+$/,
                                     },
                                 ]}>
-                               <Input/>
+                            
                                <Select
                                     showSearch
                                     allowClear
                                     optionFilterProp="children"
-                                    placeholder="select DepartmentName">
+                                    placeholder="select DocumentName">
 
                                     {data?.
                                         filter((item: any, index: any, self: any[]) => self.findIndex(i => i === item) === index)
@@ -116,36 +113,12 @@ const [form] = Form.useForm();
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={24} sm={12} md={8} lg={6}>
-                            <Form.Item
-                                name="departmentCode"
-                                label="Department Code"
-                                style={{ height: '30px' }}
-                            >
-                                <Select
-                                    showSearch
-                                    allowClear
-                                    optionFilterProp="children"
-                                    placeholder="select departmentCode">
-
-                                    {data?.
-                                        filter((item, index, self) => self.findIndex(i => i === item) === index)
-
-                                        .map(item => {
-                                            return (
-                                                <Option
-                                                    value={item} key={Date.now()}>
+                        </Row>
 
 
-                                                </Option>
-                                            )
-                                        })}
-                                </Select>
-                            </Form.Item>
-
-                        </Col>
-                        <Col xs={24} sm={12} md={8} lg={6}>
-
+                        
+                        <Row justify="end">
+                        <Col>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" style={{ marginRight: '10px' }}>
                                     Submit
@@ -164,4 +137,4 @@ const [form] = Form.useForm();
     );
 };
 
-export default DocumentForm;
+export default RoleMappingForm;

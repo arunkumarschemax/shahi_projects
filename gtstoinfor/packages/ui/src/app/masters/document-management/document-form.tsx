@@ -2,11 +2,14 @@ import React from 'react';
 import { Card, Form, Radio, Select, Button, Row, Col, DatePicker, Input, message, MessageArgsProps } from 'antd';
 import { Link } from 'react-router-dom';
 import DocumentService from 'packages/libs/shared-services/src/document-service/document-shared-service';
+import { useNavigate } from 'react-router-dom';
+
 const { Option } = Select;
 
 const DocumentForm = () => {
 
 const services = new DocumentService ();
+const navigate = useNavigate();
 
     const handleSubmit = (values: any) => {
         console.log('Form values:', values);
@@ -38,13 +41,9 @@ const services = new DocumentService ();
     return (
         <div>
             <Card title="department Form"
-                extra={
-                    <Link to='/navpage/Department-data' >
-                        <span style={{ color: "white" }}>
-                            <Button>Grid</Button>
-                        </span>
-                    </Link>
-                }>
+
+        extra={<span><Button onClick={() => navigate('/masters/document-management/document-grid')} type={'primary'}>View</Button></span>}>
+
                 <Form
                     // autoComplete='off'
                     form={form}

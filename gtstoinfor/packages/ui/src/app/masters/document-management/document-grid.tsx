@@ -1,25 +1,30 @@
 
 
 
-import { SearchOutlined, RightSquareOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { Table, Input, Popconfirm, Card, Button, Space, Divider, Switch, Tag } from 'antd';
+import { SearchOutlined,EditOutlined, RightSquareOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { Table, Input, Popconfirm, Card, Button, Space, Divider, Switch, Tag, Tooltip, message, Drawer } from 'antd';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Highlighter from 'react-highlight-words';
 import DocumentService from 'packages/libs/shared-services/src/document-service/document-shared-service';
 import AlertMessages from '../../common/common-functions/alert-messages';
+import { useNavigate } from 'react-router-dom';
+import DocumentForm from './document-form';
 
 
-const DepartmentGrid = () => {
+const DocumentGrid = () => {
   const [data, setData] = useState<any>([]);
   const [selectedDepartmentName, setSelectedDepartmentName] = useState<string | undefined>(undefined);
   const [searchedData, setSearchedData] = useState<any | null>(null);
-  const [departmentNames, setDepartmentNames] = useState<string[]>([]);
+  const [departmentNames, setdummyrefresh] = useState<number>(1);
+  const [dummyrefresh, setDepartmentNames] = useState<string[]>([]);
+
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
   const [page, setPage] = useState(1)
   const services = new DocumentService();
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -97,7 +102,17 @@ const DepartmentGrid = () => {
       render: (rowData: any, record: any) => {
         return <>
 
-
+<Tooltip>
+                        <EditOutlined type="edit" style={{ color: '#1890ff', fontSize: '17px' }}
+                            onClick={() => {
+                                if (rowData.isActive) {
+                                    setdummyrefresh(prev => prev + 1);
+                                } else {
+                                    message.error('you can not edit deactivate data')
+                                }
+                            }}
+                        />
+                    </Tooltip>
         
           <Divider type="vertical" />
           <Popconfirm onConfirm={e => { activateOrDeactivateDocument(record.id); }}
@@ -122,16 +137,9 @@ const DepartmentGrid = () => {
     <div>
       <br />
       <Card
-        title={<span style={{ color: 'white' }}>Document Details</span>}
-        extra={
-          <Link to="/navpage/departForm">
-            <span style={{ color: 'white' }}>
-              <Button>Create</Button>
-            </span>
-          </Link>
-        }
-        headStyle={{ backgroundColor: 'rgb(41, 57, 125)', border: 0 }}
-      >
+        title='Documents' extra={<span><Button onClick={() => navigate('/masters/document-management/document-form')} type={'primary'}>create</Button></span>}>
+
+
         <Table
           columns={columns}
           dataSource={data}
@@ -144,4 +152,4 @@ const DepartmentGrid = () => {
   );
 }
 
-export default DepartmentGrid;
+export default DocumentGrid;

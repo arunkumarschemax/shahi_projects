@@ -4,14 +4,15 @@
 import { SearchOutlined, RightSquareOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { Table, Input, Popconfirm, Card, Button, Space, Divider, Switch, Tag } from 'antd';
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import DocumentSharedService from 'packages/libs/shared-services/src/document-service/document-shared-service';
 import RoleSharedService from 'packages/libs/shared-services/src/document-role-service/document-role-sharedservice';
 
-const DepartmentGrid = () => {
+const DocumentRoleGrid = () => {
   const [data, setData] = useState<any>([]);
   const [page, setPage] = useState(1)
+  const navigate=useNavigate();
   const service = new RoleSharedService();
 
 
@@ -122,17 +123,10 @@ const DepartmentGrid = () => {
   return (
     <div>
       <br />
-      <Card
-        title={<span style={{ color: 'white' }}>Document Details</span>}
-        extra={
-          <Link to="/navpage/departForm">
-            <span style={{ color: 'white' }}>
-              <Button>Create</Button>
-            </span>
-          </Link>
-        }
-        headStyle={{ backgroundColor: 'rgb(41, 57, 125)', border: 0 }}
-      >
+      
+      <Card title='Roles' extra={<span><Button onClick={() => navigate('/masters/document-management/document-role-form')} type={'primary'}>create</Button></span>}>
+        {/* // extra={<span><Button onClick={() => navigate('document-role-form')} type={'primary'}>create</Button></span>} > */}
+       
         <Table
           columns={columns}
           dataSource={data}
@@ -145,4 +139,4 @@ const DepartmentGrid = () => {
   );
 }
 
-export default DepartmentGrid;
+export default DocumentRoleGrid;
