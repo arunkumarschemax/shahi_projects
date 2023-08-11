@@ -70,6 +70,8 @@ import LocationsForm from "./masters/locations/locations-form"
 import LocationsGrid from "./masters/locations/locations-grid"
 import TaxesForm from "./masters/taxes/taxes-form"
 import TaxesGrid from "./masters/taxes/taxes-grid"
+import DestinationForm from "./masters/destination/destination-form"
+import DestinationGrid from "./masters/destination/destination-grid"
 
 
 export const AppRoutes = () => {
@@ -121,7 +123,7 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
                 <Route path='items/item-grid' element={<ItemsGrid />} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
-                        <Route path='company/company-form' element={<CompanyForm currencyData={undefined} updateItem={function (companyData:undefined ): void {
+                        <Route path='company/company-form' element={<CompanyForm Data={undefined} updateItem={function (companyData:undefined ): void {
                         } } isUpdate={false} closeForm={function (): void {
                             
                         } } />} />
@@ -132,6 +134,12 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                         <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
+
+                        <Route path='destination/destination-form' element={<DestinationForm Data={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                        <Route path='destination/destination-grid' element={<DestinationGrid />} />
 
                         <Route path='brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
                 isUpdate={false}
