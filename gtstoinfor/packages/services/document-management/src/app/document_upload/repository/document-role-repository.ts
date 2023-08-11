@@ -1,10 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { DataSource, Repository } from "typeorm";
-import { RoleEntity } from "../entities/document-role-entity";
-
+import { DocumentRoleMappingEntity } from "../entities/document-role-entity";
 @Injectable()
-export class RoleRepository extends Repository<RoleEntity>{
+export class DocumentRoleMappingRepository extends Repository<DocumentRoleMappingEntity>{
     constructor(private dataSource: DataSource) {
-        super(RoleEntity, dataSource.createEntityManager());
+        super(DocumentRoleMappingEntity, dataSource.createEntityManager());
     }
 }

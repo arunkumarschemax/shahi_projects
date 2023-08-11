@@ -18,9 +18,21 @@ const roleOptions = [
     label: "Admin",
   },
   {
-    value: "generaluser",
-    label: "General User",
+    value: "sourcing",
+    label: "Sourcing",
   },
+  {
+    value: "logistics",
+    label: "Logistics",
+  },
+  {
+    value: "factory",
+    label: "Factory",
+  },
+  {
+    value: "accounts",
+    label: "Accounts",
+  }
 ];
 
 
