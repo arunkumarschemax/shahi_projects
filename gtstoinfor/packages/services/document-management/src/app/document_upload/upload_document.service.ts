@@ -9,27 +9,31 @@ import { ErrorResponse } from "../../../../../libs/shared-models/src/common/what
 import {UploadDocumentListResponseModel} from '../../../../../libs/shared-models/src/document-management/upload-document-list-response-model';
 import {DocumentFileUploadResponse} from '../../../../../libs/shared-models/src/document-management/document-file-upload-response'
 import {OrdersRepository} from '../../../../common/src/app/orders/repository/orders.repository';
+import { DocumentRoleMappingRepository } from "./repository/document-role-repository";
 @Injectable()
 export class DocumentsListService {
     constructor(
         @InjectRepository(DocumentsList)
         private documentsListRepository: DocumentsListRepository,
         private documentsListAdapter: UploadDocumentListAdapter,
-        private ordersRepo:OrdersRepository
+        private ordersRepo:OrdersRepository,
+        private documentRoleMappingRepo:DocumentRoleMappingRepository
+
       ) {}
 
       async createDocumentsList(documentsListRequest: DocumentsListRequest, isUpdate: boolean,): Promise<UploadDocumentListResponseModel> {
-        console.log(documentsListRequest);
         
         // const manager = new GenericTransactionManager();
         try{
             const data:DocumentsList[] = [];
             // await manager.startTransaction();
             let flag:boolean =true;
+            
             // for(const doc of documentsListRequest.file){
 
                 const convertedDto = await this.documentsListAdapter.convertDtoToEntity(documentsListRequest);
                 // const savedDoc = await manager.getCustomRepository(DocumentsListRepository).save(convertedDto);
+                console.log(convertedDto,'convertedDto')
                 const savedDoc = await this.documentsListRepository.save(convertedDto);
                 if(!savedDoc){
                     flag=false;
@@ -71,7 +75,7 @@ export class DocumentsListService {
             console.log(documentsListId[index]);
             console.log(index,element);
             const filePathUpdate = await this.documentsListRepository.update(
-              { documentCategoryId: documentCategoryId, roleId:roleId,customerPo:customerPo,orderId:orderId, documentsListId:documentsListId[index] },
+              {  documentsListId:documentsListId[index] },
               { filePath: filePath+element.filename,fileName: element.originalname, isUploaded: true }
             );
               if (filePathUpdate.affected > 0) {
@@ -101,6 +105,22 @@ export class DocumentsListService {
             throw err
         }
         
+    }
+
+    async getAllDocumentDetails():Promise<UploadDocumentListResponseModel>{
+        try{
+            const query='SELECT drl.id,role_name AS roleName,d.document_name AS documentName,documents_list_id AS documentListId,customer_po AS poNumber,order_id AS orderId,file_name AS fileName,file_path AS filePath,is_uploaded AS isUploaded FROM document_role_mapping drl      LEFT JOIN document d ON d.id=document_id LEFT JOIN documents_list dl ON dl.document_category_id=drl.document_id'
+            const result = await this.documentRoleMappingRepo.query(query)
+            if(result){
+                return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',result)
+            }else{
+            return new UploadDocumentListResponseModel(false,0,'no data found..',[])
+
+            }
+
+        }catch(error){
+            throw error
+        }
     }
 
     }

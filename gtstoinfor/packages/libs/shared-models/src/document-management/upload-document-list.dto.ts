@@ -46,3 +46,21 @@ export class UploadDocumentListDto{
         
     }
 }
+
+
+
+export class DocumentsListRequest{
+    documentCategoryId:number;
+    roleId:number;
+    customerPo:string
+    orderId:number
+    file:string[];
+    constructor(documentCategoryId:number,roleId:number,customerPo:string,orderId:number, file:string[],){
+        this.documentCategoryId = documentCategoryId;
+        this.file = file;
+        this.roleId = roleId;
+        this.customerPo=customerPo
+        this.orderId=orderId
+
+    }
+}

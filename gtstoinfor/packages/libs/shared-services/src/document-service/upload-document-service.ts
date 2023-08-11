@@ -1,4 +1,5 @@
 import {
+    DocumentsListRequest,
     UploadDocumentListDto,
     UploadDocumentListResponseModel,
 } from "@project-management-system/shared-models";
@@ -7,12 +8,12 @@ import { CommonAxiosService } from "../common-axios-service-prs";
 export class UploadDocumentService extends CommonAxiosService {
     private url = "/doc-upload";
 
-    async createDocumentsList(payload: UploadDocumentListDto): Promise<UploadDocumentListResponseModel> {
+    async createDocumentsList(payload: DocumentsListRequest): Promise<UploadDocumentListResponseModel> {
         return this.axiosPostCall(this.url + "/createDocumentsList", payload)
     }
 
-    async DocumentFileUpload(): Promise<UploadDocumentListResponseModel> {
-        return this.axiosPostCall(this.url + "/DocumentFileUpload")
+    async DocumentFileUpload(req:any): Promise<UploadDocumentListResponseModel> {
+        return this.axiosPostCall(this.url + "/DocumentFileUpload",req)
     }
 
     async getPoNumberDropdown(): Promise<UploadDocumentListResponseModel> {
@@ -20,4 +21,8 @@ export class UploadDocumentService extends CommonAxiosService {
         return this.axiosPostCall(this.url + "/getPoNumberDropdown")
     }
 
+    async getAllDocumentDetails(): Promise<UploadDocumentListResponseModel> {
+        return this.axiosPostCall(this.url + "/getAllDocumentDetails")
+    }
+    
 }

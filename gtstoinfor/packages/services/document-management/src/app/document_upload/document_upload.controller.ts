@@ -28,7 +28,6 @@ export class DocumentUploadController {
 
   @Post('/createDocumentsList')
     async createDocumentsList(@Body() createDto:DocumentsListRequest): Promise<UploadDocumentListResponseModel>{
-      console.log(createDto);
         try {
             return await this.uploadDocservice.createDocumentsList(createDto, false);
           } catch (error) {
@@ -109,6 +108,14 @@ export class DocumentUploadController {
     async getPoNumberDropdown(): Promise<UploadDocumentListResponseModel> {
         try {
             return await this.uploadDocservice.getPoNumberDropdown();
+        } catch (error) {
+            return (this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error));
+        }
+    }
+    @Post('/getAllDocumentDetails')
+    async getAllDocumentDetails(): Promise<UploadDocumentListResponseModel> {
+        try {
+            return await this.uploadDocservice.getAllDocumentDetails();
         } catch (error) {
             return (this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error));
         }
