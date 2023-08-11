@@ -63,67 +63,74 @@ export const baseRouterList = [
             },
         ],
     },
-    {
-        label: "Orders",
-        key: "excel-import",
-        path: "excel-import",
-        icon: <FileExcelOutlined />,
-        filepath: "excel-import",
-        children: [
-            {
-                label: "Add Orders",
-                key: "excel-import",
-                path: "excel-import",
-                filepath: "excel-import",
-            },
-            {
-                label: "Compare Orders",
-                key: "changes-view",
-                path: "changes-view",
-                filepath: "changes-view",
-            },
-            {
-                label: "View Orders",
-                key: "grid-view",
-                path: "grid-view",
-                filepath: "grid-view",
-            },
-            {
-                label: "Uploaded Files",
-                key: "revert-orders",
-                path: "revert-orders",
-                filepath: "revert-orders",
-            },
-            {
-                label: "Versions Data",
-                key: "version-grid",
-                path: "version-grid",
-                filepath: "version-grid",
-            },
-            // {
-            //     label: "Phase Wise Data",
-            //     key: "phase-wise-grid",
-            //     path: "phase-wise-grid",
-            //     filepath: "phase-wise-grid",
-            // }
-        ],
-    },
-    {
-        label: "Doucment Management",
-        key: "document_management",
-        path: "document_management",
-        icon: <FileExcelOutlined />,
-        filepath: "document-management",
-        children: [
-            {
-                label: "Add Orders",
-                key: "excel-import",
-                path: "excel-import",
-                filepath: "excel-import",
-            },
+    // {
+    //     label: "Orders",
+    //     key: "excel-import",
+    //     path: "excel-import",
+    //     icon: <FileExcelOutlined />,
+    //     filepath: "excel-import",
+    //     children: [
+    //         {
+    //             label: "Add Orders",
+    //             key: "excel-import",
+    //             path: "excel-import",
+    //             filepath: "excel-import",
+    //         },
+    //         {
+    //             label: "Compare Orders",
+    //             key: "changes-view",
+    //             path: "changes-view",
+    //             filepath: "changes-view",
+    //         },
+    //         {
+    //             label: "View Orders",
+    //             key: "grid-view",
+    //             path: "grid-view",
+    //             filepath: "grid-view",
+    //         },
+    //         {
+    //             label: "Uploaded Files",
+    //             key: "revert-orders",
+    //             path: "revert-orders",
+    //             filepath: "revert-orders",
+    //         },
+    //         {
+    //             label: "Versions Data",
+    //             key: "version-grid",
+    //             path: "version-grid",
+    //             filepath: "version-grid",
+    //         },
+    //         // {
+    //         //     label: "Phase Wise Data",
+    //         //     key: "phase-wise-grid",
+    //         //     path: "phase-wise-grid",
+    //         //     filepath: "phase-wise-grid",
+    //         // }
+    //     ],
+    // },
+    // {
+    //     label: "Doucment Management",
+    //     key: "document_management",
+    //     path: "document_management",
+    //     icon: <FileExcelOutlined />,
+    //     filepath: "document-management",
+    //     children: [
+    //         {
+    //             label: "Add Orders",
+    //             key: "excel-import",
+    //             path: "excel-import",
+    //             filepath: "excel-import",
+    //         },
           
-        ],
-    },
+    //     ],
+    // },
+    {
+        label:'Add Orders',
+        key:'add-orders',
+        icon: <UserOutlined />,
+        path:'/excel-import/excel-import.tsx',
+        filepath:'/excel-import/excel-import.tsx'     
+    }
 ];
 
 export default function BasicLayout() {
