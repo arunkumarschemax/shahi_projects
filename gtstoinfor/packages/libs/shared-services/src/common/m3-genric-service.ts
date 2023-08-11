@@ -20,8 +20,13 @@ export class M3GenericService {
         try {
             var baseUrl = 'https://172.17.3.115:23005/m3api-rest/execute/'
             let urlWithArgs = baseUrl + '/' + program + api + '?'
-            for (const arg of args) {
-                urlWithArgs += urlWithArgs + `${arg.key = arg.value}&`
+            let apiargs = ''
+            for (const [index,arg] of args.entries()) {
+                if((index+1) == args.length){
+                    apiargs += apiargs + `${arg.key}=${arg.value}`
+                }else{
+                    apiargs += apiargs + `${arg.key}=${arg.value}&`
+                }
             }
             const response = await axios.get(urlWithArgs, { headers: this.headersRequest, httpsAgent: this.agent });
             return response
