@@ -10,7 +10,7 @@ interface DataType {
     key: React.Key;
     attributeName: string;
     attributeValue : string;
-    disable: boolean;
+    disabled: boolean;
 }
 
 export const BuyersGeneralAttributeForm = () => {
@@ -43,9 +43,12 @@ export const BuyersGeneralAttributeForm = () => {
         })
     }
 
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    const onSelectChange = (newSelectedRowKeys: React.Key[],rowSelect) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
+        // rowSelect.foreach((e) => {
+        //     e.disabled = false
+        // })
     };
 
     const getAttributes = () => {
@@ -58,10 +61,14 @@ export const BuyersGeneralAttributeForm = () => {
     }
 
     const setAttributeInfo = (e,index,rowData) => {
-        console.log(rowData,'---------------rowdata')
         const req = new BuyersGeneralAttributeInfoModel(rowData.attributeId,rowData.attributeName,e.target.value,rowData.buyerGeneralAttributeId)
-        console.log(req,'--------------req')
         setAttributeValue([...attributeValue,req])
+    }
+
+    console.log(attributeValue,'------attributevalue')
+
+    const onInputChange = (e) => {
+        console.log(e,'--------e')
     }
 
     const columns : ColumnsType<DataType> = [
@@ -83,9 +90,9 @@ export const BuyersGeneralAttributeForm = () => {
                 return(
                     <>
                     {row.attributeValue ? <Input key={index} placeholder="Enter value" defaultValue={row.attributeValue}
-                        onBlur={e=> setAttributeInfo(e,index,row)}/> : (
+                        onBlur={e=> setAttributeInfo(e,index,row)}  onChange={onInputChange} disabled={row.disabled}/> : (
                         <Input key={index}placeholder="Enter value"
-                        onBlur={e=> setAttributeInfo(e,index,row)}/>
+                        onBlur={e=> setAttributeInfo(e,index,row)} onChange={onInputChange} disabled={row.disabled}/>
                     )}
                     
                     </>
@@ -144,7 +151,7 @@ export const BuyersGeneralAttributeForm = () => {
                 attributes.length <= 10 ? (<>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>
                 <Card size='small'>
-                <Table  size='small'  bordered columns={columns} dataSource={attributes} pagination={false}/>
+                <Table  size='small'  bordered columns={columns} dataSource={attributes} pagination={false} rowSelection={rowSelection}/>
                 </Card>
                 </Col>
                 </>): (<></>)

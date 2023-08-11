@@ -7,6 +7,8 @@ import { Attributes } from './attributes.entity';
 import { AttributeAdapter } from './dto/attribute.adapter';
 import { AttributeDto } from './dto/attribute.dto';
 import { AttributeRequest } from './dto/attribute.request';
+import { AttributeAgainstRequest } from './dto/attribute-against.request';
+
 
 @Injectable()
 export class AttributeService {
@@ -19,7 +21,10 @@ export class AttributeService {
     async createAttribute(attributeDto: AttributeDto, isUpdate: boolean): Promise<AttributeResponse> {
         try {
           if (!isUpdate) {
-            const attributeEntity = await this.attributeRepository.findOne({ where: { attributeName: attributeDto.attributeName } });
+            const attributeEntity = await this.attributeRepository.findOne({ where: { 
+              attributeName: attributeDto.attributeName,
+              attributeAgainst: attributeDto.attributeAgainst
+            } });
             if (attributeEntity) {
               throw new AttributeResponse(false, 11104, 'Attribute already exists');
             }
@@ -27,6 +32,14 @@ export class AttributeService {
             const attributeEntity = await this.attributeRepository.findOne({ where: { attributeId: attributeDto.attributeId } });
             if (!attributeEntity) {
               throw new ErrorResponse(11104, 'Attribute not found');
+            }
+            const attributeWithSameName = await this.attributeRepository.findOne({ where: { 
+              attributeName: attributeDto.attributeName,
+              attributeAgainst: attributeDto.attributeAgainst
+             } });
+
+            if (attributeWithSameName && attributeWithSameName.attributeId !== attributeDto.attributeId) {
+                throw new AttributeResponse(false, 11104, 'Attribute already exists');
             }
           }
       
@@ -160,6 +173,22 @@ export class AttributeService {
 //         return err;
 //     }
 //   }
+
+
+  async getAttributeByAttributeAgainst(attributeAgainst: AttributeAgainstRequest): Promise<AllAttributesResponse> {
+    console.log(attributeAgainst,'???????????????????????')
+      const Response = await this.attributeRepository.find({ where: {
+          attributeAgainst: attributeAgainst.attributeAgainst,
+          isActive: attributeAgainst.isActive
+      }});
+      // console.log(employeeResponse);
+      if (Response) {
+          const res = new AllAttributesResponse(true,1,'Attributes retrieved successfully',Response);
+          return res;
+      } else {
+          throw new ErrorResponse(99998, 'Data not found');
+        }
+  }
   
   
       

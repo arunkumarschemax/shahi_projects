@@ -41,10 +41,9 @@ export function BuyersForm(props: BuyersFormProps) {
   const paymentTermsService = new PaymentTermsService()
 
   useEffect(() => {
-    // getAllActivePaymentModes()
     getAllActiveCountries()
     getAllActiveCurrencys()
-    getAllPaymentMethods()
+    // getAllPaymentMethods()
     getAllPaymentTerms()
   }, [])
 
@@ -100,6 +99,7 @@ export function BuyersForm(props: BuyersFormProps) {
   }
 
   const saveBuyer = (buyersData: BuyersDto) => {
+    buyersData.paymentMethodId = Number(buyersData.paymentMethodId)
     buyersData.createdUser = 'admin'
     setDisable(true)
     buyerService.createBuyer(buyersData).then(res => {
@@ -117,23 +117,6 @@ export function BuyersForm(props: BuyersFormProps) {
     })
   }
 
-//   const getAllActivePaymentModes = () => {
-//     paymentModeService.getAllActivePaymentmodes().then(res => {
-//       if (res.status) {
-//         // AlertMessages.getSuccessMessage('PaymentModes Retrived successfully');
-//         setPaymentModeData(res.data);
-//       } else {
-//         if (res.intlCode) {
-//           AlertMessages.getErrorMessage(res.internalMessage);
-//         } else {
-//           AlertMessages.getErrorMessage(res.internalMessage);
-//         }
-//       }
-//     }).catch(err => {
-//       AlertMessages.getErrorMessage(err.message);
-//     })
-//   }
-
   const handlePaymentMode = (value) => {
     setSelectedPaymentModes(value);
   }
@@ -142,9 +125,7 @@ export function BuyersForm(props: BuyersFormProps) {
 
   const saveData = (values: BuyersDto) => {
     setDisable(false)
-    console.log(values);
     if (props.isUpdate) {
-      console.log('update')
       props.updateDetails(values);
     } else {
       setDisable(false)
@@ -160,16 +141,16 @@ export function BuyersForm(props: BuyersFormProps) {
     // createdUser = localStorage.getItem("createdUser");
     createdUser= 'admin'
   }
-  const onFocus = () => {
-    console.log('focus');
-  }
+  // const onFocus = () => {
+  //   console.log('focus');
+  // }
 
-  const onSearch = (val) => {
-    console.log('search:', val);
-  }
-  const onBlur = () => {
-    console.log('blur');
-  }
+  // const onSearch = (val) => {
+  //   console.log('search:', val);
+  // }
+  // const onBlur = () => {
+  //   console.log('blur');
+  // }
 
 
  // props.customersData.currency=Number(props.customersData.currency);
@@ -190,7 +171,7 @@ export function BuyersForm(props: BuyersFormProps) {
               <Row gutter={8}>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item
-                  name="clientCode"
+                  name="buyerCode"
                   label="Buyer Code"
                   rules={[
                     {
@@ -207,7 +188,7 @@ export function BuyersForm(props: BuyersFormProps) {
               </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item
-                name="clientName"
+                name="buyerName"
                 label="Buyer Name"
                 rules={[
                   {
@@ -313,9 +294,6 @@ export function BuyersForm(props: BuyersFormProps) {
                   placeholder="Select Currency"
                   // onChange={getSkuCode}
                   onChange={handleCurrency}
-                  onFocus={onFocus}
-                  onBlur={onBlur}
-                  onSearch={onSearch}
                   allowClear
                 >
                   {currencies.map(curencyDropData => {
@@ -327,7 +305,7 @@ export function BuyersForm(props: BuyersFormProps) {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item
-                name="paymentTerms"
+                name="paymentTermsId"
                 label="Payment Terms"
                 rules={[
                   {
@@ -373,7 +351,7 @@ export function BuyersForm(props: BuyersFormProps) {
                   },
                 ]}
               >
-                <Select
+                {/* <Select
                   showSearch
                   // style={{ width: 200 }}
                   placeholder="Select Payment method"
@@ -382,13 +360,13 @@ export function BuyersForm(props: BuyersFormProps) {
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onSearch={onSearch}
-                  
+                  defaultValue={'NA'}
                 >
-                  {/* <Option key={0} value={null}>Select Payment Method</Option> */}
                   {paymentMethodData.map((e) => {
                     return <Option key={e.paymentMethodId} value={e.paymentMethodId}>{e.paymentMethod}</Option>
                   })}
-                </Select>
+                </Select> */}
+                <Input/>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 12 }}>

@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import { Form, Input, Button, Select,Card, Row, Col } from 'antd';
+import { Form, Input, Button, Select,Card, Row, Col, message } from 'antd';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DeliveryMethodDto } from '@project-management-system/shared-models';
 import { DeliveryMethodService } from '@project-management-system/shared-services';
@@ -26,14 +26,14 @@ export function DeliveryMethodForm(props: DeliveryMethodFormProps) {
     deliveryMethodDto.createdUser = 'admin'
     deliveryMethodService.createDeliveryMethod(deliveryMethodDto).then(res => {
       if (res.status) {
-        AlertMessages.getSuccessMessage('Delivery Method Created Successfully');
+        message.success('Delivery Method Created Successfully',2);
         navigate("/masters/delivery-methods/delivery-method-view");
         onReset();
       } else {
         if (res.status) {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage,2);
         } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage,2);
         }
       }
     }).catch(err => {

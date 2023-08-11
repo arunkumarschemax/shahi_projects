@@ -1,17 +1,17 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 
 
-@Entity('profit_center')
-export class ProfitCenter{
+@Entity('profit_control_head')
+export class ProfitControlHead{
 
-@PrimaryGeneratedColumn("increment",{name:'profit_center-id'})
-profitCenterId:number;
+@PrimaryGeneratedColumn("increment",{name:'profit_control_head-id'})
+profitControlHeadId:number;
 @Column("varchar",{
     nullable: true,
     length:15,
-    name:"profit_center"
+    name:"profit_control_head"
 })
-profitCenter:string;
+profitControlHead:string;
 
 @Column("boolean",{
     default:true,
