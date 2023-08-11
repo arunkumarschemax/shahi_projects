@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Table, Typography, Upload, UploadProps } from 'antd';
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
-import AlertMessages from '../common/common-functions/alert-messages';
+// import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { UndoOutlined, UploadOutlined } from '@ant-design/icons';
-import { DocumentsListRequest, FileStatusReq, UploadDocumentListDto } from '@project-management-system/shared-models';
+import { AlertMessages, DocumentsListRequest, FileStatusReq, UploadDocumentListDto } from '@project-management-system/shared-models';
 import { useForm } from 'antd/es/form/Form';
 import { ColumnsType } from 'antd/es/table';
 
@@ -131,6 +131,7 @@ const onClick =()=>{
     console.log('dataaaa')
     // setFieldsData(values);
     form.validateFields().then(res => {
+      console.log(res.file.fileList)
       data.documentCategoryId=1
       data.roleId=1
       data.customerPo=form.getFieldValue('poNumber')

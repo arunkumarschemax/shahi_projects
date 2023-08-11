@@ -40,7 +40,7 @@ export class DocumentUploadController {
     @UseInterceptors(FilesInterceptor('file', null, {
       storage: diskStorage({
         // destination: '/upload-files/post-sailing-upload-files',
-        destination: 'dist/apps/services/logistics/upload-files/post-sailing-upload-files',
+        destination: './upload-files',
         filename: (req, file, callback) => {
           // console.log(file);
           const name = file.originalname.split('.')[0];
@@ -61,7 +61,7 @@ export class DocumentUploadController {
     }))
     async DocumentFileUpload(@UploadedFiles() file, @Body() uploadData: DocumentUploadDto): Promise<DocumentFileUploadResponse> {
       try {
-        return await this.uploadDocservice.updatePath(file,'upload-files/post-sailing-upload-files/',uploadData.documentCategoryId,uploadData.roleId,uploadData.customerPo,uploadData.orderId,uploadData.documentsListId);
+        return await this.uploadDocservice.updatePath(file,'upload-files/',uploadData.documentCategoryId,uploadData.roleId,uploadData.customerPo,uploadData.orderId,uploadData.documentsListId);
       } catch (error) {
         // return this.applicationExceptionHandler.returnException(DocumentFileUploadResponse, error);
       }

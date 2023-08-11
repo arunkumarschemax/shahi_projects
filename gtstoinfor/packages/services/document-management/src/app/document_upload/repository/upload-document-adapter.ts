@@ -14,7 +14,7 @@ export class UploadDocumentListAdapter{
             entity.customerPo=dto.customerPo
             entity.orderId=dto.orderId
             entity.fileName = "dto.";
-            entity.filePath = '/upload-files/post-sailing-upload-files/'+"dto.";
+            entity.filePath = '/upload-files/';
             entity.isUploaded = false;
             entity.isActive = true;
             entity.createdAt = new Date();

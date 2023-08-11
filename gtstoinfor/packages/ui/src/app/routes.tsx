@@ -16,10 +16,10 @@ import VersionChanges from "./excel-import/version-wise-table"
 import PhaseWiseData from "./excel-import/phase-wise-data"
 import DocumentForm from "./masters/document-management/document-form"
 import DepartmentGrid from "./masters/document-management/document-grid"
-import DocumentListupload from "./document-management/document-file-upload"
 import DocumentGrid from "./masters/document-management/document-grid"
 import RoleMappingForm from "./masters/document-management/document-role-form"
 import DocumentRoleGrid from "./masters/document-management/document-role-grid"
+import DocumentListupload from "./components/document-management/document-file-upload"
 
 
 export const AppRoutes = () => {
