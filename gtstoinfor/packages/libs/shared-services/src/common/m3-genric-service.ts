@@ -19,7 +19,6 @@ export class M3GenericService {
     async callM3Api(program: string, api: string, args: M3ApiArgs[]) {
         try {
             var baseUrl = 'https://172.17.3.115:23005/m3api-rest/execute/'
-            let urlWithArgs = baseUrl + '/' + program + api + '?'
             let apiargs = ''
             for (const [index,arg] of args.entries()) {
                 if((index+1) == args.length){
@@ -28,6 +27,7 @@ export class M3GenericService {
                     apiargs += apiargs + `${arg.key}=${arg.value}&`
                 }
             }
+            let urlWithArgs = baseUrl + '/' + program + api + '?' + apiargs
             const response = await axios.get(urlWithArgs, { headers: this.headersRequest, httpsAgent: this.agent });
             return response
         } catch (err) {
