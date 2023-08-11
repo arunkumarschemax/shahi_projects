@@ -16,6 +16,7 @@ import VersionChanges from "./excel-import/version-wise-table"
 import PhaseWiseData from "./excel-import/phase-wise-data"
 import DocumentForm from "./masters/document-management/document-form"
 import DepartmentGrid from "./masters/document-management/document-grid"
+import DocumentListupload from "./document-management/document-file-upload"
 
 
 export const AppRoutes = () => {
@@ -46,9 +47,13 @@ export const AppRoutes = () => {
 
                     {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
                 </Route>
+                <Route path="/document-management" key='/document-management'>
+                    <Route path="document-file-upload" key='/document-file-upload'  element={<DocumentListupload />}/>
+                </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
+
             <Route path="/login" key='/login' element={<Login />} />
         </Route>
     ))
@@ -78,9 +83,13 @@ export const AppRoutes = () => {
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 
                     </Route>
+                    <Route path="/document-management" >
+                    <Route path="document-file-upload" element={<DocumentListupload />}/>
+                </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
                 </Route>
+                
                 <Route path="/login" element={<Login />} />
             </Routes>
         </Router>
