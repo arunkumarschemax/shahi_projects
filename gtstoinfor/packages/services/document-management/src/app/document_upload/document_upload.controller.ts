@@ -9,11 +9,17 @@ import { extname } from 'path';
 import { DocumentFileUploadResponse } from "packages/libs/shared-models/src/document-management/document-file-upload-response";
 import { DocumentUploadDto } from "./requests/document-upload-dto";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-
+import { DocumentService } from './document.service';
+import { DocumentDto } from './dto/document.dto';
+import { DeleteDto } from './dto/delete-dto';
+import { Entity } from 'typeorm';
+import { DocumentEntity } from './entities/documents.entity';
+import { DocumentUploadResponseModel } from "@project-management-system/shared-models";
 @Controller('documents-list')
 @ApiTags('Document List ')
 export class DocumentsListController {
     constructor(private uploadDocservice:DocumentsListService,
+      private readonly service: DocumentService,
          private readonly applicationExceptionHandler: ApplicationExceptionHandler
          ){}
 
@@ -57,5 +63,26 @@ export class DocumentsListController {
       } catch (error) {
         // return this.applicationExceptionHandler.returnException(DocumentFileUploadResponse, error);
       }
+    }
+
+    @Post('createDocument')
+    async create(@Body() createDto: DocumentDto, entity: DocumentEntity): Promise<any> {
+      console.log(createDto,"controlllllllllllllll")
+      return await this.service.create(createDto,entity)
+    }
+  
+    @Post('getAllDocuments')
+    async getAllDocuments(): Promise<any> {
+      try {
+        return await this.service.getAllDocuments();
+      } catch (error) {
+        return error;
+      }
+    }
+  
+  
+    @Post('/activateOrDeactivateDepartment')
+    async activateOrDeactivateDepartment(@Body() req:DeleteDto): Promise<DocumentUploadResponseModel>{
+      return await this.service.activateOrDeactivateDepartment(req);
     }
 }

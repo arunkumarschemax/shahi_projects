@@ -14,6 +14,8 @@ import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import PhaseWiseData from "./excel-import/phase-wise-data"
+import DocumentForm from "./masters/document-management/document-form"
+import DepartmentGrid from "./masters/document-management/document-grid"
 
 
 export const AppRoutes = () => {
@@ -38,6 +40,10 @@ export const AppRoutes = () => {
                     <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
                     <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
                     <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
+                    <Route path='document-form' key='/document-form' element={<DocumentForm />} />
+                    <Route path='document-grid' key='/document-grid' element={<DepartmentGrid />} />
+
+
                     {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
                 </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />

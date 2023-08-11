@@ -1,13 +1,17 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 
-@Entity('document')
-export class DocumentEntity {
+@Entity('roleentity')
+export class RoleEntity {
 
     @PrimaryGeneratedColumn("increment", { name: 'id' })
     id:number;
 
     @Column("varchar", {
-        // length: 50,
+        name: "role_name"
+    })
+    roleName: string;
+
+    @Column("varchar", {
         name: "document_name"
     })
     documentName: string;
@@ -21,14 +25,12 @@ export class DocumentEntity {
     @CreateDateColumn({
         name: "created_at",
         type: "datetime",
-        // length:20
 
     })
     createdAt: Date;
 
     @Column("varchar", {
         name: "created_user",
-        // length:20
 
     })
     createdUser: string | null;
@@ -37,7 +39,6 @@ export class DocumentEntity {
     @UpdateDateColumn({
         name: "updated_at",
         type: 'datetime',
-        // length:20
 
     })
     updatedAt: Date;
