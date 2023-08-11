@@ -1,6 +1,6 @@
 import { m3Config } from "../../config";
 import axios from 'axios';
-const https = require('https');
+
 
 interface M3ApiArgs {
     key: string
@@ -12,9 +12,9 @@ export class M3GenericService {
     private headersRequest = {
         Authorization: `${this.auth}`,
     };
-    private agent = new https.Agent({
+    private agent = {
         rejectUnauthorized: false,
-    });
+    };
 
     async callM3Api(program: string, api: string, args: M3ApiArgs[]) {
         try {
