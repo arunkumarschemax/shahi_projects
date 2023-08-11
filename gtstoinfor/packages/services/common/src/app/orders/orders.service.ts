@@ -257,7 +257,7 @@ export class OrdersService {
         if (req) {
             const deleteDiffData = await this.orderDiffRepo.deleteDiffData(req)
         }
-        if(req){
+        if (req) {
             const deleteOrdersData = await this.ordersRepository.deleteData(req)
         }
         const updatedData = await this.ordersChildRepo.getUpdatedData()
@@ -365,7 +365,7 @@ export class OrdersService {
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
         } else if (files.length == 1) {
-            records = await this.ordersChildRepo.getPhaseWiseData1(files[0].fileId)
+            records = await this.ordersChildRepo.getPhaseWiseData(files[0].fileId)
         } else {
             records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
         }
@@ -390,7 +390,7 @@ export class OrdersService {
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
         } else if (files.length == 1) {
-            records = await this.ordersChildRepo.getPhaseWiseData1(files[0].fileId)
+            records = await this.ordersChildRepo.getPhaseWiseData(files[0].fileId)
         } else {
             records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
         }
