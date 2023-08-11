@@ -16,4 +16,7 @@ export class NikeService extends CommonAxiosService  {
     async getDivertReportData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.DpomController + "/getDivertReportData")
     }
+    async getCountForDivertReport(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.DpomController + "/getCountForDivertReport")
+    }
 }   

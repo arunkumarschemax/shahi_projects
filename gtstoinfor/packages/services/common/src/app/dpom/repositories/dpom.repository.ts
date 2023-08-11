@@ -22,4 +22,12 @@ export class DpomRepository extends Repository<DpomEntity> {
             .where(`dpom_item_line_status IN ('accepted','Unaccepted')`)
         return await query.getRawMany()
     }
+
+    async getCountForDivertReport(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`COUNT(dpom_item_line_status ) AS totalCount,SUM(dpom_item_line_status = 'accepted') AS acceptedCount, SUM(dpom_item_line_status = 'Unaccepted') AS unacceptedCount `)
+            .where(`dpom_item_line_status IN ('accepted','Unaccepted')`)
+        return await query.getRawMany()
+    }
+
 }

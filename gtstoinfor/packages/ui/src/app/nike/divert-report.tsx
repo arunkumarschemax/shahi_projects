@@ -1,15 +1,13 @@
     import React, { useState, useEffect, useRef } from 'react';
-    import { Card, Table, Row, Input, Col, Form, DatePicker, Select, Button } from 'antd';
+    import { Card, Table, Row, Input, Col, Form, DatePicker, Select, Button, message } from 'antd';
     import { ColumnProps } from 'antd/lib/table';
     import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
     import moment from 'moment';
-    // import { NikeService } from '@project-management-system/shared-services';
     import Highlighter from 'react-highlight-words';
     import Item from 'antd/es/descriptions/Item';
     import { IExcelColumn } from 'antd-table-saveas-excel/app';
     import { Excel } from 'antd-table-saveas-excel';
-    // import { ColumnProps } from 'antd/es/table';
-    import { Tooltip } from 'highcharts';
+    import { Tooltip, numberFormat } from 'highcharts';
     import { NikeService } from '@project-management-system/shared-services';
 
 
@@ -24,6 +22,8 @@
         const [factory, setFactory] = useState([]);
         const { RangePicker } = DatePicker;
         const [gridData, setGridData] = useState<any[]>([]);
+        const [dataLength, setDataLength] = useState<any[]>([]);
+
         const [acceptedItems, setAcceptedItems] = useState<any[]>([]);
         const [unacceptedItems, setUnacceptedItems] = useState<any[]>([])
         const { Option } = Select;
@@ -112,25 +112,31 @@
 
         useEffect(() => {
             getData();
+            getCount();
         }, [])
 
+
         const getData = async () => {
-            try {
-                const res = await service.getDivertReportData();
-                if (res.status) {
-                    setGridData(res.data.accepted);
-                    setAcceptedItems(res.data.accepted);
-                    
-                    console.log(acceptedItems)
-                    setUnacceptedItems(res.data.unaccepted);
-                }
-            } catch (err) {
-                console.log(err.message);
+         service.getDivertReportData().then(res=>{
+            if (res.status) {
+                setAcceptedItems(res.data.accepted);
+                
+                console.log(acceptedItems)
+                setUnacceptedItems(res.data.unaccepted);
             }
+         }) 
         }
 
-        // const handleExport = (e: any) => {
-        //     e.preventDefault();
+        const getCount= () =>{
+                service.getCountForDivertReport().then(res => {
+
+                    if (res.status) {
+                        setDataLength(res.data)
+                    }
+                })
+            
+            
+        }
 
         const handleExport = (e: any) => {
             e.preventDefault();
@@ -426,6 +432,19 @@
                         style={{ color: 'green' }}
                         onClick={handleExport}
                         icon={<FileExcelFilled />}>Download Excel</Button>}>
+                            <Row gutter={70}>
+                    <Col >
+                        <Card title={'Total Line Status Count  : ' + Number(dataLength[0].totalCount)} style={{ textAlign: 'left', width: 280, height: 38, backgroundColor: ' lightblue' }}></Card>
+                    </Col>
+                    <Col>
+                        <Card title={'Accepted  : ' + Number(dataLength[0].acceptedCount)} style={{ textAlign: 'left', width: 200, height: 38, backgroundColor: 'lightblue' }}></Card>
+                    </Col>
+                    <Col>
+                        <Card title={'Unaccepted : ' +Number(dataLength[0].unacceptedCount)} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
+                    </Col>
+                   
+                    
+                </Row><br></br>
                                 <Card >
                         <Table
                             columns={columns}

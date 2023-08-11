@@ -207,5 +207,12 @@ export class DpomService {
       }
       
       
+      async getCountForDivertReport(): Promise<CommonResponseModel> {
+
+        const details = await this.dpomRepository.getCountForDivertReport();
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+   
+    }
+      
    
 }

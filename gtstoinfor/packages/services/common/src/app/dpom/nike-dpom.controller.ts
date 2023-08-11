@@ -65,6 +65,15 @@ export class DpomController {
 
         }
     }
+    @Post('/getCountForDivertReport')
+    async getCountForDivertReport(): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getCountForDivertReport();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
        
     }
 
