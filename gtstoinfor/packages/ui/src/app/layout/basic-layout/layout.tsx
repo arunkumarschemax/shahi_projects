@@ -55,12 +55,12 @@ export const baseRouterList = [
         icon: <PicCenterOutlined />,
         filepath: "masters",
         children: [
-            {
-                label: "Factories",
-                key: "factories",
-                path: "factories/factories-view",
-                filepath: "factories/factories-view",
-            },
+            // {
+            //     label: "Factories",
+            //     key: "factories",
+            //     path: "factories/factories-view",
+            //     filepath: "factories/factories-view",
+            // },
         ],
     },
     // {
