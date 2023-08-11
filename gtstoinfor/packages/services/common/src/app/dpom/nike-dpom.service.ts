@@ -173,7 +173,7 @@ export class DpomService {
         // let query ='SELECT po_number , po_line_item_number ,  product_code FROM `dpom`';
 
         const details = await this.dpomRepository.find();
-        console.log(details)
+       // console.log(details)
         return new CommonResponseModel(true, 1, 'data retrived', details)
    
     }
@@ -188,4 +188,24 @@ export class DpomService {
             return 'no data found';
         }
     }
+   
+    async getDivertReportData(): Promise<CommonResponseModel> {
+        const report = await this.dpomRepository.getDivertReport();
+      
+        const acceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'accepted',);
+        const unacceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'unaccepted');      
+        if (acceptedArray.length > 0 || unacceptedArray.length > 0) {
+          const response = new CommonResponseModel(true, report.length, 'data retrieved', {
+            accepted: acceptedArray,
+            unaccepted: unacceptedArray
+          });
+          console.log(unacceptedArray, "Unaccepted Array Content");
+          return response;
+        } else {
+          return new CommonResponseModel(false, 0, 'Unable To Fetch Data', []);
+        }
+      }
+      
+      
+   
 }

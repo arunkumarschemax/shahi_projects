@@ -13,4 +13,7 @@ export class NikeService extends CommonAxiosService  {
     async getByFactoryStatus():Promise<any> {
         return this.axiosPostCall(this.DpomController + "/getByFactoryStatus")
     }
+    async getDivertReportData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.DpomController + "/getDivertReportData")
+    }
 }   

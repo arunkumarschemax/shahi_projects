@@ -55,6 +55,16 @@ export class DpomController {
     async getByFactoryStatus(@Body()req:DpomSaveDto):Promise<any>{
         return await this.dpomService.getByFactoryStatus(req);
     }
+    
+    @Post('/getDivertReportData')
+    async getDivertReportData(): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getDivertReportData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
        
     }
 
