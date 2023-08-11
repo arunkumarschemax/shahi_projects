@@ -76,9 +76,7 @@ export default function DocumentListupload() {
     fileList: fileList
 
 };
-const onClick =()=>{
-  setIsModalOpen(true)
-}
+
 
   const columns: ColumnsType<any> = [
     {
@@ -93,20 +91,30 @@ const onClick =()=>{
       width:120,
     },
     {
-      title: 'UpLoad Document',
+      title: 'Choose Document',
+      width:'220',
       render:() =>{
       return <><Form.Item name='file'>
         <Upload {...gstUploadFieldProps}
           accept='.jpeg,.pdf,.png,.jpg'>
-          <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Upload File</Button>
+          <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Choose File</Button>
           <br /><Typography.Text type="secondary">
             (Supported formats pdf,jpeg,jpg,png)
           </Typography.Text>
         </Upload>
       </Form.Item>
-      <Divider/>
-      <Form.Item>
-          <Button type="primary" htmlType="submit" style={{ marginRight: '10px' }}>
+      <Divider type='vertical' />
+      </>
+
+      }
+    },
+    {
+      title: 'Upload DOcument',
+      width:'80px',
+      render:() =>{
+      return <>
+      <Form.Item style={{alignItems: 'center'}}>
+          <Button style={{ marginRight: '10px' }}  htmlType="submit">
             Upload
           </Button>
         </Form.Item></>
@@ -117,7 +125,7 @@ const onClick =()=>{
     {
         title: 'View/Download Document',
         dataIndex: 'sourceName',
-        width:250,
+        width:150,
       },
 
 ];
@@ -131,12 +139,14 @@ const onClick =()=>{
     console.log('dataaaa')
     // setFieldsData(values);
     form.validateFields().then(res => {
+      console.log(res.customerPo)
       console.log(res.file.fileList)
       data.documentCategoryId=1
       data.roleId=1
-      data.customerPo=form.getFieldValue('poNumber')
+      data.customerPo=res.customerPo?res.customerPo:''
       data.orderId=1
       data.file= res.file.fileList;
+      console.log(form.getFieldValue('poNumber'))
       service.createDocumentsList(data).then((res) => {
         if(res.status){
           console.log(res.data);
@@ -157,16 +167,6 @@ const onClick =()=>{
               console.log(formData);
               service.DocumentFileUpload(formData).then((res) => {
                 console.log(res);
-                // if(res.status){
-                //   saleOrderService.updateDocumentStatus({saleOrderId:fieldsData.saleOrderId,plantId:plantId,documentName:fieldsData.documentCategory}).then((res) => {
-                //     if(res.status){
-                //       AlertMessages.getSuccessMessage(res.internalMessage);
-                //     }
-                //   })
-                // }
-                // else{
-                //   AlertMessages.getErrorMessage(res.internalMessage);
-                // }
               })
           }
           AlertMessages.getSuccessMessage(res.internalMessage);
@@ -186,7 +186,7 @@ const onClick =()=>{
     <Form form={form} layout='vertical' onFinish={onFinish}>
       <Row gutter={24}>
       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-          <Form.Item name='poNumber' label='Po Number'>
+          <Form.Item name='customerPo' label='Po Number'>
             <Select placeholder='Select PoNumber' showSearch allowClear>
             {poNumber?.map(obj =>{
                       return <Option key={obj.poNumber} value={obj.poNumber}>{obj.poNumber}</Option>

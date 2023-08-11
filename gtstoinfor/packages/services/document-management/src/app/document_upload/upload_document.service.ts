@@ -109,7 +109,7 @@ export class DocumentsListService {
 
     async getAllDocumentDetails():Promise<UploadDocumentListResponseModel>{
         try{
-            const query='SELECT drl.id,role_name AS roleName,d.document_name AS documentName,documents_list_id AS documentListId,customer_po AS poNumber,order_id AS orderId,file_name AS fileName,file_path AS filePath,is_uploaded AS isUploaded FROM document_role_mapping drl      LEFT JOIN document d ON d.id=document_id LEFT JOIN documents_list dl ON dl.document_category_id=drl.document_id'
+            const query='SELECT drl.id,role_name AS roleName,d.document_name AS documentName,documents_list_id AS documentListId,customer_po AS poNumber,order_id AS orderId,file_name AS fileName,file_path AS filePath,is_uploaded AS isUploaded FROM document_role_mapping drl      LEFT JOIN document d ON d.id=document_id LEFT JOIN documents_list dl ON dl.document_category_id=drl.document_id group by drl.document_id'
             const result = await this.documentRoleMappingRepo.query(query)
             if(result){
                 return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',result)
