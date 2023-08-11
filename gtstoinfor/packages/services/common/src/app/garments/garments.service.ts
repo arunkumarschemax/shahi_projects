@@ -7,6 +7,7 @@ import { Garments } from './garments.entity';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { AllGarmentsResponse, GarmentRequest, GarmentResponse } from '@project-management-system/shared-models';
 import { GarmentsRequest } from './dto/garments.request';
+import { GarmentsCategoryRequest } from './dto/garment-category.request';
 
 @Injectable()
 export class GarmentsService {
@@ -16,49 +17,41 @@ export class GarmentsService {
     ) { }
 
     async createGarment(garmentDto: GarmentDto, isUpdate: boolean): Promise<GarmentResponse> {
-        console.log('garmentDto',garmentDto)
         try {
-          let previousValue
           if (!isUpdate) {
-            const garmentEntity = await this.garmentsRepository.findOne({where:{garmentName:garmentDto.garmentName}})
-                if (garmentEntity) {
-                    throw new GarmentResponse(false,11104, 'Garment already exists');
-                }
+            const existingGarment = await this.garmentsRepository.findOne({ where: { garmentName: garmentDto.garmentName } });
+            if (existingGarment) {
+              throw new GarmentResponse(false, 11104, 'Garment already exists');
             }
-            else {
-                const garmentEntity = await this.garmentsRepository.findOne({where:{garmentId:garmentDto.garmentId}})
-                if (garmentEntity) {
-                    if (!garmentDto) {
-                        throw new ErrorResponse(11104, 'Garment already exists');
-                    }
-                }
-            }
-          const convertedGarment: Garments = this.garmentsAdapter.convertDtoToEntity(garmentDto,isUpdate);
-          console.log(convertedGarment,'----------------------------------------');
-          const savedGarmentEntity: Garments = await this.garmentsRepository.save(convertedGarment);
-          const savedGarmentDto: GarmentDto = this.garmentsAdapter.convertEntityToDto(convertedGarment);
-            // console.log(savedStateDto);
-          if (savedGarmentDto) {
-            const presentValue = savedGarmentDto.garmentName;
-           // generating resposnse
-           const response = new GarmentResponse(true,1,isUpdate? 'Garment Updated Successfully': 'Garment Created Successfully');
-           const name=isUpdate?'updated':'created'
-           const displayValue = isUpdate? 'Garment Updated Successfully': 'Garment Created Successfully'
-           const userName = isUpdate? savedGarmentDto.updatedUser :savedGarmentDto.createdUser;
-          //  const newLogDto = new LogsDto(1,name, 'Currencies', savedCurrencyDto.currencyId, true, displayValue,userName,previousValue,presentValue)
-          //  let res = await this.logService.createLog(newLogDto);
-          //  console.log(res);
-           return response
           } else {
-            //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
-            throw new GarmentResponse(false,11106,'Garment saved but issue while transforming into DTO');
+            const existingGarmentByName = await this.garmentsRepository.findOne({ where: { garmentName: garmentDto.garmentName } });
+            const existingGarmentById = await this.garmentsRepository.findOne({ where: { garmentId: garmentDto.garmentId } });
+            
+            if (existingGarmentByName && existingGarmentByName.garmentId !== garmentDto.garmentId) {
+              throw new GarmentResponse(false, 11104, 'Garment name already exists');
+            }
+            
+            if (!garmentDto || !existingGarmentById) {
+              throw new ErrorResponse(11104, 'Given garment does not exist');
+            }
+          }
+          
+          const convertedGarment: Garments = this.garmentsAdapter.convertDtoToEntity(garmentDto, isUpdate);
+          const savedGarmentEntity: Garments = await this.garmentsRepository.save(convertedGarment);
+          const savedGarmentDto: GarmentDto = this.garmentsAdapter.convertEntityToDto(savedGarmentEntity);
+          
+          if (savedGarmentDto) {
+            const response = new GarmentResponse(true, 1, isUpdate ? 'Garment Updated Successfully' : 'Garment Created Successfully');
+            return response;
+          } else {
+            throw new GarmentResponse(false, 11106, 'Garment saved but issue while transforming into DTO');
           }
         } catch (error) {
-          // when error occures while saving the data , the execution will come to catch block.
-          // tslint:disable-next-line: typedef
           return error;
         }
       }
+      
+      
 
     /**
     * gets all   Item categories details  
@@ -167,6 +160,24 @@ export class GarmentsService {
             } catch (err) {
               return err;
             }
-          }  
+          }
+
+          async getByGarmentCategory(req: GarmentsCategoryRequest): Promise<AllGarmentsResponse> {
+            console.log(req,'???????????????????????');
+            const Response = await this.garmentsRepository.find({
+                where: {
+                    garmentCategory: { garmentCategoryId: req.garmentCategoryId },
+                    isActive: req.isActive
+                }
+            });
+        
+            if (Response.length > 0) {
+                const res = new AllGarmentsResponse(true, 1, 'Attributes retrieved successfully', Response);
+                return res;
+            } else {
+                throw new ErrorResponse(99998, 'Data not found');
+            }
+        }
+        
 
 }

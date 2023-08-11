@@ -85,10 +85,32 @@ export function GarmentsForm(
     form.resetFields();
   };
 
+  const garmentCategoryDropdown = props.isUpdate ? (
+    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+      <Form.Item
+        name="garmentCategoryId"
+        label="Garment Category"
+        rules={[
+          {
+            required: true,
+            message: 'Garment Category is required'
+          }
+        ]}
+      >
+        <Select placeholder="Select Garment Category">
+          {/* Render your options here */}
+        </Select>
+      </Form.Item>
+    </Col>
+  ) : null;
+
   return (
     <Card title={<span >Garments</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }} extra={props.isUpdate == true ? "" : <Link to='/masters/garments/garments-view' ><Button type={'primary'} >View </Button></Link>}
     >
       <Form layout="vertical" form={form} initialValues={props.garmentData} name="control-hooks" onFinish={saveData}>
+      <Form.Item name="garmentId" style={{ display: "none" }} >
+        <Input hidden />
+      </Form.Item>
         <Form.Item name="garmentCategoryId" style={{ display: "none" }} >
           <Input hidden />
         </Form.Item>

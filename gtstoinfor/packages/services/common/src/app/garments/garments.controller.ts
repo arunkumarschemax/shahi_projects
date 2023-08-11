@@ -5,6 +5,7 @@ import { GarmentsService } from './garments.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { AllGarmentsResponse, GarmentResponse } from '@project-management-system/shared-models';
 import { GarmentsRequest } from './dto/garments.request';
+import { GarmentsCategoryRequest } from './dto/garment-category.request';
 
 
 
@@ -82,6 +83,15 @@ export class GarmentsController {
          }
        }
 
+       @Post('/getByGarmentCategory')
+       @ApiBody({type:GarmentsCategoryRequest})
+       async getByGarmentCategory(@Body()req: any): Promise<AllGarmentsResponse> {
+           try {
+            return await this.garmentService.getByGarmentCategory(req);
+          } catch (error) {
+               return error;
+          }
+        }
 
 
 }
