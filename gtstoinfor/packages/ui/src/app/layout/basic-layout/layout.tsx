@@ -229,6 +229,12 @@ export const baseRouterList = [
                 path: "taxes/taxes-grid",
                 filepath: "taxes/taxes-grid",
             },
+            {
+                label: "Fabric Type",
+                key: "fabricType",
+                path: "fabricType/fabric-type-view",
+                filepath: "fabricType/fabric-type-view",
+            },
         ],
     },
 
@@ -299,6 +305,7 @@ export const baseRouterList = [
             //     path: "phase-wise-grid",
             //     filepath: "phase-wise-grid",
             // }
+            
         ],
     },
 ];

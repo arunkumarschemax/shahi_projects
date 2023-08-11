@@ -37,6 +37,7 @@ import { GarmentCategoriesModule } from './garment-category/garment-category.mod
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
 import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
+import { FabricTypeModule } from './fabric-types/fabric-type.module';
 
 
 @Module({
@@ -74,7 +75,7 @@ import { WarehouseModule } from './warehouse/warehouse.module';
     DeliveryTermsModule,
     LocationsModule,
     DivisionModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,FabricTypeModule],
   controllers: [AppController],
   providers: [AppService],
 })

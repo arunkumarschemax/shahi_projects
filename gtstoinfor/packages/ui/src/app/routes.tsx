@@ -70,6 +70,8 @@ import LocationsForm from "./masters/locations/locations-form"
 import LocationsGrid from "./masters/locations/locations-grid"
 import TaxesForm from "./masters/taxes/taxes-form"
 import TaxesGrid from "./masters/taxes/taxes-grid"
+import FabricTypeForm from "./masters/fabric-type/fabric-type-form"
+import FabricTypeGrid from "./masters/fabric-type/fabric-type-grid"
 
 
 export const AppRoutes = () => {
@@ -207,7 +209,8 @@ export const AppRoutes = () => {
                          <Route path='profit-control-head/profit-control-head-form' key ='profit-control-head/profit-control-head-form' element={< ProfitControlHeadForm profitCenterData={undefined}
                  isUpdate={false}
                 closeForm={() => { }}
-                updateItem={(undefined) => { }}/>} /><Route path="components/components-view" element ={<ComponentsGrid/>}/>
+                updateItem={(undefined) => { }}/>} />
+                <Route path="components/components-view" element ={<ComponentsGrid/>}/>
                         <Route path='components/components-form' element={<ComponentsForm
                         componentsData={undefined}
                         isUpdate={false}
@@ -235,6 +238,12 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
+                        <Route path='fabricType/fabric-type-view' element={<FabricTypeGrid/>} />
+                         <Route path='fabricType/fabric-type-form' key ='fabricType/fabric-type-form' element={<FabricTypeForm  fabricTypeData={undefined}
+
+                 isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
                          <Route path='locations/locations-view' element={<LocationsGrid/>}/>
 
                     </Route>
