@@ -108,6 +108,22 @@ export const baseRouterList = [
             // }
         ],
     },
+    {
+        label: "Doucment Management",
+        key: "document_management",
+        path: "document_management",
+        icon: <FileExcelOutlined />,
+        filepath: "document-management",
+        children: [
+            {
+                label: "Add Orders",
+                key: "excel-import",
+                path: "excel-import",
+                filepath: "excel-import",
+            },
+          
+        ],
+    },
 ];
 
 export default function BasicLayout() {
