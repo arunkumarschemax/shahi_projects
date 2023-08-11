@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { DocumentListModule } from './document_upload/document_upload.module';
+import { DocumentUploadModule } from './document_upload/document_upload.module';
 import { appConfig } from '../../../common/config';
 
 
@@ -24,7 +24,7 @@ import { appConfig } from '../../../common/config';
         connectionLimit: 20
       }
     }),
-    DocumentListModule],
+    DocumentUploadModule],
   controllers: [AppController],
   providers: [AppService],
 })

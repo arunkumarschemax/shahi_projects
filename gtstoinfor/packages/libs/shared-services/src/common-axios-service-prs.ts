@@ -8,7 +8,7 @@ export class CommonAxiosService {
         let queryString = '';
         // if only query string(urlEndPoint) is specified, then the default connection host is assigned
         if (typeof urlEndPoint == 'string') {
-            hostIp = configs.APP_PROJECT_MANAGEMENT_URL;
+            hostIp = configs.doc_management_url;
             queryString = urlEndPoint;
         } else {
             // if a specific sub-service is specified then the connection host is dynamic based on the service name

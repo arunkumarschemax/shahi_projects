@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { DocumentsListService } from './upload_document.service';
-import { DocumentsListController } from './document_upload.controller';
 import { DocumentsList } from './entities/upload-document-entity';
 import { UploadDocumentListAdapter } from './repository/upload-document-adapter';
 import { DocumentEntity } from './entities/documents.entity';
@@ -13,6 +12,7 @@ import { DocumentRoleMappingEntity } from './entities/document-role-entity';
 import { DocumentRoleMappingRepository } from './repository/document-role-repository';
 import { DocumentRoleMappingService } from './document_role_mapping.service';
 import { OrdersRepository } from 'packages/services/common/src/app/orders/repository/orders.repository';
+import { DocumentUploadController } from './document_upload.controller';
 
 @Module({
   imports: [
@@ -21,8 +21,8 @@ import { OrdersRepository } from 'packages/services/common/src/app/orders/reposi
         DocumentEntity,
         DocumentRoleMappingEntity
     ])],
-  controllers: [DocumentsListController],
+  controllers: [DocumentUploadController],
   providers: [DocumentsListService,DocumentService,UploadDocumentListAdapter, ApplicationExceptionHandler,DocumentRepository,DocumentRoleMappingRepository,DocumentRoleMappingService,OrdersRepository]
 })
-export class DocumentListModule { }
+export class DocumentUploadModule { }
 
