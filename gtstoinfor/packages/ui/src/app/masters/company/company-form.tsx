@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
 import { Link, useLocation } from "react-router-dom";
-
-// import './currencies-form.css';
 import { CompanyDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { CompanyService } from '@project-management-system/shared-services';
 
 export interface CompanyFormProps {
-  currencyData: CompanyDto;
-  updateItem: (currencyData: CompanyDto) => void;
+  Data: CompanyDto;
+  updateItem: (Data: CompanyDto) => void;
   isUpdate: boolean;
   // saveItem:(varirantData:VariantDto) => void;
   closeForm: () => void;
@@ -85,7 +83,7 @@ export const CompanyForm = (props:CompanyFormProps) => {
       <Form
         layout={'vertical'}
         form={form}
-        initialValues={props.currencyData}
+        initialValues={props.Data}
         name="control-hooks"
         onFinish={saveData}
       >

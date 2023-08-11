@@ -6,7 +6,8 @@ import { CompanyAdapter } from '../company/dto/company.adapter';
 import { AllCompanyResponseModel, CompanyResponseModel } from '@project-management-system/shared-models';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyRequest } from './dto/company.request';
-import { UserRequestDto } from '../currencies/dto/user-logs-dto';
+import { UserRequestDto } from './dto/userlog';
+
 
 
 @Injectable()
@@ -67,9 +68,7 @@ export class CompanyService {
            const name=isUpdate?'updated':'created'
            const displayValue = isUpdate? 'Company Updated Successfully': 'Company Created Successfully'
            const userName = isUpdate? savedCompanyDto.updatedUser :savedCompanyDto.createdUser;
-          //  const newLogDto = new LogsDto(1,name, 'Company', savedCurrencyDto.currencyId, true, displayValue,userName,previousValue,presentValue)
-          //  let res = await this.logService.createLog(newLogDto);
-          //  console.log(res);
+         
            return response
           } else {
             //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
@@ -98,11 +97,7 @@ export class CompanyService {
               CompanyDtos.push(convertedCompanyDto);
             });
             const response = new AllCompanyResponseModel(true,1,'Company retrieved successfully',CompanyDtos);
-            // if(req?.createdUser){
-            //   const newLogDto = new LogsDto(0,'view', 'Currencies', 0, true, 'Currencies retrieved successfully',req.createdUser,"","")
-            //   let res = await this.logService.createLog(newLogDto);
-            //   console.log(res);
-            // }
+           
             return response;
           } else {
             throw new CompanyResponseModel(false,99998, 'Data not found');
@@ -142,7 +137,7 @@ export class CompanyService {
             const companyExists = await this.getCompanyById(companyReq.companyId);
             if (companyExists) {
                 if (companyReq.versionFlag !== companyExists.versionFlag) {
-                    throw new CompanyResponseModel(false,10113, 'Someone updated the current currency information.Refresh and try again');
+                    throw new CompanyResponseModel(false,10113, 'Someone updated the current company information.Refresh and try again');
                 } else {
                     
                         const companyStatus =  await this.companyRepository.update(
@@ -182,7 +177,7 @@ export class CompanyService {
               
               const companyData: CompanyDTO = this.companyAdapter.convertEntityToDto(companyEntities);
               if (companyData) {
-                  const response = new CompanyResponseModel(true, 11101 , 'Currency retrived Successfully',companyData);
+                  const response = new CompanyResponseModel(true, 11101 , 'Company retrived Successfully',companyData);
                   return response;
               }
               else{

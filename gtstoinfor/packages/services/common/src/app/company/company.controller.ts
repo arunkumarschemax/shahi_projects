@@ -3,10 +3,9 @@ import { Controller, Post, Body, Logger, Get, UseGuards,Req} from '@nestjs/commo
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
 import { CompanyDTO } from './dto/company.dto';
 import { CompanyService } from './company.service';
-// import { CurrencyResponseModel, AllCurrencyResponseModel } from '@gtpl/shared-models/masters';
 import { CompanyRequest } from './dto/company.request';
 import { AllCompanyResponseModel, CompanyResponseModel } from '@project-management-system/shared-models';
-import { UserRequestDto } from '../currencies/dto/user-logs-dto';
+import { UserRequestDto } from './dto/userlog';
 
 @ApiTags('company')
 @Controller('company')
