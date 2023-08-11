@@ -41,4 +41,9 @@ export class PackageTermsService extends CommonAxiosService {
     async getPackagetById(packageTermsRequest:PackageTermsRequest): Promise<PackageTermsResponseModel> {
         return this.axiosPostCall(this.URL + '/getPaById',packageTermsRequest);
     }
+
+    async getAllActivePackageTerms(): Promise<AllPackageTermsResponseModel> {
+        return this.axiosPostCall(this.URL + '/getAllActivePackageTerms')
+                     
+    }
 }
