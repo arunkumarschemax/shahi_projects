@@ -17,6 +17,9 @@ import PhaseWiseData from "./excel-import/phase-wise-data"
 import DocumentForm from "./masters/document-management/document-form"
 import DepartmentGrid from "./masters/document-management/document-grid"
 import DocumentListupload from "./document-management/document-file-upload"
+import DocumentGrid from "./masters/document-management/document-grid"
+import RoleMappingForm from "./masters/document-management/document-role-form"
+import DocumentRoleGrid from "./masters/document-management/document-role-grid"
 
 
 export const AppRoutes = () => {
@@ -41,12 +44,8 @@ export const AppRoutes = () => {
                     <Route path='grid-view' key='/grid-view' element={<AllOrdersGridView />} />
                     <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
                     <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
-                    <Route path='document-form' key='/document-form' element={<DocumentForm />} />
-                    <Route path='document-grid' key='/document-grid' element={<DepartmentGrid />} />
-
-
-                    {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
                 </Route>
+                    
                 <Route path="/document-management" key='/document-management'>
                     <Route path="document-file-upload" key='/document-file-upload'  element={<DocumentListupload />}/>
                 </Route>
@@ -73,6 +72,12 @@ export const AppRoutes = () => {
                     <Route path='/masters'>
                         <Route path='factories/factories-view' element={<FactoriesView />} />
                         <Route path='factories/factories-form' element={<FactoriesForm />} />
+                        <Route path='document-form' key='/document-form' element={<DocumentForm />} />
+                        <Route path='document-grid' key='/document-grid' element={<DocumentGrid />} />
+                        <Route path='role-mapping-form' key='/role-mapping-form' element={<RoleMappingForm />} />
+                        <Route path='role-mapping-grid' key='/role-mapping-grid' element={<DocumentRoleGrid />} />
+
+
                     </Route>
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />

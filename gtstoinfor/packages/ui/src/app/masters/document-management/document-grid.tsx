@@ -137,7 +137,7 @@ const DocumentGrid = () => {
     <div>
       <br />
       <Card
-        title='Documents' extra={<span><Button onClick={() => navigate('/masters/document-management/document-form')} type={'primary'}>create</Button></span>}>
+        title='Documents' extra={<span><Button onClick={() => navigate('/masters/document-form')} type={'primary'}>create</Button></span>}>
 
 
         <Table
