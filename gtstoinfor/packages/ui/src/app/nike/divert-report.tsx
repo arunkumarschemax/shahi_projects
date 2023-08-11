@@ -134,39 +134,56 @@
 
         const handleExport = (e: any) => {
             e.preventDefault();
-
-
+        
             const currentDate = new Date()
                 .toISOString()
                 .slice(0, 10)
                 .split("-")
                 .join("/");
-
-            let exportingColumns: IExcelColumn[] = []
-            exportingColumns = [
-                { title: 'Plant', dataIndex: 'Plant' },
-                { title: 'Product Code', dataIndex: 'lastModifiedDate' },
-                { title: 'Line Status', dataIndex: 'Item' },
-                { title: 'Document Date', dataIndex: 'totalItemQty' },
-                { title: 'Old Po', dataIndex: 'Factory' },
-                { title: 'Old Po Line', dataIndex: 'documentDate' },
-                { title: 'Balance Qty', dataIndex: 'purchase Order Number' },
-                { title: 'Destination', dataIndex: 'poLineItemNumber' },
-                { title: 'Shipment Type', dataIndex: 'DPOMLineItemStatus' },
-                { title: 'Inventory Segment Code', dataIndex: 'styleNumber' },
+        
+            let exportingColumns: IExcelColumn[] = [
+                { title: 'Section', dataIndex: 'section' },
+                { title: 'S.No', dataIndex: 'sno' },
+                { title: 'Plant', dataIndex: 'plant' },
                 { title: 'Product Code', dataIndex: 'productCode' },
-                { title: 'OGAC', dataIndex: 'colorDesc' },
-            ]
-
-
+                { title: 'Line Status', dataIndex: 'lineStatus' },
+                { title: 'Document Date', dataIndex: 'documentDate' },
+                { title: 'Old Po', dataIndex: 'poNumber' },
+                { title: 'Old Po Line', dataIndex: 'poLine' },
+                { title: 'Balance Qty', dataIndex: 'balanceQty' },
+                { title: 'Destination', dataIndex: 'destination' },
+                { title: 'Shipment Type', dataIndex: 'shipmentType' },
+                { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
+                { title: 'OGAC Date', dataIndex: 'ogac' },
+                { title: 'GAC Date', dataIndex: 'gac' },
+                { title: 'Item Vas', dataIndex: 'item_vas_text' },
+            ];
+        
             const excel = new Excel();
-            excel.addSheet("Sheet1");
-            excel.addRow();
-            excel.addColumns(exportingColumns);
-            excel.addDataSource(gridData);
-            excel.saveAs(`factory-report-${currentDate}.xlsx`);
-        }
+    excel.addSheet("Sheet1");
 
+    const formattedData = combinedData.map((item, index) => ({
+        ...item,
+        sno: item.section === 'old' ? index + 1 : '', 
+    }));
+
+    let newSno = 1;
+    const newSectionStart = formattedData.findIndex(item => item.section === 'new');
+    if (newSectionStart >= 0) {
+        formattedData.slice(newSectionStart).forEach((item, index) => {
+            if (item.section === 'new') {
+                item.sno = newSno++; 
+            }
+        });
+    }
+
+    excel.addRow();
+    excel.addColumns(exportingColumns);
+    excel.addDataSource(formattedData);
+    excel.saveAs(`Divert-report-${currentDate}.xlsx`);
+}
+
+        
         
 
 
