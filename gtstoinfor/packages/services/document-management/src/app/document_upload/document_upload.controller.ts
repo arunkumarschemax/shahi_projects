@@ -17,9 +17,9 @@ import { DocumentEntity } from './entities/documents.entity';
 import { DocumentRoleMapping } from "./models/document-role-mapping.dto";
 import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingResponseModel } from "@project-management-system/shared-models";
 import { DocumentRoleMappingService } from "./document_role_mapping.service";
-@Controller('documents-list')
-@ApiTags('Document List ')
-export class DocumentsListController {
+@ApiTags('Documents Upload')
+@Controller('doc-upload')
+export class DocumentUploadController {
     constructor(private uploadDocservice:DocumentsListService,
       private readonly service: DocumentService,
       private readonly mapService: DocumentRoleMappingService,
@@ -93,7 +93,7 @@ export class DocumentsListController {
       return await this.mapService.createDocMapping(documentRoleMapping);
     }
 
-    @Post('./getAllDocMappings')
+    @Post('/getAllDocMappings')
     async getAllDocMappings(): Promise<AllDocumentRoleMappingsResponseModel> {
       return await this.mapService.getAllDocMappings();
     }
