@@ -6,9 +6,9 @@ export class DocumentRoleMappingEntity extends CommonColumns {
 
     @Column("int", {
         nullable: true,
-        name: "document_id",
+        name: "role_id",
     })
-    documentId: number;
+    roleId: number;
 
     @Column("varchar", {
         name: "role_name"

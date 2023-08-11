@@ -55,6 +55,19 @@ export const baseRouterList = [
         icon: <PicCenterOutlined />,
         filepath: "masters",
         children: [
+            {
+                label: "Documents",
+                key: "Documents",
+                path: "document-grid",
+                filepath: "document-grid",
+            },
+
+            {
+                label: "Role Mapping",
+                key: "Role Mapping",
+                path: "role-mapping-grid",
+                filepath: "role-mapping-grid",
+            },
             // {
             //     label: "Factories",
             //     key: "factories",
