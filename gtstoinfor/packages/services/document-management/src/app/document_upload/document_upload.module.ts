@@ -1,13 +1,22 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { DocumentService } from './document.service';
+import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
+import { DocumentsListService } from './upload_document.service';
+import { DocumentsListController } from './document_upload.controller';
+import { DocumentsList } from './entities/upload-document-entity';
+import { UploadDocumentListAdapter } from './repository/upload-document-adapter';
 import { DocumentEntity } from './entities/documents.entity';
-import { DocumentController } from './document_upload.controller';
-@Module({
+import { DocumentService } from './document.service';
+import { DocumentRepository } from './repository/documents.repository';
 
-  imports: [TypeOrmModule.forFeature([DocumentEntity])],
-  controllers: [DocumentController],
-  providers: [DocumentService,],
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([
+        DocumentsList,
+        DocumentEntity
+    ])],
+  controllers: [DocumentsListController],
+  providers: [DocumentsListService,DocumentService,UploadDocumentListAdapter, ApplicationExceptionHandler,DocumentRepository]
 })
-export class DocumentModule {}
+export class DocumentListModule { }
+
