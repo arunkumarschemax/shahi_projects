@@ -126,10 +126,10 @@ export const baseRouterList = [
     // },
     {
         label:'Add Orders',
-        key:'add-orders',
+        key:'excel-import',
         icon: <UserOutlined />,
-        path:'/excel-import/excel-import.tsx',
-        filepath:'/excel-import/excel-import.tsx'     
+        path:'excel-import/excel-import',
+        filepath:'excel-import/excel-import'     
     }
 ];
 
