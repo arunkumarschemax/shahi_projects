@@ -17,6 +17,8 @@ import { DocumentEntity } from './entities/documents.entity';
 import { DocumentRoleMapping } from "./models/document-role-mapping.dto";
 import { AllDocumentRoleMappingsResponseModel, DocumentResponseModel, DocumentRoleMappingResponseModel } from "@project-management-system/shared-models";
 import { DocumentRoleMappingService } from "./document_role_mapping.service";
+import { PoReq, docreq,req } from "./requests/importedPoReq";
+
 @ApiTags('doc-upload')
 @Controller('doc-upload')
 export class DocumentUploadController {
@@ -122,5 +124,25 @@ export class DocumentUploadController {
         } catch (error) {
             return (this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error));
         }
+    }
+
+    @Post('/createDocListr')
+    async createDocList(@Body() req?:req[]):Promise<UploadDocumentListResponseModel>{
+      try{
+        return await this.uploadDocservice.createDocList(req);
+      }catch(error){
+        return (this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error));
+      }
+
+    }
+
+    @Post('/getDocumentOrderIds')
+    async getDocumentOrderIds():Promise<UploadDocumentListResponseModel>{
+      try{
+        return await this.uploadDocservice.getDocumentOrderIds();
+      }catch(error){
+        return (this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error));
+      }
+
     }
 }
