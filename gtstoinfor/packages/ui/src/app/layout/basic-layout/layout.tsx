@@ -123,10 +123,9 @@ export const baseRouterList = [
         children: [
             {
                 label: "Dashboard",
-                key: "nikeDashboard",
-                path: "nikeDashboard",
-                icon: <DashboardOutlined />,
-                filepath: "nikeDashboard",
+                key: "nike-dashboard",
+                path: "nike-dashboard",
+                filepath: "nike-dashboard",
             },
             {
                 label: "Add PO",

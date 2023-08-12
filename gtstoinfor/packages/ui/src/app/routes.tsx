@@ -20,6 +20,7 @@ import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared
 import PoFileImport from "./nike/reports/po-file-import"
 import FactoryPPMReport from "./nike/reports/factory-ppm-report"
 import FabricTrackerReport from "./nike/reports/fabric-tracker-report"
+import { NikeDashboard } from "./nike/nike-dash-components/nike-dashboard"
 
 
 export const AppRoutes = () => {
@@ -57,7 +58,7 @@ export const AppRoutes = () => {
                     {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
                 </Route>
                 <Route path='/nike'>
-                        <Route path='/nikeDashboard' element={<Dashboard />} />
+                        <Route path='nike-dashboard' element={<NikeDashboard />} />
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='factory-report' element={<FactoryPPMReport />} />
                         <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
@@ -105,7 +106,7 @@ export const AppRoutes = () => {
 
                     </Route>
                     <Route path='/nike'>
-                        <Route path='/nikeDashboard' element={<Dashboard />} />
+                        <Route path='nike-dashboard' element={<NikeDashboard />} />
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='factory-report' element={<FactoryPPMReport/>} />
                         <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />

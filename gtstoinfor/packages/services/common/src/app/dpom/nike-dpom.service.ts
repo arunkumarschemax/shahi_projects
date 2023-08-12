@@ -188,4 +188,19 @@ export class DpomService {
             return 'no data found';
         }
     }
+
+    async getPlantWisePoOrders(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPlantCount()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getStatusWiseItems(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getStatusWiseItemCount()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 }
