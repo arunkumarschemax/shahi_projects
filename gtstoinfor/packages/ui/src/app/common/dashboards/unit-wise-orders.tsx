@@ -9,36 +9,36 @@ import React, { useEffect, useState } from "react"
 export interface UnitWiseOrdersGraphProps { }
 
 export function UnitWiseOrderGraph() {
-  const [unitData, setUnitProData] = useState<any[]>([]);
+  //const [unitData, setUnitProData] = useState<any[]>([]);
   const service = new OrdersService();
   const form = useForm
 
-  useEffect(() => {
-    getUnitWiseOrders();
-  }, [])
+  // useEffect(() => {
+  //   getUnitWiseOrders();
+  // }, [])
 
 
-  const getUnitWiseOrders = () => {
-    service.getUnitWiseOrders().then(res => {
-      if (res.status) {
-        setUnitProData(res.data);
-      } else {
-        if (res.data) {
-          setUnitProData([]);
-          message.success("Data retrieve successfully");
-        } else {
-          message.success("Data retrieve successfully");
-        }
-      }
-    }).catch(err => {
-      message.error("Data not found");
-      setUnitProData([]);
-    })
+  // const getUnitWiseOrders = () => {
+  //   service.getUnitWiseOrders().then(res => {
+  //     if (res.status) {
+  //       setUnitProData(res.data);
+  //     } else {
+  //       if (res.data) {
+  //         setUnitProData([]);
+  //         message.success("Data retrieve successfully");
+  //       } else {
+  //         message.success("Data retrieve successfully");
+  //       }
+  //     }
+  //   }).catch(err => {
+  //     message.error("Data not found");
+  //     setUnitProData([]);
+  //   })
 
-  }
+  // }
 
-  const unitName = unitData.map(i => { return i.business_unit });
-  const count = unitData.map(i => { return Number(i.count) });
+  // const unitName = unitData.map(i => { return i.business_unit });
+  // const count = unitData.map(i => { return Number(i.count) });
   
 
   const config = {
@@ -50,7 +50,7 @@ export function UnitWiseOrderGraph() {
     },
 
     title: {
-      text: 'Unit Wise Orders',
+      text: 'Unit Wise Uploads',
       style: {
         color: 'var(--text-color,black)',
         fontSize: '1.75rem',
@@ -67,7 +67,7 @@ export function UnitWiseOrderGraph() {
       },
     },
     subtitle: {
-      text: `Total Orders: ${count.reduce((a, b) => a + b, 0)}`,
+      text: `Total Uploads`,
       style: {
         color: 'var(--text-color,black)',
         fontSize: '0.8rem', // Adjust the font size as needed
@@ -85,7 +85,7 @@ export function UnitWiseOrderGraph() {
     },
 
     xAxis: {
-      categories: unitName,
+      categories: 'unitName',
       labels: {
         autoRotation: false,
         style: {
@@ -100,7 +100,7 @@ export function UnitWiseOrderGraph() {
       // tickAmount: 16,
       // tickPixelInterval: 100,
       title: {
-        text: 'Number of Orders'
+        text: 'Number of Uploads'
       },
       enabled: true,
       style: {
@@ -140,13 +140,22 @@ export function UnitWiseOrderGraph() {
       }
     },
 
-    series: [
-      {
-        name: 'No of orders',
-        data: count,
-        // stack: 'male'
-      },
-    ],
+    series: [{
+      name: 'units',
+      colorByPoint: true,
+      data: [{
+          name: 'unit-1',
+          y: 70,
+          sliced: true,
+          selected: true
+      }, {
+          name: 'unit-2',
+          y: 14
+      },  {
+          name: 'unit-3',
+          y: 40
+      }]
+  }]
 
   }
   return (

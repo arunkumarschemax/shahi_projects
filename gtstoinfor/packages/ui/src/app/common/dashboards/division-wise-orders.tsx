@@ -9,36 +9,36 @@ import React, { useEffect, useState } from "react"
 export interface DivisionWiseOrdersProps { }
 
 export function DivisionWiseOrders() {
-  const [divisionData, setDivisionProData] = useState<any[]>([]);
+ // const [divisionData, setDivisionProData] = useState<any[]>([]);
   const service = new OrdersService();
   const form = useForm
 
-  useEffect(() => {
-    getDivisionWiseOrders();
-  }, [])
+  // useEffect(() => {
+  //   getDivisionWiseOrders();
+  // }, [])
 
 
-  const getDivisionWiseOrders = () => {
-    service.getDivisionWiseOrders().then(res => {
-      if (res.status) {
-        setDivisionProData(res.data);
-      } else {
-        if (res.data) {
-          setDivisionProData([]);
-          message.success("Data retrieve successfully");
-        } else {
-          message.success("Data retrieve successfully");
-        }
-      }
-    }).catch(err => {
-      message.error("Data not found");
-      setDivisionProData([]);
-    })
+  // const getDivisionWiseOrders = () => {
+  //   service.getDivisionWiseOrders().then(res => {
+  //     if (res.status) {
+  //       setDivisionProData(res.data);
+  //     } else {
+  //       if (res.data) {
+  //         setDivisionProData([]);
+  //         message.success("Data retrieve successfully");
+  //       } else {
+  //         message.success("Data retrieve successfully");
+  //       }
+  //     }
+  //   }).catch(err => {
+  //     message.error("Data not found");
+  //     setDivisionProData([]);
+  //   })
 
-  }
+  // }
 
-  const data = divisionData.map(i =>  [ i.department_name, Number(i.count)]);
-  const count = divisionData.map(i => { return Number(i.count) });
+  // const data = divisionData.map(i =>  [ i.department_name, Number(i.count)]);
+  // const count = divisionData.map(i => { return Number(i.count) });
   
 
   const config = {
@@ -50,7 +50,7 @@ export function DivisionWiseOrders() {
     },
 
     title: {
-      text: 'Division Wise Orders',
+      text: 'Division Wise Uploads',
       style: {
         color: 'var(--text-color,black)',
         fontSize: '1.75rem',
@@ -67,7 +67,7 @@ export function DivisionWiseOrders() {
       },
     },
     subtitle: {
-      text: `Total Orders: ${count.reduce((a, b) => a + b, 0)}`,
+      text: `Total Uploads`,
       style: {
         color: 'var(--text-color,black)',
         fontSize: '0.8rem', // Adjust the font size as needed
@@ -110,8 +110,8 @@ export function DivisionWiseOrders() {
 
     series: [
       {
-        name: 'No.of Orders' ,
-        data: data,
+        name: 'No.of Uploads' ,
+        //data: data,
       }
     ]
 
