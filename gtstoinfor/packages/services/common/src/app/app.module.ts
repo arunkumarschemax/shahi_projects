@@ -38,6 +38,7 @@ import { ComponentMappingModule } from './components-mapping/component-mapping.m
 import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { DestinationModule } from './destination/destination.module';
+import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
 
 
 @Module({
@@ -75,7 +76,7 @@ import { DestinationModule } from './destination/destination.module';
     DeliveryTermsModule,
     LocationsModule,
     DivisionModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule,LiscenceTypedModule],
   controllers: [AppController],
   providers: [AppService],
 })

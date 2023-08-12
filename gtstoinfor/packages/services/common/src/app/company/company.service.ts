@@ -1,36 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { Repository, Raw, getConnection } from 'typeorm';
 import { CompanyDTO } from '../company/dto/company.dto';
-import { Company} from '../company/company.entity';
+import { Company } from '../company/company.entity';
 import { CompanyAdapter } from '../company/dto/company.adapter';
 import { AllCompanyResponseModel, CompanyResponseModel } from '@project-management-system/shared-models';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyRequest } from './dto/company.request';
 import { UserRequestDto } from './dto/userlog';
 
+import {construnctDataFromM3Result,M3toCustomObj} from 'packages/libs/backend-utils/src/m3-utils/index'
+import {M3GenericService} from '@project-management-system/shared-services';
+import axios from 'axios'
+const https = require('https');
 
+const m3Connection = { USER_NAME: 'planmnb', PASSWORD: 'planmnb7' };
 
 @Injectable()
 export class CompanyService {
-  
-    constructor(
-      
-        @InjectRepository(Company)
-        private companyRepository: Repository<Company>,
-        private companyAdapter: CompanyAdapter,
-    ){}
 
-    async getCompanyDetailsWithoutRelations(companyName: string): Promise<Company> {
-        // tslint:disable-next-line: typedef
-        const companyResponse = await this.companyRepository.findOne({
-          where: {companyId: Raw(alias => `company_name = '${companyName}'`)},
-        });
-        if (companyResponse) {
-          return companyResponse;
-        } else {
-          return null;
-        }
-      }
+  constructor(
+
+    @InjectRepository(Company)
+    private companyRepository: Repository<Company>,
+    private companyAdapter: CompanyAdapter,
+    private m3GenericService : M3GenericService
+  ) { }
+
+
+  async getCompanyDetailsWithoutRelations(companyName: string): Promise<Company> {
+    // tslint:disable-next-line: typedef
+    const companyResponse = await this.companyRepository.findOne({
+      where: { companyId: Raw(alias => `company_name = '${companyName}'`) },
+    });
+    if (companyResponse) {
+      return companyResponse;
+    } else {
+      return null;
+    }
+  }
 
       async createCompany(companyDto: CompanyDTO, isUpdate: boolean): Promise<CompanyResponseModel> {
         console.log(companyDto,'nnnnnh');
@@ -189,17 +196,63 @@ export class CompanyService {
         }
     }
 
-    async getCompanyById(companyId: number): Promise<Company> {
-        //  console.log(employeeId);
-            const Response = await this.companyRepository.findOne({
-            where: {companyId: companyId},
-            });
-            // console.log(employeeResponse);
-            if (Response) {
-            return Response;
-            } else {
-            return null;
-            }
+  async getCompanyById(companyId: number): Promise<Company> {
+    //  console.log(employeeId);
+    const Response = await this.companyRepository.findOne({
+      where: { companyId: companyId },
+    });
+    // console.log(employeeResponse);
+    if (Response) {
+      return Response;
+    } else {
+      return null;
+    }
+  }
+
+  async getCompanyDataFromM3() {
+    try {
+      const auth =
+        'Basic ' +
+        Buffer.from(
+          `${m3Connection.USER_NAME}:${m3Connection.PASSWORD}`
+        ).toString('base64');
+      const headersRequest = {
+        Authorization: `${auth}`,
+      };
+      const agent = new https.Agent({
+        rejectUnauthorized: false,
+      });
+      const url = 'https://172.17.3.115:23005/m3api-rest/execute/MNS100MI/LstDivisions?CONO=111'
+        const args = [{key :'CONO',value:'111'}]
+      // const response = await this.m3GenericService.callM3Api('MNS100MI','LstDivisions',args)
+    
+      const response = await axios.get(url, { headers: headersRequest, httpsAgent: agent  })
+      if (response) {
+        if (response.data) {
+          const options:M3toCustomObj[] = [{m3Key :'FACN' , yourKey :'companyName'},{m3Key:'TX15' , yourKey:'companyCode'}]
+          const saveData = await construnctDataFromM3Result(options,response.data.MIRecord)
+          const entityArr: Company[] = [];
+          for(const data of saveData){
+            const entityObj = new Company();
+            entityObj.companyName = data.companyName
+            entityObj.companyCode = data.companyCode
+            entityArr.push(entityObj)
+          } 
+          
+          const save = await this.companyRepository.save(entityArr)
+          console.log('-------------------',save)
+          return saveData;
+        } else {
+          return 'No response Data';
         }
+      } else {
+        ('No response');
+      }   
+    } catch (error) {
+      console.log(error, '////////////////////');
+      throw error;
+    }
+  }
+
 
 }

@@ -66,4 +66,12 @@ export class CompanyController {
           return this.applicationExceptionHandler.returnException(CompanyResponseModel, err);
       }
   }
+  @Get()
+  async getCompanyDataFromM3() {
+    try {
+        return await this.companyService.getCompanyDataFromM3();
+    } catch (err) {
+        return this.applicationExceptionHandler.returnException(CompanyResponseModel, err);
+    }
+}
 }

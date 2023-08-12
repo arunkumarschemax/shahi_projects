@@ -1,4 +1,4 @@
-import { AllEmployeeDetailsResponseModel, EmployeeDetailsResponse, employeeIdReq } from "@project-management-system/shared-models";
+import { AllEmployeeDetailsResponseModel, DepartmentReq, EmployeeDetailsResponse, employeeIdReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class EmployeeDetailsService extends CommonAxiosService{
@@ -23,6 +23,11 @@ async ActivateOrDeactivateEmployee(
 
 async getAllActiveEmploee(): Promise<AllEmployeeDetailsResponseModel> {
   return this.axiosPostCall(this.URL + '/getAllActiveEmploee')
+
+}
+
+async getAllActiveEmploeesByDepartment(req:DepartmentReq): Promise<AllEmployeeDetailsResponseModel> {
+  return this.axiosPostCall(this.URL + '/getAllActiveEmploeesByDepartment',req)
 
 }
 

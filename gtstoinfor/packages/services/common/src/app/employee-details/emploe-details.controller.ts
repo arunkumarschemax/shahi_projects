@@ -57,4 +57,13 @@ export class EmployeeDetailsController {
       return this.applicationExceptionHandler.returnException(AllEmployeeDetailsResponseModel, error);
     }
   }
+
+  @Post('/getAllActiveEmploeesByDepartment')
+  async getAllActiveEmploeesByDepartment(@Body() req:any): Promise<AllEmployeeDetailsResponseModel> {
+    try {
+      return await this.EmployeeDetailsService.getAllActiveEmploeesByDepartment(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllEmployeeDetailsResponseModel, error);
+    }
+  }
 }
