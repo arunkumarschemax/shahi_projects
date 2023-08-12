@@ -300,7 +300,7 @@
 
 
 
-import { BuyerRequest, BuyersOrderAttributeInfoModel, BuyersOrderAttributeRequest } from "@project-management-system/shared-models";
+import { AttributeAgainstEnum, AttributeAgainstRequest, BuyerRequest, BuyersOrderAttributeInfoModel, BuyersOrderAttributeRequest } from "@project-management-system/shared-models";
 import { Button, Card, Col, Form, Input, Row } from "antd";
 import Table, { ColumnsType } from "antd/es/table"
 import { useEffect, useState } from "react";
@@ -359,10 +359,7 @@ export const BuyersOrderAttributeForm = () => {
     };
 
     const getAttributes = () => {
-        const req = {
-            "attributeAgainst": "ORDER",
-            "isActive": true
-          }
+        const req = new AttributeAgainstRequest(AttributeAgainstEnum.ORDER)
         attributeService.getAttributeByAttributeAgainst(req).then(res => {
             if(res.status){
                 setAttributes(res.data)

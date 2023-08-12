@@ -40,9 +40,4 @@ async  getAttributeByAttributeAgainst(attributeAgainst: AttributeAgainstRequest)
 //     return this.axiosPostCall(this.URL + '/getActiveDeliveryMethodsCount')
 // }
 
-async  getAttributeByAttributeAgainst(req): Promise<AllAttributesResponse> {
-    return this.axiosPostCall(this.URL + '/getAttributeByAttributeAgainst',req)
-}
-
-
 }
