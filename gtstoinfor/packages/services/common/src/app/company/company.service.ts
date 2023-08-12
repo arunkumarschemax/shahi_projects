@@ -237,7 +237,16 @@ export class CompanyService {
         if (response.data) {
           const options:M3toCustomObj[] = [{m3Key :'FACN' , yourKey :'companyName'},{m3Key:'TX15' , yourKey:'companyCode'}]
           const saveData = await construnctDataFromM3Result(options,response.data.MIRecord)
-          console.log('---------',saveData)
+          const entityArr: Company[] = [];
+          for(const data of saveData){
+            const entityObj = new Company();
+            entityObj.companyName = data.companyName
+            entityObj.companyCode = data.companyCode
+            entityArr.push(entityObj)
+          } 
+          
+          const save = await this.companyRepository.save(entityArr)
+          console.log('-------------------',save)
           return saveData;
         } else {
           return 'No response Data';
