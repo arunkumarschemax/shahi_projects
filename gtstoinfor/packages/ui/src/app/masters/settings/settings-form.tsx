@@ -1,9 +1,10 @@
 import { UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { DepartmentReq } from "@project-management-system/shared-models";
-import { BuyersService, CompanyService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DivisionService, EmployeeDetailsService, FactoryService, LiscenceTypeService, PackageTermsService, PaymentMethodService, PaymentTermsService, ProfitControlHeadService, WarehouseService } from "@project-management-system/shared-services";
+import { DepartmentReq, SettingsRequest } from "@project-management-system/shared-models";
+import { BuyersService, CompanyService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DivisionService, EmployeeDetailsService, FactoryService, LiscenceTypeService, PackageTermsService, PaymentMethodService, PaymentTermsService, ProfitControlHeadService, SettingsService, WarehouseService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Select } from "antd"
 import { useEffect, useState } from "react";
+import AlertMessages from "../../common/common-functions/alert-messages";
 
 const {Option} = Select;
 
@@ -43,6 +44,7 @@ export const SettingsForm = () => {
     const [deliveryMethods,setDeliveryMethods] = useState<any[]>([])
     const divisionService = new DivisionService()
     const [division,setDivision] = useState<any[]>([])
+    const service = new SettingsService()
 
     useEffect(() => {
         getPCHData()
@@ -212,9 +214,20 @@ export const SettingsForm = () => {
         form.resetFields()
     }
 
+    const onFinish = (val) => {
+        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethod,val.paymentTerms,val.deliveryMethod,val.deliveryTerms)
+        service.createSettings(req).then(res => {
+            if(res.status){
+                AlertMessages.getSuccessMessage(res.internalMessage)
+            } else{
+                AlertMessages.getSuccessMessage(res.internalMessage)
+            }
+        })
+    }
+
     return(
         <Card title='Settings'>
-            <Form layout="vertical" form={form}>
+            <Form layout="vertical" form={form} onFinish={onFinish}>
                 <Form.Item name='settingId' style={{display:'none'}}>
                     <Input hidden/>
                 </Form.Item>
@@ -332,7 +345,12 @@ export const SettingsForm = () => {
                     </Row>
                     <Row>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name='discount' label={<b>Discount(%)</b>}>
+                        <Form.Item name='discount' label={<b>Discount(%)</b>} 
+                          rules={[{
+                            pattern: /^[0-9]*$/,
+                            message: `Only numbers are accepted`
+                          }]}
+                        >
                             <Input placeholder="Enter discount"/>
                         </Form.Item>
                     </Col>
