@@ -30,7 +30,7 @@ import { OrdersModule } from './orders/orders.module';
     FactoriesModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule],
+    AuthModule, JwtModule,],
   controllers: [AppController],
   providers: [AppService],
 })

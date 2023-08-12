@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
+import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined, FileTextOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { CommonHeader } from '../header/header';
 import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
@@ -56,58 +56,101 @@ export const baseRouterList = [
         filepath: "masters",
         children: [
             {
-                label: "Factories",
-                key: "factories",
-                path: "factories/factories-view",
-                filepath: "factories/factories-view",
+                label: "Documents",
+                key: "Documents",
+                path: "document-grid",
+                filepath: "document-grid",
             },
-        ],
-    },
-    {
-        label: "Orders",
-        key: "excel-import",
-        path: "excel-import",
-        icon: <FileExcelOutlined />,
-        filepath: "excel-import",
-        children: [
+
             {
-                label: "Add Orders",
-                key: "excel-import",
-                path: "excel-import",
-                filepath: "excel-import",
-            },
-            {
-                label: "Compare Orders",
-                key: "changes-view",
-                path: "changes-view",
-                filepath: "changes-view",
-            },
-            {
-                label: "View Orders",
-                key: "grid-view",
-                path: "grid-view",
-                filepath: "grid-view",
-            },
-            {
-                label: "Uploaded Files",
-                key: "revert-orders",
-                path: "revert-orders",
-                filepath: "revert-orders",
-            },
-            {
-                label: "Versions Data",
-                key: "version-grid",
-                path: "version-grid",
-                filepath: "version-grid",
+                label: "Role Mapping",
+                key: "Role Mapping",
+                path: "role-mapping-grid",
+                filepath: "role-mapping-grid",
             },
             // {
-            //     label: "Phase Wise Data",
-            //     key: "phase-wise-grid",
-            //     path: "phase-wise-grid",
-            //     filepath: "phase-wise-grid",
-            // }
+            //     label: "Factories",
+            //     key: "factories",
+            //     path: "factories/factories-view",
+            //     filepath: "factories/factories-view",
+            // },
         ],
     },
+    // {
+    //     label: "Orders",
+    //     key: "excel-import",
+    //     path: "excel-import",
+    //     icon: <FileExcelOutlined />,
+    //     filepath: "excel-import",
+    //     children: [
+    //         {
+    //             label: "Add Orders",
+    //             key: "excel-import",
+    //             path: "excel-import",
+    //             filepath: "excel-import",
+    //         },
+    //         {
+    //             label: "Compare Orders",
+    //             key: "changes-view",
+    //             path: "changes-view",
+    //             filepath: "changes-view",
+    //         },
+    //         {
+    //             label: "View Orders",
+    //             key: "grid-view",
+    //             path: "grid-view",
+    //             filepath: "grid-view",
+    //         },
+    //         {
+    //             label: "Uploaded Files",
+    //             key: "revert-orders",
+    //             path: "revert-orders",
+    //             filepath: "revert-orders",
+    //         },
+    //         {
+    //             label: "Versions Data",
+    //             key: "version-grid",
+    //             path: "version-grid",
+    //             filepath: "version-grid",
+    //         },
+    //         // {
+    //         //     label: "Phase Wise Data",
+    //         //     key: "phase-wise-grid",
+    //         //     path: "phase-wise-grid",
+    //         //     filepath: "phase-wise-grid",
+    //         // }
+    //     ],
+    // },
+    // {
+    //     label: "Doucment Management",
+    //     key: "document_management",
+    //     path: "document_management",
+    //     icon: <FileExcelOutlined />,
+    //     filepath: "document-management",
+    //     children: [
+    //         {
+    //             label: "Add Orders",
+    //             key: "excel-import",
+    //             path: "excel-import",
+    //             filepath: "excel-import",
+    //         },
+          
+    //     ],
+    // },
+    {
+        label:'Add Orders',
+        key:'excel-import',
+        icon: <UserOutlined />,
+        path:'excel-import/excel-import',
+        filepath:'excel-import/excel-import'     
+    },
+    {
+        label:'Document management',
+        key:'document-management',
+        icon: <FileTextOutlined  />,
+        path:'document-management/document-file-upload',
+        filepath:'document-management/document-file-upload'     
+    }
 ];
 
 export default function BasicLayout() {
