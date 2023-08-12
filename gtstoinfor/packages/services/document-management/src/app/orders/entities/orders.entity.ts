@@ -1,5 +1,4 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { OrdersChildEntity } from "./orders-child.entity";
 
 @Entity('orders') //change the name
 export class OrdersEntity {
