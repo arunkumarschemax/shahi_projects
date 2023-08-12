@@ -5,21 +5,17 @@ import BasicLayout from "./layout/basic-layout/layout"
 import Login from "./layout/login/login"
 import UserCreationForm from "./user-management/users/users-form"
 import UsersView from "./user-management/users/users-view"
-import FactoriesView from "./masters/factories/factories-view"
-import FactoriesForm from "./masters/factories/factories-form"
 import ExcelImport from "./excel-import/excel-import"
 import ChangesGrid from "./excel-import/changes-grid"
 import AllOrdersGridView from "./excel-import/orders-view-grid"
 import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
-import PhaseWiseData from "./excel-import/phase-wise-data"
-import DocumentForm from "./masters/document-management/document-form"
-import DepartmentGrid from "./masters/document-management/document-grid"
-import DocumentGrid from "./masters/document-management/document-grid"
-import RoleMappingForm from "./masters/document-management/document-role-form"
-import DocumentRoleGrid from "./masters/document-management/document-role-grid"
+import DocumentRoleGrid from "./components/masters/document-role-grid"
+import DocumentGrid from "./components/masters/document-grid"
+import RoleMappingForm from "./components/masters/document-role-form"
 import DocumentListupload from "./components/document-management/document-file-upload"
+import DocumentForm from "./components/masters/document-form"
 
 
 export const AppRoutes = () => {
@@ -35,8 +31,6 @@ export const AppRoutes = () => {
                 <Route path='/user-management/users-from' key='/user-management/users-from' element={<UserCreationForm />} />
                 <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
                 <Route path='/masters'>
-                    <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
-                    <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm />} />
                 </Route>
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
@@ -70,8 +64,6 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
                     <Route path='/masters'>
-                        <Route path='factories/factories-view' element={<FactoriesView />} />
-                        <Route path='factories/factories-form' element={<FactoriesForm />} />
                         <Route path='document-form' key='/document-form' element={<DocumentForm />} />
                         <Route path='document-grid' key='/document-grid' element={<DocumentGrid />} />
                         <Route path='role-mapping-form' key='/role-mapping-form' element={<RoleMappingForm />} />
