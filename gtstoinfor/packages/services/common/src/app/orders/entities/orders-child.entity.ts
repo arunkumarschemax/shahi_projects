@@ -972,9 +972,9 @@ export class OrdersChildEntity {
     })
     updatedAt: string;
 
-    @ManyToOne(() => OrdersEntity, orders => orders.ordersChild)
-    @JoinColumn({ name: 'production_plan_id' })
-    orders: OrdersEntity;
+    // @ManyToOne(() => OrdersEntity, orders => orders.ordersChild)
+    // @JoinColumn({ name: 'production_plan_id' })
+    // orders: OrdersEntity;
 
     @Column('int', {
         nullable:true,

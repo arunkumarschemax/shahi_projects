@@ -106,15 +106,15 @@ export class OrdersController {
         }
     }
 
-    @Post('/revertFileData')
-    async revertFileData(@Body() req: any): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.revertFileData(req);
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    // @Post('/revertFileData')
+    // async revertFileData(@Body() req: any): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.revertFileData(req);
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
-        }
-    }
+    //     }
+    // }
 
     @Post('/fileUpload')
     @ApiConsumes('multipart/form-data')
