@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Table, Typography, Upload, UploadProps } from 'antd';
+import { Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Table, Tag, Typography, Upload, UploadProps } from 'antd';
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 // import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { UndoOutlined, UploadOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons';
 import { AlertMessages, DocumentsListRequest, FileStatusReq, UploadDocumentListDto } from '@project-management-system/shared-models';
 import { useForm } from 'antd/es/form/Form';
 import { ColumnsType } from 'antd/es/table';
+import React from 'react';
 
 
 export default function DocumentListupload() {
@@ -16,6 +17,10 @@ export default function DocumentListupload() {
   const [docData,setDocData] = useState<any[]>([])
   const [fileList,setFilelist] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeRow, setActiveRow] = useState(null);
+  const [activeRowIndex, setActiveRowIndex] = useState(null);
+  const [btndisable, setBtnDisable] = useState<boolean>(true);
+  const [page, setPage] = React.useState(1);
 
   let navigate = useNavigate();
   const [form] = Form.useForm();
@@ -60,6 +65,7 @@ export default function DocumentListupload() {
         reader.readAsArrayBuffer(file);
         reader.onload = data => {  
                 setFilelist([...fileList, file]);
+                setBtnDisable(false)
                 // uploadFileList([...filelist, file]);
                 return false;
         };
@@ -76,14 +82,13 @@ export default function DocumentListupload() {
     fileList: fileList
 
 };
-
-
   const columns: ColumnsType<any> = [
     {
       title: "S.No",
       key: "sno",
       responsive: ["sm"],
       width:30,
+      render: (text, object, index) => (page - 1) * 10 + (index + 1)
     },
     {
       title: 'Document',
@@ -93,9 +98,9 @@ export default function DocumentListupload() {
     {
       title: 'Choose Document',
       width:'220',
-      render:() =>{
-      return <><Form.Item name='file'>
-        <Upload {...gstUploadFieldProps}
+      render:(text, data,) =>{
+      return <><Form.Item name={'file'} > 
+        <Upload {...gstUploadFieldProps} 
           accept='.jpeg,.pdf,.png,.jpg'>
           <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Choose File</Button>
           <br /><Typography.Text type="secondary">
@@ -103,7 +108,6 @@ export default function DocumentListupload() {
           </Typography.Text>
         </Upload>
       </Form.Item>
-      <Divider type='vertical' />
       </>
 
       }
@@ -111,10 +115,11 @@ export default function DocumentListupload() {
     {
       title: 'Upload DOcument',
       width:'80px',
-      render:() =>{
+      render:(text, rowData) =>{
       return <>
       <Form.Item style={{alignItems: 'center'}}>
-          <Button style={{ marginRight: '10px' }}  htmlType="submit">
+
+          <Button style={{ marginRight: '10px' }} onClick={() =>{onFinish(rowData)}} disabled={btndisable}>
             Upload
           </Button>
         </Form.Item></>
@@ -124,8 +129,16 @@ export default function DocumentListupload() {
     
     {
         title: 'View/Download Document',
-        dataIndex: 'sourceName',
+        dataIndex: 'fileName',
         width:150,
+        render: (value,rowData) => (
+          rowData.fileName!=null?
+          <>
+         <Tag icon={<ArrowDownOutlined 
+        //  onClick={()=>download(rowData.filePath)}
+         />} >{value}</Tag>
+          </>:''
+        ),
       },
 
 ];
@@ -135,23 +148,18 @@ export default function DocumentListupload() {
   };
 
 
-  const onFinish = (data: DocumentsListRequest) => {
-    console.log('dataaaa')
-    // setFieldsData(values);
+  const onFinish = (data: any) => {
+    console.log(data,'dataaaa')
     form.validateFields().then(res => {
-      console.log(res.customerPo)
-      console.log(res.file.fileList)
-      data.documentCategoryId=1
-      data.roleId=1
-      data.customerPo=res.customerPo?res.customerPo:''
-      data.orderId=1
-      data.file= res.file.fileList;
-      console.log(form.getFieldValue('poNumber'))
-      service.createDocumentsList(data).then((res) => {
+      console.log(res)
+    const req = new DocumentsListRequest( data.documentCategoryId,data.roleId,res.customerPo?res.customerPo:'',data.orderId,res.file.fileList)
+console.log(req,'req')
+      service.createDocumentsList(req).then((res) => {
         if(res.status){
-          console.log(res.data);
+          console.log(res);
           console.log(fileList);
           if (fileList.length > 0) {
+            setBtnDisable(false)
             const formData = new FormData();
             formData.append('documentCategoryId', `${res.data[0].documentCategoryId}`);
             formData.append('roleId', `${res.data[0].roleId}`);
@@ -167,6 +175,10 @@ export default function DocumentListupload() {
               console.log(formData);
               service.DocumentFileUpload(formData).then((res) => {
                 console.log(res);
+                setFilelist([])
+                form.resetFields(['poNumber'])
+                DocumentData();
+                
               })
           }
           AlertMessages.getSuccessMessage(res.internalMessage);
@@ -186,7 +198,15 @@ export default function DocumentListupload() {
     <Form form={form} layout='vertical' onFinish={onFinish}>
       <Row gutter={24}>
       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-          <Form.Item name='customerPo' label='Po Number'>
+          <Form.Item name='customerPo' label='Po Number'
+            rules={[
+              {
+                required: true,
+                message: 'Select Destination',
+
+              }
+            ]}
+          >
             <Select placeholder='Select PoNumber' showSearch allowClear>
             {poNumber?.map(obj =>{
                       return <Option key={obj.poNumber} value={obj.poNumber}>{obj.poNumber}</Option>
