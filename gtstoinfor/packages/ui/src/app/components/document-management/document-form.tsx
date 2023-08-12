@@ -8,7 +8,7 @@ const { Option } = Select;
 
 const DocumentForm = () => {
 
-const services = new DocumentService ();
+const services = new DocumentService();
 const navigate = useNavigate();
 
     const handleSubmit = (values: any) => {
@@ -17,7 +17,7 @@ const navigate = useNavigate();
         form.resetFields();
     };
     const onFinish = (values: any) => {
-        services.createForm(values).then(res => {
+        services.create(values).then(res => {
             if (res.status) {
                 setTimeout(() => {
                     message.success("Created Successfully");

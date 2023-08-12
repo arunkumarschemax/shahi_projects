@@ -4,7 +4,7 @@ import {DocumentRoleMappingResponseModel, RoleDto } from "@project-management-sy
 import { CommonAxiosService } from "../common-axios-service-prs";
 import { DeleteDto } from "packages/libs/shared-models/src/document-management/delete-dto";
 
-export default class RoleService extends CommonAxiosService { 
+export default class RoleSharedService extends CommonAxiosService { 
   private url = "/doc-upload";
   
   async createDocMapping(roleDto: RoleDto, config?: AxiosRequestConfig): Promise<DocumentRoleMappingResponseModel> {
