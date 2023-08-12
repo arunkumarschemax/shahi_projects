@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import DocumentSharedService from 'packages/libs/shared-services/src/document-service/document-shared-service';
-import RoleSharedService from 'packages/libs/shared-services/src/document-role-service/document-role-sharedservice';
+import RoleSharedService from 'packages/libs/shared-services/src/document-role-shared-service/document-role--service';
 
 const DocumentRoleGrid = () => {
   const [data, setData] = useState<any>([]);
@@ -22,7 +22,7 @@ const DocumentRoleGrid = () => {
   }, []);
 
   const getroleData = () => {
-    service.getAllRoleNames()
+    service.getAllDocMappings()
       .then(res => {
         if (res.status) {
           console.log(res, "data");
@@ -35,23 +35,23 @@ const DocumentRoleGrid = () => {
       })
   }
 
-  const activateOrDeactivateRole = (id: number) => {
-    service.activateOrDeactivateRole({ id: id }).then(res => {
-      if (res.status) {
-        AlertMessages.getSuccessMessage(res.data.internalMessage);
-        getroleData();
+//   const activateOrDeactivateRole = (id: number) => {
+//     service.activateOrDeactivateRole({ id: id }).then(res => {
+//       if (res.status) {
+//         AlertMessages.getSuccessMessage(res.data.internalMessage);
+//         getroleData();
 
-      } else {
-        if (res.intlCode) {
-          AlertMessages.getErrorMessage(res.internalMessage)
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage)
-        }
-      }
-    }).catch(err => {
-      AlertMessages.getErrorMessage(err.message)
-    })
-  };
+//       } else {
+//         if (res.intlCode) {
+//           AlertMessages.getErrorMessage(res.internalMessage)
+//         } else {
+//           AlertMessages.getErrorMessage(res.internalMessage)
+//         }
+//       }
+//     }).catch(err => {
+//       AlertMessages.getErrorMessage(err.message)
+//     })
+//   };
 
  
 
@@ -92,32 +92,32 @@ const DocumentRoleGrid = () => {
         },
       ]
     },
-    {
-      title: 'Actions',
-      key: 'actions',
+    // {
+    //   title: 'Actions',
+    //   key: 'actions',
 
-      render: (rowData: any, record: any) => {
-        return <>
+    //   render: (rowData: any, record: any) => {
+    //     return <>
 
 
         
-          <Divider type="vertical" />
-          <Popconfirm onConfirm={e => { activateOrDeactivateRole(record.id); }}
-            title={
-              record.isActive
-                ? 'Are you sure to deactivate ?'
-                : 'Are you sure to activate ?'
-            }
-          >
-            <Switch size="default"
-              className={record.isActive ? 'toggle-activated' : 'toggle-deactivated'}
-              checkedChildren={<RightSquareOutlined type="check" />}
-              unCheckedChildren={<RightSquareOutlined type="close" />}
-              checked={record.isActive}
-            />
-          </Popconfirm> </>
-      }
-    },
+    //       <Divider type="vertical" />
+    //       <Popconfirm onConfirm={e => { activateOrDeactivateRole(record.id); }}
+    //         title={
+    //           record.isActive
+    //             ? 'Are you sure to deactivate ?'
+    //             : 'Are you sure to activate ?'
+    //         }
+    //       >
+    //         <Switch size="default"
+    //           className={record.isActive ? 'toggle-activated' : 'toggle-deactivated'}
+    //           checkedChildren={<RightSquareOutlined type="check" />}
+    //           unCheckedChildren={<RightSquareOutlined type="close" />}
+    //           checked={record.isActive}
+    //         />
+    //       </Popconfirm> </>
+    //   }
+    // },
   ];
 
   return (

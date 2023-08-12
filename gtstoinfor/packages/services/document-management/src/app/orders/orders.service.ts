@@ -1,21 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq,  orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
 import { OrdersAdapter } from './adapters/orders.adapter';
-import { OrdersChildRepository } from './repository/orders-child.repository';
-import { OrdersChildEntity } from './entities/orders-child.entity';
-import { OrdersChildAdapter } from './adapters/orders-child.adapter';
-import { OrdersDifferenceEntity } from './orders-difference-info.entity';
-import { OrderDifferenceRepository } from './repository/order-difference.repository';
 import { FileUploadRepository } from './repository/upload.repository';
 import { FileUploadEntity } from './entities/upload-file.entity';
-import { DataSource, Entity, EntityManager, getManager } from 'typeorm';
-import { FileIdReq } from './models/file-id.req';
+import { DataSource, EntityManager } from 'typeorm';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
-import { GenericTransactionManager } from '../../typeorm-transactions';
-import { AppDataSource } from '../app-datasource';
+import { GenericTransactionManager } from '../typeorm-transactions/generic-transaction-manager';
 let moment = require('moment');
 moment().format();
 
@@ -25,9 +18,6 @@ export class OrdersService {
     constructor(
         private ordersAdapter: OrdersAdapter,
         private ordersRepository: OrdersRepository,
-        private ordersChildRepo: OrdersChildRepository,
-        private ordersChildAdapter: OrdersChildAdapter,
-        private orderDiffRepo: OrderDifferenceRepository,
         private fileUploadRepo: FileUploadRepository,
         @InjectDataSource()
         private dataSource: DataSource,
@@ -92,48 +82,48 @@ export class OrdersService {
                             const currentDataKeys = Object.keys(dtoData)
                             for (const existingDataKey of existingDataKeys) {
                                 if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId') {
-                                    const orderDiffObj = new OrdersDifferenceEntity();
-                                    if (existingDataKey === 'lastUpdateDate' || existingDataKey === 'requestedWhDate' || existingDataKey === 'contractedDate' || existingDataKey === 'EXF') {
-                                        console.log(details[existingDataKey], 'existingOld')
-                                        const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
-                                        console.log(oldValue, 'oldValue');
-                                        console.log(dtoData[existingDataKey], 'existingNew')
-                                        const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
-                                        console.log(newValue, 'newValue')
-                                        orderDiffObj.oldValue = details[existingDataKey]
-                                        orderDiffObj.newValue = dtoData[existingDataKey]
-                                        orderDiffObj.columnName = orderColumnValues[existingDataKey]
-                                        orderDiffObj.displayName = existingDataKey
-                                        orderDiffObj.id = dtoData.id
-                                        orderDiffObj.version = dtoData.version
-                                        orderDiffObj.fileId = id
-                                        if (oldValue != newValue) {
-                                            const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
-                                            if (!orderDiffSave) {
-                                                flag.add(false)
-                                                await transactionManager.releaseTransaction();
-                                                break;
-                                            }
-                                        } else {
-                                            continue;
-                                        }
-                                    } else {
-                                        orderDiffObj.oldValue = details[existingDataKey]
-                                        orderDiffObj.newValue = dtoData[existingDataKey]
-                                        orderDiffObj.columnName = orderColumnValues[existingDataKey]
-                                        orderDiffObj.displayName = existingDataKey
-                                        orderDiffObj.id = dtoData.id
-                                        orderDiffObj.version = dtoData.version
-                                        orderDiffObj.fileId = id
-                                        if (orderDiffObj.oldValue != orderDiffObj.newValue) {
-                                            const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
-                                            if (!orderDiffSave) {
-                                                flag.add(false)
-                                                await transactionManager.releaseTransaction();
-                                                break;
-                                            }
-                                        }
-                                    }
+                                    // const orderDiffObj = new OrdersDifferenceEntity();
+                                    // if (existingDataKey === 'lastUpdateDate' || existingDataKey === 'requestedWhDate' || existingDataKey === 'contractedDate' || existingDataKey === 'EXF') {
+                                    //     console.log(details[existingDataKey], 'existingOld')
+                                    //     const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
+                                    //     console.log(oldValue, 'oldValue');
+                                    //     console.log(dtoData[existingDataKey], 'existingNew')
+                                    //     const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
+                                    //     console.log(newValue, 'newValue')
+                                    //     orderDiffObj.oldValue = details[existingDataKey]
+                                    //     orderDiffObj.newValue = dtoData[existingDataKey]
+                                    //     orderDiffObj.columnName = orderColumnValues[existingDataKey]
+                                    //     orderDiffObj.displayName = existingDataKey
+                                    //     orderDiffObj.id = dtoData.id
+                                    //     orderDiffObj.version = dtoData.version
+                                    //     orderDiffObj.fileId = id
+                                    //     if (oldValue != newValue) {
+                                    //         const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
+                                    //         if (!orderDiffSave) {
+                                    //             flag.add(false)
+                                    //             await transactionManager.releaseTransaction();
+                                    //             break;
+                                    //         }
+                                    //     } else {
+                                    //         continue;
+                                    //     }
+                                    // } else {
+                                    //     orderDiffObj.oldValue = details[existingDataKey]
+                                    //     orderDiffObj.newValue = dtoData[existingDataKey]
+                                    //     orderDiffObj.columnName = orderColumnValues[existingDataKey]
+                                    //     orderDiffObj.displayName = existingDataKey
+                                    //     orderDiffObj.id = dtoData.id
+                                    //     orderDiffObj.version = dtoData.version
+                                    //     orderDiffObj.fileId = id
+                                    //     if (orderDiffObj.oldValue != orderDiffObj.newValue) {
+                                    //         const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
+                                    //         if (!orderDiffSave) {
+                                    //             flag.add(false)
+                                    //             await transactionManager.releaseTransaction();
+                                    //             break;
+                                    //         }
+                                    //     }
+                                    // }
                                 }
                             }
                         }
@@ -187,9 +177,9 @@ export class OrdersService {
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
         } else if (files.length == 1) {
-            data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId)
+            // data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId)
         } else {
-            data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId)
+            // data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId)
         }
         if (data)
             return new CommonResponseModel(true, 1, 'data retrived', data)
@@ -229,13 +219,13 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getMaximumChangedOrders(): Promise<CommonResponseModel> {
-        const data = await this.ordersChildRepo.getNoOfChangedItem()
-        if (data)
-            return new CommonResponseModel(true, 1, 'data retrived', data)
-        else
-            return new CommonResponseModel(false, 0, 'No data found');
-    }
+    // async getMaximumChangedOrders(): Promise<CommonResponseModel> {
+    //     const data = await this.ordersChildRepo.getNoOfChangedItem()
+    //     if (data)
+    //         return new CommonResponseModel(true, 1, 'data retrived', data)
+    //     else
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    // }
 
     // async revertFileData(req: FileIdReq): Promise<CommonResponseModel> {
     //     if (req) {
@@ -332,67 +322,67 @@ export class OrdersService {
         }
     }
 
-    async getVersionWiseData(): Promise<CommonResponseModel> {
-        const records = await this.ordersChildRepo.getVersionWiseQty()
-        const versionDataMap = new Map<number, VersionDataModel>();
-        if (records.length == 0) {
-            return new CommonResponseModel(false, 0, 'No data found');
-        }
-        for (const record of records) {
-            if (!versionDataMap.has(record.production_plan_id)) {
-                versionDataMap.set(record.production_plan_id, new VersionDataModel(record.production_plan_id, record.prod_plan_type_name, record.item_code, record.itemName, []));
-            }
-            versionDataMap.get(record.production_plan_id).versionWiseData.push(new VersionAndQtyModel(record.version, record.order_qty_pcs));
-        }
-        const versionDataModelArray: VersionDataModel[] = [];
-        versionDataMap.forEach(version => versionDataModelArray.push(version));
-        return new CommonResponseModel(true, 1, 'Data retrived successfully', versionDataModelArray);
-    }
+    // async getVersionWiseData(): Promise<CommonResponseModel> {
+    //     const records = await this.ordersChildRepo.getVersionWiseQty()
+    //     const versionDataMap = new Map<number, VersionDataModel>();
+    //     if (records.length == 0) {
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    //     }
+    //     for (const record of records) {
+    //         if (!versionDataMap.has(record.production_plan_id)) {
+    //             versionDataMap.set(record.production_plan_id, new VersionDataModel(record.production_plan_id, record.prod_plan_type_name, record.item_code, record.itemName, []));
+    //         }
+    //         versionDataMap.get(record.production_plan_id).versionWiseData.push(new VersionAndQtyModel(record.version, record.order_qty_pcs));
+    //     }
+    //     const versionDataModelArray: VersionDataModel[] = [];
+    //     versionDataMap.forEach(version => versionDataModelArray.push(version));
+    //     return new CommonResponseModel(true, 1, 'Data retrived successfully', versionDataModelArray);
+    // }
 
-    async getPhaseWiseData(): Promise<CommonResponseModel> {
-        const files = await this.fileUploadRepo.getFilesData();
-        let records;
-        if (files.length == 0) {
-            return new CommonResponseModel(false, 0, 'No data found');
-        } else if (files.length == 1) {
-            records = await this.ordersChildRepo.getPhaseWiseData1(files[0].fileId)
-        } else {
-            records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
-        }
-        const phaseWiseDataMap = new Map<number, PhaseWiseDataModel>();
-        if (records.length == 0) {
-            return new CommonResponseModel(false, 0, 'No data found');
-        }
-        for (const record of records) {
-            if (!phaseWiseDataMap.has(record.item_code)) {
-                phaseWiseDataMap.set(record.item_code, new PhaseWiseDataModel(record.item_code, record.itemName, []));
-            }
-            phaseWiseDataMap.get(record.item_code).phaseWiseData.push(new PhaseAndQtyModel(record.prod_plan_type_name, record.old_qty_value, record.new_qty_value));
-        }
-        const phaseDataModelArray: PhaseWiseDataModel[] = [];
-        phaseWiseDataMap.forEach(phase => phaseDataModelArray.push(phase));
-        return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
-    }
+    // async getPhaseWiseData(): Promise<CommonResponseModel> {
+    //     const files = await this.fileUploadRepo.getFilesData();
+    //     let records;
+    //     if (files.length == 0) {
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    //     } else if (files.length == 1) {
+    //         records = await this.ordersChildRepo.getPhaseWiseData1(files[0].fileId)
+    //     } else {
+    //         records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
+    //     }
+    //     const phaseWiseDataMap = new Map<number, PhaseWiseDataModel>();
+    //     if (records.length == 0) {
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    //     }
+    //     for (const record of records) {
+    //         if (!phaseWiseDataMap.has(record.item_code)) {
+    //             phaseWiseDataMap.set(record.item_code, new PhaseWiseDataModel(record.item_code, record.itemName, []));
+    //         }
+    //         phaseWiseDataMap.get(record.item_code).phaseWiseData.push(new PhaseAndQtyModel(record.prod_plan_type_name, record.old_qty_value, record.new_qty_value));
+    //     }
+    //     const phaseDataModelArray: PhaseWiseDataModel[] = [];
+    //     phaseWiseDataMap.forEach(phase => phaseDataModelArray.push(phase));
+    //     return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
+    // }
 
-    async getPhaseWiseExcelData(): Promise<CommonResponseModel> {
-        const files = await this.fileUploadRepo.getFilesData();
-        let records;
-        if (files.length == 0) {
-            return new CommonResponseModel(false, 0, 'No data found');
-        } else if (files.length == 1) {
-            records = await this.ordersChildRepo.getPhaseWiseData1(files[0].fileId)
-        } else {
-            records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
-        }
-        const phaseDataModelArray: PhaseWiseExcelDataModel[] = [];
-        if (records.length == 0) {
-            return new CommonResponseModel(false, 0, 'No data found');
-        }
-        for (const record of records) {
+    // async getPhaseWiseExcelData(): Promise<CommonResponseModel> {
+    //     const files = await this.fileUploadRepo.getFilesData();
+    //     let records;
+    //     if (files.length == 0) {
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    //     } else if (files.length == 1) {
+    //         records = await this.ordersChildRepo.getPhaseWiseData1(files[0].fileId)
+    //     } else {
+    //         records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
+    //     }
+    //     const phaseDataModelArray: PhaseWiseExcelDataModel[] = [];
+    //     if (records.length == 0) {
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    //     }
+    //     for (const record of records) {
 
-            phaseDataModelArray.push(new PhaseWiseExcelDataModel(record.item_code, record.itemName, record.prod_plan_type_name, record.old_qty_value, record.new_qty_value, record.new_qty_value - record.old_qty_value));
-        }
-        return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
-    }
+    //         phaseDataModelArray.push(new PhaseWiseExcelDataModel(record.item_code, record.itemName, record.prod_plan_type_name, record.old_qty_value, record.new_qty_value, record.new_qty_value - record.old_qty_value));
+    //     }
+    //     return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
+    // }
 
 }

@@ -34,33 +34,32 @@ const DocumentGrid = () => {
   const getDocumentData = () => {
     services.getAllDocuments()
       .then(res => {
-        if (res.status) {
-          console.log(res, "data");
+        
           setData(res.data);
-        }
+        
       })
       .catch(error => {
         console.log(error.response);
         alert(error.response);
       })
   }
-  const activateOrDeactivateDocument = (id: number) => {
-    services.activateOrDeactivateDocument({ id: id }).then(res => {
-      if (res.status) {
-        AlertMessages.getSuccessMessage(res.data.internalMessage);
-        getDocumentData();
+//   const activateOrDeactivateDocument = (id: number) => {
+//     services.activateOrDeactivateDocument({ id: id }).then(res => {
+//       if (res.status) {
+//         AlertMessages.getSuccessMessage(res.data.internalMessage);
+//         getDocumentData();
 
-      } else {
-        if (res.intlCode) {
-          AlertMessages.getErrorMessage(res.internalMessage)
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage)
-        }
-      }
-    }).catch(err => {
-      AlertMessages.getErrorMessage(err.message)
-    })
-  };
+//       } else {
+//         if (res.id) {
+//           AlertMessages.getErrorMessage(res.internalMessage)
+//         } else {
+//           AlertMessages.getErrorMessage(res.internalMessage)
+//         }
+//       }
+//     }).catch(err => {
+//       AlertMessages.getErrorMessage(err.message)
+//     })
+//   };
 
   
  
@@ -95,42 +94,42 @@ const DocumentGrid = () => {
         },
       ]
     },
-    {
-      title: 'Actions',
-      key: 'actions',
+    // {
+//       title: 'Actions',
+//       key: 'actions',
 
-      render: (rowData: any, record: any) => {
-        return <>
+//       render: (rowData: any, record: any) => {
+//         return <>
 
-<Tooltip>
-                        <EditOutlined type="edit" style={{ color: '#1890ff', fontSize: '17px' }}
-                            onClick={() => {
-                                if (rowData.isActive) {
-                                    setdummyrefresh(prev => prev + 1);
-                                } else {
-                                    message.error('you can not edit deactivate data')
-                                }
-                            }}
-                        />
-                    </Tooltip>
+// <Tooltip>
+//                         <EditOutlined type="edit" style={{ color: '#1890ff', fontSize: '17px' }}
+//                             onClick={() => {
+//                                 if (rowData.isActive) {
+//                                     setdummyrefresh(prev => prev + 1);
+//                                 } else {
+//                                     message.error('you can not edit deactivate data')
+//                                 }
+//                             }}
+//                         />
+//                     </Tooltip>
         
-          <Divider type="vertical" />
-          <Popconfirm onConfirm={e => { activateOrDeactivateDocument(record.id); }}
-            title={
-              record.isActive
-                ? 'Are you sure to deactivate ?'
-                : 'Are you sure to activate ?'
-            }
-          >
-            <Switch size="default"
-              className={record.isActive ? 'toggle-activated' : 'toggle-deactivated'}
-              checkedChildren={<RightSquareOutlined type="check" />}
-              unCheckedChildren={<RightSquareOutlined type="close" />}
-              checked={record.isActive}
-            />
-          </Popconfirm> </>
-      }
-    },
+//           <Divider type="vertical" />
+//           <Popconfirm onConfirm={e => { activateOrDeactivateDocument(record.id); }}
+//             title={
+//               record.isActive
+//                 ? 'Are you sure to deactivate ?'
+//                 : 'Are you sure to activate ?'
+//             }
+//           >
+//             <Switch size="default"
+//               className={record.isActive ? 'toggle-activated' : 'toggle-deactivated'}
+//               checkedChildren={<RightSquareOutlined type="check" />}
+//               unCheckedChildren={<RightSquareOutlined type="close" />}
+//               checked={record.isActive}
+//             />
+//           </Popconfirm> </>
+//       }
+//     },
   ];
 
   return (

@@ -97,14 +97,14 @@ export class OrdersController {
         }
     }
 
-    @Post('/getMaximumChangedOrders')
-    async getMaximumChangedOrders(): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.getMaximumChangedOrders();
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/getMaximumChangedOrders')
+    // async getMaximumChangedOrders(): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.getMaximumChangedOrders();
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
 
     // @Post('/revertFileData')
     // async revertFileData(@Body() req: any): Promise<CommonResponseModel> {
@@ -162,30 +162,30 @@ export class OrdersController {
         }
     }
 
-    @Post('/getVersionWiseData')
-    async getVersionWiseData(): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.getVersionWiseData();
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/getVersionWiseData')
+    // async getVersionWiseData(): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.getVersionWiseData();
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
 
-    @Post('/getPhaseWiseData')
-    async getPhaseWiseData(): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.getPhaseWiseData();
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/getPhaseWiseData')
+    // async getPhaseWiseData(): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.getPhaseWiseData();
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
 
-    @Post('/getPhaseWiseExcelData')
-    async getPhaseWiseExcelData(): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.getPhaseWiseExcelData();
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/getPhaseWiseExcelData')
+    // async getPhaseWiseExcelData(): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.getPhaseWiseExcelData();
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
 }
