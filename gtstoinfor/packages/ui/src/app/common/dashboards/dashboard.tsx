@@ -32,19 +32,19 @@ export const Dashboard = () => {
             <Card>
                 <Row gutter={24}>
                     <Col xs={24} sm={24} md={24} xl={24}>
-                        <ChangesGrid />
+                        <ItemChanges />
                     </Col>
 
                 </Row>
                 <br />
-                <Row gutter={24}>
+                {/* <Row gutter={24}>
                     <Col xs={24} sm={24} md={24} xl={10}>
                         <ItemChanges />
                     </Col>
                     <Col xs={24} sm={24} md={24} xl={14}>
                         <VersionChanges />
                     </Col>
-                </Row>
+                </Row> */}
             </Card>
         </>
 
