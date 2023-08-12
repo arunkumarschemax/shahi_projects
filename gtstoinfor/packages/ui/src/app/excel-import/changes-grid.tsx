@@ -685,7 +685,6 @@ const ChangesGrid = () => {
         },
 
     ];
-
     const childColumns: any = [
         {
             title: 'Production Plan Type Name',
@@ -733,55 +732,6 @@ const ChangesGrid = () => {
             )
         }
     ]
-
-    const childColumns1: any = [
-        {
-            title: 'Production Plan Type Name',
-            dataIndex: 'prodPlanTypeName',
-            key: 'prodPlanTypeName',
-        },
-        {
-            title: 'July',
-            dataIndex: 'oldOrderQtyPcs',
-            key: 'oldOrderQtyPcs',
-            align: 'right',
-            render: (text: any, record: any) => {
-                return Number(record.oldOrderQtyPcs).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                })
-            }
-        },
-        {
-            title: 'August',
-            dataIndex: 'newOrderQtyPcs',
-            key: 'newOrderQtyPcs',
-            align: 'right',
-            render: (text: any, record: any) => {
-                return Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                })
-            }
-        },
-        {
-            title: 'Difference',
-            dataIndex: 'diff',
-            align: 'right',
-            render: (text: any, record: any) => (
-                < >
-
-                    {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) === 0 ? '-' : ''}
-                    {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) < 0 ? <span style={{ color: 'red' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
-                    {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) > 0 ? <span style={{ color: 'green' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
-
-                </>
-            )
-        }
-    ]
-
     const columns4: any = [
         {
             title: 'S No',
@@ -806,37 +756,6 @@ const ChangesGrid = () => {
                 <Table
                     dataSource={record.phaseWiseData}
                     columns={childColumns}
-                    pagination={false} // Hide pagination for child table
-                    rowKey={record => record.itemCode}
-                />
-            ),
-        }
-    ];
-
-    const columns5: any = [
-        {
-            title: 'S No',
-            key: 'sno',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1)
-        },
-        {
-            title: 'Item code',
-            dataIndex: 'itemCode',
-            ...getColumnSearchProps('itemCode')
-        },
-        {
-            title: 'Item Name',
-            dataIndex: 'itemName',
-            ...getColumnSearchProps('itemName')
-        },
-        {
-            title: 'Month Wise Data',
-            dataIndex: 'month_wise',
-            align: 'center',
-            render: (text: any, record: any) => (
-                <Table
-                    dataSource={record.phaseWiseData}
-                    columns={childColumns1}
                     pagination={false} // Hide pagination for child table
                     rowKey={record => record.itemCode}
                 />
@@ -943,11 +862,7 @@ const ChangesGrid = () => {
             label: <b>Phase Wise Sum of Order Quantity : {phaseData?.length}</b>,
             children: <Table bordered dataSource={phaseData} columns={columns4} />,
         },
-        {
-            key: '6',
-            label: <b>Monthly Phase Wise Order Quantity : {phaseData?.length}</b>,
-            children: <Table bordered dataSource={phaseData} columns={columns5} />,
-        }
+
     ];
 
     const onReset = () => {

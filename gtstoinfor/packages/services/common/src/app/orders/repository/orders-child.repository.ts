@@ -72,7 +72,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return await query.getRawMany();
     }
 
-    async getPhaseWiseData(fileId2: number, fileId1?: number): Promise<any[]> {
+    async getPhaseWiseData(fileId1: number, fileId2: number): Promise<any[]> {
         const query1 = this.createQueryBuilder('o')
             .select(` item_code, itemName ,'All Phases' as prod_plan_type_name, SUM(CASE WHEN file_id = ${fileId1} THEN order_qty_pcs ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
             .groupBy(` item_code`)
@@ -87,18 +87,19 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return data
     }
 
-    async getMonthWiseData(fileId2: number, fileId1?: number): Promise<any[]> {
+    async getPhaseWiseData1(fileId2: number): Promise<any[]> {
         const query1 = this.createQueryBuilder('o')
-            .select(` item_code, itemName ,'All Phases' as prod_plan_type_name, SUM(CASE WHEN file_id = ${fileId1} THEN order_qty_pcs ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
+            .select(` item_code, itemName ,'All Phases' as prod_plan_type_name, 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
             .groupBy(` item_code`)
             .orderBy(` item_code`)
             .getRawMany()
         const query2 = this.createQueryBuilder('o')
-            .select(` item_code, itemName , prod_plan_type_name, SUM(CASE WHEN file_id = ${fileId1} THEN order_qty_pcs ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
+            .select(` item_code, itemName , prod_plan_type_name, 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
             .groupBy(` item_code, prod_plan_type_name`)
             .orderBy(` item_code`)
             .getRawMany()
         const data = (await query1).concat(await query2)
         return data
     }
+
 }
