@@ -7,7 +7,11 @@ import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res
 import { FactoriesEntity } from './factories.entity';
 import { Not } from 'typeorm';
 import { AllFactoriesResponseModel, FactoryActivateDeactivateDto, FactoryDto as NewFactoriesDto } from '@project-management-system/shared-models';
+import axios from 'axios'
+import { M3toCustomObj, construnctDataFromM3Result } from 'packages/libs/backend-utils/src/m3-utils';
+const https = require('https');
 
+const m3Connection = { USER_NAME: 'planmnb', PASSWORD: 'planmnb7' };
 @Injectable()
 export class FactoriesService {
     constructor(
@@ -80,5 +84,41 @@ export class FactoriesService {
         }
 
     }
+
+    async getFactoriesDataFromM3() {
+        try {
+          const auth =
+            'Basic ' +
+            Buffer.from(
+              `${m3Connection.USER_NAME}:${m3Connection.PASSWORD}`
+            ).toString('base64');
+          const headersRequest = {
+            Authorization: `${auth}`,
+          };
+          const agent = new https.Agent({
+            rejectUnauthorized: false,
+          });
+          const url = 'https://172.17.3.115:23005/m3api-rest/execute/CRS008MI/ListFacility?CONO=111'
+            const args = [{key :'CONO',value:'111'}]
+          // const response = await this.m3GenericService.callM3Api('MNS100MI','LstDivisions',args)
+        
+          const response = await axios.get(url, { headers: headersRequest, httpsAgent: agent  })
+          if (response) {
+            if (response.data) {
+              const options:M3toCustomObj[] = [{m3Key :'FACN' , yourKey :'name'}]
+              const saveData = await construnctDataFromM3Result(options,response.data.MIRecord)
+              console.log('---------',saveData)
+              return saveData;
+            } else {
+              return 'No response Data';
+            }
+          } else {
+            ('No response');
+          }   
+        } catch (error) {
+          console.log(error, '************');
+          throw error;
+        }
+      }
 
 }

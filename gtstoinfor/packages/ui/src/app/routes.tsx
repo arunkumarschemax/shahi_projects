@@ -70,6 +70,7 @@ import LocationsForm from "./masters/locations/locations-form"
 import LocationsGrid from "./masters/locations/locations-grid"
 import TaxesForm from "./masters/taxes/taxes-form"
 import TaxesGrid from "./masters/taxes/taxes-grid"
+import SettingsForm from "./masters/settings/settings-form"
 
 
 export const AppRoutes = () => {
@@ -236,6 +237,7 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
                          <Route path='locations/locations-view' element={<LocationsGrid/>}/>
+                         <Route path='settings/settings-form' element={<SettingsForm/>}/>
 
                     </Route>
                     

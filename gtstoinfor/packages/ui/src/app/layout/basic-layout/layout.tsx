@@ -229,6 +229,12 @@ export const baseRouterList = [
                 path: "taxes/taxes-grid",
                 filepath: "taxes/taxes-grid",
             },
+            {
+                label: "Settings",
+                key: "settings",
+                path: "settings/settings-form",
+                filepath: "settings/settings-form",
+            },
         ],
     },
 
