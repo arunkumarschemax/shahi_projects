@@ -15,7 +15,7 @@ import { DeleteDto } from './dto/delete-dto';
 import { Entity } from 'typeorm';
 import { DocumentEntity } from './entities/documents.entity';
 import { DocumentRoleMapping } from "./models/document-role-mapping.dto";
-import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingResponseModel } from "@project-management-system/shared-models";
+import { AllDocumentRoleMappingsResponseModel, DocumentResponseModel, DocumentRoleMappingResponseModel } from "@project-management-system/shared-models";
 import { DocumentRoleMappingService } from "./document_role_mapping.service";
 @ApiTags('doc-upload')
 @Controller('doc-upload')
@@ -68,10 +68,13 @@ export class DocumentUploadController {
     }
 
     @Post('createDocument')
-    async create(@Body() createDto: DocumentDto, entity: DocumentEntity): Promise<any> {
-      console.log(createDto,"controlllllllllllllll")
-      return await this.service.create(createDto,entity)
+    async create(@Body() createDto: DocumentDto, entity: any): Promise<DocumentResponseModel> {
+  
+      return await this.service.create(createDto);
+  
+  
     }
+  
   
     @Post('getAllDocuments')
     async getAllDocuments(): Promise<any> {
