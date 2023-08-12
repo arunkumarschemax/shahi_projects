@@ -17,7 +17,7 @@ const navigate = useNavigate();
         form.resetFields();
     };
     const onFinish = (values: any) => {
-        services.create(values).then(res => {
+        services.createForm(values).then(res => {
             if (res.status) {
                 setTimeout(() => {
                     message.success("Created Successfully");

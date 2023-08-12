@@ -2,7 +2,8 @@ import axios, { AxiosRequestConfig } from "axios";
 import {DocumentResponseModel} from '../../../shared-models/src/document-management/document-response.model'
 import {DeleteDto} from '../../../shared-models/src/document-management/delete-dto'
 import { DocumentReqDto } from "@project-management-system/shared-models";
-export default class DocumentService { 
+import { CommonAxiosService } from "../common-axios-service-prs";
+export default class DocumentService extends CommonAxiosService{ 
   
   private url = "/doc-upload";
   
