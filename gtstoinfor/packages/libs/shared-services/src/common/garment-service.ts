@@ -1,17 +1,17 @@
 import axios from "axios";
 import { from } from "rxjs";
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { GarmentsDto, GarmentResponse, AllGarmentsResponse } from "@project-management-system/shared-models";
+import { GarmentsDto, GarmentResponse, AllGarmentsResponse, GarmentsCategoryRequest } from "@project-management-system/shared-models";
 
 export class GarmentService extends CommonAxiosService{
     URL = '/garments';
 
     async createGarment(dto: GarmentsDto): Promise<GarmentResponse>{
-        console.log(dto,'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
         return this.axiosPostCall(this.URL + '/createGarment', dto)
     }   
     
     async updateGarment(dto: GarmentsDto): Promise<GarmentResponse>{
+        console.log(dto,'_____________________________')
         return this.axiosPostCall(this.URL + '/updateGarment', dto)
     } 
 
@@ -21,6 +21,11 @@ export class GarmentService extends CommonAxiosService{
 
     async getAllGarments(): Promise<AllGarmentsResponse> {
         return this.axiosPostCall(this.URL + '/getAllGarments')
+
+    }
+
+    async getByGarmentCategory(req : GarmentsCategoryRequest): Promise<AllGarmentsResponse> {
+        return this.axiosPostCall(this.URL + '/getByGarmentCategory')
 
     }
 

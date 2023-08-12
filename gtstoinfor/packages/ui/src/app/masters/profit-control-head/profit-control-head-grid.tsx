@@ -6,17 +6,17 @@ import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutli
 import { Link, useNavigate } from 'react-router-dom';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import AlertMessages from '../../common/common-functions/alert-messages';
-import { ProfitCenterDto } from '@project-management-system/shared-models';
-import { ProfitCenterService } from '@project-management-system/shared-services';
-import { ProfitCenterForm } from './profit-center-form';
+import { ProfitControlHeadDto } from '@project-management-system/shared-models';
+import { ProfitControlHeadService } from '@project-management-system/shared-services';
+import { ProfitControlHeadForm } from './profit-control-head-form';
 
-export interface ProfitCenterGridProps{}
+export interface ProfitControlHeadGridProps{}
 
-export const ProfitCenterGrid =(Props:ProfitCenterGridProps)=>{
+export const ProfitControlHeadGrid =(Props:ProfitControlHeadGridProps)=>{
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const [drawerVisible, setDrawerVisible] = useState(false);
-    const [variantData, setVariantData] = useState<ProfitCenterDto[]>([]);
+    const [variantData, setVariantData] = useState<ProfitControlHeadDto[]>([]);
     const [selectedVariant, setSelectedVariant] = useState<any>(undefined);
     const [selectedPaymentmethodData, setSelectedPaymentmethodData] = useState<any>(undefined);
 
@@ -25,7 +25,7 @@ export const ProfitCenterGrid =(Props:ProfitCenterGridProps)=>{
     const columns = useState('');
     const navigate = useNavigate()
 
-    const service =new ProfitCenterService();
+    const service =new ProfitControlHeadService();
 
     
 const getColumnSearchProps = (dataIndex: string) => ({
@@ -94,7 +94,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
     clearFilters();
     setSearchText('');
   };
-  const openFormWithData=(viewData: ProfitCenterDto)=>{
+  const openFormWithData=(viewData: ProfitControlHeadDto)=>{
     setDrawerVisible(true);
     setSelectedVariant(viewData);
   }
@@ -102,10 +102,10 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   }
-  useEffect(() => {getAllProfitCenter();}, [])
+  useEffect(() => {getAllProfitControlHead();}, [])
 
-  const getAllProfitCenter=()=>{
-    service.getAllProfitCenter().then(res=>{
+  const getAllProfitControlHead=()=>{
+    service.getAllProfitControlHead().then(res=>{
         if(res.status){
             setVariantData(res.data)
             console.log(res,'dataaaaaaaaaaaaa')
@@ -121,11 +121,11 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
     setDrawerVisible(false);
   }
 
-  const saveVariant=(variantData:ProfitCenterDto)=>{
-    variantData.profitCenterId=0;
-    service.createProfitCenter(variantData).then(res=>{
+  const saveVariant=(variantData:ProfitControlHeadDto)=>{
+    variantData.profitControlHeadId=0;
+    service.createProfitControlHead(variantData).then(res=>{
         if(res.status){
-            AlertMessages.getSuccessMessage('ProfitCenter Created Successfully');
+            AlertMessages.getSuccessMessage('Profit Control Head Created Successfully');
     
         }
     }).catch(err => {
@@ -133,9 +133,9 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
       })
       }  
 
-      const updatePaymentMethod=(profitCenter: ProfitCenterDto)=>{
-        profitCenter.updatedUser=JSON.parse(localStorage.getItem('username'))
-        service.updateProfitCenter(profitCenter).then(res=>{
+      const updateProfitControlHead=(profitControlHead: ProfitControlHeadDto)=>{
+        profitControlHead.updatedUser=JSON.parse(localStorage.getItem('username'))
+        service.updateProfitContralHead(profitControlHead).then(res=>{
             if(res.status){
                 AlertMessages.getSuccessMessage('Updated Successfully');
                 setDrawerVisible(false);
@@ -149,9 +149,9 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
           })
       }
 
-      const deletePaymentmode = (profitCenter:ProfitCenterDto) => {
-        profitCenter.isActive=profitCenter.isActive?false:true;
-        service.activateDeActivateProfitCenter(profitCenter).then(res => { console.log(res);
+      const deleteProfitControlHead = (profitControlHead:ProfitControlHeadDto) => {
+        profitControlHead.isActive=profitControlHead.isActive?false:true;
+        service.activeteOrDeactivateProfitControlHead(profitControlHead).then(res => { console.log(res);
           if (res.status) {
             // getAllPaymentmethod();
             AlertMessages.getSuccessMessage('Success'); 
@@ -176,11 +176,11 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             render: (text, object, index) => (page - 1) * 10 + (index + 1) 
         },
         {
-            title: 'Profit Center',
-            dataIndex: 'profitCenter',
-            sorter: (a, b) => a.profitCenter.localeCompare(b.profitCenter),
+            title: 'Profit Control Head',
+            dataIndex: 'profitControlHead',
+            sorter: (a, b) => a.profitControlHead.localeCompare(b.profitControlHead),
             sortDirections: ['descend', 'ascend'],
-            ...getColumnSearchProps('profitCenter')
+            ...getColumnSearchProps('profitControlHead')
         },
         {
             title: 'Status',
@@ -226,7 +226,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
                   
                 
                 <Divider type="vertical" />
-                  <Popconfirm onConfirm={e =>{deletePaymentmode(rowData);}}
+                  <Popconfirm onConfirm={e =>{deleteProfitControlHead(rowData);}}
                   title={
                     rowData.isActive
                       ? 'Are you sure to Deactivate Paymentmethod ?'
@@ -247,8 +247,8 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
       ];
 
       return (
-        <Card title={<span>Profit Center</span>}
-        style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/profit-center/profit-center-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
+        <Card title={<span>Profit Control Head</span>}
+        style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/profit-control-head/profit-control-head-form"  ><span><Button type={'primary'} >New </Button> </span></Link>}>
 <br></br>
 <>
 <Row gutter={40}>
@@ -281,8 +281,8 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
           <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
               onClose={closeDrawer} visible={drawerVisible} closable={true}>
               <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
-                <ProfitCenterForm key={Date.now()}
-                  updateItem={updatePaymentMethod}
+                <ProfitControlHeadForm key={Date.now()}
+                  updateItem={updateProfitControlHead}
                   isUpdate={true}
                   // saveItem={saveVariant}
                   profitCenterData={selectedVariant}
@@ -293,4 +293,4 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
           </Card>
       )
 }
-export default ProfitCenterGrid;
+export default ProfitControlHeadGrid;

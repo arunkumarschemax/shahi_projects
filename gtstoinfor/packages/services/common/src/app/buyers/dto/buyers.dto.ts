@@ -7,10 +7,10 @@ export class BuyersDTO {
   buyerId: number;
 
   @ApiProperty()
-  clientCode: string;
+  buyerCode: string;
 
   @ApiProperty()
-  clientName: string;
+  buyerName: string;
 
   // @ApiProperty()
   // accountType: string;

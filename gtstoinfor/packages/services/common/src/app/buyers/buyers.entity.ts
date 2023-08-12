@@ -16,17 +16,17 @@ export class Buyers {
   @Column("varchar",{
     nullable:false,
     length:15,
-    name:"client_code"
+    name:"buyer_code"
   })
-  clientCode:string;
+  buyerCode:string;
 
   @Column("varchar",{
     nullable:false,
     length:50,
-    name:"client_name"
+    name:"buyer_name"
   })
   @Index({unique:true})
-  clientName:string;
+  buyerName:string;
 
   // @Column("varchar",{
   //   nullable:false,

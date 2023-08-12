@@ -28,8 +28,6 @@ import { DivisionModule } from './division/division.module';
 import { DeliveryTermsModule } from './delivery-terms/delivery-terms.module';
 import { CountriesModule } from './countries/countries.module';
 import { StyleModule } from './style/style-module';
-import { ProfitCenter } from './profit-center/profit-center-entity';
-import { ProfitCenterModule } from './profit-center/profit-center-module';
 import { PaymentMethodModule } from './payment-methods/paymeny-method-module';
 import { LocationsModule } from './locations/location.module';
 import { GarmentsModule } from './garments/garments.module';
@@ -37,8 +35,9 @@ import { AttributeModule } from './attributes/attribute.module';
 import { ComponentsModule } from './components/components.module';
 import { GarmentCategoriesModule } from './garment-category/garment-category.module';
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
-import { TaxesModule } from './taxes/taxes.module';
+import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
+import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
 
 
 @Module({
@@ -76,7 +75,7 @@ import { WarehouseModule } from './warehouse/warehouse.module';
     DeliveryTermsModule,
     LocationsModule,
     DivisionModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,ProfitCenterModule,PaymentMethodModule ,ComponentMappingModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,LiscenceTypedModule],
   controllers: [AppController],
   providers: [AppService],
 })

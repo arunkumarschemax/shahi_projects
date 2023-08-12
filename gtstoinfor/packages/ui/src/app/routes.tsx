@@ -54,8 +54,6 @@ import LiscenceTypesForm from "./masters/Liscence Types/liscence_types_form"
 import { GarmentCategoryForm } from "./masters/garment category/garment-category-form"
 import { GarmentCategoryGrid } from "./masters/garment category/garment-category-grid"
 import ComponentsMappingForm from "./components-mapping/components-mapping-form"
-import ProfitCenterGrid from "./masters/profit-center/profit-center-grid"
-import { ProfitCenterForm } from "./masters/profit-center/profit-center-form"
 import { GarmentsGrid } from "./masters/garments/garments-grid"
 import GarmentsForm from "./masters/garments/garments-form"
 import BuyersGeneralAttributeForm from "./masters/buyers/buyers-general-attribute-form"
@@ -67,10 +65,13 @@ import BuyersOrderAttributeForm from "./masters/buyers/buyers-order-attribute-fo
 import WarehouseGrid from "./masters/warehouse/warehouse-grid"
 import WarehouseForm from "./masters/warehouse/warehouse-form"
 import ComponentMappingView from "./components-mapping/components-mapping-view"
+import ProfitControlHeadGrid from "./masters/profit-control-head/profit-control-head-grid"
+import { ProfitControlHeadForm } from "./masters/profit-control-head/profit-control-head-form"
 import LocationsForm from "./masters/locations/locations-form"
 import LocationsGrid from "./masters/locations/locations-grid"
 import TaxesForm from "./masters/taxes/taxes-form"
 import TaxesGrid from "./masters/taxes/taxes-grid"
+import SettingsForm from "./masters/settings/settings-form"
 
 
 export const AppRoutes = () => {
@@ -204,8 +205,8 @@ export const AppRoutes = () => {
                         <Route path='payment-terms/payment-terms-view' element={<PaymentTermsGrid />} />
                         <Route path='package-terms/package-terms-form' element={<PackageTermsForm  packageTermsData={undefined} updateDetails={(undefined) => { }} isUpdate={false}  closeForm={() => { }}/>} />
                         <Route path='package-terms/package-terms-view' element={<PackageTermsGrid/>} />
-                        <Route path='profit-center/profit-center-view' element={<ProfitCenterGrid/>} />
-                         <Route path='profit-center/profit-center-form' key ='profit-center/profit-center-form' element={< ProfitCenterForm profitCenterData={undefined}
+                        <Route path='profit-control-head/profit-control-head-view' element={<ProfitControlHeadGrid/>} />
+                         <Route path='profit-control-head/profit-control-head-form' key ='profit-control-head/profit-control-head-form' element={< ProfitControlHeadForm profitCenterData={undefined}
                  isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} /><Route path="components/components-view" element ={<ComponentsGrid/>}/>
@@ -239,6 +240,7 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
                          <Route path='locations/locations-view' element={<LocationsGrid/>}/>
+                         <Route path='settings/settings-form' element={<SettingsForm/>}/>
 
                     </Route>
                     

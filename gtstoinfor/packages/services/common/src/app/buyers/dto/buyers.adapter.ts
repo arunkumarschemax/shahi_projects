@@ -15,8 +15,8 @@ export class BuyersAdapter {
    */
   public convertDtoToEntity(  buyersDTO: BuyersDTO,  isUpdate: boolean = false ): Buyers {
     const buyer = new Buyers();
-    buyer.clientCode=buyersDTO.clientCode;
-    buyer.clientName=buyersDTO.clientName;
+    buyer.buyerCode=buyersDTO.buyerCode;
+    buyer.buyerName=buyersDTO.buyerName;
     // buyer.accountType=buyersDTO.accountType;
     buyer.gstNumber=buyersDTO.gstNumber;
     buyer.contactPerson=buyersDTO.contactPerson;
@@ -53,8 +53,8 @@ export class BuyersAdapter {
   public convertEntityToDto(buyersObject: Buyers): BuyersDTO {
     const buyersDTO= new BuyersDTO;
     buyersDTO.buyerId=buyersObject.buyerId;
-    buyersDTO.clientCode=buyersObject.clientCode;
-    buyersDTO.clientName=buyersObject.clientName;
+    buyersDTO.buyerCode=buyersObject.buyerCode;
+    buyersDTO.buyerName=buyersObject.buyerName;
     // buyersDTO.accountType=buyersObject.accountType;
     buyersDTO.gstNumber=buyersObject.gstNumber;
     buyersDTO.phoneNo=buyersObject.phoneNo;

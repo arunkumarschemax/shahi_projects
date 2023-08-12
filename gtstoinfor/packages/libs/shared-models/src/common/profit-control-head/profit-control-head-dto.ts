@@ -1,6 +1,6 @@
-export class ProfitCenterDto {
-   profitCenterId?: number;
-   profitCenter: string;
+export class ProfitControlHeadDto {
+    profitControlHeadId?: number;
+    profitControlHead: string;
     isActive: boolean;
     createdAt : Date | any;
     createdUser : string;
@@ -9,9 +9,9 @@ export class ProfitCenterDto {
     versionFlag : number;
 }
 
-export const ProfitCenterDtoDefault : ProfitCenterDto = {
-    profitCenterId:0,
-    profitCenter:"",
+export const profitControlHeadDtoDefault : ProfitControlHeadDto = {
+    profitControlHeadId:0,
+    profitControlHead:"",
     isActive: true,
     createdAt : new Date() ,
     createdUser : '0',

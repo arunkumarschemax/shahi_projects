@@ -157,10 +157,22 @@ export const baseRouterList = [
                 filepath: "item-sub-categories/item-sub-categories-view",
             },
             {
+                label: "Components",
+                key: "components",
+                path: "components/components-view",
+                filepath: "components/components-view",
+            },
+            {
                 label: "Garments",
                 key: "garments",
                 path: "garments/garments-view",
                 filepath: "garments/garments-view",
+            },
+            {
+                label: "Attributes",
+                key: "attributes",
+                path: "attributes/attributes-view",
+                filepath: "attributes/attributes-view",
             },
             {
                 label: "Garment Categories",
@@ -194,10 +206,16 @@ export const baseRouterList = [
                 filepath: "locations/locations-view",
             },
             {
-                label: "Profit Center",
-                key: "profit-center",
-                path: "profit-center/profit-center-view",
-                filepath: "profit-center/profit-center-view",
+                label: "Locations",
+                key: "locations",
+                path: "locations/locations-view",
+                filepath: "locations/locations-view",
+            },
+            {
+                label: "Profit Control Head",
+                key: "profit-control-head",
+                path: "profit-control-head/profit-control-head-view",
+                filepath: "profit-control-head/profit-control-head-view",
             },
             {
                 label: "Liscence Type",
@@ -206,22 +224,16 @@ export const baseRouterList = [
                 filepath: "liscence-type/liscence-type-grid",
             },
             {
-                label: "Components",
-                key: "components",
-                path: "components/components-view",
-                filepath: "components/components-view",
-            },
-            {
-                label: "Attributes",
-                key: "attributes",
-                path: "attributes/attributes-view",
-                filepath: "attributes/attributes-view",
-            },
-            {
                 label: "Taxes",
                 key: "taxes",
                 path: "taxes/taxes-grid",
                 filepath: "taxes/taxes-grid",
+            },
+            {
+                label: "Settings",
+                key: "settings",
+                path: "settings/settings-form",
+                filepath: "settings/settings-form",
             },
         ],
     },

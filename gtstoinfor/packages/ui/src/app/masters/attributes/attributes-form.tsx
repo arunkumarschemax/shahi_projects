@@ -95,8 +95,8 @@ export function AttributesForm(props: AttributesFormProps) {
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 8 }}
-              lg={{ span: 8 }}
-              xl={{ span: 8 }}
+              lg={{ span: 6 }}
+              xl={{ span: 6 }}
             >
               <Form.Item
                 name="attributeName"
@@ -107,9 +107,8 @@ export function AttributesForm(props: AttributesFormProps) {
                     message: "Attribute Is Required",
                   },
                   {
-                    pattern:
-                      /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                    message: `Should contain only alphabets and numbers.`,
+                    pattern: /^[A-Za-z]+$/,
+                    message: "Should contain only alphabets.",
                   },
                 ]}
               >
