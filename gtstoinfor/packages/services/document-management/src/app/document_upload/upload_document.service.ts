@@ -10,6 +10,8 @@ import {UploadDocumentListResponseModel} from '../../../../../libs/shared-models
 import {DocumentFileUploadResponse} from '../../../../../libs/shared-models/src/document-management/document-file-upload-response'
 import {OrdersRepository} from '../../../../common/src/app/orders/repository/orders.repository';
 import { DocumentRoleMappingRepository } from "./repository/document-role-repository";
+import { PoReq, docreq,req } from "./requests/importedPoReq";
+import { DocumentRepository } from "./repository/documents.repository";
 @Injectable()
 export class DocumentsListService {
     constructor(
@@ -17,7 +19,8 @@ export class DocumentsListService {
         private documentsListRepository: DocumentsListRepository,
         private documentsListAdapter: UploadDocumentListAdapter,
         private ordersRepo:OrdersRepository,
-        private documentRoleMappingRepo:DocumentRoleMappingRepository
+        private documentRoleMappingRepo:DocumentRoleMappingRepository,
+        private documentRepo:DocumentRepository
 
       ) {}
 
@@ -97,7 +100,7 @@ export class DocumentsListService {
 
     async getPoNumberDropdown():Promise<UploadDocumentListResponseModel>{
         try{
-            const query ='select po_number as poNumber from orders'
+            const query ='select po_no as poNumber from orders'
             const result = await this.ordersRepo.query(query)
             return new UploadDocumentListResponseModel(true,1,'Data retrived Sucessfully',result)
         }
@@ -122,5 +125,40 @@ export class DocumentsListService {
             throw error
         }
     }
+
+    async getDocumentOrderIds():Promise<UploadDocumentListResponseModel>{
+        try{
+            const query ='select id from document'
+            const result = await this.documentRepo.query(query)
+            console.log(result)
+            return new UploadDocumentListResponseModel(true,1,'retrived sucessfully',result)
+        }
+        catch(error){
+            throw error
+        }
+    }
+
+        async createDocList(req?:req[]):Promise<UploadDocumentListResponseModel>{
+            try{
+                const docIds = await this.getDocumentOrderIds();
+                console.log(docIds.data,'docids')
+                for(const request of req){
+                    for(const poNumber of request.poNumber){
+                        const entity = new DocumentsList()
+                        entity.customerPo=poNumber
+                        // entity.documentCategoryId=docIds.data
+                        // for(const doc of request.documents){
+                        //     entity.documentCategoryId=doc
+                        // }
+                        const save = await this.documentsListRepository.save(entity)
+                    }    
+                }
+
+                return new UploadDocumentListResponseModel(true,1,'creted sucessfully',[])
+            }
+            catch(error){
+                throw(error)
+            }
+        }   
 
     }
