@@ -133,6 +133,12 @@ export const baseRouterList = [
                 path: "factory-report",
                 filepath: "factory-report",
             },
+            {
+                label: "Fabric Tracker",
+                key: "fabrick-tracker-report",
+                path: "fabrick-tracker-report",
+                filepath: "fabrick-tracker-report",
+            },
            
         ],
     },
