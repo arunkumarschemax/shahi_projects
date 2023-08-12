@@ -1,10 +1,10 @@
 import axios, { AxiosRequestConfig } from "axios";
 import {DocumentResponseModel} from '../../../shared-models/src/document-management/document-response.model'
-import { DocumentDto } from "@project-management-system/shared-models";
 import {DeleteDto} from '../../../shared-models/src/document-management/delete-dto'
+import { DocumentReqDto } from "@project-management-system/shared-models";
 export default class DocumentSharedService { 
   
-  async createForm(formdataDto: DocumentDto, config?: AxiosRequestConfig): Promise<DocumentResponseModel> {
+  async createForm(formdataDto: DocumentReqDto, config?: AxiosRequestConfig): Promise<DocumentResponseModel> {
     console.log(formdataDto, "cccc");
     return await axios.post("http://localhost:5000/documentdata/createDocument",
       formdataDto,
