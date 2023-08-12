@@ -139,10 +139,10 @@ export const baseRouterList = [
     // },
     {
         label:'Add Orders',
-        key:'excel-import',
+        key:'orders',
         icon: <UserOutlined />,
-        path:'excel-import/excel-import',
-        filepath:'excel-import/excel-import'     
+        path:'orders/excel-import',
+        filepath:'orders/excel-import'     
     },
     {
         label:'Document management',
