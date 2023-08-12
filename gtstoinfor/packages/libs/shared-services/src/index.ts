@@ -1,5 +1,5 @@
 export * from './user-management'
 export * from './common'
-
+export * from './orders'
 export * from './document-service'
 export * from './document-role-service'
