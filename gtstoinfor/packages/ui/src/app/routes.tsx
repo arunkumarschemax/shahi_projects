@@ -56,6 +56,7 @@ export const AppRoutes = () => {
                     {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
                 </Route>
                 <Route path='/nike'>
+                        <Route path='/nikeDashboard' element={<Dashboard />} />
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='factory-report' element={<FactoryPPMReport />} />
                     </Route>
@@ -102,6 +103,7 @@ export const AppRoutes = () => {
 
                     </Route>
                     <Route path='/nike'>
+                        <Route path='/nikeDashboard' element={<Dashboard />} />
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='factory-report' element={<FactoryPPMReport/>} />
                     </Route>

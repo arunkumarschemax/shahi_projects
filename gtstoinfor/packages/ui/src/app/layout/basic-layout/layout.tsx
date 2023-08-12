@@ -122,6 +122,13 @@ export const baseRouterList = [
         filepath: "nike",
         children: [
             {
+                label: "Dashboard",
+                key: "nikeDashboard",
+                path: "nikeDashboard",
+                icon: <DashboardOutlined />,
+                filepath: "nikeDashboard",
+            },
+            {
                 label: "Add PO",
                 key: "file-import",
                 path: "file-import",
