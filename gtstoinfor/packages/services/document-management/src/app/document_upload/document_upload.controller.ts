@@ -15,7 +15,7 @@ import { DeleteDto } from './dto/delete-dto';
 import { Entity } from 'typeorm';
 import { DocumentEntity } from './entities/documents.entity';
 import { DocumentRoleMapping } from "./models/document-role-mapping.dto";
-import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingResponseModel } from "@project-management-system/shared-models";
+import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingResponseModel, RoleActivateDeactivateDto } from "@project-management-system/shared-models";
 import { DocumentRoleMappingService } from "./document_role_mapping.service";
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 
@@ -99,6 +99,10 @@ export class DocumentUploadController {
       return await this.mapService.getAllDocMappings();
     }
 
+    @Post('/activateOrDeactivate')
+    async activateOrDeactivate(@Body() req: any): Promise<AllDocumentRoleMappingsResponseModel> {
+      return await this.mapService.activateOrDeactivate(req);
+    }
     // @Post('/getPoNumberDropdown')
     // async getPoNumberDropdown(): Promise<UploadDocumentListResponseModel> {
     //   console.log('dtaaaaaa')
