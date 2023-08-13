@@ -49,4 +49,8 @@ export class DeliveryTermsService extends CommonAxiosService{
     return this.axiosPostCall(this.URL + "/getDeliveryTermsById", deliveryTermsRequest)
       
   }
+
+  async getAllActiveDeliveryTerms(): Promise<AllDeliveryTermsResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllActiveDeliveryTerms")
+  }
 }

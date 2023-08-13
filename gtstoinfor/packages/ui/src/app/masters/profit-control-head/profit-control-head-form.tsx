@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
 import { Link, useLocation } from "react-router-dom";
-import { ProfitCenterDto } from '@project-management-system/shared-models';
-import { ProfitCenterService } from '@project-management-system/shared-services';
+import { ProfitControlHeadDto } from '@project-management-system/shared-models';
+import { ProfitControlHeadService } from '@project-management-system/shared-services';
 import { __values } from 'tslib';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import FormItem from 'antd/es/form/FormItem';
 
-export interface ProfitCenterFromProps{
-    profitCenterData: ProfitCenterDto;
-    updateItem: (profitCenterData:ProfitCenterDto)=>void
+export interface ProfitControlHeadFromProps{
+    profitCenterData: ProfitControlHeadDto;
+    updateItem: (profitCenterData:ProfitControlHeadDto)=>void
         isUpdate:boolean;
         closeForm:()=>void;
     
 }
 
-export const ProfitCenterForm=(props:ProfitCenterFromProps)=>{
+export const ProfitControlHeadForm=(props:ProfitControlHeadFromProps)=>{
     const [form] = Form.useForm();
     const [disable, setDisable] = useState<boolean>(false)
 
-    const service = new ProfitCenterService();
+    const service = new ProfitControlHeadService();
     let history =useLocation();
 
     let createdUser="";
@@ -27,13 +27,13 @@ export const ProfitCenterForm=(props:ProfitCenterFromProps)=>{
         createdUser= 'admin';
     }
 
-    const savePayment = (profitCenterData:ProfitCenterDto ) => {
+    const savePayment = (profitCenterData:ProfitControlHeadDto ) => {
         // setDisable(true)
-        profitCenterData.profitCenterId= 0;
-        service.createProfitCenter(profitCenterData).then((res) => {
+        profitCenterData.profitControlHeadId= 0;
+        service.createProfitControlHead(profitCenterData).then((res) => {
           setDisable(false)
             if (res.status) {
-              AlertMessages.getSuccessMessage('Profit Center Created Successfully');
+              AlertMessages.getSuccessMessage('Profit Control Head Created Successfully');
             //   location.push("/Currencies-view");
               onReset();
             } else {
@@ -45,7 +45,7 @@ export const ProfitCenterForm=(props:ProfitCenterFromProps)=>{
             AlertMessages.getErrorMessage(err.message);
           });
         }
-          const saveData =(values:ProfitCenterDto)=>{
+          const saveData =(values:ProfitControlHeadDto)=>{
             setDisable(false)
             if (props.isUpdate) {
                 props.updateItem(values);
@@ -61,8 +61,8 @@ export const ProfitCenterForm=(props:ProfitCenterFromProps)=>{
       
 
       return(
-        <Card title={<span>Profit Center</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-        extra={props.isUpdate==true?"":<Link to='/masters/profit-center/profit-center-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+        <Card title={<span>Profit Control Head</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+        extra={props.isUpdate==true?"":<Link to='/masters/profit-control-head/profit-control-head-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
        >
 <Form
 layout={'vertical'}
@@ -71,7 +71,7 @@ initialValues={props.profitCenterData}
 name="control-hooks"
 onFinish={saveData}>
 
-<FormItem name="profitCenterId" style={{display:'none'}}>
+<FormItem name="profitControlHeadId" style={{display:'none'}}>
     <Input hidden/>
 </FormItem>
 <FormItem name="createdUser"  initialValue={createdUser} style={{display:'none'}}>
@@ -79,16 +79,16 @@ onFinish={saveData}>
 </FormItem>
 <Row>
 <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
-          name="profitCenter"
-          label="Profit Center"
+          name="profitControlHead"
+          label="Profit Control Head"
           rules={[
             {
               required: true,
-              message:' profitCenter Is Required'
+              message:' profitControlHead Is Required'
             },
             {
               pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-              message: `profitCenter Should contain only alphabets.`
+              message: `profitControlHead Should contain only alphabets.`
             }
           ]}
         >

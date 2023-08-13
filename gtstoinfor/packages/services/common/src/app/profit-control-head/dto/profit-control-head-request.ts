@@ -2,13 +2,13 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
 
-export class ProfitCenterRequest {
+export class ProfitControlHeadRequest {
     @ApiProperty()
     @IsNotEmpty()
-    profitCenterId:number;
+    profitControlHeadId:number;
 
     @ApiProperty()
-    profitCenter: string;
+    profitControlHead: string;
 
     @ApiProperty()
     createdUser: string;

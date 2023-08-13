@@ -43,4 +43,9 @@ URL = '/liscenc-type';
             //     });
             // }
 
+    async getAllActiveLiscenceTypes(): Promise<AllLiscenceResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllActiveLiscenceTypes")
+        
+    }
+
 }
