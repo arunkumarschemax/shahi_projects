@@ -149,10 +149,10 @@ export class OrdersService {
                     console.log(convertedExcelEntity,'convertedExcelEntity')
                     const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
                     console.log(saveExcelEntity,'saveExcelEntity')
-                    for(const document of convertedData){
-                    const documentSave = await this.documentService.createDocumentsList(data.po_no,data)
-                    console.log(documentSave,'DocumentsListService')
-                    }
+                    // for(const po of data.po_no){
+                    // const documentSave = await this.documentService.createDocList(data.po_no)
+                    // console.log(documentSave,'DocumentsListService')
+                    // }
                     // const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
                     // const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
                     // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
@@ -405,5 +405,11 @@ export class OrdersService {
     //     }
     //     return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
     // }
+
+    async getRoleWiseOrders() : Promise<CommonResponseModel>{
+        let query = `SELECT dl.role_id , dr.role_name , SUM( IF(dl.is_uploaded=1, 1 , 0)) AS Completed,SUM( IF(dl.is_uploaded=0, 1 , 0)) AS Pending FROM documents_list dl LEFT JOIN document_role_mapping dr ON dr.role_id = dl.role_id GROUP BY dl.role_id`;
+        const data = await this.dataSource.query(query);
+        return new CommonResponseModel(true,0,'Data Retrived Successfully',data)
+    }
 
 }

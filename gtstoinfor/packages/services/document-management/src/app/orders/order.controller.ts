@@ -191,4 +191,14 @@ export class OrdersController {
     //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     //     }
     // }
+
+    
+    @Post('/getRoleWiseOrders')
+    async getRoleWiseOrders(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getRoleWiseOrders();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
