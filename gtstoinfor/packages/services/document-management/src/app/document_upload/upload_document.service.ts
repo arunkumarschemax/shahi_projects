@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DocumentsList } from "./entities/upload-document-entity";
 import { DocumentsListRepository } from "./repository/documents-list.repository";
 import { UploadDocumentListAdapter } from "./repository/upload-document-adapter";
@@ -12,15 +12,17 @@ import {OrdersRepository} from '../../../../common/src/app/orders/repository/ord
 import { DocumentRoleMappingRepository } from "./repository/document-role-repository";
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
+import { DataSource } from "typeorm";
 @Injectable()
 export class DocumentsListService {
     constructor(
         @InjectRepository(DocumentsList)
         private documentsListRepository: DocumentsListRepository,
         private documentsListAdapter: UploadDocumentListAdapter,
-        private ordersRepo:OrdersRepository,
         private documentRoleMappingRepo:DocumentRoleMappingRepository,
-        private documentRepo:DocumentRepository
+        private documentRepo:DocumentRepository,
+        @InjectDataSource()
+        private dataSource: DataSource,
 
       ) {}
 
@@ -101,7 +103,7 @@ export class DocumentsListService {
     async getPoNumberDropdown():Promise<UploadDocumentListResponseModel>{
         try{
             const query ='select po_no as poNumber from orders'
-            const result = await this.ordersRepo.query(query)
+            const result = await this.dataSource.query(query)
             return new UploadDocumentListResponseModel(true,1,'Data retrived Sucessfully',result)
         }
         catch(err){

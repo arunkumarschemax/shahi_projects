@@ -15,18 +15,19 @@ import { OrdersRepository } from 'packages/services/common/src/app/orders/reposi
 import { DocumentUploadController } from './document_upload.controller';
 import { OrdersEntity } from 'packages/services/common/src/app/orders/entities/orders.entity';
 import { OrdersChildEntity } from 'packages/services/common/src/app/orders/entities/orders-child.entity';
+import { OrdersModule } from '../orders/order.module';
+import { DocumentsListRepository } from './repository/documents-list.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
         DocumentsList,
         DocumentEntity,
-        DocumentRoleMappingEntity,
-        OrdersEntity,
-        OrdersChildEntity
+        DocumentRoleMappingEntity
     ])],
   controllers: [DocumentUploadController],
-  providers: [DocumentRoleMappingRepository,DocumentsListService,DocumentService,UploadDocumentListAdapter, ApplicationExceptionHandler,DocumentRepository,DocumentRoleMappingService,OrdersRepository]
+  providers: [DocumentRoleMappingRepository , DocumentsListService,DocumentService,UploadDocumentListAdapter, ApplicationExceptionHandler,DocumentRepository,DocumentRoleMappingService,DocumentsListRepository],
+  exports:[DocumentsListService,TypeOrmModule]
 })
 export class DocumentUploadModule { }
 

@@ -7,6 +7,7 @@ import { ApiConsumes } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { extname } from 'path'; 
 import { OrdersService } from './order.service';
+import { SaveOrderDto } from './models/order.dto';
 ''
 
 @Controller('orders')
@@ -19,23 +20,25 @@ export class OrdersController {
 
     @Post('/saveOrder/:id')
     async saveOrder(@Param('id') id: number, @Body() data: any): Promise<CommonResponseModel> {
+        console.log(id,'id')
+        console.log(data,'data')
         try {
-            return this.ordersService.saveOrdersData(data, id);
+            return this.ordersService.saveOrdersData(data,id);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
         }
     }
 
-    @Post('/getOrdersData')
-    async getOrdersData(): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.getOrdersData();
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    // @Post('/getOrdersData')
+    // async getOrdersData(): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.getOrdersData();
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
-        }
-    }
+    //     }
+    // }
 
     // @Post('/getQtyChangeData')
     // async getQtyChangeData(): Promise<CommonResponseModel> {

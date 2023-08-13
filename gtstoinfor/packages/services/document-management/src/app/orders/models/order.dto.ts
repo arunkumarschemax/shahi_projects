@@ -22,7 +22,7 @@ export class SaveOrderDto {
     poNo: string;
 
     @ApiProperty()
-    date: Date;
+    date: any;
 
     @ApiProperty()
     dest: string;
@@ -73,7 +73,7 @@ export class SaveOrderDto {
      * @param version 
      * @param fileId 
      */
-    constructor(id: number,buyer: string,challanNo: number,invoiceNo: string,style: string,poNo: string,date: Date,dest: string,tcStatus: string,shipQty: number,ctns: number,createdUser: string | null,updatedUser: string | null,createdAt: string,updatedAt: string,version: number,fileId : number){
+    constructor(id: number,buyer: string,challanNo: number,invoiceNo: string,style: string,poNo: string,date: any,dest: string,tcStatus: string,shipQty: number,ctns: number,createdUser: string | null,updatedUser: string | null,createdAt: string,updatedAt: string,version: number,fileId : number){
         this.id = id;
         this.buyer = buyer;
         this.challanNo = challanNo;
