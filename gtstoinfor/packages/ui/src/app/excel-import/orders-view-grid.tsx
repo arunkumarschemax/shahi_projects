@@ -93,56 +93,56 @@ const AllOrdersGridView = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Production Plan Id',
-            dataIndex: 'production_plan_id'
+            title: 'Buyer',
+            dataIndex: 'buyer'
         },
         {
-            title: 'Production Plan Name',
-            dataIndex: 'prod_plan_type_name'
+            title: 'Challan Number',
+            dataIndex: 'challanNo'
         },
         {
-            title: 'Item code',
-            dataIndex: 'item_code'
+            title: 'Invoice Number',
+            dataIndex: 'invoiceNo'
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName'
+            title: 'PO Number',
+            dataIndex: 'poNo'
         },
         {
-            title: 'Order Quantity Pieces',
-            dataIndex: 'order_qty_pcs',
+            title: 'Style',
+            dataIndex: 'style',
             align: 'right',
-            render: (text, record) => (
-                <>
-                    {Number(record.order_qty_pcs).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                </>
-            )
+            // render: (text, record) => (
+            //     <>
+            //         {Number(record.order_qty_pcs).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+            //     </>
+            // )
         },
         {
-            title: 'Contracted Date',
-            dataIndex: 'contracted_date',
-            render: (text, record) => {
-                return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
-            }
+            title: 'Dest',
+            dataIndex: 'dest',
+            // render: (text, record) => {
+            //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
+            // }
         },
         {
-            title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date',
-            render: (text, record) => {
-                return record.requested_wh_date ? convertToYYYYMMDD(record.requested_wh_date) : '-'
-            }
+            title: 'TC Status',
+            dataIndex: 'tcStatus',
+            // render: (text, record) => {
+            //     return record.requested_wh_date ? convertToYYYYMMDD(record.requested_wh_date) : '-'
+            // }
         },
         {
-            title: 'Order Revised Date',
-            dataIndex: 'last_update_date',
-            render: (text, record) => {
-                return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
-            }
+            title: 'Ship Quantity',
+            dataIndex: 'shipQty',
+            // render: (text, record) => {
+            //     return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
+            // }
         },
         {
-            title: 'Order Status',
-            dataIndex: 'order_status',
-            render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
+            title: 'Cottons',
+            dataIndex: 'ctns',
+            // render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
         }
     ];
 
@@ -157,14 +157,15 @@ const AllOrdersGridView = () => {
 
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
-            { title: 'Production Plan Id', dataIndex: 'production_plan_id' },
-            { title: 'Item code', dataIndex: 'item_code' },
-            { title: 'Item Name', dataIndex: 'itemName' },
-            { title: 'Order Quantity Pieces', dataIndex: 'order_qty_pcs' },
-            { title: 'Contracted Date', dataIndex: 'contracted_date' },
-            { title: 'Requested Warehouse Date', dataIndex: 'requested_wh_date' },
-            { title: 'Order Revised Date', dataIndex: 'last_update_date' },
-            { title: 'Order Status', dataIndex: 'order_status' },
+            { title: 'Buyer', dataIndex: 'buyer' },
+            { title: 'Challan No', dataIndex: 'challanNo' },
+            { title: 'Invoice No', dataIndex: 'invoiceNo' },
+            { title: 'Po No', dataIndex: 'poNo' },
+            { title: 'Style', dataIndex: 'style' },
+            { title: 'Dest', dataIndex: 'dest' },
+            { title: 'TC Status', dataIndex: 'tcStatus' },
+            { title: 'Ship Qty', dataIndex: 'shipQty' },
+            { title: 'Cottons', dataIndex: 'ctns' },
             // { title: 'Currency', dataIndex: 'currency' },
             // { title: 'Cost', dataIndex: 'cost' },
         ]
