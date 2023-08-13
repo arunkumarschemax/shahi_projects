@@ -1,7 +1,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { CommonResponseModel, FileStatusReq,  orderColumnValues } from '@project-management-system/shared-models';
-import { DataSource, EntityManager } from 'typeorm';
+import { DataSource, EntityManager, getConnection } from 'typeorm';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { OrdersAdapter } from './adapters/order.adapter';
 import { OrdersRepository } from './repositories/order.repository';
@@ -13,6 +13,8 @@ import { SaveOrderDto } from './models/order.dto';
 import { DocumentService } from '../document_upload/document.service';
 import { DocumentsListService } from '../document_upload/upload_document.service';
 import { DocumentsListRequest } from '../document_upload/requests/document-list.request';
+import { appConfig } from 'packages/services/document-management/config';
+import { error } from 'console';
 let moment = require('moment');
 moment().format();
 
@@ -429,5 +431,21 @@ export class OrdersService {
         const data = await this.dataSource.query(query);
         return new CommonResponseModel(true,0,'Data Retrived Successfully',data)
     }
+
+    async getDynamicData() : Promise<CommonResponseModel>{
+        const query = `SELECT DISTINCT document_name FROM document`;
+        const documentNames = await this.dataSource.query(query)
+        const dynamicSQL = `SELECT dl.customer_po AS PO, ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END END) AS '${name.document_name}'
+        `).join(',')}
+      FROM
+        documents_list dl
+      LEFT JOIN
+        document d ON d.id = dl.document_category_id
+      GROUP BY
+        dl.customer_po
+    `;
+    const data = await this.dataSource.query(dynamicSQL)
+    return new CommonResponseModel(true,0,'Data Retrived Successfully',data)
+}
 
 }

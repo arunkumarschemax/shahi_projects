@@ -79,5 +79,9 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getRoleWiseOrders")
     }
 
+    async getDynamicData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getDynamicData")
+    }
+
     
 }

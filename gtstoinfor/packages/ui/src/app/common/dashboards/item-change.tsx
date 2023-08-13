@@ -4,89 +4,62 @@ import { Form } from "react-router-dom";
 import { Card, Table } from 'antd';
 
 const ItemChanges = () =>{
-
+   
     const service = new OrdersService()
     const [itemData, setItemData] = useState([])
-    // const [form] = Form.useForm();
+    const [columns, setColumns] = useState([]);
+    //const [form] = Form.useForm();
 
-    // useEffect (()=>{
-    //     getMaximumChangedOrders();
-    // },[])
+    useEffect (()=>{
+        getDocumentData();
+    },[])
 
-    // const getMaximumChangedOrders = () =>{
-    //     service.getMaximumChangedOrders().then((res)=>{
+    // const getDocumentData = () =>{
+    //     service.getDynamicData().then((res)=>{
     //         setItemData(res.data)
     //     })
     // }
 
-    const columns = [
-        {
-            title: 'PO Number',
-            dataIndex: 'po_no',
-        },
-        {
-            title: 'Document-1',
-            dataIndex: 'document_1'
-        },
-        {
-            title: 'Document-2',
-            dataIndex: 'document_2'
-        },
-        {
-            title: 'Document-3',
-            dataIndex: 'document_3'
-        },
-       
-        {
-            title: 'Document-4',
-            dataIndex: 'document_4'
-        },
-        {
-            title: 'Document-5',
-            dataIndex: 'document_5'
-        },
-        {
-            title: 'Document-6',
-            dataIndex: 'document_6'
-        },
-        
-    ];
+    // const columns = itemData.map(header => ({
+    //     title: header,
+    //     dataIndex: header,
+    //     key: header,
+    // }));
 
-    const dataSource = [
-        {
-            po_no : '468219-5672',
-            document_1 : 'No',
-            document_2 : 'No',
-            document_3 : 'No',
-            document_4 : 'No',
-            document_5 : 'No',
-            document_6 : 'No',
+    // const columns = [
+    //     {
+    //         title: 'Customer PO',
+    //         dataIndex: 'customer_po',
+    //         key: 'customer_po',
+    //       },
+    //       ...itemData.map(header => ({
+    //         title: header,
+    //         dataIndex: header,
+    //         key: header,
+    //       }))
+    // ]
+    const getDocumentData = () => {
+        service.getDynamicData().then((res) => {
+            setItemData(res.data);
 
-        },
-        {
-            po_no : '388157-6565',
-            document_1 : 'No',
-            document_2 : 'Yes',
-            document_3 : 'Yes',
-            document_4 : 'No',
-            document_5 : 'Yes',
-            document_6 : 'No',
-
-        },
-        {
-            po_no : '428279-6555',
-            document_1 : 'No',
-            document_2 : 'Yes',
-            document_3 : 'Yes',
-            document_4 : 'No',
-            document_5 : 'Yes',
-            document_6 : 'No',
-
-        }
-    ]
+            // Assuming res.data contains at least one item to infer column names
+            const headerColumns = Object.keys(res.data[0]).map(header => ({
+                title: header,
+                dataIndex: header,
+                key: header,
+            }));
+            setColumns([
+                ...headerColumns
+            ]);
+        });
+    }
     return(
         <Card title='Document Status'>
-            <Table columns={columns} dataSource={dataSource} pagination={false}/>
+           {columns.length > 0 && itemData.length > 0 ? (
+                <Table columns={columns} dataSource={itemData} pagination={false} />
+            ) : (
+                <p>No Data</p>
+            )}
         </Card>
     )
 

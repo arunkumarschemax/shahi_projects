@@ -201,4 +201,13 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getDynamicData')
+    async getDynamicData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getDynamicData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
