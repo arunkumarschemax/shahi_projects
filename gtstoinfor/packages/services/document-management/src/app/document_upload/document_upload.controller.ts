@@ -18,7 +18,7 @@ import { DocumentRoleMapping } from "./models/document-role-mapping.dto";
 import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingResponseModel } from "@project-management-system/shared-models";
 import { DocumentRoleMappingService } from "./document_role_mapping.service";
 import { PoReq, docreq,req } from "./requests/importedPoReq";
-
+import * as fs from 'fs';
 @ApiTags('doc-upload')
 @Controller('doc-upload')
 export class DocumentUploadController {
@@ -37,14 +37,29 @@ export class DocumentUploadController {
           }
     }
 
+    
 
     @Post('/DocumentFileUpload')
     @UseInterceptors(FilesInterceptor('file', null, {
       storage: diskStorage({
-        // destination: '/upload-files/post-sailing-upload-files',
-        destination: './upload-files',
+        // destination: './upload-files/manisha-123',
+        // destination: `./upload-files/PO-${req}`,
+        destination: (req, file, callback) => {
+          const destinationPath = `./upload-files/PO-${req.body.customerPo}`;
+          console.log('Destination Path:', destinationPath);
+          try {
+            // Attempt to create the directory if it doesn't exist
+            fs.mkdirSync(destinationPath, { recursive: true });
+            callback(null, destinationPath);
+          } catch (error) {
+            console.error('Error creating directory:', error);
+            callback(error, null);
+          }
+        },
+        // destination: (req, file, callback) => {
+        //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
+        // },
         filename: (req, file, callback) => {
-          // console.log(file);
           const name = file.originalname.split('.')[0];
           const fileExtName = extname(file.originalname);
           const randomName = Array(4)
