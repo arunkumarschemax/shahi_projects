@@ -153,7 +153,6 @@ export class OrdersService {
                     const poGroups: Record<string, any[]> = {};
                     for (const data of convertedData) {
                         console.log(data,'data')
-                        // ... your existing code ...
             
                         if (!poGroups[data.po_no]) {
                             poGroups[data.po_no] = [];
@@ -163,11 +162,9 @@ export class OrdersService {
                     }
                     for (const poNo in poGroups) {
                         if (poGroups.hasOwnProperty(poNo)) {
-                            // Grouped data for a specific po_no
                             const groupedData = poGroups[poNo];
                             console.log(groupedData,'grouped')
             
-                            // Call createDocumentList service with groupedData
                             const documentSave = await this.documentService.createDocList(groupedData)
                             console.log(documentSave,'DocumentsListService')
                         }
