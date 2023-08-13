@@ -6,8 +6,8 @@ import { FabricTypeDto } from './dto/fabric-type.dto';
 import { FabricType } from './fabric-type.entity';
 import { FabricTypeRequest } from './dto/fabric-type.request';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { AllFabricTypesResponse,FabricTypeResponse} from '@project-management-system/shared-models';
-
+import { AllFabricTypesResponse,FabricTypeDropDownDto,FabricTypeResponse} from '@project-management-system/shared-models';
+import { FabricTypeItemNameRequest } from './dto/fabric-type-name.request';
 @Injectable()
 export  class FabricTypeService {
     constructor (
@@ -167,5 +167,17 @@ export  class FabricTypeService {
               return err;
             }
           }  
-
+          async getFabricTypeByName(fabricreq: FabricTypeItemNameRequest): Promise<FabricTypeDropDownDto> {
+            console.log(fabricreq);
+           const fabricEntities = await this.fabricRepository.findOne({select:['fabricTypeId', 'fabricTypeName'],
+                 where:{fabricTypeName:fabricreq.fabricTypeName}
+                 });
+                 if(fabricEntities){
+                 const response = new FabricTypeDropDownDto(fabricEntities.fabricTypeId,fabricEntities.fabricTypeName);
+                     return response;
+                 }else{
+                     throw new ErrorResponse(11106,'Something went wrong');
+                 }
+       }
+   
 }

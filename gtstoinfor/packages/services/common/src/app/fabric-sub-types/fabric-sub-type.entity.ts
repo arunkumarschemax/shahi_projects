@@ -1,25 +1,27 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
-import { FabricSubType } from "../fabric-sub-types/fabric-sub-type.entity";
+import { FabricType } from "../fabric-types/fabric-type.entity";
 
-@Entity('fabric_type')
-export class FabricType {
-    @PrimaryGeneratedColumn("increment", { name: 'fabric_type_id' })
-    fabricTypeId: number;
+
+@Entity('fabric_sub_type')
+export  class  FabricSubType {
+    @PrimaryGeneratedColumn("increment", { name: 'fabric_sub_type_id' })
+    fabricSubTypeId: number;
 
     @Column("varchar", {
         nullable: false,
         length: 40,
-        name: "fabric_type_name"
+        name: "fabric_sub_type_name"
       })
-      fabricTypeName: string;
+      fabricSubTypeName: string;
 
+      
       @Column("boolean", {
         nullable: false,
         default: true,
         name: "is_active"
       })
       isActive: boolean;
-    
+
       @CreateDateColumn({
         name: "created_at",
         type: "datetime"
@@ -50,6 +52,7 @@ export class FabricType {
       })
       versionFlag: number;
 
-      @OneToMany(()=>FabricSubType, fabricSubtype=>fabricSubtype.fabricType,{cascade:true})
-      fabrictypeName:FabricSubType[];
+      @ManyToOne(()=> FabricType,fabricType=>fabricType.fabrictypeName)
+      @JoinColumn({name:'fabric_type_id'})
+      fabricType:FabricType
 }

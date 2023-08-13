@@ -38,6 +38,7 @@ import { ComponentMappingModule } from './components-mapping/component-mapping.m
 import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { FabricTypeModule } from './fabric-types/fabric-type.module';
+import { FabricSubTypeModule } from './fabric-sub-types/fabric-sub-type.module';
 
 
 @Module({
@@ -45,11 +46,11 @@ import { FabricTypeModule } from './fabric-types/fabric-type.module';
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
-      host: appConfig.database.host,
-      port: appConfig.database.port,
-      username: appConfig.database.username,
-      password: appConfig.database.password,
-      database: appConfig.database.dbName,
+      host: 'localhost',
+      port: 3308,
+      username: 'root',
+      password: '',
+      database: 'crm',
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -75,7 +76,9 @@ import { FabricTypeModule } from './fabric-types/fabric-type.module';
     DeliveryTermsModule,
     LocationsModule,
     DivisionModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,FabricTypeModule],
+    FabricSubTypeModule,
+    FabricTypeModule,
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],
   providers: [AppService],
 })

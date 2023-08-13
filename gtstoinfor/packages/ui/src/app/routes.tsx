@@ -72,6 +72,8 @@ import TaxesForm from "./masters/taxes/taxes-form"
 import TaxesGrid from "./masters/taxes/taxes-grid"
 import FabricTypeForm from "./masters/fabric-type/fabric-type-form"
 import FabricTypeGrid from "./masters/fabric-type/fabric-type-grid"
+import FabricSubTypeGrid from "./masters/fabric-sub-types/fabric-sub-types-view"
+import FabricSubTypeForm from "./masters/fabric-sub-types/fabric-sub-type-form"
 
 
 export const AppRoutes = () => {
@@ -151,6 +153,7 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
 
+                 <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
 
 <Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
                     isUpdate={false}
@@ -160,7 +163,6 @@ export const AppRoutes = () => {
 
 
                     
-                    <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
 
                         <Route path='buyers/buyers-view' element={<BuyersView />} />
                         <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
@@ -244,6 +246,12 @@ export const AppRoutes = () => {
                  isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+                <Route path='fabricSubType/fabric-sub-type-view' element={<FabricSubTypeGrid/>} />
+                         <Route path='fabric-sub-type/fabric-sub-type-form' key ='fabric-sub-type/fabric-sub-type-form' element={<FabricSubTypeForm  fabricsubtypeData={undefined}
+
+                 isUpdate={false}
+                closeForm={() => { }}
+                updateData={(undefined) => { }}/>} />
                          <Route path='locations/locations-view' element={<LocationsGrid/>}/>
 
                     </Route>

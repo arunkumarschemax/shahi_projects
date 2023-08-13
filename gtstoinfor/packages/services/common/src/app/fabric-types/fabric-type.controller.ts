@@ -2,10 +2,10 @@ import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { FabricTypeDto } from './dto/fabric-type.dto';
 import { FabricTypeService } from './fabric-type.service';
-import { AllFabricTypesResponse,FabricTypeResponse } from '@project-management-system/shared-models';
+import { AllFabricTypesResponse,FabricTypeDropDownDto,FabricTypeResponse } from '@project-management-system/shared-models';
 import { FabricTypeRequest } from '@project-management-system/shared-models';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-
+import { FabricTypeItemNameRequest } from './dto/fabric-type-name.request';
 @Controller('fabricType')
 @ApiTags('fabricType')
 export  class FabricTypeController {
@@ -75,5 +75,12 @@ export  class FabricTypeController {
           }
         }
  
-  
+        @Post('/getFabricTypeByName')
+        async getFabricTypeByName(@Body() Fabricreq: FabricTypeItemNameRequest): Promise<FabricTypeDropDownDto> {
+            try {
+                return await this.fabricService.getFabricTypeByName(Fabricreq);
+            } catch (err) {
+                throw err;
+            }
+        }
 }

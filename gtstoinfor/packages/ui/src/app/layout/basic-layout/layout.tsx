@@ -90,12 +90,7 @@ export const baseRouterList = [
                 path: "paymentmethod/paymentmethod-view",
                 filepath: "paymentmethod/paymentmethod-view",
             },
-            {
-                label: "PaymentMethod",
-                key: "paymentmethod",
-                path: "paymentmethod/paymentmethod-view",
-                filepath: "paymentmethod/paymentmethod-view",
-            },
+           
             {
                 label: "Brands",
                 key: "brands",
@@ -234,6 +229,12 @@ export const baseRouterList = [
                 key: "fabricType",
                 path: "fabricType/fabric-type-view",
                 filepath: "fabricType/fabric-type-view",
+            },
+            {
+                label: "Fabric Sub-Type",
+                key: "fabricSubType",
+                path: "fabricSubType/fabric-sub-type-view",
+                filepath: "fabricSubType/fabric-sub-type-view",
             },
         ],
     },
