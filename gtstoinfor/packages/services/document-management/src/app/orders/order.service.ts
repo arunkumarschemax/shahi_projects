@@ -176,13 +176,13 @@ export class OrdersService {
         }
     }
 
-    // async getOrdersData(): Promise<CommonResponseModel> {
-    //     const details = await this.ordersRepository.getOrdersData()
-    //     if (details)
-    //         return new CommonResponseModel(true, 1, 'data retrived', details)
-    //     else
-    //         return new CommonResponseModel(false, 0, 'No data found');
-    // }
+    async getOrdersData(): Promise<CommonResponseModel> {
+        const details = await this.ordersRepository.find()
+        if (details)
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 
     // async getQtyChangeData(): Promise<CommonResponseModel> {
     //     const data = await this.ordersRepository.getQtyChangeData()

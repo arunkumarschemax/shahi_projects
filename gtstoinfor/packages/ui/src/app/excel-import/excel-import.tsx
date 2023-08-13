@@ -35,7 +35,7 @@ export default function ExcelImport() {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (file && file.type === 'text/csv') {
+    // if (file && file.type === 'text/csv/xlsx') {
       setSelectedFile(event.target.files[0]);
       Papa.parse(event.target.files[0], {
         header: true,
@@ -54,11 +54,11 @@ export default function ExcelImport() {
           }
         }
       });
-    } else {
-      // Display an error message or take appropriate action for invalid file type
-      alert('Please select a valid .csv file.');
-      setSelectedFile(null);
-    }
+    // } else {
+    //   // Display an error message or take appropriate action for invalid file type
+    //   alert('Please select a valid .csv file.');
+    //   setSelectedFile(null);
+    // }
   };
 
   const handleUpload = async () => {
@@ -104,8 +104,8 @@ export default function ExcelImport() {
       // uploadFileList([]);
     },
     beforeUpload: (file: any) => {
-      if (!file.name.match(/\.(csv)$/)) {
-        AlertMessages.getErrorMessage("Only csv files are allowed!");
+      if (!file.name.match(/\.(csv|xlsx|xls|pdf)$/)) {
+        AlertMessages.getErrorMessage("Only csv & xlsx files are allowed!");
         return true;
       }
       var reader = new FileReader();
