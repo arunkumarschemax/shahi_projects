@@ -39,6 +39,9 @@ import { GarmentCategoriesModule } from './garment-category/garment-category.mod
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
 import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
+import { CustomGroupsModule } from './custom groups/custom-groups.module';
+import { ROSLGroupsModule } from './rosl groups/rosl-groups.module';
+import { BuyingHouseModule } from './buying-house/buying-house.module';
 
 
 @Module({
@@ -71,6 +74,9 @@ import { WarehouseModule } from './warehouse/warehouse.module';
     GarmentCategoriesModule,
     ComponentsModule,
     AttributeModule,
+    CustomGroupsModule,
+    ROSLGroupsModule,
+    BuyingHouseModule,
     UsersModule,
     OrdersModule,
     DeliveryTermsModule,

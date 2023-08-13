@@ -70,6 +70,12 @@ import LocationsForm from "./masters/locations/locations-form"
 import LocationsGrid from "./masters/locations/locations-grid"
 import TaxesForm from "./masters/taxes/taxes-form"
 import TaxesGrid from "./masters/taxes/taxes-grid"
+import CustomGroupsGrid from "./masters/custom-groups/custom-groups-grid"
+import CustomGroupsForm from "./masters/custom-groups/custom-groups-form"
+import ROSLGroupsForm from "./masters/rosl-groups/rosl-groups-form"
+import ROSLGroupsGrid from "./masters/rosl-groups/rosl-groups-grid"
+import BuyingHouseForm from "./masters/buying-house/buying-house-form"
+import BuyingHouseGrid from "./masters/buying-house/buying-house-grid"
 
 
 export const AppRoutes = () => {
@@ -219,6 +225,24 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=>{}}
                         updateAttribute={(undefined)=>{}}/>}/>
+                        <Route path="custom-groups/custom-groups-view" element ={<CustomGroupsGrid/>}/>
+                        <Route path='custom-groups/custom-groups-form' element={<CustomGroupsForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateCustomGroups={(undefined)=>{}}/>}/>
+                        <Route path="rosl-groups/rosl-groups-view" element ={<ROSLGroupsGrid/>}/>
+                        <Route path='rosl-groups/rosl-groups-form' element={<ROSLGroupsForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateROSLGroups={(undefined)=>{}}/>}/>
+                        <Route path="buying-house/buying-house-view" element ={<BuyingHouseGrid/>}/>
+                        <Route path='buying-house/buying-house-form' element={<BuyingHouseForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateBuyingHouse={(undefined)=>{}}/>}/>
 
 
                         <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}
