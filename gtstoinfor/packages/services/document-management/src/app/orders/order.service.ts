@@ -150,8 +150,29 @@ export class OrdersService {
                     const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
                     console.log(saveExcelEntity,'saveExcelEntity')
                     // for(const po of data.po_no){
-                    // const documentSave = await this.documentService.createDocList(data.po_no)
-                    // console.log(documentSave,'DocumentsListService')
+                    const poGroups: Record<string, any[]> = {};
+                    for (const data of convertedData) {
+                        console.log(data,'data')
+                        // ... your existing code ...
+            
+                        if (!poGroups[data.po_no]) {
+                            poGroups[data.po_no] = [];
+                        }
+                        poGroups[data.po_no].push(data);
+                        console.log(data,'data11111')
+                    }
+                    for (const poNo in poGroups) {
+                        if (poGroups.hasOwnProperty(poNo)) {
+                            // Grouped data for a specific po_no
+                            const groupedData = poGroups[poNo];
+                            console.log(groupedData,'grouped')
+            
+                            // Call createDocumentList service with groupedData
+                            const documentSave = await this.documentService.createDocList(groupedData)
+                            console.log(documentSave,'DocumentsListService')
+                        }
+                    }
+                    
                     // }
                     // const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
                     // const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
