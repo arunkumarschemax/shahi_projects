@@ -253,6 +253,12 @@ export const baseRouterList = [
                 path: "buying-house/buying-house-view",
                 filepath: "buying-house/buying-house-view",
             },
+            {
+                label: "Commission",
+                key: "commission",
+                path: "commission/commission-view",
+                filepath: "commission/commission-view",
+            },
         ],
     },
 

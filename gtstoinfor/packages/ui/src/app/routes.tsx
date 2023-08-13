@@ -77,6 +77,8 @@ import ROSLGroupsForm from "./masters/rosl-groups/rosl-groups-form"
 import ROSLGroupsGrid from "./masters/rosl-groups/rosl-groups-grid"
 import BuyingHouseForm from "./masters/buying-house/buying-house-form"
 import BuyingHouseGrid from "./masters/buying-house/buying-house-grid"
+import CommissionForm from "./masters/commission/commission-form"
+import CommissionGrid from "./masters/commission/commission-grid"
 
 
 export const AppRoutes = () => {
@@ -244,6 +246,12 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=>{}}
                         updateBuyingHouse={(undefined)=>{}}/>}/>
+                        <Route path="commission/commission-view" element ={<CommissionGrid/>}/>
+                        <Route path='commission/commission-form' element={<CommissionForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateCommission={(undefined)=>{}}/>}/>
 
 
                         <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}

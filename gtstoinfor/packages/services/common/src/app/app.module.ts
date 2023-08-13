@@ -41,6 +41,7 @@ import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
 import { CustomGroupsModule } from './custom groups/custom-groups.module';
 import { ROSLGroupsModule } from './rosl groups/rosl-groups.module';
 import { BuyingHouseModule } from './buying-house/buying-house.module';
+import { CommissionModule } from './commission/commission.module';
 
 
 @Module({
@@ -76,6 +77,7 @@ import { BuyingHouseModule } from './buying-house/buying-house.module';
     CustomGroupsModule,
     ROSLGroupsModule,
     BuyingHouseModule,
+    CommissionModule,
     UsersModule,
     OrdersModule,
     DeliveryTermsModule,
