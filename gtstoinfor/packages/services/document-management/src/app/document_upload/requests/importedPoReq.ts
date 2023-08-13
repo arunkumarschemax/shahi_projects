@@ -22,10 +22,10 @@ export class docreq{
 
 export class req {
     @ApiProperty()
-    poNumber:string[]
+    poNumber:string;
     // @ApiProperty()
     // documents:number[]
-    constructor(poNumber:string[]){
+    constructor(poNumber:string){
         // this.documents=documents
         this.poNumber=poNumber
     }

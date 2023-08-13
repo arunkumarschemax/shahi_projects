@@ -10,6 +10,7 @@ import { AlertMessages, DocumentsListRequest, FileStatusReq, UploadDocumentListD
 import { useForm } from 'antd/es/form/Form';
 import { ColumnsType } from 'antd/es/table';
 import React from 'react';
+import { ColumnProps } from 'antd/lib/table';
 
 
 export default function DocumentListupload() {
@@ -82,7 +83,11 @@ export default function DocumentListupload() {
     fileList: fileList
 
 };
-  const columns: ColumnsType<any> = [
+const handleUpload = (documentListId, info) => {
+  // Handle the file upload for the specific documentListId
+  // You can use the 'documentListId' to identify which row is being interacted with
+};
+  const columns: ColumnProps<any>[] = [
     {
       title: "S.No",
       key: "sno",
@@ -96,30 +101,33 @@ export default function DocumentListupload() {
       width:120,
     },
     {
-      title: 'Choose Document',
-      width:'220',
-      render:(text, data,) =>{
-      return <><Form.Item name={'file'} > 
-        <Upload {...gstUploadFieldProps} 
-          accept='.jpeg,.pdf,.png,.jpg'>
-          <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Choose File</Button>
-          <br /><Typography.Text type="secondary">
-            (Supported formats pdf,jpeg,jpg,png)
-          </Typography.Text>
-        </Upload>
-      </Form.Item>
-      </>
-
-      }
+      title: 'Upload',
+      key: 'upload',
+      render: (text, record) => (
+        <Form.Item name={record.documentListId}>
+          <Upload
+            name={`uploadFile${record.documentListId}`}
+            {...gstUploadFieldProps}
+            accept=".jpeg,.pdf,.png,.jpg"
+            onChange={(info) => handleUpload(record.documentListId, info)}
+          >
+            <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Choose File</Button>
+            <br />
+            <Typography.Text type="secondary">
+              (Supported formats pdf, jpeg, jpg, png)
+            </Typography.Text>
+          </Upload>
+        </Form.Item>
+      ),
     },
     {
       title: 'Upload DOcument',
       width:'80px',
       render:(text, rowData) =>{
       return <>
-      <Form.Item style={{alignItems: 'center'}}>
+      <Form.Item name={`button${rowData.documentListId}`}  style={{alignItems: 'center'}}>
 
-          <Button style={{ marginRight: '10px' }} onClick={() =>{onFinish(rowData)}} disabled={btndisable}>
+          <Button name={`upload${rowData.documentListId}`} style={{ marginRight: '10px' }} onClick={() =>{onFinish(rowData)}} disabled={btndisable}>
             Upload
           </Button>
         </Form.Item></>
@@ -195,7 +203,8 @@ console.log(req,'req')
 
   return(
   <Card title='Document Upload'>
-    <Form form={form} layout='vertical' onFinish={onFinish}>
+    
+    <Form form={form}  layout='vertical' name="control-hooks" onFinish={onFinish}>
       <Row gutter={24}>
       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
           <Form.Item name='customerPo' label='Po Number'
@@ -218,9 +227,10 @@ console.log(req,'req')
       <Row>
       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 24 }}>
          <Card>
-         <Table columns={columns}
+         <Table 
+          rowKey={record => record.documentListId}
+          columns={columns}
           dataSource={docData} 
-         rowKey={record => record.id}
           size='small'
           pagination={{
             onChange(current) {
@@ -232,11 +242,11 @@ console.log(req,'req')
         </Col>
         
       </Row>
-      <Modal width={1000}  centered  open={isModalOpen} onCancel={handleCancel} footer={[]} >
+      {/* <Modal width={1000}  centered  open={isModalOpen} onCancel={handleCancel} footer={[]} >
         <Card title='Upload Document against Customer'>
           <Row gutter={24}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:6}}>
-          {/* <Form.Item name='file'>
+          <Form.Item name='file'>
           <Upload {...gstUploadFieldProps} 
               accept='.jpeg,.pdf,.png,.jpg'>
               <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Upload File</Button>
@@ -244,14 +254,14 @@ console.log(req,'req')
                   (Supported formats pdf,jpeg,jpg,png)
               </Typography.Text>
               </Upload>
-            </Form.Item> */}
+            </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:2 }}>
               <Form.Item>
               <Button type="primary" htmlType="submit" style={{ marginRight: '10px' }}>
                                     Submit
                                 </Button>
-                {/* <Button type='primary' htmlType="submit">Upload</Button> */}
+                <Button type='primary' htmlType="submit">Upload</Button>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:2 }}>
@@ -264,7 +274,7 @@ console.log(req,'req')
           
         </Card>
           
-        </Modal>
+        </Modal> */}
     </Form> 
 
      
