@@ -1,5 +1,5 @@
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Query } from '@nestjs/common';
 import { DocumentRoleMappingRepository } from './repository/document-role-repository';
 import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingInfoDto, DocumentRoleMappingResponseModel, RoleActivateDeactivateDto } from '@project-management-system/shared-models';
 import { DocumentRoleMapping, DocumentRoleMappingMulti } from './models/document-role-mapping.dto';
@@ -12,49 +12,20 @@ export class DocumentRoleMappingService {
         private mappingRepo : DocumentRoleMappingRepository
     ) { }
 
-    async createDocMappingg(documentRoleMapping: DocumentRoleMapping): Promise<DocumentRoleMappingResponseModel> {
-        console.log(documentRoleMapping,'documentRoleMapping')
-        try {
-            const docMapCheck = await this.mappingRepo.findOne({where: {documentId: documentRoleMapping.documentId,roleId:documentRoleMapping.roleId}});
-            if(docMapCheck){
-                return new DocumentRoleMappingResponseModel(false, 0, 'Mapping already exist. ',)
-            }
-            else{
-                const documentRoleMappingEntity = new DocumentRoleMappingEntity();
-                documentRoleMappingEntity.id = documentRoleMapping.docMappingId;
-                documentRoleMappingEntity.roleName = documentRoleMapping.roleName;
-                documentRoleMappingEntity.documentName =documentRoleMapping.documentName;
-                documentRoleMappingEntity.roleId=documentRoleMapping.roleId;
-                documentRoleMappingEntity.documentId = documentRoleMapping.documentId;
-                documentRoleMappingEntity.createdUser = documentRoleMapping.username;
-                const savedResult = await this.mappingRepo.save(documentRoleMappingEntity);
-                const docRoleMapInfo = new DocumentRoleMappingInfoDto(savedResult.id,savedResult.documentId,savedResult.roleName,savedResult.documentName,savedResult.createdUser);
-                return new DocumentRoleMappingResponseModel(true, 0, 'Document Mapped successfully', docRoleMapInfo)
-            }
-        } catch(err) {
-            throw err;
-        }
-    }
-
     async getAllDocMappings(): Promise<AllDocumentRoleMappingsResponseModel> {
         try {
-            const docMaps = await this.mappingRepo.find();
-            if(docMaps.length){
-                let documentRoleMappingInfoDto:DocumentRoleMappingInfoDto[] = [];
-                for(const doc of docMaps){
-                    const docRoleMapInfo = new DocumentRoleMappingInfoDto(doc.id,doc.documentId,doc.roleName,doc.documentName,doc.createdUser,doc.isActive,doc.versionFlag);
-                    documentRoleMappingInfoDto.push(docRoleMapInfo);
-                }
-                return new AllDocumentRoleMappingsResponseModel(true, 0, 'Document Mapped successfully', documentRoleMappingInfoDto)
-            }
-            else{
-                return new AllDocumentRoleMappingsResponseModel(false, 0, "Document Maps doesn't exist.",)
+
+            const quuery = 'select drm.role_id as roleId, drm.id as docMappingId,drm.document_id as documentId,drm.role_name as roleName,drm.is_active as isActive,drm.version_flag as versionFlag,d.document_name as documentName from document_role_mapping drm left join document d on d.id=drm.document_id'
+            const result = await this.mappingRepo.query(quuery)
+            if(result){
+                return new AllDocumentRoleMappingsResponseModel(true, 0, 'Document Mapped successfully', result)
+            }else{
+                return new AllDocumentRoleMappingsResponseModel(true, 0, 'not found', [])
             }
         } catch(err) {
             throw err;
         }
     }
-
 
       async activateOrDeactivate(req: RoleActivateDeactivateDto): 
       Promise<AllDocumentRoleMappingsResponseModel> {
@@ -88,37 +59,36 @@ export class DocumentRoleMappingService {
 
     }
 
+    async createDocMapping(documentRoleMapping: DocumentRoleMappingMulti): Promise<DocumentRoleMappingResponseModel> {
+        console.log(documentRoleMapping,'documentRoleMapping')
+        try {
+            // const docMapCheck = await this.mappingRepo.findOne({where: {documentId: documentRoleMapping.documentId,roleId:documentRoleMapping.roleId}});
+            // let docMapCheck
 
-
-
-    // async createDocMapping(documentRoleMapping: DocumentRoleMappingMulti): Promise<DocumentRoleMappingResponseModel> {
-    //     console.log(documentRoleMapping,'documentRoleMapping')
-    //     try {
-    //         // const docMapCheck = await this.mappingRepo.findOne({where: {documentId: documentRoleMapping.documentId,roleId:documentRoleMapping.roleId}});
-    //         let docMapCheck
-
-    //         if(docMapCheck){
-    //             return new DocumentRoleMappingResponseModel(false, 0, 'Mapping already exist. ',)
-    //         }
-    //         else{
-    //             for(const req of documentRoleMapping.documentId){
-                    
-    //             }
-    //             const documentRoleMappingEntity = new DocumentRoleMappingEntity();
-    //             documentRoleMappingEntity.id = documentRoleMapping.docMappingId;
-    //             documentRoleMappingEntity.roleName = documentRoleMapping.roleName;
-    //             documentRoleMappingEntity.documentName =documentRoleMapping.documentName;
-    //             documentRoleMappingEntity.roleId=documentRoleMapping.roleId;
-    //             documentRoleMappingEntity.documentId = documentRoleMapping.documentId;
-    //             documentRoleMappingEntity.createdUser = documentRoleMapping.username;
-    //             const savedResult = await this.mappingRepo.save(documentRoleMappingEntity);
-    //             const docRoleMapInfo = new DocumentRoleMappingInfoDto(savedResult.id,savedResult.documentId,savedResult.roleName,savedResult.documentName,savedResult.createdUser);
-    //             return new DocumentRoleMappingResponseModel(true, 0, 'Document Mapped successfully', docRoleMapInfo)
-    //         }
-    //     } catch(err) {
-    //         throw err;
-    //     }
-    // }
+            // if(docMapCheck){
+            //     return new DocumentRoleMappingResponseModel(false, 0, 'Mapping already exist. ',)
+            // }
+            // else{
+                const documentRoleMappingEntityArr : DocumentRoleMappingEntity[] = []
+                 
+                for(const req of documentRoleMapping.documentId){            
+                    const documentRoleMappingEntity = new DocumentRoleMappingEntity();
+                    documentRoleMappingEntity.id = documentRoleMapping.docMappingId;
+                    documentRoleMappingEntity.roleName = documentRoleMapping.roleName;
+                    documentRoleMappingEntity.documentName =documentRoleMapping.documentName;
+                    documentRoleMappingEntity.roleId=documentRoleMapping.roleId;
+                    documentRoleMappingEntity.documentId = req;
+                    documentRoleMappingEntity.createdUser = documentRoleMapping.username;
+                    console.log(documentRoleMappingEntity)
+                    documentRoleMappingEntityArr.push(documentRoleMappingEntity)
+                }
+                const savedResult = await this.mappingRepo.save(documentRoleMappingEntityArr);
+               return new DocumentRoleMappingResponseModel(true, 0, 'Document Mapped successfully', undefined)
+            // }
+        } catch(err) {
+            throw err;
+        }
+    }
 
 }
 

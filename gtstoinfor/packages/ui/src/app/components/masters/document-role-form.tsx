@@ -66,7 +66,7 @@ const getDocumentData =() =>{
         roleMappingService.createDocMapping(req).then(res =>{
             if(res.status){
              message.success(res.internalMessage)
-                // navigate("/routes-view")
+                navigate("/masters/role-mapping-grid")
                 handleReset()
             }else{
               message.error(res.internalMessage)
@@ -76,8 +76,8 @@ const getDocumentData =() =>{
    
   }
   const docOnchange =(e:any,option:any) =>{
-    console.log(e)
-    form.setFieldsValue({documentName:option?.name})
+    console.log(option.type)
+    form.setFieldsValue({documentName:option?.type})
   
   }
   const roleOnchange =(e:any,option:any) =>{
@@ -130,12 +130,18 @@ const getDocumentData =() =>{
                                     placeholder="select DocumentName" 
                                     onChange={docOnchange}
                                     >
-                                      {roleData?.map(obj =>{
-                                            return <Option key={obj.documentCategoryId} value={obj.documentCategoryId}  name={obj.documentName}>{obj.documentName}</Option>
+                                      {roleData?.map((obj:any) =>{
+                                            return <Option key={obj.documentCategoryId} value={obj.documentCategoryId} type={obj.documentName}>{obj.documentName}</Option>
                                          })}
                                 </Select>
                             </Form.Item>
-                            <Form.Item name='documentName' hidden><Input/></Form.Item>
+                            <Col>
+                            <Form.Item name='documentName' >
+                              {/* <Input/> */}
+                              <Select mode='multiple'></Select>
+                              </Form.Item>
+
+                            </Col>
                         </Col>
                         </Row>                    
                         <Row justify="end">

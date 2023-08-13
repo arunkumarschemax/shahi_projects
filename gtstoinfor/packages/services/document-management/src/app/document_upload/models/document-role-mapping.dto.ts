@@ -6,7 +6,7 @@ export class DocumentRoleMapping extends CommonRequestAttrs {
     @ApiProperty()
     docMappingId: number;
     @ApiProperty()
-    documentId: number;
+    documentId: number[];
     @ApiProperty()
     roleName: string;
     @ApiProperty()
@@ -14,7 +14,7 @@ export class DocumentRoleMapping extends CommonRequestAttrs {
     @ApiProperty()
     roleId: number;
 
-    constructor(docMappingId: number, documentId: number, roleName: string, documentName: string,roleId:number, username: string) {
+    constructor(docMappingId: number, documentId: number[], roleName: string, documentName: string,roleId:number, username: string) {
         super(username);
         this.docMappingId = docMappingId;
         this.documentId = documentId;
