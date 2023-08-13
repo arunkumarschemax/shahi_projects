@@ -241,7 +241,7 @@ export function RoleWiseDocumentsGraph() {
 
     tooltip: {
       formatter: function () {
-        return '<b>' + this.x + '</b><br/>' + 'No.of Assets: ' + this.y + '<br/>'
+        return '<b>' + this.x + '</b><br/>' + 'No.of Documents: ' + this.y + '<br/>'
 
       }
     },
