@@ -39,7 +39,6 @@ import { ProfitControlHeadModule } from './profit-control-head/profit-control-he
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { FabricTypeModule } from './fabric-types/fabric-type.module';
 import { FabricSubTypeModule } from './fabric-sub-types/fabric-sub-type.module';
-import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
 
 
 @Module({
@@ -47,11 +46,11 @@ import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
-      host: 'localhost',
-      port: 3308,
-      username: 'root',
-      password: '',
-      database: 'crm',
+      host: appConfig.database.host,
+      port: appConfig.database.port,
+      username: appConfig.database.username,
+      password: appConfig.database.password,
+      database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -79,7 +78,7 @@ import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
     DivisionModule,
     FabricSubTypeModule,
     FabricTypeModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,LiscenceTypedModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],
   providers: [AppService],
 })
