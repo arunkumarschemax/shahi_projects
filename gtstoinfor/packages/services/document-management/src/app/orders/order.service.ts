@@ -10,6 +10,9 @@ import {GenericTransactionManager } from '../../../../common/src/typeorm-transac
 import { OrdersEntity } from './entities/order.entity';
 import { FileUploadEntity } from './entities/file-upload.entity';
 import { SaveOrderDto } from './models/order.dto';
+import { DocumentService } from '../document_upload/document.service';
+import { DocumentsListService } from '../document_upload/upload_document.service';
+import { DocumentsListRequest } from '../document_upload/requests/document-list.request';
 let moment = require('moment');
 moment().format();
 
@@ -22,11 +25,14 @@ export class OrdersService {
         private fileUploadRepo: FileUploadRepository,
         @InjectDataSource()
         private dataSource: DataSource,
-        @InjectEntityManager() private readonly entityManager: EntityManager
+        @InjectEntityManager() private readonly entityManager: EntityManager,
+        private documentService : DocumentsListService
 
     ) { }
 
     async saveOrdersData(formData: any, id: number): Promise<CommonResponseModel> {
+        console.log(formData,'formData')
+        console.log(id,'id')
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
             await transactionManager.startTransaction()
@@ -36,6 +42,7 @@ export class OrdersService {
                 for (const key in obj) {
                     const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_');
                     updatedObj[newKey] = obj[key];
+                    console.log(updatedObj,'updatedObj')
                 }
                 return updatedObj;
             });
@@ -51,15 +58,19 @@ export class OrdersService {
                         var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
                         updatedObj[key] = value.replace(regexPattern, null);
                         updatedObj[key] = Buffer.from(value, 'utf-8').toString()
+                        console.log(updatedObj,'updatedObj')
                     }
                 }
                 return updatedObj;
             });
 
             for (const data of convertedData) {
-                const dtoData = new SaveOrderDto(data.id, data.buyer, data.challanNo, data.invoiceNo, data.style, data.poNo, data.date, data.dest, data.tcStatus, data.shipQty, data.ctns, data.createdUser, data.updatedUser, data.createdAt, data.updatedAt, data.version, data.fileId)
+                console.log(data,'data=======')
+                const dtoData = new SaveOrderDto(data.id, data.buyer, data.challan_no, data.invoice_no, data.style, data.po_no, data.date, data.dest, data.tc_status, data.ship_qty, data.ctns, data.created_user, data.updated_user, data.created_at, data.updated_at, 1, id)
+                console.log(dtoData,'dtoData')
                 if (dtoData.id != null) {
                     const details = await this.ordersRepository.findOne({ where: { id: dtoData.id } })
+                    console.log(details,'details')
                     //const versionDetails = await this.ordersChildRepo.getVersion(dtoData.id)
                     // let version = 1;
                     // if (versionDetails.length > 0) {
@@ -71,12 +82,15 @@ export class OrdersService {
                         const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ id: dtoData.id }, {
                             buyer: dtoData.buyer, challanNo: dtoData.challanNo, invoiceNo: dtoData.invoiceNo, style: dtoData.style, poNo: dtoData.poNo, date: dtoData.date, dest: dtoData.dest, tcStatus: dtoData.tcStatus, shipQty: dtoData.shipQty, ctns: dtoData.ctns, fileId: id
                         })
+                        console.log(updateOrder,'updateOrder')
                         if (!updateOrder.affected) {
                             await transactionManager.releaseTransaction();
                             return new CommonResponseModel(false, 0, 'Something went wrong in order update')
                         }
                         const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
+                        console.log(convertedExcelEntity,'convertedExcelEntity')
                         const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
+                        console.log(saveExcelEntity)
                         if (saveExcelEntity) {
                             //difference insertion to order diff table
                             const existingDataKeys = Object.keys(details)
@@ -128,18 +142,42 @@ export class OrdersService {
                                 }
                             }
                         }
-                    } else {
-                        dtoData.version = 1
-                        const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
-                        const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
-                        // const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
-                        // const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
-                        // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
-                        if (!saveExcelEntity) {
-                            flag.add(false)
-                            await transactionManager.releaseTransaction();
-                            break;
+                    } 
+                }else {
+                    dtoData.version = 1
+                    const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
+                    console.log(convertedExcelEntity,'convertedExcelEntity')
+                    const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
+                    console.log(saveExcelEntity,'saveExcelEntity')
+                    // for(const po of data.po_no){
+                    const poGroups: Record<string, any[]> = {};
+                    for (const data of convertedData) {
+                        console.log(data,'data')
+            
+                        if (!poGroups[data.po_no]) {
+                            poGroups[data.po_no] = [];
                         }
+                        poGroups[data.po_no].push(data);
+                        console.log(data,'data11111')
+                    }
+                    for (const poNo in poGroups) {
+                        if (poGroups.hasOwnProperty(poNo)) {
+                            const groupedData = poGroups[poNo];
+                            console.log(groupedData,'grouped')
+            
+                            const documentSave = await this.documentService.createDocList(groupedData)
+                            console.log(documentSave,'DocumentsListService')
+                        }
+                    }
+                    
+                    // }
+                    // const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
+                    // const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
+                    // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
+                    if (!saveExcelEntity) {
+                        flag.add(false)
+                        await transactionManager.releaseTransaction();
+                        break;
                     }
                 }
             }
@@ -157,7 +195,7 @@ export class OrdersService {
     }
 
     async getOrdersData(): Promise<CommonResponseModel> {
-        const details = await this.ordersRepository.getOrdersData()
+        const details = await this.ordersRepository.find()
         if (details)
             return new CommonResponseModel(true, 1, 'data retrived', details)
         else
@@ -385,5 +423,11 @@ export class OrdersService {
     //     }
     //     return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
     // }
+
+    async getRoleWiseOrders() : Promise<CommonResponseModel>{
+        let query = `SELECT dl.role_id , dr.role_name , SUM( IF(dl.is_uploaded=1, 1 , 0)) AS Completed,SUM( IF(dl.is_uploaded=0, 1 , 0)) AS Pending FROM documents_list dl LEFT JOIN document_role_mapping dr ON dr.role_id = dl.role_id GROUP BY dl.role_id`;
+        const data = await this.dataSource.query(query);
+        return new CommonResponseModel(true,0,'Data Retrived Successfully',data)
+    }
 
 }

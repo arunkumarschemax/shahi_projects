@@ -85,7 +85,7 @@ const ItemChanges = () =>{
         }
     ]
     return(
-        <Card title='TC Order'>
+        <Card title='Document Status'>
             <Table columns={columns} dataSource={dataSource} pagination={false}/>
         </Card>
     )

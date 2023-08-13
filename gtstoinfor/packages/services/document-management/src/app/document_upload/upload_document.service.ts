@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DocumentsList } from "./entities/upload-document-entity";
 import { DocumentsListRepository } from "./repository/documents-list.repository";
 import { UploadDocumentListAdapter } from "./repository/upload-document-adapter";
@@ -12,15 +12,17 @@ import {OrdersRepository} from '../../../../common/src/app/orders/repository/ord
 import { DocumentRoleMappingRepository } from "./repository/document-role-repository";
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
+import { DataSource } from "typeorm";
 @Injectable()
 export class DocumentsListService {
     constructor(
         @InjectRepository(DocumentsList)
         private documentsListRepository: DocumentsListRepository,
         private documentsListAdapter: UploadDocumentListAdapter,
-        private ordersRepo:OrdersRepository,
         private documentRoleMappingRepo:DocumentRoleMappingRepository,
-        private documentRepo:DocumentRepository
+        private documentRepo:DocumentRepository,
+        @InjectDataSource()
+        private dataSource: DataSource,
 
       ) {}
 
@@ -101,7 +103,7 @@ export class DocumentsListService {
     async getPoNumberDropdown():Promise<UploadDocumentListResponseModel>{
         try{
             const query ='select po_no as poNumber from orders'
-            const result = await this.ordersRepo.query(query)
+            const result = await this.dataSource.query(query)
             return new UploadDocumentListResponseModel(true,1,'Data retrived Sucessfully',result)
         }
         catch(err){
@@ -112,8 +114,9 @@ export class DocumentsListService {
 
     async getAllDocumentDetails():Promise<UploadDocumentListResponseModel>{
         try{
-            const query='SELECT d.id as documentCategoryId,drl.id,role_name AS roleName,d.document_name AS documentName,documents_list_id AS documentListId,customer_po AS poNumber,order_id AS orderId,file_name AS fileName,file_path AS filePath,is_uploaded AS isUploaded FROM document_role_mapping drl      LEFT JOIN document d ON d.id=document_id LEFT JOIN documents_list dl ON dl.document_category_id=drl.document_id group by drl.document_id'
-            const result = await this.documentRoleMappingRepo.query(query)
+            // const query='SELECT d.id as documentCategoryId,dl.documents_list_id AS documentList,role_name AS roleName,d.document_name AS documentName,documents_list_id AS documentListId,customer_po AS poNumber,order_id AS orderId,file_name AS fileName,file_path AS filePath,is_uploaded AS isUploaded FROM document_role_mapping drl LEFT JOIN document d ON d.id=document_id LEFT JOIN documents_list dl ON dl.document_category_id=drl.document_id group by drl.document_id'
+            const sqlQuery = "Select d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentList, from document_list dl left join document d on d.id = dl.document_category_id"
+            const result = await this.documentRoleMappingRepo.query(sqlQuery)
             if(result){
                 return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',result)
             }else{
@@ -128,7 +131,7 @@ export class DocumentsListService {
 
     async getDocumentOrderIds():Promise<UploadDocumentListResponseModel>{
         try{
-            const query ='select id from document'
+            const query ='select id AS documentCategoryId from document'
             const result = await this.documentRepo.query(query)
             console.log(result)
             return new UploadDocumentListResponseModel(true,1,'retrived sucessfully',result)
@@ -141,15 +144,12 @@ export class DocumentsListService {
         async createDocList(req?:req[]):Promise<UploadDocumentListResponseModel>{
             try{
                 const docIds = await this.getDocumentOrderIds();
-                console.log(docIds.data,'docids')
-                for(const request of req){
-                    for(const poNumber of request.poNumber){
+                for(const poNo of req){
+                    console.log(poNo)
+                    for(const doc of docIds.data){
                         const entity = new DocumentsList()
-                        entity.customerPo=poNumber
-                        // entity.documentCategoryId=docIds.data
-                        // for(const doc of request.documents){
-                        //     entity.documentCategoryId=doc
-                        // }
+                        entity.customerPo=poNo.poNumber
+                        entity.documentCategoryId=doc.documentCategoryId
                         const save = await this.documentsListRepository.save(entity)
                     }    
                 }

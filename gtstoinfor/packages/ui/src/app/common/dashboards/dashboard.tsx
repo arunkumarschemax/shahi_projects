@@ -1,7 +1,7 @@
 
 import { Card, Col, Row, theme } from "antd"
 import { UnitWiseOrderGraph } from "./unit-wise-orders"
-import { DivisionWiseOrders } from "./division-wise-orders"
+import { RoleWiseDocumentsGraph } from "./division-wise-orders"
 import ChangesGrid from "../../excel-import/changes-grid"
 import ItemChanges from "./item-change"
 import VersionChanges from "../../excel-import/version-wise-table"
@@ -24,7 +24,7 @@ export const Dashboard = () => {
                     </Col>
                     <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>
                         <div >
-                            <DivisionWiseOrders />
+                            <RoleWiseDocumentsGraph />
                         </div>
                     </Col>
                 </Row>

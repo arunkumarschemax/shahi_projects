@@ -50,7 +50,7 @@ export class OrdersEntity {
         //length: '6'
 
     })
-    date: Date;
+    date: any;
 
     @Column('varchar', {
         nullable: true,
