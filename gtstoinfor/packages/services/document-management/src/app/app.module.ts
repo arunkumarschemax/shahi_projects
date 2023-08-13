@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { DocumentUploadModule } from './document_upload/document_upload.module';
 import { appConfig } from '../../../common/config';
+import { OrdersModule } from './orders/order.module';
 
 
 @Module({
@@ -24,7 +25,7 @@ import { appConfig } from '../../../common/config';
         connectionLimit: 20
       }
     }),
-    DocumentUploadModule],
+    DocumentUploadModule,OrdersModule],
   controllers: [AppController],
   providers: [AppService],
 })
