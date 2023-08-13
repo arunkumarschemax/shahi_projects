@@ -8,9 +8,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FactoryRepository } from './repository/factory.repository';
 import { AppDataSource } from '../app-datasource';
 import { AppDataSourceModule } from '../app-datasource.module';
+import { M3GenericService } from '@project-management-system/shared-services';
 
 @Module({
-  providers: [FactoriesService, ApplicationExceptionHandler,FactoryRepository,FactoryAdapter],
+  providers: [FactoriesService, ApplicationExceptionHandler,FactoryRepository,FactoryAdapter,M3GenericService],
   imports: [
     TypeOrmModule.forFeature([
     FactoriesEntity

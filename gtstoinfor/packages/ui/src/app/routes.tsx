@@ -74,6 +74,7 @@ import FabricTypeForm from "./masters/fabric-type/fabric-type-form"
 import FabricTypeGrid from "./masters/fabric-type/fabric-type-grid"
 import FabricSubTypeGrid from "./masters/fabric-sub-types/fabric-sub-types-view"
 import FabricSubTypeForm from "./masters/fabric-sub-types/fabric-sub-type-form"
+import SettingsForm from "./masters/settings/settings-form"
 
 
 export const AppRoutes = () => {
@@ -253,6 +254,7 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateData={(undefined) => { }}/>} />
                          <Route path='locations/locations-view' element={<LocationsGrid/>}/>
+                         <Route path='settings/settings-form' element={<SettingsForm/>}/>
 
                     </Route>
                     

@@ -236,6 +236,12 @@ export const baseRouterList = [
                 path: "fabricSubType/fabric-sub-type-view",
                 filepath: "fabricSubType/fabric-sub-type-view",
             },
+            {
+                label: "Settings",
+                key: "settings",
+                path: "settings/settings-form",
+                filepath: "settings/settings-form",
+            },
         ],
     },
 

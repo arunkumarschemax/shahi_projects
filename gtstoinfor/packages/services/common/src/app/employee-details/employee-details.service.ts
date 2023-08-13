@@ -5,11 +5,13 @@ import { AllEmployeeDetailsResponseModel } from '@project-management-system/shar
 import { EmplyeeDetails } from './dto/employee-details-entity';
 import { EmployeeIdReq } from './dto/employee-id-req';
 import { EmployeeDetailsResponse } from './dto/employee-details-request';
+import { DepartmentReq } from './dto/department-name.req';
 
 @Injectable()
 export class EmployeeDetailsService {
     constructor(
         private employeeDetailsRepo: EmployeeDetailsRepo,
+        // private departmentRepo : DepartmentRepo,
     ) { }
     
     async createEmployee(req: EmployeeDetailsResponse, isUpdate: boolean): Promise<AllEmployeeDetailsResponseModel> {
@@ -100,4 +102,17 @@ export class EmployeeDetailsService {
         }
 
     }
+
+    async getAllActiveEmploeesByDepartment(req:DepartmentReq):Promise<AllEmployeeDetailsResponseModel>{
+        // const getDeparmentId = await this.departmentRepo.find({where:{department:req.department}})
+        const employee = await this.employeeDetailsRepo.find({
+            // where:{isActive:true,deparmentInfo:{departmentId:req.departmentId}},
+            order:{firstName:'ASC'}})
+        if(employee.length >0){
+            return new AllEmployeeDetailsResponseModel(true,1,'Employees Retrived Sucessfully',employee)
+        }else{
+            return new AllEmployeeDetailsResponseModel(false,0,'No  Employees Found ')
+
+        }
     }
+}
