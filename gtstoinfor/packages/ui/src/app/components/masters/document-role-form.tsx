@@ -86,7 +86,7 @@ const getDocumentData =() =>{
   }
     return (
         <div>
-            <Card title="Roles Mapping "
+            <Card title="Document Role Mapping "
         extra={<span><Button onClick={() => navigate('/masters/role-mapping-grid')} type={'primary'}>View</Button></span>}>          
                 <Form
                     form={form}
@@ -136,7 +136,7 @@ const getDocumentData =() =>{
                                 </Select>
                             </Form.Item>
                             <Col>
-                            <Form.Item name='documentName' >
+                            <Form.Item name='documentName' hidden>
                               {/* <Input/> */}
                               <Select mode='multiple'></Select>
                               </Form.Item>
