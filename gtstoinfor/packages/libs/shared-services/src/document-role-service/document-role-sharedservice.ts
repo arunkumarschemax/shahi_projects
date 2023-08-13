@@ -1,7 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { DocumentRoleMappingResponseModel, RoleDto } from "@project-management-system/shared-models";
+import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingDto, DocumentRoleMappingResponseModel, RoleActivateDeactivateDto, RoleDto } from "@project-management-system/shared-models";
 import {DeleteDto} from '../../../shared-models/src/document-management/delete-dto'
-export default class RoleSharedService { 
+import { CommonAxiosService } from "../common-axios-service-prs";
+export default class RoleSharedService extends CommonAxiosService{ 
+  private url = "/doc-upload";
   
   async createForm(formdataDto: RoleDto, config?: AxiosRequestConfig): Promise<DocumentRoleMappingResponseModel> {
     console.log(formdataDto, "cccc");
@@ -10,6 +12,7 @@ export default class RoleSharedService {
       config
     );
   }
+
   
   async getAllRoleNames(): Promise<DocumentRoleMappingResponseModel> {
     console.log('like')
@@ -28,6 +31,21 @@ export default class RoleSharedService {
       config
     );
   }
+
+
+  async createDocMapping(dto: DocumentRoleMappingDto): Promise<DocumentRoleMappingResponseModel> {
+    return this.axiosPostCall(this.url + "/createDocMapping",dto)
+}
+
+
+async getAllDocMappings(): Promise<AllDocumentRoleMappingsResponseModel> {
+  return this.axiosPostCall(this.url + "/getAllDocMappings")
+}
+
+async activateOrDeactivate(req:RoleActivateDeactivateDto): Promise<AllDocumentRoleMappingsResponseModel> {
+  return this.axiosPostCall(this.url + "/activateOrDeactivate",req)
+}
+
 
   
 }

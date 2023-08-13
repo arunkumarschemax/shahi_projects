@@ -11,12 +11,39 @@ export class DocumentRoleMapping extends CommonRequestAttrs {
     roleName: string;
     @ApiProperty()
     documentName: string;
+    @ApiProperty()
+    roleId: number;
 
-    constructor(docMappingId: number, documentId: number, roleName: string, documentName: string, username: string) {
+    constructor(docMappingId: number, documentId: number, roleName: string, documentName: string,roleId:number, username: string) {
         super(username);
         this.docMappingId = docMappingId;
         this.documentId = documentId;
         this.roleName = roleName;
         this.documentName = documentName;
+        this.roleId=roleId
+    }
+}
+
+
+export class DocumentRoleMappingMulti extends CommonRequestAttrs {
+
+    @ApiProperty()
+    docMappingId: number;
+    @ApiProperty()
+    documentId: number[];
+    @ApiProperty()
+    roleName: string;
+    @ApiProperty()
+    documentName: string;
+    @ApiProperty()
+    roleId: number;
+
+    constructor(docMappingId: number, documentId: number[], roleName: string, documentName: string,roleId:number, username: string) {
+        super(username);
+        this.docMappingId = docMappingId;
+        this.documentId = documentId;
+        this.roleName = roleName;
+        this.documentName = documentName;
+        this.roleId=roleId
     }
 }
