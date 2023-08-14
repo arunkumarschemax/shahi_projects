@@ -5,6 +5,7 @@ import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingInfoDto, Docum
 import { DocumentRoleMapping, DocumentRoleMappingMulti } from './models/document-role-mapping.dto';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { DocumentRoleMappingEntity } from './entities/document-role-entity';
+import { In } from 'typeorm';
 
 @Injectable()
 export class DocumentRoleMappingService {
@@ -62,13 +63,12 @@ export class DocumentRoleMappingService {
     async createDocMapping(documentRoleMapping: DocumentRoleMappingMulti): Promise<DocumentRoleMappingResponseModel> {
         console.log(documentRoleMapping,'documentRoleMapping')
         try {
-            // const docMapCheck = await this.mappingRepo.findOne({where: {documentId: documentRoleMapping.documentId,roleId:documentRoleMapping.roleId}});
-            // let docMapCheck
-
-            // if(docMapCheck){
-            //     return new DocumentRoleMappingResponseModel(false, 0, 'Mapping already exist. ',)
-            // }
-            // else{
+            const docMapCheck = await this.mappingRepo.findOne({where: {documentId :In([documentRoleMapping.documentId])}});
+            console.log(docMapCheck);
+            if(docMapCheck){
+                return new DocumentRoleMappingResponseModel(false, 0, 'Mapping already exist. ',)
+            }
+            else{
                 const documentRoleMappingEntityArr : DocumentRoleMappingEntity[] = []
                  
                 for(const req of documentRoleMapping.documentId){            
@@ -84,7 +84,7 @@ export class DocumentRoleMappingService {
                 }
                 const savedResult = await this.mappingRepo.save(documentRoleMappingEntityArr);
                return new DocumentRoleMappingResponseModel(true, 0, 'Document Mapped successfully', undefined)
-            // }
+            }
         } catch(err) {
             throw err;
         }
