@@ -1,6 +1,6 @@
 
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, PoRoleRequest, orderColumnValues } from '@project-management-system/shared-models';
 import { DataSource, EntityManager, getConnection } from 'typeorm';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { OrdersAdapter } from './adapters/order.adapter';
@@ -17,7 +17,7 @@ import { appConfig } from 'packages/services/document-management/config';
 import { error } from 'console';
 let moment = require('moment');
 moment().format();
-
+import { req } from '../document_upload/requests/importedPoReq';
 @Injectable()
 export class OrdersService {
 
@@ -33,21 +33,30 @@ export class OrdersService {
     ) { }
 
     async saveOrdersData(formData: any, id: number): Promise<CommonResponseModel> {
-        console.log(formData, 'formData')
-        console.log(id, 'id')
+        // console.log(formData, 'formData')
+        // console.log(id, 'id')
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
             await transactionManager.startTransaction()
             const flag = new Set()
+            const poNumbers = new Map<string, string[]>()
             const updatedArray = formData.map((obj) => {
+                poNumbers.set(obj.po_no, obj.po_no)
                 const updatedObj = {};
                 for (const key in obj) {
                     const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_');
                     updatedObj[newKey] = obj[key];
-                    console.log(updatedObj, 'updatedObj')
+                    // console.log(updatedObj, 'updatedObj')
                 }
                 return updatedObj;
             });
+            const poRequest : req[] =[];
+            for(const res of poNumbers){
+                if(res[0] != undefined){
+                    poRequest.push(new req(res[0]));
+                }
+            }
+            console.log(poRequest);
 
             const convertedData = updatedArray.map((obj) => {
                 const updatedObj = {};
@@ -74,12 +83,6 @@ export class OrdersService {
                 if (dtoData.id != null) {
                     const details = await this.ordersRepository.findOne({ where: { id: dtoData.id } })
                     console.log(details, 'details')
-                    //const versionDetails = await this.ordersChildRepo.getVersion(dtoData.id)
-                    // let version = 1;
-                    // if (versionDetails.length > 0) {
-                    //     version = Number(versionDetails.length) + 1
-                    // }
-                    // dtoData.version = version
                     if (details) {
                         // const updatedData = this.ordersAdapter.convertDtoToEntity(data);
                         const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ id: dtoData.id }, {
@@ -100,48 +103,6 @@ export class OrdersService {
                             const currentDataKeys = Object.keys(dtoData)
                             for (const existingDataKey of existingDataKeys) {
                                 if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId') {
-                                    // const orderDiffObj = new OrdersDifferenceEntity();
-                                    // if (existingDataKey === 'lastUpdateDate' || existingDataKey === 'requestedWhDate' || existingDataKey === 'contractedDate' || existingDataKey === 'EXF') {
-                                    //     console.log(details[existingDataKey], 'existingOld')
-                                    //     const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
-                                    //     console.log(oldValue, 'oldValue');
-                                    //     console.log(dtoData[existingDataKey], 'existingNew')
-                                    //     const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
-                                    //     console.log(newValue, 'newValue')
-                                    //     orderDiffObj.oldValue = details[existingDataKey]
-                                    //     orderDiffObj.newValue = dtoData[existingDataKey]
-                                    //     orderDiffObj.columnName = orderColumnValues[existingDataKey]
-                                    //     orderDiffObj.displayName = existingDataKey
-                                    //     orderDiffObj.id = dtoData.id
-                                    //     orderDiffObj.version = dtoData.version
-                                    //     orderDiffObj.fileId = id
-                                    //     if (oldValue != newValue) {
-                                    //         const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
-                                    //         if (!orderDiffSave) {
-                                    //             flag.add(false)
-                                    //             await transactionManager.releaseTransaction();
-                                    //             break;
-                                    //         }
-                                    //     } else {
-                                    //         continue;
-                                    //     }
-                                    // } else {
-                                    //     orderDiffObj.oldValue = details[existingDataKey]
-                                    //     orderDiffObj.newValue = dtoData[existingDataKey]
-                                    //     orderDiffObj.columnName = orderColumnValues[existingDataKey]
-                                    //     orderDiffObj.displayName = existingDataKey
-                                    //     orderDiffObj.id = dtoData.id
-                                    //     orderDiffObj.version = dtoData.version
-                                    //     orderDiffObj.fileId = id
-                                    //     if (orderDiffObj.oldValue != orderDiffObj.newValue) {
-                                    //         const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
-                                    //         if (!orderDiffSave) {
-                                    //             flag.add(false)
-                                    //             await transactionManager.releaseTransaction();
-                                    //             break;
-                                    //         }
-                                    //     }
-                                    // }
                                 }
                             }
                         }
@@ -202,10 +163,16 @@ export class OrdersService {
                 }
             }
             console.log(requestData,'requestData')
-            const documentSave = await this.documentService.createDocList(requestData);
             if (!flag.has(false)) {
-                await transactionManager.completeTransaction()
-                return new CommonResponseModel(true, 1, 'Data saved sucessfully')
+                const documentSave = await this.documentService.createDocList(poRequest);
+                if(!documentSave.status){
+                    flag.add(false)
+                    await transactionManager.releaseTransaction();
+                }
+                else{
+                    await transactionManager.completeTransaction()
+                    return new CommonResponseModel(true, 1, 'Data saved sucessfully')
+                }
             } else {
                 await transactionManager.releaseTransaction()
                 return new CommonResponseModel(false, 0, 'Something went wrong')
