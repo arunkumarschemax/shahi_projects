@@ -158,8 +158,6 @@ export class DpomService {
     }
 
     async getFactoryReportData(): Promise<CommonResponseModel> {
-        // let query ='SELECT po_number , po_line_item_number ,  product_code FROM `dpom`';
-
         const details = await this.dpomRepository.find();
         console.log(details)
         return new CommonResponseModel(true, 1, 'data retrived', details)
@@ -175,5 +173,12 @@ export class DpomService {
         }else{
             return 'no data found';
         }
+    }
+
+    async getShipmentTrackerReport(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.find();
+        console.log(details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+   
     }
 }

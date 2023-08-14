@@ -16,6 +16,7 @@ import VersionChanges from "./excel-import/version-wise-table"
 import PhaseWiseData from "./excel-import/phase-wise-data"
 import PoFileImport from "./nike/po-file-import"
 import FactoryPPMReport from "./nike/factory-ppm-report"
+import ShipmentTrackerReport from "./nike/shipment-tracker-report"
 
 
 export const AppRoutes = () => {
@@ -45,6 +46,8 @@ export const AppRoutes = () => {
                 <Route path='/nike'>
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='factory-report' element={<FactoryPPMReport />} />
+                        <Route path='shipment-report' element={<ShipmentTrackerReport />} />
+                      
                     </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
@@ -81,6 +84,9 @@ export const AppRoutes = () => {
                     <Route path='/nike'>
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='factory-report' element={<FactoryPPMReport/>} />
+                        <Route path='shipment-report' element={<ShipmentTrackerReport />} />
+                       
+                      
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

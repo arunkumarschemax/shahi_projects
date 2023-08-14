@@ -7,6 +7,7 @@ import Highlighter from 'react-highlight-words';
 import Item from 'antd/es/descriptions/Item';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
+import { ColumnsType } from 'antd/es/table';
 
 
 const FactoryPPMReport = () => {
@@ -38,6 +39,7 @@ const FactoryPPMReport = () => {
             setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Unaccepted"))
         }else if(values.DPOMLineItemStatus === "Cancelled"){
             setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Cancelled"))
+        
         }else if(values.DPOMLineItemStatus === "Closed"){
             setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Closed"))
         }
@@ -165,7 +167,7 @@ const FactoryPPMReport = () => {
 
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
-            { title: 'Po+Line ', dataIndex: 'Po+Line' },
+            { title: 'Po+Line ',dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
             { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
             { title: 'Item', dataIndex: 'Item' },
             { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
@@ -177,6 +179,90 @@ const FactoryPPMReport = () => {
             { title: 'Style Number', dataIndex: 'styleNumber' },
             { title: 'Product Code', dataIndex: 'productCode' },
             { title: 'Colour Description', dataIndex: 'colorDesc' },
+            { title: 'CO', dataIndex: ' ' },
+            { title: 'CO Final Approval Date', dataIndex: ' ' },
+            { title: 'Plan No', dataIndex: ' ' },
+            { title: 'Lead Time', dataIndex: ' ' },
+            { title: 'Category', dataIndex: 'categoryCode' },
+            { title: 'Category Description', dataIndex: 'categoryDesc' },
+            { title: 'Vendor Code', dataIndex: 'vendorCode' },
+            { title: 'Global Category Core Focus', dataIndex: 'gccFocusCode' },
+            { title: 'Global Category Core Focus Description', dataIndex: 'gccFocusDesc' },
+            { title: 'Gender Age', dataIndex: ' ' },
+            { title: 'Gender Age Description', dataIndex: ' ' },
+            { title: 'Destination Country Code ', dataIndex: 'destinationCountryCode' },
+            { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
+            { title: 'Plant Code', dataIndex: 'plant' },
+            { title: 'Plant Name', dataIndex: 'plantName' },
+            { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
+            { title: 'UPC', dataIndex: 'UPC' },
+            { title: 'Sales Order Number', dataIndex: ' ' },
+            { title: 'Sales Order Item Number', dataIndex: ' ' },
+            { title: 'Customer PO', dataIndex: 'customerPO' },
+            { title: 'Ship To Customer Number', dataIndex: 'shipToCustomerNumber' },
+            { title: 'Ship To Customer Name', dataIndex: 'shipToCustomerName' },
+            { title: 'Planning Season Code', dataIndex: 'planningSeasonCode' },
+            { title: 'Planning Season Year', dataIndex: 'planningSeasonYear' },
+            { title: 'Doc Type', dataIndex: 'docTypeCode' },
+            { title: 'Doc Type Description ', dataIndex: 'docTypeDesc' },
+            { title: 'MRGAC', dataIndex: 'MRGAC' },
+            { title: 'OGAC', dataIndex: 'OGAC' },
+            { title: 'GAC', dataIndex: 'GAC' },
+            { title: 'Track Out Date', dataIndex: ' ' },
+            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
+            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
+            { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
+            { title: 'GAC Reason Description', dataIndex: ' ' },
+            { title: 'Shipping Type', dataIndex: 'shippingType' },
+            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode' },
+            { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
+            { title: 'Launch Code', dataIndex: 'launchCode' },
+            { title: 'Mode Of Transportation', dataIndex: ' ' },
+            { title: 'In Co Terms', dataIndex: 'inCoTerms' },
+            { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
+            { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
+            { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
+            { title: 'Total Item Quantity', dataIndex: 'totalItemQty' },
+            { title: '2XL', dataIndex: ' ' },
+            { title: '2XL-S', dataIndex: ' ' },
+            { title: '2XL-T', dataIndex: ' ' },
+            { title: '2XLTT', dataIndex: ' ' },
+            { title: '2XS', dataIndex: ' ' },
+            { title: '3XL', dataIndex: ' ' },
+            { title: '3XL-T', dataIndex: ' ' },
+            { title: '3XL-TT', dataIndex: ' ' },
+            { title: '4XL', dataIndex: ' ' },
+            { title: '4XL-S', dataIndex: ' ' },
+            { title: '4XL-T', dataIndex: ' ' },
+            { title: '5XL', dataIndex: ' ' },
+            { title: 'CUSTM', dataIndex: ' ' },
+            { title: 'L', dataIndex: ' ' },
+            { title: 'L+', dataIndex: ' ' },
+            { title: 'L-S', dataIndex: ' ' },
+            { title: 'L-T', dataIndex: ' ' },
+            { title: 'LTT', dataIndex: ' ' },
+            { title: 'M', dataIndex: ' ' },
+            { title: 'M+', dataIndex: ' ' },
+            { title: 'M-S', dataIndex: ' ' },
+            { title: 'M-T', dataIndex: ' ' },
+            { title: 'S', dataIndex: ' ' },
+            { title: 'S+', dataIndex: ' ' },
+            { title: 'S-S', dataIndex: ' ' },
+            { title: 'S-T', dataIndex: ' ' },
+            { title: 'XL', dataIndex: ' ' },
+            { title: 'XL+', dataIndex: ' ' },
+            { title: 'XL-S', dataIndex: ' ' },
+            { title: 'XL-T', dataIndex: ' ' },
+            { title: 'XLTT', dataIndex: ' ' },
+            { title: 'XS', dataIndex: ' ' },
+            { title: 'XS-S', dataIndex: ' ' },
+            { title: 'XS-T', dataIndex: ' ' },
+            { title: 'Grand Total', dataIndex: ' ' },
+            { title: 'Actual Shipped Qty', dataIndex: ' ' },
+            { title: 'VAS-Size', dataIndex: 'VASSize' },
+            { title: 'Item Vas Text', dataIndex: 'itemVasText' },
+            { title: 'Item Text', dataIndex: 'itemText' },
+
         ]
 
 
@@ -203,63 +289,177 @@ const FactoryPPMReport = () => {
         return formattedDate;
     }
 
-    const columns: any = [
+    const columns: ColumnsType<any> = [
         {
             title: 'Po+Line',
-            dataIndex: 'Po+Line',
-            render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}`
+            dataIndex: 'purchaseOrderNumber-poLineItemNumber',
+            render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}`,
+            
         },
         {
             title: 'Last Modified Date',
-            dataIndex: 'lastModifiedDate'
+            dataIndex: 'lastModifiedDate',
+           
         },
         {
             title: 'Item',
             dataIndex: 'Item',
-            ...getColumnSearch('Item')
+            ...getColumnSearch('Item'),
+           
         },
         {
             title: 'Total Item Qty',
-            dataIndex: 'totalItemQty'
+            dataIndex: 'totalItemQty',
+           
         },
         {
             title: 'Factory',
             dataIndex: 'Factory',
-            ...getColumnSearch('Factory')
+            ...getColumnSearch('Factory'),
+           
         },
         {
             title: 'Document Date',
             dataIndex: 'documentDate',
             // render: (text, record) => {
             //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
-            // }
+            // },
+           
         },
         {
             title: 'Purchase Order Number',
             dataIndex: 'purchaseOrderNumber',
+           
         },
         {
             title: 'PO Line Item Number',
-            dataIndex: 'poLineItemNumber'
+            dataIndex: 'poLineItemNumber',
+            
         },
         {
             title: 'DPOM Line Item Status',
-            dataIndex: 'DPOMLineItemStatus'
+            dataIndex: 'DPOMLineItemStatus',
+          
         },
         {
             title: 'Style Number',
             dataIndex: 'styleNumber',
-            ...getColumnSearch('styleNumber')
+            ...getColumnSearch('styleNumber'),
+           
         },
         {
             title: 'Product Code',
             dataIndex: 'productCode',
-            ...getColumnSearch('productCode')
+            ...getColumnSearch('productCode'),
+          
         },
         {
             title: 'Colour Description',
-            dataIndex: 'colorDesc'
+            dataIndex: 'colorDesc',
+           
         },
+        {
+            title: 'CO',
+            dataIndex: '',
+        
+        },
+        {
+            title: 'CO Final Approval Date',
+            dataIndex: '',
+           
+        },
+        {
+            title: 'Plan No',
+            dataIndex: '',
+          
+        },
+        {
+            title: 'Lead Time',
+            dataIndex: '',
+           
+        },
+        {
+            title: 'Category',
+            dataIndex: 'categoryCode',
+           
+        },
+        {
+            title: 'Category Description',
+            dataIndex: 'categoryDesc',
+            
+        },
+        {
+            title: 'Vendor Code',
+            dataIndex: 'vendorCode',
+         
+        },
+        {
+            title: 'Global Category Core Focus',
+            dataIndex: 'gccFocusCode',
+           
+        },
+        {
+            title: 'Global Category Core Focus Description',
+            dataIndex: 'gccFocusDesc',
+           
+        },
+        {
+            title: 'Gender Age',
+            dataIndex: '',
+          
+        },
+        {
+            title: 'Gender Age Description',
+            dataIndex: '',
+           
+        },
+        {
+            title: 'Destination Country Code',
+            dataIndex: 'destinationCountryCode',
+            
+        },
+        {
+            title: 'destination country Name',
+            dataIndex: 'destinationCountry',
+           
+        },
+        {
+            title: 'Plant Code',
+            dataIndex: 'plant',
+           
+        },
+        {
+            title: 'Plant Name',
+            dataIndex: 'plantName',
+           
+        },
+        {
+            title: 'Trading Co PO Number',
+            dataIndex: 'tradingCoPoNumber',
+           
+        },
+        {
+            title: 'UPC',
+            dataIndex: 'UPC',
+           
+        },
+        {
+            title: 'Sales Order Number',
+            dataIndex: '',
+           
+        },
+        {
+            title: 'Sales Order Item Number',
+            dataIndex: '',
+           
+        },
+        {
+            title: 'Customer PO',
+            dataIndex: 'customerPO',
+            
+        },
+       
+        
 
     ];
 
@@ -267,7 +467,7 @@ const FactoryPPMReport = () => {
 
     return (
         <>
-            <Card title="Factory PPM" headStyle={{ color: "#EC5477", fontWeight: 'bold',backgroundColor:"skyblue" }}
+            <Card title="Factory PPM" headStyle={{  fontWeight: 'bold' }}
 
                 extra={filteredData.length > 0 ? (<Button
                     type="default"
@@ -307,31 +507,31 @@ const FactoryPPMReport = () => {
                 </Form>
                 <Row gutter={80}>
                     <Col >
-                        <Card title={'Total order Qty : ' + gridData.length} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: '#B1A44C' }}></Card>
+                        <Card title={'Total order Qty : ' + gridData.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Total Shipped : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: '#B1A44C' }}></Card>
+                        <Card title={'Total Shipped : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Balance to ship : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: '#B1A44C' }}></Card>
+                        <Card title={'Balance to ship : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
                     </Col>
                 </Row><br></br>
 
                 <Row gutter={70}>
                     <Col >
-                        <Card title={'Total PO Count : ' + gridData.length} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: ' lightblue' }}></Card>
+                        <Card title={'Total PO Count : ' + gridData.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Accepted PO Count : ' + gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} style={{ textAlign: 'left', width: 200, height: 38, backgroundColor: 'lightblue' }}></Card>
+                        <Card title={'Accepted PO Count : ' + gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} style={{ textAlign: 'left', width: 200, height: 38 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Unaccepted PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
+                        <Card title={'Unaccepted PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Closed PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
+                        <Card title={'Closed PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
+                        <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
                     </Col>
                 </Row><br></br>
                 <Card >
@@ -339,8 +539,8 @@ const FactoryPPMReport = () => {
                         columns={columns}
                         // dataSource={gridData}
                         dataSource={filterData}
-                        scroll={{ x: 1000 }}
-                        bordered style={{ backgroundColor: "green" }} />
+                        scroll={{ x: 1000  }}
+                        />
                 </Card>
             </Card>
         </>
