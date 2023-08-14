@@ -24,23 +24,23 @@ const FactoryPPMReport = () => {
     const searchInput = useRef<any>(null);
     const [searchText, setSearchText] = useState<any>([]);
     const [searchedColumn, setSearchedColumn] = useState<any>([]);
-    const [filterData,setFilterData] = useState<any>([])
+    const [filterData, setFilterData] = useState<any>([])
 
     const Finish = (values: any) => {
-        console.log(values,'vallllll');
+        console.log(values, 'vallllll');
         // if (values.DPOMLineItemStatus !== undefined) {
         //     // getFactoryStatus(values)
         // }/
         if (values.DPOMLineItemStatus === undefined) {
             setFilterData(gridData)
-        }else if(values.DPOMLineItemStatus === "Accepted"){
+        } else if (values.DPOMLineItemStatus === "Accepted") {
             setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Accepted"))
-        }else if(values.DPOMLineItemStatus === "Unaccepted"){
+        } else if (values.DPOMLineItemStatus === "Unaccepted") {
             setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Unaccepted"))
-        }else if(values.DPOMLineItemStatus === "Cancelled"){
+        } else if (values.DPOMLineItemStatus === "Cancelled") {
             setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Cancelled"))
-        
-        }else if(values.DPOMLineItemStatus === "Closed"){
+
+        } else if (values.DPOMLineItemStatus === "Closed") {
             setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Closed"))
         }
     }
@@ -167,7 +167,7 @@ const FactoryPPMReport = () => {
 
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
-            { title: 'Po+Line ',dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
+            { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
             { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
             { title: 'Item', dataIndex: 'Item' },
             { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
@@ -278,7 +278,7 @@ const FactoryPPMReport = () => {
 
     function convertToYYYYMMDD(inputDate) {
         const formatsToTry = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY', 'YYYY-MM-DD'];
-        let formattedDate = null;
+        let formattedDate;
         for (const format of formatsToTry) {
             const parsedDate = moment(inputDate, format);
             if (parsedDate.isValid()) {
@@ -294,29 +294,29 @@ const FactoryPPMReport = () => {
             title: 'Po+Line',
             dataIndex: 'purchaseOrderNumber-poLineItemNumber',
             render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}`,
-            
+
         },
         {
             title: 'Last Modified Date',
             dataIndex: 'lastModifiedDate',
-           
+
         },
         {
             title: 'Item',
             dataIndex: 'Item',
             ...getColumnSearch('Item'),
-           
+
         },
         {
             title: 'Total Item Qty',
             dataIndex: 'totalItemQty',
-           
+
         },
         {
             title: 'Factory',
             dataIndex: 'Factory',
             ...getColumnSearch('Factory'),
-           
+
         },
         {
             title: 'Document Date',
@@ -324,142 +324,142 @@ const FactoryPPMReport = () => {
             // render: (text, record) => {
             //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
             // },
-           
+
         },
         {
             title: 'Purchase Order Number',
             dataIndex: 'purchaseOrderNumber',
-           
+
         },
         {
             title: 'PO Line Item Number',
             dataIndex: 'poLineItemNumber',
-            
+
         },
         {
             title: 'DPOM Line Item Status',
             dataIndex: 'DPOMLineItemStatus',
-          
+
         },
         {
             title: 'Style Number',
             dataIndex: 'styleNumber',
             ...getColumnSearch('styleNumber'),
-           
+
         },
         {
             title: 'Product Code',
             dataIndex: 'productCode',
             ...getColumnSearch('productCode'),
-          
+
         },
         {
             title: 'Colour Description',
             dataIndex: 'colorDesc',
-           
+
         },
         {
             title: 'CO',
             dataIndex: '',
-        
+
         },
         {
             title: 'CO Final Approval Date',
             dataIndex: '',
-           
+
         },
         {
             title: 'Plan No',
             dataIndex: '',
-          
+
         },
         {
             title: 'Lead Time',
             dataIndex: '',
-           
+
         },
         {
             title: 'Category',
             dataIndex: 'categoryCode',
-           
+
         },
         {
             title: 'Category Description',
             dataIndex: 'categoryDesc',
-            
+
         },
         {
             title: 'Vendor Code',
             dataIndex: 'vendorCode',
-         
+
         },
         {
             title: 'Global Category Core Focus',
             dataIndex: 'gccFocusCode',
-           
+
         },
         {
             title: 'Global Category Core Focus Description',
             dataIndex: 'gccFocusDesc',
-           
+
         },
         {
             title: 'Gender Age',
             dataIndex: '',
-          
+
         },
         {
             title: 'Gender Age Description',
             dataIndex: '',
-           
+
         },
         {
             title: 'Destination Country Code',
             dataIndex: 'destinationCountryCode',
-            
+
         },
         {
             title: 'destination country Name',
             dataIndex: 'destinationCountry',
-           
+
         },
         {
             title: 'Plant Code',
             dataIndex: 'plant',
-           
+
         },
         {
             title: 'Plant Name',
             dataIndex: 'plantName',
-           
+
         },
         {
             title: 'Trading Co PO Number',
             dataIndex: 'tradingCoPoNumber',
-           
+
         },
         {
             title: 'UPC',
             dataIndex: 'UPC',
-           
+
         },
         {
             title: 'Sales Order Number',
             dataIndex: '',
-           
+
         },
         {
             title: 'Sales Order Item Number',
             dataIndex: '',
-           
+
         },
         {
             title: 'Customer PO',
             dataIndex: 'customerPO',
-            
+
         },
-       
-        
+
+
 
     ];
 
@@ -467,7 +467,7 @@ const FactoryPPMReport = () => {
 
     return (
         <>
-            <Card title="Factory PPM" headStyle={{  fontWeight: 'bold' }}
+            <Card title="Factory PPM" headStyle={{ fontWeight: 'bold' }}
 
                 extra={filteredData.length > 0 ? (<Button
                     type="default"
@@ -539,8 +539,8 @@ const FactoryPPMReport = () => {
                         columns={columns}
                         // dataSource={gridData}
                         dataSource={filterData}
-                        scroll={{ x: 1000  }}
-                        />
+                        scroll={{ x: 1000 }}
+                        bordered />
                 </Card>
             </Card>
         </>

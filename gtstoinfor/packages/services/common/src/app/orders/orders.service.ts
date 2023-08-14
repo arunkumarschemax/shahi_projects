@@ -11,7 +11,7 @@ import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
 import { FileUploadRepository } from './repository/upload.repository';
 import { FileUploadEntity } from './entities/upload-file.entity';
-import { DataSource, Entity, EntityManager, getManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { FileIdReq } from './models/file-id.req';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { GenericTransactionManager } from '../../typeorm-transactions';

@@ -20,6 +20,10 @@ export class FactoryService extends CommonAxiosService {
     async getActiveFactories(): Promise<AllFactoriesResponseModel> {
         return this.axiosPostCall(this.FactoryController + "/getActiveFactories")
     }
+    async updateFactories(dto:FactoryDto): Promise<AllFactoriesResponseModel> {
+        console.log(dto,"update")
+        return await this.axiosPostCall(this.FactoryController + '/updateFactories',dto)
+    }
 
     async activateOrDeactivate(payload: FactoryActivateDeactivateDto): Promise<FactoryResponseModel> {
         return this.axiosPostCall(this.FactoryController + "/activateOrDeactivate", payload)
