@@ -1,7 +1,6 @@
 import { Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DpomChildEntity } from "../entites/dpom-child.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 
 @Injectable()
