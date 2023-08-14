@@ -14,10 +14,10 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/getByFactoryStatus")
     }
     async getDivertReportData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.DpomController + "/getDivertReportData")
+        return this.axiosPostCall(this.dpomController + "/getDivertReportData")
     }
     async getCountForDivertReport(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.DpomController + "/getCountForDivertReport")
+        return this.axiosPostCall(this.dpomController + "/getCountForDivertReport")
     }
 
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
@@ -44,6 +44,6 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/poLineItemStatusChange")
     }
     async getShipmentPlaningChart(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.DpomController + "/getShipmentPlaningChart")
+        return this.axiosPostCall(this.dpomController + "/getShipmentPlaningChart")
     }
 }   
