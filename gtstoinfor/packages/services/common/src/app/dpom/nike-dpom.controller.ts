@@ -55,6 +55,26 @@ export class DpomController {
     async getByFactoryStatus(@Body()req:DpomSaveDto):Promise<any>{
         return await this.dpomService.getByFactoryStatus(req);
     }
+
+    @Post('/getPlantWisePoOrders')
+    async getPlantWisePoOrders(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPlantWisePoOrders();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+    @Post('/getStatusWiseItems')
+    async getStatusWiseItems(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getStatusWiseItems();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
        
     }
 
