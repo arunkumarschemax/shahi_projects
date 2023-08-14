@@ -85,6 +85,16 @@ export class DpomController {
 
         }
     }
+
+    @Post('/approveDpomLineItemStatus')
+    async approveDpomLineItemStatus(@Body() req : any): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.approveDpomLineItemStatus(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
        
     }
 

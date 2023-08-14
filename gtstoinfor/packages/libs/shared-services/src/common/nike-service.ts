@@ -1,4 +1,4 @@
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, DpomApproveRequest } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -24,5 +24,9 @@ export class NikeService extends CommonAxiosService  {
 
     async getOrderAcceptanceData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.DpomController + "/getOrderAcceptanceData")
+    }
+
+    async approveDpomLineItemStatus(req:DpomApproveRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.DpomController + "/approveDpomLineItemStatus",req)
     }
 }   

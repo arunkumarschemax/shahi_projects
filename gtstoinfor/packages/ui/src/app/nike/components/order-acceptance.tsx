@@ -1,5 +1,6 @@
+import { DpomApproveRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
-import { Card, Table, message } from "antd";
+import { Button, Card, Popconfirm, Table, message } from "antd";
 import React from "react";
 import { useEffect, useState } from "react";
 
@@ -17,6 +18,21 @@ export function OrderAcceptance() {
         service.getOrderAcceptanceData().then((res)=>{
             if(res.data){
                 setData(res.data)
+                // message.success(res.internalMessage)
+            }else(
+                message.error(res.internalMessage)
+            )
+        })
+    }
+
+    const approveDpomLineItemStatus = (record) =>{
+        const req = new DpomApproveRequest();
+        req.poLineItemNumber = record.poLineItemNumber
+        req.purchaseOrderNumber = record.purchaseOrderNumber
+        req.scheduleLineItemNumber = record.scheduleLineItemNumber
+        service.approveDpomLineItemStatus(req).then((res)=>{
+            if(res.status){
+                getOrderAcceptanceData()
                 message.success(res.internalMessage)
             }else(
                 message.error(res.internalMessage)
@@ -65,6 +81,22 @@ export function OrderAcceptance() {
             title: 'DPOM Line Item Status',
             dataIndex: 'DPOMLineItemStatus'
         },
+        {
+            title :'Action',
+            dataIndex:'action',
+            render: (value,record) => {
+                if (record.DPOMLineItemStatus === 'Unaccepted') {
+                    return (
+                        <Popconfirm title="Are you sure to approve" onConfirm={() => approveDpomLineItemStatus(record)}>
+                            <Button>Accept</Button>
+                        </Popconfirm>
+                    );
+                } else {
+                    return null;
+                }
+            }
+                
+        }
     ]
 
     return (
