@@ -115,7 +115,7 @@ export class DocumentsListService {
 
     async getDocumentDetailsByPO(req:PoRoleRequest):Promise<UploadDocumentListResponseModel>{
         try{
-            const sqlQuery = "Select dl.file_name AS fileName, dl.file_path AS filePath, dl.is_uploaded AS uploadStatus, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentList from documents_list dl left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"'";
+            const sqlQuery = "Select dl.file_name AS fileName, dl.file_path AS filePath, dl.is_uploaded AS uploadStatus, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"'";
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
             if(result){
                 return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',result)

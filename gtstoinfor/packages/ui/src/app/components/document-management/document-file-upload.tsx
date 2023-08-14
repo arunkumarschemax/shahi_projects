@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Table, Tag, Typography, Upload, UploadProps } from 'antd';
+import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps } from 'antd';
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 // import AlertMessages from '../common/common-functions/alert-messages';
@@ -11,17 +11,19 @@ import { useForm } from 'antd/es/form/Form';
 import { ColumnsType } from 'antd/es/table';
 import React from 'react';
 import { ColumnProps } from 'antd/lib/table';
+import UploadView from './upload-view';
 
+const { Title, Text } = Typography;
 
 export default function DocumentListupload() {
   const [poNumber,setPoNumber] = useState<any[]>([])
   const [docData,setDocData] = useState<any[]>([])
-  const [fileList,setFilelist] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeRow, setActiveRow] = useState(null);
   const [activeRowIndex, setActiveRowIndex] = useState(null);
-  const [btndisable, setBtnDisable] = useState<boolean>(true);
   const [page, setPage] = React.useState(1);
+  const [fileList,setFilelist] = useState<any[]>([]);
+  const [btndisable, setBtnDisable] = useState<boolean>(true);
 
   let navigate = useNavigate();
   const [form] = Form.useForm();
@@ -50,42 +52,7 @@ export default function DocumentListupload() {
     getPoNumber();
   },[])
 
-  const gstUploadFieldProps: UploadProps = {
-    multiple: false,
-    onRemove: (file: any) => {
-        setFilelist([]);
-        // uploadFileList([]);
-    },
-    beforeUpload: (file: any) => {
-        if (!file.name.match(/\.(pdf|jpg|jpeg|png)$/)) {
-            message.error("Only pdf and image files are allowed!");
-            return true;
-        }
-        var reader = new FileReader();
-        reader.readAsArrayBuffer(file);
-        reader.onload = data => {  
-                setFilelist([...fileList, file]);
-                setBtnDisable(false)
-                // uploadFileList([...filelist, file]);
-                return false;
-        };
-        return false;
-    },
-    progress: {
-        strokeColor: {
-            '0%': '#108ee9',
-            '100%': '#87d068',
-        },
-        strokeWidth: 3,
-        format: (percent: any) => `${parseFloat(percent.toFixed(2))}%`,
-    },
-    fileList: fileList
-
-};
-const handleUpload = (documentListId, info) => {
-  // Handle the file upload for the specific documentListId
-  // You can use the 'documentListId' to identify which row is being interacted with
-};
+ 
   const columns: ColumnProps<any>[] = [
     {
       title: "S.No",
@@ -99,33 +66,33 @@ const handleUpload = (documentListId, info) => {
       dataIndex: 'documentName',
       width:120,
     },
-    {
-      title: 'Upload',
-      key: 'upload',
-      render: (text, record) => (
-        <Form.Item name={record.documentListId}>
-          <Upload
-            name={`uploadFile${record.documentListId}`}
-            {...gstUploadFieldProps}
-            accept=".jpeg,.pdf,.png,.jpg"
-            onChange={(info) => handleUpload(record.documentListId, info)}
-          >
-            <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Choose File</Button>
-            <br />
-            <Typography.Text type="secondary">
-              (Supported formats pdf, jpeg, jpg, png)
-            </Typography.Text>
-          </Upload>
-        </Form.Item>
-      ),
-    },
+    // {
+    //   title: 'Upload',
+    //   key: 'upload',
+    //   render: (text, record) => (
+    //     <Form.Item name={record.documentsListId}>
+    //       <Upload
+    //         name={`uploadFile${record.documentsListId}`}
+    //         {...gstUploadFieldProps}
+    //         accept=".jpeg,.pdf,.png,.jpg"
+    //         onChange={(info) => handleUpload(record.documentsListId, info)}
+    //       >
+    //         <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Choose File</Button>
+    //         <br />
+    //         <Typography.Text type="secondary">
+    //           (Supported formats pdf, jpeg, jpg, png)
+    //         </Typography.Text>
+    //       </Upload>
+    //     </Form.Item>
+    //   ),
+    // },
     {
       title: 'Upload DOcument',
       width:'80px',
       render:(text, rowData) =>{
       return <>
-      <Form.Item name={`button${rowData.documentListId}`}  style={{alignItems: 'center'}}>
-          <Button name={`upload${rowData.documentListId}`} style={{ marginRight: '10px' }} onClick={() =>{onFinish(rowData)}} disabled={btndisable}>
+      <Form.Item name={`button${rowData.documentsListId}`}  style={{alignItems: 'center'}}>
+          <Button name={`upload${rowData.documentsListId}`} style={{ marginRight: '10px' }} onClick={() =>{onFinish(rowData)}} disabled={btndisable}>
             Upload
           </Button>
         </Form.Item></>
@@ -159,7 +126,7 @@ const handleUpload = (documentListId, info) => {
     form.validateFields().then(res => {
       console.log(res)
     const req = new DocumentsListRequest( data.documentCategoryId,data.roleId,res.customerPo?res.customerPo:'',data.orderId,res.file.fileList)
-console.log(req,'req')
+    console.log(req,'req')
       service.createDocumentsList(req).then((res) => {
         if(res.status){
           console.log(res);
@@ -200,83 +167,107 @@ console.log(req,'req')
   }
 
   return(
-  <Card title='Document Upload'>
-    
-    <Form form={form}  layout='vertical' name="control-hooks" onFinish={onFinish}>
-      <Row gutter={24}>
-      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-          <Form.Item name='customerPo' label='Po Number'
-            rules={[
-              {
-                required: true,
-                message: 'Select Destination',
+    <div >
+      <Form form={form}  layout='vertical' name="control-hooks" onFinish={onFinish}>
+       <Row gutter={24}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+           <Form.Item name='customerPo' label='Po Number'
+             rules={[
+               {
+                 required: true,
+                 message: 'Select Destination',
 
-              }
-            ]}
-          >
-            <Select placeholder='Select PoNumber' onChange={getDocData} showSearch allowClear>
-            {poNumber?.map(obj =>{
-                      return <Option key={obj.poNumber} value={obj.poNumber}>{obj.poNumber}</Option>
-                    })}
-            </Select>
-          </Form.Item>
-        </Col>
+               }
+             ]}
+           >
+             <Select placeholder='Select PoNumber' onChange={getDocData} showSearch allowClear>
+             {poNumber?.map(obj =>{
+                       return <Option key={obj.poNumber} value={obj.poNumber}>{obj.poNumber}</Option>
+                     })}
+             </Select>
+           </Form.Item>
+         </Col>
       </Row>
-      <Row>
-      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 24 }}>
-         <Card>
-         <Table 
-          rowKey={record => record.documentListId}
-          columns={columns}
-          dataSource={docData} 
-          size='small'
-          pagination={{
-            onChange(current) {
-            }
-          }}
-          bordered
-          />
-          </Card>
-        </Col>
+        <UploadView form={form} docData={docData} formData={onFinish}/>
+      </Form>
+    </div>
+  // <Card title='Document Upload'>
+    
+  //   <Form form={form}  layout='vertical' name="control-hooks" onFinish={onFinish}>
+  //     <Row gutter={24}>
+  //     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+  //         <Form.Item name='customerPo' label='Po Number'
+  //           rules={[
+  //             {
+  //               required: true,
+  //               message: 'Select Destination',
+
+  //             }
+  //           ]}
+  //         >
+  //           <Select placeholder='Select PoNumber' onChange={getDocData} showSearch allowClear>
+  //           {poNumber?.map(obj =>{
+  //                     return <Option key={obj.poNumber} value={obj.poNumber}>{obj.poNumber}</Option>
+  //                   })}
+  //           </Select>
+  //         </Form.Item>
+  //       </Col>
+  //     </Row>
+  //     <Row>
+  //     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 24 }}>
+  //        <Card>
+  //        <Table 
+  //         rowKey={record => record.documentListId}
+  //         columns={columns}
+  //         dataSource={docData} 
+  //         size='small'
+  //         pagination={{
+  //           onChange(current) {
+  //           }
+  //         }}
+  //         bordered
+  //         />
+  //         </Card>
+  //       </Col>
         
-      </Row>
-      {/* <Modal width={1000}  centered  open={isModalOpen} onCancel={handleCancel} footer={[]} >
-        <Card title='Upload Document against Customer'>
-          <Row gutter={24}>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:6}}>
-          <Form.Item name='file'>
-          <Upload {...gstUploadFieldProps} 
-              accept='.jpeg,.pdf,.png,.jpg'>
-              <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Upload File</Button>
-              <br/><Typography.Text type="secondary">
-                  (Supported formats pdf,jpeg,jpg,png)
-              </Typography.Text>
-              </Upload>
-            </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:2 }}>
-              <Form.Item>
-              <Button type="primary" htmlType="submit" style={{ marginRight: '10px' }}>
-                                    Submit
-                                </Button>
-                <Button type='primary' htmlType="submit">Upload</Button>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:2 }}>
-            <Form.Item>
-                <Button type='default' onClick={handleCancel}>Cancel</Button>
-              </Form.Item>
-              </Col>
+  //     </Row>
+  //     {/* <Modal width={1000}  centered  open={isModalOpen} onCancel={handleCancel} footer={[]} >
+  //       <Card title='Upload Document against Customer'>
+  //         <Row gutter={24}>
+  //         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:6}}>
+  //         <Form.Item name='file'>
+  //         <Upload {...gstUploadFieldProps} 
+  //             accept='.jpeg,.pdf,.png,.jpg'>
+  //             <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Upload File</Button>
+  //             <br/><Typography.Text type="secondary">
+  //                 (Supported formats pdf,jpeg,jpg,png)
+  //             </Typography.Text>
+  //             </Upload>
+  //           </Form.Item>
+  //           </Col>
+  //           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:2 }}>
+  //             <Form.Item>
+  //             <Button type="primary" htmlType="submit" style={{ marginRight: '10px' }}>
+  //                                   Submit
+  //                               </Button>
+  //               <Button type='primary' htmlType="submit">Upload</Button>
+  //             </Form.Item>
+  //           </Col>
+  //           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:2 }}>
+  //           <Form.Item>
+  //               <Button type='default' onClick={handleCancel}>Cancel</Button>
+  //             </Form.Item>
+  //             </Col>
              
-          </Row>
+  //         </Row>
           
-        </Card>
+  //       </Card>
           
-        </Modal> */}
-    </Form> 
+  //       </Modal> */}
+  //   </Form> 
 
      
-  </Card>
+  // </Card>
 
   )
 }
