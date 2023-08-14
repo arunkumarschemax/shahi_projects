@@ -61,6 +61,7 @@ import ComponentsForm from "./masters/Components/components-form"
 import ComponentsGrid from "./masters/Components/components-grid"
 import AttributesGrid from "./masters/attributes/attributes-grid"
 import AttributesForm from "./masters/attributes/attributes-form"
+import BuyersOrderAttributeForm from "./masters/buyers/buyers-order-attribute-form"
 import WarehouseGrid from "./masters/warehouse/warehouse-grid"
 import WarehouseForm from "./masters/warehouse/warehouse-form"
 import ComponentMappingView from "./components-mapping/components-mapping-view"
@@ -271,6 +272,8 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateData={(undefined) => { }}/>}/>
                         <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
+                        <Route path='buyers/buyers-order-attributes-form' key='buyers/buyers-order-attributes-form' element={<BuyersOrderAttributeForm/>} />
+
                         <Route path='locations/locations-form' element={<LocationsForm locationsData={undefined}
                         isUpdate={false}
                         closeForm={()=> {}}
