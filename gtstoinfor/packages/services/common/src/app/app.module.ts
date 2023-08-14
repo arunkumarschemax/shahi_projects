@@ -39,6 +39,7 @@ import { ProfitControlHeadModule } from './profit-control-head/profit-control-he
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { FabricTypeModule } from './fabric-types/fabric-type.module';
 import { FabricSubTypeModule } from './fabric-sub-types/fabric-sub-type.module';
+import { SizeModule } from './sizes/sizes-module';
 
 
 @Module({
@@ -78,6 +79,7 @@ import { FabricSubTypeModule } from './fabric-sub-types/fabric-sub-type.module';
     DivisionModule,
     FabricSubTypeModule,
     FabricTypeModule,
+  SizeModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],
   providers: [AppService],

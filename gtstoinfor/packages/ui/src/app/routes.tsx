@@ -75,6 +75,8 @@ import FabricTypeGrid from "./masters/fabric-type/fabric-type-grid"
 import FabricSubTypeGrid from "./masters/fabric-sub-types/fabric-sub-types-view"
 import FabricSubTypeForm from "./masters/fabric-sub-types/fabric-sub-type-form"
 import SettingsForm from "./masters/settings/settings-form"
+import SizeGrid from "./masters/sizes/size.view"
+import SizeForm from "./masters/sizes/size.form"
 
 
 export const AppRoutes = () => {
@@ -253,6 +255,12 @@ export const AppRoutes = () => {
                  isUpdate={false}
                 closeForm={() => { }}
                 updateData={(undefined) => { }}/>} />
+                <Route path='size/size-view' element={<SizeGrid/>} />
+                         <Route path='size/size-form' key ='size/size-form' element={<SizeForm  sizeData={undefined}
+
+                 isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
                          <Route path='locations/locations-view' element={<LocationsGrid/>}/>
                          <Route path='settings/settings-form' element={<SettingsForm/>}/>
 

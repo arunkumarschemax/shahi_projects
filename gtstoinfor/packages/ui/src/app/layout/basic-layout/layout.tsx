@@ -242,6 +242,12 @@ export const baseRouterList = [
                 path: "settings/settings-form",
                 filepath: "settings/settings-form",
             },
+            {
+                label: "Size",
+                key: "Size",
+                path: "size/size-view",
+                filepath: "size/size-view",
+            },
         ],
     },
 
