@@ -15,7 +15,7 @@ import { DeleteDto } from './dto/delete-dto';
 import { Entity } from 'typeorm';
 import { DocumentEntity } from './entities/documents.entity';
 import { DocumentRoleMapping } from "./models/document-role-mapping.dto";
-import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingResponseModel, PoRoleRequest, RoleActivateDeactivateDto } from "@project-management-system/shared-models";
+import { AllDocumentRoleMappingsResponseModel, DocumentResponseModel, DocumentRoleMappingResponseModel, PoRoleRequest, RoleActivateDeactivateDto } from "@project-management-system/shared-models";
 import { DocumentRoleMappingService } from "./document_role_mapping.service";
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import * as fs from 'fs';
@@ -23,7 +23,7 @@ import * as fs from 'fs';
 @Controller('doc-upload')
 export class DocumentUploadController {
     constructor(private uploadDocservice:DocumentsListService,
-      private readonly service: DocumentService,
+      private readonly documentservice: DocumentService,
       private readonly mapService: DocumentRoleMappingService,
          private readonly applicationExceptionHandler: ApplicationExceptionHandler
          ){}
@@ -37,7 +37,6 @@ export class DocumentUploadController {
           }
     }
 
-    
 
     @Post('/DocumentFileUpload')
     @UseInterceptors(FilesInterceptor('file', null, {
@@ -84,25 +83,34 @@ export class DocumentUploadController {
       }
     }
 
-    @Post('createDocument')
-    async create(@Body() createDto: DocumentDto, entity: DocumentEntity): Promise<any> {
-      console.log(createDto,"controlllllllllllllll")
-      return await this.service.create(createDto,entity)
+    @Post('/createDocument')
+    async createDocument(@Body() req: DocumentDto ): Promise<DocumentResponseModel> {
+      return await this.documentservice.createDocument(req,false);
+    }
+    
+    @Post('/updateDocument')
+    async updateDocument(@Body() req: DocumentDto): Promise<DocumentResponseModel> {
+      return await this.documentservice.createDocument(req,true);
     }
   
     @Post('getAllDocuments')
-    async getAllDocuments(): Promise<any> {
+    async getAllDocuments(): Promise<DocumentResponseModel> {
       try {
-        return await this.service.getAllDocuments();
+        return await this.documentservice.getAllDocuments();
+      } catch (error) {
+        return error;
+      }
+    }
+
+    @Post('activateOrDeactivateDocument')
+    async activateOrDeactivateDocument(@Body() req:DocumentDto): Promise<DocumentResponseModel> {
+      try {
+        return await this.documentservice.activateOrDeactivateDocument(req);
       } catch (error) {
         return error;
       }
     }
   
-    // @Post('/activateOrDeactivateDepartment')
-    // async activateOrDeactivateDepartment(@Body() req:DeleteDto): Promise<DocumentUploadResponseModel>{
-    //   return await this.service.activateOrDeactivateDepartment(req);
-    // }
 
     @Post('/createDocMapping')
     async createDocMapping(@Body() documentRoleMapping: DocumentRoleMapping): Promise<DocumentRoleMappingResponseModel> {
@@ -118,13 +126,7 @@ export class DocumentUploadController {
     async activateOrDeactivate(@Body() req: any): Promise<AllDocumentRoleMappingsResponseModel> {
       return await this.mapService.activateOrDeactivate(req);
     }
-    // @Post('/getPoNumberDropdown')
-    // async getPoNumberDropdown(): Promise<UploadDocumentListResponseModel> {
-    //   console.log('dtaaaaaa')
-    //   return await this.uploadDocservice.getPoNumberDropdown();
-    // }
-
-
+ 
     @Post('/getPoNumberDropdown')
     async getPoNumberDropdown(): Promise<UploadDocumentListResponseModel> {
         try {

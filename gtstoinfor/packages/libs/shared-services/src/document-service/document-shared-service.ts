@@ -1,42 +1,24 @@
-import axios, { AxiosRequestConfig } from "axios";
-import {DocumentResponseModel} from '../../../shared-models/src/document-management/document-response.model'
-import { DocumentDto } from "@project-management-system/shared-models";
-import {DeleteDto} from '../../../shared-models/src/document-management/delete-dto'
+import { DocumentDto, DocumentResponseModel } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
-export default class DocumentSharedService extends CommonAxiosService{ 
-  private url = "/doc-upload";
-  
-  // async createForm(formdataDto: DocumentDto, config?: AxiosRequestConfig): Promise<DocumentResponseModel> {
-  //   return await axios.post("http://localhost:5000/documentdata/createDocument",
-  //     formdataDto,
-  //     config
-  //   );
-  // }
-  async createForm(formdataDto: DocumentDto): Promise<DocumentResponseModel> {
-    return this.axiosPostCall(this.url + "/createForm",formdataDto)
-}
-  // async getAllDocuments(): Promise<DocumentResponseModel> {
-  //   console.log('like')
-  //   return await axios.post("http://localhost:5000/documentdata/getAllDocuments");
-  // }
 
+export class DocumentService extends CommonAxiosService {
+  private url = "/doc-upload";
 
   async getAllDocuments(): Promise<DocumentResponseModel> {
-    return this.axiosPostCall(this.url + "/getAllDocumentDetails")
-}
-
-
-
-  async activateOrDeactivateDocument(
-    formdataDto: DeleteDto,
-    config?: AxiosRequestConfig
-  ): Promise<any> {
-    return await axios.post(
-      "http://localhost:5000/documentdata/activateOrDeactivateDocument",
-      formdataDto,
-      config
-    );
+      return this.axiosPostCall(this.url + "/getAllDocuments")
+      // .then(res => {
+      //   return res
+      // })
   }
 
+  async createDocument(dto:DocumentDto): Promise<DocumentResponseModel> {
+    return this.axiosPostCall(this.url + "/createDocument",dto)
+  }
+  async updateDocument(dto:DocumentDto): Promise<DocumentResponseModel> {
+    return this.axiosPostCall(this.url + "/updateDocument",dto)
+  }
+  async activateOrDeactivateDocument(dto:DocumentDto): Promise<DocumentResponseModel> {
+    return this.axiosPostCall(this.url + "/activateOrDeactivateDocument",dto)
+  }
   
 }

@@ -11,50 +11,40 @@ export class DocumentEntity {
         name: "document_name"
     })
     documentName: string;
-
-    @Column("boolean", {
-        name: "is_active" ,
-
-    })
-    isActive: boolean;
-
     @CreateDateColumn({
-        name: "created_at",
-        type: "datetime",
-        // length:20
-
+        name: 'created_at'
     })
-    createdAt: Date;
+    createdAt: string;
 
-    @Column("varchar", {
-        name: "created_user",
-        // length:20
-
+    @Column('varchar', {
+        nullable: true,
+        length: 40,
+        name: 'created_user'
     })
     createdUser: string | null;
 
-
     @UpdateDateColumn({
-        name: "updated_at",
-        type: 'datetime',
-        // length:20
-
+        name: 'updated_at'
     })
-    updatedAt: Date;
+    updatedAt: string;
 
-    @Column("varchar", {
-        name: "updated_user",
-        
-
+    @Column('varchar', {
+        nullable: true,
+        length: 40,
+        name: 'updated_user'
     })
     updatedUser: string | null;
 
-
     @VersionColumn({
-        name: "version_flag",
-      
-
+        default: 1,
+        name: 'version_flag'
     })
     versionFlag: number;
-    static documentName: string;
+
+    @Column('boolean', {
+        nullable: false,
+        name: 'is_active',
+        default: true
+    })
+    isActive: boolean;
 }
