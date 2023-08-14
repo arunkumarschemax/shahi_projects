@@ -432,6 +432,12 @@ export class OrdersService {
         return new CommonResponseModel(true,0,'Data Retrived Successfully',data)
     }
 
+    async getDocumentWiseDoc() : Promise<CommonResponseModel>{
+        let query = `SELECT d.document_name , SUM( IF(dl.is_uploaded=1, 1 , 0)) AS Completed,SUM( IF(dl.is_uploaded=0, 1 , 0)) AS Pending FROM documents_list dl LEFT JOIN document d ON d.id = dl.document_category_id GROUP BY d.document_name`;
+        const data = await this.dataSource.query(query);
+        return new CommonResponseModel(true,0,'Data Retrived Successfully', data)
+    }
+
     async getDynamicData() : Promise<CommonResponseModel>{
         const query = `SELECT DISTINCT document_name FROM document`;
         const documentNames = await this.dataSource.query(query)

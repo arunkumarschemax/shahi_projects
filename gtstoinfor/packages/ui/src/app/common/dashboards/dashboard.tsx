@@ -1,10 +1,10 @@
 
 import { Card, Col, Row, theme } from "antd"
-import { UnitWiseOrderGraph } from "./unit-wise-orders"
 import { RoleWiseDocumentsGraph } from "./division-wise-orders"
 import ChangesGrid from "../../excel-import/changes-grid"
 import ItemChanges from "./item-change"
 import VersionChanges from "../../excel-import/version-wise-table"
+import { DocumentWiseDocumentsGraph } from "./unit-wise-orders"
 const { useToken } = theme
 
 export const Dashboard = () => {
@@ -19,7 +19,7 @@ export const Dashboard = () => {
                 <Row gutter={24}>
                     <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>
                         <div >
-                            <UnitWiseOrderGraph />
+                            <DocumentWiseDocumentsGraph />
                         </div>
                     </Col>
                     <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>

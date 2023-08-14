@@ -14,30 +14,6 @@ const ItemChanges = () =>{
         getDocumentData();
     },[])
 
-    // const getDocumentData = () =>{
-    //     service.getDynamicData().then((res)=>{
-    //         setItemData(res.data)
-    //     })
-    // }
-
-    // const columns = itemData.map(header => ({
-    //     title: header,
-    //     dataIndex: header,
-    //     key: header,
-    // }));
-
-    // const columns = [
-    //     {
-    //         title: 'Customer PO',
-    //         dataIndex: 'customer_po',
-    //         key: 'customer_po',
-    //       },
-    //       ...itemData.map(header => ({
-    //         title: header,
-    //         dataIndex: header,
-    //         key: header,
-    //       }))
-    // ]
     const getDocumentData = () => {
         service.getDynamicData().then((res) => {
             setItemData(res.data);
