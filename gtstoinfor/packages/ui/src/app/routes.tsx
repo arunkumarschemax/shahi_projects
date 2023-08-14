@@ -77,6 +77,14 @@ import FabricSubTypeForm from "./masters/fabric-sub-types/fabric-sub-type-form"
 import SettingsForm from "./masters/settings/settings-form"
 import SizeGrid from "./masters/sizes/size.view"
 import SizeForm from "./masters/sizes/size.form"
+import CustomGroupsGrid from "./masters/custom-groups/custom-groups-grid"
+import CustomGroupsForm from "./masters/custom-groups/custom-groups-form"
+import ROSLGroupsForm from "./masters/rosl-groups/rosl-groups-form"
+import ROSLGroupsGrid from "./masters/rosl-groups/rosl-groups-grid"
+import BuyingHouseForm from "./masters/buying-house/buying-house-form"
+import BuyingHouseGrid from "./masters/buying-house/buying-house-grid"
+import CommissionForm from "./masters/commission/commission-form"
+import CommissionGrid from "./masters/commission/commission-grid"
 
 
 export const AppRoutes = () => {
@@ -227,6 +235,30 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=>{}}
                         updateAttribute={(undefined)=>{}}/>}/>
+                        <Route path="custom-groups/custom-groups-view" element ={<CustomGroupsGrid/>}/>
+                        <Route path='custom-groups/custom-groups-form' element={<CustomGroupsForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateCustomGroups={(undefined)=>{}}/>}/>
+                        <Route path="rosl-groups/rosl-groups-view" element ={<ROSLGroupsGrid/>}/>
+                        <Route path='rosl-groups/rosl-groups-form' element={<ROSLGroupsForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateROSLGroups={(undefined)=>{}}/>}/>
+                        <Route path="buying-house/buying-house-view" element ={<BuyingHouseGrid/>}/>
+                        <Route path='buying-house/buying-house-form' element={<BuyingHouseForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateBuyingHouse={(undefined)=>{}}/>}/>
+                        <Route path="commission/commission-view" element ={<CommissionGrid/>}/>
+                        <Route path='commission/commission-form' element={<CommissionForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateCommission={(undefined)=>{}}/>}/>
 
 
                         <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}

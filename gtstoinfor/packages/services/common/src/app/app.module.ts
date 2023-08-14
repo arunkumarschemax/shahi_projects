@@ -40,6 +40,10 @@ import { WarehouseModule } from './warehouse/warehouse.module';
 import { FabricTypeModule } from './fabric-types/fabric-type.module';
 import { FabricSubTypeModule } from './fabric-sub-types/fabric-sub-type.module';
 import { SizeModule } from './sizes/sizes-module';
+import { CustomGroupsModule } from './custom groups/custom-groups.module';
+import { ROSLGroupsModule } from './rosl groups/rosl-groups.module';
+import { BuyingHouseModule } from './buying-house/buying-house.module';
+import { CommissionModule } from './commission/commission.module';
 
 
 @Module({
@@ -72,6 +76,10 @@ import { SizeModule } from './sizes/sizes-module';
     GarmentCategoriesModule,
     ComponentsModule,
     AttributeModule,
+    CustomGroupsModule,
+    ROSLGroupsModule,
+    BuyingHouseModule,
+    CommissionModule,
     UsersModule,
     OrdersModule,
     DeliveryTermsModule,
