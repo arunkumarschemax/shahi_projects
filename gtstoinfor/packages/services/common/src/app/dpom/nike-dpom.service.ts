@@ -199,7 +199,6 @@ export class DpomService {
             accepted: acceptedArray,
             unaccepted: unacceptedArray
           });
-          console.log(unacceptedArray, "Unaccepted Array Content");
           return response;
         } else {
           return new CommonResponseModel(false, 0, 'Unable To Fetch Data', []);

@@ -20,6 +20,7 @@ import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared
 import PoFileImport from "./nike/po-file-import"
 import DivertReport from "./nike/divert-report"
 import FactoryPPMReport from "./nike/factory-ppm-report"
+import ShipmentPlanningChart from "./nike/shipment-planning-chart"
 
 
 export const AppRoutes = () => {
@@ -60,6 +61,8 @@ export const AppRoutes = () => {
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='divert-report' element={<DivertReport />} />
                         <Route path='factory-report' element={<FactoryPPMReport />} />
+                        <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
+
                     </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
@@ -107,6 +110,7 @@ export const AppRoutes = () => {
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='divert-report' element={<DivertReport />} />
                         <Route path='factory-report' element={<FactoryPPMReport/>} />
+                        <Route path='shipment-planning-chart' element={<ShipmentPlanningChart/>} />
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

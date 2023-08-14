@@ -30,15 +30,11 @@
         const service = new NikeService();
         const [form] = Form.useForm();
 
-        const Finish = (values: any) => {
-            console.log(values,'vallllll');
-            // if (values.DPOMLineItemStatus !== undefined) {
-            //     // getFactoryStatus(values)
-            // }/
-            
-        }
+        useEffect(() => {
+            getData();
+            getCount();
+        }, [])
 
-        
 
         const handleSearch = (selectedKeys: any, confirm: any, dataIndex: string) => {
             confirm();
@@ -108,35 +104,33 @@
                     text
                 ),
         });
+    let oldSno = 0;
+    let newSno = 0;
 
+        
 
-        useEffect(() => {
-            getData();
-            getCount();
-        }, [])
+        const getCount= () =>{
+            service.getCountForDivertReport().then(res => {
 
-
-        const getData = async () => {
+                if (res.status) {
+                    setDataLength(res.data)
+                }
+            })
+        
+        
+    }
+        const getData = () =>{
          service.getDivertReportData().then(res=>{
             if (res.status) {
                 setAcceptedItems(res.data.accepted);
-                
                 console.log(acceptedItems)
                 setUnacceptedItems(res.data.unaccepted);
+                getCount();
             }
          }) 
         }
 
-        const getCount= () =>{
-                service.getCountForDivertReport().then(res => {
-
-                    if (res.status) {
-                        setDataLength(res.data)
-                    }
-                })
-            
-            
-        }
+       
 
         const handleExport = (e: any) => {
             e.preventDefault();
@@ -168,15 +162,15 @@
             const excel = new Excel();
     excel.addSheet("Sheet1");
 
-    const formattedData = combinedData.map((item, index) => ({
+    const formattedDataForExcel = modifiedCombinedData.map(item => ({
         ...item,
-        sno: item.section === 'old' ? index + 1 : '', 
+        sno: item.section === 'old' ? item.sno : newSno++,
     }));
 
     let newSno = 1;
-    const newSectionStart = formattedData.findIndex(item => item.section === 'new');
+    const newSectionStart = formattedDataForExcel.findIndex(item => item.section === 'new');
     if (newSectionStart >= 0) {
-        formattedData.slice(newSectionStart).forEach((item, index) => {
+        formattedDataForExcel.slice(newSectionStart).forEach((item, index) => {
             if (item.section === 'new') {
                 item.sno = newSno++; 
             }
@@ -185,16 +179,13 @@
 
     excel.addRow();
     excel.addColumns(exportingColumns);
-    excel.addDataSource(formattedData);
+    excel.addDataSource(formattedDataForExcel);
     excel.saveAs(`Divert-report-${currentDate}.xlsx`);
 }
 
-        
-        
-
-
         const columns: ColumnProps<any>[] = [
-            
+
+         
         { title: 'old',  
         children: [
             {
@@ -267,7 +258,7 @@
                 render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
 
             },
-            {
+            {   
                 title: 'Inventory Segment Code',
                 dataIndex: ' inventorySegmentCode',
                 render: (text, record) => (record.section === 'old' ? record.inventorySegmentCode : "-"),
@@ -314,7 +305,41 @@
                 key: 'sno',
                 responsive: ['sm'],
                 render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+            },
+            {
+                title: 'OGAC Date',
+                dataIndex: 'ogac', 
+                render: (text, record) => {
+                    return record.section === 'new'
+                        ? (record.ogac
+                            ? moment(record.ogac).format("YYYY-MM-DD")
+                            : "-")
+                        : "";
+                }
+            },
+            {
+                title: 'GAC Date',
+                dataIndex: 'gac', 
+                render: (text, record) => {
+                    return record.section === 'new'
+                        ? (record.gac
+                            ? moment(record.gac).format("YYYY-MM-DD")
+                            : "-")
+                        : "";
+                }
+            },{
+            title:"No of Days to GAC",
+            dataIndex:"",
             }, 
+            {
+                title:"To item",
+                dataIndex:"",
+                }, 
+            {
+               title:"Unit",
+               dataIndex:"",
+               },
+
             {
                 title: "Plant",
                 dataIndex: "plant",
@@ -362,7 +387,7 @@
                 
             },
             {
-                title: 'Balance Qty',
+                title: 'Quantity',
                 dataIndex: '', 
               //  render: (text, record) => (record.section === 'new' ? record.poLine : "-"),
 
@@ -373,47 +398,43 @@
                 render: (text, record) => (record.section === 'new' ? record.destination : "-"),
  
             },
-            {
-                title: 'Shipment Type',
-                dataIndex: 'shipmentType',
-                render: (text, record) => (record.section === 'new' ? record.shipmentType : "-"),
-            },
+            
             {
                 title: 'Inventory Segment Code',
                 dataIndex: 'inventorySegmentCode', 
                 render: (text, record) => (record.section === 'new' ? record.inventorySegmentCode : "-"),
             },
             {
-                title: 'OGAC Date',
-                dataIndex: 'ogac', 
-                render: (text, record) => {
-                    return record.section === 'new'
-                        ? (record.ogac
-                            ? moment(record.ogac).format("YYYY-MM-DD")
-                            : "-")
-                        : "";
-                }
-            },
-            {
-                title: 'GAC Date',
-                dataIndex: 'gac', 
-                render: (text, record) => {
-                    return record.section === 'new'
-                        ? (record.gac
-                            ? moment(record.gac).format("YYYY-MM-DD")
-                            : "-")
-                        : "";
-                }
-            },
-            {
-                title: 'Quantity',
-                dataIndex: '', 
-            },{
                 title: 'Item Vas',
                 dataIndex: 'item_vas_text',
                 render: (text, record) => (record.section === 'new' ? (record.item_vas_text !== null ? record.item_vas_text : "null") : ""),
             },
             
+            {
+                title: 'Shipment Type',
+                dataIndex: 'shipmentType',
+                render: (text, record) => (record.section === 'new' ? record.shipmentType : "-"),
+            },
+            {
+                title: 'Item Vas Diff Check',
+                dataIndex: '', 
+            },
+            {
+                title: 'Qty Tally-Check',
+                dataIndex: '', 
+            },
+            {
+                title: 'Price-Fob Tally-Check',
+                dataIndex: '', 
+            },
+            {
+                title: 'Price-Net Includding Discount Tally-Check',
+                dataIndex: '', 
+            },
+            {
+                title: 'Price-Trading Co Net Includding Discount Tally-Check',
+                dataIndex: '', 
+            },
         
         ]as unknown as null,}
         ]
@@ -421,6 +442,13 @@
             ...acceptedItems.map(item => ({ ...item, section: 'old' })),
             ...unacceptedItems.map(item => ({ ...item, section: 'new' })),
         ]
+        const newSectionStart = combinedData.findIndex(item => item.section === 'new');
+        const modifiedCombinedData = combinedData.map((item, index) => {
+            if (item.section === 'new') {
+                return { ...item, sno: index + 301 - newSectionStart };
+            }
+            return item;
+        });
 
 
 
@@ -433,15 +461,15 @@
                         onClick={handleExport}
                         icon={<FileExcelFilled />}>Download Excel</Button>}>
                             <Row gutter={70}>
-                    <Col >
-                        <Card title={'Total Line Status Count  : ' + Number(dataLength[0].totalCount)} style={{ textAlign: 'left', width: 280, height: 38, backgroundColor: ' lightblue' }}></Card>
+                     <Col >
+                        <Card title={'Total Line Status Count  : ' + Number(dataLength[0]?.totalCount)} style={{ textAlign: 'left', width: 280, height: 38, backgroundColor: ' lightblue' }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Accepted  : ' + Number(dataLength[0].acceptedCount)} style={{ textAlign: 'left', width: 200, height: 38, backgroundColor: 'lightblue' }}></Card>
+                        <Card title={'Accepted  : ' + Number(dataLength[0]?.acceptedCount)} style={{ textAlign: 'left', width: 200, height: 38, backgroundColor: 'lightblue' }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Unaccepted : ' +Number(dataLength[0].unacceptedCount)} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
-                    </Col>
+                        <Card title={'Unaccepted : ' +Number(dataLength[0]?.unacceptedCount)} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
+                    </Col> 
                    
                     
                 </Row><br></br>
@@ -449,7 +477,7 @@
                         <Table
                             columns={columns}
                             className="custom-table-wrapper"
-                            dataSource={combinedData}
+                            dataSource={modifiedCombinedData}
                             pagination={{
                                 onChange(current, pageSize) {
                                 setPage(current);
@@ -468,3 +496,6 @@
     }
 
     export default DivertReport
+
+
+
