@@ -330,4 +330,20 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'Something went wrong');
         }
     }
+
+    async getQtyChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getQtyChangeData()
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async poLineItemStatusChange(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.poLineItemStatusChange()
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 }
