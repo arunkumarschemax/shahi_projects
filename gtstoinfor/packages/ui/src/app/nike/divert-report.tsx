@@ -202,7 +202,7 @@
                         },
                         {
                             title: 'OGAC Date',
-                            dataIndex: 'ogac', 
+                            dataIndex: 'ogac',
                            
                         },
                         {
