@@ -103,7 +103,7 @@ export class DocumentsListService {
 
     async getPoNumberDropdown():Promise<UploadDocumentListResponseModel>{
         try{
-            const query ='select po_no as poNumber from orders group by po_no'
+            const query ='select customer_po as poNumber from documents_list group by customer_po'
             const result = await this.dataSource.query(query)
             return new UploadDocumentListResponseModel(true,1,'Data retrived Sucessfully',result)
         }
@@ -115,8 +115,7 @@ export class DocumentsListService {
 
     async getDocumentDetailsByPO(req:PoRoleRequest):Promise<UploadDocumentListResponseModel>{
         try{
-            // const query='SELECT d.id as documentCategoryId,dl.documents_list_id AS documentList,role_name AS roleName,d.document_name AS documentName,documents_list_id AS documentListId,customer_po AS poNumber,order_id AS orderId,file_name AS fileName,file_path AS filePath,is_uploaded AS isUploaded FROM document_role_mapping drl LEFT JOIN document d ON d.id=document_id LEFT JOIN documents_list dl ON dl.document_category_id=drl.document_id group by drl.document_id'
-            const sqlQuery = "Select d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentList from documents_list dl left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"'";
+            const sqlQuery = "Select dl.file_name AS fileName, dl.file_path AS filePath, dl.is_uploaded AS uploadStatus, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentList from documents_list dl left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"'";
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
             if(result){
                 return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',result)
