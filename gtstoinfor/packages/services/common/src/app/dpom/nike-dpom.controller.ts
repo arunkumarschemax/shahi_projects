@@ -55,6 +55,25 @@ export class DpomController {
     async getByFactoryStatus(@Body() req: DpomSaveDto): Promise<any> {
         return await this.dpomService.getByFactoryStatus(req);
     }
+    
+    @Post('/getDivertReportData')
+    async getDivertReportData(): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getDivertReportData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+    @Post('/getCountForDivertReport')
+    async getCountForDivertReport(): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getCountForDivertReport();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
 
     @Post('/getPlantWisePoOrders')
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
@@ -83,6 +102,15 @@ export class DpomController {
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
 
+        }
+    }
+
+    @Post('/getShipmentPlaningChart')
+    async getShipmentPlaningChart(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getShipmentPlaningChart();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
 

@@ -13,6 +13,12 @@ export class NikeService extends CommonAxiosService {
     async getByFactoryStatus(): Promise<any> {
         return this.axiosPostCall(this.dpomController + "/getByFactoryStatus")
     }
+    async getDivertReportData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.DpomController + "/getDivertReportData")
+    }
+    async getCountForDivertReport(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.DpomController + "/getCountForDivertReport")
+    }
 
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPlantWisePoOrders")
@@ -36,5 +42,8 @@ export class NikeService extends CommonAxiosService {
 
     async poLineItemStatusChange(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/poLineItemStatusChange")
+    }
+    async getShipmentPlaningChart(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.DpomController + "/getShipmentPlaningChart")
     }
 }   

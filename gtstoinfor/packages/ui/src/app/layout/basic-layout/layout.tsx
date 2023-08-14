@@ -128,6 +128,12 @@ export const baseRouterList = [
                 filepath: "file-import",
             },
             {
+                label: "Divert Report",
+                key: "divert-report",
+                path: "divert-report",
+                filepath: "divert-report",
+            },
+            {
                 label: "Factory Report",
                 key: "factory-report",
                 path: "factory-report",
@@ -149,6 +155,12 @@ export const baseRouterList = [
                 key: "order-acceptance",
                 path: "order-acceptance",
                 filepath: "order-acceptance",
+            },
+            {
+                label: "Shipment Planning Chart",
+                key: "shipment-planning-chart",
+                path: "shipment-planning-chart",
+                filepath: "shipment-planning-chart",
             },
            
         ],

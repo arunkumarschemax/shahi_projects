@@ -19,10 +19,12 @@ import SupplierView from "./masters/supplier/supplier-view"
 import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared-models"
 import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
+import DivertReport from "./nike/divert-report"
 import FactoryPPMReport from "./nike/reports/factory-ppm-report"
 import FabricTrackerReport from "./nike/reports/fabric-tracker-report"
 import { NikeDashboard } from "./nike/nike-dash-components/nike-dashboard"
 import { OrderAcceptance } from "./nike/components/order-acceptance"
+import ShipmentPlanningChart from "./nike/shipment-planning-chart"
 
 
 export const AppRoutes = () => {
@@ -64,9 +66,12 @@ export const AppRoutes = () => {
                     <Route path='file-import' element={<PoFileImport />} />
                     <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
                     <Route path='file-import' element={<PoFileImport />} />
+                        <Route path='divert-report' element={<DivertReport />} />
                     <Route path='factory-report' element={<FactoryPPMReport />} />
                     <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
                     <Route path='order-acceptance' element={<OrderAcceptance />} />
+                        <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
+
                 </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
@@ -114,8 +119,10 @@ export const AppRoutes = () => {
                         <Route path='nike-dashboard' element={<NikeDashboard />} />
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
+                        <Route path='divert-report' element={<DivertReport />} />
                         <Route path='factory-report' element={<FactoryPPMReport />} />
                         <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
+                        <Route path='shipment-planning-chart' element={<ShipmentPlanningChart/>} />
                         <Route path='order-acceptance' element={<OrderAcceptance />} />
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
