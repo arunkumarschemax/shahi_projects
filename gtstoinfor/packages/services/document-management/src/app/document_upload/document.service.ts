@@ -27,6 +27,16 @@ export class DocumentService {
         }
        
       }
+      async getAllDocumentsforRolemapping(): Promise<DocumentResponseModel> {
+        const query= 'select document_name as documentName,id,created_user as createdUser,updated_user as updatedUser,is_active as isActive,version_flag as versionFlag from document where is_active=true'
+        const data = await this.repository.query(query)
+        console.log(data,'dataa')
+        if (data) {
+         return new DocumentResponseModel(true,1,'Document data Retrived Sucessfully',data)
+        }else{
+          return new DocumentResponseModel(false,0,'no data found',undefined)
+        }    
+      }
 
       async getDocvalidation(documentName:string):Promise<DocumentEntity>{
         const data = await this.repository.findOne({

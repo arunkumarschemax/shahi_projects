@@ -101,6 +101,14 @@ export class DocumentUploadController {
         return error;
       }
     }
+    @Post('getAllDocumentsforRolemapping')
+    async getAllDocumentsforRolemapping(): Promise<DocumentResponseModel> {
+      try {
+        return await this.documentservice.getAllDocumentsforRolemapping();
+      } catch (error) {
+        return error;
+      }
+    }
 
     @Post('activateOrDeactivateDocument')
     async activateOrDeactivateDocument(@Body() req:DocumentDto): Promise<DocumentResponseModel> {

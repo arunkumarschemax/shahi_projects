@@ -63,7 +63,7 @@ export const baseRouterList = [
             },
 
             {
-                label: "Role Mapping",
+                label: "Document Role Mapping",
                 key: "Role Mapping",
                 path: "role-mapping-grid",
                 filepath: "role-mapping-grid",
