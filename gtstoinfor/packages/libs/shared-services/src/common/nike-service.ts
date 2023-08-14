@@ -19,4 +19,12 @@ export class NikeService extends CommonAxiosService  {
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.DpomController + "/getCountForDivertReport")
     }
+
+    async getPlantWisePoOrders(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.DpomController + "/getPlantWisePoOrders")
+    }
+
+    async getStatusWiseItems(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.DpomController + "/getStatusWiseItems")
+    }
 }   

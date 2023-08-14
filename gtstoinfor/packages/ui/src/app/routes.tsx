@@ -17,9 +17,11 @@ import PhaseWiseData from "./excel-import/phase-wise-data"
 import SupplierForm from "./masters/supplier/supplier-form"
 import SupplierView from "./masters/supplier/supplier-view"
 import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared-models"
-import PoFileImport from "./nike/po-file-import"
+import PoFileImport from "./nike/reports/po-file-import"
 import DivertReport from "./nike/divert-report"
-import FactoryPPMReport from "./nike/factory-ppm-report"
+import FactoryPPMReport from "./nike/reports/factory-ppm-report"
+import FabricTrackerReport from "./nike/reports/fabric-tracker-report"
+import { NikeDashboard } from "./nike/nike-dash-components/nike-dashboard"
 import ShipmentPlanningChart from "./nike/shipment-planning-chart"
 
 
@@ -58,9 +60,11 @@ export const AppRoutes = () => {
                     {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
                 </Route>
                 <Route path='/nike'>
+                        <Route path='nike-dashboard' element={<NikeDashboard />} />
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='divert-report' element={<DivertReport />} />
                         <Route path='factory-report' element={<FactoryPPMReport />} />
+                        <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
                         <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
 
                     </Route>
@@ -107,9 +111,11 @@ export const AppRoutes = () => {
 
                     </Route>
                     <Route path='/nike'>
+                        <Route path='nike-dashboard' element={<NikeDashboard />} />
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='divert-report' element={<DivertReport />} />
                         <Route path='factory-report' element={<FactoryPPMReport/>} />
+                        <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
                         <Route path='shipment-planning-chart' element={<ShipmentPlanningChart/>} />
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />

@@ -30,4 +30,17 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany()
     }
 
+
+    async getPlantCount(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`plant , plant_name , COUNT(po_number) AS poCount , SUM(total_item_qty) AS qty`)
+            .groupBy(`plant`)
+        return await query.getRawMany();
+    }
+    async getStatusWiseItemCount(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom_item_line_status , COUNT(dpom_item_line_status) AS count`)
+            .groupBy(`dpom_item_line_status`)
+        return await query.getRawMany();
+    }
 }

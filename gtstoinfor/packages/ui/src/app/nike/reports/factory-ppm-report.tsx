@@ -340,7 +340,7 @@ const FactoryPPMReport = () => {
                         // dataSource={gridData}
                         dataSource={filterData}
                         scroll={{ x: 1000 }}
-                        bordered style={{ backgroundColor: "green" }} />
+                        bordered />
                 </Card>
             </Card>
         </>

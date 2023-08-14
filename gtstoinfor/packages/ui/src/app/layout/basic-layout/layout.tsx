@@ -122,6 +122,12 @@ export const baseRouterList = [
         filepath: "nike",
         children: [
             {
+                label: "Dashboard",
+                key: "nike-dashboard",
+                path: "nike-dashboard",
+                filepath: "nike-dashboard",
+            },
+            {
                 label: "Add PO",
                 key: "file-import",
                 path: "file-import",
@@ -138,6 +144,12 @@ export const baseRouterList = [
                 key: "factory-report",
                 path: "factory-report",
                 filepath: "factory-report",
+            },
+            {
+                label: "Fabric Tracker",
+                key: "fabrick-tracker-report",
+                path: "fabrick-tracker-report",
+                filepath: "fabrick-tracker-report",
             },
             {
                 label: "Shipment Planning Chart",
