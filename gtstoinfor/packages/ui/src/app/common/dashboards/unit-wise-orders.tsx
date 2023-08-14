@@ -350,8 +350,7 @@ export function DocumentWiseDocumentsGraph() {
   const service = new OrdersService();
 
   const config = {
-    colors: ['#058DC7', '#50B432', '#FFC000', '#7798BF', '#aaeeee', '#ff0066',
-      '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+    colors:['green', '#FF1D18'],
     chart: {
       type: 'column',
       //backgroundColor: '#CCCCFF'
