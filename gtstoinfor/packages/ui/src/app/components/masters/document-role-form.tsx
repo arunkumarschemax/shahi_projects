@@ -66,7 +66,7 @@ const getDocumentData =() =>{
         roleMappingService.createDocMapping(req).then(res =>{
             if(res.status){
              message.success(res.internalMessage)
-                navigate("/masters/role-mapping-grid")
+                navigate("/role-mapping-grid")
                 handleReset()
             }else{
               message.error(res.internalMessage)

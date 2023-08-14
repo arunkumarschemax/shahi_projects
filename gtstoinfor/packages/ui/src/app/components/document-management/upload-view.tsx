@@ -18,6 +18,8 @@ export interface UploadViewProps {
     form: FormInstance<any>
     docData: any[];
     formData: (value: any) => void;
+    fileList: (value: any[]) => void;
+
 }
 
 const UploadView = (props: UploadViewProps) => {
@@ -39,6 +41,7 @@ const UploadView = (props: UploadViewProps) => {
     console.log(props.form.getFieldValue(`${data.documentsListId}`));
     data.file = file;
     props.formData(data);
+    props.fileList(fileList);
   }
     
     const gstUploadFieldProps: UploadProps = {

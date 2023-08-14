@@ -124,44 +124,36 @@ export default function DocumentListupload() {
   const onFinish = (data: any) => {
     console.log(data,'dataaaa')
     form.validateFields().then(res => {
-      console.log(res)
-    const req = new DocumentsListRequest( data.documentCategoryId,data.roleId,res.customerPo?res.customerPo:'',data.orderId,res.file.fileList)
-    console.log(req,'req')
-      service.createDocumentsList(req).then((res) => {
-        if(res.status){
-          console.log(res);
-          console.log(fileList);
-          if (fileList.length > 0) {
-            setBtnDisable(false)
+      // console.log(res,'res')
+    
+    // data.file.forEach((file: any) => {
+    //   req.file = ('file', file);
+    // });
+          if (data.file.fileList) {
             const formData = new FormData();
-            formData.append('documentCategoryId', `${res.data[0].documentCategoryId}`);
-            formData.append('roleId', `${res.data[0].roleId}`);
-            formData.append('customerPo', `${res.data[0].customerPo}`);
-            formData.append('orderId', `${res.data[0].orderId}`);
-            res.data.forEach((value) => {
-              formData.append('documentsListId', `${value.documentsListId}`);
-            })
-
+            formData.append('documentCategoryId', `${data.documentCategoryId}`);
+            formData.append('roleId', `${data.roleId}`);
+            formData.append('customerPo', `${data.poNumber}`);
+            formData.append('orderId', `${data.orderId}`);
+            console.log(fileList,'fileList')
              fileList.forEach((file: any) => {
               formData.append('file', file);
             });
               console.log(formData);
-              service.DocumentFileUpload(formData).then((res) => {
-                console.log(res);
-                setFilelist([])
-                form.resetFields(['poNumber'])
-                getDocData(form.getFieldValue("customerPo"));
-                
+              const req = new DocumentsListRequest(data.documentsListId,data.documentCategoryId,1,data.poNumber,data.orderId,data.file.fileList)
+              console.log(req,'req')
+              service.DocumentFileUpload(req).then((res) => {
+                if(res.status){
+                  console.log(res);
+                  getDocData(form.getFieldValue("customerPo"));
+                  message.success(res.internalMessage)
+                }
+                else{
+                  AlertMessages.getSuccessMessage("Something went wrong");
+                }
               })
           }
           AlertMessages.getSuccessMessage(res.internalMessage);
-        } else {
-          
-            AlertMessages.getErrorMessage(res.internalMessage);
-        }
-      }).catch((err) => {
-        AlertMessages.getErrorMessage(err.message);
-      });
     })
 
   }
@@ -188,7 +180,7 @@ export default function DocumentListupload() {
            </Form.Item>
          </Col>
       </Row>
-        <UploadView form={form} docData={docData} formData={onFinish}/>
+        <UploadView form={form} docData={docData} formData={onFinish} fileList={setFilelist}/>
       </Form>
     </div>
   // <Card title='Document Upload'>

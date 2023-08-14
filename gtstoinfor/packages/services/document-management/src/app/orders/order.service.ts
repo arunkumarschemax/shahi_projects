@@ -118,7 +118,7 @@ export class OrdersService {
                         const poNo = data.po_no;
 
                         if (!uniquePoNos[poNo]) {
-                            uniquePoNos[poNo] = true; 
+                            uniquePoNos[poNo] = []; 
 
                             requestData = [
                                 {

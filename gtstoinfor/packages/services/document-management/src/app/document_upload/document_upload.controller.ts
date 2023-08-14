@@ -75,9 +75,10 @@ export class DocumentUploadController {
         callback(null, true);
       },
     }))
-    async DocumentFileUpload(@UploadedFiles() file, @Body() uploadData: DocumentUploadDto): Promise<DocumentFileUploadResponse> {
+    async DocumentFileUpload(@UploadedFiles() file, @Body() uploadData: DocumentsListRequest): Promise<DocumentFileUploadResponse> {
+      console.log(uploadData,'uploaddataaaa')
       try {
-        return await this.uploadDocservice.updatePath(file,'upload-files/',uploadData.documentCategoryId,uploadData.roleId,uploadData.customerPo,uploadData.orderId,uploadData.documentsListId);
+        return await this.uploadDocservice.updatePath(uploadData,file);
       } catch (error) {
         // return this.applicationExceptionHandler.returnException(DocumentFileUploadResponse, error);
       }

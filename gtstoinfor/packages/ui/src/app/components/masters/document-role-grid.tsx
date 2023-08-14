@@ -116,7 +116,7 @@ const DocumentRoleGrid = () => {
     <div>
       <br />
       
-      <Card title='Document Role Mapping' size='small' extra={<span><Button onClick={() => navigate('/masters/role-mapping-form')} type={'primary'}>create</Button></span>}>       
+      <Card title='Document Role Mapping' size='small' extra={<span><Button onClick={() => navigate('/role-mapping-form')} type={'primary'}>create</Button></span>}>       
         <Table
           columns={columns}
           dataSource={data}

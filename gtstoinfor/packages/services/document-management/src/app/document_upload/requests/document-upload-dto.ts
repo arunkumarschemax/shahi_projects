@@ -7,7 +7,7 @@ export class FilesDto {
 
 export class DocumentUploadDto {
     @ApiProperty()
-    documentsListId: number[];
+    documentsListId: number;
     @ApiProperty()
     documentCategoryId: number;
     @ApiProperty()
@@ -17,5 +17,6 @@ export class DocumentUploadDto {
     @ApiProperty()
     orderId:number
     @ApiProperty({ type: [FilesDto]})
-    filesDto: FilesDto[];
+    file: FilesDto[];
 }
+

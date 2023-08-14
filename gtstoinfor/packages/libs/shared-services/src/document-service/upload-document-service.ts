@@ -14,6 +14,7 @@ export class UploadDocumentService extends CommonAxiosService {
     }
 
     async DocumentFileUpload(req:any): Promise<UploadDocumentListResponseModel> {
+        console.log(req,'req')
         return this.axiosPostCall(this.url + "/DocumentFileUpload",req)
     }
 
