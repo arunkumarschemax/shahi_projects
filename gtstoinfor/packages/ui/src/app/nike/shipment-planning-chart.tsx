@@ -150,17 +150,14 @@ const ShipmentPlanningChart = () => {
         {
             title: 'SHIP TO ADDRESS(lpo)',
             dataIndex: '', 
-            render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
 
         },{
             title: 'SHIP TO ADDRESS(DIA)',
             dataIndex: '', 
-            render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
 
         },{
             title: 'Hanger',
             dataIndex: 'shipmentType', 
-            render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
 
         },
         {   
@@ -250,17 +247,164 @@ const ShipmentPlanningChart = () => {
         },
   
     ]
+
+    const handleExport = (e: any) => {
+        e.preventDefault();
+
+
+        const currentDate = new Date()
+            .toISOString()
+            .slice(0, 10)
+            .split("-")
+            .join("/");
+
+        let exportingColumns: IExcelColumn[] = []
+        exportingColumns = [
+            
+            { title: 'Po+Line ', dataIndex: 'poLine' },
+            { title: 'Item', dataIndex: 'Item' },
+            {
+                title: 'Factory',dataIndex:''
+            },
+            {
+                title: 'Plan',dataIndex:''   
+            },
+            {
+                title: 'Purchase Order Number',
+                dataIndex:'purchaseOrderNumber'
+                  
+            },
+            {
+                title: 'PO Line Item Number',
+                dataIndex: 'poLineItemNumber',
+    
+                
+            },
+            {
+                title: 'Style Number',
+                dataIndex: 'styleNumber', 
+            },
+            {
+                title: 'Destination Country Name',
+                dataIndex: 'destinationCountryName',
+            },
+            {
+                title: 'SHIP TO ADDRESS(lpo)',
+                dataIndex: '', 
+    
+            },{
+                title: 'SHIP TO ADDRESS(DIA)',
+                dataIndex: '', 
+    
+            },{
+                title: 'Hanger',
+                dataIndex: 'shipmentType', 
+    
+            },
+            {    title: 'FOB',dataIndex:''
+    
+            },
+            {   
+                title: 'CO',dataIndex:''
+            },
+            {
+                title: 'Prooduct Code',
+                dataIndex: 'productCode', 
+              
+            },
+            {
+                title: 'Color Description',
+                dataIndex: 'colorDescription', 
+              
+            },
+            {
+                title: 'Planning Season Code',
+                dataIndex:'planningSeasonCode'
+            },
+            {
+                title: 'Plant Serason Year',
+                dataIndex: 'planningSeasonYear',          
+            },
+            {
+                title: 'OGAC',
+                dataIndex: 'ogac',          
+            }, {
+                title: 'GAC',
+                dataIndex: 'gac',          
+            },
+            {
+                title: 'EX FACTORY',
+                dataIndex: '',          
+            },
+            {
+                title: 'Total Item Quantity',
+                dataIndex: 'totalItemQuantity',          
+            },{
+                title: 'Mode of Transportation',
+                dataIndex: 'modeofTransport',          
+            },
+            {
+                title: 'PAYMENT TERMS LC/TT/TC',
+                dataIndex: '',          
+            },
+            {
+                title: 'DESCRIPTION WITH FABRIC CONTENT',
+                dataIndex: '',          
+            },
+            {
+                title: 'Gender Age Description',
+                dataIndex: '',          
+            },
+            {
+                title: 'Fabric Content as per washcare label',
+                dataIndex: '',          
+            },
+            {
+                title: 'FABRIC IMPORTED/DOMESTIC',
+                dataIndex: '',          
+            },
+            {
+                title: 'COMMISSION(IF ANY)',
+                dataIndex: '',          
+            },
+            {
+                title: 'Shipping Type',
+                dataIndex: 'shippingType',          
+            },
+            {
+                title: 'Doc Type Description',
+                dataIndex: 'docTypeDescription',          
+            },
+            {
+                title: 'Purchase Group Name',
+                dataIndex: 'purchaseGroupName',          
+            },
+            {
+                title: 'CAB CODE',
+                dataIndex: '',          
+            },
+        ]
+
+
+        const excel = new Excel();
+        excel.addSheet("Sheet1");
+        excel.addRow();
+        excel.addColumns(exportingColumns);
+        excel.addDataSource(shipmentData);
+        excel.saveAs(`shipment-planning-chart-${currentDate}.xlsx`);
+    }
+
    
 
 
     return (
         <>
         <Card title="Shipment Planning Chart" headStyle={{ fontWeight: 'bold' }}
-            // extra={ <Button
-            //     type="default"
-            //     style={{ color: 'green' }}
-            //     onClick={handleExport}
-            //     icon={<FileExcelFilled />}>Download Excel</Button>}
+            extra={ <Button
+                type="default"
+                style={{ color: 'green' }}
+                onClick={handleExport}
+                icon={<FileExcelFilled />}>Download Excel</Button>}
                 >
 
                         <Card >

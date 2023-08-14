@@ -5,11 +5,17 @@
     import moment from 'moment';
     import Highlighter from 'react-highlight-words';
     import Item from 'antd/es/descriptions/Item';
-    import { IExcelColumn } from 'antd-table-saveas-excel/app';
     import { Excel } from 'antd-table-saveas-excel';
     import { Tooltip, numberFormat } from 'highcharts';
     import { NikeService } from '@project-management-system/shared-services';
-
+   
+      
+    interface IExcelColumn {
+        title: string;
+        dataIndex: string;
+        color?:string;
+        children?: IExcelColumn[];
+      }
 
     const DivertReport = () => {
     
@@ -18,17 +24,10 @@
         const [searchText, setSearchText] = useState("");
         const [searchedColumn, setSearchedColumn] = useState("");
         const searchInput = useRef<any>(null);
-
-        const [factory, setFactory] = useState([]);
-        const { RangePicker } = DatePicker;
-        const [gridData, setGridData] = useState<any[]>([]);
         const [dataLength, setDataLength] = useState<any[]>([]);
-
         const [acceptedItems, setAcceptedItems] = useState<any[]>([]);
         const [unacceptedItems, setUnacceptedItems] = useState<any[]>([])
-        const { Option } = Select;
         const service = new NikeService();
-        const [form] = Form.useForm();
 
         useEffect(() => {
             getData();
@@ -141,23 +140,189 @@
                 .split("-")
                 .join("/");
         
-            let exportingColumns: IExcelColumn[] = [
-                { title: 'Section', dataIndex: 'section' },
-                { title: 'S.No', dataIndex: 'sno' },
-                { title: 'Plant', dataIndex: 'plant' },
-                { title: 'Product Code', dataIndex: 'productCode' },
-                { title: 'Line Status', dataIndex: 'lineStatus' },
-                { title: 'Document Date', dataIndex: 'documentDate' },
-                { title: 'Old Po', dataIndex: 'poNumber' },
-                { title: 'Old Po Line', dataIndex: 'poLine' },
-                { title: 'Balance Qty', dataIndex: 'balanceQty' },
-                { title: 'Destination', dataIndex: 'destination' },
-                { title: 'Shipment Type', dataIndex: 'shipmentType' },
-                { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
-                { title: 'OGAC Date', dataIndex: 'ogac' },
-                { title: 'GAC Date', dataIndex: 'gac' },
-                { title: 'Item Vas', dataIndex: 'item_vas_text' },
-            ];
+           
+                const exportingColumns: IExcelColumn[] = [
+                    {
+                      title: 'Old',
+                      dataIndex: 'acceptedItems',
+                      color:'1bb5a1',
+                      children: [
+                        {
+                            title: "Plant",
+                            dataIndex: "plant",
+                            
+                        },
+                        {
+                            title: "Product Code",
+                            dataIndex: "productCode",
+            
+                        },
+                           {
+                            title: "Line Status",
+                            dataIndex: "lineStatus",
+                            // ...getColumnSearchProps("lineStatus"),
+            
+                        },
+                        {
+                            title: 'Document Date',
+                            dataIndex: 'documentDate', 
+                            
+                        },
+                        {
+                            title: 'Old Po',
+                            dataIndex: 'poNumber',
+            
+                            
+                        },
+                        {
+                            title: 'Old Po Line',
+                            dataIndex: 'poLine',
+            
+                            
+                        },
+                        {
+                            title: 'Balance Qty',
+                            dataIndex: '-', 
+            
+                        },
+                        {
+                            title: 'Destination',
+                            dataIndex: 'destination',
+             
+                        },
+                        {
+                            title: 'Shipment Type',
+                            dataIndex: 'shipmentType', 
+            
+                        },
+                        {   
+                            title: 'Inventory Segment Code',
+                            dataIndex: ' inventorySegmentCode',
+             
+                        },
+                        {
+                            title: 'OGAC Date',
+                            dataIndex: 'ogac', 
+                           
+                        },
+                        {
+                            title: 'GAC Date',
+                            dataIndex: 'gac', 
+                            
+                        },
+                        ,
+                        {
+                            title: 'Item Vas',
+                            dataIndex: 'item_vas_text',
+                        },
+                      ]
+                    },
+                    {
+                        title: 'New',
+                        dataIndex: 'unacceptedItems',
+                        children: [
+                          { title: 'Plant', dataIndex: 'plant' },
+                          {
+                            title: 'OGAC Date',
+                            dataIndex: 'ogac', 
+                            
+                        },
+                        {
+                            title: 'GAC Date',
+                            dataIndex: 'gac', 
+                           
+                        },{
+                        title:"No of Days to GAC",
+                        dataIndex:"",
+                        }, 
+                        {
+                            title:"To item",
+                            dataIndex:"",
+                            }, 
+                        {
+                           title:"Unit",
+                           dataIndex:"",
+                           },
+            
+                        {
+                            title: "Plant",
+                            dataIndex: "plant",
+            
+                        },
+                        {
+                            title: "Product Code",
+                            dataIndex: "productCode",
+            
+                        },
+                        {
+                            title: "Line Status",dataIndex:''
+            
+                        },
+                        {
+                            title: 'Document Date',
+                            dataIndex: 'documentDate', 
+                        },
+                        {
+                            title: 'New Po',
+                            dataIndex: 'poNumber',
+                            
+                        },
+                        {
+                            title: 'New Po Line',
+                            dataIndex: 'poLine',
+            
+                            
+                        },
+                        {
+                            title: 'Quantity',
+                            dataIndex: '', 
+            
+                        },
+                        {
+                            title: 'Destination',
+                            dataIndex: 'destination',
+             
+                        },
+                        
+                        {
+                            title: 'Inventory Segment Code',
+                            dataIndex: 'inventorySegmentCode', 
+                        },
+                        {
+                            title: 'Item Vas',
+                            dataIndex: 'item_vas_text',
+                        },
+                        
+                        {
+                            title: 'Shipment Type',
+                            dataIndex: 'shipmentType',
+                        },
+                        {
+                            title: 'Item Vas Diff Check',
+                            dataIndex: '', 
+                        },
+                        {
+                            title: 'Qty Tally-Check',
+                            dataIndex: '', 
+                        },
+                        {
+                            title: 'Price-Fob Tally-Check',
+                            dataIndex: '', 
+                        },
+                        {
+                            title: 'Price-Net Includding Discount Tally-Check',
+                            dataIndex: '', 
+                        },
+                        {
+                            title: 'Price-Trading Co Net Includding Discount Tally-Check',
+                            dataIndex: '', 
+                        },
+                    
+                        ]
+                      },
+                    
+                  ];
+            
         
             const excel = new Excel();
     excel.addSheet("Sheet1");
@@ -167,15 +332,15 @@
         sno: item.section === 'old' ? item.sno : newSno++,
     }));
 
-    let newSno = 1;
-    const newSectionStart = formattedDataForExcel.findIndex(item => item.section === 'new');
-    if (newSectionStart >= 0) {
-        formattedDataForExcel.slice(newSectionStart).forEach((item, index) => {
-            if (item.section === 'new') {
-                item.sno = newSno++; 
-            }
-        });
-    }
+    // let newSno = 1;
+    // const newSectionStart = formattedDataForExcel.findIndex(item => item.section === 'new');
+    // if (newSectionStart >= 0) {
+    //     formattedDataForExcel.slice(newSectionStart).forEach((item, index) => {
+    //         if (item.section === 'new') {
+    //             item.sno = newSno++; 
+    //         }
+    //     });
+    // }
 
     excel.addRow();
     excel.addColumns(exportingColumns);
@@ -186,7 +351,8 @@
         const columns: ColumnProps<any>[] = [
 
          
-        { title: 'old',  
+        { title: 'old', 
+       
         children: [
             {
                 title: 'S.No',
