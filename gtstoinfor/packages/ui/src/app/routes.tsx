@@ -63,7 +63,7 @@ export const AppRoutes = () => {
                 } >
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
-                    <Route path='/masters'>
+                    {/* <Route path='/masters'> */}
                         <Route path='document-form' key='/document-form' element={<DocumentForm data={undefined
                 } updateDetails={(undefined => { })} isUpdate={false} closeForm={() => { }} />} />
                         <Route path='document-grid' key='/document-grid' element={<DocumentGrid />} />
@@ -71,7 +71,7 @@ export const AppRoutes = () => {
                         <Route path='role-mapping-grid' key='/role-mapping-grid' element={<DocumentRoleGrid />} />
 
 
-                    </Route>
+                    {/* </Route> */}
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
                         <Route path='changes-view' element={<ChangesGrid />} />

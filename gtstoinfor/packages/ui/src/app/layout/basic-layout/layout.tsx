@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined, FileTextOutlined } from '@ant-design/icons'
+import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined, FileTextOutlined, FilePdfOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { CommonHeader } from '../header/header';
 import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
@@ -25,40 +25,41 @@ export const baseRouterList = [
         icon: <DashboardOutlined />,
         filepath: "/dashboard.tsx",
     },
-    {
-        label: "User Management",
-        key: "user-management",
-        path: "user-management",
-        icon: <UserOutlined />,
-        filepath: "../",
-        children: [
-            {
-                label: "Add User",
-                key: "users-from",
-                path: "users-from",
-                icon: <UserOutlined />,
-                filepath: "users-form.tsx",
-            },
-            {
-                label: "View User",
-                key: "users-view",
-                path: "users-view",
-                icon: <UserOutlined />,
-                filepath: "users-view.tsx",
-            },
-        ],
-    },
-    {
-        label: "Masters",
-        key: "masters",
-        path: "masters",
-        icon: <PicCenterOutlined />,
-        filepath: "masters",
-        children: [
+    // {
+    //     label: "User Management",
+    //     key: "user-management",
+    //     path: "user-management",
+    //     icon: <UserOutlined />,
+    //     filepath: "../",
+    //     children: [
+    //         {
+    //             label: "Add User",
+    //             key: "users-from",
+    //             path: "users-from",
+    //             icon: <UserOutlined />,
+    //             filepath: "users-form.tsx",
+    //         },
+    //         {
+    //             label: "View User",
+    //             key: "users-view",
+    //             path: "users-view",
+    //             icon: <UserOutlined />,
+    //             filepath: "users-view.tsx",
+    //         },
+    //     ],
+    // },
+    // {
+    //     label: "Masters",
+    //     key: "masters",
+    //     path: "masters",
+    //     icon: <PicCenterOutlined />,
+    //     filepath: "masters",
+    //     children: [
             {
                 label: "Documents",
                 key: "Documents",
                 path: "document-grid",
+                icon: <FilePdfOutlined />,
                 filepath: "document-grid",
             },
 
@@ -66,6 +67,7 @@ export const baseRouterList = [
                 label: "Document Role Mapping",
                 key: "Role Mapping",
                 path: "role-mapping-grid",
+                icon: <FilePdfOutlined />,
                 filepath: "role-mapping-grid",
             },
             // {
@@ -74,8 +76,8 @@ export const baseRouterList = [
             //     path: "factories/factories-view",
             //     filepath: "factories/factories-view",
             // },
-        ],
-    },
+    //     ],
+    // },
     // {
     //     label: "Orders",
     //     key: "excel-import",
