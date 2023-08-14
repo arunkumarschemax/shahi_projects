@@ -16,56 +16,96 @@ export class DocumentService {
         private repository:DocumentRepository ,
     ) { }
 
-    async create(createDto: DocumentDto, entity: DocumentEntity): Promise<DocumentDto> {
-        createDto.documentName = entity.documentName;
+    async getAllDocuments(): Promise<DocumentResponseModel> {
+        const query= 'select document_name as documentName,id,created_user as createdUser,updated_user as updatedUser,is_active as isActive,version_flag as versionFlag from document'
+        const data = await this.repository.query(query)
+        console.log(data,'dataa')
+        if (data) {
+         return new DocumentResponseModel(true,1,'Document data Retrived Sucessfully',data)
+        }else{
+          return new DocumentResponseModel(false,0,'no data found',undefined)
+        }
+       
+      }
 
-        const updatedDocument = await this.repository.save(createDto);
-
-        return updatedDocument;
+      async getDocvalidation(documentName:string):Promise<DocumentEntity>{
+        const data = await this.repository.findOne({
+           where:{documentName: documentName}    
+        })
+        if(data){
+            return data
+        }else{
+            return null
+        }
     }
 
+      async createDocument(req:DocumentDto ,isUpdate: boolean):Promise<DocumentResponseModel>{
+        try{
 
-    // async getAllDocuments(): Promise<DocumentResponseModel> {
-    //     const data = await this.repository.find();
-    //     let info = []
-    //     if (data.length === 0) {
-    //         console.log('oooo');
-    //         for(const rec of data){
-    //             info.push(new DocumentDto(rec.id,rec.documentName,rec.createdUser,rec.isActive,rec.updatedAt,rec.updatedUser,rec.updatedAt,rec.createdAt,rec.versionFlag))
-    //         }
-    //     }
-    //     return new DocumentResponseModel(
-    //         true,23333,`data retrieved successfully`
-    //     )
-    // }
-
-    async getAllDocuments(): Promise<CommonResponseModel> {
-        const data = await this.repository.find();
-        if (data.length > 0) {
-          return new CommonResponseModel(true,1,"data retrived successfully", data);
+          if(!isUpdate){
+            const relation = await this.getDocvalidation(req.documentName)
+            if(relation){
+                return new DocumentResponseModel(false,0,'routes combination already exists',undefined)
+            }
+        }else{
+            console.log('hiii')
+            const relation = await this.getDocvalidation(req.documentName)
+            if(relation){
+                return new DocumentResponseModel(false,0,'routes combination already exists',undefined)     
+            }
         }
-        else{
-          return new CommonResponseModel(false,0,"No Data found",);
+          const entities= new DocumentEntity()
+          entities.documentName=req.documentName
+          if(isUpdate){
+            entities.id=req.id
+            entities.updatedUser=req.updatedUser
+          }else{
+            entities.createdUser=req.createdUser
+          }
+          const save = await this.repository.save(entities)
+          if(save){
+            return new DocumentResponseModel(true,1,'document created sucessfully..',undefined)
+          }else{
+            return new DocumentResponseModel(false,0,'somthing went wrong..',undefined)
 
+          }
+        }catch(error){
+          throw error
         }
       }
 
-      // async activateOrDeactivateModules(modulesReq: DocumentDto): Promise<CommonResponseModel> {
-      //   const record = await this.repository.findOne({ where: { moduleId: modulesReq.moduleId } });
-    
-      //   await this.repository.update({ moduleId: modulesReq.moduleId }, { isActive: !record.isActive });
-      //   const internalMessage: string = !record.isActive ? "Activated Sucessfully" : "Deactivated Successfully"
-      //   return new CommonResponseModel(true, 6876, internalMessage)
-      // }
-      // async getModulesById(moduleId: number): Promise<ModulesEntity> {
-      //   const Response = await this.repository.findOne({
-      //     where: { moduleId: moduleId },
-      //   });
-      //   if (Response) {
-      //     return Response;
-      //   } else {
-      //     return null;
-      //   }
-      // }
-   
+      async activateOrDeactivateDocument(req: DocumentDto): 
+      Promise<DocumentResponseModel> {
+        const routedetails = await this.repository.findOne({ where: { id: req.id } })
+        if (routedetails) {
+
+            if (req.versionFlag != routedetails.versionFlag) {
+
+                throw new DocumentResponseModel(false, 1, 'SomeOne updated. Referesh and try again', [])
+            } else {
+                const routesupdate = await this.repository.update({ id: req.id }, { isActive: req.isActive, updatedUser: req.updatedUser, })
+                if (routedetails.isActive) {
+                    if (routesupdate.affected) {
+                        return new DocumentResponseModel(true, 0, ' de-activated successfully', [])
+                    } else {
+                        throw new DocumentResponseModel(false, 1, 'already deactivated', [])
+                    }
+                } else {
+                    if (routesupdate.affected) {
+                        return new DocumentResponseModel(true, 0, 'activated successfully', [])
+                    } else {
+                        throw new DocumentResponseModel(false, 1, 'already activated', [])
+                    }
+                }
+            }
+        }
+        else {
+            throw new DocumentResponseModel(false, 1, 'No record found', [])
+
+        }
+
+    }
+
+
+      
     }

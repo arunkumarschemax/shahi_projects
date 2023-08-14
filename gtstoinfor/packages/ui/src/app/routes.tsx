@@ -64,7 +64,8 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
                     <Route path='/masters'>
-                        <Route path='document-form' key='/document-form' element={<DocumentForm />} />
+                        <Route path='document-form' key='/document-form' element={<DocumentForm data={undefined
+                } updateDetails={(undefined => { })} isUpdate={false} closeForm={() => { }} />} />
                         <Route path='document-grid' key='/document-grid' element={<DocumentGrid />} />
                         <Route path='role-mapping-form' key='/role-mapping-form' element={<RoleMappingForm />} />
                         <Route path='role-mapping-grid' key='/role-mapping-grid' element={<DocumentRoleGrid />} />

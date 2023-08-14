@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Form, Select, Button, Row, Col, Input, message, MessageArgsProps } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-import DocumentService from 'packages/libs/shared-services/src/document-service/document-shared-service';
 import { DocumentDto, DocumentRoleMappingDto } from '@project-management-system/shared-models';
 import RoleSharedService from 'packages/libs/shared-services/src/document-role-service/document-role-sharedservice';
+import { DocumentService } from '@project-management-system/shared-services';
 const { Option } = Select;
 
 export const RoleMappingForm=() =>{
@@ -131,7 +131,7 @@ const getDocumentData =() =>{
                                     onChange={docOnchange}
                                     >
                                       {roleData?.map((obj:any) =>{
-                                            return <Option key={obj.documentCategoryId} value={obj.documentCategoryId} type={obj.documentName}>{obj.documentName}</Option>
+                                            return <Option key={obj.id} value={obj.id} type={obj.documentName}>{obj.documentName}</Option>
                                          })}
                                 </Select>
                             </Form.Item>
