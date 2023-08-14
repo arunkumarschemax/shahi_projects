@@ -145,6 +145,12 @@ export const baseRouterList = [
                 path: "fabrick-tracker-report",
                 filepath: "fabrick-tracker-report",
             },
+            {
+                label: "Order Acceptance",
+                key: "order-acceptance",
+                path: "order-acceptance",
+                filepath: "order-acceptance",
+            },
            
         ],
     },

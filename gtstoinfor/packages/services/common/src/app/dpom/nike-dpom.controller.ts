@@ -75,6 +75,16 @@ export class DpomController {
 
         }
     }
+
+    @Post('/getOrderAcceptanceData')
+    async getOrderAcceptanceData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getOrderAcceptanceData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
        
     }
 

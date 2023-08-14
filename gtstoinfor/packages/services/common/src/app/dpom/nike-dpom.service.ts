@@ -5,6 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { CommonResponseModel } from '@project-management-system/shared-models';
+import { DpomApproveReq } from './dto/dpom-approve.req';
 const qs = require('querystring');
 
 @Injectable()
@@ -202,5 +203,19 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'Data retrieved', data)
         else
             return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getOrderAcceptanceData () : Promise<CommonResponseModel>{
+        const data = await this.dpomRepository.find()
+        console.log(data)
+        if(data){
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        }else{
+            return new CommonResponseModel(false, 0, 'No data found');
+        }
+    }
+
+    async approveDpomLineItemStatus (req:DpomApproveReq) : Promise <CommonResponseModel>{
+      return
     }
 }
