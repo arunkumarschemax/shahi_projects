@@ -52,7 +52,7 @@ export class DpomController {
     }
 
     @Post('/getByFactoryStatus')
-    async getByFactoryStatus(@Body()req:DpomSaveDto):Promise<any>{
+    async getByFactoryStatus(@Body() req: DpomSaveDto): Promise<any> {
         return await this.dpomService.getByFactoryStatus(req);
     }
     
@@ -104,6 +104,7 @@ export class DpomController {
 
         }
     }
+
     @Post('/getShipmentPlaningChart')
     async getShipmentPlaningChart(): Promise<CommonResponseModel> {
         try {
@@ -112,7 +113,36 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
-    
-       
+
+    @Post('/approveDpomLineItemStatus')
+    async approveDpomLineItemStatus(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.approveDpomLineItemStatus(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
     }
+
+    @Post('/getQtyChangeData')
+    async getQtyChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getQtyChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+    @Post('/poLineItemStatusChange')
+    async poLineItemStatusChange(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.poLineItemStatusChange();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+}
 

@@ -2,8 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class DpomApproveReq {
     @ApiProperty()
-    poNumber: string;
+    purchaseOrderNumber: string;
     @ApiProperty()
-    poLineItemNunber:number;
-    
+    poLineItemNumber: number;
+    @ApiProperty()
+    scheduleLineItemNumber: string;
 }

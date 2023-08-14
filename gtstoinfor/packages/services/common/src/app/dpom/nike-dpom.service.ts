@@ -335,18 +335,42 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getOrderAcceptanceData () : Promise<CommonResponseModel>{
+    async getOrderAcceptanceData(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.find()
         console.log(data)
-        if(data){
+        if (data) {
             return new CommonResponseModel(true, 1, 'Data retrieved', data)
-        }else{
+        } else {
             return new CommonResponseModel(false, 0, 'No data found');
         }
     }
 
-    async approveDpomLineItemStatus (req:DpomApproveReq) : Promise <CommonResponseModel>{
-      return
+    async approveDpomLineItemStatus(req: DpomApproveReq): Promise<CommonResponseModel> {
+        const purchaseOrderNumber = req.purchaseOrderNumber
+        const poLineItemNumber = req.poLineItemNumber
+        const scheduleLineItemNumber = req.scheduleLineItemNumber
+        const updateStatus = await this.dpomRepository.update({ purchaseOrderNumber: purchaseOrderNumber, poLineItemNumber: poLineItemNumber, scheduleLineItemNumber: scheduleLineItemNumber }, { DPOMLineItemStatus: 'Accepted' })
+        if (updateStatus) {
+            return new CommonResponseModel(true, 1, 'Status Updated')
+        } else {
+            return new CommonResponseModel(false, 0, 'Something went wrong');
+        }
+    }
+
+    async getQtyChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getQtyChangeData()
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async poLineItemStatusChange(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.poLineItemStatusChange()
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
     async getShipmentPlaningChart(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.shipmentChart()
