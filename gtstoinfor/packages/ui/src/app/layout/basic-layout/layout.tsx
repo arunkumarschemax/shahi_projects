@@ -90,12 +90,7 @@ export const baseRouterList = [
                 path: "paymentmethod/paymentmethod-view",
                 filepath: "paymentmethod/paymentmethod-view",
             },
-            {
-                label: "PaymentMethod",
-                key: "paymentmethod",
-                path: "paymentmethod/paymentmethod-view",
-                filepath: "paymentmethod/paymentmethod-view",
-            },
+           
             {
                 label: "Brands",
                 key: "brands",
@@ -230,10 +225,28 @@ export const baseRouterList = [
                 filepath: "taxes/taxes-grid",
             },
             {
+                label: "Fabric Type",
+                key: "fabricType",
+                path: "fabricType/fabric-type-view",
+                filepath: "fabricType/fabric-type-view",
+            },
+            {
+                label: "Fabric Sub-Type",
+                key: "fabricSubType",
+                path: "fabricSubType/fabric-sub-type-view",
+                filepath: "fabricSubType/fabric-sub-type-view",
+            },
+            {
                 label: "Settings",
                 key: "settings",
                 path: "settings/settings-form",
                 filepath: "settings/settings-form",
+            },
+            {
+                label: "Size",
+                key: "Size",
+                path: "size/size-view",
+                filepath: "size/size-view",
             },
             {
                 label: "Custom Groups",
@@ -329,6 +342,7 @@ export const baseRouterList = [
             //     path: "phase-wise-grid",
             //     filepath: "phase-wise-grid",
             // }
+            
         ],
     },
 ];
