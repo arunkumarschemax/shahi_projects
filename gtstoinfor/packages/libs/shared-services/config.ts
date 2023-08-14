@@ -3,6 +3,6 @@ export const config = {
     whatsapp_redirection_url: 'http://dev.schemaxtech.in/#',
     whatsapp_notification_url: 'http://206.189.138.212:3000',
     whatsapp_broadcast_url: 'http://206.189.138.212:3232/api',
-    // doc_management_url:'http://165.22.220.143:8002/api',
-    doc_management_url:'http://localhost:8002/api',
+    doc_management_url:'http://165.22.220.143:8002/api',
+    // doc_management_url:'http://localhost:8002/api',
 }
