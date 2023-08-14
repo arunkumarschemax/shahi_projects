@@ -213,7 +213,6 @@ export class DpomService {
    
     }
       
-   
 
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPlantCount()
@@ -224,6 +223,13 @@ export class DpomService {
     }
     async getStatusWiseItems(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getStatusWiseItemCount()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getShipmentPlaningChart(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.shipmentChart()
         if (data)
             return new CommonResponseModel(true, 1, 'Data retrieved', data)
         else

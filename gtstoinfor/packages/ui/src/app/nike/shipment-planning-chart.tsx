@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, Table, Row, Input, Col, Form, DatePicker, Select, Button, message } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
@@ -16,122 +17,237 @@ const ShipmentPlanningChart = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<any>(null);
+  const service = new NikeService();
+  const [shipmentData, setShipmentData] = useState<any>();
   
 
     useEffect(() => {
-      
+        getShipmentData();
     }, [])
+
+    const getShipmentData = () =>{
+        service.getShipmentPlaningChart().then(res=>{
+           if (res.status) {
+            setShipmentData(res.data)
+
+           }
+        }) 
+       }
+     
+       const handleSearch = (selectedKeys: any, confirm: any, dataIndex: string) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters: any) => {
+        clearFilters();
+        setSearchText('');
+    };
+
+    const getColumnSearch = (dataIndex: string) => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+            <div style={{ padding: 8 }}>
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{ width: 188, marginBottom: 8, display: 'block' }}
+                />
+                <Button
+                    type="primary"
+                    onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                    icon={<SearchOutlined />}
+                    size="small"
+                    style={{ width: 90, marginRight: 8 }}
+                >
+                    Search
+                </Button>
+                <Button
+                    size="small"
+                    style={{ width: 90 }}
+                    onClick={() => {
+                        handleReset(clearFilters);
+                        setSearchedColumn(dataIndex);
+                        confirm({ closeDropdown: true });
+                    }}
+                >
+                    Reset
+                </Button>
+            </div>
+        ),
+        filterIcon: (filtered: any) => (
+            <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+        ),
+        onFilter: (value: any, record: any) =>
+            record[dataIndex]
+                ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+                : false,
+        onFilterDropdownVisibleChange: (visible: any) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select());
+            }
+        },
+        render: (text: any) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text.toString()}
+                />
+            ) : (
+                text
+            ),
+    });
+
 
     const columns: ColumnProps<any>[] = [
 
-     
+        {
+            title: 'PO+Line',
+            dataIndex:"poLine"
 
+        },
         {
             title: 'S.No',
             key: 'sno',
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1)
         },
+       
         {
-            title: "Plant",
-            dataIndex: "plant",
-            render: (text, record) => (record.section === 'old' ? record.plant : ''),
-        },
-        {
-            title: "Product Code",
-            dataIndex: "productCode",
-            sorter: (a, b) => a.productCode.localeCompare(b.productCode),
-            sortDirections: ["descend", "ascend"],
-            // ...getColumnSearchProps("productCode"),
-            render: (text, record) => (record.section === 'old' ? record.productCode : ''),
-
+            title: 'Item',
         },
            {
-            title: "Line Status",
-            dataIndex: "lineStatus",
-            // ...getColumnSearchProps("lineStatus"),
-            render: (text, record) => (record.section === 'old' ? record.lineStatus : ''),
-
+            title: 'Factory',
         },
         {
-            title: 'Document Date',
-            dataIndex: 'documentDate', 
-            render: (text, record) => {
-                return record.section === 'old'
-                    ? (record.documentDate
-                        ? moment(record.documentDate).format("YYYY-MM-DD")
-                        : "-")
-                    : "";
-            }
+            title: 'Plan',
+            
         },
         {
-            title: 'Old Po',
-            dataIndex: 'poNumber',
-            render: (text, record) => (record.section === 'old' ? record.poNumber : ''),
+            title: 'Purchase Order Number',
+            dataIndex:'purchaseOrderNumber'
+              
+        },
+        {
+            title: 'PO Line Item Number',
+            dataIndex: 'poLineItemNumber',
 
             
         },
         {
-            title: 'Old Po Line',
-            dataIndex: 'poLine',
-            render: (text, record) => (record.section === 'old' ? record.poLine : "-"),
-
-            
+            title: 'Style Number',
+            dataIndex: 'styleNumber', 
         },
         {
-            title: 'Balance Qty',
-            dataIndex: '-', 
-            render: (text, record) => (record.section === 'old' ? record.plant : "-"),
-
+            title: 'Destination Country Name',
+            dataIndex: 'destinationCountryName',
         },
         {
-            title: 'Destination',
-            dataIndex: 'destination',
-            render: (text, record) => (record.section === 'old' ? record.destination : "-"),
+            title: 'SHIP TO ADDRESS(lpo)',
+            dataIndex: '', 
+            render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
 
-        },
-        {
-            title: 'Shipment Type',
+        },{
+            title: 'SHIP TO ADDRESS(DIA)',
+            dataIndex: '', 
+            render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
+
+        },{
+            title: 'Hanger',
             dataIndex: 'shipmentType', 
             render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
 
         },
         {   
-            title: 'Inventory Segment Code',
-            dataIndex: ' inventorySegmentCode',
-            render: (text, record) => (record.section === 'old' ? record.inventorySegmentCode : "-"),
+            title: 'FOB',
+
+        },
+        {   
+            title: 'CO',
+           
 
         },
         {
-            title: 'OGAC Date',
-            dataIndex: 'ogac', 
-            render: (text, record) => {
-                return record.section === 'old'
-                    ? (record.ogac
-                        ? moment(record.ogac).format("YYYY-MM-DD")
-                        : "-")
-                    : "";
-            }
+            title: 'Prooduct Code',
+            dataIndex: 'productCode', 
+          
         },
         {
-            title: 'GAC Date',
-            dataIndex: 'gac', 
-            render: (text, record) => {
-                return record.section === 'old'
-                    ? (record.gac
-                        ? moment(record.gac).format("YYYY-MM-DD")
-                        : "-")
-                    : "";
-            }
+            title: 'Color Description',
+            dataIndex: 'colorDescription', 
+          
         },
-        ,
         {
-            title: 'Item Vas',
-            dataIndex: 'item_vas_text',
-            render: (text, record) => (record.section === 'old' ? (record.item_vas_text !== null ? record.item_vas_text : "null") : ""),
+            title: 'Planning Season Code',
+            dataIndex:'planningSeasonCode'
         },
-  
-  
+        {
+            title: 'Plant Serason Year',
+            dataIndex: 'planningSeasonYear',          
+        },
+        {
+            title: 'OGAC',
+            dataIndex: 'ogac',          
+        }, {
+            title: 'GAC',
+            dataIndex: 'gac',          
+        },
+        {
+            title: 'EX FACTORY',
+            dataIndex: '',          
+        },
+        {
+            title: 'Total Item Quantity',
+            dataIndex: 'totalItemQuantity',          
+        },{
+            title: 'Mode of Transportation',
+            dataIndex: 'modeofTransport',          
+        },
+        {
+            title: 'PAYMENT TERMS LC/TT/TC',
+            dataIndex: '',          
+        },
+        {
+            title: 'DESCRIPTION WITH FABRIC CONTENT',
+            dataIndex: '',          
+        },
+        {
+            title: 'Gender Age Description',
+            dataIndex: '',          
+        },
+        {
+            title: 'Fabric Content as per washcare label',
+            dataIndex: '',          
+        },
+        {
+            title: 'FABRIC IMPORTED/DOMESTIC',
+            dataIndex: '',          
+        },
+        {
+            title: 'COMMISSION(IF ANY)',
+            dataIndex: '',          
+        },
+        {
+            title: 'Shipping Type',
+            dataIndex: 'shippingType',          
+        },
+        {
+            title: 'Doc Type Description',
+            dataIndex: 'docTypeDescription',          
+        },
+        {
+            title: 'Purchase Group Name',
+            dataIndex: 'purchaseGroupName',          
+        },
+        {
+            title: 'CAB CODE',
+            dataIndex: '',          
+        },
   
     ]
    
@@ -151,7 +267,7 @@ const ShipmentPlanningChart = () => {
                 <Table
                     columns={columns}
                     className="custom-table-wrapper"
-                   // dataSource={modifiedCombinedData}
+                    dataSource={shipmentData}
                     pagination={{
                         onChange(current, pageSize) {
                         setPage(current);

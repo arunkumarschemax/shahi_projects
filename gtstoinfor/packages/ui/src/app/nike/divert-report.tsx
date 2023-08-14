@@ -125,7 +125,7 @@
                 setAcceptedItems(res.data.accepted);
                 console.log(acceptedItems)
                 setUnacceptedItems(res.data.unaccepted);
-                getCount();
+                // getCount();
             }
          }) 
         }

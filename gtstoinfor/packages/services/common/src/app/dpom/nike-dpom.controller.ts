@@ -94,6 +94,15 @@ export class DpomController {
 
         }
     }
+
+    @Post('/getShipmentPlaningChart')
+    async getShipmentPlaningChart(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getShipmentPlaningChart();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
        
     }
 
