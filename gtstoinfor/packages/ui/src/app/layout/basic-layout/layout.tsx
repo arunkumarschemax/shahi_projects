@@ -163,6 +163,13 @@ export const baseRouterList = [
                 filepath: "shipment-planning-chart",
             },
            
+            {
+                label: "Shipment Report",
+                key: "shipment-report",
+                path: "shipment-report",
+                filepath: "shipment-report",
+            },
+           
         ],
     },
 ];

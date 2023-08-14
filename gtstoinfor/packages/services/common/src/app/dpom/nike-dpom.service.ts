@@ -279,7 +279,7 @@ export class DpomService {
 
     async getFactoryReportData(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find();
-       // console.log(details)
+        // console.log(details)
         return new CommonResponseModel(true, 1, 'data retrived', details)
 
     }
@@ -294,31 +294,38 @@ export class DpomService {
             return 'no data found';
         }
     }
-   
+
+    async getShipmentTrackerReport(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.find();
+        console.log(details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+
+    }
+
     async getDivertReportData(): Promise<CommonResponseModel> {
         const report = await this.dpomRepository.getDivertReport();
-      
+
         const acceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'accepted',);
-        const unacceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'unaccepted');      
+        const unacceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'unaccepted');
         if (acceptedArray.length > 0 || unacceptedArray.length > 0) {
-          const response = new CommonResponseModel(true, report.length, 'data retrieved', {
-            accepted: acceptedArray,
-            unaccepted: unacceptedArray
-          });
-          return response;
+            const response = new CommonResponseModel(true, report.length, 'data retrieved', {
+                accepted: acceptedArray,
+                unaccepted: unacceptedArray
+            });
+            return response;
         } else {
-          return new CommonResponseModel(false, 0, 'Unable To Fetch Data', []);
+            return new CommonResponseModel(false, 0, 'Unable To Fetch Data', []);
         }
-      }
-      
-      
-      async getCountForDivertReport(): Promise<CommonResponseModel> {
+    }
+
+
+    async getCountForDivertReport(): Promise<CommonResponseModel> {
 
         const details = await this.dpomRepository.getCountForDivertReport();
         return new CommonResponseModel(true, 1, 'data retrived', details)
-   
+
     }
-      
+
 
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPlantCount()

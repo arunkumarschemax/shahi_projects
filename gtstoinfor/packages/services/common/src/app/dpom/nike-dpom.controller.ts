@@ -55,7 +55,17 @@ export class DpomController {
     async getByFactoryStatus(@Body() req: DpomSaveDto): Promise<any> {
         return await this.dpomService.getByFactoryStatus(req);
     }
-    
+
+    @Post('/getShipmentTrackerReport')
+    async getShipmentTrackerReport(): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getShipmentTrackerReport();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
     @Post('/getDivertReportData')
     async getDivertReportData(): Promise<CommonResponseModel> {
         try {
@@ -65,6 +75,7 @@ export class DpomController {
 
         }
     }
+
     @Post('/getCountForDivertReport')
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         try {
