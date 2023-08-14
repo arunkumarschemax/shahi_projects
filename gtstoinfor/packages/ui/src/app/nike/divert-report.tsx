@@ -454,7 +454,7 @@
 
         return (
             <>
-                <Card title="Divert Report" headStyle={{ fontWeight: 'bold',backgroundColor:"skyblue" }}
+                <Card title="Divert Report" headStyle={{ fontWeight: 'bold' }}
                     extra={ <Button
                         type="default"
                         style={{ color: 'green' }}

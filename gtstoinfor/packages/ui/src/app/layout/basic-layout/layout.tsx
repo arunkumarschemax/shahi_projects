@@ -140,7 +140,7 @@ export const baseRouterList = [
                 filepath: "factory-report",
             },
             {
-                label: "Factory Report",
+                label: "Shipment Planning Chart",
                 key: "shipment-planning-chart",
                 path: "shipment-planning-chart",
                 filepath: "shipment-planning-chart",

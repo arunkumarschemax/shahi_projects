@@ -139,7 +139,7 @@ const ShipmentPlanningChart = () => {
 
     return (
         <>
-        <Card title="Shipment Planning Chart" headStyle={{ fontWeight: 'bold',backgroundColor:"skyblue" }}
+        <Card title="Shipment Planning Chart" headStyle={{ fontWeight: 'bold' }}
             // extra={ <Button
             //     type="default"
             //     style={{ color: 'green' }}
