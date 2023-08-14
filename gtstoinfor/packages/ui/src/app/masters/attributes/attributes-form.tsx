@@ -107,7 +107,7 @@ export function AttributesForm(props: AttributesFormProps) {
                     message: "Attribute Is Required",
                   },
                   {
-                    pattern: /^[A-Za-z]+$/,
+                    pattern: /^[A-Za-z ]+$/,
                     message: "Should contain only alphabets.",
                   },
                 ]}

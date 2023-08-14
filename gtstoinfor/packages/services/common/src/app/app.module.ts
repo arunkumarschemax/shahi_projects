@@ -38,6 +38,10 @@ import { ComponentMappingModule } from './components-mapping/component-mapping.m
 import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
+import { CustomGroupsModule } from './custom groups/custom-groups.module';
+import { ROSLGroupsModule } from './rosl groups/rosl-groups.module';
+import { BuyingHouseModule } from './buying-house/buying-house.module';
+import { CommissionModule } from './commission/commission.module';
 
 
 @Module({
@@ -70,6 +74,10 @@ import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
     GarmentCategoriesModule,
     ComponentsModule,
     AttributeModule,
+    CustomGroupsModule,
+    ROSLGroupsModule,
+    BuyingHouseModule,
+    CommissionModule,
     UsersModule,
     OrdersModule,
     DeliveryTermsModule,

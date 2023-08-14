@@ -235,6 +235,30 @@ export const baseRouterList = [
                 path: "settings/settings-form",
                 filepath: "settings/settings-form",
             },
+            {
+                label: "Custom Groups",
+                key: "custom-groups",
+                path: "custom-groups/custom-groups-view",
+                filepath: "custom-groups/custom-groups-view",
+            },
+            {
+                label: "ROSL Groups",
+                key: "rosl-groups",
+                path: "rosl-groups/rosl-groups-view",
+                filepath: "rosl-groups/rosl-groups-view",
+            },
+            {
+                label: "Buying House",
+                key: "buying-house",
+                path: "buying-house/buying-house-view",
+                filepath: "buying-house/buying-house-view",
+            },
+            {
+                label: "Commission",
+                key: "commission",
+                path: "commission/commission-view",
+                filepath: "commission/commission-view",
+            },
         ],
     },
 
