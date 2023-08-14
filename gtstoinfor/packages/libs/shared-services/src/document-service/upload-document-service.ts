@@ -1,5 +1,6 @@
 import {
     DocumentsListRequest,
+    PoRoleRequest,
     UploadDocumentListDto,
     UploadDocumentListResponseModel,
 } from "@project-management-system/shared-models";
@@ -17,12 +18,11 @@ export class UploadDocumentService extends CommonAxiosService {
     }
 
     async getPoNumberDropdown(): Promise<UploadDocumentListResponseModel> {
-        console.log('hii')
         return this.axiosPostCall(this.url + "/getPoNumberDropdown")
     }
 
-    async getAllDocumentDetails(): Promise<UploadDocumentListResponseModel> {
-        return this.axiosPostCall(this.url + "/getAllDocumentDetails")
+    async getDocumentDetailsByPO(req: PoRoleRequest): Promise<UploadDocumentListResponseModel> {
+        return this.axiosPostCall(this.url + "/getDocumentDetailsByPO",req)
     }
     
 }

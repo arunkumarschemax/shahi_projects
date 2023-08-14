@@ -15,7 +15,7 @@ import { DeleteDto } from './dto/delete-dto';
 import { Entity } from 'typeorm';
 import { DocumentEntity } from './entities/documents.entity';
 import { DocumentRoleMapping } from "./models/document-role-mapping.dto";
-import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingResponseModel, RoleActivateDeactivateDto } from "@project-management-system/shared-models";
+import { AllDocumentRoleMappingsResponseModel, DocumentRoleMappingResponseModel, PoRoleRequest, RoleActivateDeactivateDto } from "@project-management-system/shared-models";
 import { DocumentRoleMappingService } from "./document_role_mapping.service";
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import * as fs from 'fs';
@@ -133,10 +133,10 @@ export class DocumentUploadController {
             return (this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error));
         }
     }
-    @Post('/getAllDocumentDetails')
-    async getAllDocumentDetails(): Promise<UploadDocumentListResponseModel> {
+    @Post('/getDocumentDetailsByPO')
+    async getDocumentDetailsByPO(@Body() req:PoRoleRequest): Promise<UploadDocumentListResponseModel> {
         try {
-            return await this.uploadDocservice.getAllDocumentDetails();
+            return await this.uploadDocservice.getDocumentDetailsByPO(req);
         } catch (error) {
             return (this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error));
         }

@@ -37,8 +37,8 @@ export default function DocumentListupload() {
       }
     })
   }
-  const DocumentData =()=>{
-    service.getAllDocumentDetails().then(res=>{
+  const getDocData =(value)=>{
+    service.getDocumentDetailsByPO({roleId:1,customerPo:value}).then(res=>{
       if(res.status){
         setDocData(res.data)
       }else{
@@ -48,7 +48,6 @@ export default function DocumentListupload() {
   }
   useEffect(() =>{
     getPoNumber();
-    DocumentData();
   },[])
 
   const gstUploadFieldProps: UploadProps = {
@@ -126,7 +125,6 @@ const handleUpload = (documentListId, info) => {
       render:(text, rowData) =>{
       return <>
       <Form.Item name={`button${rowData.documentListId}`}  style={{alignItems: 'center'}}>
-
           <Button name={`upload${rowData.documentListId}`} style={{ marginRight: '10px' }} onClick={() =>{onFinish(rowData)}} disabled={btndisable}>
             Upload
           </Button>
@@ -185,7 +183,7 @@ console.log(req,'req')
                 console.log(res);
                 setFilelist([])
                 form.resetFields(['poNumber'])
-                DocumentData();
+                getDocData(form.getFieldValue("customerPo"));
                 
               })
           }
@@ -216,7 +214,7 @@ console.log(req,'req')
               }
             ]}
           >
-            <Select placeholder='Select PoNumber' showSearch allowClear>
+            <Select placeholder='Select PoNumber' onChange={getDocData} showSearch allowClear>
             {poNumber?.map(obj =>{
                       return <Option key={obj.poNumber} value={obj.poNumber}>{obj.poNumber}</Option>
                     })}
