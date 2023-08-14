@@ -17,6 +17,7 @@ import PhaseWiseData from "./excel-import/phase-wise-data"
 import SupplierForm from "./masters/supplier/supplier-form"
 import SupplierView from "./masters/supplier/supplier-view"
 import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared-models"
+import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
 import FactoryPPMReport from "./nike/reports/factory-ppm-report"
 import FabricTrackerReport from "./nike/reports/fabric-tracker-report"
@@ -38,17 +39,17 @@ export const AppRoutes = () => {
                 <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
                 <Route path='/masters'>
                     <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
-                    <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm   Data={undefined} updateItem={function (Data: FactoryDto): void {
-                            throw new Error("Function not implemented.")
-                        } } isUpdate={false} closeForm={function (): void {
-                            throw new Error("Function not implemented.")
-                        } } />} />
+                    <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm Data={undefined} updateItem={function (Data: FactoryDto): void {
+                        throw new Error("Function not implemented.")
+                    }} isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    }} />} />
                     <Route path='supplier/supplier-view' key='/supplier/supplier-view' element={<SupplierView />} />
                     <Route path='supplier/supplier-form' key='/supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
                         throw new Error("Function not implemented.")
-                    } } isUpdate={false} closeForm={function (): void {
+                    }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
-                    } } />} />
+                    }} />} />
                 </Route>
                 <Route path='/excel-import' key='/excel-import'>
                     <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
@@ -59,12 +60,14 @@ export const AppRoutes = () => {
                     {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
                 </Route>
                 <Route path='/nike'>
-                        <Route path='nike-dashboard' element={<NikeDashboard />} />
-                        <Route path='file-import' element={<PoFileImport />} />
-                        <Route path='factory-report' element={<FactoryPPMReport />} />
-                        <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
-                        <Route path='order-acceptance' element={<OrderAcceptance />} />
-                    </Route>
+                    <Route path='nike-dashboard' element={<NikeDashboard />} />
+                    <Route path='file-import' element={<PoFileImport />} />
+                    <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
+                    <Route path='file-import' element={<PoFileImport />} />
+                    <Route path='factory-report' element={<FactoryPPMReport />} />
+                    <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
+                    <Route path='order-acceptance' element={<OrderAcceptance />} />
+                </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
@@ -88,14 +91,14 @@ export const AppRoutes = () => {
                         <Route path='factories/factories-view' element={<FactoriesView />} />
                         <Route path='factories/factories-form' element={<FactoriesForm Data={undefined} updateItem={function (Data: FactoryDto): void {
                             throw new Error("Function not implemented.")
-                        } } isUpdate={false} closeForm={function (): void {
+                        }} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
-                        } }  />} />
+                        }} />} />
                         <Route path='supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
                             throw new Error("Function not implemented.")
-                        } } isUpdate={false} closeForm={function (): void {
+                        }} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
-                        } } />} />
+                        }} />} />
                         <Route path='supplier/supplier-view' element={<SupplierView />} />
                     </Route>
                     <Route path='/excel-import'>
@@ -110,7 +113,8 @@ export const AppRoutes = () => {
                     <Route path='/nike'>
                         <Route path='nike-dashboard' element={<NikeDashboard />} />
                         <Route path='file-import' element={<PoFileImport />} />
-                        <Route path='factory-report' element={<FactoryPPMReport/>} />
+                        <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
+                        <Route path='factory-report' element={<FactoryPPMReport />} />
                         <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
                         <Route path='order-acceptance' element={<OrderAcceptance />} />
                     </Route>

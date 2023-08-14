@@ -1,10 +1,11 @@
+import { DpomChildEntity } from "../entites/dpom-child.entity";
 import { DpomEntity } from "../entites/dpom.entity";
 import { DpomSaveDto } from "./dpom-save.dto";
 
-export class DpomAdapter {
+export class DpomChildAdapter {
 
     public convertDtoToEntity(dto: DpomSaveDto): DpomEntity {
-        const entity = new DpomEntity()
+        const entity = new DpomChildEntity()
 
         entity.documentDate = dto.documentDate
         entity.purchaseOrderNumber = dto.purchaseOrderNumber

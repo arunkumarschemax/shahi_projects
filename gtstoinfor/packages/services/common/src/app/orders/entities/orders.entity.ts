@@ -975,8 +975,8 @@ export class OrdersEntity {
     ordersChild: OrdersChildEntity;
 
     @Column('int', {
-        nullable:true,
+        nullable: true,
         name: 'file_id',
     })
-    fileId : number;
+    fileId: number;
 }
