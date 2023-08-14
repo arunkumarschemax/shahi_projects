@@ -39,12 +39,15 @@ export class DocumentService {
     //     )
     // }
 
-    async getAllDocuments(): Promise<any> {
+    async getAllDocuments(): Promise<CommonResponseModel> {
         const data = await this.repository.find();
-        if (data.length === 0) {
-          console.log('oooo');
+        if (data.length > 0) {
+          return new CommonResponseModel(true,1,"data retrived successfully", data);
         }
-        return data;
+        else{
+          return new CommonResponseModel(false,0,"No Data found",);
+
+        }
       }
 
       // async activateOrDeactivateModules(modulesReq: DocumentDto): Promise<CommonResponseModel> {
