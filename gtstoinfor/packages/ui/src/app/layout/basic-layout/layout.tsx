@@ -13,7 +13,7 @@ import { getOperatingSystem, treeRouter } from '../../utils/common';
 import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
-const { useToken } = theme 
+const { useToken } = theme
 
 
 
@@ -105,13 +105,7 @@ export const baseRouterList = [
                 key: "version-grid",
                 path: "version-grid",
                 filepath: "version-grid",
-            },
-            // {
-            //     label: "Phase Wise Data",
-            //     key: "phase-wise-grid",
-            //     path: "phase-wise-grid",
-            //     filepath: "phase-wise-grid",
-            // }
+            }
         ],
     },
     {
@@ -132,8 +126,12 @@ export const baseRouterList = [
                 key: "factory-report",
                 path: "factory-report",
                 filepath: "factory-report",
-            },
-           
+            }, {
+                label: "Compare Orders",
+                key: "compare-orders",
+                path: "compare-orders",
+                filepath: "compare-orders",
+            }
         ],
     },
 ];
