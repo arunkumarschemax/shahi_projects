@@ -14,6 +14,7 @@ import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
 import { DataSource } from "typeorm";
 import { PoRoleRequest } from "@project-management-system/shared-models";
+import { DocumentUploadDto } from "./requests/document-upload-dto";
 @Injectable()
 export class DocumentsListService {
     constructor(
@@ -65,35 +66,23 @@ export class DocumentsListService {
    * @returns
    */
   async updatePath(
-    file:any[],
-  filePath: string,
-  documentCategoryId: number,
-  roleId:number,
-  customerPo:string,
-  orderId:number,
-  documentsListId: number[],
+    req:DocumentsListRequest,
+    file:any,
 ): Promise<DocumentFileUploadResponse> {
-    console.log(documentsListId[0]);
+    console.log(req,'DocumentUploadDo')
     try{
-        console.log('try');
-        let status = false;
-          file.forEach(async (element,index) => {
-            console.log(documentsListId[index]);
-            console.log(index,element);
             const filePathUpdate = await this.documentsListRepository.update(
-              {  documentsListId:documentsListId[index] },
-              { filePath: filePath+element.filename,fileName: element.originalname, isUploaded: true }
+              {  documentsListId:req.documentsListId },
+              { filePath: '/upload-files/PO-'+req.customerPo+req.file[0].name,fileName: req.file[0].name, isUploaded: true }
             );
-              if (filePathUpdate.affected > 0) {
-                  status = true;
-              } 
-        });
-      if (status) {
-          return new DocumentFileUploadResponse(true,1001,'uploaded successfully. ',"");
-      }
-      else{
-          return new DocumentFileUploadResponse(false,1011,'Something went wrong. ',"");
-      }
+              if (filePathUpdate.affected) {
+                console.log('&&&&&&&&&&&&&&77')
+             return new DocumentFileUploadResponse(true,1,'uploaded successfully. ',"");
+              } else{
+                return new DocumentFileUploadResponse(false,0,'something went wrong. ',"");
+
+              }
+    
   }catch(error){
       console.log(error);
       return error;

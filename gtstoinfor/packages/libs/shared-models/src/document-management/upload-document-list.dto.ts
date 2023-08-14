@@ -50,12 +50,14 @@ export class UploadDocumentListDto{
 
 
 export class DocumentsListRequest{
+    documentsListId: number;
     documentCategoryId:number;
     roleId:number;
     customerPo:string
     orderId:number
-    file:string[];
-    constructor(documentCategoryId:number,roleId:number,customerPo:string,orderId:number, file:string[],){
+    file:any[];
+    constructor(documentsListId: number,documentCategoryId:number,roleId:number,customerPo:string,orderId:number, file:any[],){
+        this.documentsListId = documentsListId;
         this.documentCategoryId = documentCategoryId;
         this.file = file;
         this.roleId = roleId;
