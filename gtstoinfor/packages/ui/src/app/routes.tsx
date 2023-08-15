@@ -85,6 +85,8 @@ import BuyingHouseForm from "./masters/buying-house/buying-house-form"
 import BuyingHouseGrid from "./masters/buying-house/buying-house-grid"
 import CommissionForm from "./masters/commission/commission-form"
 import CommissionGrid from "./masters/commission/commission-grid"
+import ColourGrid from "./masters/colours/colour-grid"
+import { ColourForm } from "./masters/colours/colour-form"
 
 
 export const AppRoutes = () => {
@@ -166,7 +168,7 @@ export const AppRoutes = () => {
 
                  <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
 
-<Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
+                       <Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
                     isUpdate={false}
                     closeForm={() => { }}
                     updateTax={(undefined) => { }}/>} />
@@ -289,6 +291,12 @@ export const AppRoutes = () => {
                 updateData={(undefined) => { }}/>} />
                 <Route path='size/size-view' element={<SizeGrid/>} />
                          <Route path='size/size-form' key ='size/size-form' element={<SizeForm  sizeData={undefined}
+
+                 isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                   <Route path='colour/colour-view' element={<ColourGrid/>} />
+                         <Route path='colour/colour-form' key ='colour/colour-form' element={<ColourForm  colourData={undefined}
 
                  isUpdate={false}
                 closeForm={() => { }}

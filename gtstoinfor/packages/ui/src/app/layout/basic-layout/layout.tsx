@@ -272,6 +272,12 @@ export const baseRouterList = [
                 path: "commission/commission-view",
                 filepath: "commission/commission-view",
             },
+            {
+                label: "Colours",
+                key: "colours",
+                path: "colour/colour-view",
+                filepath: "colour/colour-view",
+            },
         ],
     },
 
