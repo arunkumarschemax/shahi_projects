@@ -1,6 +1,7 @@
 import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { Countries } from "../countries/countries.entity";
 import { BuyerGeneralAttributesEntity } from "./buyers-general.entity";
+import { BuyerOrderAttributesEntity } from "./buyers-order.entity";
 import { PaymentMethod } from "../payment-methods/payment-method-entity";
 import { PaymentTerms } from "../payment-terms/payment-terms.entity";
 // import { PaymentMode } from "../payment-mode/payment-mode.entity";
@@ -212,5 +213,8 @@ export class Buyers {
 
     @OneToMany(type => BuyerGeneralAttributesEntity, attribute => attribute.buyerInfo,{cascade: true})
     generalAttributesInfo : BuyerGeneralAttributesEntity
+
+    @OneToMany(type => BuyerOrderAttributesEntity, attribute => attribute.buyerInfo,{cascade: true})
+    orderAttributesInfo : BuyerOrderAttributesEntity
 
 }

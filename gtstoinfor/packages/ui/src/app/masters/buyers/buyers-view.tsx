@@ -337,7 +337,7 @@ export const  BuyersView = () => {
           <span>
             <Button onClick={() => navigate('/masters/buyers/buyers-general-attributes-form',{state:{id:rowData.buyerId}})}>General</Button>
             <Divider type="vertical"/>
-            <Button>Order</Button>
+            <Button onClick={() => navigate('/masters/buyers/buyers-order-attributes-form',{state:{id:rowData.buyerId}})}>Order</Button>
           </span>
         )
       }

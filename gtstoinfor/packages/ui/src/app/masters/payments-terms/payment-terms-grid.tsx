@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import { Link, useNavigate } from 'react-router-dom';
@@ -120,7 +120,9 @@ export function PaymentTermsGrid(
     service.activateOrDeactivatePaymentTerms(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
-        AlertMessages.getSuccessMessage('Success'); 
+        // AlertMessages.getSuccessMessage('Success'); 
+        message.success(res.internalMessage)
+
       } else {
         if (res.status) {
           AlertMessages.getErrorMessage(res.internalMessage);
@@ -283,7 +285,10 @@ export function PaymentTermsGrid(
   }
 
   return (
-    <Card title ="Payment Terms">
+    <Card title ="Payment Terms"
+    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/payment-terms/payment-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
+
+    >
      <br></br>
       <Row gutter={40}>
          <Col>
@@ -296,8 +301,6 @@ export function PaymentTermsGrid(
            <Card title={'In-Active: ' + paymentTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
            </Col>
            <Col>
-        <span><Button onClick={() => navigate('/masters/payment-terms/payment-terms-form')}
-              type={'primary'}>New</Button></span>
         </Col>
           </Row> 
           <br></br>
