@@ -86,19 +86,19 @@ export default function DocumentListupload() {
     //     </Form.Item>
     //   ),
     // },
-    {
-      title: 'Upload DOcument',
-      width:'80px',
-      render:(text, rowData) =>{
-      return <>
-      <Form.Item name={`button${rowData.documentsListId}`}  style={{alignItems: 'center'}}>
-          <Button name={`upload${rowData.documentsListId}`} style={{ marginRight: '10px' }} onClick={() =>{onFinish(rowData)}} disabled={btndisable}>
-            Upload
-          </Button>
-        </Form.Item></>
+    // {
+    //   title: 'Upload DOcument',
+    //   width:'80px',
+    //   render:(text, rowData) =>{
+    //   return <>
+    //   <Form.Item name={`button${rowData.documentsListId}`}  style={{alignItems: 'center'}}>
+    //       <Button name={`upload${rowData.documentsListId}`} style={{ marginRight: '10px' }} onClick={() =>{onFinish(rowData)}} disabled={btndisable}>
+    //         Upload
+    //       </Button>
+    //     </Form.Item></>
 
-      }
-    },
+    //   }
+    // },
     
     {
         title: 'View/Download Document',
@@ -121,46 +121,74 @@ export default function DocumentListupload() {
   };
 
 
-  const onFinish = (data: any) => {
+  const onFinish = (data: any, filesList:any[]) => {
     console.log(data,'dataaaa')
+    console.log(data.file);
+    console.log(data.file.fileList);
+
     form.validateFields().then(res => {
-      // console.log(res,'res')
-    
+      if (data.file.fileList.length > 0) {
+        const formData = new FormData();
+        formData.append('documentsListId', `${data.documentsListId}`);
+        formData.append('documentCategoryId', `${data.documentCategoryId}`);
+        formData.append('poNumber', `${data.poNumber}`);
+        formData.append('orderId', '1');
+        formData.append('fileName', `${data.fileName}`);
+        formData.append('filePath', `${data.filePath}`);
+        formData.append('uploadStatus', `${data.uploadStatus}`);
+        const files = filesList;
+        if (files) {
+          for (let i = 0; i < files.length; i++) {
+            formData.append('file', files[i]);
+          }
+        }
+        console.log(formData)
+        service.DocumentFileUpload(formData).then((res) => {
+          if(res.status){
+            getDocData(form.getFieldValue("customerPo"));
+            message.success(res.internalMessage)
+          }
+          else{
+            AlertMessages.getSuccessMessage("Something went wrong");
+          }
+        })
+      }
+
     // data.file.forEach((file: any) => {
     //   req.file = ('file', file);
     // });
-          if (data.file.fileList) {
-            const formData = new FormData();
-            formData.append('documentCategoryId', `${data.documentCategoryId}`);
-            formData.append('roleId', `${data.roleId}`);
-            formData.append('customerPo', `${data.poNumber}`);
-            formData.append('orderId', `${data.orderId}`);
-            console.log(fileList,'fileList')
-             fileList.forEach((file: any) => {
-              formData.append('file', file);
-            });
-              console.log(formData);
-              const req = new DocumentsListRequest(data.documentsListId,data.documentCategoryId,1,data.poNumber,data.orderId,data.file.fileList)
-              console.log(req,'req')
-              service.DocumentFileUpload(req).then((res) => {
-                if(res.status){
-                  console.log(res);
-                  getDocData(form.getFieldValue("customerPo"));
-                  message.success(res.internalMessage)
-                }
-                else{
-                  AlertMessages.getSuccessMessage("Something went wrong");
-                }
-              })
-          }
-          AlertMessages.getSuccessMessage(res.internalMessage);
+          // if (data.file.fileList) {
+          //   const formData = new FormData();
+          //   formData.append('documentCategoryId', `${data.documentCategoryId}`);
+          //   formData.append('roleId', `1`);
+          //   formData.append('customerPo', `${data.poNumber}`);
+          //   formData.append('orderId', `1`);
+          //   console.log(fileList,'fileList')
+          //    data.file.fileList.forEach((file: any) => {
+          //     formData.append('file', file);
+          //   });
+          //     console.log(formData);
+          //     const req = new DocumentsListRequest(data.documentsListId,data.documentCategoryId,1,data.poNumber,data.orderId,data.file)
+          //     console.log(req,'req')
+          //     service.DocumentFileUpload(req).then((res) => {
+          //       if(res.status){
+          //         console.log(res);
+          //         getDocData(form.getFieldValue("customerPo"));
+          //         message.success(res.internalMessage)
+          //       }
+          //       else{
+          //         AlertMessages.getSuccessMessage("Something went wrong");
+          //       }
+          //     })
+          // }
+          // AlertMessages.getSuccessMessage(res.internalMessage);
     })
 
   }
 
   return(
     <div >
-      <Form form={form}  layout='vertical' name="control-hooks" onFinish={onFinish}>
+      <Form form={form}  layout='vertical' name="control-hooks" >
        <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
            <Form.Item name='customerPo' label='Po Number'
@@ -180,7 +208,34 @@ export default function DocumentListupload() {
            </Form.Item>
          </Col>
       </Row>
-        <UploadView form={form} docData={docData} formData={onFinish} fileList={setFilelist}/>
+      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        <Card
+          size="small"
+          title="Document Upload"
+          bordered={true}
+          style={{
+            width: '100%',
+            marginBottom: 16,
+            borderRadius: 8,
+            borderTop: '1px solid #e8e8e8',
+          }}
+        >
+          <Row gutter={24}>
+            {docData?.length > 0 ? (
+              docData?.map((response) => (
+                <UploadView form={form} docData={response} formData={onFinish} fileList={setFilelist}/>
+              ))
+            ) : (
+              <Alert
+                message="No Data Found"
+                type="warning"
+                showIcon
+                style={{ width: "150px", margin: "auto" }}
+              />
+            )}
+          </Row>
+        </Card>
+      </div>
       </Form>
     </div>
   // <Card title='Document Upload'>

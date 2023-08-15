@@ -19,6 +19,7 @@ import { DocumentRepository } from '../document_upload/repository/documents.repo
 import { UploadDocumentListAdapter } from '../document_upload/repository/upload-document-adapter';
 import { DocumentEntity } from '../document_upload/entities/documents.entity';
 import { Repository } from 'typeorm';
+import { UploadFilesRepository } from '../document_upload/repository/upload-files.repository';
 
 
 @Module({
@@ -27,6 +28,6 @@ import { Repository } from 'typeorm';
       OrdersEntity, FileUploadEntity,DocumentsList
     ]),DocumentUploadModule],
   controllers: [OrdersController],
-  providers: [OrdersService,DocumentsListService,OrdersRepository,DocumentsListRepository, OrdersAdapter, ApplicationExceptionHandler,FileUploadRepository,Repository,UploadDocumentListAdapter,DocumentRepository,DocumentRoleMappingRepository]
+  providers: [OrdersService,DocumentsListService,OrdersRepository,DocumentsListRepository, OrdersAdapter, ApplicationExceptionHandler,FileUploadRepository,Repository,UploadDocumentListAdapter,DocumentRepository,DocumentRoleMappingRepository,UploadFilesRepository]
 })
 export class OrdersModule { }

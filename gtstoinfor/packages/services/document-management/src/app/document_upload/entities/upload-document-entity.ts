@@ -17,6 +17,10 @@ export class DocumentsList {
     })
     roleId: number;
 
+    @Column("varchar", {
+        name: "role_name"
+    })
+    roleName: string;
 
     @Column("varchar", {
         nullable: true,
