@@ -1,5 +1,5 @@
 export class LiscenceTypesdDto {
-    liscenceTypeId?: number;
+    
     liscenceType: string;
     isActive: boolean;
     createdAt : Date | any;
@@ -7,16 +7,18 @@ export class LiscenceTypesdDto {
     updatedAt : Date | any;
     updatedUser : string;
     versionFlag : number;
+    liscenceTypeId?: number;
+    constructor(liscenceType:string,isActive: boolean,createdAt : Date | any,createdUser : string,updatedAt : Date | any, updatedUser : string,versionFlag : number,liscenceTypeId?:number ){
+            this.liscenceType = liscenceType;
+            this.isActive = isActive
+            this.createdAt = createdAt;
+            this.createdUser = createdUser;
+            this.updatedAt = updatedAt;
+            this.updatedUser = updatedUser;
+            this.versionFlag = versionFlag;
+            this.liscenceTypeId = liscenceTypeId;
+
+    }
 }
 
-export const LiscenceTypesdDtoDefault : LiscenceTypesdDto = {
-    liscenceTypeId: 0,
-    liscenceType: "",
-    isActive: true,
-    createdAt : new Date() ,
-    createdUser : '0',
-    updatedAt : new Date() ,
-    updatedUser : '0',
-    versionFlag : 1
-};
 

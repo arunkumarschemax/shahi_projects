@@ -27,7 +27,7 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
     getAllLiscenceTypes();
   }, [])
 
-    const getAllLiscenceTypes= () => {
+    const getAllLiscenceTypes = () => {
     service.getAllLiscenceTypes().then(res => {
       if (res.status) {
         setLTData(res.data);
@@ -263,7 +263,7 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
       <Card >
         <Table
         size='small'
-        rowKey={record => record}
+        //rowKey={record => record}
           columns={columnsSkelton}
           dataSource={lTData}
           pagination={{

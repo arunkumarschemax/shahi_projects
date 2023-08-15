@@ -31,17 +31,6 @@ URL = '/liscenc-type';
                 return this.axiosPostCall(this.URL + '/getActiveLiscenceTypeById',liscenceTypeReq)
               }
 
-            // async getActiveDeliveryMethodsCount(): Promise<AllDeliveryResponseModel> {
-            //     return this.axiosPostCall(this.URL + '/getActiveDeliveryMethodsCount').then(res => {
-            //     return res.data
-            // });
-            // }
-
-            // async getDeliveryById(deliveryTermsRequest:PaymentTermsDto): Promise<DeliveryMethodsResponseModel> {
-            //     return await axios.post(this.URL + '/getPaymentById',paymentTermsRequest).then(res => {
-            //         return res.data
-            //     });
-            // }
 
     async getAllActiveLiscenceTypes(): Promise<AllLiscenceResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllActiveLiscenceTypes")

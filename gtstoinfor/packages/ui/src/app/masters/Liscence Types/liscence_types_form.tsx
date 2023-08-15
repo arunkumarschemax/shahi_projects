@@ -1,8 +1,8 @@
 import React,{useState,useEffect} from 'react';
 import { Form, Input, Button, Select,Card, Row, Col } from 'antd';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { DeliveryMethodDto, LiscenceTypesdDto } from '@project-management-system/shared-models';
-import { DeliveryMethodService, LiscenceTypeService } from '@project-management-system/shared-services';
+import {  LiscenceTypesdDto } from '@project-management-system/shared-models';
+import {  LiscenceTypeService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 
 
@@ -27,6 +27,7 @@ export function LiscenceTypesForm(props: LiscenceTypesFormProps) {
   const createLiscenceType=(liscenceTypeDto:LiscenceTypesdDto)=>{
     service.createLiscenceType(liscenceTypeDto).then(res => {
       if (res.status) {
+        
         AlertMessages.getSuccessMessage('Liscence Type Created Successfully');
         navigate("/masters/liscence-type/liscence-type-grid");
         onReset();
