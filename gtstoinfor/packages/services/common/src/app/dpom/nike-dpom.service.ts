@@ -156,4 +156,12 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'Data retrived successfully')
         }
     }
+    async getPPMData(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.find()
+        console.log(details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+     
+    }
+    
+    
 }

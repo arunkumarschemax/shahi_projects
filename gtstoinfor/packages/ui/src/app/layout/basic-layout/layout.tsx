@@ -127,6 +127,12 @@ export const baseRouterList = [
                 path: "file-import",
                 filepath: "file-import",
             },
+            {
+                label: "PPM Report",
+                key: "ppm-report",
+                path: "ppm-report",
+                filepath: "ppm-report",
+            },
            
            
         ],

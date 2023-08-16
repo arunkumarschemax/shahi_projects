@@ -39,4 +39,14 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
+    @Post('/getPPMData')
+    async getPPMData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPPMData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+     
 }
