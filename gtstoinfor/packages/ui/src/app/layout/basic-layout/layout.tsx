@@ -13,7 +13,7 @@ import { getOperatingSystem, treeRouter } from '../../utils/common';
 import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
-const { useToken } = theme 
+const { useToken } = theme
 
 
 
@@ -105,13 +105,7 @@ export const baseRouterList = [
                 key: "version-grid",
                 path: "version-grid",
                 filepath: "version-grid",
-            },
-            // {
-            //     label: "Phase Wise Data",
-            //     key: "phase-wise-grid",
-            //     path: "phase-wise-grid",
-            //     filepath: "phase-wise-grid",
-            // }
+            }
         ],
     },
     {
@@ -134,16 +128,46 @@ export const baseRouterList = [
                 filepath: "file-import",
             },
             {
+                label: "Divert Report",
+                key: "divert-report",
+                path: "divert-report",
+                filepath: "divert-report",
+            },
+            {
                 label: "Factory Report",
                 key: "factory-report",
                 path: "factory-report",
                 filepath: "factory-report",
+            }, {
+                label: "Compare Orders",
+                key: "compare-orders",
+                path: "compare-orders",
+                filepath: "compare-orders",
             },
             {
                 label: "Fabric Tracker",
                 key: "fabrick-tracker-report",
                 path: "fabrick-tracker-report",
                 filepath: "fabrick-tracker-report",
+            },
+            {
+                label: "Order Acceptance",
+                key: "order-acceptance",
+                path: "order-acceptance",
+                filepath: "order-acceptance",
+            },
+            {
+                label: "Shipment Planning Chart",
+                key: "shipment-planning-chart",
+                path: "shipment-planning-chart",
+                filepath: "shipment-planning-chart",
+            },
+           
+            {
+                label: "Shipment Report",
+                key: "shipment-report",
+                path: "shipment-report",
+                filepath: "shipment-report",
             },
            
         ],
