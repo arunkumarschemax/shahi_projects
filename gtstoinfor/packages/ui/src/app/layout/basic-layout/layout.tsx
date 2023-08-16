@@ -19,11 +19,11 @@ const { useToken } = theme
 
 export const baseRouterList = [
     {
-        label: "Dashboard",
-        key: "dashboard",
-        path: "dashboard",
         icon: <DashboardOutlined />,
-        filepath: "/dashboard.tsx",
+        label: "Dashboard",
+        key: "nike-dashboard",
+        path: "nike-dashboard",
+        filepath: "nike-dashboard",
     },
     {
         label: "User Management",
@@ -69,45 +69,45 @@ export const baseRouterList = [
             },
         ],
     },
-    {
-        label: "Orders",
-        key: "excel-import",
-        path: "excel-import",
-        icon: <FileExcelOutlined />,
-        filepath: "excel-import",
-        children: [
-            {
-                label: "Add Orders",
-                key: "excel-import",
-                path: "excel-import",
-                filepath: "excel-import",
-            },
-            {
-                label: "Compare Orders",
-                key: "changes-view",
-                path: "changes-view",
-                filepath: "changes-view",
-            },
-            {
-                label: "View Orders",
-                key: "grid-view",
-                path: "grid-view",
-                filepath: "grid-view",
-            },
-            {
-                label: "Uploaded Files",
-                key: "revert-orders",
-                path: "revert-orders",
-                filepath: "revert-orders",
-            },
-            {
-                label: "Versions Data",
-                key: "version-grid",
-                path: "version-grid",
-                filepath: "version-grid",
-            }
-        ],
-    },
+    // {
+    //     label: "Orders",
+    //     key: "excel-import",
+    //     path: "excel-import",
+    //     icon: <FileExcelOutlined />,
+    //     filepath: "excel-import",
+    //     children: [
+    //         {
+    //             label: "Add Orders",
+    //             key: "excel-import",
+    //             path: "excel-import",
+    //             filepath: "excel-import",
+    //         },
+    //         {
+    //             label: "Compare Orders",
+    //             key: "changes-view",
+    //             path: "changes-view",
+    //             filepath: "changes-view",
+    //         },
+    //         {
+    //             label: "View Orders",
+    //             key: "grid-view",
+    //             path: "grid-view",
+    //             filepath: "grid-view",
+    //         },
+    //         {
+    //             label: "Uploaded Files",
+    //             key: "revert-orders",
+    //             path: "revert-orders",
+    //             filepath: "revert-orders",
+    //         },
+    //         {
+    //             label: "Versions Data",
+    //             key: "version-grid",
+    //             path: "version-grid",
+    //             filepath: "version-grid",
+    //         }
+    //     ],
+    // },
     {
         label: "Nike",
         key: "nike",
@@ -115,12 +115,6 @@ export const baseRouterList = [
         icon: <CheckOutlined />,
         filepath: "nike",
         children: [
-            {
-                label: "Dashboard",
-                key: "nike-dashboard",
-                path: "nike-dashboard",
-                filepath: "nike-dashboard",
-            },
             {
                 label: "Add PO",
                 key: "file-import",
@@ -162,14 +156,14 @@ export const baseRouterList = [
                 path: "shipment-planning-chart",
                 filepath: "shipment-planning-chart",
             },
-           
+
             {
                 label: "Shipment Report",
                 key: "shipment-report",
                 path: "shipment-report",
                 filepath: "shipment-report",
             },
-           
+
         ],
     },
 ];
