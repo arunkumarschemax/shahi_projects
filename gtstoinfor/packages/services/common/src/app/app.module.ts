@@ -31,7 +31,7 @@ import { DpomModule } from './dpom/nike-dpom.module';
     FactoriesModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule , DpomModule],
+    AuthModule, JwtModule, DpomModule],
   controllers: [AppController],
   providers: [AppService],
 })

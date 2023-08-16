@@ -9,6 +9,7 @@ export class DpomAdapter {
         entity.documentDate = dto.documentDate
         entity.purchaseOrderNumber = dto.purchaseOrderNumber
         entity.poLineItemNumber = dto.poLineItemNumber
+        entity.scheduleLineItemNumber = dto.scheduleLineItemNumber
         entity.categoryCode = dto.categoryCode
         entity.categoryDesc = dto.categoryDesc
         entity.vendorCode = dto.vendorCode
@@ -60,6 +61,33 @@ export class DpomAdapter {
         entity.netIncludingDiscCurrencyCode = dto.netIncludingDiscCurrencyCode
         entity.trCoNetIncludingDisc = dto.trCoNetIncludingDisc
         entity.trCoNetIncludingDiscCurrencyCode = dto.trCoNetIncludingDiscCurrencyCode
+        entity.shipToAddressLegalPO = dto.shipToAddressLegalPO
+        entity.quantity = dto.quantity
+        entity.price = dto.price
+        entity.itemVas = dto.itemVas
+        entity.shipToAddressDIA = dto.shipToAddressDIA
+        entity.CABCode = dto.CABCode
+        entity.item = dto.item
+        entity.factory = dto.factory
+        entity.customerOrder = dto.customerOrder
+        entity.coFinalApprovalDate = dto.coFinalApprovalDate
+        entity.planNo = dto.planNo
+        entity.truckOutDate = dto.truckOutDate
+        entity.actualShippedQty = dto.actualShippedQty
+        entity.coPrice = dto.coPrice
+        entity.shipToAddress = dto.shipToAddress
+        entity.paymentTerm = dto.paymentTerm
+        entity.styleDesc = dto.styleDesc
+        entity.fabricContent = dto.fabricContent
+        entity.fabricSource = dto.fabricSource
+        entity.commission = dto.commission
+        entity.PCD = dto.PCD
+        entity.hanger = dto.hanger
+        entity.poAndLine = dto.poAndLine
+        entity.lastModifiedDate = dto.lastModifiedDate
+        entity.leadTime = dto.leadTime
+        entity.recordDate = dto.recordDate
+        entity.odVersion = dto.odVersion
 
         return entity
     }
