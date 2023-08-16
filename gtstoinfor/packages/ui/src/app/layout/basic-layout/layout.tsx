@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined, CheckOutlined } from '@ant-design/icons'
+import { UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined, CheckOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { CommonHeader } from '../header/header';
 import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
 import logo from './logo.png'
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
-import ProLayout, { DefaultFooter, MenuDataItem, SettingDrawer } from '@ant-design/pro-layout';
-import { getOperatingSystem, treeRouter } from '../../utils/common';
-import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
+import ProLayout from '@ant-design/pro-layout';
+import { treeRouter } from '../../utils/common';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
 const { useToken } = theme
@@ -61,12 +60,12 @@ export const baseRouterList = [
                 path: "factories/factories-view",
                 filepath: "factories/factories-view",
             },
-            {
-                label: "Supplier",
-                key: "supplier",
-                path: "supplier/supplier-view",
-                filepath: "supplier/supplier-view",
-            },
+            // {
+            //     label: "Supplier",
+            //     key: "supplier",
+            //     path: "supplier/supplier-view",
+            //     filepath: "supplier/supplier-view",
+            // },
         ],
     },
     // {
@@ -156,7 +155,6 @@ export const baseRouterList = [
                 path: "shipment-planning-chart",
                 filepath: "shipment-planning-chart",
             },
-
             {
                 label: "Shipment Report",
                 key: "shipment-report",
