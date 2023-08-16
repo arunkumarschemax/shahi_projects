@@ -8,17 +8,20 @@ export class DocumentsListRequest{
     @ApiProperty()
     roleId:number;
     @ApiProperty()
-    customerPo:string  
+    poNumber:string  
     @ApiProperty()
     orderId:number
     @ApiProperty()
+    fileName:string
+    @ApiProperty()
     file:any[];
-    constructor(documentsListId:number,documentCategoryId:number,roleId:number,customerPo:string,orderId:number, file:any[],){
+    constructor(documentsListId:number,documentCategoryId:number,roleId:number,poNumber:string,fileName:string,orderId:number, file:any[],){
         this.documentsListId = documentsListId;
         this.documentCategoryId = documentCategoryId;
         this.file = file;
         this.roleId = roleId;
-        this.customerPo=customerPo
+        this.poNumber=poNumber
+        this.fileName=fileName
         this.orderId=orderId
 
     }

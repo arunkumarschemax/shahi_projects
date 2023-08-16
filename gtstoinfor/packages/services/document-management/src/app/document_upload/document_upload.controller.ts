@@ -4,7 +4,7 @@ import { DocumentsListService } from "./upload_document.service";
 import { DocumentsListRequest } from "./requests/document-list.request";
 import { UploadDocumentListResponseModel } from "packages/libs/shared-models/src/document-management/upload-document-list-response-model";
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express'
-import { diskStorage } from 'multer';
+import { diskStorage, File } from 'multer'; 
 import { extname } from 'path';
 import { DocumentFileUploadResponse } from "packages/libs/shared-models/src/document-management/document-file-upload-response";
 import { DocumentUploadDto } from "./requests/document-upload-dto";
@@ -19,6 +19,7 @@ import { AllDocumentRoleMappingsResponseModel, CommonResponseModel, DocumentRole
 import { DocumentRoleMappingService } from "./document_role_mapping.service";
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import * as fs from 'fs';
+import { Express } from 'express'; 
 @ApiTags('doc-upload')
 @Controller('doc-upload')
 export class DocumentUploadController {
@@ -39,13 +40,13 @@ export class DocumentUploadController {
 
 
     @Post('/DocumentFileUpload')
-    @UseInterceptors(FilesInterceptor('file', null, {
+    @UseInterceptors(FilesInterceptor('file', 10, {
       storage: diskStorage({
         // destination: './upload-files/manisha-123',
         // destination: `./upload-files/PO-${req}`,
         destination: (req, file, callback) => {
-          const destinationPath = `./upload-files/PO-${req.body.customerPo}`;
-          console.log('Destination Path:', destinationPath);
+          console.log(file);
+          const destinationPath = `./upload-files/PO-${req.body.poNumber}`;
           try {
             // Attempt to create the directory if it doesn't exist
             fs.mkdirSync(destinationPath, { recursive: true });
@@ -59,6 +60,9 @@ export class DocumentUploadController {
         //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
         // },
         filename: (req, file, callback) => {
+          // console.log(req);
+          // console.log(file);
+          // console.log("************************************************************************************************");
           const name = file.originalname.split('.')[0];
           const fileExtName = extname(file.originalname);
           const randomName = Array(4)
@@ -75,8 +79,8 @@ export class DocumentUploadController {
         callback(null, true);
       },
     }))
-    async DocumentFileUpload(@UploadedFiles() file, @Body() uploadData: DocumentsListRequest): Promise<DocumentFileUploadResponse> {
-      console.log(uploadData,'uploaddataaaa')
+    async DocumentFileUpload(@UploadedFiles() file:File[], @Body() uploadData: DocumentsListRequest): Promise<DocumentFileUploadResponse> {
+      console.log(file)
       try {
         return await this.uploadDocservice.updatePath(uploadData,file);
       } catch (error) {

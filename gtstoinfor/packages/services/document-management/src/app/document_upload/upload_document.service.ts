@@ -15,6 +15,8 @@ import { DocumentRepository } from "./repository/documents.repository";
 import { DataSource } from "typeorm";
 import { PoRoleRequest } from "@project-management-system/shared-models";
 import { DocumentUploadDto } from "./requests/document-upload-dto";
+import { UploadFilesRepository } from "./repository/upload-files.repository";
+import { UploadFileDto } from "./models/upload-file.dto";
 @Injectable()
 export class DocumentsListService {
     constructor(
@@ -23,6 +25,8 @@ export class DocumentsListService {
         private documentsListAdapter: UploadDocumentListAdapter,
         private documentRoleMappingRepo:DocumentRoleMappingRepository,
         private documentRepo:DocumentRepository,
+        private uploadFilesRepository:UploadFilesRepository,
+
         @InjectDataSource()
         private dataSource: DataSource,
 
@@ -69,20 +73,31 @@ export class DocumentsListService {
     req:DocumentsListRequest,
     file:any,
 ): Promise<DocumentFileUploadResponse> {
-    console.log(req,'DocumentUploadDo')
     try{
-            const filePathUpdate = await this.documentsListRepository.update(
-              {  documentsListId:req.documentsListId },
-              { filePath: '/upload-files/PO-'+req.customerPo+req.file[0].name,fileName: req.file[0].name, isUploaded: true }
-            );
-              if (filePathUpdate.affected) {
-                console.log('&&&&&&&&&&&&&&77')
-             return new DocumentFileUploadResponse(true,1,'uploaded successfully. ',"");
-              } else{
-                return new DocumentFileUploadResponse(false,0,'something went wrong. ',"");
+        let flag :boolean = true;
+        const filePathUpdate = await this.documentsListRepository.update(
+            {  documentsListId:req.documentsListId },
+            { filePath: '/upload-files/PO-'+req.poNumber+req.fileName,fileName: req.fileName, isUploaded: true }
+        );
+        if (filePathUpdate.affected) {
+            for(const res of file){
+                console.log("*******************************");
+                console.log(res);
 
-              }
-    
+                const data = new UploadFileDto(0,res.filename,res.path,req.documentsListId)
+                const uploadDoc = await this.uploadFilesRepository.save(data);
+                if(!uploadDoc){
+                    flag = false;
+                }
+            }
+            if(flag){
+                return new DocumentFileUploadResponse(true,1,'uploaded successfully. ',"");
+            }
+        } else{
+            flag=false
+            return new DocumentFileUploadResponse(false,0,'something went wrong. ',"");
+        }
+
   }catch(error){
       console.log(error);
       return error;
@@ -133,12 +148,14 @@ export class DocumentsListService {
         async createDocList(req?:req[]):Promise<UploadDocumentListResponseModel>{
             try{
                 const docIds = await this.getDocumentOrderIds();
+                const roleMappingData = await this.documentRoleMappingRepo.find();
                 for(const poNo of req){
                     console.log(poNo)
                     for(const doc of docIds.data){
                         const entity = new DocumentsList()
-                        entity.customerPo=poNo.poNumber
-                        entity.documentCategoryId=doc.documentCategoryId
+                        entity.customerPo=poNo.poNumber;
+                        entity.documentCategoryId=doc.documentCategoryId;
+                        entity.roleName= roleMappingData.find((res) => res.documentId === doc.documentCategoryId).roleName;
                         const save = await this.documentsListRepository.save(entity)
                     }    
                 }

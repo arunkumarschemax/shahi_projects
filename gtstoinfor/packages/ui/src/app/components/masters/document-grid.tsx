@@ -153,7 +153,7 @@ const updateDoc = (data: DocumentDto) => {
     <div>
       <br />
       <Card size='small'
-        title='Documents' extra={<span><Button onClick={() => navigate('/masters/document-form')} type={'primary'}>create</Button></span>}>
+        title='Documents' extra={<span><Button onClick={() => navigate('/document-form')} type={'primary'}>create</Button></span>}>
         <Table
           columns={columns}
           dataSource={docData}

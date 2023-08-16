@@ -26,21 +26,21 @@ export class OrdersEntity {
     @Column('varchar', {
         nullable: true,
         name: "invoice_no",
-        length: '5'
+        length: '100'
     })
     invoiceNo: string;
 
     @Column('varchar', {
         nullable: true,
         name: "style",
-        length: '10'
+        length: '100'
     })
     style: string;
 
     @Column('varchar', {
         nullable: true,
         name: "po_no",
-        length: '4'
+        length: '100'
     })
     poNo: string;
 

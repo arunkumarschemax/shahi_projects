@@ -22,6 +22,7 @@ export class DocumentRoleMappingEntity extends CommonColumns {
     roleName: string;
 
     @Column("varchar", {
+        nullable: true,
         name: "document_name"
     })
     documentName: string;

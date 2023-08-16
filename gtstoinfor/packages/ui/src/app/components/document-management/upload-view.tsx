@@ -16,8 +16,8 @@ const { Title, Text } = Typography;
 
 export interface UploadViewProps {
     form: FormInstance<any>
-    docData: any[];
-    formData: (value: any) => void;
+    docData: any;
+    formData: (value: any, filesList:any[]) => void;
     fileList: (value: any[]) => void;
 
 }
@@ -34,18 +34,21 @@ const UploadView = (props: UploadViewProps) => {
 
 
   const upload = (data: any) => {
-    console.log(data);
-    console.log(data.documentsListId);
-    console.log(props.form.getFieldsValue())
+    // console.log(data);
+    // console.log(data.documentsListId);
+    // console.log(props.form.getFieldsValue())
     let file = props.form.getFieldValue(`${data.documentsListId}`);
-    console.log(props.form.getFieldValue(`${data.documentsListId}`));
+    // console.log(props.form.getFieldValue(`${data.documentsListId}`));
     data.file = file;
-    props.formData(data);
+    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^")
+    console.log(file);
+    console.log(fileList);
+    props.formData(data,fileList);
     props.fileList(fileList);
   }
     
     const gstUploadFieldProps: UploadProps = {
-        multiple: false,
+        multiple: true,
         onRemove: (file: any) => {
             setFilelist([]);
             // uploadFileList([]);
@@ -59,6 +62,11 @@ const UploadView = (props: UploadViewProps) => {
             reader.readAsArrayBuffer(file);
             reader.onload = data => {  
                     setFilelist([...fileList, file]);
+                    console.log("*****************************")
+                    console.log(fileList)
+                    console.log([...fileList, file])
+
+
                     setBtnDisable(false)
                     // uploadFileList([...filelist, file]);
                     return false;
@@ -73,6 +81,7 @@ const UploadView = (props: UploadViewProps) => {
             strokeWidth: 3,
             format: (percent: any) => `${parseFloat(percent.toFixed(2))}%`,
         },
+        
         fileList: fileList
     
     };
@@ -81,97 +90,56 @@ const UploadView = (props: UploadViewProps) => {
       // You can use the 'documentListId' to identify which row is being interacted with
     };
     return(
-        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        <Card
-          size="small"
-          title="Document Upload"
+      <Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
+      <Card
           bordered={true}
           style={{
-            width: '100%',
-            marginBottom: 16,
-            borderRadius: 8,
-            borderTop: '1px solid #e8e8e8',
+          marginBottom: 16,
+          borderRadius: 8,
+          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+          background: '#fff',
+          borderTop: '1px solid #e8e8e8',
           }}
-        >
-          <Row gutter={24}>
-            {props.docData?.length > 0 ? (
-              props.docData?.map((response) => (
-                <Col xs={24} sm={12} md={8} lg={6} xl={6} key={response.documentsListId}>
-                <Card
-                    bordered={true}
-                    style={{
-                    marginBottom: 16,
-                    borderRadius: 8,
-                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-                    background: '#fff',
-                    borderTop: '1px solid #e8e8e8',
-                    }}
-                >
-                    <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}> 
-                        <Tag color="royalblue" style={{ fontSize: '15px', marginBottom: '5px' }}>{response.documentName}</Tag>
-                    </Text>
-                    <br />
-                    <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}> 
-                        {/* <Form.Item name={response.documentsListId}>
-                            <Upload key={response.documentsListId}
-                                name={`uploadFile${response.documentsListId}`}
-                                {...gstUploadFieldProps}
-                                accept=".jpeg,.pdf,.png,.jpg"
-                                onChange={(info) => handleUpload(response.documentsListId, info)}
-                            >
-                                <Button key={response.documentsListId} style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Choose File</Button>
-                                <br />
-                                <Typography.Text type="secondary">
-                                (Supported formats pdf, jpeg, jpg, png)
-                                </Typography.Text>
-                            </Upload>
-                        </Form.Item> */}
-                        <Form.Item name={response.documentsListId}>
-                            <Upload
-                                key={response.documentsListId}
-                                name={`uploadFile${response.documentsListId}`}
-                                {...gstUploadFieldProps}
-                                accept=".jpeg,.pdf,.png,.jpg"
-                                onChange={(info) => handleUpload(response.documentsListId, info)}
-                            >
-                                <Button
-                                key={response.documentsListId}
-                                style={{ color: 'black', backgroundColor: '#7ec1ff' }}
-                                icon={<UploadOutlined />}
-                                >
-                                Choose File
-                                </Button>
-                                <br />
-                                <Typography.Text type="secondary">
-                                (Supported formats pdf, jpeg, jpg, png)
-                                </Typography.Text>
-                            </Upload>
-                        </Form.Item>
-                    </Text>
-                    <br />
-                    <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-                      <Button type='primary' icon={<UploadOutlined/>} onClick={() => upload(response)}>Upload</Button>
-                    </Text>
-                    <br />
-                    <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-                      <Button style={{ color: "white", backgroundColor: "#806767", width:'100%' }} icon={<DownloadOutlined />} >Download Document</Button>
-                    </Text>
-                    <br />
-                    
-                </Card>
-                </Col>
-              ))
-            ) : (
-              <Alert
-                message="No Data Found"
-                type="warning"
-                showIcon
-                style={{ width: "150px", margin: "auto" }}
-              />
-            )}
-          </Row>
-        </Card>
-      </div>
+      >
+          <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}> 
+              <Tag color="royalblue" style={{ fontSize: '15px', marginBottom: '5px' }}>{props.docData.documentName}</Tag>
+          </Text>
+          <br />
+          <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}> 
+              <Form.Item name={props.docData.documentsListId}>
+                  <Upload
+                      key={props.docData.documentsListId}
+                      name={`uploadFile${props.docData.documentsListId}`}
+                      {...gstUploadFieldProps}
+                      accept=".jpeg,.pdf,.png,.jpg"
+                      onChange={(info) => handleUpload(props.docData.documentsListId, info)}
+                  >
+                      <Button
+                      key={props.docData.documentsListId}
+                      style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                      icon={<UploadOutlined />}
+                      >
+                      Choose File
+                      </Button>
+                      <br />
+                      <Typography.Text type="secondary">
+                      (Supported formats pdf, jpeg, jpg, png)
+                      </Typography.Text>
+                  </Upload>
+              </Form.Item>
+          </Text>
+          <br />
+          <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
+            <Button type='primary' icon={<UploadOutlined/>} onClick={() => upload(props.docData)}>Upload</Button>
+          </Text>
+          <br />
+          <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
+            <Button disabled={props.docData.uploadStatus === 1 ? false : true } style={{ color: "white", backgroundColor: props.docData.uploadStatus === 1 ? 'green' : "#806767", width:'100%' }} icon={<DownloadOutlined />} >Download Document</Button>
+          </Text>
+          <br />
+          
+      </Card>
+      </Col>
     )
 }
 
