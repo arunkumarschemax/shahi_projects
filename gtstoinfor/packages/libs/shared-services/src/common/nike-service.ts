@@ -12,4 +12,10 @@ export class NikeService extends CommonAxiosService  {
     async getPPMData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.DpomController + "/getPPMData")
     }
+    async getByFactoryStatus():Promise<any> {
+        return this.axiosPostCall(this.DpomController + "/getByFactoryStatus")
+    }
+
+
+
     }
