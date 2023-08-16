@@ -2,28 +2,20 @@ import { ApiProperty } from "@nestjs/swagger";
 
 
 export class SizeDto {
-    @ApiProperty()
     sizeId: number;
     
-    @ApiProperty()
     size: string;
 
-    @ApiProperty()
     isActive: boolean;
 
-    @ApiProperty()
     createdAt : Date | any;
 
-    @ApiProperty()
     createdUser : string;
 
-    @ApiProperty()
     updatedAt : Date | any;
 
-    @ApiProperty()
     updatedUser : string;
 
-    @ApiProperty()
     versionFlag : number;
 }
 
