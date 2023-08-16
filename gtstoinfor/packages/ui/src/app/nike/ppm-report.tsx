@@ -9,7 +9,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
 
 
-const OPTIONS = ['ACCEPTED', 'UNACCEPTED', 'CANCELLED', 'CLOSED'];
+// const OPTIONS = ['ACCEPTED', 'UNACCEPTED', 'CANCELLED', 'CLOSED'];
 
 
 
@@ -24,7 +24,8 @@ const PPMReport = () => {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const service = new NikeService();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+  const [filterData, setFilterData] = useState<any>([])
+  // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
 
 
@@ -36,6 +37,7 @@ const PPMReport = () => {
     service.getPPMData().then(res => {
       if (res.status) {
         setGridData(res.data)
+        setFilterData(res.data)
         setFilteredData(res.data)
       }
     }).catch(err => {
@@ -47,37 +49,37 @@ const PPMReport = () => {
 
 
     const currentDate = new Date()
-        .toISOString()
-        .slice(0, 10)
-        .split("-")
-        .join("/");
+      .toISOString()
+      .slice(0, 10)
+      .split("-")
+      .join("/");
 
     let exportingColumns: IExcelColumn[] = []
     exportingColumns = [
-        { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-        { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
-        { title: 'Item', dataIndex: 'Item' },
-        { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
-        { title: 'Factory', dataIndex: 'Factory' },
-        { title: 'Document Date', dataIndex: 'documentDate' },
-        { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
-        { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
-        { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
-        { title: 'Style Number', dataIndex: 'styleNumber' },
-        { title: 'Product Code', dataIndex: 'productCode' },
-        { title: 'Colour Description', dataIndex: 'colorDesc' },
-      ]
+      { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
+      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
+      { title: 'Item', dataIndex: 'Item' },
+      { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
+      { title: 'Factory', dataIndex: 'Factory' },
+      { title: 'Document Date', dataIndex: 'documentDate' },
+      { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
+      { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
+      { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
+      { title: 'Style Number', dataIndex: 'styleNumber' },
+      { title: 'Product Code', dataIndex: 'productCode' },
+      { title: 'Colour Description', dataIndex: 'colorDesc' },
+    ]
 
 
-      const excel = new Excel();
-      excel.addSheet("Sheet1");
-      excel.addRow();
-      excel.addColumns(exportingColumns);
-      excel.addDataSource(gridData);
-      excel.saveAs(`ppm-report-${currentDate}.xlsx`);
-  } 
+    const excel = new Excel();
+    excel.addSheet("Sheet1");
+    excel.addRow();
+    excel.addColumns(exportingColumns);
+    excel.addDataSource(gridData);
+    excel.saveAs(`ppm-report-${currentDate}.xlsx`);
+  }
 
-  
+
   console.log(gridData, 'ggggggggggggg')
 
   const totalItemQty = gridData?.map(i => i.totalItemQty)
@@ -113,36 +115,26 @@ const PPMReport = () => {
       setSelectedEstimatedToDate(toDate)
     }
   }
-  const getFilterdData = () => {
-    let ppmStatus = form.getFieldValue('ppmStatus');
-    let startDate = selectedEstimatedFromDate;
-    let endDate = selectedEstimatedToDate;
-    let filteredData = gridData;
-    if (ppmStatus) {
-      filteredData = filteredData.filter(record => record.ppm_status === ppmStatus);
-      if (filteredData.length === 0) {
-        message.error("No Data Found")
-      }
-      setFilteredData(filteredData);
+  const Finish = (values: any) => {
+    console.log(values, 'vallllll');
+    // if (values.DPOMLineItemStatus !== undefined) {
+    //     // getFactoryStatus(values)
+    // }/
+    if (values.DPOMLineItemStatus === undefined) {
+        setFilterData(gridData)
+    } else if (values.DPOMLineItemStatus === "Accepted") {
+        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Accepted"))
+    } else if (values.DPOMLineItemStatus === "Unaccepted") {
+        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Unaccepted"))
+    } else if (values.DPOMLineItemStatus === "Cancelled") {
+        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Cancelled"))
+
+    } else if (values.DPOMLineItemStatus === "Closed") {
+        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Closed"))
     }
-    if (startDate && endDate) {
-      filteredData = filteredData.filter(record => moment(record.last_update_date).format('YYYY-MM-DD') >= startDate && moment(record.last_update_date).format('YYYY-MM-DD') <= endDate);
-      if (filteredData.length === 0) {
-        message.error("No Data Found")
-      }
-      setFilteredData(filteredData);
-    }
-  }
+}
 
 
-  const onReset = () => {
-    form.resetFields();
-    setSelectedEstimatedFromDate(undefined);
-    setSelectedEstimatedToDate(undefined);
-    getData();
-  }
-
-  
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
@@ -285,7 +277,7 @@ const PPMReport = () => {
           onClick={handleExport}
           icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
         <Form
-
+           onFinish={Finish}
           form={form}
           layout='vertical'>
           <Row>
@@ -296,7 +288,7 @@ const PPMReport = () => {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
               <Form.Item name="DPOMLineItemStatus" label="PPM Status">
-                {/* <Select
+                <Select
                   showSearch
                   placeholder="Select PPM Status"
                   optionFilterProp="children"
@@ -305,8 +297,8 @@ const PPMReport = () => {
                   <Option value="Unaccepted">UNACCEPTED</Option>
                   <Option value="Cancelled">CANCELLED</Option>
                   <Option value="Closed">CLOSED</Option>
-                </Select> */}
-                <Select
+                </Select>
+                {/* <Select
                   mode="multiple"
                   placeholder="Inserted are removed"
                   value={selectedItems}
@@ -316,21 +308,13 @@ const PPMReport = () => {
                     value: item,
                     label: item,
                   }))}
-                />
+                /> */}
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 40 }} >
-              <Button
-                type="primary"
-                icon={<SearchOutlined />}
-                style={{ marginRight: 50, width: 80 }}
-                htmlType="button"
-                onClick={getFilterdData}>Search</Button>
-              <Button
-                type="primary"
-                icon={<UndoOutlined />}
-                htmlType="submit"
-                onClick={onReset}>Reset</Button>
+              <Form.Item>
+                <Button htmlType="submit" type="primary">Filter</Button>
+              </Form.Item>
             </Col>
           </Row>
         </Form>
@@ -367,7 +351,9 @@ const PPMReport = () => {
         </Row><br></br>
         <div>
 
-          <Table columns={Columns} dataSource={gridData}
+          <Table columns={Columns} 
+          // dataSource={gridData}
+           dataSource={filterData}
             bordered
           />
 

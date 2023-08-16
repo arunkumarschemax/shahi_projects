@@ -5,10 +5,14 @@ import { CommonAxiosService } from "../common-axios-service-prs";
 export default class SupplierService extends CommonAxiosService {
     private supplierController = '/supplier';
       
-    async createSupplier( dto: SupplierCreateDto): Promise<CommonResponseModel> {
-        console.log(dto,"qqqqqqqqqqqq")
-        return this.axiosPostCall(this.supplierController + '/createSupplier', dto)
+    // async createSupplier( dto: SupplierCreateDto): Promise<CommonResponseModel> {
+    //     console.log(dto,"qqqqqqqqqqqq")
+    //     return this.axiosPostCall(this.supplierController + '/createSupplier', dto)
+    // }
+    async createSupplier(payload: SupplierCreateDto): Promise<FactoryResponseModel> {
+        return this.axiosPostCall(this.supplierController + "/createSupplier", payload)
     }
+
 
     async getAllSuppliers(): Promise<any> {
         return await this.axiosPostCall(this.supplierController + '/getAllSuppliers')
