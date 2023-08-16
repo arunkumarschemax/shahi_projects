@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Form, Select, Button, Row, Col, Input, message, MessageArgsProps } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-import DocumentService from 'packages/libs/shared-services/src/document-service/document-shared-service';
+import { DocumentService } from '@project-management-system/shared-services';
+// import DocumentService from 'packages/libs/shared-services/src/document-service/document-shared-service';
 const { Option } = Select;
 
 const RoleMappingForm = () => {
@@ -20,10 +21,10 @@ const navigate=useNavigate();
     // const handleSubmit = (values: any) => {
     //     console.log('Form values:', values);
 
-    //     form.resetFields();
+    //     form.resetFields();s
     // };
     const onFinish = (values: any) => {
-        services.createForm(values).then(res => {
+        services.createDocument(values).then(res => {
             if (res.status) {
                 setTimeout(() => {
                     message.success("Created Successfully");

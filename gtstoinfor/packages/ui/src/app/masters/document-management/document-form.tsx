@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card, Form, Radio, Select, Button, Row, Col, DatePicker, Input, message, MessageArgsProps } from 'antd';
 import { Link } from 'react-router-dom';
-import DocumentService from 'packages/libs/shared-services/src/document-service/document-shared-service';
 import { useNavigate } from 'react-router-dom';
+import { DocumentService } from '@project-management-system/shared-services';
 
 const { Option } = Select;
 
@@ -17,7 +17,7 @@ const navigate = useNavigate();
         form.resetFields();
     };
     const onFinish = (values: any) => {
-        services.createForm(values).then(res => {
+        services.createDocument(values).then(res => {
             if (res.status) {
                 setTimeout(() => {
                     message.success("Created Successfully");

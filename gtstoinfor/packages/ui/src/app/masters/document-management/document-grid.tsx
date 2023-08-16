@@ -7,10 +7,11 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Highlighter from 'react-highlight-words';
-import DocumentService from 'packages/libs/shared-services/src/document-service/document-shared-service';
+// import DocumentService from 'packages/libs/shared-services/src/document-service/document-shared-service';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import DocumentForm from './document-form';
+import { DocumentService } from '@project-management-system/shared-services';
 
 
 const DocumentGrid = () => {
@@ -45,21 +46,21 @@ const DocumentGrid = () => {
       })
   }
   const activateOrDeactivateDocument = (id: number) => {
-    services.activateOrDeactivateDocument({ id: id }).then(res => {
-      if (res.status) {
-        AlertMessages.getSuccessMessage(res.data.internalMessage);
-        getDocumentData();
+    // services.activateOrDeactivateDocument({ id: id }).then(res => {
+    //   if (res.status) {
+    //     AlertMessages.getSuccessMessage(res.data.internalMessage);
+    //     getDocumentData();
 
-      } else {
-        if (res.intlCode) {
-          AlertMessages.getErrorMessage(res.internalMessage)
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage)
-        }
-      }
-    }).catch(err => {
-      AlertMessages.getErrorMessage(err.message)
-    })
+    //   } else {
+    //     if (res.intlCode) {
+    //       AlertMessages.getErrorMessage(res.internalMessage)
+    //     } else {
+    //       AlertMessages.getErrorMessage(res.internalMessage)
+    //     }
+    //   }
+    // }).catch(err => {
+    //   AlertMessages.getErrorMessage(err.message)
+    // })
   };
 
   

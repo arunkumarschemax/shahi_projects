@@ -122,9 +122,9 @@ export default function DocumentListupload() {
 
 
   const onFinish = (data: any, filesList:any[]) => {
-    console.log(data,'dataaaa')
+    console.log(filesList,'dataaaa')
     console.log(data.file);
-    console.log(data.file.fileList);
+    // console.log(data.file.fileList);
 
     form.validateFields().then(res => {
       if (data.file.fileList.length > 0) {

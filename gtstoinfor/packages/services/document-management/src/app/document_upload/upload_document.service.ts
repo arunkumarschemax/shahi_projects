@@ -17,6 +17,7 @@ import { PoRoleRequest } from "@project-management-system/shared-models";
 import { DocumentUploadDto } from "./requests/document-upload-dto";
 import { UploadFilesRepository } from "./repository/upload-files.repository";
 import { UploadFileDto } from "./models/upload-file.dto";
+import { UploadFilesEntity } from "./entities/upload-files.entity";
 @Injectable()
 export class DocumentsListService {
     constructor(
@@ -85,7 +86,11 @@ export class DocumentsListService {
                 console.log(res);
 
                 const data = new UploadFileDto(0,res.filename,res.path,req.documentsListId)
-                const uploadDoc = await this.uploadFilesRepository.save(data);
+                const entity = new UploadFilesEntity()
+                entity.fileName=data.fileName
+                entity.filePath=data.filePath
+                entity.documentListId=data.documentListId     
+                const uploadDoc = await this.uploadFilesRepository.save(entity);
                 if(!uploadDoc){
                     flag = false;
                 }

@@ -27,6 +27,7 @@ const UploadView = (props: UploadViewProps) => {
   const [loading, setLoading] = useState(true);
   const [fileList,setFilelist] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
+  
 
     useEffect(() =>{
         setLoading(false);
@@ -130,7 +131,7 @@ const UploadView = (props: UploadViewProps) => {
           </Text>
           <br />
           <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-            <Button type='primary' icon={<UploadOutlined/>} onClick={() => upload(props.docData)}>Upload</Button>
+            <Button type='primary' icon={<UploadOutlined/>} onClick={() => upload(props.docData)} disabled={btndisable}>Upload</Button>
           </Text>
           <br />
           <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>

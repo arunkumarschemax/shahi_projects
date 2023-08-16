@@ -6,7 +6,6 @@ import { Table, Input, Popconfirm, Card, Button, Space, Divider, Switch, Tag } f
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
-import DocumentSharedService from 'packages/libs/shared-services/src/document-service/document-shared-service';
 import RoleSharedService from 'packages/libs/shared-services/src/document-role-service/document-role-sharedservice';
 
 const DocumentRoleGrid = () => {
