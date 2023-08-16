@@ -292,6 +292,14 @@ export class DpomService {
             return 'no data found';
         }
     }
+    async getPPMData(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.find()
+        console.log(details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+     
+    }
+    
+    
 
     async getShipmentTrackerReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find();
