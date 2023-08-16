@@ -106,6 +106,16 @@ export class DpomController {
         }
     }
 
+    @Post('/getCategoryWiseItemQty')
+    async getCategoryWiseItemQty(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getCategoryWiseItemQty();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
     @Post('/getOrderAcceptanceData')
     async getOrderAcceptanceData(): Promise<CommonResponseModel> {
         try {
@@ -115,6 +125,30 @@ export class DpomController {
 
         }
     }
+
+    
+
+    @Post('/getShipmentWiseData')
+    async getShipmentWiseData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getShipmentWiseData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+    @Post('/getPlanShipmentWiseData')
+    async getPlanShipmentWiseData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPlanShipmentWiseData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+       
+    
 
     @Post('/getShipmentPlaningChart')
     async getShipmentPlaningChart(): Promise<CommonResponseModel> {

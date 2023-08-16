@@ -340,6 +340,30 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
+    async getCategoryWiseItemQty(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getCategoriesWiseItemQty()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getShipmentWiseData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getShipmentWiseItems()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getPlanShipmentWiseData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPlanningShipment()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
     async getOrderAcceptanceData(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.find()
         if (data) {

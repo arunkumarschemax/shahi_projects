@@ -111,8 +111,6 @@ export function OrderAcceptance() {
         })
     }
 
-    console.log(data)
-
     const columns: any = [
         {
             title: "S.No",
@@ -122,7 +120,8 @@ export function OrderAcceptance() {
         },
         {
             title: 'Plant Name',
-            dataIndex: 'plantName'
+            dataIndex: 'plantName',
+            ...getColumnSearchProps('plantName')
         },
         {
             title: 'PO Number',
@@ -135,11 +134,8 @@ export function OrderAcceptance() {
         },
         {
             title: 'Product Code',
-            dataIndex: 'productCode'
-        },
-        {
-            title: 'Product Code',
-            dataIndex: 'productCode'
+            dataIndex: 'productCode',
+            ...getColumnSearchProps('productCode')
         },
         {
             title: 'Category',
@@ -158,7 +154,7 @@ export function OrderAcceptance() {
                 { text: 'Closed', value: 'Closed' },
                 { text: 'Cancelled', value: 'Cancelled' }
             ],
-            filterMultiple: false,
+            filterMultiple: true,
             onFilter: (value, record) => { return record.DPOMLineItemStatus === value }
         },
         {
@@ -167,7 +163,7 @@ export function OrderAcceptance() {
             render: (value, record) => {
                 if (record.DPOMLineItemStatus === 'Unaccepted') {
                     return (
-                        <Popconfirm title="Are you sure to approve" onConfirm={() => approveDpomLineItemStatus(record)}>
+                        <Popconfirm title="Are you sure to accept" onConfirm={() => approveDpomLineItemStatus(record)}>
                             <Button>Accept</Button>
                         </Popconfirm>
                     );
@@ -178,7 +174,9 @@ export function OrderAcceptance() {
 
         }
     ]
-
+    const onChange = (pagination, filters, sorter, extra) => {
+        console.log('params', pagination, filters, sorter, extra);
+      }
     return (
         <>
             <Card title="Order Acceptance" headStyle={{ fontWeight: 'bold' }}>
@@ -186,6 +184,8 @@ export function OrderAcceptance() {
                     columns={columns}
                     dataSource={data}
                     bordered
+                    onChange={onChange}
+                    scroll={{x:1500}}
                 >
                 </Table>
             </Card>
