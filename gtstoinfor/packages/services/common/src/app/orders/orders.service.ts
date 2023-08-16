@@ -367,7 +367,7 @@ export class OrdersService {
         } else if (files.length == 1) {
             records = await this.ordersChildRepo.getPhaseWiseData(files[0].fileId)
         } else {
-            records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
+            records = await this.ordersChildRepo.getPhaseWiseData(files[0].fileId, files[1]?.fileId, files[2]?.fileId, files[3]?.fileId, files[4]?.fileId)
         }
         const phaseWiseDataMap = new Map<number, PhaseWiseDataModel>();
         if (records.length == 0) {
@@ -377,7 +377,7 @@ export class OrdersService {
             if (!phaseWiseDataMap.has(record.item_code)) {
                 phaseWiseDataMap.set(record.item_code, new PhaseWiseDataModel(record.item_code, record.itemName, []));
             }
-            phaseWiseDataMap.get(record.item_code).phaseWiseData.push(new PhaseAndQtyModel(record.prod_plan_type_name, record.old_qty_value, record.new_qty_value));
+            phaseWiseDataMap.get(record.item_code).phaseWiseData.push(new PhaseAndQtyModel(record.prod_plan_type_name, record.old_qty_value4, record.old_qty_value3, record.old_qty_value2, record.old_qty_value1, record.old_qty_value, record.new_qty_value));
         }
         const phaseDataModelArray: PhaseWiseDataModel[] = [];
         phaseWiseDataMap.forEach(phase => phaseDataModelArray.push(phase));

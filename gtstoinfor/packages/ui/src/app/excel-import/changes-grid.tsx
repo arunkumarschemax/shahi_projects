@@ -694,6 +694,50 @@ const ChangesGrid = () => {
         },
         {
             title: 'Sum of Ord Qty last week',
+            dataIndex: 'oldOrderQtyPcs4',
+            key: 'oldOrderQtyPcs4',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return Number(record.oldOrderQtyPcs4).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                })
+            }
+        },
+        {
+            title: 'Sum of Ord Qty last week',
+            dataIndex: 'oldOrderQtyPcs3',
+            key: 'oldOrderQtyPcs3',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return Number(record.oldOrderQtyPcs3).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                })
+            }
+        },
+        {
+            title: 'Sum of Ord Qty last week',
+            dataIndex: 'oldOrderQtyPcs2',
+            key: 'oldOrderQtyPcs2',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return Number(record.oldOrderQtyPcs2).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                })
+            }
+        },
+        {
+            title: 'Sum of Ord Qty last week',
+            dataIndex: 'oldOrderQtyPcs1',
+            key: 'oldOrderQtyPcs1',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return Number(record.oldOrderQtyPcs1).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                })
+            }
+        },
+        {
+            title: 'Sum of Ord Qty last week',
             dataIndex: 'oldOrderQtyPcs',
             key: 'oldOrderQtyPcs',
             align: 'right',
