@@ -1,7 +1,8 @@
+import { CommonColumns } from "packages/services/common/common-columns.entity";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
-@Entity('dpom')
-export class DpomEntity {
+@Entity('dpom_child')
+export class DpomChildEntity {
     @PrimaryGeneratedColumn('increment', {
         name: "id",
     })
@@ -25,7 +26,7 @@ export class DpomEntity {
 
     @Column('varchar', {
         name: "schedule_line_item_number",
-        length: 5
+        length: 5,
     })
     scheduleLineItemNumber: string;
 
@@ -39,7 +40,7 @@ export class DpomEntity {
     @Column("varchar", {
         name: "category_desc",
         length: 100,
-        nullable: true,
+        nullable: true
     })
     categoryDesc: string;
 
@@ -60,7 +61,7 @@ export class DpomEntity {
     @Column("varchar", {
         name: "gcc_focus_desc",
         length: 100,
-        nullable: true,
+        nullable: true
     })
     gccFocusDesc: string;
 
@@ -561,9 +562,9 @@ export class DpomEntity {
     })
     leadTime: string;
 
-    @Column("date", {
+    @Column("varchar", {
         name: "record_date",
-        nullable: true
+        length: 10
     })
     recordDate: string
 
@@ -608,4 +609,5 @@ export class DpomEntity {
         default: 1
     })
     isActive: boolean;
+
 }
