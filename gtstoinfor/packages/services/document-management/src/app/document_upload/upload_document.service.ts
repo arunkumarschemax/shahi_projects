@@ -78,7 +78,7 @@ export class DocumentsListService {
         let flag :boolean = true;
         const filePathUpdate = await this.documentsListRepository.update(
             {  documentsListId:req.documentsListId },
-            { filePath: '/upload-files/PO-'+req.poNumber+req.fileName,fileName: req.fileName, isUploaded: true }
+            { isUploaded: true }
         );
         if (filePathUpdate.affected) {
             for(const res of file){
@@ -88,7 +88,7 @@ export class DocumentsListService {
                 const data = new UploadFileDto(0,res.filename,res.path,req.documentsListId)
                 const entity = new UploadFilesEntity()
                 entity.fileName=data.fileName
-                entity.filePath=data.filePath
+                entity.filePath="/dist/packages/services/document-management/"+data.filePath
                 entity.documentListId=data.documentListId     
                 const uploadDoc = await this.uploadFilesRepository.save(entity);
                 if(!uploadDoc){
