@@ -37,101 +37,113 @@ export class DpomService {
     }
 
     async getDPOMOrderDetails(): Promise<any> {
-        const tokenResponse = await this.getOctaToken();
-        if (!tokenResponse.status) throw new Error(tokenResponse.error)
-        const payload = {
-            "fields": [
-                "poHeader.documentDate",
-                "poHeader.poNumber",
-                "poLine.itemNumber",
-                "product.categoryCode",
-                "product.categoryDescription",
-                "poHeader.vendorCode",
-                "product.globalCategoryCoreFocusCode",
-                "product.globalCategoryCoreFocusDescription",
-                "product.genderAgeCode",
-                "product.genderAgeDescription",
-                "product.styleNumber",
-                "poLine.productCode",
-                "product.colorDescription",
-                "poLine.destinationCountryCode",
-                "poLine.destinationCountryName",
-                "poLine.plantCode",
-                "poLine.plantName",
-                "poHeader.trcoPoNumber",
-                "sizes.sizeProduct.upc",
-                "poLine.directshipSalesOrderNumber",
-                "poLine.directshipSalesOrderItemNumber",
-                "salesOrder.customerPo",
-                "salesOrder.customerShipTo",
-                "poLine.seasonCode",
-                "poLine.seasonYear",
-                "poHeader.poDocTypeCode",
-                "poHeader.poDocTypeDescription",
-                "planning.mrgacDate",
-                "poLine.originalGoodsAtConsolidatorDate",
-                "sizes.sizePo.goodsAtConsolidatorDate",
-                "sizes.sizeLogisticsOR.originReceiptActualDate",
-                "manufacturing.factoryDeliveryActualDate",
-                "sizes.sizePo.goodsAtConsolidatorReasonCode",
-                "sizes.sizePo.goodsAtConsolidatorReasonDescription",
-                "poLine.shippingType",
-                "planning.planningPriorityCode",
-                "planning.planningPriorityDescription",
-                "product.launchCode",
-                "poLine.dpomItemStatus",
-                "sizes.sizePo.transportationModeCode",
-                "poHeader.incoTerms",
-                "poHeader.purchaseGroupCode",
-                "poHeader.purchaseGroupName",
-                "poLine.itemQuantity",
-                "sizes.sizeLogisticsOR.originReceiptQuantity",
-                "sizes.sizeVas.valueAddedServiceInstructions",
-                "poLine.itemVas.valueAddedServiceInstructions",
-                "poLine.itemTextDetail.textDetails",
-                "sizes.sizePo.sizePricing.fob.crpoRateUnitValue",
-                "sizes.sizePo.sizePricing.fob.crpoCurrencyCode",
-                "sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue",
-                "sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode"
-            ],
-            "search": [
-                {
-                    "fieldName": "poHeader.vendorCode",
-                    "operator": "=",
-                    "fieldValue": "SHK"
-                },
-                {
-                    "fieldName": "poLine.dpomItemStatus",
-                    "operator": "=",
-                    "fieldValue": "Accepted"
+        try {
+            const tokenResponse = await this.getOctaToken();
+            if (!tokenResponse.status) throw new Error(tokenResponse.error)
+            const dpomItemStatusValues = ["Accepted", "Unaccepted", "Closed", "Cancelled"];
+            const results = [];
+            for (const status of dpomItemStatusValues) {
+                const payload = {
+                    "fields": [
+                        "poHeader.documentDate",
+                        "poHeader.poNumber",
+                        "poLine.itemNumber",
+                        "product.categoryCode",
+                        "product.categoryDescription",
+                        "poHeader.vendorCode",
+                        "product.globalCategoryCoreFocusCode",
+                        "product.globalCategoryCoreFocusDescription",
+                        "product.genderAgeCode",
+                        "product.genderAgeDescription",
+                        "product.styleNumber",
+                        "poLine.productCode",
+                        "product.colorDescription",
+                        "poLine.destinationCountryCode",
+                        "poLine.destinationCountryName",
+                        "poLine.plantCode",
+                        "poLine.plantName",
+                        "poHeader.trcoPoNumber",
+                        "sizes.sizeProduct.upc",
+                        "poLine.directshipSalesOrderNumber",
+                        "poLine.directshipSalesOrderItemNumber",
+                        "salesOrder.customerPo",
+                        "salesOrder.customerShipTo",
+                        "poLine.seasonCode",
+                        "poLine.seasonYear",
+                        "poHeader.poDocTypeCode",
+                        "poHeader.poDocTypeDescription",
+                        "planning.mrgacDate",
+                        "poLine.originalGoodsAtConsolidatorDate",
+                        "sizes.sizePo.goodsAtConsolidatorDate",
+                        "sizes.sizeLogisticsOR.originReceiptActualDate",
+                        "manufacturing.factoryDeliveryActualDate",
+                        "sizes.sizePo.goodsAtConsolidatorReasonCode",
+                        "sizes.sizePo.goodsAtConsolidatorReasonDescription",
+                        "poLine.shippingType",
+                        "planning.planningPriorityCode",
+                        "planning.planningPriorityDescription",
+                        "product.launchCode",
+                        "poLine.dpomItemStatus",
+                        "sizes.sizePo.transportationModeCode",
+                        "poHeader.incoTerms",
+                        "poHeader.purchaseGroupCode",
+                        "poHeader.purchaseGroupName",
+                        "poLine.itemQuantity",
+                        "sizes.sizeLogisticsOR.originReceiptQuantity",
+                        "sizes.sizeVas.valueAddedServiceInstructions",
+                        "poLine.itemVas.valueAddedServiceInstructions",
+                        "poLine.itemTextDetail.textDetails",
+                        "sizes.sizePo.sizePricing.fob.crpoRateUnitValue",
+                        "sizes.sizePo.sizePricing.fob.crpoCurrencyCode",
+                        "sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue",
+                        "sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode",
+                        "sizes.sizePo.sizeQuantity",
+                        "sizes.sizePo.sizeDescription"
+                    ],
+                    "search": [
+                        {
+                            "fieldName": "poHeader.vendorCode",
+                            "operator": "=",
+                            "fieldValue": "SHK"
+                        },
+                        {
+                            "fieldName": "poLine.dpomItemStatus",
+                            "operator": "=",
+                            "fieldValue": status
+                        }
+                    ],
+                    "filter": [
+                        {
+                            "fieldName": "product.sizeMismatchIndicator",
+                            "operator": "=",
+                            "fieldValue": [
+                                "NO"
+                            ]
+                        }
+                    ],
+                    "offset": "0",
+                    "count": 300,
+                    "savedSearchID": "2e81ddd3-a131-4deb-9356-2528196ab342"
                 }
-            ],
-            "filter": [
-                {
-                    "fieldName": "product.sizeMismatchIndicator",
-                    "operator": "=",
-                    "fieldValue": [
-                        "NO"
-                    ]
+                const headers = {
+                    'Cache-Control': 'no-cache', 'Content-Type': 'application/json', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br', 'Ocp-Apim-Subscription-Key': '7033b5d3725246599ab84f0946f0a2f3', 'bearer-jwt': tokenResponse.accessToken
                 }
-            ],
-            "offset": "0",
-            "count": 300,
-            "savedSearchID": "2e81ddd3-a131-4deb-9356-2528196ab342"
-        }
-        const headers = {
-            'Cache-Control': 'no-cache', 'Content-Type': 'application/json', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br', 'Ocp-Apim-Subscription-Key': '7033b5d3725246599ab84f0946f0a2f3', 'bearer-jwt': tokenResponse.accessToken
-        }
-        const config = {
-            headers: headers
-        }
-        const octaTokenUrl = 'https://dpomservice-prod.partner.nike-cloud.com/dpom_purchaseorder/purchaseorder/v0'
-        const response = await axios.post(octaTokenUrl, payload, config)
-        if (response.status === 200) {
-            console.log(response.data.objects[0])
-            return { status: true, data: response.data.objects };
-        } else {
-            return { status: false, error: response.statusText }
+                const config = {
+                    headers: headers
+                }
+                const octaTokenUrl = 'https://dpomservice-prod.partner.nike-cloud.com/dpom_purchaseorder/purchaseorder/v0'
+                const response = await axios.post(octaTokenUrl, payload, config)
+                if (response.status === 200) {
+                    results.push(...response.data.objects);
+                }
+            }
+            if (results.length > 0) {
+                return { status: true, data: results };
+            } else {
+                return { status: false, error: 'No results found' };
+            }
+        } catch (error) {
+            return { status: false, error: error.message };
         }
     }
 
@@ -154,6 +166,26 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'something went wrong')
         } else {
             return new CommonResponseModel(true, 1, 'Data retrived successfully')
+        }
+    }
+
+    async getFactoryReportData(): Promise<CommonResponseModel> {
+        // let query ='SELECT po_number , po_line_item_number ,  product_code FROM `dpom`';
+
+        const details = await this.dpomRepository.find();
+        console.log(details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+   
+    }
+
+    async getByFactoryStatus(req:DpomSaveDto){
+        const record=await this.dpomRepository.find({
+            where:{DPOMLineItemStatus:req.DPOMLineItemStatus},
+        });
+        if(record){
+            return record;
+        }else{
+            return 'no data found';
         }
     }
     async getPPMData(): Promise<CommonResponseModel> {

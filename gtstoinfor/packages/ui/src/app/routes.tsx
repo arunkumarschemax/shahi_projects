@@ -19,6 +19,7 @@ import SupplierView from "./masters/supplier/supplier-view"
 import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared-models"
 import PoFileImport from "./nike/po-file-import"
 import PPMReport from "./nike/ppm-report"
+import FactoryPPMReport from "./nike/factory-ppm-report"
 
 
 export const AppRoutes = () => {
@@ -98,7 +99,7 @@ export const AppRoutes = () => {
                         <Route path='grid-view' element={<AllOrdersGridView />} />
                         <Route path='revert-orders' element={<FileRevert />} />
                         <Route path='version-grid' element={<VersionChanges />} />
-                        {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
+                        <Route path='phase-wise-grid' element={<PhaseWiseData />} />
 
                     </Route>
                     <Route path='/nike'>
