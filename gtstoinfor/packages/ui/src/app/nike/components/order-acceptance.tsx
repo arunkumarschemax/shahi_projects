@@ -154,7 +154,7 @@ export function OrderAcceptance() {
                 { text: 'Closed', value: 'Closed' },
                 { text: 'Cancelled', value: 'Cancelled' }
             ],
-            filterMultiple: false,
+            filterMultiple: true,
             onFilter: (value, record) => { return record.DPOMLineItemStatus === value }
         },
         {
