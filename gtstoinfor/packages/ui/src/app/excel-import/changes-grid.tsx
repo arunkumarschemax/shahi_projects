@@ -765,7 +765,6 @@ const ChangesGrid = () => {
 
     const EstimatedETDDate = (value) => {
         if (value) {
-            console.log(value)
             const fromDate = value[0];
             const toDate = value[1];
             setSelectedEstimatedFromDate(fromDate)
@@ -789,7 +788,6 @@ const ChangesGrid = () => {
             setFilteredWarehouseDateDate(filteredReqWhData)
         }
         if (startDate && endDate) {
-            console.log(filteredQtyData)
             filteredContractData = filteredContractData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
             filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
             filteredReqWhData = filteredReqWhData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)

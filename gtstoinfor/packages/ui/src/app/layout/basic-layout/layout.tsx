@@ -128,21 +128,34 @@ export const baseRouterList = [
                 filepath: "file-import",
             },
             {
+                label: "Order Acceptance",
+                key: "order-acceptance",
+                path: "order-acceptance",
+                filepath: "order-acceptance",
+            },
+            {
+                label: "PO Change",
+                key: "compare-orders",
+                path: "compare-orders",
+                filepath: "compare-orders",
+            },
+            {
+                label: "Factory PPM Report",
+                key: "factory-report",
+                path: "factory-report",
+                filepath: "factory-report",
+            },
+            {
+                label: "PPM Marketing Report",
+                key: "ppm-report",
+                path: "ppm-report",
+                filepath: "ppm-report",
+            },
+            {
                 label: "Divert Report",
                 key: "divert-report",
                 path: "divert-report",
                 filepath: "divert-report",
-            },
-            {
-                label: "Factory Report",
-                key: "factory-report",
-                path: "factory-report",
-                filepath: "factory-report",
-            }, {
-                label: "Compare Orders",
-                key: "compare-orders",
-                path: "compare-orders",
-                filepath: "compare-orders",
             },
             {
                 label: "Fabric Tracker",
@@ -151,32 +164,19 @@ export const baseRouterList = [
                 filepath: "fabrick-tracker-report",
             },
             {
-                label: "Order Acceptance",
-                key: "order-acceptance",
-                path: "order-acceptance",
-                filepath: "order-acceptance",
-            },
-            {
-                label: "Shipment Planning Chart",
+                label: "Shipment Planning",
                 key: "shipment-planning-chart",
                 path: "shipment-planning-chart",
                 filepath: "shipment-planning-chart",
             },
            
             {
-                label: "Shipment Report",
+                label: "Shipment Tracker",
                 key: "shipment-report",
                 path: "shipment-report",
                 filepath: "shipment-report",
             },
-             {
-                label: "PPM Report",
-                key: "ppm-report",
-                path: "ppm-report",
-                filepath: "ppm-report",
-            },
-           
-           
+
         ],
     },
 ];
@@ -188,11 +188,8 @@ export default function BasicLayout() {
     const [settings, setSettings] = useState<any>({ colorPrimary: '1890ff', fixedHeader: true })
     const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
 
-
-
     return (
         <ProConfigProvider dark={dark}  >
-
             <div
                 id="main-layout"
                 style={{

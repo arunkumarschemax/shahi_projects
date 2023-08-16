@@ -278,8 +278,11 @@ export class DpomService {
 
     async getFactoryReportData(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find();
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
     }
 
     async getByFactoryStatus(req: DpomSaveDto) {
@@ -294,18 +297,20 @@ export class DpomService {
     }
     async getPPMData(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find()
-        console.log(details)
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-     
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
     }
-    
-    
 
     async getShipmentTrackerReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find();
-        console.log(details)
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
     }
 
     async getDivertReportData(): Promise<CommonResponseModel> {
@@ -320,18 +325,18 @@ export class DpomService {
             });
             return response;
         } else {
-            return new CommonResponseModel(false, 0, 'Unable To Fetch Data', []);
+            return new CommonResponseModel(false, 0, 'No Data Found', []);
         }
     }
 
-
     async getCountForDivertReport(): Promise<CommonResponseModel> {
-
         const details = await this.dpomRepository.getCountForDivertReport();
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
     }
-
 
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPlantCount()
@@ -340,6 +345,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getStatusWiseItems(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getStatusWiseItemCount()
         if (data)
@@ -386,7 +392,7 @@ export class DpomService {
         const poLineItemNumber = req.poLineItemNumber
         const scheduleLineItemNumber = req.scheduleLineItemNumber
         const updateStatus = await this.dpomRepository.update({ purchaseOrderNumber: purchaseOrderNumber, poLineItemNumber: poLineItemNumber, scheduleLineItemNumber: scheduleLineItemNumber }, { DPOMLineItemStatus: 'Accepted' })
-        if (updateStatus) {
+        if (updateStatus.affected) {
             return new CommonResponseModel(true, 1, 'Status Updated')
         } else {
             return new CommonResponseModel(false, 0, 'Something went wrong');
@@ -408,6 +414,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getShipmentPlaningChart(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.shipmentChart()
         if (data)

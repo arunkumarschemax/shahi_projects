@@ -33,7 +33,7 @@ import { SupplierModule } from './supplier/supplier.module';
     SupplierModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule, DpomModule] ,
+    AuthModule, JwtModule, DpomModule],
   controllers: [AppController],
   providers: [AppService],
 })

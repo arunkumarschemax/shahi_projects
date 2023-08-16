@@ -5,8 +5,8 @@ import { SupplierEntity } from "../../supplier.entity";
 export class SupplierAdapter {
 
   // static toDto: any;
-  public convertDtoToEntity(dto: SupplierDto,isUpdate:boolean = false): SupplierEntity {
-    
+  public convertDtoToEntity(dto: SupplierDto, isUpdate: boolean = false): SupplierEntity {
+
     const entity = new SupplierEntity;
     entity.category = dto.category;
     entity.supplierCode = dto.supplierCode;
@@ -27,23 +27,22 @@ export class SupplierAdapter {
     entity.contactNumber = dto.contactNumber;
     entity.email = dto.email;
     entity.creditPaymentPeriod = dto.creditPaymentPeriod;
-    entity.isActive = dto.isActive == undefined?true:dto.isActive;
+    entity.isActive = dto.isActive == undefined ? true : dto.isActive;
     entity.versionFlag = dto.versionFlag;
-    if(isUpdate){
+    if (isUpdate) {
       // if ur update the rowdata give against id data
       entity.id = dto.id
       entity.updatedUser = dto.updatedUser;
-    }else{
+    } else {
       entity.isActive = true;
       entity.createdUser = dto.createdUser
     }
     // Map any other fields as needed
-    console.log(entity);
     return entity;
-   
+
   }
 
-   convertEntityToDto(entity: SupplierEntity): SupplierDto {
+  convertEntityToDto(entity: SupplierEntity): SupplierDto {
     const dto = new SupplierDto;
     dto.id = entity.id;
     dto.category = entity.category;

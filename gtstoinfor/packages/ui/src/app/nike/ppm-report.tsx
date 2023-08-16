@@ -79,14 +79,8 @@ const PPMReport = () => {
     excel.saveAs(`ppm-report-${currentDate}.xlsx`);
   }
 
-
-  console.log(gridData, 'ggggggggggggg')
-
   const totalItemQty = gridData?.map(i => i.totalItemQty)
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
-
-  console.log(count, 'countttttt')
-
 
   function convertToYYYYMMDD(inputDate) {
     const formatsToTry = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY', 'YYYY-MM-DD'];
@@ -100,6 +94,7 @@ const PPMReport = () => {
     }
     return formattedDate;
   }
+
   const { RangePicker } = DatePicker;
   const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
   const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
@@ -108,7 +103,6 @@ const PPMReport = () => {
 
   const EstimatedETDDate = (value) => {
     if (value) {
-      console.log(value)
       const fromDate = value[0].format('YYYY-MM-DD');
       const toDate = value[1].format('YYYY-MM-DD');
       setSelectedEstimatedFromDate(fromDate)
@@ -132,7 +126,7 @@ const PPMReport = () => {
     } else if (values.DPOMLineItemStatus === "Closed") {
         setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Closed"))
     }
-}
+  }
 
 
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -270,7 +264,7 @@ const PPMReport = () => {
 
   return (
     <>
-      <Card title="PPM Report" headStyle={{ color: 'black', fontWeight: 'bold', backgroundColor: "skyblue" }}
+      <Card title="PPM Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
         extra={filteredData.length > 0 ? (<Button
           type="default"
           style={{ color: 'green' }}
@@ -321,31 +315,31 @@ const PPMReport = () => {
 
         <Row gutter={80}>
           <Col >
-            <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40, backgroundColor: 'skyblue' }}></Card>
+            <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'skyblue' }}></Card>
+            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'skyblue' }}></Card>
+            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40 }}></Card>
           </Col>
 
         </Row><br></br>
         <Row gutter={80}>
           <Col >
-            <Card title={'Total Po Count: ' + gridData.length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: ' lightblue' }}></Card>
+            <Card title={'Total Po Count: ' + gridData.length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'Accepted Po Count: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Accepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Accepted Po Count: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Accepted').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'UnAccepted Po :' + gridData.filter(el => el.DPOMLineItemStatus == 'Unaccepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'UnAccepted Po :' + gridData.filter(el => el.DPOMLineItemStatus == 'Unaccepted').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'Closed Po:' + gridData.filter(el => el.DPOMLineItemStatus == 'Closed').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Closed Po:' + gridData.filter(el => el.DPOMLineItemStatus == 'Closed').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'Cancelled: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 41, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Cancelled: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 41 }}></Card>
           </Col>
 
         </Row><br></br>
@@ -356,7 +350,6 @@ const PPMReport = () => {
            dataSource={filterData}
             bordered
           />
-
         </div>
       </Card>
     </>
