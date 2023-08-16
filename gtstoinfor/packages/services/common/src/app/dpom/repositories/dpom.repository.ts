@@ -25,4 +25,29 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom_item_line_status`)
         return await query.getRawMany();
     }
+
+    async getCategoriesWiseItemQty(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`category_desc ,  SUM(total_item_qty) AS totalItemQty`)
+            .where(`category_desc  IS NOT NULL`)
+            .andWhere(`dpom_item_line_status = 'Accepted'||'Unaccepted'`)
+            .groupBy(`category_desc`)
+        return await query.getRawMany();
+    }
+
+    async getShipmentWiseItems(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`shipping_type , SUM( IF(dpom_item_line_status ='Accepted', 1 , 0)) AS Accepted,SUM( IF(dpom_item_line_status ='Unaccepted', 1 , 0)) AS unAccepted`)
+            .groupBy(`shipping_type`)
+        return await query.getRawMany();
+    }
+
+    async getPlanningShipment(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`planning_season_year AS planningSeasonYear, COUNT(po_number) AS poCount`)
+            .where(`planning_season_year  IS NOT NULL`)
+            .andWhere(`dpom_item_line_status = 'Accepted'||'Unaccepted'`)
+            .groupBy(`planning_season_year`)
+        return await query.getRawMany();
+    }
 }
