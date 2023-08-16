@@ -169,11 +169,11 @@ const FactoryPPMReport = () => {
         exportingColumns = [
             { title: 'Po+Line ',dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
             { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
-            { title: 'Item', dataIndex: 'Item' },
+            { title: 'Item', dataIndex: 'item' },
             { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
-            { title: 'Factory', dataIndex: 'Factory' },
+            { title: 'Factory', dataIndex: 'factory' },
             { title: 'Document Date', dataIndex: 'documentDate' },
-            { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
+            { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber' },
             { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
             { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
             { title: 'Style Number', dataIndex: 'styleNumber' },
@@ -289,6 +289,9 @@ const FactoryPPMReport = () => {
         return formattedDate;
     }
 
+    const totalItemQty = gridData?.map(i => i.totalItemQty)
+    const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
+
     const columns: ColumnsType<any> = [
         {
             title: 'Po+Line',
@@ -314,8 +317,8 @@ const FactoryPPMReport = () => {
         },
         {
             title: 'Factory',
-            dataIndex: 'Factory',
-            ...getColumnSearch('Factory'),
+            dataIndex: 'factory',
+            ...getColumnSearch('factory'),
            
         },
         {
@@ -507,7 +510,7 @@ const FactoryPPMReport = () => {
                 </Form>
                 <Row gutter={80}>
                     <Col >
-                        <Card title={'Total order Qty : ' + gridData.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                        <Card title={'Total order Qty : ' + count} style={{ textAlign: 'left', width: 250, height: 38 }}></Card>
                     </Col>
                     <Col>
                         <Card title={'Total Shipped : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>

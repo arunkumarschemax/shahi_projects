@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button, Card, Input, Table } from 'antd'
+import { Button, Card, Col, Form, Input, Row, Table } from 'antd'
 import { NikeService } from '@project-management-system/shared-services';
 import { FileExcelFilled, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
@@ -168,7 +168,7 @@ function ShipmentTrackerReport() {
             title: 'Po+Line',
             dataIndex: 'purchaseOrderNumber-poLineItemNumber',
             render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}`,
-
+            width:"150  "
 
         },
         {
@@ -179,13 +179,13 @@ function ShipmentTrackerReport() {
 
         {
             title: 'Item',
-            dataIndex: 'Item',
-            ...getColumnSearch('Item'),
+            dataIndex: 'item',
+            ...getColumnSearch('item'),
 
         },
         {
             title: 'Plan#',
-            dataIndex: 'plan',
+            dataIndex: 'plant',
 
         },
         {
@@ -347,6 +347,25 @@ function ShipmentTrackerReport() {
                     onClick={handleExport}
                     icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
                 <Card>
+                    <Form>
+                    <Row gutter={50}>
+                    <Col >
+                        <Card title={'Total PO Count : ' + gridData.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                    </Col>
+                    <Col>
+                        <Card title={'Accepted PO Count : ' + gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} style={{ textAlign: 'left', width: 200, height: 38 }}></Card>
+                    </Col>
+                    <Col>
+                        <Card title={'Unaccepted PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                    </Col>
+                    <Col>
+                        <Card title={'Closed PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                    </Col>
+                    <Col>
+                        <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                    </Col>
+                </Row>
+                    </Form><br></br>
                     <Table
                         columns={columns}
 
