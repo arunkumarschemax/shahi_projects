@@ -120,7 +120,8 @@ export function OrderAcceptance() {
         },
         {
             title: 'Plant Name',
-            dataIndex: 'plantName'
+            dataIndex: 'plantName',
+            ...getColumnSearchProps('plantName')
         },
         {
             title: 'PO Number',
@@ -133,11 +134,8 @@ export function OrderAcceptance() {
         },
         {
             title: 'Product Code',
-            dataIndex: 'productCode'
-        },
-        {
-            title: 'Product Code',
-            dataIndex: 'productCode'
+            dataIndex: 'productCode',
+            ...getColumnSearchProps('productCode')
         },
         {
             title: 'Category',
