@@ -1,21 +1,30 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message } from 'antd';
+import { Excel } from 'antd-table-saveas-excel';
+import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import moment from 'moment';
-// import NikeService from 'packages/libs/shared-services/src/common/nike-service';
 import RangePicker from 'rc-picker/lib/RangePicker';
 import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
+
+
+const OPTIONS = ['ACCEPTED', 'UNACCEPTED', 'CANCELLED', 'CLOSED'];
+
+
+
 
 const PPMReport = () => {
   const [ppm, setPPM] = useState([]);
   const [form] = Form.useForm();
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState(''); 
+  const [searchedColumn, setSearchedColumn] = useState('');
   const [gridData, setGridData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
-  const service = new NikeService(); 
+  const service = new NikeService();
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
 
 
@@ -33,13 +42,48 @@ const PPMReport = () => {
       console.log(err.message)
     })
   }
+  const handleExport = (e: any) => {
+    e.preventDefault();
 
- console.log(gridData, 'ggggggggggggg')
-    
-     const totalItemQty = gridData?.map(i => i.totalItemQty)
-     const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
 
-     console.log(count, 'countttttt')
+    const currentDate = new Date()
+        .toISOString()
+        .slice(0, 10)
+        .split("-")
+        .join("/");
+
+    let exportingColumns: IExcelColumn[] = []
+    exportingColumns = [
+        { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
+        { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
+        { title: 'Item', dataIndex: 'Item' },
+        { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
+        { title: 'Factory', dataIndex: 'Factory' },
+        { title: 'Document Date', dataIndex: 'documentDate' },
+        { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
+        { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
+        { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
+        { title: 'Style Number', dataIndex: 'styleNumber' },
+        { title: 'Product Code', dataIndex: 'productCode' },
+        { title: 'Colour Description', dataIndex: 'colorDesc' },
+      ]
+
+
+      const excel = new Excel();
+      excel.addSheet("Sheet1");
+      excel.addRow();
+      excel.addColumns(exportingColumns);
+      excel.addDataSource(gridData);
+      excel.saveAs(`ppm-report-${currentDate}.xlsx`);
+  } 
+
+  
+  console.log(gridData, 'ggggggggggggg')
+
+  const totalItemQty = gridData?.map(i => i.totalItemQty)
+  const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
+
+  console.log(count, 'countttttt')
 
 
   function convertToYYYYMMDD(inputDate) {
@@ -70,12 +114,12 @@ const PPMReport = () => {
     }
   }
   const getFilterdData = () => {
-    let orderStatus = form.getFieldValue('orderStatus');
+    let ppmStatus = form.getFieldValue('ppmStatus');
     let startDate = selectedEstimatedFromDate;
     let endDate = selectedEstimatedToDate;
     let filteredData = gridData;
-    if (orderStatus) {
-      filteredData = filteredData.filter(record => record.order_status === orderStatus);
+    if (ppmStatus) {
+      filteredData = filteredData.filter(record => record.ppm_status === ppmStatus);
       if (filteredData.length === 0) {
         message.error("No Data Found")
       }
@@ -90,18 +134,20 @@ const PPMReport = () => {
     }
   }
 
-  
+
   const onReset = () => {
     form.resetFields();
     setSelectedEstimatedFromDate(undefined);
     setSelectedEstimatedToDate(undefined);
     getData();
-  } 
+  }
+
+  
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input
-          ref={searchInput} 
+          ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
@@ -149,7 +195,7 @@ const PPMReport = () => {
         : null
 
   });
-   
+
 
   function handleSearch(selectedKeys, confirm, dataIndex) {
     confirm();
@@ -176,14 +222,14 @@ const PPMReport = () => {
       title: 'Last Modified Date',
       dataIndex: 'updatedAt',
       render: (text) => moment(text).format('YYYY-MM-DD')
-      
+
     },
     {
       title: 'Item',
       dataIndex: 'Item',
-      sorter: (a, b) => a.supplierName.length - b.supplierName.length,
+      sorter: (a, b) => a.Item.length - b.Item.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('supplierName'),
+      ...getColumnSearchProps('Item'),
 
     },
     {
@@ -236,7 +282,7 @@ const PPMReport = () => {
         extra={filteredData.length > 0 ? (<Button
           type="default"
           style={{ color: 'green' }}
-          // onClick={handleExport}
+          onClick={handleExport}
           icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
         <Form
 
@@ -250,7 +296,7 @@ const PPMReport = () => {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
               <Form.Item name="DPOMLineItemStatus" label="PPM Status">
-                <Select
+                {/* <Select
                   showSearch
                   placeholder="Select PPM Status"
                   optionFilterProp="children"
@@ -259,7 +305,18 @@ const PPMReport = () => {
                   <Option value="Unaccepted">UNACCEPTED</Option>
                   <Option value="Cancelled">CANCELLED</Option>
                   <Option value="Closed">CLOSED</Option>
-                </Select>
+                </Select> */}
+                <Select
+                  mode="multiple"
+                  placeholder="Inserted are removed"
+                  value={selectedItems}
+                  onChange={setSelectedItems}
+                  style={{ width: '100%' }}
+                  options={filteredOptions.map((item) => ({
+                    value: item,
+                    label: item,
+                  }))}
+                />
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 40 }} >
@@ -280,31 +337,31 @@ const PPMReport = () => {
 
         <Row gutter={80}>
           <Col >
-            <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40, backgroundColor: 'orange' }}></Card>
+            <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40, backgroundColor: 'skyblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'orange' }}></Card>
+            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'skyblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'orange' }}></Card>
+            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'skyblue' }}></Card>
           </Col>
 
         </Row><br></br>
         <Row gutter={80}>
           <Col >
-            <Card title={'Total Po Count: ' + gridData.length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: ' lightgreen' }}></Card>
+            <Card title={'Total Po Count: ' + gridData.length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: ' lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Accepted Po Count: ' + gridData.filter(el => el.DPOMLineItemStatus== 'Accepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightgreen' }}></Card>
+            <Card title={'Accepted Po Count: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Accepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'UnAccepted Po :' + gridData.filter(el => el.DPOMLineItemStatus == 'Unaccepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightgreen' }}></Card>
+            <Card title={'UnAccepted Po :' + gridData.filter(el => el.DPOMLineItemStatus == 'Unaccepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Closed Po:' + gridData.filter(el => el.DPOMLineItemStatus == 'Closed').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightgreen' }}></Card>
+            <Card title={'Closed Po:' + gridData.filter(el => el.DPOMLineItemStatus == 'Closed').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Cancelled: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 41, backgroundColor: 'lightgreen' }}></Card>
+            <Card title={'Cancelled: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 41, backgroundColor: 'lightblue' }}></Card>
           </Col>
 
         </Row><br></br>
