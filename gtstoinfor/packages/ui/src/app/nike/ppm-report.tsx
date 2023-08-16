@@ -47,44 +47,38 @@ const PPMReport = () => {
 
 
     const currentDate = new Date()
-        .toISOString()
-        .slice(0, 10)
-        .split("-")
-        .join("/");
+      .toISOString()
+      .slice(0, 10)
+      .split("-")
+      .join("/");
 
     let exportingColumns: IExcelColumn[] = []
     exportingColumns = [
-        { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-        { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
-        { title: 'Item', dataIndex: 'Item' },
-        { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
-        { title: 'Factory', dataIndex: 'Factory' },
-        { title: 'Document Date', dataIndex: 'documentDate' },
-        { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
-        { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
-        { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
-        { title: 'Style Number', dataIndex: 'styleNumber' },
-        { title: 'Product Code', dataIndex: 'productCode' },
-        { title: 'Colour Description', dataIndex: 'colorDesc' },
-      ]
+      { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
+      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
+      { title: 'Item', dataIndex: 'Item' },
+      { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
+      { title: 'Factory', dataIndex: 'Factory' },
+      { title: 'Document Date', dataIndex: 'documentDate' },
+      { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
+      { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
+      { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
+      { title: 'Style Number', dataIndex: 'styleNumber' },
+      { title: 'Product Code', dataIndex: 'productCode' },
+      { title: 'Colour Description', dataIndex: 'colorDesc' },
+    ]
 
 
-      const excel = new Excel();
-      excel.addSheet("Sheet1");
-      excel.addRow();
-      excel.addColumns(exportingColumns);
-      excel.addDataSource(gridData);
-      excel.saveAs(`ppm-report-${currentDate}.xlsx`);
-  } 
-
-  
-  console.log(gridData, 'ggggggggggggg')
+    const excel = new Excel();
+    excel.addSheet("Sheet1");
+    excel.addRow();
+    excel.addColumns(exportingColumns);
+    excel.addDataSource(gridData);
+    excel.saveAs(`ppm-report-${currentDate}.xlsx`);
+  }
 
   const totalItemQty = gridData?.map(i => i.totalItemQty)
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
-
-  console.log(count, 'countttttt')
-
 
   function convertToYYYYMMDD(inputDate) {
     const formatsToTry = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY', 'YYYY-MM-DD'];
@@ -98,6 +92,7 @@ const PPMReport = () => {
     }
     return formattedDate;
   }
+
   const { RangePicker } = DatePicker;
   const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
   const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
@@ -106,13 +101,13 @@ const PPMReport = () => {
 
   const EstimatedETDDate = (value) => {
     if (value) {
-      console.log(value)
       const fromDate = value[0].format('YYYY-MM-DD');
       const toDate = value[1].format('YYYY-MM-DD');
       setSelectedEstimatedFromDate(fromDate)
       setSelectedEstimatedToDate(toDate)
     }
   }
+
   const getFilterdData = () => {
     let ppmStatus = form.getFieldValue('ppmStatus');
     let startDate = selectedEstimatedFromDate;
@@ -142,7 +137,7 @@ const PPMReport = () => {
     getData();
   }
 
-  
+
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
@@ -278,7 +273,7 @@ const PPMReport = () => {
 
   return (
     <>
-      <Card title="PPM Report" headStyle={{ color: 'black', fontWeight: 'bold', backgroundColor: "skyblue" }}
+      <Card title="PPM Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
         extra={filteredData.length > 0 ? (<Button
           type="default"
           style={{ color: 'green' }}
@@ -295,17 +290,7 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
-              <Form.Item name="DPOMLineItemStatus" label="PPM Status">
-                {/* <Select
-                  showSearch
-                  placeholder="Select PPM Status"
-                  optionFilterProp="children"
-                  allowClear>
-                  <Option value="Accepted">ACCEPTED</Option>
-                  <Option value="Unaccepted">UNACCEPTED</Option>
-                  <Option value="Cancelled">CANCELLED</Option>
-                  <Option value="Closed">CLOSED</Option>
-                </Select> */}
+              <Form.Item name="DPOMLineItemStatus" label="Order Status">
                 <Select
                   mode="multiple"
                   placeholder="Inserted are removed"
@@ -337,40 +322,38 @@ const PPMReport = () => {
 
         <Row gutter={80}>
           <Col >
-            <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40, backgroundColor: 'skyblue' }}></Card>
+            <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'skyblue' }}></Card>
+            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'skyblue' }}></Card>
+            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40 }}></Card>
           </Col>
 
         </Row><br></br>
         <Row gutter={80}>
           <Col >
-            <Card title={'Total Po Count: ' + gridData.length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: ' lightblue' }}></Card>
+            <Card title={'Total Po Count: ' + gridData.length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'Accepted Po Count: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Accepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Accepted Po Count: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Accepted').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'UnAccepted Po :' + gridData.filter(el => el.DPOMLineItemStatus == 'Unaccepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'UnAccepted Po :' + gridData.filter(el => el.DPOMLineItemStatus == 'Unaccepted').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'Closed Po:' + gridData.filter(el => el.DPOMLineItemStatus == 'Closed').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Closed Po:' + gridData.filter(el => el.DPOMLineItemStatus == 'Closed').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
           </Col>
           <Col>
-            <Card title={'Cancelled: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 41, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Cancelled: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 41 }}></Card>
           </Col>
 
         </Row><br></br>
         <div>
-
           <Table columns={Columns} dataSource={gridData}
             bordered
           />
-
         </div>
       </Card>
     </>

@@ -64,11 +64,11 @@ export const AppRoutes = () => {
                     <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
                     {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
                 <Route path='/nike'>
-                    <Route path='file-import' element={<PoFileImport />} />
                     <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
                     <Route path='file-import' element={<PoFileImport />} />
                     <Route path='divert-report' element={<DivertReport />} />
-                    <Route path="ppm-report" element={<PPMReport/>}/>
+                    <Route path='factory-report' element={<FactoryPPMReport />} />
+                    <Route path="ppm-report" element={<PPMReport />} />
                     <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
                     <Route path='order-acceptance' element={<OrderAcceptance />} />
                     <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
@@ -121,12 +121,13 @@ export const AppRoutes = () => {
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
                         <Route path='divert-report' element={<DivertReport />} />
+                        <Route path='factory-report' element={<FactoryPPMReport />} />
                         <Route path='ppm-report' element={<PPMReport />} />
                         <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
                         <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                         <Route path='shipment-report' element={<ShipmentTrackerReport />} />
-                        <Route path='order-acceptance' element={<OrderAcceptance  />} />
-                        
+                        <Route path='order-acceptance' element={<OrderAcceptance />} />
+
                     </Route>
                     {/* <Route path='/dashboard' element={<Dashboard />} /> */}
                     <Route path='nike-dashboard' element={<NikeDashboard />} />

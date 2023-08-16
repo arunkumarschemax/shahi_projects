@@ -27,7 +27,6 @@ const FactoryPPMReport = () => {
     const [filterData, setFilterData] = useState<any>([])
 
     const Finish = (values: any) => {
-        console.log(values, 'vallllll');
         // if (values.DPOMLineItemStatus !== undefined) {
         //     // getFactoryStatus(values)
         // }/

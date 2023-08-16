@@ -16,7 +16,6 @@ export class DpomController {
         try {
             return await this.dpomService.getOctaToken()
         } catch (error) {
-            console.log(error);
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
@@ -26,7 +25,6 @@ export class DpomController {
         try {
             return await this.dpomService.getDPOMOrderDetails()
         } catch (error) {
-            console.log(error);
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
@@ -36,7 +34,6 @@ export class DpomController {
         try {
             return await this.dpomService.saveDPOMDataToDataBase()
         } catch (error) {
-            console.log(error);
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
@@ -49,7 +46,7 @@ export class DpomController {
 
         }
     }
-     
+
 
 
     @Post('/getFactoryReportData')
@@ -137,7 +134,7 @@ export class DpomController {
         }
     }
 
-    
+
 
     @Post('/getShipmentWiseData')
     async getShipmentWiseData(): Promise<CommonResponseModel> {
@@ -158,8 +155,8 @@ export class DpomController {
 
         }
     }
-       
-    
+
+
 
     @Post('/getShipmentPlaningChart')
     async getShipmentPlaningChart(): Promise<CommonResponseModel> {
