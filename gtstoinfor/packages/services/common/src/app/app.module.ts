@@ -8,7 +8,6 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { appConfig } from '../../config';
 import { OrdersModule } from './orders/orders.module';
-import { DpomModule } from './dpom/nike-dpom.module';
 
 
 @Module({
