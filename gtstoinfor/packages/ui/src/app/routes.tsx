@@ -79,6 +79,7 @@ import BuyingHouseForm from "./masters/buying-house/buying-house-form"
 import BuyingHouseGrid from "./masters/buying-house/buying-house-grid"
 import CommissionForm from "./masters/commission/commission-form"
 import CommissionGrid from "./masters/commission/commission-grid"
+import SampleRequestView from "./sample-development/sample-request-view"
 
 
 export const AppRoutes = () => {
@@ -284,6 +285,10 @@ export const AppRoutes = () => {
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
 
+                </Route>
+
+                <Route path='/sample-development'>
+                    <Route path='sample-request/sample-request-view' element={<SampleRequestView />} />
                 </Route>
 
 
