@@ -60,53 +60,8 @@ export const baseRouterList = [
                 path: "factories/factories-view",
                 filepath: "factories/factories-view",
             },
-            // {
-            //     label: "Supplier",
-            //     key: "supplier",
-            //     path: "supplier/supplier-view",
-            //     filepath: "supplier/supplier-view",
-            // },
         ],
     },
-    // {
-    //     label: "Orders",
-    //     key: "excel-import",
-    //     path: "excel-import",
-    //     icon: <FileExcelOutlined />,
-    //     filepath: "excel-import",
-    //     children: [
-    //         {
-    //             label: "Add Orders",
-    //             key: "excel-import",
-    //             path: "excel-import",
-    //             filepath: "excel-import",
-    //         },
-    //         {
-    //             label: "Compare Orders",
-    //             key: "changes-view",
-    //             path: "changes-view",
-    //             filepath: "changes-view",
-    //         },
-    //         {
-    //             label: "View Orders",
-    //             key: "grid-view",
-    //             path: "grid-view",
-    //             filepath: "grid-view",
-    //         },
-    //         {
-    //             label: "Uploaded Files",
-    //             key: "revert-orders",
-    //             path: "revert-orders",
-    //             filepath: "revert-orders",
-    //         },
-    //         {
-    //             label: "Versions Data",
-    //             key: "version-grid",
-    //             path: "version-grid",
-    //             filepath: "version-grid",
-    //         }
-    //     ],
-    // },
     {
         label: "Nike",
         key: "nike",
@@ -121,21 +76,34 @@ export const baseRouterList = [
                 filepath: "file-import",
             },
             {
+                label: "Order Acceptance",
+                key: "order-acceptance",
+                path: "order-acceptance",
+                filepath: "order-acceptance",
+            },
+            {
+                label: "PO Change",
+                key: "compare-orders",
+                path: "compare-orders",
+                filepath: "compare-orders",
+            },
+            {
+                label: "Factory PPM Report",
+                key: "factory-report",
+                path: "factory-report",
+                filepath: "factory-report",
+            },
+            {
+                label: "PPM Marketing Report",
+                key: "ppm-report",
+                path: "ppm-report",
+                filepath: "ppm-report",
+            },
+            {
                 label: "Divert Report",
                 key: "divert-report",
                 path: "divert-report",
                 filepath: "divert-report",
-            },
-            {
-                label: "Factory Report",
-                key: "factory-report",
-                path: "factory-report",
-                filepath: "factory-report",
-            }, {
-                label: "Compare Orders",
-                key: "compare-orders",
-                path: "compare-orders",
-                filepath: "compare-orders",
             },
             {
                 label: "Fabric Tracker",
@@ -144,31 +112,18 @@ export const baseRouterList = [
                 filepath: "fabrick-tracker-report",
             },
             {
-                label: "Order Acceptance",
-                key: "order-acceptance",
-                path: "order-acceptance",
-                filepath: "order-acceptance",
-            },
-            {
-                label: "Shipment Planning Chart",
+                label: "Shipment Planning",
                 key: "shipment-planning-chart",
                 path: "shipment-planning-chart",
                 filepath: "shipment-planning-chart",
             },
             {
-                label: "Shipment Report",
+                label: "Shipment Tracker",
                 key: "shipment-report",
                 path: "shipment-report",
                 filepath: "shipment-report",
             },
-             {
-                label: "PPM Report",
-                key: "ppm-report",
-                path: "ppm-report",
-                filepath: "ppm-report",
-            },
-           
-           
+
         ],
     },
 ];
@@ -180,11 +135,8 @@ export default function BasicLayout() {
     const [settings, setSettings] = useState<any>({ colorPrimary: '1890ff', fixedHeader: true })
     const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
 
-
-
     return (
         <ProConfigProvider dark={dark}  >
-
             <div
                 id="main-layout"
                 style={{
