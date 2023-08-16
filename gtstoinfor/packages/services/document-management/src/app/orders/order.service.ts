@@ -414,7 +414,7 @@ export class OrdersService {
     // }
 
     async getRoleWiseOrders(): Promise<CommonResponseModel> {
-        let query = `SELECT dl.role_id , dr.role_name , SUM( IF(dl.is_uploaded=1, 1 , 0)) AS Completed,SUM( IF(dl.is_uploaded=0, 1 , 0)) AS Pending FROM documents_list dl LEFT JOIN document_role_mapping dr ON dr.role_id = dl.role_id GROUP BY dl.role_id`;
+        let query = `SELECT  dl.role_name , SUM( IF(dl.is_uploaded=1, 1 , 0)) AS Completed,SUM( IF(dl.is_uploaded=0, 1 , 0)) AS Pending FROM documents_list dl LEFT JOIN document_role_mapping dr ON dr.role_id = dl.role_id GROUP BY dl.role_name`;
         const data = await this.dataSource.query(query);
         return new CommonResponseModel(true, 0, 'Data Retrived Successfully', data)
     }
