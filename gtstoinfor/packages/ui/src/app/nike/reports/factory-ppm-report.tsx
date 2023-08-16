@@ -178,16 +178,16 @@ const FactoryPPMReport = () => {
             { title: 'Style Number', dataIndex: 'styleNumber' },
             { title: 'Product Code', dataIndex: 'productCode' },
             { title: 'Colour Description', dataIndex: 'colorDesc' },
-            { title: 'CO', dataIndex: ' ' },
-            { title: 'CO Final Approval Date', dataIndex: ' ' },
-            { title: 'Plan No', dataIndex: ' ' },
-            { title: 'Lead Time', dataIndex: ' ' },
+            { title: 'CO', dataIndex: 'customerOrder' },
+            { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate' },
+            { title: 'Plan No', dataIndex: 'planNo' },
+            { title: 'Lead Time', dataIndex: 'leadTime' },
             { title: 'Category', dataIndex: 'categoryCode' },
             { title: 'Category Description', dataIndex: 'categoryDesc' },
             { title: 'Vendor Code', dataIndex: 'vendorCode' },
             { title: 'Global Category Core Focus', dataIndex: 'gccFocusCode' },
             { title: 'Global Category Core Focus Description', dataIndex: 'gccFocusDesc' },
-            { title: 'Gender Age', dataIndex: ' ' },
+            { title: 'Gender Age', dataIndex: 'genderAgeCode' },
             { title: 'Gender Age Description', dataIndex: ' ' },
             { title: 'Destination Country Code ', dataIndex: 'destinationCountryCode' },
             { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
@@ -207,7 +207,7 @@ const FactoryPPMReport = () => {
             { title: 'MRGAC', dataIndex: 'MRGAC' },
             { title: 'OGAC', dataIndex: 'OGAC' },
             { title: 'GAC', dataIndex: 'GAC' },
-            { title: 'Track Out Date', dataIndex: ' ' },
+            { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
             { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
             { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
             { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
@@ -216,7 +216,7 @@ const FactoryPPMReport = () => {
             { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode' },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
             { title: 'Launch Code', dataIndex: 'launchCode' },
-            { title: 'Mode Of Transportation', dataIndex: ' ' },
+            { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
             { title: 'In Co Terms', dataIndex: 'inCoTerms' },
             { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
             { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
@@ -257,7 +257,7 @@ const FactoryPPMReport = () => {
             { title: 'XS-S', dataIndex: ' ' },
             { title: 'XS-T', dataIndex: ' ' },
             { title: 'Grand Total', dataIndex: ' ' },
-            { title: 'Actual Shipped Qty', dataIndex: ' ' },
+            { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
             { title: 'VAS-Size', dataIndex: 'VASSize' },
             { title: 'Item Vas Text', dataIndex: 'itemVasText' },
             { title: 'Item Text', dataIndex: 'itemText' },
@@ -305,8 +305,8 @@ const FactoryPPMReport = () => {
         },
         {
             title: 'Item',
-            dataIndex: 'Item',
-            ...getColumnSearch('Item'),
+            dataIndex: 'item',
+            ...getColumnSearch('item'),
 
         },
         {
@@ -362,22 +362,22 @@ const FactoryPPMReport = () => {
         },
         {
             title: 'CO',
-            dataIndex: '',
+            dataIndex: 'customerOrder',
 
         },
         {
             title: 'CO Final Approval Date',
-            dataIndex: '',
+            dataIndex: 'coFinalApprovalDate',
 
         },
         {
             title: 'Plan No',
-            dataIndex: '',
+            dataIndex: 'planNo',
 
         },
         {
             title: 'Lead Time',
-            dataIndex: '',
+            dataIndex: 'leadTime',
 
         },
         {
@@ -407,7 +407,7 @@ const FactoryPPMReport = () => {
         },
         {
             title: 'Gender Age',
-            dataIndex: '',
+            dataIndex: 'genderAgeCode',
 
         },
         {
