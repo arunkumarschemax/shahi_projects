@@ -48,6 +48,26 @@ export class NikeService extends CommonAxiosService {
     }
 
     async getShipmentTrackerReport(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.DpomController + "/getShipmentTrackerReport")
+        return this.axiosPostCall(this.dpomController + "/getShipmentTrackerReport")
     }
+
+    async getCategoryWiseItemQty(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getCategoryWiseItemQty")
+    }
+
+    async getShipmentWiseData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getShipmentWiseData")
+    }
+    async getPPMData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPPMData")
+    }
+    // async getByFactoryStatus():Promise<any> {
+    //     return this.axiosPostCall(this.dpomController + "/getByFactoryStatus")
+    
+    // }
+    async getPlanShipmentWiseData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPlanShipmentWiseData")
+    }
+
+
 }   

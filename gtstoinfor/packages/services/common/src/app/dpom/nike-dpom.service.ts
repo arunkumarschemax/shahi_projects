@@ -204,7 +204,6 @@ export class DpomService {
 
                 // Calculate the difference in days
                 const daysDifference = date4.diff(date3, 'days');
-                console.log(daysDifference, 'days')
                 const dtoData = new DpomSaveDto(orderDetail.poHeader.documentDate, orderDetail.poHeader.poNumber, orderDetail.poLine.itemNumber, orderDetail.sizes.scheduleLineItemNumber, orderDetail.product.categoryCode, orderDetail.product.categoryDescription, orderDetail.poHeader.vendorCode, orderDetail.product.globalCategoryCoreFocusCode, orderDetail.product.globalCategoryCoreFocusDescription, orderDetail.product.genderAgeCode, orderDetail.product.styleNumber, orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null, orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, null, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity, orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVas.valueAddedServiceInstructions, orderDetail.poLine.itemTextDetail.textDetails, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVas, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate, crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, 'hanger', orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, 'username')
 
                 const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
@@ -279,9 +278,11 @@ export class DpomService {
 
     async getFactoryReportData(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find();
-        // console.log(details)
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
     }
 
     async getByFactoryStatus(req: DpomSaveDto) {
@@ -294,12 +295,22 @@ export class DpomService {
             return 'no data found';
         }
     }
+    async getPPMData(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.find()
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
+    }
 
     async getShipmentTrackerReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find();
-        console.log(details)
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
     }
 
     async getDivertReportData(): Promise<CommonResponseModel> {
@@ -314,18 +325,18 @@ export class DpomService {
             });
             return response;
         } else {
-            return new CommonResponseModel(false, 0, 'Unable To Fetch Data', []);
+            return new CommonResponseModel(false, 0, 'No Data Found', []);
         }
     }
 
-
     async getCountForDivertReport(): Promise<CommonResponseModel> {
-
         const details = await this.dpomRepository.getCountForDivertReport();
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
     }
-
 
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPlantCount()
@@ -334,6 +345,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getStatusWiseItems(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getStatusWiseItemCount()
         if (data)
@@ -342,9 +354,32 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
+    async getCategoryWiseItemQty(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getCategoriesWiseItemQty()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getShipmentWiseData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getShipmentWiseItems()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getPlanShipmentWiseData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPlanningShipment()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
     async getOrderAcceptanceData(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.find()
-        console.log(data)
         if (data) {
             return new CommonResponseModel(true, 1, 'Data retrieved', data)
         } else {
@@ -357,7 +392,7 @@ export class DpomService {
         const poLineItemNumber = req.poLineItemNumber
         const scheduleLineItemNumber = req.scheduleLineItemNumber
         const updateStatus = await this.dpomRepository.update({ purchaseOrderNumber: purchaseOrderNumber, poLineItemNumber: poLineItemNumber, scheduleLineItemNumber: scheduleLineItemNumber }, { DPOMLineItemStatus: 'Accepted' })
-        if (updateStatus) {
+        if (updateStatus.affected) {
             return new CommonResponseModel(true, 1, 'Status Updated')
         } else {
             return new CommonResponseModel(false, 0, 'Something went wrong');
@@ -379,6 +414,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getShipmentPlaningChart(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.shipmentChart()
         if (data)

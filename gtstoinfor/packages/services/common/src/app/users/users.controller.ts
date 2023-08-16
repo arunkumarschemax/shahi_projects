@@ -20,7 +20,6 @@ export class UsersController {
     try {
       return await this.usersService.createUser(usersDto);
     } catch (error) {
-      console.log(error);
       return this.applicationExceptionhandler.returnException(
         UsersResponseModel,
         error
@@ -33,7 +32,6 @@ export class UsersController {
     try {
       return this.usersService.getAllUsers();
     } catch (error) {
-      console.log(error);
       return this.applicationExceptionhandler.returnException(
         AllUsersResponseModel,
         error
@@ -42,7 +40,7 @@ export class UsersController {
   }
 
   @Post("/activateOrDeactivate")
-  async activateOrDeactivate(@Body() activateDeactivateReq:any): Promise<UsersResponseModel> {
+  async activateOrDeactivate(@Body() activateDeactivateReq: any): Promise<UsersResponseModel> {
     try {
       return this.usersService.activateOrDeactivate(activateDeactivateReq);
     } catch (error) {

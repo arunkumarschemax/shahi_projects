@@ -16,7 +16,6 @@ export class DpomController {
         try {
             return await this.dpomService.getOctaToken()
         } catch (error) {
-            console.log(error);
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
@@ -26,7 +25,6 @@ export class DpomController {
         try {
             return await this.dpomService.getDPOMOrderDetails()
         } catch (error) {
-            console.log(error);
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
@@ -36,10 +34,20 @@ export class DpomController {
         try {
             return await this.dpomService.saveDPOMDataToDataBase()
         } catch (error) {
-            console.log(error);
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
+    @Post('/getPPMData')
+    async getPPMData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPPMData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+
 
     @Post('/getFactoryReportData')
     async getFactoryReportData(): Promise<CommonResponseModel> {
@@ -106,6 +114,16 @@ export class DpomController {
         }
     }
 
+    @Post('/getCategoryWiseItemQty')
+    async getCategoryWiseItemQty(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getCategoryWiseItemQty();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
     @Post('/getOrderAcceptanceData')
     async getOrderAcceptanceData(): Promise<CommonResponseModel> {
         try {
@@ -115,6 +133,30 @@ export class DpomController {
 
         }
     }
+
+
+
+    @Post('/getShipmentWiseData')
+    async getShipmentWiseData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getShipmentWiseData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+    @Post('/getPlanShipmentWiseData')
+    async getPlanShipmentWiseData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPlanShipmentWiseData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+
 
     @Post('/getShipmentPlaningChart')
     async getShipmentPlaningChart(): Promise<CommonResponseModel> {
