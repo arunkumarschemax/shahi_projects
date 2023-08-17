@@ -19,6 +19,7 @@ import SupplierView from "./masters/supplier/supplier-view"
 import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared-models"
 import PoFileImport from "./nike/po-file-import"
 import FactoryPPMReport from "./nike/factory-ppm-report"
+import PdfUpload from "./nike/pdf-reader/pdf-upload"
 
 
 export const AppRoutes = () => {
@@ -104,6 +105,7 @@ export const AppRoutes = () => {
                     <Route path='/nike'>
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='factory-report' element={<FactoryPPMReport/>} />
+                        <Route path = 'pdf-upload' element={<PdfUpload />} />
                     </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

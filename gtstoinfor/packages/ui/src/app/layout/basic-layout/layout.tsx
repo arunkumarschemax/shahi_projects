@@ -133,6 +133,12 @@ export const baseRouterList = [
                 path: "factory-report",
                 filepath: "factory-report",
             },
+            {
+                label: "Upload PDF",
+                key: "pdf-upload",
+                path: "pdf-upload",
+                filepath: "pdf-upload",
+            },
            
         ],
     },
