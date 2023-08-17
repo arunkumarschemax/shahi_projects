@@ -1,6 +1,6 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import moment from 'moment';
@@ -9,7 +9,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
 
 
-// const OPTIONS = ['ACCEPTED', 'UNACCEPTED', 'CANCELLED', 'CLOSED'];
+const OPTIONS = ['ACCEPTED', 'UNACCEPTED', 'CANCELLED', 'CLOSED'];
 
 
 
@@ -25,7 +25,7 @@ const PPMReport = () => {
   const service = new NikeService();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [filterData, setFilterData] = useState<any>([])
-  // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
 
 
@@ -127,7 +127,9 @@ const PPMReport = () => {
         setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Closed"))
     }
   }
-
+  const onReset = () => {
+    form.resetFields()
+  }
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -308,11 +310,13 @@ const PPMReport = () => {
                     label: item,
                   }))}
                 /> */}
+                
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 40 }} >
               <Form.Item>
-                <Button htmlType="submit" type="primary">Filter</Button>
+                <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Search</Button>
+                <Button style={{marginLeft:8}}  htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined/>}>Reset</Button>
               </Form.Item>
             </Col>
           </Row>

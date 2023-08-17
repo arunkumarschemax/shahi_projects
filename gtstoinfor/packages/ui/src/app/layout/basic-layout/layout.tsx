@@ -61,53 +61,53 @@ export const baseRouterList = [
                 path: "factories/factories-view",
                 filepath: "factories/factories-view",
             },
-            {
-                label: "Supplier",
-                key: "supplier",
-                path: "supplier/supplier-view",
-                filepath: "supplier/supplier-view",
-            },
+            // {
+            //     label: "Supplier",
+            //     key: "supplier",
+            //     path: "supplier/supplier-view",
+            //     filepath: "supplier/supplier-view",
+            // },
         ],
     },
-    {
-        label: "Orders",
-        key: "excel-import",
-        path: "excel-import",
-        icon: <FileExcelOutlined />,
-        filepath: "excel-import",
-        children: [
-            {
-                label: "Add Orders",
-                key: "excel-import",
-                path: "excel-import",
-                filepath: "excel-import",
-            },
-            {
-                label: "Compare Orders",
-                key: "changes-view",
-                path: "changes-view",
-                filepath: "changes-view",
-            },
-            {
-                label: "View Orders",
-                key: "grid-view",
-                path: "grid-view",
-                filepath: "grid-view",
-            },
-            {
-                label: "Uploaded Files",
-                key: "revert-orders",
-                path: "revert-orders",
-                filepath: "revert-orders",
-            },
-            {
-                label: "Versions Data",
-                key: "version-grid",
-                path: "version-grid",
-                filepath: "version-grid",
-            }
-        ],
-    },
+    // {
+    //     label: "Orders",
+    //     key: "excel-import",
+    //     path: "excel-import",
+    //     icon: <FileExcelOutlined />,
+    //     filepath: "excel-import",
+    //     children: [
+    //         {
+    //             label: "Add Orders",
+    //             key: "excel-import",
+    //             path: "excel-import",
+    //             filepath: "excel-import",
+    //         },
+    //         {
+    //             label: "Compare Orders",
+    //             key: "changes-view",
+    //             path: "changes-view",
+    //             filepath: "changes-view",
+    //         },
+    //         {
+    //             label: "View Orders",
+    //             key: "grid-view",
+    //             path: "grid-view",
+    //             filepath: "grid-view",
+    //         },
+    //         {
+    //             label: "Uploaded Files",
+    //             key: "revert-orders",
+    //             path: "revert-orders",
+    //             filepath: "revert-orders",
+    //         },
+    //         {
+    //             label: "Versions Data",
+    //             key: "version-grid",
+    //             path: "version-grid",
+    //             filepath: "version-grid",
+    //         }
+    //     ],
+    // },
     {
         label: "Nike",
         key: "nike",

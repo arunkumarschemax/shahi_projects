@@ -49,12 +49,12 @@ export const AppRoutes = () => {
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
                     }} />} />
-                    <Route path='supplier/supplier-view' key='supplier/supplier-view' element={<SupplierView />} />
+                    {/* <Route path='supplier/supplier-view' key='supplier/supplier-view' element={<SupplierView />} />
                     <Route path='supplier/supplier-form' key='/supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
                         throw new Error("Function not implemented.")
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
-                    }} />} />
+                    }} />} /> */}
                 </Route>
                 <Route path='/nike'>
                     <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
@@ -94,12 +94,12 @@ export const AppRoutes = () => {
                         }} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         }} />} />
-                                <Route path='supplier/supplier-view' element={<SupplierView />} />
+                                {/* <Route path='supplier/supplier-view' element={<SupplierView />} />
                                 <Route path='supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
                             throw new Error("Function not implemented.")
                         }} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
-                        }} />} />
+                        }} />} /> */}
 
                     </Route>
                     {/* <Route path='/excel-import'>
