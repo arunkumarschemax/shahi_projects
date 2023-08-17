@@ -63,8 +63,8 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/approveDpomLineItemStatus", req)
     }
 
-    async getQtyChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getQtyChangeData")
+    async getTotalItemQtyChangeData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getTotalItemQtyChangeData")
     }
 
     async poLineItemStatusChange(): Promise<CommonResponseModel> {

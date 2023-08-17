@@ -220,10 +220,10 @@ export class DpomController {
         }
     }
 
-    @Post('/getQtyChangeData')
-    async getQtyChangeData(): Promise<CommonResponseModel> {
+    @Post('/getTotalItemQtyChangeData')
+    async getTotalItemQtyChangeData(): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getQtyChangeData();
+            return this.dpomService.getTotalItemQtyChangeData();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

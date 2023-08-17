@@ -73,6 +73,13 @@ export class DpomEntity {
     genderAgeCode: string;
 
     @Column("varchar", {
+        name: "gender_age_desc",
+        length: 15,
+        nullable: true
+    })
+    genderAgeDesc: string;
+
+    @Column("varchar", {
         name: "style_number",
         length: 10,
         nullable: true
@@ -241,6 +248,13 @@ export class DpomEntity {
     GACReasonCode: string;
 
     @Column("varchar", {
+        name: "gac_reason_desc",
+        length: 50,
+        nullable: true
+    })
+    GACReasonDesc: string;
+
+    @Column("varchar", {
         name: "shipping_type",
         length: 30,
         nullable: true
@@ -386,6 +400,19 @@ export class DpomEntity {
         nullable: true
     })
     trCoNetIncludingDiscCurrencyCode: string;
+
+    @Column("int", {
+        name: "size_qty",
+        nullable: true
+    })
+    sizeQuantity: number;
+
+    @Column("varchar", {
+        name: "size_description",
+        length: 10,
+        nullable: true
+    })
+    sizeDescription: string;
 
     //PDF Data
     @Column('varchar', {
