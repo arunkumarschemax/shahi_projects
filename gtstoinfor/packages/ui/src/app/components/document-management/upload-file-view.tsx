@@ -120,22 +120,28 @@ const UploadFileGrid = () =>{
 
     const pocolumn = [
         {
-            title: 'Po Number',
+            title: 'PO NUMBER',
             dataIndex: 'PO',
-            render: (text) => (
+            align:'center',
+
+              ...getColumnSearchProps('PO'),
+              render: (text) => (
                 <a href={"document-management/document-file-upload#/document-management/document-file-upload"}>{text}</a>
               ),
-              // ...getColumnSearchProps('PO')
         },
       ];
 
       const downloadcomun = [
         {
+          title:'Status',
+          dataIndex:'status'
+        },
+        {
           title: 'Download',
           dataIndex: 'documentName',
           render :(text, rowData, index) =>{
             return ( <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
-                  <Button style={{ marginRight: '10px' }}onClick={()=>download(rowData.filePath)} >
+                  <Button style={{ marginRight: '10px' }}onClick={()=>download(rowData.filePath)}  >
                      Download
                    </Button>
                </Form.Item>        
@@ -169,22 +175,21 @@ const UploadFileGrid = () =>{
             setItemData(res.data);
 
             const headerColumns = Object.keys(res.data[0])
-            .filter(header =>header !== 'docListId' && header !== 'PO' && header !== 'filePath')
+            .filter(header =>header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status')
             .map(header => ({           
                 title: header.toUpperCase(),
                 dataIndex: header,
                 key: header,
-                // render:() =>{
-                //     console.log(res.data,'header')
-                //     return (
-                //         <div style={{backgroundColor :'red'}}></div>
-                //     )
+                render:(data, record) =>{
+                    console.log(res.data,'header')
+                    const backgroundColor = data === 'Yes' ? 'green' : 'red'
+                    return    (
+                        <div style={{color:backgroundColor ,textAlign:'center'}} >{data}</div>
+                    )
               
-                // }
+                }
             }));
-            setColumns([
-              ...pocolumn,...headerColumns,...downloadcomun
-            ]);
+            setColumns([...pocolumn,...headerColumns,...downloadcomun]);
           
         });
     }
@@ -202,21 +207,21 @@ const UploadFileGrid = () =>{
             </div> */}
             {columns.length > 0 && itemData.length > 0 ? (
                 <Table
-                    // columns={columns.map((column) => ({
-                    //     ...column,
-                    //     title: (
-                    //         <div
-                    //             // style={{
-                    //             //     fontWeight: 'bold',
-                    //             //     backgroundColor: '#3582c4', // Highlight color
-                    //             //     padding: '8px',
-                    //             //     textAlign:'center'
-                    //             // }}
-                    //         >
-                    //             {column.title}
-                    //         </div>
-                    //     ),
-                    // }))}
+                    columns={columns.map((column) => ({
+                        ...column,
+                        title: (
+                            <div
+                                style={{
+                                    // fontWeight: 'bold',
+                                    // backgroundColor: '#3582c4', // Highlight color
+                                    // padding: '8px',
+                                    textAlign:'center'
+                                }}
+                            >
+                                {column.title}
+                            </div>
+                        ),
+                    }))}
                     // dataSource={itemData.filter((item) =>
                     //     // Filter data based on search text
                     //     Object.values(item).some((value) =>
@@ -225,14 +230,8 @@ const UploadFileGrid = () =>{
                     // )}
                     // pagination={false}
 
-                       columns={columns}
-                       dataSource={itemData.filter((item) =>
-                            // Filter data based on search text
-                            Object.values(item).some((value) =>
-                                value.toString().toLowerCase().includes(searchText.toLowerCase())
-                            )
-                        )}
-                    // dataSource={itemData}
+                      //  columns={columns}
+                    dataSource={itemData}
                     pagination={false}
                 />
             ) : (
