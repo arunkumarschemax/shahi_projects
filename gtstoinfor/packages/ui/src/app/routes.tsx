@@ -7,7 +7,7 @@ import UserCreationForm from "./user-management/users/users-form"
 import UsersView from "./user-management/users/users-view"
 import FactoriesView from "./masters/factories/factories-view"
 import FactoriesForm from "./masters/factories/factories-form"
-import { FactoryDto } from "@project-management-system/shared-models"
+import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared-models"
 import ShipmentTrackerReport from "./nike/reports/shipment-tracker-report"
 import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
@@ -18,6 +18,8 @@ import FabricTrackerReport from "./nike/reports/fabric-tracker-report"
 import { NikeDashboard } from "./nike/nike-dash-components/nike-dashboard"
 import { OrderAcceptance } from "./nike/components/order-acceptance"
 import ShipmentPlanningChart from "./nike/shipment-planning-chart"
+import SupplierView from "./masters/supplier/supplier-view"
+import SupplierForm from "./masters/supplier/supplier-form"
 
 
 export const AppRoutes = () => {
@@ -35,6 +37,12 @@ export const AppRoutes = () => {
                 <Route path='/masters'>
                     <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
                     <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm Data={undefined} updateItem={function (Data: FactoryDto): void {
+                        throw new Error("Function not implemented.")
+                    }} isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    }} />} />
+                    <Route path='supplier/supplier-view' key='supplier/supplier-view' element={<SupplierView />} />
+                    <Route path='supplier/supplier-form' key='/supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
                         throw new Error("Function not implemented.")
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
@@ -78,6 +86,13 @@ export const AppRoutes = () => {
                         }} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         }} />} />
+                                <Route path='supplier/supplier-view' element={<SupplierView />} />
+                                <Route path='supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
+                            throw new Error("Function not implemented.")
+                        }} isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        }} />} />
+
                     </Route>
                     {/* <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />
