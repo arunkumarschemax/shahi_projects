@@ -133,18 +133,20 @@ const UploadFileGrid = () =>{
 
       const downloadcomun = [
         {
-          title:'Status',
+          title:'STATUS',
           dataIndex:'status'
         },
         {
-          title: 'Download',
+          title: 'DOWNLOAD',
           dataIndex: 'documentName',
           render :(text, rowData, index) =>{
-            return ( <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
+            return (<div style={{alignContent:'center'}}>
+               <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
                   <Button style={{ marginRight: '10px' }}onClick={()=>download(rowData.filePath)}  >
                      Download
                    </Button>
-               </Form.Item>        
+               </Form.Item>   
+               </div>     
                 )
           }
         },
