@@ -123,7 +123,9 @@ const FactoryPPMReport = () => {
             ),
     });
 
-
+   const ClearData=()=>{
+    form.resetFields();
+   }
 
     const EstimatedETDDate = (value) => {
         if (value) {
@@ -169,7 +171,7 @@ const FactoryPPMReport = () => {
             { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
             { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
             { title: 'Item', dataIndex: 'item' },
-            { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
+            // { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
             { title: 'Factory', dataIndex: 'factory' },
             { title: 'Document Date', dataIndex: 'documentDate' },
             { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber' },
@@ -318,7 +320,7 @@ const FactoryPPMReport = () => {
             title: 'Factory',
             dataIndex: 'factory',
             ...getColumnSearch('factory'),
-           
+
         },
         {
             title: 'Document Date',
@@ -502,8 +504,23 @@ const FactoryPPMReport = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '42px' }}>
                             <Form.Item>
-                                <Button htmlType="submit" type="primary">Filter</Button>
+                                <Button htmlType="submit"
+                                icon={<SearchOutlined />}
+                                 type="primary">SEARCH</Button>
+                               
                             </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ padding: '42px' }}>
+                            <Form.Item>
+                        <Button 
+                                htmlType='button'
+                                icon={<UndoOutlined />}
+                                style={{ left: '-150px', width: 80 , backgroundColor:"#162A6D" , color:"white",position:"relative"}}
+                                onClick={()=>{ClearData();}}
+                                  >
+                                    RESET
+                                </Button>
+                                </Form.Item>
                         </Col>
                     </Row>
                 </Form>
