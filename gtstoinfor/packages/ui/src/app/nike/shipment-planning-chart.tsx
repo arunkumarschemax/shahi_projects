@@ -120,12 +120,15 @@ const ShipmentPlanningChart = () => {
        
         {
             title: 'Item',
+            dataIndex:'item',
         },
            {
             title: 'Factory',
+            dataIndex:'factory'
         },
         {
             title: 'Plan',
+            dataIndex:'plan'
             
         },
         {
@@ -136,6 +139,7 @@ const ShipmentPlanningChart = () => {
         {
             title: 'PO Line Item Number',
             dataIndex: 'poLineItemNumber',
+            align:'center'
 
             
         },
@@ -149,23 +153,25 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'SHIP TO ADDRESS(lpo)',
-            dataIndex: '', 
+            dataIndex: 'shipToAddressToLegalPo', 
 
         },{
             title: 'SHIP TO ADDRESS(DIA)',
-            dataIndex: '', 
+            dataIndex: 'shipToAddressDia', 
 
         },{
             title: 'Hanger',
-            dataIndex: 'shipmentType', 
+            dataIndex: 'hanger', 
 
         },
         {   
             title: 'FOB',
+            dataIndex:'fob'
 
         },
         {   
             title: 'CO',
+            dataIndex:'co'
            
 
         },
@@ -181,7 +187,8 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'Planning Season Code',
-            dataIndex:'planningSeasonCode'
+            dataIndex:'planningSeasonCode',
+            align:"center"
         },
         {
             title: 'Plant Serason Year',
@@ -207,11 +214,11 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'PAYMENT TERMS LC/TT/TC',
-            dataIndex: '',          
+            dataIndex: 'paymentTerm',          
         },
         {
             title: 'DESCRIPTION WITH FABRIC CONTENT',
-            dataIndex: '',          
+            dataIndex: 'desFabricContent',          
         },
         {
             title: 'Gender Age Description',
@@ -223,11 +230,11 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'FABRIC IMPORTED/DOMESTIC',
-            dataIndex: '',          
+            dataIndex: 'fabricLocation',          
         },
         {
             title: 'COMMISSION(IF ANY)',
-            dataIndex: '',          
+            dataIndex: 'commission',          
         },
         {
             title: 'Shipping Type',
@@ -243,7 +250,7 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'CAB CODE',
-            dataIndex: '',          
+            dataIndex: 'cabCode',          
         },
   
     ]
@@ -261,13 +268,23 @@ const ShipmentPlanningChart = () => {
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
             
-            { title: 'Po+Line ', dataIndex: 'poLine' },
-            { title: 'Item', dataIndex: 'Item' },
             {
-                title: 'Factory',dataIndex:''
+                title: 'PO+Line',
+                dataIndex:"poLine"
+    
             },
             {
-                title: 'Plan',dataIndex:''   
+                title: 'Item',
+                dataIndex:'item',
+            },
+               {
+                title: 'Factory',
+                dataIndex:'factory'
+            },
+            {
+                title: 'Plan',
+                dataIndex:'plan'
+                
             },
             {
                 title: 'Purchase Order Number',
@@ -277,6 +294,7 @@ const ShipmentPlanningChart = () => {
             {
                 title: 'PO Line Item Number',
                 dataIndex: 'poLineItemNumber',
+                align:'center'
     
                 
             },
@@ -290,22 +308,27 @@ const ShipmentPlanningChart = () => {
             },
             {
                 title: 'SHIP TO ADDRESS(lpo)',
-                dataIndex: '', 
+                dataIndex: 'shipToAddressToLegalPo', 
     
             },{
                 title: 'SHIP TO ADDRESS(DIA)',
-                dataIndex: '', 
+                dataIndex: 'shipToAddressDia', 
     
             },{
                 title: 'Hanger',
-                dataIndex: 'shipmentType', 
-    
-            },
-            {    title: 'FOB',dataIndex:''
+                dataIndex: 'hanger', 
     
             },
             {   
-                title: 'CO',dataIndex:''
+                title: 'FOB',
+                dataIndex:'fob'
+    
+            },
+            {   
+                title: 'CO',
+                dataIndex:'co'
+               
+    
             },
             {
                 title: 'Prooduct Code',
@@ -319,7 +342,8 @@ const ShipmentPlanningChart = () => {
             },
             {
                 title: 'Planning Season Code',
-                dataIndex:'planningSeasonCode'
+                dataIndex:'planningSeasonCode',
+                align:"center"
             },
             {
                 title: 'Plant Serason Year',
@@ -345,11 +369,11 @@ const ShipmentPlanningChart = () => {
             },
             {
                 title: 'PAYMENT TERMS LC/TT/TC',
-                dataIndex: '',          
+                dataIndex: 'paymentTerm',          
             },
             {
                 title: 'DESCRIPTION WITH FABRIC CONTENT',
-                dataIndex: '',          
+                dataIndex: 'desFabricContent',          
             },
             {
                 title: 'Gender Age Description',
@@ -361,11 +385,11 @@ const ShipmentPlanningChart = () => {
             },
             {
                 title: 'FABRIC IMPORTED/DOMESTIC',
-                dataIndex: '',          
+                dataIndex: 'fabricLocation',          
             },
             {
                 title: 'COMMISSION(IF ANY)',
-                dataIndex: '',          
+                dataIndex: 'commission',          
             },
             {
                 title: 'Shipping Type',
@@ -381,7 +405,7 @@ const ShipmentPlanningChart = () => {
             },
             {
                 title: 'CAB CODE',
-                dataIndex: '',          
+                dataIndex: 'cabCode',          
             },
         ]
 

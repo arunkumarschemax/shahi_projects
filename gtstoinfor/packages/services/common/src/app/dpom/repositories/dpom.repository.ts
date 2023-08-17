@@ -19,7 +19,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .select(`id,plant,dpom_item_line_status AS lineStatus, plant_name AS plantName,document_date AS documentDate,po_number AS poNumber,
             po_line_item_number AS poLine ,destination_country AS destination,shipping_type AS shipmentType, 
             inventory_segment_code AS inventorySegmentCode, ogac AS ogac ,gac AS gac ,product_code AS productCode,
-            item_vas_text`)
+            item_vas_text,quantity`)
             .where(`dpom_item_line_status IN ('accepted','Unaccepted')`)
         return await query.getRawMany()
     }
@@ -71,10 +71,13 @@ export class DpomRepository extends Repository<DpomEntity> {
     }
     async shipmentChart(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(`po_number AS poLine, po_number AS purchaseOrderNumber,po_line_item_number AS poLineItemNumber, style_number AS styleNumber ,
+            .select(`po_and_line AS poLine, po_number AS purchaseOrderNumber,po_line_item_number AS poLineItemNumber, style_number AS styleNumber ,
             destination_country AS destinationCountryName,product_code AS productCode ,color_desc AS colorDescription,planning_season_code AS planningSeasonCode,
-            planning_season_year AS planningSeasonYear,ogac,gac,total_item_qty AS totalItemQuantity,mode_of_transport_code AS modeofTransport,shipping_type AS shippingType,
-            doc_type_desc AS docTypeDescription,purchase_group_name AS purchaseGroupName `)
+            planning_season_year AS planningSeasonYear,ogac,gac,total_item_qty AS totalItemQuantity,mode_of_transport_code AS modeofTransport,
+            shipping_type AS shippingType,doc_type_desc AS docTypeDescription,purchase_group_name AS purchaseGroupName,item,factory,plan_no AS plan,
+            ship_to_address_legal_po AS shipToAddressToLegalPo,
+            gross_price_fob AS fob,payment_term AS paymentTerm,fabric_content AS desFabricContent,fabric_source AS fabricLocation,
+            ship_to_address_dia AS shipToAddressDia,cab_code AS cabCode,hanger,customer_order AS co,commission`)
         return await query.getRawMany();
     }
 

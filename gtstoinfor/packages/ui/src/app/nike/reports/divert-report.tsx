@@ -361,6 +361,21 @@
                 render: (text, object, index) => (page - 1) * pageSize + (index + 1)
             },
             {
+                title: "Request Date",
+                dataIndex: "",
+                render: (text, record) => (record.section === 'old' ? record.plant : ''),
+            },
+            {
+                title: "From Item",
+                dataIndex: "",
+                render: (text, record) => (record.section === 'old' ? record.plant : ''),
+            },
+            {
+                title: "Unit",
+                dataIndex: "",
+                render: (text, record) => (record.section === 'old' ? record.plant : ''),
+            },
+            {
                 title: "Plant",
                 dataIndex: "plant",
                 render: (text, record) => (record.section === 'old' ? record.plant : ''),
@@ -407,9 +422,15 @@
                 
             },
             {
-                title: 'Balance Qty',
+                title: 'Old Qantity',
                 dataIndex: '-', 
                 render: (text, record) => (record.section === 'old' ? record.plant : "-"),
+
+            },
+            {
+                title: 'Balance Qty',
+                dataIndex: 'quantity', 
+                render: (text, record) => (record.section === 'old' ? record.quantity : "-"),
 
             },
             {
@@ -424,6 +445,18 @@
                 render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
 
             },
+            {
+                title: 'OLD OGAC',
+                dataIndex: '', 
+                render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
+
+            },
+            {
+                title: 'OLD GAC',
+                dataIndex: '', 
+                render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
+
+            },
             {   
                 title: 'Inventory Segment Code',
                 dataIndex: ' inventorySegmentCode',
@@ -431,7 +464,7 @@
  
             },
             {
-                title: 'OGAC Date',
+                title: 'GAC Difference',
                 dataIndex: 'ogac', 
                 render: (text, record) => {
                     return record.section === 'old'
@@ -440,19 +473,7 @@
                             : "-")
                         : "";
                 }
-            },
-            {
-                title: 'GAC Date',
-                dataIndex: 'gac', 
-                render: (text, record) => {
-                    return record.section === 'old'
-                        ? (record.gac
-                            ? moment(record.gac).format("YYYY-MM-DD")
-                            : "-")
-                        : "";
-                }
-            },
-            ,
+            } ,
             {
                 title: 'Item Vas',
                 dataIndex: 'item_vas_text',
@@ -554,8 +575,8 @@
             },
             {
                 title: 'Quantity',
-                dataIndex: '', 
-              //  render: (text, record) => (record.section === 'new' ? record.poLine : "-"),
+                dataIndex: 'quantity', 
+                render: (text, record) => (record.section === 'new' ? record.quantity : "-"),
 
             },
             {
