@@ -18,6 +18,7 @@ import FabricTrackerReport from "./nike/reports/fabric-tracker-report"
 import { NikeDashboard } from "./nike/nike-dash-components/nike-dashboard"
 import { OrderAcceptance } from "./nike/components/order-acceptance"
 import ShipmentPlanningChart from "./nike/shipment-planning-chart"
+import NikeFileRevert from "./nike/components/file-revert"
 
 
 export const AppRoutes = () => {
@@ -43,6 +44,9 @@ export const AppRoutes = () => {
                 <Route path='/nike'>
                     <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
                     <Route path='file-import' element={<PoFileImport />} />
+                    <Route path='file-revert' element={<NikeFileRevert />} />
+                </Route>
+                <Route path='/reports'>
                     <Route path='divert-report' element={<DivertReport />} />
                     <Route path='factory-report' element={<FactoryPPMReport />} />
                     <Route path="ppm-report" element={<PPMReport />} />
@@ -80,6 +84,11 @@ export const AppRoutes = () => {
                     </Route>
                     <Route path='/nike'>
                         <Route path='file-import' element={<PoFileImport />} />
+                        <Route path='file-revert' element={<NikeFileRevert />} />
+                        <Route path='order-acceptance' element={<OrderAcceptance />} />
+
+                    </Route>
+                    <Route path='/reports'>
                         <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
                         <Route path='divert-report' element={<DivertReport />} />
                         <Route path='factory-report' element={<FactoryPPMReport />} />
@@ -87,8 +96,6 @@ export const AppRoutes = () => {
                         <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
                         <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                         <Route path='shipment-report' element={<ShipmentTrackerReport />} />
-                        <Route path='order-acceptance' element={<OrderAcceptance />} />
-
                     </Route>
                     <Route path='nike-dashboard' element={<NikeDashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
