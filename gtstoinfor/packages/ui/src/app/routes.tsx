@@ -7,7 +7,17 @@ import UserCreationForm from "./user-management/users/users-form"
 import UsersView from "./user-management/users/users-view"
 import FactoriesView from "./masters/factories/factories-view"
 import FactoriesForm from "./masters/factories/factories-form"
-import { FactoryDto } from "@project-management-system/shared-models"
+import ExcelImport from "./excel-import/excel-import"
+import ChangesGrid from "./excel-import/changes-grid"
+import AllOrdersGridView from "./excel-import/orders-view-grid"
+import { Dashboard } from "./common/dashboards/dashboard"
+import { FileRevert } from "./excel-import/file-revert"
+import VersionChanges from "./excel-import/version-wise-table"
+import PhaseWiseData from "./excel-import/phase-wise-data"
+import SupplierForm from "./masters/supplier/supplier-form"
+import SupplierView from "./masters/supplier/supplier-view"
+import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared-models"
+import PdfUpload from "./nike/pdf-reader/pdf-upload"
 import ShipmentTrackerReport from "./nike/reports/shipment-tracker-report"
 import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
@@ -45,6 +55,7 @@ export const AppRoutes = () => {
                     <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
                     <Route path='file-import' element={<PoFileImport />} />
                     <Route path='file-revert' element={<NikeFileRevert />} />
+                    <Route path='pdf-upload' element={<PdfUpload />} />
                 </Route>
                 <Route path='/reports'>
                     <Route path='divert-report' element={<DivertReport />} />
@@ -86,9 +97,11 @@ export const AppRoutes = () => {
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='file-revert' element={<NikeFileRevert />} />
                         <Route path='order-acceptance' element={<OrderAcceptance />} />
+                        <Route path='pdf-upload' element={<PdfUpload />} />
 
                     </Route>
                     <Route path='/reports'>
+                        <Route path='factory-report' element={<FactoryPPMReport />} />
                         <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
                         <Route path='divert-report' element={<DivertReport />} />
                         <Route path='factory-report' element={<FactoryPPMReport />} />
