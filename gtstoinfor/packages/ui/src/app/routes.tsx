@@ -16,6 +16,7 @@ import DocumentGrid from "./components/masters/document-grid"
 import RoleMappingForm from "./components/masters/document-role-form"
 import DocumentListupload from "./components/document-management/document-file-upload"
 import DocumentForm from "./components/masters/document-form"
+import UploadFileGrid from "./components/document-management/upload-file-view"
 
 
 export const AppRoutes = () => {
@@ -42,6 +43,8 @@ export const AppRoutes = () => {
                     
                 <Route path="/document-management" key='/document-management'>
                     <Route path="document-file-upload" key='/document-file-upload'  element={<DocumentListupload />}/>
+                    <Route path="upload-file-view" key='/upload-file-view'  element={<UploadFileGrid />}/>
+
                 </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
@@ -83,6 +86,8 @@ export const AppRoutes = () => {
                     </Route>
                     <Route path="/document-management" >
                     <Route path="document-file-upload" element={<DocumentListupload />}/>
+                    <Route path="upload-file-view" key='/upload-file-view'  element={<UploadFileGrid />}/>
+
                 </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

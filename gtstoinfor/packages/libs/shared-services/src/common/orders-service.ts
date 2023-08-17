@@ -87,5 +87,9 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getDynamicData")
     }
 
+    async getDynamicDataForDocList(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getDynamicDataForDocList")
+    }
+    
     
 }

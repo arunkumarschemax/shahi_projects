@@ -152,6 +152,13 @@ export const baseRouterList = [
         icon: <FileTextOutlined  />,
         path:'document-management/document-file-upload',
         filepath:'document-management/document-file-upload'     
+    },
+    {
+        label:'uploaded documents list',
+        key:'document-management-list',
+        icon: <FileTextOutlined  />,
+        path:'document-management/upload-file-view',
+        filepath:'document-management/upload-file-view'     
     }
 ];
 
