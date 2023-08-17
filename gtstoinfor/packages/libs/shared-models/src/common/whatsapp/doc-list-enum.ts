@@ -1,4 +1,4 @@
 export enum DoclListEnum{
-    partially = 'parially uploaded',
+    partially = 'partially uploaded',
     Full = 'fully uploaded',
 }

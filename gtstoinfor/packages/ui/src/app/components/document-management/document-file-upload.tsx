@@ -24,7 +24,7 @@ export default function DocumentListupload() {
   const [page, setPage] = React.useState(1);
   const [fileList,setFilelist] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
-
+  const [statusval,setStatusval] = useState(String)
   let navigate = useNavigate();
   const [form] = Form.useForm();
   const { Option } = Select;
@@ -122,7 +122,8 @@ export default function DocumentListupload() {
 
 
   const onFinish = (data: any, filesList:any[]) => {
-    console.log(filesList,'dataaaa')
+    console.log(statusval,'statusval')
+    console.log(data,'dataaaa')
     console.log(data.file);
     // console.log(data.file.fileList);
 
@@ -223,7 +224,7 @@ export default function DocumentListupload() {
           <Row gutter={24}>
             {docData?.length > 0 ? (
               docData?.map((response) => (
-                <UploadView form={form} docData={response} formData={onFinish} fileList={setFilelist}/>
+                <UploadView form={form} docData={response} formData={onFinish} fileList={setFilelist}  setStatusVal={setStatusval}/>
               ))
             ) : (
               <Alert

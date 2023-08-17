@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance } from 'antd';
+import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, Radio } from 'antd';
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 // import AlertMessages from '../common/common-functions/alert-messages';
@@ -19,7 +19,7 @@ export interface UploadViewProps {
     docData: any;
     formData: (value: any, filesList:any[]) => void;
     fileList: (value: any[]) => void;
-
+    setStatusVal:any ///////////renu
 }
 
 const UploadView = (props: UploadViewProps) => {
@@ -27,28 +27,31 @@ const UploadView = (props: UploadViewProps) => {
   const [loading, setLoading] = useState(true);
   const [fileList,setFilelist] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
-  
+  const [statusval,setStatusVal] = useState(String)
+
+
 
     useEffect(() =>{
         setLoading(false);
+        console.log(props.docData.status)
+        // props.statusval(props.docData.status)
     },[props.docData])
 
-
+    // props.statusvalue(statusval)
+    // console.log( props.statusvalue)
   const download = (data: any) => {
     console.log("data");
-    console.log(data);
-    
+    console.log(data);  
 
   }
 
   const upload = (data: any) => {
-    // console.log(data);
+    console.log(data);
     // console.log(data.documentsListId);
     // console.log(props.form.getFieldsValue())
     let file = props.form.getFieldValue(`${data.documentsListId}`);
     // console.log(props.form.getFieldValue(`${data.documentsListId}`));
     data.file = file;
-    console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^")
     console.log(file);
     console.log(fileList);
     props.formData(data,fileList);
@@ -97,8 +100,14 @@ const UploadView = (props: UploadViewProps) => {
       // Handle the file upload for the specific documentListId
       // You can use the 'documentListId' to identify which row is being interacted with
     };
+
+    const handleStatusChange = (value) => {
+      console.log(value)
+      // console.log(value.target.value); 
+      setStatusVal(value.target.value)
+    };
     return(
-      <Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
+         <Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
       <Card
           bordered={true}
           style={{
@@ -136,7 +145,12 @@ const UploadView = (props: UploadViewProps) => {
                   </Upload>
               </Form.Item>
           </Text>
-          <br />
+          <Radio.Group defaultValue={props.docData.status} buttonStyle="solid" onChange={handleStatusChange}>
+          <Radio.Button value="partially uploaded">parially</Radio.Button>
+          <Radio.Button value="fully uploaded">fully</Radio.Button>
+        </Radio.Group>
+  
+        <br />
           <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
             <Button type='primary' icon={<UploadOutlined/>} onClick={() => upload(props.docData)} disabled={btndisable}>Upload</Button>
           </Text>
@@ -148,6 +162,7 @@ const UploadView = (props: UploadViewProps) => {
           
       </Card>
       </Col>
+     
     )
 }
 
