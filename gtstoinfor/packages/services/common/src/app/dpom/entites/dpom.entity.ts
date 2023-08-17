@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn, OneToMany } from "typeorm";
+import { DpomChildEntity } from "./dpom-child.entity";
 
 @Entity('dpom')
 export class DpomEntity {
@@ -608,4 +609,13 @@ export class DpomEntity {
         default: 1
     })
     isActive: boolean;
+
+    @OneToMany(() => DpomChildEntity, (dpomChild) => { dpomChild.dpom }, { cascade: true })
+    dpomChild: DpomChildEntity;
+
+    @Column('int', {
+        nullable: true,
+        name: 'file_id',
+    })
+    fileId: number;
 }

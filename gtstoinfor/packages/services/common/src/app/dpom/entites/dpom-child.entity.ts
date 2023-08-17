@@ -1,5 +1,5 @@
-import { CommonColumns } from "packages/services/common/common-columns.entity";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn, JoinColumn, ManyToOne } from "typeorm";
+import { DpomEntity } from "./dpom.entity";
 
 @Entity('dpom_child')
 export class DpomChildEntity {
@@ -609,5 +609,15 @@ export class DpomChildEntity {
         default: 1
     })
     isActive: boolean;
+
+    @ManyToOne(() => DpomEntity, dpom => dpom.dpomChild)
+    @JoinColumn({ name: 'parent_id' })
+    dpom: DpomEntity;
+
+    @Column('int', {
+        nullable: true,
+        name: 'file_id',
+    })
+    fileId: number;
 
 }

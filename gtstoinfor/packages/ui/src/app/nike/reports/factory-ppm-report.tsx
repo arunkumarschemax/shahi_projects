@@ -266,7 +266,6 @@ const FactoryPPMReport = () => {
 
         ]
 
-
         const excel = new Excel();
         excel.addSheet("Sheet1");
         excel.addRow();
@@ -274,8 +273,6 @@ const FactoryPPMReport = () => {
         excel.addDataSource(gridData);
         excel.saveAs(`factory-report-${currentDate}.xlsx`);
     }
-
-
 
     function convertToYYYYMMDD(inputDate) {
         const formatsToTry = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY', 'YYYY-MM-DD'];

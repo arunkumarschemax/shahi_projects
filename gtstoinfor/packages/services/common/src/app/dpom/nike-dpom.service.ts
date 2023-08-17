@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { CommonResponseModel, dpomOrderColumnsName } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, dpomOrderColumnsName } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -13,6 +13,11 @@ import { DataSource } from 'typeorm';
 import { DpomChildEntity } from './entites/dpom-child.entity';
 import { DpomDifferenceEntity } from './entites/dpom-difference.entity';
 import { DpomChildAdapter } from './dto/dpom-child.adapter';
+import { DpomDifferenceRepository } from './repositories/dpom-difference.repository';
+import { NikeFileUploadRepository } from './repositories/upload.repository';
+import { FileIdReq } from '../orders/models/file-id.req';
+import { NikeFileUploadEntity } from './entites/upload-file.entity';
+import { Cron } from '@nestjs/schedule';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -21,8 +26,10 @@ export class DpomService {
     constructor(
         private dpomRepository: DpomRepository,
         private dpomChildRepo: DpomChildRepository,
+        private dpomDiffRepo: DpomDifferenceRepository,
         private dpomAdapter: DpomAdapter,
         private dpomChildAdapter: DpomChildAdapter,
+        private fileUploadRepo: NikeFileUploadRepository,
         @InjectDataSource()
         private dataSource: DataSource,
     ) { }
@@ -112,7 +119,8 @@ export class DpomService {
                         "sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue",
                         "sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode",
                         "sizes.sizePo.sizeQuantity",
-                        "sizes.sizePo.sizeDescription"
+                        "sizes.sizePo.sizeDescription",
+                        "sizes.sizeManufacturing.initialGoodsAtConsolidatorReasonDescription",
                     ],
                     "search": [
                         {
@@ -161,7 +169,8 @@ export class DpomService {
         }
     }
 
-    async saveDPOMDataToDataBase(): Promise<CommonResponseModel> {
+    @Cron('0 8 * * *')
+    async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
             await transactionManager.startTransaction()
@@ -178,7 +187,6 @@ export class DpomService {
             }
 
             const crmData = {
-
                 item: '012A',
                 factory: '',
                 customerOrder: '',
@@ -195,6 +203,7 @@ export class DpomService {
                 commission: '',
                 PCD: ''
             }
+
             const date = new Date();
             const todayDate = date.getFullYear() + '-' + Number(date.getMonth() + 1) + '-' + date.getDate()
             for (const orderDetail of orderDetails.data) {
@@ -204,8 +213,13 @@ export class DpomService {
 
                 // Calculate the difference in days
                 const daysDifference = date4.diff(date3, 'days');
-                const dtoData = new DpomSaveDto(orderDetail.poHeader.documentDate, orderDetail.poHeader.poNumber, orderDetail.poLine.itemNumber, orderDetail.sizes.scheduleLineItemNumber, orderDetail.product.categoryCode, orderDetail.product.categoryDescription, orderDetail.poHeader.vendorCode, orderDetail.product.globalCategoryCoreFocusCode, orderDetail.product.globalCategoryCoreFocusDescription, orderDetail.product.genderAgeCode, orderDetail.product.styleNumber, orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null, orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, null, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity, orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVas.valueAddedServiceInstructions, orderDetail.poLine.itemTextDetail.textDetails, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVas, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate, crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, 'hanger', orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, 'username')
-
+                const dtoData = new DpomSaveDto(orderDetail.poHeader.documentDate, orderDetail.poHeader.poNumber, orderDetail.poLine.itemNumber, orderDetail.sizes.scheduleLineItemNumber, orderDetail.product.categoryCode, orderDetail.product.categoryDescription, orderDetail.poHeader.vendorCode, orderDetail.product.globalCategoryCoreFocusCode, orderDetail.product.globalCategoryCoreFocusDescription, orderDetail.product.genderAgeCode, orderDetail.product.styleNumber,
+                    orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null,
+                    orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode,
+                    orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, null, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity,
+                    orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVas.valueAddedServiceInstructions, orderDetail.poLine.itemTextDetail.textDetails, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
+                    orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVas, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
+                    crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, 'hanger', orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, 'username')
                 const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
                 // const versionDetails = await this.dpomChildRepo.getVersion(dtoData.purchaseOrderNumber)
                 let version = 1;
@@ -273,6 +287,236 @@ export class DpomService {
         } catch (error) {
             await transactionManager.releaseTransaction()
             return new CommonResponseModel(false, 0, error)
+        }
+    }
+
+    async saveDPOMExcelData(formData: any, id: number): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource)
+        try {
+            await transactionManager.startTransaction()
+            const flag = new Set()
+            const pdfData = {
+                shipToAddressLegalPO: '',
+                quantity: 0,
+                price: 0,
+                itemVas: '',
+                shipToAddressDIA: '',
+                CABCode: ''
+            }
+
+            const crmData = {
+                item: '012A',
+                factory: '',
+                customerOrder: '',
+                coFinalApprovalDate: '',
+                planNo: '',
+                truckOutDate: '',
+                actualShippedQty: '',
+                coPrice: '',
+                shipToAddress: '',
+                paymentTerm: '',
+                styleDesc: '',
+                fabricContent: '',
+                fabricSource: '',
+                commission: '',
+                PCD: ''
+            }
+            const updatedArray = formData.map((obj) => {
+                const updatedObj = {};
+                for (const key in obj) {
+                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_');
+                    updatedObj[newKey] = obj[key];
+                }
+                return updatedObj;
+            });
+
+            const convertedData = updatedArray.map((obj) => {
+                const updatedObj = {};
+                for (const key in obj) {
+                    const value = obj[key];
+                    if (value === "") {
+                        updatedObj[key] = null;
+                    } else {
+                        // updatedObj[key] = value;
+                        var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
+                        updatedObj[key] = value.replace(regexPattern, null);
+                        updatedObj[key] = Buffer.from(value, 'utf-8').toString()
+                    }
+                }
+                return updatedObj;
+            });
+
+            const date = new Date();
+            const todayDate = date.getFullYear() + '-' + Number(date.getMonth() + 1) + '-' + date.getDate()
+            for (const orderDetail of convertedData) {
+                const date3 = moment(orderDetail.sizes.sizePo.goodsAtConsolidatorDate, 'MM/DD/YYYY');
+                const date4 = moment(orderDetail.poHeader.documentDate, 'MM/DD/YYYY');
+
+                // Calculate the difference in days
+                const daysDifference = date4.diff(date3, 'days');
+                const dtoData = new DpomSaveDto(orderDetail.poHeader.documentDate, orderDetail.poHeader.poNumber, orderDetail.poLine.itemNumber, orderDetail.sizes.scheduleLineItemNumber, orderDetail.product.categoryCode, orderDetail.product.categoryDescription, orderDetail.poHeader.vendorCode, orderDetail.product.globalCategoryCoreFocusCode, orderDetail.product.globalCategoryCoreFocusDescription, orderDetail.product.genderAgeCode, orderDetail.product.styleNumber,
+                    orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null,
+                    orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode,
+                    orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, null, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity,
+                    orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVas.valueAddedServiceInstructions, orderDetail.poLine.itemTextDetail.textDetails, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
+                    orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVas, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
+                    crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, 'hanger', orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, 'username')
+                if (dtoData.purchaseOrderNumber != null) {
+                    const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
+                    // const versionDetails = await this.dpomChildRepo.getVersion(dtoData.productionPlanId)
+                    let version = 1;
+                    // if (versionDetails.length > 0) {
+                    //     version = Number(versionDetails.length) + 1
+                    // }
+                    dtoData.odVersion = version
+                    if (details) {
+                        // const updatedData = this.ordersAdapter.convertDtoToEntity(data);
+                        const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber }, {
+                            documentDate: dtoData.documentDate, categoryCode: dtoData.categoryCode, categoryDesc: dtoData.categoryDesc, vendorCode: dtoData.vendorCode, gccFocusCode: dtoData.gccFocusCode, gccFocusDesc: dtoData.gccFocusDesc, genderAgeCode: dtoData.genderAgeCode, styleNumber: dtoData.styleNumber, productCode: dtoData.productCode, colorDesc: dtoData.colorDesc, destinationCountryCode: dtoData.destinationCountryCode, destinationCountry: dtoData.destinationCountry, plant: dtoData.plant, plantName: dtoData.plantName, tradingCoPoNumber: dtoData.tradingCoPoNumber, UPC: dtoData.UPC, directShipSONumber: dtoData.directShipSONumber, directShipSOItemNumber: dtoData.directShipSOItemNumber, customerPO: dtoData.customerPO, shipToCustomerNumber: dtoData.shipToCustomerNumber, shipToCustomerName: dtoData.shipToCustomerName, planningSeasonCode: dtoData.planningSeasonCode, planningSeasonYear: dtoData.planningSeasonYear, docTypeCode: dtoData.docTypeCode, docTypeDesc: dtoData.docTypeDesc, MRGAC: dtoData.MRGAC, OGAC: dtoData.OGAC, GAC: dtoData.GAC, originReceiptDate: dtoData.originReceiptDate, factoryDeliveryActDate: dtoData.factoryDeliveryActDate, GACReasonCode: dtoData.GACReasonCode, shippingType: dtoData.shippingType, planningPriorityCode: dtoData.planningPriorityCode, planningPriorityDesc: dtoData.planningPriorityDesc, launchCode: dtoData.launchCode, DPOMLineItemStatus: dtoData.DPOMLineItemStatus, modeOfTransportationCode: dtoData.modeOfTransportationCode, inCoTerms: dtoData.inCoTerms, inventorySegmentCode: dtoData.inventorySegmentCode, purchaseGroupCode: dtoData.purchaseGroupCode, purchaseGroupName: dtoData.purchaseGroupName, totalItemQty: dtoData.totalItemQty, originReceiptQty: dtoData.originReceiptQty, VASSize: dtoData.VASSize, itemVasText: dtoData.itemVasText, itemText: dtoData.itemText, grossPriceFOB: dtoData.grossPriceFOB, FOBCurrencyCode: dtoData.FOBCurrencyCode, netIncludingDisc: dtoData.netIncludingDisc, netIncludingDiscCurrencyCode: dtoData.netIncludingDiscCurrencyCode, trCoNetIncludingDisc: dtoData.trCoNetIncludingDisc, trCoNetIncludingDiscCurrencyCode: dtoData.trCoNetIncludingDiscCurrencyCode, shipToAddressLegalPO: pdfData.shipToAddressLegalPO, quantity: pdfData.quantity, price: pdfData.price, itemVas: pdfData.itemVas, shipToAddressDIA: pdfData.shipToAddressDIA, CABCode: pdfData.CABCode, item: crmData.item, factory: crmData.factory, customerOrder: crmData.customerOrder, coFinalApprovalDate: crmData.coFinalApprovalDate, planNo: crmData.planNo, truckOutDate: crmData.truckOutDate, actualShippedQty: crmData.actualShippedQty, coPrice: crmData.coPrice, shipToAddress: crmData.shipToAddress, paymentTerm: crmData.paymentTerm, styleDesc: crmData.styleDesc, fabricContent: crmData.fabricContent, fabricSource: crmData.fabricSource, commission: crmData.commission, PCD: crmData.PCD, odVersion: dtoData.odVersion
+                        })
+                        if (!updateOrder.affected) {
+                            await transactionManager.releaseTransaction();
+                            return new CommonResponseModel(false, 0, 'Something went wrong in order update')
+                        }
+                        const convertedExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData);
+                        const saveExcelEntity: DpomChildEntity = await transactionManager.getRepository(DpomChildEntity).save(convertedExcelEntity);
+                        if (saveExcelEntity) {
+                            //difference insertion to order diff table
+                            const existingDataKeys = Object.keys(details)
+                            const currentDataKeys = Object.keys(dtoData)
+                            for (const existingDataKey of existingDataKeys) {
+                                if (details[existingDataKey] != orderDetail[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId') {
+                                    const dpomDiffObj = new DpomDifferenceEntity();
+                                    dpomDiffObj.oldValue = details[existingDataKey]
+                                    dpomDiffObj.newValue = dtoData[existingDataKey]
+                                    dpomDiffObj.columnName = dpomOrderColumnsName[existingDataKey]
+                                    dpomDiffObj.displayName = existingDataKey
+                                    dpomDiffObj.purchaseOrderNumber = dtoData.purchaseOrderNumber
+                                    dpomDiffObj.poLineItemNumber = dtoData.poLineItemNumber
+                                    dpomDiffObj.scheduleLineItemNumber = dtoData.scheduleLineItemNumber
+                                    dpomDiffObj.odVersion = dtoData.odVersion
+                                    dpomDiffObj.fileId = id
+                                    if (dpomDiffObj.oldValue != dpomDiffObj.newValue) {
+                                        const orderDiffSave = await transactionManager.getRepository(DpomDifferenceEntity).save(dpomDiffObj);
+                                        if (!orderDiffSave) {
+                                            flag.add(false)
+                                            await transactionManager.releaseTransaction();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        dtoData.odVersion = 1
+                        const convertedExcelEntity: Partial<DpomEntity> = this.dpomAdapter.convertDtoToEntity(dtoData);
+                        const saveExcelEntity: DpomEntity = await transactionManager.getRepository(DpomEntity).save(convertedExcelEntity);
+                        const convertedChildExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData);
+                        const saveChildExcelEntity: DpomChildEntity = await transactionManager.getRepository(DpomChildEntity).save(convertedChildExcelEntity);
+                        // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
+                        if (!saveExcelEntity || !saveChildExcelEntity) {
+                            flag.add(false)
+                            await transactionManager.releaseTransaction();
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!flag.has(false)) {
+                await transactionManager.completeTransaction()
+                return new CommonResponseModel(true, 1, 'Data saved sucessfully')
+            } else {
+                await transactionManager.releaseTransaction()
+                return new CommonResponseModel(false, 0, 'Something went wrong')
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction()
+            return new CommonResponseModel(false, 0, error)
+        }
+    }
+
+    async revertFileData(req: FileIdReq): Promise<CommonResponseModel> {
+        if (req) {
+            const latestFileId = await this.fileUploadRepo.update({ id: req.fileId }, { isActive: false })
+        }
+        if (req) {
+            const deleteChildData = await this.dpomChildRepo.deleteChildData(req)
+        }
+        if (req) {
+            const deleteDiffData = await this.dpomDiffRepo.deleteDiffData(req)
+        }
+        if (req) {
+            const deleteOrdersData = await this.dpomRepository.deleteData(req)
+        }
+        const updatedData = await this.dpomChildRepo.getUpdatedData()
+        const data = await this.dpomChildRepo.find({
+            where: { fileId: updatedData[0]?.fileId },
+            relations: ['orders']
+        })
+        const flag = new Set()
+        for (const dtoData of data) {
+            const entity = new DpomEntity();
+            entity.purchaseOrderNumber = dtoData.purchaseOrderNumber
+            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber }, {
+                documentDate: dtoData.documentDate, categoryCode: dtoData.categoryCode, categoryDesc: dtoData.categoryDesc, vendorCode: dtoData.vendorCode, gccFocusCode: dtoData.gccFocusCode, gccFocusDesc: dtoData.gccFocusDesc, genderAgeCode: dtoData.genderAgeCode, styleNumber: dtoData.styleNumber, productCode: dtoData.productCode, colorDesc: dtoData.colorDesc, destinationCountryCode: dtoData.destinationCountryCode, destinationCountry: dtoData.destinationCountry, plant: dtoData.plant, plantName: dtoData.plantName, tradingCoPoNumber: dtoData.tradingCoPoNumber, UPC: dtoData.UPC, directShipSONumber: dtoData.directShipSONumber, directShipSOItemNumber: dtoData.directShipSOItemNumber, customerPO: dtoData.customerPO, shipToCustomerNumber: dtoData.shipToCustomerNumber, shipToCustomerName: dtoData.shipToCustomerName, planningSeasonCode: dtoData.planningSeasonCode, planningSeasonYear: dtoData.planningSeasonYear, docTypeCode: dtoData.docTypeCode, docTypeDesc: dtoData.docTypeDesc, MRGAC: dtoData.MRGAC, OGAC: dtoData.OGAC, GAC: dtoData.GAC, originReceiptDate: dtoData.originReceiptDate, factoryDeliveryActDate: dtoData.factoryDeliveryActDate, GACReasonCode: dtoData.GACReasonCode, shippingType: dtoData.shippingType, planningPriorityCode: dtoData.planningPriorityCode, planningPriorityDesc: dtoData.planningPriorityDesc, launchCode: dtoData.launchCode, DPOMLineItemStatus: dtoData.DPOMLineItemStatus, modeOfTransportationCode: dtoData.modeOfTransportationCode, inCoTerms: dtoData.inCoTerms, inventorySegmentCode: dtoData.inventorySegmentCode, purchaseGroupCode: dtoData.purchaseGroupCode, purchaseGroupName: dtoData.purchaseGroupName, totalItemQty: dtoData.totalItemQty, originReceiptQty: dtoData.originReceiptQty, VASSize: dtoData.VASSize, itemVasText: dtoData.itemVasText, itemText: dtoData.itemText, grossPriceFOB: dtoData.grossPriceFOB, FOBCurrencyCode: dtoData.FOBCurrencyCode, netIncludingDisc: dtoData.netIncludingDisc, netIncludingDiscCurrencyCode: dtoData.netIncludingDiscCurrencyCode, trCoNetIncludingDisc: dtoData.trCoNetIncludingDisc, trCoNetIncludingDiscCurrencyCode: dtoData.trCoNetIncludingDiscCurrencyCode, shipToAddressLegalPO: dtoData.shipToAddressLegalPO, quantity: dtoData.quantity, price: dtoData.price, itemVas: dtoData.itemVas, shipToAddressDIA: dtoData.shipToAddressDIA, CABCode: dtoData.CABCode, item: dtoData.item, factory: dtoData.factory, customerOrder: dtoData.customerOrder, coFinalApprovalDate: dtoData.coFinalApprovalDate, planNo: dtoData.planNo, truckOutDate: dtoData.truckOutDate, actualShippedQty: dtoData.actualShippedQty, coPrice: dtoData.coPrice, shipToAddress: dtoData.shipToAddress, paymentTerm: dtoData.paymentTerm, styleDesc: dtoData.styleDesc, fabricContent: dtoData.fabricContent, fabricSource: dtoData.fabricSource, commission: dtoData.commission, PCD: dtoData.PCD, odVersion: dtoData.odVersion
+            })
+            if (!updateOrder.affected) {
+                return new CommonResponseModel(false, 0, 'Something went wrong in order update', updateOrder)
+            }
+            if (!updateOrder.affected) {
+                flag.add(false)
+            } else {
+                flag.add(true)
+            }
+        }
+        if (flag.has(true)) {
+            return new CommonResponseModel(true, 1, 'File Reverted Successfully')
+        } else {
+            return new CommonResponseModel(false, 0, 'failed to revert file data')
+        }
+    }
+
+    async updatePath(filePath: string, filename: string): Promise<CommonResponseModel> {
+        const entity = new NikeFileUploadEntity()
+        entity.fileName = filename;
+        entity.filePath = filePath;
+        entity.status = 'uploading';
+        const file = await this.fileUploadRepo.findOne({ where: { fileName: filename } })
+        if (file) {
+            return new CommonResponseModel(false, 0, 'File with same name already uploaded');
+        } else {
+            const save = await this.fileUploadRepo.save(entity)
+            if (save) {
+                return new CommonResponseModel(true, 1, 'uploaded successfully', save);
+            }
+            else {
+                return new CommonResponseModel(false, 0, 'uploaded failed', save);
+            }
+        }
+    }
+
+    async updateFileStatus(req: FileStatusReq): Promise<CommonResponseModel> {
+        let update
+        if (req.status === 'Failed') {
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false });
+        } else {
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status })
+        }
+        if (update.affected) {
+            return new CommonResponseModel(true, 1, 'updated successfully');
+        } else {
+            return new CommonResponseModel(false, 0, 'update failed');
+
+        }
+    }
+
+    async getUploadFilesData(): Promise<CommonResponseModel> {
+        const data = await this.fileUploadRepo.getFilesData()
+        if (data.length > 0) {
+            return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
+        }
+        else {
+            return new CommonResponseModel(false, 0, 'No data found', data);
         }
     }
 

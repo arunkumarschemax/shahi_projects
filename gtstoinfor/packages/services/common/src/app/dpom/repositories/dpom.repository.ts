@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
+import { FileIdReq } from "../../orders/models/file-id.req";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
@@ -13,7 +14,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     ) {
         super(dpomRepository.target, dpomRepository.manager, dpomRepository.queryRunner);
     }
-  
+
     async getDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(`id,plant,dpom_item_line_status AS lineStatus, plant_name AS plantName,document_date AS documentDate,po_number AS poNumber,
@@ -67,7 +68,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .where(`planning_season_year  IS NOT NULL`)
             .andWhere(`dpom_item_line_status = 'Accepted'||'Unaccepted'`)
             .groupBy(`planning_season_year`)
-            return await query.getRawMany();
+        return await query.getRawMany();
     }
     async shipmentChart(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
@@ -92,5 +93,11 @@ export class DpomRepository extends Repository<DpomEntity> {
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
             .where(` column_name='dpom_line_item_status' `)
         return await query.getRawMany();
+    }
+
+    async deleteData(req: FileIdReq): Promise<void> {
+        const queryBuilder = this.createQueryBuilder('dpom');
+        queryBuilder.where(`file_id = '${req.fileId}' AND version = 1`);
+        await queryBuilder.delete().execute();
     }
 }
