@@ -27,6 +27,7 @@ const UploadFileGrid = () =>{
         getDocumentData();
     }, [])
 
+    
     const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
           <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
