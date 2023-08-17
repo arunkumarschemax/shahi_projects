@@ -9,6 +9,7 @@ export const dpomOrderColumnsName = {
     gccFocusCode: 'gcc_focus_code',
     gccFocusDesc: 'gcc_focus_desc',
     genderAgeCode: 'gender_age_code',
+    genderAgeDesc: 'gender_age_desc',
     styleNumber: 'style_number',
     productCode: 'product_code',
     colorDesc: 'color_desc',
@@ -33,6 +34,7 @@ export const dpomOrderColumnsName = {
     originReceiptDate: 'origin_receipt_date',
     factoryDeliveryActDate: 'factory_delivery_date',
     GACReasonCode: 'gac_reason_code',
+    GACReasonDesc: 'gac_reason_desc',
     shippingType: 'shipping_type',
     planningPriorityCode: 'planning_priority_code',
     planningPriorityDesc: 'planning_priority_desc',
@@ -53,5 +55,8 @@ export const dpomOrderColumnsName = {
     netIncludingDisc: 'net_inc_disc',
     netIncludingDiscCurrencyCode: 'net_inc_disc_currency_code',
     trCoNetIncludingDisc: 'trading_net_inc_disc',
-    trCoNetIncludingDiscCurrencyCode: 'trading_net_currency_code'
+    trCoNetIncludingDiscCurrencyCode: 'trading_net_currency_code',
+    sizeQuantity: 'size_qty',
+    sizeDescription: 'size_description',
+
 }

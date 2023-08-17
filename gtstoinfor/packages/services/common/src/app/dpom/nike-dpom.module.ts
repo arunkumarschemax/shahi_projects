@@ -10,16 +10,19 @@ import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { DpomChildEntity } from './entites/dpom-child.entity';
 import { DpomDifferenceEntity } from './entites/dpom-difference.entity';
 import { DpomChildAdapter } from './dto/dpom-child.adapter';
+import { DpomDifferenceRepository } from './repositories/dpom-difference.repository';
+import { NikeFileUploadEntity } from './entites/upload-file.entity';
+import { NikeFileUploadRepository } from './repositories/upload.repository';
 
 @Module({
-  providers: [DpomService, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter],
   imports: [
     TypeOrmModule.forFeature([
       DpomEntity,
       DpomChildEntity,
-      DpomDifferenceEntity
+      DpomDifferenceEntity,
+      NikeFileUploadEntity
     ])],
   controllers: [DpomController],
-  exports: [DpomService]
+  providers: [DpomService, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter, DpomDifferenceRepository, NikeFileUploadRepository]
 })
 export class DpomModule { }

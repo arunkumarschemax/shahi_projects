@@ -70,17 +70,32 @@ export const baseRouterList = [
         filepath: "nike",
         children: [
             {
-                label: "Add PO",
+                label: "Upload File",
                 key: "file-import",
                 path: "file-import",
                 filepath: "file-import",
+            },
+            {
+                label: "Revert File",
+                key: "file-revert",
+                path: "file-revert",
+                filepath: "file-revert",
             },
             {
                 label: "Order Acceptance",
                 key: "order-acceptance",
                 path: "order-acceptance",
                 filepath: "order-acceptance",
-            },
+            }
+        ],
+    },
+    {
+        label: "Reports",
+        key: "Reports",
+        path: "Reports",
+        // icon: < />,
+        filepath: "Reports",
+        children: [
             {
                 label: "PO Change",
                 key: "compare-orders",
@@ -127,8 +142,7 @@ export const baseRouterList = [
                 key: "shipment-report",
                 path: "shipment-report",
                 filepath: "shipment-report",
-            },
-
+            }
         ],
     },
 ];

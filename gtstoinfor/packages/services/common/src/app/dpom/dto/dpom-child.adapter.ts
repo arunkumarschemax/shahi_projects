@@ -4,7 +4,7 @@ import { DpomSaveDto } from "./dpom-save.dto";
 
 export class DpomChildAdapter {
 
-    public convertDtoToEntity(dto: DpomSaveDto): DpomEntity {
+    public convertDtoToEntity(dto: DpomSaveDto): DpomChildEntity {
         const entity = new DpomChildEntity()
 
         entity.documentDate = dto.documentDate
