@@ -1,37 +1,60 @@
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useState } from 'react';
+import { Form, Typography, message } from 'antd';
+import axios from "axios";
+import { useState } from "react";
+import backgrod from './backgrod.jpg';
+import bkimage from './newloginpage.jpeg';
+// import 'antd/dist/antd.css';
+import './app.css';
 import './app.module.css';
-import CustomSpinner from './common/custom-spinner/custom-spinner';
-import { Route, Link } from 'react-router-dom';
-import axios from 'axios';
-import { AppRoutes } from './routes';
+
+import { LoginComponent, useIAMClientState } from "./common";
+import CustomSpinner from "./common/custom-spinner/custom-spinner";
+const { Text } = Typography;
+
 
 
 export function App() {
-  const [load, setLoad] = useState<any>();
+
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+  const [load, setLoad] = useState(false);
+  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : undefined
 
 
+
+  const [form] = Form.useForm();
+  //setting load attribute for every request
   axios.interceptors.request.use(request => {
-      setLoad(true);
-      return request;
+    setLoad(true);
+    return request;
+  });
+  //setting loading flag false after getting response for every request
+  axios.interceptors.response.use(response => {
+    setLoad(false);
+    return response;
+  }, error => {
+    setLoad(false);
+    throw error;
   });
 
-  axios.interceptors.response.use(response => {
+  const handleSubmit = (values: any) => {
+    if (values.username && values.password) {
+      localStorage.setItem("user", JSON.stringify(values.username));
       setLoad(false);
-      return response;
-  }, error => {
-      setLoad(false);
-      throw error;
-  });
+    } else {
+      message.error('Enter Username and password')
+    }
+  }
+
 
   return (
-    <>
-      <CustomSpinner loading={load} />
-      <AppRoutes />
-    </>);
+    <div style={{ backgroundImage: `url(${backgrod})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <LoginComponent />
+    </div>
+  );
+};
 
-}
 
 
 export default App;
