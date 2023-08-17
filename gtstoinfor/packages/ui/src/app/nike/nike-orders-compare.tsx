@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, TabsProps, Tag, Tooltip, Typography } from 'antd';
-import { OrdersService } from '@project-management-system/shared-services';
+import { NikeService, OrdersService } from '@project-management-system/shared-services';
 import { ArrowDownOutlined, ArrowUpOutlined, FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 
-const ChangesGrid = () => {
+const OrdersCompareGrid = () => {
 
-    const service = new OrdersService()
+    const service = new NikeService()
     const [contractDateData, setContractDateData] = useState([])
     const [qtyData, setQtyData] = useState([])
     const [warehouseDateData, setWarehouseDateDate] = useState([])
@@ -29,27 +29,24 @@ const ChangesGrid = () => {
     const { Option } = Select
 
     useEffect(() => {
-        getContractDateChangeData()
+        poLineItemStatusChange()
         getQtyChangeData()
-        getWharehouseDateChangeData()
-        getQtyDifChangeData()
-        getPhaseWiseData()
-        getPhaseWiseExcelData()
+        // getWharehouseDateChangeData()
+        // getQtyDifChangeData()
     }, [])
 
-    const getContractDateChangeData = () => {
-        service.getContractDateChangeData().then((res) => {
+    const poLineItemStatusChange = () => {
+        service.poLineItemStatusChange().then((res) => {
             setContractDateData(res.data)
             setFilteredContractDateData(res.data)
         })
     }
 
-    const getQtyDifChangeData = () => {
-        service.getQtyDifChangeData().then((res) => {
-            setDifferenceQtyData(res.data)
-            // setFilteredContractDateData(res.data)
-        })
-    }
+    // const getQtyDifChangeData = () => {
+    //     service.getQtyDifChangeData().then((res) => {
+    //         setDifferenceQtyData(res.data)
+    //     })
+    // }
 
     const getQtyChangeData = () => {
         service.getQtyChangeData().then((res) => {
@@ -58,33 +55,12 @@ const ChangesGrid = () => {
         })
     }
 
-    const getWharehouseDateChangeData = () => {
-        service.getWharehouseDateChangeData().then((res) => {
-            setWarehouseDateDate(res.data)
-            setFilteredWarehouseDateDate(res.data)
-        })
-    }
-
-    const getPhaseWiseData = () => {
-        service.getPhaseWiseData().then(res => {
-            if (res.status) {
-                setPhaseWiseData(res.data)
-            }
-        }).catch(err => {
-            console.log(err.message)
-        })
-    }
-
-    const getPhaseWiseExcelData = () => {
-        service.getPhaseWiseExcelData().then(res => {
-            if (res.status) {
-                const data = res.data.sort((a, b) => a.itemCode - b.itemCode);
-                setPhaseWiseExcelData(data)
-            }
-        }).catch(err => {
-            console.log(err.message)
-        })
-    }
+    // const getWharehouseDateChangeData = () => {
+    //     service.getWharehouseDateChangeData().then((res) => {
+    //         setWarehouseDateDate(res.data)
+    //         setFilteredWarehouseDateDate(res.data)
+    //     })
+    // }
 
     function convertToYYYYMMDD(inputDate) {
         const formatsToTry = ['DD-MM-YYYY', 'MM/DD/YYYY'];
@@ -108,16 +84,16 @@ const ChangesGrid = () => {
                 .addColumns(data1)
                 .addDataSource(filteredQtyData, { str2num: true })
         }
-        excel
-            .addSheet('GroupBy ItemCode Qty')
-            .addColumns(data4)
-            .addDataSource(differenceQtyData, { str2num: true })
-        if (filteredWarehouseDateData.length > 0) {
-            excel
-                .addSheet('Requested Warehouse Date')
-                .addColumns(data2)
-                .addDataSource(filteredWarehouseDateData, { str2num: true })
-        }
+        // excel
+        //     .addSheet('GroupBy ItemCode Qty')
+        //     .addColumns(data4)
+        //     .addDataSource(differenceQtyData, { str2num: true })
+        // if (filteredWarehouseDateData.length > 0) {
+        //     excel
+        //         .addSheet('Requested Warehouse Date')
+        //         .addColumns(data2)
+        //         .addDataSource(filteredWarehouseDateData, { str2num: true })
+        // }
         if (contractDateData.length > 0) {
             excel
                 .addSheet('Contracted date')
@@ -350,18 +326,18 @@ const ChangesGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Production Plan Id',
-            dataIndex: 'production_plan_id',
-            ...getColumnSearchProps('production_plan_id')
+            title: 'PO Number',
+            dataIndex: 'po_number',
+            ...getColumnSearchProps('po_number')
         },
         {
-            title: 'Production Plan Name',
-            dataIndex: 'prod_plan_type_name'
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number'
         },
         {
-            title: 'Item code',
-            dataIndex: 'item_code',
-            ...getColumnSearchProps('item_code')
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+            ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Item Name',
@@ -452,16 +428,18 @@ const ChangesGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Production Plan Id',
-            dataIndex: 'production_plan_id'
+            title: 'PO Number',
+            dataIndex: 'po_number',
+            ...getColumnSearchProps('po_number')
         },
         {
-            title: 'Item code',
-            dataIndex: 'item_code'
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number'
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName'
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+            ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Previous Requested Warehouse Date',
@@ -540,83 +518,84 @@ const ChangesGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Production Plan Id',
-            dataIndex: 'production_plan_id'
+            title: 'PO Number',
+            dataIndex: 'po_number',
+            ...getColumnSearchProps('po_number')
         },
         {
-            title: 'Item code',
-            dataIndex: 'item_code'
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number'
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName'
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+            ...getColumnSearchProps('schedule_line_item_number')
         },
-
         {
-            title: 'Previous Contracted Date',
+            title: 'Previous Line Item Status',
             dataIndex: 'old_val',
-            render: (text, record) => {
-                return record.old_val ? convertToYYYYMMDD(record.old_val) : '-'
-            }
+            // render: (text, record) => {
+            //     return record.old_val ? convertToYYYYMMDD(record.old_val) : '-'
+            // }
         },
 
         {
-            title: 'Revised Contracted Date',
+            title: 'Revised Line Item Status',
             dataIndex: 'new_val',
-            render: (text, record) => (
-                <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} >
-                    {convertToYYYYMMDD(record.old_val) < convertToYYYYMMDD(record.new_val) ? <span style={{ color: 'green' }}>{convertToYYYYMMDD(record.new_val)}</span> : ''}
-                    {convertToYYYYMMDD(record.old_val) > convertToYYYYMMDD(record.new_val) ? <span style={{ color: 'red' }}>{convertToYYYYMMDD(record.new_val)}</span> : ''}
-                    &nbsp;&nbsp;
-                    <span>
-                        {convertToYYYYMMDD(record.old_val) < convertToYYYYMMDD(record.new_val) ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
-                    </span>
-                </Tooltip>
-            )
+            // render: (text, record) => (
+            //     <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} >
+            //         {convertToYYYYMMDD(record.old_val) < convertToYYYYMMDD(record.new_val) ? <span style={{ color: 'green' }}>{convertToYYYYMMDD(record.new_val)}</span> : ''}
+            //         {convertToYYYYMMDD(record.old_val) > convertToYYYYMMDD(record.new_val) ? <span style={{ color: 'red' }}>{convertToYYYYMMDD(record.new_val)}</span> : ''}
+            //         &nbsp;&nbsp;
+            //         <span>
+            //             {convertToYYYYMMDD(record.old_val) < convertToYYYYMMDD(record.new_val) ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+            //         </span>
+            //     </Tooltip>
+            // )
         },
-        {
-            title: 'Difference',
-            dataIndex: 'diff',
-            // width :'190px',
-            render: (text, record) => {
-                const obj: any = {
-                    children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + ' Days'}</div>)
-                };
-                return obj;
-            }
-        },
+        // {
+        //     title: 'Difference',
+        //     dataIndex: 'diff',
+        //     // width :'190px',
+        //     render: (text, record) => {
+        //         const obj: any = {
+        //             children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + ' Days'}</div>)
+        //         };
+        //         return obj;
+        //     }
+        // },
         {
             title: 'Order Quantity Pieces',
-            dataIndex: 'order_qty_pcs',
+            dataIndex: 'total_item_qty',
             align: 'right',
             render: (text, record) => (
                 <>
-                    {Number(record.order_qty_pcs).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                    {Number(record.total_item_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </>
             )
 
         },
-        {
-            title: 'Order Revised Date',
-            dataIndex: 'last_update_date',
-            render: (text, record) => {
-                return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
-            }
+        // {
+        //     title: 'Order Revised Date',
+        //     dataIndex: 'last_update_date',
+        //     render: (text, record) => {
+        //         return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
+        //     }
 
-        },
-        {
-            title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date',
-            // width :'190px'
-            render: (text, record) => {
-                return record.requested_wh_date ? convertToYYYYMMDD(record.requested_wh_date) : '-'
-            }
-        },
-        {
-            title: 'Order Status',
-            dataIndex: 'order_status',
-            render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
-        }
+        // },
+        // {
+        //     title: 'Requested Warehouse Date',
+        //     dataIndex: 'requested_wh_date',
+        //     // width :'190px'
+        //     render: (text, record) => {
+        //         return record.requested_wh_date ? convertToYYYYMMDD(record.requested_wh_date) : '-'
+        //     }
+        // },
+        // {
+        //     title: 'Order Status',
+        //     dataIndex: 'order_status',
+        //     render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
+        // }
     ];
 
     const columns3: any = [
@@ -685,6 +664,7 @@ const ChangesGrid = () => {
         },
 
     ];
+
     const childColumns: any = [
         {
             title: 'Production Plan Type Name',
@@ -765,6 +745,7 @@ const ChangesGrid = () => {
 
     const EstimatedETDDate = (value) => {
         if (value) {
+            console.log(value)
             const fromDate = value[0];
             const toDate = value[1];
             setSelectedEstimatedFromDate(fromDate)
@@ -788,6 +769,7 @@ const ChangesGrid = () => {
             setFilteredWarehouseDateDate(filteredReqWhData)
         }
         if (startDate && endDate) {
+            console.log(filteredQtyData)
             filteredContractData = filteredContractData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
             filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
             filteredReqWhData = filteredReqWhData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
@@ -805,61 +787,19 @@ const ChangesGrid = () => {
         },
         {
             key: '2',
-            label: <b>Group Of ItemCode  : {differenceQtyData?.length}</b>,
-            children: <Table dataSource={differenceQtyData} columns={columns3} pagination={false}
-                summary={(differenceQtyData) => {
-                    let totalLastQty = 0;
-                    let totalRecQty = 0;
-                    let defData = 0;
-                    differenceQtyData.forEach(({ old_qty_value }) => {
-                        totalLastQty += Number(old_qty_value);
-
-                    });
-                    differenceQtyData.forEach(({ new_qty_value }) => {
-                        totalRecQty += Number(new_qty_value);
-
-                    });
-
-                    defData = totalRecQty - totalLastQty;
-
-                    return (
-                        <>
-                            <Table.Summary.Row className='tableFooter'>
-                                {/* <Table.Summary.Cell index={0} ><Text ></Text></Table.Summary.Cell> */}
-                                <Table.Summary.Cell index={1} ><Text ></Text></Table.Summary.Cell>
-                                <Table.Summary.Cell index={3} ><Text ></Text></Table.Summary.Cell>
-                                <Table.Summary.Cell index={4}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Summary</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={5} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalLastQty).toLocaleString('en-IN', {
-                                    maximumFractionDigits: 0
-                                })}</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={6}><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalRecQty).toLocaleString('en-IN', {
-                                    maximumFractionDigits: 0
-                                })}</div></Table.Summary.Cell>
-                                <Table.Summary.Cell index={7} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(defData).toLocaleString('en-IN', {
-                                    maximumFractionDigits: 0
-                                })}</div></Table.Summary.Cell>
-                            </Table.Summary.Row>
-                        </>
-                    );
-                }
-                }
-            />,
-        },
-        {
-            key: '3',
             label: <b >Requested Warehouse Date Revised Orders: {filteredWarehouseDateData?.length}</b>,
             children: <Table bordered dataSource={filteredWarehouseDateData} columns={columns1} />,
         },
         {
-            key: '4',
-            label: <b>Contracted Date Revised Orders : {filteredContractDateData?.length}</b>,
+            key: '3',
+            label: <b>PO Line Item Status Revised Orders : {filteredContractDateData?.length}</b>,
             children: <Table bordered dataSource={filteredContractDateData} columns={columns2} />,
         },
-        {
-            key: '5',
-            label: <b>Phase Wise Sum of Order Quantity : {phaseData?.length}</b>,
-            children: <Table bordered dataSource={phaseData} columns={columns4} />,
-        },
+        // {
+        //     key: '5',
+        //     label: <b>Phase Wise Sum of Order Quantity : {phaseData?.length}</b>,
+        //     children: <Table bordered dataSource={phaseData} columns={columns4} />,
+        // },
 
     ];
 
@@ -867,9 +807,9 @@ const ChangesGrid = () => {
         form.resetFields();
         setSelectedEstimatedFromDate(undefined);
         setSelectedEstimatedToDate(undefined);
-        getContractDateChangeData()
+        // getContractDateChangeData()
         getQtyChangeData()
-        getWharehouseDateChangeData()
+        // getWharehouseDateChangeData()
     }
 
     return (
@@ -895,8 +835,10 @@ const ChangesGrid = () => {
                                 allowClear
                                 placeholder='select order status'
                             >
-                                <Option key='new' value="NEW">NEW</Option>
-                                <Option key='unaccepted' value="UNACCEPTED">UNACCEPTED</Option>
+                                <Option key='Accepted' value="Accepted">Accepted</Option>
+                                <Option key='Unaccepted' value="Unaccepted">Unaccepted</Option>
+                                <Option key='Closed' value="Closed">Closed</Option>
+                                <Option key='Cancelled' value="Cancelled">Cancelled</Option>
                             </Select>
                         </Form.Item>
                     </Col>
@@ -918,13 +860,6 @@ const ChangesGrid = () => {
                 </Row>
             </Form>
             {filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData ? <>
-                {/* <Row gutter={24}>
-                    <Col>
-                        <Button icon={<DownloadOutlined />} style={{ marginTop: '30px', }} onClick={() => { exportExcel(); }}>
-                            Get Excel
-                        </Button>
-                    </Col>
-                </Row> */}
                 <Tabs type='card' items={items} />
             </> : <></>}
 
@@ -932,4 +867,4 @@ const ChangesGrid = () => {
     );
 };
 
-export default ChangesGrid;
+export default OrdersCompareGrid;

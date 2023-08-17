@@ -41,9 +41,7 @@ export class UsersService {
   async createUser(req: UsersDto): Promise<UsersResponseModel> {
     let findAllRecords: UsersEntity[];
     if (!req.id) {
-      console.log("before");
       findAllRecords = await this.userRepository.find();
-      console.log("after");
       for (const records of findAllRecords) {
         if (records.username === req.username) {
           throw new ErrorResponse(99999, "User already existed");

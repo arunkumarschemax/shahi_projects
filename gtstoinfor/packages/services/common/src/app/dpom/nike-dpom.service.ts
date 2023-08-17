@@ -4,14 +4,27 @@ import axios, { Axios } from 'axios';
 import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
-import { CommonResponseModel } from '@project-management-system/shared-models';
+import { DpomApproveReq } from './dto/dpom-approve.req';
+import { CommonResponseModel, dpomOrderColumnsName } from '@project-management-system/shared-models';
+import { DpomChildRepository } from './repositories/dpom-child.repository';
+import { GenericTransactionManager } from '../../typeorm-transactions';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { DpomChildEntity } from './entites/dpom-child.entity';
+import { DpomDifferenceEntity } from './entites/dpom-difference.entity';
+import { DpomChildAdapter } from './dto/dpom-child.adapter';
+const moment = require('moment');
 const qs = require('querystring');
 
 @Injectable()
 export class DpomService {
     constructor(
         private dpomRepository: DpomRepository,
-        private dpomAdapter: DpomAdapter
+        private dpomChildRepo: DpomChildRepository,
+        private dpomAdapter: DpomAdapter,
+        private dpomChildAdapter: DpomChildAdapter,
+        @InjectDataSource()
+        private dataSource: DataSource,
     ) { }
 
     async getOctaToken() {
@@ -48,6 +61,7 @@ export class DpomService {
                         "poHeader.documentDate",
                         "poHeader.poNumber",
                         "poLine.itemNumber",
+                        "sizes.scheduleLineItemNumber",
                         "product.categoryCode",
                         "product.categoryDescription",
                         "poHeader.vendorCode",
@@ -148,44 +162,264 @@ export class DpomService {
     }
 
     async saveDPOMDataToDataBase(): Promise<CommonResponseModel> {
-        const orderDetails = await this.getDPOMOrderDetails();
-        if (!orderDetails.status) return new CommonResponseModel(false, 0, orderDetails.error)
-        const flag = new Set();
-        for (const orderDetail of orderDetails.data) {
-            const saveDto = new DpomSaveDto(orderDetail.poHeader.documentDate, orderDetail.poHeader.poNumber, orderDetail.poLine.itemNumber, orderDetail.product.categoryCode, orderDetail.product.categoryDescription, orderDetail.poHeader.vendorCode, orderDetail.product.globalCategoryCoreFocusCode, orderDetail.product.globalCategoryCoreFocusDescription, orderDetail.product.genderAgeCode, orderDetail.product.styleNumber, orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null, orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, null, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity, orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVas.valueAddedServiceInstructions, orderDetail.poLine.itemTextDetail.textDetails, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode)
-
-            const entity = this.dpomAdapter.convertDtoToEntity(saveDto)
-            const savedEntity = this.dpomRepository.save(entity);
-            if (!savedEntity) {
-                flag.add(false)
-            } else {
-                flag.add(true)
+        const transactionManager = new GenericTransactionManager(this.dataSource)
+        try {
+            await transactionManager.startTransaction()
+            const orderDetails = await this.getDPOMOrderDetails();
+            if (!orderDetails.status) return new CommonResponseModel(false, 0, orderDetails.error)
+            const flag = new Set();
+            const pdfData = {
+                shipToAddressLegalPO: '',
+                quantity: 0,
+                price: 0,
+                itemVas: '',
+                shipToAddressDIA: '',
+                CABCode: ''
             }
-        }
-        if (flag.has(false)) {
-            return new CommonResponseModel(false, 0, 'something went wrong')
-        } else {
-            return new CommonResponseModel(true, 1, 'Data retrived successfully')
+
+            const crmData = {
+
+                item: '012A',
+                factory: '',
+                customerOrder: '',
+                coFinalApprovalDate: '',
+                planNo: '',
+                truckOutDate: '',
+                actualShippedQty: '',
+                coPrice: '',
+                shipToAddress: '',
+                paymentTerm: '',
+                styleDesc: '',
+                fabricContent: '',
+                fabricSource: '',
+                commission: '',
+                PCD: ''
+            }
+            const date = new Date();
+            const todayDate = date.getFullYear() + '-' + Number(date.getMonth() + 1) + '-' + date.getDate()
+            for (const orderDetail of orderDetails.data) {
+                // Parse dates using moment
+                const date3 = moment(orderDetail.sizes.sizePo.goodsAtConsolidatorDate, 'MM/DD/YYYY');
+                const date4 = moment(orderDetail.poHeader.documentDate, 'MM/DD/YYYY');
+
+                // Calculate the difference in days
+                const daysDifference = date4.diff(date3, 'days');
+                const dtoData = new DpomSaveDto(orderDetail.poHeader.documentDate, orderDetail.poHeader.poNumber, orderDetail.poLine.itemNumber, orderDetail.sizes.scheduleLineItemNumber, orderDetail.product.categoryCode, orderDetail.product.categoryDescription, orderDetail.poHeader.vendorCode, orderDetail.product.globalCategoryCoreFocusCode, orderDetail.product.globalCategoryCoreFocusDescription, orderDetail.product.genderAgeCode, orderDetail.product.styleNumber, orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null, orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, null, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity, orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVas.valueAddedServiceInstructions, orderDetail.poLine.itemTextDetail.textDetails, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVas, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate, crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, 'hanger', orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, 'username')
+
+                const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
+                // const versionDetails = await this.dpomChildRepo.getVersion(dtoData.purchaseOrderNumber)
+                let version = 1;
+                // if (versionDetails.length > 0) {
+                //     version = Number(versionDetails.length) + 1
+                // }
+                dtoData.odVersion = version
+                if (details) {
+                    const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber }, {
+                        documentDate: dtoData.documentDate, categoryCode: dtoData.categoryCode, categoryDesc: dtoData.categoryDesc, vendorCode: dtoData.vendorCode, gccFocusCode: dtoData.gccFocusCode, gccFocusDesc: dtoData.gccFocusDesc, genderAgeCode: dtoData.genderAgeCode, styleNumber: dtoData.styleNumber, productCode: dtoData.productCode, colorDesc: dtoData.colorDesc, destinationCountryCode: dtoData.destinationCountryCode, destinationCountry: dtoData.destinationCountry, plant: dtoData.plant, plantName: dtoData.plantName, tradingCoPoNumber: dtoData.tradingCoPoNumber, UPC: dtoData.UPC, directShipSONumber: dtoData.directShipSONumber, directShipSOItemNumber: dtoData.directShipSOItemNumber, customerPO: dtoData.customerPO, shipToCustomerNumber: dtoData.shipToCustomerNumber, shipToCustomerName: dtoData.shipToCustomerName, planningSeasonCode: dtoData.planningSeasonCode, planningSeasonYear: dtoData.planningSeasonYear, docTypeCode: dtoData.docTypeCode, docTypeDesc: dtoData.docTypeDesc, MRGAC: dtoData.MRGAC, OGAC: dtoData.OGAC, GAC: dtoData.GAC, originReceiptDate: dtoData.originReceiptDate, factoryDeliveryActDate: dtoData.factoryDeliveryActDate, GACReasonCode: dtoData.GACReasonCode, shippingType: dtoData.shippingType, planningPriorityCode: dtoData.planningPriorityCode, planningPriorityDesc: dtoData.planningPriorityDesc, launchCode: dtoData.launchCode, DPOMLineItemStatus: dtoData.DPOMLineItemStatus, modeOfTransportationCode: dtoData.modeOfTransportationCode, inCoTerms: dtoData.inCoTerms, inventorySegmentCode: dtoData.inventorySegmentCode, purchaseGroupCode: dtoData.purchaseGroupCode, purchaseGroupName: dtoData.purchaseGroupName, totalItemQty: dtoData.totalItemQty, originReceiptQty: dtoData.originReceiptQty, VASSize: dtoData.VASSize, itemVasText: dtoData.itemVasText, itemText: dtoData.itemText, grossPriceFOB: dtoData.grossPriceFOB, FOBCurrencyCode: dtoData.FOBCurrencyCode, netIncludingDisc: dtoData.netIncludingDisc, netIncludingDiscCurrencyCode: dtoData.netIncludingDiscCurrencyCode, trCoNetIncludingDisc: dtoData.trCoNetIncludingDisc, trCoNetIncludingDiscCurrencyCode: dtoData.trCoNetIncludingDiscCurrencyCode, shipToAddressLegalPO: pdfData.shipToAddressLegalPO, quantity: pdfData.quantity, price: pdfData.price, itemVas: pdfData.itemVas, shipToAddressDIA: pdfData.shipToAddressDIA, CABCode: pdfData.CABCode, item: crmData.item, factory: crmData.factory, customerOrder: crmData.customerOrder, coFinalApprovalDate: crmData.coFinalApprovalDate, planNo: crmData.planNo, truckOutDate: crmData.truckOutDate, actualShippedQty: crmData.actualShippedQty, coPrice: crmData.coPrice, shipToAddress: crmData.shipToAddress, paymentTerm: crmData.paymentTerm, styleDesc: crmData.styleDesc, fabricContent: crmData.fabricContent, fabricSource: crmData.fabricSource, commission: crmData.commission, PCD: crmData.PCD, odVersion: dtoData.odVersion
+                    })
+                    if (!updateOrder.affected) {
+                        await transactionManager.releaseTransaction();
+                        return new CommonResponseModel(false, 0, 'Something went wrong in order update')
+                    }
+                    const convertedExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData);
+                    const saveExcelEntity: DpomChildEntity = await transactionManager.getRepository(DpomChildEntity).save(convertedExcelEntity);
+                    if (saveExcelEntity) {
+                        //difference insertion to order diff table
+                        const existingDataKeys = Object.keys(details)
+                        const currentDataKeys = Object.keys(dtoData)
+                        for (const existingDataKey of existingDataKeys) {
+                            if (details[existingDataKey] != orderDetail[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'odVersion' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'versionFlag' && existingDataKey != 'isActive' && existingDataKey != 'recordDate' && existingDataKey != 'lastModifiedDate' && existingDataKey != 'id') {
+                                const dpomDiffObj = new DpomDifferenceEntity();
+                                dpomDiffObj.oldValue = details[existingDataKey]
+                                dpomDiffObj.newValue = dtoData[existingDataKey]
+                                dpomDiffObj.columnName = dpomOrderColumnsName[existingDataKey]
+                                dpomDiffObj.displayName = existingDataKey
+                                dpomDiffObj.purchaseOrderNumber = dtoData.purchaseOrderNumber
+                                dpomDiffObj.poLineItemNumber = dtoData.poLineItemNumber
+                                dpomDiffObj.scheduleLineItemNumber = dtoData.scheduleLineItemNumber
+                                dpomDiffObj.odVersion = dtoData.odVersion
+                                if (dpomDiffObj.oldValue != dpomDiffObj.newValue) {
+                                    const dpomDiffSave = await transactionManager.getRepository(DpomDifferenceEntity).save(dpomDiffObj);
+                                    if (!dpomDiffSave) {
+                                        flag.add(false)
+                                        await transactionManager.releaseTransaction();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    dtoData.odVersion = 1
+                    const convertedExcelEntity: Partial<DpomEntity> = this.dpomAdapter.convertDtoToEntity(dtoData);
+                    const saveExcelEntity: DpomEntity = await transactionManager.getRepository(DpomEntity).save(convertedExcelEntity);
+                    const convertedChildExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData);
+                    const saveChildExcelEntity: DpomChildEntity = await transactionManager.getRepository(DpomChildEntity).save(convertedChildExcelEntity);
+                    // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
+                    if (!saveExcelEntity || !saveChildExcelEntity) {
+                        flag.add(false)
+                        await transactionManager.releaseTransaction();
+                        break;
+                    }
+                }
+            }
+            if (flag.has(false)) {
+                await transactionManager.releaseTransaction()
+                return new CommonResponseModel(false, 0, 'something went wrong')
+            } else {
+                await transactionManager.completeTransaction()
+                return new CommonResponseModel(true, 1, 'Data retrived successfully')
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction()
+            return new CommonResponseModel(false, 0, error)
         }
     }
 
     async getFactoryReportData(): Promise<CommonResponseModel> {
-        // let query ='SELECT po_number , po_line_item_number ,  product_code FROM `dpom`';
-
         const details = await this.dpomRepository.find();
-        console.log(details)
-        return new CommonResponseModel(true, 1, 'data retrived', details)
-   
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
     }
 
-    async getByFactoryStatus(req:DpomSaveDto){
-        const record=await this.dpomRepository.find({
-            where:{DPOMLineItemStatus:req.DPOMLineItemStatus},
+    async getByFactoryStatus(req: DpomSaveDto) {
+        const record = await this.dpomRepository.find({
+            where: { DPOMLineItemStatus: req.DPOMLineItemStatus },
         });
-        if(record){
+        if (record) {
             return record;
-        }else{
+        } else {
             return 'no data found';
         }
+    }
+    async getPPMData(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.find()
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
+    }
+
+    async getShipmentTrackerReport(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.find();
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
+    }
+
+    async getDivertReportData(): Promise<CommonResponseModel> {
+        const report = await this.dpomRepository.getDivertReport();
+
+        const acceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'accepted',);
+        const unacceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'unaccepted');
+        if (acceptedArray.length > 0 || unacceptedArray.length > 0) {
+            const response = new CommonResponseModel(true, report.length, 'data retrieved', {
+                accepted: acceptedArray,
+                unaccepted: unacceptedArray
+            });
+            return response;
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data Found', []);
+        }
+    }
+
+    async getCountForDivertReport(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.getCountForDivertReport();
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
+    }
+
+    async getPlantWisePoOrders(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPlantCount()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getStatusWiseItems(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getStatusWiseItemCount()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getCategoryWiseItemQty(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getCategoriesWiseItemQty()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getShipmentWiseData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getShipmentWiseItems()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getPlanShipmentWiseData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPlanningShipment()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getOrderAcceptanceData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.find()
+        if (data) {
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'No data found');
+        }
+    }
+
+    async approveDpomLineItemStatus(req: DpomApproveReq): Promise<CommonResponseModel> {
+        const purchaseOrderNumber = req.purchaseOrderNumber
+        const poLineItemNumber = req.poLineItemNumber
+        const scheduleLineItemNumber = req.scheduleLineItemNumber
+        const updateStatus = await this.dpomRepository.update({ purchaseOrderNumber: purchaseOrderNumber, poLineItemNumber: poLineItemNumber, scheduleLineItemNumber: scheduleLineItemNumber }, { DPOMLineItemStatus: 'Accepted' })
+        if (updateStatus.affected) {
+            return new CommonResponseModel(true, 1, 'Status Updated')
+        } else {
+            return new CommonResponseModel(false, 0, 'Something went wrong');
+        }
+    }
+
+    async getQtyChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getQtyChangeData()
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async poLineItemStatusChange(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.poLineItemStatusChange()
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getShipmentPlaningChart(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.shipmentChart()
+        if (data)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 }
