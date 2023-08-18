@@ -112,7 +112,7 @@ export class DocumentsListService {
 
     async getPoNumberDropdown():Promise<UploadDocumentListResponseModel>{
         try{
-            const query ='select customer_po as poNumber from documents_list group by customer_po'
+            const query ='select customer_po as poNumber from documents_list where customer_po != "" and is_uploaded = 0 group by customer_po'
             const result = await this.dataSource.query(query)
             return new UploadDocumentListResponseModel(true,1,'Data retrived Sucessfully',result)
         }

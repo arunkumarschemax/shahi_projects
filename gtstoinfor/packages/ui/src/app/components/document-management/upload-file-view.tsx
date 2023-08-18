@@ -23,8 +23,10 @@ const UploadFileGrid = () =>{
     const searchInput = useRef<InputRef>(null);
   let navigate = useNavigate();
 
+    // const navigate=useNavigate();
     
     useEffect(() => {
+      console.log("jjjj")
         getDocumentData();
     }, [])
 
@@ -129,7 +131,6 @@ const UploadFileGrid = () =>{
             title: 'PO NUMBER',
             dataIndex: 'PO',
             align:'center',
-
               ...getColumnSearchProps('PO'),
 
               render: (text, record) => {
@@ -212,11 +213,14 @@ const UploadFileGrid = () =>{
 
 
     return (
-
-        <Card title="Document Status">
-            <div style={{ marginBottom: 16 }}>
-            {/* <button onClick={handleResetFilters}>Reset Filters</button> */}
-            </div>
+        <Card title="Document management" extra={<span><Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button></span>}>
+            {/* <div style={{ marginBottom: 16 }}>
+                <input
+                    placeholder="Search by column value"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                />
+            </div> */}
             {columns.length > 0 && itemData.length > 0 ? (
                 <Table
                     columns={columns.map((column) => ({
