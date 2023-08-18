@@ -187,7 +187,7 @@ export default function DocumentListupload() {
   }
 
   return(
-    <div >
+    <Card title="Document management" extra={<span><Button onClick={() => navigate('/document-management/upload-file-view')} type={'primary'}>View Document Status</Button></span>}>
       <Form form={form}  layout='vertical' name="control-hooks" >
        <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
@@ -208,6 +208,7 @@ export default function DocumentListupload() {
            </Form.Item>
          </Col>
       </Row>
+      {docData?.length > 0 ? 
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         <Card
           size="small"
@@ -236,85 +237,9 @@ export default function DocumentListupload() {
           </Row>
         </Card>
       </div>
+    :""}
       </Form>
-    </div>
-  // <Card title='Document Upload'>
-    
-  //   <Form form={form}  layout='vertical' name="control-hooks" onFinish={onFinish}>
-  //     <Row gutter={24}>
-  //     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-  //         <Form.Item name='customerPo' label='Po Number'
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: 'Select Destination',
-
-  //             }
-  //           ]}
-  //         >
-  //           <Select placeholder='Select PoNumber' onChange={getDocData} showSearch allowClear>
-  //           {poNumber?.map(obj =>{
-  //                     return <Option key={obj.poNumber} value={obj.poNumber}>{obj.poNumber}</Option>
-  //                   })}
-  //           </Select>
-  //         </Form.Item>
-  //       </Col>
-  //     </Row>
-  //     <Row>
-  //     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 24 }}>
-  //        <Card>
-  //        <Table 
-  //         rowKey={record => record.documentListId}
-  //         columns={columns}
-  //         dataSource={docData} 
-  //         size='small'
-  //         pagination={{
-  //           onChange(current) {
-  //           }
-  //         }}
-  //         bordered
-  //         />
-  //         </Card>
-  //       </Col>
-        
-  //     </Row>
-  //     {/* <Modal width={1000}  centered  open={isModalOpen} onCancel={handleCancel} footer={[]} >
-  //       <Card title='Upload Document against Customer'>
-  //         <Row gutter={24}>
-  //         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:6}}>
-  //         <Form.Item name='file'>
-  //         <Upload {...gstUploadFieldProps} 
-  //             accept='.jpeg,.pdf,.png,.jpg'>
-  //             <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Upload File</Button>
-  //             <br/><Typography.Text type="secondary">
-  //                 (Supported formats pdf,jpeg,jpg,png)
-  //             </Typography.Text>
-  //             </Upload>
-  //           </Form.Item>
-  //           </Col>
-  //           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:2 }}>
-  //             <Form.Item>
-  //             <Button type="primary" htmlType="submit" style={{ marginRight: '10px' }}>
-  //                                   Submit
-  //                               </Button>
-  //               <Button type='primary' htmlType="submit">Upload</Button>
-  //             </Form.Item>
-  //           </Col>
-  //           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:2 }}>
-  //           <Form.Item>
-  //               <Button type='default' onClick={handleCancel}>Cancel</Button>
-  //             </Form.Item>
-  //             </Col>
-             
-  //         </Row>
-          
-  //       </Card>
-          
-  //       </Modal> */}
-  //   </Form> 
-
-     
-  // </Card>
+  </Card>
 
   )
 }

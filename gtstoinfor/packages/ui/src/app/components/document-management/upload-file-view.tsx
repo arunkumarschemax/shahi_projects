@@ -22,8 +22,10 @@ const UploadFileGrid = () =>{
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
+    const navigate=useNavigate();
     
     useEffect(() => {
+      console.log("jjjj")
         getDocumentData();
     }, [])
 
@@ -123,7 +125,7 @@ const UploadFileGrid = () =>{
             title: 'Po Number',
             dataIndex: 'PO',
             render: (text) => (
-                <a href={"document-management/document-file-upload#/document-management/document-file-upload"}>{text}</a>
+                <a href={"/document-management/document-file-upload"}>{text}</a>
               ),
               // ...getColumnSearchProps('PO')
         },
@@ -192,7 +194,7 @@ const UploadFileGrid = () =>{
 
 
     return (
-        <Card title="Document Status">
+        <Card title="Document management" extra={<span><Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button></span>}>
             {/* <div style={{ marginBottom: 16 }}>
                 <input
                     placeholder="Search by column value"
