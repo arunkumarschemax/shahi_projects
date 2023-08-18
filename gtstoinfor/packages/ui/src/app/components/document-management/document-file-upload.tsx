@@ -45,6 +45,7 @@ export default function DocumentListupload() {
 
     const getDocData =(value)=>{
       service.getDocumentDetailsByPO({roleId:1,customerPo:value}).then(res=>{
+        console.log(res)
         if(res.status){
           setDocData(res.data)
         }else{
@@ -132,13 +133,14 @@ export default function DocumentListupload() {
 
 
   const onFinish = (data: any, filesList:any[]) => {
-    console.log(statusval,'statusval')
+    // console.log(statusval,'statusval')
     console.log(data,'dataaaa')
-    console.log(data.file);
-    // console.log(data.file.fileList);
+    console.log(data.file,'fileeeeeeeeeeeeeeeee')
+
+    console.log(filesList);
 
     form.validateFields().then(res => {
-      if (data.file.fileList.length > 0) {
+      if (filesList.length > 0) {
         const formData = new FormData();
         formData.append('documentsListId', `${data.documentsListId}`);
         formData.append('documentCategoryId', `${data.documentCategoryId}`);
@@ -147,11 +149,14 @@ export default function DocumentListupload() {
         formData.append('fileName', `${data.fileName}`);
         formData.append('filePath', `${data.filePath}`);
         formData.append('uploadStatus', `${data.uploadStatus}`);
+        // formData.append('uid',''\)
         const files = filesList;
         console.log(files);
         if (files) {
           for (let i = 0; i < files.length; i++) {
+          console.log(files[i])
             formData.append('file', files[i]);
+            formData.append('uid',files[i].uid)
           }
         }
         console.log(formData)

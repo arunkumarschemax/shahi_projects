@@ -23,6 +23,7 @@ export interface UploadViewProps {
 }
 
 const UploadView = (props: UploadViewProps) => {
+  console.log(props.docData,'props.doctdataaaaaaaaaaaaaaaaaaaaa')
 
   const initialFileList = [
     {
@@ -57,6 +58,7 @@ const UploadView = (props: UploadViewProps) => {
     console.log(data);  
 
   }
+  console.log(props.docData)
 
   const upload = (data: any) => {
     console.log(data);
@@ -84,7 +86,7 @@ const UploadView = (props: UploadViewProps) => {
                 {initialFileList.map(file => (
                     <li key={file.uid}>
                         <span>{file.name}</span>
-                        <Button onClick={() => handleRemoveFile(file)}>Remove</Button>
+                        {/* <Button onClick={() => handleRemoveFile(file)}>Remove</Button> */}
                     </li>
                 ))}
             </ul>
@@ -110,8 +112,6 @@ const UploadView = (props: UploadViewProps) => {
                     console.log("*****************************")
                     console.log(fileList)
                     console.log([...fileList, file])
-
-
                     setBtnDisable(false)
                     // uploadFileList([...filelist, file]);
                     return false;
@@ -159,7 +159,7 @@ const UploadView = (props: UploadViewProps) => {
           }}
       >
           <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}> 
-              <Tag color="royalblue" style={{ fontSize: '15px', marginBottom: '5px' }}>{props.docData.documentName}</Tag>
+              <Tag color="royalblue" style={{ fontSize: '15px', marginBottom: '5px' }}>{props.docData.fileName}</Tag>
           </Text>
           <br />
           <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}> 

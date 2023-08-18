@@ -15,7 +15,9 @@ export class DocumentsListRequest{
     fileName:string
     @ApiProperty()
     file:any[];
-    constructor(documentsListId:number,documentCategoryId:number,roleId:number,poNumber:string,fileName:string,orderId:number, file:any[],){
+    @ApiProperty()
+    uid:any[]
+    constructor(documentsListId:number,documentCategoryId:number,roleId:number,poNumber:string,fileName:string,orderId:number, file:any[],uid:any[]){
         this.documentsListId = documentsListId;
         this.documentCategoryId = documentCategoryId;
         this.file = file;
@@ -23,6 +25,7 @@ export class DocumentsListRequest{
         this.poNumber=poNumber
         this.fileName=fileName
         this.orderId=orderId
+        this.uid=uid
 
     }
 }

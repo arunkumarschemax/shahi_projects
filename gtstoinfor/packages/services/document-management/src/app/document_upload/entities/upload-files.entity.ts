@@ -15,7 +15,7 @@ export class UploadFilesEntity {
     @Column("varchar", {
         name: "uid"
     })
-    uid: string;
+    uid: any;
     @Column("varchar", {
         name: "file_name"
     })

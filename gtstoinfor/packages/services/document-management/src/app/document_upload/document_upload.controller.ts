@@ -81,6 +81,8 @@ export class DocumentUploadController {
     }))
     async DocumentFileUpload(@UploadedFiles() file:File[], @Body() uploadData: DocumentsListRequest): Promise<DocumentFileUploadResponse> {
       console.log(file)
+      console.log(uploadData,'###########')
+      // console.log('@@@@@@@@@@@@@@@@@@@@@@@')
       try {
         return await this.uploadDocservice.updatePath(uploadData,file);
       } catch (error) {
