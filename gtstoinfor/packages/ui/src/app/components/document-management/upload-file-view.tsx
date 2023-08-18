@@ -263,7 +263,17 @@ const UploadFileGrid = () =>{
          footer={[]}
         >
           <Card>
-      
+          <div>
+            <h3>Uploaded Files:</h3>
+            <ul>
+                {documentdat.map(file =>
+                 (
+                    <li key={file.uid}>
+                        <span>{file.fileName}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
 
           </Card>
 
