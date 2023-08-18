@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import {  Button, Card, Form, Input, Table, Space, InputRef } from 'antd';
+import {  Button, Card, Form, Input, Table, Space, InputRef, Modal } from 'antd';
 import {  SearchOutlined,  } from '@ant-design/icons';
 import { AlertMessages, } from '@project-management-system/shared-models';
 import { ColumnType } from 'antd/lib/table';
-import { OrdersService } from '@project-management-system/shared-services';
+import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import Link from 'antd/lib/typography/Link';
@@ -21,12 +21,15 @@ const UploadFileGrid = () =>{
     const [filters, setFilters] = useState({});
     const [po, setPo]=useState('')
     const searchInput = useRef<InputRef>(null);
-  let navigate = useNavigate();
+    const [documentdat,setDocumentsData]=useState<any[]>([])
+    const [form] = Form.useForm()
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // const navigate=useNavigate();
+    const uploadDcoService = new UploadDocumentService()
+    let navigate = useNavigate();
+
     
     useEffect(() => {
-      console.log("jjjj")
         getDocumentData();
     }, [])
 
@@ -156,9 +159,10 @@ const UploadFileGrid = () =>{
           render :(text, rowData, index) =>{
             return (<div style={{alignContent:'center'}}>
                <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
-                  <Button style={{ marginRight: '10px' }}onClick={()=>download(rowData.filePath)}  >
-                     Download
-                   </Button>
+                  <Button type="primary" 
+                onClick={() => modelOpen(rowData.PO)}>
+              View Docs
+              </Button>
                </Form.Item>   
                </div>     
                 )
@@ -182,12 +186,9 @@ const UploadFileGrid = () =>{
         setSearchedColumn(dataIndex);
       };
 
-
-
     const getDocumentData = () => {
         service.getDynamicDataForDocList().then((res) => {
             setItemData(res.data);
-
             const headerColumns = Object.keys(res.data[0])
             .filter(header =>header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status')
             .map(header => ({           
@@ -197,7 +198,7 @@ const UploadFileGrid = () =>{
               ...getColumnSearchProps([header]),
                 
                 render:(data, record) =>{
-                    console.log(res.data,'header')
+                    // console.log(res.data,'header')
                     const backgroundColor = data === 'Yes' ? 'green' : 'red'
                     return    (
                         <div style={{color:backgroundColor ,textAlign:'center'}} >{data}</div>
@@ -210,17 +211,28 @@ const UploadFileGrid = () =>{
         });
     }
 
+    const getTotalDocUploadedAgainstPo =(poNumber:string)=>{    
+      console.log(poNumber)
+      uploadDcoService.totalFileUploadAgainstPo({customerPo:poNumber}).then(res =>{
+        if(res.status){
+          setDocumentsData(res.data)
+        }else{
+          setDocumentsData([])
+        }
+      })
 
+    }
 
-    return (
+    const modelOpen =(poNumber:string) =>{
+      setIsModalOpen(true)
+      getTotalDocUploadedAgainstPo(poNumber)
+    }
+
+    const handleCancel =()=>{
+      setIsModalOpen(false)
+    }
+    return (<Form form={form}>
         <Card title="Document management" extra={<span><Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button></span>}>
-            {/* <div style={{ marginBottom: 16 }}>
-                <input
-                    placeholder="Search by column value"
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                />
-            </div> */}
             {columns.length > 0 && itemData.length > 0 ? (
                 <Table
                     columns={columns.map((column) => ({
@@ -228,9 +240,6 @@ const UploadFileGrid = () =>{
                         title: (
                             <div
                                 style={{
-                                    // fontWeight: 'bold',
-                                    // backgroundColor: '#3582c4', // Highlight color
-                                    // padding: '8px',
                                     textAlign:'center'
                                 }}
                             >
@@ -238,15 +247,6 @@ const UploadFileGrid = () =>{
                             </div>
                         ),
                     }))}
-                    // dataSource={itemData.filter((item) =>
-                    //     // Filter data based on search text
-                    //     Object.values(item).some((value) =>
-                    //         value.toString().toLowerCase().includes(searchText.toLowerCase())
-                    //     )
-                    // )}
-                    // pagination={false}
-
-                      //  columns={columns}
                     dataSource={itemData}
                     pagination={false}
                 />
@@ -254,6 +254,21 @@ const UploadFileGrid = () =>{
                 <p>No Data</p>
             )}
         </Card>
+        <Modal
+        title='View Documents'
+         width={1000}
+         centered
+         open={isModalOpen}
+         onCancel={handleCancel}
+         footer={[]}
+        >
+          <Card>
+      
+
+          </Card>
+
+        </Modal>
+        </Form>
     )
 
 }

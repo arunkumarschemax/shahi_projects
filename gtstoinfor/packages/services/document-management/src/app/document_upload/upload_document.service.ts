@@ -13,7 +13,7 @@ import { DocumentRoleMappingRepository } from "./repository/document-role-reposi
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
 import { DataSource } from "typeorm";
-import { PoRoleRequest, docRequest } from "@project-management-system/shared-models";
+import { PoRoleRequest, docRequest, poReq } from "@project-management-system/shared-models";
 import { DocumentUploadDto } from "./requests/document-upload-dto";
 import { UploadFilesRepository } from "./repository/upload-files.repository";
 import { UploadFileDto } from "./models/upload-file.dto";
@@ -27,7 +27,7 @@ export class DocumentsListService {
         private documentRoleMappingRepo:DocumentRoleMappingRepository,
         private documentRepo:DocumentRepository,
         private uploadFilesRepository:UploadFilesRepository,
-
+    
         @InjectDataSource()
         private dataSource: DataSource,
 
@@ -178,5 +178,21 @@ export class DocumentsListService {
                 throw(error)
             }
         }   
+
+        async totalFileUploadAgainstPo(req:poReq):Promise<UploadDocumentListResponseModel>{
+            try{
+                const query = 'SELECT id,document_list_id,file_name AS fileName,file_path AS filePath  FROM upload_files WHERE document_list_id IN ( SELECT documents_list_id FROM documents_list WHERE customer_po="'+req.customerPo+'")'
+                const result = await this.uploadFilesRepository.query(query)
+                if(result){
+                    return new UploadDocumentListResponseModel(true,1,'data retrived sucessfull',result)
+                }else{
+                    return new UploadDocumentListResponseModel(false,0,'no data found',[])
+
+                }
+
+            }catch(err){
+                throw err
+            }
+        }
 
     }
