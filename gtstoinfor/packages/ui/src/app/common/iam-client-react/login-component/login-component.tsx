@@ -8,7 +8,6 @@ import { loginUser } from '../actions';
 import { LoginUserDto } from '../user-models';
 // import xpparellogo from '../xpparel-logo.jpeg'
 import doclogo from './doclogo.jpg'
-import xpparellogo from '../../../xpparel-logo.jpeg'
 const { Text } = Typography;
 
 
@@ -26,7 +25,7 @@ export const LoginComponent = () => {
             if (from) {
                 navigate(from, { replace: true });
             } else {
-                navigate("/main-component", { replace: true });
+                navigate("/", { replace: true });
             }
             return true;
         } catch (error: any) {

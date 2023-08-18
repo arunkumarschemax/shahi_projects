@@ -3,12 +3,8 @@
 import { Form, Typography, message } from 'antd';
 import axios from "axios";
 import { useState } from "react";
-import backgrod from './backgrod.jpg';
-import bkimage from './newloginpage.jpeg';
-// import 'antd/dist/antd.css';
 import './app.css';
-import './app.module.css';
-
+// import 'antd/dist/antd.css';
 import { LoginComponent, useIAMClientState } from "./common";
 import CustomSpinner from "./common/custom-spinner/custom-spinner";
 const { Text } = Typography;
@@ -49,9 +45,9 @@ export function App() {
 
 
   return (
-    <div style={{ backgroundImage: `url(${backgrod})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    // <div style={{ backgroundImage: `url(${"bkimage"})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <LoginComponent />
-    </div>
+    // </div>
   );
 };
 
