@@ -148,6 +148,7 @@ export default function DocumentListupload() {
         formData.append('filePath', `${data.filePath}`);
         formData.append('uploadStatus', `${data.uploadStatus}`);
         const files = filesList;
+        console.log(files);
         if (files) {
           for (let i = 0; i < files.length; i++) {
             formData.append('file', files[i]);

@@ -13,7 +13,7 @@ export class UploadDocumentListDto{
     updatedAt: Date;
     updatedUser: string | null;
     versionFlag: number;
-    documentsPath?: string[];
+    documentsPath?: docRequest[];
     constructor(
     documentsListId: number,
     documentCategoryId: number,
@@ -29,7 +29,7 @@ export class UploadDocumentListDto{
     updatedAt: Date,
     updatedUser: string | null,
     versionFlag: number,
-    documentsPath: string[],
+    documentsPath: docRequest[],
     ){
         this.documentsListId=documentsListId
         this.documentCategoryId=documentCategoryId
@@ -66,5 +66,17 @@ export class DocumentsListRequest{
         this.customerPo=customerPo
         this.orderId=orderId
 
+    }
+}
+
+
+export class docRequest{
+    uid: string;
+    name:string;
+    status:string;
+    constructor(uid: string,name:string,status:string){
+        this.uid = uid;
+        this.name = name;
+        this.status = status;
     }
 }

@@ -13,7 +13,7 @@ import { DocumentRoleMappingRepository } from "./repository/document-role-reposi
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
 import { DataSource } from "typeorm";
-import { PoRoleRequest } from "@project-management-system/shared-models";
+import { PoRoleRequest, docRequest } from "@project-management-system/shared-models";
 import { DocumentUploadDto } from "./requests/document-upload-dto";
 import { UploadFilesRepository } from "./repository/upload-files.repository";
 import { UploadFileDto } from "./models/upload-file.dto";
@@ -87,6 +87,7 @@ export class DocumentsListService {
 
                 const data = new UploadFileDto(0,res.filename,res.path,req.documentsListId)
                 const entity = new UploadFilesEntity()
+                entity.uid=res.uid
                 entity.fileName=data.fileName
                 entity.filePath="/dist/packages/services/document-management/"+data.filePath
                 entity.documentListId=data.documentListId     
@@ -124,9 +125,15 @@ export class DocumentsListService {
 
     async getDocumentDetailsByPO(req:PoRoleRequest):Promise<UploadDocumentListResponseModel>{
         try{
-            const sqlQuery = "Select dl.status as status,is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"' Group by dl.documents_list_id";
+            const sqlQuery = "Select dl.status as status,is_uploaded AS uploadStatus,'' AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"' Group by dl.documents_list_id";
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
             if(result){
+                const docReq:docRequest[] =[];
+                for(const res of result){
+                    let data = new docRequest(res.uid,res.name,res.status);
+                    docReq.push(data);
+                }
+                result.documentsPath = docReq;
                 return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',result)
             }else{
             return new UploadDocumentListResponseModel(false,0,'no data found..',[])

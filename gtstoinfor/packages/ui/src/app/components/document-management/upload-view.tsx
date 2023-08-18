@@ -24,6 +24,19 @@ export interface UploadViewProps {
 
 const UploadView = (props: UploadViewProps) => {
 
+  const initialFileList = [
+    {
+        uid: 'file-1',
+        name: 'example.pdf',
+        status: 'done', // 'done', 'uploading', 'error'
+    },
+    {
+        uid: 'file-2',
+        name: 'image.jpg',
+        status: 'done',
+    },
+    // ... other files
+];
   const [loading, setLoading] = useState(true);
   const [fileList,setFilelist] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
@@ -57,7 +70,27 @@ const UploadView = (props: UploadViewProps) => {
     props.formData(data,fileList);
     props.fileList(fileList);
   }
+  const handleRemoveFile = (fileToRemove) => {
+    const updatedFileList = fileList.filter(file => file.uid !== fileToRemove.uid);
+    setFilelist(updatedFileList);
+};
     
+  const CustomUploadList = ({ fileList, handleRemoveFile }) => {
+    console.log(fileList)
+    return (
+        <div>
+            <h3>Uploaded Files:</h3>
+            <ul>
+                {initialFileList.map(file => (
+                    <li key={file.uid}>
+                        <span>{file.name}</span>
+                        <Button onClick={() => handleRemoveFile(file)}>Remove</Button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
     const gstUploadFieldProps: UploadProps = {
         multiple: true,
         onRemove: (file: any) => {
@@ -65,6 +98,7 @@ const UploadView = (props: UploadViewProps) => {
             // uploadFileList([]);
         },
         beforeUpload: (file: any) => {
+
             if (!file.name.match(/\.(pdf|jpg|jpeg|png)$/)) {
                 message.error("Only pdf and image files are allowed!");
                 return true;
@@ -96,7 +130,13 @@ const UploadView = (props: UploadViewProps) => {
         fileList: fileList
     
     };
+  //   const handleRemoveFile = (fileToRemove) => {
+  //     const updatedFileList = fileList.filter(file => file.uid !== fileToRemove.uid);
+  //     setFilelist(updatedFileList);
+  // };
     const handleUpload = (documentsListId, info) => {
+      // console.log(info);
+      // {...gstUploadFieldProps}
       // Handle the file upload for the specific documentListId
       // You can use the 'documentListId' to identify which row is being interacted with
     };
@@ -123,8 +163,9 @@ const UploadView = (props: UploadViewProps) => {
           </Text>
           <br />
           <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}> 
-              <Form.Item name={props.docData.documentsListId}>
-                  <Upload
+              <Form.Item name={props.docData.documentsListId} initialValue={props.docData.documentsPath}>
+              <CustomUploadList fileList={fileList} handleRemoveFile={handleRemoveFile} />
+                  <Upload 
                       key={props.docData.documentsListId}
                       name={`uploadFile${props.docData.documentsListId}`}
                       {...gstUploadFieldProps}

@@ -13,6 +13,10 @@ export class UploadFilesEntity {
     documentListId: number;
     
     @Column("varchar", {
+        name: "uid"
+    })
+    uid: string;
+    @Column("varchar", {
         name: "file_name"
     })
     fileName: string;
