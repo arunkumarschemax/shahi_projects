@@ -164,6 +164,7 @@ export default function DocumentListupload() {
           if(res.status){
             getDocData(form.getFieldValue("customerPo"));
             message.success(res.internalMessage)
+            // setFilelist([])
           }
           else{
             AlertMessages.getSuccessMessage("Something went wrong");
