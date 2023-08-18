@@ -186,7 +186,7 @@ const UploadView = (props: UploadViewProps) => {
                   </Upload>
               </Form.Item>
           </Text>
-          <Radio.Group defaultValue={props.docData.status} buttonStyle="solid" onChange={handleStatusChange}>
+          <Radio.Group defaultValue={props.docData.docStatus} buttonStyle="solid" onChange={handleStatusChange}>
           <Radio.Button value="partially uploaded">parially</Radio.Button>
           <Radio.Button value="fully uploaded">fully</Radio.Button>
         </Radio.Group>
