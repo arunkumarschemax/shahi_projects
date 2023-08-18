@@ -3,7 +3,7 @@ import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, 
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 // import AlertMessages from '../common/common-functions/alert-messages';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { ArrowDownOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons';
 import { AlertMessages, DocumentsListRequest, FileStatusReq, UploadDocumentListDto } from '@project-management-system/shared-models';
@@ -28,8 +28,11 @@ export default function DocumentListupload() {
   let navigate = useNavigate();
   const [form] = Form.useForm();
   const { Option } = Select;
+  let location = useLocation();
+  const statePoNumber: any = location.state;
   const service = new UploadDocumentService
 
+// console.log(statePoNumber.data,'statePoNumber')
   const getPoNumber =()=>{
     service.getPoNumberDropdown().then(res=>{
       if(res.status){
@@ -39,20 +42,27 @@ export default function DocumentListupload() {
       }
     })
   }
-  const getDocData =(value)=>{
-    service.getDocumentDetailsByPO({roleId:1,customerPo:value}).then(res=>{
-      if(res.status){
-        setDocData(res.data)
-      }else{
-        setDocData([])
-      }
-    })
-  }
+
+    const getDocData =(value)=>{
+      service.getDocumentDetailsByPO({roleId:1,customerPo:value}).then(res=>{
+        if(res.status){
+          setDocData(res.data)
+        }else{
+          setDocData([])
+        }
+      })
+    }
   useEffect(() =>{
     getPoNumber();
   },[])
 
- 
+ useEffect(() =>{
+  if(statePoNumber){
+    form.setFieldsValue({customerPo:statePoNumber.data})
+    getDocData(statePoNumber.data)
+  }
+
+ },[])
   const columns: ColumnProps<any>[] = [
     {
       title: "S.No",

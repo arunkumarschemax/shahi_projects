@@ -1,17 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, Space, InputRef } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import moment from 'moment';
-import { ArrowDownOutlined, DownloadOutlined, SearchOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons';
-import { AlertMessages, DocumentsListRequest, FileStatusReq, UploadDocumentListDto } from '@project-management-system/shared-models';
-import { useForm } from 'antd/es/form/Form';
-import { ColumnsType } from 'antd/es/table';
-import React from 'react';
-import { ColumnProps, ColumnType } from 'antd/lib/table';
+import {  Button, Card, Form, Input, Table, Space, InputRef } from 'antd';
+import {  SearchOutlined,  } from '@ant-design/icons';
+import { AlertMessages, } from '@project-management-system/shared-models';
+import { ColumnType } from 'antd/lib/table';
 import { OrdersService } from '@project-management-system/shared-services';
-import { render } from 'react-dom';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
+import Link from 'antd/lib/typography/Link';
+import { redirect, useNavigate } from 'react-router-dom';
+
 
 const UploadFileGrid = () =>{
 
@@ -21,7 +18,11 @@ const UploadFileGrid = () =>{
     const [columns, setColumns] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
+    const [filters, setFilters] = useState({});
+    const [po, setPo]=useState('')
     const searchInput = useRef<InputRef>(null);
+  let navigate = useNavigate();
+
     
     useEffect(() => {
         getDocumentData();
@@ -117,6 +118,11 @@ const UploadFileGrid = () =>{
     
         }
       }
+      
+      const goToFileUpload=(PO:string)=>{
+        setPo(PO)
+        navigate('/document-management/document-file-upload', { state: { data: PO } })
+      }
 
     const pocolumn = [
         {
@@ -125,9 +131,16 @@ const UploadFileGrid = () =>{
             align:'center',
 
               ...getColumnSearchProps('PO'),
-              render: (text) => (
-                <a href={"document-management/document-file-upload#/document-management/document-file-upload"}>{text}</a>
-              ),
+
+              render: (text, record) => {
+                return <>
+                  <Link onClick={e => goToFileUpload(record.PO)}>{record.PO}</Link>
+                </>
+              },
+
+              // render: (text) => (
+              //   <a href={`#/document-management/document-file-upload?text=${encodeURIComponent(text)}`}>{text}</a>
+              // ),
         },
       ];
 
@@ -170,8 +183,6 @@ const UploadFileGrid = () =>{
 
 
 
-
-
     const getDocumentData = () => {
         service.getDynamicDataForDocList().then((res) => {
             setItemData(res.data);
@@ -182,6 +193,8 @@ const UploadFileGrid = () =>{
                 title: header.toUpperCase(),
                 dataIndex: header,
                 key: header,
+              ...getColumnSearchProps([header]),
+                
                 render:(data, record) =>{
                     console.log(res.data,'header')
                     const backgroundColor = data === 'Yes' ? 'green' : 'red'
@@ -199,14 +212,11 @@ const UploadFileGrid = () =>{
 
 
     return (
+
         <Card title="Document Status">
-            {/* <div style={{ marginBottom: 16 }}>
-                <input
-                    placeholder="Search by column value"
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                />
-            </div> */}
+            <div style={{ marginBottom: 16 }}>
+            {/* <button onClick={handleResetFilters}>Reset Filters</button> */}
+            </div>
             {columns.length > 0 && itemData.length > 0 ? (
                 <Table
                     columns={columns.map((column) => ({
