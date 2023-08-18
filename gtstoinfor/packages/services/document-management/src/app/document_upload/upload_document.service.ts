@@ -201,7 +201,7 @@ export class DocumentsListService {
 
         async totalFileUploadAgainstPo(req:poReq):Promise<UploadDocumentListResponseModel>{
             try{
-                const query = 'SELECT id,document_list_id,file_name AS fileName,file_path AS filePath  FROM upload_files WHERE document_list_id IN ( SELECT documents_list_id FROM documents_list WHERE customer_po="'+req.customerPo+'")'
+                const query = 'SELECT uid,status,id,document_list_id,file_name AS fileName,file_path AS filePath  FROM upload_files WHERE document_list_id IN ( SELECT documents_list_id FROM documents_list WHERE customer_po="'+req.customerPo+'")'
                 const result = await this.uploadFilesRepository.query(query)
                 if(result){
                     return new UploadDocumentListResponseModel(true,1,'data retrived sucessfull',result)
