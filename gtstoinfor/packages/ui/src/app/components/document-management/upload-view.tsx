@@ -165,8 +165,7 @@ useEffect(() =>{
   return (
 
     <Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
-      <Card
-      
+      <Card   
         bordered={true} 
         style={{
           marginBottom: 16,

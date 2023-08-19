@@ -152,6 +152,7 @@ const UploadFileGrid = () =>{
         {
           title:'PO STATUS',
           dataIndex:'status',
+          align:'center',
           render:(text: string, rowData: any, index: number) =>{
             const hasNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value === 'No');
             const hasYes = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('Yes'));

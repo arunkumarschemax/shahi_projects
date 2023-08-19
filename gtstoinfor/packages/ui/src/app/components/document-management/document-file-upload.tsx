@@ -24,7 +24,7 @@ export default function DocumentListupload() {
   const [page, setPage] = React.useState(1);
   const [fileList,setFilelist] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
-  const [statusval,setStatusval] = useState(String)
+  const [hide,setHide] = useState(true)
   let navigate = useNavigate();
   const [form] = Form.useForm();
   const { Option } = Select;
@@ -44,6 +44,7 @@ export default function DocumentListupload() {
   }
 
     const getDocData =(value)=>{
+      setHide(false)
       service.getDocumentDetailsByPO({roleId:1,customerPo:value}).then(res=>{
         console.log(res)
         if(res.status){
@@ -224,6 +225,13 @@ export default function DocumentListupload() {
                      })}
              </Select>
            </Form.Item>
+         </Col>
+         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{marginTop:'21px'}}>
+         <Form.Item name={'download'}  hidden={hide}>
+            <Button name='download' type='primary'>
+                    Po Download
+            </Button>
+         </Form.Item>
          </Col>
       </Row>
       {docData?.length > 0 ? 
