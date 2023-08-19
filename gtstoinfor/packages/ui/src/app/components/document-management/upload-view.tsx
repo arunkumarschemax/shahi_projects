@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, UploadFile } from 'antd';
+import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, UploadFile, Radio } from 'antd';
 import { PDFDocument } from 'pdf-lib';
 import Papa from 'papaparse'
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
@@ -204,11 +204,14 @@ useEffect(() =>{
     // Handle the file upload for the specific documentListId
     // You can use the 'documentListId' to identify which row is being interacted with
   };
+
+  const handleStatusChange =() =>{
+    
+  }
   return (
 
     <Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
-      <Card
-      
+      <Card   
         bordered={true} 
         style={{
           marginBottom: 16,
@@ -265,7 +268,10 @@ useEffect(() =>{
           </Button>
         </Text>
         <br />
-
+        <Radio.Group defaultValue={props.docData.docStatus} buttonStyle="solid" onChange={handleStatusChange}>
+          <Radio.Button value="partially uploaded">parially</Radio.Button>
+          <Radio.Button value="fully uploaded">fully</Radio.Button>
+        </Radio.Group>
 
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           {
@@ -295,6 +301,4 @@ useEffect(() =>{
 };
 
 
-export default UploadView;
-
-
+export default UploadView;
