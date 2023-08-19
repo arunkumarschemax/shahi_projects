@@ -21,7 +21,7 @@ export const LoginComponent = () => {
             const req = new LoginUserDto(values.username, values.password, IAMClientAuthContext.authServerUrl)
             let response = await loginUser(dispatch, req);
             if (!response.user) return false;
-            const from = location.state?.from;
+            const from = location?.state?.from;
             if (from) {
                 navigate(from, { replace: true });
             } else {

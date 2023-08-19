@@ -26,7 +26,7 @@ export const loginUser = async (dispatch: React.Dispatch<IAMClientAuthActions>, 
                 user: {
                     userName: menuData.userName,
                     profilePicPath: aaa?.['filesData']?.[0]?.filePath?.slice(7) ? fileUploadPath + '/' + aaa?.['filesData']?.[0]?.filePath?.slice(7) : null,
-                    roles: menuData.roleName.join(','),
+                    roles: menuData?.roleName?.join(','),
                     externalRefNo: menuData.externalRefNo
                 },
                 defaultPlant: 'SRPL',
