@@ -5,7 +5,7 @@ import Papa from 'papaparse'
 import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { UndoOutlined } from '@ant-design/icons';
+import { DownloadOutlined, UndoOutlined } from '@ant-design/icons';
 import { FileStatusReq } from '@project-management-system/shared-models';
 
 
@@ -60,7 +60,32 @@ export default function ExcelImport() {
     //   setSelectedFile(null);
     // }
   };
+  
+  const handleImport = () => {
+    // : FilenameDto[]
+    let filePath;
+     filePath ='http://165.22.220.143/document-management/gtstoinfor/upload-files/import%20excel%20format.xlsx'
+    if (filePath) {
+      filePath = filePath.split(",");
+      for (const res of filePath) {
+        if(res){
+          console.log(res);
+          setTimeout(() => {
+            const response = {
+              file: 'http://165.22.220.143/document-management/gtstoinfor/upload-files/import%20excel%20format.xlsx',
+            };
+  
+            window.open(response.file);
+  
+          }, 100);
+        }
+      }
+    }
+    else {
+      AlertMessages.getErrorMessage("Please upload file. ");
 
+    }
+  }
   const handleUpload = async () => {
     try {
       if (selectedFile) {
@@ -137,7 +162,7 @@ export default function ExcelImport() {
 
   return (
     <>
-      <Card title="Excel Import">
+      <Card title="Excel Import" extra={<Button type="default" style={{ color: 'green' }} onClick={handleImport} icon={<DownloadOutlined />}>Download Excel Format</Button>}>
         <span>
           <Descriptions style={{ alignItems: 'right' }}>
             <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item>

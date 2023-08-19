@@ -9,12 +9,14 @@ export class UploadFileDto {
     filePath: string;
     @ApiProperty()
     documentListId: number;
-
-    constructor(id: number, fileName: string,filePath: string,documentListId: number) {
+    @ApiProperty()
+    uid: string;
+    constructor(id: number, fileName: string,filePath: string,documentListId: number,uid:string) {
         this.id = id;
         this.fileName = fileName;
         this.filePath = filePath;
         this.documentListId = documentListId;
+        this.uid=uid
     }
 
 }

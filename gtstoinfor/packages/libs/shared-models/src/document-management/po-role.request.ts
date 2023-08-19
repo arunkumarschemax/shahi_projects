@@ -6,3 +6,10 @@ export class PoRoleRequest{
         this.customerPo=customerPo
     }
 }
+
+export class poReq{
+    customerPo:string
+    constructor(customerPo:string){
+        this.customerPo=customerPo
+    }
+}

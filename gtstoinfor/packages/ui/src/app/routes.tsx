@@ -16,6 +16,7 @@ import BasicLayout from "./layout/basic-layout/layout"
 import Login from "./layout/login/login"
 import UserCreationForm from "./user-management/users/users-form"
 import UsersView from "./user-management/users/users-view"
+import UploadFileGrid from "./components/document-management/upload-file-view"
 
 
 export const AppRoutes = () => {
@@ -52,6 +53,8 @@ export const AppRoutes = () => {
                     </Route>
                     <Route path="/document-management" >
                     <Route path="document-file-upload" element={<DocumentListupload />}/>
+                    <Route path="upload-file-view" key='/upload-file-view'  element={<UploadFileGrid />}/>
+
                 </Route>
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

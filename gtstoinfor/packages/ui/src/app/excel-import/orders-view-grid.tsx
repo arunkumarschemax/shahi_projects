@@ -5,6 +5,7 @@ import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { OrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 
 const AllOrdersGridView = () => {
@@ -185,11 +186,11 @@ const AllOrdersGridView = () => {
         <div>
             <Card
                 title="Orders Reports"
-                extra={filteredData.length > 0 ? (<Button
+                extra={filteredData.length > 0 ? (<><Button
                     type="default"
                     style={{ color: 'green' }}
                     onClick={handleExport}
-                    icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
+                    icon={<FileExcelFilled />}>Download Excel</Button>    <Link to='/excel-import/excel-import'>{<Button className='panel_button' type={'primary'}>Import Orders</Button>}</Link></>) : <Link to='/excel-import/excel-import'>{<Button className='panel_button' type={'primary'}>Import Orders</Button>}</Link> }>
                 <Form form={form} layout={'vertical'}>
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >

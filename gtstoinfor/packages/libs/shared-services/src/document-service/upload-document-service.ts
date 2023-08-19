@@ -3,6 +3,7 @@ import {
     PoRoleRequest,
     UploadDocumentListDto,
     UploadDocumentListResponseModel,
+    poReq,
 } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
@@ -24,6 +25,10 @@ export class UploadDocumentService extends CommonAxiosService {
 
     async getDocumentDetailsByPO(req: PoRoleRequest): Promise<UploadDocumentListResponseModel> {
         return this.axiosPostCall(this.url + "/getDocumentDetailsByPO",req)
+    }
+
+    async totalFileUploadAgainstPo(req: poReq): Promise<UploadDocumentListResponseModel> {
+        return this.axiosPostCall(this.url + "/totalFileUploadAgainstPo",req)
     }
     
 }
