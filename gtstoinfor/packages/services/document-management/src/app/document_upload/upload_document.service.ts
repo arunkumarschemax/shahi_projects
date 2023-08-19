@@ -151,7 +151,7 @@ export class DocumentsListService {
                 }
                 // console.log(docReq,'docReq')
                 // console.log(res.status,'resssssssssssssssssssssssssssss')
-                docinfo.push(new UploadDocumentListDto(res.documentListId,res.documentCarid,res.role_id,res.poNumber,1,res.documentName,res.dlFilePath,res.uploadStatus,res.isActive,'','','','',1,docReq,res.status) )
+                docinfo.push(new UploadDocumentListDto(res.documentListId,res.documentCarid,res.role_id,res.poNumber,1,res.documentName,res.dlFilePath,res.uploadStatus,res.isActive,'','','','',1,docReq,res.status,res.documentName) )
                 // result.documentsPath = docReq;
                 console.log( docinfo,' result.documentsPath')
             }

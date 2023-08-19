@@ -15,6 +15,7 @@ export class UploadDocumentListDto{
     versionFlag: number;
     documentsPath?: any[];
     docStatus?:string
+    documentName?:string
     constructor(
     documentsListId: number,
     documentCategoryId: number,
@@ -31,8 +32,8 @@ export class UploadDocumentListDto{
     updatedUser: string | null,
     versionFlag: number,
     documentsPath: any[],
-    docStatus?:string
-
+    docStatus?:string,
+    documentName?:string
     ){
         this.documentsListId=documentsListId
         this.documentCategoryId=documentCategoryId
@@ -50,6 +51,8 @@ export class UploadDocumentListDto{
         this.versionFlag=versionFlag
         this.documentsPath=documentsPath
         this.docStatus=docStatus
+        this.documentName=documentName
+
     }
 }
 
