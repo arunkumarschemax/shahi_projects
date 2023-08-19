@@ -7,6 +7,7 @@ import './app.css';
 // import 'antd/dist/antd.css';
 import { LoginComponent, useIAMClientState } from "./common";
 import CustomSpinner from "./common/custom-spinner/custom-spinner";
+import { AppRoutes } from './routes';
 const { Text } = Typography;
 
 
@@ -45,7 +46,11 @@ export function App() {
 
 
   return (
-    // <div style={{ backgroundImage: `url(${"bkimage"})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    IAMClientAuthContext.isAuthenticated ? <>
+    <CustomSpinner loading={load} />
+    <AppRoutes />
+  </> :
+    // <div style={{ backgroundImage: `url(${bkimage})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <LoginComponent />
     // </div>
   );

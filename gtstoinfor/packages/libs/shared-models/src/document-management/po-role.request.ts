@@ -1,8 +1,8 @@
 export class PoRoleRequest{
-    roleId:number;
+    role:string;
     customerPo:string
-    constructor(roleId:number,customerPo:string){
-        this.roleId = roleId;
+    constructor(role:string,customerPo:string){
+        this.role = role;
         this.customerPo=customerPo
     }
 }

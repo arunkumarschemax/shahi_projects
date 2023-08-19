@@ -74,7 +74,7 @@ const BasicLayout = () => {
                     {/* <img src={logo} width={200} height={52}></img> */}
                     <img src={"schemaxlogo"} width={150} height={80}></img>
                 </div>
-                <h1 style={{color: '#f3bf13',textAlign: 'center',marginTop:'0.2px'}}>LOGISTICS</h1>
+                <h1 style={{color: '#f3bf13',textAlign: 'center',marginTop:'0.2px'}}>E Document Management</h1>
                 <Tooltip title='Logout'><Button type="default" icon={<LogoutOutlined />} style={{ float: 'right', marginTop: '-5.4%' }} onClick={logOut}>{'Hi '+loginUser}<div style={{color:'#f3bf13',marginTop:'10px',fontStyle:'italic'}}>{loginUserRole}</div></Button></Tooltip>
                 {/* <>{userData.user.roles}</> */}
                 <Menu

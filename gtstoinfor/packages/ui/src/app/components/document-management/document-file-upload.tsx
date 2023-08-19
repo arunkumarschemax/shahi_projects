@@ -40,7 +40,8 @@ export default function DocumentListupload() {
     })
   }
   const getDocData =(value)=>{
-    service.getDocumentDetailsByPO({roleId:1,customerPo:value}).then(res=>{
+    console.log(localStorage.getItem("user"))
+    service.getDocumentDetailsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:value}).then(res=>{
       if(res.status){
         setDocData(res.data)
       }else{
