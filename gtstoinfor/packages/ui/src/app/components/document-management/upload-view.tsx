@@ -25,7 +25,7 @@ export interface UploadViewProps {
 
 const UploadView = (props: UploadViewProps) => {
 
-    
+  const [activePreviewIndex, setActivePreviewIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [fileList, setFileList] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
@@ -36,13 +36,80 @@ const handleRemoveFile = (fileToRemove) => {
   setFileList(updatedFileList);
 };
   
+const togglePreview = (index: number) => {
+  setActivePreviewIndex((prevIndex) => (prevIndex === index ? null : index));
+};
+
+const renderFileNames = () => {
+  if (Array.isArray(fileList) && fileList.length > 0) {
+    return (
+      <div>
+        <ul>
+          {fileList.map((file, index) => (
+            <li key={index}>
+              <a
+                href={URL.createObjectURL(new Blob([file.originFileObj]))}
+                onClick={() => togglePreview(index)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ cursor: 'pointer', textDecoration: 'underline' }}
+              >
+                {file.name}
+              </a>
+              {activePreviewIndex === index && (
+                <div>
+                  <h3>File {index + 1} Preview</h3>
+                  {file.type?.startsWith('image/') ? (
+                    <img
+                      src={URL.createObjectURL(new Blob([file.originFileObj]))}
+                      alt={`Preview ${index + 1}`}
+                      style={{ maxWidth: '40%' }}
+                    />
+                  ) : file.type === 'application/pdf' ? (
+                    <div style={{ maxWidth: '500px' }}>
+                      <iframe
+                        src={URL.createObjectURL(new Blob([file.originFileObj]))}
+                        title={`PDF Preview ${index + 1}`}
+                        width="100%"
+                        height="500px"
+                      />
+                    </div>
+                  ) : (
+                    <p>Preview not available for this file type.</p>
+                  )}
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  } else {
+    return <p>No files selected.</p>;
+  }
+};
 const renderFilePreviews = (fileList) => {
   console.log(fileList)
+  // return {fileList?.map((file, index) => (
+  //     <a
+  //       href={URL.createObjectURL(file)}
+  //       target="_blank"
+  //       rel="noopener noreferrer"
+  //       style={{ cursor: 'pointer', textDecoration: 'underline' }}
+  //     >
+  //       {file.name}
+  //     </a>
+  // ))}
   return fileList?.map(file => (
       <div key={file.uid}>
-          <p>{file.name}</p>
-          <Button onClick={() => handleRemoveFile(file)}><DeleteOutlined /></Button>
-          <Button onClick={() => handleFileDownload(file)} icon={<DownloadOutlined />}></Button>
+          <a
+        href={URL.createObjectURL(file)}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ cursor: 'pointer', textDecoration: 'underline' }}
+      >
+        {file.name}
+      </a>
       </div>
   ));
 };
@@ -54,7 +121,7 @@ const CustomUploadList = ({ fileList, handleRemoveFile }) => {
           
           <ul>
           {fileList?.length > 0 ? (
-                   renderFilePreviews(fileList)
+                   renderFileNames()
                 ) : (
                     <p>No files uploaded yet.</p>
                 )}

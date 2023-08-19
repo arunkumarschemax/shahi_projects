@@ -81,9 +81,11 @@ export class docRequest{
     uid: string;
     name:string;
     status:string;
-    constructor(uid: string,name:string,status:string){
+    type:string;
+    constructor(uid: string,name:string,status:string,type:string){
         this.uid = uid;
         this.name = name;
         this.status = status;
+        this.type = type;
     }
 }

@@ -136,13 +136,13 @@ export class DocumentsListService {
             if(result){
             for (const res of result){
 
-                const doctlistQuery = 'SELECT uid,u.status,u.file_name AS name FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id where u.document_list_id ='+res.documentsListId;
+                const doctlistQuery = 'SELECT uid,u.status,u.file_name AS name, "application/pdf" AS "type" FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id where u.document_list_id ='+res.documentsListId;
                 const docres = await this.uploadFilesRepository.query(doctlistQuery)
 
                 const docReq:docRequest[] =[];
                 for(const res of docres){
                     console.log(res);
-                    let data = new docRequest(res.uid,res.name,res.status);
+                    let data = new docRequest(res.uid,res.name,res.status,res.type);
                     console.log(data);
                     console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
