@@ -97,10 +97,22 @@ export const baseRouterList = [
         filepath: "Reports",
         children: [
             {
-                label: "PO Change",
+                label: "PO Changes (PO Mgmt)",
                 key: "compare-orders",
                 path: "compare-orders",
                 filepath: "compare-orders",
+            },
+            {
+                label: "PO Changes (Shipment)",
+                key: "shipment-compare",
+                path: "shipment-compare",
+                filepath: "shipment-compare",
+            },
+            {
+                label: "PO Changes (VAS)",
+                key: "vas-compare",
+                path: "vas-compare",
+                filepath: "vas-compare",
             },
             {
                 label: "Factory PPM Report",
@@ -113,7 +125,7 @@ export const baseRouterList = [
                 key: "pdf-upload",
                 path: "pdf-upload",
                 filepath: "pdf-upload",
-            },{
+            }, {
                 label: "PPM Marketing Report",
                 key: "ppm-report",
                 path: "ppm-report",

@@ -559,7 +559,6 @@ export class DpomService {
 
     async getDivertReportData(): Promise<CommonResponseModel> {
         const report = await this.dpomRepository.getDivertReport();
-
         const acceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'accepted',);
         const unacceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'unaccepted');
         if (acceptedArray.length > 0 || unacceptedArray.length > 0) {
@@ -663,6 +662,126 @@ export class DpomService {
         const data = await this.dpomRepository.shipmentChart()
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getItemChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getItemChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getUnitChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getUnitChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getFOBPriceChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getFOBPriceChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getNetInclDiscChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getNetInclDiscChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getTradingNetInclDiscChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getTradingNetInclDiscChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getModeOfTransportChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getModeOfTransportChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getGACChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getGACChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getMRGACChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getMRGACChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getPlantCodeChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPlantCodeChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getShippingTypeChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getShippingTypeChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getVasTextChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getVasTextChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getShipToCustomerChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getShipToCustomerChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getInventorySegmentCodeChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getInventorySegmentCodeChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getDirectShipSoNoChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getDirectShipSoNoChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getDestinationCountryChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getDestinationCountryChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
