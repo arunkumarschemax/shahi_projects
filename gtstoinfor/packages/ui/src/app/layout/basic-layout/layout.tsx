@@ -143,8 +143,8 @@ export const baseRouterList = [
         label:' Orders',
         key:'excel-import',
         icon: <UserOutlined />,
-        path:'excel-import/excel-import',
-        filepath:'excel-import/excel-import'     
+        path:'excel-import/grid-view',
+        filepath:'excel-import/grid-view'     
     },
     {
         label:'Document management',
