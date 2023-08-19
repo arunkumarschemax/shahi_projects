@@ -164,21 +164,21 @@ const UploadFileGrid = () =>{
             }
           }
         },
-        {
-          title: 'DOWNLOAD',
-          dataIndex: 'documentName',
-          render :(text, rowData, index) =>{
-            return (<div style={{alignContent:'center'}}>
-               <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
-                  <Button type="primary" 
-                onClick={() => modelOpen(rowData.PO)}>
-              View Docs
-              </Button>
-               </Form.Item>   
-               </div>     
-                )
-          }
-        },
+        // {
+        //   title: 'DOWNLOAD',
+        //   dataIndex: 'documentName',
+        //   render :(text, rowData, index) =>{
+        //     return (<div style={{alignContent:'center'}}>
+        //        <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
+        //           <Button type="primary" 
+        //         onClick={() => modelOpen(rowData.PO)}>
+        //       View Docs
+        //       </Button>
+        //        </Form.Item>   
+        //        </div>     
+        //         )
+        //   }
+        // },
       ];
       
       const handleReset = (clearFilters:any) => {

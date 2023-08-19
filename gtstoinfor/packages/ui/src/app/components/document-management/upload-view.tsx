@@ -22,8 +22,9 @@ export interface UploadViewProps {
     setStatusVal:any ///////////renu
 }
 
+
 const UploadView = (props: UploadViewProps) => {
-  console.log(props.docData,'props.doctdataaaaaaaaaaaaaaaaaaaaa')
+  console.log(props.fileList,'props.doctdataaaaaaaaaaaaaaaaaaaaa')
 
   const initialFileList = [
     {
@@ -48,10 +49,10 @@ const UploadView = (props: UploadViewProps) => {
     useEffect(() =>{
         setLoading(false);
         console.log(props.docData.status)
-        // props.statusval(props.docData.status)
+        // setFilelist([])
     },[props.docData])
 
-    // props.statusvalue(statusval)
+// props.statusvalue(statusval)
     // console.log( props.statusvalue)
   const download = (data: any) => {
     console.log("data");
@@ -62,10 +63,10 @@ const UploadView = (props: UploadViewProps) => {
 
   const upload = (data: any) => {
     console.log(data);
-    // console.log(data.documentsListId);
+// console.log(data.documentsListId);
     // console.log(props.form.getFieldsValue())
     let file = props.form.getFieldValue(`${data.documentsListId}`);
-    // console.log(props.form.getFieldValue(`${data.documentsListId}`));
+// console.log(props.form.getFieldValue(`${data.documentsListId}`));
     data.file = file;
     console.log(file);
     console.log(fileList);
