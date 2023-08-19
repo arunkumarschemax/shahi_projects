@@ -60,10 +60,32 @@ export default function ExcelImport() {
     //   setSelectedFile(null);
     // }
   };
+  
   const handleImport = () => {
-    
-  }
+    // : FilenameDto[]
+    let filePath;
+     filePath ='http://165.22.220.143/document-management/gtstoinfor/upload-files/import%20excel%20format.xlsx'
+    if (filePath) {
+      filePath = filePath.split(",");
+      for (const res of filePath) {
+        if(res){
+          console.log(res);
+          setTimeout(() => {
+            const response = {
+              file: 'http://165.22.220.143/document-management/gtstoinfor/upload-files/import%20excel%20format.xlsx',
+            };
+  
+            window.open(response.file);
+  
+          }, 100);
+        }
+      }
+    }
+    else {
+      AlertMessages.getErrorMessage("Please upload file. ");
 
+    }
+  }
   const handleUpload = async () => {
     try {
       if (selectedFile) {
