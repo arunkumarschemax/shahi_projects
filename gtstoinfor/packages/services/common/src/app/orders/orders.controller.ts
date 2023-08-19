@@ -17,10 +17,10 @@ export class OrdersController {
 
     ) { }
 
-    @Post('/saveOrder/:id')
-    async saveOrder(@Param('id') id: number, @Body() data: any): Promise<CommonResponseModel> {
+    @Post('/saveOrder/:id/:month')
+    async saveOrder(@Param('id') id: number, @Param('month') month:number, @Body() data: any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.saveOrdersData(data, id);
+            return this.ordersService.saveOrdersData(data, id, month);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 

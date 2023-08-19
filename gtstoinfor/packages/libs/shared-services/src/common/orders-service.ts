@@ -9,9 +9,11 @@ export class OrdersService extends CommonAxiosService {
     //     return this.axiosPostCall(this.ordersController + "/saveOrder", data,{id})
     // }
 
-    async saveOrder(data: any, id: number): Promise<CommonResponseModel> {
+    async saveOrder(data: any, id: number,month:any): Promise<CommonResponseModel> {
+        console.log(month)
         const idn = id;
-        const url = `/orders/saveOrder/${idn}`;
+        const montId = month
+        const url = `/orders/saveOrder/${idn}/${montId}`;
         return this.axiosPostCall(url, data);
     }
 
