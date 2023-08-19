@@ -25,8 +25,9 @@
         const [searchedColumn, setSearchedColumn] = useState("");
         const searchInput = useRef<any>(null);
         const [dataLength, setDataLength] = useState<any[]>([]);
-        const [acceptedItems, setAcceptedItems] = useState<any[]>([]);
-        const [unacceptedItems, setUnacceptedItems] = useState<any[]>([])
+        const [items, setItems] = useState<any[]>([]);
+    
+       
         const service = new NikeService();
 
         useEffect(() => {
@@ -121,10 +122,8 @@
         const getData = () =>{
          service.getDivertReportData().then(res=>{
             if (res.status) {
-                setAcceptedItems(res.data.accepted);
-                console.log(acceptedItems)
-                setUnacceptedItems(res.data.unaccepted);
-                // getCount();
+                setItems(res.data);
+             
             }
          }) 
         }
@@ -141,196 +140,247 @@
                 .join("/");
         
            
-                const exportingColumns: IExcelColumn[] = [
-                    {
-                      title: 'Old',
-                      dataIndex: 'acceptedItems',
-                      color:'1bb5a1',
-                      children: [
-                        {
-                            title: "Plant",
-                            dataIndex: "plant",
-                            
-                        },
-                        {
-                            title: "Product Code",
-                            dataIndex: "productCode",
-            
-                        },
-                           {
-                            title: "Line Status",
-                            dataIndex: "lineStatus",
-                            // ...getColumnSearchProps("lineStatus"),
-            
-                        },
-                        {
-                            title: 'Document Date',
-                            dataIndex: 'documentDate', 
-                            
-                        },
-                        {
-                            title: 'Old Po',
-                            dataIndex: 'poNumber',
-            
-                            
-                        },
-                        {
-                            title: 'Old Po Line',
-                            dataIndex: 'poLine',
-            
-                            
-                        },
-                        {
-                            title: 'Balance Qty',
-                            dataIndex: '-', 
-            
-                        },
-                        {
-                            title: 'Destination',
-                            dataIndex: 'destination',
-             
-                        },
-                        {
-                            title: 'Shipment Type',
-                            dataIndex: 'shipmentType', 
-            
-                        },
-                        {   
-                            title: 'Inventory Segment Code',
-                            dataIndex: ' inventorySegmentCode',
-             
-                        },
-                        {
-                            title: 'OGAC Date',
-                            dataIndex: 'ogac',
-                           
-                        },
-                        {
-                            title: 'GAC Date',
-                            dataIndex: 'gac', 
-                            
-                        },
-                        ,
-                        {
-                            title: 'Item Vas',
-                            dataIndex: 'item_vas_text',
-                        },
-                      ]
-                    },
-                    {
-                        title: 'New',
-                        dataIndex: 'unacceptedItems',
-                        children: [
-                          { title: 'Plant', dataIndex: 'plant' },
-                          {
-                            title: 'OGAC Date',
-                            dataIndex: 'ogac', 
-                            
-                        },
-                        {
-                            title: 'GAC Date',
-                            dataIndex: 'gac', 
-                           
-                        },{
-                        title:"No of Days to GAC",
-                        dataIndex:"",
-                        }, 
-                        {
-                            title:"To item",
-                            dataIndex:"",
-                            }, 
-                        {
-                           title:"Unit",
-                           dataIndex:"",
-                           },
-            
-                        {
-                            title: "Plant",
-                            dataIndex: "plant",
-            
-                        },
-                        {
-                            title: "Product Code",
-                            dataIndex: "productCode",
-            
-                        },
-                        {
-                            title: "Line Status",dataIndex:''
-            
-                        },
-                        {
-                            title: 'Document Date',
-                            dataIndex: 'documentDate', 
-                        },
-                        {
-                            title: 'New Po',
-                            dataIndex: 'poNumber',
-                            
-                        },
-                        {
-                            title: 'New Po Line',
-                            dataIndex: 'poLine',
-            
-                            
-                        },
-                        {
-                            title: 'Quantity',
-                            dataIndex: '', 
-            
-                        },
-                        {
-                            title: 'Destination',
-                            dataIndex: 'destination',
-             
-                        },
+                // const exportingColumns: IExcelColumn[] = [
+                //     { title: 'old', 
+       
+                //     children: [
                         
-                        {
-                            title: 'Inventory Segment Code',
-                            dataIndex: 'inventorySegmentCode', 
-                        },
-                        {
-                            title: 'Item Vas',
-                            dataIndex: 'item_vas_text',
-                        },
+                //         {
+                //             title: "Request Date",
+                //             dataIndex: "",
+                //         },
+                //         {
+                //             title: "From Item",
+                //             dataIndex: "",
+                //         },
+                //         {
+                //             title: "Unit",
+                //             dataIndex: "",
+                //         },
+                //         {
+                //             title: "Plant",
+                //             dataIndex: "oplant",
+                //         },
+                //         {
+                //             title: "Product Code",
+                //             dataIndex: "oproductCode",
+            
+                //         },
+                //            {
+                //             title: "Line Status",
+                //             dataIndex: "onLineStatus",
+                //             // ...getColumnSearchProps("lineStatus"),
+            
+                //         },
+                //         {
+                //             title: 'Document Date',
+                //             dataIndex: 'oDocumentDate', 
+                //             // render: (text, record) => {
+                //             //    (record.documentDate
+                //             //             ? moment(record.documentDate).format("YYYY-MM-DD")
+                //             //             : "-")
+                                  
+                //             // }
+                //         },
+                //         {
+                //             title: 'Old Po',
+                //             dataIndex: 'opoNumber',
+            
+                            
+                //         }, 
+                //         {
+                //             title: 'Old Po Line',
+                //             dataIndex: 'opoLine',
+            
+                            
+                //         },
+                //         {
+                //             title: 'Old Qantity',
+                //             //from yesterdays ppm
+                //             dataIndex: 'oquantity', 
+            
+                //         },
+                //         {
+                //             title: 'Balance Qty',
+                //             // from dpom
+                //             dataIndex: 'nQuantity', 
+            
+                //         },
+                //         {
+                //             title: 'Destination',
+                //             dataIndex: 'odestination',
+             
+                //         },
+                //         {
+                //             title: 'Shipment Type',
+                //             dataIndex: 'oshipmentType', 
+            
+                //         },
+                //         {
+                //             title: 'OLD OGAC',
+                //             dataIndex: 'oogac', 
+                //         },
+                //         {
+                //             title: 'OLD GAC',
+                //             dataIndex: 'ogac', 
+                //         },
+                //         {   
+                //             title: 'Inventory Segment Code',
+                //             dataIndex: 'oinventorySegmentCode',
+             
+                //         },
+                //         {
+                //             title: 'GAC Difference',
+                //             dataIndex: 'ogac',
+                //             render: (text, record) => {
+                //               if (record.ogac && record.gac) {
+                //                 const ogacDate = moment(record.ogac);
+                //                 const gacDate = moment(record.gac);
+                //                 const daysDifference = gacDate.diff(ogacDate, 'days');
+                //                 return daysDifference + ' days';
+                //               } else {
+                //                 return '-';
+                //               }
+                //             },
+                //           },
+                //         {
+                //             title: 'Item Vas',
+                //             dataIndex: 'oitem_vas_text',
+                //         },
                         
-                        {
-                            title: 'Shipment Type',
-                            dataIndex: 'shipmentType',
-                        },
-                        {
-                            title: 'Item Vas Diff Check',
-                            dataIndex: '', 
-                        },
-                        {
-                            title: 'Qty Tally-Check',
-                            dataIndex: '', 
-                        },
-                        {
-                            title: 'Price-Fob Tally-Check',
-                            dataIndex: '', 
-                        },
-                        {
-                            title: 'Price-Net Includding Discount Tally-Check',
-                            dataIndex: '', 
-                        },
-                        {
-                            title: 'Price-Trading Co Net Includding Discount Tally-Check',
-                            dataIndex: '', 
-                        },
                     
-                        ]
-                      },
+                //     ]  
+                //     },
                     
-                  ];
+                //     { 
+                //         title: 'New',
+                    
+                //     children:[
+                //         {  title: 'OGAC Date',
+                //             dataIndex: 'nogac', 
+                //             // render: (text, record) => {
+                //             //  (record.ogac
+                //             //             ? moment(record.ogac).format("YYYY-MM-DD")
+                //             //             : "-")
+                                  
+                //             // }
+                //         },
+                //         {
+                //             title: 'GAC Date',
+                //             dataIndex: 'ngac', 
+                //             // render: (text, record) => {
+                //             //     (record.gac
+                //             //             ? moment(record.gac).format("YYYY-MM-DD")
+                //             //             : "-")
+                //             // }
+                //         },{
+                //         title:"No of Days to GAC",dataIndex:'dpomCreatedDates'
+                //         // render: (text, record) => {
+                //         //     if (record.dpomCreatedDates && record.nogac) {
+                //         //       const dpomCreatedDate = moment(record.dpomCreatedDates);
+                //         //       const nogacDate = moment(record.nogac);
+                //         //       const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
+                //         //       return daysDifference + ' days';
+                //         //     } else {
+                //         //       return "-";
+                //         //     }
+                //         //   }
+                //         }, 
+                //         {
+                //             title:"To item",
+                //             dataIndex:"",
+                //             }, 
+                //         {
+                //            title:"Unit",
+                //            dataIndex:"",
+                //            },
+            
+                //         {
+                //             title: "Plant",
+                //             dataIndex: "nPlant",
+                //         },
+                //         {
+                //             title: "Product Code",
+                //             dataIndex: "nproductCode",
+                          
+            
+                //         },
+                //         {
+                //             title: "Line Status",
+                //             dataIndex:'nLineStatus'
+                //         },
+                //         {
+                //             title: 'Document Date',
+                //             dataIndex: 'nDocumentDate', 
+                //             // render: (text, record) => {
+                //             //  (record.nDocumentDate
+                //             //             ? moment(record.nDocumentDate).format("YYYY-MM-DD")
+                //             //             : "-")
+                //             // }
+                //         },
+                //         {
+                //             title: 'New Po',
+                //             dataIndex: 'npoNumber',
+                //         },
+                //         {
+                //             title: 'New Po Line',
+                //             dataIndex: 'npoLine',
+                //         },
+                //         {
+                //             title: 'Quantity',
+                //             dataIndex: 'nQuantity', 
+                //         },
+                //         {
+                //             title: 'Destination',
+                //             dataIndex: 'ndestination', 
+                //         },
+                        
+                //         {
+                //             title: 'Inventory Segment Code',
+                //             dataIndex: 'ninventorySegmentCode', 
+                //         },
+                //         {
+                //             title: 'Item Vas',
+                //             dataIndex: 'nitemVasText',
+                //         },
+                                   
+                //         {
+                //             title: 'Shipment Type',
+                //             dataIndex: 'nshipmentType',
+                //         },
+                //         {
+                //             title: 'Item Vas Diff Check',
+                //             dataIndex: '', 
+                //         },
+                //         {
+                //             title: 'Qty Tally-Check',
+                //             dataIndex: '', 
+                //         },
+                //         {
+                //             title: 'Price-Fob Tally-Check',
+                //             dataIndex: '', 
+                //         },
+                //         {
+                //             title: 'Price-Net Includding Discount Tally-Check',
+                //             dataIndex: '', 
+                //         },
+                //         {
+                //             title: 'Price-Trading Co Net Includding Discount Tally-Check',
+                //             dataIndex: '', 
+                //         },
+                    
+                //     ]}
+                    
+                //   ];
             
         
             const excel = new Excel();
     excel.addSheet("Sheet1");
 
-    const formattedDataForExcel = modifiedCombinedData.map(item => ({
-        ...item,
-        sno: item.section === 'old' ? item.sno : newSno++,
-    }));
+    // const formattedDataForExcel = modifiedCombinedData.map(item => ({
+    //     ...item,
+    //     sno: item.section === 'old' ? item.sno : newSno++,
+    // }));
 
     // let newSno = 1;
     // const newSectionStart = formattedDataForExcel.findIndex(item => item.section === 'new');
@@ -343,8 +393,8 @@
     // }
 
     excel.addRow();
-    excel.addColumns(exportingColumns);
-    excel.addDataSource(formattedDataForExcel);
+    //excel.addColumns(exportingColumns);
+    // excel.addDataSource(formattedDataForExcel);
     excel.saveAs(`Divert-report-${currentDate}.xlsx`);
 }
 
@@ -363,121 +413,106 @@
             {
                 title: "Request Date",
                 dataIndex: "",
-                render: (text, record) => (record.section === 'old' ? record.plant : ''),
             },
             {
                 title: "From Item",
                 dataIndex: "",
-                render: (text, record) => (record.section === 'old' ? record.plant : ''),
             },
             {
                 title: "Unit",
                 dataIndex: "",
-                render: (text, record) => (record.section === 'old' ? record.plant : ''),
             },
             {
                 title: "Plant",
-                dataIndex: "plant",
-                render: (text, record) => (record.section === 'old' ? record.plant : ''),
+                dataIndex: "oplant",
             },
             {
                 title: "Product Code",
-                dataIndex: "productCode",
+                dataIndex: "oproductCode",
                 sorter: (a, b) => a.productCode.localeCompare(b.productCode),
                 sortDirections: ["descend", "ascend"],
-                // ...getColumnSearchProps("productCode"),
-                render: (text, record) => (record.section === 'old' ? record.productCode : ''),
 
             },
                {
                 title: "Line Status",
-                dataIndex: "lineStatus",
+                dataIndex: "onLineStatus",
                 // ...getColumnSearchProps("lineStatus"),
-                render: (text, record) => (record.section === 'old' ? record.lineStatus : ''),
 
             },
             {
                 title: 'Document Date',
-                dataIndex: 'documentDate', 
+                dataIndex: 'oDocumentDate', 
                 render: (text, record) => {
-                    return record.section === 'old'
-                        ? (record.documentDate
+                   (record.documentDate
                             ? moment(record.documentDate).format("YYYY-MM-DD")
                             : "-")
-                        : "";
+                      
                 }
             },
             {
                 title: 'Old Po',
-                dataIndex: 'poNumber',
-                render: (text, record) => (record.section === 'old' ? record.poNumber : ''),
+                dataIndex: 'opoNumber',
 
                 
-            },
+            }, 
             {
                 title: 'Old Po Line',
-                dataIndex: 'poLine',
-                render: (text, record) => (record.section === 'old' ? record.poLine : "-"),
+                dataIndex: 'opoLine',
 
                 
             },
             {
                 title: 'Old Qantity',
-                dataIndex: '-', 
-                render: (text, record) => (record.section === 'old' ? record.plant : "-"),
+                //from yesterdays ppm
+                dataIndex: 'oquantity', 
 
             },
             {
                 title: 'Balance Qty',
-                dataIndex: 'quantity', 
-                render: (text, record) => (record.section === 'old' ? record.quantity : "-"),
+                // from dpom
+                dataIndex: 'nQuantity', 
 
             },
             {
                 title: 'Destination',
-                dataIndex: 'destination',
-                render: (text, record) => (record.section === 'old' ? record.destination : "-"),
+                dataIndex: 'odestination',
  
             },
             {
                 title: 'Shipment Type',
-                dataIndex: 'shipmentType', 
-                render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
+                dataIndex: 'oshipmentType', 
 
             },
             {
                 title: 'OLD OGAC',
-                dataIndex: '', 
-                render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
-
+                dataIndex: 'oogac', 
             },
             {
                 title: 'OLD GAC',
-                dataIndex: '', 
-                render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
-
+                dataIndex: 'ogac', 
             },
             {   
                 title: 'Inventory Segment Code',
-                dataIndex: ' inventorySegmentCode',
-                render: (text, record) => (record.section === 'old' ? record.inventorySegmentCode : "-"),
+                dataIndex: 'oinventorySegmentCode',
  
             },
             {
                 title: 'GAC Difference',
                 dataIndex: 'ogac', 
                 render: (text, record) => {
-                    return record.section === 'old'
-                        ? (record.ogac
-                            ? moment(record.ogac).format("YYYY-MM-DD")
-                            : "-")
-                        : "";
+                  if (record.ogac && record.gac) {
+                    const ogacDate = moment(record.ogac);
+                    const gacDate = moment(record.gac);
+                    const daysDifference = gacDate.diff(ogacDate, 'days');
+                    return daysDifference + ' days';
+                  } else {
+                    return "-";
+                  }
                 }
-            } ,
+              },
             {
                 title: 'Item Vas',
-                dataIndex: 'item_vas_text',
-                render: (text, record) => (record.section === 'old' ? (record.item_vas_text !== null ? record.item_vas_text : "null") : ""),
+                dataIndex: 'oitem_vas_text',
             },
             
         
@@ -495,28 +530,34 @@
             },
             {
                 title: 'OGAC Date',
-                dataIndex: 'ogac', 
+                dataIndex: 'nogac', 
                 render: (text, record) => {
-                    return record.section === 'new'
-                        ? (record.ogac
+                 (record.ogac
                             ? moment(record.ogac).format("YYYY-MM-DD")
                             : "-")
-                        : "";
+                      
                 }
             },
             {
                 title: 'GAC Date',
-                dataIndex: 'gac', 
+                dataIndex: 'ngac', 
                 render: (text, record) => {
-                    return record.section === 'new'
-                        ? (record.gac
+                    (record.gac
                             ? moment(record.gac).format("YYYY-MM-DD")
                             : "-")
-                        : "";
                 }
             },{
             title:"No of Days to GAC",
-            dataIndex:"",
+            render: (text, record) => {
+                if (record.dpomCreatedDates && record.nogac) {
+                  const dpomCreatedDate = moment(record.dpomCreatedDates);
+                  const nogacDate = moment(record.nogac);
+                  const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
+                  return daysDifference + ' days';
+                } else {
+                  return "-";
+                }
+              }
             }, 
             {
                 title:"To item",
@@ -529,78 +570,58 @@
 
             {
                 title: "Plant",
-                dataIndex: "plant",
-                // ...getColumnSearchProps("plant"),
-                render: (text, record) => (record.section === 'new' ? record.plant : ''),
-
+                dataIndex: "nPlant",
             },
             {
                 title: "Product Code",
-                dataIndex: "productCode",
-                sorter: (a, b) => a.owner.localeCompare(b.owner),
+                dataIndex: "nproductCode",
+                sorter: (a, b) => a.nproductCode.localeCompare(b.nproductCode),
                 sortDirections: ["descend", "ascend"],
                 //...getColumnSearchProps("owner"),
-            render: (text, record) => (record.section === 'new' ? record.productCode : ''),
 
             },
             {
                 title: "Line Status",
-                render: (text, record) => (record.section === 'new' ? record.lineStatus : ''),
-
+                dataIndex:'nLineStatus'
             },
             {
                 title: 'Document Date',
-                dataIndex: 'documentDate', 
+                dataIndex: 'nDocumentDate', 
                 render: (text, record) => {
-                    return record.section === 'new'
-                        ? (record.documentDate
-                            ? moment(record.documentDate).format("YYYY-MM-DD")
+                 (record.nDocumentDate
+                            ? moment(record.nDocumentDate).format("YYYY-MM-DD")
                             : "-")
-                        : "";
                 }
             },
             {
                 title: 'New Po',
-                dataIndex: 'poNumber',
-                render: (text, record) => (record.section === 'new' ? record.poLine : "-"),
-
-                
+                dataIndex: 'npoNumber',
             },
             {
                 title: 'New Po Line',
-                dataIndex: 'poLine',
-                render: (text, record) => (record.section === 'new' ? record.poLine : "-"),
-
-                
+                dataIndex: 'npoLine',
             },
             {
                 title: 'Quantity',
-                dataIndex: 'quantity', 
-                render: (text, record) => (record.section === 'new' ? record.quantity : "-"),
-
+                dataIndex: 'nQuantity', 
             },
             {
                 title: 'Destination',
-                dataIndex: 'destination',
-                render: (text, record) => (record.section === 'new' ? record.destination : "-"),
- 
+                dataIndex: 'ndestination', 
             },
             
             {
                 title: 'Inventory Segment Code',
-                dataIndex: 'inventorySegmentCode', 
-                render: (text, record) => (record.section === 'new' ? record.inventorySegmentCode : "-"),
+                dataIndex: 'ninventorySegmentCode', 
             },
             {
                 title: 'Item Vas',
-                dataIndex: 'item_vas_text',
-                render: (text, record) => (record.section === 'new' ? (record.item_vas_text !== null ? record.item_vas_text : "null") : ""),
+                dataIndex: 'nitemVasText',
             },
-            
+
             {
                 title: 'Shipment Type',
-                dataIndex: 'shipmentType',
-                render: (text, record) => (record.section === 'new' ? record.shipmentType : "-"),
+                dataIndex: 'nshipmentType',
             },
             {
                 title: 'Item Vas Diff Check',
@@ -624,18 +645,9 @@
             },
         
         ]as unknown as null,}
+
         ]
-        const combinedData = [
-            ...acceptedItems.map(item => ({ ...item, section: 'old' })),
-            ...unacceptedItems.map(item => ({ ...item, section: 'new' })),
-        ]
-        const newSectionStart = combinedData.findIndex(item => item.section === 'new');
-        const modifiedCombinedData = combinedData.map((item, index) => {
-            if (item.section === 'new') {
-                return { ...item, sno: index + 301 - newSectionStart };
-            }
-            return item;
-        });
+       
 
 
 
@@ -648,7 +660,7 @@
                         onClick={handleExport}
                         icon={<FileExcelFilled />}>Download Excel</Button>}>
                             <Row gutter={70}>
-                     <Col >
+                     {/* <Col >
                         <Card title={'Total Line Status Count  : ' + Number(dataLength[0]?.totalCount)} style={{ textAlign: 'left', width: 280, height: 38, backgroundColor: ' lightblue' }}></Card>
                     </Col>
                     <Col>
@@ -656,7 +668,7 @@
                     </Col>
                     <Col>
                         <Card title={'Unaccepted : ' +Number(dataLength[0]?.unacceptedCount)} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
-                    </Col> 
+                    </Col>  */}
                    
                     
                 </Row><br></br>
@@ -664,7 +676,7 @@
                         <Table
                             columns={columns}
                             className="custom-table-wrapper"
-                            dataSource={modifiedCombinedData}
+                            dataSource={items}
                             pagination={{
                                 onChange(current, pageSize) {
                                 setPage(current);

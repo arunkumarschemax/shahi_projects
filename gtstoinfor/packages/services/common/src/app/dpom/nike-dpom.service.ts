@@ -557,21 +557,21 @@ export class DpomService {
         }
     }
 
-    async getDivertReportData(): Promise<CommonResponseModel> {
-        const report = await this.dpomRepository.getDivertReport();
+    // async getDivertReportData(): Promise<CommonResponseModel> {
+    //     const report = await this.dpomRepository.getDivertReport();
 
-        const acceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'accepted',);
-        const unacceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'unaccepted');
-        if (acceptedArray.length > 0 || unacceptedArray.length > 0) {
-            const response = new CommonResponseModel(true, report.length, 'data retrieved', {
-                accepted: acceptedArray,
-                unaccepted: unacceptedArray
-            });
-            return response;
-        } else {
-            return new CommonResponseModel(false, 0, 'No Data Found', []);
-        }
-    }
+    //     const acceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'accepted',);
+    //     const unacceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'unaccepted');
+    //     if (acceptedArray.length > 0 || unacceptedArray.length > 0) {
+    //         const response = new CommonResponseModel(true, report.length, 'data retrieved', {
+    //             accepted: acceptedArray,
+    //             unaccepted: unacceptedArray
+    //         });
+    //         return response;
+    //     } else {
+    //         return new CommonResponseModel(false, 0, 'No Data Found', []);
+    //     }
+    // }
 
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.getCountForDivertReport();
@@ -665,5 +665,13 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'Data retrieved', data)
         else
             return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getDivertReportData(): Promise<CommonResponseModel> {
+        const report = await this.dpomRepository.getDivertReport();
+        if (report.length > 0 ) {
+            return new CommonResponseModel(true, 1, 'Data Retrived Successfully',report );
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data Found', []);
+        }
     }
 }
