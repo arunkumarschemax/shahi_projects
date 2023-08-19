@@ -50,6 +50,12 @@ export const AppRoutes = () => {
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
                     }} />} />
+                    {/* <Route path='supplier/supplier-view' key='supplier/supplier-view' element={<SupplierView />} />
+                    <Route path='supplier/supplier-form' key='/supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
+                        throw new Error("Function not implemented.")
+                    }} isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    }} />} /> */}
                 </Route>
                 <Route path='/nike'>
                     <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
@@ -65,6 +71,7 @@ export const AppRoutes = () => {
                     <Route path='order-acceptance' element={<OrderAcceptance />} />
                     <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
+
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
@@ -92,8 +99,25 @@ export const AppRoutes = () => {
                         }} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         }} />} />
+                                {/* <Route path='supplier/supplier-view' element={<SupplierView />} />
+                                <Route path='supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
+                            throw new Error("Function not implemented.")
+                        }} isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        }} />} /> */}
+
                     </Route>
+                    {/* <Route path='/excel-import'>
+                        <Route path='excel-import' element={<ExcelImport />} />
+                        <Route path='changes-view' element={<ChangesGrid />} />
+                        <Route path='grid-view' element={<AllOrdersGridView />} />
+                        <Route path='revert-orders' element={<FileRevert />} />
+                        <Route path='version-grid' element={<VersionChanges />} />
+                        <Route path='phase-wise-grid' element={<PhaseWiseData />} />
+
+                    </Route> */}
                     <Route path='/nike'>
+                        <Route path='nike-dashboard' element={<NikeDashboard />} />
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='file-revert' element={<NikeFileRevert />} />
                         <Route path='order-acceptance' element={<OrderAcceptance />} />

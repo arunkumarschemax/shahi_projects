@@ -1,6 +1,6 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import moment from 'moment';
@@ -24,6 +24,7 @@ const PPMReport = () => {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const service = new NikeService();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [filterData, setFilterData] = useState<any>([])
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
 
@@ -36,6 +37,7 @@ const PPMReport = () => {
     service.getPPMData().then(res => {
       if (res.status) {
         setGridData(res.data)
+        setFilterData(res.data)
         setFilteredData(res.data)
       }
     }).catch(err => {
@@ -107,36 +109,27 @@ const PPMReport = () => {
       setSelectedEstimatedToDate(toDate)
     }
   }
+  const Finish = (values: any) => {
+    console.log(values, 'vallllll');
+    // if (values.DPOMLineItemStatus !== undefined) {
+    //     // getFactoryStatus(values)
+    // }/
+    if (values.DPOMLineItemStatus === undefined) {
+        setFilterData(gridData)
+    } else if (values.DPOMLineItemStatus === "Accepted") {
+        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Accepted"))
+    } else if (values.DPOMLineItemStatus === "Unaccepted") {
+        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Unaccepted"))
+    } else if (values.DPOMLineItemStatus === "Cancelled") {
+        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Cancelled"))
 
-  const getFilterdData = () => {
-    let ppmStatus = form.getFieldValue('ppmStatus');
-    let startDate = selectedEstimatedFromDate;
-    let endDate = selectedEstimatedToDate;
-    let filteredData = gridData;
-    if (ppmStatus) {
-      filteredData = filteredData.filter(record => record.ppm_status === ppmStatus);
-      if (filteredData.length === 0) {
-        message.error("No Data Found")
-      }
-      setFilteredData(filteredData);
-    }
-    if (startDate && endDate) {
-      filteredData = filteredData.filter(record => moment(record.last_update_date).format('YYYY-MM-DD') >= startDate && moment(record.last_update_date).format('YYYY-MM-DD') <= endDate);
-      if (filteredData.length === 0) {
-        message.error("No Data Found")
-      }
-      setFilteredData(filteredData);
+    } else if (values.DPOMLineItemStatus === "Closed") {
+        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Closed"))
     }
   }
-
-
   const onReset = () => {
-    form.resetFields();
-    setSelectedEstimatedFromDate(undefined);
-    setSelectedEstimatedToDate(undefined);
-    getData();
+    form.resetFields()
   }
-
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -204,6 +197,11 @@ const PPMReport = () => {
   };
 
   const Columns: any = [
+    {
+      title: "SL",
+      render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
+
+    },
 
     {
 
@@ -280,7 +278,7 @@ const PPMReport = () => {
           onClick={handleExport}
           icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
         <Form
-
+           onFinish={Finish}
           form={form}
           layout='vertical'>
           <Row>
@@ -290,8 +288,18 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
-              <Form.Item name="DPOMLineItemStatus" label="Order Status">
+              <Form.Item name="DPOMLineItemStatus" label="PPM Status">
                 <Select
+                  showSearch
+                  placeholder="Select PPM Status"
+                  optionFilterProp="children"
+                  allowClear>
+                  <Option value="Accepted">ACCEPTED</Option>
+                  <Option value="Unaccepted">UNACCEPTED</Option>
+                  <Option value="Cancelled">CANCELLED</Option>
+                  <Option value="Closed">CLOSED</Option>
+                </Select>
+                {/* <Select
                   mode="multiple"
                   placeholder="Inserted are removed"
                   value={selectedItems}
@@ -301,57 +309,54 @@ const PPMReport = () => {
                     value: item,
                     label: item,
                   }))}
-                />
+                /> */}
+                
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 40 }} >
-              <Button
-                type="primary"
-                icon={<SearchOutlined />}
-                style={{ marginRight: 50, width: 80 }}
-                htmlType="button"
-                onClick={getFilterdData}>Search</Button>
-              <Button
-                type="primary"
-                icon={<UndoOutlined />}
-                htmlType="submit"
-                onClick={onReset}>Reset</Button>
+              <Form.Item>
+                <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Search</Button>
+                <Button style={{marginLeft:8}}  htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined/>}>Reset</Button>
+              </Form.Item>
             </Col>
           </Row>
         </Form>
 
         <Row gutter={80}>
           <Col >
-            <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40 }}></Card>
+            <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40 }}></Card>
+            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40 }}></Card>
+            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
 
         </Row><br></br>
         <Row gutter={80}>
           <Col >
-            <Card title={'Total Po Count: ' + gridData.length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
+            <Card title={'Total Po Count: ' + gridData.length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Accepted Po Count: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Accepted').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
+            <Card title={'Accepted Po Count: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Accepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'UnAccepted Po :' + gridData.filter(el => el.DPOMLineItemStatus == 'Unaccepted').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
+            <Card title={'UnAccepted Po :' + gridData.filter(el => el.DPOMLineItemStatus == 'Unaccepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Closed Po:' + gridData.filter(el => el.DPOMLineItemStatus == 'Closed').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
+            <Card title={'Closed Po:' + gridData.filter(el => el.DPOMLineItemStatus == 'Closed').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Cancelled: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 41 }}></Card>
+            <Card title={'Cancelled Po: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
 
         </Row><br></br>
         <div>
-          <Table columns={Columns} dataSource={gridData}
+
+          <Table columns={Columns} 
+          // dataSource={gridData}
+           dataSource={filterData}
             bordered
           />
         </div>
