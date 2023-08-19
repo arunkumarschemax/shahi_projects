@@ -75,15 +75,14 @@ export class DocumentsListService {
     file:any,
 ): Promise<DocumentFileUploadResponse> {
     try{
-        // console.log(req.uid,'reqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq')
-        // console.log(req.uid.length,'reqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq')
-
+        console.log(req)
         let flag :boolean = true;
-        const filePathUpdate = await this.documentsListRepository.update(
+        const uploadStatusUpdate = await this.documentsListRepository.update(
             {  documentsListId:req.documentsListId },
             { isUploaded: true }
         );
-        if (filePathUpdate.affected) {
+        console.log (uploadStatusUpdate)
+        if (uploadStatusUpdate.affected > 0) {
             for(const res of file){
                 const data = new UploadFileDto(0,res.filename,res.path,req.documentsListId,res.uid)
                 const entity = new UploadFilesEntity()
@@ -137,7 +136,7 @@ export class DocumentsListService {
             if(result){
             for (const res of result){
 
-                const doctlistQuery = 'SELECT uid,u.status,u.file_name AS name FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id where u.document_list_id ='+res.documentListId;
+                const doctlistQuery = 'SELECT uid,u.status,u.file_name AS name FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id where u.document_list_id ='+res.documentsListId;
                 const docres = await this.uploadFilesRepository.query(doctlistQuery)
 
                 const docReq:docRequest[] =[];
@@ -151,7 +150,7 @@ export class DocumentsListService {
                 }
                 // console.log(docReq,'docReq')
                 // console.log(res.status,'resssssssssssssssssssssssssssss')
-                docinfo.push(new UploadDocumentListDto(res.documentListId,res.documentCarid,res.role_id,res.poNumber,1,res.documentName,res.dlFilePath,res.uploadStatus,res.isActive,'','','','',1,docReq,res.status,res.documentName) )
+                docinfo.push(new UploadDocumentListDto(res.documentsListId,res.documentCategoryId,res.role_id,res.poNumber,1,res.documentName,res.dlFilePath,res.uploadStatus,res.isActive,'','','','',1,docReq,res.status,res.documentName) )
                 // result.documentsPath = docReq;
                 console.log( docinfo,' result.documentsPath')
             }

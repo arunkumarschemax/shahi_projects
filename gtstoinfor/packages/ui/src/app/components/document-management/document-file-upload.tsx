@@ -143,7 +143,7 @@ export default function DocumentListupload() {
         const formData = new FormData();
         formData.append('documentsListId', `${data.documentsListId}`);
         formData.append('documentCategoryId', `${data.documentCategoryId}`);
-        formData.append('poNumber', `${data.poNumber}`);
+        formData.append('poNumber', `${data.customerPo}`);
         formData.append('orderId', '1');
         formData.append('fileName', `${data.fileName}`);
         formData.append('filePath', `${data.filePath}`);
@@ -212,7 +212,7 @@ export default function DocumentListupload() {
              rules={[
                {
                  required: true,
-                 message: 'Select Destination',
+                 message: 'Select PO Number',
 
                }
              ]}

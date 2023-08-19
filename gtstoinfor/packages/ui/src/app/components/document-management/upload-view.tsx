@@ -9,6 +9,9 @@ import { ColumnProps } from 'antd/lib/table';
 import { ColumnsType } from 'antd/es/table';
 import { useForm } from 'antd/es/form/Form';
 import { AlertMessages, DocumentsListRequest, FileStatusReq, UploadDocumentListDto } from '@project-management-system/shared-models';
+import FormList from 'antd/es/form/FormList';
+import InputNumber from 'rc-input-number';
+import { number } from 'prop-types';
 
 
 const { Title, Text } = Typography;
@@ -21,7 +24,6 @@ export interface UploadViewProps {
 }
 
 const UploadView = (props: UploadViewProps) => {
-  console.log(props.docData,'props.doctdataaaaaaaaaaaaaaaaaaaaa')
 
     
   const [loading, setLoading] = useState(true);
@@ -34,8 +36,9 @@ const handleRemoveFile = (fileToRemove) => {
   setFileList(updatedFileList);
 };
   
-const renderFilePreviews = () => {
-  return fileList.map(file => (
+const renderFilePreviews = (fileList) => {
+  console.log(fileList)
+  return fileList?.map(file => (
       <div key={file.uid}>
           <p>{file.name}</p>
           <Button onClick={() => handleRemoveFile(file)}><DeleteOutlined /></Button>
@@ -50,8 +53,8 @@ const CustomUploadList = ({ fileList, handleRemoveFile }) => {
           <h3>Uploaded Files:</h3>
           
           <ul>
-          {fileList.length > 0 ? (
-                   renderFilePreviews()
+          {fileList?.length > 0 ? (
+                   renderFilePreviews(fileList)
                 ) : (
                     <p>No files uploaded yet.</p>
                 )}
@@ -64,6 +67,7 @@ const CustomUploadList = ({ fileList, handleRemoveFile }) => {
 useEffect(() =>{
   setFileList(props.docData.documentsPath);
 },[props.docData.documentsPath])
+
 
   useEffect(() => {
     setBtnDisable(selectedFiles.length === 0);
@@ -133,7 +137,7 @@ useEffect(() =>{
 
   const handleFileDownload = (file) => {
     // Replace 'your-download-endpoint' with the actual URL or API endpoint to download the file.
-    const downloadUrl = `http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/PO-${props.docData.customerPo}/${file.name}`;
+    const downloadUrl = `/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/PO-${props.docData.customerPo}/${file.name}`;
 
     // Create a link element to trigger the download
     const link = document.createElement('a');
@@ -191,8 +195,11 @@ useEffect(() =>{
 
 };
   const upload = (data: any) => {
+    console.log(data)
     let file = props.form.getFieldValue(`${data.documentsListId}`);
     data.file = file;
+    data.documentsListId = props.docData.documentsListId;
+    data.documentCategoryId = props.docData.documentCategoryId;
     console.log(file);
     console.log(fileList);
     props.formData(data, fileList);
@@ -230,7 +237,7 @@ useEffect(() =>{
         <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           <Form.Item name={props.docData.documentsListId}>
-          <CustomUploadList fileList={fileList} handleRemoveFile={handleRemoveFile} />
+          <CustomUploadList fileList={props.docData.documentsPath} handleRemoveFile={handleRemoveFile} />
             <Upload
               key={props.docData.documentsListId}
               name={`uploadFile${props.docData.documentsListId}`}
@@ -268,11 +275,13 @@ useEffect(() =>{
           </Button>
         </Text>
         <br />
-        <Radio.Group defaultValue={props.docData.docStatus} buttonStyle="solid" onChange={handleStatusChange}>
-          <Radio.Button value="partially uploaded">parially</Radio.Button>
-          <Radio.Button value="fully uploaded">fully</Radio.Button>
-        </Radio.Group>
-
+        <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
+          <Radio.Group defaultValue={props.docData.docStatus} buttonStyle="solid" onChange={handleStatusChange}>
+            <Radio.Button value="partially uploaded">parially</Radio.Button>
+            <Radio.Button value="fully uploaded">fully</Radio.Button>
+          </Radio.Group>
+        </Text>
+        <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           {
             props.docData.isUploaded === 1 ?  
