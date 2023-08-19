@@ -25,19 +25,7 @@ export interface UploadViewProps {
 const UploadView = (props: UploadViewProps) => {
   console.log(props.docData,'props.doctdataaaaaaaaaaaaaaaaaaaaa')
 
-  const initialFileList = [
-    {
-        uid: 'file-1',
-        name: 'example.pdf',
-        status: 'done', // 'done', 'uploading', 'error'
-    },
-    {
-        uid: 'file-2',
-        name: 'image.jpg',
-        status: 'done',
-    },
-    // ... other files
-];
+    
   const [loading, setLoading] = useState(true);
   const [fileList,setFilelist] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
@@ -50,6 +38,12 @@ const UploadView = (props: UploadViewProps) => {
         console.log(props.docData.status)
         // props.statusval(props.docData.status)
     },[props.docData])
+
+
+    useEffect(() =>{
+      setFilelist(props.docData.documentsPath);
+  },[props.docData.documentsPath])
+
 
     // props.statusvalue(statusval)
     // console.log( props.statusvalue)
@@ -83,7 +77,7 @@ const UploadView = (props: UploadViewProps) => {
         <div>
             <h3>Uploaded Files:</h3>
             <ul>
-                {initialFileList.map(file => (
+                {fileList.map(file => (
                     <li key={file.uid}>
                         <span>{file.name}</span>
                         {/* <Button onClick={() => handleRemoveFile(file)}>Remove</Button> */}
@@ -96,8 +90,12 @@ const UploadView = (props: UploadViewProps) => {
     const gstUploadFieldProps: UploadProps = {
         multiple: true,
         onRemove: (file: any) => {
+          console.log("IIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
             setFilelist([]);
             // uploadFileList([]);
+        },
+        onDownload:(file:any) => {
+          
         },
         beforeUpload: (file: any) => {
 
@@ -164,7 +162,7 @@ const UploadView = (props: UploadViewProps) => {
           <br />
           <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}> 
               <Form.Item name={props.docData.documentsListId} initialValue={props.docData.documentsPath}>
-              <CustomUploadList fileList={fileList} handleRemoveFile={handleRemoveFile} />
+              {/* <CustomUploadList fileList={props.docData.documentsPath} handleRemoveFile={handleRemoveFile} /> */}
                   <Upload 
                       key={props.docData.documentsListId}
                       name={`uploadFile${props.docData.documentsListId}`}
@@ -197,8 +195,8 @@ const UploadView = (props: UploadViewProps) => {
           </Text>
           <br />
           <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-          {props.docData.uploadStatus === 1 ?
-            <Button onClick={() => download(props.docData)} disabled={props.docData.uploadStatus === 1 ? false : true } style={{ color: "white", backgroundColor: props.docData.uploadStatus === 1 ? 'green' : "#806767", width:'100%' }} icon={<DownloadOutlined />} >Download Document</Button>
+          {props.docData.isUploaded === 1 ?
+            <Button onClick={() => download(props.docData)} disabled={props.docData.isUploaded === 1 ? false : true } style={{ color: "white", backgroundColor: props.docData.isUploaded === 1 ? 'green' : "#806767", width:'100%' }} icon={<DownloadOutlined />} >Download Document</Button>
             :""}
           </Text>
           <br />
