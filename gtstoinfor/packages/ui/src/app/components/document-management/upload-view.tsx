@@ -29,9 +29,13 @@ const UploadView = (props: UploadViewProps) => {
   const [btndisable, setBtnDisable] = useState<boolean>(true);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
  
-  useEffect(() =>{
-    setLoading(false);
-},[props.docData])
+//   useEffect(() =>{
+//     setLoading(false);
+// },[props.docData])
+
+useEffect(() =>{
+  setFileList(props.docData.documentsPath);
+},[props.docData.documentsPath])
 
   useEffect(() => {
     setBtnDisable(selectedFiles.length === 0);
