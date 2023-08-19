@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button, Card, Input, Table } from 'antd'
+import { Button, Card, Col, Form, Input, Row, Table } from 'antd'
 import { NikeService } from '@project-management-system/shared-services';
 import { FileExcelFilled, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
@@ -116,9 +116,9 @@ function ShipmentTrackerReport() {
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
             { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}`, },
-            { title: 'Unit', dataIndex: 'unit' },
-            { title: 'Item', dataIndex: 'Item' },
-            { title: 'Plan#', dataIndex: 'plan' },
+            { title: 'Unit', dataIndex: '' },
+            { title: 'Item', dataIndex: 'item' },
+            { title: 'Plan#', dataIndex: '' },
             { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
             { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
             { title: 'Doc Type Description', dataIndex: 'docTypeDesc' },
@@ -137,16 +137,16 @@ function ShipmentTrackerReport() {
             { title: 'GAC reason Code', dataIndex: 'GACReasonCode' },
             { title: 'GAC reason Description', dataIndex: 'generalagedescription' },
             { title: 'Shipping Type', dataIndex: 'shippingType' },
-            { title: 'Truckout Date', dataIndex: 'truckoutdate' },
+            { title: 'Truckout Date', dataIndex: 'truckOutDate' },
             { title: 'Origin Receipt date', dataIndex: 'originReceiptDate' },
             { title: 'Factory Delivery Actual date', dataIndex: 'factoryDeliveryActDate' },
             { title: 'Mode of Transportation', dataIndex: 'modeOfTransportationCode' },
             { title: 'Total Item Quantity', dataIndex: 'totalItemQty' },
-            { title: 'ACTUAL SHIPPED QTY', dataIndex: 'Actalshippedqty' },
-            { title: 'ACTUAL SHIPPED %', dataIndex: 'actualShippedper' },
-            { title: 'SHIPPED VALUE $', dataIndex: 'ShippedVAlue' },
+            { title: 'ACTUAL SHIPPED QTY', dataIndex: '' },
+            { title: 'ACTUAL SHIPPED %', dataIndex: '' },
+            { title: 'SHIPPED VALUE $', dataIndex: '' },
             { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
-            { title: 'GAC-OGAC', dataIndex: 'GAC-OGAC' },
+            { title: 'GAC-OGAC', dataIndex: '' },
 
         ]
 
@@ -168,24 +168,24 @@ function ShipmentTrackerReport() {
             title: 'Po+Line',
             dataIndex: 'purchaseOrderNumber-poLineItemNumber',
             render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}`,
-
+            width:"150  "
 
         },
         {
             title: 'Unit',
-            dataIndex: 'unit',
+            dataIndex: '',
 
         },
 
         {
             title: 'Item',
-            dataIndex: 'Item',
-            ...getColumnSearch('Item'),
+            dataIndex: 'item',
+            ...getColumnSearch('item'),
 
         },
         {
             title: 'Plan#',
-            dataIndex: 'plan',
+            dataIndex: '',
 
         },
         {
@@ -309,17 +309,17 @@ function ShipmentTrackerReport() {
         },
         {
             title: 'ACTUAL SHIPPED QTY',
-            dataIndex: 'Actalshippedqty',
+            dataIndex: '',
 
         },
         {
             title: 'ACTUAL SHIPPED %',
-            dataIndex: 'actualShippedper',
+            dataIndex: '',
 
         },
         {
             title: 'SHIPPED VALUE $',
-            dataIndex: 'ShippedVAlue',
+            dataIndex: '',
 
         },
         {
@@ -329,7 +329,7 @@ function ShipmentTrackerReport() {
         },
         {
             title: 'GAC-OGAC',
-            dataIndex: 'GAC-OGAC',
+            dataIndex: '',
 
         },
 
@@ -347,6 +347,25 @@ function ShipmentTrackerReport() {
                     onClick={handleExport}
                     icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
                 <Card>
+                    <Form>
+                    <Row gutter={50}>
+                    <Col >
+                        <Card title={'Total PO Count : ' + gridData.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                    </Col>
+                    <Col>
+                        <Card title={'Accepted PO Count : ' + gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} style={{ textAlign: 'left', width: 200, height: 38 }}></Card>
+                    </Col>
+                    <Col>
+                        <Card title={'Unaccepted PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                    </Col>
+                    <Col>
+                        <Card title={'Closed PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                    </Col>
+                    <Col>
+                        <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                    </Col>
+                </Row>
+                    </Form><br></br>
                     <Table
                         columns={columns}
 

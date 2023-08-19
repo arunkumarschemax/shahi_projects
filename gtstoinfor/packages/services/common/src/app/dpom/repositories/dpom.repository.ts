@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
+import { DpomChildEntity } from "../entites/dpom-child.entity";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
@@ -16,12 +17,19 @@ export class DpomRepository extends Repository<DpomEntity> {
     }
 
     async getDivertReport(): Promise<any[]> {
-        const query = this.createQueryBuilder('dpom')
-            .select(`id,plant,dpom_item_line_status AS lineStatus, plant_name AS plantName,document_date AS documentDate,po_number AS poNumber,
-            po_line_item_number AS poLine ,destination_country AS destination,shipping_type AS shipmentType, 
-            inventory_segment_code AS inventorySegmentCode, ogac AS ogac ,gac AS gac ,product_code AS productCode,
-            item_vas_text`)
-            .where(`dpom_item_line_status IN ('accepted','Unaccepted')`)
+        const query = this.createQueryBuilder('dpm')
+            .select(`dpm.id,dpm.plant AS nPlant,dpm.dpom_item_line_status AS nLineStatus,
+            dpm.plant_name AS nPlantName,dpm.document_date AS nDocumentDate,
+            dpm.po_number AS npoNumber,dpm.po_line_item_number AS npoLine ,dpm.destination_country AS ndestination,
+            dpm.shipping_type AS nshipmentType,dpm.inventory_segment_code AS ninventorySegmentCode,
+            dpm.ogac AS nogac ,dpm.gac AS nogac ,dpm.product_code AS nproductCode,
+            dpm.item_vas_text AS nitemVasText,dpm.quantity AS nQuantity,dpc.plant AS oplant,
+            dpc.dpom_item_line_status AS onLineStatus,dpc.plant_name AS oPlantName ,
+            dpc.document_date AS oDocumentDate,dpc.po_number AS opoNumber, dpc.po_line_item_number AS opoLine,
+            dpc.destination_country AS odestination , dpc.shipping_type AS oshipmentType,dpc.inventory_segment_code AS oinventorySegmentCode,
+            dpc.ogac AS oogac,dpc.gac AS ogac,dpc.product_code AS oproductCode ,dpc.item_vas_text AS oitemVasText , dpc.quantity AS oquantity,dpm.created_at AS dpomCreatedDates `)
+            .leftJoin(DpomChildEntity,'dpc','dpc.parent_id = dpm.id')
+            //.where(`dpm.dpom_item_line_status IN ('accepted','Unaccepted')`)
         return await query.getRawMany()
     }
 
@@ -72,10 +80,13 @@ export class DpomRepository extends Repository<DpomEntity> {
     }
     async shipmentChart(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(`po_number AS poLine, po_number AS purchaseOrderNumber,po_line_item_number AS poLineItemNumber, style_number AS styleNumber ,
+            .select(`po_and_line AS poLine, po_number AS purchaseOrderNumber,po_line_item_number AS poLineItemNumber, style_number AS styleNumber ,
             destination_country AS destinationCountryName,product_code AS productCode ,color_desc AS colorDescription,planning_season_code AS planningSeasonCode,
-            planning_season_year AS planningSeasonYear,ogac,gac,total_item_qty AS totalItemQuantity,mode_of_transport_code AS modeofTransport,shipping_type AS shippingType,
-            doc_type_desc AS docTypeDescription,purchase_group_name AS purchaseGroupName `)
+            planning_season_year AS planningSeasonYear,ogac,gac,total_item_qty AS totalItemQuantity,mode_of_transport_code AS modeofTransport,
+            shipping_type AS shippingType,doc_type_desc AS docTypeDescription,purchase_group_name AS purchaseGroupName,item,factory,plan_no AS plan,
+            ship_to_address_legal_po AS shipToAddressToLegalPo,
+            gross_price_fob AS fob,payment_term AS paymentTerm,fabric_content AS desFabricContent,fabric_source AS fabricLocation,
+            ship_to_address_dia AS shipToAddressDia,cab_code AS cabCode,hanger,customer_order AS co,commission`)
         return await query.getRawMany();
     }
 
