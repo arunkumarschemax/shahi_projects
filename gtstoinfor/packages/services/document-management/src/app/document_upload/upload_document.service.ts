@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Query } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DocumentsList } from "./entities/upload-document-entity";
 import { DocumentsListRepository } from "./repository/documents-list.repository";
@@ -13,7 +13,7 @@ import { DocumentRoleMappingRepository } from "./repository/document-role-reposi
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
 import { DataSource } from "typeorm";
-import { PoRoleRequest } from "@project-management-system/shared-models";
+import { PoRoleRequest, UploadDocumentListDto, docRequest, poReq } from "@project-management-system/shared-models";
 import { DocumentUploadDto } from "./requests/document-upload-dto";
 import { UploadFilesRepository } from "./repository/upload-files.repository";
 import { UploadFileDto } from "./models/upload-file.dto";
@@ -27,7 +27,7 @@ export class DocumentsListService {
         private documentRoleMappingRepo:DocumentRoleMappingRepository,
         private documentRepo:DocumentRepository,
         private uploadFilesRepository:UploadFilesRepository,
-
+    
         @InjectDataSource()
         private dataSource: DataSource,
 
@@ -75,26 +75,33 @@ export class DocumentsListService {
     file:any,
 ): Promise<DocumentFileUploadResponse> {
     try{
+        // console.log(req.uid,'reqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq')
+        // console.log(req.uid.length,'reqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq')
+
         let flag :boolean = true;
         const filePathUpdate = await this.documentsListRepository.update(
             {  documentsListId:req.documentsListId },
-            { filePath: '/upload-files/PO-'+req.poNumber+req.fileName,fileName: req.fileName, isUploaded: true }
+            { isUploaded: true }
         );
         if (filePathUpdate.affected) {
             for(const res of file){
-                console.log("*******************************");
-                console.log(res);
-
-                const data = new UploadFileDto(0,res.filename,res.path,req.documentsListId)
+                const data = new UploadFileDto(0,res.filename,res.path,req.documentsListId,res.uid)
                 const entity = new UploadFilesEntity()
                 entity.fileName=data.fileName
-                entity.filePath=data.filePath
-                entity.documentListId=data.documentListId     
+                entity.filePath="/dist/packages/services/document-management/"+data.filePath
+                entity.documentListId=data.documentListId  
+                if(req.uid.length >= 20){            
+                    entity.uid=req.uid;
+                }else{
+                    entity.uid=req.uid[file.indexOf(res)];
+                }      
                 const uploadDoc = await this.uploadFilesRepository.save(entity);
                 if(!uploadDoc){
                     flag = false;
                 }
             }
+           
+         
             if(flag){
                 return new DocumentFileUploadResponse(true,1,'uploaded successfully. ',"");
             }
@@ -112,7 +119,7 @@ export class DocumentsListService {
 
     async getPoNumberDropdown():Promise<UploadDocumentListResponseModel>{
         try{
-            const query ='select customer_po as poNumber from documents_list group by customer_po'
+            const query ='select customer_po as poNumber from documents_list where customer_po != "" and is_uploaded = 0 group by customer_po'
             const result = await this.dataSource.query(query)
             return new UploadDocumentListResponseModel(true,1,'Data retrived Sucessfully',result)
         }
@@ -124,15 +131,35 @@ export class DocumentsListService {
 
     async getDocumentDetailsByPO(req:PoRoleRequest):Promise<UploadDocumentListResponseModel>{
         try{
-            const sqlQuery = "Select is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"' Group by dl.documents_list_id";
+            const sqlQuery = "Select role_id,dl.documents_list_id as documentListId,document_category_id as documentCarid,dl.status as status,is_uploaded AS uploadStatus,'' AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId,dl.file_path  as dlFilePath from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"' Group by dl.documents_list_id";
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
+            let docinfo: UploadDocumentListDto[] = [];
             if(result){
-                return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',result)
+            for (const res of result){
+
+                const doctlistQuery = 'SELECT uid,u.status,u.file_name AS name FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id where u.document_list_id ='+res.documentListId;
+                const docres = await this.uploadFilesRepository.query(doctlistQuery)
+
+                const docReq:docRequest[] =[];
+                for(const res of docres){
+                    console.log(res);
+                    let data = new docRequest(res.uid,res.name,res.status);
+                    console.log(data);
+                    console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
+                    docReq.push(data);
+                }
+                // console.log(docReq,'docReq')
+                // console.log(res.status,'resssssssssssssssssssssssssssss')
+                docinfo.push(new UploadDocumentListDto(res.documentListId,res.documentCarid,res.role_id,res.poNumber,1,res.documentName,res.dlFilePath,res.uploadStatus,res.isActive,'','','','',1,docReq,res.status) )
+                // result.documentsPath = docReq;
+                console.log( docinfo,' result.documentsPath')
+            }
+                return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',docinfo)
             }else{
             return new UploadDocumentListResponseModel(false,0,'no data found..',[])
 
             }
-
         }catch(error){
             throw error
         }
@@ -171,5 +198,23 @@ export class DocumentsListService {
                 throw(error)
             }
         }   
+
+        async totalFileUploadAgainstPo(req:poReq):Promise<UploadDocumentListResponseModel>{
+            try{
+                const query = 'SELECT uid,status,id,document_list_id,file_name AS fileName,file_path AS filePath  FROM upload_files WHERE document_list_id IN ( SELECT documents_list_id FROM documents_list WHERE customer_po="'+req.customerPo+'")'
+                const result = await this.uploadFilesRepository.query(query)
+                if(result){
+                    return new UploadDocumentListResponseModel(true,1,'data retrived sucessfull',result)
+                }else{
+                    return new UploadDocumentListResponseModel(false,0,'no data found',[])
+
+                }
+
+            }catch(err){
+                throw err
+            }
+        }
+
+        
 
     }

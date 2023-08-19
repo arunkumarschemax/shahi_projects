@@ -140,7 +140,7 @@ export const baseRouterList = [
     //     ],
     // },
     {
-        label:'Add Orders',
+        label:' Orders',
         key:'excel-import',
         icon: <UserOutlined />,
         path:'excel-import/excel-import',
@@ -150,9 +150,9 @@ export const baseRouterList = [
         label:'Document management',
         key:'document-management',
         icon: <FileTextOutlined  />,
-        path:'document-management/document-file-upload',
-        filepath:'document-management/document-file-upload'     
-    }
+        path:'document-management/upload-file-view',
+        filepath:'document-management/upload-file-view'     
+    },
 ];
 
 export default function BasicLayout() {

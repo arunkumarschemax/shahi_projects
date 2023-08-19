@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
-
+import {DoclListEnum} from '../../../../../../libs/shared-models/src/common/whatsapp/doc-list-enum'
 @Entity('documents_list')
 export class DocumentsList {
     @PrimaryGeneratedColumn("increment", { name: 'documents_list_id' })
@@ -27,6 +27,15 @@ export class DocumentsList {
         name: "customer_po",
     })
     customerPo: string;
+ 
+
+    @Column('enum', {
+        name: 'status',
+        nullable: false,
+        enum: DoclListEnum
+    })
+    status: DoclListEnum;
+    
 
     @Column("int", {
         nullable: true,

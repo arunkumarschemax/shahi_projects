@@ -220,4 +220,13 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getDynamicDataForDocList')
+    async getDynamicDataForDocList(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getDynamicDataForDocList();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }

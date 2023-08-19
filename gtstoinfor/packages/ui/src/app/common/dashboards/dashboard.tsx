@@ -29,13 +29,13 @@ export const Dashboard = () => {
                     </Col>
                 </Row>
             </Card>
-            <Card>
-                <Row gutter={24}>
+            {/* <Card> */}
+                {/* <Row gutter={24}>
                     <Col xs={24} sm={24} md={24} xl={24}>
                         <ItemChanges />
                     </Col>
 
-                </Row>
+                </Row> */}
                 <br />
                 {/* <Row gutter={24}>
                     <Col xs={24} sm={24} md={24} xl={10}>
@@ -45,7 +45,7 @@ export const Dashboard = () => {
                         <VersionChanges />
                     </Col>
                 </Row> */}
-            </Card>
+            {/* </Card> */}
         </>
 
     )

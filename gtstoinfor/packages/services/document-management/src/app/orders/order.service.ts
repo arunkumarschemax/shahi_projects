@@ -441,4 +441,19 @@ export class OrdersService {
         return new CommonResponseModel(true, 0, 'Data Retrived Successfully', data)
     }
 
+    async getDynamicDataForDocList(): Promise<CommonResponseModel> {
+        const query = `SELECT DISTINCT document_name FROM document`;
+        const documentNames = await this.dataSource.query(query)
+        const dynamicSQL = `SELECT dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END END) AS '${name.document_name}'
+        `).join(',')},dl.documents_list_id as docListId,dl.file_path as filePath,dl.status
+      FROM
+        documents_list dl
+      LEFT JOIN
+        document d ON d.id = dl.document_category_id
+      GROUP BY
+        dl.customer_po
+    `;
+        const data = await this.dataSource.query(dynamicSQL)
+        return new CommonResponseModel(true, 0, 'Data Retrived Successfully', data)
+    }
 }

@@ -13,7 +13,8 @@ export class UploadDocumentListDto{
     updatedAt: Date;
     updatedUser: string | null;
     versionFlag: number;
-    documentsPath?: string[];
+    documentsPath?: any[];
+    docStatus?:string
     constructor(
     documentsListId: number,
     documentCategoryId: number,
@@ -24,12 +25,14 @@ export class UploadDocumentListDto{
     filePath: string,
     isUploaded: boolean,
     isActive: boolean,
-    createdAt: Date,
+    createdAt: any,
     createdUser: string | null,
-    updatedAt: Date,
+    updatedAt: any,
     updatedUser: string | null,
     versionFlag: number,
-    documentsPath: string[],
+    documentsPath: any[],
+    docStatus?:string
+
     ){
         this.documentsListId=documentsListId
         this.documentCategoryId=documentCategoryId
@@ -46,6 +49,7 @@ export class UploadDocumentListDto{
         this.updatedUser=updatedUser
         this.versionFlag=versionFlag
         this.documentsPath=documentsPath
+        this.docStatus=docStatus
     }
 }
 
@@ -66,5 +70,17 @@ export class DocumentsListRequest{
         this.customerPo=customerPo
         this.orderId=orderId
 
+    }
+}
+
+
+export class docRequest{
+    uid: string;
+    name:string;
+    status:string;
+    constructor(uid: string,name:string,status:string){
+        this.uid = uid;
+        this.name = name;
+        this.status = status;
     }
 }

@@ -3,7 +3,7 @@ import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, 
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 // import AlertMessages from '../common/common-functions/alert-messages';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { ArrowDownOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons';
 import { AlertMessages, DocumentsListRequest, FileStatusReq, UploadDocumentListDto } from '@project-management-system/shared-models';
@@ -24,12 +24,15 @@ export default function DocumentListupload() {
   const [page, setPage] = React.useState(1);
   const [fileList,setFilelist] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
-
+  const [statusval,setStatusval] = useState(String)
   let navigate = useNavigate();
   const [form] = Form.useForm();
   const { Option } = Select;
+  let location = useLocation();
+  const statePoNumber: any = location.state;
   const service = new UploadDocumentService
 
+// console.log(statePoNumber.data,'statePoNumber')
   const getPoNumber =()=>{
     service.getPoNumberDropdown().then(res=>{
       if(res.status){
@@ -39,20 +42,28 @@ export default function DocumentListupload() {
       }
     })
   }
-  const getDocData =(value)=>{
-    service.getDocumentDetailsByPO({roleId:1,customerPo:value}).then(res=>{
-      if(res.status){
-        setDocData(res.data)
-      }else{
-        setDocData([])
-      }
-    })
-  }
+
+    const getDocData =(value)=>{
+      service.getDocumentDetailsByPO({roleId:1,customerPo:value}).then(res=>{
+        console.log(res)
+        if(res.status){
+          setDocData(res.data)
+        }else{
+          setDocData([])
+        }
+      })
+    }
   useEffect(() =>{
     getPoNumber();
   },[])
 
- 
+ useEffect(() =>{
+  if(statePoNumber){
+    form.setFieldsValue({customerPo:statePoNumber.data})
+    getDocData(statePoNumber.data)
+  }
+
+ },[])
   const columns: ColumnProps<any>[] = [
     {
       title: "S.No",
@@ -122,12 +133,14 @@ export default function DocumentListupload() {
 
 
   const onFinish = (data: any, filesList:any[]) => {
-    console.log(filesList,'dataaaa')
-    console.log(data.file);
-    // console.log(data.file.fileList);
+    // console.log(statusval,'statusval')
+    console.log(data,'dataaaa')
+    console.log(data.file,'fileeeeeeeeeeeeeeeee')
+
+    console.log(filesList);
 
     form.validateFields().then(res => {
-      if (data.file.fileList.length > 0) {
+      if (filesList.length > 0) {
         const formData = new FormData();
         formData.append('documentsListId', `${data.documentsListId}`);
         formData.append('documentCategoryId', `${data.documentCategoryId}`);
@@ -136,10 +149,14 @@ export default function DocumentListupload() {
         formData.append('fileName', `${data.fileName}`);
         formData.append('filePath', `${data.filePath}`);
         formData.append('uploadStatus', `${data.uploadStatus}`);
+        // formData.append('uid',''\)
         const files = filesList;
+        console.log(files);
         if (files) {
           for (let i = 0; i < files.length; i++) {
+          console.log(files[i])
             formData.append('file', files[i]);
+            formData.append('uid',files[i].uid)
           }
         }
         console.log(formData)
@@ -147,6 +164,7 @@ export default function DocumentListupload() {
           if(res.status){
             getDocData(form.getFieldValue("customerPo"));
             message.success(res.internalMessage)
+            // setFilelist([])
           }
           else{
             AlertMessages.getSuccessMessage("Something went wrong");
@@ -187,7 +205,7 @@ export default function DocumentListupload() {
   }
 
   return(
-    <div >
+    <Card title="Document management" extra={<span><Button onClick={() => navigate('/document-management/upload-file-view')} type={'primary'}>View Document Status</Button></span>}>
       <Form form={form}  layout='vertical' name="control-hooks" >
        <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
@@ -208,6 +226,7 @@ export default function DocumentListupload() {
            </Form.Item>
          </Col>
       </Row>
+      {docData?.length > 0 ? 
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         <Card
           size="small"
@@ -223,7 +242,9 @@ export default function DocumentListupload() {
           <Row gutter={24}>
             {docData?.length > 0 ? (
               docData?.map((response) => (
-                <UploadView form={form} docData={response} formData={onFinish} fileList={setFilelist}/>
+                <UploadView form={form} docData={response} formData={onFinish} fileList={setFilelist}  
+                // setStatusVal={setStatusval}
+                />
               ))
             ) : (
               <Alert
@@ -236,85 +257,9 @@ export default function DocumentListupload() {
           </Row>
         </Card>
       </div>
+    :""}
       </Form>
-    </div>
-  // <Card title='Document Upload'>
-    
-  //   <Form form={form}  layout='vertical' name="control-hooks" onFinish={onFinish}>
-  //     <Row gutter={24}>
-  //     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-  //         <Form.Item name='customerPo' label='Po Number'
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: 'Select Destination',
-
-  //             }
-  //           ]}
-  //         >
-  //           <Select placeholder='Select PoNumber' onChange={getDocData} showSearch allowClear>
-  //           {poNumber?.map(obj =>{
-  //                     return <Option key={obj.poNumber} value={obj.poNumber}>{obj.poNumber}</Option>
-  //                   })}
-  //           </Select>
-  //         </Form.Item>
-  //       </Col>
-  //     </Row>
-  //     <Row>
-  //     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 24 }}>
-  //        <Card>
-  //        <Table 
-  //         rowKey={record => record.documentListId}
-  //         columns={columns}
-  //         dataSource={docData} 
-  //         size='small'
-  //         pagination={{
-  //           onChange(current) {
-  //           }
-  //         }}
-  //         bordered
-  //         />
-  //         </Card>
-  //       </Col>
-        
-  //     </Row>
-  //     {/* <Modal width={1000}  centered  open={isModalOpen} onCancel={handleCancel} footer={[]} >
-  //       <Card title='Upload Document against Customer'>
-  //         <Row gutter={24}>
-  //         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:6}}>
-  //         <Form.Item name='file'>
-  //         <Upload {...gstUploadFieldProps} 
-  //             accept='.jpeg,.pdf,.png,.jpg'>
-  //             <Button style={{ color: "black", backgroundColor: "#7ec1ff" }} icon={<UploadOutlined />}>Upload File</Button>
-  //             <br/><Typography.Text type="secondary">
-  //                 (Supported formats pdf,jpeg,jpg,png)
-  //             </Typography.Text>
-  //             </Upload>
-  //           </Form.Item>
-  //           </Col>
-  //           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:2 }}>
-  //             <Form.Item>
-  //             <Button type="primary" htmlType="submit" style={{ marginRight: '10px' }}>
-  //                                   Submit
-  //                               </Button>
-  //               <Button type='primary' htmlType="submit">Upload</Button>
-  //             </Form.Item>
-  //           </Col>
-  //           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span:2 }}>
-  //           <Form.Item>
-  //               <Button type='default' onClick={handleCancel}>Cancel</Button>
-  //             </Form.Item>
-  //             </Col>
-             
-  //         </Row>
-          
-  //       </Card>
-          
-  //       </Modal> */}
-  //   </Form> 
-
-     
-  // </Card>
+  </Card>
 
   )
 }
