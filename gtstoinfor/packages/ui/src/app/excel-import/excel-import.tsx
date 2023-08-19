@@ -5,7 +5,7 @@ import Papa from 'papaparse'
 import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { UndoOutlined } from '@ant-design/icons';
+import { DownloadOutlined, UndoOutlined } from '@ant-design/icons';
 import { FileStatusReq } from '@project-management-system/shared-models';
 
 
@@ -60,6 +60,9 @@ export default function ExcelImport() {
     //   setSelectedFile(null);
     // }
   };
+  const handleImport = () => {
+    
+  }
 
   const handleUpload = async () => {
     try {
@@ -137,7 +140,7 @@ export default function ExcelImport() {
 
   return (
     <>
-      <Card title="Excel Import">
+      <Card title="Excel Import" extra={<Button type="default" style={{ color: 'green' }} onClick={handleImport} icon={<DownloadOutlined />}>Download Excel Format</Button>}>
         <span>
           <Descriptions style={{ alignItems: 'right' }}>
             <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item>

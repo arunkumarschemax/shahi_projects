@@ -242,7 +242,9 @@ export default function DocumentListupload() {
           <Row gutter={24}>
             {docData?.length > 0 ? (
               docData?.map((response) => (
-                <UploadView form={form} docData={response} formData={onFinish} fileList={setFilelist}  setStatusVal={setStatusval}/>
+                <UploadView form={form} docData={response} formData={onFinish} fileList={setFilelist}  
+                // setStatusVal={setStatusval}
+                />
               ))
             ) : (
               <Alert
