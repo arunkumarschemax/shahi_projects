@@ -223,18 +223,20 @@ useEffect(() =>{
 
 
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
+          {
+            props.docData.isUploaded === 1 ?  
           <Button
            onClick={() => download(props.docData)}
-            disabled={props.docData.uploadStatus === 1 ? false : true}
+            disabled={props.docData.isUploaded === 1 ? false : true}
             style={{
               color: 'white',
-              backgroundColor: props.docData.uploadStatus === 1 ? 'green' : '#806767',
+              backgroundColor: props.docData.isUploaded === 1 ? 'green' : '#806767',
               width: '100%',
             }}
             icon={<DownloadOutlined />}
           >
             Download Document
-          </Button>
+          </Button> :"" }
         </Text>
 
 
