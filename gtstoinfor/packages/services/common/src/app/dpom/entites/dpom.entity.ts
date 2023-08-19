@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn, OneToMany } from "typeorm";
+import { DpomChildEntity } from "./dpom-child.entity";
 
 @Entity('dpom')
 export class DpomEntity {
@@ -70,6 +71,13 @@ export class DpomEntity {
         nullable: true
     })
     genderAgeCode: string;
+
+    @Column("varchar", {
+        name: "gender_age_desc",
+        length: 15,
+        nullable: true
+    })
+    genderAgeDesc: string;
 
     @Column("varchar", {
         name: "style_number",
@@ -240,6 +248,13 @@ export class DpomEntity {
     GACReasonCode: string;
 
     @Column("varchar", {
+        name: "gac_reason_desc",
+        length: 50,
+        nullable: true
+    })
+    GACReasonDesc: string;
+
+    @Column("varchar", {
         name: "shipping_type",
         length: 30,
         nullable: true
@@ -385,6 +400,19 @@ export class DpomEntity {
         nullable: true
     })
     trCoNetIncludingDiscCurrencyCode: string;
+
+    @Column("int", {
+        name: "size_qty",
+        nullable: true
+    })
+    sizeQuantity: number;
+
+    @Column("varchar", {
+        name: "size_description",
+        length: 10,
+        nullable: true
+    })
+    sizeDescription: string;
 
     //PDF Data
     @Column('varchar', {
@@ -608,4 +636,13 @@ export class DpomEntity {
         default: 1
     })
     isActive: boolean;
+
+    @OneToMany(() => DpomChildEntity, (dpomChild) => { dpomChild.dpom }, { cascade: true })
+    dpomChild: DpomChildEntity;
+
+    @Column('int', {
+        nullable: true,
+        name: 'file_id',
+    })
+    fileId: number;
 }

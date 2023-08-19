@@ -72,4 +72,10 @@ export class DpomDifferenceEntity {
         nullable: true
     })
     odVersion: number;
+
+    @Column('int', {
+        nullable: false,
+        name: 'file_id',
+    })
+    fileId: number;
 }

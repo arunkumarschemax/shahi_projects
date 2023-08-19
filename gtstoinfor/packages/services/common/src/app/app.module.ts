@@ -5,15 +5,16 @@ import { FactoriesModule } from './factories/factories.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { appConfig } from '../../config';
-import { OrdersModule } from './orders/orders.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import { DpomModule } from './dpom/nike-dpom.module';
 import { SupplierModule } from './supplier/supplier.module';
 
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
@@ -32,7 +33,6 @@ import { SupplierModule } from './supplier/supplier.module';
     FactoriesModule,
     SupplierModule,
     UsersModule,
-    OrdersModule,
     AuthModule, JwtModule, DpomModule],
   controllers: [AppController],
   providers: [AppService],
