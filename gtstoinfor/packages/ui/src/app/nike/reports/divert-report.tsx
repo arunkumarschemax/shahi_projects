@@ -9,14 +9,14 @@ import { Excel } from 'antd-table-saveas-excel';
 import { Tooltip, numberFormat } from 'highcharts';
 import { NikeService } from '@project-management-system/shared-services';
 
-  
+
 interface IExcelColumn {
     title: string;
     dataIndex: string;
-    color?:string;
+    color?: string;
     children?: IExcelColumn[];
-  }
-  interface ExpandedRows {
+}
+interface ExpandedRows {
     [key: string]: boolean;
 }
 const DivertReport = () => {
@@ -120,637 +120,634 @@ const DivertReport = () => {
                 text
             ),
     });
-// let oldSno = 0;
-// let newSno = 0;
+    // let oldSno = 0;
+    // let newSno = 0;
 
 
-    const getCount= () =>{
+    const getCount = () => {
         service.getCountForDivertReport().then(res => {
 
             if (res.status) {
                 setDataLength(res.data)
             }
         })
-    
-    
-}
-    const getData = () =>{
-     service.getDivertReportData().then(res=>{
-        if (res.status) {
-            setItems(res.data);
-         
-        }
-     }) 
+
+
+    }
+    const getData = () => {
+        service.getDivertReportData().then(res => {
+            if (res.status) {
+                setItems(res.data);
+
+            }
+        })
     }
 
-   
+
 
     const handleExport = (e: any) => {
         e.preventDefault();
-    
+
         const currentDate = new Date()
             .toISOString()
             .slice(0, 10)
             .split("-")
             .join("/");
-    
-       
-            // const exportingColumns: IExcelColumn[] = [
-            //     { title: 'old', 
-   
-            //     children: [
-                    
-            //         {
-            //             title: "Request Date",
-            //             dataIndex: "",
-            //         },
-            //         {
-            //             title: "From Item",
-            //             dataIndex: "",
-            //         },
-            //         {
-            //             title: "Unit",
-            //             dataIndex: "",
-            //         },
-            //         {
-            //             title: "Plant",
-            //             dataIndex: "oplant",
-            //         },
-            //         {
-            //             title: "Product Code",
-            //             dataIndex: "oproductCode",
-        
-            //         },
-            //            {
-            //             title: "Line Status",
-            //             dataIndex: "onLineStatus",
-            //             // ...getColumnSearchProps("lineStatus"),
-        
-            //         },
-            //         {
-            //             title: 'Document Date',
-            //             dataIndex: 'oDocumentDate', 
-            //             // render: (text, record) => {
-            //             //    (record.documentDate
-            //             //             ? moment(record.documentDate).format("YYYY-MM-DD")
-            //             //             : "-")
-                              
-            //             // }
-            //         },
-            //         {
-            //             title: 'Old Po',
-            //             dataIndex: 'opoNumber',
-        
-                        
-            //         }, 
-            //         {
-            //             title: 'Old Po Line',
-            //             dataIndex: 'opoLine',
-        
-                        
-            //         },
-            //         {
-            //             title: 'Old Qantity',
-            //             //from yesterdays ppm
-            //             dataIndex: 'oquantity', 
-        
-            //         },
-            //         {
-            //             title: 'Balance Qty',
-            //             // from dpom
-            //             dataIndex: 'nQuantity', 
-        
-            //         },
-            //         {
-            //             title: 'Destination',
-            //             dataIndex: 'odestination',
-         
-            //         },
-            //         {
-            //             title: 'Shipment Type',
-            //             dataIndex: 'oshipmentType', 
-        
-            //         },
-            //         {
-            //             title: 'OLD OGAC',
-            //             dataIndex: 'oogac', 
-            //         },
-            //         {
-            //             title: 'OLD GAC',
-            //             dataIndex: 'ogac', 
-            //         },
-            //         {   
-            //             title: 'Inventory Segment Code',
-            //             dataIndex: 'oinventorySegmentCode',
-         
-            //         },
-            //         {
-            //             title: 'GAC Difference',
-            //             dataIndex: 'ogac',
-            //             render: (text, record) => {
-            //               if (record.ogac && record.gac) {
-            //                 const ogacDate = moment(record.ogac);
-            //                 const gacDate = moment(record.gac);
-            //                 const daysDifference = gacDate.diff(ogacDate, 'days');
-            //                 return daysDifference + ' days';
-            //               } else {
-            //                 return '-';
-            //               }
-            //             },
-            //           },
-            //         {
-            //             title: 'Item Vas',
-            //             dataIndex: 'oitem_vas_text',
-            //         },
-                    
-                
-            //     ]  
-            //     },
-                
-            //     { 
-            //         title: 'New',
-                
-            //     children:[
-            //         {  title: 'OGAC Date',
-            //             dataIndex: 'nogac', 
-            //             // render: (text, record) => {
-            //             //  (record.ogac
-            //             //             ? moment(record.ogac).format("YYYY-MM-DD")
-            //             //             : "-")
-                              
-            //             // }
-            //         },
-            //         {
-            //             title: 'GAC Date',
-            //             dataIndex: 'ngac', 
-            //             // render: (text, record) => {
-            //             //     (record.gac
-            //             //             ? moment(record.gac).format("YYYY-MM-DD")
-            //             //             : "-")
-            //             // }
-            //         },{
-            //         title:"No of Days to GAC",dataIndex:'dpomCreatedDates'
-            //         // render: (text, record) => {
-            //         //     if (record.dpomCreatedDates && record.nogac) {
-            //         //       const dpomCreatedDate = moment(record.dpomCreatedDates);
-            //         //       const nogacDate = moment(record.nogac);
-            //         //       const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
-            //         //       return daysDifference + ' days';
-            //         //     } else {
-            //         //       return "-";
-            //         //     }
-            //         //   }
-            //         }, 
-            //         {
-            //             title:"To item",
-            //             dataIndex:"",
-            //             }, 
-            //         {
-            //            title:"Unit",
-            //            dataIndex:"",
-            //            },
-        
-            //         {
-            //             title: "Plant",
-            //             dataIndex: "nPlant",
-            //         },
-            //         {
-            //             title: "Product Code",
-            //             dataIndex: "nproductCode",
-                      
-        
-            //         },
-            //         {
-            //             title: "Line Status",
-            //             dataIndex:'nLineStatus'
-            //         },
-            //         {
-            //             title: 'Document Date',
-            //             dataIndex: 'nDocumentDate', 
-            //             // render: (text, record) => {
-            //             //  (record.nDocumentDate
-            //             //             ? moment(record.nDocumentDate).format("YYYY-MM-DD")
-            //             //             : "-")
-            //             // }
-            //         },
-            //         {
-            //             title: 'New Po',
-            //             dataIndex: 'npoNumber',
-            //         },
-            //         {
-            //             title: 'New Po Line',
-            //             dataIndex: 'npoLine',
-            //         },
-            //         {
-            //             title: 'Quantity',
-            //             dataIndex: 'nQuantity', 
-            //         },
-            //         {
-            //             title: 'Destination',
-            //             dataIndex: 'ndestination', 
-            //         },
-                    
-            //         {
-            //             title: 'Inventory Segment Code',
-            //             dataIndex: 'ninventorySegmentCode', 
-            //         },
-            //         {
-            //             title: 'Item Vas',
-            //             dataIndex: 'nitemVasText',
-            //         },
-                               
-            //         {
-            //             title: 'Shipment Type',
-            //             dataIndex: 'nshipmentType',
-            //         },
-            //         {
-            //             title: 'Item Vas Diff Check',
-            //             dataIndex: '', 
-            //         },
-            //         {
-            //             title: 'Qty Tally-Check',
-            //             dataIndex: '', 
-            //         },
-            //         {
-            //             title: 'Price-Fob Tally-Check',
-            //             dataIndex: '', 
-            //         },
-            //         {
-            //             title: 'Price-Net Includding Discount Tally-Check',
-            //             dataIndex: '', 
-            //         },
-            //         {
-            //             title: 'Price-Trading Co Net Includding Discount Tally-Check',
-            //             dataIndex: '', 
-            //         },
-                
-            //     ]}
-                
-            //   ];
-        
-    
+
+
+        // const exportingColumns: IExcelColumn[] = [
+        //     { title: 'old', 
+
+        //     children: [
+
+        //         {
+        //             title: "Request Date",
+        //             dataIndex: "",
+        //         },
+        //         {
+        //             title: "From Item",
+        //             dataIndex: "",
+        //         },
+        //         {
+        //             title: "Unit",
+        //             dataIndex: "",
+        //         },
+        //         {
+        //             title: "Plant",
+        //             dataIndex: "oplant",
+        //         },
+        //         {
+        //             title: "Product Code",
+        //             dataIndex: "oproductCode",
+
+        //         },
+        //            {
+        //             title: "Line Status",
+        //             dataIndex: "onLineStatus",
+        //             // ...getColumnSearchProps("lineStatus"),
+
+        //         },
+        //         {
+        //             title: 'Document Date',
+        //             dataIndex: 'oDocumentDate', 
+        //             // render: (text, record) => {
+        //             //    (record.documentDate
+        //             //             ? moment(record.documentDate).format("YYYY-MM-DD")
+        //             //             : "-")
+
+        //             // }
+        //         },
+        //         {
+        //             title: 'Old Po',
+        //             dataIndex: 'opoNumber',
+
+
+        //         }, 
+        //         {
+        //             title: 'Old Po Line',
+        //             dataIndex: 'opoLine',
+
+
+        //         },
+        //         {
+        //             title: 'Old Qantity',
+        //             //from yesterdays ppm
+        //             dataIndex: 'oquantity', 
+
+        //         },
+        //         {
+        //             title: 'Balance Qty',
+        //             // from dpom
+        //             dataIndex: 'nQuantity', 
+
+        //         },
+        //         {
+        //             title: 'Destination',
+        //             dataIndex: 'odestination',
+
+        //         },
+        //         {
+        //             title: 'Shipment Type',
+        //             dataIndex: 'oshipmentType', 
+
+        //         },
+        //         {
+        //             title: 'OLD OGAC',
+        //             dataIndex: 'oogac', 
+        //         },
+        //         {
+        //             title: 'OLD GAC',
+        //             dataIndex: 'ogac', 
+        //         },
+        //         {   
+        //             title: 'Inventory Segment Code',
+        //             dataIndex: 'oinventorySegmentCode',
+
+        //         },
+        //         {
+        //             title: 'GAC Difference',
+        //             dataIndex: 'ogac',
+        //             render: (text, record) => {
+        //               if (record.ogac && record.gac) {
+        //                 const ogacDate = moment(record.ogac);
+        //                 const gacDate = moment(record.gac);
+        //                 const daysDifference = gacDate.diff(ogacDate, 'days');
+        //                 return daysDifference + ' days';
+        //               } else {
+        //                 return '-';
+        //               }
+        //             },
+        //           },
+        //         {
+        //             title: 'Item Vas',
+        //             dataIndex: 'oitem_vas_text',
+        //         },
+
+
+        //     ]  
+        //     },
+
+        //     { 
+        //         title: 'New',
+
+        //     children:[
+        //         {  title: 'OGAC Date',
+        //             dataIndex: 'nogac', 
+        //             // render: (text, record) => {
+        //             //  (record.ogac
+        //             //             ? moment(record.ogac).format("YYYY-MM-DD")
+        //             //             : "-")
+
+        //             // }
+        //         },
+        //         {
+        //             title: 'GAC Date',
+        //             dataIndex: 'ngac', 
+        //             // render: (text, record) => {
+        //             //     (record.gac
+        //             //             ? moment(record.gac).format("YYYY-MM-DD")
+        //             //             : "-")
+        //             // }
+        //         },{
+        //         title:"No of Days to GAC",dataIndex:'dpomCreatedDates'
+        //         // render: (text, record) => {
+        //         //     if (record.dpomCreatedDates && record.nogac) {
+        //         //       const dpomCreatedDate = moment(record.dpomCreatedDates);
+        //         //       const nogacDate = moment(record.nogac);
+        //         //       const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
+        //         //       return daysDifference + ' days';
+        //         //     } else {
+        //         //       return "-";
+        //         //     }
+        //         //   }
+        //         }, 
+        //         {
+        //             title:"To item",
+        //             dataIndex:"",
+        //             }, 
+        //         {
+        //            title:"Unit",
+        //            dataIndex:"",
+        //            },
+
+        //         {
+        //             title: "Plant",
+        //             dataIndex: "nPlant",
+        //         },
+        //         {
+        //             title: "Product Code",
+        //             dataIndex: "nproductCode",
+
+
+        //         },
+        //         {
+        //             title: "Line Status",
+        //             dataIndex:'nLineStatus'
+        //         },
+        //         {
+        //             title: 'Document Date',
+        //             dataIndex: 'nDocumentDate', 
+        //             // render: (text, record) => {
+        //             //  (record.nDocumentDate
+        //             //             ? moment(record.nDocumentDate).format("YYYY-MM-DD")
+        //             //             : "-")
+        //             // }
+        //         },
+        //         {
+        //             title: 'New Po',
+        //             dataIndex: 'npoNumber',
+        //         },
+        //         {
+        //             title: 'New Po Line',
+        //             dataIndex: 'npoLine',
+        //         },
+        //         {
+        //             title: 'Quantity',
+        //             dataIndex: 'nQuantity', 
+        //         },
+        //         {
+        //             title: 'Destination',
+        //             dataIndex: 'ndestination', 
+        //         },
+
+        //         {
+        //             title: 'Inventory Segment Code',
+        //             dataIndex: 'ninventorySegmentCode', 
+        //         },
+        //         {
+        //             title: 'Item Vas',
+        //             dataIndex: 'nitemVasText',
+        //         },
+
+        //         {
+        //             title: 'Shipment Type',
+        //             dataIndex: 'nshipmentType',
+        //         },
+        //         {
+        //             title: 'Item Vas Diff Check',
+        //             dataIndex: '', 
+        //         },
+        //         {
+        //             title: 'Qty Tally-Check',
+        //             dataIndex: '', 
+        //         },
+        //         {
+        //             title: 'Price-Fob Tally-Check',
+        //             dataIndex: '', 
+        //         },
+        //         {
+        //             title: 'Price-Net Includding Discount Tally-Check',
+        //             dataIndex: '', 
+        //         },
+        //         {
+        //             title: 'Price-Trading Co Net Includding Discount Tally-Check',
+        //             dataIndex: '', 
+        //         },
+
+        //     ]}
+
+        //   ];
+
+
         const excel = new Excel();
-excel.addSheet("Sheet1");
+        excel.addSheet("Sheet1");
 
-// const formattedDataForExcel = modifiedCombinedData.map(item => ({
-//     ...item,
-//     sno: item.section === 'old' ? item.sno : newSno++,
-// }));
+        // const formattedDataForExcel = modifiedCombinedData.map(item => ({
+        //     ...item,
+        //     sno: item.section === 'old' ? item.sno : newSno++,
+        // }));
 
-// let newSno = 1;
-// const newSectionStart = formattedDataForExcel.findIndex(item => item.section === 'new');
-// if (newSectionStart >= 0) {
-//     formattedDataForExcel.slice(newSectionStart).forEach((item, index) => {
-//         if (item.section === 'new') {
-//             item.sno = newSno++; 
-//         }
-//     });
-// }
+        // let newSno = 1;
+        // const newSectionStart = formattedDataForExcel.findIndex(item => item.section === 'new');
+        // if (newSectionStart >= 0) {
+        //     formattedDataForExcel.slice(newSectionStart).forEach((item, index) => {
+        //         if (item.section === 'new') {
+        //             item.sno = newSno++; 
+        //         }
+        //     });
+        // }
 
-excel.addRow();
-//excel.addColumns(exportingColumns);
-// excel.addDataSource(formattedDataForExcel);
-excel.saveAs(`Divert-report-${currentDate}.xlsx`);
-}
+        excel.addRow();
+        //excel.addColumns(exportingColumns);
+        // excel.addDataSource(formattedDataForExcel);
+        excel.saveAs(`Divert-report-${currentDate}.xlsx`);
+    }
 
     const columns: ColumnProps<any>[] = [
 
-     
-    { title: 'old', 
-   
-    children: [
-        {
-            title: 'S.No',
-            key: 'sno',
-            responsive: ['sm'],
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1)
-        },
-        {
-            title: "Request Date",
-            dataIndex: "",
-        },
-        {
-            title: "From Item",
-            dataIndex: "",
-        },
-        {
-            title: "Unit",
-            dataIndex: "",
-        },
-        {
-            title: "Plant",
-            dataIndex: "oplant",
-        },
-        {
-            title: "Product Code",
-            dataIndex: "oproductCode",
-            sorter: (a, b) => a.productCode.localeCompare(b.productCode),
-            sortDirections: ["descend", "ascend"],
-
-        },
-           {
-            title: "Line Status",
-            dataIndex: "onLineStatus",
-            // ...getColumnSearchProps("lineStatus"),
-
-        },
-        {
-            title: 'Document Date',
-            dataIndex: 'oDocumentDate', 
-            render: (text, record) => {
-               (record.documentDate
-                        ? moment(record.documentDate).format("YYYY-MM-DD")
-                        : "-")
-                  
-            }
-        },
-        {
-            title: 'Old Po',
-            dataIndex: 'opoNumber',
-
-            
-        }, 
-        {
-            title: 'Old Po Line',
-            dataIndex: 'opoLine',
-
-            
-        },
-        {
-            title: 'Old Qantity',
-            //from yesterdays ppm
-            dataIndex: 'oquantity', 
-
-        },
-        {
-            title: 'Balance Qty',
-            // from dpom
-            dataIndex: 'nQuantity', 
-
-        },
-        {
-            title: 'Destination',
-            dataIndex: 'odestination',
-
-        },
-        {
-            title: 'Shipment Type',
-            dataIndex: 'oshipmentType', 
-
-        },
-        {
-            title: 'OLD OGAC',
-            dataIndex: 'oogac', 
-        },
-        {
-            title: 'OLD GAC',
-            dataIndex: 'ogac', 
-        },
-        {   
-            title: 'Inventory Segment Code',
-            dataIndex: 'oinventorySegmentCode',
-
-        },
-        {
-            title: 'GAC Difference',
-            dataIndex: 'ogac', 
-            render: (text, record) => {
-              if (record.ogac && record.gac) {
-                const ogacDate = moment(record.ogac);
-                const gacDate = moment(record.gac);
-                const daysDifference = gacDate.diff(ogacDate, 'days');
-                return daysDifference + ' days';
-              } else {
-                return "-";
-              }
-            }
-          },
-        {
-            title: 'Item Vas',
-            dataIndex: 'oitem_vas_text',
-        },
-        
-    
-    ]  as unknown as null, 
-    },
-    
-    { title: 'New',
-    
-    children:[
-       {
-            title: 'S.No',
-            key: 'sno',
-            responsive: ['sm'],
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1)
-        },
-        {
-            title: 'OGAC Date',
-            dataIndex: 'nogac', 
-            render: (text, record) => {
-             (record.ogac
-                        ? moment(record.ogac).format("YYYY-MM-DD")
-                        : "-")
-                  
-            }
-        },
-        {
-            title: 'GAC Date',
-            dataIndex: 'ngac', 
-            render: (text, record) => {
-                (record.gac
-                        ? moment(record.gac).format("YYYY-MM-DD")
-                        : "-")
-            }
-        },{
-        title:"No of Days to GAC",
-        render: (text, record) => {
-            if (record.dpomCreatedDates && record.nogac) {
-              const dpomCreatedDate = moment(record.dpomCreatedDates);
-              const nogacDate = moment(record.nogac);
-              const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
-              return daysDifference + ' days';
-            } else {
-              return "-";
-            }
-          }
-        }, 
-        {
-            title:"To item",
-            dataIndex:"",
-            }, 
-        {
-           title:"Unit",
-           dataIndex:"",
-           },
 
         {
-            title: "Plant",
-            dataIndex: "nPlant",
-        },
-        {
-            title: "Product Code",
-            dataIndex: "nproductCode",
-            sorter: (a, b) => a.nproductCode.localeCompare(b.nproductCode),
-            sortDirections: ["descend", "ascend"],
-            //...getColumnSearchProps("owner"),
+            title: 'old',
 
-        },
-        {
-            title: "Line Status",
-            dataIndex:'nLineStatus'
-        },
-        {
-            title: 'Document Date',
-            dataIndex: 'nDocumentDate', 
-            render: (text, record) => {
-             (record.nDocumentDate
-                        ? moment(record.nDocumentDate).format("YYYY-MM-DD")
-                        : "-")
-            }
-        },
-        {
-            title: 'New Po',
-            dataIndex: 'npoNumber',
-        },
-        {
-            title: 'New Po Line',
-            dataIndex: 'npoLine',
-        },
-        {
-            title: 'Quantity',
-            dataIndex: 'nQuantity', 
-        },
-        {
-            title: 'Destination',
-            dataIndex: 'ndestination', 
-        },
-        
-        {
-            title: 'Inventory Segment Code',
-            dataIndex: 'ninventorySegmentCode', 
-        },
-        {
-            title: 'Item Vas',
-            dataIndex: 'nitemVasText',
+            children: [
+                {
+                    title: 'S.No',
+                    key: 'sno',
+                    responsive: ['sm'],
+                    render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+                },
+                {
+                    title: "Request Date",
+                    dataIndex: "",
+                },
+                {
+                    title: "From Item",
+                    dataIndex: "",
+                },
+                {
+                    title: "Unit",
+                    dataIndex: "",
+                },
+                {
+                    title: "Plant",
+                    dataIndex: "oplant",
+                },
+                {
+                    title: "Product Code",
+                    dataIndex: "oproductCode",
+                    sorter: (a, b) => a.productCode.localeCompare(b.productCode),
+                    sortDirections: ["descend", "ascend"],
+
+                },
+                {
+                    title: "Line Status",
+                    dataIndex: "onLineStatus",
+                    // ...getColumnSearchProps("lineStatus"),
+
+                },
+                {
+                    title: 'Document Date',
+                    dataIndex: 'oDocumentDate',
+                    render: (text, record) => {
+                        (record.documentDate
+                            ? moment(record.documentDate).format("YYYY-MM-DD")
+                            : "-")
+
+                    }
+                },
+                {
+                    title: 'Old Po',
+                    dataIndex: 'opoNumber',
+
+
+                },
+                {
+                    title: 'Old Po Line',
+                    dataIndex: 'opoLine',
+
+
+                },
+                {
+                    title: 'Old Qantity',
+                    //from yesterdays ppm
+                    dataIndex: 'oquantity',
+
+                },
+                {
+                    title: 'Balance Qty',
+                    // from dpom
+                    dataIndex: 'nQuantity',
+
+                },
+                {
+                    title: 'Destination',
+                    dataIndex: 'odestination',
+
+                },
+                {
+                    title: 'Shipment Type',
+                    dataIndex: 'oshipmentType',
+
+                },
+                {
+                    title: 'OLD OGAC',
+                    dataIndex: 'oogac',
+                },
+                {
+                    title: 'OLD GAC',
+                    dataIndex: 'ogac',
+                },
+                {
+                    title: 'Inventory Segment Code',
+                    dataIndex: 'oinventorySegmentCode',
+
+                },
+                {
+                    title: 'GAC Difference',
+                    dataIndex: 'ogac',
+                    render: (text, record) => {
+                        if (record.ogac && record.gac) {
+                            const ogacDate = moment(record.ogac);
+                            const gacDate = moment(record.gac);
+                            const daysDifference = gacDate.diff(ogacDate, 'days');
+                            return daysDifference + ' days';
+                        } else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    title: 'Item Vas',
+                    dataIndex: 'oitem_vas_text',
+                },
+
+
+            ] as unknown as null,
         },
 
         {
-            title: 'Shipment Type',
-            dataIndex: 'nshipmentType',
-        },
-        {
-            title: 'Item Vas Diff Check',
-            dataIndex: '', 
-        },
-        {
-            title: 'Qty Tally-Check',
-            dataIndex: '', 
-        },
-        {
-            title: 'Price-Fob Tally-Check',
-            dataIndex: '', 
-        },
-        {
-            title: 'Price-Net Includding Discount Tally-Check',
-            dataIndex: '', 
-        },
-        {
-            title: 'Price-Trading Co Net Includding Discount Tally-Check',
-            dataIndex: '', 
-        },
-        {
-            title:'CO-update',
-            children:[
-         {
-            title:'Approve',
-            dataIndex:'',
-            render: (text, rowData) => (
-                <span>
-                    
-                    <Form.Item>
-                        <Checkbox value={'yes'}
-                           // checked={rowData.selectedLevel === 'L1'}
-                            //onChange={() => handleCheckboxChange('L1', rowData.qResponseId)}
-                        ></Checkbox>
-                    </Form.Item>
-                </span>
-            )
+            title: 'New',
+
+            children: [
+                {
+                    title: 'OGAC Date',
+                    dataIndex: 'nogac',
+                    render: (text, record) => {
+                        (record.ogac
+                            ? moment(record.ogac).format("YYYY-MM-DD")
+                            : "-")
+
+                    }
+                },
+                {
+                    title: 'GAC Date',
+                    dataIndex: 'ngac',
+                    render: (text, record) => {
+                        (record.gac
+                            ? moment(record.gac).format("YYYY-MM-DD")
+                            : "-")
+                    }
+                }, {
+                    title: "No of Days to GAC",
+                    render: (text, record) => {
+                        if (record.dpomCreatedDates && record.nogac) {
+                            const dpomCreatedDate = moment(record.dpomCreatedDates);
+                            const nogacDate = moment(record.nogac);
+                            const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
+                            return daysDifference + ' days';
+                        } else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    title: "To item",
+                    dataIndex: "",
+                },
+                {
+                    title: "Unit",
+                    dataIndex: "",
+                },
+
+                {
+                    title: "Plant",
+                    dataIndex: "nPlant",
+                },
+                {
+                    title: "Product Code",
+                    dataIndex: "nproductCode",
+                    sorter: (a, b) => a.nproductCode.localeCompare(b.nproductCode),
+                    sortDirections: ["descend", "ascend"],
+                    //...getColumnSearchProps("owner"),
+
+                },
+                {
+                    title: "Line Status",
+                    dataIndex: 'nLineStatus'
+                },
+                {
+                    title: 'Document Date',
+                    dataIndex: 'nDocumentDate',
+                    render: (text, record) => {
+                        (record.nDocumentDate
+                            ? moment(record.nDocumentDate).format("YYYY-MM-DD")
+                            : "-")
+                    }
+                },
+                {
+                    title: 'New Po',
+                    dataIndex: 'npoNumber',
+                },
+                {
+                    title: 'New Po Line',
+                    dataIndex: 'npoLine',
+                },
+                {
+                    title: 'Quantity',
+                    dataIndex: 'nQuantity',
+                },
+                {
+                    title: 'Destination',
+                    dataIndex: 'ndestination',
+                },
+
+                {
+                    title: 'Inventory Segment Code',
+                    dataIndex: 'ninventorySegmentCode',
+                },
+                {
+                    title: 'Item Vas',
+                    dataIndex: 'nitemVasText',
+                },
+
+                {
+                    title: 'Shipment Type',
+                    dataIndex: 'nshipmentType',
+                },
+                {
+                    title: 'Item Vas Diff Check',
+                    dataIndex: '',
+                },
+                {
+                    title: 'Qty Tally-Check',
+                    dataIndex: '',
+                },
+                {
+                    title: 'Price-Fob Tally-Check',
+                    dataIndex: '',
+                },
+                {
+                    title: 'Price-Net Includding Discount Tally-Check',
+                    dataIndex: '',
+                },
+                {
+                    title: 'Price-Trading Co Net Includding Discount Tally-Check',
+                    dataIndex: '',
+                },
+                {
+                    title: 'CO-update',
+                    children: [
+                        {
+                            title: 'Approve',
+                            dataIndex: '',
+                            render: (text, rowData) => (
+                                <span>
+
+                                    <Form.Item>
+                                        <Checkbox value={'yes'}
+                                        // checked={rowData.selectedLevel === 'L1'}
+                                        //onChange={() => handleCheckboxChange('L1', rowData.qResponseId)}
+                                        ></Checkbox>
+                                    </Form.Item>
+                                </span>
+                            )
 
 
-            },
-            {
-                title: 'Edit',
-                dataIndex: 'id',
-                render: (text, rowData) => (
-                    <span>
-                        <Form.Item>
-                            <Checkbox
-                                onChange={() => handleCheckboxChange(rowData.id)}
-                                checked={expandedRows[rowData.id] || false}
-                            ></Checkbox>
-                        </Form.Item>
-                    </span>
-                ),
-            },
-            {
-                title: 'Manual Type Item',
-                dataIndex: 'id',
-                render: (text, rowData) => (
-                    <div>
-                        {expandedRows[rowData.id] ? (
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Input
-                                    style={{ marginRight: '10px' }}
-                                    placeholder="Enter text"
-                                    value={textareaValues[rowData.id] || ''}
-                                    onChange={e =>
-                                        handleTextareaChange(rowData.id, e.target.value)
-                                    }
-                                />
-                                <Button
-                                    type="primary"
-                                    onClick={() => handleSubmit(rowData.id)}
-                                >
-                                    Submit
-                                </Button>
-                            </div>
-                        ) : (
-                            <Button
-                                type="link"
-                                onClick={() =>
-                                    setExpandedRows(prevExpandedRows => ({
-                                        ...prevExpandedRows,
-                                        [rowData.id]: true,
-                                    }))
-                                }
-                            >
-                                Manual Edit
-                            </Button>
-                        )}
-                    </div>
-                ),
-            },
-    
-        ]
+                        },
+                        {
+                            title: 'Edit',
+                            dataIndex: 'id',
+                            render: (text, rowData) => (
+                                <span>
+                                    <Form.Item>
+                                        <Checkbox
+                                            onChange={() => handleCheckboxChange(rowData.id)}
+                                            checked={expandedRows[rowData.id] || false}
+                                        ></Checkbox>
+                                    </Form.Item>
+                                </span>
+                            ),
+                        },
+                        {
+                            title: 'Manual Type Item',
+                            dataIndex: 'id',
+                            render: (text, rowData) => (
+                                <div>
+                                    {expandedRows[rowData.id] ? (
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <Input
+                                                style={{ marginRight: '10px' }}
+                                                placeholder="Enter text"
+                                                value={textareaValues[rowData.id] || ''}
+                                                onChange={e =>
+                                                    handleTextareaChange(rowData.id, e.target.value)
+                                                }
+                                            />
+                                            <Button
+                                                type="primary"
+                                                onClick={() => handleSubmit(rowData.id)}
+                                            >
+                                                Submit
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <Button
+                                            type="link"
+                                            onClick={() =>
+                                                setExpandedRows(prevExpandedRows => ({
+                                                    ...prevExpandedRows,
+                                                    [rowData.id]: true,
+                                                }))
+                                            }
+                                        >
+                                            Manual Edit
+                                        </Button>
+                                    )}
+                                </div>
+                            ),
+                        },
+
+                    ]
+                }
+
+            ] as unknown as null,
         }
-    
-    ]as unknown as null,}
 
     ]
-   
+
 
 
 
     return (
         <>
             <Card title="Divert Report" headStyle={{ fontWeight: 'bold' }}
-                extra={ <Button
+                extra={<Button
                     type="default"
                     style={{ color: 'green' }}
                     onClick={handleExport}
                     icon={<FileExcelFilled />}>Download Excel</Button>}>
-                        <Row gutter={70}>
-                 {/* <Col >
+                <Row gutter={70}>
+                    {/* <Col >
                     <Card title={'Total Line Status Count  : ' + Number(dataLength[0]?.totalCount)} style={{ textAlign: 'left', width: 280, height: 38, backgroundColor: ' lightblue' }}></Card>
                 </Col>
                 <Col>
@@ -759,26 +756,26 @@ excel.saveAs(`Divert-report-${currentDate}.xlsx`);
                 <Col>
                     <Card title={'Unaccepted : ' +Number(dataLength[0]?.unacceptedCount)} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
                 </Col>  */}
-               
-                
-            </Row><br></br>
-                            <Card >
+
+
+                </Row><br></br>
+                <Card >
                     <Table
                         columns={columns}
                         className="custom-table-wrapper"
                         dataSource={items}
                         pagination={{
                             onChange(current, pageSize) {
-                            setPage(current);
-                            setPageSize(pageSize)
-                            },   
+                                setPage(current);
+                                setPageSize(pageSize)
+                            },
                         }}
                         scroll={{ x: 'max-content' }}
-                        bordered 
-                       // expandedRowRender={(record) => record.additionalData} 
-                        />
-                    
-        
+                        bordered
+                    // expandedRowRender={(record) => record.additionalData} 
+                    />
+
+
                 </Card>
             </Card>
         </>

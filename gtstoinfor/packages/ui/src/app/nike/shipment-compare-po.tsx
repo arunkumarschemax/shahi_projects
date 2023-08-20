@@ -29,34 +29,41 @@ const ShipmentChangesCompareGrid = () => {
     const { Option } = Select
 
     useEffect(() => {
-        poLineItemStatusChange()
-        getQtyChangeData()
-        getUnitChangeData()
-        getItemChangeData()
+        getPlantCodeChangeData()
+        getGACChangeData()
+        getMRGACChangeData()
+        getModeOfTransportChangeData()
     }, [])
 
-    const getQtyChangeData = () => {
-        service.getTotalItemQtyChangeData().then((res) => {
+    const getGACChangeData = () => {
+        service.getGACChangeData().then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
         })
     }
 
-    const getUnitChangeData = () => {
-        service.getUnitChangeData().then((res) => {
+    const getMRGACChangeData = () => {
+        service.getMRGACChangeData().then((res) => {
             setUnitChangeData(res.data)
         })
     }
 
-    const getItemChangeData = () => {
-        service.getItemChangeData().then((res) => {
+    const getModeOfTransportChangeData = () => {
+        service.getModeOfTransportChangeData().then((res) => {
             setItemChangeData(res.data)
             setFilteredItemChangeData(res.data)
         })
     }
 
-    const poLineItemStatusChange = () => {
-        service.poLineItemStatusChange().then((res) => {
+    const getPlantCodeChangeData = () => {
+        service.getPlantCodeChangeData().then((res) => {
+            setPOStatusData(res.data)
+            setFilteredPOStatusData(res.data)
+        })
+    }
+
+    const getShippingTypeChangeData = () => {
+        service.getShippingTypeChangeData().then((res) => {
             setPOStatusData(res.data)
             setFilteredPOStatusData(res.data)
         })
@@ -673,7 +680,7 @@ const ShipmentChangesCompareGrid = () => {
         setSelectedEstimatedFromDate(undefined);
         setSelectedEstimatedToDate(undefined);
         // getContractDateChangeData()
-        getQtyChangeData()
+        // getQtyChangeData()
         // getWharehouseDateChangeData()
     }
 
