@@ -342,12 +342,14 @@ useEffect(() =>{
           </Button>
         </Text>
         <br />
+        <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           <Radio.Group defaultValue={props.docData.docStatus} buttonStyle="solid" onChange={handleStatusChange}>
             <Radio.Button value="partially uploaded">parially</Radio.Button>
             <Radio.Button value="fully uploaded">fully</Radio.Button>
           </Radio.Group>
         </Text>
+        <br />
         <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           {

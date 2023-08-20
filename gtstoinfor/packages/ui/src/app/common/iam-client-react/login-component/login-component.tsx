@@ -25,7 +25,7 @@ export const LoginComponent = () => {
             if (from) {
                 navigate(from, { replace: true });
             } else {
-                navigate("/", { replace: true });
+                navigate("/dashboard", { replace: true });
             }
             return true;
         } catch (error: any) {
@@ -42,11 +42,11 @@ export const LoginComponent = () => {
     };
 
     return (
-        <Card style={{marginLeft:'60%',marginTop:'5%',height: '55%',width: '300px'}}>
-        <div style={{marginLeft:'20%'}}>
+        <Card style={{justifyContent: 'center',alignItems: 'center',height: '55%',width: '300px'}}>
+        <div style={{marginLeft:'15%'}}>
                 <img src={doclogo} width={150} height={'50%'}></img>
             </div>
-        <div style={{marginLeft:'23%'}}><b>E Document Management</b></div>
+        <div style={{marginLeft:'15%'}}><b>E Document Management</b></div>
         <br />
             <Form
                 name="login-form"

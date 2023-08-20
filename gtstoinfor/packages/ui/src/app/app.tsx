@@ -10,8 +10,6 @@ import CustomSpinner from "./common/custom-spinner/custom-spinner";
 import { AppRoutes } from './routes';
 const { Text } = Typography;
 
-
-
 export function App() {
 
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
@@ -50,9 +48,9 @@ export function App() {
     <CustomSpinner loading={load} />
     <AppRoutes />
   </> :
-    // <div style={{ backgroundImage: `url(${bkimage})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div style={{ backgroundColor:'rgba(0, 0, 0, 0.45)', display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <LoginComponent />
-    // </div>
+    </div>
   );
 };
 
