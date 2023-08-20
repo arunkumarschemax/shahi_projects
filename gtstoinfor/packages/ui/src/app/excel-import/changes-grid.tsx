@@ -23,6 +23,7 @@ const ChangesGrid = () => {
     const [pageSize, setPageSize] = useState<number>(null);
     const [differenceQtyData, setDifferenceQtyData] = useState([])
     const [page, setPage] = React.useState(1);
+    const [monthWisedata, setMonthWiseData] = useState<any[]>([])
     const [form] = Form.useForm();
     const { Text } = Typography;
     const { RangePicker } = DatePicker
@@ -35,7 +36,14 @@ const ChangesGrid = () => {
         getQtyDifChangeData()
         getPhaseWiseData()
         getPhaseWiseExcelData()
+        getAllLatestFileMonthWisedata()
     }, [])
+
+    const getAllLatestFileMonthWisedata =() =>{
+        service.getAllLatestFileMonthWisedata().then((res) =>{
+            setMonthWiseData(res.data)
+        })
+    }
 
     const getContractDateChangeData = () => {
         service.getContractDateChangeData().then((res) => {
@@ -786,32 +794,32 @@ const ChangesGrid = () => {
         },
         {
             title: 'August',
-            dataIndex: 'newOrderQtyPcs',
-            key: 'newOrderQtyPcs',
-            align: 'right',
-            render: (text: any, record: any) => {
-                return Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                })
-            }
+        dataIndex: 'newOrderQtyPcs',
+        key: 'newOrderQtyPcs',
+        align: 'right',
+        render: (text: any, record: any) => {
+        return Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
+        maximumFractionDigits: 0
+        })
+        }
         },
         {
             title: 'Difference',
-            dataIndex: 'diff',
-            align: 'right',
-            render: (text: any, record: any) => (
-                < >
+        dataIndex: 'diff',
+        align: 'right',
+        render: (text: any, record: any) => (
+        < >
 
-                    {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) === 0 ? '-' : ''}
-                    {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) < 0 ? <span style={{ color: 'red' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
-                    {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) > 0 ? <span style={{ color: 'green' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
+        {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) === 0 ? '-' : ''}
+        {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) < 0 ? <span style={{ color: 'red' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
+        maximumFractionDigits: 0
+        })} </span> : ''}
+        {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) > 0 ? <span style={{ color: 'green' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
+        maximumFractionDigits: 0
+        })} </span> : ''}
 
-                </>
-            )
+        </>
+        )
         }
     ]
 

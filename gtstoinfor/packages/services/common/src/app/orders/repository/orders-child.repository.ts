@@ -101,4 +101,16 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         const data = (await query1).concat(await query2)
         return data
     }
+    
+    async getlatestFileIdAgainstMonth(): Promise<any[]>{
+        const query= `SELECT t1.month, t1.file_id as fileId
+        FROM orders_child t1
+        INNER JOIN (
+            SELECT MONTH, MAX(created_at) AS latest_created_at
+            FROM orders_child
+            GROUP BY MONTH
+        ) t2 ON t1.month = t2.month AND t1.created_at = t2.latest_created_at`
+        const result = await this.query(query)
+        return result
+    }
 }

@@ -193,6 +193,7 @@ export class OrdersService {
 
     async getQtyDifChangeData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
+
         let data;
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
@@ -361,6 +362,9 @@ export class OrdersService {
 
     async getPhaseWiseData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData();
+        const latestfileId = await this.ordersChildRepo.getlatestFileIdAgainstMonth()
+        // console.log(latestfileId.length)
+        // console.log(latestfileId[0].file_id)
         let records;
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
@@ -403,6 +407,25 @@ export class OrdersService {
             phaseDataModelArray.push(new PhaseWiseExcelDataModel(record.item_code, record.itemName, record.prod_plan_type_name, record.old_qty_value, record.new_qty_value, record.new_qty_value - record.old_qty_value));
         }
         return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
+    }
+
+    
+    async getAllLatestFileMonthWisedata():Promise<CommonResponseModel>{
+        try{
+            const query='WITH LatestFileCreated AS (SELECT t1.MONTH,t1.file_id,t1.created_at AS latest_created_at FROM orders_child t1  WHERE (t1.MONTH, t1.created_at) IN (SELECT t2.MONTH,MAX(t2.created_at) AS latest_created_at FROM orders_child t2  WHERE t2.MONTH = t1.MONTH GROUP BY t2.MONTH ))SELECT item_code, itemName , prod_plan_type_name,lf.MONTH,lf.file_id, SUM(oc.order_qty_pcs) AS total_quantity FROM LatestFileCreated lf JOIN orders_child oc ON lf.MONTH = oc.MONTH AND lf.file_id = oc.file_id GROUP BY lf.MONTH, lf.file_id'
+            const result = await this.ordersChildRepo.query(query)
+            if(result.length>0){
+                return new CommonResponseModel(true,1,'Data retived sucssfully',result)
+
+            }else{
+                return new CommonResponseModel(false,1,'Nod Data Found',[])
+
+            }
+        }
+        catch(error){
+            throw error
+        }
+
     }
 
 }

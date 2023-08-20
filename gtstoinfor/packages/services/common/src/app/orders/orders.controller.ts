@@ -188,4 +188,12 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getAllLatestFileMonthWisedata')
+    async getAllLatestFileMonthWisedata(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getAllLatestFileMonthWisedata();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
