@@ -694,17 +694,6 @@ const ChangesGrid = () => {
         },
         {
             title: 'Sum of Ord Qty last week',
-            dataIndex: 'oldOrderQtyPcs4',
-            key: 'oldOrderQtyPcs4',
-            align: 'right',
-            render: (text: any, record: any) => {
-                return Number(record.oldOrderQtyPcs4).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                })
-            }
-        },
-        {
-            title: 'Sum of Ord Qty last week',
             dataIndex: 'oldOrderQtyPcs3',
             key: 'oldOrderQtyPcs3',
             align: 'right',
@@ -890,7 +879,6 @@ const ChangesGrid = () => {
 
     const EstimatedETDDate = (value) => {
         if (value) {
-            console.log(value)
             const fromDate = value[0];
             const toDate = value[1];
             setSelectedEstimatedFromDate(fromDate)
