@@ -7,3 +7,5 @@ export * from './phase-wise-data.model';
 export * from './phase-wise-qty.model';
 export * from './file-status.request';
 export * from './phase-wise-excel-data.model'
+export * from './month-wise-data.model';
+export * from './month-wise-qty.model';

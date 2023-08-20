@@ -18,7 +18,7 @@ export class OrdersController {
     ) { }
 
     @Post('/saveOrder/:id/:month')
-    async saveOrder(@Param('id') id: number, @Param('month') month:number, @Body() data: any): Promise<CommonResponseModel> {
+    async saveOrder(@Param('id') id: number, @Param('month') month: number, @Body() data: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.saveOrdersData(data, id, month);
         } catch (err) {
@@ -188,10 +188,20 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
     @Post('/getAllLatestFileMonthWisedata')
     async getAllLatestFileMonthWisedata(): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getAllLatestFileMonthWisedata();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getMonthWiseData')
+    async getMonthWiseData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getMonthWiseData();
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

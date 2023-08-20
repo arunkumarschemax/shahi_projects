@@ -39,8 +39,8 @@ const ChangesGrid = () => {
         getAllLatestFileMonthWisedata()
     }, [])
 
-    const getAllLatestFileMonthWisedata =() =>{
-        service.getAllLatestFileMonthWisedata().then((res) =>{
+    const getAllLatestFileMonthWisedata = () => {
+        service.getMonthWiseData().then((res) => {
             setMonthWiseData(res.data)
         })
     }
@@ -782,45 +782,155 @@ const ChangesGrid = () => {
             key: 'prodPlanTypeName',
         },
         {
-            title: 'July',
-            dataIndex: 'oldOrderQtyPcs',
-            key: 'oldOrderQtyPcs',
+            title: 'January',
+            dataIndex: 'newOrderQtyPcs',
+            key: 'newOrderQtyPcs',
             align: 'right',
             render: (text: any, record: any) => {
-                return Number(record.oldOrderQtyPcs).toLocaleString('en-IN', {
+                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
                     maximumFractionDigits: 0
-                })
+                }) : '-'
+            }
+        },
+        {
+            title: 'February',
+            dataIndex: 'newOrderQtyPcs',
+            key: 'newOrderQtyPcs',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'March',
+            dataIndex: 'newOrderQtyPcs',
+            key: 'newOrderQtyPcs',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'April',
+            dataIndex: 'newOrderQtyPcs',
+            key: 'newOrderQtyPcs',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'May',
+            dataIndex: 'newOrderQtyPcs',
+            key: 'newOrderQtyPcs',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'June',
+            dataIndex: 'newOrderQtyPcs',
+            key: 'newOrderQtyPcs',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'July',
+            dataIndex: 'oldOrderQtyPcs1',
+            key: 'oldOrderQtyPcs1',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs1 != 0 ? Number(record.oldOrderQtyPcs1).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
             }
         },
         {
             title: 'August',
-        dataIndex: 'newOrderQtyPcs',
-        key: 'newOrderQtyPcs',
-        align: 'right',
-        render: (text: any, record: any) => {
-        return Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
-        maximumFractionDigits: 0
-        })
-        }
+            dataIndex: 'oldOrderQtyPcs2',
+            key: 'oldOrderQtyPcs2',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.newOrderQtyPcs2 != 0 ? Number(record.oldOrderQtyPcs2).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
         },
         {
-            title: 'Difference',
-        dataIndex: 'diff',
-        align: 'right',
-        render: (text: any, record: any) => (
-        < >
+            title: 'September',
+            dataIndex: 'oldOrderQtyPcs3',
+            key: 'oldOrderQtyPcs3',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs3 != 0 ? Number(record.oldOrderQtyPcs3).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'October',
+            dataIndex: 'oldOrderQtyPcs4',
+            key: 'oldOrderQtyPcs4',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs4 != 0 ? Number(record.oldOrderQtyPcs4).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'November',
+            dataIndex: 'oldOrderQtyPcs4',
+            key: 'oldOrderQtyPcs4',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs4 != 0 ? Number(record.oldOrderQtyPcs4).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'December',
+            dataIndex: 'oldOrderQtyPcs4',
+            key: 'oldOrderQtyPcs4',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs4 != 0 ? Number(record.oldOrderQtyPcs4).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        // {
+        //     title: 'Difference',
+        //     dataIndex: 'diff',
+        //     align: 'right',
+        //     render: (text: any, record: any) => (
+        //         < >
 
-        {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) === 0 ? '-' : ''}
-        {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) < 0 ? <span style={{ color: 'red' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
-        maximumFractionDigits: 0
-        })} </span> : ''}
-        {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) > 0 ? <span style={{ color: 'green' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
-        maximumFractionDigits: 0
-        })} </span> : ''}
+        //             {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) === 0 ? '-' : ''}
+        //             {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) < 0 ? <span style={{ color: 'red' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
+        //                 maximumFractionDigits: 0
+        //             })} </span> : ''}
+        //             {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) > 0 ? <span style={{ color: 'green' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
+        //                 maximumFractionDigits: 0
+        //             })} </span> : ''}
 
-        </>
-        )
-        }
+        //         </>
+        //     )
+        // }
     ]
 
     const columns4: any = [
@@ -876,7 +986,7 @@ const ChangesGrid = () => {
             align: 'center',
             render: (text: any, record: any) => (
                 <Table
-                    dataSource={record.phaseWiseData}
+                    dataSource={record.monthWiseData}
                     columns={childColumns1}
                     pagination={false} // Hide pagination for child table
                     rowKey={record => record.itemCode}
@@ -985,8 +1095,8 @@ const ChangesGrid = () => {
         },
         {
             key: '6',
-            label: <b>Monthly Phase Wise Order Quantity : {phaseData?.length}</b>,
-            children: <Table bordered dataSource={phaseData} columns={columns5} />,
+            label: <b>Monthly Phase Wise Order Quantity : {monthWisedata?.length}</b>,
+            children: <Table bordered dataSource={monthWisedata} columns={columns5} />,
         }
     ];
 

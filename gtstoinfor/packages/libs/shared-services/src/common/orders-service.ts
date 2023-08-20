@@ -9,7 +9,7 @@ export class OrdersService extends CommonAxiosService {
     //     return this.axiosPostCall(this.ordersController + "/saveOrder", data,{id})
     // }
 
-    async saveOrder(data: any, id: number,month:any): Promise<CommonResponseModel> {
+    async saveOrder(data: any, id: number, month: any): Promise<CommonResponseModel> {
         console.log(month)
         const idn = id;
         const montId = month
@@ -78,5 +78,9 @@ export class OrdersService extends CommonAxiosService {
     }
     async getAllLatestFileMonthWisedata(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getAllLatestFileMonthWisedata")
+    }
+
+    async getMonthWiseData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getMonthWiseData")
     }
 }

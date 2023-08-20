@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, MonthAndQtyModel, MonthWiseDataModel, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
@@ -362,9 +362,6 @@ export class OrdersService {
 
     async getPhaseWiseData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData();
-        const latestfileId = await this.ordersChildRepo.getlatestFileIdAgainstMonth()
-        // console.log(latestfileId.length)
-        // console.log(latestfileId[0].file_id)
         let records;
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
@@ -403,26 +400,49 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'No data found');
         }
         for (const record of records) {
-
-            phaseDataModelArray.push(new PhaseWiseExcelDataModel(record.item_code, record.itemName, record.prod_plan_type_name, record.old_qty_value, record.new_qty_value, record.new_qty_value - record.old_qty_value));
+            phaseDataModelArray.push(new PhaseWiseExcelDataModel(record.item_code, record.itemName, record.prod_plan_type_name, record.old_qty_value3, record.old_qty_value2, record.old_qty_value1, record.old_qty_value, record.new_qty_value, record.new_qty_value - record.old_qty_value));
         }
         return new CommonResponseModel(true, 1, 'Data retrived successfully', phaseDataModelArray);
     }
 
-    
-    async getAllLatestFileMonthWisedata():Promise<CommonResponseModel>{
-        try{
-            const query='WITH LatestFileCreated AS (SELECT t1.MONTH,t1.file_id,t1.created_at AS latest_created_at FROM orders_child t1  WHERE (t1.MONTH, t1.created_at) IN (SELECT t2.MONTH,MAX(t2.created_at) AS latest_created_at FROM orders_child t2  WHERE t2.MONTH = t1.MONTH GROUP BY t2.MONTH ))SELECT item_code, itemName , prod_plan_type_name,lf.MONTH,lf.file_id, SUM(oc.order_qty_pcs) AS total_quantity FROM LatestFileCreated lf JOIN orders_child oc ON lf.MONTH = oc.MONTH AND lf.file_id = oc.file_id GROUP BY lf.MONTH, lf.file_id'
-            const result = await this.ordersChildRepo.query(query)
-            if(result.length>0){
-                return new CommonResponseModel(true,1,'Data retived sucssfully',result)
+    async getMonthWiseData(): Promise<CommonResponseModel> {
+        const files = await this.fileUploadRepo.getlatestFileIdAgainstMonth();
+        let records;
+        if (files.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        } else if (files.length == 1) {
+            records = await this.ordersChildRepo.getMonthWiseData(files[0].id)
+        } else {
+            records = await this.ordersChildRepo.getMonthWiseData(files[0].id, files[1]?.id, files[2]?.id, files[3]?.id, files[4]?.id)
+        }
+        const monthWiseDataMap = new Map<number, MonthWiseDataModel>();
+        if (records.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        }
+        for (const record of records) {
+            if (!monthWiseDataMap.has(record.item_code)) {
+                monthWiseDataMap.set(record.item_code, new MonthWiseDataModel(record.item_code, record.itemName, []));
+            }
+            monthWiseDataMap.get(record.item_code).monthWiseData.push(new MonthAndQtyModel(record.prod_plan_type_name, record.old_qty_value1, record.old_qty_value2, record.old_qty_value3, record.old_qty_value4, record.old_qty_value5, record.old_qty_value6, record.old_qty_value7, record.old_qty_value8, record.old_qty_value9, record.old_qty_value10, record.old_qty_value11, record.old_qty_value12));
+        }
+        const monthDataModelArray: MonthWiseDataModel[] = [];
+        monthWiseDataMap.forEach(phase => monthDataModelArray.push(phase));
+        return new CommonResponseModel(true, 1, 'Data retrived successfully', monthDataModelArray);
+    }
 
-            }else{
-                return new CommonResponseModel(false,1,'Nod Data Found',[])
+    async getAllLatestFileMonthWisedata(): Promise<CommonResponseModel> {
+        try {
+            const query = 'WITH LatestFileCreated AS (SELECT t1.MONTH,t1.file_id,t1.created_at AS latest_created_at FROM orders_child t1  WHERE (t1.MONTH, t1.created_at) IN (SELECT t2.MONTH,MAX(t2.created_at) AS latest_created_at FROM orders_child t2  WHERE t2.MONTH = t1.MONTH GROUP BY t2.MONTH ))SELECT item_code, itemName , prod_plan_type_name,lf.MONTH,lf.file_id, SUM(oc.order_qty_pcs) AS total_quantity FROM LatestFileCreated lf JOIN orders_child oc ON lf.MONTH = oc.MONTH AND lf.file_id = oc.file_id GROUP BY lf.MONTH, lf.file_id'
+            const result = await this.ordersChildRepo.query(query)
+            if (result.length > 0) {
+                return new CommonResponseModel(true, 1, 'Data retived sucssfully', result)
+
+            } else {
+                return new CommonResponseModel(false, 1, 'Nod Data Found', [])
 
             }
         }
-        catch(error){
+        catch (error) {
             throw error
         }
 
