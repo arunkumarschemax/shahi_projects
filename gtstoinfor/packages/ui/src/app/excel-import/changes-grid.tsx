@@ -273,9 +273,12 @@ const ChangesGrid = () => {
         { title: 'Item code', dataIndex: 'itemCode' },
         { title: 'Item Name', dataIndex: 'itemName' },
         { title: 'Production Plan Type Name', dataIndex: 'prodPlanTypeName' },
+        { title: 'Sum of Ord Qty before week', dataIndex: 'oldOrderQtyPcs3' },
+        { title: 'Sum of Ord Qty before week', dataIndex: 'oldOrderQtyPcs2' },
+        { title: 'Sum of Ord Qty before week', dataIndex: 'oldOrderQtyPcs1' },
         { title: 'Sum of Ord Qty last week', dataIndex: 'oldOrderQtyPcs' },
         { title: 'Sum of Ord Qty this week', dataIndex: 'newOrderQtyPcs' },
-        { title: 'Difference Qty', dataIndex: 'difference' }
+        { title: 'Difference Qty of last two weeks', dataIndex: 'difference' }
     ]
 
     const [searchedColumn, setSearchedColumn] = useState('');
