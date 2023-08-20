@@ -693,29 +693,29 @@ const ChangesGrid = () => {
             key: 'prodPlanTypeName',
         },
         {
-            title: 'Sum of Ord Qty last week',
+            title: 'Sum of Ord Qty before week',
             dataIndex: 'oldOrderQtyPcs3',
             key: 'oldOrderQtyPcs3',
             align: 'right',
             render: (text: any, record: any) => {
-                return Number(record.oldOrderQtyPcs3).toLocaleString('en-IN', {
+                return record.oldOrderQtyPcs3 != 0 ? Number(record.oldOrderQtyPcs3).toLocaleString('en-IN', {
                     maximumFractionDigits: 0
-                })
+                }) : '-'
             }
         },
         {
-            title: 'Sum of Ord Qty last week',
+            title: 'Sum of Ord Qty before week',
             dataIndex: 'oldOrderQtyPcs2',
             key: 'oldOrderQtyPcs2',
             align: 'right',
             render: (text: any, record: any) => {
-                return Number(record.oldOrderQtyPcs2).toLocaleString('en-IN', {
+                return record.oldOrderQtyPcs2 != 0 ? Number(record.oldOrderQtyPcs2).toLocaleString('en-IN', {
                     maximumFractionDigits: 0
-                })
+                }) : '-'
             }
         },
         {
-            title: 'Sum of Ord Qty last week',
+            title: 'Sum of Ord Qty before week',
             dataIndex: 'oldOrderQtyPcs1',
             key: 'oldOrderQtyPcs1',
             align: 'right',
@@ -748,7 +748,7 @@ const ChangesGrid = () => {
             }
         },
         {
-            title: 'Difference',
+            title: 'Difference of last two weeks',
             dataIndex: 'diff',
             align: 'right',
             render: (text: any, record: any) => (
@@ -833,7 +833,7 @@ const ChangesGrid = () => {
         },
         {
             title: 'Phase Wise Data',
-            dataIndex: 'prod_plan_type_name',
+            dataIndex: 'phase_wise_data',
             align: 'center',
             render: (text: any, record: any) => (
                 <Table
