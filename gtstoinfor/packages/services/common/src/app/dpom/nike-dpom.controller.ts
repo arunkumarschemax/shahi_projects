@@ -6,6 +6,7 @@ import { DpomSaveDto } from './dto/dpom-save.dto';
 import { ApiConsumes } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { DiaPDFDto } from './dto/diaPDF.dto';
 
 @Controller('/nike-dpom')
 export class DpomController {
@@ -238,6 +239,14 @@ export class DpomController {
         }
     }
 
+    @Post('/saveDiaPDFFields')
+    async saveDiaPDFFields(@Body() req : DiaPDFDto): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.saveDiaPDFFields(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
     @Post('/getItemChangeData')
     async getItemChangeData(): Promise<CommonResponseModel> {
         try {
@@ -246,6 +255,7 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
 
     @Post('/getUnitChangeData')
     async getUnitChangeData(): Promise<CommonResponseModel> {
