@@ -1,4 +1,4 @@
-import { CommonResponseModel, DpomApproveRequest } from "@project-management-system/shared-models";
+import { CommonResponseModel, DiaPDFModel, DpomApproveRequest } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -93,6 +93,10 @@ export class NikeService extends CommonAxiosService {
 
     async getPlanShipmentWiseData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPlanShipmentWiseData")
+    }
+
+    async saveDiaPDFFields(req : DiaPDFModel):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.dpomController + "/saveDiaPDFFields",req)
     }
 
 

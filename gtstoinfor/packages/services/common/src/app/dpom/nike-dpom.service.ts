@@ -18,6 +18,7 @@ import { NikeFileUploadRepository } from './repositories/upload.repository';
 import { FileIdReq } from '../orders/models/file-id.req';
 import { NikeFileUploadEntity } from './entites/upload-file.entity';
 import { Cron } from '@nestjs/schedule';
+import { DiaPDFDto } from './dto/diaPDF.dto';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -665,5 +666,14 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'Data retrieved', data)
         else
             return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async saveDiaPDFFields(data:DiaPDFDto):Promise<CommonResponseModel>{
+        const updateData = await this.dpomRepository.update({purchaseOrderNumber:data.poNumber,poLineItemNumber:data.lineNo},{CABCode:data.cabCode,shipToAddressDIA:data.shipToAddress})
+        if(updateData.affected){
+            return new CommonResponseModel(true,1111,"DIA Data updated sucessfully")
+        }else{
+            return new CommonResponseModel(false,1010,"The  PO Number of the uploaded document not exist")
+        }
     }
 }
