@@ -123,7 +123,9 @@ const FactoryPPMReport = () => {
             ),
     });
 
-
+   const ClearData=()=>{
+    form.resetFields();
+   }
 
     const EstimatedETDDate = (value) => {
         if (value) {
@@ -168,26 +170,26 @@ const FactoryPPMReport = () => {
         exportingColumns = [
             { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
             { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
-            { title: 'Item', dataIndex: 'Item' },
-            { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
-            { title: 'Factory', dataIndex: 'Factory' },
+            { title: 'Item', dataIndex: 'item' },
+            // { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
+            { title: 'Factory', dataIndex: 'factory' },
             { title: 'Document Date', dataIndex: 'documentDate' },
-            { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
+            { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber' },
             { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
             { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
             { title: 'Style Number', dataIndex: 'styleNumber' },
             { title: 'Product Code', dataIndex: 'productCode' },
             { title: 'Colour Description', dataIndex: 'colorDesc' },
-            { title: 'CO', dataIndex: ' ' },
-            { title: 'CO Final Approval Date', dataIndex: ' ' },
-            { title: 'Plan No', dataIndex: ' ' },
-            { title: 'Lead Time', dataIndex: ' ' },
+            { title: 'CO', dataIndex: 'customerOrder' },
+            { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate' },
+            { title: 'Plan No', dataIndex: 'planNo' },
+            { title: 'Lead Time', dataIndex: 'leadTime' },
             { title: 'Category', dataIndex: 'categoryCode' },
             { title: 'Category Description', dataIndex: 'categoryDesc' },
             { title: 'Vendor Code', dataIndex: 'vendorCode' },
             { title: 'Global Category Core Focus', dataIndex: 'gccFocusCode' },
             { title: 'Global Category Core Focus Description', dataIndex: 'gccFocusDesc' },
-            { title: 'Gender Age', dataIndex: ' ' },
+            { title: 'Gender Age', dataIndex: 'genderAgeCode' },
             { title: 'Gender Age Description', dataIndex: ' ' },
             { title: 'Destination Country Code ', dataIndex: 'destinationCountryCode' },
             { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
@@ -207,7 +209,7 @@ const FactoryPPMReport = () => {
             { title: 'MRGAC', dataIndex: 'MRGAC' },
             { title: 'OGAC', dataIndex: 'OGAC' },
             { title: 'GAC', dataIndex: 'GAC' },
-            { title: 'Track Out Date', dataIndex: ' ' },
+            { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
             { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
             { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
             { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
@@ -216,7 +218,7 @@ const FactoryPPMReport = () => {
             { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode' },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
             { title: 'Launch Code', dataIndex: 'launchCode' },
-            { title: 'Mode Of Transportation', dataIndex: ' ' },
+            { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
             { title: 'In Co Terms', dataIndex: 'inCoTerms' },
             { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
             { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
@@ -257,7 +259,7 @@ const FactoryPPMReport = () => {
             { title: 'XS-S', dataIndex: ' ' },
             { title: 'XS-T', dataIndex: ' ' },
             { title: 'Grand Total', dataIndex: ' ' },
-            { title: 'Actual Shipped Qty', dataIndex: ' ' },
+            { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
             { title: 'VAS-Size', dataIndex: 'VASSize' },
             { title: 'Item Vas Text', dataIndex: 'itemVasText' },
             { title: 'Item Text', dataIndex: 'itemText' },
@@ -285,6 +287,9 @@ const FactoryPPMReport = () => {
         return formattedDate;
     }
 
+    const totalItemQty = gridData?.map(i => i.totalItemQty)
+    const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
+
     const columns: ColumnsType<any> = [
         {
             title: 'Po+Line',
@@ -299,8 +304,8 @@ const FactoryPPMReport = () => {
         },
         {
             title: 'Item',
-            dataIndex: 'Item',
-            ...getColumnSearch('Item'),
+            dataIndex: 'item',
+            ...getColumnSearch('item'),
 
         },
         {
@@ -310,8 +315,8 @@ const FactoryPPMReport = () => {
         },
         {
             title: 'Factory',
-            dataIndex: 'Factory',
-            ...getColumnSearch('Factory'),
+            dataIndex: 'factory',
+            ...getColumnSearch('factory'),
 
         },
         {
@@ -356,22 +361,22 @@ const FactoryPPMReport = () => {
         },
         {
             title: 'CO',
-            dataIndex: '',
+            dataIndex: 'customerOrder',
 
         },
         {
             title: 'CO Final Approval Date',
-            dataIndex: '',
+            dataIndex: 'coFinalApprovalDate',
 
         },
         {
             title: 'Plan No',
-            dataIndex: '',
+            dataIndex: 'planNo',
 
         },
         {
             title: 'Lead Time',
-            dataIndex: '',
+            dataIndex: 'leadTime',
 
         },
         {
@@ -401,7 +406,7 @@ const FactoryPPMReport = () => {
         },
         {
             title: 'Gender Age',
-            dataIndex: '',
+            dataIndex: 'genderAgeCode',
 
         },
         {
@@ -496,14 +501,29 @@ const FactoryPPMReport = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '42px' }}>
                             <Form.Item>
-                                <Button htmlType="submit" type="primary">Filter</Button>
+                                <Button htmlType="submit"
+                                icon={<SearchOutlined />}
+                                 type="primary">SEARCH</Button>
+                               
                             </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ padding: '42px' }}>
+                            <Form.Item>
+                        <Button 
+                                htmlType='button'
+                                icon={<UndoOutlined />}
+                                style={{ left: '-150px', width: 80 , backgroundColor:"#162A6D" , color:"white",position:"relative"}}
+                                onClick={()=>{ClearData();}}
+                                  >
+                                    RESET
+                                </Button>
+                                </Form.Item>
                         </Col>
                     </Row>
                 </Form>
                 <Row gutter={80}>
                     <Col >
-                        <Card title={'Total order Qty : ' + gridData.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                        <Card title={'Total order Qty : ' + count} style={{ textAlign: 'left', width: 250, height: 38 }}></Card>
                     </Col>
                     <Col>
                         <Card title={'Total Shipped : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>

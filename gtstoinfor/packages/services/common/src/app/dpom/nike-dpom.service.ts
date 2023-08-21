@@ -235,7 +235,7 @@ export class DpomService {
                         await transactionManager.releaseTransaction();
                         return new CommonResponseModel(false, 0, 'Something went wrong in order update')
                     }
-                    const convertedExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData);
+                    const convertedExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData, details.id);
                     const saveExcelEntity: DpomChildEntity = await transactionManager.getRepository(DpomChildEntity).save(convertedExcelEntity);
                     if (saveExcelEntity) {
                         //difference insertion to order diff table
@@ -267,7 +267,7 @@ export class DpomService {
                     dtoData.odVersion = 1
                     const convertedExcelEntity: Partial<DpomEntity> = this.dpomAdapter.convertDtoToEntity(dtoData);
                     const saveExcelEntity: DpomEntity = await transactionManager.getRepository(DpomEntity).save(convertedExcelEntity);
-                    const convertedChildExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData);
+                    const convertedChildExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData, saveExcelEntity.id);
                     const saveChildExcelEntity: DpomChildEntity = await transactionManager.getRepository(DpomChildEntity).save(convertedChildExcelEntity);
                     // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
                     if (!saveExcelEntity || !saveChildExcelEntity) {
@@ -354,17 +354,17 @@ export class DpomService {
 
                 // Calculate the difference in days
                 const daysDifference = date4.diff(date3, 'days');
+                let version = 1;
                 const dtoData = new DpomSaveDto(orderDetail.poHeader.documentDate, orderDetail.poHeader.poNumber, orderDetail.poLine.itemNumber, orderDetail.sizes.scheduleLineItemNumber, orderDetail.product.categoryCode, orderDetail.product.categoryDescription, orderDetail.poHeader.vendorCode, orderDetail.product.globalCategoryCoreFocusCode, orderDetail.product.globalCategoryCoreFocusDescription, orderDetail.product.genderAgeCode, orderDetail.product.genderAgeDescription, orderDetail.product.styleNumber,
                     orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null,
                     orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonDescription,
                     orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, null, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity,
                     orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVas.valueAddedServiceInstructions, orderDetail.poLine.itemTextDetail.textDetails, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
                     orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, orderDetail.sizes.sizePo.sizeQuantity, orderDetail.sizes.sizePo.sizeDescription, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVas, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
-                    crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, 'hanger', orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, 'username')
+                    crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, 'hanger', orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, 'username', version)
                 if (dtoData.purchaseOrderNumber != null) {
                     const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
                     // const versionDetails = await this.dpomChildRepo.getVersion(dtoData.productionPlanId)
-                    let version = 1;
                     // if (versionDetails.length > 0) {
                     //     version = Number(versionDetails.length) + 1
                     // }
@@ -378,7 +378,7 @@ export class DpomService {
                             await transactionManager.releaseTransaction();
                             return new CommonResponseModel(false, 0, 'Something went wrong in order update')
                         }
-                        const convertedExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData);
+                        const convertedExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData, details.id);
                         const saveExcelEntity: DpomChildEntity = await transactionManager.getRepository(DpomChildEntity).save(convertedExcelEntity);
                         if (saveExcelEntity) {
                             //difference insertion to order diff table
@@ -411,7 +411,7 @@ export class DpomService {
                         dtoData.odVersion = 1
                         const convertedExcelEntity: Partial<DpomEntity> = this.dpomAdapter.convertDtoToEntity(dtoData);
                         const saveExcelEntity: DpomEntity = await transactionManager.getRepository(DpomEntity).save(convertedExcelEntity);
-                        const convertedChildExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData);
+                        const convertedChildExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData, saveExcelEntity.id);
                         const saveChildExcelEntity: DpomChildEntity = await transactionManager.getRepository(DpomChildEntity).save(convertedChildExcelEntity);
                         // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
                         if (!saveExcelEntity || !saveChildExcelEntity) {
@@ -558,21 +558,21 @@ export class DpomService {
         }
     }
 
-    async getDivertReportData(): Promise<CommonResponseModel> {
-        const report = await this.dpomRepository.getDivertReport();
+    // async getDivertReportData(): Promise<CommonResponseModel> {
+    //     const report = await this.dpomRepository.getDivertReport();
 
-        const acceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'accepted',);
-        const unacceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'unaccepted');
-        if (acceptedArray.length > 0 || unacceptedArray.length > 0) {
-            const response = new CommonResponseModel(true, report.length, 'data retrieved', {
-                accepted: acceptedArray,
-                unaccepted: unacceptedArray
-            });
-            return response;
-        } else {
-            return new CommonResponseModel(false, 0, 'No Data Found', []);
-        }
-    }
+    //     const acceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'accepted',);
+    //     const unacceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'unaccepted');
+    //     if (acceptedArray.length > 0 || unacceptedArray.length > 0) {
+    //         const response = new CommonResponseModel(true, report.length, 'data retrieved', {
+    //             accepted: acceptedArray,
+    //             unaccepted: unacceptedArray
+    //         });
+    //         return response;
+    //     } else {
+    //         return new CommonResponseModel(false, 0, 'No Data Found', []);
+    //     }
+    // }
 
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.getCountForDivertReport();
@@ -675,5 +675,148 @@ export class DpomService {
         }else{
             return new CommonResponseModel(false,1010,"The  PO Number of the uploaded document not exist")
         }
+    }
+    async getItemChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getItemChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getUnitChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getUnitChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getFOBPriceChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getFOBPriceChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getNetInclDiscChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getNetInclDiscChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getTradingNetInclDiscChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getTradingNetInclDiscChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getModeOfTransportChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getModeOfTransportChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getGACChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getGACChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getMRGACChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getMRGACChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getPlantCodeChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPlantCodeChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getShippingTypeChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getShippingTypeChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getVasTextChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getVasTextChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getShipToCustomerChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getShipToCustomerChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getInventorySegmentCodeChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getInventorySegmentCodeChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getDirectShipSoNoChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getDirectShipSoNoChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getDestinationCountryChangeData(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getDestinationCountryChangeData()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getDivertReportData(): Promise<CommonResponseModel> {
+        const report = await this.dpomRepository.getDivertReport();
+        if (report.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrived Successfully', report);
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data Found', []);
+        }
+    }
+    async getDestinationWisePo(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getDestinationPo()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getSeasonWisePo(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getSeasonPo()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 }

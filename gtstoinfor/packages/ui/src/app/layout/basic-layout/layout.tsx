@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined, CheckOutlined } from '@ant-design/icons'
+import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined, CheckOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { CommonHeader } from '../header/header';
 import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
 import logo from './logo.png'
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
-import ProLayout from '@ant-design/pro-layout';
-import { treeRouter } from '../../utils/common';
+import ProLayout, { DefaultFooter, MenuDataItem, SettingDrawer } from '@ant-design/pro-layout';
+import { getOperatingSystem, treeRouter } from '../../utils/common';
+import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
 const { useToken } = theme
@@ -18,11 +19,11 @@ const { useToken } = theme
 
 export const baseRouterList = [
     {
-        icon: <DashboardOutlined />,
         label: "Dashboard",
-        key: "nike-dashboard",
+        key: "dashboard",
         path: "nike-dashboard",
-        filepath: "nike-dashboard",
+        icon: <DashboardOutlined />,
+        filepath: "/dashboard.tsx",
     },
     {
         label: "User Management",
@@ -60,8 +61,53 @@ export const baseRouterList = [
                 path: "factories/factories-view",
                 filepath: "factories/factories-view",
             },
+            // {
+            //     label: "Supplier",
+            //     key: "supplier",
+            //     path: "supplier/supplier-view",
+            //     filepath: "supplier/supplier-view",
+            // },
         ],
     },
+    // {
+    //     label: "Orders",
+    //     key: "excel-import",
+    //     path: "excel-import",
+    //     icon: <FileExcelOutlined />,
+    //     filepath: "excel-import",
+    //     children: [
+    //         {
+    //             label: "Add Orders",
+    //             key: "excel-import",
+    //             path: "excel-import",
+    //             filepath: "excel-import",
+    //         },
+    //         {
+    //             label: "Compare Orders",
+    //             key: "changes-view",
+    //             path: "changes-view",
+    //             filepath: "changes-view",
+    //         },
+    //         {
+    //             label: "View Orders",
+    //             key: "grid-view",
+    //             path: "grid-view",
+    //             filepath: "grid-view",
+    //         },
+    //         {
+    //             label: "Uploaded Files",
+    //             key: "revert-orders",
+    //             path: "revert-orders",
+    //             filepath: "revert-orders",
+    //         },
+    //         {
+    //             label: "Versions Data",
+    //             key: "version-grid",
+    //             path: "version-grid",
+    //             filepath: "version-grid",
+    //         }
+    //     ],
+    // },
     {
         label: "Nike",
         key: "nike",
@@ -103,10 +149,22 @@ export const baseRouterList = [
         filepath: "Reports",
         children: [
             {
-                label: "PO Change",
+                label: "PO Changes (PO Mgmt)",
                 key: "compare-orders",
                 path: "compare-orders",
                 filepath: "compare-orders",
+            },
+            {
+                label: "PO Changes (Shipment)",
+                key: "shipment-compare",
+                path: "shipment-compare",
+                filepath: "shipment-compare",
+            },
+            {
+                label: "PO Changes (VAS)",
+                key: "vas-compare",
+                path: "vas-compare",
+                filepath: "vas-compare",
             },
             {
                 label: "Factory PPM Report",
@@ -114,7 +172,13 @@ export const baseRouterList = [
                 path: "factory-report",
                 filepath: "factory-report",
             },
-           {
+           
+            {
+                label: "Upload PDF",
+                key: "pdf-upload",
+                path: "pdf-upload",
+                filepath: "pdf-upload",
+            }, {
                 label: "PPM Marketing Report",
                 key: "ppm-report",
                 path: "ppm-report",
@@ -138,6 +202,7 @@ export const baseRouterList = [
                 path: "shipment-planning-chart",
                 filepath: "shipment-planning-chart",
             },
+           
             {
                 label: "Shipment Tracker",
                 key: "shipment-report",

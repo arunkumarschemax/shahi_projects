@@ -7,7 +7,7 @@ import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 
-const OrdersCompareGrid = () => {
+const ShipmentChangesCompareGrid = () => {
 
     const service = new NikeService()
     const [poStatusData, setPOStatusData] = useState([])
@@ -29,34 +29,41 @@ const OrdersCompareGrid = () => {
     const { Option } = Select
 
     useEffect(() => {
-        poLineItemStatusChange()
-        getQtyChangeData()
-        getUnitChangeData()
-        getItemChangeData()
+        getPlantCodeChangeData()
+        getGACChangeData()
+        getMRGACChangeData()
+        getModeOfTransportChangeData()
     }, [])
 
-    const getQtyChangeData = () => {
-        service.getTotalItemQtyChangeData().then((res) => {
+    const getGACChangeData = () => {
+        service.getGACChangeData().then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
         })
     }
 
-    const getUnitChangeData = () => {
-        service.getUnitChangeData().then((res) => {
+    const getMRGACChangeData = () => {
+        service.getMRGACChangeData().then((res) => {
             setUnitChangeData(res.data)
         })
     }
 
-    const getItemChangeData = () => {
-        service.getItemChangeData().then((res) => {
+    const getModeOfTransportChangeData = () => {
+        service.getModeOfTransportChangeData().then((res) => {
             setItemChangeData(res.data)
             setFilteredItemChangeData(res.data)
         })
     }
 
-    const poLineItemStatusChange = () => {
-        service.poLineItemStatusChange().then((res) => {
+    const getPlantCodeChangeData = () => {
+        service.getPlantCodeChangeData().then((res) => {
+            setPOStatusData(res.data)
+            setFilteredPOStatusData(res.data)
+        })
+    }
+
+    const getShippingTypeChangeData = () => {
+        service.getShippingTypeChangeData().then((res) => {
             setPOStatusData(res.data)
             setFilteredPOStatusData(res.data)
         })
@@ -643,42 +650,27 @@ const OrdersCompareGrid = () => {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <b>Order Qty Revised PO's : {filteredQtyData?.length} </b>,
+            label: <b>GAC Revised PO's : {filteredQtyData?.length} </b>,
             children: <Table bordered dataSource={filteredQtyData} columns={columns} />,
         },
         {
             key: '2',
-            label: <b>Unit changed PO's : {unitChangeData?.length}</b>,
+            label: <b>MRGAC Revised PO's : {unitChangeData?.length}</b>,
             children: <Table bordered dataSource={unitChangeData} columns={columns4} />,
         },
         {
             key: '3',
-            label: <b >Item Changed PO's : {itemChangeData?.length}</b>,
+            label: <b >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
             children: <Table bordered dataSource={itemChangeData} columns={columns1} />,
         },
         {
             key: '4',
-            label: <b>PO Line Item Status Revised PO's : {poStatusData?.length}</b>,
+            label: <b>Plant Code Revised PO's : {poStatusData?.length}</b>,
             children: <Table bordered dataSource={poStatusData} columns={columns2} />,
         },
         {
             key: '5',
-            label: <b>Price & currency change in FOB : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
-        },
-        {
-            key: '6',
-            label: <b>Price & currency change in Net Incl.Discount : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
-        },
-        {
-            key: '7',
-            label: <b>Price & currency change in Trading Net Incl.Discount : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
-        },
-        {
-            key: '8',
-            label: <b>Item Text changed PO's : {poStatusData?.length}</b>,
+            label: <b>Shipment Type Revised PO's : {poStatusData?.length}</b>,
             children: <Table bordered dataSource={poStatusData} columns={columns2} />,
         }
     ];
@@ -688,7 +680,7 @@ const OrdersCompareGrid = () => {
         setSelectedEstimatedFromDate(undefined);
         setSelectedEstimatedToDate(undefined);
         // getContractDateChangeData()
-        getQtyChangeData()
+        // getQtyChangeData()
         // getWharehouseDateChangeData()
     }
 
@@ -747,4 +739,4 @@ const OrdersCompareGrid = () => {
     );
 };
 
-export default OrdersCompareGrid;
+export default ShipmentChangesCompareGrid;

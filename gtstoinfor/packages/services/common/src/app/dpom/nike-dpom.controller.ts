@@ -247,7 +247,158 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getItemChangeData')
+    async getItemChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getItemChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 
 
+    @Post('/getUnitChangeData')
+    async getUnitChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getUnitChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getFOBPriceChangeData')
+    async getFOBPriceChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getFOBPriceChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getNetInclDiscChangeData')
+    async getNetInclDiscChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getNetInclDiscChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getTradingNetInclDiscChangeData')
+    async getTradingNetInclDiscChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getTradingNetInclDiscChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getGACChangeData')
+    async getGACChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getGACChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getMRGACChangeData')
+    async getMRGACChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getMRGACChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getModeOfTransportChangeData')
+    async getModeOfTransportChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getModeOfTransportChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getPlantCodeChangeData')
+    async getPlantCodeChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPlantCodeChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getShippingTypeChangeData')
+    async getShippingTypeChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getShippingTypeChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getVasTextChangeData')
+    async getVasTextChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getVasTextChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getShipToCustomerChangeData')
+    async getShipToCustomerChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getShipToCustomerChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getInventorySegmentCodeChangeData')
+    async getInventorySegmentCodeChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getInventorySegmentCodeChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getDirectShipSoNoChangeData')
+    async getDirectShipSoNoChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getDirectShipSoNoChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getDestinationCountryChangeData')
+    async getDestinationCountryChangeData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getDestinationCountryChangeData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getDestinationWisePo')
+    async getDestinationWisePo(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getDestinationWisePo();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getSeasonWisePo')
+    async getSeasonWisePo(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getSeasonWisePo();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
 
