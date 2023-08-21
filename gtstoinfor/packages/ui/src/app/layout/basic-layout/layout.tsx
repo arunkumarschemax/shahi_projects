@@ -278,6 +278,12 @@ export const baseRouterList = [
                 path: "colour/colour-view",
                 filepath: "colour/colour-view",
             },
+            {
+                label: "Department",
+                key: "department",
+                path: "department/department-view",
+                filepath: "department/department-view",
+            },
         ],
     },
 

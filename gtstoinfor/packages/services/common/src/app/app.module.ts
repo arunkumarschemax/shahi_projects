@@ -16,7 +16,6 @@ import { ItemsModule } from './items/items.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { BuyersModule } from './buyers/buyers.module';
 import { CompanyModule } from './company/company.module';
-
 import { PaymentTermsModule } from './payment-terms/payment-terms.module';
 import { PackageTermsModule } from './packages-terms/package-terms.module';
 import { OperationGroupsModule } from './operation-groups/operation-groups.module';
@@ -24,7 +23,6 @@ import { DeliveryMethodModule } from './delivery-method/delivery-method.module';
 import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categories.module';
 import { DivisionModule } from './division/division.module';
-
 import { DeliveryTermsModule } from './delivery-terms/delivery-terms.module';
 import { CountriesModule } from './countries/countries.module';
 import { StyleModule } from './style/style-module';
@@ -45,6 +43,7 @@ import { ROSLGroupsModule } from './rosl groups/rosl-groups.module';
 import { BuyingHouseModule } from './buying-house/buying-house.module';
 import { CommissionModule } from './commission/commission.module';
 import { ColourModule } from './colours/colour.module';
+import { DepartmentsModule } from './departments/departments.module';
 
 
 @Module({
@@ -90,6 +89,7 @@ import { ColourModule } from './colours/colour.module';
     FabricTypeModule,
     ColourModule,
   SizeModule,
+  DepartmentsModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],
   providers: [AppService],

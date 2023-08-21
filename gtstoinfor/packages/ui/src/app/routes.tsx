@@ -88,6 +88,8 @@ import CommissionForm from "./masters/commission/commission-form"
 import CommissionGrid from "./masters/commission/commission-grid"
 import ColourGrid from "./masters/colours/colour-grid"
 import { ColourForm } from "./masters/colours/colour-form"
+import DepartmentGrid from "./masters/departments/department-grid"
+import DepartmentForm from "./masters/departments/department-form"
 
 
 export const AppRoutes = () => {
@@ -304,6 +306,14 @@ export const AppRoutes = () => {
                  isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+                
+                  <Route path='department/department-view' element={<DepartmentGrid/>} />
+                         <Route path='department/department-form' key ='department/department-form' element={<DepartmentForm  DepartmentData={undefined}
+
+                 isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+
                          <Route path='locations/locations-view' element={<LocationsGrid/>}/>
                          <Route path='settings/settings-form' element={<SettingsForm/>}/>
 
