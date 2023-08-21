@@ -69,45 +69,6 @@ export const baseRouterList = [
             // },
         ],
     },
-    // {
-    //     label: "Orders",
-    //     key: "excel-import",
-    //     path: "excel-import",
-    //     icon: <FileExcelOutlined />,
-    //     filepath: "excel-import",
-    //     children: [
-    //         {
-    //             label: "Add Orders",
-    //             key: "excel-import",
-    //             path: "excel-import",
-    //             filepath: "excel-import",
-    //         },
-    //         {
-    //             label: "Compare Orders",
-    //             key: "changes-view",
-    //             path: "changes-view",
-    //             filepath: "changes-view",
-    //         },
-    //         {
-    //             label: "View Orders",
-    //             key: "grid-view",
-    //             path: "grid-view",
-    //             filepath: "grid-view",
-    //         },
-    //         {
-    //             label: "Uploaded Files",
-    //             key: "revert-orders",
-    //             path: "revert-orders",
-    //             filepath: "revert-orders",
-    //         },
-    //         {
-    //             label: "Versions Data",
-    //             key: "version-grid",
-    //             path: "version-grid",
-    //             filepath: "version-grid",
-    //         }
-    //     ],
-    // },
     {
         label: "Nike",
         key: "nike",
@@ -116,10 +77,16 @@ export const baseRouterList = [
         filepath: "nike",
         children: [
             {
-                label: "Upload File",
+                label: "PO Data Upload",
                 key: "file-import",
                 path: "file-import",
                 filepath: "file-import",
+            },
+            {
+                label: "DPOM Data Sync",
+                key: "dpom-sync",
+                path: "dpom-sync",
+                filepath: "dpom-sync",
             },
             {
                 label: "Revert File",
@@ -128,7 +95,7 @@ export const baseRouterList = [
                 filepath: "file-revert",
             },
             {
-                label: "Order Acceptance",
+                label: "Nike Orders Register",
                 key: "order-acceptance",
                 path: "order-acceptance",
                 filepath: "order-acceptance",
@@ -195,7 +162,7 @@ export const baseRouterList = [
                 path: "shipment-planning-chart",
                 filepath: "shipment-planning-chart",
             },
-           
+
             {
                 label: "Shipment Tracker",
                 key: "shipment-report",
