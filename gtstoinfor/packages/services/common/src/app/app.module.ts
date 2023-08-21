@@ -21,7 +21,7 @@ import { OrdersModule } from './orders/orders.module';
       password: appConfig.database.password,
       database: appConfig.database.dbName,
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       logging: true,
       extra: {
         connectionLimit: 20
