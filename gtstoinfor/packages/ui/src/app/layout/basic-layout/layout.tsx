@@ -21,7 +21,7 @@ export const baseRouterList = [
     {
         label: "Dashboard",
         key: "dashboard",
-        path: "dashboard",
+        path: "nike-dashboard",
         icon: <DashboardOutlined />,
         filepath: "/dashboard.tsx",
     },

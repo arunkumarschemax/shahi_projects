@@ -231,4 +231,22 @@ export class DpomRepository extends Repository<DpomEntity> {
             .where(` od.column_name='destination_country' `)
         return await query.getRawMany();
     }
+
+    async getDestinationPo(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`destination_country AS destination, COUNT(po_number) AS poCount`)
+            .where(`destination_country  IS NOT NULL`)
+            .andWhere(`dpom_item_line_status = 'Accepted'||'Unaccepted'`)
+            .groupBy(`destination_country`)
+        return await query.getRawMany();
+    }
+
+    async getSeasonPo(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`planning_season_code AS season, COUNT(po_number) AS poCount`)
+            .where(`planning_season_code  IS NOT NULL`)
+            .andWhere(`dpom_item_line_status = 'Accepted'||'Unaccepted'`)
+            .groupBy(`planning_season_code`)
+        return await query.getRawMany();
+    }
 }

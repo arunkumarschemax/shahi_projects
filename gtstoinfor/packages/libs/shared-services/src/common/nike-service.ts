@@ -154,4 +154,12 @@ export class NikeService extends CommonAxiosService {
     async getDestinationCountryChangeData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getDestinationCountryChangeData")
     }
+
+    async getDestinationWisePo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getDestinationWisePo")
+    }
+
+    async getSeasonWisePo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getSeasonWisePo")
+    }
 }   

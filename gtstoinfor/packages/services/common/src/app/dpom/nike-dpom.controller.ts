@@ -372,5 +372,23 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getDestinationWisePo')
+    async getDestinationWisePo(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getDestinationWisePo();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getSeasonWisePo')
+    async getSeasonWisePo(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getSeasonWisePo();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
 

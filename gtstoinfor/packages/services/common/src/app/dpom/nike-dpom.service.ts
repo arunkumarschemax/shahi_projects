@@ -795,4 +795,19 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No Data Found', []);
         }
     }
+    async getDestinationWisePo(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getDestinationPo()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    async getSeasonWisePo(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getSeasonPo()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'Data retrieved', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 }
