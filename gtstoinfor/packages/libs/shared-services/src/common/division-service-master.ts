@@ -23,7 +23,7 @@ export class DivisionService extends CommonAxiosService{
 
   }
   async getAllActiveDivision(): Promise<AllDivisionResponseModel> {
-    return this.axiosPostCall(this.URL + '/getAllActiveDiviion')
+    return this.axiosPostCall(this.URL + '/getAllActivedivision')
   }
   async getDivisionById(divisionRequest:DivisionRequest): Promise<DivisionResponseModel> {
     return this.axiosPostCall(this.URL + '/getDivisionById',divisionRequest)

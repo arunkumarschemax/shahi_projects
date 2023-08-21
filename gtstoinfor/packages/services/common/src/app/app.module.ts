@@ -40,6 +40,13 @@ import { SampleTypesModule } from './sample Types/sample-types.module';
 import { LocationsModule } from './locations/location.module';
 import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module';
 import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
+import { FabricTypeModule } from './fabric-types/fabric-type.module';
+import { FabricSubTypeModule } from './fabric-sub-types/fabric-sub-type.module';
+import { SizeModule } from './sizes/sizes-module';
+import { CustomGroupsModule } from './custom groups/custom-groups.module';
+import { ROSLGroupsModule } from './rosl groups/rosl-groups.module';
+import { BuyingHouseModule } from './buying-house/buying-house.module';
+import { CommissionModule } from './commission/commission.module';
 
 
 @Module({
@@ -73,6 +80,10 @@ import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
     GarmentCategoriesModule,
     ComponentsModule,
     AttributeModule,
+    CustomGroupsModule,
+    ROSLGroupsModule,
+    BuyingHouseModule,
+    CommissionModule,
     UsersModule,
     OrdersModule,
     DeliveryTermsModule,
@@ -81,6 +92,9 @@ import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
     SampleTypesModule,
     SampleSubTypesModule,
     LiscenceTypedModule,
+    FabricSubTypeModule,
+    FabricTypeModule,
+  SizeModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],
   providers: [AppService],

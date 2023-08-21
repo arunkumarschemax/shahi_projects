@@ -45,3 +45,12 @@ export * from './taxes-service'
 export * from './warehouse-service'
 export * from './sample-types-service';
 export * from './sample-sub-types-service';
+export * from './fabric-type-service'
+export * from './fabric-sub-type-service'
+export * from './settings-service'
+export * from './m3-genric-service'
+export * from './size-service'
+export * from './custom-group.service'
+export * from './rosl-groups.service'
+export * from './buying-house.service'
+export * from './commission.service'
