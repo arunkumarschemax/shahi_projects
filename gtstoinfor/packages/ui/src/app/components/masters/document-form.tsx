@@ -56,7 +56,7 @@ const [form] = Form.useForm();
 
     return (
         <div>
-              <Card  title={<span style={{ color: "Black",}}>Document</span>}  headStyle={{ backgroundColor:'transparent'}} extra={<Link to='/document-grid' >{(props.isUpdate === false) && <Button className='panel_button' type={'primary'}>View </Button>}</Link>} size="small">
+              <Card size='small' title={<span style={{ color: "Black",}}>Document</span>}  headStyle={{ backgroundColor:'transparent'}} extra={<span><Button onClick={() => navigate('/document-grid')} type={'primary'}>View</Button></span>}>
                 <Form
                     form={form}
                     onFinish={onFinish} initialValues={props.data}>

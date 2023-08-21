@@ -55,13 +55,13 @@ export class DocumentService {
           if(!isUpdate){
             const relation = await this.getDocvalidation(req.documentName)
             if(relation){
-                return new DocumentResponseModel(false,0,'routes combination already exists',undefined)
+                return new DocumentResponseModel(false,0,'Document already exists',undefined)
             }
         }else{
             console.log('hiii')
             const relation = await this.getDocvalidation(req.documentName)
             if(relation){
-                return new DocumentResponseModel(false,0,'routes combination already exists',undefined)     
+                return new DocumentResponseModel(false,0,'Document already exists',undefined)     
             }
         }
           const entities= new DocumentEntity()

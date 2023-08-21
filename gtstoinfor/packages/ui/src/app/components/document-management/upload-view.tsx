@@ -264,7 +264,10 @@ useEffect(() =>{
   const upload = (data: any) => {
     console.log(data)
     let file = props.form.getFieldValue(`${data.documentsListId}`);
+    let status = props.form.getFieldValue(`status`);
+
     data.file = file;
+    data.status = status;
     data.documentsListId = props.docData.documentsListId;
     data.documentCategoryId = props.docData.documentCategoryId;
     console.log(file);
@@ -344,10 +347,12 @@ useEffect(() =>{
         <br />
         <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-          <Radio.Group defaultValue={props.docData.docStatus} buttonStyle="solid" onChange={handleStatusChange}>
-            <Radio.Button value="partially uploaded">parially</Radio.Button>
-            <Radio.Button value="fully uploaded">fully</Radio.Button>
-          </Radio.Group>
+          <Form.Item name={"status"} initialValue={props.docData.docStatus}>
+            <Radio.Group buttonStyle="solid" onChange={handleStatusChange}>
+              <Radio.Button value="partially uploaded">parially</Radio.Button>
+              <Radio.Button value="fully uploaded">fully</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
         </Text>
         <br />
         <br />
