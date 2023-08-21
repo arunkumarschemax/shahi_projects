@@ -34,7 +34,7 @@ const DivertReport = () => {
 
     useEffect(() => {
         getData();
-        getCount();
+       // getCount();
     }, [])
 
     const handleCheckboxChange = (id: string) => {
@@ -124,16 +124,16 @@ const DivertReport = () => {
 // let newSno = 0;
 
 
-    const getCount= () =>{
-        service.getCountForDivertReport().then(res => {
+//     const getCount= () =>{
+//         service.getCountForDivertReport().then(res => {
 
-            if (res.status) {
-                setDataLength(res.data)
-            }
-        })
+//             if (res.status) {
+//                 setDataLength(res.data)
+//             }
+//         })
     
     
-}
+// }
     const getData = () =>{
      service.getDivertReportData().then(res=>{
         if (res.status) {
@@ -458,10 +458,9 @@ excel.saveAs(`Divert-report-${currentDate}.xlsx`);
             title: 'Document Date',
             dataIndex: 'oDocumentDate', 
             render: (text, record) => {
-               (record.documentDate
-                        ? moment(record.documentDate).format("YYYY-MM-DD")
-                        : "-")
-                  
+                return record.oDocumentDate
+                    ? moment(record.oDocumentDate).format("YYYY-MM-DD")
+                    : "-";
             }
         },
         {
@@ -512,19 +511,19 @@ excel.saveAs(`Divert-report-${currentDate}.xlsx`);
 
         },
         {
-            title: 'GAC Difference',
-            dataIndex: 'ogac', 
-            render: (text, record) => {
-              if (record.ogac && record.gac) {
-                const ogacDate = moment(record.ogac);
-                const gacDate = moment(record.gac);
-                const daysDifference = gacDate.diff(ogacDate, 'days');
-                return daysDifference + ' days';
-              } else {
-                return "-";
-              }
-            }
-          },
+    title: 'GAC Difference',
+    dataIndex: '', 
+    render: (text, record) => {
+        if (record.ogac && record.nogac) {
+            const ogacDate = moment(record.ogac, 'YYYY-MM-DD');
+            const nogacDate = moment(record.nogac, 'YYYY-MM-DD');
+            const daysDifference = nogacDate.diff(ogacDate, 'days');
+            return daysDifference + ' days';
+        } else {
+            return "-";
+        }
+    }
+},
         {
             title: 'Item Vas',
             dataIndex: 'oitem_vas_text',
@@ -567,7 +566,7 @@ excel.saveAs(`Divert-report-${currentDate}.xlsx`);
             if (record.dpomCreatedDates && record.nogac) {
               const dpomCreatedDate = moment(record.dpomCreatedDates);
               const nogacDate = moment(record.nogac);
-              const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
+              const daysDifference = dpomCreatedDate.diff(nogacDate, 'days');
               return daysDifference + ' days';
             } else {
               return "-";
@@ -600,14 +599,14 @@ excel.saveAs(`Divert-report-${currentDate}.xlsx`);
             dataIndex:'nLineStatus'
         },
         {
-            title: 'Document Date',
-            dataIndex: 'nDocumentDate', 
-            render: (text, record) => {
-             (record.nDocumentDate
-                        ? moment(record.nDocumentDate).format("YYYY-MM-DD")
-                        : "-")
-            }
-        },
+    title: 'Document Date',
+    dataIndex: 'nDocumentDate', 
+    render: (text, record) => {
+        return record.nDocumentDate
+            ? moment(record.nDocumentDate).format("YYYY-MM-DD")
+            : "-";
+    }
+},
         {
             title: 'New Po',
             dataIndex: 'npoNumber',
