@@ -22,7 +22,7 @@ export function SampleSubTypesGrid(
 
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [Data, setData] = useState<SampleSubTypesDTO[]>([]);
-  const [selectedSampleSubType, setSelectedSampleSubType] = useState<SampleSubTypesDTO>();
+  const [selectedSampleSubType, setSelectedSampleSubType] = useState<any>(undefined);
 
   const Service = new SampleSubTypesService();
 
@@ -48,8 +48,9 @@ export function SampleSubTypesGrid(
   }
 
   const updateSampleSubType = (Data:SampleSubTypesDTO) => {
+    console.log(Data,"rrrrrrrrrrr")
     Service.updateSampleSubType(Data).then(res => {
-      console.log(res);
+      console.log(res,"================");
       if(res.status){
         getAllSampleSubTypeData();
         setDrawerVisible(false);
@@ -233,6 +234,8 @@ export function SampleSubTypesGrid(
           <span>         
               <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
                 onClick={() => {
+                  console.log(rowData,'roww')
+
                   if (rowData.isActive) {
                     openFormWithData(rowData);
                   } else {

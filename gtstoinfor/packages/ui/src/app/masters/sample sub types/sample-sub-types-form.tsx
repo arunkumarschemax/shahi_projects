@@ -3,7 +3,7 @@ import {Form, Input, Button, Select, Card, Row, Col, InputNumber} from 'antd';
 
 
 import TextArea from 'antd/lib/input/TextArea';
-import { OperationsDTO, SampleSubTypesDTO } from '@project-management-system/shared-models';
+import {  SampleSubTypesDTO } from '@project-management-system/shared-models';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { OperationsService, SampleSubTypesService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
@@ -84,7 +84,7 @@ export function SampleSubTypesForm(
     setDisable(false)
     if(props.isUpdate){
       // form.setFieldValue({'operationGroup'})
-      console.log(values,'===========')
+      console.log(values,'===========[[[[[[[[[[[')
       props.updateSampleSubTypes(values);
     }else{
       setDisable(false)
@@ -101,7 +101,7 @@ export function SampleSubTypesForm(
       <Form.Item name="sampleTypeId" style={{ display: "none" }} >
         <Input hidden />
       </Form.Item>
-      <Form.Item name="sampleSubTypeID" style={{ display: "none" }} >
+      <Form.Item name="sampleSubTypeId" style={{ display: "none" }} >
         <Input hidden />
       </Form.Item>
       <Row gutter={24}>
@@ -109,7 +109,7 @@ export function SampleSubTypesForm(
 
         <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}} >
           <Form.Item
-            name="sampleSubTYpe"
+            name="sampleSubType"
             label="Sample Sub Type"
             rules={[
               {

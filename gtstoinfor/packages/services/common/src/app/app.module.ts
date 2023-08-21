@@ -39,6 +39,7 @@ import { WarehouseModule } from './warehouse/warehouse.module';
 import { SampleTypesModule } from './sample Types/sample-types.module';
 import { LocationsModule } from './locations/location.module';
 import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module';
+import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
 
 
 @Module({
@@ -51,7 +52,7 @@ import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module'
       username: appConfig.database.username,
       password: appConfig.database.password,
       database: appConfig.database.dbName,
-     
+   
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -79,6 +80,7 @@ import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module'
     DivisionModule,
     SampleTypesModule,
     SampleSubTypesModule,
+    LiscenceTypedModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],
   providers: [AppService],

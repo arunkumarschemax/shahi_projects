@@ -32,9 +32,9 @@ export class SampleSubTypesController {
        }
 
        @Post('/updateSampleSubTypes')
-       async updateSampleSubTypes(@Body() sampleSubTypeDto: any,@Req() request:Request): Promise<SampleSubTypesResponseModel> {
+       async updateSampleSubTypes(@Body() sampleSubTypeDto: SampleSubTypeDTO,@Req() request:Request): Promise<SampleSubTypesResponseModel> {
          try {
-           console.log(request);
+           console.log(request,'[[[[[[[[[]]]]]]]]]');
            return await this.sampleSubTypeService.createSampleSubType(sampleSubTypeDto, true);
          } catch (error) {
            return this.applicationExceptionHandler.returnException(SampleSubTypesResponseModel, error);
