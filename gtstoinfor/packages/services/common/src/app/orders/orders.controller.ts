@@ -116,14 +116,13 @@ export class OrdersController {
         }
     }
 
-    @Post('/fileUpload')
+    @Post('/fileUpload/:month')
     @ApiConsumes('multipart/form-data')
     @UseInterceptors(FileInterceptor('file', {
         limits: { files: 1 },
         storage: diskStorage({
             destination: './upload-files',
             filename: (req, file, callback) => {
-                console.log(file.originalname);
                 const name = file.originalname;
                 callback(null, `${name}`);
             },
@@ -136,9 +135,9 @@ export class OrdersController {
         },
     }))
 
-    async fileUpload(@UploadedFile() file): Promise<CommonResponseModel> {
+    async fileUpload(@Param('month') month: number, @UploadedFile() file): Promise<CommonResponseModel> {
         try {
-            return await this.ordersService.updatePath(file.path, file.filename)
+            return await this.ordersService.updatePath(file.path, file.filename, month)
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
         }

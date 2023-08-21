@@ -299,10 +299,11 @@ export class OrdersService {
         }
     }
 
-    async updatePath(filePath: string, filename: string): Promise<CommonResponseModel> {
+    async updatePath(filePath: string, filename: string, month: number): Promise<CommonResponseModel> {
         const entity = new FileUploadEntity()
         entity.fileName = filename;
         entity.filePath = filePath;
+        entity.month = month;
         entity.status = 'uploading';
         const file = await this.fileUploadRepo.findOne({ where: { fileName: filename } })
         if (file) {

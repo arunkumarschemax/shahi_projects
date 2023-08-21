@@ -62,26 +62,23 @@ export default function ExcelImport() {
   };
   const handleUpload = async () => {
     try {
-      
+
       if (selectedFile) {
         let integerPart
-  //  console.log(selectedFile.name,'selectedFile') 
-      const inputString=selectedFile.name
-      const match = inputString.match(/(\d+)\.\d+/);
+        //  console.log(selectedFile.name,'selectedFile') 
+        const inputString = selectedFile.name
+        const match = inputString.match(/(\d+)\.\d+/);
         if (match) {
-             integerPart = parseInt(match[1]);
-            console.log(integerPart);
+          integerPart = parseInt(match[1]);
         } else {
-            console.log("No integer part found in the input string.");
+          console.log("No integer part found in the input string.");
         }
-
         const formData = new FormData();
         formData.append('file', selectedFile);
-        if(integerPart){
-          console.log('hii')
-          ordersService.fileUpload(formData).then((fileRes) => {
+        if (integerPart) {
+          ordersService.fileUpload(formData, integerPart).then((fileRes) => {
             if (fileRes.status) {
-              ordersService.saveOrder(data, fileRes?.data?.id ,integerPart).then((res) => {
+              ordersService.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
                 setLoading(true)
                 if (res.status) {
                   const req = new FileStatusReq()
@@ -104,10 +101,10 @@ export default function ExcelImport() {
               message.error(fileRes.internalMessage)
             }
           });
-        }else{
+        } else {
           message.info('month not avilable')
         }
-      
+
       }
     } catch (error) {
       message.error(error.message)
