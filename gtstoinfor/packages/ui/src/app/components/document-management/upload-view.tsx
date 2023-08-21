@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, UploadFile, Radio } from 'antd';
-import { PDFDocument } from 'pdf-lib';
+// import { PDFDocument } from 'pdf-lib';
 import Papa from 'papaparse'
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import { ArrowDownOutlined, DeleteOutlined, DownloadOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons';
@@ -141,54 +141,54 @@ useEffect(() =>{
   }, [selectedFiles]);
 
   const download = (data: any) => {
-    mergeAndDownloadPDF(selectedFiles);
+    // mergeAndDownloadPDF(selectedFiles);
 
     console.log('data');
     console.log(data);
   };
 
-  const mergeAndDownloadPDF = async (files: File[]) => {
-    if (files.length === 0) {
-      alert('Please select at least one file.');
-      return;
-    }
+  // const mergeAndDownloadPDF = async (files: File[]) => {
+  //   if (files.length === 0) {
+  //     alert('Please select at least one file.');
+  //     return;
+  //   }
 
-    const pdfDoc = await PDFDocument.create();
+  //   const pdfDoc = await PDFDocument.create();
 
-    for (const file of files) {
-      const fileData = await file.arrayBuffer();
-      // const pdfBytes = new Uint8Array(fileData);
-      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+  //   for (const file of files) {
+  //     const fileData = await file.arrayBuffer();
+  //     // const pdfBytes = new Uint8Array(fileData);
+  //     const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
-      if (fileExtension === 'pdf') {
-        const pdfBytes = new Uint8Array(fileData);
-        const externalPdf = await PDFDocument.load(pdfBytes);
-        const copiedPages = await pdfDoc.copyPages(externalPdf, externalPdf.getPageIndices());
+  //     if (fileExtension === 'pdf') {
+  //       const pdfBytes = new Uint8Array(fileData);
+  //       const externalPdf = await PDFDocument.load(pdfBytes);
+  //       const copiedPages = await pdfDoc.copyPages(externalPdf, externalPdf.getPageIndices());
   
-        copiedPages.forEach((page) => {
-          pdfDoc.addPage(page);
-        });
-      } else if (fileExtension === 'jpg' || fileExtension === 'jpeg' || fileExtension === 'png') {
-        const image = await pdfDoc.embedJpg(fileData);
-        const page = pdfDoc.addPage();
-        page.drawImage(image, {
-          x: 50,
-          y: 450,
-          width: 500,
-          height: 400,
-        });
-      }
-    }
+  //       copiedPages.forEach((page) => {
+  //         pdfDoc.addPage(page);
+  //       });
+  //     } else if (fileExtension === 'jpg' || fileExtension === 'jpeg' || fileExtension === 'png') {
+  //       const image = await pdfDoc.embedJpg(fileData);
+  //       const page = pdfDoc.addPage();
+  //       page.drawImage(image, {
+  //         x: 50,
+  //         y: 450,
+  //         width: 500,
+  //         height: 400,
+  //       });
+  //     }
+  //   }
 
 
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  //   const pdfBytes = await pdfDoc.save();
+  //   const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'MERGED.pdf';
-    link.click();
-  };
+  //   const link = document.createElement('a');
+  //   link.href = URL.createObjectURL(blob);
+  //   link.download = 'MERGED.pdf';
+  //   link.click();
+  // };
 
   const handleFileUpload = (file: File) => {
     setFileList([...fileList, file]);
