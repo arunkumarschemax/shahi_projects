@@ -148,6 +148,8 @@ export default function DocumentListupload() {
         formData.append('fileName', `${data.fileName}`);
         formData.append('filePath', `${data.filePath}`);
         formData.append('uploadStatus', `${data.uploadStatus}`);
+        formData.append('status', `${data.status}`);
+
         // formData.append('uid',''\)
         const files = filesList;
         console.log(files);
@@ -204,7 +206,7 @@ export default function DocumentListupload() {
   }
 
   return(
-    <Card title="Document management" extra={<span><Button onClick={() => navigate('/document-management/upload-file-view')} type={'primary'}>View Document Status</Button></span>}>
+    <Card title="Document management" extra={<span><Button onClick={() => navigate('/document-management/upload-file-view')} type={'primary'}>View Documents Status</Button></span>}>
       <Form form={form}  layout='vertical' name="control-hooks" >
        <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
@@ -253,12 +255,13 @@ export default function DocumentListupload() {
                 />
               ))
             ) : (
-              <Alert
-                message="No Data Found"
-                type="warning"
-                showIcon
-                style={{ width: "150px", margin: "auto" }}
-              />
+              <div style={{ display: 'flex', flexWrap: 'wrap' }}>No Data Found</div>
+
+              // <>No Data Found<Alert
+              //         message="No Data Found"
+              //         type="warning"
+              //         showIcon
+              //         style={{ width: "150px", margin: "auto" }} /></>
             )}
           </Row>
         </Card>

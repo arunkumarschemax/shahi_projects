@@ -19,7 +19,7 @@ import { OrdersModule } from './orders/order.module';
       password: appConfig.database.password,
       database: appConfig.database.docdbName,
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       logging: true,
       extra: {
         connectionLimit: 20

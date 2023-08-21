@@ -79,7 +79,7 @@ export class DocumentsListService {
         let flag :boolean = true;
         const uploadStatusUpdate = await this.documentsListRepository.update(
             {  documentsListId:req.documentsListId },
-            { isUploaded: true }
+            { isUploaded: true, status:req.status }
         );
         console.log (uploadStatusUpdate)
         if (uploadStatusUpdate.affected > 0) {
@@ -130,13 +130,13 @@ export class DocumentsListService {
 
     async getDocumentDetailsByPO(req:PoRoleRequest):Promise<UploadDocumentListResponseModel>{
         try{
-            const sqlQuery = "Select is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"' and role_name ='"+req.role+"' Group by dl.documents_list_id";
+            const sqlQuery = "Select dl.status,is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"' and role_name ='"+req.role+"' Group by dl.documents_list_id";
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
             let docinfo: UploadDocumentListDto[] = [];
-            if(result){
+            if(result.length >0){
             for (const res of result){
 
-                const doctlistQuery = 'SELECT uid,u.status,u.file_name AS name, "application/pdf" AS "type" FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id where u.document_list_id ='+res.documentsListId;
+                const doctlistQuery = 'SELECT uid,u.file_name AS name, "application/pdf" AS "type" FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id where u.document_list_id ='+res.documentsListId;
                 const docres = await this.uploadFilesRepository.query(doctlistQuery)
 
                 const docReq:docRequest[] =[];

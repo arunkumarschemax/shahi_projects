@@ -34,7 +34,7 @@ export class DocumentsList {
         nullable: false,
         enum: DoclListEnum
     })
-    status: DoclListEnum;
+    status: string;
     
 
     @Column("int", {
