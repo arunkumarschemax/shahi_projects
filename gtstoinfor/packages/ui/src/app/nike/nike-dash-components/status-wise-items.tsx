@@ -42,7 +42,7 @@ export function StatusWiseOrders() {
   
 
   const config = {
-    colors: ['#058DC7', '#50B432', '#FFC000', '#7798BF', '#aaeeee', '#ff0066',
+    colors: ['#99C846', '#FF0000', '#FFC000', '#7798BF', '#aaeeee', '#ff0066',
       '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
     chart: {
       type: 'pie',
