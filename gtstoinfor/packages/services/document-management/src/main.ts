@@ -13,7 +13,7 @@ async function bootstrap() {
   // }));
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 8002;
+  const port = process.env.PORT || 3002;
 
   const options = new DocumentBuilder()
     .setTitle('Documents management API Service')
