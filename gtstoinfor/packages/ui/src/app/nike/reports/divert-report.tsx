@@ -13,9 +13,11 @@ import { NikeService } from '@project-management-system/shared-services';
 interface IExcelColumn {
     title: string;
     dataIndex: string;
-    color?:string;
-    children?: IExcelColumn[];
+  
+//    children?: CustomExcelColumn[];
   }
+
+
   interface ExpandedRows {
     [key: string]: boolean;
 }
@@ -145,273 +147,7 @@ const DivertReport = () => {
 
    
 
-    const handleExport = (e: any) => {
-        e.preventDefault();
-    
-        const currentDate = new Date()
-            .toISOString()
-            .slice(0, 10)
-            .split("-")
-            .join("/");
-    
-       
-            // const exportingColumns: IExcelColumn[] = [
-            //     { title: 'old', 
-   
-            //     children: [
-                    
-            //         {
-            //             title: "Request Date",
-            //             dataIndex: "",
-            //         },
-            //         {
-            //             title: "From Item",
-            //             dataIndex: "",
-            //         },
-            //         {
-            //             title: "Unit",
-            //             dataIndex: "",
-            //         },
-            //         {
-            //             title: "Plant",
-            //             dataIndex: "oplant",
-            //         },
-            //         {
-            //             title: "Product Code",
-            //             dataIndex: "oproductCode",
-        
-            //         },
-            //            {
-            //             title: "Line Status",
-            //             dataIndex: "onLineStatus",
-            //             // ...getColumnSearchProps("lineStatus"),
-        
-            //         },
-            //         {
-            //             title: 'Document Date',
-            //             dataIndex: 'oDocumentDate', 
-            //             // render: (text, record) => {
-            //             //    (record.documentDate
-            //             //             ? moment(record.documentDate).format("YYYY-MM-DD")
-            //             //             : "-")
-                              
-            //             // }
-            //         },
-            //         {
-            //             title: 'Old Po',
-            //             dataIndex: 'opoNumber',
-        
-                        
-            //         }, 
-            //         {
-            //             title: 'Old Po Line',
-            //             dataIndex: 'opoLine',
-        
-                        
-            //         },
-            //         {
-            //             title: 'Old Qantity',
-            //             //from yesterdays ppm
-            //             dataIndex: 'oquantity', 
-        
-            //         },
-            //         {
-            //             title: 'Balance Qty',
-            //             // from dpom
-            //             dataIndex: 'nQuantity', 
-        
-            //         },
-            //         {
-            //             title: 'Destination',
-            //             dataIndex: 'odestination',
-         
-            //         },
-            //         {
-            //             title: 'Shipment Type',
-            //             dataIndex: 'oshipmentType', 
-        
-            //         },
-            //         {
-            //             title: 'OLD OGAC',
-            //             dataIndex: 'oogac', 
-            //         },
-            //         {
-            //             title: 'OLD GAC',
-            //             dataIndex: 'ogac', 
-            //         },
-            //         {   
-            //             title: 'Inventory Segment Code',
-            //             dataIndex: 'oinventorySegmentCode',
-         
-            //         },
-            //         {
-            //             title: 'GAC Difference',
-            //             dataIndex: 'ogac',
-            //             render: (text, record) => {
-            //               if (record.ogac && record.gac) {
-            //                 const ogacDate = moment(record.ogac);
-            //                 const gacDate = moment(record.gac);
-            //                 const daysDifference = gacDate.diff(ogacDate, 'days');
-            //                 return daysDifference + ' days';
-            //               } else {
-            //                 return '-';
-            //               }
-            //             },
-            //           },
-            //         {
-            //             title: 'Item Vas',
-            //             dataIndex: 'oitem_vas_text',
-            //         },
-                    
-                
-            //     ]  
-            //     },
-                
-            //     { 
-            //         title: 'New',
-                
-            //     children:[
-            //         {  title: 'OGAC Date',
-            //             dataIndex: 'nogac', 
-            //             // render: (text, record) => {
-            //             //  (record.ogac
-            //             //             ? moment(record.ogac).format("YYYY-MM-DD")
-            //             //             : "-")
-                              
-            //             // }
-            //         },
-            //         {
-            //             title: 'GAC Date',
-            //             dataIndex: 'ngac', 
-            //             // render: (text, record) => {
-            //             //     (record.gac
-            //             //             ? moment(record.gac).format("YYYY-MM-DD")
-            //             //             : "-")
-            //             // }
-            //         },{
-            //         title:"No of Days to GAC",dataIndex:'dpomCreatedDates'
-            //         // render: (text, record) => {
-            //         //     if (record.dpomCreatedDates && record.nogac) {
-            //         //       const dpomCreatedDate = moment(record.dpomCreatedDates);
-            //         //       const nogacDate = moment(record.nogac);
-            //         //       const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
-            //         //       return daysDifference + ' days';
-            //         //     } else {
-            //         //       return "-";
-            //         //     }
-            //         //   }
-            //         }, 
-            //         {
-            //             title:"To item",
-            //             dataIndex:"",
-            //             }, 
-            //         {
-            //            title:"Unit",
-            //            dataIndex:"",
-            //            },
-        
-            //         {
-            //             title: "Plant",
-            //             dataIndex: "nPlant",
-            //         },
-            //         {
-            //             title: "Product Code",
-            //             dataIndex: "nproductCode",
-                      
-        
-            //         },
-            //         {
-            //             title: "Line Status",
-            //             dataIndex:'nLineStatus'
-            //         },
-            //         {
-            //             title: 'Document Date',
-            //             dataIndex: 'nDocumentDate', 
-            //             // render: (text, record) => {
-            //             //  (record.nDocumentDate
-            //             //             ? moment(record.nDocumentDate).format("YYYY-MM-DD")
-            //             //             : "-")
-            //             // }
-            //         },
-            //         {
-            //             title: 'New Po',
-            //             dataIndex: 'npoNumber',
-            //         },
-            //         {
-            //             title: 'New Po Line',
-            //             dataIndex: 'npoLine',
-            //         },
-            //         {
-            //             title: 'Quantity',
-            //             dataIndex: 'nQuantity', 
-            //         },
-            //         {
-            //             title: 'Destination',
-            //             dataIndex: 'ndestination', 
-            //         },
-                    
-            //         {
-            //             title: 'Inventory Segment Code',
-            //             dataIndex: 'ninventorySegmentCode', 
-            //         },
-            //         {
-            //             title: 'Item Vas',
-            //             dataIndex: 'nitemVasText',
-            //         },
-                               
-            //         {
-            //             title: 'Shipment Type',
-            //             dataIndex: 'nshipmentType',
-            //         },
-            //         {
-            //             title: 'Item Vas Diff Check',
-            //             dataIndex: '', 
-            //         },
-            //         {
-            //             title: 'Qty Tally-Check',
-            //             dataIndex: '', 
-            //         },
-            //         {
-            //             title: 'Price-Fob Tally-Check',
-            //             dataIndex: '', 
-            //         },
-            //         {
-            //             title: 'Price-Net Includding Discount Tally-Check',
-            //             dataIndex: '', 
-            //         },
-            //         {
-            //             title: 'Price-Trading Co Net Includding Discount Tally-Check',
-            //             dataIndex: '', 
-            //         },
-                
-            //     ]}
-                
-            //   ];
-        
-    
-        const excel = new Excel();
-excel.addSheet("Sheet1");
 
-// const formattedDataForExcel = modifiedCombinedData.map(item => ({
-//     ...item,
-//     sno: item.section === 'old' ? item.sno : newSno++,
-// }));
-
-// let newSno = 1;
-// const newSectionStart = formattedDataForExcel.findIndex(item => item.section === 'new');
-// if (newSectionStart >= 0) {
-//     formattedDataForExcel.slice(newSectionStart).forEach((item, index) => {
-//         if (item.section === 'new') {
-//             item.sno = newSno++; 
-//         }
-//     });
-// }
-
-excel.addRow();
-//excel.addColumns(exportingColumns);
-// excel.addDataSource(formattedDataForExcel);
-excel.saveAs(`Divert-report-${currentDate}.xlsx`);
-}
 
     const columns: ColumnProps<any>[] = [
 
@@ -472,8 +208,7 @@ excel.saveAs(`Divert-report-${currentDate}.xlsx`);
         {
             title: 'Old Po Line',
             dataIndex: 'opoLine',
-
-            
+   
         },
         {
             title: 'Old Qantity',
@@ -699,6 +434,7 @@ excel.saveAs(`Divert-report-${currentDate}.xlsx`);
                         {expandedRows[rowData.id] ? (
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <Input
+                                allowClear
                                     style={{ marginRight: '10px' }}
                                     placeholder="Enter text"
                                     value={textareaValues[rowData.id] || ''}
@@ -736,9 +472,6 @@ excel.saveAs(`Divert-report-${currentDate}.xlsx`);
     ]as unknown as null,}
 
     ]
-   
-
-
 
     return (
         <>
@@ -746,7 +479,7 @@ excel.saveAs(`Divert-report-${currentDate}.xlsx`);
                 extra={ <Button
                     type="default"
                     style={{ color: 'green' }}
-                    onClick={handleExport}
+                    //onClick={handleExport}
                     icon={<FileExcelFilled />}>Download Excel</Button>}>
                         <Row gutter={70}>
                  {/* <Col >
