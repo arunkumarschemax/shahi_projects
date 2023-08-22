@@ -1,42 +1,57 @@
 import React from 'react';
-import { PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument } from 'pdf-lib';
+import { saveAs } from 'file-saver';
 
-export interface PDFMergerProps {
-    fileList: any;
-}
+const PdfMergeDownload = () => {
+  const mergeAndDownloadPDFs = async () => {
+    try {
+      // Load the initial PDF file (you need to provide a valid URL)
+      const initialPdfUrl = 'http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/PO-388157-6565/Material%20preparation-e816.pdf';
+      const initialPdfBytes = await fetch(initialPdfUrl,{mode:'no-cors'}).then((res) => res.arrayBuffer());
 
-const DocPDFMerger = (props: PDFMergerProps) => {
+      // Load additional PDFs from URLs (you need to provide valid PDF URLs)
+      const pdfUrls = [
+        'http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/PO-388157-6565/Material%20preparation-e816.pdf',
+      ];
+      const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
+        const response = await fetch(url,{mode:'no-cors'});
+        if (!response.ok) {
+          throw new Error(`Failed to fetch ${url}`);
+        }
+        return response.arrayBuffer();
+      }));
 
-  const mergePDFs = async () => {
-    // Create a new PDF document
-    const mergedPdf = await PDFDocument.create();
+      // Create a new PDF document
+      const mergedPdf = await PDFDocument.create();
 
-    for (const pdfFile of props.fileList) {
-      // Load each PDF document
-      const pdfBytes = await fetch(pdfFile.url).then((response) => response.arrayBuffer());
-      const pdfDoc = await PDFDocument.load(pdfBytes);
+      // Add the pages from the initial PDF
+      const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
+      const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
+      initialPages.forEach((page) => mergedPdf.addPage(page));
 
-      // Add pages from the loaded PDF to the merged PDF
-      const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
-      pages.forEach((page) => mergedPdf.addPage(page));
+      // Loop through each PDF and add its pages to the merged PDF
+      for (const pdfBytes of pdfBytesArray) {
+        const pdfDoc = await PDFDocument.load(pdfBytes);
+        const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+        pages.forEach((page) => mergedPdf.addPage(page));
+      }
+
+      // Save the merged PDF as a blob
+      const mergedPdfBytes = await mergedPdf.save();
+
+      // Create a Blob and trigger a download
+      const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+      saveAs(blob, 'merged.pdf');
+    } catch (error) {
+      console.error('Error merging and downloading PDFs:', error);
     }
-
-    // Generate a new PDF blob
-    const mergedPdfBytes = await mergedPdf.save();
-
-    // Create a URL for downloading the merged PDF
-    const mergedPdfUrl = URL.createObjectURL(new Blob([mergedPdfBytes]));
-
-    // You can now use mergedPdfUrl to download or display the merged PDF
-    console.log('Merged PDF URL:', mergedPdfUrl);
   };
 
   return (
     <div>
-      <h1>PDF Merger</h1>
-      <button onClick={mergePDFs}>Merge PDFs</button>
+      <button onClick={mergeAndDownloadPDFs}>Merge and Download PDFs</button>
     </div>
   );
-}
+};
 
-export default DocPDFMerger;
+export default PdfMergeDownload;

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, UploadFile, Radio } from 'antd';
 import { PDFDocument } from 'pdf-lib';
-import { createPDF,pdfArrayToBlob, mergePDF } from "pdf-actions";
 import Papa from 'papaparse'
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import { ArrowDownOutlined, DeleteOutlined, DownloadOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons';
@@ -14,8 +13,7 @@ import FormList from 'antd/es/form/FormList';
 import InputNumber from 'rc-input-number';
 import { number } from 'prop-types';
 import PDFMerger from 'pdf-merger-js/browser';
-import DocPDFMerger from './merge-pdf';
-import { Document, Page, pdfjs } from 'react-pdf';
+import PdfMergeDownload from './merge-pdf';
 const { Title, Text } = Typography;
 
 export interface UploadViewProps {
@@ -116,68 +114,52 @@ useEffect(() =>{
 },[props.docData.documentsPath])
 
 
-  useEffect(() => {
-    setBtnDisable(selectedFiles.length === 0);
-  }, [selectedFiles]);
+
 
 
   const download = (data: any) => {
-
-    // mergeAllPDFs(data[0].url)
-    // mergeAndDownloadPDF(data);
-
-    // console.log('data');
-    // console.log(data);
-  };
-
-  const mergeAndDownloadPDF = async (files: File[]) => {
-    if (files.length === 0) {
-      alert('Please select at least one file.');
-      return;
-    }
-
-    const pdfDoc = await PDFDocument.create();
-
-    for (const file of files) {
-      if (file.constructor === File || file.constructor === Blob) {
-        console.log()
-      }
-      console.log(file.constructor);
-      const fileData = await file.arrayBuffer();
-
-      const pdfBytes = new Uint8Array(fileData);
-      const fileExtension = file.name.split('.').pop()?.toLowerCase();
-      console.log(fileExtension)
-
-      if (fileExtension === 'pdf') {
-        const pdfBytes = new Uint8Array(fileData);
-        const externalPdf = await PDFDocument.load(pdfBytes);
-        const copiedPages = await pdfDoc.copyPages(externalPdf, externalPdf.getPageIndices());
+    console.log(data);
+//     try {
+//       const merger = new PDFMerger();
   
-        copiedPages.forEach((page) => {
-          pdfDoc.addPage(page);
-        });
-      } else if (fileExtension === 'jpg' || fileExtension === 'jpeg' || fileExtension === 'png') {
-        const image = await pdfDoc.embedJpg(fileData);
-        const page = pdfDoc.addPage();
-        page.drawImage(image, {
-          x: 50,
-          y: 450,
-          width: 500,
-          height: 400,
-        });
-      }
+//       fetch('http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/PO-388157-6565/Nike%20Automation-%20Requirements%20(1)%20(1)%20(1)-6921.pdf', {
+//   mode: 'no-cors',
+// })
+//   .then(async response => {
+//     console.log(response)
+//     console.log(await merger.add('http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/PO-388157-6565/Nike%20Automation-%20Requirements%20(1)%20(1)%20(1)-6921.pdf'));
+  
+//     // await merger.save('merged.pdf');
+
+//     // console.log('PDFs merged successfully.');
+//   });
+      
+//     } catch (error) {
+//       console.error('Error merging PDFs:', error);
+//     }
+const fileUrl = 'http://206.189.138.212/erpx_dev/dist/apps/services/upload-files/brand-files';
+
+// Use the Fetch API to fetch the file
+fetch(fileUrl,{mode:'no-cors'})
+  .then(response => {
+    console.log(response)
+    // Check if the request was successful (status code 200)
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
-
-
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'MERGED.pdf';
-    link.click();
+    // Use the response.text() method to get the file content as text
+    return response.text();
+  })
+  .then(fileContent => {
+    // Do something with the file content
+    console.log(fileContent);
+  })
+  .catch(error => {
+    // Handle errors
+    console.error('Error:', error);
+  });
   };
+
 
   const handleFileUpload = (file: File) => {
     setFileList([...fileList, file]);
@@ -250,17 +232,7 @@ useEffect(() =>{
     // fileList: fileList
 
 };
-const mergePDFHandler = async (files) => {
-  // Converting File Object Array To PDF Document Array
-  files.forEach(async (file)=>await createPDF.PDFDocumentFromFile(file))
-  // Merging The PDF Files to A PDFDocument
-  const mergedPDFDocument = await mergePDF(files)
-  console.log(mergedPDFDocument)
-  // Converting The Merged Document to Unit8Array
-  const mergedPdfFile = await mergedPDFDocument.save();
-  // Saving The File To Disk
-  const pdfBlob = pdfArrayToBlob(mergedPdfFile);
-};
+
   const upload = (data: any) => {
     console.log(data)
     let file = props.form.getFieldValue(`${data.documentsListId}`);
@@ -371,10 +343,8 @@ const mergePDFHandler = async (files) => {
               Download Document
             </Button> : ""}
         </Text>
-
-
         <br />
-        {/* <DocPDFMerger fileList={fileList} /> */}
+        <><PdfMergeDownload/></>
       </Card>
     </Col></>
     
