@@ -18,17 +18,18 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpm')
-            .select(`dpm.id,dpm.plant AS nPlant,dpm.dpom_item_line_status AS nLineStatus,
+            .select(`DISTINCT dpm.id,dpm.plant AS nPlant,dpm.dpom_item_line_status AS nLineStatus,
             dpm.plant_name AS nPlantName,dpm.document_date AS nDocumentDate,
             dpm.po_number AS npoNumber,dpm.po_line_item_number AS npoLine ,dpm.destination_country AS ndestination,
             dpm.shipping_type AS nshipmentType,dpm.inventory_segment_code AS ninventorySegmentCode,
-            dpm.ogac AS nogac ,dpm.gac AS nogac ,dpm.product_code AS nproductCode,
+            dpm.ogac AS nogac ,dpm.gac AS ngac ,dpm.product_code AS nproductCode,
             dpm.item_vas_text AS nitemVasText,dpm.quantity AS nQuantity,dpc.plant AS oplant,
             dpc.dpom_item_line_status AS onLineStatus,dpc.plant_name AS oPlantName ,
             dpc.document_date AS oDocumentDate,dpc.po_number AS opoNumber, dpc.po_line_item_number AS opoLine,
             dpc.destination_country AS odestination , dpc.shipping_type AS oshipmentType,dpc.inventory_segment_code AS oinventorySegmentCode,
             dpc.ogac AS oogac,dpc.gac AS ogac,dpc.product_code AS oproductCode ,dpc.item_vas_text AS oitemVasText , dpc.quantity AS oquantity,dpm.created_at AS dpomCreatedDates `)
             .leftJoin(DpomChildEntity,'dpc','dpc.parent_id = dpm.id')
+            .groupBy(`dpm.id,dpc.id`)
             //.where(`dpm.dpom_item_line_status IN ('accepted','Unaccepted')`)
         return await query.getRawMany()
     }
