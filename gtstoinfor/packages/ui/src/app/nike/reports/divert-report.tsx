@@ -245,8 +245,8 @@ const DivertReport = () => {
         {
             title: "Product Code",
             dataIndex: "oproductCode",
-            sorter: (a, b) => a.productCode.localeCompare(b.productCode),
-            sortDirections: ["descend", "ascend"],
+            sorter: (a, b) => a.oproductCode?.localeCompare(b.oproductCode),
+            sortDirections: ["descend","ascend"],
 
         },
            {
@@ -267,39 +267,50 @@ const DivertReport = () => {
         {
             title: 'Old Po',
             dataIndex: 'opoNumber',
-
-            
+            sorter: (a, b) => a.opoNumber?.localeCompare(b.opoNumberx),
+            sortDirections: ["descend", "ascend"],    
         }, 
         {
             title: 'Old Po Line',
             dataIndex: 'opoLine',
+            sorter: (a, b) => a.opoLine-b.opoLine,
+            sortDirections: ["descend", "ascend"],
    
         },
         {
             title: 'Old Qantity',
             //from yesterdays ppm
             dataIndex: 'oquantity', 
+            sorter: (a, b) => a.oquantity.localeCompare(b.oquantity),
+            sortDirections: ["descend", "ascend"],
 
         },
         {
             title: 'Balance Qty',
             // from dpom
-            dataIndex: 'nQuantity', 
+            dataIndex: 'nQuantity',
+            sorter: (a, b) => a.nQuantity.localeCompare(b.nQuantity),
+            sortDirections: ["descend", "ascend"], 
 
         },
         {
             title: 'Destination',
             dataIndex: 'odestination',
+            sorter: (a, b) => a.odestination.localeCompare(b.odestination),
+            sortDirections: ["descend", "ascend"],
 
         },
         {
             title: 'Shipment Type',
             dataIndex: 'oshipmentType', 
+            sorter: (a, b) => a.oshipmentType.localeCompare(b.oshipmentType),
+            sortDirections: ["descend", "ascend"],
 
         },
         {
             title: 'OLD OGAC',
             dataIndex: 'oogac', 
+
         },
         {
             title: 'OLD GAC',
@@ -308,6 +319,8 @@ const DivertReport = () => {
         {   
             title: 'Inventory Segment Code',
             dataIndex: 'oinventorySegmentCode',
+            sorter: (a, b) => a.oinventorySegmentCode.localeCompare(b.oinventorySegmentCode),
+            sortDirections: ["descend", "ascend"],
 
         },
         {
@@ -322,7 +335,9 @@ const DivertReport = () => {
         } else {
             return "-";
         }
-    }
+    },
+    sorter: (a, b) => a.daysDifference.localeCompare(b.daysDifference),
+            sortDirections: ["descend", "ascend"],
 },
         {
             title: 'Item Vas',
@@ -562,6 +577,7 @@ const DivertReport = () => {
                         }}
                         scroll={{ x: 'max-content' }}
                         bordered 
+                        size='small'
                        // expandedRowRender={(record) => record.additionalData} 
                         />
                     
