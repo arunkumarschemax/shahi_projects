@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, UploadFile, Radio } from 'antd';
-// import { PDFDocument } from 'pdf-lib';
+import { PDFDocument } from 'pdf-lib';
 import Papa from 'papaparse'
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import { ArrowDownOutlined, DeleteOutlined, DownloadOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons';
@@ -12,7 +12,8 @@ import { AlertMessages, DocumentsListRequest, FileStatusReq, UploadDocumentListD
 import FormList from 'antd/es/form/FormList';
 import InputNumber from 'rc-input-number';
 import { number } from 'prop-types';
-
+import PDFMerger from 'pdf-merger-js/browser';
+import DocPDFMerger from './merge-pdf';
 
 const { Title, Text } = Typography;
 
@@ -30,6 +31,7 @@ const UploadView = (props: UploadViewProps) => {
   const [fileList, setFileList] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [mergedPdfUrl, setMergedPdfUrl] = useState<any>();
  
 const handleRemoveFile = (fileToRemove) => {
   const updatedFileList = fileList.filter(file => file.uid !== fileToRemove.uid);
@@ -42,11 +44,13 @@ const togglePreview = (index: number) => {
 
 const renderFileNames = () => {
   if (Array.isArray(fileList) && fileList.length > 0) {
+    console.log(fileList)
     return (
       <div>
         <ul>
           {fileList.map((file, index) => (
             <li key={index}>
+              
               <a
                 href={URL.createObjectURL(new Blob([file.originFileObj]))}
                 onClick={() => togglePreview(index)}
@@ -56,7 +60,7 @@ const renderFileNames = () => {
               >
                 {file.name}
               </a>
-              {activePreviewIndex === index && (
+              {/* {activePreviewIndex === index && (
                 <div>
                   <h3>File {index + 1} Preview</h3>
                   {file.type?.startsWith('image/') ? (
@@ -78,7 +82,7 @@ const renderFileNames = () => {
                     <p>Preview not available for this file type.</p>
                   )}
                 </div>
-              )}
+              )} */}
             </li>
           ))}
         </ul>
@@ -131,64 +135,183 @@ const CustomUploadList = ({ fileList, handleRemoveFile }) => {
 };
 
 
+const mergeDownloadPDFs = async () => {
+  try {
+    const mergedPdf = await PDFDocument.create();
+    console.log(mergedPdf);
+    // Load PDFs and merge them
+    for (const filePath of fileList) {
+      console.log(filePath)
+      const pdfBytes = await fetch(filePath.url).then((response) => response.arrayBuffer());
+    console.log(pdfBytes);
+
+      const pdfDoc = await PDFDocument.load(pdfBytes);
+    console.log(pdfDoc);
+
+      const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+    console.log(copiedPages);
+
+      copiedPages.forEach((page) => mergedPdf.addPage(page));
+    console.log(copiedPages);
+
+    }
+
+
+    // Generate a new PDF blob
+    const mergedPdfBytes = await mergedPdf.save();
+    console.log(mergedPdfBytes);
+    // Create a download link for the merged PDF
+    const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    console.log(url);
+
+    // Open the PDF for download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'merged.pdf';
+    a.click();
+  } catch (error) {
+    console.error('Error merging PDFs:', error);
+  }
+};
 useEffect(() =>{
   setFileList(props.docData.documentsPath);
 },[props.docData.documentsPath])
 
+// const Merger = (files) => {
+//   console.log(files)
+//   // useEffect(() => {
+//     const render = async () => {
+//       const merger = new PDFMerger();
+
+//       for(const file of files) {
+//         await merger.add(file)
+//       }
+//       console.log(merger);
+//       const mergedPdf = await merger.saveAsBlob();
+//       console.log(mergedPdf)
+//       const url = URL.createObjectURL(mergedPdf);
+
+//       return setMergedPdfUrl(url);
+//     };
+
+//     render().catch((err) => {
+//       throw err;
+//     });
+
+//     // () => setMergedPdfUrl({});
+//   // }, [files, setMergedPdfUrl]);
+
+//   return !fileList ? (
+//     <>Loading</>
+//   ) : (
+//     <iframe
+//       height={1000}
+//       src={`${mergedPdfUrl}`}
+//       title='pdf-viewer'
+//       width='100%s'
+//     ></iframe>
+//   );
+// };
+useEffect(() => {
+  const script = document.createElement('script');
+
+  script.src = "https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.js";
+  script.src = "https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js";
+
+  script.async = true;
+
+  document.body.appendChild(script);
+
+  return () => {
+    document.body.removeChild(script);
+  }
+}, []);
 
   useEffect(() => {
     setBtnDisable(selectedFiles.length === 0);
   }, [selectedFiles]);
 
-  const download = (data: any) => {
-    // mergeAndDownloadPDF(selectedFiles);
 
-    console.log('data');
-    console.log(data);
+//   const mergeAllPDFs = (urls)  => {
+    
+//     const pdfDoc = await PDFLib.PDFDocument.create();
+//     const numDocs = urls.length;
+    
+//     for(var i = 0; i < numDocs; i++) {
+//         const donorPdfBytes = await fetch(urls[i]).then(res => res.arrayBuffer());
+//         const donorPdfDoc = await PDFLib.PDFDocument.load(donorPdfBytes);
+//         const docLength = donorPdfDoc.getPageCount();
+//         for(var k = 0; k < docLength; k++) {
+//             const [donorPage] = await pdfDoc.copyPages(donorPdfDoc, [k]);
+//             //console.log("Doc " + i+ ", page " + k);
+//             pdfDoc.addPage(donorPage);
+//         }
+//     }
+
+//     const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
+//     //console.log(pdfDataUri);
+  
+//     // strip off the first part to the first comma "data:image/png;base64,iVBORw0K..."
+//     var data_pdf = pdfDataUri.substring(pdfDataUri.indexOf(',')+1);
+// }
+  const download = (data: any) => {
+
+    // mergeAllPDFs(data[0].url)
+    // mergeAndDownloadPDF(data);
+
+    // console.log('data');
+    // console.log(data);
   };
 
-  // const mergeAndDownloadPDF = async (files: File[]) => {
-  //   if (files.length === 0) {
-  //     alert('Please select at least one file.');
-  //     return;
-  //   }
+  const mergeAndDownloadPDF = async (files: File[]) => {
+    if (files.length === 0) {
+      alert('Please select at least one file.');
+      return;
+    }
 
-  //   const pdfDoc = await PDFDocument.create();
+    const pdfDoc = await PDFDocument.create();
 
-  //   for (const file of files) {
-  //     const fileData = await file.arrayBuffer();
-  //     // const pdfBytes = new Uint8Array(fileData);
-  //     const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    for (const file of files) {
+      if (file.constructor === File || file.constructor === Blob) {
+        console.log()
+      }
+      console.log(file.constructor);
+      const fileData = await file.arrayBuffer();
 
-  //     if (fileExtension === 'pdf') {
-  //       const pdfBytes = new Uint8Array(fileData);
-  //       const externalPdf = await PDFDocument.load(pdfBytes);
-  //       const copiedPages = await pdfDoc.copyPages(externalPdf, externalPdf.getPageIndices());
+      const pdfBytes = new Uint8Array(fileData);
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+      console.log(fileExtension)
+
+      if (fileExtension === 'pdf') {
+        const pdfBytes = new Uint8Array(fileData);
+        const externalPdf = await PDFDocument.load(pdfBytes);
+        const copiedPages = await pdfDoc.copyPages(externalPdf, externalPdf.getPageIndices());
   
-  //       copiedPages.forEach((page) => {
-  //         pdfDoc.addPage(page);
-  //       });
-  //     } else if (fileExtension === 'jpg' || fileExtension === 'jpeg' || fileExtension === 'png') {
-  //       const image = await pdfDoc.embedJpg(fileData);
-  //       const page = pdfDoc.addPage();
-  //       page.drawImage(image, {
-  //         x: 50,
-  //         y: 450,
-  //         width: 500,
-  //         height: 400,
-  //       });
-  //     }
-  //   }
+        copiedPages.forEach((page) => {
+          pdfDoc.addPage(page);
+        });
+      } else if (fileExtension === 'jpg' || fileExtension === 'jpeg' || fileExtension === 'png') {
+        const image = await pdfDoc.embedJpg(fileData);
+        const page = pdfDoc.addPage();
+        page.drawImage(image, {
+          x: 50,
+          y: 450,
+          width: 500,
+          height: 400,
+        });
+      }
+    }
 
 
-  //   const pdfBytes = await pdfDoc.save();
-  //   const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
-  //   const link = document.createElement('a');
-  //   link.href = URL.createObjectURL(blob);
-  //   link.download = 'MERGED.pdf';
-  //   link.click();
-  // };
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'MERGED.pdf';
+    link.click();
+  };
 
   const handleFileUpload = (file: File) => {
     setFileList([...fileList, file]);
@@ -287,9 +410,9 @@ useEffect(() =>{
   }
   return (
 
-    <Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
-      <Card   
-        bordered={true} 
+    <><Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
+      <Card
+        bordered={true}
         style={{
           marginBottom: 16,
           borderRadius: 8,
@@ -307,7 +430,7 @@ useEffect(() =>{
         <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           <Form.Item name={props.docData.documentsListId}>
-          <CustomUploadList fileList={props.docData.documentsPath} handleRemoveFile={handleRemoveFile} />
+            <CustomUploadList fileList={props.docData.documentsPath} handleRemoveFile={handleRemoveFile} />
             <Upload
               key={props.docData.documentsListId}
               name={`uploadFile${props.docData.documentsListId}`}
@@ -316,7 +439,7 @@ useEffect(() =>{
               onChange={(info) => handleUpload(props.docData.documentsListId, info)}
 
             >
-              <Button           
+              <Button
                 key={props.docData.documentsListId}
                 style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                 icon={<UploadOutlined />}
@@ -333,7 +456,7 @@ useEffect(() =>{
         <br />
 
 
-         
+
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           <Button
             type="primary"
@@ -351,33 +474,32 @@ useEffect(() =>{
             <Radio.Group buttonStyle="solid" onChange={handleStatusChange}>
               <Radio.Button value="partially uploaded">parially</Radio.Button>
               <Radio.Button value="fully uploaded">fully</Radio.Button>
-            </Radio.Group>
+            </Radio.Group>
           </Form.Item>
         </Text>
         <br />
         <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-          {
-            props.docData.isUploaded === 1 ?  
-          <Button
-           onClick={() => download(props.docData)}
-            disabled={props.docData.isUploaded === 1 ? false : true}
-            style={{
-              color: 'white',
-              backgroundColor: props.docData.isUploaded === 1 ? 'green' : '#806767',
-              width: '100%',
-            }}
-            icon={<DownloadOutlined />}
-          >
-            Download Document
-          </Button> :"" }
+          {props.docData.isUploaded === 1 ?
+            <Button
+              onClick={() => mergeDownloadPDFs()}
+              disabled={props.docData.isUploaded === 1 ? false : true}
+              style={{
+                color: 'white',
+                backgroundColor: props.docData.isUploaded === 1 ? 'green' : '#806767',
+                width: '100%',
+              }}
+              icon={<DownloadOutlined />}
+            >
+              Download Document
+            </Button> : ""}
         </Text>
 
 
         <br />
-      </Card>  
-    </Col>
-
+        {/* <DocPDFMerger fileList={fileList} /> */}
+      </Card>
+    </Col></>
     
    
   );

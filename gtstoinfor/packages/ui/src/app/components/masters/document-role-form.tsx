@@ -41,7 +41,7 @@ const roleOptions = [
   ];
 
 const getDocumentData =() =>{
-    services.getAllDocumentsforRolemapping().then((res) =>{
+    services.getDocumentsNotMapped().then((res) =>{
         if(res.status){
             setRoleData(res.data)
         }else{
@@ -87,13 +87,13 @@ const getDocumentData =() =>{
     return (
         <div>
             <Card title="Document Role Mapping " size='small'
-        extra={<span><Button onClick={() => navigate('/masters/role-mapping-grid')} type={'primary'}>View</Button></span>}>          
+        extra={<span><Button onClick={() => navigate('/role-mapping-grid')} type={'primary'}>View</Button></span>}>          
                 <Form
                     form={form}
                     onFinish={onFinish}
                     >
-                    <Row gutter={10}>
-                        <Col span={8}>
+                    <Row gutter={24}>
+                        <Col span={4}>
                             <Form.Item name="roleName" label="Role"
                                 rules={[
                                     { required: true, message: "Enter role Name" },
