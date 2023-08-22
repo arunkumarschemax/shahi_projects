@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import { Link, useNavigate } from 'react-router-dom';
@@ -117,7 +117,9 @@ export function PackageTermsGrid() {
     service.activateOrDeactivatePackageTerms(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
-        AlertMessages.getSuccessMessage('Success'); 
+        // AlertMessages.getSuccessMessage('Success');
+        message.success(res.internalMessage)
+
       } else {
         if (res.status) {
           AlertMessages.getErrorMessage(res.internalMessage);
@@ -242,7 +244,9 @@ export function PackageTermsGrid() {
   }
 
   return (
-    <Card title = "Package Terms">
+    <Card title = "Package Terms"
+    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/package-terms/package-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
+    >
      <br></br>
       <Row gutter={40}>
          <Col>
@@ -255,8 +259,6 @@ export function PackageTermsGrid() {
            <Card title={'In-Active: ' + packageTermsData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
            </Col>
            <Col>
-        <span><Button onClick={() => navigate('/masters/package-terms/package-terms-form')}
-              type={'primary'}>New</Button></span>
         </Col>
           </Row> 
           <br></br>
