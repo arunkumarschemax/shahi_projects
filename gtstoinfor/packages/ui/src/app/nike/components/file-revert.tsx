@@ -52,7 +52,7 @@ export function NikeFileRevert() {
             dataIndex: 'uploadedDate',
             render: (value, record) => {
                 return (
-                    moment(value).format('YYYY-MM-DD HH:mm:ss')
+                    moment(record.uploadedDate).format('YYYY-MM-DD HH:mm:ss')
                 )
             }
         },

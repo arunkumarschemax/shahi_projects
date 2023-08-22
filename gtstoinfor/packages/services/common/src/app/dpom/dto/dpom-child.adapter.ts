@@ -17,6 +17,7 @@ export class DpomChildAdapter {
         entity.gccFocusCode = dto.gccFocusCode
         entity.gccFocusDesc = dto.gccFocusDesc
         entity.genderAgeCode = dto.genderAgeCode
+        entity.genderAgeDesc = dto.genderAgeDesc
         entity.styleNumber = dto.styleNumber
         entity.productCode = dto.productCode
         entity.colorDesc = dto.colorDesc
@@ -41,6 +42,7 @@ export class DpomChildAdapter {
         entity.originReceiptDate = dto.originReceiptDate
         entity.factoryDeliveryActDate = dto.factoryDeliveryActDate
         entity.GACReasonCode = dto.GACReasonCode
+        entity.GACReasonDesc = dto.GACReasonDesc
         entity.shippingType = dto.shippingType
         entity.planningPriorityCode = dto.planningPriorityCode
         entity.planningPriorityDesc = dto.planningPriorityDesc
@@ -62,10 +64,12 @@ export class DpomChildAdapter {
         entity.netIncludingDiscCurrencyCode = dto.netIncludingDiscCurrencyCode
         entity.trCoNetIncludingDisc = dto.trCoNetIncludingDisc
         entity.trCoNetIncludingDiscCurrencyCode = dto.trCoNetIncludingDiscCurrencyCode
+        entity.sizeQuantity = dto.sizeQuantity
+        entity.sizeDescription = dto.sizeDescription
         entity.shipToAddressLegalPO = dto.shipToAddressLegalPO
         entity.quantity = dto.quantity
         entity.price = dto.price
-        entity.itemVas = dto.itemVas
+        entity.itemVasPDF = dto.itemVasPDF
         entity.shipToAddressDIA = dto.shipToAddressDIA
         entity.CABCode = dto.CABCode
         entity.item = dto.item

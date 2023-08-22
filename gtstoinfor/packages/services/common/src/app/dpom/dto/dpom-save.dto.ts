@@ -129,7 +129,7 @@ export class DpomSaveDto {
     @ApiProperty()
     price: number;
     @ApiProperty()
-    itemVas: string;
+    itemVasPDF: string;
     @ApiProperty()
     shipToAddressDIA: string;
     @ApiProperty()
@@ -185,7 +185,7 @@ export class DpomSaveDto {
     @ApiProperty()
     id?: number;
 
-    constructor(documentDate: string, purchaseOrderNumber: string, poLineItemNumber: number, scheduleLineItemNumber: string, categoryCode: string, categoryDesc: string, vendorCode: string, gccFocusCode: string, gccFocusDesc: string, genderAgeCode: string, genderAgeDesc: string, styleNumber: string, productCode: string, colorDesc: string, destinationCountryCode: string, destinationCountry: string, plant: string, plantName: string, tradingCoPoNumber: string, UPC: string, directShipSONumber: string, directShipSOItemNumber: string, customerPO: string, shipToCustomerNumber: string, shipToCustomerName: string, planningSeasonCode: string, planningSeasonYear: string, docTypeCode: string, docTypeDesc: string, MRGAC: string, OGAC: string, GAC: string, originReceiptDate: string, factoryDeliveryActDate: string, GACReasonCode: string, GACReasonDesc: string, shippingType: string, planningPriorityCode: string, planningPriorityDesc: string, launchCode: string, DPOMLineItemStatus: string, modeOfTransportationCode: string, inCoTerms: string, inventorySegmentCode: string, purchaseGroupCode: string, purchaseGroupName: string, totalItemQty: string, originReceiptQty: string, VASSize: string, itemVasText: string, itemText: string, grossPriceFOB: string, FOBCurrencyCode: string, netIncludingDisc: string, netIncludingDiscCurrencyCode: string, trCoNetIncludingDisc: string, trCoNetIncludingDiscCurrencyCode: string, sizeQuantity: number, sizeDescription: string, shipToAddressLegalPO: string, quantity: number, price: number, itemVas: string, shipToAddressDIA: string, CABCode: string, item: string, factory: string, customerOrder: string, coFinalApprovalDate: string, planNo: string, truckOutDate: string, actualShippedQty: string, coPrice: string, shipToAddress: string, paymentTerm: string, styleDesc: string, fabricContent: string, fabricSource: string, commission: string, PCD: string, hanger: string, poAndLine: string, lastModifiedDate: string, leadTime: string, recordDate: string, userName?: string, odVersion?: number, id?: number
+    constructor(documentDate: string, purchaseOrderNumber: string, poLineItemNumber: number, scheduleLineItemNumber: string, categoryCode: string, categoryDesc: string, vendorCode: string, gccFocusCode: string, gccFocusDesc: string, genderAgeCode: string, genderAgeDesc: string, styleNumber: string, productCode: string, colorDesc: string, destinationCountryCode: string, destinationCountry: string, plant: string, plantName: string, tradingCoPoNumber: string, UPC: string, directShipSONumber: string, directShipSOItemNumber: string, customerPO: string, shipToCustomerNumber: string, shipToCustomerName: string, planningSeasonCode: string, planningSeasonYear: string, docTypeCode: string, docTypeDesc: string, MRGAC: string, OGAC: string, GAC: string, originReceiptDate: string, factoryDeliveryActDate: string, GACReasonCode: string, GACReasonDesc: string, shippingType: string, planningPriorityCode: string, planningPriorityDesc: string, launchCode: string, DPOMLineItemStatus: string, modeOfTransportationCode: string, inCoTerms: string, inventorySegmentCode: string, purchaseGroupCode: string, purchaseGroupName: string, totalItemQty: string, originReceiptQty: string, VASSize: string, itemVasText: string, itemText: string, grossPriceFOB: string, FOBCurrencyCode: string, netIncludingDisc: string, netIncludingDiscCurrencyCode: string, trCoNetIncludingDisc: string, trCoNetIncludingDiscCurrencyCode: string, sizeQuantity: number, sizeDescription: string, shipToAddressLegalPO: string, quantity: number, price: number, itemVasPDF: string, shipToAddressDIA: string, CABCode: string, item: string, factory: string, customerOrder: string, coFinalApprovalDate: string, planNo: string, truckOutDate: string, actualShippedQty: string, coPrice: string, shipToAddress: string, paymentTerm: string, styleDesc: string, fabricContent: string, fabricSource: string, commission: string, PCD: string, hanger: string, poAndLine: string, lastModifiedDate: string, leadTime: string, recordDate: string, userName?: string, odVersion?: number, id?: number
     ) {
         this.documentDate = documentDate
         this.purchaseOrderNumber = purchaseOrderNumber
@@ -249,7 +249,7 @@ export class DpomSaveDto {
         this.shipToAddressLegalPO = shipToAddressLegalPO
         this.quantity = quantity
         this.price = price
-        this.itemVas = itemVas
+        this.itemVasPDF = itemVasPDF
         this.shipToAddressDIA = shipToAddressDIA
         this.CABCode = CABCode
         this.item = item
