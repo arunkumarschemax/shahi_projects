@@ -1,16 +1,17 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components'
-import { BuyerRequest, BuyersDto, FactoryActivateDeactivateDto, FactoryDto, OperationGroupsDto } from '@project-management-system/shared-models'
+import { BuyerIdReq, BuyerRequest, BuyersDto, FactoryActivateDeactivateDto, FactoryDto, OperationGroupsDto } from '@project-management-system/shared-models'
 import { BuyersService, FactoryService } from '@project-management-system/shared-services'
-import { Button, Card, Col, Divider, Drawer, Form, Input, Popconfirm, Row, Space, Switch, Table, Tag, message } from 'antd'
+import { Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
 import { forEachObject } from 'for-each'
 import { useNavigate } from 'react-router-dom'
 import TableActions from '../../common/table-actions/table-actions'
 import { ColumnProps, ColumnType } from 'antd/es/table'
 import { useEffect, useRef, useState } from 'react'
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, InfoCircleOutlined, RightSquareOutlined, SearchOutlined } from '@ant-design/icons'
 import Highlighter from 'react-highlight-words'
 import BuyersForm from './buyers-form'
 import AlertMessages from '../../common/common-functions/alert-messages'
+import AddressInfo from './address-info'
 
 export const  BuyersView = () => {
   const navigate = useNavigate()
@@ -24,6 +25,8 @@ export const  BuyersView = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedBuyersData, setSelectedBuyersData] = useState<any>(undefined);
   const [form] = Form.useForm()
+  const [addressModal,setAddressModal] = useState<boolean>(false)
+  const [buyerId,setBuyerId] = useState<number>(0)
 
 
 
@@ -35,7 +38,7 @@ export const  BuyersView = () => {
 
 
   const getBuyersData = () => {
-    buyerService.getAllBuyer().then(res => {
+    buyerService.getAllBuyersInfo().then(res => {
       if(res.status){
         setBuyersData(res.data)
       }
@@ -186,7 +189,7 @@ export const  BuyersView = () => {
       buyerService.activateOrDeactivateBuyer(req).then(res => {
         if (res.status) {
           getBuyersData();
-          message.success('Success');
+          message.success(res.internalMessage);
         } else {
             message.error(res.internalMessage);
         }
@@ -212,6 +215,12 @@ export const  BuyersView = () => {
       }).catch(err => {
         AlertMessages.getErrorMessage(err.message);
       })
+    }
+
+    const onAddressInfo = (rowData) => {
+      setBuyerId(rowData.buyerId)
+      setAddressModal(true)
+      
     }
 
 
@@ -255,18 +264,18 @@ export const  BuyersView = () => {
         sortDirections: ['descend', 'ascend'],
         ...getColumnSearchProps('phoneNo')
       },
-      {
-        dataIndex:"address",
-        title:"Address",
-        render:(text,record) => {
-          return(
-            <>
-            {record.state ? `${record.countryName}-${record.state}-${record.city}` : '-'}
-            </>
-          )
-        }
-        // ...getColumnSearchProps('city')
-      },
+      // {
+      //   dataIndex:"address",
+      //   title:"Address",
+      //   render:(text,record) => {
+      //     return(
+      //       <>
+      //       {record.state ? `${record.countryName}-${record.state}-${record.city}` : '-'}
+      //       </>
+      //     )
+      //   }
+      //   // ...getColumnSearchProps('city')
+      // },
       {
         title: 'Status',
         dataIndex: 'isActive',
@@ -299,7 +308,10 @@ export const  BuyersView = () => {
         dataIndex: 'action',
         render: (text, rowData) => (
           <span>   
-               
+                <Tooltip title='Address Info'>
+               <InfoCircleOutlined onClick={() => {onAddressInfo(rowData)}}/>
+                </Tooltip>
+               <Divider type='vertical'/>
               <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
                 onClick={() => {
                   if (rowData.isActive) {
@@ -375,6 +387,9 @@ export const  BuyersView = () => {
             closeForm={closeDrawer} />
         </Card>
       </Drawer>
+      <Modal width={'80%'} open={addressModal} onCancel={() => setAddressModal(false)} footer={[<Button onClick={() => setAddressModal(false)} >Ok</Button>]}>
+        <AddressInfo buyerId={buyerId}/>
+      </Modal>
     </Card>
 
   )

@@ -6,7 +6,7 @@ import { BuyersRequest } from './dto/buyers.request';
 import { BuyersDTO } from './dto/buyers.dto';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { BuyersResponseModel } from 'packages/libs/shared-models/src/common/buyers/buyers.response.model';
-import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
 import { BuyersGeneralAttributeDto } from './dto/buyers-general-attributes.dto';
 import { BuyersGeneralAttributeService } from './buyers-general-attributes.service';
 
@@ -26,7 +26,6 @@ export class BuyersController {
      */
     @Post('/createBuyer')
     async createBuyer(@Body() buyersDTO: any, isUpdate: boolean = false): Promise<BuyersResponseModel> {
-        console.log(buyersDTO,'=============')
         try {
             return await this.buyersService.createBuyer(buyersDTO, false);
         } catch (error) {
@@ -129,6 +128,24 @@ export class BuyersController {
             return await this.buyersGeneralAttributeService.getByBuyerId(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(BuyersGeneralAttributeResponseModel, err);
+        }
+    }
+
+    @Post('/getAddressByBuyerId')
+    async getAddressByBuyerId(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.buyersService.getAddressByBuyerId(req);
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/getAllBuyersInfo')
+    async getAllBuyersInfo(): Promise<CommonResponseModel> {
+        try {
+            return await this.buyersService.getAllBuyersInfo();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
 }
