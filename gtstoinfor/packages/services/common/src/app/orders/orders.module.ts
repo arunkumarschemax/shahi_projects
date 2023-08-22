@@ -23,6 +23,6 @@ import { FileUploadEntity } from './entities/upload-file.entity';
       FileUploadEntity
     ])],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository]
+  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler, FileUploadRepository]
 })
 export class OrdersModule { }

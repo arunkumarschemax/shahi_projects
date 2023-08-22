@@ -168,7 +168,7 @@ const DivertReport = () => {
       { title: 'GAC Difference', dataIndex: 'oogac', render: (text, record) => { return record.oogac ? record.oogac : '-' } },
       { title: 'item Vas', dataIndex: 'oitemVasText', render: (text, record) => { return record.oitemVasText ? record.oitemVasText: '-' } },
 
-      { title: 'New', dataIndex: '' },
+      
       { title: 'OGAC Date', dataIndex: 'nogac', render: (text, record) => { return record.nogac ? record.nogac: '-' } },
       { title: 'GAC Date', dataIndex: 'nogac', render: (text, record) => { return record.ngac ? record.ngac: '-' } },
       { title: ' To Item', dataIndex: '-' },
@@ -196,7 +196,7 @@ const DivertReport = () => {
       { title: 'Qty Tally-Check	', dataIndex: '', },
       { title: 'Price-Fob Tally-Check', dataIndex: '', },
       { title: 'Price-Net Includding Discount Tally-Check', dataIndex: '', },
-      { title: 'Price-Trading Co Net Includding Discount Tally-Check', dataIndex: '', },
+      { title: 'Price-Trading Co Net Includding Discount Tally-Check', dataIndex: '', }, 
 
 
 

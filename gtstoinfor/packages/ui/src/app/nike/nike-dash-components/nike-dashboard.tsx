@@ -8,6 +8,8 @@ import { StatusWiseOrders } from "./status-wise-items"
 import { CategoryWiseItemQtyGraph } from "./category-wise-item-qty"
 import { ShipmentGraph } from "./shipment-tracker"
 import { ShipmentPlanWisePoOrderGraph } from "./plan-shipment"
+import { DestinationWisePoOrderGraph } from "./destination-wise-po"
+import { SeasonWisePoOrderGraph } from "./season-wise-po"
 const { useToken } = theme
 
 export const NikeDashboard = () => {
@@ -42,11 +44,23 @@ export const NikeDashboard = () => {
                 <Row gutter={24}>
                     
                     <Col xs={24} sm={24} md={24} xl={12}>
-                        <ShipmentGraph />
+                        <SeasonWisePoOrderGraph />
                     </Col>
 
                     <Col xs={24} sm={24} md={24} xl={12}>
                         <ShipmentPlanWisePoOrderGraph />
+                    </Col>
+                </Row>
+            </Card>
+            <Card>
+                <Row gutter={24}>
+                    
+                    <Col xs={24} sm={24} md={24} xl={12}>
+                        <DestinationWisePoOrderGraph />
+                    </Col>
+
+                    <Col xs={24} sm={24} md={24} xl={12}>
+                        <ShipmentGraph />
                     </Col>
                 </Row>
             </Card>

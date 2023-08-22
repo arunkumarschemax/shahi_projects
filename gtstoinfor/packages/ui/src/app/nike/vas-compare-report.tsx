@@ -7,7 +7,7 @@ import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 
-const OrdersCompareGrid = () => {
+const VASChangesCompareGrid = () => {
 
     const service = new NikeService()
     const [poStatusData, setPOStatusData] = useState([])
@@ -643,42 +643,27 @@ const OrdersCompareGrid = () => {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <b>Order Qty Revised PO's : {filteredQtyData?.length} </b>,
+            label: <b>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
             children: <Table bordered dataSource={filteredQtyData} columns={columns} />,
         },
         {
             key: '2',
-            label: <b>Unit changed PO's : {unitChangeData?.length}</b>,
+            label: <b>Ship to customer Revised PO's : {unitChangeData?.length}</b>,
             children: <Table bordered dataSource={unitChangeData} columns={columns4} />,
         },
         {
             key: '3',
-            label: <b >Item Changed PO's : {itemChangeData?.length}</b>,
+            label: <b >Inventory Segment Code Revised PO's : {itemChangeData?.length}</b>,
             children: <Table bordered dataSource={itemChangeData} columns={columns1} />,
         },
         {
             key: '4',
-            label: <b>PO Line Item Status Revised PO's : {poStatusData?.length}</b>,
+            label: <b>Direct Ship SO No Revised PO's : {poStatusData?.length}</b>,
             children: <Table bordered dataSource={poStatusData} columns={columns2} />,
         },
         {
             key: '5',
-            label: <b>Price & currency change in FOB : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
-        },
-        {
-            key: '6',
-            label: <b>Price & currency change in Net Incl.Discount : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
-        },
-        {
-            key: '7',
-            label: <b>Price & currency change in Trading Net Incl.Discount : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
-        },
-        {
-            key: '8',
-            label: <b>Item Text changed PO's : {poStatusData?.length}</b>,
+            label: <b>Destination Country Revised PO's : {poStatusData?.length}</b>,
             children: <Table bordered dataSource={poStatusData} columns={columns2} />,
         }
     ];
@@ -747,4 +732,4 @@ const OrdersCompareGrid = () => {
     );
 };
 
-export default OrdersCompareGrid;
+export default VASChangesCompareGrid;

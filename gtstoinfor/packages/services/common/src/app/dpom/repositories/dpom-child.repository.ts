@@ -14,13 +14,13 @@ export class DpomChildRepository extends Repository<DpomChildEntity> {
         super(dpomChildRepository.target, dpomChildRepository.manager, dpomChildRepository.queryRunner);
     }
 
-    // async getVersion(productionPlanId: string): Promise<any[]> {
-    //     const query = this.createQueryBuilder('oc')
-    //         .select(`id,production_plan_id, version`)
-    //         .where(` production_plan_id = ${productionPlanId}`)
-    //         .orderBy(` version`, 'DESC')
-    //     return await query.getRawMany();
-    // }
+    async getVersion(poNumber: string, poLineItemNumber: number, scheduleLineItemNumber: string): Promise<any[]> {
+        const query = this.createQueryBuilder('oc')
+            .select(`id, po_number, po_line_item_number, schedule_line_item_number, od_version`)
+            .where(` po_number = ${poNumber} AND po_line_item_number = ${poLineItemNumber} AND schedule_line_item_number = ${scheduleLineItemNumber}`)
+            .orderBy(` od_version`, 'DESC')
+        return await query.getRawMany();
+    }
 
     async deleteChildData(req: FileIdReq): Promise<void> {
         const queryBuilder = this.createQueryBuilder('oc');
