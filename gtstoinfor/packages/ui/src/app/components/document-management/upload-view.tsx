@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, UploadFile, Radio } from 'antd';
 import { PDFDocument } from 'pdf-lib';
+import { createPDF,pdfArrayToBlob, mergePDF } from "pdf-actions";
 import Papa from 'papaparse'
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import { ArrowDownOutlined, DeleteOutlined, DownloadOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons';
@@ -14,7 +15,7 @@ import InputNumber from 'rc-input-number';
 import { number } from 'prop-types';
 import PDFMerger from 'pdf-merger-js/browser';
 import DocPDFMerger from './merge-pdf';
-
+import { Document, Page, pdfjs } from 'react-pdf';
 const { Title, Text } = Typography;
 
 export interface UploadViewProps {
@@ -31,7 +32,6 @@ const UploadView = (props: UploadViewProps) => {
   const [fileList, setFileList] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [mergedPdfUrl, setMergedPdfUrl] = useState<any>();
  
 const handleRemoveFile = (fileToRemove) => {
   const updatedFileList = fileList.filter(file => file.uid !== fileToRemove.uid);
@@ -92,31 +92,6 @@ const renderFileNames = () => {
     return <p>No files selected.</p>;
   }
 };
-const renderFilePreviews = (fileList) => {
-  console.log(fileList)
-  // return {fileList?.map((file, index) => (
-  //     <a
-  //       href={URL.createObjectURL(file)}
-  //       target="_blank"
-  //       rel="noopener noreferrer"
-  //       style={{ cursor: 'pointer', textDecoration: 'underline' }}
-  //     >
-  //       {file.name}
-  //     </a>
-  // ))}
-  return fileList?.map(file => (
-      <div key={file.uid}>
-          <a
-        href={URL.createObjectURL(file)}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ cursor: 'pointer', textDecoration: 'underline' }}
-      >
-        {file.name}
-      </a>
-      </div>
-  ));
-};
 const CustomUploadList = ({ fileList, handleRemoveFile }) => {
   console.log(fileList)
   return (
@@ -135,126 +110,17 @@ const CustomUploadList = ({ fileList, handleRemoveFile }) => {
 };
 
 
-const mergeDownloadPDFs = async () => {
-  try {
-    const mergedPdf = await PDFDocument.create();
-    console.log(mergedPdf);
-    // Load PDFs and merge them
-    for (const filePath of fileList) {
-      console.log(filePath)
-      const pdfBytes = await fetch(filePath.url).then((response) => response.arrayBuffer());
-    console.log(pdfBytes);
 
-      const pdfDoc = await PDFDocument.load(pdfBytes);
-    console.log(pdfDoc);
-
-      const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
-    console.log(copiedPages);
-
-      copiedPages.forEach((page) => mergedPdf.addPage(page));
-    console.log(copiedPages);
-
-    }
-
-
-    // Generate a new PDF blob
-    const mergedPdfBytes = await mergedPdf.save();
-    console.log(mergedPdfBytes);
-    // Create a download link for the merged PDF
-    const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    console.log(url);
-
-    // Open the PDF for download
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'merged.pdf';
-    a.click();
-  } catch (error) {
-    console.error('Error merging PDFs:', error);
-  }
-};
 useEffect(() =>{
   setFileList(props.docData.documentsPath);
 },[props.docData.documentsPath])
 
-// const Merger = (files) => {
-//   console.log(files)
-//   // useEffect(() => {
-//     const render = async () => {
-//       const merger = new PDFMerger();
-
-//       for(const file of files) {
-//         await merger.add(file)
-//       }
-//       console.log(merger);
-//       const mergedPdf = await merger.saveAsBlob();
-//       console.log(mergedPdf)
-//       const url = URL.createObjectURL(mergedPdf);
-
-//       return setMergedPdfUrl(url);
-//     };
-
-//     render().catch((err) => {
-//       throw err;
-//     });
-
-//     // () => setMergedPdfUrl({});
-//   // }, [files, setMergedPdfUrl]);
-
-//   return !fileList ? (
-//     <>Loading</>
-//   ) : (
-//     <iframe
-//       height={1000}
-//       src={`${mergedPdfUrl}`}
-//       title='pdf-viewer'
-//       width='100%s'
-//     ></iframe>
-//   );
-// };
-useEffect(() => {
-  const script = document.createElement('script');
-
-  script.src = "https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.js";
-  script.src = "https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js";
-
-  script.async = true;
-
-  document.body.appendChild(script);
-
-  return () => {
-    document.body.removeChild(script);
-  }
-}, []);
 
   useEffect(() => {
     setBtnDisable(selectedFiles.length === 0);
   }, [selectedFiles]);
 
 
-//   const mergeAllPDFs = (urls)  => {
-    
-//     const pdfDoc = await PDFLib.PDFDocument.create();
-//     const numDocs = urls.length;
-    
-//     for(var i = 0; i < numDocs; i++) {
-//         const donorPdfBytes = await fetch(urls[i]).then(res => res.arrayBuffer());
-//         const donorPdfDoc = await PDFLib.PDFDocument.load(donorPdfBytes);
-//         const docLength = donorPdfDoc.getPageCount();
-//         for(var k = 0; k < docLength; k++) {
-//             const [donorPage] = await pdfDoc.copyPages(donorPdfDoc, [k]);
-//             //console.log("Doc " + i+ ", page " + k);
-//             pdfDoc.addPage(donorPage);
-//         }
-//     }
-
-//     const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
-//     //console.log(pdfDataUri);
-  
-//     // strip off the first part to the first comma "data:image/png;base64,iVBORw0K..."
-//     var data_pdf = pdfDataUri.substring(pdfDataUri.indexOf(',')+1);
-// }
   const download = (data: any) => {
 
     // mergeAllPDFs(data[0].url)
@@ -384,6 +250,17 @@ useEffect(() => {
     // fileList: fileList
 
 };
+const mergePDFHandler = async (files) => {
+  // Converting File Object Array To PDF Document Array
+  files.forEach(async (file)=>await createPDF.PDFDocumentFromFile(file))
+  // Merging The PDF Files to A PDFDocument
+  const mergedPDFDocument = await mergePDF(files)
+  console.log(mergedPDFDocument)
+  // Converting The Merged Document to Unit8Array
+  const mergedPdfFile = await mergedPDFDocument.save();
+  // Saving The File To Disk
+  const pdfBlob = pdfArrayToBlob(mergedPdfFile);
+};
   const upload = (data: any) => {
     console.log(data)
     let file = props.form.getFieldValue(`${data.documentsListId}`);
@@ -482,7 +359,7 @@ useEffect(() => {
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           {props.docData.isUploaded === 1 ?
             <Button
-              onClick={() => mergeDownloadPDFs()}
+              onClick={() => download(props.docData.documentsPath)}
               disabled={props.docData.isUploaded === 1 ? false : true}
               style={{
                 color: 'white',
