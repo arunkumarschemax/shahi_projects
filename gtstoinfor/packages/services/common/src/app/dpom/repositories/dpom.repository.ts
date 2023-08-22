@@ -22,7 +22,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             dpm.plant_name AS nPlantName,dpm.document_date AS nDocumentDate,
             dpm.po_number AS npoNumber,dpm.po_line_item_number AS npoLine ,dpm.destination_country AS ndestination,
             dpm.shipping_type AS nshipmentType,dpm.inventory_segment_code AS ninventorySegmentCode,
-            dpm.ogac AS nogac ,dpm.gac AS nogac ,dpm.product_code AS nproductCode,
+            dpm.ogac AS nogac ,dpm.gac AS ngac ,dpm.product_code AS nproductCode,
             dpm.item_vas_text AS nitemVasText,dpm.quantity AS nQuantity,dpc.plant AS oplant,
             dpc.dpom_item_line_status AS onLineStatus,dpc.plant_name AS oPlantName ,
             dpc.document_date AS oDocumentDate,dpc.po_number AS opoNumber, dpc.po_line_item_number AS opoLine,

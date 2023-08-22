@@ -144,7 +144,72 @@ const DivertReport = () => {
         }
      }) 
     }
+    const exportedData = [];
+    const execlData = items
+    let i = 1;
+    const data = [
+      { title: 'S No', dataIndex: 'sNo', render: (text, object, index) => { return i++; } },
+      { title: 'Old Request Date', dataIndex: ''},
+      { title: 'O.From Item', dataIndex: ''},
+      { title: 'O.Unit', dataIndex: ''},
+      { title: 'O.Plant', dataIndex: 'oplant', render: (text, record) => { return record.oplant ? record.oplant : '-' } },
+      { title: 'O.Product Code', dataIndex: 'oproductCode', render: (text, record) => { return record.oproductCode ? record.oproductCode : '-' } },
+      { title: 'O.Line Status', dataIndex: 'onLineStatus', render: (text, record) => { return record.onLineStatus ? record.onLineStatus : '-' } },
+      { title: 'O.Document Date', dataIndex: 'oDocumentDate',  render: (text, record) => { return record.oDocumentDate ? moment(record.oDocumentDate).format('YYYY-MM-DD') : '-' } },
+      { title: 'Old Po', dataIndex: 'opoNumber', render: (text, record) => { return record.opoNumber ? record.opoNumber : '-' } },
+      { title: 'Old Po Line', dataIndex: 'opoLine', render: (text, record) => { return record.opoLine ? record.opoLine: '-' } },
+      {title:'Old Qantity',dataIndex:'oquantity',render:(text,record) => {return record.oquantity ? record.oquantity : '-'}},
+      { title: 'Balance Qty', dataIndex: 'nQuantity', render: (text, record) => { return record.nQuantity ? record.nQuantity : '-' } },
+     {title:'Destination', dataIndex:'odestination',render:(text,record)=>{return record.odestination ? record.odestination : '-'}},
+      { title: 'Shipment Type', dataIndex: 'oshipmentType', render: (text, record) => { return record.oshipmentType ? record.oshipmentType : '-' } },
+      { title: 'OLD OGAC', dataIndex: 'oogac', render: (text, record) => { return record.oogac ? record.oogac : '-' } },
+      { title: 'OLD GAC', dataIndex: 'ogac', render: (text, record) => { return record.ogac ? record.ogac : '-' } },
+      { title: 'Inventory Segment Code', dataIndex: 'oinventorySegmentCode', render: (text, record) => { return record.oinventorySegmentCode ? record.oinventorySegmentCode : '-' } },
+      { title: 'GAC Difference', dataIndex: 'oogac', render: (text, record) => { return record.oogac ? record.oogac : '-' } },
+      { title: 'item Vas', dataIndex: 'oitemVasText', render: (text, record) => { return record.oitemVasText ? record.oitemVasText: '-' } },
 
+      { title: 'New', dataIndex: '' },
+      { title: 'OGAC Date', dataIndex: 'nogac', render: (text, record) => { return record.nogac ? record.nogac: '-' } },
+      { title: 'GAC Date', dataIndex: 'nogac', render: (text, record) => { return record.ngac ? record.ngac: '-' } },
+      { title: ' To Item', dataIndex: '-' },
+      { title: 'No of Days to GAC', dataIndex: '', render: (text, record) => { if (record.dpomCreatedDates && record.nogac) {
+        const dpomCreatedDate = moment(record.dpomCreatedDates);
+        const nogacDate = moment(record.nogac);
+        const daysDifference = dpomCreatedDate.diff(nogacDate, 'days');
+        return daysDifference + ' days';
+      } else {
+        return "-";
+      }} },
+      { title: 'N.Unit', dataIndex: 'unit'},
+      { title: 'N.Plant', dataIndex: 'nPlant', render: (text, record) => { return record.nPlant ? record.nPlant: '-' } },
+      { title: 'N.Product Code', dataIndex: 'nproductCode', render: (text, record) => { return record.nproductCode ? record.nproductCode: '-' } },
+      { title: 'N.Line Status', dataIndex: 'nLineStatus', render: (text, record) => { return record.nLineStatus  ? record.nLineStatus    : '-' } },
+      { title: 'N.Document Date', dataIndex: 'nDocumentDate',  render: (text, record) => { return record.nDocumentDate ? moment(record.nDocumentDate).format('YYYY-MM-DD') : '-' } },
+      { title: 'New Po', dataIndex: 'npoNumber', render: (text, record) => { return record.npoNumber    ? record.npoNumber : '-' } },
+      { title: 'New Po Line', dataIndex: 'npoLine', render: (text, record) => { return record.npoLine ? record.npoLine: '-' } },
+      { title: 'N.Quantity', dataIndex: 'nQuantity', render: (text, record) => { return record.nQuantity        ? record.nQuantity : '-' } },
+      { title: 'N.Destination', dataIndex: 'ndestination', render: (text, record) => { return record.ndestination ? record.ndestination : '-' } },
+      { title: 'N.Inventory Segment Code', dataIndex: 'ninventorySegmentCode', render: (text, record) => { return record.ninventorySegmentCode ? record.ninventorySegmentCode: '-' } },
+      { title: 'Item Vas', dataIndex: 'nitemVasText', render: (text, record) => { return record.nitemVasText        ? record.nitemVasText        : '-' } },
+      { title: 'Shipment Type', dataIndex: 'nshipmentType', render: (text, record) => { return record.nshipmentType ? record.nshipmentType: '-' } },
+      { title: 'Item Vas Diff Check', dataIndex: '', },
+      { title: 'Qty Tally-Check	', dataIndex: '', },
+      { title: 'Price-Fob Tally-Check', dataIndex: '', },
+      { title: 'Price-Net Includding Discount Tally-Check', dataIndex: '', },
+      { title: 'Price-Trading Co Net Includding Discount Tally-Check', dataIndex: '', },
+
+
+
+    ];
+  
+    const exportExcel = () => {
+      const excel = new Excel();
+      excel
+        .addSheet('Divert-report')
+        .addColumns(data)
+        .addDataSource(items, { str2num: true })
+        .saveAs('Divert report.xlsx');
+    }
    
 
 
@@ -280,21 +345,11 @@ const DivertReport = () => {
         {
             title: 'OGAC Date',
             dataIndex: 'nogac', 
-            render: (text, record) => {
-             (record.ogac
-                        ? moment(record.ogac).format("YYYY-MM-DD")
-                        : "-")
-                  
-            }
+            
         },
         {
             title: 'GAC Date',
             dataIndex: 'ngac', 
-            render: (text, record) => {
-                (record.gac
-                        ? moment(record.gac).format("YYYY-MM-DD")
-                        : "-")
-            }
         },{
         title:"No of Days to GAC",
         render: (text, record) => {
@@ -479,7 +534,7 @@ const DivertReport = () => {
                 extra={ <Button
                     type="default"
                     style={{ color: 'green' }}
-                    //onClick={handleExport}
+                    onClick={exportExcel}
                     icon={<FileExcelFilled />}>Download Excel</Button>}>
                         <Row gutter={70}>
                  {/* <Col >
