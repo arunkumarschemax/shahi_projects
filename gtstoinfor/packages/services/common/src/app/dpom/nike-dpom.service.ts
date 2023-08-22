@@ -206,6 +206,12 @@ export class DpomService {
 
             const date = new Date();
             const todayDate = date.getFullYear() + '-' + Number(date.getMonth() + 1) + '-' + date.getDate()
+            const entity = new NikeFileUploadEntity()
+            entity.fileName = 'DPOM Api';
+            entity.filePath = 'DPOM Api';
+            entity.status = 'Success';
+            entity.createdUser = 'API sync'
+            const save = await transactionManager.getRepository(NikeFileUploadEntity).save(entity);
             for (const orderDetail of orderDetails.data) {
                 // Parse dates using moment
                 const date3 = moment(orderDetail.sizes.sizePo.goodsAtConsolidatorDate, 'MM/DD/YYYY');
@@ -221,11 +227,11 @@ export class DpomService {
                     orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, orderDetail.sizes.sizePo.sizeQuantity, orderDetail.sizes.sizePo.sizeDescription, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVas, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
                     crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, 'hanger', orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, 'username')
                 const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
-                // const versionDetails = await this.dpomChildRepo.getVersion(dtoData.purchaseOrderNumber)
+                const versionDetails = await this.dpomChildRepo.getVersion(dtoData.purchaseOrderNumber, dtoData.poLineItemNumber, dtoData.scheduleLineItemNumber)
                 let version = 1;
-                // if (versionDetails.length > 0) {
-                //     version = Number(versionDetails.length) + 1
-                // }
+                if (versionDetails.length > 0) {
+                    version = Number(versionDetails.length) + 1
+                }
                 dtoData.odVersion = version
                 if (details) {
                     const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber }, {
@@ -252,6 +258,7 @@ export class DpomService {
                                 dpomDiffObj.poLineItemNumber = dtoData.poLineItemNumber
                                 dpomDiffObj.scheduleLineItemNumber = dtoData.scheduleLineItemNumber
                                 dpomDiffObj.odVersion = dtoData.odVersion
+                                dpomDiffObj.fileId = save.id
                                 if (dpomDiffObj.oldValue != dpomDiffObj.newValue) {
                                     const dpomDiffSave = await transactionManager.getRepository(DpomDifferenceEntity).save(dpomDiffObj);
                                     if (!dpomDiffSave) {
@@ -364,10 +371,10 @@ export class DpomService {
                     crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, 'hanger', orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, 'username', version)
                 if (dtoData.purchaseOrderNumber != null) {
                     const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
-                    // const versionDetails = await this.dpomChildRepo.getVersion(dtoData.productionPlanId)
-                    // if (versionDetails.length > 0) {
-                    //     version = Number(versionDetails.length) + 1
-                    // }
+                    const versionDetails = await this.dpomChildRepo.getVersion(dtoData.purchaseOrderNumber, dtoData.poLineItemNumber, dtoData.scheduleLineItemNumber)
+                    if (versionDetails.length > 0) {
+                        version = Number(versionDetails.length) + 1
+                    }
                     dtoData.odVersion = version
                     if (details) {
                         // const updatedData = this.ordersAdapter.convertDtoToEntity(data);

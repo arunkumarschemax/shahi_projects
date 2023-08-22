@@ -22,6 +22,7 @@ import DivertReport from "./nike/reports/divert-report"
 import ShipmentTrackerReport from "./nike/reports/shipment-tracker-report"
 import ShipmentChangesCompareGrid from "./nike/shipment-compare-po"
 import VASChangesCompareGrid from "./nike/vas-compare-report"
+import DPOMSyncManually from "./nike/components/dpom-manual-sync"
 
 
 export const AppRoutes = () => {
@@ -52,6 +53,7 @@ export const AppRoutes = () => {
                 </Route>
                 <Route path='/nike'>
                     <Route path='file-import' element={<PoFileImport />} />
+                    <Route path='dpom-sync' element={<DPOMSyncManually />} />
                     <Route path='file-revert' element={<NikeFileRevert />} />
                     <Route path='pdf-upload' element={<PdfUpload />} />
                 </Route>
@@ -94,7 +96,7 @@ export const AppRoutes = () => {
                         }} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         }} />} />
-                                {/* <Route path='supplier/supplier-view' element={<SupplierView />} />
+                        {/* <Route path='supplier/supplier-view' element={<SupplierView />} />
                                 <Route path='supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
                             throw new Error("Function not implemented.")
                         }} isUpdate={false} closeForm={function (): void {
@@ -102,17 +104,9 @@ export const AppRoutes = () => {
                         }} />} /> */}
 
                     </Route>
-                    {/* <Route path='/excel-import'>
-                        <Route path='excel-import' element={<ExcelImport />} />
-                        <Route path='changes-view' element={<ChangesGrid />} />
-                        <Route path='grid-view' element={<AllOrdersGridView />} />
-                        <Route path='revert-orders' element={<FileRevert />} />
-                        <Route path='version-grid' element={<VersionChanges />} />
-                        <Route path='phase-wise-grid' element={<PhaseWiseData />} />
-
-                    </Route> */}
                     <Route path='/nike'>
                         <Route path='nike-dashboard' element={<NikeDashboard />} />
+                        <Route path='dpom-sync' element={<DPOMSyncManually />} />
                         <Route path='file-import' element={<PoFileImport />} />
                         <Route path='file-revert' element={<NikeFileRevert />} />
                         <Route path='order-acceptance' element={<OrderAcceptance />} />

@@ -181,7 +181,7 @@ export function OrderAcceptance() {
 
     return (
         <>
-            <Card title="Order Acceptance" headStyle={{ fontWeight: 'bold' }}>
+            <Card title="Nike Orders Register" headStyle={{ fontWeight: 'bold' }}>
                 <Table
                     columns={columns}
                     dataSource={data}
