@@ -198,7 +198,7 @@ const PPMReport = () => {
 
   const Columns: any = [
     {
-      title: "SL",
+      title: "S.No",
       render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
 
     },
@@ -271,7 +271,7 @@ const PPMReport = () => {
 
   return (
     <>
-      <Card title="PPM Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
+      <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
         extra={filteredData.length > 0 ? (<Button
           type="default"
           style={{ color: 'green' }}
@@ -293,7 +293,7 @@ const PPMReport = () => {
                   showSearch
                   placeholder="Select PPM Status"
                   optionFilterProp="children"
-                  allowClear>
+                  allowClear mode='multiple'>
                   <Option value="Accepted">ACCEPTED</Option>
                   <Option value="Unaccepted">UNACCEPTED</Option>
                   <Option value="Cancelled">CANCELLED</Option>
