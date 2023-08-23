@@ -8,6 +8,7 @@ import Item from 'antd/es/descriptions/Item';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { ColumnsType } from 'antd/es/table';
+import { FactoryReportModel } from '@project-management-system/shared-models';
 
 
 const FactoryPPMReport = () => {
@@ -24,7 +25,9 @@ const FactoryPPMReport = () => {
     const searchInput = useRef<any>(null);
     const [searchText, setSearchText] = useState<any>([]);
     const [searchedColumn, setSearchedColumn] = useState<any>([]);
-    const [filterData, setFilterData] = useState<any>([])
+    const [filterData, setFilterData] = useState<any>([]);
+    const [pageSize, setPageSize] = useState<number>(null);
+    const [page, setPage] = React.useState(1)
 
     const Finish = (values: any) => {
         // if (values.DPOMLineItemStatus !== undefined) {
@@ -287,13 +290,37 @@ const FactoryPPMReport = () => {
         return formattedDate;
     }
 
+    const getSizeWiseHeaders = (data: FactoryReportModel[]) => {
+        const sizeHeaders = new Set<string>();
+        data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
+            sizeHeaders.add('' + version.sizeDescription);
+        }))
+        return Array.from(sizeHeaders);
+    };
+    const getMap = (data: FactoryReportModel[]) => {
+        const sizeWiseMap = new Map<string, Map<string, number>>();
+        data?.forEach(rec => {
+            if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
+                sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
+            }
+            rec.sizeWiseData?.forEach(version => {
+                sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
+            })
+        });
+        return sizeWiseMap;
+    }
+
     const totalItemQty = gridData?.map(i => i.totalItemQty)
     const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
 
+    const renderReport =(data:FactoryReportModel[])=>{
+     const sizeHeaders = getSizeWiseHeaders(data);
+     const sizeWiseMap = getMap(data);
     const columns: ColumnsType<any> = [
         {
             title: 'Po+Line',
             dataIndex: 'purchaseOrderNumber-poLineItemNumber',
+            fixed:'left',
             render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}`,
 
         },
@@ -308,11 +335,7 @@ const FactoryPPMReport = () => {
             ...getColumnSearch('item'),
 
         },
-        {
-            title: 'Total Item Qty',
-            dataIndex: 'totalItemQty',
-
-        },
+       
         {
             title: 'Factory',
             dataIndex: 'factory',
@@ -367,7 +390,6 @@ const FactoryPPMReport = () => {
         {
             title: 'CO Final Approval Date',
             dataIndex: 'coFinalApprovalDate',
-
         },
         {
             title: 'Plan No',
@@ -458,11 +480,43 @@ const FactoryPPMReport = () => {
             title: 'Customer PO',
             dataIndex: 'customerPO',
 
-        },
-
-
-
+        }, 
+         {
+                title: 'Total Item Qty',
+                dataIndex: 'totalItemQty',
+                align:'center',
+                render: (text) => <strong>{text}</strong>
+            },
+       
     ];
+    sizeHeaders?.forEach(version => {
+        columns.push({
+            title: version,
+            dataIndex: version, 
+            key: version,
+            width: 130,
+            align: 'right',
+            render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                if (sizeData) {
+                    return sizeData.sizeQty !== null ? Number(sizeData.sizeQty).toLocaleString('en-IN', {
+                        maximumFractionDigits: 0
+                    }) : '-';
+                } else {
+                    return '-';
+                }
+            }
+        });
+    })
+   
+     
+        return (<Table columns={columns} dataSource={filterData} pagination={{
+            onChange(current, pageSize) {
+                setPage(current);
+                setPageSize(pageSize)}
+        }}scroll={{ x: 'max-content' }} />)
+    }
+
 
 
 
@@ -551,12 +605,13 @@ const FactoryPPMReport = () => {
                     </Col>
                 </Row><br></br>
                 <Card >
-                    <Table
+                    {/* <Table
                         columns={columns}
                         // dataSource={gridData}
                         dataSource={filterData}
                         scroll={{ x: 1000 }}
-                        bordered />
+                        bordered /> */}
+                        {renderReport(filterData)}
                 </Card>
             </Card>
         </>

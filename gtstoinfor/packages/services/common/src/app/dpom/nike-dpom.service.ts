@@ -869,7 +869,8 @@ export class DpomService {
 
     async getFactoryReportData(): Promise<CommonResponseModel> {
         try {
-            const details = await this.dpomRepository.find();
+            const allDetails = await this.dpomRepository.find();
+            const details = allDetails.filter(record => record.DPOMLineItemStatus !== 'Cancelled')
             if (details.length === 0) {
                 return new CommonResponseModel(false, 0, 'data not found');
             }
