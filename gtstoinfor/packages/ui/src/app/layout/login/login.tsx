@@ -13,6 +13,7 @@ import {
 import React from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
+import { LoginComponent } from "../../iam-client-react";
 const { Text, Link, Title } = Typography;
 const { useToken } = theme;
 
@@ -83,60 +84,19 @@ export default function Login() {
           }}
         >
           <Card
-            style={{
-              paddingTop: "10px",
-              height: "55%",
-              width: "55%",
-              borderRadius: "10px",
-              boxShadow: "1px 1px 5px 5px lightgrey",
-              backgroundColor: "#29397d",
-            }}
+          style={{
+            right:'20%'
+          }}
+            // style={{
+            //   paddingTop: "10px",
+            //   height: "55%",
+            //   width: "55%",
+            //   borderRadius: "10px",
+            //   boxShadow: "1px 1px 5px 5px lightgrey",
+            //   backgroundColor: "#29397d",
+            // }}
           >
-            <div className="login-title">
-              <Title level={2} style={{ color: "#ffff", margin: "0" }}>
-                Log In
-              </Title>
-              {/* <Text style={{color:`black`}}>Enter your credentials below to login</Text> */}
-              <br />
-            </div>
-            <Form form={loginForm} layout="vertical" className="content">
-              <Form.Item
-                name="username"
-                label={<label style={{ color: "white" }}>Username</label>}
-              >
-                <Input
-                  style={{ borderColor: colorPrimary, borderRadius: 5 }}
-                  placeholder="enter your username"
-                />
-              </Form.Item>
-              <Form.Item
-                name="password"
-                label={<label style={{ color: "white" }}>Passowrd</label>}
-                style={{ color: "#ffff" }}
-              >
-                <Input.Password
-                  style={{ borderColor: colorPrimary, borderRadius: 5 }}
-                  placeholder="enter your password"
-                />
-              </Form.Item>
-            </Form>
-            <Row justify={"end"}>
-              <Link style={{ color: "white" }}>Forgot password ?</Link>
-            </Row>
-            <Row style={{ paddingTop: "20px", justifyContent: "center" }}>
-              <Button
-                onClick={onLogin}
-                style={{
-                  width: "60%",
-                  backgroundColor: "#BBD6EA",
-                  color: "black",
-                  borderRadius: 5,
-                }}
-                type={"primary"}
-              >
-                Login
-              </Button>
-            </Row>
+            <LoginComponent/>
           </Card>
           <div
             style={{
