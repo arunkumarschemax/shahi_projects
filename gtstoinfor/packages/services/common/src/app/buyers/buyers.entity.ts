@@ -4,6 +4,7 @@ import { BuyerGeneralAttributesEntity } from "./buyers-general.entity";
 import { BuyerOrderAttributesEntity } from "./buyers-order.entity";
 import { PaymentMethod } from "../payment-methods/payment-method-entity";
 import { PaymentTerms } from "../payment-terms/payment-terms.entity";
+import { Address } from "./address.entity";
 // import { PaymentMode } from "../payment-mode/payment-mode.entity";
 // import { ShippingTerms } from "../shipping-terms/shipping-terms.entity";
 
@@ -90,53 +91,53 @@ export class Buyers {
   // })
   // paymentModeId:number;
 
-  @Column("varchar",{
-    nullable:true,
-    length:50,
-    name:"state"
-  })
-  state:string;
+  // @Column("varchar",{
+  //   nullable:true,
+  //   length:50,
+  //   name:"state"
+  // })
+  // state:string;
 
-  @Column("varchar",{
-    nullable:true,
-    length:50,
-    name:"district"
-  })
-  district:string;
+  // @Column("varchar",{
+  //   nullable:true,
+  //   length:50,
+  //   name:"district"
+  // })
+  // district:string;
 
-  @Column("varchar",{
-    nullable:true,
-    length:50,
-    name:"city"
-  })
-  city:string;
+  // @Column("varchar",{
+  //   nullable:true,
+  //   length:50,
+  //   name:"city"
+  // })
+  // city:string;
 
-  @Column("varchar",{
-    nullable:true,
-    length:50,
-    name:"landmark"
-  })
-  landmark:string;
+  // @Column("varchar",{
+  //   nullable:true,
+  //   length:50,
+  //   name:"landmark"
+  // })
+  // landmark:string;
 
-  @Column("varchar",{
-    nullable:true,
-    length:50,
-    name:"lane1"
-  })
-  lane1:string;
+  // @Column("varchar",{
+  //   nullable:true,
+  //   length:50,
+  //   name:"lane1"
+  // })
+  // lane1:string;
 
-  @Column("varchar",{
-    nullable:true,
-    length:50,
-    name:"lane2"
-  })
-  lane2:string;
+  // @Column("varchar",{
+  //   nullable:true,
+  //   length:50,
+  //   name:"lane2"
+  // })
+  // lane2:string;
 
-  @Column("varchar",{
-    nullable:true,
-    length:10,
-    name:"pincode"
-  })
+  // @Column("varchar",{
+  //   nullable:true,
+  //   length:10,
+  //   name:"pincode"
+  // })
   pincode:string;
 
   @Column("varchar",{
@@ -149,7 +150,7 @@ export class Buyers {
   @Column("varchar",{
       nullable:true,
       length:50,
-      name:"privateNote"
+      name:"private_note"
   })
   privateNote:string;
 
@@ -207,12 +208,11 @@ export class Buyers {
 //     shippingTermsInfo: ShippingTerms;
 
 
-    @ManyToOne(type=>Countries, country=>country.buyersInfo,{  nullable:false, })
-    @JoinColumn({ name:"country_id"})
-    countryInfo: Countries;
-
     @OneToMany(type => BuyerGeneralAttributesEntity, attribute => attribute.buyerInfo,{cascade: true})
     generalAttributesInfo : BuyerGeneralAttributesEntity
+
+    @OneToMany(type => Address,address => address.buyerInfo,{cascade:true})
+    adressInfo: Address[]
 
     @OneToMany(type => BuyerOrderAttributesEntity, attribute => attribute.buyerInfo,{cascade: true})
     orderAttributesInfo : BuyerOrderAttributesEntity

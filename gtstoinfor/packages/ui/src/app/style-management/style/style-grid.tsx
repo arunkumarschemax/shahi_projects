@@ -284,7 +284,9 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
 
   return (
       <>
-      <Row gutter={40}>
+            <Card title='Styles' extra={<span><Button onClick={() =>  navigate('/style-management/style/style-form')}
+              type={'primary'}>New</Button></span>} >
+   <Row gutter={40}>
         <Col>
           <Card title={'Total Styles: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -294,15 +296,10 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-        <Col>
-        <span><Button onClick={() => navigate('/style-management/style/style-form')}
-              type={'primary'}>New</Button></span>
-        </Col>
       </Row><br></br>
-      <Card >
+      <Card size='small'>
         <Table
         size='small'
-          // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
           pagination={{
@@ -325,6 +322,8 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
             closeForm={closeDrawer} />
         </Card>
       </Drawer>
+              </Card>
+   
       </>
   );
 }
