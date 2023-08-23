@@ -13,9 +13,12 @@ import { DpomChildAdapter } from './dto/dpom-child.adapter';
 import { DpomDifferenceRepository } from './repositories/dpom-difference.repository';
 import { NikeFileUploadEntity } from './entites/upload-file.entity';
 import { NikeFileUploadRepository } from './repositories/upload.repository';
+import { ScheduleModule } from '@nestjs/schedule';
+
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
       DpomEntity,
       DpomChildEntity,

@@ -139,13 +139,7 @@ export const baseRouterList = [
                 path: "factory-report",
                 filepath: "factory-report",
             },
-
             {
-                label: "Upload PDF",
-                key: "pdf-upload",
-                path: "pdf-upload",
-                filepath: "pdf-upload",
-            }, {
                 label: "PPM Marketing Report",
                 key: "ppm-report",
                 path: "ppm-report",
@@ -169,7 +163,6 @@ export const baseRouterList = [
                 path: "shipment-planning-chart",
                 filepath: "shipment-planning-chart",
             },
-
             {
                 label: "Shipment Tracker",
                 key: "shipment-report",

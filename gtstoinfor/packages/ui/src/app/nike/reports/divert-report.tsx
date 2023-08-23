@@ -337,12 +337,6 @@ const DivertReport = () => {
             title: 'New',
             children: [
                 {
-                    title: 'S.No',
-                    key: 'sno',
-                    responsive: ['sm'],
-                    render: (text, object, index) => (page - 1) * pageSize + (index + 1)
-                },
-                {
                     title: 'OGAC Date',
                     dataIndex: 'nogac',
 
@@ -516,7 +510,6 @@ const DivertReport = () => {
                                 </div>
                             ),
                         },
-
                     ]
                 }
             ] as unknown as null,
