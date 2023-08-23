@@ -51,3 +51,5 @@ export * from './custom-groups'
 export * from './rosl-groups'
 export * from './buying-house'
 export * from './commission'
+export * from './fabric-structures';
+export * from './fabric-finish-types';

@@ -47,6 +47,8 @@ import { CustomGroupsModule } from './custom groups/custom-groups.module';
 import { ROSLGroupsModule } from './rosl groups/rosl-groups.module';
 import { BuyingHouseModule } from './buying-house/buying-house.module';
 import { CommissionModule } from './commission/commission.module';
+import { FabricStructuresModule } from './fabric structure/fabric.module';
+import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-types.module';
 
 
 @Module({
@@ -94,6 +96,8 @@ import { CommissionModule } from './commission/commission.module';
     LiscenceTypedModule,
     FabricSubTypeModule,
     FabricTypeModule,
+    FabricStructuresModule,
+    FabricFinishTypesModule,
   SizeModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],

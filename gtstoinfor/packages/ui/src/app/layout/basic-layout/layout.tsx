@@ -284,6 +284,18 @@ export const baseRouterList = [
                 path: "commission/commission-view",
                 filepath: "commission/commission-view",
             },
+            {
+                label: "Fabric Structure",
+                key: "fabric-structure",
+                path: "fabric-structure/fabric-structure-grid",
+                filepath: "fabric-structure/fabric-structure-grid",
+            },
+            {
+                label: "Fabric Finish Type",
+                key: "fabric-finish-type",
+                path: "fabric-finish-type/fabric-finish-type-grid",
+                filepath: "fabric-finish-type/fabric-finish-type-grid",
+            },
         ],
     },
 
