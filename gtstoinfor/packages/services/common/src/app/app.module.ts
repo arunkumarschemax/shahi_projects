@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { appConfig } from '../../config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DpomModule } from './dpom/nike-dpom.module';
+import { SupplierModule } from './supplier/supplier.module';
 
 
 @Module({
@@ -30,6 +31,7 @@ import { DpomModule } from './dpom/nike-dpom.module';
       }
     }),
     FactoriesModule,
+    SupplierModule,
     UsersModule,
     AuthModule, JwtModule, DpomModule],
   controllers: [AppController],

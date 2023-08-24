@@ -6,25 +6,25 @@ import HighchartsReact from "highcharts-react-official"
 import { title } from "process"
 import React, { useEffect, useState } from "react"
 
-export interface StatusWiseOrdersProps { }
+export interface DestinationWisePoOrdersGraphProps { }
 
-export function StatusWiseOrders() {
-  const [statusData, setStatusData] = useState<any[]>([]);
+export function DestinationWisePoOrderGraph() {
+  const [destinationData, setDestinationData] = useState<any[]>([]);
   const service = new NikeService();
   const form = useForm
 
   useEffect(() => {
-    getStatusWiseItems();
+    getDestinationWisePo();
   }, [])
 
 
-  const getStatusWiseItems = () => {
-    service.getStatusWiseItems().then(res => {
+  const getDestinationWisePo = () => {
+    service.getDestinationWisePo().then(res => {
       if (res.status) {
-        setStatusData(res.data);
+        setDestinationData(res.data);
       } else {
         if (res.data) {
-          setStatusData([]);
+            setDestinationData([]);
           message.success("Data retrieve successfully");
         } else {
           message.success("Data retrieve successfully");
@@ -32,25 +32,26 @@ export function StatusWiseOrders() {
       }
     }).catch(err => {
       message.error("Data not found");
-      setStatusData([]);
+      setDestinationData([]);
     })
 
   }
 
-  const data = statusData.map(i =>  [ i.dpom_item_line_status, Number(i.count)]);
-  const count = statusData.map(i => { return Number(i.count) });
+  const destination = destinationData.map(i => { return i.destination });
+  const poCount = destinationData.map(i => { return Number(i.poCount) });
+//   const itemQty = planData.map(i => { return Number(i.qty) });
   
 
   const config = {
-    colors: ['#99C846', '#FF0000', '#FFC000', '#7798BF', '#aaeeee', '#ff0066',
+    colors: ['#058DC7', '#50B432', '#FFC000', '#7798BF', '#aaeeee', '#ff0066',
       '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
     chart: {
-      type: 'pie',
+      type: 'bar',
     //   backgroundColor: '#CCCCFF'
     },
 
     title: {
-      text: 'Status Wise Orders',
+      text: 'Destination-Wise Purchase Orders ',
       style: {
         color: 'var(--text-color,black)',
         fontSize: '1.75rem',
@@ -67,7 +68,7 @@ export function StatusWiseOrders() {
       },
     },
     subtitle: {
-      text: `Total Orders: ${count.reduce((a, b) => a + b, 0)}`,
+      text: `Total Orders: ${poCount.reduce((a, b) => a + b, 0)}`,
       style: {
         color: 'var(--text-color,black)',
         fontSize: '0.8rem', // Adjust the font size as needed
@@ -84,54 +85,74 @@ export function StatusWiseOrders() {
       },
     },
 
-    
+    xAxis: {
+      categories: destination,
+      labels: {
+        autoRotation: false,
+        style: {
+          color: 'var(--text-color,black)'
+        }
+      },
+    },
+
+    yAxis: {
+      allowDecimals: false,
+      min: 0,
+      // tickAmount: 16,
+      // tickPixelInterval: 100,
+      title: {
+        text: 'Accept & unAccepted Po s'
+      },
+      enabled: true,
+      style: {
+        color: 'var(--text-color,black)',
+        fontSize: '1.15rem',
+        lineHeight: '1.4',
+        marginBottom: '0',
+        overflow: 'hidden',
+        // paddingTop: '2px',
+        paddingTop: 'calc(2px*var(--scale-factor, 1))',
+        position: 'relative',
+        textOverFlow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        zIndex: '5',
+        fontFamily: 'visuelt-bold-pro,Arial,sans-serif,Font Awesome\ 5 Pro',
+      },
+      labels: {
+        style: {
+          color: 'var(--text-color,black)'
+        }
+      }
+    },
+
     // tooltip: {
-    //     pointFormat: '{series.department_name}: {point.percentage:.1f}%</b>'
-    // },
+    //   formatter: function () {
+    //     return '<b>' + this.x + '</b><br/>' + 'No.of Projects: ' + this.y + '<br/>'
 
-
-    // plotOptions: {
-    //   pie: {
-    //     cursor: 'pointer',
-    //     borderRadius: 5,
-    //     stacking: 'normal',
-    //     dataLabels: {
-    //       enabled: true,
-    //       format: '<b>{point.name}</b><br>{point.y}',
-    //       distance: -50,
-    //             filter: {
-    //                 property: 'percentage',
-    //                 operator: '>',
-    //                 value: 4
-    //             }
-    //     }
     //   }
     // },
+
     plotOptions: {
-        pie: {
-            dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b><br>{point.y}',
-                distance: -50,
-                style: {
-                    fontWeight: 'bold',
-                    color: 'white'
-                }
-            },
-            startAngle: -90,
-            endAngle: 90,
-            center: ['50%', '75%'],
-            size: '110%'
+      bar: {
+        stacking: 'normal',
+        dataLabels: {
+          enabled: true
         }
+      }
     },
 
     series: [
       {
-        name: 'No.of Orders' ,
-        data: data,
-        innerSize: '50%',
-      }
-    ]
+        name: 'No of Purchase orders',
+        data: poCount,
+        // stack: 'male'
+      },
+    //   {
+    //     name: 'Item Qty',
+    //     data: itemQty,
+    //     // stack: 'male'
+    //   },
+    ],
 
   }
   return (

@@ -1,112 +1,128 @@
-    import React, { useState, useEffect, useRef } from 'react';
-    import { Card, Table, Row, Input, Col, Form, DatePicker, Select, Button, message } from 'antd';
-    import { ColumnProps } from 'antd/lib/table';
-    import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-    import moment from 'moment';
-    import Highlighter from 'react-highlight-words';
-    import Item from 'antd/es/descriptions/Item';
-    import { Excel } from 'antd-table-saveas-excel';
-    import { Tooltip, numberFormat } from 'highcharts';
-    import { NikeService } from '@project-management-system/shared-services';
-   
-      
-    interface IExcelColumn {
-        title: string;
-        dataIndex: string;
-        color?:string;
-        children?: IExcelColumn[];
-      }
-
-    const DivertReport = () => {
-    
-        const [page, setPage] = useState<number>(1);
-        const [pageSize, setPageSize] = useState<number>(1);
-        const [searchText, setSearchText] = useState("");
-        const [searchedColumn, setSearchedColumn] = useState("");
-        const searchInput = useRef<any>(null);
-        const [dataLength, setDataLength] = useState<any[]>([]);
-        const [acceptedItems, setAcceptedItems] = useState<any[]>([]);
-        const [unacceptedItems, setUnacceptedItems] = useState<any[]>([])
-        const service = new NikeService();
-
-        useEffect(() => {
-            getData();
-            getCount();
-        }, [])
+import React, { useState, useEffect, useRef } from 'react';
+import { Card, Table, Row, Input, Col, Form, Button, Checkbox } from 'antd';
+import { ColumnProps } from 'antd/lib/table';
+import { FileExcelFilled, SearchOutlined } from '@ant-design/icons';
+import moment from 'moment';
+import Highlighter from 'react-highlight-words';
+import { Excel } from 'antd-table-saveas-excel';
+import { NikeService } from '@project-management-system/shared-services';
 
 
-        const handleSearch = (selectedKeys: any, confirm: any, dataIndex: string) => {
-            confirm();
-            setSearchText(selectedKeys[0]);
-            setSearchedColumn(dataIndex);
-        };
+interface IExcelColumn {
+    title: string;
+    dataIndex: string;
+    //    children?: CustomExcelColumn[];
+}
 
-        const handleReset = (clearFilters: any) => {
-            clearFilters();
-            setSearchText('');
-        };
+interface ExpandedRows {
+    [key: string]: boolean;
+}
 
-        const getColumnSearch = (dataIndex: string) => ({
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
-                <div style={{ padding: 8 }}>
-                    <Input
-                        ref={searchInput}
-                        placeholder={`Search ${dataIndex}`}
-                        value={selectedKeys[0]}
-                        onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                        onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                        style={{ width: 188, marginBottom: 8, display: 'block' }}
-                    />
-                    <Button
-                        type="primary"
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                        icon={<SearchOutlined />}
-                        size="small"
-                        style={{ width: 90, marginRight: 8 }}
-                    >
-                        Search
-                    </Button>
-                    <Button
-                        size="small"
-                        style={{ width: 90 }}
-                        onClick={() => {
-                            handleReset(clearFilters);
-                            setSearchedColumn(dataIndex);
-                            confirm({ closeDropdown: true });
-                        }}
-                    >
-                        Reset
-                    </Button>
-                </div>
+const DivertReport = () => {
+
+    const [page, setPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(1);
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
+    const searchInput = useRef<any>(null);
+    const [dataLength, setDataLength] = useState<any[]>([]);
+    const [items, setItems] = useState<any[]>([]);
+    const service = new NikeService();
+    const [expandedRows, setExpandedRows] = useState<ExpandedRows>({});
+    const [textareaValues, setTextareaValues] = useState<{ [key: string]: string }>({});
+
+    useEffect(() => {
+        getData();
+         getCount();
+    }, [])
+
+    const handleCheckboxChange = (id: string) => {
+        if (expandedRows[id]) {
+            setExpandedRows(prevExpandedRows => ({ ...prevExpandedRows, [id]: false }));
+        } else {
+            setExpandedRows(prevExpandedRows => ({ ...prevExpandedRows, [id]: true }));
+        }
+    };
+
+    const handleTextareaChange = (id: string, value: string) => {
+        setTextareaValues(prevTextareaValues => ({ ...prevTextareaValues, [id]: value }));
+    };
+
+    const handleSubmit = (id: string) => {
+        console.log(`Textarea value for ID ${id}:`, textareaValues[id]);
+    }
+
+    const handleSearch = (selectedKeys: any, confirm: any, dataIndex: string) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+
+    const handleReset = (clearFilters: any) => {
+        clearFilters();
+        setSearchText('');
+    };
+
+    const getColumnSearch = (dataIndex: string) => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+            <div style={{ padding: 8 }}>
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{ width: 188, marginBottom: 8, display: 'block' }}
+                />
+                <Button
+                    type="primary"
+                    onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                    icon={<SearchOutlined />}
+                    size="small"
+                    style={{ width: 90, marginRight: 8 }}
+                >
+                    Search
+                </Button>
+                <Button
+                    size="small"
+                    style={{ width: 90 }}
+                    onClick={() => {
+                        handleReset(clearFilters);
+                        setSearchedColumn(dataIndex);
+                        confirm({ closeDropdown: true });
+                    }}
+                >
+                    Reset
+                </Button>
+            </div>
+        ),
+        filterIcon: (filtered: any) => (
+            <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+        ),
+        onFilter: (value: any, record: any) =>
+            record[dataIndex]
+                ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+                : false,
+        onFilterDropdownVisibleChange: (visible: any) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select());
+            }
+        },
+        render: (text: any) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text.toString()}
+                />
+            ) : (
+                text
             ),
-            filterIcon: (filtered: any) => (
-                <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-            ),
-            onFilter: (value: any, record: any) =>
-                record[dataIndex]
-                    ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-                    : false,
-            onFilterDropdownVisibleChange: (visible: any) => {
-                if (visible) {
-                    setTimeout(() => searchInput.current?.select());
-                }
-            },
-            render: (text: any) =>
-                searchedColumn === dataIndex ? (
-                    <Highlighter
-                        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                        searchWords={[searchText]}
-                        autoEscape
-                        textToHighlight={text.toString()}
-                    />
-                ) : (
-                    text
-                ),
-        });
-    let oldSno = 0;
-    let newSno = 0;
+    });
+    // let oldSno = 0;
+    // let newSno = 0;
 
-        
 
         const getCount= () =>{
             service.getCountForDivertReport().then(res => {
@@ -114,554 +130,435 @@
                 if (res.status) {
                     setDataLength(res.data)
                 }
-            })
-        
-        
-    }
-        const getData = () =>{
-         service.getDivertReportData().then(res=>{
+            }) }
+
+    const getData = () => {
+        service.getDivertReportData().then(res => {
             if (res.status) {
-                setAcceptedItems(res.data.accepted);
-                console.log(acceptedItems)
-                setUnacceptedItems(res.data.unaccepted);
-                // getCount();
+                setItems(res.data);
+
             }
-         }) 
-        }
+        })
+    }
 
-       
-
-        const handleExport = (e: any) => {
-            e.preventDefault();
-        
-            const currentDate = new Date()
-                .toISOString()
-                .slice(0, 10)
-                .split("-")
-                .join("/");
-        
-           
-                const exportingColumns: IExcelColumn[] = [
-                    {
-                      title: 'Old',
-                      dataIndex: 'acceptedItems',
-                      color:'1bb5a1',
-                      children: [
-                        {
-                            title: "Plant",
-                            dataIndex: "plant",
-                            
-                        },
-                        {
-                            title: "Product Code",
-                            dataIndex: "productCode",
-            
-                        },
-                           {
-                            title: "Line Status",
-                            dataIndex: "lineStatus",
-                            // ...getColumnSearchProps("lineStatus"),
-            
-                        },
-                        {
-                            title: 'Document Date',
-                            dataIndex: 'documentDate', 
-                            
-                        },
-                        {
-                            title: 'Old Po',
-                            dataIndex: 'poNumber',
-            
-                            
-                        },
-                        {
-                            title: 'Old Po Line',
-                            dataIndex: 'poLine',
-            
-                            
-                        },
-                        {
-                            title: 'Balance Qty',
-                            dataIndex: '-', 
-            
-                        },
-                        {
-                            title: 'Destination',
-                            dataIndex: 'destination',
-             
-                        },
-                        {
-                            title: 'Shipment Type',
-                            dataIndex: 'shipmentType', 
-            
-                        },
-                        {   
-                            title: 'Inventory Segment Code',
-                            dataIndex: ' inventorySegmentCode',
-             
-                        },
-                        {
-                            title: 'OGAC Date',
-                            dataIndex: 'ogac',
-                           
-                        },
-                        {
-                            title: 'GAC Date',
-                            dataIndex: 'gac', 
-                            
-                        },
-                        ,
-                        {
-                            title: 'Item Vas',
-                            dataIndex: 'item_vas_text',
-                        },
-                      ]
-                    },
-                    {
-                        title: 'New',
-                        dataIndex: 'unacceptedItems',
-                        children: [
-                          { title: 'Plant', dataIndex: 'plant' },
-                          {
-                            title: 'OGAC Date',
-                            dataIndex: 'ogac', 
-                            
-                        },
-                        {
-                            title: 'GAC Date',
-                            dataIndex: 'gac', 
-                           
-                        },{
-                        title:"No of Days to GAC",
-                        dataIndex:"",
-                        }, 
-                        {
-                            title:"To item",
-                            dataIndex:"",
-                            }, 
-                        {
-                           title:"Unit",
-                           dataIndex:"",
-                           },
-            
-                        {
-                            title: "Plant",
-                            dataIndex: "plant",
-            
-                        },
-                        {
-                            title: "Product Code",
-                            dataIndex: "productCode",
-            
-                        },
-                        {
-                            title: "Line Status",dataIndex:''
-            
-                        },
-                        {
-                            title: 'Document Date',
-                            dataIndex: 'documentDate', 
-                        },
-                        {
-                            title: 'New Po',
-                            dataIndex: 'poNumber',
-                            
-                        },
-                        {
-                            title: 'New Po Line',
-                            dataIndex: 'poLine',
-            
-                            
-                        },
-                        {
-                            title: 'Quantity',
-                            dataIndex: '', 
-            
-                        },
-                        {
-                            title: 'Destination',
-                            dataIndex: 'destination',
-             
-                        },
-                        
-                        {
-                            title: 'Inventory Segment Code',
-                            dataIndex: 'inventorySegmentCode', 
-                        },
-                        {
-                            title: 'Item Vas',
-                            dataIndex: 'item_vas_text',
-                        },
-                        
-                        {
-                            title: 'Shipment Type',
-                            dataIndex: 'shipmentType',
-                        },
-                        {
-                            title: 'Item Vas Diff Check',
-                            dataIndex: '', 
-                        },
-                        {
-                            title: 'Qty Tally-Check',
-                            dataIndex: '', 
-                        },
-                        {
-                            title: 'Price-Fob Tally-Check',
-                            dataIndex: '', 
-                        },
-                        {
-                            title: 'Price-Net Includding Discount Tally-Check',
-                            dataIndex: '', 
-                        },
-                        {
-                            title: 'Price-Trading Co Net Includding Discount Tally-Check',
-                            dataIndex: '', 
-                        },
-                    
-                        ]
-                      },
-                    
-                  ];
-            
-        
-            const excel = new Excel();
-    excel.addSheet("Sheet1");
-
-    const formattedDataForExcel = modifiedCombinedData.map(item => ({
-        ...item,
-        sno: item.section === 'old' ? item.sno : newSno++,
-    }));
-
-    // let newSno = 1;
-    // const newSectionStart = formattedDataForExcel.findIndex(item => item.section === 'new');
-    // if (newSectionStart >= 0) {
-    //     formattedDataForExcel.slice(newSectionStart).forEach((item, index) => {
-    //         if (item.section === 'new') {
-    //             item.sno = newSno++; 
-    //         }
-    //     });
-    // }
-
-    excel.addRow();
-    excel.addColumns(exportingColumns);
-    excel.addDataSource(formattedDataForExcel);
-    excel.saveAs(`Divert-report-${currentDate}.xlsx`);
-}
-
-        const columns: ColumnProps<any>[] = [
-
-         
-        { title: 'old', 
-       
-        children: [
-            {
-                title: 'S.No',
-                key: 'sno',
-                responsive: ['sm'],
-                render: (text, object, index) => (page - 1) * pageSize + (index + 1)
-            },
-            {
-                title: "Plant",
-                dataIndex: "plant",
-                render: (text, record) => (record.section === 'old' ? record.plant : ''),
-            },
-            {
-                title: "Product Code",
-                dataIndex: "productCode",
-                sorter: (a, b) => a.productCode.localeCompare(b.productCode),
-                sortDirections: ["descend", "ascend"],
-                // ...getColumnSearchProps("productCode"),
-                render: (text, record) => (record.section === 'old' ? record.productCode : ''),
-
-            },
-               {
-                title: "Line Status",
-                dataIndex: "lineStatus",
-                // ...getColumnSearchProps("lineStatus"),
-                render: (text, record) => (record.section === 'old' ? record.lineStatus : ''),
-
-            },
-            {
-                title: 'Document Date',
-                dataIndex: 'documentDate', 
-                render: (text, record) => {
-                    return record.section === 'old'
-                        ? (record.documentDate
-                            ? moment(record.documentDate).format("YYYY-MM-DD")
-                            : "-")
-                        : "";
+    const exportedData = [];
+    const execlData = items
+    let i = 1;
+    const data = [
+        { title: 'S No', dataIndex: 'sNo', render: (text, object, index) => { return i++; } },
+        { title: 'Old Request Date', dataIndex: '' },
+        { title: 'O.From Item', dataIndex: '' },
+        { title: 'O.Unit', dataIndex: '' },
+        { title: 'O.Plant', dataIndex: 'oplant', render: (text, record) => { return record.oplant ? record.oplant : '-' } },
+        { title: 'O.Product Code', dataIndex: 'oproductCode', render: (text, record) => { return record.oproductCode ? record.oproductCode : '-' } },
+        { title: 'O.Line Status', dataIndex: 'onLineStatus', render: (text, record) => { return record.onLineStatus ? record.onLineStatus : '-' } },
+        { title: 'O.Document Date', dataIndex: 'oDocumentDate', render: (text, record) => { return record.oDocumentDate ? moment(record.oDocumentDate).format('YYYY-MM-DD') : '-' } },
+        { title: 'Old Po', dataIndex: 'opoNumber', render: (text, record) => { return record.opoNumber ? record.opoNumber : '-' } },
+        { title: 'Old Po Line', dataIndex: 'opoLine', render: (text, record) => { return record.opoLine ? record.opoLine : '-' } },
+        { title: 'Old Qantity', dataIndex: 'oquantity', render: (text, record) => { return record.oquantity ? record.oquantity : '-' } },
+        { title: 'Balance Qty', dataIndex: 'nQuantity', render: (text, record) => { return record.nQuantity ? record.nQuantity : '-' } },
+        { title: 'Destination', dataIndex: 'odestination', render: (text, record) => { return record.odestination ? record.odestination : '-' } },
+        { title: 'Shipment Type', dataIndex: 'oshipmentType', render: (text, record) => { return record.oshipmentType ? record.oshipmentType : '-' } },
+        { title: 'OLD OGAC', dataIndex: 'oogac', render: (text, record) => { return record.oogac ? record.oogac : '-' } },
+        { title: 'OLD GAC', dataIndex: 'ogac', render: (text, record) => { return record.ogac ? record.ogac : '-' } },
+        { title: 'Inventory Segment Code', dataIndex: 'oinventorySegmentCode', render: (text, record) => { return record.oinventorySegmentCode ? record.oinventorySegmentCode : '-' } },
+        { title: 'GAC Difference', dataIndex: 'oogac', render: (text, record) => { return record.oogac ? record.oogac : '-' } },
+        { title: 'item Vas', dataIndex: 'oitemVasText', render: (text, record) => { return record.oitemVasText ? record.oitemVasText : '-' } },
+        { title: 'OGAC Date', dataIndex: 'nogac', render: (text, record) => { return record.nogac ? record.nogac : '-' } },
+        { title: 'GAC Date', dataIndex: 'nogac', render: (text, record) => { return record.ngac ? record.ngac : '-' } },
+        { title: ' To Item', dataIndex: '-' },
+        {
+            title: 'No of Days to GAC', dataIndex: '', render: (text, record) => {
+                if (record.dpomCreatedDates && record.nogac) {
+                    const dpomCreatedDate = moment(record.dpomCreatedDates);
+                    const nogacDate = moment(record.nogac);
+                    const daysDifference = dpomCreatedDate.diff(nogacDate, 'days');
+                    return daysDifference + ' days';
+                } else {
+                    return "-";
                 }
-            },
-            {
-                title: 'Old Po',
-                dataIndex: 'poNumber',
-                render: (text, record) => (record.section === 'old' ? record.poNumber : ''),
-
-                
-            },
-            {
-                title: 'Old Po Line',
-                dataIndex: 'poLine',
-                render: (text, record) => (record.section === 'old' ? record.poLine : "-"),
-
-                
-            },
-            {
-                title: 'Balance Qty',
-                dataIndex: '-', 
-                render: (text, record) => (record.section === 'old' ? record.plant : "-"),
-
-            },
-            {
-                title: 'Destination',
-                dataIndex: 'destination',
-                render: (text, record) => (record.section === 'old' ? record.destination : "-"),
- 
-            },
-            {
-                title: 'Shipment Type',
-                dataIndex: 'shipmentType', 
-                render: (text, record) => (record.section === 'old' ? record.shipmentType : "-"),
-
-            },
-            {   
-                title: 'Inventory Segment Code',
-                dataIndex: ' inventorySegmentCode',
-                render: (text, record) => (record.section === 'old' ? record.inventorySegmentCode : "-"),
- 
-            },
-            {
-                title: 'OGAC Date',
-                dataIndex: 'ogac', 
-                render: (text, record) => {
-                    return record.section === 'old'
-                        ? (record.ogac
-                            ? moment(record.ogac).format("YYYY-MM-DD")
-                            : "-")
-                        : "";
-                }
-            },
-            {
-                title: 'GAC Date',
-                dataIndex: 'gac', 
-                render: (text, record) => {
-                    return record.section === 'old'
-                        ? (record.gac
-                            ? moment(record.gac).format("YYYY-MM-DD")
-                            : "-")
-                        : "";
-                }
-            },
-            ,
-            {
-                title: 'Item Vas',
-                dataIndex: 'item_vas_text',
-                render: (text, record) => (record.section === 'old' ? (record.item_vas_text !== null ? record.item_vas_text : "null") : ""),
-            },
-            
-        
-        ]  as unknown as null, 
+            }
         },
-        
-        { title: 'New',
-        
-        children:[
-           {
-                title: 'S.No',
-                key: 'sno',
-                responsive: ['sm'],
-                render: (text, object, index) => (page - 1) * pageSize + (index + 1)
-            },
-            {
-                title: 'OGAC Date',
-                dataIndex: 'ogac', 
-                render: (text, record) => {
-                    return record.section === 'new'
-                        ? (record.ogac
-                            ? moment(record.ogac).format("YYYY-MM-DD")
-                            : "-")
-                        : "";
-                }
-            },
-            {
-                title: 'GAC Date',
-                dataIndex: 'gac', 
-                render: (text, record) => {
-                    return record.section === 'new'
-                        ? (record.gac
-                            ? moment(record.gac).format("YYYY-MM-DD")
-                            : "-")
-                        : "";
-                }
-            },{
-            title:"No of Days to GAC",
-            dataIndex:"",
-            }, 
-            {
-                title:"To item",
-                dataIndex:"",
-                }, 
-            {
-               title:"Unit",
-               dataIndex:"",
-               },
+        { title: 'N.Unit', dataIndex: 'unit' },
+        { title: 'N.Plant', dataIndex: 'nPlant', render: (text, record) => { return record.nPlant ? record.nPlant : '-' } },
+        { title: 'N.Product Code', dataIndex: 'nproductCode', render: (text, record) => { return record.nproductCode ? record.nproductCode : '-' } },
+        { title: 'N.Line Status', dataIndex: 'nLineStatus', render: (text, record) => { return record.nLineStatus ? record.nLineStatus : '-' } },
+        { title: 'N.Document Date', dataIndex: 'nDocumentDate', render: (text, record) => { return record.nDocumentDate ? moment(record.nDocumentDate).format('YYYY-MM-DD') : '-' } },
+        { title: 'New Po', dataIndex: 'npoNumber', render: (text, record) => { return record.npoNumber ? record.npoNumber : '-' } },
+        { title: 'New Po Line', dataIndex: 'npoLine', render: (text, record) => { return record.npoLine ? record.npoLine : '-' } },
+        { title: 'N.Quantity', dataIndex: 'nQuantity', render: (text, record) => { return record.nQuantity ? record.nQuantity : '-' } },
+        { title: 'N.Destination', dataIndex: 'ndestination', render: (text, record) => { return record.ndestination ? record.ndestination : '-' } },
+        { title: 'N.Inventory Segment Code', dataIndex: 'ninventorySegmentCode', render: (text, record) => { return record.ninventorySegmentCode ? record.ninventorySegmentCode : '-' } },
+        { title: 'Item Vas', dataIndex: 'nitemVasText', render: (text, record) => { return record.nitemVasText ? record.nitemVasText : '-' } },
+        { title: 'Shipment Type', dataIndex: 'nshipmentType', render: (text, record) => { return record.nshipmentType ? record.nshipmentType : '-' } },
+        { title: 'Item Vas Diff Check', dataIndex: '', },
+        { title: 'Qty Tally-Check	', dataIndex: '', },
+        { title: 'Price-Fob Tally-Check', dataIndex: '', },
+        { title: 'Price-Net Includding Discount Tally-Check', dataIndex: '', },
+        { title: 'Price-Trading Co Net Includding Discount Tally-Check', dataIndex: '', },
+    ];
 
-            {
-                title: "Plant",
-                dataIndex: "plant",
-                // ...getColumnSearchProps("plant"),
-                render: (text, record) => (record.section === 'new' ? record.plant : ''),
+    const exportExcel = () => {
+        const excel = new Excel();
+        excel
+            .addSheet('Divert-report')
+            .addColumns(data)
+            .addDataSource(items, { str2num: true })
+            .saveAs('Divert report.xlsx');
+    }
 
-            },
-            {
-                title: "Product Code",
-                dataIndex: "productCode",
-                sorter: (a, b) => a.owner.localeCompare(b.owner),
-                sortDirections: ["descend", "ascend"],
-                //...getColumnSearchProps("owner"),
-            render: (text, record) => (record.section === 'new' ? record.productCode : ''),
-
-            },
-            {
-                title: "Line Status",
-                render: (text, record) => (record.section === 'new' ? record.lineStatus : ''),
-
-            },
-            {
-                title: 'Document Date',
-                dataIndex: 'documentDate', 
-                render: (text, record) => {
-                    return record.section === 'new'
-                        ? (record.documentDate
-                            ? moment(record.documentDate).format("YYYY-MM-DD")
-                            : "-")
-                        : "";
-                }
-            },
-            {
-                title: 'New Po',
-                dataIndex: 'poNumber',
-                render: (text, record) => (record.section === 'new' ? record.poLine : "-"),
-
-                
-            },
-            {
-                title: 'New Po Line',
-                dataIndex: 'poLine',
-                render: (text, record) => (record.section === 'new' ? record.poLine : "-"),
-
-                
-            },
-            {
-                title: 'Quantity',
-                dataIndex: '', 
-              //  render: (text, record) => (record.section === 'new' ? record.poLine : "-"),
-
-            },
-            {
-                title: 'Destination',
-                dataIndex: 'destination',
-                render: (text, record) => (record.section === 'new' ? record.destination : "-"),
- 
-            },
-            
-            {
-                title: 'Inventory Segment Code',
-                dataIndex: 'inventorySegmentCode', 
-                render: (text, record) => (record.section === 'new' ? record.inventorySegmentCode : "-"),
-            },
-            {
-                title: 'Item Vas',
-                dataIndex: 'item_vas_text',
-                render: (text, record) => (record.section === 'new' ? (record.item_vas_text !== null ? record.item_vas_text : "null") : ""),
-            },
-            
-            {
-                title: 'Shipment Type',
-                dataIndex: 'shipmentType',
-                render: (text, record) => (record.section === 'new' ? record.shipmentType : "-"),
-            },
-            {
-                title: 'Item Vas Diff Check',
-                dataIndex: '', 
-            },
-            {
-                title: 'Qty Tally-Check',
-                dataIndex: '', 
-            },
-            {
-                title: 'Price-Fob Tally-Check',
-                dataIndex: '', 
-            },
-            {
-                title: 'Price-Net Includding Discount Tally-Check',
-                dataIndex: '', 
-            },
-            {
-                title: 'Price-Trading Co Net Includding Discount Tally-Check',
-                dataIndex: '', 
-            },
-        
-        ]as unknown as null,}
-        ]
-        const combinedData = [
-            ...acceptedItems.map(item => ({ ...item, section: 'old' })),
-            ...unacceptedItems.map(item => ({ ...item, section: 'new' })),
-        ]
-        const newSectionStart = combinedData.findIndex(item => item.section === 'new');
-        const modifiedCombinedData = combinedData.map((item, index) => {
-            if (item.section === 'new') {
-                return { ...item, sno: index + 301 - newSectionStart };
-            }
-            return item;
-        });
-
-
-
-        return (
-            <>
-                <Card title="Divert Report" headStyle={{ fontWeight: 'bold' }}
-                    extra={ <Button
-                        type="default"
-                        style={{ color: 'green' }}
-                        onClick={handleExport}
-                        icon={<FileExcelFilled />}>Download Excel</Button>}>
-                            <Row gutter={70}>
-                     <Col >
-                        <Card title={'Total Line Status Count  : ' + Number(dataLength[0]?.totalCount)} style={{ textAlign: 'left', width: 280, height: 38, backgroundColor: ' lightblue' }}></Card>
-                    </Col>
-                    <Col>
-                        <Card title={'Accepted  : ' + Number(dataLength[0]?.acceptedCount)} style={{ textAlign: 'left', width: 200, height: 38, backgroundColor: 'lightblue' }}></Card>
-                    </Col>
-                    <Col>
-                        <Card title={'Unaccepted : ' +Number(dataLength[0]?.unacceptedCount)} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
-                    </Col> 
-                   
+    const columns: ColumnProps<any>[] = [
+        {
+            title: 'old',
+            children: [
+                // {
+                //     title: 'S.No',
+                //     key: 'sno',
+                //     responsive: ['sm'],
+                //     render: (text, object, index) => (page - 1) * pageSize + (index + 1),
                     
-                </Row><br></br>
-                                <Card >
-                        <Table
-                            columns={columns}
-                            className="custom-table-wrapper"
-                            dataSource={modifiedCombinedData}
-                            pagination={{
-                                onChange(current, pageSize) {
+                // },
+                {
+                    title: "Product Code",
+                    dataIndex: "oproductCode",
+                    sorter: (a, b) => a.oproductCode?.localeCompare(b.oproductCode),
+                    sortDirections: ["descend", "ascend"],
+                    fixed:'left'
+                },
+                {
+                    title: "Request Date",
+                    dataIndex: "",
+                },
+                {
+                    title: "From Item",
+                    dataIndex: "",
+                },
+                {
+                    title: "Unit",
+                    dataIndex: "",
+                },
+                {
+                    title: "Plant",
+                    dataIndex: "oplant",
+                },
+               
+                {
+                    title: "Line Status",
+                    dataIndex: "onLineStatus",
+                    // ...getColumnSearchProps("lineStatus"),
+                },
+                {
+                    title: 'Document Date',
+                    dataIndex: 'oDocumentDate',
+                    render: (text, record) => {
+                        return record.oDocumentDate
+                            ? moment(record.oDocumentDate).format("YYYY-MM-DD")
+                            : "-";
+                    }
+                },
+                {
+                    title: 'Old Po',
+                    dataIndex: 'opoNumber',
+                    sorter: (a, b) => a.opoNumber?.localeCompare(b.opoNumberx),
+                    sortDirections: ["descend", "ascend"],
+                },
+                {
+                    title: 'Old Po Line',
+                    dataIndex: 'opoLine',
+                    sorter: (a, b) => a.opoLine - b.opoLine,
+                    sortDirections: ["descend", "ascend"],
+                },
+                {
+                    title: 'Old Qantity',
+                    //from yesterdays ppm
+                    dataIndex: 'oquantity',
+                    sorter: (a, b) => a.oquantity.localeCompare(b.oquantity),
+                    sortDirections: ["descend", "ascend"],
+                },
+                {
+                    title: 'Balance Qty',
+                    // from dpom
+                    dataIndex: 'oquantity',
+                    sorter: (a, b) => a.oquantity.localeCompare(b.oquantity),
+                    sortDirections: ["descend", "ascend"],
+                },
+                {
+                    title: 'Destination',
+                    dataIndex: 'odestination',
+                    sorter: (a, b) => a.odestination.localeCompare(b.odestination),
+                    sortDirections: ["descend", "ascend"],
+                },
+                {
+                    title: 'Shipment Type',
+                    dataIndex: 'oshipmentType',
+                    sorter: (a, b) => a.oshipmentType.localeCompare(b.oshipmentType),
+                    sortDirections: ["descend", "ascend"],
+
+                },
+                {
+                    title: 'OLD OGAC',
+                    dataIndex: 'oogac',
+                },
+                {
+                    title: 'OLD GAC',
+                    dataIndex: 'ogac',
+                },
+                {
+                    title: 'Inventory Segment Code',
+                    dataIndex: 'oinventorySegmentCode',
+                    sorter: (a, b) => a.oinventorySegmentCode.localeCompare(b.oinventorySegmentCode),
+                    sortDirections: ["descend", "ascend"],
+                },
+                {
+                    title: 'GAC Difference',
+                    dataIndex: '',
+                    render: (text, record) => {
+                        if (record.ogac && record.nogac) {
+                            const ogacDate = moment(record.ogac, 'YYYY-MM-DD');
+                            const nogacDate = moment(record.nogac, 'YYYY-MM-DD');
+                            const daysDifference = nogacDate.diff(ogacDate, 'days');
+                            return daysDifference + ' days';
+                        } else {
+                            return "-";
+                        }
+                    },
+                    sorter: (a, b) => a.daysDifference.localeCompare(b.daysDifference),
+                    sortDirections: ["descend", "ascend"],
+                },
+                {
+                    title: 'Item Vas',
+                    dataIndex: 'oitem_vas_text',
+                },
+            ] as unknown as null,
+        },
+        {
+            title: 'New',
+            children: [
+                {
+                    title: 'OGAC Date',
+                    dataIndex: 'nogac',
+
+                },
+                {
+                    title: 'GAC Date',
+                    dataIndex: 'ngac',
+                },
+                {
+                    title: "No of Days to GAC",
+                    render: (text, record) => {
+                        if (record.dpomCreatedDates && record.nogac) {
+                            const dpomCreatedDate = moment(record.dpomCreatedDates);
+                            const nogacDate = moment(record.nogac);
+                            const daysDifference = dpomCreatedDate.diff(nogacDate, 'days');
+                            return daysDifference + ' days';
+                        } else {
+                            return "-";
+                        }
+                    }
+                },
+                {
+                    title: "To item",
+                    dataIndex: "",
+                },
+                {
+                    title: "Unit",
+                    dataIndex: "",
+                },
+
+                {
+                    title: "Plant",
+                    dataIndex: "nPlant",
+                },
+                {
+                    title: "Product Code",
+                    dataIndex: "nproductCode",
+                    sorter: (a, b) => a.nproductCode.localeCompare(b.nproductCode),
+                    sortDirections: ["descend", "ascend"],
+                },
+                {
+                    title: "Line Status",
+                    dataIndex: 'nLineStatus'
+                },
+                {
+                    title: 'Document Date',
+                    dataIndex: 'nDocumentDate',
+                    render: (text, record) => {
+                        return record.nDocumentDate
+                            ? moment(record.nDocumentDate).format("YYYY-MM-DD")
+                            : "-";
+                    }
+                },
+                {
+                    title: 'New Po',
+                    dataIndex: 'npoNumber',
+                },
+                {
+                    title: 'New Po Line',
+                    dataIndex: 'npoLine',
+                },
+                {
+                    title: 'Quantity',
+                    dataIndex: 'nQuantity',
+                },
+                {
+                    title: 'Destination',
+                    dataIndex: 'ndestination',
+                },
+                {
+                    title: 'Inventory Segment Code',
+                    dataIndex: 'ninventorySegmentCode',
+                },
+                {
+                    title: 'Item Vas',
+                    dataIndex: 'nitemVasText',
+                },
+
+                {
+                    title: 'Shipment Type',
+                    dataIndex: 'nshipmentType',
+                },
+                {
+                    title: 'Item Vas Diff Check',
+                    dataIndex: '',
+                },
+                {
+                    title: 'Qty Tally-Check',
+                    dataIndex: '',
+                },
+                {
+                    title: 'Price-Fob Tally-Check',
+                    dataIndex: '',
+                },
+                {
+                    title: 'Price-Net Includding Discount Tally-Check',
+                    dataIndex: '',
+                },
+                {
+                    title: 'Price-Trading Co Net Includding Discount Tally-Check',
+                    dataIndex: '',
+                },
+                {
+                    title: 'CO-update',
+                    children: [
+                        {
+                            title: 'Approve',
+                            dataIndex: '',
+                            render: (text, rowData) => (
+                                <span>
+
+                                    <Form.Item>
+                                        <Checkbox value={'yes'}
+                                        // checked={rowData.selectedLevel === 'L1'}
+                                        //onChange={() => handleCheckboxChange('L1', rowData.qResponseId)}
+                                        ></Checkbox>
+                                    </Form.Item>
+                                </span>
+                            )
+                        },
+                        {
+                            title: 'Edit',
+                            dataIndex: 'id',
+                            render: (text, rowData) => (
+                                <span>
+                                    <Form.Item>
+                                        <Checkbox
+                                            onChange={() => handleCheckboxChange(rowData.id)}
+                                            checked={expandedRows[rowData.id] || false}
+                                        ></Checkbox>
+                                    </Form.Item>
+                                </span>
+                            ),
+                        },
+                        {
+                            title: 'Manual Type Item',
+                            dataIndex: 'id',
+                            render: (text, rowData) => (
+                                <div>
+                                    {expandedRows[rowData.id] ? (
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <Input
+                                                allowClear
+                                                style={{ marginRight: '10px' }}
+                                                placeholder="Enter text"
+                                                value={textareaValues[rowData.id] || ''}
+                                                onChange={e =>
+                                                    handleTextareaChange(rowData.id, e.target.value)
+                                                }
+                                            />
+                                            <Button
+                                                type="primary"
+                                                onClick={() => handleSubmit(rowData.id)}
+                                            >
+                                                Submit
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <Button
+                                            type="link"
+                                            onClick={() =>
+                                                setExpandedRows(prevExpandedRows => ({
+                                                    ...prevExpandedRows,
+                                                    [rowData.id]: true,
+                                                }))
+                                            }
+                                        >
+                                            Manual Edit
+                                        </Button>
+                                    )}
+                                </div>
+                            ),
+                        },
+                    ]
+                }
+            ] as unknown as null,
+        }
+    ]
+
+    return (
+        <>
+            <Card title="Divert Report" headStyle={{ fontWeight: 'bold' }}
+                extra={<Button
+                    type="default"
+                    style={{ color: 'green' }}
+                    onClick={exportExcel}
+                    icon={<FileExcelFilled />}>Download Excel</Button>}>
+                {/* <Row gutter={70}>
+                    <Col >
+                    <Card title={'Total Line Status Count  : ' + Number(dataLength[0]?.totalCount)} style={{ textAlign: 'left', width: 280, height: 38, backgroundColor: ' lightblue' }}></Card>
+                </Col>
+                <Col>
+                    <Card title={'Accepted  : ' + Number(dataLength[0]?.acceptedCount)} style={{ textAlign: 'left', width: 200, height: 38, backgroundColor: 'lightblue' }}></Card>
+                </Col>
+                <Col>
+                    <Card title={'Unaccepted : ' +Number(dataLength[0]?.unacceptedCount)} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
+                </Col> 
+
+                </Row><br></br> */}
+                <Card >
+                    <Table
+                        columns={columns}
+                        className="custom-table-wrapper"
+                        dataSource={items}
+                        pagination={{
+                            onChange(current, pageSize) {
                                 setPage(current);
                                 setPageSize(pageSize)
-                                },   
-                            }}
-                            scroll={{ x: 'max-content' }}
-                            bordered  
-                            />
-                        
-            
-                    </Card>
+                            },
+                        }}
+                        scroll={{ x: 'max-content' }}
+                        bordered
+                        size='small'
+                    // expandedRowRender={(record) => record.additionalData} 
+                    />
                 </Card>
-            </>
-        )
-    }
+            </Card>
+        </>
+    )
+}
 
-    export default DivertReport
+export default DivertReport
+
+
 
 
 

@@ -1,8 +1,10 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { MarketingModel } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
+import { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import RangePicker from 'rc-picker/lib/RangePicker';
 import React, { useEffect, useRef, useState } from 'react'
@@ -24,8 +26,10 @@ const PPMReport = () => {
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const service = new NikeService();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [filterData, setFilterData] = useState<any>([])
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
-
+  const [pageSize, setPageSize] = useState<number>(null);
+  const [page, setPage] = React.useState(1)
 
 
   useEffect(() => {
@@ -36,6 +40,7 @@ const PPMReport = () => {
     service.getPPMData().then(res => {
       if (res.status) {
         setGridData(res.data)
+        setFilterData(res.data)
         setFilteredData(res.data)
       }
     }).catch(err => {
@@ -59,13 +64,74 @@ const PPMReport = () => {
       { title: 'Item', dataIndex: 'Item' },
       { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
       { title: 'Factory', dataIndex: 'Factory' },
+      { title: 'PCD', dataIndex: '' },
       { title: 'Document Date', dataIndex: 'documentDate' },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
       { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
+      { title: 'Trading Co PO Number', dataIndex: '' },
       { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
+      { title: 'Doc Type', dataIndex: '' },
+      { title: 'Doc Type Description', dataIndex: 'colorDesc' },
       { title: 'Style Number', dataIndex: 'styleNumber' },
       { title: 'Product Code', dataIndex: 'productCode' },
       { title: 'Colour Description', dataIndex: 'colorDesc' },
+      { title: 'Planning Season Code', dataIndex: '' },
+      { title: 'Planning Season Year', dataIndex: '' },
+      { title: 'Co', dataIndex: '' },
+      { title: 'CO Final Approval Date', dataIndex: '' },
+      { title: 'Plan No', dataIndex: '' },
+      { title: 'Lead Time', dataIndex: '' },
+      { title: 'Category', dataIndex: '' },
+      { title: 'Category Description', dataIndex: '' },
+      { title: 'Vendor Code', dataIndex: '' },
+      { title: 'Global Category Core Focus', dataIndex: '' },
+      { title: 'Global Category Core Focus Description', dataIndex: '' },
+      { title: 'Gender Age', dataIndex: '' },
+      { title: 'Gender Age Description', dataIndex: '' },
+      { title: 'Destination Country Code', dataIndex: '' },
+      { title: 'Destination Country Name', dataIndex: '' },
+      { title: 'Plant Code', dataIndex: '' },
+      { title: 'plant Name', dataIndex: '' },
+      { title: 'UPS', dataIndex: '' },
+      { title: 'Sales Order Number', dataIndex: '' },
+      { title: 'Sales Order Item Number', dataIndex: '' },
+      { title: 'Customer PO', dataIndex: '' },
+      { title: 'Ship To Customer Number', dataIndex: '' },
+      { title: 'Ship To Customer Name', dataIndex: '' },
+      { title: 'Ship to Address Legal PO', dataIndex: '' },
+      { title: 'Ship to Address DIA', dataIndex: '' },
+      { title: 'Diff of Ship to Address', dataIndex: '' },
+      { title: 'CAB Code', dataIndex: '' },
+      { title: 'MRGAC', dataIndex: '' },
+      { title: 'OGAC', dataIndex: '' },
+      { title: 'GAC', dataIndex: '' },
+      { title: 'Truck Out Date', dataIndex: '' },
+      { title: 'Origin Receipt Date', dataIndex: '' },
+      { title: 'Factory Delivery Actual Date', dataIndex: '' }, { title: 'GAC Reason Description', dataIndex: '' },
+      { title: 'GAC Reason Code', dataIndex: '' },
+      { title: 'Shipping Type', dataIndex: '' },
+      { title: 'Planning Priority Number', dataIndex: '' },
+      { title: 'Planning Priority Description', dataIndex: '' },
+      { title: 'Launch Code', dataIndex: '' },
+      { title: 'Mode of Transportation', dataIndex: '' },
+      { title: 'In Co Terms', dataIndex: '' },
+      { title: 'Inventory Segment Code', dataIndex: '' },
+      { title: 'Purchase Group', dataIndex: '' },
+      { title: 'Purchase Group Name', dataIndex: '' },
+      { title: 'Total Item Quantity', dataIndex: '' },
+      { title: 'Gross Price/FOB ', dataIndex: '' },
+      { title: 'Net including discounts', dataIndex: '' },
+      { title: 'Trading Co Net including discounts', dataIndex: '' },
+      { title: 'Legal PO Price', dataIndex: '' },
+      { title: 'CO Price', dataIndex: '' },
+      { title: 'Actual Shipped Qty', dataIndex: '' },
+      { title: 'VAS - Size', dataIndex: '' },
+      { title: 'Item Vas Text', dataIndex: '' },
+      { title: 'Item Vas Text in PDF PO', dataIndex: '' },
+      { title: 'Diff of Item Vas Text', dataIndex: '' },
+      { title: 'Item Text', dataIndex: '' },
+
+
     ]
 
 
@@ -108,35 +174,21 @@ const PPMReport = () => {
     }
   }
 
-  const getFilterdData = () => {
-    let ppmStatus = form.getFieldValue('ppmStatus');
-    let startDate = selectedEstimatedFromDate;
-    let endDate = selectedEstimatedToDate;
-    let filteredData = gridData;
-    if (ppmStatus) {
-      filteredData = filteredData.filter(record => record.ppm_status === ppmStatus);
-      if (filteredData.length === 0) {
-        message.error("No Data Found")
-      }
-      setFilteredData(filteredData);
+  const Finish = (values: any) => {
+    if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
+      setFilterData(gridData);
+    } else {
+      const filteredData = gridData.filter(item =>
+        values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
+      );
+      setFilterData(filteredData);
     }
-    if (startDate && endDate) {
-      filteredData = filteredData.filter(record => moment(record.last_update_date).format('YYYY-MM-DD') >= startDate && moment(record.last_update_date).format('YYYY-MM-DD') <= endDate);
-      if (filteredData.length === 0) {
-        message.error("No Data Found")
-      }
-      setFilteredData(filteredData);
-    }
-  }
-
+  };
+  
 
   const onReset = () => {
-    form.resetFields();
-    setSelectedEstimatedFromDate(undefined);
-    setSelectedEstimatedToDate(undefined);
-    getData();
+    form.resetFields()
   }
-
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -203,7 +255,36 @@ const PPMReport = () => {
     setSearchText('');
   };
 
-  const Columns: any = [
+  const getSizeWiseHeaders = (data: MarketingModel[]) => {
+    const sizeHeaders = new Set<string>();
+    data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
+        sizeHeaders.add('' + version.sizeDescription);
+    }))
+    return Array.from(sizeHeaders);
+};
+const getMap = (data: MarketingModel[]) => {
+    const sizeWiseMap = new Map<string, Map<string, number>>();
+    data?.forEach(rec => {
+        if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
+            sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
+        }
+        rec.sizeWiseData?.forEach(version => {
+            sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
+        })
+    });
+    return sizeWiseMap;
+}
+
+  const renderReport =(data:MarketingModel[])=>{
+    const sizeHeaders = getSizeWiseHeaders(data);
+    const sizeWiseMap = getMap(data);
+
+  const columns: ColumnsType<any>= [
+    {
+      title: "S.No",
+      render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
+
+    },
 
     {
 
@@ -221,15 +302,11 @@ const PPMReport = () => {
     },
     {
       title: 'Item',
-      dataIndex: 'Item',
-      sorter: (a, b) => a.Item.length - b.Item.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Item'),
+      dataIndex: 'item',
+      // sorter: (a, b) => a.Item.length - b.Item.length,
+      // sortDirections: ['descend', 'ascend'],
+      // ...getColumnSearchProps('Item'),
 
-    },
-    {
-      title: 'Total Item Qty',
-      dataIndex: 'totalItemQty'
     },
     {
       title: 'Factory',
@@ -269,18 +346,52 @@ const PPMReport = () => {
       title: 'Colour Description',
       dataIndex: 'colorDesc'
     },
+    {
+      title: 'Total Item Qty',
+      dataIndex: 'totalItemQty',
+      align:'center',
+      render: (text) => <strong>{text}</strong>
+  },
   ]
+  sizeHeaders?.forEach(version => {
+    columns.push({
+        title: version,
+        dataIndex: version, 
+        key: version,
+        width: 130,
+        align: 'right',
+        render: (text, record) => {
+            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+            if (sizeData) {
+                return sizeData.sizeQty !== null ? Number(sizeData.sizeQty).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-';
+            } else {
+                return '-';
+            }
+        }
+    });
+ })
+
+ 
+    return (<Table columns={columns} dataSource={filterData} pagination={{
+        onChange(current, pageSize) {
+            setPage(current);
+            setPageSize(pageSize)}
+    }}scroll={{ x: 'max-content' }} />)
+
+}
 
   return (
     <>
-      <Card title="PPM Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
+      <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
         extra={filteredData.length > 0 ? (<Button
           type="default"
           style={{ color: 'green' }}
           onClick={handleExport}
           icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
         <Form
-
+           onFinish={Finish}
           form={form}
           layout='vertical'>
           <Row>
@@ -290,8 +401,18 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
-              <Form.Item name="DPOMLineItemStatus" label="Order Status">
+              <Form.Item name="DPOMLineItemStatus" label="PPM Status">
                 <Select
+                  showSearch
+                  placeholder="Select PPM Status"
+                  optionFilterProp="children"
+                  allowClear mode='multiple'>
+                  <Option value="Accepted">ACCEPTED</Option>
+                  <Option value="Unaccepted">UNACCEPTED</Option>
+                  <Option value="Cancelled">CANCELLED</Option>
+                  <Option value="Closed">CLOSED</Option>
+                </Select>
+                {/* <Select
                   mode="multiple"
                   placeholder="Inserted are removed"
                   value={selectedItems}
@@ -301,60 +422,59 @@ const PPMReport = () => {
                     value: item,
                     label: item,
                   }))}
-                />
+                /> */}
+                
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 40 }} >
-              <Button
-                type="primary"
-                icon={<SearchOutlined />}
-                style={{ marginRight: 50, width: 80 }}
-                htmlType="button"
-                onClick={getFilterdData}>Search</Button>
-              <Button
-                type="primary"
-                icon={<UndoOutlined />}
-                htmlType="submit"
-                onClick={onReset}>Reset</Button>
+              <Form.Item>
+                <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Search</Button>
+                <Button style={{marginLeft:8}}  htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined/>}>Reset</Button>
+              </Form.Item>
             </Col>
           </Row>
         </Form>
 
         <Row gutter={80}>
           <Col >
-            <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40 }}></Card>
+            <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40 }}></Card>
+            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40 }}></Card>
+            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
 
         </Row><br></br>
         <Row gutter={80}>
           <Col >
-            <Card title={'Total Po Count: ' + gridData.length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
+            <Card title={'Total Po Count: ' + gridData.length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Accepted Po Count: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Accepted').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
+            <Card title={'Accepted Po Count: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Accepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'UnAccepted Po :' + gridData.filter(el => el.DPOMLineItemStatus == 'Unaccepted').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
+            <Card title={'UnAccepted Po :' + gridData.filter(el => el.DPOMLineItemStatus == 'Unaccepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Closed Po:' + gridData.filter(el => el.DPOMLineItemStatus == 'Closed').length} style={{ textAlign: 'left', width: 190, height: 40 }}></Card>
+            <Card title={'Closed Po:' + gridData.filter(el => el.DPOMLineItemStatus == 'Closed').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Cancelled: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 41 }}></Card>
+            <Card title={'Cancelled Po: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
 
         </Row><br></br>
         <div>
-          <Table columns={Columns} dataSource={gridData}
+
+          {/* <Table columns={Columns} 
+          // dataSource={gridData}
+           dataSource={filterData}
             bordered
-          />
+          /> */}
+
         </div>
+        {renderReport(filterData)}
       </Card>
     </>
   )

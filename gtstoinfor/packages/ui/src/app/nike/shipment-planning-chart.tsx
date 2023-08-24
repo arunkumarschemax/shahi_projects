@@ -12,29 +12,29 @@ import { Tooltip, numberFormat } from 'highcharts';
 import { NikeService } from '@project-management-system/shared-services';
 
 const ShipmentPlanningChart = () => {
-  const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(1);
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
-  const searchInput = useRef<any>(null);
-  const service = new NikeService();
-  const [shipmentData, setShipmentData] = useState<any>();
-  
+    const [page, setPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(1);
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
+    const searchInput = useRef<any>(null);
+    const service = new NikeService();
+    const [shipmentData, setShipmentData] = useState<any>();
+
 
     useEffect(() => {
         getShipmentData();
     }, [])
 
-    const getShipmentData = () =>{
-        service.getShipmentPlaningChart().then(res=>{
-           if (res.status) {
-            setShipmentData(res.data)
+    const getShipmentData = () => {
+        service.getShipmentPlaningChart().then(res => {
+            if (res.status) {
+                setShipmentData(res.data)
 
-           }
-        }) 
-       }
-     
-       const handleSearch = (selectedKeys: any, confirm: any, dataIndex: string) => {
+            }
+        })
+    }
+
+    const handleSearch = (selectedKeys: any, confirm: any, dataIndex: string) => {
         confirm();
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
@@ -105,43 +105,44 @@ const ShipmentPlanningChart = () => {
 
 
     const columns: ColumnProps<any>[] = [
-
-        {
-            title: 'PO+Line',
-            dataIndex:"poLine"
-
-        },
         {
             title: 'S.No',
             key: 'sno',
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1)
         },
-       
+        {
+            title: 'PO+Line',
+            dataIndex: "poLine"
+        },
         {
             title: 'Item',
+            dataIndex: 'item',
         },
-           {
+        {
             title: 'Factory',
+            dataIndex: 'factory'
         },
         {
             title: 'Plan',
-            
+            dataIndex: 'plan'
+
         },
         {
             title: 'Purchase Order Number',
-            dataIndex:'purchaseOrderNumber'
-              
+            dataIndex: 'purchaseOrderNumber'
+
         },
         {
             title: 'PO Line Item Number',
             dataIndex: 'poLineItemNumber',
+            align: 'center'
 
-            
+
         },
         {
             title: 'Style Number',
-            dataIndex: 'styleNumber', 
+            dataIndex: 'styleNumber',
         },
         {
             title: 'Destination Country Name',
@@ -149,108 +150,106 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'SHIP TO ADDRESS(lpo)',
-            dataIndex: '', 
+            dataIndex: 'shipToAddressToLegalPo',
 
-        },{
+        }, {
             title: 'SHIP TO ADDRESS(DIA)',
-            dataIndex: '', 
+            dataIndex: 'shipToAddressDia',
 
-        },{
+        }, {
             title: 'Hanger',
-            dataIndex: 'shipmentType', 
+            dataIndex: 'hanger',
 
         },
-        {   
+        {
             title: 'FOB',
-
+            dataIndex: 'fob'
         },
-        {   
+        {
             title: 'CO',
-           
-
+            dataIndex: 'co'
         },
         {
             title: 'Prooduct Code',
-            dataIndex: 'productCode', 
-          
+            dataIndex: 'productCode',
         },
         {
             title: 'Color Description',
-            dataIndex: 'colorDescription', 
-          
+            dataIndex: 'colorDescription',
         },
         {
             title: 'Planning Season Code',
-            dataIndex:'planningSeasonCode'
+            dataIndex: 'planningSeasonCode',
+            align: "center"
         },
         {
             title: 'Plant Serason Year',
-            dataIndex: 'planningSeasonYear',          
+            dataIndex: 'planningSeasonYear',
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac',          
-        }, {
+            dataIndex: 'ogac',
+        },
+        {
             title: 'GAC',
-            dataIndex: 'gac',          
+            dataIndex: 'gac',
         },
         {
             title: 'EX FACTORY',
-            dataIndex: '',          
+            dataIndex: '',
         },
         {
             title: 'Total Item Quantity',
-            dataIndex: 'totalItemQuantity',          
-        },{
+            dataIndex: 'totalItemQuantity',
+        }, {
             title: 'Mode of Transportation',
-            dataIndex: 'modeofTransport',          
+            dataIndex: 'modeofTransport',
         },
         {
             title: 'PAYMENT TERMS LC/TT/TC',
-            dataIndex: '',          
+            dataIndex: 'paymentTerm',
         },
         {
             title: 'DESCRIPTION WITH FABRIC CONTENT',
-            dataIndex: '',          
+            dataIndex: 'desFabricContent',
         },
         {
             title: 'Gender Age Description',
-            dataIndex: '',          
+            dataIndex: 'genderAgeDesc',
         },
         {
             title: 'Fabric Content as per washcare label',
-            dataIndex: '',          
+            dataIndex: '',
         },
         {
             title: 'FABRIC IMPORTED/DOMESTIC',
-            dataIndex: '',          
+            dataIndex: 'fabricLocation',
         },
         {
             title: 'COMMISSION(IF ANY)',
-            dataIndex: '',          
+            dataIndex: 'commission',
         },
         {
             title: 'Shipping Type',
-            dataIndex: 'shippingType',          
+            dataIndex: 'shippingType',
         },
         {
             title: 'Doc Type Description',
-            dataIndex: 'docTypeDescription',          
+            dataIndex: 'docTypeDescription',
         },
         {
             title: 'Purchase Group Name',
-            dataIndex: 'purchaseGroupName',          
+            dataIndex: 'purchaseGroupName',
         },
         {
             title: 'CAB CODE',
-            dataIndex: '',          
+            dataIndex: 'cabCode',
         },
-  
+
     ]
 
     const handleExport = (e: any) => {
         e.preventDefault();
-
 
         const currentDate = new Date()
             .toISOString()
@@ -260,29 +259,34 @@ const ShipmentPlanningChart = () => {
 
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
-            
-            { title: 'Po+Line ', dataIndex: 'poLine' },
-            { title: 'Item', dataIndex: 'Item' },
             {
-                title: 'Factory',dataIndex:''
+                title: 'PO+Line',
+                dataIndex: "poLine"
             },
             {
-                title: 'Plan',dataIndex:''   
+                title: 'Item',
+                dataIndex: 'item',
+            },
+            {
+                title: 'Factory',
+                dataIndex: 'factory'
+            },
+            {
+                title: 'Plan',
+                dataIndex: 'plan'
             },
             {
                 title: 'Purchase Order Number',
-                dataIndex:'purchaseOrderNumber'
-                  
+                dataIndex: 'purchaseOrderNumber'
             },
             {
                 title: 'PO Line Item Number',
                 dataIndex: 'poLineItemNumber',
-    
-                
+                align: 'center'
             },
             {
                 title: 'Style Number',
-                dataIndex: 'styleNumber', 
+                dataIndex: 'styleNumber',
             },
             {
                 title: 'Destination Country Name',
@@ -290,101 +294,102 @@ const ShipmentPlanningChart = () => {
             },
             {
                 title: 'SHIP TO ADDRESS(lpo)',
-                dataIndex: '', 
-    
-            },{
+                dataIndex: 'shipToAddressToLegalPo',
+
+            }, {
                 title: 'SHIP TO ADDRESS(DIA)',
-                dataIndex: '', 
-    
-            },{
+                dataIndex: 'shipToAddressDia',
+
+            }, {
                 title: 'Hanger',
-                dataIndex: 'shipmentType', 
-    
+                dataIndex: 'hanger',
             },
-            {    title: 'FOB',dataIndex:''
-    
+            {
+                title: 'FOB',
+                dataIndex: 'fob'
             },
-            {   
-                title: 'CO',dataIndex:''
+            {
+                title: 'CO',
+                dataIndex: 'co'
             },
             {
                 title: 'Prooduct Code',
-                dataIndex: 'productCode', 
-              
+                dataIndex: 'productCode',
             },
             {
                 title: 'Color Description',
-                dataIndex: 'colorDescription', 
-              
+                dataIndex: 'colorDescription',
             },
             {
                 title: 'Planning Season Code',
-                dataIndex:'planningSeasonCode'
+                dataIndex: 'planningSeasonCode',
+                align: "center"
             },
             {
                 title: 'Plant Serason Year',
-                dataIndex: 'planningSeasonYear',          
+                dataIndex: 'planningSeasonYear',
             },
             {
                 title: 'OGAC',
-                dataIndex: 'ogac',          
-            }, {
+                dataIndex: 'ogac',
+            },
+            {
                 title: 'GAC',
-                dataIndex: 'gac',          
+                dataIndex: 'gac',
             },
             {
                 title: 'EX FACTORY',
-                dataIndex: '',          
+                dataIndex: '',
             },
             {
                 title: 'Total Item Quantity',
-                dataIndex: 'totalItemQuantity',          
-            },{
+                dataIndex: 'totalItemQuantity',
+            },
+            {
                 title: 'Mode of Transportation',
-                dataIndex: 'modeofTransport',          
+                dataIndex: 'modeofTransport',
             },
             {
                 title: 'PAYMENT TERMS LC/TT/TC',
-                dataIndex: '',          
+                dataIndex: 'paymentTerm',
             },
             {
                 title: 'DESCRIPTION WITH FABRIC CONTENT',
-                dataIndex: '',          
+                dataIndex: 'desFabricContent',
             },
             {
                 title: 'Gender Age Description',
-                dataIndex: '',          
+                dataIndex: '',
             },
             {
                 title: 'Fabric Content as per washcare label',
-                dataIndex: '',          
+                dataIndex: '',
             },
             {
                 title: 'FABRIC IMPORTED/DOMESTIC',
-                dataIndex: '',          
+                dataIndex: 'fabricLocation',
             },
             {
                 title: 'COMMISSION(IF ANY)',
-                dataIndex: '',          
+                dataIndex: 'commission',
             },
             {
                 title: 'Shipping Type',
-                dataIndex: 'shippingType',          
+                dataIndex: 'shippingType',
             },
             {
                 title: 'Doc Type Description',
-                dataIndex: 'docTypeDescription',          
+                dataIndex: 'docTypeDescription',
             },
             {
                 title: 'Purchase Group Name',
-                dataIndex: 'purchaseGroupName',          
+                dataIndex: 'purchaseGroupName',
             },
             {
                 title: 'CAB CODE',
-                dataIndex: '',          
+                dataIndex: 'cabCode',
             },
         ]
-
 
         const excel = new Excel();
         excel.addSheet("Sheet1");
@@ -394,39 +399,32 @@ const ShipmentPlanningChart = () => {
         excel.saveAs(`shipment-planning-chart-${currentDate}.xlsx`);
     }
 
-   
-
-
     return (
         <>
-        <Card title="Shipment Planning Chart" headStyle={{ fontWeight: 'bold' }}
-            extra={ <Button
-                type="default"
-                style={{ color: 'green' }}
-                onClick={handleExport}
-                icon={<FileExcelFilled />}>Download Excel</Button>}
-                >
-
-                        <Card >
-                <Table
-                    columns={columns}
-                    className="custom-table-wrapper"
-                    dataSource={shipmentData}
-                    pagination={{
-                        onChange(current, pageSize) {
-                        setPage(current);
-                        setPageSize(pageSize)
-                        },   
-                    }}
-                    scroll={{ x: 'max-content' }}
-                    bordered  
+            <Card title="Shipment Planning Chart" headStyle={{ fontWeight: 'bold' }}
+                extra={<Button
+                    type="default"
+                    style={{ color: 'green' }}
+                    onClick={handleExport}
+                    icon={<FileExcelFilled />}>Download Excel</Button>}
+            >
+                <Card >
+                    <Table
+                        columns={columns}
+                        className="custom-table-wrapper"
+                        dataSource={shipmentData}
+                        pagination={{
+                            onChange(current, pageSize) {
+                                setPage(current);
+                                setPageSize(pageSize)
+                            },
+                        }}
+                        scroll={{ x: 'max-content' }}
+                        bordered
                     />
-                
-    
+                </Card>
             </Card>
-        </Card>
-    </>
-      
+        </>
     )
 }
 
