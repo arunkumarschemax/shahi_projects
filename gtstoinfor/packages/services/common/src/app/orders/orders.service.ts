@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, MonthAndQtyModel, MonthWiseDataModel, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, MonthAndQtyModel, MonthWiseDataModel, MonthWiseExcelDataModel, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
@@ -394,7 +394,7 @@ export class OrdersService {
         } else if (files.length == 1) {
             records = await this.ordersChildRepo.getPhaseWiseData(files[0].fileId)
         } else {
-            records = await this.ordersChildRepo.getPhaseWiseData(files[1].fileId, files[0].fileId)
+            records = await this.ordersChildRepo.getPhaseWiseData(files[0].fileId, files[1]?.fileId, files[2]?.fileId, files[3]?.fileId, files[4]?.fileId)
         }
         const phaseDataModelArray: PhaseWiseExcelDataModel[] = [];
         if (records.length == 0) {
@@ -446,13 +446,37 @@ export class OrdersService {
 
             } else {
                 return new CommonResponseModel(false, 1, 'Nod Data Found', [])
-
             }
         }
         catch (error) {
             throw error
         }
+    }
 
+    async getMonthlyPhaseWiseExcelData(): Promise<CommonResponseModel> {
+        const files = await this.fileUploadRepo.getlatestFileIdAgainstMonth();
+        const fileIdsByMonth: Record<string, number> = {};
+
+        for (const entry of files) {
+            const { id, month } = entry;
+            const fileId = `fileId${month}`;
+            fileIdsByMonth[fileId] = id;
+        }
+        console.log(fileIdsByMonth)
+        let records;
+        if (files.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        } else {
+            records = await this.ordersChildRepo.getMonthWiseData(fileIdsByMonth?.fileId1, fileIdsByMonth?.fileId2, fileIdsByMonth?.fileId3, fileIdsByMonth?.fileId4, fileIdsByMonth?.fileId5, fileIdsByMonth?.fileId6, fileIdsByMonth?.fileId7, fileIdsByMonth?.fileId8, fileIdsByMonth?.fileId9, fileIdsByMonth?.fileId10, fileIdsByMonth?.fileId11, fileIdsByMonth?.fileId12)
+        }
+        if (records.length == 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        }
+        const monthWiseDataModelArray: MonthWiseExcelDataModel[] = [];
+        for (const record of records) {
+            monthWiseDataModelArray.push(new MonthWiseExcelDataModel(record.item_code, record.itemName, record.prod_plan_type_name, record.old_qty_value1, record.old_qty_value2, record.old_qty_value3, record.old_qty_value4, record.old_qty_value5, record.old_qty_value6, record.old_qty_value7, record.old_qty_value8, record.old_qty_value9, record.old_qty_value10, record.old_qty_value11, record.old_qty_value12));
+        }
+        return new CommonResponseModel(true, 1, 'Data retrived successfully', monthWiseDataModelArray);
     }
 
 }

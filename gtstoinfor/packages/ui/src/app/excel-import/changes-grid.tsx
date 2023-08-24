@@ -20,10 +20,14 @@ const ChangesGrid = () => {
     const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
     const [phaseData, setPhaseWiseData] = useState<any[]>([]);
     const [phaseExcelData, setPhaseWiseExcelData] = useState<any[]>([]);
+    const [monthlyPhaseWiseExcelData, setMonthlyPhaseWiseExcelData] = useState<any[]>([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [differenceQtyData, setDifferenceQtyData] = useState([])
     const [page, setPage] = React.useState(1);
     const [monthWisedata, setMonthWiseData] = useState<any[]>([])
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInput = useRef(null);
+    const [searchText, setSearchText] = useState('');
     const [form] = Form.useForm();
     const { Text } = Typography;
     const { RangePicker } = DatePicker
@@ -37,6 +41,7 @@ const ChangesGrid = () => {
         getPhaseWiseData()
         getPhaseWiseExcelData()
         getAllLatestFileMonthWisedata()
+        getMonthlyPhaseWiseExcelData()
     }, [])
 
     const getAllLatestFileMonthWisedata = () => {
@@ -54,22 +59,34 @@ const ChangesGrid = () => {
 
     const getQtyDifChangeData = () => {
         service.getQtyDifChangeData().then((res) => {
-            setDifferenceQtyData(res.data)
-            // setFilteredContractDateData(res.data)
+            if (res.status) {
+                setDifferenceQtyData(res.data)
+                // setFilteredContractDateData(res.data)
+            }
+        }).catch(err => {
+            console.log(err.message)
         })
     }
 
     const getQtyChangeData = () => {
         service.getQtyChangeData().then((res) => {
-            setQtyData(res.data)
-            setFilteredQtyData(res.data)
+            if (res.status) {
+                setQtyData(res.data)
+                setFilteredQtyData(res.data)
+            }
+        }).catch(err => {
+            console.log(err.message)
         })
     }
 
     const getWharehouseDateChangeData = () => {
         service.getWharehouseDateChangeData().then((res) => {
-            setWarehouseDateDate(res.data)
-            setFilteredWarehouseDateDate(res.data)
+            if (res.status) {
+                setWarehouseDateDate(res.data)
+                setFilteredWarehouseDateDate(res.data)
+            }
+        }).catch(err => {
+            console.log(err.message)
         })
     }
 
@@ -94,6 +111,17 @@ const ChangesGrid = () => {
         })
     }
 
+    const getMonthlyPhaseWiseExcelData = () => {
+        service.getMonthlyPhaseWiseExcelData().then(res => {
+            if (res.status) {
+                const data = res.data.sort((a, b) => a.itemCode - b.itemCode);
+                setMonthlyPhaseWiseExcelData(data)
+            }
+        }).catch(err => {
+            console.log(err.message)
+        })
+    }
+
     function convertToYYYYMMDD(inputDate) {
         const formatsToTry = ['DD-MM-YYYY', 'MM/DD/YYYY'];
         let formattedDate = null;
@@ -110,32 +138,42 @@ const ChangesGrid = () => {
 
     const exportExcel = () => {
         const excel = new Excel();
-        if (filteredQtyData.length > 0) {
+        if (filteredQtyData?.length > 0) {
             excel
                 .addSheet('order Qty')
                 .addColumns(data1)
                 .addDataSource(filteredQtyData, { str2num: true })
         }
-        excel
-            .addSheet('GroupBy ItemCode Qty')
-            .addColumns(data4)
-            .addDataSource(differenceQtyData, { str2num: true })
-        if (filteredWarehouseDateData.length > 0) {
+        if (differenceQtyData?.length > 0) {
+            excel
+                .addSheet('GroupBy ItemCode Qty')
+                .addColumns(data4)
+                .addDataSource(differenceQtyData, { str2num: true })
+        }
+        if (filteredWarehouseDateData?.length > 0) {
             excel
                 .addSheet('Requested Warehouse Date')
                 .addColumns(data2)
                 .addDataSource(filteredWarehouseDateData, { str2num: true })
         }
-        if (contractDateData.length > 0) {
+        if (contractDateData?.length > 0) {
             excel
-                .addSheet('Contracted date')
+                .addSheet('Contracted Date')
                 .addColumns(data3)
                 .addDataSource(contractDateData, { str2num: true })
         }
-        excel
-            .addSheet('Phase Wise data')
-            .addColumns(exportingColumns)
-            .addDataSource(phaseExcelData, { str2num: true })
+        if (phaseExcelData?.length > 0) {
+            excel
+                .addSheet('Phase Wise Data')
+                .addColumns(phaseWiseDataColumns)
+                .addDataSource(phaseExcelData, { str2num: true })
+        }
+        if (monthlyPhaseWiseExcelData?.length > 0) {
+            excel
+                .addSheet('Mothly Phase Wise Data')
+                .addColumns(monthlyDataColumns)
+                .addDataSource(monthlyPhaseWiseExcelData, { str2num: true })
+        }
         excel.saveAs('revisedOrders.xlsx');
     }
 
@@ -268,22 +306,156 @@ const ChangesGrid = () => {
 
     ];
 
-    let exportingColumns: IExcelColumn[] = []
-    exportingColumns = [
+    let phaseWiseDataColumns: IExcelColumn[] = []
+    phaseWiseDataColumns = [
         { title: 'Item code', dataIndex: 'itemCode' },
         { title: 'Item Name', dataIndex: 'itemName' },
         { title: 'Production Plan Type Name', dataIndex: 'prodPlanTypeName' },
-        { title: 'Sum of Ord Qty before week', dataIndex: 'oldOrderQtyPcs3' },
-        { title: 'Sum of Ord Qty before week', dataIndex: 'oldOrderQtyPcs2' },
-        { title: 'Sum of Ord Qty before week', dataIndex: 'oldOrderQtyPcs1' },
-        { title: 'Sum of Ord Qty last week', dataIndex: 'oldOrderQtyPcs' },
-        { title: 'Sum of Ord Qty this week', dataIndex: 'newOrderQtyPcs' },
+        {
+            title: 'Sum of Ord Qty before week', dataIndex: 'oldOrderQtyPcs3', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs3 != 0 ? Number(record.oldOrderQtyPcs3).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'Sum of Ord Qty before week', dataIndex: 'oldOrderQtyPcs2', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs2 != 0 ? Number(record.oldOrderQtyPcs2).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'Sum of Ord Qty before week', dataIndex: 'oldOrderQtyPcs1', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs1 != 0 ? Number(record.oldOrderQtyPcs1).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'Sum of Ord Qty last week', dataIndex: 'oldOrderQtyPcs', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs != 0 ? Number(record.oldOrderQtyPcs).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'Sum of Ord Qty this week', dataIndex: 'newOrderQtyPcs', align: 'right',
+            render: (text: any, record: any) => {
+                return record.newOrderQtyPcs != 0 ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
         { title: 'Difference Qty of last two weeks', dataIndex: 'difference' }
     ]
 
-    const [searchedColumn, setSearchedColumn] = useState('');
-    const searchInput = useRef(null);
-    const [searchText, setSearchText] = useState('');
+    let monthlyDataColumns: IExcelColumn[] = []
+    monthlyDataColumns = [
+        { title: 'Item code', dataIndex: 'itemCode' },
+        { title: 'Item Name', dataIndex: 'itemName' },
+        { title: 'Production Plan Type Name', dataIndex: 'prodPlanTypeName' },
+        {
+            title: 'January', dataIndex: 'oldOrderQtyPcs1', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs1 != 0 ? Number(record.oldOrderQtyPcs1).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'February', dataIndex: 'oldOrderQtyPcs2', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs2 != 0 ? Number(record.oldOrderQtyPcs2).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'March', dataIndex: 'oldOrderQtyPcs3', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs3 != 0 ? Number(record.oldOrderQtyPcs3).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'April', dataIndex: 'oldOrderQtyPcs4', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs4 != 0 ? Number(record.oldOrderQtyPcs4).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'May', dataIndex: 'oldOrderQtyPcs5', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs5 != 0 ? Number(record.oldOrderQtyPcs5).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'June', dataIndex: 'oldOrderQtyPcs6', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs6 != 0 ? Number(record.oldOrderQtyPcs6).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'July', dataIndex: 'oldOrderQtyPcs7', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs7 != 0 ? Number(record.oldOrderQtyPcs7).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'August', dataIndex: 'oldOrderQtyPcs8', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs8 != 0 ? Number(record.oldOrderQtyPcs8).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'September', dataIndex: 'oldOrderQtyPcs9', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs9 != 0 ? Number(record.oldOrderQtyPcs9).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'October', dataIndex: 'oldOrderQtyPcs10', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs10 != 0 ? Number(record.oldOrderQtyPcs10).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'November', dataIndex: 'oldOrderQtyPcs11', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs11 != 0 ? Number(record.oldOrderQtyPcs11).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'December', dataIndex: 'oldOrderQtyPcs12', align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs12 != 0 ? Number(record.oldOrderQtyPcs12).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        }
+    ]
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -422,7 +594,6 @@ const ChangesGrid = () => {
         {
             title: 'Version',
             dataIndex: 'version',
-
             sorter: (a, b) => a.version - b.version,
             sortDirections: ['descend', 'ascend'],
         },
@@ -502,7 +673,6 @@ const ChangesGrid = () => {
         {
             title: 'Days Difference',
             dataIndex: 'diff',
-            // width :'190px',
             render: (text, record) => {
                 const obj: any = {
                     children: (<div style={{ textAlign: 'left' }}>{Math.floor((new Date(convertToYYYYMMDD(record.new_val)).getTime() - new Date(convertToYYYYMMDD(record.old_val)).getTime()) / (1000 * 60 * 60 * 24)) + ' Days'}</div>)
@@ -510,8 +680,6 @@ const ChangesGrid = () => {
                 return obj;
             }
         },
-
-
         {
             title: 'Order Quantity Pieces',
             dataIndex: 'order_qty_pcs',
@@ -562,7 +730,6 @@ const ChangesGrid = () => {
             title: 'Item Name',
             dataIndex: 'itemName'
         },
-
         {
             title: 'Previous Contracted Date',
             dataIndex: 'old_val',
@@ -570,7 +737,6 @@ const ChangesGrid = () => {
                 return record.old_val ? convertToYYYYMMDD(record.old_val) : '-'
             }
         },
-
         {
             title: 'Revised Contracted Date',
             dataIndex: 'new_val',
@@ -605,7 +771,6 @@ const ChangesGrid = () => {
                     {Number(record.order_qty_pcs).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </>
             )
-
         },
         {
             title: 'Order Revised Date',
@@ -613,7 +778,6 @@ const ChangesGrid = () => {
             render: (text, record) => {
                 return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
             }
-
         },
         {
             title: 'Requested Warehouse Date',
@@ -654,7 +818,6 @@ const ChangesGrid = () => {
                     {Number(record.old_qty_value).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </>
             )
-
         },
         {
             title: 'Sum Of Qrd Qty this Week',
@@ -682,7 +845,6 @@ const ChangesGrid = () => {
             align: 'right',
             render: (text, record) => (
                 < >
-
                     {Number(record.diff) === 0 ? '-' : ''}
                     {Number(record.diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.diff).toLocaleString('en-IN', {
                         maximumFractionDigits: 0
@@ -690,11 +852,9 @@ const ChangesGrid = () => {
                     {Number(record.diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.diff).toLocaleString('en-IN', {
                         maximumFractionDigits: 0
                     })} </span> : ''}
-
                 </>
             )
-        },
-
+        }
     ];
 
     const childColumns: any = [
@@ -915,25 +1075,7 @@ const ChangesGrid = () => {
                     maximumFractionDigits: 0
                 }) : '-'
             }
-        },
-        // {
-        //     title: 'Difference',
-        //     dataIndex: 'diff',
-        //     align: 'right',
-        //     render: (text: any, record: any) => (
-        //         < >
-
-        //             {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) === 0 ? '-' : ''}
-        //             {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) < 0 ? <span style={{ color: 'red' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-        //             {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs) > 0 ? <span style={{ color: 'green' }} > {Number(record.newOrderQtyPcs - record.oldOrderQtyPcs).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-
-        //         </>
-        //     )
-        // }
+        }
     ]
 
     const columns4: any = [

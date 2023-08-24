@@ -205,4 +205,13 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getMonthlyPhaseWiseExcelData')
+    async getMonthlyPhaseWiseExcelData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getMonthlyPhaseWiseExcelData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
