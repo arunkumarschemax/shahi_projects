@@ -23,14 +23,14 @@ import { UploadFilesEntity } from './entities/upload-files.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-        DocumentsList,
-        DocumentEntity,
-        DocumentRoleMappingEntity,
-        UploadFilesEntity
+      DocumentsList,
+      DocumentEntity,
+      DocumentRoleMappingEntity,
+      UploadFilesEntity
     ])],
   controllers: [DocumentUploadController],
-  providers: [DocumentRoleMappingRepository , DocumentsListService,DocumentService,UploadDocumentListAdapter, ApplicationExceptionHandler,DocumentRepository,DocumentRoleMappingService,DocumentsListRepository,UploadFilesRepository],
-  exports:[DocumentsListService,TypeOrmModule]
+  providers: [DocumentRoleMappingRepository, DocumentsListService, DocumentService, UploadDocumentListAdapter, ApplicationExceptionHandler, DocumentRepository, DocumentRoleMappingService, DocumentsListRepository, UploadFilesRepository],
+  exports: [DocumentsListService, TypeOrmModule]
 })
 export class DocumentUploadModule { }
 

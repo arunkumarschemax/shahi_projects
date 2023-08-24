@@ -15,7 +15,8 @@ import { number } from 'prop-types';
 import PDFMerger from 'pdf-merger-js/browser';
 import PdfMergeDownload from './merge-pdf';
 const { Title, Text } = Typography;
-
+import { saveAs } from 'file-saver';
+import axios, { AxiosRequestConfig } from 'axios';
 export interface UploadViewProps {
     form: FormInstance<any>
     docData: any;
@@ -51,7 +52,7 @@ const renderFileNames = () => {
               
               <a
                 href={URL.createObjectURL(new Blob([file.originFileObj]))}
-                onClick={() => togglePreview(index)}
+                // onClick={() => togglePreview(index)}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ cursor: 'pointer', textDecoration: 'underline' }}
@@ -113,51 +114,89 @@ useEffect(() =>{
   setFileList(props.docData.documentsPath);
 },[props.docData.documentsPath])
 
+const fetchPdfBytesArrayWithAxios = async (pdfUrls) => {
+  try {
+    const pdfPromises = pdfUrls.map(async (res, index) => {
+      // if(index != 0){
+        const response = await axios.get(res.url, {
+          responseType: 'arraybuffer',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+        return response.data;
+      // }
+    });
 
+    const pdfBytesArray = await Promise.all(pdfPromises);
+    return pdfBytesArray;
+  } catch (error) {
+    console.error('Error fetching PDFs:', error);
+    throw error; // Rethrow the error to handle it further
+  }
+};
+const mergeAndDownloadPDFs = async (pathsData:any[]) => {
+  try {
+    // Load the initial PDF file (you need to provide a valid URL)
+    const initialPdfUrl = pathsData[0].url;
+    // 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';
+
+    const initialPdfResponse = await axios.request({
+      url: initialPdfUrl,
+      method: 'get',
+      responseType: 'arraybuffer',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    });
+    const initialPdfBytes = initialPdfResponse.data;
+    console.log('*&*&*&', initialPdfBytes)
+
+    // Load additional PDFs from URLs (you need to provide valid PDF URLs)
+    const pdfUrls = [
+      'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf',
+    ];
+    // const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
+    //   const response = await fetch(url, { mode: 'no-cors' });
+    //   if (!response.ok) {
+    //     throw new Error(`Failed to fetch ${url}`);
+    //   }
+    //   return response.arrayBuffer();
+    // }));
+    const pdfBytesArray = await fetchPdfBytesArrayWithAxios(pathsData)
+
+
+    // Create a new PDF document
+    const mergedPdf = await PDFDocument.create();
+
+    // Add the pages from the initial PDF
+    const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
+    const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
+    initialPages.forEach((page) => mergedPdf.addPage(page));
+
+    // Loop through each PDF and add its pages to the merged PDF
+    for (const pdfBytes of pdfBytesArray) {
+      const pdfDoc = await PDFDocument.load(pdfBytes);
+      const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+      pages.forEach((page) => mergedPdf.addPage(page));
+    }
+
+    // Save the merged PDF as a blob
+    const mergedPdfBytes = await mergedPdf.save();
+
+    // Create a Blob and trigger a download
+    const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+    saveAs(blob, 'merged.pdf');
+  } catch (error) {
+    console.error('Error merging and downloading PDFs:', error);
+  }
+};
 
 
 
   const download = (data: any) => {
     console.log(data);
-//     try {
-//       const merger = new PDFMerger();
-  
-//       fetch('http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/PO-388157-6565/Nike%20Automation-%20Requirements%20(1)%20(1)%20(1)-6921.pdf', {
-//   mode: 'no-cors',
-// })
-//   .then(async response => {
-//     console.log(response)
-//     console.log(await merger.add('http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/PO-388157-6565/Nike%20Automation-%20Requirements%20(1)%20(1)%20(1)-6921.pdf'));
-  
-//     // await merger.save('merged.pdf');
-
-//     // console.log('PDFs merged successfully.');
-//   });
-      
-//     } catch (error) {
-//       console.error('Error merging PDFs:', error);
-//     }
-const fileUrl = 'http://206.189.138.212/erpx_dev/dist/apps/services/upload-files/brand-files';
-
-// Use the Fetch API to fetch the file
-fetch(fileUrl,{mode:'no-cors'})
-  .then(response => {
-    console.log(response)
-    // Check if the request was successful (status code 200)
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    // Use the response.text() method to get the file content as text
-    return response.text();
-  })
-  .then(fileContent => {
-    // Do something with the file content
-    console.log(fileContent);
-  })
-  .catch(error => {
-    // Handle errors
-    console.error('Error:', error);
-  });
+    mergeAndDownloadPDFs(data)
   };
 
 
@@ -344,7 +383,7 @@ fetch(fileUrl,{mode:'no-cors'})
             </Button> : ""}
         </Text>
         <br />
-        <><PdfMergeDownload/></>
+        {/* <><PdfMergeDownload/></> */}
       </Card>
     </Col></>
     
@@ -354,3 +393,7 @@ fetch(fileUrl,{mode:'no-cors'})
 
 
 export default UploadView;
+
+function fetchPdfBytesArrayWithAxios(pdfUrls: string[]) {
+  throw new Error('Function not implemented.');
+}

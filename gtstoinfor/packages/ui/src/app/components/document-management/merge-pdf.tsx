@@ -1,25 +1,58 @@
 import React from 'react';
 import { PDFDocument } from 'pdf-lib';
 import { saveAs } from 'file-saver';
+import axios, { AxiosRequestConfig } from 'axios';
 
 const PdfMergeDownload = () => {
+  const fetchPdfBytesArrayWithAxios = async (pdfUrls) => {
+    try {
+      const pdfPromises = pdfUrls.map(async (url) => {
+        const response = await axios.get(url, {
+          responseType: 'arraybuffer',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+
+        return response.data;
+      });
+
+      const pdfBytesArray = await Promise.all(pdfPromises);
+      return pdfBytesArray;
+    } catch (error) {
+      console.error('Error fetching PDFs:', error);
+      throw error; // Rethrow the error to handle it further
+    }
+  };
   const mergeAndDownloadPDFs = async () => {
     try {
       // Load the initial PDF file (you need to provide a valid URL)
-      const initialPdfUrl = 'http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/PO-388157-6565/Material%20preparation-e816.pdf';
-      const initialPdfBytes = await fetch(initialPdfUrl,{mode:'no-cors'}).then((res) => res.arrayBuffer());
+      const initialPdfUrl = 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';
+
+      const initialPdfResponse = await axios.request({
+        url: initialPdfUrl,
+        method: 'get',
+        responseType: 'arraybuffer',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      });
+      const initialPdfBytes = initialPdfResponse.data;
+      console.log('*&*&*&', initialPdfBytes)
 
       // Load additional PDFs from URLs (you need to provide valid PDF URLs)
       const pdfUrls = [
-        'http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/PO-388157-6565/Material%20preparation-e816.pdf',
+        'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf',
       ];
-      const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
-        const response = await fetch(url,{mode:'no-cors'});
-        if (!response.ok) {
-          throw new Error(`Failed to fetch ${url}`);
-        }
-        return response.arrayBuffer();
-      }));
+      // const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
+      //   const response = await fetch(url, { mode: 'no-cors' });
+      //   if (!response.ok) {
+      //     throw new Error(`Failed to fetch ${url}`);
+      //   }
+      //   return response.arrayBuffer();
+      // }));
+      const pdfBytesArray = await fetchPdfBytesArrayWithAxios(pdfUrls)
+
 
       // Create a new PDF document
       const mergedPdf = await PDFDocument.create();

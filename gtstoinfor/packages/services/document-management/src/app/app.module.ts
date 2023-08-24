@@ -2,14 +2,25 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from "@nestjs/serve-static";
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { DocumentUploadModule } from './document_upload/document_upload.module';
 import { appConfig } from '../../../common/config';
 import { OrdersModule } from './orders/order.module';
+import { join } from 'path';
 
 
 @Module({
   imports: [
+    ServeStaticModule.forRootAsync({
+      useFactory: () => ([{
+        rootPath: join(__dirname, '../../../..', 'upload-files'),
+        serveStaticOptions: {
+          redirect: false,
+          index: false
+        }
+      }]),
+    }),
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
@@ -19,13 +30,13 @@ import { OrdersModule } from './orders/order.module';
       password: appConfig.database.password,
       database: appConfig.database.docdbName,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
       logging: true,
       extra: {
         connectionLimit: 20
       }
     }),
-    DocumentUploadModule,OrdersModule],
+    DocumentUploadModule, OrdersModule],
   controllers: [AppController],
   providers: [AppService],
 })
