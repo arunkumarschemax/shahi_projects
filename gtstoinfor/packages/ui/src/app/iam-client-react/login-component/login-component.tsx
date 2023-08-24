@@ -1,4 +1,3 @@
-import React from 'react';
 import { Form, Input, Button, notification, Card, Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './login-component.css';
@@ -6,8 +5,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useIAMClientState } from '../iam-client';
 import { loginUser } from '../actions';
 import { LoginUserDto } from '../user-models';
-// import xpparellogo from '../xpparel-logo.jpeg'
-import xpparellogo from '../../../xpparel-logo.jpeg'
 const { Text } = Typography;
 
 
@@ -42,15 +39,15 @@ export const LoginComponent = () => {
     };
 
     return (
-        
-        <Card 
-             className="card-header"
-        style={{height: '55%',width: '300px'}}
+
+        <Card
+            className="card-header"
+            style={{ height: '55%', width: '300px' }}
         >
             {/* <div style={{marginLeft:'20%'}}>
                     <img src={''} width={150} height={'50%'}></img>
                 </div> */}
-            <div style={{marginLeft:'20%'}}><b>ORDER MANAGEMENT</b></div>
+            <div style={{ marginLeft: '20%' }}><b>ORDER MANAGEMENT</b></div>
             <br />
             <Form
                 name="login-form"
@@ -58,7 +55,7 @@ export const LoginComponent = () => {
                 onFinish={handleLogin}
                 style={{ minWidth: 300 }}
             >
-                <Form.Item style={{width:'250px'}}
+                <Form.Item style={{ width: '250px' }}
                     name="username"
                     rules={[
                         {
@@ -74,7 +71,7 @@ export const LoginComponent = () => {
                     <Input width={215} prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" autoComplete="off" />
                 </Form.Item>
 
-                <Form.Item style={{width:'250px'}}
+                <Form.Item style={{ width: '250px' }}
                     name="password"
                     rules={[{ required: true, message: 'Please input your password!' }]}
                 >
@@ -92,7 +89,7 @@ export const LoginComponent = () => {
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit" style={{ width: '250px' }}>
-                        Log In 
+                        Log In
                     </Button>
                     {/* Or <a href="/">register now!</a> */}
                 </Form.Item>

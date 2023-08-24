@@ -1,15 +1,11 @@
-import React from 'react'
-import { Layout, Row, Col, Menu, Dropdown, Button, Avatar, MenuProps, Select, SelectProps, theme, Divider } from 'antd';
+import { Layout, Row, Col, Dropdown, Button, Avatar, MenuProps, SelectProps, theme } from 'antd';
 
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  UserOutlined,
-  SearchOutlined,
-} from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import './header.css';
-import Search from 'antd/es/input/Search';
 import { useNavigate } from 'react-router-dom';
+// import logo from '../basic-layout/logo.png';
+import shahinew from './shahinew.png'
+
 const { Header } = Layout;
 const { useToken } = theme
 
@@ -43,15 +39,14 @@ export const CommonHeader = (props: IProps) => {
   const items: MenuProps['items'] = [
     {
       key: '1',
-      label: `Username:${loginUser}`
+      label: `User Name : ${loginUser}`
     },
     {
       key: '2',
       label: (
         <>
-          <Divider type='horizontal' />
           <Button type='primary' onClick={() => logoutHandler()} >
-            logout
+            Log Out
           </Button>
         </>
       )
@@ -60,14 +55,12 @@ export const CommonHeader = (props: IProps) => {
 
   const options: SelectProps['options'] = [{ value: 'project-creation-page', label: 'Project Creation' }, { value: 'project-list-grid', label: 'Project View' }];
 
-
-
   return (
     <Header className='header-row' style={{ background: '#fff', padding: 0 }}>
       <Row justify='space-between' align='middle'>
         <Col span={4}>
           <div className="logo" >
-            <span style={{ color: colorPrimary }}>{'SHAHI'}</span>
+            <img src={shahinew} style={{ width: '90%', marginTop: '5px' }} />
           </div>
         </Col>
         <Col span={1} >
@@ -80,11 +73,12 @@ export const CommonHeader = (props: IProps) => {
         </Col>
         <Col span={4}></Col>
         <Col span={6}>
+          <span style={{ alignSelf: 'center', fontSize: 24, color: 'darkblue' }}><b>{'UNIQLO ORDERS MANGEMENT'}</b></span>
           {/* <Select  onSelect={(e) => {navigate('/'+e)}} className='header-search' showSearch  allowClear style={{width:'100%',marginBottom:'60px'}}  placeholder='search for forms and views' options={options} suffixIcon={<SearchOutlined style={{color:colorPrimary}}/>} /> */}
         </Col>
         <Col span={7} style={{ textAlign: 'right' }}>
           <Dropdown menu={{ items }}>
-            <Avatar style={{ marginBottom: '5px', cursor:'pointer' }} size={45} shape="circle" icon={<UserOutlined style={{ fontSize: '25px' }} />} />
+            <Avatar style={{ marginBottom: '20px', cursor: 'pointer' }} size={45} shape="circle" icon={<UserOutlined style={{ fontSize: '25px' }} />} />
           </Dropdown>
         </Col>
         <Col></Col>

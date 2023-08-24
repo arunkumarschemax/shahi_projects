@@ -8,6 +8,7 @@ import axios from 'axios';
 import { AppRoutes } from './routes';
 import { LoginComponent, useIAMClientState } from './iam-client-react';
 import { AppRoutesNew } from './route-new';
+import Login from './layout/login/login';
 
 
 export function App() {
@@ -15,27 +16,25 @@ export function App() {
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   axios.interceptors.request.use(request => {
-      setLoad(true);
-      return request;
+    setLoad(true);
+    return request;
   });
 
   axios.interceptors.response.use(response => {
-      setLoad(false);
-      return response;
+    setLoad(false);
+    return response;
   }, error => {
-      setLoad(false);
-      throw error;
+    setLoad(false);
+    throw error;
   });
 
   return (
     IAMClientAuthContext.isAuthenticated ? <>
-    <CustomSpinner loading={load} />
-    <AppRoutesNew />
-  </> :
-    <div style={{ backgroundColor:'rgba(0, 0, 0, 0.45)', display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <LoginComponent />
-    </div>
-  );
+      <CustomSpinner loading={load} />
+      <AppRoutesNew />
+    </> :
+      <Login />
+  );
 
 }
 
