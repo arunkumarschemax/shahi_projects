@@ -45,6 +45,7 @@ export * from './taxes-service'
 export * from './warehouse-service'
 export * from './sample-types-service';
 export * from './sample-sub-types-service';
+export * from './destination-service'
 export * from './fabric-type-service'
 export * from './fabric-sub-type-service'
 export * from './settings-service'

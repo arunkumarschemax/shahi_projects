@@ -40,6 +40,7 @@ import { SampleTypesModule } from './sample Types/sample-types.module';
 import { LocationsModule } from './locations/location.module';
 import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module';
 import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
+import { DestinationModule } from './destination/destination.module';
 import { FabricTypeModule } from './fabric-types/fabric-type.module';
 import { FabricSubTypeModule } from './fabric-sub-types/fabric-sub-type.module';
 import { SizeModule } from './sizes/sizes-module';
@@ -87,7 +88,7 @@ import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-typ
     BuyingHouseModule,
     CommissionModule,
     UsersModule,
-    OrdersModule,
+    // OrdersModule,
     DeliveryTermsModule,
     LocationsModule,
     DivisionModule,

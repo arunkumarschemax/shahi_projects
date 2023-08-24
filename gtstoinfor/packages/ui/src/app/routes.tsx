@@ -75,6 +75,8 @@ import SampleTypesGrid from "./masters/sample-types/sample-type-grid"
 import SampleTypeForm from "./masters/sample-types/sample-type-form"
 import SampleSubTypesForm from "./masters/sample sub types/sample-sub-types-form"
 import SampleSubTypesGrid from "./masters/sample sub types/sample-sub-types-grid"
+import DestinationForm from "./masters/destination/destination-form"
+import DestinationGrid from "./masters/destination/destination-grid"
 import FabricTypeForm from "./masters/fabric-type/fabric-type-form"
 import FabricTypeGrid from "./masters/fabric-type/fabric-type-grid"
 import FabricSubTypeGrid from "./masters/fabric-sub-types/fabric-sub-types-view"
@@ -145,7 +147,7 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
                 <Route path='items/item-grid' element={<ItemsGrid />} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
-                        <Route path='company/company-form' element={<CompanyForm currencyData={undefined} updateItem={function (companyData:undefined ): void {
+                        <Route path='company/company-form' element={<CompanyForm Data={undefined} updateItem={function (companyData:undefined ): void {
                         } } isUpdate={false} closeForm={function (): void {
                             
                         } } />} />
@@ -157,7 +159,13 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
                         <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
 
-                        <Route path='masters-brands/master-brands-form' element={<MasterBrandsForm masterBrandData={undefined}
+                        <Route path='destination/destination-form' element={<DestinationForm Data={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                        <Route path='destination/destination-grid' element={<DestinationGrid />} />
+
+                        <Route path='brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
                 updateMasterBrand={(undefined) => { }}/>} />
