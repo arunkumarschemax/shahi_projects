@@ -6,9 +6,11 @@ import { BuyersRequest } from './dto/buyers.request';
 import { BuyersDTO } from './dto/buyers.dto';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { BuyersResponseModel } from 'packages/libs/shared-models/src/common/buyers/buyers.response.model';
-import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel, CommonResponseModel, BuyersOrderAttributeResponseModel } from '@project-management-system/shared-models';
 import { BuyersGeneralAttributeDto } from './dto/buyers-general-attributes.dto';
 import { BuyersGeneralAttributeService } from './buyers-general-attributes.service';
+import { BuyersOrderAttributeService } from './buyers-order-attributes.service';
+import { BuyersOrderAttributeDto } from './dto/buyers-order-attributes.dto';
 
 @ApiTags('Buyers')
 @Controller('buyers')
@@ -16,7 +18,8 @@ export class BuyersController {
     constructor(
         private buyersService: BuyersService,
         private readonly applicationExceptionhandler: ApplicationExceptionHandler,
-        private buyersGeneralAttributeService : BuyersGeneralAttributeService
+        private buyersGeneralAttributeService : BuyersGeneralAttributeService,
+        private buyersOrderAttributeService : BuyersOrderAttributeService
 
     ) { }
     /**
@@ -26,7 +29,6 @@ export class BuyersController {
      */
     @Post('/createBuyer')
     async createBuyer(@Body() buyersDTO: any, isUpdate: boolean = false): Promise<BuyersResponseModel> {
-        console.log(buyersDTO,'=============')
         try {
             return await this.buyersService.createBuyer(buyersDTO, false);
         } catch (error) {
@@ -114,6 +116,15 @@ export class BuyersController {
         }
     }
 
+    @Post('/createOrderAttribute')
+    async createOrderAttribute(@Body() req: any): Promise<BuyersOrderAttributeResponseModel> {
+        try {
+            return await this.buyersOrderAttributeService.createOrderAttribute(req,false);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(BuyersOrderAttributeResponseModel, err);
+        }
+    }
+
     @Post('/updateGeneralAttribute')
     async updateGeneralAttribute(@Body() req: any): Promise<BuyersGeneralAttributeResponseModel> {
         try {
@@ -129,6 +140,42 @@ export class BuyersController {
             return await this.buyersGeneralAttributeService.getByBuyerId(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(BuyersGeneralAttributeResponseModel, err);
+        }
+    }
+
+    @Post('/getAddressByBuyerId')
+    async getAddressByBuyerId(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.buyersService.getAddressByBuyerId(req);
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/getAllBuyersInfo')
+    async getAllBuyersInfo(): Promise<CommonResponseModel> {
+        try {
+            return await this.buyersService.getAllBuyersInfo();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/updateOrderAttribute')
+    async updateOrderAttribute(@Body() req: any): Promise<BuyersOrderAttributeResponseModel> {
+        try {
+            return await this.buyersOrderAttributeService.createOrderAttribute(req,true);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(BuyersOrderAttributeResponseModel, err);
+        }
+    }
+
+    @Post('/getBuyerId')
+    async getBuyerId(@Body() req:any): Promise<BuyersOrderAttributeResponseModel> {
+        try {
+            return await this.buyersOrderAttributeService.getBuyerId(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(BuyersOrderAttributeResponseModel, err);
         }
     }
 }

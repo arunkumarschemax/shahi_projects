@@ -84,7 +84,7 @@ export function PackagesTermsForm(props:PackagesTermsFormProps) {
  console.log(PaymentTermsDto,"999999")
 
   return (
-    <Card title='Package Terms' extra={<span><Button onClick={() => navigate('/masters/package-terms/package-terms-view')} type={'primary'}>View</Button></span>}>
+    <Card title='Package Terms' extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/package-terms/package-terms-view')} type={'primary'}>View</Button></span>}>
     <Form layout="vertical" form={form}  onFinish={saveData}  initialValues={props.packageTermsData}>
     <Row>
     <Form.Item name="packageTermsId" style={{ display: 'none' }}>

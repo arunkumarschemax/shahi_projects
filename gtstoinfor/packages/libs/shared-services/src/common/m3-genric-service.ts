@@ -12,11 +12,7 @@ export class M3GenericService {
     private headersRequest = {
         Authorization: `${this.auth}`,
     };
-    private agent = {
-        rejectUnauthorized: false,
-    };
-
-    async callM3Api(program: string, api: string, args: M3ApiArgs[]) {
+      async callM3Api(program: string, api: string, args: M3ApiArgs[]) {
         try {
             var baseUrl = 'https://172.17.3.115:23005/m3api-rest/execute/'
             let apiargs = ''
@@ -28,7 +24,7 @@ export class M3GenericService {
                 }
             }
             let urlWithArgs :string = baseUrl   + program + '/' + api + '?' + apiargs
-            const response = await axios.get(urlWithArgs, { headers: this.headersRequest, httpsAgent: this.agent });
+            const response = await axios.get(urlWithArgs, { headers: this.headersRequest });
             return response
         } catch (err) {
             return err

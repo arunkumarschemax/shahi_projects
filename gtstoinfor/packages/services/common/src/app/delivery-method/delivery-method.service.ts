@@ -32,24 +32,17 @@ export class DeliveryMethodService {
       async createDeliveryMethod(deliveryMethodDTO: DeliveryMethodDTO, isUpdate: boolean): Promise<DeliveryMethodResponseModel> {
         try {
           let previousValue;
-          if (!isUpdate) {
             const deliveryMethodEntity = await this.deliveryMethodRepository.findOne({ where: { deliveryMethod: deliveryMethodDTO.deliveryMethod } });
             if (deliveryMethodEntity) {
               throw new DeliveryMethodResponseModel(false, 11104, 'Delivery Method already exists');
             }
-          } else {
+            if(isUpdate){
             const certificatePrevious = await this.deliveryMethodRepository.findOne({ where: { deliveryMethodId: deliveryMethodDTO.deliveryMethodId } });
             if (!certificatePrevious) {
               throw new ErrorResponse(0, 'Given delivery does not exist');
             }
-            
-            if (certificatePrevious.deliveryMethod !== deliveryMethodDTO.deliveryMethod) {
-              throw new DeliveryMethodResponseModel(false, 11104, 'Cannot update to an existing delivery method');
-            }
-            
             previousValue = certificatePrevious.deliveryMethod;
           }
-          
           const convertedDeliveryMethod: DeliveryMethod = this.deliveryMethodAdapter.convertDtoToEntity(deliveryMethodDTO, isUpdate);
           const savedDeliveryMethodEntity: DeliveryMethod = await this.deliveryMethodRepository.save(convertedDeliveryMethod);
           const savedDeliveryMethodDto: DeliveryMethodDTO = this.deliveryMethodAdapter.convertEntityToDto(savedDeliveryMethodEntity);
