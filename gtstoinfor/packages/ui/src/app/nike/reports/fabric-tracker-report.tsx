@@ -210,7 +210,7 @@ export function FabricTrackerReport() {
           {
             title: 'Product Code',
             dataIndex: 'productCode',
-            sorter: (a, b) => a.Item.length - b.Item.length,
+            sorter: (a, b) => a.productCode.length - b.productCode.length,
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('productCode'),
       
