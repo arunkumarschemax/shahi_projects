@@ -83,13 +83,13 @@ export class docRequest{
     status:string;
     type:string;
     url:string;
-
-    constructor(uid: string,name:string,status:string,type:string,url:string){
+    documentName:string;
+    constructor(uid: string,name:string,status:string,type:string,url:string,documentName:string){
         this.uid = uid;
         this.name = name;
         this.status = status;
         this.type = type;
         this.url = url;
-
+        this.documentName = documentName;
     }
 }

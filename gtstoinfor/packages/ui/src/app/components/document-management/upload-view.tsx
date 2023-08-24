@@ -22,6 +22,7 @@ export interface UploadViewProps {
     docData: any;
     formData: (value: any, filesList:any[]) => void;
     fileList: (value: any[]) => void;
+    urls: any[];
 }
 
 const UploadView = (props: UploadViewProps) => {
@@ -186,7 +187,7 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
 
     // Create a Blob and trigger a download
     const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
-    saveAs(blob, 'merged.pdf');
+    saveAs(blob, pathsData[0].documentName+'.pdf');
   } catch (error) {
     console.error('Error merging and downloading PDFs:', error);
   }
