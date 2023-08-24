@@ -147,7 +147,7 @@ export default function BasicLayout() {
         if (route && route.subMenuData && route.subMenuData.length) {
             return (
                 <SubMenu key={route.menuId} title={<span> {renderIcon(route.iconType, route.iconName)} <span>{route.menuName}</span> </span>}  >
-                    <div style={{backgroundColor:'white',color:'white'}}>
+                    <div>
 
                     {route.subMenuData.map(item => getSubMenu(item))}
                     </div>
@@ -155,7 +155,7 @@ export default function BasicLayout() {
             )
         } else {
                 return(
-                    <div style={{backgroundColor:'white',color:'white'}}>
+                    <div>
                         (<Menu.Item key={route.subMenuId} ><Link to={route.path}><span><span> {route.icon} <span>{route.subMenuName}</span> </span></span></Link> </Menu.Item>) 
                     </div>
     
