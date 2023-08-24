@@ -435,11 +435,11 @@ export class DpomEntity {
     price: number;
 
     @Column('varchar', {
-        name: "item_vas",
+        name: "item_vas_pdf",
         length: 10,
         nullable: true
     })
-    itemVas: string;
+    itemVasPDF: string;
 
     @Column('varchar', {
         name: "ship_to_address_dia",

@@ -1,8 +1,10 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { MarketingModel } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
+import { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import RangePicker from 'rc-picker/lib/RangePicker';
 import React, { useEffect, useRef, useState } from 'react'
@@ -26,7 +28,8 @@ const PPMReport = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [filterData, setFilterData] = useState<any>([])
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
-
+  const [pageSize, setPageSize] = useState<number>(null);
+  const [page, setPage] = React.useState(1)
 
 
   useEffect(() => {
@@ -109,24 +112,19 @@ const PPMReport = () => {
       setSelectedEstimatedToDate(toDate)
     }
   }
-  const Finish = (values: any) => {
-    console.log(values, 'vallllll');
-    // if (values.DPOMLineItemStatus !== undefined) {
-    //     // getFactoryStatus(values)
-    // }/
-    if (values.DPOMLineItemStatus === undefined) {
-        setFilterData(gridData)
-    } else if (values.DPOMLineItemStatus === "Accepted") {
-        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Accepted"))
-    } else if (values.DPOMLineItemStatus === "Unaccepted") {
-        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Unaccepted"))
-    } else if (values.DPOMLineItemStatus === "Cancelled") {
-        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Cancelled"))
 
-    } else if (values.DPOMLineItemStatus === "Closed") {
-        setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Closed"))
+  const Finish = (values: any) => {
+    if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
+      setFilterData(gridData);
+    } else {
+      const filteredData = gridData.filter(item =>
+        values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
+      );
+      setFilterData(filteredData);
     }
-  }
+  };
+  
+
   const onReset = () => {
     form.resetFields()
   }
@@ -196,9 +194,33 @@ const PPMReport = () => {
     setSearchText('');
   };
 
-  const Columns: any = [
+  const getSizeWiseHeaders = (data: MarketingModel[]) => {
+    const sizeHeaders = new Set<string>();
+    data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
+        sizeHeaders.add('' + version.sizeDescription);
+    }))
+    return Array.from(sizeHeaders);
+};
+const getMap = (data: MarketingModel[]) => {
+    const sizeWiseMap = new Map<string, Map<string, number>>();
+    data?.forEach(rec => {
+        if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
+            sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
+        }
+        rec.sizeWiseData?.forEach(version => {
+            sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
+        })
+    });
+    return sizeWiseMap;
+}
+
+  const renderReport =(data:MarketingModel[])=>{
+    const sizeHeaders = getSizeWiseHeaders(data);
+    const sizeWiseMap = getMap(data);
+
+  const columns: ColumnsType<any>= [
     {
-      title: "SL",
+      title: "S.No",
       render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
 
     },
@@ -219,15 +241,11 @@ const PPMReport = () => {
     },
     {
       title: 'Item',
-      dataIndex: 'Item',
-      sorter: (a, b) => a.Item.length - b.Item.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('Item'),
+      dataIndex: 'item',
+      // sorter: (a, b) => a.Item.length - b.Item.length,
+      // sortDirections: ['descend', 'ascend'],
+      // ...getColumnSearchProps('Item'),
 
-    },
-    {
-      title: 'Total Item Qty',
-      dataIndex: 'totalItemQty'
     },
     {
       title: 'Factory',
@@ -267,11 +285,45 @@ const PPMReport = () => {
       title: 'Colour Description',
       dataIndex: 'colorDesc'
     },
+    {
+      title: 'Total Item Qty',
+      dataIndex: 'totalItemQty',
+      align:'center',
+      render: (text) => <strong>{text}</strong>
+  },
   ]
+  sizeHeaders?.forEach(version => {
+    columns.push({
+        title: version,
+        dataIndex: version, 
+        key: version,
+        width: 130,
+        align: 'right',
+        render: (text, record) => {
+            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+            if (sizeData) {
+                return sizeData.sizeQty !== null ? Number(sizeData.sizeQty).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-';
+            } else {
+                return '-';
+            }
+        }
+    });
+ })
+
+ 
+    return (<Table columns={columns} dataSource={filterData} pagination={{
+        onChange(current, pageSize) {
+            setPage(current);
+            setPageSize(pageSize)}
+    }}scroll={{ x: 'max-content' }} />)
+
+}
 
   return (
     <>
-      <Card title="PPM Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
+      <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
         extra={filteredData.length > 0 ? (<Button
           type="default"
           style={{ color: 'green' }}
@@ -293,7 +345,7 @@ const PPMReport = () => {
                   showSearch
                   placeholder="Select PPM Status"
                   optionFilterProp="children"
-                  allowClear>
+                  allowClear mode='multiple'>
                   <Option value="Accepted">ACCEPTED</Option>
                   <Option value="Unaccepted">UNACCEPTED</Option>
                   <Option value="Cancelled">CANCELLED</Option>
@@ -354,12 +406,14 @@ const PPMReport = () => {
         </Row><br></br>
         <div>
 
-          <Table columns={Columns} 
+          {/* <Table columns={Columns} 
           // dataSource={gridData}
            dataSource={filterData}
             bordered
-          />
+          /> */}
+
         </div>
+        {renderReport(filterData)}
       </Card>
     </>
   )

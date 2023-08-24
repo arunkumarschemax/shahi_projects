@@ -18,17 +18,18 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpm')
-            .select(`dpm.id,dpm.plant AS nPlant,dpm.dpom_item_line_status AS nLineStatus,
+            .select(`DISTINCT dpm.id,dpm.plant AS nPlant,dpm.dpom_item_line_status AS nLineStatus,
             dpm.plant_name AS nPlantName,dpm.document_date AS nDocumentDate,
             dpm.po_number AS npoNumber,dpm.po_line_item_number AS npoLine ,dpm.destination_country AS ndestination,
             dpm.shipping_type AS nshipmentType,dpm.inventory_segment_code AS ninventorySegmentCode,
-            dpm.ogac AS nogac ,dpm.gac AS nogac ,dpm.product_code AS nproductCode,
+            dpm.ogac AS nogac ,dpm.gac AS ngac ,dpm.product_code AS nproductCode,
             dpm.item_vas_text AS nitemVasText,dpm.quantity AS nQuantity,dpc.plant AS oplant,
             dpc.dpom_item_line_status AS onLineStatus,dpc.plant_name AS oPlantName ,
             dpc.document_date AS oDocumentDate,dpc.po_number AS opoNumber, dpc.po_line_item_number AS opoLine,
             dpc.destination_country AS odestination , dpc.shipping_type AS oshipmentType,dpc.inventory_segment_code AS oinventorySegmentCode,
             dpc.ogac AS oogac,dpc.gac AS ogac,dpc.product_code AS oproductCode ,dpc.item_vas_text AS oitemVasText , dpc.quantity AS oquantity,dpm.created_at AS dpomCreatedDates `)
             .leftJoin(DpomChildEntity,'dpc','dpc.parent_id = dpm.id')
+            .groupBy(`dpm.id,dpc.id`)
             //.where(`dpm.dpom_item_line_status IN ('accepted','Unaccepted')`)
         return await query.getRawMany()
     }
@@ -100,7 +101,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async poLineItemStatusChange(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, od.created_at, od.old_val, od.new_val, od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
             .where(` od.column_name='dpom_line_item_status' `)
         return await query.getRawMany();
@@ -110,5 +111,143 @@ export class DpomRepository extends Repository<DpomEntity> {
         const queryBuilder = this.createQueryBuilder('dpom');
         queryBuilder.where(`file_id = '${req.fileId}' AND version = 1`);
         await queryBuilder.delete().execute();
+    }
+
+    async getItemChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='item' `)
+        return await query.getRawMany();
+    }
+
+    async getUnitChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='unit' `)
+        return await query.getRawMany();
+    }
+
+    async getFOBPriceChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name = 'gross_price_fob'`)
+        return await query.getRawMany();
+    }
+
+    async getNetInclDiscChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='ne_inc_disc' `)
+        return await query.getRawMany();
+    }
+
+    async getTradingNetInclDiscChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='trading_net_inc_disc' `)
+        return await query.getRawMany();
+    }
+
+    async getGACChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='gac' `)
+        return await query.getRawMany();
+    }
+
+    async getMRGACChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='mrgac' `)
+        return await query.getRawMany();
+    }
+
+    async getModeOfTransportChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='unit' `)
+        return await query.getRawMany();
+    }
+
+    async getPlantCodeChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='plant' `)
+        return await query.getRawMany();
+    }
+
+    async getShippingTypeChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='shipping_type' `)
+        return await query.getRawMany();
+    }
+
+    async getVasTextChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='vas_text' `)
+        return await query.getRawMany();
+    }
+
+    async getShipToCustomerChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='ship_to_customer_name' `)
+        return await query.getRawMany();
+    }
+
+    async getInventorySegmentCodeChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='inventory_segment_code' `)
+        return await query.getRawMany();
+    }
+
+    async getDirectShipSoNoChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='direct_ship_so_no' `)
+        return await query.getRawMany();
+    }
+
+    async getDestinationCountryChangeData(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
+            .where(` od.column_name='destination_country' `)
+        return await query.getRawMany();
+    }
+
+    async getDestinationPo(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`destination_country AS destination, COUNT(po_number) AS poCount`)
+            .where(`destination_country  IS NOT NULL`)
+            .andWhere(`dpom_item_line_status = 'Accepted'||'Unaccepted'`)
+            .groupBy(`destination_country`)
+        return await query.getRawMany();
+    }
+
+    async getSeasonPo(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`planning_season_code AS season, COUNT(po_number) AS poCount`)
+            .where(`planning_season_code  IS NOT NULL`)
+            .andWhere(`dpom_item_line_status = 'Accepted'||'Unaccepted'`)
+            .groupBy(`planning_season_code`)
+        return await query.getRawMany();
     }
 }
