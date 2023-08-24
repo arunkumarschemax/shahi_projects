@@ -20,11 +20,11 @@ export const AppRoutesNew = () => {
     return(
         <Routes>
         <Route path='/' key='/' element={
-              <ChildProtectionWrapper>
+              <>
                   <>
                       <BasicLayout />
                   </>
-              </ChildProtectionWrapper>
+              </>
           } >
               <Route path='/user-management/users-from' key='/user-management/users-from' element={<UserCreationForm />} />
               <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />

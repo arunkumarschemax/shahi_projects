@@ -25,7 +25,7 @@ export const LoginComponent = () => {
             if (from) {
                 navigate(from, { replace: true });
             } else {
-                navigate("/#", { replace: true });
+                navigate("/excel-import/excel-import", { replace: true });
             }
             return true;
         } catch (error: any) {
@@ -42,14 +42,15 @@ export const LoginComponent = () => {
     };
 
     return (
+        
         <Card 
              className="card-header"
         style={{height: '55%',width: '300px'}}
         >
-            {/* <div style={{marginLeft:'10%'}}>
-                    <img src={''} width={180} height={'50%'}></img>
+            {/* <div style={{marginLeft:'20%'}}>
+                    <img src={''} width={150} height={'50%'}></img>
                 </div> */}
-            <div style={{marginLeft:'15%'}}><b>ORDER MANAGEMENT</b></div>
+            <div style={{marginLeft:'20%'}}><b>ORDER MANAGEMENT</b></div>
             <br />
             <Form
                 name="login-form"
