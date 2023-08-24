@@ -137,7 +137,7 @@ export class DocumentsListService {
             for (const res of result){
 
 
-                const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("http://localhost:8002/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type" FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id where u.document_list_id ='+res.documentsListId;
+                const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("https://edoc-backend.shahiapps.in/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type" FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id where u.document_list_id ='+res.documentsListId;
                 const docres = await this.uploadFilesRepository.query(doctlistQuery)
 
                 const docReq:docRequest[] =[];
