@@ -33,7 +33,7 @@ const DivertReport = () => {
 
     useEffect(() => {
         getData();
-        // getCount();
+         getCount();
     }, [])
 
     const handleCheckboxChange = (id: string) => {
@@ -124,16 +124,14 @@ const DivertReport = () => {
     // let newSno = 0;
 
 
-    //     const getCount= () =>{
-    //         service.getCountForDivertReport().then(res => {
+        const getCount= () =>{
+            service.getCountForDivertReport().then(res => {
 
-    //             if (res.status) {
-    //                 setDataLength(res.data)
-    //             }
-    //         })
+                if (res.status) {
+                    setDataLength(res.data)
+                }
+            }) }
 
-
-    // }
     const getData = () => {
         service.getDivertReportData().then(res => {
             if (res.status) {
@@ -524,7 +522,7 @@ const DivertReport = () => {
                     style={{ color: 'green' }}
                     onClick={exportExcel}
                     icon={<FileExcelFilled />}>Download Excel</Button>}>
-                <Row gutter={70}>
+                {/* <Row gutter={70}>
                     <Col >
                     <Card title={'Total Line Status Count  : ' + Number(dataLength[0]?.totalCount)} style={{ textAlign: 'left', width: 280, height: 38, backgroundColor: ' lightblue' }}></Card>
                 </Col>
@@ -535,7 +533,7 @@ const DivertReport = () => {
                     <Card title={'Unaccepted : ' +Number(dataLength[0]?.unacceptedCount)} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
                 </Col> 
 
-                </Row><br></br>
+                </Row><br></br> */}
                 <Card >
                     <Table
                         columns={columns}
