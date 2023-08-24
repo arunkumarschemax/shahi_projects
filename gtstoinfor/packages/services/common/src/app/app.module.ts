@@ -83,7 +83,7 @@ import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
     BuyingHouseModule,
     CommissionModule,
     UsersModule,
-    OrdersModule,
+    // OrdersModule,
     DeliveryTermsModule,
     LocationsModule,
     DivisionModule,
