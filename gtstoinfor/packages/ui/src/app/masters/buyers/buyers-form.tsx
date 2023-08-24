@@ -105,7 +105,7 @@ export function BuyersForm(props: BuyersFormProps) {
     buyerService.createBuyer(buyersData).then(res => {
       setDisable(false)
       if (res.status) {
-        message.success('Customer Details Created Successfully')
+        message.success('Buyer Details Created Successfully')
         onReset();
         navigate('/masters/buyers/buyers-view')
       } else {
@@ -141,17 +141,6 @@ export function BuyersForm(props: BuyersFormProps) {
     // createdUser = localStorage.getItem("createdUser");
     createdUser= 'admin'
   }
-  // const onFocus = () => {
-  //   console.log('focus');
-  // }
-
-  // const onSearch = (val) => {
-  //   console.log('search:', val);
-  // }
-  // const onBlur = () => {
-  //   console.log('blur');
-  // }
-
 
  // props.customersData.currency=Number(props.customersData.currency);
   return (
@@ -398,7 +387,7 @@ export function BuyersForm(props: BuyersFormProps) {
             </Row>
             <Row gutter={8}>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 24 }}>
-                <Form.List name='address' initialValue={[{}]}>
+                <Form.List name='addressInfo' initialValue={[{}]}>
                   {(fields,{add,remove}) => (
                     <>
                       <Form.Item>
