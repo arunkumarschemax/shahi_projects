@@ -113,6 +113,7 @@ export const baseRouterList = [
 ];
 
 export default function BasicLayout() {
+    const [collapsed, setCollapsed] = useState(true);
     const [pathname, setPathname] = useState(location.pathname);
     const [dark, setDark] = useState(false);
     const navigate = useNavigate();
@@ -125,6 +126,10 @@ export default function BasicLayout() {
     const loginUser = userData.user.userName
     const loginUserRole = userData.user.roles
     console.log(userData.user.userName)
+
+    const toggle = () => {
+        setCollapsed(prevCollapsed => !prevCollapsed);
+    };
     
     function renderIcon(iconType, iconName) {
         // if (iconType === "antd") { 
@@ -151,7 +156,7 @@ export default function BasicLayout() {
         } else {
                 return(
                     <div style={{backgroundColor:'white',color:'white'}}>
-                        {route.subMenuName !== 'Vehicle Inspection Track' ? (<Menu.Item key={route.subMenuId} ><Link to={route.path}><span><span> {route.icon} <span>{route.subMenuName}</span> </span></span></Link> </Menu.Item>) : (<></>)}
+                        (<Menu.Item key={route.subMenuId} ><Link to={route.path}><span><span> {route.icon} <span>{route.subMenuName}</span> </span></span></Link> </Menu.Item>) 
                     </div>
     
                 ) 
@@ -174,36 +179,97 @@ export default function BasicLayout() {
         token: { colorBgContainer },
     } = theme.useToken();
     return (
-        <Layout className="layout">
-            <Header style={{ alignItems: 'center', backgroundColor: '#2c5259', height: 83 }}>
-                <div style={{ float: 'left', marginTop: '0%' }}>
-                    {/* <img src={logo} width={200} height={52}></img> */}
-                    <img src={''} width={150} height={80}></img>
-                </div>
-                <h1 style={{color: '#f3bf13',textAlign: 'center',marginTop:'0.2px'}}>ORDERS MANAGEMENT</h1>
-                <Tooltip title='Logout'><Button type="default" icon={<LogoutOutlined />} style={{ float: 'right', marginTop: '-5.4%' }} onClick={logOut}>{'Hi '+loginUser}<div style={{color:'#f3bf13',marginTop:'10px',fontStyle:'italic'}}>{loginUserRole}</div></Button></Tooltip>
-                {/* <>{userData.user.roles}</> */}
-                <Menu
+        <Layout style={{ minHeight: '100vh' }}>
+            {/* <Router> */}
+                <Layout className="site-layout" style={{ background: ' #f0f2f5' }}>
+                    <Sider
+                        className='layout'
+                        trigger={null}
+                        breakpoint='lg'
+                        collapsedWidth='60'
+                        style={{
+                            overflow: 'auto',
+                            height: '100vh',
+                            position: 'fixed',
+                            left: 0,
+                            background: '#fff',
+                            marginTop: '83px' ,
+                            borderRadius:'5px'
+                        }}
+                    >           
+                    <Menu
                     theme="light"
-                    mode="horizontal"
+                    mode="inline"
                     // defaultSelectedKeys={['1']}
                     // style={{ marginTop: '20px' }}
                     // 230
                     selectedKeys={[]}
-                    style={{ backgroundColor: '#2c5259', width: '75%', height: '61%', marginLeft: '160px', marginTop: '-3.8%',color:'white' }}
+                    // style={{ backgroundColor: '#000', width: '75%', height: '61%', marginLeft: '160px', marginTop: '-3.8%',color:'white' }}
                 >
                     
                     {getAllSubMenus()}
-                </Menu>
-       
-            </Header>
-            <Content style={{ padding: '0 50px', minHeight: '490px', backgroundColor: 'white' }}>
-                <br />
-                {/* <IndentDashboard/> */}
-                <Outlet />
-            </Content >
-            <Footer style={{ textAlign: 'center' }}>ⓒ2023 Design and Developed by SchemaX Tech</Footer>
-        </Layout >
+                </Menu>         
+                        {/* <Menu mode="inline"
+                            items={items}
+                            onClick={menu}
+                            openKeys={subMenu}
+                            defaultOpenKeys={[]}
+                            selectedKeys={[selectedMenu]}
+                            onOpenChange={onOpenChange}
+                            defaultSelectedKeys={['/']}
+                            // style={{ paddingTop: '83px' }}
+                        /> */}
+                        {/* <Menu mode="inline"
+                            defaultSelectedKeys={['/']}
+                            style={{ paddingTop: '20px' }}
+                        >
+                            <Menu.Item >
+                                <span>
+                                    <Link to='/project-user-creation-page' />
+                                </span>
+                                <span><UserOutlined /></span>
+                                <span>User Creation</span>
+                            </Menu.Item>
+                            <Menu.Item >
+                            <span>
+                                <Link to='/project-Dashboard' />
+                            </span>
+                            <span><ProjectOutlined /></span>
+                            <span>Projects Dashboard</span>
+                        </Menu.Item>
+                        </Menu> */}
+
+                        {/* <Menu mode="inline"
+                            defaultSelectedKeys={['/']}
+                            style={{ paddingTop: '20px' }}
+                        >
+                            <Menu.Item >
+                                <span>
+                                    <Link to='/project-creation-reports' />
+                                </span>
+                                <span><UserOutlined /></span>
+                                <span>Project Creation Reports</span>
+                            </Menu.Item>
+                        </Menu> */}
+
+
+                    </Sider>
+                    <CommonHeader key={Date.now()} toggle={toggle} collapsed={collapsed} />
+                    <Content
+                        className="site-layout-background"
+                        style={{
+                            marginTop: '70px',
+                            padding: 14,
+                            height: '100%',
+                            marginLeft: 198
+                        }}
+                    >
+                        <Outlet />
+                    </Content>
+                    {/* <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>©2023 Design and Developed by SchemaX</Footer> */}
+                </Layout>
+            {/* </Router> */}
+        </Layout>
     );
         
     // return (
