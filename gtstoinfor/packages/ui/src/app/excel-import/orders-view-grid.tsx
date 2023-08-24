@@ -1,11 +1,13 @@
-import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tag, message } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tag, Tooltip, message } from 'antd';
 import { useEffect, useState, } from 'react';
-import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { OrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import AlertMessages from '../common/common-functions/alert-messages';
+import { OrdersReq } from '@project-management-system/shared-models';
 
 
 const AllOrdersGridView = () => {
@@ -15,6 +17,7 @@ const AllOrdersGridView = () => {
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
     const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
+    const [uploadedData,setuploadedData]=useState<any[]>([])
     const service = new OrdersService();
     const [form] = Form.useForm();
     const { Option } = Select;
@@ -23,6 +26,7 @@ const AllOrdersGridView = () => {
 
     useEffect(() => {
         getData();
+        getOrdersData()
     }, [])
 
     const getData = () => {
@@ -33,6 +37,23 @@ const AllOrdersGridView = () => {
             }
         }).catch(err => {
             console.log(err.message)
+        })
+    }
+
+    const getOrdersData = () =>{
+        const req= new OrdersReq()
+        req.status=form.getFieldValue('orderStatus')
+        if(form.getFieldValue('fromDate') != undefined){
+         req.fromDate=form.getFieldValue('fromDate').format("YYYY-MM-DD")
+        }
+        console.log(req)
+        service.getuploadeOrdersdata(req).then(res =>{
+            if(res.status){
+                setuploadedData(res.data)
+
+            }else{
+                setuploadedData([])
+            }
         })
     }
 
@@ -67,11 +88,13 @@ const AllOrdersGridView = () => {
         }
     }
 
+
     const onReset = () => {
         form.resetFields();
         setSelectedEstimatedFromDate(undefined);
         setSelectedEstimatedToDate(undefined);
-        getData();
+        // getData();
+        getOrdersData()
     }
 
     function convertToYYYYMMDD(inputDate) {
@@ -86,6 +109,31 @@ const AllOrdersGridView = () => {
         }
         return formattedDate;
     }
+    const download = (filePath) => {
+        console.log(filePath);
+        // : FilenameDto[]
+        
+        if (filePath) {
+          filePath = filePath.split(",");
+          for (const res of filePath) {
+            if(res){
+              console.log(res);
+              setTimeout(() => {
+                const response = {
+                  file: 'http://165.22.220.143/document-management/gtstoinfor/upload-files/'+`${res}`,
+                };
+                window.open(response.file);
+      
+              }, 100);
+            }
+          }
+        }
+        else {
+          AlertMessages.getErrorMessage("Please upload file. ");
+    
+        }
+      }
+    
 
     const columns: any = [
         {
@@ -94,57 +142,65 @@ const AllOrdersGridView = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Buyer',
-            dataIndex: 'buyer'
+            title: 'FileName',
+            dataIndex: 'fileName'
         },
         {
-            title: 'Challan Number',
-            dataIndex: 'challanNo'
+            title: 'uploaded At',
+            dataIndex: 'createdAt'
         },
         {
-            title: 'Invoice Number',
-            dataIndex: 'invoiceNo'
+            title: 'Status',
+            dataIndex: 'status'
         },
         {
-            title: 'PO Number',
-            dataIndex: 'poNo'
+            title: 'Download',
+            dataIndex: 'poNo',
+            render: (value,rowData) => (
+                rowData.fileName!=null?
+                <>
+                <Tooltip title='Download'>
+                <Tag icon={<ArrowDownOutlined onClick={()=>download(rowData.filePath)}/>} >{value}</Tag>
+                </Tooltip>
+                </>:''
+              ),
         },
-        {
-            title: 'Style',
-            dataIndex: 'style',
-            align: 'right',
-            // render: (text, record) => (
-            //     <>
-            //         {Number(record.order_qty_pcs).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-            //     </>
-            // )
-        },
-        {
-            title: 'Dest',
-            dataIndex: 'dest',
-            // render: (text, record) => {
-            //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
-            // }
-        },
-        {
-            title: 'TC Status',
-            dataIndex: 'tcStatus',
-            // render: (text, record) => {
-            //     return record.requested_wh_date ? convertToYYYYMMDD(record.requested_wh_date) : '-'
-            // }
-        },
-        {
-            title: 'Ship Quantity',
-            dataIndex: 'shipQty',
-            // render: (text, record) => {
-            //     return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
-            // }
-        },
-        {
-            title: 'Cottons',
-            dataIndex: 'ctns',
-            // render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
-        }
+        // {
+        //     title: 'Style',
+        //     dataIndex: 'style',
+        //     align: 'right',
+        //     // render: (text, record) => (
+        //     //     <>
+        //     //         {Number(record.order_qty_pcs).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+        //     //     </>
+        //     // )
+        // },
+        // {
+        //     title: 'Dest',
+        //     dataIndex: 'dest',
+        //     // render: (text, record) => {
+        //     //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
+        //     // }
+        // },
+        // {
+        //     title: 'TC Status',
+        //     dataIndex: 'tcStatus',
+        //     // render: (text, record) => {
+        //     //     return record.requested_wh_date ? convertToYYYYMMDD(record.requested_wh_date) : '-'
+        //     // }
+        // },
+        // {
+        //     title: 'Ship Quantity',
+        //     dataIndex: 'shipQty',
+        //     // render: (text, record) => {
+        //     //     return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
+        //     // }
+        // },
+        // {
+        //     title: 'Cottons',
+        //     dataIndex: 'ctns',
+        //     // render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
+        // }
     ];
 
     const handleExport = (e: any) => {
@@ -182,24 +238,30 @@ const AllOrdersGridView = () => {
         console.log('params', pagination, filters, sorter, extra);
     }
 
+
+
+
     return (
         <div>
-            <Card
+            <Card size='small'
                 title="Orders Reports"
                 extra={filteredData.length > 0 ? (<><Button
                     type="default"
                     style={{ color: 'green' }}
                     onClick={handleExport}
-                    icon={<FileExcelFilled />}>Download Excel</Button>    <Link to='/excel-import/excel-import'>{<Button className='panel_button' type={'primary'}>Import Orders</Button>}</Link></>) : <Link to='/excel-import/excel-import'>{<Button className='panel_button' type={'primary'}>Import Orders</Button>}</Link> }>
+                    icon={<FileExcelFilled />}>Download Excel</Button>    <Link to='/excel-import/excel-import'>{<Button className='panel_button' type={'primary'}>Import Orders</Button>}</Link></>) : <Link to='/excel-import/excel-import'>
+                        {/* {<Button className='panel_button' type={'primary'}>Import Orders</Button>} */}
+                        </Link> }>
                 <Form form={form} layout={'vertical'}>
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
-                            <Form.Item label="Order Revised Date" name="fromDate">
-                                <RangePicker onChange={EstimatedETDDate} />
+                            <Form.Item label="Uploaded At" name="fromDate">
+                                {/* <RangePicker onChange={EstimatedETDDate} /> */}
+                                 <DatePicker style={{ width: '95%', }}  showToday/>
                             </Form.Item>
                         </Col>
 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{marginTop:'6px'}}>
                             <div>
                                 <label>Order Status</label>
                                 <Form.Item name="orderStatus">
@@ -208,33 +270,37 @@ const AllOrdersGridView = () => {
                                         placeholder="Select Project Status"
                                         optionFilterProp="children"
                                         allowClear>
-                                        <Option key='new' value="NEW">NEW</Option>
-                                        <Option key='unaccepted' value="UNACCEPTED">UNACCEPTED</Option>
+                                        <Option key='Failed' value="Failed">Failed</Option>
+                                        <Option key='Sucess' value="Sucess">Sucess</Option>
                                     </Select>
                                 </Form.Item>
                             </div>
                         </Col>
 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 17 }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 23 }} >
                             <Button
                                 type="primary"
                                 icon={<SearchOutlined />}
-                                style={{ marginRight: 50, width: 80 }}
+                                // style={{ marginRight: 50, width: 80 }}
                                 htmlType="button"
-                                onClick={getFilterdData}>Search</Button>
+                                onClick={getOrdersData}>get Data</Button>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 23 }} >
                             <Button
                                 type="primary"
                                 icon={<UndoOutlined />}
                                 htmlType="submit"
                                 onClick={onReset}>Reset</Button>
                         </Col>
+
+
                     </Row>
                 </Form>
-                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1000 }} pagination={{
+                <Table size='small' columns={columns} dataSource={uploadedData} scroll={{ x: 1000 }} pagination={{
                     onChange(current) {
                         setPage(current);
                     }
-
+                
                 }} onChange={onChange} bordered />
             </Card>
         </div>
