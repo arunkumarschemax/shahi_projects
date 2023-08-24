@@ -66,7 +66,7 @@ export const AppRoutes = () => {
                     <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
                 </Route>
-                <Route path='nike-dashboard' element={<NikeDashboard />} />
+                <Route path='/nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
             <Route path="/login" key='/login' element={<Login />} />
@@ -74,14 +74,14 @@ export const AppRoutes = () => {
     ))
 
     return (
-        <Router>
+        
             <Routes>
                 <Route path='/' element={
-                    <ChildProtectionWrapper>
+                    <>
                         <>
                             <BasicLayout />
                         </>
-                    </ChildProtectionWrapper>
+                    </>
                 } >
                     <Route path='/user-management/users-from' element={<UserCreationForm />} />
                     <Route path='/user-management/users-view' element={<UsersView />} />
@@ -115,6 +115,6 @@ export const AppRoutes = () => {
                 </Route>
                 <Route path="/login" element={<Login />} />
             </Routes>
-        </Router>
+        
     )
 }
