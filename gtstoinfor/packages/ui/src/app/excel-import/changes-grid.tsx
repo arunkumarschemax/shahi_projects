@@ -786,72 +786,6 @@ const ChangesGrid = () => {
         },
         {
             title: 'January',
-            dataIndex: 'newOrderQtyPcs',
-            key: 'newOrderQtyPcs',
-            align: 'right',
-            render: (text: any, record: any) => {
-                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                }) : '-'
-            }
-        },
-        {
-            title: 'February',
-            dataIndex: 'newOrderQtyPcs',
-            key: 'newOrderQtyPcs',
-            align: 'right',
-            render: (text: any, record: any) => {
-                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                }) : '-'
-            }
-        },
-        {
-            title: 'March',
-            dataIndex: 'newOrderQtyPcs',
-            key: 'newOrderQtyPcs',
-            align: 'right',
-            render: (text: any, record: any) => {
-                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                }) : '-'
-            }
-        },
-        {
-            title: 'April',
-            dataIndex: 'newOrderQtyPcs',
-            key: 'newOrderQtyPcs',
-            align: 'right',
-            render: (text: any, record: any) => {
-                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                }) : '-'
-            }
-        },
-        {
-            title: 'May',
-            dataIndex: 'newOrderQtyPcs',
-            key: 'newOrderQtyPcs',
-            align: 'right',
-            render: (text: any, record: any) => {
-                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                }) : '-'
-            }
-        },
-        {
-            title: 'June',
-            dataIndex: 'newOrderQtyPcs',
-            key: 'newOrderQtyPcs',
-            align: 'right',
-            render: (text: any, record: any) => {
-                return record.newOrderQtyPcs ? Number(record.newOrderQtyPcs).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                }) : '-'
-            }
-        },
-        {
-            title: 'July',
             dataIndex: 'oldOrderQtyPcs1',
             key: 'oldOrderQtyPcs1',
             align: 'right',
@@ -862,18 +796,18 @@ const ChangesGrid = () => {
             }
         },
         {
-            title: 'August',
+            title: 'February',
             dataIndex: 'oldOrderQtyPcs2',
             key: 'oldOrderQtyPcs2',
             align: 'right',
             render: (text: any, record: any) => {
-                return record.newOrderQtyPcs2 != 0 ? Number(record.oldOrderQtyPcs2).toLocaleString('en-IN', {
+                return record.oldOrderQtyPcs2 != 0 ? Number(record.oldOrderQtyPcs2).toLocaleString('en-IN', {
                     maximumFractionDigits: 0
                 }) : '-'
             }
         },
         {
-            title: 'September',
+            title: 'March',
             dataIndex: 'oldOrderQtyPcs3',
             key: 'oldOrderQtyPcs3',
             align: 'right',
@@ -884,34 +818,100 @@ const ChangesGrid = () => {
             }
         },
         {
-            title: 'October',
+            title: 'April',
             dataIndex: 'oldOrderQtyPcs4',
             key: 'oldOrderQtyPcs4',
             align: 'right',
             render: (text: any, record: any) => {
                 return record.oldOrderQtyPcs4 != 0 ? Number(record.oldOrderQtyPcs4).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'May',
+            dataIndex: 'oldOrderQtyPcs5',
+            key: 'oldOrderQtyPcs5',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs5 != 0 ? Number(record.oldOrderQtyPcs5).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'June',
+            dataIndex: 'oldOrderQtyPcs6',
+            key: 'oldOrderQtyPcs6',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs6 != 0 ? Number(record.oldOrderQtyPcs6).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'July',
+            dataIndex: 'oldOrderQtyPcs7',
+            key: 'oldOrderQtyPcs7',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs7 != 0 ? Number(record.oldOrderQtyPcs7).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'August',
+            dataIndex: 'oldOrderQtyPcs8',
+            key: 'oldOrderQtyPcs8',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs8 != 0 ? Number(record.oldOrderQtyPcs8).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'September',
+            dataIndex: 'oldOrderQtyPcs9',
+            key: 'oldOrderQtyPcs9',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs9 != 0 ? Number(record.oldOrderQtyPcs9).toLocaleString('en-IN', {
+                    maximumFractionDigits: 0
+                }) : '-'
+            }
+        },
+        {
+            title: 'October',
+            dataIndex: 'oldOrderQtyPcs10',
+            key: 'oldOrderQtyPcs10',
+            align: 'right',
+            render: (text: any, record: any) => {
+                return record.oldOrderQtyPcs10 != 0 ? Number(record.oldOrderQtyPcs10).toLocaleString('en-IN', {
                     maximumFractionDigits: 0
                 }) : '-'
             }
         },
         {
             title: 'November',
-            dataIndex: 'oldOrderQtyPcs4',
-            key: 'oldOrderQtyPcs4',
+            dataIndex: 'oldOrderQtyPcs11',
+            key: 'oldOrderQtyPcs11',
             align: 'right',
             render: (text: any, record: any) => {
-                return record.oldOrderQtyPcs4 != 0 ? Number(record.oldOrderQtyPcs4).toLocaleString('en-IN', {
+                return record.oldOrderQtyPcs11 != 0 ? Number(record.oldOrderQtyPcs11).toLocaleString('en-IN', {
                     maximumFractionDigits: 0
                 }) : '-'
             }
         },
         {
             title: 'December',
-            dataIndex: 'oldOrderQtyPcs4',
-            key: 'oldOrderQtyPcs4',
+            dataIndex: 'oldOrderQtyPcs12',
+            key: 'oldOrderQtyPcs12',
             align: 'right',
             render: (text: any, record: any) => {
-                return record.oldOrderQtyPcs4 != 0 ? Number(record.oldOrderQtyPcs4).toLocaleString('en-IN', {
+                return record.oldOrderQtyPcs12 != 0 ? Number(record.oldOrderQtyPcs12).toLocaleString('en-IN', {
                     maximumFractionDigits: 0
                 }) : '-'
             }

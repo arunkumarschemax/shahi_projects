@@ -408,13 +408,19 @@ export class OrdersService {
 
     async getMonthWiseData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getlatestFileIdAgainstMonth();
+        const fileIdsByMonth: Record<string, number> = {};
+
+        for (const entry of files) {
+            const { id, month } = entry;
+            const fileId = `fileId${month}`;
+            fileIdsByMonth[fileId] = id;
+        }
+        console.log(fileIdsByMonth)
         let records;
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
-        } else if (files.length == 1) {
-            records = await this.ordersChildRepo.getMonthWiseData(files[0].id)
         } else {
-            records = await this.ordersChildRepo.getMonthWiseData(files[0].id, files[1]?.id, files[2]?.id, files[3]?.id, files[4]?.id)
+            records = await this.ordersChildRepo.getMonthWiseData(fileIdsByMonth?.fileId1, fileIdsByMonth?.fileId2, fileIdsByMonth?.fileId3, fileIdsByMonth?.fileId4, fileIdsByMonth?.fileId5, fileIdsByMonth?.fileId6, fileIdsByMonth?.fileId7, fileIdsByMonth?.fileId8, fileIdsByMonth?.fileId9, fileIdsByMonth?.fileId10, fileIdsByMonth?.fileId11, fileIdsByMonth?.fileId12)
         }
         const monthWiseDataMap = new Map<number, MonthWiseDataModel>();
         if (records.length == 0) {
