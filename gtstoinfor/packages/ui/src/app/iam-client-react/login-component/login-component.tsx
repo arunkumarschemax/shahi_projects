@@ -44,12 +44,12 @@ export const LoginComponent = () => {
     return (
         <Card 
              className="card-header"
-        style={{marginLeft:'75%',height: '55%',width: '300px'}}
+        style={{height: '55%',width: '300px'}}
         >
-            <div style={{marginLeft:'20%'}}>
-                    <img src={''} width={150} height={'50%'}></img>
-                </div>
-            <div style={{marginLeft:'40%'}}><b>ORDER MANAGEMENT</b></div>
+            {/* <div style={{marginLeft:'10%'}}>
+                    <img src={''} width={180} height={'50%'}></img>
+                </div> */}
+            <div style={{marginLeft:'15%'}}><b>ORDER MANAGEMENT</b></div>
             <br />
             <Form
                 name="login-form"
