@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { CommonResponseModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, dpomOrderColumnsName } from '@project-management-system/shared-models';
+import { CommonResponseModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, MarketingModel, dpomOrderColumnsName } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -544,15 +544,6 @@ export class DpomService {
         }
     }
 
-    // async getFactoryReportData(): Promise<CommonResponseModel> {
-    //     const details = await this.dpomRepository.find();
-    //     const sizeDateMap = new Map<number, factoryReportModel>();
-    //     if (details.length > 0) {
-    //         return new CommonResponseModel(true, 1, 'data retrived', details)
-    //     } else {
-    //         return new CommonResponseModel(false, 0, 'data not found')
-    //     }
-    // }
 
     async getByFactoryStatus(req: DpomSaveDto) {
         const record = await this.dpomRepository.find({
@@ -565,14 +556,14 @@ export class DpomService {
         }
     }
 
-    async getPPMData(): Promise<CommonResponseModel> {
-        const details = await this.dpomRepository.find()
-        if (details.length > 0) {
-            return new CommonResponseModel(true, 1, 'data retrived', details)
-        } else {
-            return new CommonResponseModel(false, 0, 'data not found')
-        }
-    }
+    // async getPPMData(): Promise<CommonResponseModel> {
+    //     const details = await this.dpomRepository.find()
+    //     if (details.length > 0) {
+    //         return new CommonResponseModel(true, 1, 'data retrived', details)
+    //     } else {
+    //         return new CommonResponseModel(false, 0, 'data not found')
+    //     }
+    // }
 
     async getShipmentTrackerReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find();
@@ -847,7 +838,8 @@ export class DpomService {
 
     async getFactoryReportData(): Promise<CommonResponseModel> {
         try {
-            const details = await this.dpomRepository.find();
+            const allDetails = await this.dpomRepository.find();
+            const details = allDetails.filter(record => record.DPOMLineItemStatus !== 'Cancelled')
             if (details.length === 0) {
                 return new CommonResponseModel(false, 0, 'data not found');
             }
@@ -868,5 +860,28 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'failed', e);
         }
     }
+    async getPPMData(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.find()
+        if (details.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found')
+         } 
+         const sizeDateMap = new Map<string, MarketingModel>();
+            for (const rec of details) {
+                if (!sizeDateMap.has(rec.poAndLine)) {
+                    sizeDateMap.set(
+                        rec.poAndLine,
+                        new MarketingModel(rec.poLineItemNumber, rec.lastModifiedDate, rec.item, rec.totalItemQty, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc,  [])
+                    );
+                }
+                const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
+                sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity));
+            }
+            const dataModelArray: MarketingModel[] = Array.from(sizeDateMap.values());
+            return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+        }
+      catch (e) {
+        return new CommonResponseModel(false, 0, 'failed', e);
+    }
+
 }
 

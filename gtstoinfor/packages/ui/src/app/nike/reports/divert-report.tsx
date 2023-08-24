@@ -213,11 +213,19 @@ const DivertReport = () => {
         {
             title: 'old',
             children: [
+                // {
+                //     title: 'S.No',
+                //     key: 'sno',
+                //     responsive: ['sm'],
+                //     render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+                    
+                // },
                 {
-                    title: 'S.No',
-                    key: 'sno',
-                    responsive: ['sm'],
-                    render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+                    title: "Product Code",
+                    dataIndex: "oproductCode",
+                    sorter: (a, b) => a.oproductCode?.localeCompare(b.oproductCode),
+                    sortDirections: ["descend", "ascend"],
+                    fixed:'left'
                 },
                 {
                     title: "Request Date",
@@ -235,12 +243,7 @@ const DivertReport = () => {
                     title: "Plant",
                     dataIndex: "oplant",
                 },
-                {
-                    title: "Product Code",
-                    dataIndex: "oproductCode",
-                    sorter: (a, b) => a.oproductCode?.localeCompare(b.oproductCode),
-                    sortDirections: ["descend", "ascend"],
-                },
+               
                 {
                     title: "Line Status",
                     dataIndex: "onLineStatus",
@@ -277,8 +280,8 @@ const DivertReport = () => {
                 {
                     title: 'Balance Qty',
                     // from dpom
-                    dataIndex: 'nQuantity',
-                    sorter: (a, b) => a.nQuantity.localeCompare(b.nQuantity),
+                    dataIndex: 'oquantity',
+                    sorter: (a, b) => a.oquantity.localeCompare(b.oquantity),
                     sortDirections: ["descend", "ascend"],
                 },
                 {
@@ -522,7 +525,7 @@ const DivertReport = () => {
                     onClick={exportExcel}
                     icon={<FileExcelFilled />}>Download Excel</Button>}>
                 <Row gutter={70}>
-                    {/* <Col >
+                    <Col >
                     <Card title={'Total Line Status Count  : ' + Number(dataLength[0]?.totalCount)} style={{ textAlign: 'left', width: 280, height: 38, backgroundColor: ' lightblue' }}></Card>
                 </Col>
                 <Col>
@@ -530,7 +533,7 @@ const DivertReport = () => {
                 </Col>
                 <Col>
                     <Card title={'Unaccepted : ' +Number(dataLength[0]?.unacceptedCount)} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
-                </Col>  */}
+                </Col> 
 
                 </Row><br></br>
                 <Card >
