@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Descriptions, Divider, Form, message, UploadProps } from 'antd';
-import { OrdersService } from '@project-management-system/shared-services';
+import { NikeService, OrdersService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { FileStatusReq } from '@project-management-system/shared-models';
 
 export default function PoFileImport() {
   const [loading, setLoading] = useState(false);
-  const ordersService = new OrdersService();
+  const nikeService = new NikeService();
   const [selectedFile, setSelectedFile] = useState(null);
   const [filesData, setFilesData] = useState([])
   const [data, setData] = useState([])
@@ -25,10 +25,20 @@ export default function PoFileImport() {
   }, [])
 
   const getUploadFilesData = () => {
-    ordersService.getUploadFilesData().then((res) => {
+    nikeService.getUploadFilesData().then((res) => {
       if (res.status) {
         setFilesData(res.data)
         // message.success(res.internalMessage)
+      }
+    })
+  }
+
+  const syncDpomData = () => {
+    nikeService.saveDPOMDataToDataBase().then((res) => {
+      if (res.status) {
+        message.success(res.internalMessage)
+      } else {
+        message.error(res.internalMessage)
       }
     })
   }
@@ -66,22 +76,22 @@ export default function PoFileImport() {
       if (selectedFile) {
         const formData = new FormData();
         formData.append('file', selectedFile);
-        ordersService.fileUpload(formData).then((fileRes) => {
+        nikeService.fileUpload(formData).then((fileRes) => {
           if (fileRes.status) {
-            ordersService.saveOrder(data, fileRes?.data?.id).then((res) => {
+            nikeService.saveDPOMExcelData(data, fileRes?.data?.id).then((res) => {
               setLoading(true)
               if (res.status) {
                 const req = new FileStatusReq()
                 req.fileId = fileRes?.data?.id;
                 req.status = 'Success'
-                ordersService.updateFileStatus(req)
+                nikeService.updateFileStatus(req)
                 message.success(res.internalMessage)
                 navigate("/excel-import/grid-view");
               } else {
                 const req = new FileStatusReq()
                 req.fileId = fileRes?.data?.id;
                 req.status = 'Failed'
-                ordersService.updateFileStatus(req)
+                nikeService.updateFileStatus(req)
                 message.error('File upload failed')
               }
             }).finally(() => {
@@ -166,6 +176,24 @@ export default function PoFileImport() {
             Upload
           </Button>
         </>
+      </Card>
+      <br />
+      <Card title="Sync Nike DPOM Data Manually">
+        <span>
+          <Descriptions style={{ alignItems: 'right' }}>
+            <Descriptions.Item>{<b>Last Sync Details</b>}</Descriptions.Item>
+            <Descriptions.Item label={<b>Last Sync Date & Time</b>}>
+              {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).utc().format('YYYY-MM-DD HH:mm:ss') : '-'}
+            </Descriptions.Item>
+          </Descriptions>
+        </span>
+        <Divider></Divider>
+        <Button
+          type="primary"
+          onClick={syncDpomData}
+        >
+          Sync DPOM Data
+        </Button>
       </Card>
     </>
   );

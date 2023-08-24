@@ -5,6 +5,31 @@ import { CommonAxiosService } from "../common-axios-service-prs";
 export class NikeService extends CommonAxiosService {
     private dpomController = "/nike-dpom"
 
+    async saveDPOMExcelData(data: any, id: number): Promise<CommonResponseModel> {
+        const idn = id;
+        const url = `/nike-dpom/saveDPOMExcelData/${idn}`;
+        return this.axiosPostCall(url, data);
+    }
+
+    async fileUpload(formData: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/fileUpload", formData)
+    }
+
+    async saveDPOMDataToDataBase(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/saveDPOMDataToDataBase")
+    }
+
+    async updateFileStatus(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/updateFileStatus", req)
+    }
+
+    async getUploadFilesData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getUploadFilesData")
+    }
+
+    async revertFileData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/revertFileData", req)
+    }
 
     async getFactoryReportData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getFactoryReportData")
@@ -13,9 +38,11 @@ export class NikeService extends CommonAxiosService {
     async getByFactoryStatus(): Promise<any> {
         return this.axiosPostCall(this.dpomController + "/getByFactoryStatus")
     }
+
     async getDivertReportData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getDivertReportData")
     }
+
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getCountForDivertReport")
     }
@@ -36,13 +63,14 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/approveDpomLineItemStatus", req)
     }
 
-    async getQtyChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getQtyChangeData")
+    async getTotalItemQtyChangeData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getTotalItemQtyChangeData")
     }
 
     async poLineItemStatusChange(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/poLineItemStatusChange")
     }
+
     async getShipmentPlaningChart(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getShipmentPlaningChart")
     }
@@ -58,13 +86,11 @@ export class NikeService extends CommonAxiosService {
     async getShipmentWiseData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getShipmentWiseData")
     }
+
     async getPPMData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPPMData")
     }
-    // async getByFactoryStatus():Promise<any> {
-    //     return this.axiosPostCall(this.dpomController + "/getByFactoryStatus")
-    
-    // }
+
     async getPlanShipmentWiseData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPlanShipmentWiseData")
     }

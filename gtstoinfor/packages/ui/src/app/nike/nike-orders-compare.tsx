@@ -49,7 +49,7 @@ const OrdersCompareGrid = () => {
     // }
 
     const getQtyChangeData = () => {
-        service.getQtyChangeData().then((res) => {
+        service.getTotalItemQtyChangeData().then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
         })
