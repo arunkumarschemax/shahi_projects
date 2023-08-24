@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { Size } from "../sizes/sizes-entity";
 
 @Entity('buyers_destination')
 export class BuyersDestionations {
@@ -47,9 +48,15 @@ export class BuyersDestionations {
   })
   versionFlag: number;
    
-//   @ManyToOne(type=>Destina, operationGroups=>operationGroups.operationInfo,{  nullable:false, })
-//   @JoinColumn({ name:"operation_group_id"})
-//   operationGroupInfo: OperationGroups;
-  
+  @ManyToOne(type=>Size, sizes=>sizes.sizeInfo,{  nullable:false, })
+  @JoinColumn({ name:"size-id"})
+  sizeInfo: Size;
 
+//   @ManyToOne(type=>Colour, colours=>colours.colourInfo,{  nullable:false, })
+//   @JoinColumn({ name:"colour_id"})
+//   colourInfo: Colour;
+
+//   @ManyToOne(type=>Destination, destinations=>destinations.destinationInfo,{  nullable:false, })
+//   @JoinColumn({ name:"destination_id"})
+//   destinationInfo: Destination;
 }

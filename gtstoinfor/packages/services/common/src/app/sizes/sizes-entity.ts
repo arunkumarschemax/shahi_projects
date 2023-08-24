@@ -1,4 +1,5 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
 
 @Entity('size')
 export class Size{
@@ -49,5 +50,7 @@ updatedUser: string | null;
 })
 versionFlag: number;
 
+@OneToMany(type=>BuyersDestionations, buyers=>buyers.sizeInfo,{cascade: true})
+sizeInfo:BuyersDestionations;
 
 }
