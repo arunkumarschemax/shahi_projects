@@ -150,7 +150,7 @@ export const baseRouterList = [
                 key: "pdf-upload",
                 path: "pdf-upload",
                 filepath: "pdf-upload",
-            },{
+            }, {
                 label: "PPM Marketing Report",
                 key: "ppm-report",
                 path: "ppm-report",
@@ -163,7 +163,7 @@ export const baseRouterList = [
                 filepath: "divert-report",
             },
             {
-                label: "Fabric Tracker",
+                label: "Fabric Tracker Report",
                 key: "fabrick-tracker-report",
                 path: "fabrick-tracker-report",
                 filepath: "fabrick-tracker-report",
@@ -174,7 +174,7 @@ export const baseRouterList = [
                 path: "shipment-planning-chart",
                 filepath: "shipment-planning-chart",
             },
-           
+
             {
                 label: "Shipment Tracker",
                 key: "shipment-report",
@@ -194,7 +194,7 @@ export default function BasicLayout() {
     const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
 
     return (
-        <ProConfigProvider dark={dark}  >
+        <ProConfigProvider dark={dark}>
             <div
                 id="main-layout"
                 style={{
@@ -228,49 +228,9 @@ export default function BasicLayout() {
                         // if (props.isMobile) return [];
                         return [
 
-                            // <div
-                            //     key="SearchOutlined"
-                            //     aria-hidden
-                            //     style={{
-                            //         display: 'flex',
-                            //         alignItems: 'center',
-                            //         marginInlineEnd: 24,
-                            //     }}
-                            //     onMouseDown={(e) => {
-                            //         e.stopPropagation();
-                            //         e.preventDefault();
-                            //     }}
-                            // >
-                            //     <Input
-                            //         style={{
-                            //             borderRadius: 4,
-                            //             marginInlineEnd: 12,
-                            //             backgroundColor: 'rgba(0,0,0,0.03)',
-                            //         }}
-                            //         prefix={
-                            //             <SearchOutlined
-                            //                 style={{
-                            //                     color: 'rgba(0, 0, 0, 0.15)',
-                            //                 }}
-                            //             />
-                            //         }
-                            //         placeholder="Search"
-                            //         bordered={false}
-                            //     />
-                            //     <PlusCircleFilled
-                            //         style={{
-                            //             color: 'var(--ant-primary-color)',
-                            //             fontSize: 24,
-                            //         }}
-                            //     />
-                            // </div>
+
                             <Tooltip placement="bottom" title={'Switch mode'}>
-                                {/* <Switch
-                                    checkedChildren="🌜"
-                                    unCheckedChildren="🌞"
-                                    checked={dark}
-                                    onChange={(v) => setDark(v)}
-                                /> */}
+
                                 <Button
                                     size="middle"
                                     style={{ borderRadius: "5px" }}

@@ -96,7 +96,12 @@ const FactoriesView = () => {
         >
           Search
         </Button>
-        <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+        <Button size="small" style={{ width: 90 }}
+          onClick={() => {
+            handleReset(clearFilters)
+            setSearchedColumn(dataIndex);
+            confirm({ closeDropdown: true });
+          }}>
           Reset
         </Button>
       </div>
