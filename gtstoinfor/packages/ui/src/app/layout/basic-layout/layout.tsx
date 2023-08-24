@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined, FileTextOutlined, FilePdfOutlined } from '@ant-design/icons'
+import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined, FileTextOutlined, FilePdfOutlined, DiffOutlined, FileJpgOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { CommonHeader } from '../header/header';
 import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
@@ -153,6 +153,22 @@ export const baseRouterList = [
         path:'document-management/upload-file-view',
         filepath:'document-management/upload-file-view'     
     },
+    {
+        label:'Doc Extract',
+        key:'doc-extract',
+        icon: <FileJpgOutlined />,
+        path:'doc-extract/doc-extract-view',
+        filepath:'doc-extract/doc-extract-view'
+            
+    },
+    //   {
+    //     label:'Doc Extract form',
+    //     key:'doc-extract',
+    //     icon: <FileTextOutlined  />,
+    //     path:'doc-extract/doc-extract-form',
+    //     filepath:'doc-extract/doc-extract-form'
+            
+    // },
 ];
 
 export default function BasicLayout() {
