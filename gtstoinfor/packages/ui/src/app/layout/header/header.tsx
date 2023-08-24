@@ -20,6 +20,8 @@ interface IProps {
 export const CommonHeader = (props: IProps) => {
   const navigate = useNavigate();
   const { token: { colorPrimary } } = useToken()
+  const authdata = JSON.parse(localStorage.getItem('currentUser'))
+  const loginUser = authdata?.user?.userName
 
 
   const logoutHandler = async () => {
@@ -41,18 +43,10 @@ export const CommonHeader = (props: IProps) => {
   const items: MenuProps['items'] = [
     {
       key: '1',
-      label: 'Username'
+      label: `Username:${loginUser}`
     },
     {
       key: '2',
-      label: 'Role:'
-    },
-    {
-      key: '3',
-      label: 'Plant:'
-    },
-    {
-      key: '4',
       label: (
         <>
           <Divider type='horizontal' />
