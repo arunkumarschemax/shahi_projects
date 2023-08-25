@@ -47,4 +47,10 @@ export class DocumentEntity {
         default: true
     })
     isActive: boolean;
+
+    @Column('int',{
+        name:'priority',
+        nullable:false
+    })
+    priority:number
 }
