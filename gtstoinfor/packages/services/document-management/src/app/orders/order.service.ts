@@ -460,12 +460,14 @@ export class OrdersService {
     async getuploadeOrdersdata(req?:OrdersReq):Promise<CommonResponseModel>{
         try{
             let query
-             query='select file_name as fileName,file_path as filePath,status,date(created_at) as createdAt from file_upload where id>0'
+             query='select file_name as fileName,file_path as filePath,status,date(created_at) as createdAt,DATE_FORMAT(created_at, "%Y-%m-%d %H") AS DateAndHours from file_upload where id>0'
             if(req.status){
                 query=query+' and status="'+req.status+'"'    
             }
             if(req.fromDate){
-                query =query+' and date(created_at)="'+req.fromDate+'"'
+                // query =query+' and date(created_at)="'+req.fromDate+'"'
+                query =query+' and DATE_FORMAT(created_at, "%Y-%m-%d %H")="'+req.fromDate+'"'
+
             }
             const result = await this.fileUploadRepo.query(query)
             if(result){
