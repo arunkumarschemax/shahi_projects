@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Descriptions, Divider, Form, message, UploadProps } from 'antd';
-import { NikeService, OrdersService } from '@project-management-system/shared-services';
+import { NikeService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { UndoOutlined } from '@ant-design/icons';
 import { FileStatusReq } from '@project-management-system/shared-models';
 
 
@@ -155,7 +154,7 @@ export default function PoFileImport() {
               {filesData[0]?.fileName}
             </Descriptions.Item>
             <Descriptions.Item label={<b>Uploaded Date</b>}>
-              {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).utc().format('YYYY-MM-DD HH:mm:ss') : '-'}
+              {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).format('YYYY-MM-DD HH:mm:ss') : '-'}
             </Descriptions.Item>
             <Descriptions.Item label={<b>Uploaded User</b>}>
               {filesData[0]?.createdUser}
@@ -176,24 +175,6 @@ export default function PoFileImport() {
             Upload
           </Button>
         </>
-      </Card>
-      <br />
-      <Card title="Sync Nike DPOM Data Manually">
-        <span>
-          <Descriptions style={{ alignItems: 'right' }}>
-            <Descriptions.Item>{<b>Last Sync Details</b>}</Descriptions.Item>
-            <Descriptions.Item label={<b>Last Sync Date & Time</b>}>
-              {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).utc().format('YYYY-MM-DD HH:mm:ss') : '-'}
-            </Descriptions.Item>
-          </Descriptions>
-        </span>
-        <Divider></Divider>
-        <Button
-          type="primary"
-          onClick={syncDpomData}
-        >
-          Sync DPOM Data
-        </Button>
       </Card>
     </>
   );

@@ -4,7 +4,7 @@ import { DpomSaveDto } from "./dpom-save.dto";
 
 export class DpomChildAdapter {
 
-    public convertDtoToEntity(dto: DpomSaveDto): DpomChildEntity {
+    public convertDtoToEntity(dto: DpomSaveDto, id: number): DpomChildEntity {
         const entity = new DpomChildEntity()
 
         entity.documentDate = dto.documentDate
@@ -17,6 +17,7 @@ export class DpomChildAdapter {
         entity.gccFocusCode = dto.gccFocusCode
         entity.gccFocusDesc = dto.gccFocusDesc
         entity.genderAgeCode = dto.genderAgeCode
+        entity.genderAgeDesc = dto.genderAgeDesc
         entity.styleNumber = dto.styleNumber
         entity.productCode = dto.productCode
         entity.colorDesc = dto.colorDesc
@@ -41,6 +42,7 @@ export class DpomChildAdapter {
         entity.originReceiptDate = dto.originReceiptDate
         entity.factoryDeliveryActDate = dto.factoryDeliveryActDate
         entity.GACReasonCode = dto.GACReasonCode
+        entity.GACReasonDesc = dto.GACReasonDesc
         entity.shippingType = dto.shippingType
         entity.planningPriorityCode = dto.planningPriorityCode
         entity.planningPriorityDesc = dto.planningPriorityDesc
@@ -62,10 +64,12 @@ export class DpomChildAdapter {
         entity.netIncludingDiscCurrencyCode = dto.netIncludingDiscCurrencyCode
         entity.trCoNetIncludingDisc = dto.trCoNetIncludingDisc
         entity.trCoNetIncludingDiscCurrencyCode = dto.trCoNetIncludingDiscCurrencyCode
+        entity.sizeQuantity = dto.sizeQuantity
+        entity.sizeDescription = dto.sizeDescription
         entity.shipToAddressLegalPO = dto.shipToAddressLegalPO
         entity.quantity = dto.quantity
         entity.price = dto.price
-        entity.itemVas = dto.itemVas
+        entity.itemVasPDF = dto.itemVasPDF
         entity.shipToAddressDIA = dto.shipToAddressDIA
         entity.CABCode = dto.CABCode
         entity.item = dto.item
@@ -89,6 +93,9 @@ export class DpomChildAdapter {
         entity.leadTime = dto.leadTime
         entity.recordDate = dto.recordDate
         entity.odVersion = dto.odVersion
+        const ordersEntity = new DpomEntity();
+        ordersEntity.id = id;
+        entity.dpom = ordersEntity;
 
         return entity
     }
