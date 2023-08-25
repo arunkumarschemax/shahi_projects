@@ -25,4 +25,8 @@ export class DocumentService extends CommonAxiosService {
     return this.axiosPostCall(this.url + "/getAllDocumentsforRolemapping")
 }
   
+async getDocumentsNotMapped(): Promise<DocumentResponseModel> {
+  return this.axiosPostCall(this.url + "/getDocumentsNotMapped")
+}
+
 }

@@ -13,3 +13,4 @@ export * from './all-document-role-mappings-response.model';
 export * from './role-mapping-dto';
 export * from './document-role-mapping-id-req'
 export * from './po-role.request'
+export * from './orders-req'

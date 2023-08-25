@@ -74,7 +74,7 @@ export class DocumentService {
           }
           const save = await this.repository.save(entities)
           if(save){
-            return new DocumentResponseModel(true,1,'document created sucessfully..',undefined)
+            return new DocumentResponseModel(true,1,isUpdate?'Document updated sucessfully..':'Document created successfully..',undefined)
           }else{
             return new DocumentResponseModel(false,0,'somthing went wrong..',undefined)
 
@@ -115,6 +115,23 @@ export class DocumentService {
         }
 
     }
+
+    async getDocumentsNotMapped():Promise<DocumentResponseModel>{
+      try{
+        const query= 'select d.document_name as documentName,d.id,d.created_user as createdUser,d.updated_user as updatedUser,d.is_active as isActive,d.version_flag as versionFlag from document d left join document_role_mapping drm on drm.document_id = d.id where drm.document_id IS NULL'
+        const data = await this.repository.query(query)
+        console.log(data,'dataa')
+        if (data) {
+         return new DocumentResponseModel(true,1,'Document data Retrived Sucessfully',data)
+        }else{
+          return new DocumentResponseModel(false,0,'no data found',undefined)
+        }
+
+      }catch(error){
+          throw error
+        }
+    }
+
 
 
       

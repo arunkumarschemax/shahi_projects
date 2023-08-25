@@ -162,7 +162,7 @@ export default function ExcelImport() {
 
   return (
     <>
-      <Card title="Import Orders" extra={<Button type="default" style={{ color: 'green' }} onClick={handleImport} icon={<DownloadOutlined />}>Download Excel Format</Button>}>
+      <Card title="Import Orders" extra={<><Button type="default" style={{ color: 'green' }} onClick={handleImport} icon={<DownloadOutlined />}>Download Excel Format</Button>  <Button onClick={() => navigate('/excel-import/grid-view')} type={'primary'}>View Orders</Button></>}>
         <span>
           <Descriptions style={{ alignItems: 'right' }}>
             <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item>

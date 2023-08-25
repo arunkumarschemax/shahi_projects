@@ -197,4 +197,14 @@ export class DocumentUploadController {
       }
 
     }
+    @Post('/getDocumentsNotMapped')
+    async getDocumentsNotMapped():Promise<DocumentResponseModel>{
+      try{
+        return await this.documentservice.getDocumentsNotMapped();
+      }catch(error){
+        return (this.applicationExceptionHandler.returnException(DocumentResponseModel, error));
+      }
+
+    }
+
 }

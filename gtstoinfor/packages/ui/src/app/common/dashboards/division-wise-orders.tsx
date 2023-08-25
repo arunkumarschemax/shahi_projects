@@ -174,14 +174,14 @@ export function RoleWiseDocumentsGraph() {
   const service = new OrdersService();
 
   const config = {
-    colors: ['green', '#FF1D18'],
+    colors:['#8ef092', '#77dfec'],
     chart: {
       type: 'column',
       //backgroundColor: '#CCCCFF'
     },
 
     title: {
-      text: 'Role-Wise Status',
+      text: 'Role Wise Document Status',
       style: {
         color: 'var(--text-color,black)',
         fontSize: '1.75rem',
@@ -199,6 +199,9 @@ export function RoleWiseDocumentsGraph() {
     },
 
     xAxis: {
+      title: {
+        text: 'Roles'
+      },
       categories: roleName,
       labels: {
         autoRotation: false,

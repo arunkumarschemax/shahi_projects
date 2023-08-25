@@ -133,16 +133,17 @@ export class DocumentsListService {
             const sqlQuery = "Select dl.status,is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"' and role_name ='"+req.role+"' Group by dl.documents_list_id";
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
             let docinfo: UploadDocumentListDto[] = [];
+            let urls:any[] = [];
             if(result.length >0){
             for (const res of result){
-
-                const doctlistQuery = 'SELECT uid,u.file_name AS name, "application/pdf" AS "type" FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id where u.document_list_id ='+res.documentsListId;
+                const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("https://edoc-backend.shahiapps.in/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where u.document_list_id ='+res.documentsListId;
                 const docres = await this.uploadFilesRepository.query(doctlistQuery)
 
                 const docReq:docRequest[] =[];
                 for(const res of docres){
                     console.log(res);
-                    let data = new docRequest(res.uid,res.name,res.status,res.type);
+                    urls.push(res.url);
+                    let data = new docRequest(res.uid,res.name,res.status,res.type,res.url,res.documentName);
                     console.log(data);
                     console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
@@ -154,7 +155,7 @@ export class DocumentsListService {
                 // result.documentsPath = docReq;
                 console.log( docinfo,' result.documentsPath')
             }
-                return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',docinfo)
+                return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',docinfo,urls)
             }else{
             return new UploadDocumentListResponseModel(false,0,'no data found..',[])
 

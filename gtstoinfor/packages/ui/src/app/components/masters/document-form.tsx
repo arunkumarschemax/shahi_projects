@@ -23,6 +23,7 @@ const [form] = Form.useForm();
             services.createDocument(values).then(res => {
                 if (res.status) {
                     setTimeout(() => {
+                        navigate('/document-grid')
                         message.success("Created Successfully");
                         form.resetFields();
                     }, 1000);

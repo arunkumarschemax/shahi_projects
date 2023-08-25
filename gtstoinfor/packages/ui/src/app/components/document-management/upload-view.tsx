@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, UploadFile, Radio } from 'antd';
-// import { PDFDocument } from 'pdf-lib';
+import { PDFDocument } from 'pdf-lib';
 import Papa from 'papaparse'
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
 import { ArrowDownOutlined, DeleteOutlined, DownloadOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons';
@@ -12,15 +12,17 @@ import { AlertMessages, DocumentsListRequest, FileStatusReq, UploadDocumentListD
 import FormList from 'antd/es/form/FormList';
 import InputNumber from 'rc-input-number';
 import { number } from 'prop-types';
-
-
+import PDFMerger from 'pdf-merger-js/browser';
+import PdfMergeDownload from './merge-pdf';
 const { Title, Text } = Typography;
-
+import { saveAs } from 'file-saver';
+import axios, { AxiosRequestConfig } from 'axios';
 export interface UploadViewProps {
     form: FormInstance<any>
     docData: any;
     formData: (value: any, filesList:any[]) => void;
     fileList: (value: any[]) => void;
+    urls: any[];
 }
 
 const UploadView = (props: UploadViewProps) => {
@@ -39,9 +41,35 @@ const handleRemoveFile = (fileToRemove) => {
 const togglePreview = (index: number) => {
   setActivePreviewIndex((prevIndex) => (prevIndex === index ? null : index));
 };
+const handleDownload = (url) => {
+  // : FilenameDto[]
+  let filePath = url;
+  console.log(filePath);
+  //  filePath ='http://165.22.220.143/document-management/gtstoinfor/upload-files/import%20excel%20format.xlsx'
+  if (filePath) {
+    filePath = filePath.split(",");
+    for (const res of filePath) {
+      if(res){
+        console.log(res);
+        setTimeout(() => {
+          const response = {
+            file: url,
+          };
 
+          window.open(response.file);
+
+        }, 100);
+      }
+    }
+  }
+  else {
+    AlertMessages.getErrorMessage("Please upload file. ");
+
+  }
+}
 const renderFileNames = () => {
   if (Array.isArray(fileList) && fileList.length > 0) {
+    console.log(fileList)
     return (
       <div>
         <ul>
@@ -49,14 +77,14 @@ const renderFileNames = () => {
             <li key={index}>
               <a
                 href={URL.createObjectURL(new Blob([file.originFileObj]))}
-                onClick={() => togglePreview(index)}
+                onClick={() => handleDownload(file.url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ cursor: 'pointer', textDecoration: 'underline' }}
               >
                 {file.name}
               </a>
-              {activePreviewIndex === index && (
+              {/* {activePreviewIndex === index && (
                 <div>
                   <h3>File {index + 1} Preview</h3>
                   {file.type?.startsWith('image/') ? (
@@ -78,7 +106,7 @@ const renderFileNames = () => {
                     <p>Preview not available for this file type.</p>
                   )}
                 </div>
-              )}
+              )} */}
             </li>
           ))}
         </ul>
@@ -87,31 +115,6 @@ const renderFileNames = () => {
   } else {
     return <p>No files selected.</p>;
   }
-};
-const renderFilePreviews = (fileList) => {
-  console.log(fileList)
-  // return {fileList?.map((file, index) => (
-  //     <a
-  //       href={URL.createObjectURL(file)}
-  //       target="_blank"
-  //       rel="noopener noreferrer"
-  //       style={{ cursor: 'pointer', textDecoration: 'underline' }}
-  //     >
-  //       {file.name}
-  //     </a>
-  // ))}
-  return fileList?.map(file => (
-      <div key={file.uid}>
-          <a
-        href={URL.createObjectURL(file)}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{ cursor: 'pointer', textDecoration: 'underline' }}
-      >
-        {file.name}
-      </a>
-      </div>
-  ));
 };
 const CustomUploadList = ({ fileList, handleRemoveFile }) => {
   console.log(fileList)
@@ -131,64 +134,96 @@ const CustomUploadList = ({ fileList, handleRemoveFile }) => {
 };
 
 
+
 useEffect(() =>{
   setFileList(props.docData.documentsPath);
 },[props.docData.documentsPath])
 
+const fetchPdfBytesArrayWithAxios = async (pdfUrls) => {
+  try {
+    const pdfPromises = pdfUrls.map(async (res, index) => {
+      // if(index != 0){
+        const response = await axios.get(res.url, {
+          responseType: 'arraybuffer',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+        return response.data;
+      // }
+    });
 
-  useEffect(() => {
-    setBtnDisable(selectedFiles.length === 0);
-  }, [selectedFiles]);
+    const pdfBytesArray = await Promise.all(pdfPromises);
+    return pdfBytesArray;
+  } catch (error) {
+    console.error('Error fetching PDFs:', error);
+    throw error; // Rethrow the error to handle it further
+  }
+};
+const mergeAndDownloadPDFs = async (pathsData:any[]) => {
+  try {
+    // Load the initial PDF file (you need to provide a valid URL)
+    const initialPdfUrl = pathsData[0].url;
+    // 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';
+
+    const initialPdfResponse = await axios.request({
+      url: initialPdfUrl,
+      method: 'get',
+      responseType: 'arraybuffer',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    });
+    const initialPdfBytes = initialPdfResponse.data;
+    console.log('*&*&*&', initialPdfBytes)
+
+    // Load additional PDFs from URLs (you need to provide valid PDF URLs)
+    const pdfUrls = [
+      'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf',
+    ];
+    // const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
+    //   const response = await fetch(url, { mode: 'no-cors' });
+    //   if (!response.ok) {
+    //     throw new Error(`Failed to fetch ${url}`);
+    //   }
+    //   return response.arrayBuffer();
+    // }));
+    const pdfBytesArray = await fetchPdfBytesArrayWithAxios(pathsData)
+
+
+    // Create a new PDF document
+    const mergedPdf = await PDFDocument.create();
+
+    // Add the pages from the initial PDF
+    const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
+    const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
+    initialPages.forEach((page) => mergedPdf.addPage(page));
+
+    // Loop through each PDF and add its pages to the merged PDF
+    for (const pdfBytes of pdfBytesArray) {
+      const pdfDoc = await PDFDocument.load(pdfBytes);
+      const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+      pages.forEach((page) => mergedPdf.addPage(page));
+    }
+
+    // Save the merged PDF as a blob
+    const mergedPdfBytes = await mergedPdf.save();
+
+    // Create a Blob and trigger a download
+    const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+    saveAs(blob, pathsData[0].documentName+'.pdf');
+  } catch (error) {
+    console.error('Error merging and downloading PDFs:', error);
+  }
+};
+
+
 
   const download = (data: any) => {
-    // mergeAndDownloadPDF(selectedFiles);
-
-    console.log('data');
     console.log(data);
+    mergeAndDownloadPDFs(data)
   };
 
-  // const mergeAndDownloadPDF = async (files: File[]) => {
-  //   if (files.length === 0) {
-  //     alert('Please select at least one file.');
-  //     return;
-  //   }
-
-  //   const pdfDoc = await PDFDocument.create();
-
-  //   for (const file of files) {
-  //     const fileData = await file.arrayBuffer();
-  //     // const pdfBytes = new Uint8Array(fileData);
-  //     const fileExtension = file.name.split('.').pop()?.toLowerCase();
-
-  //     if (fileExtension === 'pdf') {
-  //       const pdfBytes = new Uint8Array(fileData);
-  //       const externalPdf = await PDFDocument.load(pdfBytes);
-  //       const copiedPages = await pdfDoc.copyPages(externalPdf, externalPdf.getPageIndices());
-  
-  //       copiedPages.forEach((page) => {
-  //         pdfDoc.addPage(page);
-  //       });
-  //     } else if (fileExtension === 'jpg' || fileExtension === 'jpeg' || fileExtension === 'png') {
-  //       const image = await pdfDoc.embedJpg(fileData);
-  //       const page = pdfDoc.addPage();
-  //       page.drawImage(image, {
-  //         x: 50,
-  //         y: 450,
-  //         width: 500,
-  //         height: 400,
-  //       });
-  //     }
-  //   }
-
-
-  //   const pdfBytes = await pdfDoc.save();
-  //   const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-
-  //   const link = document.createElement('a');
-  //   link.href = URL.createObjectURL(blob);
-  //   link.download = 'MERGED.pdf';
-  //   link.click();
-  // };
 
   const handleFileUpload = (file: File) => {
     setFileList([...fileList, file]);
@@ -261,6 +296,7 @@ useEffect(() =>{
     // fileList: fileList
 
 };
+
   const upload = (data: any) => {
     console.log(data)
     let file = props.form.getFieldValue(`${data.documentsListId}`);
@@ -287,9 +323,9 @@ useEffect(() =>{
   }
   return (
 
-    <Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
-      <Card   
-        bordered={true} 
+    <><Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
+      <Card
+        bordered={true}
         style={{
           marginBottom: 16,
           borderRadius: 8,
@@ -307,7 +343,6 @@ useEffect(() =>{
         <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           <Form.Item name={props.docData.documentsListId}>
-          <CustomUploadList fileList={props.docData.documentsPath} handleRemoveFile={handleRemoveFile} />
             <Upload
               key={props.docData.documentsListId}
               name={`uploadFile${props.docData.documentsListId}`}
@@ -316,7 +351,7 @@ useEffect(() =>{
               onChange={(info) => handleUpload(props.docData.documentsListId, info)}
 
             >
-              <Button           
+              <Button
                 key={props.docData.documentsListId}
                 style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                 icon={<UploadOutlined />}
@@ -330,10 +365,14 @@ useEffect(() =>{
             </Upload>
           </Form.Item>
         </Text>
-        <br />
-
-
-         
+        <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
+          <Form.Item name={"status"} initialValue={props.docData.docStatus}>
+            <Radio.Group buttonStyle="solid" onChange={handleStatusChange}>
+              <Radio.Button value="partially uploaded">parially</Radio.Button>
+              <Radio.Button value="fully uploaded">fully</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+        </Text>
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           <Button
             type="primary"
@@ -347,37 +386,29 @@ useEffect(() =>{
         <br />
         <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-          <Form.Item name={"status"} initialValue={props.docData.docStatus}>
-            <Radio.Group buttonStyle="solid" onChange={handleStatusChange}>
-              <Radio.Button value="partially uploaded">parially</Radio.Button>
-              <Radio.Button value="fully uploaded">fully</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
+          <CustomUploadList fileList={props.docData.documentsPath} handleRemoveFile={handleRemoveFile} />
         </Text>
-        <br />
-        <br />
-        <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-          {
-            props.docData.isUploaded === 1 ?  
-          <Button
-           onClick={() => download(props.docData)}
-            disabled={props.docData.isUploaded === 1 ? false : true}
-            style={{
-              color: 'white',
-              backgroundColor: props.docData.isUploaded === 1 ? 'green' : '#806767',
-              width: '100%',
-            }}
-            icon={<DownloadOutlined />}
-          >
-            Download Document
-          </Button> :"" }
+      
+        {/* <br /> */}
+        {/* <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
+          {props.docData.isUploaded === 1 ?
+            <Button
+              onClick={() => download(props.docData.documentsPath)}
+              disabled={props.docData.isUploaded === 1 ? false : true}
+              style={{
+                color: 'white',
+                backgroundColor: props.docData.isUploaded === 1 ? 'green' : '#806767',
+                width: '100%',
+              }}
+              icon={<DownloadOutlined />}
+            >
+              Download Document
+            </Button> : ""}
         </Text>
-
-
-        <br />
-      </Card>  
-    </Col>
-
+        <br /> */}
+        {/* <><PdfMergeDownload/></> */}
+      </Card>
+    </Col></>
     
    
   );
@@ -385,3 +416,7 @@ useEffect(() =>{
 
 
 export default UploadView;
+
+function fetchPdfBytesArrayWithAxios(pdfUrls: string[]) {
+  throw new Error('Function not implemented.');
+}

@@ -160,7 +160,7 @@ const updateDoc = (data: DocumentDto) => {
         size='small'
           rowKey="id"
         />
-          <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '85%' : '85%'}
+          <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '65%' : '85%'}
             onClose={closeDrawer} open={drawerVisible} closable={true}>
              <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
               <DocumentForm key={Date.now()}

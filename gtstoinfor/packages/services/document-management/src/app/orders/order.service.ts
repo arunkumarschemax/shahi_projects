@@ -1,7 +1,7 @@
 
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, PoRoleRequest, orderColumnValues } from '@project-management-system/shared-models';
-import { DataSource, EntityManager, getConnection } from 'typeorm';
+import { CommonResponseModel, FileStatusReq, OrdersReq, PoRoleRequest, orderColumnValues } from '@project-management-system/shared-models';
+import { DataSource, EntityManager, QueryResult, getConnection } from 'typeorm';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { OrdersAdapter } from './adapters/order.adapter';
 import { OrdersRepository } from './repositories/order.repository';
@@ -455,5 +455,27 @@ export class OrdersService {
     `;
         const data = await this.dataSource.query(dynamicSQL)
         return new CommonResponseModel(true, 0, 'Data Retrived Successfully', data)
+    }
+
+    async getuploadeOrdersdata(req?:OrdersReq):Promise<CommonResponseModel>{
+        try{
+            let query
+             query='select file_name as fileName,file_path as filePath,status,date(created_at) as createdAt from file_upload where id>0'
+            if(req.status){
+                query=query+' and status="'+req.status+'"'    
+            }
+            if(req.fromDate){
+                query =query+' and date(created_at)="'+req.fromDate+'"'
+            }
+            const result = await this.fileUploadRepo.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'files retrived sucessfully...',result)
+            }else{
+                return new CommonResponseModel(false,0,'no data foun',[])
+            }
+        }
+        catch(err){
+            throw err
+        }
     }
 }

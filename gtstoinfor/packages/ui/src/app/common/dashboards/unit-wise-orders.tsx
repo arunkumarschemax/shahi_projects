@@ -350,14 +350,14 @@ export function DocumentWiseDocumentsGraph() {
   const service = new OrdersService();
 
   const config = {
-    colors:['green', '#FF1D18'],
+    colors:['#8ef092', '#77dfec'],
     chart: {
       type: 'column',
       //backgroundColor: '#CCCCFF'
     },
 
     title: {
-      text: 'Document-Wise',
+      text: 'Document Wise Report',
       style: {
         color: 'var(--text-color,black)',
         fontSize: '1.75rem',
@@ -375,6 +375,9 @@ export function DocumentWiseDocumentsGraph() {
     },
 
     xAxis: {
+      title: {
+        text: 'Documents'
+      },
       categories: docName,
       labels: {
         autoRotation: false,
