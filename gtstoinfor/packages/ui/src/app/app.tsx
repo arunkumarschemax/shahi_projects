@@ -6,10 +6,12 @@ import CustomSpinner from './common/custom-spinner/custom-spinner';
 import { Route, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AppRoutes } from './routes';
+import { LoginComponent, useIAMClientState } from './nike/iam-client-react';
   
 
 export function App() {
   const [load, setLoad] = useState<any>();
+  const {IAMClientAuthContext,dispatch}=useIAMClientState();
 
 
   axios.interceptors.request.use(request => {
@@ -26,10 +28,15 @@ export function App() {
   });
 
   return (
+    IAMClientAuthContext.isAuthenticated?
     <>
       <CustomSpinner loading={load} />
       <AppRoutes />
-    </>);
+    </>:
+     <div >
+     <LoginComponent />
+   </div>)
+   
 
 }
 
