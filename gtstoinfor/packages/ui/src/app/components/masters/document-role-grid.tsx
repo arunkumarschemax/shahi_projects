@@ -53,19 +53,37 @@ const DocumentRoleGrid = () => {
     {
       title: 'Role',
       dataIndex: 'roleName',
-      key: '2',
+      key: 'roleName',
+      render: (text, record, index) => {
+        if (index === 0 || record.roleName !== data[index - 1].roleName) {
+          const rowSpan = data.filter(item => item.roleName === record.roleName).length;
+          return {
+            children: text,
+            props: {
+              rowSpan: rowSpan,
+            },
+          };
+        } else {
+          return {
+            children: null,
+            props: {
+              rowSpan: 0,
+            },
+          };
+        }
+      },
    
     },
 
     {
         title: 'Document',
         dataIndex: 'documentName',
-        key: '3',
+        key: 'documentName',
      
       },
   
     {
-      key: '4',
+      key: 'isActive',
       title: "Status",
       dataIndex: "isActive",
       render: (isActive: any, rowData: any) => (
@@ -111,6 +129,8 @@ const DocumentRoleGrid = () => {
       )
     }
   ];
+
+
 
   return (
     <div>
