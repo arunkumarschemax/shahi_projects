@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import {  Button, Card, Form, Input, Table, Space, InputRef, Modal } from 'antd';
-import {  SearchOutlined,  } from '@ant-design/icons';
+import {  DownloadOutlined, SearchOutlined,  } from '@ant-design/icons';
 import { AlertMessages, } from '@project-management-system/shared-models';
 import { ColumnType } from 'antd/lib/table';
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
@@ -8,6 +8,9 @@ import { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import Link from 'antd/lib/typography/Link';
 import { redirect, useNavigate } from 'react-router-dom';
+import { PDFDocument } from 'pdf-lib';
+import axios from 'axios';
+import { saveAs } from 'file-saver';
 
 
 const UploadFileGrid = () =>{
@@ -28,6 +31,83 @@ const UploadFileGrid = () =>{
     const uploadDcoService = new UploadDocumentService()
     let navigate = useNavigate();
 
+    const fetchPdfBytesArrayWithAxios = async (pdfUrls) => {
+      try {
+        const pdfPromises = pdfUrls.map(async (res, index) => {
+          // if(index != 0){
+            const response = await axios.get(res.url, {
+              responseType: 'arraybuffer',
+              headers: {
+                'Access-Control-Allow-Origin': '*',
+              },
+            });
+            return response.data;
+          // }
+        });
+    
+        const pdfBytesArray = await Promise.all(pdfPromises);
+        return pdfBytesArray;
+      } catch (error) {
+        console.error('Error fetching PDFs:', error);
+        throw error; // Rethrow the error to handle it further
+      }
+    };
+    const mergeAndDownloadPDFs = async (pathsData:any[], poNo:string) => {
+      try {
+        // Load the initial PDF file (you need to provide a valid URL)
+        const initialPdfUrl = pathsData[0].url;
+        // 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';
+    
+        const initialPdfResponse = await axios.request({
+          url: initialPdfUrl,
+          method: 'get',
+          responseType: 'arraybuffer',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        });
+        const initialPdfBytes = initialPdfResponse.data;
+        console.log('*&*&*&', initialPdfBytes)
+    
+        // Load additional PDFs from URLs (you need to provide valid PDF URLs)
+        const pdfUrls = [
+          'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf',
+        ];
+        // const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
+        //   const response = await fetch(url, { mode: 'no-cors' });
+        //   if (!response.ok) {
+        //     throw new Error(`Failed to fetch ${url}`);
+        //   }
+        //   return response.arrayBuffer();
+        // }));
+        const pdfBytesArray = await fetchPdfBytesArrayWithAxios(pathsData)
+    
+    
+        // Create a new PDF document
+        const mergedPdf = await PDFDocument.create();
+    
+        // Add the pages from the initial PDF
+        const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
+        const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
+        initialPages.forEach((page) => mergedPdf.addPage(page));
+    
+        // Loop through each PDF and add its pages to the merged PDF
+        for (const pdfBytes of pdfBytesArray) {
+          const pdfDoc = await PDFDocument.load(pdfBytes);
+          const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+          pages.forEach((page) => mergedPdf.addPage(page));
+        }
+    
+        // Save the merged PDF as a blob
+        const mergedPdfBytes = await mergedPdf.save();
+    
+        // Create a Blob and trigger a download
+        const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+        saveAs(blob, 'PO-'+poNo+'.pdf');
+      } catch (error) {
+        console.error('Error merging and downloading PDFs:', error);
+      }
+    };
     
     useEffect(() => {
         getDocumentData();
@@ -133,6 +213,7 @@ const UploadFileGrid = () =>{
         {
             title: 'PO NUMBER',
             dataIndex: 'PO',
+            fixed: 'left',
             align:'center',
               ...getColumnSearchProps('PO'),
 
@@ -165,21 +246,21 @@ const UploadFileGrid = () =>{
             }
           }
         },
-        // {
-        //   title: 'DOWNLOAD',
-        //   dataIndex: 'documentName',
-        //   render :(text, rowData, index) =>{
-        //     return (<div style={{alignContent:'center'}}>
-        //        <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
-        //           <Button type="primary" 
-        //         onClick={() => modelOpen(rowData.PO)}>
-        //       View Docs
-        //       </Button>
-        //        </Form.Item>   
-        //        </div>     
-        //         )
-        //   }
-        // },
+        {
+          title: 'DOWNLOAD',
+          dataIndex: 'documentName',
+          render :(text, rowData, index) =>{
+            return (<div style={{alignContent:'center'}}>
+               <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
+                  <Button type="primary" 
+                onClick={() => mergeAndDownloadPDFs(rowData.url, rowData.PO)}>
+              <DownloadOutlined/>
+              </Button>
+               </Form.Item>   
+               </div>     
+                )
+          }
+        },
       ];
       
       const handleReset = (clearFilters:any) => {
@@ -202,7 +283,7 @@ const UploadFileGrid = () =>{
         service.getDynamicDataForDocList().then((res) => {
             setItemData(res.data);
             const headerColumns = Object.keys(res.data[0])
-            .filter(header =>header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status')
+            .filter(header =>header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url')
             .map(header => ({           
                 title: header.toUpperCase(),
                 dataIndex: header,
@@ -244,7 +325,7 @@ const UploadFileGrid = () =>{
       setIsModalOpen(false)
     }
     return (<Form form={form}>
-        <Card title="Document management" extra={<span><Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button></span>}>
+        <Card title="Document management" extra={<span>{JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" ?<Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button>:""}</span>}>
             {columns.length > 0 && itemData.length > 0 ? (
                 <Table
                     columns={columns.map((column) => ({
@@ -260,6 +341,8 @@ const UploadFileGrid = () =>{
                         ),
                     }))}
                     dataSource={itemData}
+                    scroll={{ x: true }}
+                    bordered
                     pagination={false}
                 />
             ) : (

@@ -132,8 +132,8 @@ export class OrdersController {
             },
         }),
         fileFilter: (req, file, callback) => {
-            if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|xls|xlsx|csv)$/)) {
-                return callback(new Error('Only png,jpeg,PNG,jpg,JPG,xls,xlsx and csv files are allowed!'), false);
+            if (!file.originalname.match(/\.(xls|xlsx|csv)$/)) {
+                return callback(new Error('Only xls,xlsx and csv files are allowed!'), false);
             }
             callback(null, true);
         },
