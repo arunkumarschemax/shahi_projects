@@ -140,6 +140,17 @@ export class DpomController {
         }
     }
 
+    @Post('/getFabricTrackerReport')
+    async getFabricTrackerReport(): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getFabricTrackerReport();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+
     @Post('/getCountForDivertReport')
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         try {

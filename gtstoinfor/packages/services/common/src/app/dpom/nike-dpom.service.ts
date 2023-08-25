@@ -591,6 +591,8 @@ export class DpomService {
     //     }
     // }
 
+
+
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.getCountForDivertReport();
         if (details.length > 0) {
@@ -599,6 +601,16 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'data not found')
         }
     }
+    async getFabricTrackerReport(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.find();
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
+    }
+
+
 
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPlantCount()
