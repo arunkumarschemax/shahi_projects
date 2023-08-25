@@ -1,6 +1,6 @@
 
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, OrdersReq, PoRoleRequest, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, OrdersReq, PoRoleRequest, docRequest, orderColumnValues } from '@project-management-system/shared-models';
 import { DataSource, EntityManager, QueryResult, getConnection } from 'typeorm';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { OrdersAdapter } from './adapters/order.adapter';
@@ -18,6 +18,7 @@ import { error } from 'console';
 let moment = require('moment');
 moment().format();
 import { req } from '../document_upload/requests/importedPoReq';
+import { UploadFilesRepository } from '../document_upload/repository/upload-files.repository';
 @Injectable()
 export class OrdersService {
 
@@ -28,7 +29,8 @@ export class OrdersService {
         @InjectDataSource()
         private dataSource: DataSource,
         @InjectEntityManager() private readonly entityManager: EntityManager,
-        private documentService: DocumentsListService
+        private documentService: DocumentsListService,
+        private uploadFilesRepository:UploadFilesRepository,
 
     ) { }
 
@@ -444,7 +446,7 @@ export class OrdersService {
     async getDynamicDataForDocList(): Promise<CommonResponseModel> {
         const query = `SELECT DISTINCT document_name FROM document where is_active=1`;
         const documentNames = await this.dataSource.query(query)
-        const dynamicSQL = `SELECT dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END END) AS '${name.document_name}'
+        const dynamicSQL = `SELECT "" AS url, dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END END) AS '${name.document_name}'
         `).join(',')},dl.documents_list_id as docListId,dl.file_path as filePath,dl.status
       FROM
         documents_list dl
@@ -454,7 +456,26 @@ export class OrdersService {
         dl.customer_po
     `;
         const data = await this.dataSource.query(dynamicSQL)
-        return new CommonResponseModel(true, 0, 'Data Retrived Successfully', data)
+        let urls:any[] = [];
+        let docinfo: any[] = [];
+        for (const res of data){
+            const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("https://edoc-backend.shahiapps.in/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where u.document_list_id ='+res.docListId;
+            const docres = await this.uploadFilesRepository.query(doctlistQuery)
+
+            const docReq:docRequest[] =[];
+            for(const res of docres){
+                console.log(res);
+                urls.push(res.url);
+                let data = new docRequest(res.uid,res.name,res.status,res.type,res.url,res.documentName);
+                console.log(data);
+                console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
+                docReq.push(data);
+            }
+            res.url = docReq;
+            docinfo.push(res)
+        }
+        return new CommonResponseModel(true, 0, 'Data Retrived Successfully', docinfo)
     }
 
     async getuploadeOrdersdata(req?:OrdersReq):Promise<CommonResponseModel>{

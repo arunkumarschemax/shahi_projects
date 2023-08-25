@@ -184,17 +184,24 @@ export class DocumentsListService {
                 for(const poNo of req){
                     console.log(poNo)
                     for(const doc of docIds.data){
-                        const entity = new DocumentsList()
-                        entity.customerPo=poNo.poNumber;
-                        entity.documentCategoryId=doc.documentCategoryId;
-                        entity.roleName= roleMappingData.find((res) => res.documentId === doc.documentCategoryId).roleName;
-                        const save = await this.documentsListRepository.save(entity)
+                        console.log(roleMappingData.find((res) => res.documentId === doc.documentCategoryId)?.roleName);
+                        if(roleMappingData.find((res) => res.documentId === doc.documentCategoryId)?.roleName != undefined){
+                            const entity = new DocumentsList()
+                            entity.customerPo=poNo.poNumber;
+                            entity.documentCategoryId=doc.documentCategoryId;
+                            entity.roleName= roleMappingData.find((res) => res.documentId === doc.documentCategoryId).roleName;
+                            const save = await this.documentsListRepository.save(entity)
+                        }
+                        else{
+                            continue;
+                        }
                     }    
                 }
 
                 return new UploadDocumentListResponseModel(true,1,'creted sucessfully',[])
             }
             catch(error){
+                console.log(error)
                 throw(error)
             }
         }   
