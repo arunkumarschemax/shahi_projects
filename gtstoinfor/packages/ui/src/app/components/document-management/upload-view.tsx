@@ -41,7 +41,32 @@ const handleRemoveFile = (fileToRemove) => {
 const togglePreview = (index: number) => {
   setActivePreviewIndex((prevIndex) => (prevIndex === index ? null : index));
 };
+const handleDownload = (url) => {
+  // : FilenameDto[]
+  let filePath = url;
+  console.log(filePath);
+  //  filePath ='http://165.22.220.143/document-management/gtstoinfor/upload-files/import%20excel%20format.xlsx'
+  if (filePath) {
+    filePath = filePath.split(",");
+    for (const res of filePath) {
+      if(res){
+        console.log(res);
+        setTimeout(() => {
+          const response = {
+            file: url,
+          };
 
+          window.open(response.file);
+
+        }, 100);
+      }
+    }
+  }
+  else {
+    AlertMessages.getErrorMessage("Please upload file. ");
+
+  }
+}
 const renderFileNames = () => {
   if (Array.isArray(fileList) && fileList.length > 0) {
     console.log(fileList)
@@ -50,10 +75,9 @@ const renderFileNames = () => {
         <ul>
           {fileList.map((file, index) => (
             <li key={index}>
-              
               <a
                 href={URL.createObjectURL(new Blob([file.originFileObj]))}
-                // onClick={() => togglePreview(index)}
+                onClick={() => handleDownload(file.url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ cursor: 'pointer', textDecoration: 'underline' }}
@@ -319,7 +343,6 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
         <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           <Form.Item name={props.docData.documentsListId}>
-            <CustomUploadList fileList={props.docData.documentsPath} handleRemoveFile={handleRemoveFile} />
             <Upload
               key={props.docData.documentsListId}
               name={`uploadFile${props.docData.documentsListId}`}
@@ -342,10 +365,14 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
             </Upload>
           </Form.Item>
         </Text>
-        <br />
-
-
-
+        <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
+          <Form.Item name={"status"} initialValue={props.docData.docStatus}>
+            <Radio.Group buttonStyle="solid" onChange={handleStatusChange}>
+              <Radio.Button value="partially uploaded">parially</Radio.Button>
+              <Radio.Button value="fully uploaded">fully</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+        </Text>
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           <Button
             type="primary"
@@ -359,16 +386,11 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
         <br />
         <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-          <Form.Item name={"status"} initialValue={props.docData.docStatus}>
-            <Radio.Group buttonStyle="solid" onChange={handleStatusChange}>
-              <Radio.Button value="partially uploaded">parially</Radio.Button>
-              <Radio.Button value="fully uploaded">fully</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
+          <CustomUploadList fileList={props.docData.documentsPath} handleRemoveFile={handleRemoveFile} />
         </Text>
-        <br />
-        <br />
-        <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
+      
+        {/* <br /> */}
+        {/* <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           {props.docData.isUploaded === 1 ?
             <Button
               onClick={() => download(props.docData.documentsPath)}
@@ -383,7 +405,7 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
               Download Document
             </Button> : ""}
         </Text>
-        <br />
+        <br /> */}
         {/* <><PdfMergeDownload/></> */}
       </Card>
     </Col></>
