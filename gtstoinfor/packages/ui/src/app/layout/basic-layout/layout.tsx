@@ -72,7 +72,7 @@ const BasicLayout = () => {
         token: { colorBgContainer },
     } = theme.useToken();
     return (
-        <Layout className="layout" style={{width:'100%'}}>
+        <Layout className="layout" style={{width:'102%', paddingLeft:'0px'}}>
             <Header style={{ alignItems: 'center', backgroundColor: '#000', height: 83, marginTop:'-8px' }}>
                 <div style={{ float: 'left', marginTop: '0%' }}>
                     {/* <img src={logo} width={200} height={52}></img> */}
@@ -95,12 +95,12 @@ const BasicLayout = () => {
                 </Menu>
        
             </Header>
-            <Content style={{ padding: '0 50px', minHeight: '490px', backgroundColor: 'white' }}>
+            <Content style={{ padding: '0 50px', minHeight: '615px', backgroundColor: 'beige' }}>
                 <br />
                 {/* <IndentDashboard/> */}
                 <Outlet />
             </Content >
-            <Footer style={{ textAlign: 'center', justifyContent:'end', alignItems:'self-end' }}>ⓒ2023 Design and Developed by SchemaX Tech</Footer>
+            <Footer style={{ textAlign: 'center',  height:'15px' }}>ⓒ2023 Design and Developed by SchemaX Tech</Footer>
         </Layout >
     );
 };

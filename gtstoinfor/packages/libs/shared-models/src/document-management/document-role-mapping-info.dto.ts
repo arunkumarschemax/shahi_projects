@@ -6,8 +6,10 @@ export class DocumentRoleMappingInfoDto {
     username: string;
     isActive?:boolean
     versionFlag?:number
+    count?:number
 
-    constructor(docMappingId: number,documentId: number,roleName: string,documentName: string,username: string,isActive?:boolean,versionFlag?:number){
+
+    constructor(docMappingId: number,documentId: number,roleName: string,documentName: string,username: string,isActive?:boolean,versionFlag?:number,count?:number){
         this.docMappingId = docMappingId;
         this.documentId = documentId;
         this.roleName = roleName;
@@ -15,5 +17,6 @@ export class DocumentRoleMappingInfoDto {
         this.username = username;
         this.isActive=isActive
         this.versionFlag=versionFlag
+        this.count=count
     }
 }

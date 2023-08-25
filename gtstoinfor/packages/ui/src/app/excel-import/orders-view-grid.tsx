@@ -5,7 +5,7 @@ import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { OrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AlertMessages from '../common/common-functions/alert-messages';
 import { OrdersReq } from '@project-management-system/shared-models';
 
@@ -23,6 +23,7 @@ const AllOrdersGridView = () => {
     const [form] = Form.useForm();
     const { Option } = Select;
     const { RangePicker } = DatePicker;
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -257,15 +258,7 @@ const AllOrdersGridView = () => {
 
     return (
         <div>
-            <Card size='small'
-                title="Orders Reports"
-                extra={filteredData.length > 0 ? (<><Button
-                    type="default"
-                    style={{ color: 'green' }}
-                    onClick={handleExport}
-                    icon={<FileExcelFilled />}>Download Excel</Button>    <Link to='/excel-import/excel-import'>{<Button className='panel_button' type={'primary'}>Import Orders</Button>}</Link></>) : <Link to='/excel-import/excel-import'>
-                        {/* {<Button className='panel_button' type={'primary'}>Import Orders</Button>} */}
-                        </Link> }>
+            <Card size='small' title="Orders" extra={<span><Button onClick={() => navigate('/excel-import/excel-import')} type={'primary'}>Import Orders</Button></span>}>
                 <Form form={form} layout={'vertical'}>
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >

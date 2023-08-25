@@ -16,10 +16,18 @@ export class DocumentRoleMappingService {
     async getAllDocMappings(): Promise<AllDocumentRoleMappingsResponseModel> {
         try {
 
-            const quuery = 'select drm.role_id as roleId, drm.id as docMappingId,drm.document_id as documentId,drm.role_name as roleName,drm.is_active as isActive,drm.version_flag as versionFlag,d.document_name as documentName from document_role_mapping drm left join document d on d.id=drm.document_id'
-            const result = await this.mappingRepo.query(quuery)
+            const count = 'select drm.role_name AS roleName ,count(drm.role_name) as count from document_role_mapping drm left join document d on d.id=drm.document_id group by drm.role_name'
+            const countRes:any[] = await this.mappingRepo.query(count)
+
+            const quuery = 'select drm.role_id as roleId, drm.id as docMappingId,drm.document_id as documentId,drm.role_name as roleName,drm.is_active as isActive,drm.version_flag as versionFlag,d.document_name as documentName,count(drm.role_name) as count from document_role_mapping drm left join document d on d.id=drm.document_id group by drm.id'
+            const result = await this.mappingRepo.query(quuery);
+            const data:DocumentRoleMappingInfoDto[] = [];
             if(result){
-                return new AllDocumentRoleMappingsResponseModel(true, 0, 'Document Mapped successfully', result)
+                for(const res of result){
+                    let rcount = countRes.find((rec) => rec.roleName === res.roleName)?.count
+                    data.push(new DocumentRoleMappingInfoDto(res.docMappingId,res.documentId,res.roleName,res.documentName,"",res.isActive,res.versionFlag,rcount))
+                }
+                return new AllDocumentRoleMappingsResponseModel(true, 0, 'Document Mapped successfully', data)
             }else{
                 return new AllDocumentRoleMappingsResponseModel(true, 0, 'not found', [])
             }

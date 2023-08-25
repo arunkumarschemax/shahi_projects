@@ -5,19 +5,22 @@ import Papa from 'papaparse'
 // import AlertMessages from '../common/common-functions/alert-messages';
 import { useLocation, useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { ArrowDownOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, DownloadOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons';
 import { AlertMessages, DocumentsListRequest, FileStatusReq, UploadDocumentListDto } from '@project-management-system/shared-models';
 import { useForm } from 'antd/es/form/Form';
 import { ColumnsType } from 'antd/es/table';
 import React from 'react';
 import { ColumnProps } from 'antd/lib/table';
 import UploadView from './upload-view';
-
+import { saveAs } from 'file-saver';
+import axios, { AxiosRequestConfig } from 'axios';
+import { PDFDocument } from 'pdf-lib';
 const { Title, Text } = Typography;
 
 export default function DocumentListupload() {
   const [poNumber,setPoNumber] = useState<any[]>([])
   const [docData,setDocData] = useState<any[]>([])
+  const [urls,setUrls] = useState<any[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeRow, setActiveRow] = useState(null);
   const [activeRowIndex, setActiveRowIndex] = useState(null);
@@ -47,8 +50,10 @@ export default function DocumentListupload() {
     service.getDocumentDetailsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:value}).then(res=>{
       if(res.status){
         setDocData(res.data)
+        setUrls(res.dataa);
       }else{
         setDocData([])
+        setUrls([]);
       }
     })
   }
@@ -205,6 +210,88 @@ export default function DocumentListupload() {
 
   }
 
+  const fetchPdfBytesArrayWithAxios = async (pdfUrls) => {
+    try {
+      const pdfPromises = pdfUrls.map(async (res, index) => {
+        console.log(res);
+        // if(index != 0){
+          const response = await axios.get(res, {
+            responseType: 'arraybuffer',
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+            },
+          });
+          return response.data;
+        // }
+      });
+  
+      const pdfBytesArray = await Promise.all(pdfPromises);
+      return pdfBytesArray;
+    } catch (error) {
+      console.error('Error fetching PDFs:', error);
+      throw error; // Rethrow the error to handle it further
+    }
+  };
+  const mergeAndDownloadPDFs = async (pathsData:any[]) => {
+    try {
+      // Load the initial PDF file (you need to provide a valid URL)
+      const initialPdfUrl = pathsData[0];
+      // 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';
+  
+      const initialPdfResponse = await axios.request({
+        url: initialPdfUrl,
+        method: 'get',
+        responseType: 'arraybuffer',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      });
+      const initialPdfBytes = initialPdfResponse.data;
+      console.log('*&*&*&', initialPdfBytes)
+  
+      // Load additional PDFs from URLs (you need to provide valid PDF URLs)
+      const pdfUrls = [
+        'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf',
+      ];
+      // const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
+      //   const response = await fetch(url, { mode: 'no-cors' });
+      //   if (!response.ok) {
+      //     throw new Error(`Failed to fetch ${url}`);
+      //   }
+      //   return response.arrayBuffer();
+      // }));
+      const pdfBytesArray = await fetchPdfBytesArrayWithAxios(pathsData)
+  
+  
+      // Create a new PDF document
+      const mergedPdf = await PDFDocument.create();
+  
+      // Add the pages from the initial PDF
+      const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
+      const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
+      initialPages.forEach((page) => mergedPdf.addPage(page));
+  
+      // Loop through each PDF and add its pages to the merged PDF
+      for (const pdfBytes of pdfBytesArray) {
+        const pdfDoc = await PDFDocument.load(pdfBytes);
+        const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+        pages.forEach((page) => mergedPdf.addPage(page));
+      }
+  
+      // Save the merged PDF as a blob
+      const mergedPdfBytes = await mergedPdf.save();
+  
+      // Create a Blob and trigger a download
+      const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+      saveAs(blob, 'PO-'+docData[0].customerPo+'.pdf');
+    } catch (error) {
+      console.error('Error merging and downloading PDFs:', error);
+    }
+  };
+  const download = (data: any) => {
+    console.log(data);
+    mergeAndDownloadPDFs(data)
+  };
   return(
     <Card title="Document management" extra={<span><Button onClick={() => navigate('/document-management/upload-file-view')} type={'primary'}>View Documents Status</Button></span>}>
       <Form form={form}  layout='vertical' name="control-hooks" >
@@ -226,6 +313,18 @@ export default function DocumentListupload() {
              </Select>
            </Form.Item>
          </Col>
+        <Col span={5} style={{paddingTop:'30px'}}>
+          <Button onClick={() => download(urls)}
+              style={{
+                color: 'white',
+                backgroundColor: 'green',
+                width: '100%',
+              }}
+              icon={<DownloadOutlined />}
+            >
+              Merge & Download Documents
+            </Button>
+        </Col>      
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{marginTop:'21px'}}>
          <Form.Item name={'download'}  hidden={hide}>
             <Button name='download' type='primary'>
@@ -250,7 +349,7 @@ export default function DocumentListupload() {
           <Row gutter={24}>
             {docData?.length > 0 ? (
               docData?.map((response) => (
-                <UploadView form={form} docData={response} formData={onFinish} fileList={setFilelist}  
+                <UploadView form={form} docData={response} formData={onFinish} fileList={setFilelist} urls ={urls} 
                 // setStatusVal={setStatusval}
                 />
               ))
