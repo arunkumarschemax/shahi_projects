@@ -5,6 +5,7 @@ import ChangesGrid from "../../excel-import/changes-grid"
 import ItemChanges from "./item-change"
 import VersionChanges from "../../excel-import/version-wise-table"
 import { DocumentWiseDocumentsGraph } from "./unit-wise-orders"
+import PieChart from "./pie-chart"
 const { useToken } = theme
 
 export const Dashboard = () => {
@@ -29,13 +30,13 @@ export const Dashboard = () => {
                     </Col>
                 </Row>
             </Card>
-            {/* <Card> */}
-                {/* <Row gutter={24}>
+            <Card>
+                <Row gutter={24}>
                     <Col xs={24} sm={24} md={24} xl={24}>
-                        <ItemChanges />
+                        <PieChart />
                     </Col>
 
-                </Row> */}
+                </Row>
                 <br />
                 {/* <Row gutter={24}>
                     <Col xs={24} sm={24} md={24} xl={10}>
@@ -45,7 +46,7 @@ export const Dashboard = () => {
                         <VersionChanges />
                     </Col>
                 </Row> */}
-            {/* </Card> */}
+            </Card>
         </>
 
     )

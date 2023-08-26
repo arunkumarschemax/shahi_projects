@@ -1,9 +1,11 @@
-import { CommonResponseModel, FileIdReq, FileStatusReq, OrdersReq, SaveOrderDto } from "@project-management-system/shared-models"
+import { CommonResponseModel, FileIdReq, FileStatusReq, OrdersReq, SaveOrderDto, UploadDocumentListResponseModel } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
 export class OrdersService extends CommonAxiosService {
     private ordersController = "/orders"
+    private url = "/doc-upload";
+
 
     // async saveOrder(data: any, id:number): Promise<CommonResponseModel> {
     //     return this.axiosPostCall(this.ordersController + "/saveOrder", data,{id})
@@ -92,6 +94,9 @@ export class OrdersService extends CommonAxiosService {
     }
     async getuploadeOrdersdata(req?:OrdersReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getuploadeOrdersdata",req)
+    }
+    async documentwisePercentage(): Promise<UploadDocumentListResponseModel> {
+        return this.axiosPostCall(this.url + "/documentwisePercentage")
     }
     
     

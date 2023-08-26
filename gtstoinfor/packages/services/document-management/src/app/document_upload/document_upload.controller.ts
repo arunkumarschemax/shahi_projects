@@ -214,5 +214,13 @@ export class DocumentUploadController {
             return this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error);
           }
     }
+    @Post('/documentwisePercentage')
+    async documentwisePercentage(): Promise<UploadDocumentListResponseModel>{
+        try {
+            return await this.uploadDocservice.documentwisePercentage();
+          } catch (error) {
+            return this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error);
+          }
+    }
 
 }
