@@ -96,16 +96,34 @@ export function PoQuantityWiseGraph() {
 
 
         ],
+       
+    plotOptions: {
+        series: {
+            cursor: "pointer",
+            stickyTracking: false,
+        },
+        column: {
+            groupPadding: 0.05,
+            pointPadding: 0.05,
+            dataLabels: {
+                enabled: graphType === ReportType.WEEKWISE || graphType === ReportType.QUARTERWISE, 
+                format: '{point.y}',
+                style: {
+                    color: 'var(--text-color,black)',
+                    fontWeight: 'bold',
+                },
+            },
+        }
+    },
         xAxis: {
             title: {
                 text: graphType,
                 style: {
-                    color: 'var(--text-color, BLACK)',
-                    fontFamily: 'Your Preferred Font, sans-serif', 
+                    color: 'var(--text-color,black)',
+                   // fontFamily: 'Your Preferred Font, sans-serif', 
                     
                 }
             },
-            
             labels: {
                 style: {
                     color: 'var(--text-color,black)'
@@ -133,33 +151,7 @@ export function PoQuantityWiseGraph() {
 
         ],
 
-        plotOptions: {
-            series: {
-                cursor: "pointer",
-                stickyTracking: false,
-
-            },
-            column: {
-                groupPadding: 0.05,
-                pointPadding: 0.05,dataLabels: {
-                    enabled: true
-                  }
-            }
-        },
-        title: { text: 'Temporal Quantity Trends' },
-        style: {
-            color: 'var(--text-color,black)',
-            fontSize: '2rem',
-            lineHeight: '1.4',
-            marginBottom: '0',
-            overflow: 'hidden',
-            // paddingTop: '2px',
-            position: 'relative',
-            textOverFlow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            zIndex: '5',
-            fontFamily: 'visuelt-bold-pro,Arial,sans-serif,Font Awesome\ 5 Pro',
-        },
+       
     };
 
     const months = [
