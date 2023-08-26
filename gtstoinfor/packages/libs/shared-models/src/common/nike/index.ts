@@ -5,3 +5,6 @@ export * from './dia-pdf.model';
 export * from './factory-report-model';
 export * from './factory-repoort-factory-size-model';
 export * from './marketing-ppm.model';
+export * from './po-qty-data.dto';
+export * from './po-qtyreq.dto';
+export * from './POQty.dto';

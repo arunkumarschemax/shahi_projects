@@ -169,4 +169,8 @@ export class NikeService extends CommonAxiosService {
     async getSeasonWisePo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getSeasonWisePo")
     }
+
+    async getPoAndQtyDashboard(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPoAndQtyDashboard", req)
+    }
 }   
