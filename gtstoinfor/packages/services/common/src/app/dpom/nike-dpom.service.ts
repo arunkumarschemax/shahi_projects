@@ -19,6 +19,7 @@ import { FileIdReq } from '../orders/models/file-id.req';
 import { NikeFileUploadEntity } from './entites/upload-file.entity';
 import { Cron } from '@nestjs/schedule';
 import { DiaPDFDto } from './dto/diaPDF.dto';
+const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 import { PoAndQtyReq } from './dto/po-qty.req';
 import { PoQty } from './dto/poqty.req';
 import { WeeklyPoAndQtyReq } from './dto/weeklypoqty.req';
@@ -594,6 +595,8 @@ export class DpomService {
     //     }
     // }
 
+
+
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.getCountForDivertReport();
         if (details.length > 0) {
@@ -602,6 +605,16 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'data not found')
         }
     }
+    async getFabricTrackerReport(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.find();
+        if (details.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', details)
+        } else {
+            return new CommonResponseModel(false, 0, 'data not found', undefined)
+        }
+    }
+
+
 
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPlantCount()
@@ -864,26 +877,70 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'failed', e);
         }
     }
+
+    async getDifferentialData(): Promise<any> {
+
+        const oldText = `HANGING IS REQUIRED:
+        Each garment must be hung on a GS1 black style hanger HCLR12.
+        
+        The carton contents should be placed in at least one GOH polybag and polybag(s) placed in a GOH shipping carton.
+        A per unit upcharge has been added to this PO for garment on hanger.
+
+        CROWN SIZER REQUIRED:
+        A Crown Sizer must be placed on all hangers for this Purchase Order.
+        `;
+
+        const newText = `HANGING IS REQUIRED:
+        Each garment must be hung on a GS1 black style hanger HCLR12.
+        The carton contents should be placed in at least one GOH polybag and
+        polybag(s) placed in a GOH shipping carton.
+        A per unit upcharge has been added to this PO for garment on hanger.`;
+
+        const lines1 = oldText.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+        const text1 = lines1.join('');
+
+        const lines2 = newText.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+        const text2 = lines2.join('');
+
+        const dmp = new DiffMatchPatch();
+        const diff = dmp.diff_main(text1, text2);
+        dmp.diff_cleanupSemantic(diff);
+
+        let output = '';
+        for (const [op, text] of diff) {
+            if (op === DiffMatchPatch.DIFF_INSERT) {
+                if (text.trim() !== '') {
+                    output += `${text} `;
+                }
+            } else if (op === DiffMatchPatch.DIFF_DELETE) {
+                if (text.trim() !== '') {
+                    output += `${text} `;
+                }
+            }
+        }
+        return output.trim();
+    }
+
     async getPPMData(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find()
         if (details.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found')
-         } 
-         const sizeDateMap = new Map<string, MarketingModel>();
-            for (const rec of details) {
-                if (!sizeDateMap.has(rec.poAndLine)) {
-                    sizeDateMap.set(
-                        rec.poAndLine,
-                        new MarketingModel(rec.poLineItemNumber, rec.lastModifiedDate, rec.item, rec.totalItemQty, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc,  [])
-                    );
-                }
-                const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
-                sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity));
-            }
-            const dataModelArray: MarketingModel[] = Array.from(sizeDateMap.values());
-            return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
         }
-      catch (e) {
+        const sizeDateMap = new Map<string, MarketingModel>();
+        for (const rec of details) {
+            if (!sizeDateMap.has(rec.poAndLine)) {
+                sizeDateMap.set(
+                    rec.poAndLine,
+                    new MarketingModel(rec.poLineItemNumber, rec.lastModifiedDate, rec.item, rec.totalItemQty, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc, [])
+                );
+            }
+            const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
+            sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity));
+        }
+        const dataModelArray: MarketingModel[] = Array.from(sizeDateMap.values());
+        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    }
+    catch(e) {
         return new CommonResponseModel(false, 0, 'failed', e);
     }
 

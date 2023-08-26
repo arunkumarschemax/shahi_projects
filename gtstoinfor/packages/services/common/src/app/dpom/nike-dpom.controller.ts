@@ -143,6 +143,17 @@ export class DpomController {
         }
     }
 
+    @Post('/getFabricTrackerReport')
+    async getFabricTrackerReport(): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getFabricTrackerReport();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+
+
     @Post('/getCountForDivertReport')
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         try {
@@ -243,7 +254,7 @@ export class DpomController {
     }
 
     @Post('/saveDiaPDFFields')
-    async saveDiaPDFFields(@Body() req : DiaPDFDto): Promise<CommonResponseModel> {
+    async saveDiaPDFFields(@Body() req: DiaPDFDto): Promise<CommonResponseModel> {
         try {
             return this.dpomService.saveDiaPDFFields(req);
         } catch (err) {
@@ -403,6 +414,15 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     } 
+
+    @Post('/getDifferentialData')
+    async getDifferentialData(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getDifferentialData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
     @Post('/getPoAndQtyDashboard')
     @ApiBody ({type: PoAndQtyReq})
     async getPoAndQtyDashboard(@Body()req:any): Promise<CommonResponseModel> {
