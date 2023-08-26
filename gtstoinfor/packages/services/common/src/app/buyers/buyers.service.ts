@@ -6,15 +6,21 @@ import { BuyersRequest } from './dto/buyers.request';
 import { BuyersAdapter } from './dto/buyers.adapter';
 import { BuyersDTO } from './dto/buyers.dto';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { AllBuyersResponseModel, BuyersResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerIdReq, BuyersDto, BuyersResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
 import { UserRequestDto } from '../currencies/dto/user-logs-dto';
+import { Address } from './address.entity';
+import { BuyerRepository } from './buyers.repository';
+import { AddressDto } from 'packages/libs/shared-models/src/common/buyers/address-dto';
 
 @Injectable()
 export class BuyersService {
     constructor(
-        @InjectRepository(Buyers)
-        private buyersRepository: Repository<Buyers>,
+        // @InjectRepository(Buyers)
+        // private buyersRepository: Repository<Buyers>,
         private buyersAdapter: BuyersAdapter,
+        @InjectRepository(Address)
+        private addressRepo: Repository<Address>,
+        private buyersRepository : BuyerRepository
     ) { }
     /**
      * create or update Buyer
@@ -45,9 +51,9 @@ export class BuyersService {
             if (savedBuyerDto) {
                 const certificatePresent = savedBuyerDto.buyerName;
                 // generating resposnse
-                const response = new BuyersResponseModel(true, isUpdate ? 11101 : 11100, isUpdate ? 'Customer Updated Successfully' : 'Customer Created Successfully', savedBuyerDto);
+                const response = new BuyersResponseModel(true, isUpdate ? 11101 : 11100, isUpdate ? 'Buyer Updated Successfully' : 'Buyer Created Successfully', savedBuyerDto);
                 const name=isUpdate?'updated':'created'
-                const displayValue = isUpdate? 'Customer Updated Successfully': 'Customer Created Successfully'
+                const displayValue = isUpdate? 'Buyer Updated Successfully': 'Buyer Created Successfully'
             const userName = isUpdate? savedBuyerDto.updatedUser :savedBuyerDto.createdUser;
             // const newLogDto = new LogsDto(1,name, 'Customers', savedCustomerDto.buyerId, true, displayValue,userName,previousValue,certificatePresent)
             // let res = await this.logService.createLog(newLogDto);
@@ -84,7 +90,7 @@ export class BuyersService {
     async getAllBuyers(): Promise<AllBuyersResponseModel> {
         try {
             const buyersDTO: BuyersDTO[] = [];
-            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'buyerName': 'ASC' },relations:['countryInfo','paymentTermsInfo','paymentMethodInfo']});
+            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'buyerName': 'ASC' },relations:['paymentTermsInfo','paymentMethodInfo','adressInfo']});
             if (buyersEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 buyersEntities.forEach(buyerEntity => {
@@ -214,4 +220,64 @@ export class BuyersService {
             return err;
         }
       }
+
+    async getAddressByBuyerId(req:BuyerIdReq):Promise<CommonResponseModel>{
+        try{
+            const addressInfo = await this.addressRepo.find({where:{buyerInfo:{buyerId:req.buyerId}},relations:['countryInfo']})
+            if(addressInfo){
+                return new CommonResponseModel(true,1,'Data retrieved',addressInfo)
+            } else{
+                return new CommonResponseModel(true,1,'No data found',[])
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
+    async getAllBuyersInfo(): Promise<CommonResponseModel>{
+        try{
+            const buyerInfo = await this.buyersRepository.getBuyerInfo()
+            const buyerMap = new Map<number,BuyersDto>()
+            if(buyerInfo.length == 0){
+                return new CommonResponseModel(false,1,'No buyers found',[])
+            } else {
+                for(const rec of buyerInfo){
+                    if(!buyerMap.has(rec.id)){
+                        buyerMap.set(rec.buyer_id,new BuyersDto(rec.buyer_id,rec.buyer_code,rec.buyer_name,rec.gst_number,rec.contact_person,rec.phone_no,rec.email,rec.currency_name,rec.public_note,rec.private_note,rec.payment_terms,null,rec.payment_method_id,rec.is_active,null,null,rec.version_flag,rec.payment_terms_id,rec.payment_method,[]))
+                    }
+                    buyerMap.get(rec.buyer_id).addressInfo.push(new AddressDto(rec.address_id,rec.country_id,rec.state,rec.district,rec.city,rec.landmark,rec.lane1,rec.lane2,rec.pincode,null,null,null,null,rec.country_name))
+                }
+                const buyerModel: BuyersDto[] = [];
+                buyerMap.forEach((buyer => buyerModel.push(buyer)))
+                return new CommonResponseModel(true,1,'Data retrieved',buyerModel)
+            }
+
+        } catch(err){
+            throw err
+        }
+    }
+
+    // async getVbsBranchByVendorId(vendorIdReq: VendorIdRequest): Promise<VendorBranchResponse> {
+    //     try {
+    //         const records = await this.vbsBranchRepo.getBranchDetailsbyVendorId(vendorIdReq.vendorId);
+    //         const vendorBranchResponseMap = new Map<number, VendorBranchModel>();
+    //         if (records.length == 0) {
+    //             return new VendorBranchResponse(false, 1, 'No branches found', [])
+    //         } else {
+    //             for (const record of records) {
+    //                 if (!vendorBranchResponseMap.has(record.id)) {
+    //                     vendorBranchResponseMap.set(record.id, new VendorBranchModel(record.vbs_id, record.name, record.address, record.contact, record.email, record.country, record.state, record.district,record.city, record.area, record.latitude, record.longitude, record.zipcode, record.username, [],record.id,record.vehiclesCount));
+
+    //                 }
+    //                 vendorBranchResponseMap.get(record.id).vbsBranchAttributes.push(new VbsBranchAttributesModel(record.vbs_id, record.vbs_branch_id, record.attribute_name, record.attribute_value, record.vbsBranchAttributeId))
+    //             }
+    //             const vendorBranchModel: VendorBranchModel[] = [];
+    //             vendorBranchResponseMap.forEach((branch => vendorBranchModel.push(branch)))
+
+    //             return new VendorBranchResponse(true, 0, 'Branch details retrived successfully', vendorBranchModel)
+    //         }
+    //     } catch (err) {
+    //         throw err;
+    //     }
+    // }
 }
