@@ -1,6 +1,6 @@
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq, OrdersReq } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileIdReq, OrdersReq } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiConsumes } from '@nestjs/swagger';
@@ -8,6 +8,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path'; 
 import { OrdersService } from './order.service';
 import { SaveOrderDto } from './models/order.dto';
+import { FileUpdateStatusReq } from './models/file-request.dto';
 ''
 
 @Controller('orders')
@@ -157,7 +158,7 @@ export class OrdersController {
     }
 
     @Post('/updateFileStatus')
-    async updateFileStatus(@Body() req: any): Promise<CommonResponseModel> {
+    async updateFileStatus(@Body() req: FileUpdateStatusReq): Promise<CommonResponseModel> {
         try {
             return this.ordersService.updateFileStatus(req);
         } catch (err) {

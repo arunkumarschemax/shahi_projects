@@ -50,7 +50,8 @@ export class DocumentEntity {
 
     @Column('int',{
         name:'priority',
-        nullable:false
+        nullable:false,
+        default:0
     })
     priority:number
 }

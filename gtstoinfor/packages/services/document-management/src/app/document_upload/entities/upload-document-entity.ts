@@ -23,7 +23,7 @@ export class DocumentsList {
     roleName: string;
 
     @Column("varchar", {
-        nullable: true,
+        nullable: false,
         name: "customer_po",
     })
     customerPo: string;

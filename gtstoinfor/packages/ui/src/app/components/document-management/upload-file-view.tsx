@@ -219,7 +219,8 @@ const UploadFileGrid = () =>{
 
               render: (text, record) => {
                 return <>
-                  <Link onClick={e => goToFileUpload(record.PO)}>{record.PO}</Link>
+                  {JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" ?
+                  <Link onClick={e => goToFileUpload(record.PO)}>{record.PO}</Link> : <span>{record.PO}</span>}
                 </>
               },
 
@@ -252,10 +253,10 @@ const UploadFileGrid = () =>{
           render :(text, rowData, index) =>{
             return (<div style={{alignContent:'center'}}>
                <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
-                  <Button type="primary" 
+                  {rowData.status === "partially uploaded" ? "-" :<Button type="primary" 
                 onClick={() => mergeAndDownloadPDFs(rowData.url, rowData.PO)}>
               <DownloadOutlined/>
-              </Button>
+              </Button>}
                </Form.Item>   
                </div>     
                 )

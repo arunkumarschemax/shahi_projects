@@ -1,4 +1,4 @@
-import { CommonResponseModel, FileIdReq, OrdersReq, SaveOrderDto } from "@project-management-system/shared-models"
+import { CommonResponseModel, FileIdReq, FileStatusReq, OrdersReq, SaveOrderDto } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
@@ -51,7 +51,7 @@ export class OrdersService extends CommonAxiosService {
         return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
     }
 
-    async updateFileStatus(req: any): Promise<CommonResponseModel> {
+    async updateFileStatus(req: FileStatusReq): Promise<CommonResponseModel> {
         return await this.axiosPostCall(this.ordersController + '/updateFileStatus', req);
     }
 

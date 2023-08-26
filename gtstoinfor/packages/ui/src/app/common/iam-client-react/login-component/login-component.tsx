@@ -46,7 +46,7 @@ export const LoginComponent = () => {
         <div style={{marginLeft:'15%'}}>
                 <img src={doclogo} width={150} height={'50%'}></img>
             </div>
-        <div style={{marginLeft:'15%'}}><b>E Document Management</b></div>
+        <div style={{marginLeft:'15%'}}><b>E-Document Management</b></div>
         <br />
             <Form
                 name="login-form"

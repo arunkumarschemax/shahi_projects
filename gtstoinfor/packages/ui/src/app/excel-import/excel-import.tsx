@@ -95,10 +95,12 @@ export default function ExcelImport() {
           if (fileRes.status) {
             ordersService.saveOrder(data, fileRes?.data?.id).then((res) => {
               setLoading(true)
+              console.log(res);
               if (res.status) {
                 const req = new FileStatusReq()
                 req.fileId = fileRes?.data?.id;
                 req.status = 'Success'
+                req.updatedUser = JSON.parse(localStorage.getItem("currentUser")).user.userName;
                 ordersService.updateFileStatus(req)
                 message.success(res.internalMessage)
                 navigate("/excel-import/grid-view");
@@ -106,6 +108,8 @@ export default function ExcelImport() {
                 const req = new FileStatusReq()
                 req.fileId = fileRes?.data?.id;
                 req.status = 'Failed'
+                req.updatedUser = JSON.parse(localStorage.getItem("currentUser")).user.userName;
+                console.log(req);
                 ordersService.updateFileStatus(req)
                 message.error('File upload failed')
               }

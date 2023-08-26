@@ -1,6 +1,6 @@
 
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, OrdersReq, PoRoleRequest, docRequest, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileIdReq, FileStatusReq, OrdersReq, PoRoleRequest, docRequest, orderColumnValues } from '@project-management-system/shared-models';
 import { DataSource, EntityManager, QueryResult, getConnection } from 'typeorm';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { OrdersAdapter } from './adapters/order.adapter';
@@ -19,6 +19,7 @@ let moment = require('moment');
 moment().format();
 import { req } from '../document_upload/requests/importedPoReq';
 import { UploadFilesRepository } from '../document_upload/repository/upload-files.repository';
+import { FileUpdateStatusReq } from './models/file-request.dto';
 @Injectable()
 export class OrdersService {
 
@@ -52,13 +53,16 @@ export class OrdersService {
                 }
                 return updatedObj;
             });
+           
             const poRequest : req[] =[];
             for(const res of poNumbers){
-                if(res[0] != undefined){
+                if(res[0] === undefined || res[0] === ""){
+                    console.log("&&&&&&&&")
+                }
+                else{
                     poRequest.push(new req(res[0]));
                 }
             }
-            console.log(poRequest);
 
             const convertedData = updatedArray.map((obj) => {
                 const updatedObj = {};
@@ -327,12 +331,14 @@ export class OrdersService {
         }
     }
 
-    async updateFileStatus(req: FileStatusReq): Promise<CommonResponseModel> {
+    async updateFileStatus(req: FileUpdateStatusReq): Promise<CommonResponseModel> {
+        console.log(req);
+        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
         let update
         if (req.status === 'Failed') {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false });
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false, updatedUser: req.updatedUser });
         } else {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status })
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, updatedUser: req.updatedUser })
         }
         if (update.affected) {
             return new CommonResponseModel(true, 1, 'updated successfully');
