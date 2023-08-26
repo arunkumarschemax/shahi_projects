@@ -5,6 +5,7 @@ import Highcharts from 'highcharts';
 import moment from 'moment';
 import { NikeService } from '@project-management-system/shared-services';
 import { PoDataResDto, PoQtyDReqDto, ReportType } from '@project-management-system/shared-models';
+import { title } from 'process';
 
 export interface PoQuantityWiseProps { }
 
@@ -57,8 +58,9 @@ export function PoQuantityWiseGraph() {
 
     
     const options = {
-       
+        title: { text: "Temporal Quantity Trends" },
         chart: {
+            
             type: 'column',
             style: {
                 color: 'var(--text-color,black)',
@@ -124,14 +126,31 @@ export function PoQuantityWiseGraph() {
                     
                 }
             },
+            enabled: true,
+            stackLabels: {
+                enabled: true
+            },
+            
             labels: {
                 style: {
                     color: 'var(--text-color,black)'
                 }
             },
+            
             type: "category",
             categories: poData?.names ?? [] ,
-            reversed: false
+            reversed: false,
+           
+                plotOptions: {
+                    column: {
+                      stacking: 'normal',
+                      format: '{total}',
+                      dataLabels: {
+                        enabled: true
+                      }
+                    }
+                  },
+
         },
         yAxis: [
             {
@@ -142,13 +161,15 @@ export function PoQuantityWiseGraph() {
                         color: 'black'
                     },
                 },
+                enabled: true,
                 labels: {
                     style: {
                         color: 'var(--text-color,black)'
-                    }
+                    },
+                    
                 },
+               
             },
-
         ],
 
        
