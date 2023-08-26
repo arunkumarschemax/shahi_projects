@@ -10,6 +10,7 @@ import { SeasonWisePoOrderGraph } from "./season-wise-po"
 import { NikeService } from "@project-management-system/shared-services"
 import { useEffect, useState } from 'react';
 import moment from "moment"
+import PoQuantityWiseGraph from "./po-quantity-dwmq-wis"
 const { useToken } = theme
 
 export const NikeDashboard = () => {
@@ -84,6 +85,14 @@ export const NikeDashboard = () => {
                     <Col xs={24} sm={24} md={24} xl={12}>
                         <ShipmentGraph />
                     </Col>
+                </Row>
+            </Card>
+            <Card>
+                <Row gutter={24}>
+                    <Col xs={24} sm={24} md={24} xl={12}>
+                        <PoQuantityWiseGraph />
+                    </Col>
+
                 </Row>
             </Card>
         </>
