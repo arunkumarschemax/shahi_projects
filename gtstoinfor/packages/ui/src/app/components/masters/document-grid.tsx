@@ -1,14 +1,13 @@
-
-
-
 import {  CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined } from '@ant-design/icons';
 import { Table, Input, Popconfirm, Card, Button, Space, Divider, Switch, Tag, Tooltip, message, Drawer } from 'antd';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 import { useNavigate } from 'react-router-dom';
-import { DocumentService } from '@project-management-system/shared-services';
+import { DocumentService, UploadDocumentService } from '@project-management-system/shared-services';
 import { DocumentDto } from '@project-management-system/shared-models';
 import DocumentForm from './document-form';
+
+
 
 const DocumentGrid = () => {
 
@@ -19,7 +18,7 @@ const DocumentGrid = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedRoutesData, setSelectedRoutesData] = useState<any>(undefined);
 
-
+const docuListService = new UploadDocumentService()
   useEffect(() => {
     getDocumentData();
   }, []);
@@ -31,6 +30,17 @@ const DocumentGrid = () => {
         setDocData(res.data)
       }else{
         setDocData([])
+      }
+    })
+  }
+  const GetDocAvtiveinAvtivevalidation =(rowData:any) =>{
+    docuListService.getDocumentuploadedStaus({documentId:rowData.id}).then(res =>{
+      console.log(res)
+      if(res.data.length >0){
+        message.info('you Have Already Upload files aginst this you can not deactive this')
+      }else{
+        deleteMapping(rowData)
+
       }
     })
   }
@@ -124,7 +134,7 @@ const updateDoc = (data: DocumentDto) => {
                 
               <Divider type="vertical" /> 
                <Tooltip placement='top' title='Activate or Deactivate'>
-            <Popconfirm onConfirm={e =>{deleteMapping(rowData);}}
+            <Popconfirm onConfirm={e =>{GetDocAvtiveinAvtivevalidation(rowData);}}
             title={
               rowData.isActive
                 ? 'Are you sure to Deactivate  ?'
@@ -149,10 +159,12 @@ const updateDoc = (data: DocumentDto) => {
     setDrawerVisible(false);
     }
 
+   
+
   return (
     <div>
       <br />
-      <Card size='small'
+    <Card size='small'
         title='Documents' extra={<span><Button onClick={() => navigate('/document-form')} type={'primary'}>Create</Button></span>}>
         <Table
           columns={columns}
@@ -167,6 +179,7 @@ const updateDoc = (data: DocumentDto) => {
                 updateDetails={updateDoc}
                 isUpdate={true}
                 data={selectedRoutesData }
+                
                 closeForm={closeDrawer} />
             </Card> 
           </Drawer>

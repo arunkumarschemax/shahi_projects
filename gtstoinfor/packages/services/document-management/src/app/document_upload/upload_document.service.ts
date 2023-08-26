@@ -13,7 +13,7 @@ import { DocumentRoleMappingRepository } from "./repository/document-role-reposi
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
 import { DataSource } from "typeorm";
-import { PoRoleRequest, UploadDocumentListDto, docRequest, poReq } from "@project-management-system/shared-models";
+import { DocumentIdreq, PoRoleRequest, UploadDocumentListDto, docRequest, poReq } from "@project-management-system/shared-models";
 import { DocumentUploadDto } from "./requests/document-upload-dto";
 import { UploadFilesRepository } from "./repository/upload-files.repository";
 import { UploadFileDto } from "./models/upload-file.dto";
@@ -222,6 +222,23 @@ export class DocumentsListService {
             }
         }
 
+
+    async getDocumentuploadedStaus(req:DocumentIdreq):Promise<UploadDocumentListResponseModel>{
+        try{
+            const query='select  document_category_id AS docCatId,is_uploaded AS isUploaded FROM documents_list  WHERE is_uploaded=1 AND document_category_id='+req.documentId+''
+            const result= await this.documentsListRepository.query(query)
+            if(result){
+                return new UploadDocumentListResponseModel(true,1,'data retrivedsucessfully',result)
+            }else{
+                return new UploadDocumentListResponseModel(false,1,'data not found',[])
+
+            }
+        }catch(err){
+            throw err
+        }
+
+
+    }
         
 
     }

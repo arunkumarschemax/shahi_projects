@@ -8,12 +8,19 @@ import { DeleteDto } from './dto/delete-dto';
 import {DocumentResponseModel} from '../../../../../libs/shared-models/src/document-management/document-response.model'
 import { DocumentRepository } from './repository/documents.repository';
 import { CommonResponseModel } from '@project-management-system/shared-models';
+import { DocumentRoleMappingRepository } from './repository/document-role-repository';
+import { UploadFilesRepository } from './repository/upload-files.repository';
+import { DocumentsListRepository } from './repository/documents-list.repository';
 
 @Injectable()
 export class DocumentService {
     constructor(
         @InjectRepository(DocumentEntity)
         private repository:DocumentRepository ,
+        private mappingRepo : DocumentRoleMappingRepository,
+        private uploadFilesRepository:DocumentsListRepository,
+
+
     ) { }
 
     async getAllDocuments(): Promise<DocumentResponseModel> {
@@ -86,7 +93,7 @@ export class DocumentService {
 
       async activateOrDeactivateDocument(req: DocumentDto): 
       Promise<DocumentResponseModel> {
-        const routedetails = await this.repository.findOne({ where: { id: req.id } })
+        const routedetails = await this.repository.findOne({ where: { id: req.id } })        
         if (routedetails) {
 
             if (req.versionFlag != routedetails.versionFlag) {
@@ -96,12 +103,15 @@ export class DocumentService {
                 const routesupdate = await this.repository.update({ id: req.id }, { isActive: req.isActive, updatedUser: req.updatedUser, })
                 if (routedetails.isActive) {
                     if (routesupdate.affected) {
+                      const updateRolemap = await this.mappingRepo.update({documentId:req.id},{isActive:req.isActive})
+
                         return new DocumentResponseModel(true, 0, ' de-activated successfully', [])
                     } else {
                         throw new DocumentResponseModel(false, 1, 'already deactivated', [])
                     }
                 } else {
                     if (routesupdate.affected) {
+                      const updateRolemap = await this.mappingRepo.update({documentId:req.id},{isActive:req.isActive})
                         return new DocumentResponseModel(true, 0, 'activated successfully', [])
                     } else {
                         throw new DocumentResponseModel(false, 1, 'already activated', [])
