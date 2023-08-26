@@ -20,12 +20,12 @@ export const Dashboard = () => {
                 <Row gutter={24}>
                     <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>
                         <div >
-                            <DocumentWiseDocumentsGraph />
+                        <RoleWiseDocumentsGraph />
                         </div>
                     </Col>
                     <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>
                         <div >
-                            <RoleWiseDocumentsGraph />
+                            <PieChart />
                         </div>
                     </Col>
                 </Row>
@@ -33,7 +33,10 @@ export const Dashboard = () => {
             <Card>
                 <Row gutter={24}>
                     <Col xs={24} sm={24} md={24} xl={24}>
-                        <PieChart />
+                        {/* <PieChart /> */}
+                        <DocumentWiseDocumentsGraph />
+
+
                     </Col>
 
                 </Row>
