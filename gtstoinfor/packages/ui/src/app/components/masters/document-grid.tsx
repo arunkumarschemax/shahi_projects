@@ -231,7 +231,7 @@ const orders = (value, index, rowData) => {
   return (
     <div>
       <br />
-    <Card size='small'
+    <Card size='small' headStyle={{ backgroundColor: '#77dfec', border: 0 }}
         title='Documents' extra={<span><Button onClick={() => navigate('/document-form')} type={'primary'}>Create</Button></span>}>
       
         <Table

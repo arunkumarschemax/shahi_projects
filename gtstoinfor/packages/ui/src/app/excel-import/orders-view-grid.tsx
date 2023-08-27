@@ -262,7 +262,7 @@ const AllOrdersGridView = () => {
 
     return (
         <div>
-            <Card size='small' title="Orders" extra={<span><Button onClick={() => navigate('/excel-import/excel-import')} type={'primary'}>Import Orders</Button></span>}>
+            <Card size='small' title="Orders" headStyle={{ backgroundColor: '#77dfec', border: 0 }}  extra={<span><Button onClick={() => navigate('/excel-import/excel-import')} type={'primary'}>Import Orders</Button></span>}>
                 <Form form={form} layout={'vertical'}>
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >

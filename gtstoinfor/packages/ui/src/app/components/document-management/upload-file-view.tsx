@@ -327,7 +327,7 @@ const UploadFileGrid = () =>{
       setIsModalOpen(false)
     }
     return (<Form form={form}>
-        <Card title="Document management" extra={<span>{JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" ?<Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button>:""}</span>}>
+        <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span>{JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" ?<Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button>:""}</span>}>
             {columns.length > 0 && itemData.length > 0 ? (
                 <Table
                     columns={columns.map((column) => ({

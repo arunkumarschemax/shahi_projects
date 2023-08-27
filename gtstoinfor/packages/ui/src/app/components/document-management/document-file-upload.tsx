@@ -294,7 +294,7 @@ export default function DocumentListupload() {
     mergeAndDownloadPDFs(data)
   };
   return(
-    <Card title="Document management" extra={<span><Button onClick={() => navigate('/document-management/upload-file-view')} type={'primary'}>View Documents Status</Button></span>}>
+    <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span><Button onClick={() => navigate('/document-management/upload-file-view')} type={'primary'}>View Documents Status</Button></span>}>
       <Form form={form}  layout='vertical' name="control-hooks" >
        <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
@@ -341,7 +341,7 @@ export default function DocumentListupload() {
             marginBottom: 16,
             borderRadius: 8,
             borderTop: '1px solid #e8e8e8',
-            backgroundColor:'#dae7f3'
+            backgroundColor:'#77dfec'
           }}
         >
           <Row gutter={24}>

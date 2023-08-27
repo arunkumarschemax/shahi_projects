@@ -86,7 +86,7 @@ const getDocumentData =() =>{
   }
     return (
         <div>
-            <Card title="Document Role Mapping " size='small'
+            <Card title="Document Role Mapping " size='small' headStyle={{ backgroundColor: '#77dfec', border: 0 }} 
         extra={<span><Button onClick={() => navigate('/role-mapping-grid')} type={'primary'}>View</Button></span>}>          
                 <Form
                     form={form}

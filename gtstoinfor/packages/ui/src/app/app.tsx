@@ -9,6 +9,7 @@ import { LoginComponent, useIAMClientState } from "./common";
 import CustomSpinner from "./common/custom-spinner/custom-spinner";
 import { AppRoutes } from './routes';
 const { Text } = Typography;
+import edocbkimg from './edocbkimg.jpg'
 
 export function App() {
 
@@ -48,7 +49,7 @@ export function App() {
     <CustomSpinner loading={load} />
     <AppRoutes />
   </> :
-    <div style={{ backgroundColor:'rgba(0, 0, 0, 0.45)', display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div style={{ backgroundImage: `url(${edocbkimg})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'start', height: '100vh' }}>
       <LoginComponent />
     </div>
   );
