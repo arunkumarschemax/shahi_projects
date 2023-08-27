@@ -24,7 +24,7 @@ export class DocumentService {
     ) { }
 
     async getAllDocuments(): Promise<DocumentResponseModel> {
-        const query= 'select document_name as documentName,id,created_user as createdUser,updated_user as updatedUser,is_active as isActive,version_flag as versionFlag from document'
+        const query= 'select document_name as documentName,id,created_user as createdUser,updated_user as updatedUser,is_active as isActive,version_flag as versionFlag, priority AS priority from document order by priority ASC' 
         const data = await this.repository.query(query)
         console.log(data,'dataa')
         if (data) {
@@ -55,10 +55,42 @@ export class DocumentService {
             return null
         }
     }
+    async updatePriority(req:DocumentDto):Promise<CommonResponseModel>{
+      try{
+        let flag = true;
+        // for(const data of req){
+          let existingPriority = await this.repository.findOne({where:{priority:req.priority}});
+          let oldPriority = await this.repository.findOne({where:{id:req.id}});
+          let updatePriority = await this.repository.update({id:req.id},{priority:req.priority});
+          if(updatePriority.affected === 0){
+            flag = false;
+            return new CommonResponseModel(false, 1001, "Update Failed",)
+          }
+          else{
+            let updateNewPriority = await this.repository.update({id:existingPriority.id},{priority:oldPriority.priority});
+            if(updateNewPriority.affected === 0){
+              flag = false;
+              return new CommonResponseModel(false, 1001, "Update Failed",)
+            }
+          }
+        // }
+        if(!flag){
+          return new CommonResponseModel(false, 1001, "Update Failed",)
+        }
+        else{
+          return new CommonResponseModel(true, 1010, "Updated Successfully. ",)
+        }
+      }catch(error){
+        return new CommonResponseModel(false,10011,"Something went wrong. ")
+          throw error
+        }
+    }
+
 
       async createDocument(req:DocumentDto ,isUpdate: boolean):Promise<DocumentResponseModel>{
         try{
-
+          let count =  await this.repository.count();
+          console.log(count)
           if(!isUpdate){
             const relation = await this.getDocvalidation(req.documentName)
             if(relation){
@@ -79,6 +111,7 @@ export class DocumentService {
           }else{
             entities.createdUser=req.createdUser
           }
+          entities.priority = Number(count) + 1;
           const save = await this.repository.save(entities)
           if(save){
             return new DocumentResponseModel(true,1,isUpdate?'Document updated sucessfully..':'Document created successfully..',undefined)

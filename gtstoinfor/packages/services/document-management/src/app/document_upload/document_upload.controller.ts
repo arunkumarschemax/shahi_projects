@@ -108,6 +108,15 @@ export class DocumentUploadController {
         return error;
       }
     }
+
+    @Post('updatePriority')
+    async updatePriority(@Body() req:DocumentDto):Promise<CommonResponseModel>{
+      try {
+        return await this.documentservice.updatePriority(req);
+      } catch (error) {
+        return error;
+      }
+    }
     @Post('getAllDocumentsforRolemapping')
     async getAllDocumentsforRolemapping(): Promise<DocumentResponseModel> {
       try {
