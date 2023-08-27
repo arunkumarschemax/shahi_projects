@@ -416,7 +416,3 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
 
 
 export default UploadView;
-
-function fetchPdfBytesArrayWithAxios(pdfUrls: string[]) {
-  throw new Error('Function not implemented.');
-}

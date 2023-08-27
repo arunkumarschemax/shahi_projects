@@ -32,6 +32,7 @@ export class DocumentsList {
     @Column('enum', {
         name: 'status',
         nullable: false,
+        default:DoclListEnum.Pending,
         enum: DoclListEnum
     })
     status: string;
