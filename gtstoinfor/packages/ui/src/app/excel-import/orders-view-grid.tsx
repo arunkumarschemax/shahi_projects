@@ -285,6 +285,7 @@ const AllOrdersGridView = () => {
                                         allowClear>
                                         <Option key='Failed' value="Failed">Failed</Option>
                                         <Option key='Sucess' value="Sucess">Sucess</Option>
+                                        <Option key='Uploading' value="Uploading">Uploading</Option>
                                     </Select>
                                 </Form.Item>
                             </div>
