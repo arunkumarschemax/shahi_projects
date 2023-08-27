@@ -24,7 +24,7 @@ export class DocumentService {
     ) { }
 
     async getAllDocuments(): Promise<DocumentResponseModel> {
-        const query= 'select document_name as documentName,id,created_user as createdUser,updated_user as updatedUser,is_active as isActive,version_flag as versionFlag, priority AS priority from document order by priority ASC' 
+        const query= 'select document_name as documentName,id,created_user as createdUser,updated_user as updatedUser,is_active as isActive,version_flag as versionFlag, priority AS priority from document ORDER BY priority ASC' 
         const data = await this.repository.query(query)
         console.log(data,'dataa')
         if (data) {

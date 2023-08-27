@@ -20,6 +20,7 @@ import { DocumentRoleMappingService } from "./document_role_mapping.service";
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import * as fs from 'fs';
 import { Express } from 'express'; 
+import { OrdersEntity } from "../orders/entities/order.entity";
 @ApiTags('doc-upload')
 @Controller('doc-upload')
 export class DocumentUploadController {
@@ -177,7 +178,7 @@ export class DocumentUploadController {
     }
 
     @Post('/createDocListr')
-    async createDocList(@Body() req?:req[]):Promise<UploadDocumentListResponseModel>{
+    async createDocList(@Body() req?:OrdersEntity[]):Promise<UploadDocumentListResponseModel>{
       try{
         return await this.uploadDocservice.createDocList(req);
       }catch(error){

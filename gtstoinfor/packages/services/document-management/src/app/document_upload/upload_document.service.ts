@@ -18,6 +18,8 @@ import { DocumentUploadDto } from "./requests/document-upload-dto";
 import { UploadFilesRepository } from "./repository/upload-files.repository";
 import { UploadFileDto } from "./models/upload-file.dto";
 import { UploadFilesEntity } from "./entities/upload-files.entity";
+import { OrdersEntity } from "../orders/entities/order.entity";
+import { GenericTransactionManager } from "packages/services/common/src/typeorm-transactions/generic-transaction-manager";
 @Injectable()
 export class DocumentsListService {
     constructor(
@@ -167,7 +169,7 @@ export class DocumentsListService {
 
     async getDocumentOrderIds():Promise<UploadDocumentListResponseModel>{
         try{
-            const query ='select id AS documentCategoryId from document'
+            const query ='select id AS documentCategoryId from document where is_active = 1'
             const result = await this.documentRepo.query(query)
             console.log(result)
             return new UploadDocumentListResponseModel(true,1,'retrived sucessfully',result)
@@ -177,32 +179,44 @@ export class DocumentsListService {
         }
     }
 
-        async createDocList(req?:req[]):Promise<UploadDocumentListResponseModel>{
+        async createDocList(req?:OrdersEntity[]):Promise<UploadDocumentListResponseModel>{
+            const transactionManager = new GenericTransactionManager(this.dataSource)
+            let flag:boolean=true;
             try{
+                await transactionManager.startTransaction()
                 const docIds = await this.getDocumentOrderIds();
                 const roleMappingData = await this.documentRoleMappingRepo.find();
                 for(const poNo of req){
-                    console.log(poNo)
                     for(const doc of docIds.data){
-                        console.log(roleMappingData.find((res) => res.documentId === doc.documentCategoryId)?.roleName);
-                        if(roleMappingData.find((res) => res.documentId === doc.documentCategoryId)?.roleName != undefined){
+                        if(roleMappingData.find((res) => res.documentId === doc.documentCategoryId)?.roleName != undefined && poNo.poNo != null && poNo.id != null){
                             const entity = new DocumentsList()
-                            entity.customerPo=poNo.poNumber;
+                            entity.customerPo=poNo.poNo;
+                            entity.orderId=poNo.id;
                             entity.documentCategoryId=doc.documentCategoryId;
                             entity.roleName= roleMappingData.find((res) => res.documentId === doc.documentCategoryId).roleName;
-                            const save = await this.documentsListRepository.save(entity)
+                            const save =  await transactionManager.getRepository(DocumentsList).save(entity)
+                            if(!save){
+                                flag=false;
+                                break
+                            }
                         }
                         else{
                             continue;
                         }
                     }    
                 }
-
-                return new UploadDocumentListResponseModel(true,1,'creted sucessfully',[])
+                if(!flag){
+                    await transactionManager.releaseTransaction()
+                    return new UploadDocumentListResponseModel(false,0,'something went wrong. ',[])
+                }
+                else{
+                    await transactionManager.completeTransaction()
+                    return new UploadDocumentListResponseModel(true,1,'creted sucessfully',[])
+                }
             }
             catch(error){
-                console.log(error)
-                throw(error)
+                await transactionManager.releaseTransaction()
+                return new UploadDocumentListResponseModel(false,0,'something went wrong. ',[])
             }
         }   
 

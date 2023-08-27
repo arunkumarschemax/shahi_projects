@@ -228,6 +228,20 @@ const UploadFileGrid = () =>{
               //   <a href={`#/document-management/document-file-upload?text=${encodeURIComponent(text)}`}>{text}</a>
               // ),
         },
+        {
+          title: 'INVOICE NO',
+          dataIndex: 'invoiceNo',
+          fixed: 'left',
+          align:'center',
+            ...getColumnSearchProps('invoiceNo'),
+        },
+        {
+          title: 'CHALLAN NO',
+          dataIndex: 'challanNo',
+          fixed: 'left',
+          align:'center',
+            ...getColumnSearchProps('challanNo'),
+        },
       ];
 
       const downloadcomun = [
@@ -283,9 +297,10 @@ const UploadFileGrid = () =>{
 
     const getDocumentData = () => {
         service.getDynamicDataForDocList().then((res) => {
+          if(res.status){
             setItemData(res.data);
-            const headerColumns = Object.keys(res.data[0])
-            .filter(header =>header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url')
+            const headerColumns = Object?.keys(res?.data[0])
+            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url')
             .map(header => ({           
                 title: header.toUpperCase(),
                 dataIndex: header,
@@ -296,13 +311,15 @@ const UploadFileGrid = () =>{
                     // console.log(res.data,'header')
                     const backgroundColor = data === 'Yes' ? 'green' : 'red'
                     return    (
-                        <div style={{color:backgroundColor ,textAlign:'center'}} >{data}</div>
+                        <div style={{color:backgroundColor ,textAlign:'center'}} ><b>{data}</b></div>
                     )
               
                 }
             }));
             setColumns([...pocolumn,...headerColumns,...downloadcomun]);
-          
+        }
+        else{
+        }
         });
     }
 

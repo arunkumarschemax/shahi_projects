@@ -235,6 +235,7 @@ const orders = (value, index, rowData) => {
         title='Documents' extra={<span><Button onClick={() => navigate('/document-form')} type={'primary'}>Create</Button></span>}>
       
         <Table
+          pagination={false}
           rowKey={record => record.id}
           columns={columns}
           dataSource={docData}
