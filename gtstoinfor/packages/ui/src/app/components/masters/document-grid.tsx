@@ -97,21 +97,34 @@ const updateDoc = (data: DocumentDto) => {
       key: '5',
       title: "Status",
       dataIndex: "isActive",
-      render: (isActive: any, rowData: any) => (
+      render: (isActive, rowData) => (
         <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
+          {isActive == 1? (
+            <Tag icon={<CheckCircleOutlined />} color="#87d068">
+              Active
+            </Tag>
+          ) : (
+            <Tag icon={<CloseCircleOutlined />} color="#f50">
+              Inactive
+            </Tag>
+          )}
         </>
       ),
       filters: [
         {
-          text: 'active',
+          text: 'Active',
           value: 1,
         },
         {
-          text: 'InActive',
+          text: 'Inactive',
           value: 0,
         },
-      ]
+      ],
+      filterMultiple: false,
+      onFilter: (value, record) => {
+        return record.isActive === value // Use 'true' and 'false' as filter values
+      }
+     
     },
     {
       title:`Action`,

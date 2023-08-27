@@ -368,7 +368,7 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           <Form.Item name={"status"} initialValue={props.docData.docStatus}>
             <Radio.Group buttonStyle="solid" onChange={handleStatusChange}>
-              <Radio.Button value="partially uploaded">parially</Radio.Button>
+              <Radio.Button value="partially uploaded">partially</Radio.Button>
               <Radio.Button value="fully uploaded">fully</Radio.Button>
             </Radio.Group>
           </Form.Item>
