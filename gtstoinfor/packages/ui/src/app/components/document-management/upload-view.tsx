@@ -120,13 +120,12 @@ const CustomUploadList = ({ fileList, handleRemoveFile }) => {
   console.log(fileList)
   return (
       <div>
-          <h3>Uploaded Files:</h3>
-          
+          <h5>Uploaded Files:</h5>
           <ul>
           {fileList?.length > 0 ? (
                    renderFileNames()
                 ) : (
-                    <p>No files uploaded yet.</p>
+                    <h6>No files uploaded yet.</h6>
                 )}
           </ul>
       </div>
@@ -263,7 +262,7 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
         setFileList([]);
         // uploadFileList([]);
     },
-    onDownload: handleFileDownload,
+    // onDownload: handleFileDownload,
     beforeUpload: (file: any) => {
         if (!file.name.match(/\.(pdf|jpg|jpeg|png)$/)) {
             message.error("Only pdf and image files are allowed!");
@@ -366,7 +365,7 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
           </Form.Item>
         </Text>
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-          <Form.Item name={"status"} initialValue={props.docData.docStatus}>
+          <Form.Item name={`status${props.docData.documentsListId}`} initialValue={props.docData.docStatus}>
             <Radio.Group buttonStyle="solid" onChange={handleStatusChange}>
               <Radio.Button value="partially uploaded">partially</Radio.Button>
               <Radio.Button value="fully uploaded">fully</Radio.Button>
@@ -383,8 +382,6 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
             Upload
           </Button>
         </Text>
-        <br />
-        <br />
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
           <CustomUploadList fileList={props.docData.documentsPath} handleRemoveFile={handleRemoveFile} />
         </Text>

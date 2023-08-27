@@ -156,9 +156,13 @@ const AllOrdersGridView = () => {
             // dataIndex: 'createdAt',
             render: (_, record) => {
                 return record.DateAndHours
-                  ? moment(record.DateAndHours).format("YYYY-MM-DD :HH")
+                  ? moment(record.DateAndHours).format("YYYY-MM-DD")
                   : "-";
               },
+        },
+        {
+            title: 'Uploaded By',
+            dataIndex: 'uploadedUser'
         },
         {
             title: 'Status',
@@ -267,8 +271,7 @@ const AllOrdersGridView = () => {
                                  <DatePicker style={{ width: '95%', }}  
                                  onChange={onChangeDate} 
                                  showToday 
-                                 showTime={{ format: 'HH' }} // Specify the format for time
-                                 format="YYYY-MM-DD HH" 
+                                 format="YYYY-MM-DD" 
                                  />
                                  {/* <DatePicker showTime onChange={onChange} onOk={onOk} /> */}
                             </Form.Item>

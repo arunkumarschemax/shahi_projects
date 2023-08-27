@@ -177,7 +177,7 @@ export default function ExcelImport() {
               {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).utc().format('YYYY-MM-DD HH:mm:ss') : '-'}
             </Descriptions.Item>
             <Descriptions.Item label={<b>Uploaded User</b>}>
-              {filesData[0]?.createdUser}
+              {filesData[0]?.updatedUser}
             </Descriptions.Item>
           </Descriptions>
         </span>

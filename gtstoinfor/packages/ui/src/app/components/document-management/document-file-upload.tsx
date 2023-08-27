@@ -27,7 +27,7 @@ export default function DocumentListupload() {
   const [page, setPage] = React.useState(1);
   const [fileList,setFilelist] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
-  const [hide,setHide] = useState(true)
+  const [hide,setHide] = useState<boolean>(false)
   let navigate = useNavigate();
   const [form] = Form.useForm();
   const { Option } = Select;
@@ -51,6 +51,7 @@ export default function DocumentListupload() {
       if(res.status){
         setDocData(res.data)
         setUrls(res.dataa);
+        setHide(true)
       }else{
         setDocData([])
         setUrls([]);
@@ -313,25 +314,21 @@ export default function DocumentListupload() {
              </Select>
            </Form.Item>
          </Col>
-        <Col span={5} style={{paddingTop:'30px'}}>
-          <Button onClick={() => download(urls)}
-              style={{
-                color: 'white',
-                backgroundColor: 'green',
-                width: '100%',
-              }}
-              icon={<DownloadOutlined />}
-            >
-              Merge & Download Documents
-            </Button>
-        </Col>      
-         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{marginTop:'21px'}}>
-         <Form.Item name={'download'}  hidden={hide}>
-            <Button name='download' type='primary'>
-                    Po Download
-            </Button>
-         </Form.Item>
-         </Col>
+         {
+          !hide ? "" :
+            <Col span={5} style={{paddingTop:'30px'}}>
+              <Button onClick={() => download(urls)}
+                  style={{
+                    color: 'white',
+                    backgroundColor: 'green',
+                    width: '100%',
+                  }}
+                  icon={<DownloadOutlined />}
+                >
+                  Merge & Download Documents
+                </Button>
+            </Col> 
+          }     
       </Row>
       {docData?.length > 0 ? 
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -344,6 +341,7 @@ export default function DocumentListupload() {
             marginBottom: 16,
             borderRadius: 8,
             borderTop: '1px solid #e8e8e8',
+            backgroundColor:'#dae7f3'
           }}
         >
           <Row gutter={24}>

@@ -219,6 +219,7 @@ const getColumnSearchProps = (dataIndex:string) => ({
       
       <Card title='Document Role Mapping' size='small' extra={<span><Button onClick={() => navigate('/role-mapping-form')} type={'primary'}>Create</Button></span>}>       
         <Table
+        pagination={false}
           columns={columns}
           dataSource={data}
          size='small'

@@ -236,12 +236,13 @@ const UploadFileGrid = () =>{
           dataIndex:'status',
           align:'center',
           render:(text: string, rowData: any, index: number) =>{
-            const hasNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value === 'No');
-            const hasYes = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('Yes'));
-            if (hasNo) {
-              return 'Partially Uploaded';
-            } else if (!hasYes) {
+            let hasNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value === 'No');
+            let hasYes = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('Yes'));
+            if (!hasYes) {
               return 'Pending';
+            }
+            else if (hasNo) {
+              return 'Partially Uploaded';
             } else {
               return 'Fully Uploaded';
             }
@@ -253,7 +254,7 @@ const UploadFileGrid = () =>{
           render :(text, rowData, index) =>{
             return (<div style={{alignContent:'center'}}>
                <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
-                  {rowData.status === "partially uploaded" ? "-" :<Button type="primary" 
+                  {rowData.status === "pending" ? "-" :<Button type="primary" 
                 onClick={() => mergeAndDownloadPDFs(rowData.url, rowData.PO)}>
               <DownloadOutlined/>
               </Button>}

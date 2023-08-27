@@ -336,9 +336,9 @@ export class OrdersService {
         console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
         let update
         if (req.status === 'Failed') {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false, updatedUser: req.updatedUser });
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false, updatedUser: req.updatedUser, createdUser:req.updatedUser });
         } else {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, updatedUser: req.updatedUser })
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, updatedUser: req.updatedUser, createdUser:req.updatedUser })
         }
         if (update.affected) {
             return new CommonResponseModel(true, 1, 'updated successfully');
@@ -450,9 +450,9 @@ export class OrdersService {
     }
 
     async getDynamicDataForDocList(): Promise<CommonResponseModel> {
-        const query = `SELECT DISTINCT document_name FROM document where is_active=1`;
+        const query = `SELECT DISTINCT document_name FROM document where is_active=1 order by priority ASC`;
         const documentNames = await this.dataSource.query(query)
-        const dynamicSQL = `SELECT "" AS url, dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END END) AS '${name.document_name}'
+        const dynamicSQL = `SELECT "" AS url, dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END ELSE '-' END) AS '${name.document_name}'
         `).join(',')},dl.documents_list_id as docListId,dl.file_path as filePath,dl.status
       FROM
         documents_list dl
@@ -487,7 +487,7 @@ export class OrdersService {
     async getuploadeOrdersdata(req?:OrdersReq):Promise<CommonResponseModel>{
         try{
             let query
-             query='select file_name as fileName,file_path as filePath,status,date(created_at) as createdAt,DATE_FORMAT(created_at, "%Y-%m-%d %H") AS DateAndHours from file_upload where id>0'
+             query='select updated_user AS uploadedUser,file_name as fileName,file_path as filePath,status,date(created_at) as createdAt,DATE_FORMAT(created_at, "%Y-%m-%d %H") AS DateAndHours from file_upload where id>0'
             if(req.status){
                 query=query+' and status="'+req.status+'"'    
             }
