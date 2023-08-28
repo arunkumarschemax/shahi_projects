@@ -125,8 +125,8 @@ const AllOrdersGridView = () => {
               console.log(res);
               setTimeout(() => {
                 const response = {
-                    file:  'http://165.22.220.143/document-management/gtstoinfor/upload-files/'+`${res}`
-                //   file: 'http://165.22.220.143/document-management/gtstoinfor/upload-files/'+`${res}`,
+                    file: 'http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'+`${res}`
+                    // file:  'http://165.22.220.143/document-management/gtstoinfor/upload-files/'+`${res}`
                 };
                 window.open(response.file);
       
