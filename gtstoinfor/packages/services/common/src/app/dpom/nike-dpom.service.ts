@@ -23,7 +23,6 @@ const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 import { PoAndQtyReq } from './dto/po-qty.req';
 import { PoQty } from './dto/poqty.req';
 import { WeeklyPoAndQtyReq } from './dto/weeklypoqty.req';
-import { Console } from 'console';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -944,56 +943,51 @@ export class DpomService {
         return new CommonResponseModel(false, 0, 'failed', e);
     }
 
-    async getPoAndQtyDashboard(req:PoAndQtyReq): Promise<CommonResponseModel> {
-        
-        try{
-           
+    async getPoAndQtyDashboard(req: PoAndQtyReq): Promise<CommonResponseModel> {
+        try {
             let query = '';
-            let monthNo=0;  
-            if(!req.month){
-              
+            let monthNo = 0;
+            if (!req.month) {
                 const dateData = new Date();
                 monthNo = dateData.getMonth();
-            }else{
-                monthNo=req.month;
-            }           
-            let yearNo=0;
-            if(!req.year){
+            } else {
+                monthNo = req.month;
+            }
+            let yearNo = 0;
+            if (!req.year) {
                 const dateData = new Date();
                 yearNo = dateData.getFullYear();
-            }else{
-                yearNo=req.year;
+            } else {
+                yearNo = req.year;
             }
-            const names = []; 
-            const namesData = [];let quarterName;
-            const qunarterCount = {1 : 'quarter1',  2 : 'quarter1', 3 : 'quarter1', 4 : 'quarter2', 5 : 'quarter2', 6 : 'quarter2', 7 : 'quarter3', 8 : 'quarter3', 9 : 'quarter3', 10 : 'quarter4', 11 : 'quarter4', 12 : 'quarter4'};
-            const monthData ={1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'};
+            const names = [];
+            const namesData = []; let quarterName;
+            const qunarterCount = { 1: 'quarter1', 2: 'quarter1', 3: 'quarter1', 4: 'quarter2', 5: 'quarter2', 6: 'quarter2', 7: 'quarter3', 8: 'quarter3', 9: 'quarter3', 10: 'quarter4', 11: 'quarter4', 12: 'quarter4' };
+            const monthData = { 1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec' };
             let mapKey;
             let querySelect;
 
             let queryWhere;
             let queryGroup;
-            const monthInfo=monthNo-1;
+            const monthInfo = monthNo - 1;
             let allNames;
 
-            if(req.reportType == ReportType.DAYWISE){
-                /** Assigning all dateData */               
-                const date = new Date(yearNo, monthInfo, 1);   
+            if (req.reportType == ReportType.DAYWISE) {
+                /** Assigning all dateData */
+                const date = new Date(yearNo, monthInfo, 1);
                 while (date.getMonth() === monthInfo) {
-                    names.push(moment(new Date(date)).format('YYYY-MM-DD'));                    
+                    names.push(moment(new Date(date)).format('YYYY-MM-DD'));
                     date.setDate(date.getDate() + 1);
                 }
-
                 /**Day QueryFilter */
                 querySelect = 'DATE(created_at) AS reportedDate';
                 queryGroup = 'DATE(created_at)';
-                queryWhere = 'MONTH(created_at)='+monthNo+'';
+                queryWhere = 'MONTH(created_at)=' + monthNo + '';
                 allNames = names;
-                console.log(querySelect,"selected data")
-            }else if(req.reportType == ReportType.WEEKWISE){
-                let month;      
+            } else if (req.reportType == ReportType.WEEKWISE) {
+                let month;
                 if (monthNo < 10)
-                month = "0" + monthNo;            
+                    month = "0" + monthNo;
                 const date = "01." + month + "." + yearNo;
                 const first = moment(date, 'dd.MM.yyyy').startOf('month').week();
                 const last = moment(date, 'dd.MM.yyyy').endOf('month').week();
@@ -1001,102 +995,100 @@ export class DpomService {
                     namesData.push(i);
                     names.push(i + " " + monthData[monthNo]);
                 }
-                 /** Month QueryFilter */
-                 querySelect = 'WEEK(created_at) AS reportedDate';
-                 queryGroup = 'WEEK(created_at)';
-                 queryWhere = 'MONTH(created_at)='+monthNo+'';
-                 allNames = namesData;
-                 
-             }else{
-                 const quarterNames = ['Jan - Mar', 'Apr - Jun', 'Jul - Sep', 'Oct - Dec'];
-                 const quarterData = ['quarter1', 'quarter2', 'quarter3', 'quarter4'];
-                 for (const quanrter of quarterNames) {
-                     names.push(quanrter + " " + yearNo);                
-                 }
-                 /** Year QueryFilter */
-                 querySelect = 'MONTH(created_at) AS reportedDate';
-                 queryGroup = 'MONTH(created_at)';
-                 queryWhere = 'YEAR(created_at)='+yearNo+'';
-                 allNames = quarterData;
-             }  
-            
-          query =`SELECT po_number AS poNumber, sum(total_item_qty) AS totalItemQuantity,created_at AS createdAt,`+querySelect+`
-         FROM dpom WHERE total_item_qty >0 AND `+queryWhere+``;
-         query += ` group by `+ queryGroup +``;
-           
-        const data = await this.dpomRepository.query(query)
-        if (data.length < 1){
-            return new CommonResponseModel(false, 0, 'No Records Found', [])
-        } 
-       
-const poMap = new Map<string, PoQty>();
-for (const poData of data) {
-    const totalQty = parseFloat(poData.totalItemQuantity);
-    if (req.reportType == ReportType.DAYWISE) {
-        const mapKey = moment(poData.reportedDate).format('YYYY-MM-DD');
-        if (!poMap.has(mapKey)) {
-            const poObj = new PoQty();
-            poObj.totalItemQuantity = poData.totalItemQuantity; 
-            poMap.set(mapKey, poObj);
-        } else {
-            poMap.get(mapKey).totalItemQuantity += poData.totalItemQuantity;
-        }
-    }  else if (req.reportType == ReportType.WEEKWISE) {
-        const mapKey = poData.reportedDate;
-        if (!poMap.has(mapKey)) {
-            const poObj = new PoQty();
-            poObj.totalItemQuantity = totalQty; 
-            poMap.set(mapKey, poObj);
-            console.log(poObj,"pppppppppppppppppppppppppppppppp")
-        } else {
-            poMap.get(mapKey).totalItemQuantity += totalQty; 
-        }
-    } else {
-        quarterName = qunarterCount[poData.reportedDate];
-        if (!poMap.has(quarterName)) {
-            const poObj = new PoQty();
-            poObj.totalItemQuantity = totalQty; 
-            poMap.set(quarterName, poObj);
-        } else {
-            poMap.get(quarterName).totalItemQuantity += totalQty; 
-        }
-    }
-}
+                /** Month QueryFilter */
+                querySelect = 'WEEK(created_at) AS reportedDate';
+                queryGroup = 'WEEK(created_at)';
+                queryWhere = 'MONTH(created_at)=' + monthNo + '';
+                allNames = namesData;
+            } else {
+                const quarterNames = ['Jan - Mar', 'Apr - Jun', 'Jul - Sep', 'Oct - Dec'];
+                const quarterData = ['quarter1', 'quarter2', 'quarter3', 'quarter4'];
+                for (const quanrter of quarterNames) {
+                    names.push(quanrter + " " + yearNo);
+                }
+                /** Year QueryFilter */
+                querySelect = 'MONTH(created_at) AS reportedDate';
+                queryGroup = 'MONTH(created_at)';
+                queryWhere = 'YEAR(created_at)=' + yearNo + '';
+                allNames = quarterData;
+            }
 
-const dashboardPoGrnData = new PoData();
-dashboardPoGrnData.poQty = [];
-allNames.forEach(eachName => {
-    const PoGrnForQty = poMap.get(eachName);
-    const totalQty = PoGrnForQty ? PoGrnForQty.totalItemQuantity : 0;
-    dashboardPoGrnData.poQty.push(totalQty);
-});
+            query = `SELECT po_number AS poNumber, sum(total_item_qty) AS totalItemQuantity,created_at AS createdAt,` + querySelect + `
+         FROM dpom WHERE total_item_qty >0 AND `+ queryWhere + ``;
+            query += ` group by ` + queryGroup + ``;
+
+            const data = await this.dpomRepository.query(query)
+            if (data.length < 1) {
+                return new CommonResponseModel(false, 0, 'No Records Found', [])
+            }
+
+            const poMap = new Map<string, PoQty>();
+            for (const poData of data) {
+                const totalQty = parseFloat(poData.totalItemQuantity);
+                if (req.reportType == ReportType.DAYWISE) {
+                    const mapKey = moment(poData.reportedDate).format('YYYY-MM-DD');
+                    if (!poMap.has(mapKey)) {
+                        const poObj = new PoQty();
+                        poObj.totalItemQuantity = poData.totalItemQuantity;
+                        poMap.set(mapKey, poObj);
+                    } else {
+                        poMap.get(mapKey).totalItemQuantity += poData.totalItemQuantity;
+                    }
+                } else if (req.reportType == ReportType.WEEKWISE) {
+                    const mapKey = poData.reportedDate;
+                    if (!poMap.has(mapKey)) {
+                        const poObj = new PoQty();
+                        poObj.totalItemQuantity = totalQty;
+                        poMap.set(mapKey, poObj);
+                    } else {
+                        poMap.get(mapKey).totalItemQuantity += totalQty;
+                    }
+                } else {
+                    quarterName = qunarterCount[poData.reportedDate];
+                    if (!poMap.has(quarterName)) {
+                        const poObj = new PoQty();
+                        poObj.totalItemQuantity = totalQty;
+                        poMap.set(quarterName, poObj);
+                    } else {
+                        poMap.get(quarterName).totalItemQuantity += totalQty;
+                    }
+                }
+            }
+
+            const dashboardPoGrnData = new PoData();
+            dashboardPoGrnData.poQty = [];
+            allNames.forEach(eachName => {
+                const PoGrnForQty = poMap.get(eachName);
+                const totalQty = PoGrnForQty ? PoGrnForQty.totalItemQuantity : 0;
+                dashboardPoGrnData.poQty.push(totalQty);
+            });
 
 
 
-        // const dashboardPoGrnData = new PoData();
-        // dashboardPoGrnData.poQty = [];           
-        // allNames.forEach(eachName => {
-        //     const PoGrnForQty = poMap.get(eachName); 
-        //     dashboardPoGrnData.poQty.push(PoGrnForQty? PoGrnForQty.poQty : 0); 
-        // })
+            // const dashboardPoGrnData = new PoData();
+            // dashboardPoGrnData.poQty = [];           
+            // allNames.forEach(eachName => {
+            //     const PoGrnForQty = poMap.get(eachName); 
+            //     dashboardPoGrnData.poQty.push(PoGrnForQty? PoGrnForQty.poQty : 0); 
+            // })
 
-        const dashboardData = new PoDataResDto(names, dashboardPoGrnData);
-        return new CommonResponseModel(true, 10000, 'Data Retrieved Successfully.', dashboardData);
-       
+            const dashboardData = new PoDataResDto(names, dashboardPoGrnData);
+            return new CommonResponseModel(true, 10000, 'Data Retrieved Successfully.', dashboardData);
+
         } catch (error) {
             return new CommonResponseModel(false, 0, 'failed', error);
         }
-    
+
     }
 
     // async weeklyPoAndQtyDashboard(req:WeeklyPoAndQtyReq): Promise<CommonResponseModel> {
-        
+
     //     try{
-           
+
     //         let query = '';
     //         let monthNo=0;  
     //         if(!req.month){
-              
+
     //             const dateData = new Date();
     //             monthNo = dateData.getMonth();
     //         }else{
@@ -1129,13 +1121,13 @@ allNames.forEach(eachName => {
     //              queryGroup = 'WEEK(created_at)';
     //              queryWhere = 'MONTH(created_at)='+monthNo+'';
     //              allNames = namesData;
-                 
+
     //          }  
-            
+
     //       query =`SELECT po_number AS poNumber, total_item_qty AS totalItemQuantity,created_at AS createdAt,`+querySelect+`
     //      FROM dpom WHERE total_item_qty >0 AND `+queryWhere+``;
     //      query += ` group by `+ queryGroup +``;
-           
+
     //     const data = await this.dpomRepository.query(query)
     //     if (data.length < 1){
     //         return new CommonResponseModel(false, 0, 'No Records Found', [])
@@ -1147,7 +1139,7 @@ allNames.forEach(eachName => {
     //             const mapKey = poData.reportedDate;
     //             if(!poMap.has(mapKey)){
     //                 const poObj = new PoQty();
-            
+
     //                 poObj.totalItemQuantity = poData.totalItemQuantity;                
     //                 poMap.set(mapKey, poObj);   
     //             }else{
@@ -1164,11 +1156,11 @@ allNames.forEach(eachName => {
 
     //     const dashboardData = new PoDataResDto(names, dashboardPoGrnData);
     //     return new CommonResponseModel(true, 10000, 'Data Retrieved Successfully.', dashboardData);
-       
+
     //     } catch (error) {
     //         return new CommonResponseModel(false, 0, 'failed', error);
     //     }
-    
+
     // }
 }
 
