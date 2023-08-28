@@ -14,6 +14,8 @@ import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import PhaseWiseData from "./excel-import/phase-wise-data"
+import View from "./components/doc-extract/doc-extract-view"
+import Form from "./components/doc-extract/doc-extract-form"
 
 
 export const AppRoutes = () => {
@@ -39,6 +41,11 @@ export const AppRoutes = () => {
                     <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
                     <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
                     {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
+                </Route>
+                  <Route path="/doc-extract" >
+                    <Route path="doc-extract-view" element={<View />}/>
+                    <Route path="doc-extract-view" key='/doc-extract-view'  element={<View />}/>
+                    
                 </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
@@ -70,8 +77,19 @@ export const AppRoutes = () => {
                         <Route path='revert-orders' element={<FileRevert />} />
                         <Route path='version-grid' element={<VersionChanges />} />
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
+                    <Route path="doc-extract-view" element={<View />}/>
+
 
                     </Route>
+
+                    <Route path="/doc-extract" >
+                    <Route path="doc-extract-view" element={<View />}/>
+                    <Route path="doc-extract-view" key='/doc-extract-view'  element={<View />}/>
+                    
+                </Route>
+
+                <Route path="/doc-extract-form" element={<Form/>}/>
+
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
                 </Route>
