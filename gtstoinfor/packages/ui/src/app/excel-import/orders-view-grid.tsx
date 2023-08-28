@@ -156,9 +156,13 @@ const AllOrdersGridView = () => {
             // dataIndex: 'createdAt',
             render: (_, record) => {
                 return record.DateAndHours
-                  ? moment(record.DateAndHours).format("YYYY-MM-DD :HH")
+                  ? moment(record.DateAndHours).format("YYYY-MM-DD")
                   : "-";
               },
+        },
+        {
+            title: 'Uploaded By',
+            dataIndex: 'uploadedUser'
         },
         {
             title: 'Status',
@@ -258,7 +262,7 @@ const AllOrdersGridView = () => {
 
     return (
         <div>
-            <Card size='small' title="Orders" extra={<span><Button onClick={() => navigate('/excel-import/excel-import')} type={'primary'}>Import Orders</Button></span>}>
+            <Card size='small' title="Orders" headStyle={{ backgroundColor: '#77dfec', border: 0 }}  extra={<span><Button onClick={() => navigate('/excel-import/excel-import')} type={'primary'}>Import Orders</Button></span>}>
                 <Form form={form} layout={'vertical'}>
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
@@ -267,8 +271,7 @@ const AllOrdersGridView = () => {
                                  <DatePicker style={{ width: '95%', }}  
                                  onChange={onChangeDate} 
                                  showToday 
-                                 showTime={{ format: 'HH' }} // Specify the format for time
-                                 format="YYYY-MM-DD HH" 
+                                 format="YYYY-MM-DD" 
                                  />
                                  {/* <DatePicker showTime onChange={onChange} onOk={onOk} /> */}
                             </Form.Item>

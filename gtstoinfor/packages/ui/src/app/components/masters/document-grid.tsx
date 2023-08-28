@@ -1,10 +1,10 @@
 import {  CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined } from '@ant-design/icons';
-import { Table, Input, Popconfirm, Card, Button, Space, Divider, Switch, Tag, Tooltip, message, Drawer } from 'antd';
+import { Table, Input, Popconfirm, Card, Button, Space, Divider, Switch, Tag, Tooltip, message, Drawer, InputNumber, Form } from 'antd';
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { DocumentService, UploadDocumentService } from '@project-management-system/shared-services';
-import { DocumentDto } from '@project-management-system/shared-models';
+import { AlertMessages, DocumentDto } from '@project-management-system/shared-models';
 import DocumentForm from './document-form';
 
 
@@ -17,6 +17,7 @@ const DocumentGrid = () => {
   const [docData,setDocData] = useState<any[]>([])
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedRoutesData, setSelectedRoutesData] = useState<any>(undefined);
+  const [form] = Form.useForm();
 
 const docuListService = new UploadDocumentService()
   useEffect(() => {
@@ -54,6 +55,8 @@ const docuListService = new UploadDocumentService()
         if(res.status) {
             message.success(res.internalMessage)
             getDocumentData();
+        navigate('/document-grid')
+
             
         } else {
             message.error(res.internalMessage)
@@ -83,7 +86,32 @@ const updateDoc = (data: DocumentDto) => {
       }
   })
 }
-
+const orders = (value, index, rowData) => {
+  if (value == 0 || value == null) {
+    AlertMessages.getErrorMessage('Orders should be greater than zero')
+  }
+  else{
+    console.log(index);
+    console.log(docData);
+    console.log(docData.find((rec) => rec.priority === value));
+    console.log(docData[index]);
+    rowData.priority = value
+    console.log(value, 'row value')
+    const newData = [...docData];
+    newData[index].priority = value;
+  
+    setDocData(newData);
+    services.updatePriority(newData[index]).then((res) => {
+      if(res.status){
+        getDocumentData();
+        window.location.reload()
+      }
+      else{
+        AlertMessages.getErrorMessage("Priority update failed. ")
+      }
+    })
+  }
+}
 
   const columns = [
     { title: 'S.no', render: (text: any, object: any, index: any) => (page - 1) * 10 + (index + 1), },
@@ -93,6 +121,32 @@ const updateDoc = (data: DocumentDto) => {
       dataIndex: 'documentName',
       key: '2',
    
+    },
+    {
+      title: 'Order',
+      dataIndex: 'priority',
+      render: (text, rowData, index) => { 
+        return (
+          <>
+          <Form layout={'vertical'} form={form} name="control-hooks" >
+            <Form.Item
+              name={rowData.id}
+              rules={[
+                {
+                  required: true, message: 'Missing Order',
+                }
+
+              ]}
+              style={{ margin: 0 }}
+              initialValue={rowData.priority}
+            >
+            <InputNumber key={rowData.id} defaultValue={rowData.priority} name={`priority${rowData.id}`} onChange={(e)=>orders(e,index,rowData)} 
+             />
+            </Form.Item>
+          </Form>
+          </>
+        )
+      }
     },
     {
       key: '5',
@@ -178,13 +232,15 @@ const updateDoc = (data: DocumentDto) => {
   return (
     <div>
       <br />
-    <Card size='small'
+    <Card size='small' headStyle={{ backgroundColor: '#77dfec', border: 0 }}
         title='Documents' extra={<span><Button onClick={() => navigate('/document-form')} type={'primary'}>Create</Button></span>}>
+      
         <Table
+          pagination={false}
+          rowKey={record => record.id}
           columns={columns}
           dataSource={docData}
         size='small'
-          rowKey="id"
         />
           <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '65%' : '85%'}
             onClose={closeDrawer} open={drawerVisible} closable={true}>

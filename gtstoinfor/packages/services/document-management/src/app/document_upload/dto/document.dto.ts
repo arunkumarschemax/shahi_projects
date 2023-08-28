@@ -17,6 +17,8 @@ export class DocumentDto{
   versionFlag?: number;
   @ApiProperty()
   id?:number
+  @ApiProperty()
+  priority?:number
   constructor(
     documentName?: string,
     createdUser?: string,
@@ -25,7 +27,7 @@ export class DocumentDto{
     updatedAt?: Date,
     createdAt?: Date,
     versionFlag?: number,
-    id?:number)
+    id?:number,priority?:number)
   {
     this.documentName=documentName
     this.createdUser=createdUser
@@ -35,6 +37,7 @@ export class DocumentDto{
     this.createdAt=createdAt
     this.versionFlag=versionFlag
     this.id=id
+    this.priority=priority
   }
 
 

@@ -166,10 +166,12 @@ export default function ExcelImport() {
 
   return (
     <>
-      <Card title="Import Orders" extra={<><Button type="default" style={{ color: 'green' }} onClick={handleImport} icon={<DownloadOutlined />}>Download Excel Format</Button>  <Button onClick={() => navigate('/excel-import/grid-view')} type={'primary'}>View Orders</Button></>}>
+      <Card title="Import Orders" headStyle={{ backgroundColor: '#77dfec', border: 0 }}   extra={<><Button type="default" style={{ color: 'green' }} onClick={handleImport} icon={<DownloadOutlined />}>Download Excel Format</Button>  <Button onClick={() => navigate('/excel-import/grid-view')} type={'primary'}>View Orders</Button></>}>
         <span>
-          <Descriptions style={{ alignItems: 'right' }}>
+          <Descriptions style={{ alignItems: 'right' }} >
             <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item>
+          </Descriptions>
+          <Descriptions style={{ alignItems: 'right' }} >
             <Descriptions.Item label={<b>File Name</b>}>
               {filesData[0]?.fileName}
             </Descriptions.Item>
@@ -177,7 +179,7 @@ export default function ExcelImport() {
               {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).utc().format('YYYY-MM-DD HH:mm:ss') : '-'}
             </Descriptions.Item>
             <Descriptions.Item label={<b>Uploaded User</b>}>
-              {filesData[0]?.createdUser}
+              {filesData[0]?.updatedUser}
             </Descriptions.Item>
           </Descriptions>
         </span>

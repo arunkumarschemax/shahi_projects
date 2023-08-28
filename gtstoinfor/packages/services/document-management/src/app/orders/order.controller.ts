@@ -21,8 +21,6 @@ export class OrdersController {
 
     @Post('/saveOrder/:id')
     async saveOrder(@Param('id') id: number, @Body() data: any): Promise<CommonResponseModel> {
-        console.log(id,'id')
-        console.log(data,'data')
         try {
             return this.ordersService.saveOrdersData(data,id);
         } catch (err) {

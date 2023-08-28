@@ -228,6 +228,20 @@ const UploadFileGrid = () =>{
               //   <a href={`#/document-management/document-file-upload?text=${encodeURIComponent(text)}`}>{text}</a>
               // ),
         },
+        {
+          title: 'INVOICE NO',
+          dataIndex: 'invoiceNo',
+          fixed: 'left',
+          align:'center',
+            ...getColumnSearchProps('invoiceNo'),
+        },
+        {
+          title: 'CHALLAN NO',
+          dataIndex: 'challanNo',
+          fixed: 'left',
+          align:'center',
+            ...getColumnSearchProps('challanNo'),
+        },
       ];
 
       const downloadcomun = [
@@ -236,12 +250,13 @@ const UploadFileGrid = () =>{
           dataIndex:'status',
           align:'center',
           render:(text: string, rowData: any, index: number) =>{
-            const hasNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value === 'No');
-            const hasYes = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('Yes'));
-            if (hasNo) {
-              return 'Partially Uploaded';
-            } else if (!hasYes) {
+            let hasNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value === 'No');
+            let hasYes = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('Yes'));
+            if (!hasYes) {
               return 'Pending';
+            }
+            else if (hasNo) {
+              return 'Partially Uploaded';
             } else {
               return 'Fully Uploaded';
             }
@@ -253,7 +268,7 @@ const UploadFileGrid = () =>{
           render :(text, rowData, index) =>{
             return (<div style={{alignContent:'center'}}>
                <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
-                  {rowData.status === "partially uploaded" ? "-" :<Button type="primary" 
+                  {rowData.status === "pending" ? "-" :<Button type="primary" 
                 onClick={() => mergeAndDownloadPDFs(rowData.url, rowData.PO)}>
               <DownloadOutlined/>
               </Button>}
@@ -282,9 +297,10 @@ const UploadFileGrid = () =>{
 
     const getDocumentData = () => {
         service.getDynamicDataForDocList().then((res) => {
+          if(res.status){
             setItemData(res.data);
-            const headerColumns = Object.keys(res.data[0])
-            .filter(header =>header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url')
+            const headerColumns = Object?.keys(res?.data[0])
+            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url')
             .map(header => ({           
                 title: header.toUpperCase(),
                 dataIndex: header,
@@ -295,13 +311,15 @@ const UploadFileGrid = () =>{
                     // console.log(res.data,'header')
                     const backgroundColor = data === 'Yes' ? 'green' : 'red'
                     return    (
-                        <div style={{color:backgroundColor ,textAlign:'center'}} >{data}</div>
+                        <div style={{color:backgroundColor ,textAlign:'center'}} ><b>{data}</b></div>
                     )
               
                 }
             }));
             setColumns([...pocolumn,...headerColumns,...downloadcomun]);
-          
+        }
+        else{
+        }
         });
     }
 
@@ -326,7 +344,7 @@ const UploadFileGrid = () =>{
       setIsModalOpen(false)
     }
     return (<Form form={form}>
-        <Card title="Document management" extra={<span>{JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" ?<Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button>:""}</span>}>
+        <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span>{JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" ?<Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button>:""}</span>}>
             {columns.length > 0 && itemData.length > 0 ? (
                 <Table
                     columns={columns.map((column) => ({
