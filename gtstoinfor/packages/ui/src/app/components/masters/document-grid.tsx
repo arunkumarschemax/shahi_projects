@@ -37,9 +37,10 @@ const docuListService = new UploadDocumentService()
     docuListService.getDocumentuploadedStaus({documentId:rowData.id}).then(res =>{
       console.log(res)
       if(res.data.length >0){
-        message.info('you Have Already Upload files aginst this you can not deactive this')
-      }else{
         deleteMapping(rowData)
+
+      }else{
+        message.info('you cannot deactivate this document. you have not upload any files')
 
       }
     })

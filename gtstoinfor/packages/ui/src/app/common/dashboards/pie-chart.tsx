@@ -44,7 +44,7 @@ export function PieChart() {
       type: 'pie'
     },
     title: {
-      text: 'Document wise uploaded Percentage'
+      text: 'Document wise pending percentage '
     },
     tooltip: {
       pointFormat: ' <b>{point.percentage:.1f}%</b>'
