@@ -60,62 +60,51 @@ export default function ExcelImport() {
     //   setSelectedFile(null);
     // }
   };
-  
-  const handleImport = () => {
-    // : FilenameDto[]
-    let filePath;
-     filePath ='http://165.22.220.143/document-management/gtstoinfor/upload-files/import%20excel%20format.xlsx'
-    if (filePath) {
-      filePath = filePath.split(",");
-      for (const res of filePath) {
-        if(res){
-          console.log(res);
-          setTimeout(() => {
-            const response = {
-              file: 'http://165.22.220.143/document-management/gtstoinfor/upload-files/import%20excel%20format.xlsx',
-            };
-  
-            window.open(response.file);
-  
-          }, 100);
-        }
-      }
-    }
-    else {
-      AlertMessages.getErrorMessage("Please upload file. ");
-
-    }
-  }
   const handleUpload = async () => {
     try {
+
       if (selectedFile) {
+        let integerPart
+        //  console.log(selectedFile.name,'selectedFile') 
+        const inputString = selectedFile.name
+        const match = inputString.match(/(\d+)\.\d+/);
+        if (match) {
+          integerPart = parseInt(match[1]);
+        } else {
+          console.log("No integer part found in the input string.");
+        }
         const formData = new FormData();
         formData.append('file', selectedFile);
-        ordersService.fileUpload(formData).then((fileRes) => {
-          if (fileRes.status) {
-            ordersService.saveOrder(data, fileRes?.data?.id).then((res) => {
-              setLoading(true)
-              if (res.status) {
-                const req = new FileStatusReq()
-                req.fileId = fileRes?.data?.id;
-                req.status = 'Success'
-                ordersService.updateFileStatus(req)
-                message.success(res.internalMessage)
-                navigate("/excel-import/grid-view");
-              } else {
-                const req = new FileStatusReq()
-                req.fileId = fileRes?.data?.id;
-                req.status = 'Failed'
-                ordersService.updateFileStatus(req)
-                message.error('File upload failed')
-              }
-            }).finally(() => {
-              setLoading(false);
-            })
-          } else {
-            message.error(fileRes.internalMessage)
-          }
-        });
+        if (integerPart) {
+          ordersService.fileUpload(formData, integerPart).then((fileRes) => {
+            if (fileRes.status) {
+              ordersService.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
+                setLoading(true)
+                if (res.status) {
+                  const req = new FileStatusReq()
+                  req.fileId = fileRes?.data?.id;
+                  req.status = 'Success'
+                  ordersService.updateFileStatus(req)
+                  message.success(res.internalMessage)
+                  navigate("/excel-import/grid-view");
+                } else {
+                  const req = new FileStatusReq()
+                  req.fileId = fileRes?.data?.id;
+                  req.status = 'Failed'
+                  ordersService.updateFileStatus(req)
+                  message.error('File upload failed')
+                }
+              }).finally(() => {
+                setLoading(false);
+              })
+            } else {
+              message.error(fileRes.internalMessage)
+            }
+          });
+        } else {
+          message.info('month not avilable')
+        }
+
       }
     } catch (error) {
       message.error(error.message)
@@ -162,7 +151,7 @@ export default function ExcelImport() {
 
   return (
     <>
-      <Card title="Excel Import" extra={<Button type="default" style={{ color: 'green' }} onClick={handleImport} icon={<DownloadOutlined />}>Download Excel Format</Button>}>
+      <Card title="Excel Import" extra={<Button type="default" style={{ color: 'green' }}  icon={<DownloadOutlined />}>Download Excel Format</Button>}>
         <span>
           <Descriptions style={{ alignItems: 'right' }}>
             <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item>

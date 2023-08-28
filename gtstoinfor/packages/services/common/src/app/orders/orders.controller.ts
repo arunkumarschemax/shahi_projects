@@ -17,10 +17,10 @@ export class OrdersController {
 
     ) { }
 
-    @Post('/saveOrder/:id')
-    async saveOrder(@Param('id') id: number, @Body() data: any): Promise<CommonResponseModel> {
+    @Post('/saveOrder/:id/:month')
+    async saveOrder(@Param('id') id: number, @Param('month') month: number, @Body() data: any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.saveOrdersData(data, id);
+            return this.ordersService.saveOrdersData(data, id, month);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -116,14 +116,13 @@ export class OrdersController {
         }
     }
 
-    @Post('/fileUpload')
+    @Post('/fileUpload/:month')
     @ApiConsumes('multipart/form-data')
     @UseInterceptors(FileInterceptor('file', {
         limits: { files: 1 },
         storage: diskStorage({
             destination: './upload-files',
             filename: (req, file, callback) => {
-                console.log(file.originalname);
                 const name = file.originalname;
                 callback(null, `${name}`);
             },
@@ -136,9 +135,9 @@ export class OrdersController {
         },
     }))
 
-    async fileUpload(@UploadedFile() file): Promise<CommonResponseModel> {
+    async fileUpload(@Param('month') month: number, @UploadedFile() file): Promise<CommonResponseModel> {
         try {
-            return await this.ordersService.updatePath(file.path, file.filename)
+            return await this.ordersService.updatePath(file.path, file.filename, month)
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
         }
@@ -184,6 +183,24 @@ export class OrdersController {
     async getPhaseWiseExcelData(): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getPhaseWiseExcelData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getAllLatestFileMonthWisedata')
+    async getAllLatestFileMonthWisedata(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getAllLatestFileMonthWisedata();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getMonthWiseData')
+    async getMonthWiseData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getMonthWiseData();
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

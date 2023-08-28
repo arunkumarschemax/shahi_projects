@@ -4,7 +4,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 
 export class OrdersChildAdapter {
 
-    public convertDtoToEntity(dto: SaveOrderDto , id :number): OrdersChildEntity {
+    public convertDtoToEntity(dto: SaveOrderDto , id :number, month:number): OrdersChildEntity {
         const entity = new OrdersChildEntity()
         entity.year = dto.year;
         entity.planningSeason = dto.planningSeason
@@ -143,6 +143,7 @@ export class OrdersChildAdapter {
         ordersEntity.productionPlanId = dto.productionPlanId;
         entity.orders = ordersEntity;
         entity.fileId = id
+        entity.month=month
         return entity
     }
 }
