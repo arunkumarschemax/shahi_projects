@@ -357,7 +357,7 @@ const Form: React.FC = () => {
     const handleSubmit = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:8081/typeo/postdata",
+                "http://localhost:8003/typeo/postdata",
                 {
                     typeId: selectedType,
                     GST: gstNumbers,
@@ -390,7 +390,7 @@ const Form: React.FC = () => {
     const handleSub = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:8081/typetwo/postdata",
+                "http://localhost:8003/typetwo/postdata",
                 {
                     typeId: selectedType,
                     Quantity: quantity,
@@ -417,7 +417,7 @@ const Form: React.FC = () => {
     const handleSumbmitting = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:8081/typethree/postdata",
+                "http://localhost:8003/typethree/postdata",
                 {
                     typeId: selectedType,
                     CustomerNo: customerno,
@@ -497,13 +497,13 @@ const Form: React.FC = () => {
                             <div >
                                 <Select
                                     disabled={loading}
-                                    defaultValue="Type 1"
+                                    defaultValue="PO"
                                     style={{ width: 120, marginLeft: "-320px", top: "-25px" }}
                                     onChange={() => setSelectedType("")}
                                 >
-                                    <Option value="type1">Type 1</Option>
-                                    <Option value="type2">Type 2</Option>
-                                    <Option value="type3">Type 3</Option>
+                                    <Option value="type1">PO</Option>
+                                    <Option value="type2">NON-PO</Option>
+                                    {/* <Option value="type3">Type 3</Option> */}
                                 </Select>
                             </div>
                             <div >
@@ -523,7 +523,7 @@ const Form: React.FC = () => {
                     )}
                     {current === 1 && showText && (
                         <div style={{ position: "relative", top: "380px" }}>
-                            {selectedType === "Type 1" && (
+                            {selectedType === "PO" && (
 
                                 <>
                                     <div>
@@ -702,7 +702,7 @@ const Form: React.FC = () => {
                             )}
                             
                             <div style={{ position: "relative", top: "10px", right: "600px" }}>
-                                {selectedType === "Type 2" && (
+                                {selectedType === "NON-PO" && (
                                     <>
                                         <div>
                                             <Button
