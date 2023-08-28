@@ -1,253 +1,108 @@
-import React, { useState } from 'react'
-import { Button, Input, Layout, Menu, MenuProps, Switch, Tooltip, theme } from 'antd';
-import { Footer } from 'antd/es/layout/layout';
-import { DollarOutlined, ProjectOutlined, SolutionOutlined, UserOutlined, DashboardOutlined, LoginOutlined, GithubFilled, PlusCircleFilled, SearchOutlined, PicCenterOutlined, PoweroffOutlined, LogoutOutlined, FileExcelOutlined, FileJpgOutlined } from '@ant-design/icons'
-import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
-import { CommonHeader } from '../header/header';
-import { ProBreadcrumb, ProConfigProvider, ProSettings } from '@ant-design/pro-components';
-import logo from './logo.png'
-const { Sider, Content } = Layout;
-const { SubMenu } = Menu;
-import ProLayout, { DefaultFooter, MenuDataItem, SettingDrawer } from '@ant-design/pro-layout';
-import { getOperatingSystem, treeRouter } from '../../utils/common';
-import ErrorBoundary from 'antd/es/alert/ErrorBoundary';
-import { DarkModeIcon } from '../../icons/darkmode.icon';
-import { LightModeIcon } from '../../icons/lightmode.icon';
-const { useToken } = theme
 
+import { Button, Layout, Menu, Tooltip, theme } from 'antd';
+import Icon, { SolutionOutlined, LogoutOutlined, EnvironmentOutlined, AppstoreOutlined, UserOutlined, NodeIndexOutlined, CarOutlined, TeamOutlined, FullscreenOutlined, InfoCircleOutlined, ProjectOutlined, FormOutlined, CheckSquareOutlined, FileProtectOutlined, HddOutlined } from '@ant-design/icons';
+import { Link, Outlet, Route, Routes } from 'react-router-dom';
+import { SubMenu } from 'rc-menu';
+import doclogo from './doclogo.jpg'
+import * as antdIcons from '@ant-design/icons';
+import { logout, useIAMClientState } from '../../common';
+// const icons = {
+//     TDSIcon: TDSIcon,
+//     ApprovalIcon: ApprovalIcon
+// }
+// import { VendorGrid } from '@transport-management-system/ui/components/vendor-management';
+const { Header, Content, Footer, Sider } = Layout;
+const BasicLayout = () => {
+    const { IAMClientAuthContext, dispatch } = useIAMClientState();
+    const userData = JSON.parse(localStorage.getItem('currentUser'))
+    const loginUser = userData?.user?.userName
+    const loginUserRole = userData?.user?.roles
+    // console.log(userData.user.userName)
+    
+    function renderIcon(iconType, iconName) {
+        // // if (iconType === "antd") { 
+        //     const SpecificIcon = antdIcons["SolutionOutlined"]; 
+        //     return <SpecificIcon /> 
+        // }
+        // else {
+            const SpecificIcon = antdIcons[iconName];
+            return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
+        // }
+    }
+    const getSubMenu = (route) => {
+        console.log(route)
+       
+        if (route && route[0].subMenuId && route.length) {
+            return (
+                <Menu.Item key={route[0].subMenuId} ><Link to={route[0].path}><span><span> {renderIcon(route[0].subMenuIconType, route[0].subMenuIconName)} <span>{route[0].subMenuName}</span> </span></span></Link> </Menu.Item>
+                // <SubMenu key={route[0].subMenuId} title={<span> {renderIcon(route[0].subMenuIconType, route[0].subMenuIconName)} <span>{route[0].subMenuName}</span> </span>}  >
+                //     {/* <div style={{backgroundColor:'white',color:'white'}}>
 
+                //     {route.subMenuData.map(item => getSubMenu(item))}
+                //     </div> */}
+                // </SubMenu>
+            )
+        } else {
+                return(
+                    <div style={{backgroundColor:'white',color:'white'}}>
+                       
+                    </div>
+    
+                ) 
+        }
+    }
 
-export const baseRouterList = [
-    {
-        label: "Dashboard",
-        key: "dashboard",
-        path: "dashboard",
-        icon: <DashboardOutlined />,
-        filepath: "/dashboard.tsx",
-    },
-    {
-        label: "User Management",
-        key: "user-management",
-        path: "user-management",
-        icon: <UserOutlined />,
-        filepath: "../",
-        children: [
-            {
-                label: "Add User",
-                key: "users-from",
-                path: "users-from",
-                icon: <UserOutlined />,
-                filepath: "users-form.tsx",
-            },
-            {
-                label: "View User",
-                key: "users-view",
-                path: "users-view",
-                icon: <UserOutlined />,
-                filepath: "users-view.tsx",
-            },
-        ],
-    },
-    {
-        label: "Masters",
-        key: "masters",
-        path: "masters",
-        icon: <PicCenterOutlined />,
-        filepath: "masters",
-        children: [
-            {
-                label: "Factories",
-                key: "factories",
-                path: "factories/factories-view",
-                filepath: "factories/factories-view",
-            },
-        ],
-    },
-    {
-        label: "Orders",
-        key: "excel-import",
-        path: "excel-import",
-        icon: <FileExcelOutlined />,
-        filepath: "excel-import",
-        children: [
-            {
-                label: "Add Orders",
-                key: "excel-import",
-                path: "excel-import",
-                filepath: "excel-import",
-            },
-            {
-                label: "Compare Orders",
-                key: "changes-view",
-                path: "changes-view",
-                filepath: "changes-view",
-            },
-            {
-                label: "View Orders",
-                key: "grid-view",
-                path: "grid-view",
-                filepath: "grid-view",
-            },
-            {
-                label: "Uploaded Files",
-                key: "revert-orders",
-                path: "revert-orders",
-                filepath: "revert-orders",
-            },
-            {
-                label: "Versions Data",
-                key: "version-grid",
-                path: "version-grid",
-                filepath: "version-grid",
-            },
-            {
-                label:'Doc Extract',
-                key:'doc-extract',
-                icon: <FileJpgOutlined />,
-                path:'/doc-extract/doc-extract-view',
-                filepath:'doc-extract/doc-extract-view'
-                    
-            },
-            // {
-            //     label: "Phase Wise Data",
-            //     key: "phase-wise-grid",
-            //     path: "phase-wise-grid",
-            //     filepath: "phase-wise-grid",
-            // }
-        ],
-    },
-];
+    const getAllSubMenus = () => {
+        console.log(localStorage.getItem("currentUser"));
+        const subMenus = [];
+        const menu = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : [];
+        console.log(menu)
+        // const menuAccess = localStorage.getItem("currentUser")? JSON.parse(localStorage.getItem("currentUser"))["menuAccessObject"]:[];
+        menu?.forEach(eachRoutes => {
+            console.log(eachRoutes)
+            subMenus.push(getSubMenu(eachRoutes.subMenuData));
+        });
+        return subMenus;
+    }
+    const logOut = () => {
+        logout(dispatch);
+    }
 
-export default function BasicLayout() {
-    const [pathname, setPathname] = useState(location.pathname);
-    const [dark, setDark] = useState(false);
-    const navigate = useNavigate();
-    const [settings, setSettings] = useState<any>({ colorPrimary: '1890ff', fixedHeader: true })
-    const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
-
-
-
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken();
     return (
-        <ProConfigProvider dark={dark}  >
-
-            <div
-                id="main-layout"
-                style={{
-                    height: '100vh',
-                }}
-            >
-                <ProLayout
-                    title='SHAHI'
-                    locale='en-US'
-                    siderWidth={240}
-                    colorPrimary='#29397d'
-                    headerContentRender={(props) => props.layout !== 'side' && document.body.clientWidth > 1000 ? <ProBreadcrumb /> : undefined}
-                    logo={<img src={logo} />}
-                    fixSiderbar
-                    layout='mix'
-                    token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg } }}
-                    route={{
-                        path: '/',
-                        routes: treeRouter(baseRouterList),
-                    }}
-                    location={{
-                        pathname,
-                    }}
-                    avatarProps={{
-                        src: 'https://hzdjs.cn/blog/logo.jpg',
-                        size: 'small',
-                        title: 'admin',
-                    }}
-                    contentStyle={{ paddingBlock: '10px', paddingInline: '10px' }}
-                    actionsRender={(props) => {
-                        // if (props.isMobile) return [];
-                        return [
-
-                            // <div
-                            //     key="SearchOutlined"
-                            //     aria-hidden
-                            //     style={{
-                            //         display: 'flex',
-                            //         alignItems: 'center',
-                            //         marginInlineEnd: 24,
-                            //     }}
-                            //     onMouseDown={(e) => {
-                            //         e.stopPropagation();
-                            //         e.preventDefault();
-                            //     }}
-                            // >
-                            //     <Input
-                            //         style={{
-                            //             borderRadius: 4,
-                            //             marginInlineEnd: 12,
-                            //             backgroundColor: 'rgba(0,0,0,0.03)',
-                            //         }}
-                            //         prefix={
-                            //             <SearchOutlined
-                            //                 style={{
-                            //                     color: 'rgba(0, 0, 0, 0.15)',
-                            //                 }}
-                            //             />
-                            //         }
-                            //         placeholder="Search"
-                            //         bordered={false}
-                            //     />
-                            //     <PlusCircleFilled
-                            //         style={{
-                            //             color: 'var(--ant-primary-color)',
-                            //             fontSize: 24,
-                            //         }}
-                            //     />
-                            // </div>
-                            <Tooltip placement="bottom" title={'Switch mode'}>
-                                {/* <Switch
-                                    checkedChildren="🌜"
-                                    unCheckedChildren="🌞"
-                                    checked={dark}
-                                    onChange={(v) => setDark(v)}
-                                /> */}
-                                <Button
-                                    size="middle"
-                                    style={{ borderRadius: "5px" }}
-                                    onClick={() => {
-                                        setDark(!dark);
-                                    }}
-                                    icon={!dark ? <DarkModeIcon /> : <LightModeIcon />}
-                                ></Button>
-                            </Tooltip>,
-                            <Tooltip placement="bottom" title={"Sign Out"}>
-                                <Button
-                                    size="middle"
-                                    style={{ borderRadius: "5px" }}
-                                    icon={
-                                        <LogoutOutlined
-                                            onClick={async () => {
-                                                // await signOut(dispatch);
-                                                navigate("/login");
-                                            }}
-                                        />
-                                    }
-                                ></Button>
-                            </Tooltip>,
-                        ];
-                    }}
-                    menuItemRender={(item, dom) => {
-                        return (
-                            <Link
-                                to={item?.path || "/"}
-                                onClick={() => {
-                                    setPathname(item.path || "/");
-                                }}
-                            >
-                                {dom}
-                            </Link>
-                        );
-                    }}
-                    onMenuHeaderClick={() => navigate("/")}
+        <Layout className="layout" style={{width:'102%', paddingLeft:'0px'}}>
+            <Header style={{ alignItems: 'center', backgroundColor: '#000', height: 83, marginTop:'-8px' }}>
+                <div style={{ float: 'left', marginTop: '0%' }}>
+                    {/* <img src={logo} width={200} height={52}></img> */}
+                    <img src={doclogo} width={150} height={80}></img>
+                </div>
+                <h1 style={{color: 'white',textAlign: 'center',marginTop:'0.2px'}}>E-Document Management</h1>
+                <Tooltip title='Logout'><Button type="default" icon={<LogoutOutlined />} style={{ float: 'right', marginTop: '-5.4%' }} onClick={logOut}>{'Hi '+loginUser}<div style={{color:'#f3bf13',marginTop:'10px',fontStyle:'italic'}}>{loginUserRole}</div></Button></Tooltip>
+                {/* <>{userData.user.roles}</> */}
+                <Menu
+                    theme="light"
+                    mode="horizontal"
+                    // defaultSelectedKeys={['1']}
+                    // style={{ marginTop: '20px' }}
+                    // 230
+                    selectedKeys={[]}
+                    style={{ backgroundColor: '#000', width: '75%', height: '61%', marginLeft: '160px', marginTop: '-3.8%',color:'white' }}
                 >
-                    <Outlet />
-                </ProLayout>
-            </div>
-        </ProConfigProvider>
+                    
+                    {getAllSubMenus()}
+                </Menu>
+       
+            </Header>
+            <Content style={{ padding: '0 50px', minHeight: '615px', backgroundColor: 'beige' }}>
+                <br />
+                {/* <IndentDashboard/> */}
+                <Outlet />
+            </Content >
+            <Footer style={{ textAlign: 'center',  height:'15px' }}>ⓒ2023 Design and Developed by SchemaX Tech</Footer>
+        </Layout >
     );
-}
+};
+
+export default BasicLayout;
