@@ -50,7 +50,7 @@ const BasicLayout = () => {
         }
     }
 
-    const getAllSubMenus = () => {
+    const  getAllSubMenus = () => {
         console.log(localStorage.getItem("currentUser"));
         const subMenus = [];
         const menu = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : [];
