@@ -94,6 +94,9 @@ export class NikeService extends CommonAxiosService {
     async getPlanShipmentWiseData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPlanShipmentWiseData")
     }
+    async getFabricTrackerReport(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getFabricTrackerReport")
+    }
 
     async saveDiaPDFFields(req : DiaPDFModel):Promise<CommonResponseModel>{
         return this.axiosPostCall(this.dpomController + "/saveDiaPDFFields",req)
@@ -165,5 +168,9 @@ export class NikeService extends CommonAxiosService {
 
     async getSeasonWisePo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getSeasonWisePo")
+    }
+
+    async getPoAndQtyDashboard(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPoAndQtyDashboard", req)
     }
 }   

@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
 
 
-const OPTIONS = ['ACCEPTED', 'UNACCEPTED', 'CANCELLED', 'CLOSED'];
+// const OPTIONS = ['ACCEPTED', 'UNACCEPTED', 'CANCELLED', 'CLOSED'];
 
 
 
@@ -27,7 +27,7 @@ const PPMReport = () => {
   const service = new NikeService();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [filterData, setFilterData] = useState<any>([])
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+  // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   const [pageSize, setPageSize] = useState<number>(null);
   const [page, setPage] = React.useState(1)
 
@@ -279,7 +279,7 @@ const getMap = (data: MarketingModel[]) => {
     const sizeHeaders = getSizeWiseHeaders(data);
     const sizeWiseMap = getMap(data);
 
-  const columns: ColumnsType<any>= [
+  const columns: any = [
     {
       title: "S.No",
       render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
@@ -303,14 +303,11 @@ const getMap = (data: MarketingModel[]) => {
     {
       title: 'Item',
       dataIndex: 'item',
-      // sorter: (a, b) => a.Item.length - b.Item.length,
-      // sortDirections: ['descend', 'ascend'],
-      // ...getColumnSearchProps('Item'),
 
     },
     {
       title: 'Factory',
-      dataIndex: 'Factory',
+      dataIndex: 'factory',
 
     },
     {
@@ -335,11 +332,16 @@ const getMap = (data: MarketingModel[]) => {
     {
       title: 'Style Number',
       dataIndex: 'styleNumber',
+      
 
     },
     {
       title: 'Product Code',
-      dataIndex: 'productCode',
+      dataIndex: 'productCode', 
+      sorter: (a, b) => a.productCode.length - b.productCode.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('productCode'),
+      
 
     },
     {

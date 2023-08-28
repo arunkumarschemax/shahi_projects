@@ -250,4 +250,10 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`planning_season_code`)
         return await query.getRawMany();
     }
+
+    async getPoAndQuantity(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+       .select(`po_number AS poNumber, total_item_qty AS totalItemQuantity,created_at AS createdAt`)
+        return await query.getRawMany();
+    }
 }
