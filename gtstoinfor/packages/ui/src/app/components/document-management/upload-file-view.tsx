@@ -252,14 +252,26 @@ const UploadFileGrid = () =>{
           render:(text: string, rowData: any, index: number) =>{
             let hasNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value === 'No');
             let hasYes = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('Yes'));
-            if (!hasYes) {
-              return 'Pending';
+            let hasSingleNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('No'));
+
+            if(hasNo){
+              return text;
+            }else if(hasYes && hasSingleNo ){
+              return 'Partially Uploaded'
+
+            }else{
+              return 'Fully Uploaded'
             }
-            else if (hasNo) {
-              return 'Partially Uploaded';
-            } else {
-              return 'Fully Uploaded';
-            }
+
+            // if (!hasYes) {
+            //   return 'Pending';
+            // }
+            // else if (hasNo) {
+            //   return text;
+            // }
+            //  else {
+            //   return 'Fully Uploaded';
+            // }
           }
         },
         {
