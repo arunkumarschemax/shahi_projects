@@ -18,6 +18,7 @@ import { DocumentUploadDto } from "./requests/document-upload-dto";
 import { UploadFilesRepository } from "./repository/upload-files.repository";
 import { UploadFileDto } from "./models/upload-file.dto";
 import { UploadFilesEntity } from "./entities/upload-files.entity";
+import { config } from 'packages/libs/shared-services/config';
 @Injectable()
 export class DocumentsListService {
     constructor(
@@ -136,7 +137,7 @@ export class DocumentsListService {
             let urls:any[] = [];
             if(result.length >0){
             for (const res of result){
-                const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("https://edoc-backend.shahiapps.in/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where u.document_list_id ='+res.documentsListId;
+                const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("'+config.download_path+'"PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where u.document_list_id ='+res.documentsListId;
                 const docres = await this.uploadFilesRepository.query(doctlistQuery)
 
                 const docReq:docRequest[] =[];
