@@ -1,5 +1,6 @@
 import {
     AllFactoriesResponseModel,
+    CompanyResponseModel,
     FactoryActivateDeactivateDto,
     FactoryDto,
     FactoryResponseModel,
@@ -24,5 +25,8 @@ export class FactoryService extends CommonAxiosService {
     async activateOrDeactivate(payload: FactoryActivateDeactivateDto): Promise<FactoryResponseModel> {
         return this.axiosPostCall(this.FactoryController + "/activateOrDeactivate", payload)
     }
+    async getFactoriesData ():Promise<CompanyResponseModel>{
+        return this.axiosPostCall(this.FactoryController + '/getFactoriesData')
+      }
 
 }

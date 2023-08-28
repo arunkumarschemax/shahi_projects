@@ -1,8 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { FactoriesService } from './factories.service';
 import {FactoryResponseModel} from '../../../../../libs/shared-models/src/common/factory/factory-response-objects'
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
-import { AllFactoriesResponseModel } from '@project-management-system/shared-models';
+import { AllFactoriesResponseModel, CommonResponseModel, CompanyResponseModel } from '@project-management-system/shared-models';
 
 @Controller('/factories')
 export class FactoriesController {
@@ -47,5 +47,14 @@ export class FactoriesController {
         return this.applicationExceptionhandler.returnException(FactoryResponseModel,error)
     }
   }
+
+  @Get()
+  async getFactoriesDataFromM3() {
+    try {
+        return await this.factoriesService.getFactoriesDataFromM3();
+    } catch (err) {
+        return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    }
+}
     
 }

@@ -1,6 +1,7 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { Vendors } from "../vendors/vendors.entity";
 import { Buyers } from "../buyers/buyers.entity";
+import { Address } from "../buyers/address.entity";
 
 @Entity('countries')
 export class Countries {
@@ -56,8 +57,8 @@ export class Countries {
   })
   versionFlag: number;
 
-  @OneToMany(type => Buyers, Buyers => Buyers.countryInfo)
-  buyersInfo: Buyers[];
+  @OneToMany(type => Address, address => address.countryInfo)
+  addressInfo: Buyers[];
   
   @OneToMany(type=>Vendors, vendor=>vendor.countryInfo,{cascade: true})
   vendorInfo:Vendors[];

@@ -37,6 +37,14 @@ import { GarmentCategoriesModule } from './garment-category/garment-category.mod
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
 import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
+import { DestinationModule } from './destination/destination.module';
+import { FabricTypeModule } from './fabric-types/fabric-type.module';
+import { FabricSubTypeModule } from './fabric-sub-types/fabric-sub-type.module';
+import { SizeModule } from './sizes/sizes-module';
+import { CustomGroupsModule } from './custom groups/custom-groups.module';
+import { ROSLGroupsModule } from './rosl groups/rosl-groups.module';
+import { BuyingHouseModule } from './buying-house/buying-house.module';
+import { CommissionModule } from './commission/commission.module';
 import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
 import { BomModule } from './bom-trim/bom.module';
 
@@ -71,12 +79,16 @@ import { BomModule } from './bom-trim/bom.module';
     GarmentCategoriesModule,
     ComponentsModule,
     AttributeModule,
+    CustomGroupsModule,
+    ROSLGroupsModule,
+    BuyingHouseModule,
+    CommissionModule,
     UsersModule,
-    OrdersModule,
+    // OrdersModule,
     DeliveryTermsModule,
     LocationsModule,
     DivisionModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,LiscenceTypedModule,BomModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule,LiscenceTypedModule,BomModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -71,7 +71,23 @@ import LocationsForm from "./masters/locations/locations-form"
 import LocationsGrid from "./masters/locations/locations-grid"
 import TaxesForm from "./masters/taxes/taxes-form"
 import TaxesGrid from "./masters/taxes/taxes-grid"
+import DestinationForm from "./masters/destination/destination-form"
+import DestinationGrid from "./masters/destination/destination-grid"
+import FabricTypeForm from "./masters/fabric-type/fabric-type-form"
+import FabricTypeGrid from "./masters/fabric-type/fabric-type-grid"
+import FabricSubTypeGrid from "./masters/fabric-sub-types/fabric-sub-types-view"
+import FabricSubTypeForm from "./masters/fabric-sub-types/fabric-sub-type-form"
 import SettingsForm from "./masters/settings/settings-form"
+import SizeGrid from "./masters/sizes/size.view"
+import SizeForm from "./masters/sizes/size.form"
+import CustomGroupsGrid from "./masters/custom-groups/custom-groups-grid"
+import CustomGroupsForm from "./masters/custom-groups/custom-groups-form"
+import ROSLGroupsForm from "./masters/rosl-groups/rosl-groups-form"
+import ROSLGroupsGrid from "./masters/rosl-groups/rosl-groups-grid"
+import BuyingHouseForm from "./masters/buying-house/buying-house-form"
+import BuyingHouseGrid from "./masters/buying-house/buying-house-grid"
+import CommissionForm from "./masters/commission/commission-form"
+import CommissionGrid from "./masters/commission/commission-grid"
 
 
 export const AppRoutes = () => {
@@ -123,7 +139,7 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
                 <Route path='items/item-grid' element={<ItemsGrid />} />
                         <Route path='currencies/currency-view' element={<CurrenciesGrid />} />
-                        <Route path='company/company-form' element={<CompanyForm currencyData={undefined} updateItem={function (companyData:undefined ): void {
+                        <Route path='company/company-form' element={<CompanyForm Data={undefined} updateItem={function (companyData:undefined ): void {
                         } } isUpdate={false} closeForm={function (): void {
                             
                         } } />} />
@@ -134,6 +150,12 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
                         <Route path='warehouse/warehouse-grid' element={<WarehouseGrid />} />
+
+                        <Route path='destination/destination-form' element={<DestinationForm Data={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                        <Route path='destination/destination-grid' element={<DestinationGrid />} />
 
                         <Route path='brands/brand-form' element={<MasterBrandsForm masterBrandData={undefined}
                 isUpdate={false}
@@ -151,6 +173,7 @@ export const AppRoutes = () => {
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
 
+                 <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
 
 <Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
                     isUpdate={false}
@@ -160,7 +183,6 @@ export const AppRoutes = () => {
 
 
                     
-                    <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
 
                         <Route path='buyers/buyers-view' element={<BuyersView />} />
                         <Route path='buyers/buyers-form' key='/buyers/buyers-form' element={<BuyersForm buyersData={undefined} updateDetails={(undefined) => {}} isUpdate={false} closeForm={() => {}}/>} />
@@ -209,7 +231,8 @@ export const AppRoutes = () => {
                          <Route path='profit-control-head/profit-control-head-form' key ='profit-control-head/profit-control-head-form' element={< ProfitControlHeadForm profitCenterData={undefined}
                  isUpdate={false}
                 closeForm={() => { }}
-                updateItem={(undefined) => { }}/>} /><Route path="components/components-view" element ={<ComponentsGrid/>}/>
+                updateItem={(undefined) => { }}/>} />
+                <Route path="components/components-view" element ={<ComponentsGrid/>}/>
                         <Route path='components/components-form' element={<ComponentsForm
                         componentsData={undefined}
                         isUpdate={false}
@@ -221,6 +244,30 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=>{}}
                         updateAttribute={(undefined)=>{}}/>}/>
+                        <Route path="custom-groups/custom-groups-view" element ={<CustomGroupsGrid/>}/>
+                        <Route path='custom-groups/custom-groups-form' element={<CustomGroupsForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateCustomGroups={(undefined)=>{}}/>}/>
+                        <Route path="rosl-groups/rosl-groups-view" element ={<ROSLGroupsGrid/>}/>
+                        <Route path='rosl-groups/rosl-groups-form' element={<ROSLGroupsForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateROSLGroups={(undefined)=>{}}/>}/>
+                        <Route path="buying-house/buying-house-view" element ={<BuyingHouseGrid/>}/>
+                        <Route path='buying-house/buying-house-form' element={<BuyingHouseForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateBuyingHouse={(undefined)=>{}}/>}/>
+                        <Route path="commission/commission-view" element ={<CommissionGrid/>}/>
+                        <Route path='commission/commission-form' element={<CommissionForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={()=>{}}
+                        updateCommission={(undefined)=>{}}/>}/>
 
 
                         <Route path='delivery-terms/delivery-terms-form' element={<DeliveryTermsForm deliverytermsData={undefined}
@@ -239,6 +286,24 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
+                        <Route path='fabricType/fabric-type-view' element={<FabricTypeGrid/>} />
+                         <Route path='fabricType/fabric-type-form' key ='fabricType/fabric-type-form' element={<FabricTypeForm  fabricTypeData={undefined}
+
+                 isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
+                <Route path='fabricSubType/fabric-sub-type-view' element={<FabricSubTypeGrid/>} />
+                         <Route path='fabric-sub-type/fabric-sub-type-form' key ='fabric-sub-type/fabric-sub-type-form' element={<FabricSubTypeForm  fabricsubtypeData={undefined}
+
+                 isUpdate={false}
+                closeForm={() => { }}
+                updateData={(undefined) => { }}/>} />
+                <Route path='size/size-view' element={<SizeGrid/>} />
+                         <Route path='size/size-form' key ='size/size-form' element={<SizeForm  sizeData={undefined}
+
+                 isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
                          <Route path='locations/locations-view' element={<LocationsGrid/>}/>
                          <Route path='settings/settings-form' element={<SettingsForm/>}/>
 

@@ -23,25 +23,24 @@ export function StyleForm(props: StyleFormProps) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [imageUrl, setImageUrl] = useState('');
-  // const [filelist, setfilelist] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isUpdateimg, setisUpdateImg]=useState('')
 
   const [filelist, setfilelist] = useState<any>(props.isUpdate?[{
     name: props.styleData.styleFileName,
     status: 'done',
     url:props.styleData.styleFileName,
-    // url:'http://206.189.138.212/gts-to-infor/gtstoinfor/upload-files/'+props.styleData.styleFileName
 
   }]:[]);
 
   useEffect(() => {
-   if( props.isUpdate){
-    const image ='http://206.189.138.212/gts-to-infor/gtstoinfor/upload-files/'+props.styleData.styleFileName
-    setImageUrl(image)
+   if(props.styleData){
+    console.log(props.styleData.styleFileName)
+    const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+props.styleData.styleFileName
+    setisUpdateImg(updateImage)
    }
   }, [])
 
-// console.log(props.styleData.styleFileName)
 const service = new StyleService()
   const uploadButton = (
     <div>
@@ -140,7 +139,7 @@ const service = new StyleService()
 
   
   return (
-    <>
+    
     <Card title={props.isUpdate ? 'Update Stle' : 'Add Stle'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/style-management/style/style-grid')} type={'primary'}>View</Button></span>}>
         <Form form={form}
          onFinish={saveData}
@@ -201,7 +200,7 @@ const service = new StyleService()
                             rules={[
                                 {required:true,message:'Upload Style'}
                             ]}  
-                            initialValue={props.isUpdate ? props.styleData.styleFilePath:''}
+                            initialValue={props.isUpdate ? props.styleData.styleFileName:''}
                         >
                            <Upload  {...uploadFieldProps} style={{  width:'100%' }} listType="picture-card">
                             
@@ -229,7 +228,7 @@ const service = new StyleService()
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }} >
             <Card style={{height:'331px'}}>
                     <Form.Item >
-                    <img src={imageUrl} alt="Preview"  
+                    <img src={props.isUpdate ? isUpdateimg:imageUrl} alt="Preview"  
                      height={'300px'} 
                     width={'500px'}   
                     style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
@@ -243,7 +242,6 @@ const service = new StyleService()
          </Row>
         </Form>
       </Card>
-    </>
   );
 
 }
