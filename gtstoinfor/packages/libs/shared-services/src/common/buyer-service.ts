@@ -1,4 +1,4 @@
-import { AllBuyersResponseModel, BuyerRequest, BuyersDto, BuyersGeneralAttributeModel, BuyersGeneralAttributeRequest, BuyersGeneralAttributeResponseModel, BuyersOrderAttributeRequest, BuyersOrderAttributeResponseModel, BuyersResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerIdReq, BuyerRequest, BuyersDto, BuyersGeneralAttributeModel, BuyersGeneralAttributeRequest, BuyersGeneralAttributeResponseModel, BuyersOrderAttributeRequest, BuyersOrderAttributeResponseModel, BuyersResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class BuyersService extends CommonAxiosService{
@@ -41,6 +41,14 @@ export class BuyersService extends CommonAxiosService{
 
     async getByBuyerId(req:BuyerRequest): Promise<BuyersGeneralAttributeResponseModel> {
         return this.axiosPostCall(this.URL + "/getByBuyerId",req)
+    }
+
+    async getAddressByBuyerId(req:BuyerIdReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAddressByBuyerId",req)
+    }
+
+    async getAllBuyersInfo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllBuyersInfo")
     }
     
     async createOrderAttribute(req:BuyersOrderAttributeRequest): Promise<BuyersOrderAttributeResponseModel> {

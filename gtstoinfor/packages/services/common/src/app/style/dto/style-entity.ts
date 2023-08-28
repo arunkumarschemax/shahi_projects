@@ -36,13 +36,13 @@ export class Style {
 
     @Column('varchar', {
       name: 'style_file_name',
-      nullable: false
+      nullable: true
   })
   styleFileName: string;
 
   @Column('varchar', {
       name: 'style_file_path',
-      nullable: false
+      nullable: true
   })
   styleFilePath: string;
   

@@ -1,5 +1,6 @@
 import {IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { AddressDto } from './address.dto';
 
 export class BuyersDTO {
 
@@ -31,27 +32,6 @@ export class BuyersDTO {
   currency: string;
 
   @ApiProperty()
-  state:string;
-
-  @ApiProperty()
-  district:string;
-
-  @ApiProperty()
-  city:string;
-
-  @ApiProperty()
-  landmark:string;
-
-  @ApiProperty()
-  lane1:string;
-
-  @ApiProperty()
-  lane2:string;
-
-  @ApiProperty()
-  pincode:string;
-
-  @ApiProperty()
   publicNote: string;
 
   @ApiProperty()
@@ -69,8 +49,7 @@ export class BuyersDTO {
   paymentMethod: string;
 
   @ApiProperty()
-  countryId:number;
-  countryName: string;
+  addressInfo: AddressDto[];
   
   @ApiProperty()
   isActive: boolean;

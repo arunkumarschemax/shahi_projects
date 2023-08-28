@@ -35,6 +35,7 @@ import { GarmentCategoriesModule } from './garment-category/garment-category.mod
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
 import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
+import { DestinationModule } from './destination/destination.module';
 import { FabricTypeModule } from './fabric-types/fabric-type.module';
 import { FabricSubTypeModule } from './fabric-sub-types/fabric-sub-type.module';
 import { SizeModule } from './sizes/sizes-module';
@@ -45,6 +46,7 @@ import { CommissionModule } from './commission/commission.module';
 import { ColourModule } from './colours/colour.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { AccountControlObjectModule } from './account-control-objects/account-control-object-module';
+import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
 
 
 @Module({
@@ -82,16 +84,15 @@ import { AccountControlObjectModule } from './account-control-objects/account-co
     BuyingHouseModule,
     CommissionModule,
     UsersModule,
-    OrdersModule,
+    // OrdersModule,
     DeliveryTermsModule,
     LocationsModule,
     DivisionModule,
     FabricSubTypeModule,
     FabricTypeModule,
     ColourModule,
+
   SizeModule,
-  DepartmentsModule,
-  AccountControlObjectModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],
   providers: [AppService],
