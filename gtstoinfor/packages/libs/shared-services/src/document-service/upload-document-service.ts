@@ -1,4 +1,5 @@
 import {
+    DocumentIdreq,
     DocumentsListRequest,
     PoRoleRequest,
     UploadDocumentListDto,
@@ -30,5 +31,7 @@ export class UploadDocumentService extends CommonAxiosService {
     async totalFileUploadAgainstPo(req: poReq): Promise<UploadDocumentListResponseModel> {
         return this.axiosPostCall(this.url + "/totalFileUploadAgainstPo",req)
     }
-    
+    async getDocumentuploadedStaus(req:DocumentIdreq): Promise<UploadDocumentListResponseModel> {
+        return this.axiosPostCall(this.url + "/getDocumentuploadedStaus",req)
+      }
 }

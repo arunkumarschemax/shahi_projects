@@ -7,14 +7,17 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import RoleSharedService from 'packages/libs/shared-services/src/document-role-service/document-role-sharedservice';
 import { RoleActivateDeactivateDto } from '@project-management-system/shared-models';
+import Highlighter from 'react-highlight-words';
 
 const DocumentRoleGrid = () => {
+  const searchInput = useRef(null);
   const [data, setData] = useState<any[]>([]);
   const [page, setPage] = useState(1)
   const navigate=useNavigate();
   const service = new RoleSharedService();
 
-
+  const [searchText, setSearchText] = useState(''); 
+  const [searchedColumn, setSearchedColumn] = useState('');         ``
 
   useEffect(() => {
     getroleData();
@@ -47,42 +50,138 @@ const DocumentRoleGrid = () => {
     })
 }
 
+function handleSearch(selectedKeys, confirm, dataIndex) {
+  confirm();
+  setSearchText(selectedKeys[0]);
+  setSearchedColumn(dataIndex);
+};
+
+function handleReset(clearFilters) {
+  clearFilters();
+  setSearchText('');
+};
+
+const getColumnSearchProps = (dataIndex:string) => ({
+  filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    <div style={{ padding: 8 }}>
+      <Input
+        ref={ searchInput }
+        placeholder={`Search ${dataIndex}`}
+        value={selectedKeys[0]}
+        onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+        onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        style={{ width: 188, marginBottom: 8, display: 'block' }}
+      />
+      <Button
+        type="primary"
+        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        icon={<SearchOutlined />}
+        size="small"
+        style={{ width: 90, marginRight: 8 }}
+      >
+        Search
+      </Button>
+      <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+        Reset
+      </Button>
+    </div>
+  ),
+  filterIcon: filtered => (
+    <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+  ),
+  onFilter: (value, record) =>
+  record[dataIndex]
+  ? record[dataIndex]
+     .toString()
+      .toLowerCase()
+      .includes(value.toLowerCase())
+      : false,
+  onFilterDropdownVisibleChange: visible => {
+    if (visible) {    setTimeout(() => searchInput.current.select());   }
+  },
+  render: text =>
+    text ?(
+    searchedColumn === dataIndex ? (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[searchText]}
+        autoEscape
+        textToHighlight={text.toString()}
+      />
+    ) :text
+    )
+    : null
+   
+});
+
   const columns = [
     { title: 'S.no', render: (text: any, object: any, index: any) => (page - 1) * 10 + (index + 1), },
 
     {
       title: 'Role',
       dataIndex: 'roleName',
-      key: '2',
+      key: 'roleName',
+      render: (text, record, index) => {
+        if (index === 0 || record.roleName !== data[index - 1].roleName) {
+          const rowSpan = data.filter(item => item.roleName === record.roleName).length;
+          return {
+            children: text,
+            props: {
+              rowSpan: rowSpan,
+            },
+          };
+        } else {
+          return {
+            children: null,
+            props: {
+              rowSpan: 0,
+            },
+          };
+        }
+      },
    
     },
 
     {
         title: 'Document',
         dataIndex: 'documentName',
-        key: '3',
+        key: 'documentName',
      
       },
   
     {
-      key: '4',
+      key: 'isActive',
       title: "Status",
       dataIndex: "isActive",
-      render: (isActive: any, rowData: any) => (
+   
+      render: (isActive, rowData) => (
         <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
+          {isActive == 1? (
+            <Tag icon={<CheckCircleOutlined />} color="#87d068">
+              Active
+            </Tag>
+          ) : (
+            <Tag icon={<CloseCircleOutlined />} color="#f50">
+              Inactive
+            </Tag>
+          )}
         </>
       ),
-      filters: [
-        {
-          text: 'active',
-          value: 1,
-        },
-        {
-          text: 'InActive',
-          value: 0,
-        },
-      ]
+      // filters: [
+      //   {
+      //     text: 'Active',
+      //     value: 1,
+      //   },
+      //   {
+      //     text: 'Inactive',
+      //     value: 0,
+      //   },
+      // ],
+      // filterMultiple: false,
+      // onFilter: (value, record) => {
+      //   return record.isActive === value // Use 'true' and 'false' as filter values
+      // }
+     
     },
     {
       title:`Action`,
@@ -112,12 +211,15 @@ const DocumentRoleGrid = () => {
     }
   ];
 
+
+
   return (
     <div>
       <br />
       
-      <Card title='Document Role Mapping' size='small' extra={<span><Button onClick={() => navigate('/role-mapping-form')} type={'primary'}>Create</Button></span>}>       
+      <Card title='Document Role Mapping' size='small' headStyle={{ backgroundColor: '#77dfec', border: 0 }}  extra={<span><Button onClick={() => navigate('/role-mapping-form')} type={'primary'}>Create</Button></span>}>       
         <Table
+        pagination={false}
           columns={columns}
           dataSource={data}
          size='small'

@@ -8,16 +8,23 @@ import { DeleteDto } from './dto/delete-dto';
 import {DocumentResponseModel} from '../../../../../libs/shared-models/src/document-management/document-response.model'
 import { DocumentRepository } from './repository/documents.repository';
 import { CommonResponseModel } from '@project-management-system/shared-models';
+import { DocumentRoleMappingRepository } from './repository/document-role-repository';
+import { UploadFilesRepository } from './repository/upload-files.repository';
+import { DocumentsListRepository } from './repository/documents-list.repository';
 
 @Injectable()
 export class DocumentService {
     constructor(
         @InjectRepository(DocumentEntity)
         private repository:DocumentRepository ,
+        private mappingRepo : DocumentRoleMappingRepository,
+        private uploadFilesRepository:DocumentsListRepository,
+
+
     ) { }
 
     async getAllDocuments(): Promise<DocumentResponseModel> {
-        const query= 'select document_name as documentName,id,created_user as createdUser,updated_user as updatedUser,is_active as isActive,version_flag as versionFlag from document'
+        const query= 'select document_name as documentName,id,created_user as createdUser,updated_user as updatedUser,is_active as isActive,version_flag as versionFlag, priority AS priority from document ORDER BY priority ASC' 
         const data = await this.repository.query(query)
         console.log(data,'dataa')
         if (data) {
@@ -48,10 +55,42 @@ export class DocumentService {
             return null
         }
     }
+    async updatePriority(req:DocumentDto):Promise<CommonResponseModel>{
+      try{
+        let flag = true;
+        // for(const data of req){
+          let existingPriority = await this.repository.findOne({where:{priority:req.priority}});
+          let oldPriority = await this.repository.findOne({where:{id:req.id}});
+          let updatePriority = await this.repository.update({id:req.id},{priority:req.priority});
+          if(updatePriority.affected === 0){
+            flag = false;
+            return new CommonResponseModel(false, 1001, "Update Failed",)
+          }
+          else{
+            let updateNewPriority = await this.repository.update({id:existingPriority.id},{priority:oldPriority.priority});
+            if(updateNewPriority.affected === 0){
+              flag = false;
+              return new CommonResponseModel(false, 1001, "Update Failed",)
+            }
+          }
+        // }
+        if(!flag){
+          return new CommonResponseModel(false, 1001, "Update Failed",)
+        }
+        else{
+          return new CommonResponseModel(true, 1010, "Updated Successfully. ",)
+        }
+      }catch(error){
+        return new CommonResponseModel(false,10011,"Something went wrong. ")
+          throw error
+        }
+    }
+
 
       async createDocument(req:DocumentDto ,isUpdate: boolean):Promise<DocumentResponseModel>{
         try{
-
+          let count =  await this.repository.count();
+          console.log(count)
           if(!isUpdate){
             const relation = await this.getDocvalidation(req.documentName)
             if(relation){
@@ -72,6 +111,7 @@ export class DocumentService {
           }else{
             entities.createdUser=req.createdUser
           }
+          entities.priority = Number(count) + 1;
           const save = await this.repository.save(entities)
           if(save){
             return new DocumentResponseModel(true,1,isUpdate?'Document updated sucessfully..':'Document created successfully..',undefined)
@@ -86,7 +126,7 @@ export class DocumentService {
 
       async activateOrDeactivateDocument(req: DocumentDto): 
       Promise<DocumentResponseModel> {
-        const routedetails = await this.repository.findOne({ where: { id: req.id } })
+        const routedetails = await this.repository.findOne({ where: { id: req.id } })        
         if (routedetails) {
 
             if (req.versionFlag != routedetails.versionFlag) {
@@ -96,12 +136,15 @@ export class DocumentService {
                 const routesupdate = await this.repository.update({ id: req.id }, { isActive: req.isActive, updatedUser: req.updatedUser, })
                 if (routedetails.isActive) {
                     if (routesupdate.affected) {
+                      const updateRolemap = await this.mappingRepo.update({documentId:req.id},{isActive:req.isActive})
+
                         return new DocumentResponseModel(true, 0, ' de-activated successfully', [])
                     } else {
                         throw new DocumentResponseModel(false, 1, 'already deactivated', [])
                     }
                 } else {
                     if (routesupdate.affected) {
+                      const updateRolemap = await this.mappingRepo.update({documentId:req.id},{isActive:req.isActive})
                         return new DocumentResponseModel(true, 0, 'activated successfully', [])
                     } else {
                         throw new DocumentResponseModel(false, 1, 'already activated', [])

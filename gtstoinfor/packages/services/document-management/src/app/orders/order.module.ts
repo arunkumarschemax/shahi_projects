@@ -28,6 +28,6 @@ import { UploadFilesRepository } from '../document_upload/repository/upload-file
       OrdersEntity, FileUploadEntity,DocumentsList
     ]),DocumentUploadModule],
   controllers: [OrdersController],
-  providers: [OrdersService,DocumentsListService,OrdersRepository,DocumentsListRepository, OrdersAdapter, ApplicationExceptionHandler,FileUploadRepository,Repository,UploadDocumentListAdapter,DocumentRepository,DocumentRoleMappingRepository,UploadFilesRepository]
+  providers: [OrdersService,DocumentsListService,OrdersRepository,DocumentsListRepository, OrdersAdapter, ApplicationExceptionHandler,FileUploadRepository,Repository,UploadDocumentListAdapter,DocumentRepository,DocumentRoleMappingRepository,UploadFilesRepository,]
 })
 export class OrdersModule { }

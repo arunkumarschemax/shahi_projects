@@ -1,6 +1,6 @@
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq, OrdersReq } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileIdReq, OrdersReq } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiConsumes } from '@nestjs/swagger';
@@ -8,6 +8,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path'; 
 import { OrdersService } from './order.service';
 import { SaveOrderDto } from './models/order.dto';
+import { FileUpdateStatusReq } from './models/file-request.dto';
 ''
 
 @Controller('orders')
@@ -20,8 +21,6 @@ export class OrdersController {
 
     @Post('/saveOrder/:id')
     async saveOrder(@Param('id') id: number, @Body() data: any): Promise<CommonResponseModel> {
-        console.log(id,'id')
-        console.log(data,'data')
         try {
             return this.ordersService.saveOrdersData(data,id);
         } catch (err) {
@@ -132,8 +131,8 @@ export class OrdersController {
             },
         }),
         fileFilter: (req, file, callback) => {
-            if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|xls|xlsx|csv)$/)) {
-                return callback(new Error('Only png,jpeg,PNG,jpg,JPG,xls,xlsx and csv files are allowed!'), false);
+            if (!file.originalname.match(/\.(xls|xlsx|csv)$/)) {
+                return callback(new Error('Only xls,xlsx and csv files are allowed!'), false);
             }
             callback(null, true);
         },
@@ -157,7 +156,7 @@ export class OrdersController {
     }
 
     @Post('/updateFileStatus')
-    async updateFileStatus(@Body() req: any): Promise<CommonResponseModel> {
+    async updateFileStatus(@Body() req: FileUpdateStatusReq): Promise<CommonResponseModel> {
         try {
             return this.ordersService.updateFileStatus(req);
         } catch (err) {

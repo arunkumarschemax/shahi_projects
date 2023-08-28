@@ -15,11 +15,12 @@ import { DeleteDto } from './dto/delete-dto';
 import { Entity } from 'typeorm';
 import { DocumentEntity } from './entities/documents.entity';
 import { DocumentRoleMapping } from "./models/document-role-mapping.dto";
-import { AllDocumentRoleMappingsResponseModel, CommonResponseModel, DocumentRoleMappingResponseModel, PoRoleRequest,RoleActivateDeactivateDto ,DocumentResponseModel, poReq} from "@project-management-system/shared-models";
+import { AllDocumentRoleMappingsResponseModel, CommonResponseModel, DocumentRoleMappingResponseModel, PoRoleRequest,RoleActivateDeactivateDto ,DocumentResponseModel, poReq, DocumentIdreq} from "@project-management-system/shared-models";
 import { DocumentRoleMappingService } from "./document_role_mapping.service";
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import * as fs from 'fs';
 import { Express } from 'express'; 
+import { OrdersEntity } from "../orders/entities/order.entity";
 @ApiTags('doc-upload')
 @Controller('doc-upload')
 export class DocumentUploadController {
@@ -108,6 +109,15 @@ export class DocumentUploadController {
         return error;
       }
     }
+
+    @Post('updatePriority')
+    async updatePriority(@Body() req:DocumentDto):Promise<CommonResponseModel>{
+      try {
+        return await this.documentservice.updatePriority(req);
+      } catch (error) {
+        return error;
+      }
+    }
     @Post('getAllDocumentsforRolemapping')
     async getAllDocumentsforRolemapping(): Promise<DocumentResponseModel> {
       try {
@@ -168,7 +178,7 @@ export class DocumentUploadController {
     }
 
     @Post('/createDocListr')
-    async createDocList(@Body() req?:req[]):Promise<UploadDocumentListResponseModel>{
+    async createDocList(@Body() req?:OrdersEntity[]):Promise<UploadDocumentListResponseModel>{
       try{
         return await this.uploadDocservice.createDocList(req);
       }catch(error){
@@ -205,6 +215,22 @@ export class DocumentUploadController {
         return (this.applicationExceptionHandler.returnException(DocumentResponseModel, error));
       }
 
+    }
+    @Post('/getDocumentuploadedStaus')
+    async getDocumentuploadedStaus(@Body() req:DocumentIdreq): Promise<UploadDocumentListResponseModel>{
+        try {
+            return await this.uploadDocservice.getDocumentuploadedStaus(req);
+          } catch (error) {
+            return this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error);
+          }
+    }
+    @Post('/documentwisePercentage')
+    async documentwisePercentage(): Promise<UploadDocumentListResponseModel>{
+        try {
+            return await this.uploadDocservice.documentwisePercentage();
+          } catch (error) {
+            return this.applicationExceptionHandler.returnException(UploadDocumentListResponseModel, error);
+          }
     }
 
 }

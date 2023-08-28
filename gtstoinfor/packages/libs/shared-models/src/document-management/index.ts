@@ -14,3 +14,4 @@ export * from './role-mapping-dto';
 export * from './document-role-mapping-id-req'
 export * from './po-role.request'
 export * from './orders-req'
+export * from './document-id-req'

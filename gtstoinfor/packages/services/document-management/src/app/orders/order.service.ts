@@ -1,6 +1,6 @@
 
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, OrdersReq, PoRoleRequest, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileIdReq, FileStatusReq, OrdersReq, PoRoleRequest, docRequest, orderColumnValues } from '@project-management-system/shared-models';
 import { DataSource, EntityManager, QueryResult, getConnection } from 'typeorm';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { OrdersAdapter } from './adapters/order.adapter';
@@ -18,6 +18,8 @@ import { error } from 'console';
 let moment = require('moment');
 moment().format();
 import { req } from '../document_upload/requests/importedPoReq';
+import { UploadFilesRepository } from '../document_upload/repository/upload-files.repository';
+import { FileUpdateStatusReq } from './models/file-request.dto';
 @Injectable()
 export class OrdersService {
 
@@ -28,13 +30,12 @@ export class OrdersService {
         @InjectDataSource()
         private dataSource: DataSource,
         @InjectEntityManager() private readonly entityManager: EntityManager,
-        private documentService: DocumentsListService
+        private documentService: DocumentsListService,
+        private uploadFilesRepository:UploadFilesRepository,
 
     ) { }
 
     async saveOrdersData(formData: any, id: number): Promise<CommonResponseModel> {
-        // console.log(formData, 'formData')
-        // console.log(id, 'id')
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
             await transactionManager.startTransaction()
@@ -46,17 +47,19 @@ export class OrdersService {
                 for (const key in obj) {
                     const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_');
                     updatedObj[newKey] = obj[key];
-                    // console.log(updatedObj, 'updatedObj')
                 }
                 return updatedObj;
             });
+           
             const poRequest : req[] =[];
             for(const res of poNumbers){
-                if(res[0] != undefined){
+                if(res[0] === undefined || res[0] === ""){
+                    console.log("&&&&&&&&")
+                }
+                else{
                     poRequest.push(new req(res[0]));
                 }
             }
-            console.log(poRequest);
 
             const convertedData = updatedArray.map((obj) => {
                 const updatedObj = {};
@@ -69,102 +72,59 @@ export class OrdersService {
                         var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
                         updatedObj[key] = value.replace(regexPattern, null);
                         updatedObj[key] = Buffer.from(value, 'utf-8').toString()
-                        console.log(updatedObj, 'updatedObj')
                     }
                 }
                 return updatedObj;
             });
- 
+
             let requestData = [];
+            let orderDetails:OrdersEntity[] = [];
             for (const data of convertedData) {
-                console.log(data, 'data=======')
-                const dtoData = new SaveOrderDto(data.id, data.buyer, data.challan_no, data.invoice_no, data.style, data.po_no, data.date, data.dest, data.tc_status, data.ship_qty, data.ctns, data.created_user, data.updated_user, data.created_at, data.updated_at, 1, id)
-                console.log(dtoData, 'dtoData')
-                if (dtoData.id != null) {
-                    const details = await this.ordersRepository.findOne({ where: { id: dtoData.id } })
-                    console.log(details, 'details')
-                    if (details) {
-                        // const updatedData = this.ordersAdapter.convertDtoToEntity(data);
-                        const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ id: dtoData.id }, {
-                            buyer: dtoData.buyer, challanNo: dtoData.challanNo, invoiceNo: dtoData.invoiceNo, style: dtoData.style, poNo: dtoData.poNo, date: dtoData.date, dest: dtoData.dest, tcStatus: dtoData.tcStatus, shipQty: dtoData.shipQty, ctns: dtoData.ctns, fileId: id
-                        })
-                        console.log(updateOrder, 'updateOrder')
-                        if (!updateOrder.affected) {
-                            await transactionManager.releaseTransaction();
-                            return new CommonResponseModel(false, 0, 'Something went wrong in order update')
-                        }
-                        const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
-                        console.log(convertedExcelEntity, 'convertedExcelEntity')
-                        const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
-                        console.log(saveExcelEntity)
-                        if (saveExcelEntity) {
-                            //difference insertion to order diff table
-                            const existingDataKeys = Object.keys(details)
-                            const currentDataKeys = Object.keys(dtoData)
-                            for (const existingDataKey of existingDataKeys) {
-                                if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId') {
-                                }
-                            }
-                        }
-                    }
-                } else {
+                console.log(data)
+                let dtoData:SaveOrderDto;
+                if(data.challan_no != null && data.invoice_no != null && data.po_no != null){
+                    dtoData = new SaveOrderDto(data.id, data.buyer, data.challan_no, data.invoice_no, data.style, data.po_no, data.date, data.dest, data.tc_status, data.ship_qty, data.ctns, data.created_user, data.updated_user, data.created_at, data.updated_at, 1, id)
                     dtoData.version = 1
-                    const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
-                    console.log(convertedExcelEntity, 'convertedExcelEntity')
-                    const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
-                    console.log(saveExcelEntity, 'saveExcelEntity')
-                    // for(const po of data.po_no){
-                    const uniquePoNos = {};                
-                        const poNo = data.po_no;
-
-                        if (!uniquePoNos[poNo]) {
-                            uniquePoNos[poNo] = []; 
-
-                            requestData = [
-                                {
-                                    ...data,
-                                    poNumber: poNo
-                                }
-                            ];                           
-                        }
-                   
-
-                    // const poGroups: Record<string, any[]> = {}
-
-                    //     if (!poGroups[data.po_no]) {
-                    //         poGroups[data.po_no] = [];
-                    //     }
-                    //     poGroups[data.po_no].push(data);
-                    //     console.log(data,'data11111')
-
-                    //     for (const poNo in poGroups) {
-                    //         if (poGroups.hasOwnProperty(poNo)) {
-                    //             const groupedData = poGroups[poNo];
-                    //             const requestData = groupedData.map(item => ({
-                    //                 ...item,
-                    //                 poNumber: item.po_no
-                    //             }));
-                    //             console.log(requestData,'requestData')
-
-                    //             const documentSave = await this.documentService.createDocList(requestData);
-                    //             console.log(documentSave, 'DocumentsListService');
-                    //         }
-                    //     }
-
-                    // }
-                    // const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id);
-                    // const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
-                    // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
-                    if (!saveExcelEntity) {
+                    let checkChallanExist = await transactionManager.getRepository(OrdersEntity).findOne({where:{
+                        invoiceNo:dtoData.invoiceNo, poNo:dtoData.poNo, challanNo:dtoData.challanNo, dest:dtoData.dest
+                    }})
+                    if(checkChallanExist.id > 0){
                         flag.add(false)
                         await transactionManager.releaseTransaction();
                         break;
                     }
+                    else{
+                        const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
+                        // console.log(convertedExcelEntity, 'convertedExcelEntity')
+                        const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
+                        // console.log(saveExcelEntity, 'saveExcelEntity')
+                        orderDetails.push(saveExcelEntity);
+                        // for(const po of data.po_no){
+                        const uniquePoNos = {};                
+                            const poNo = data.po_no;
+
+                            if (!uniquePoNos[poNo]) {
+                                uniquePoNos[poNo] = []; 
+
+                                requestData = [
+                                    {
+                                        ...data,
+                                        poNumber: poNo
+                                    }
+                                ];                           
+                            }
+                    
+                        if (!saveExcelEntity) {
+                            flag.add(false)
+                            await transactionManager.releaseTransaction();
+                            break;
+                        }
+                    }
                 }
             }
-            console.log(requestData,'requestData')
+            // console.log(requestData,'requestData')
             if (!flag.has(false)) {
-                const documentSave = await this.documentService.createDocList(poRequest);
+                const documentSave = await this.documentService.createDocList(orderDetails);
                 if(!documentSave.status){
                     flag.add(false)
                     await transactionManager.releaseTransaction();
@@ -325,12 +285,14 @@ export class OrdersService {
         }
     }
 
-    async updateFileStatus(req: FileStatusReq): Promise<CommonResponseModel> {
+    async updateFileStatus(req: FileUpdateStatusReq): Promise<CommonResponseModel> {
+        console.log(req);
+        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
         let update
         if (req.status === 'Failed') {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false });
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false, updatedUser: req.updatedUser, createdUser:req.updatedUser });
         } else {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status })
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, updatedUser: req.updatedUser, createdUser:req.updatedUser })
         }
         if (update.affected) {
             return new CommonResponseModel(true, 1, 'updated successfully');
@@ -442,30 +404,57 @@ export class OrdersService {
     }
 
     async getDynamicDataForDocList(): Promise<CommonResponseModel> {
-        const query = `SELECT DISTINCT document_name FROM document`;
+        const query = `SELECT DISTINCT document_name FROM document where is_active=1 order by priority ASC`;
         const documentNames = await this.dataSource.query(query)
-        const dynamicSQL = `SELECT dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END END) AS '${name.document_name}'
+        const dynamicSQL = `SELECT o.challan_no AS challanNo, o.invoice_no AS invoiceNo,"" AS url, dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END ELSE '-' END) AS '${name.document_name}'
         `).join(',')},dl.documents_list_id as docListId,dl.file_path as filePath,dl.status
       FROM
         documents_list dl
       LEFT JOIN
         document d ON d.id = dl.document_category_id
+        LEFT JOIN orders o on o.id = dl.order_id
       GROUP BY
-        dl.customer_po
+        dl.order_id ORDER BY o.po_no,o.invoice_no,o.challan_no ASC
     `;
         const data = await this.dataSource.query(dynamicSQL)
-        return new CommonResponseModel(true, 0, 'Data Retrived Successfully', data)
+        let urls:any[] = [];
+        let docinfo: any[] = [];
+        for (const res of data){
+            const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("https://edoc-backend.shahiapps.in/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where u.document_list_id ='+res.docListId;
+            const docres = await this.uploadFilesRepository.query(doctlistQuery)
+
+            const docReq:docRequest[] =[];
+            for(const res of docres){
+                console.log(res);
+                urls.push(res.url);
+                let data = new docRequest(res.uid,res.name,res.status,res.type,res.url,res.documentName);
+                console.log(data);
+                console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
+                docReq.push(data);
+            }
+            res.url = docReq;
+            docinfo.push(res)
+        }
+        if(docinfo.length > 0){
+            return new CommonResponseModel(true, 0, 'Data Retrived Successfully', docinfo)
+        }
+        else{
+            return new CommonResponseModel(false, 0, 'No data found', docinfo)
+        }
     }
 
     async getuploadeOrdersdata(req?:OrdersReq):Promise<CommonResponseModel>{
         try{
             let query
-             query='select file_name as fileName,file_path as filePath,status,date(created_at) as createdAt from file_upload where id>0'
+             query='select updated_user AS uploadedUser,file_name as fileName,file_path as filePath,status,date(created_at) as createdAt,DATE_FORMAT(created_at, "%Y-%m-%d %H") AS DateAndHours from file_upload where id>0'
             if(req.status){
                 query=query+' and status="'+req.status+'"'    
             }
             if(req.fromDate){
-                query =query+' and date(created_at)="'+req.fromDate+'"'
+                // query =query+' and date(created_at)="'+req.fromDate+'"'
+                query =query+' and DATE_FORMAT(created_at, "%Y-%m-%d %H")="'+req.fromDate+'"'
+
             }
             const result = await this.fileUploadRepo.query(query)
             if(result){

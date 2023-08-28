@@ -18,6 +18,7 @@ const AllOrdersGridView = () => {
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
     const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
     const [uploadedData,setuploadedData]=useState<any[]>([])
+    const [date,setdate]=useState<any>('')
     const service = new OrdersService();
     const [form] = Form.useForm();
     const { Option } = Select;
@@ -45,7 +46,10 @@ const AllOrdersGridView = () => {
         const req= new OrdersReq()
         req.status=form.getFieldValue('orderStatus')
         if(form.getFieldValue('fromDate') != undefined){
-         req.fromDate=form.getFieldValue('fromDate').format("YYYY-MM-DD")
+            console.log(form.getFieldValue('fromDate'))
+        //  req.fromDate=form.getFieldValue('fromDate').format("YYYY-MM-DD")
+        req.fromDate=date
+        console.log(req.fromDate)
         }
         console.log(req)
         service.getuploadeOrdersdata(req).then(res =>{
@@ -121,7 +125,8 @@ const AllOrdersGridView = () => {
               console.log(res);
               setTimeout(() => {
                 const response = {
-                  file: 'http://165.22.220.143/document-management/gtstoinfor/upload-files/'+`${res}`,
+                    file: 'http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'+`${res}`
+                    // file:  'http://165.22.220.143/document-management/gtstoinfor/upload-files/'+`${res}`
                 };
                 window.open(response.file);
       
@@ -148,7 +153,16 @@ const AllOrdersGridView = () => {
         },
         {
             title: 'uploaded At',
-            dataIndex: 'createdAt'
+            // dataIndex: 'createdAt',
+            render: (_, record) => {
+                return record.DateAndHours
+                  ? moment(record.DateAndHours).format("YYYY-MM-DD")
+                  : "-";
+              },
+        },
+        {
+            title: 'Uploaded By',
+            dataIndex: 'uploadedUser'
         },
         {
             title: 'Status',
@@ -240,23 +254,32 @@ const AllOrdersGridView = () => {
     }
 
 
-
+    const onChangeDate = (value, dateString) => {
+        console.log('Selected Time: ', value);
+        console.log('Formatted Selected Time: ', dateString);
+        setdate(dateString)
+      };
 
     return (
         <div>
-            <Card size='small' title="Orders" extra={<span><Button onClick={() => navigate('/excel-import/excel-import')} type={'primary'}>Import Orders</Button></span>}>
+            <Card size='small' title="Orders" headStyle={{ backgroundColor: '#77dfec', border: 0 }}  extra={<span><Button onClick={() => navigate('/excel-import/excel-import')} type={'primary'}>Import Orders</Button></span>}>
                 <Form form={form} layout={'vertical'}>
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
                             <Form.Item label="Uploaded At" name="fromDate">
                                 {/* <RangePicker onChange={EstimatedETDDate} /> */}
-                                 <DatePicker style={{ width: '95%', }}  showToday/>
+                                 <DatePicker style={{ width: '95%', }}  
+                                 onChange={onChangeDate} 
+                                 showToday 
+                                 format="YYYY-MM-DD" 
+                                 />
+                                 {/* <DatePicker showTime onChange={onChange} onOk={onOk} /> */}
                             </Form.Item>
                         </Col>
 
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{marginTop:'6px'}}>
                             <div>
-                                <label>Order Status</label>
+                                <label>Upload Status</label>
                                 <Form.Item name="orderStatus">
                                     <Select
                                         showSearch
@@ -265,6 +288,7 @@ const AllOrdersGridView = () => {
                                         allowClear>
                                         <Option key='Failed' value="Failed">Failed</Option>
                                         <Option key='Sucess' value="Sucess">Sucess</Option>
+                                        <Option key='Uploading' value="Uploading">Uploading</Option>
                                     </Select>
                                 </Form.Item>
                             </div>

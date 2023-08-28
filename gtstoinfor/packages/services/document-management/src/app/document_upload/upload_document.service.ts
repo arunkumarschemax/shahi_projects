@@ -5,7 +5,6 @@ import { DocumentsListRepository } from "./repository/documents-list.repository"
 import { UploadDocumentListAdapter } from "./repository/upload-document-adapter";
 import { DocumentsListRequest } from "./requests/document-list.request";
 import { ErrorResponse } from "../../../../../libs/shared-models/src/common/whatsapp/error-response-object";
-
 import {UploadDocumentListResponseModel} from '../../../../../libs/shared-models/src/document-management/upload-document-list-response-model';
 import {DocumentFileUploadResponse} from '../../../../../libs/shared-models/src/document-management/document-file-upload-response'
 import {OrdersRepository} from '../../../../common/src/app/orders/repository/orders.repository';
@@ -13,12 +12,14 @@ import { DocumentRoleMappingRepository } from "./repository/document-role-reposi
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
 import { DataSource } from "typeorm";
-import { PoRoleRequest, UploadDocumentListDto, docRequest, poReq } from "@project-management-system/shared-models";
+import { DocumentIdreq, PoRoleRequest, UploadDocumentListDto, docRequest, poReq } from "@project-management-system/shared-models";
 import { DocumentUploadDto } from "./requests/document-upload-dto";
 import { UploadFilesRepository } from "./repository/upload-files.repository";
 import { UploadFileDto } from "./models/upload-file.dto";
 import { UploadFilesEntity } from "./entities/upload-files.entity";
 import { config } from 'packages/libs/shared-services/config';
+import { GenericTransactionManager } from "packages/services/common/src/typeorm-transactions/generic-transaction-manager";
+import { OrdersEntity } from "../orders/entities/order.entity";
 @Injectable()
 export class DocumentsListService {
     constructor(
@@ -168,7 +169,7 @@ export class DocumentsListService {
 
     async getDocumentOrderIds():Promise<UploadDocumentListResponseModel>{
         try{
-            const query ='select id AS documentCategoryId from document'
+            const query ='select id AS documentCategoryId from document where is_active = 1'
             const result = await this.documentRepo.query(query)
             console.log(result)
             return new UploadDocumentListResponseModel(true,1,'retrived sucessfully',result)
@@ -178,25 +179,44 @@ export class DocumentsListService {
         }
     }
 
-        async createDocList(req?:req[]):Promise<UploadDocumentListResponseModel>{
+        async createDocList(req?:OrdersEntity[]):Promise<UploadDocumentListResponseModel>{
+            const transactionManager = new GenericTransactionManager(this.dataSource)
+            let flag:boolean=true;
             try{
+                await transactionManager.startTransaction()
                 const docIds = await this.getDocumentOrderIds();
                 const roleMappingData = await this.documentRoleMappingRepo.find();
                 for(const poNo of req){
-                    console.log(poNo)
                     for(const doc of docIds.data){
-                        const entity = new DocumentsList()
-                        entity.customerPo=poNo.poNumber;
-                        entity.documentCategoryId=doc.documentCategoryId;
-                        entity.roleName= roleMappingData.find((res) => res.documentId === doc.documentCategoryId).roleName;
-                        const save = await this.documentsListRepository.save(entity)
+                        if(roleMappingData.find((res) => res.documentId === doc.documentCategoryId)?.roleName != undefined && poNo.poNo != null && poNo.id != null){
+                            const entity = new DocumentsList()
+                            entity.customerPo=poNo.poNo;
+                            entity.orderId=poNo.id;
+                            entity.documentCategoryId=doc.documentCategoryId;
+                            entity.roleName= roleMappingData.find((res) => res.documentId === doc.documentCategoryId).roleName;
+                            const save =  await transactionManager.getRepository(DocumentsList).save(entity)
+                            if(!save){
+                                flag=false;
+                                break
+                            }
+                        }
+                        else{
+                            continue;
+                        }
                     }    
                 }
-
-                return new UploadDocumentListResponseModel(true,1,'creted sucessfully',[])
+                if(!flag){
+                    await transactionManager.releaseTransaction()
+                    return new UploadDocumentListResponseModel(false,0,'something went wrong. ',[])
+                }
+                else{
+                    await transactionManager.completeTransaction()
+                    return new UploadDocumentListResponseModel(true,1,'creted sucessfully',[])
+                }
             }
             catch(error){
-                throw(error)
+                await transactionManager.releaseTransaction()
+                return new UploadDocumentListResponseModel(false,0,'something went wrong. ',[])
             }
         }   
 
@@ -216,6 +236,37 @@ export class DocumentsListService {
             }
         }
 
-        
+
+    async getDocumentuploadedStaus(req:DocumentIdreq):Promise<UploadDocumentListResponseModel>{
+        try{
+            const query='select  document_category_id AS docCatId,is_uploaded AS isUploaded FROM documents_list  WHERE is_uploaded=1 AND document_category_id='+req.documentId+''
+            const result= await this.documentsListRepository.query(query)
+            if(result){
+                return new UploadDocumentListResponseModel(true,1,'data retrivedsucessfully',result)
+            }else{
+                return new UploadDocumentListResponseModel(false,1,'data not found',[])
+
+            }
+        }catch(err){
+            throw err
+        }
+
+    }
+    async documentwisePercentage():Promise<UploadDocumentListResponseModel>{
+        try{
+          const query= 'SELECT COUNT(u.document_list_id) AS uploadedDoccnt,COUNT(document_category_id) AS doccnt,100-(ROUND(COUNT(u.document_list_id)*100/(COUNT(document_category_id)))) AS perecent, u.document_list_id,document_name AS docName FROM documents_list dl LEFT JOIN  `upload_files` u  ON u.document_list_id=dl.documents_list_id LEFT JOIN document d ON d.id=dl.document_category_id         GROUP BY document_category_id'
+          const data = await this.documentsListRepository.query(query)
+          console.log(data,'dataa')
+          if (data) {
+           return new UploadDocumentListResponseModel(true,1,'Document data Retrived Sucessfully',data)
+          }else{
+            return new UploadDocumentListResponseModel(false,0,'no data found',undefined)
+          }
+  
+        }catch(error){
+            throw error
+          }
+      }
+  
 
     }

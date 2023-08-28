@@ -23,7 +23,7 @@ export class DocumentsList {
     roleName: string;
 
     @Column("varchar", {
-        nullable: true,
+        nullable: false,
         name: "customer_po",
     })
     customerPo: string;
@@ -32,6 +32,7 @@ export class DocumentsList {
     @Column('enum', {
         name: 'status',
         nullable: false,
+        default:DoclListEnum.Pending,
         enum: DoclListEnum
     })
     status: string;
