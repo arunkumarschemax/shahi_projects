@@ -268,6 +268,21 @@ const FactoryPPMReport = () => {
             { title: 'Item Text', dataIndex: 'itemText' },
 
         ]
+        const sizeHeaders = new Set<string>();
+
+        const excelData = gridData.map(item => {
+            const excelItem: any = {
+                'Po+Line': `${item.purchaseOrderNumber}-${item.poLineItemNumber}`,
+                'Last Modified Date': item.lastModifiedDate,
+                'Item': item.item,
+                
+            };
+        sizeHeaders.forEach(sizeHeader => {
+            excelItem[sizeHeader] = item[sizeHeader];
+        });
+
+        return excelItem;
+    });
 
         const excel = new Excel();
         excel.addSheet("Sheet1");
