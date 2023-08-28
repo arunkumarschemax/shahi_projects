@@ -637,12 +637,19 @@ export class DpomEntity {
     })
     isActive: boolean;
 
-    @OneToMany(() => DpomChildEntity, (dpomChild) => { dpomChild.dpom }, { cascade: true })
-    dpomChild: DpomChildEntity;
-
     @Column('int', {
         nullable: true,
         name: 'file_id',
     })
     fileId: number;
+
+    @Column('varchar', {
+        nullable: true,
+        name: 'diverted_to_pos',
+    })
+    divertedToPos: string;
+
+    @OneToMany(() => DpomChildEntity, (dpomChild) => { dpomChild.dpom }, { cascade: true })
+    dpomChild: DpomChildEntity;
+
 }
