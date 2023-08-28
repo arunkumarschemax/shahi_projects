@@ -200,12 +200,7 @@ export const baseRouterList = [
                 path: "locations/locations-view",
                 filepath: "locations/locations-view",
             },
-            {
-                label: "Locations",
-                key: "locations",
-                path: "locations/locations-view",
-                filepath: "locations/locations-view",
-            },
+            
             {
                 label: "Profit Control Head",
                 key: "profit-control-head",
@@ -283,6 +278,12 @@ export const baseRouterList = [
                 key: "department",
                 path: "department/department-view",
                 filepath: "department/department-view",
+            },
+            {
+                label: "Account Control Object",
+                key: "accountcontrolobjects",
+                path: "accountcontrolobjects/accountcontrolobjects-view",
+                filepath: "accountcontrolobjects/accountcontrolobjects-view",
             },
         ],
     },

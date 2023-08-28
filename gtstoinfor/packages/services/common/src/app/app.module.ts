@@ -44,6 +44,7 @@ import { BuyingHouseModule } from './buying-house/buying-house.module';
 import { CommissionModule } from './commission/commission.module';
 import { ColourModule } from './colours/colour.module';
 import { DepartmentsModule } from './departments/departments.module';
+import { AccountControlObjectModule } from './account-control-objects/account-control-object-module';
 
 
 @Module({
@@ -90,6 +91,7 @@ import { DepartmentsModule } from './departments/departments.module';
     ColourModule,
   SizeModule,
   DepartmentsModule,
+  AccountControlObjectModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],
   providers: [AppService],

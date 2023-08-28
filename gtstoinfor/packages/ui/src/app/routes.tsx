@@ -90,6 +90,8 @@ import ColourGrid from "./masters/colours/colour-grid"
 import { ColourForm } from "./masters/colours/colour-form"
 import DepartmentGrid from "./masters/departments/department-grid"
 import DepartmentForm from "./masters/departments/department-form"
+import AccountControlObjectGrid from "./masters/account-control-objects/account-control-objects-view"
+import AccountControlObjectForm from "./masters/account-control-objects/account-control-objects-form"
 
 
 export const AppRoutes = () => {
@@ -313,7 +315,12 @@ export const AppRoutes = () => {
                  isUpdate={false}
                 closeForm={() => { }}
                 updateItem={(undefined) => { }}/>} />
+                 <Route path='accountcontrolobjects/accountcontrolobjects-view' element={<AccountControlObjectGrid/>} />
+                         <Route path='accountcontrolobjects/accountcontrolobjects-form' key ='accountcontrolobjects/accountcontrolobjects-form' element={<AccountControlObjectForm  accountControlData={undefined}
 
+                 isUpdate={false}
+                closeForm={() => { }}
+                updateDetails={(undefined) => { }}/>} />
                          <Route path='locations/locations-view' element={<LocationsGrid/>}/>
                          <Route path='settings/settings-form' element={<SettingsForm/>}/>
 

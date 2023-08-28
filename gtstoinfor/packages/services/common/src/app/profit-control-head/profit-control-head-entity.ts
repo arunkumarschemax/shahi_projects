@@ -1,10 +1,10 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
-
+import { AccountControlObject } from "../account-control-objects/account-control-objects-entity";
 
 @Entity('profit_control_head')
 export class ProfitControlHead{
 
-@PrimaryGeneratedColumn("increment",{name:'profit_control_head-id'})
+@PrimaryGeneratedColumn("increment",{name:'profit_control_head_id'})
 profitControlHeadId:number;
 @Column("varchar",{
     nullable: true,
@@ -48,4 +48,7 @@ updatedUser: string | null;
     name: "version_flag"
 })
 versionFlag: number;
+
+@OneToMany(()=>AccountControlObject, account=>account.pch,{cascade:true})
+accountControl:AccountControlObject;
 }
