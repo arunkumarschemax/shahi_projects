@@ -64,6 +64,7 @@ export const SettingsForm = () => {
         getTrimResponsible()
         getFabricResponsible()
         getEmployees()
+        getBuyerAddress()
     },[])
 
     const getPCHData = () => {
@@ -113,7 +114,7 @@ export const SettingsForm = () => {
     const getLicenceType = () => {
         licenceTypeService.getAllActiveLiscenceTypes().then(res => {
             if(res.status){
-                setCurrency(res.data)
+                setLicenceType(res.data)
             }
         })
     }
@@ -210,6 +211,14 @@ export const SettingsForm = () => {
         })
     }
 
+    const getBuyerAddress = () => {
+        buyerService.getAllAddress().then(res => {
+            if(res.status){
+                setBuyerAddress(res.data)
+            }
+        })
+    }
+
     const onReset = () => {
         form.resetFields()
     }
@@ -219,10 +228,15 @@ export const SettingsForm = () => {
         service.createSettings(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
+                form.resetFields()
             } else{
                 AlertMessages.getSuccessMessage(res.internalMessage)
             }
         })
+    }
+
+    const onAddressChange = (val,object) => {
+        form.setFieldsValue({buyerName:object?.buyer})
     }
 
     return(
@@ -241,7 +255,7 @@ export const SettingsForm = () => {
                         <Select allowClear showSearch optionFilterProp="children" placeholder='Select Account Control'>
                                 {employee.map((e) => {
                                     return(
-                                        <Option key={e.employeeId} value={e.employeeId}>{e.employee}</Option>
+                                        <Option key={e.employeeId} value={e.employeeId}>{e.firstName}-{e.employeeCode}</Option>
                                     )
                                 })}
                             </Select>
@@ -263,7 +277,7 @@ export const SettingsForm = () => {
                             <Select allowClear showSearch optionFilterProp="children" placeholder='Select Comapny'>
                                 {company.map((e) => {
                                     return(
-                                        <Option key={e.companyId} value={e.companyId}>{e.company}</Option>
+                                        <Option key={e.companyId} value={e.companyId}>{e.companyName}</Option>
                                     )
                                 })}
                             </Select>
@@ -276,7 +290,7 @@ export const SettingsForm = () => {
                         <Select allowClear showSearch optionFilterProp="children" placeholder='Select Facility'>
                                 {facility.map((e) => {
                                     return(
-                                        <Option key={e.factoryId} value={e.factoryId}>{e.factory}</Option>
+                                        <Option key={e.id} value={e.id}>{e.name}</Option>
                                     )
                                 })}
                             </Select>
@@ -287,7 +301,7 @@ export const SettingsForm = () => {
                         <Select allowClear showSearch optionFilterProp="children" placeholder='Select Division'>
                                 {division.map((e) => {
                                     return(
-                                        <Option key={e.divisionId} value={e.divisionId}>{e.division}</Option>
+                                        <Option key={e.divisionId} value={e.divisionId}>{e.divisionName}</Option>
                                     )
                                 })}
                             </Select>
@@ -298,7 +312,7 @@ export const SettingsForm = () => {
                         <Select allowClear showSearch optionFilterProp="children" placeholder='Select Warehouse'>
                                 {warehouse.map((e) => {
                                     return(
-                                        <Option key={e.warehouseId} value={e.warehouseId}>{e.warehouse}</Option>
+                                        <Option key={e.warehouseId} value={e.warehouseId}>{e.warehouseName}</Option>
                                     )
                                 })}
                             </Select>
@@ -308,13 +322,14 @@ export const SettingsForm = () => {
                     <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                         <Form.Item name='coTypeId' label='CO Type' rules={[{required:true,message:'CO Type is reqired'}]}>
-                        <Select allowClear showSearch optionFilterProp="children" placeholder='Select CO Type'>
+                        {/* <Select allowClear showSearch optionFilterProp="children" placeholder='Select CO Type'>
                                 {coType.map((e) => {
                                     return(
                                         <Option key={e.coTypeId} value={e.coTypeId}>{e.coType}</Option>
                                     )
                                 })}
-                            </Select>
+                            </Select> */}
+                            <Input/>
                         </Form.Item>
                     </Col>
                     </Row>
@@ -336,7 +351,7 @@ export const SettingsForm = () => {
                         <Select allowClear showSearch optionFilterProp="children" placeholder='Select Licence Type'>
                                 {licenceType.map((e) => {
                                     return(
-                                        <Option key={e.licencetypeId} value={e.licencetypeId}>{e.licenceType}</Option>
+                                        <Option key={e.liscenceTypeId} value={e.liscenceTypeId}>{e.liscenceType}</Option>
                                     )
                                 })}
                             </Select>
@@ -366,7 +381,7 @@ export const SettingsForm = () => {
                                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Sales Person'>
                                 {salesPerson.map((e) => {
                                     return(
-                                        <Option key={e.employeeId} value={e.employeeId}>{e.employee}</Option>
+                                        <Option key={e.employeeId} value={e.employeeId}>{e.firstName}-{e.employeeCode}</Option>
                                     )
                                 })}
                             </Select>
@@ -377,7 +392,7 @@ export const SettingsForm = () => {
                                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Fabric Responsible'>
                                 {fabricResponsible.map((e) => {
                                     return(
-                                        <Option key={e.employeeId} value={e.employeeId}>{e.employee}</Option>
+                                        <Option key={e.employeeId} value={e.employeeId}>{e.firstName}-{e.employeeCode}</Option>
                                     )
                                 })}
                             </Select>
@@ -390,7 +405,7 @@ export const SettingsForm = () => {
                                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Responsible'>
                                 {itemResponsible.map((e) => {
                                     return(
-                                        <Option key={e.employeeId} value={e.employeeId}>{e.employee}</Option>
+                                        <Option key={e.employeeId} value={e.employeeId}>{e.firstName}-{e.employeeCode}</Option>
                                     )
                                 })}
                             </Select>
@@ -401,7 +416,7 @@ export const SettingsForm = () => {
                                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Trim Responsible'>
                                 {trimResponsible.map((e) => {
                                     return(
-                                        <Option key={e.employeeId} value={e.employeeId}>{e.employee}</Option>
+                                        <Option key={e.employeeId} value={e.employeeId}>{e.firstName}-{e.employeeCode}</Option>
                                     )
                                 })}
                             </Select>
@@ -412,7 +427,13 @@ export const SettingsForm = () => {
                             <Row gutter={8}>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                                 <Form.Item name='buyerAddress' label='Buyer Address' rules={[{required:true,message:'Buyer Address is reqired'}]}>
-                                    <Input/>
+                                <Select allowClear showSearch optionFilterProp="children" placeholder='Select Buyer Address' onChange={onAddressChange}>
+                                {buyerAddress.map((e) => {
+                                    return(
+                                        <Option key={e.addressId} value={e.addressId} buyer={e.buyerInfo.buyerName}>{e.countryInfo.countryName}-{e.state}-{e.city}-{e.landmark}</Option>
+                                    )
+                                })}
+                            </Select>
                                 </Form.Item>
                             </Col>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
@@ -432,7 +453,7 @@ export const SettingsForm = () => {
                                 <Select allowClear showSearch optionFilterProp="children" placeholder='Select Agent'>
                                 {employee.map((e) => {
                                     return(
-                                        <Option key={e.employeeId} value={e.employeeId}>{e.employee}</Option>
+                                        <Option key={e.employeeId} value={e.employeeId}>{e.firstName}-{e.employeeCode}</Option>
                                     )
                                 })}
                             </Select>
@@ -443,7 +464,7 @@ export const SettingsForm = () => {
                                 <Select allowClear showSearch optionFilterProp="children" placeholder='Select Package Terms'>
                                 {packageTerms.map((e) => {
                                     return(
-                                        <Option key={e.packageTermsId} value={e.packageTermsId}>{e.packageTerms}</Option>
+                                        <Option key={e.packageTermsId} value={e.packageTermsId}>{e.packageTermsName}</Option>
                                     )
                                 })}
                             </Select>
@@ -478,7 +499,7 @@ export const SettingsForm = () => {
                                 <Select allowClear showSearch optionFilterProp="children" placeholder='Select Delivery Method'>
                                 {deliveryMethods.map((e) => {
                                     return(
-                                        <Option key={e.deliveryMethodId} value={e.deliveryMethodId}>{e.delivery}</Option>
+                                        <Option key={e.deliveryMethodId} value={e.deliveryMethodId}>{e.deliveryMethod}</Option>
                                     )
                                 })}
                             </Select>
@@ -489,7 +510,7 @@ export const SettingsForm = () => {
                                 <Select allowClear showSearch optionFilterProp="children" placeholder='Select Delivery Terms'>
                                 {deliveryTerms.map((e) => {
                                     return(
-                                        <Option key={e.deliveryTermId} value={e.deliveryTermId}>{e.deliveryTerm}</Option>
+                                        <Option key={e.deliveryTermsId} value={e.deliveryTermsId}>{e.deliveryTermsName}</Option>
                                     )
                                 })}
                             </Select>

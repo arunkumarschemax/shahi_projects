@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, ValidateIf } from 'class-validator';
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { Settings } from '../settings/settings.entity';
 // import { Customers } from '../customers/customers.entity';
 
 @Entity('liscence_type')
@@ -55,4 +56,7 @@ export class LiscenceType {
       name: "version_flag"
   })
   versionFlag: number;
+
+  @OneToMany(type => Settings, settings => settings.licenseTypeInfo,{cascade: true})
+  settingsInfo : Settings
   }
