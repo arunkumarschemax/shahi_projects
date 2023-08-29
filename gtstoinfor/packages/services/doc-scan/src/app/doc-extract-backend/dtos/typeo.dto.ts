@@ -1,4 +1,4 @@
-export class TypeoDto {
+export class ScanDto {
     readonly typeId: number;
     readonly GST: string;
     readonly IFSC: string;
@@ -13,5 +13,11 @@ export class TypeoDto {
     readonly Console: string;
     readonly PO: string;
     readonly Payref: string;
+
+    readonly Quantity: string;
+    readonly InnvoiceNumber: string;
+    readonly Currency: string;
+    readonly Origin: string;
+    readonly Destination: string;
   }
   

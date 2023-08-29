@@ -1,13 +1,14 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { TypeoDto } from '../dtos/typeo.dto';
+import { Body, Controller, Get, Post } from '@nestjs/common'
 import { TypeoService } from './typeo-service';
+import { ScanDto } from '../dtos/typeo.dto';
 
-@Controller('/typeo')
+
+@Controller("/scan")
 export class TypeoController {
   constructor(private readonly typeoService: TypeoService) {}
 
   @Post('/postdata')
-  userdata(@Body() typeoDto: TypeoDto) {
+  userdata(@Body() typeoDto: ScanDto) {
     const data = this.typeoService.userdata(typeoDto);
     console.log(data, '######');
     return data;

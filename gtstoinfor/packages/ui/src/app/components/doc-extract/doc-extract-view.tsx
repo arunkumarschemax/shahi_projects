@@ -28,7 +28,7 @@ const View: React.FC = () => {
 
   const get = () => {
     axios
-      .get("http://localhost:8003/typeo/getdata")
+      .get("http://localhost:8003/scan/getdata")
       .then((res) => {
         if (res.status) {
           console.log(res, "#######");

@@ -6,8 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useIAMClientState } from '../iam-client';
 import { loginUser } from '../actions';
 import { LoginUserDto } from '../user-models';
-// import xpparellogo from '../xpparel-logo.jpeg'
-import doclogo from './doclogo.jpg'
+import xpparellogo from './xpparel-logo.jpeg'
 const { Text } = Typography;
 
 
@@ -44,9 +43,9 @@ export const LoginComponent = () => {
     return (
         <Card style={{marginLeft:'60%',marginTop:'5%',height: '55%',width: '300px'}}>
         <div style={{marginLeft:'20%'}}>
-                <img src={doclogo} width={150} height={'50%'}></img>
+                <img src={xpparellogo} width={150} height={'50%'}></img>
             </div>
-        <div style={{marginLeft:'23%'}}><b>E Document Management</b></div>
+        <div style={{marginLeft:'20%'}}><b>Document Scan Management</b></div>
         <br />
             <Form
                 name="login-form"

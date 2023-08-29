@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { appConfig } from '../../config';
+import { TypeoModule } from './doc-extract-backend/typeo/typeo-module';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { appConfig } from '../../config';
       port: appConfig.database.port,
       username: appConfig.database.username,
       password: appConfig.database.password,
-      database: appConfig.database.dbName,
+      database: appConfig.database.docScandbName,
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -21,6 +22,7 @@ import { appConfig } from '../../config';
         connectionLimit: 20
       }
     }),
+    TypeoModule,AppModule
   ],
   controllers: [AppController],
   providers: [AppService],

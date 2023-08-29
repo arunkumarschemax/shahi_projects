@@ -6,6 +6,7 @@ import Login from "./layout/login/login"
 import View from "./components/doc-extract/doc-extract-view"
 import Form from "./components/doc-extract/doc-extract-form"
 import VendorGrid from "./components/doc-extract/vendor-view/vendor-view"
+import DocExtractForm from "./components/doc-extract-new-form"
 
 
 export const AppRoutes = () => {
@@ -24,13 +25,20 @@ export const AppRoutes = () => {
                 <Route path="/doc-extract" >
                 <Route path="doc-extract-view" element={<View />}/>
                 <Route path="doc-extract-view" key='/doc-extract-view'  element={<View />}/>
-                
             </Route>
+            <Route path="/vendors" />
+            <Route path="/scan-document" />
+            <Route path="/invoices"/>
+            <Route path="/pending-approvals"/>
+            <Route path="/dashboard"/>
+            <Route path="/invoice-report"/>
 
             <Route path="/vendorGrid" element={<VendorGrid/>}/>
 
             <Route path="/doc-extract-form" element={<Form/>}/>
             
+
+            <Route path="/doc-extract-new-form" element={<DocExtractForm invoiceData={undefined} type="" file={undefined}/>}/>
 
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>

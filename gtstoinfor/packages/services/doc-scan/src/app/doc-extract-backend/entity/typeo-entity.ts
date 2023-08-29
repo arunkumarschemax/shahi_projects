@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-@Entity('typeo')
-export class TypeoEntity extends BaseEntity {
+@Entity('po')
+export class ScanEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
     name: 'type_id',
   })
@@ -96,6 +96,42 @@ export class TypeoEntity extends BaseEntity {
     name: 'Payref',
   })
   Payref: string;
+
+  @Column('varchar', {
+    nullable: false,
+    length: 50,
+    name: 'Quantity',
+  })
+  Quantity: string;
+
+  @Column('varchar', {
+    nullable: false,
+    length: 50,
+    name: 'InnvoiceNumber',
+  })
+  InnvoiceNumber: string;
+
+  @Column('varchar', {
+    nullable: false,
+    length: 50,
+    name: 'Currency',
+  })
+  Currency: string;
+
+  @Column('varchar', {
+    nullable: false,
+    length: 50,
+    name: 'Origin',
+  })
+  Origin: string;
+
+  @Column('varchar', {
+    nullable: false,
+    length: 50,
+    name: 'Destination',
+  })
+  Destination: string;
+
 
   versionFlag: number;
   isActive: boolean;
