@@ -357,23 +357,49 @@ const getMap = (data: MarketingModel[]) => {
   ]
   sizeHeaders?.forEach(version => {
     columns.push({
-        title: version,
-        dataIndex: version, 
-        key: version,
-        width: 130,
-        align: 'right',
-        render: (text, record) => {
-            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-            if (sizeData) {
-                return sizeData.sizeQty !== null ? Number(sizeData.sizeQty).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                }) : '-';
-            } else {
-                return '-';
-            }
+      title: version,
+      dataIndex: version,
+      key: version,
+      width: 130,
+      align: 'center',
+      render: (text, record) => {
+        const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+  
+        if (sizeData) {
+          if (sizeData.sizeQty !== null) {
+            const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+            const priceVariation = sizeData.price - sizeData.coPrice; 
+  
+            const nestedColumns = [
+              { title: 'Quantity', dataIndex: 'sizeQty' },
+              { title: 'Price', dataIndex: 'price' },
+              { title: 'Co Price', dataIndex: 'coPrice' },
+              { title: 'Price Variation', render: () => <span style={{ color: priceVariation < 0 ? 'red' : 'green' }}>{priceVariation}</span> }
+            ];
+  
+            const nestedData = [
+              {
+                key: 'nested',
+                sizeQty: formattedQty,
+                price: sizeData.price,
+                coPrice: sizeData.coPrice,
+              }
+            ];
+  
+            return (
+              <Table columns={nestedColumns} dataSource={nestedData} pagination={false} />
+            );
+          } else {
+            return (
+              <div>No data available</div>
+            );
+          }
+        } else {
+          return '-';
         }
+      }
     });
- })
+  });
 
  
     return (<Table columns={columns} dataSource={filterData} pagination={{

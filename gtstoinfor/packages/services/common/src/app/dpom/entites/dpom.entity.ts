@@ -428,9 +428,11 @@ export class DpomEntity {
     })
     quantity: number;
 
-    @Column('int', {
+    @Column('decimal', {
         name: "price",
-        nullable: true
+        nullable: true,
+        precision:5,
+        scale:2
     })
     price: number;
 
@@ -505,12 +507,14 @@ export class DpomEntity {
     })
     actualShippedQty: string;
 
-    @Column('varchar', {
+    @Column('decimal', {
         name: "co_price",
-        length: 20,
-        nullable: true
+        nullable: true,
+        precision:5,
+        scale:2,
+        
     })
-    coPrice: string;
+    coPrice: number;
 
     @Column('varchar', {
         name: "ship_to_address",

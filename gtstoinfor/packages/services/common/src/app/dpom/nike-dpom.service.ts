@@ -199,7 +199,7 @@ export class DpomService {
                 planNo: '',
                 truckOutDate: '',
                 actualShippedQty: '',
-                coPrice: '',
+                coPrice: null,
                 shipToAddress: '',
                 paymentTerm: '',
                 styleDesc: '',
@@ -334,7 +334,7 @@ export class DpomService {
                 planNo: '',
                 truckOutDate: '',
                 actualShippedQty: '',
-                coPrice: '',
+                coPrice: null,
                 shipToAddress: '',
                 paymentTerm: '',
                 styleDesc: '',
@@ -869,7 +869,11 @@ export class DpomService {
                     );
                 }
                 const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
-                sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity));
+                sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity,
+                     rec.price,rec.coPrice
+                    ));
+                  //  console.log(sizeWiseData,"test11111111111111111111111111111111111")
+
             }
             const dataModelArray: FactoryReportModel[] = Array.from(sizeDateMap.values());
             return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
@@ -935,7 +939,9 @@ export class DpomService {
                 );
             }
             const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
-            sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity));
+            sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity,
+                rec.price,rec.coPrice
+                ));
         }
         const dataModelArray: MarketingModel[] = Array.from(sizeDateMap.values());
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);

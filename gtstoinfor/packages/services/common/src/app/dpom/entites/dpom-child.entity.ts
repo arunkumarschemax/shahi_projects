@@ -510,7 +510,7 @@ export class DpomChildEntity {
         length: 20,
         nullable: true
     })
-    coPrice: string;
+    coPrice: number;
 
     @Column('varchar', {
         name: "ship_to_address",
