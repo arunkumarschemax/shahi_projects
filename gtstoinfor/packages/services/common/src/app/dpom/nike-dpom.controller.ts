@@ -1,12 +1,15 @@
-import { Body, Controller, Post, Param, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
 import { CommonResponseModel } from '@project-management-system/shared-models';
 import { DpomService } from './nike-dpom.service';
 import { DpomSaveDto } from './dto/dpom-save.dto';
-import { ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { DiaPDFDto } from './dto/diaPDF.dto';
+import { PoAndQtyReq } from './dto/po-qty.req';
+import { log } from 'console';
+import { type } from 'os';
 
 @Controller('/nike-dpom')
 export class DpomController {
@@ -410,7 +413,7 @@ export class DpomController {
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
-    }
+    } 
 
     @Post('/getDifferentialData')
     async getDifferentialData(): Promise<CommonResponseModel> {
@@ -420,5 +423,25 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getPoAndQtyDashboard')
+    @ApiBody ({type: PoAndQtyReq})
+    async getPoAndQtyDashboard(@Body()req:any): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPoAndQtyDashboard(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    // @Post('/weeklyPoAndQtyDashboard')
+    // @ApiBody ({type: PoAndQtyReq})
+    // async weeklyPoAndQtyDashboard(@Body()req:any): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.dpomService.weeklyPoAndQtyDashboard(req);
+    //     } catch (err) {
+    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
+   
 }
 
