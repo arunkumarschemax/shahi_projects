@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, Row, Col, Table } from 'antd';
+import { Modal, Form, Input, Row, Col, Table, Select } from 'antd';
 
 
-const MyModal = ({ visible, onClose }) => {
-    const [form] = Form.useForm();
+const M3Items = ({ visible, onClose }) => {
+    const [M3Item] = Form.useForm();
 
     const columns:any= [
         {
@@ -18,11 +18,11 @@ const MyModal = ({ visible, onClose }) => {
 
   
     const handleOk = () => {
-      form.validateFields()
+      M3Item.validateFields()
         .then(values => {
           // Do something with the form values
           console.log(values);
-          form.resetFields();
+          M3Item.resetFields();
           onClose(); // Close the modal
         })
         .catch(error => {
@@ -31,31 +31,43 @@ const MyModal = ({ visible, onClose }) => {
     };
   
     const handleCancel = () => {
-      form.resetFields();
+      M3Item.resetFields();
       onClose(); // Close the modal
     };
   
     return (
 
       <Modal
-        title="Shahi Export Pvt Ltd"
+        // title="Maps Items"
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}
       > 
-           {/* <Form>
+           <Form form={M3Item}>
+           <Col
+                    xs={{ span: 24 }}
+                    sm={{ span: 24 }}
+                    md={{ span: 8 }}
+                    lg={{ span: 8}}
+                    xl={{ span: 8 }}
+                  >
             <Form.Item
-              label="Additional"
-              name="additional"
-              
+              label="Item No"
+              name="ItemNo"
+                           
             >
-              <Input placeholder="Additional Input" />
+              <Select placeholder="Item No" allowClear>
+                <option key="1" value="Items1">Items1</option>
+                <option key="2" value="Items2">Items2</option>
+
+              </Select>
             </Form.Item>
-            </Form> */}
+            </Col>
+            </Form>
         <Table  columns={columns}/>
       </Modal>
     );
   };
   
-  export default MyModal;
+  export default M3Items;
   

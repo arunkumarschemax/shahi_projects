@@ -88,6 +88,9 @@ import BuyingHouseForm from "./masters/buying-house/buying-house-form"
 import BuyingHouseGrid from "./masters/buying-house/buying-house-grid"
 import CommissionForm from "./masters/commission/commission-form"
 import CommissionGrid from "./masters/commission/commission-grid"
+import TrimsBomCreation from "./BOM/trims-bom-creation"
+import { FabricDevelopmentApproval } from "./fabric development/fabric-development-approval"
+// import FabricDevelopmentApproval from "./fabric development/fabric-development-approval"
 
 
 export const AppRoutes = () => {
@@ -306,6 +309,8 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
                          <Route path='locations/locations-view' element={<LocationsGrid/>}/>
                          <Route path='settings/settings-form' element={<SettingsForm/>}/>
+                         <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
+                         <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentApproval/>}/>
 
                     </Route>
                     
