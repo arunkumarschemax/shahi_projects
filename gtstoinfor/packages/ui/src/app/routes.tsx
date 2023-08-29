@@ -5,8 +5,8 @@ import BasicLayout from "./layout/basic-layout/layout"
 import Login from "./layout/login/login"
 import View from "./components/doc-extract/doc-extract-view"
 import Form from "./components/doc-extract/doc-extract-form"
-import VendorGrid from "./components/doc-extract/vendor-view/vendor-view"
-import DocExtractForm from "./components/doc-extract-new-form"
+import DocExtractForm from "./components/doc-extract/doc-extract-new-form"
+import VendorGrid from "./components/vendor-view/vendor-view"
 
 
 export const AppRoutes = () => {
