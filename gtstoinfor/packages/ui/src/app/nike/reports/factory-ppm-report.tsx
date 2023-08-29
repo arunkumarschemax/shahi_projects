@@ -36,12 +36,12 @@ const FactoryPPMReport = () => {
 
         if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
             setFilterData(gridData);
-          } else {
+        } else {
             const filteredData = gridData.filter(item =>
-              values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
+                values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
             );
             setFilterData(filteredData);
-          }
+        }
     }
 
     const getFactoryStatus = (values: any) => {
@@ -123,9 +123,9 @@ const FactoryPPMReport = () => {
             ),
     });
 
-   const ClearData=()=>{
-    form.resetFields();
-   }
+    const ClearData = () => {
+        form.resetFields();
+    }
 
     const EstimatedETDDate = (value) => {
         if (value) {
@@ -224,40 +224,6 @@ const FactoryPPMReport = () => {
             { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
             { title: 'Total Item Quantity', dataIndex: 'totalItemQty' },
-            // { title: '2XL', dataIndex: ' ' },
-            // { title: '2XL-S', dataIndex: ' ' },
-            // { title: '2XL-T', dataIndex: ' ' },
-            // { title: '2XLTT', dataIndex: ' ' },
-            // { title: '2XS', dataIndex: ' ' },
-            // { title: '3XL', dataIndex: ' ' },
-            // { title: '3XL-T', dataIndex: ' ' },
-            // { title: '3XL-TT', dataIndex: ' ' },
-            // { title: '4XL', dataIndex: ' ' },
-            // { title: '4XL-S', dataIndex: ' ' },
-            // { title: '4XL-T', dataIndex: ' ' },
-            // { title: '5XL', dataIndex: ' ' },
-            // { title: 'CUSTM', dataIndex: ' ' },
-            // { title: 'L', dataIndex: ' ' },
-            // { title: 'L+', dataIndex: ' ' },
-            // { title: 'L-S', dataIndex: ' ' },
-            // { title: 'L-T', dataIndex: ' ' },
-            // { title: 'LTT', dataIndex: ' ' },
-            // { title: 'M', dataIndex: ' ' },
-            // { title: 'M+', dataIndex: ' ' },
-            // { title: 'M-S', dataIndex: ' ' },
-            // { title: 'M-T', dataIndex: ' ' },
-            // { title: 'S', dataIndex: ' ' },
-            // { title: 'S+', dataIndex: ' ' },
-            // { title: 'S-S', dataIndex: ' ' },
-            // { title: 'S-T', dataIndex: ' ' },
-            // { title: 'XL', dataIndex: ' ' },
-            // { title: 'XL+', dataIndex: ' ' },
-            // { title: 'XL-S', dataIndex: ' ' },
-            // { title: 'XL-T', dataIndex: ' ' },
-            // { title: 'XLTT', dataIndex: ' ' },
-            // { title: 'XS', dataIndex: ' ' },
-            // { title: 'XS-S', dataIndex: ' ' },
-            // { title: 'XS-T', dataIndex: ' ' },
             { title: 'Grand Total', dataIndex: ' ' },
             { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
             { title: 'VAS-Size', dataIndex: 'VASSize' },
@@ -272,14 +238,14 @@ const FactoryPPMReport = () => {
                 'Po+Line': `${item.purchaseOrderNumber}-${item.poLineItemNumber}`,
                 'Last Modified Date': item.lastModifiedDate,
                 'Item': item.item,
-                
-            };
-        sizeHeaders.forEach(sizeHeader => {
-            excelItem[sizeHeader] = item[sizeHeader];
-        });
 
-        return excelItem;
-    });
+            };
+            sizeHeaders.forEach(sizeHeader => {
+                excelItem[sizeHeader] = item[sizeHeader];
+            });
+
+            return excelItem;
+        });
 
         const excel = new Excel();
         excel.addSheet("Sheet1");
@@ -289,19 +255,6 @@ const FactoryPPMReport = () => {
         excel.saveAs(`factory-report-${currentDate}.xlsx`);
     }
 
-    function convertToYYYYMMDD(inputDate) {
-        const formatsToTry = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY', 'YYYY-MM-DD'];
-        let formattedDate;
-        for (const format of formatsToTry) {
-            const parsedDate = moment(inputDate, format);
-            if (parsedDate.isValid()) { 
-                formattedDate = parsedDate.format('YYYY-MM-DD');
-                break;
-            }
-        }
-        return formattedDate;
-    }
-
     const getSizeWiseHeaders = (data: FactoryReportModel[]) => {
         const sizeHeaders = new Set<string>();
         data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
@@ -309,6 +262,7 @@ const FactoryPPMReport = () => {
         }))
         return Array.from(sizeHeaders);
     };
+
     const getMap = (data: FactoryReportModel[]) => {
         const sizeWiseMap = new Map<string, Map<string, number>>();
         data?.forEach(rec => {
@@ -325,242 +279,264 @@ const FactoryPPMReport = () => {
     const totalItemQty = gridData?.map(i => i.totalItemQty)
     const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
 
-    const renderReport =(data:FactoryReportModel[])=>{
-     const sizeHeaders = getSizeWiseHeaders(data);
-     const sizeWiseMap = getMap(data);
-    
+    const renderReport = (data: FactoryReportModel[]) => {
+        const sizeHeaders = getSizeWiseHeaders(data);
+        const sizeWiseMap = getMap(data);
 
-    const columns: ColumnsType<any> = [
-        {
-            title: 'Po+Line',
-            dataIndex: 'purchaseOrderNumber-poLineItemNumber',
-            fixed:'left',
-            render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}`,
 
-        },
-        {
-            title: 'Last Modified Date',
-            dataIndex: 'lastModifiedDate',
-
-        },
-        {
-            title: 'Item',
-            dataIndex: 'item',
-            ...getColumnSearch('item'),
-
-        },
-       
-        {
-            title: 'Factory',
-            dataIndex: 'factory',
-            ...getColumnSearch('factory'),
-
-        },
-        {
-            title: 'Document Date',
-            dataIndex: 'documentDate',
-            // render: (text, record) => {
-            //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
-            // },
-
-        },
-        {
-            title: 'Purchase Order Number',
-            dataIndex: 'purchaseOrderNumber',
-
-        },
-        {
-            title: 'PO Line Item Number',
-            dataIndex: 'poLineItemNumber',
-
-        },
-        {
-            title: 'DPOM Line Item Status',
-            dataIndex: 'DPOMLineItemStatus',
-
-        },
-        {
-            title: 'Style Number',
-            dataIndex: 'styleNumber',
-            ...getColumnSearch('styleNumber'),
-
-        },
-        {
-            title: 'Product Code',
-            dataIndex: 'productCode',
-            ...getColumnSearch('productCode'),
-
-        },
-        {
-            title: 'Colour Description',
-            dataIndex: 'colorDesc',
-
-        },
-        {
-            title: 'CO',
-            dataIndex: 'customerOrder',
-
-        },
-        {
-            title: 'CO Final Approval Date',
-            dataIndex: 'coFinalApprovalDate',
-        },
-        {
-            title: 'Plan No',
-            dataIndex: 'planNo',
-
-        },
-        {
-            title: 'Lead Time',
-            dataIndex: 'leadTime',
-
-        },
-        {
-            title: 'Category',
-            dataIndex: 'categoryCode',
-
-        },
-        {
-            title: 'Category Description',
-            dataIndex: 'categoryDesc',
-
-        },
-        {
-            title: 'Vendor Code',
-            dataIndex: 'vendorCode',
-
-        },
-        {
-            title: 'Global Category Core Focus',
-            dataIndex: 'gccFocusCode',
-
-        },
-        {
-            title: 'Global Category Core Focus Description',
-            dataIndex: 'gccFocusDesc',
-
-        },
-        {
-            title: 'Gender Age',
-            dataIndex: 'genderAgeCode',
-
-        },
-        {
-            title: 'Gender Age Description',
-            dataIndex: '',
-
-        },
-        {
-            title: 'Destination Country Code',
-            dataIndex: 'destinationCountryCode',
-
-        },
-        {
-            title: 'destination country Name',
-            dataIndex: 'destinationCountry',
-
-        },
-        {
-            title: 'Plant Code',
-            dataIndex: 'plant',
-
-        },
-        {
-            title: 'Plant Name',
-            dataIndex: 'plantName',
-
-        },
-        {
-            title: 'Trading Co PO Number',
-            dataIndex: 'tradingCoPoNumber',
-
-        },
-        {
-            title: 'UPC',
-            dataIndex: 'UPC',
-
-        },
-        {
-            title: 'Sales Order Number',
-            dataIndex: '',
-
-        },
-        {
-            title: 'Sales Order Item Number',
-            dataIndex: '',
-
-        },
-        {
-            title: 'Customer PO',
-            dataIndex: 'customerPO',
-
-        }, 
-         {
+        const columns: ColumnsType<any> = [
+            {
+                title: 'Po+Line',
+                dataIndex: 'purchaseOrderNumber-poLineItemNumber',
+                fixed: 'left',
+                render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}`,
+            },
+            {
+                title: 'Last Modified Date',
+                dataIndex: 'lastModifiedDate',
+            },
+            {
+                title: 'Item',
+                dataIndex: 'item',
+                ...getColumnSearch('item'),
+            },
+            {
+                title: 'Factory',
+                dataIndex: 'factory',
+                ...getColumnSearch('factory'),
+            },
+            {
+                title: 'Document Date',
+                dataIndex: 'documentDate',
+                // render: (text, record) => {
+                //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
+                // },
+            },
+            {
+                title: 'Purchase Order Number',
+                dataIndex: 'purchaseOrderNumber',
+            },
+            {
+                title: 'PO Line Item Number',
+                dataIndex: 'poLineItemNumber',
+            },
+            {
+                title: 'DPOM Line Item Status',
+                dataIndex: 'DPOMLineItemStatus',
+            },
+            {
+                title: 'Style Number',
+                dataIndex: 'styleNumber',
+                ...getColumnSearch('styleNumber'),
+            },
+            {
+                title: 'Product Code',
+                dataIndex: 'productCode',
+                ...getColumnSearch('productCode'),
+            },
+            {
+                title: 'Colour Description',
+                dataIndex: 'colorDesc',
+            },
+            {
+                title: 'CO',
+                dataIndex: 'customerOrder',
+            },
+            {
+                title: 'CO Final Approval Date',
+                dataIndex: 'coFinalApprovalDate',
+            },
+            {
+                title: 'Plan No',
+                dataIndex: 'planNo',
+            },
+            {
+                title: 'Lead Time',
+                dataIndex: 'leadTime',
+            },
+            {
+                title: 'Category',
+                dataIndex: 'categoryCode',
+            },
+            {
+                title: 'Category Description',
+                dataIndex: 'categoryDesc',
+            },
+            {
+                title: 'Vendor Code',
+                dataIndex: 'vendorCode',
+            },
+            {
+                title: 'Global Category Core Focus',
+                dataIndex: 'gccFocusCode',
+            },
+            {
+                title: 'Global Category Core Focus Description',
+                dataIndex: 'gccFocusDesc',
+            },
+            {
+                title: 'Gender Age',
+                dataIndex: 'genderAgeCode',
+            },
+            {
+                title: 'Gender Age Description',
+                dataIndex: '',
+            },
+            {
+                title: 'Destination Country Code',
+                dataIndex: 'destinationCountryCode',
+            },
+            {
+                title: 'destination country Name',
+                dataIndex: 'destinationCountry',
+            },
+            {
+                title: 'Plant Code',
+                dataIndex: 'plant',
+            },
+            {
+                title: 'Plant Name',
+                dataIndex: 'plantName',
+            },
+            {
+                title: 'Trading Co PO Number',
+                dataIndex: 'tradingCoPoNumber',
+            },
+            {
+                title: 'UPC',
+                dataIndex: 'UPC',
+            },
+            {
+                title: 'Sales Order Number',
+                dataIndex: '',
+            },
+            {
+                title: 'Sales Order Item Number',
+                dataIndex: '',
+            },
+            {
+                title: 'Customer PO',
+                dataIndex: 'customerPO',
+            },
+            {
                 title: 'Total Item Qty',
                 dataIndex: 'totalItemQty',
-                align:'center',
+                align: 'center',
                 render: (text) => <strong>{text}</strong>
             },
-       
-    ];
-    sizeHeaders?.forEach(version => {
-        columns.push({
-          title: version,
-          dataIndex: version,
-          key: version,
-          width: 130,
-          align: 'center',
-          render: (text, record) => {
-            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-      
-            if (sizeData) {
-              if (sizeData.sizeQty !== null) {
-                const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                const priceVariation = sizeData.price - sizeData.coPrice; 
-      
-                const nestedColumns = [
-                  { title: 'Quantity', dataIndex: 'sizeQty' },
-                  { title: 'Price', dataIndex: 'price' },
-                  { title: 'Co Price', dataIndex: 'coPrice' },
-                  { title: 'Price Variation', render: () => <span style={{ color: priceVariation < 0 ? 'red' : 'green' }}>{priceVariation}</span> }
-                ];
-      
-                const nestedData = [
-                  {
-                    key: 'nested',
-                    sizeQty: formattedQty,
-                    price: sizeData.price,
-                    coPrice: sizeData.coPrice,
-                  }
-                ];
-      
-                return (
-                  <Table columns={nestedColumns} dataSource={nestedData} pagination={false} />
-                );
-              } else {
-                return (
-                  <div>No data available</div>
-                );
-              }
-            } else {
-              return '-';
-            }
-          }
+
+        ];
+        sizeHeaders?.forEach(version => {
+            columns.push({
+                title: version,
+                dataIndex: version,
+                key: version,
+                width: 130,
+                align: 'center',
+                children: [
+                    {
+                        title: 'Quantity',
+                        dataIndex: '',
+                        key: '',
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                            if (sizeData) {
+                                if (sizeData.sizeQty !== null) {
+                                    const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                                    return (
+                                        formattedQty
+                                    );
+                                } else {
+                                    return (
+                                        '-'
+                                    );
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    },
+                    {
+                        title: 'Legal PO Price',
+                        dataIndex: '',
+                        key: '',
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+                            if (sizeData) {
+                                if (sizeData.sizeQty !== null) {
+                                    return (
+                                        sizeData.price
+                                    );
+                                } else {
+                                    return (
+                                        '-'
+                                    );
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    },
+                    {
+                        title: 'CO Price',
+                        dataIndex: '',
+                        key: '',
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+                            if (sizeData) {
+                                if (sizeData.sizeQty !== null) {
+                                    return (
+                                        sizeData.coPrice
+                                    );
+                                } else {
+                                    return (
+                                        '-'
+                                    );
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    },
+                    {
+                        title: 'Price Variation',
+                        dataIndex: '',
+                        key: '',
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+                            if (sizeData) {
+                                if (sizeData.sizeQty !== null) {
+                                    const priceVariation = sizeData.price - sizeData.coPrice;
+                                    return (
+                                        priceVariation
+                                    );
+                                } else {
+                                    return (
+                                        '-'
+                                    );
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    },
+                ],
+                render: (text, record) => {
+                    return record.sizeWiseData.find(item => item.sizeDescription === version);
+                }
+            });
         });
-      });
-      
-   
-      
-   
+
         return (<Table columns={columns} dataSource={filterData} pagination={{
             onChange(current, pageSize) {
                 setPage(current);
-                setPageSize(pageSize)}
-        }}scroll={{ x: 'max-content' }} />)
+                setPageSize(pageSize)
+            }
+        }} scroll={{ x: 'max-content' }} />)
     }
-
-
-
 
     return (
         <>
@@ -587,7 +563,7 @@ const FactoryPPMReport = () => {
                                     showSearch
                                     placeholder="Select Factory Status"
                                     optionFilterProp="children"
-                                    allowClear  mode='multiple'>
+                                    allowClear mode='multiple'>
                                     <Option value="Accepted">ACCEPTED</Option>
                                     <Option value="Unaccepted">UNACCEPTED</Option>
                                     {/* <Option value="Cancelled">CANCELLED</Option> */}
@@ -598,22 +574,22 @@ const FactoryPPMReport = () => {
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '42px' }}>
                             <Form.Item>
                                 <Button htmlType="submit"
-                                icon={<SearchOutlined />}
-                                 type="primary">SEARCH</Button>
-                               
+                                    icon={<SearchOutlined />}
+                                    type="primary">SEARCH</Button>
+
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ padding: '42px' }}>
                             <Form.Item>
-                        <Button 
-                                htmlType='button'
-                                icon={<UndoOutlined />}
-                                style={{ left: '-150px', width: 80 , backgroundColor:"#162A6D" , color:"white",position:"relative"}}
-                                onClick={()=>{ClearData();}}
-                                  >
+                                <Button
+                                    htmlType='button'
+                                    icon={<UndoOutlined />}
+                                    style={{ left: '-150px', width: 80, backgroundColor: "#162A6D", color: "white", position: "relative" }}
+                                    onClick={() => { ClearData(); }}
+                                >
                                     RESET
                                 </Button>
-                                </Form.Item>
+                            </Form.Item>
                         </Col>
                     </Row>
                 </Form>
@@ -653,7 +629,7 @@ const FactoryPPMReport = () => {
                         dataSource={filterData}
                         scroll={{ x: 1000 }}
                         bordered /> */}
-                        {renderReport(filterData)}
+                    {renderReport(filterData)}
                 </Card>
             </Card>
         </>

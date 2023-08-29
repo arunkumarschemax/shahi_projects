@@ -239,8 +239,10 @@ export class DpomService {
                 const matches = [];
 
                 let match;
-                while ((match = pattern.exec(itemText)) !== null) {
-                    matches.push(match[1]);
+                if (itemText !== null) {
+                    while ((match = pattern.exec(itemText)) !== null) {
+                        matches.push(match[1]);
+                    }
                 }
 
                 const dtoData = new DpomSaveDto(orderDetail.poHeader.documentDate, orderDetail.poHeader.poNumber, orderDetail.poLine.itemNumber, orderDetail.sizes.scheduleLineItemNumber, orderDetail.product.categoryCode, orderDetail.product.categoryDescription, orderDetail.poHeader.vendorCode, orderDetail.product.globalCategoryCoreFocusCode, orderDetail.product.globalCategoryCoreFocusDescription, orderDetail.product.genderAgeCode, orderDetail.product.genderAgeDescription, orderDetail.product.styleNumber,
@@ -400,8 +402,10 @@ export class DpomService {
                 const matches = [];
 
                 let match;
-                while ((match = pattern.exec(itemText)) !== null) {
-                    matches.push(match[1]);
+                if (itemText !== null) {
+                    while ((match = pattern.exec(itemText)) !== null) {
+                        matches.push(match[1]);
+                    }
                 }
 
                 const dtoData = new DpomSaveDto(orderDetail.poHeader.documentDate, orderDetail.poHeader.poNumber, orderDetail.poLine.itemNumber, orderDetail.sizes.scheduleLineItemNumber, orderDetail.product.categoryCode, orderDetail.product.categoryDescription, orderDetail.poHeader.vendorCode, orderDetail.product.globalCategoryCoreFocusCode, orderDetail.product.globalCategoryCoreFocusDescription, orderDetail.product.genderAgeCode, orderDetail.product.genderAgeDescription, orderDetail.product.styleNumber,
@@ -555,7 +559,6 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'updated successfully');
         } else {
             return new CommonResponseModel(false, 0, 'update failed');
-
         }
     }
 
@@ -569,7 +572,6 @@ export class DpomService {
         }
     }
 
-
     async getByFactoryStatus(req: DpomSaveDto) {
         const record = await this.dpomRepository.find({
             where: { DPOMLineItemStatus: req.DPOMLineItemStatus },
@@ -581,15 +583,6 @@ export class DpomService {
         }
     }
 
-    // async getPPMData(): Promise<CommonResponseModel> {
-    //     const details = await this.dpomRepository.find()
-    //     if (details.length > 0) {
-    //         return new CommonResponseModel(true, 1, 'data retrived', details)
-    //     } else {
-    //         return new CommonResponseModel(false, 0, 'data not found')
-    //     }
-    // }
-
     async getShipmentTrackerReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find();
         if (details.length > 0) {
@@ -598,24 +591,6 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'data not found')
         }
     }
-
-    // async getDivertReportData(): Promise<CommonResponseModel> {
-    //     const report = await this.dpomRepository.getDivertReport();
-
-    //     const acceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'accepted',);
-    //     const unacceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'unaccepted');
-    //     if (acceptedArray.length > 0 || unacceptedArray.length > 0) {
-    //         const response = new CommonResponseModel(true, report.length, 'data retrieved', {
-    //             accepted: acceptedArray,
-    //             unaccepted: unacceptedArray
-    //         });
-    //         return response;
-    //     } else {
-    //         return new CommonResponseModel(false, 0, 'No Data Found', []);
-    //     }
-    // }
-
-
 
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.getCountForDivertReport();
@@ -633,8 +608,6 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'data not found', undefined)
         }
     }
-
-
 
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPlantCount()
@@ -729,6 +702,7 @@ export class DpomService {
             return new CommonResponseModel(false, 1010, "The  PO Number of the uploaded document not exist")
         }
     }
+
     async getItemChangeData(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getItemChangeData()
         if (data.length > 0)
@@ -1090,8 +1064,6 @@ export class DpomService {
                 dashboardPoGrnData.poQty.push(totalQty);
             });
 
-
-
             // const dashboardPoGrnData = new PoData();
             // dashboardPoGrnData.poQty = [];           
             // allNames.forEach(eachName => {
@@ -1101,21 +1073,18 @@ export class DpomService {
 
             const dashboardData = new PoDataResDto(names, dashboardPoGrnData);
             return new CommonResponseModel(true, 10000, 'Data Retrieved Successfully.', dashboardData);
-
         } catch (error) {
             return new CommonResponseModel(false, 0, 'failed', error);
         }
-
     }
 
+
+
     // async weeklyPoAndQtyDashboard(req:WeeklyPoAndQtyReq): Promise<CommonResponseModel> {
-
     //     try{
-
     //         let query = '';
     //         let monthNo=0;  
     //         if(!req.month){
-
     //             const dateData = new Date();
     //             monthNo = dateData.getMonth();
     //         }else{
@@ -1126,12 +1095,10 @@ export class DpomService {
     //         const monthData ={1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'};
     //         let mapKey;
     //         let querySelect;
-
     //         let queryWhere;
     //         let queryGroup;
     //         const monthInfo=monthNo-1;
     //         let allNames;
-
     //         if(req.reportType == ReportType.WEEKWISE){
     //             let month;      
     //             if (monthNo < 10)
@@ -1148,25 +1115,20 @@ export class DpomService {
     //              queryGroup = 'WEEK(created_at)';
     //              queryWhere = 'MONTH(created_at)='+monthNo+'';
     //              allNames = namesData;
-
     //          }  
-
     //       query =`SELECT po_number AS poNumber, total_item_qty AS totalItemQuantity,created_at AS createdAt,`+querySelect+`
     //      FROM dpom WHERE total_item_qty >0 AND `+queryWhere+``;
     //      query += ` group by `+ queryGroup +``;
-
     //     const data = await this.dpomRepository.query(query)
     //     if (data.length < 1){
     //         return new CommonResponseModel(false, 0, 'No Records Found', [])
     //     } 
     //     const poMap = new Map<string, PoQty>();
     //     for(const poData of data){
-
     //         if(req.reportType == ReportType.WEEKWISE){ 
     //             const mapKey = poData.reportedDate;
     //             if(!poMap.has(mapKey)){
     //                 const poObj = new PoQty();
-
     //                 poObj.totalItemQuantity = poData.totalItemQuantity;                
     //                 poMap.set(mapKey, poObj);   
     //             }else{
@@ -1180,14 +1142,11 @@ export class DpomService {
     //         const PoGrnForQty = poMap.get(eachName); 
     //         dashboardPoGrnData.poQty.push(PoGrnForQty? PoGrnForQty.totalItemQuantity : 0); 
     //     })
-
     //     const dashboardData = new PoDataResDto(names, dashboardPoGrnData);
     //     return new CommonResponseModel(true, 10000, 'Data Retrieved Successfully.', dashboardData);
-
     //     } catch (error) {
     //         return new CommonResponseModel(false, 0, 'failed', error);
     //     }
-
     // }
 }
 
