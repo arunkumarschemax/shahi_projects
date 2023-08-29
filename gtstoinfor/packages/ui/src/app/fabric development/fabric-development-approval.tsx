@@ -52,7 +52,7 @@ export const FabricDevelopmentApproval = () => {
               <Form.Item
                 label="Location"
                 name="location"
-                rules={[{ required: true, message: "Enter Trim Code" }]}
+                rules={[{ required: true, message: "Location" }]}
               >
                 <Input placeholder="Location" allowClear />
               </Form.Item>
@@ -90,7 +90,7 @@ export const FabricDevelopmentApproval = () => {
               <Form.Item
                 label="PCH"
                 name="pch"
-                rules={[{ required: true, message: "Enter Trim Code" }]}
+                rules={[{ required: true, message: "PCH" }]}
               >
                 <Select placeholder="PCH">
                 <option key="1" value="type1">pch</option>
@@ -109,7 +109,7 @@ export const FabricDevelopmentApproval = () => {
               <Form.Item
                 label="Buyer"
                 name="buyer"
-                rules={[{ required: true, message: "Enter Trim Code" }]}
+                rules={[{ required: true, message: "Buyer" }]}
               >
                 <Select placeholder="Buyer">
                 <option key="1" value="type1">SURESH</option>
@@ -152,7 +152,7 @@ export const FabricDevelopmentApproval = () => {
               <Form.Item
                 label="Type"
                 name="type"
-                rules={[{ required: true, message: "Enter Trim Code" }]}
+                rules={[{ required: true, message: "Type" }]}
               >
                 <Select placeholder="Sample Type">
                   <option key="1" value="type1">type1</option>
@@ -170,7 +170,7 @@ export const FabricDevelopmentApproval = () => {
               <Form.Item
                 label="Fabric Responsible"
                 name="fabricresponsible"
-                rules={[{ required: true, message: "Enter Trim Code" }]}
+                rules={[{ required: true, message: "Fabric Responsible" }]}
               >
                 <Select placeholder="Fabric Responsible">
                 <option key="1" value="type1">SURESH</option>

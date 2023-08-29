@@ -18,7 +18,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
  console.log(props.key,"key")
   const items: TabsProps['items'] = [
     {
-      key: '1',
+      key: 'quality1',
       label: (
         <span style={{ color: "green" }}>
          Quality 1
@@ -27,7 +27,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
       children: <FabricDevelopmentRequestQuality />,
     },
     {
-      key: '2',
+      key: 'quality2',
       label: (
         <span style={{ color:"brown" }}>
          Quality 2
@@ -37,7 +37,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
     },
     {
-      key: '3',
+      key: 'quality3',
       label: (
         <span style={{ color: "green" }}>
           Quality 3
@@ -47,7 +47,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
     },
     {
-      key: '4',
+      key: 'quality4',
       label: (
         <span style={{ color:"brown" }}>
           Quality 4
@@ -57,7 +57,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
     },
     {
-      key: '5',
+      key: 'quality5',
       label: (
         <span style={{ color: "green" }}>
           Quality 5
@@ -67,7 +67,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
     },
     {
-      key: '6',
+      key: 'quality6',
       label: (
         <span style={{ color:"brown" }}>
           Quality 6
@@ -76,7 +76,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
       children: <FabricDevelopmentRequestQuality />
     },
     {
-      key: '7',
+      key: 'quality7',
       label: (
         <span style={{ color: "green" }}>
           Quality 7
@@ -86,7 +86,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
     },
     {
-      key: '8',
+      key: 'quality8',
       label: (
         <span style={{ color:"brown" }}>
           Quality 8
@@ -96,7 +96,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
     },
     {
-      key: '9',
+      key: 'quality9',
       label: (
         <span style={{ color: "green" }}>
           Quality 9
@@ -106,7 +106,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
     },
     {
-      key: '10',
+      key: 'quality10',
       label: (
         <span style={{ color:"brown" }}>
           Quality 10
@@ -116,7 +116,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
     },
     {
-      key: '11',
+      key: 'quality11',
       label: (
         <span style={{ color: "green" }}>
           Quality 11
@@ -126,7 +126,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
     },
     {
-      key: '12',
+      key: 'quality                                                                                                                12',
       label: (
         <span style={{ color:"brown" }}>
           Quality 12
