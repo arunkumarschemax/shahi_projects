@@ -60,6 +60,7 @@
     "regenerator-runtime": "0.13.7",
     "rxjs": "^7.0.0",
     "static-server": "2.2.1",
+    "tesseract.js": "^2.1.1",
     "tslib": "2.3.0",
     "typeorm": "^0.3.17",
     "xlsx": "^0.18.5",
