@@ -29,11 +29,14 @@ const Form: React.FC = () => {
     const [weight, setWeight] = useState("");
     const [volume, setVolume] = useState("");
     const [chargeable, setChargeable] = useState("");
-    const [console, setConsole] = useState("");
+    const [consoles, setConsoles] = useState("");
     const [cartons, setCartons] = useState("");
     const [po, setPO] = useState("");
     const [dt, setDt] = useState("");
     const [payref, setpayref] = useState("");
+    const [igst, setIgst] = useState("");
+    const [charges, setCharges] = useState("");
+
 
     const [quantity, setQuantity] = useState("any");
     const [innNumber, setInnnumber] = useState("");
@@ -58,6 +61,9 @@ const Form: React.FC = () => {
             setImageText(text);
             setOriginalImageText(text);
             setCurrent(1);
+            console.log("imageText");
+            console.log(imageText);
+
 
             const extractedGstNumbers = extractGstNumbers(text);
             const extractedIfscCodes = extractIfscCodes(text);
@@ -72,6 +78,10 @@ const Form: React.FC = () => {
             const extractedPO = extractPO(text);
             const extractedDt = extractDt(text);
             const extractedPayref = extractPayref(text);
+            const extractedIgst = extractIgst(text);
+            const extractedCharges = extractCharges(text);
+
+
 
             const extractedQuantity = extractQuantity(text);
             const extractedInnNumber = extractInnNumber(text);
@@ -95,8 +105,10 @@ const Form: React.FC = () => {
             setPO(extractedPO);
             setDt(extractedDt);
             setpayref(extractedPayref);
-            setConsole(extractedConsole);
+            setConsoles(extractedConsole);
             setCartons(extractedCartons);
+            setIgst(extractedIgst);
+            setCharges(extractedCharges);
 
             setQuantity(extractedQuantity);
             setInnnumber(extractedInnNumber);
@@ -109,7 +121,11 @@ const Form: React.FC = () => {
             setPannumber(extractedPannumber);
             setAmountdue(extractedAmountdue);
         }
+        
     };
+
+
+
 
     //* Type 1*//
     const extractGstNumbers = (text) => {
@@ -211,6 +227,24 @@ const Form: React.FC = () => {
         return extractedPayref;
     };
 
+
+    const extractIgst = (text) => {
+        const igstRegex = /IGST\s+(\d+%)\s*=\s*([\d.]+)/g;
+        const match = text.match(igstRegex);
+        const extractedIgst = match ? match[0] : "";
+        return extractedIgst;
+    };
+
+
+    const extractCharges = (text) => {
+        const chargesRegex =/\[HSN:\s*(\d+)\]\s*([^0-9]+)\s*(\d+GST\s+18%=[\d,.]+)\s*([\d,.]+)/;
+        const match = text.match(chargesRegex);
+        const extractedCharges = match ? match[0] : "";
+        return extractedCharges;
+    };
+
+
+
     //*Type 2*//
 
     const extractQuantity = (text) => {
@@ -292,41 +326,46 @@ const Form: React.FC = () => {
         isDragging = true;
         startPosition = { x: e.clientX, y: e.clientY };
         e.preventDefault();
-      };
-      
-      const handleImageMouseMove = (e) => {
+    };
+
+    const handleImageMouseMove = (e) => {
         if (!isDragging) return;
-      
+
         const speedFactor = 15;
         const deltaX = (e.clientX - startPosition.x) * speedFactor;
         const deltaY = (e.clientY - startPosition.y) * speedFactor;
-      
+
         setImagePosition((prevPosition) => ({
-          x: prevPosition.x + deltaX,
-          y: prevPosition.y + deltaY,
+            x: prevPosition.x + deltaX,
+            y: prevPosition.y + deltaY,
         }));
-      
+
         startPosition = { x: e.clientX, y: e.clientY };
-      };
-      
-      const handleImageMouseUp = () => {
+    };
+
+    const handleImageMouseUp = () => {
         isDragging = false;
-      };
-      
-      const handleImageZoom = (e) => {
-        e.preventDefault(); 
-        
+    };
+
+    const handleImageZoom = (e) => {
+        e.preventDefault();
+
         const zoomFactor = 0.3;
         const newScale = Math.min(3, Math.max(0.5, imageScale + (e.deltaY > 0 ? -zoomFactor : zoomFactor)));
-      
+
         setImageScale(newScale);
+    };
+
+    let isDragging = false;
+    let startPosition = { x: 0, y: 0 };
+
+
+    const handleSaveAsClick = () => {
+        const anchor = document.createElement('a');
+        anchor.href = URL.createObjectURL(image);
+        anchor.download = 'image.jpg';
+        anchor.click();
       };
-      
-      let isDragging = false;
-      let startPosition = { x: 0, y: 0 };
-      
-
-
 
     const handleApplyClick = async () => {
         if (!fileSelected) {
@@ -357,7 +396,7 @@ const Form: React.FC = () => {
     const handleSubmit = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:8003/typeo/postdata",
+                "http://localhost:8003/scan/postdata",
                 {
                     typeId: selectedType,
                     GST: gstNumbers,
@@ -370,7 +409,7 @@ const Form: React.FC = () => {
                     Chargeable: chargeable,
                     Date: dt,
                     Cartons: cartons,
-                    Console: console,
+                    Consoles: consoles,
                     PO: po,
                     Payref: payref,
                 }
@@ -390,7 +429,7 @@ const Form: React.FC = () => {
     const handleSub = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:8003/typetwo/postdata",
+                "http://localhost:8003/scan/postdata",
                 {
                     typeId: selectedType,
                     Quantity: quantity,
@@ -414,30 +453,30 @@ const Form: React.FC = () => {
         }
     };
 
-    const handleSumbmitting = async () => {
-        try {
-            const response = await axios.post(
-                "http://localhost:8003/typethree/postdata",
-                {
-                    typeId: selectedType,
-                    CustomerNo: customerno,
-                    Acknumber: ackdata,
-                    Pannumber: pannumber,
-                    Amountdue: amountdue,
-                }
-            );
+    // const handleSumbmitting = async () => {
+    //     try {
+    //         const response = await axios.post(
+    //             "http://localhost:8003/typethree/postdata",
+    //             {
+    //                 typeId: selectedType,
+    //                 CustomerNo: customerno,
+    //                 Acknumber: ackdata,
+    //                 Pannumber: pannumber,
+    //                 Amountdue: amountdue,
+    //             }
+    //         );
 
-            if (response.data.success) {
-                message.success("Data submitted successfully");
-                navigate("/doc-extract/doc-extract-view")
-            } else {
-                message.success("Data Submitted Succesfully");
-                navigate("/doc-extract/doc-extract-view")
-            }
-        } catch (error) {
-            message.error("Error occurred while submitting data");
-        }
-    };
+    //         if (response.data.success) {
+    //             message.success("Data submitted successfully");
+    //             navigate("/doc-extract/doc-extract-view")
+    //         } else {
+    //             message.success("Data Submitted Succesfully");
+    //             navigate("/doc-extract/doc-extract-view")
+    //         }
+    //     } catch (error) {
+    //         message.error("Error occurred while submitting data");
+    //     }
+    // };
 
     return (
         <div>
@@ -451,36 +490,36 @@ const Form: React.FC = () => {
             <Divider />
 
             <div style={{ display: "flex", justifyContent: "center" }}>
-  <div style={{ width: "50%", marginRight: "20px" }}>
-    {current === 1 && image && (
-      <div
-        style={{
-          maxHeight: "70vh",
-          overflowX:"scroll",
-          overflowY:"scroll",
-          maxWidth: "100%",
-        }}
-      >
-        <img
-          src={URL.createObjectURL(image)}
-          alt="Uploaded"
-          style={{
-            maxWidth: "100%",
-            position: "relative",
-            transform: `scale(${imageScale}) translate(${imagePosition.x}px, ${imagePosition.y}px)`,
-            transition: "transform 0.3s ease-in-out",
-            cursor: cursorStyle,
-          }}
-          onMouseDown={handleImageMouseDown}
-          onMouseMove={handleImageMouseMove}
-          onMouseUp={handleImageMouseUp}
-          onMouseEnter={() => setCursorStyle("grab")}
-          onMouseLeave={() => setCursorStyle("auto")}
-          onWheel={handleImageZoom}
-        />
-      </div>
-    )}
-  </div>
+                <div style={{ width: "50%", marginRight: "20px" }}>
+                    {current === 1 && image && (
+                        <div
+                            style={{
+                                maxHeight: "70vh",
+                                overflowX: "scroll",
+                                overflowY: "scroll",
+                                maxWidth: "100%",
+                            }}
+                        >
+                            <img
+                                src={URL.createObjectURL(image)}
+                                alt="Uploaded"
+                                style={{
+                                    maxWidth: "100%",
+                                    position: "relative",
+                                    transform: `scale(${imageScale}) translate(${imagePosition.x}px, ${imagePosition.y}px)`,
+                                    transition: "transform 0.3s ease-in-out",
+                                    cursor: cursorStyle,
+                                }}
+                                onMouseDown={handleImageMouseDown}
+                                onMouseMove={handleImageMouseMove}
+                                onMouseUp={handleImageMouseUp}
+                                onMouseEnter={() => setCursorStyle("grab")}
+                                onMouseLeave={() => setCursorStyle("auto")}
+                                onWheel={handleImageZoom}
+                            />
+                        </div>
+                    )}
+                </div>
                 <div style={{ width: "50%" }}>
                     {current === 0 && (
                         <>
@@ -527,38 +566,39 @@ const Form: React.FC = () => {
 
                                 <>
                                     <div>
-                                       <Button
-                    type="primary"
-                    onClick={handleZoomIn}
-                    onMouseEnter={() => setCursorStyle('zoom-in')}
-                    onMouseLeave={() => setCursorStyle('auto')}
-                    style={{
-                        marginRight: '10px',
-                        position: "relative",
-                        right: "300px",
-                        top: "130px",
-                        cursor: cursorStyle,
-                    }}
-                    disabled={imageScale >= 3}
-                >
-                    Zoom In
-                </Button>
-                <Button
-                    type="primary"
-                    onClick={handleZoomOut}
-                    onMouseEnter={() => setCursorStyle('zoom-out')}
-                    onMouseLeave={() => setCursorStyle('auto')}
-                    style={{
-                        marginRight: '10px',
-                        position: "relative",
-                        right: "300px",
-                        top: "130px",
-                        cursor: cursorStyle,
-                    }}
-                    disabled={imageScale <= 1}
-                >
-                    Zoom Out
-                </Button>
+                                    
+                                        <Button
+                                            type="primary"
+                                            onClick={handleZoomIn}
+                                            onMouseEnter={() => setCursorStyle('zoom-in')}
+                                            onMouseLeave={() => setCursorStyle('auto')}
+                                            style={{
+                                                marginRight: '10px',
+                                                position: "relative",
+                                                right: "300px",
+                                                top: "130px",
+                                                cursor: cursorStyle,
+                                            }}
+                                            disabled={imageScale >= 3}
+                                        >
+                                            Zoom In
+                                        </Button>
+                                        <Button
+                                            type="primary"
+                                            onClick={handleZoomOut}
+                                            onMouseEnter={() => setCursorStyle('zoom-out')}
+                                            onMouseLeave={() => setCursorStyle('auto')}
+                                            style={{
+                                                marginRight: '10px',
+                                                position: "relative",
+                                                right: "300px",
+                                                top: "130px",
+                                                cursor: cursorStyle,
+                                            }}
+                                            disabled={imageScale <= 1}
+                                        >
+                                            Zoom Out
+                                        </Button>
                                     </div>
                                     <div style={{ position: "relative", top: "470px", right: "600px" }}>
                                         <div style={{ position: "relative", bottom: "870px", left: "650px" }} >
@@ -662,10 +702,10 @@ const Form: React.FC = () => {
                                         <div style={{ position: "relative", bottom: "1367px", left: "830px" }}>
                                             <h4 style={{ left: "30px", position: "relative" }} > Console</h4>
                                             <Input
-                                                name="Console"
+                                                name="Consoles"
                                                 style={{ width: "150px", height: "30px" }}
-                                                value={console}
-                                                onChange={(e) => setConsole(e.target.value)}
+                                                value={consoles}
+                                                onChange={(e) => setConsoles(e.target.value)}
                                             />
                                         </div>
                                         <div style={{ position: "relative", bottom: "1444px", left: "1010px" }} >
@@ -687,20 +727,46 @@ const Form: React.FC = () => {
                                                 onChange={(e) => setPackages(e.target.value)}
                                             />
                                         </div>
+
+                                        <div style={{ position: "relative", bottom: "1510px", left: "830px" }}>
+                                            <h4 style={{ left: "30px", position: "relative" }} > IGST</h4>
+                                            <Input
+                                                name="Igst"
+                                                style={{ width: "150px", height: "30px" }}
+                                                value={igst}
+                                                onChange={(e) => setIgst(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div style={{ position: "relative", bottom: "1588px", left: "1010px" }}>
+                                            <h4 style={{ left: "30px", position: "relative" }} > CHARGES</h4>
+                                            <textarea
+                                                name="Charges"
+                                                style={{ width: "150px", height: "30px" }}
+                                                value={charges}
+                                                onChange={(e) => setCharges(e.target.value)}
+                                            />
+                                        </div>
                                     </div>
 
                                     <div >
-                                        <Button type="primary" onClick={handleSubmit} style={{ position: "relative", bottom: "930px", left: "55px" }}>
+                                        <Button type="primary" onClick={handleSubmit} style={{ position: "relative", bottom: "1080px", left: "55px" }}>
                                             Submit
                                         </Button>
                                         <Button type="primary"
-                                            onClick={handleCancelClick} style={{ position: "relative", bottom: "930px", left: "65px" }}>
+                                            onClick={handleCancelClick} style={{ position: "relative", bottom: "1080px", left: "65px" }}>
                                             Cancel
                                         </Button>
+                                        <Button type="primary"
+                                            onClick={handleSaveAsClick } style={{ position: "relative", bottom: "1080px", left: "85px" }}>
+                                            Save As
+                                        </Button>
+
+                                        
                                     </div>
                                 </>
                             )}
-                            
+
                             <div style={{ position: "relative", top: "10px", right: "600px" }}>
                                 {selectedType === "NON-PO" && (
                                     <>
@@ -847,14 +913,14 @@ const Form: React.FC = () => {
                                                 />
                                             </div>
                                         </div>
-                                        <div >
+                                        {/* <div >
                                             <Button type="primary" onClick={handleSumbmitting} style={{ position: "relative", bottom: "560px", left: "699px" }} >
                                                 Submit
                                             </Button>
                                             <Button type="primary" onClick={handleCancelClick} style={{ position: "relative", bottom: "560px", left: "710px" }} >
                                                 Cancel
                                             </Button>
-                                        </div>
+                                        </div> */}
                                     </>
                                 )}
                             </div>

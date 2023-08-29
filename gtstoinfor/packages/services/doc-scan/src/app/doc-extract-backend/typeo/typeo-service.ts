@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TypeoEntity } from '../entity/typeo-entity';
+import { ScanEntity } from '../entity/typeo-entity';
 
 interface User {
   typeId: number;
@@ -23,11 +23,11 @@ interface User {
 @Injectable()
 export class TypeoService {
   constructor(
-    @InjectRepository(TypeoEntity)
-    private TypeoRepo: Repository<TypeoEntity>,
+    @InjectRepository(ScanEntity)
+    private TypeoRepo: Repository<ScanEntity>,
   ) {}
 
-  async userdata(user: User): Promise<TypeoEntity | boolean> {
+  async userdata(user: User): Promise<ScanEntity | boolean> {
     console.log(user, 'user');
     const data = await this.TypeoRepo.findOne({
       where: {
@@ -71,7 +71,7 @@ export class TypeoService {
     await this.TypeoRepo.delete(typeId);
   }
 
-  async editData(data: TypeoEntity, typeId: number): Promise<TypeoEntity> {
+  async editData(data: ScanEntity, typeId: number): Promise<ScanEntity> {
     const editedData = await this.TypeoRepo.findOne({
       where: {
         typeId: typeId,
