@@ -24,8 +24,13 @@ export const AppRoutes = () => {
                 <Route path="/doc-extract" >
                 <Route path="doc-extract-view" element={<View />}/>
                 <Route path="doc-extract-view" key='/doc-extract-view'  element={<View />}/>
-                
             </Route>
+            <Route path="/vendors" />
+            <Route path="/scan-document" />
+            <Route path="/invoices"/>
+            <Route path="/pending-approvals"/>
+            <Route path="/dashboard"/>
+            <Route path="/invoice-report"/>
 
             <Route path="/doc-extract-form" element={<Form/>}/>
 
