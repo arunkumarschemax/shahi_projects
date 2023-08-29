@@ -5,6 +5,7 @@ import BasicLayout from "./layout/basic-layout/layout"
 import Login from "./layout/login/login"
 import View from "./components/doc-extract/doc-extract-view"
 import Form from "./components/doc-extract/doc-extract-form"
+import VendorGrid from "./components/doc-extract/vendor-view/vendor-view"
 
 
 export const AppRoutes = () => {
@@ -26,7 +27,10 @@ export const AppRoutes = () => {
                 
             </Route>
 
+            <Route path="/vendorGrid" element={<VendorGrid/>}/>
+
             <Route path="/doc-extract-form" element={<Form/>}/>
+            
 
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
