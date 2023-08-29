@@ -184,7 +184,7 @@ export function OrderAcceptance() {
 
     return (
         <>
-            <Card title="Nike Orders Register" headStyle={{ fontWeight: 'bold' }}>
+            <Card title="Over All PO Changes" headStyle={{ fontWeight: 'bold' }}>
                 <Form
                     onFinish={Finish}
                     form={form}
