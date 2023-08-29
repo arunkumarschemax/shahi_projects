@@ -223,7 +223,7 @@ const DivertReport = () => {
                     dataIndex: "oproductCode",
                     sorter: (a, b) => a.oproductCode?.localeCompare(b.oproductCode),
                     sortDirections: ["descend", "ascend"],
-                    fixed:'left'
+                  //  fixed:'left'
                 },
                 {
                     title: "Request Date",
