@@ -3,9 +3,9 @@ import { Button, Layout, Menu, Tooltip, theme } from 'antd';
 import Icon, { SolutionOutlined, LogoutOutlined, EnvironmentOutlined, AppstoreOutlined, UserOutlined, NodeIndexOutlined, CarOutlined, TeamOutlined, FullscreenOutlined, InfoCircleOutlined, ProjectOutlined, FormOutlined, CheckSquareOutlined, FileProtectOutlined, HddOutlined } from '@ant-design/icons';
 import { Link, Outlet, Route, Routes } from 'react-router-dom';
 import { SubMenu } from 'rc-menu';
-import doclogo from './doclogo.jpg'
 import * as antdIcons from '@ant-design/icons';
 import { logout, useIAMClientState } from '../../common';
+import scanIcon from './scanIcon.png'
 // const icons = {
 //     TDSIcon: TDSIcon,
 //     ApprovalIcon: ApprovalIcon
@@ -32,15 +32,15 @@ const BasicLayout = () => {
     const getSubMenu = (route) => {
         console.log(route)
        
-        if (route && route[0].subMenuId && route.length) {
+        if (route && route.length) {
             return (
-                <Menu.Item key={route[0].subMenuId} ><Link to={route[0].path}><span><span> {renderIcon(route[0].subMenuIconType, route[0].subMenuIconName)} <span>{route[0].subMenuName}</span> </span></span></Link> </Menu.Item>
-                // <SubMenu key={route[0].subMenuId} title={<span> {renderIcon(route[0].subMenuIconType, route[0].subMenuIconName)} <span>{route[0].subMenuName}</span> </span>}  >
-                //     {/* <div style={{backgroundColor:'white',color:'white'}}>
+                // <Menu.Item key={route[0].subMenuId} ><Link to={route[0].path}><span><span> {renderIcon(route[0].subMenuIconType, route[0].subMenuIconName)} <span>{route[0].subMenuName}</span> </span></span></Link> </Menu.Item>
+                <SubMenu key={route.subMenuId} title={<span> {renderIcon(route.subMenuIconType, route.subMenuIconName)} <span>{route.subMenuName}</span> </span>}  >
+                    <div style={{backgroundColor:'white',color:'white'}}>
 
-                //     {route.subMenuData.map(item => getSubMenu(item))}
-                //     </div> */}
-                // </SubMenu>
+                    {route.subMenuData?.map(item => getSubMenu(item))}
+                    </div>
+                </SubMenu>
             )
         } else {
                 return(
@@ -76,9 +76,9 @@ const BasicLayout = () => {
             <Header style={{ alignItems: 'center', backgroundColor: '#000', height: 83, marginTop:'-8px' }}>
                 <div style={{ float: 'left', marginTop: '0%' }}>
                     {/* <img src={logo} width={200} height={52}></img> */}
-                    <img src={doclogo} width={150} height={80}></img>
+                    <img src={scanIcon} width={150} height={80}></img>
                 </div>
-                <h1 style={{color: 'white',textAlign: 'center',marginTop:'0.2px'}}>E-Document Management</h1>
+                <h1 style={{color: 'white',textAlign: 'center',marginTop:'0.2px'}}>Document Scan Management</h1>
                 <Tooltip title='Logout'><Button type="default" icon={<LogoutOutlined />} style={{ float: 'right', marginTop: '-5.4%' }} onClick={logOut}>{'Hi '+loginUser}<div style={{color:'#f3bf13',marginTop:'10px',fontStyle:'italic'}}>{loginUserRole}</div></Button></Tooltip>
                 {/* <>{userData.user.roles}</> */}
                 <Menu
