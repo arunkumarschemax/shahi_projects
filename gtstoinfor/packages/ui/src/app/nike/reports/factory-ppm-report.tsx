@@ -33,18 +33,15 @@ const FactoryPPMReport = () => {
         // if (values.DPOMLineItemStatus !== undefined) {
         //     // getFactoryStatus(values)
         // }/
-        if (values.DPOMLineItemStatus === undefined) {
-            setFilterData(gridData)
-        } else if (values.DPOMLineItemStatus === "Accepted") {
-            setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Accepted"))
-        } else if (values.DPOMLineItemStatus === "Unaccepted") {
-            setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Unaccepted"))
-        } else if (values.DPOMLineItemStatus === "Cancelled") {
-            setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Cancelled"))
 
-        } else if (values.DPOMLineItemStatus === "Closed") {
-            setFilterData(gridData.filter(a => a.DPOMLineItemStatus === "Closed"))
-        }
+        if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
+            setFilterData(gridData);
+          } else {
+            const filteredData = gridData.filter(item =>
+              values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
+            );
+            setFilterData(filteredData);
+          }
     }
 
     const getFactoryStatus = (values: any) => {
@@ -227,40 +224,40 @@ const FactoryPPMReport = () => {
             { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
             { title: 'Total Item Quantity', dataIndex: 'totalItemQty' },
-            { title: '2XL', dataIndex: ' ' },
-            { title: '2XL-S', dataIndex: ' ' },
-            { title: '2XL-T', dataIndex: ' ' },
-            { title: '2XLTT', dataIndex: ' ' },
-            { title: '2XS', dataIndex: ' ' },
-            { title: '3XL', dataIndex: ' ' },
-            { title: '3XL-T', dataIndex: ' ' },
-            { title: '3XL-TT', dataIndex: ' ' },
-            { title: '4XL', dataIndex: ' ' },
-            { title: '4XL-S', dataIndex: ' ' },
-            { title: '4XL-T', dataIndex: ' ' },
-            { title: '5XL', dataIndex: ' ' },
-            { title: 'CUSTM', dataIndex: ' ' },
-            { title: 'L', dataIndex: ' ' },
-            { title: 'L+', dataIndex: ' ' },
-            { title: 'L-S', dataIndex: ' ' },
-            { title: 'L-T', dataIndex: ' ' },
-            { title: 'LTT', dataIndex: ' ' },
-            { title: 'M', dataIndex: ' ' },
-            { title: 'M+', dataIndex: ' ' },
-            { title: 'M-S', dataIndex: ' ' },
-            { title: 'M-T', dataIndex: ' ' },
-            { title: 'S', dataIndex: ' ' },
-            { title: 'S+', dataIndex: ' ' },
-            { title: 'S-S', dataIndex: ' ' },
-            { title: 'S-T', dataIndex: ' ' },
-            { title: 'XL', dataIndex: ' ' },
-            { title: 'XL+', dataIndex: ' ' },
-            { title: 'XL-S', dataIndex: ' ' },
-            { title: 'XL-T', dataIndex: ' ' },
-            { title: 'XLTT', dataIndex: ' ' },
-            { title: 'XS', dataIndex: ' ' },
-            { title: 'XS-S', dataIndex: ' ' },
-            { title: 'XS-T', dataIndex: ' ' },
+            // { title: '2XL', dataIndex: ' ' },
+            // { title: '2XL-S', dataIndex: ' ' },
+            // { title: '2XL-T', dataIndex: ' ' },
+            // { title: '2XLTT', dataIndex: ' ' },
+            // { title: '2XS', dataIndex: ' ' },
+            // { title: '3XL', dataIndex: ' ' },
+            // { title: '3XL-T', dataIndex: ' ' },
+            // { title: '3XL-TT', dataIndex: ' ' },
+            // { title: '4XL', dataIndex: ' ' },
+            // { title: '4XL-S', dataIndex: ' ' },
+            // { title: '4XL-T', dataIndex: ' ' },
+            // { title: '5XL', dataIndex: ' ' },
+            // { title: 'CUSTM', dataIndex: ' ' },
+            // { title: 'L', dataIndex: ' ' },
+            // { title: 'L+', dataIndex: ' ' },
+            // { title: 'L-S', dataIndex: ' ' },
+            // { title: 'L-T', dataIndex: ' ' },
+            // { title: 'LTT', dataIndex: ' ' },
+            // { title: 'M', dataIndex: ' ' },
+            // { title: 'M+', dataIndex: ' ' },
+            // { title: 'M-S', dataIndex: ' ' },
+            // { title: 'M-T', dataIndex: ' ' },
+            // { title: 'S', dataIndex: ' ' },
+            // { title: 'S+', dataIndex: ' ' },
+            // { title: 'S-S', dataIndex: ' ' },
+            // { title: 'S-T', dataIndex: ' ' },
+            // { title: 'XL', dataIndex: ' ' },
+            // { title: 'XL+', dataIndex: ' ' },
+            // { title: 'XL-S', dataIndex: ' ' },
+            // { title: 'XL-T', dataIndex: ' ' },
+            // { title: 'XLTT', dataIndex: ' ' },
+            // { title: 'XS', dataIndex: ' ' },
+            // { title: 'XS-S', dataIndex: ' ' },
+            // { title: 'XS-T', dataIndex: ' ' },
             { title: 'Grand Total', dataIndex: ' ' },
             { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
             { title: 'VAS-Size', dataIndex: 'VASSize' },
@@ -268,6 +265,21 @@ const FactoryPPMReport = () => {
             { title: 'Item Text', dataIndex: 'itemText' },
 
         ]
+        const sizeHeaders = new Set<string>();
+
+        const excelData = gridData.map(item => {
+            const excelItem: any = {
+                'Po+Line': `${item.purchaseOrderNumber}-${item.poLineItemNumber}`,
+                'Last Modified Date': item.lastModifiedDate,
+                'Item': item.item,
+                
+            };
+        sizeHeaders.forEach(sizeHeader => {
+            excelItem[sizeHeader] = item[sizeHeader];
+        });
+
+        return excelItem;
+    });
 
         const excel = new Excel();
         excel.addSheet("Sheet1");
@@ -282,7 +294,7 @@ const FactoryPPMReport = () => {
         let formattedDate;
         for (const format of formatsToTry) {
             const parsedDate = moment(inputDate, format);
-            if (parsedDate.isValid()) {
+            if (parsedDate.isValid()) { 
                 formattedDate = parsedDate.format('YYYY-MM-DD');
                 break;
             }
@@ -316,6 +328,8 @@ const FactoryPPMReport = () => {
     const renderReport =(data:FactoryReportModel[])=>{
      const sizeHeaders = getSizeWiseHeaders(data);
      const sizeWiseMap = getMap(data);
+    
+
     const columns: ColumnsType<any> = [
         {
             title: 'Po+Line',
@@ -491,25 +505,53 @@ const FactoryPPMReport = () => {
     ];
     sizeHeaders?.forEach(version => {
         columns.push({
-            title: version,
-            dataIndex: version, 
-            key: version,
-            width: 130,
-            align: 'right',
-            render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-                if (sizeData) {
-                    return sizeData.sizeQty !== null ? Number(sizeData.sizeQty).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    }) : '-';
-                } else {
-                    return '-';
-                }
+          title: version,
+          dataIndex: version,
+          key: version,
+          width: 130,
+          align: 'center',
+          render: (text, record) => {
+            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+      
+            if (sizeData) {
+              if (sizeData.sizeQty !== null) {
+                const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                const priceVariation = sizeData.price - sizeData.coPrice; 
+      
+                const nestedColumns = [
+                  { title: 'Quantity', dataIndex: 'sizeQty' },
+                  { title: 'Price', dataIndex: 'price' },
+                  { title: 'Co Price', dataIndex: 'coPrice' },
+                  { title: 'Price Variation', render: () => <span style={{ color: priceVariation < 0 ? 'red' : 'green' }}>{priceVariation}</span> }
+                ];
+      
+                const nestedData = [
+                  {
+                    key: 'nested',
+                    sizeQty: formattedQty,
+                    price: sizeData.price,
+                    coPrice: sizeData.coPrice,
+                  }
+                ];
+      
+                return (
+                  <Table columns={nestedColumns} dataSource={nestedData} pagination={false} />
+                );
+              } else {
+                return (
+                  <div>No data available</div>
+                );
+              }
+            } else {
+              return '-';
             }
+          }
         });
-    })
+      });
+      
    
-     
+      
+   
         return (<Table columns={columns} dataSource={filterData} pagination={{
             onChange(current, pageSize) {
                 setPage(current);
@@ -545,10 +587,10 @@ const FactoryPPMReport = () => {
                                     showSearch
                                     placeholder="Select Factory Status"
                                     optionFilterProp="children"
-                                    allowClear>
+                                    allowClear  mode='multiple'>
                                     <Option value="Accepted">ACCEPTED</Option>
                                     <Option value="Unaccepted">UNACCEPTED</Option>
-                                    <Option value="Cancelled">CANCELLED</Option>
+                                    {/* <Option value="Cancelled">CANCELLED</Option> */}
                                     <Option value="Closed">CLOSED</Option>
                                 </Select>
                             </Form.Item>
@@ -577,31 +619,31 @@ const FactoryPPMReport = () => {
                 </Form>
                 <Row gutter={80}>
                     <Col >
-                        <Card title={'Total order Qty : ' + count} style={{ textAlign: 'left', width: 250, height: 38 }}></Card>
+                        <Card title={'Total order Qty : ' + count} style={{ textAlign: 'left', width: 250, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Total Shipped : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                        <Card title={'Total Shipped : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Balance to ship : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                        <Card title={'Balance to ship : ' + factory.length} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
                     </Col>
                 </Row><br></br>
 
                 <Row gutter={70}>
                     <Col >
-                        <Card title={'Total PO Count : ' + gridData.length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                        <Card title={'Total PO Count : ' + gridData.length} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Accepted PO Count : ' + gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} style={{ textAlign: 'left', width: 200, height: 38 }}></Card>
+                        <Card title={'Accepted PO Count : ' + gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} style={{ textAlign: 'left', width: 250, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Unaccepted PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                        <Card title={'Unaccepted PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Closed PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                        <Card title={'Closed PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                        {/* <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card> */}
                     </Col>
                 </Row><br></br>
                 <Card >
