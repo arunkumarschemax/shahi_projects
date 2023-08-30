@@ -47,7 +47,6 @@ export default function DocumentListupload() {
     })
   }
   const getDocData =(value)=>{
-    console.log(localStorage.getItem("user"))
     service.getDocumentDetailsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:value}).then(res=>{
       if(res.status){
         setDocData(res.data)
