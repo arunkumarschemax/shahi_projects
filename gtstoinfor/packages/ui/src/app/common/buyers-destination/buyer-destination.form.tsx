@@ -322,7 +322,7 @@ console.log(mappDetails,'details')
                 <span>
                     <Button
                         onClick={() =>
-                            navigate("/masters/buyers-destination/buyers-destination-grid")
+                            navigate("/global/buyers-destination/buyers-destination-grid")
                         }
                         type={"primary"}
                     >

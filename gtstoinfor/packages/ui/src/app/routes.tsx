@@ -244,7 +244,9 @@ export const AppRoutes = () => {
                     updateItem={(undefined) => { }}/>} />
             </Route>
                     <Route path='/global'>
-                        
+                    <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
+                        <Route path='buyers-destination/buyers-destination-grid' element={<BuyersDestinationGrid/>}/>
+
                     <Route path="attributes/attributes-view" element ={<AttributesGrid/>}/>
                     <Route path='attributes/attributes-form' element={<AttributesForm
                     attributesData={undefined}
@@ -339,9 +341,7 @@ export const AppRoutes = () => {
                             throw new Error("Function not implemented.")
                         } }/>}/>
                         <Route path='fabric-finish-type/fabric-finish-type-grid' element={<FabricFinishTypesGrid />}/>
-                        <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
-                        <Route path='buyers-destination/buyers-destination-grid' element={<BuyersDestinationGrid/>}/>
-
+                      
                  </Route>
 
                     <Route path="style-management">

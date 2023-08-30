@@ -124,7 +124,7 @@ const columns: ColumnProps<any>[]  = [
 ]
 
     return(
-        <Card size='small' title='Buyers Destination' extra={<span><Button onClick={() => navigate('/masters/buyers-destination/buyers-destination-form')} type="primary">New</Button></span>}>
+        <Card size='small' title='Buyers Destination' extra={<span><Button onClick={() => navigate('/global/buyers-destination/buyers-destination-form')} type="primary">New</Button></span>}>
             <Form form={form} >
                 <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 5 }}>
