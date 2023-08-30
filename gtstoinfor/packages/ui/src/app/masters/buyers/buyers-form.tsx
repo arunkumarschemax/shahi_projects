@@ -43,7 +43,7 @@ export function BuyersForm(props: BuyersFormProps) {
   useEffect(() => {
     getAllActiveCountries()
     getAllActiveCurrencys()
-    // getAllPaymentMethods()
+    getAllPaymentMethods()
     getAllPaymentTerms()
   }, [])
 
@@ -331,22 +331,18 @@ export function BuyersForm(props: BuyersFormProps) {
                   },
                 ]}
               >
-                {/* <Select
+                <Select
                   showSearch
                   // style={{ width: 200 }}
                   placeholder="Select Payment method"
                   optionFilterProp="children"
                   onChange={handlePaymentMode}
-                  onFocus={onFocus}
-                  onBlur={onBlur}
-                  onSearch={onSearch}
-                  defaultValue={'NA'}
                 >
                   {paymentMethodData.map((e) => {
                     return <Option key={e.paymentMethodId} value={e.paymentMethodId}>{e.paymentMethod}</Option>
                   })}
-                </Select> */}
-                <Input/>
+                </Select>
+                {/* <Input/> */}
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 4 }}>
