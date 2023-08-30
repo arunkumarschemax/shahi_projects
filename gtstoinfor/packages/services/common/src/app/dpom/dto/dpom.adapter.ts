@@ -92,7 +92,7 @@ export class DpomAdapter {
         entity.leadTime = dto.leadTime
         entity.recordDate = dto.recordDate
         entity.odVersion = dto.odVersion
-        entity.divertedToPos = dto.divertedToPos.join(',')
+        entity.divertedToPos = dto.divertedToPos ? dto.divertedToPos.join(',') : null
 
         return entity
     }

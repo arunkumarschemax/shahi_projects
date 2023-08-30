@@ -102,7 +102,7 @@ export default function Login() {
               <br />
             </div>
 
-             <LoginComponent/>
+            <LoginComponent />
 
             {/* <Form form={loginForm} layout="vertical" className="content">
               <Form.Item
