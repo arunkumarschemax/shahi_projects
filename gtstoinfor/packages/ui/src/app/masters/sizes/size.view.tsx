@@ -248,7 +248,7 @@ service.createsize(variantData).then(res=>{
     ];
 
 return (
-  <Card title={<span>Payment Method</span>}
+  <Card title={<span>Size</span>}
   style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/size/size-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
   <br></br>
     <>

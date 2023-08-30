@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Raw, Repository } from 'typeorm';
-import { AllSizeResponseModel, SizeDto } from '@project-management-system/shared-models';
+import { AllSizeResponseModel } from '@project-management-system/shared-models';
 import { SizeResponseModel } from '@project-management-system/shared-models';
 import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 import { SizeAdapter } from './dto/sizes-adapter';
@@ -9,6 +9,7 @@ import { Size } from './sizes-entity';
 import { SizeRequest } from './dto/sizes-request';
 import { SizeRequestDto } from '@project-management-system/shared-models';
 import { Console } from 'console';
+import { SizeDto } from './dto/sizes-dto';
 
 @Injectable()
 export class SizeService{

@@ -137,7 +137,7 @@ export class ProfitControlHeadService{
           if (ProfitControlHeadEntity) {
             // converts the data fetched from the database which of type companies array to type StateDto array.
             ProfitControlHeadEntity.forEach(ProfitControlHeadEntity => {
-              const convertedProfitControlHeadDto: ProfitControlHead = this.ProfitControlHeadAdapter.convertEntityToDto(
+              const convertedProfitControlHeadDto: ProfitControlHeadDTO = this.ProfitControlHeadAdapter.convertEntityToDto(
                 ProfitControlHeadEntity
               );
               ProfitcontrolHeadDTO.push(convertedProfitControlHeadDto);
