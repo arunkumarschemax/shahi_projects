@@ -253,9 +253,14 @@ export class DocumentsListService {
 
     }
     async documentwisePercentage():Promise<UploadDocumentListResponseModel>{
+        const data = [];
         try{
           const query= 'SELECT COUNT(u.document_list_id) AS uploadedDoccnt,COUNT(document_category_id) AS doccnt,100-(ROUND(COUNT(u.document_list_id)*100/(COUNT(document_category_id)))) AS perecent, u.document_list_id,document_name AS docName FROM documents_list dl LEFT JOIN  `upload_files` u  ON u.document_list_id=dl.documents_list_id LEFT JOIN document d ON d.id=dl.document_category_id         GROUP BY document_category_id'
-          const data = await this.documentsListRepository.query(query)
+          const dropData = await this.documentsListRepository.query(query)
+          data.push(dropData)
+          const query1 = `SELECT COUNT(documents_list_id) AS count,is_uploaded AS uploadDoc FROM documents_list GROUP BY is_uploaded`;
+          const dropData1 = await this.documentsListRepository.query(query1);
+          data.push(dropData1)
           console.log(data,'dataa')
           if (data) {
            return new UploadDocumentListResponseModel(true,1,'Document data Retrived Sucessfully',data)
