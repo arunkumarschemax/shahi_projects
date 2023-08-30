@@ -5,6 +5,9 @@ import { BuyerOrderAttributesEntity } from "./buyers-order.entity";
 import { PaymentMethod } from "../payment-methods/payment-method-entity";
 import { PaymentTerms } from "../payment-terms/payment-terms.entity";
 import { Address } from "./address.entity";
+import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
+import { BuyersSize } from "../buyers-destination/buyers-sizes.entity";
+import { BuyersColor } from "../buyers-destination/byers-colors.entity";
 // import { PaymentMode } from "../payment-mode/payment-mode.entity";
 // import { ShippingTerms } from "../shipping-terms/shipping-terms.entity";
 
@@ -217,4 +220,12 @@ export class Buyers {
     @OneToMany(type => BuyerOrderAttributesEntity, attribute => attribute.buyerInfo,{cascade: true})
     orderAttributesInfo : BuyerOrderAttributesEntity
 
+    @OneToMany(type => BuyersDestionations, attribute => attribute.buyerInfo,{cascade: true})
+    buyerDestinationInfo : BuyersDestionations
+
+    @OneToMany(type => BuyersSize, attribute => attribute.buyerInfo,{cascade: true})
+    buyerSizesInfo : BuyersSize
+
+    @OneToMany(type => BuyersColor, attribute => attribute.buyerInfo,{cascade: true})
+    buyerColorsInfo : BuyersColor
 }

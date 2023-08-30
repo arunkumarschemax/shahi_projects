@@ -155,6 +155,12 @@ export const baseRouterList = [
                 path: "attributes/attributes-view",
                 filepath: "attributes/attributes-view",
             },
+            {
+                label: "Buyers Destination",
+                key: "buyers-destination",
+                path: "buyers-destination/buyers-destination-grid",
+                filepath: "buyers-destination/buyers-destination-grid",
+            },
         ]
     },
     {
@@ -257,6 +263,18 @@ export const baseRouterList = [
                 filepath: "liscence-type/liscence-type-grid",
             },
             {
+                label: "Sample Types",
+                key: "sampleTypes",
+                path: "sampleTypes/sampleTypes-grid",
+                filepath: "sampleTypes/sampleTypes-grid",
+            },
+            {
+                label: "Sample Sub Types",
+                key: "sampleSubTypes",
+                path: "sampleSubTypes/sampleSubTypes-grid",
+                filepath: "sampleSubTypes/sampleSubTypes-grid",
+            },
+            {
                 label: "Fabric Type",
                 key: "fabricType",
                 path: "fabricType/fabric-type-view",
@@ -298,6 +316,19 @@ export const baseRouterList = [
                 path: "commission/commission-view",
                 filepath: "commission/commission-view",
             },
+            {
+                label: "Fabric Structure",
+                key: "fabric-structure",
+                path: "fabric-structure/fabric-structure-grid",
+                filepath: "fabric-structure/fabric-structure-grid",
+            },
+            {
+                label: "Fabric Finish Type",
+                key: "fabric-finish-type",
+                path: "fabric-finish-type/fabric-finish-type-grid",
+                filepath: "fabric-finish-type/fabric-finish-type-grid",
+            },
+         
             {
                 label: "Colours",
                 key: "colours",

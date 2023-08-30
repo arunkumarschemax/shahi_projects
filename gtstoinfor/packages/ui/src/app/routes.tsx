@@ -17,7 +17,7 @@ import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
-import { CurrencyDto } from "@project-management-system/shared-models"
+import { CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -71,6 +71,10 @@ import LocationsForm from "./masters/locations/locations-form"
 import LocationsGrid from "./masters/locations/locations-grid"
 import TaxesForm from "./masters/taxes/taxes-form"
 import TaxesGrid from "./masters/taxes/taxes-grid"
+import SampleTypesGrid from "./masters/sample-types/sample-type-grid"
+import SampleTypeForm from "./masters/sample-types/sample-type-form"
+import SampleSubTypesForm from "./masters/sample sub types/sample-sub-types-form"
+import SampleSubTypesGrid from "./masters/sample sub types/sample-sub-types-grid"
 import DestinationForm from "./masters/destination/destination-form"
 import DestinationGrid from "./masters/destination/destination-grid"
 import FabricTypeForm from "./masters/fabric-type/fabric-type-form"
@@ -88,6 +92,12 @@ import BuyingHouseForm from "./masters/buying-house/buying-house-form"
 import BuyingHouseGrid from "./masters/buying-house/buying-house-grid"
 import CommissionForm from "./masters/commission/commission-form"
 import CommissionGrid from "./masters/commission/commission-grid"
+import FabricStructuresGrid from "./masters/fabric-structure/fabric-structure.grid"
+import FabricStructuresForm from "./masters/fabric-structure/fabric-structure.form"
+import FabricFinishTypesForm from "./masters/fabric-finish-types/fabric-finish-types.form"
+import FabricFinishTypesGrid from "./masters/fabric-finish-types/fabric-finish-types.grid"
+import BuyersDestinationForm from "./common/buyers-destination/buyer-destination.form"
+import BuyersDestinationGrid from "./common/buyers-destination/buyer-destination.grid"
 import ColourGrid from "./masters/colours/colour-grid"
 import { ColourForm } from "./masters/colours/colour-form"
 import DepartmentGrid from "./masters/departments/department-grid"
@@ -316,7 +326,9 @@ export const AppRoutes = () => {
                 updateDetails={(undefined) => { }}/>} />
             </Route>
                     <Route path='/global'>
-                        
+                    <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
+                        <Route path='buyers-destination/buyers-destination-grid' element={<BuyersDestinationGrid/>}/>
+
                     <Route path="attributes/attributes-view" element ={<AttributesGrid/>}/>
                     <Route path='attributes/attributes-form' element={<AttributesForm
                     attributesData={undefined}
@@ -381,7 +393,17 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
                 <Route path='locations/locations-view' element={<LocationsGrid/>}/>
-                <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
+                         <Route path='sampleTypes/sampleTypes-grid' element={<SampleTypesGrid/>}/>
+                        <Route path='sampleTypes/sampleTypes-form' element={<SampleTypeForm sampleTypeData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateDetails={(undefined) => { }}/>}/>
+                            <Route path='sampleSubTypes/sampleSubTypes-grid' element={<SampleSubTypesGrid/>}/>
+                        <Route path='sampleSubTypes/sampleSubTypes-form' element={<SampleSubTypesForm SampleSubTypesData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateSampleSubTypes={(undefined) => { }}/>}/>                         
+               <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
                         <Route path='buyers/buyers-order-attributes-form' key='buyers/buyers-order-attributes-form' element={<BuyersOrderAttributeForm/>} />
 
                         <Route path='locations/locations-form' element={<LocationsForm locationsData={undefined}
@@ -389,8 +411,20 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
                <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
-                        
-                </Route>
+                        <Route path='fabric-structure/fabric-structure-form'element={<FabricStructuresForm FabriStructuresData={undefined} updateDetails={function (fabricStructureDto: FabricStructuresDTO): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } }/>}/>
+                        <Route path='fabric-structure/fabric-structure-grid' element={<FabricStructuresGrid />}/>
+                        <Route path='fabric-finish-type/fabric-finish-type-form'element={<FabricFinishTypesForm FabriFinishTypesData={undefined} updateDetails={function (fabricFinishTypeDto: FabricFinishTypesDTO): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } }/>}/>
+                        <Route path='fabric-finish-type/fabric-finish-type-grid' element={<FabricFinishTypesGrid />}/>
+                                              
+                 </Route>
 
                     <Route path="style-management">
                     <Route path='style/style-form' key='/style/style-form' element={<StyleForm styleData={undefined}
@@ -400,7 +434,7 @@ export const AppRoutes = () => {
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
-
+                        
                 </Route>
                 <Route path='fabricdevelopment'>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
