@@ -850,7 +850,8 @@ export class DpomService {
     async getFactoryReportData(): Promise<CommonResponseModel> {
         try {
             const allDetails = await this.dpomRepository.find();
-            const details = allDetails.filter(record => record.DPOMLineItemStatus !== 'Cancelled')
+            const filteredDetails = allDetails.filter(record => record.docTypeCode !== 'ZP26')
+            const details = filteredDetails.filter(record => record.DPOMLineItemStatus !== 'Cancelled')
             if (details.length === 0) {
                 return new CommonResponseModel(false, 0, 'data not found');
             }
@@ -863,11 +864,10 @@ export class DpomService {
                     );
                 }
                 const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
-                sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity,
-                     rec.price,rec.coPrice
-                    ));
-                  //  console.log(sizeWiseData,"test11111111111111111111111111111111111")
-
+                if (rec.sizeDescription !== null) {
+                    sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity, rec.price, rec.coPrice));
+                }
+                //  console.log(sizeWiseData,"test11111111111111111111111111111111111")
             }
             const dataModelArray: FactoryReportModel[] = Array.from(sizeDateMap.values());
             return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
@@ -933,9 +933,9 @@ export class DpomService {
                 );
             }
             const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
-            sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity,
-                rec.price,rec.coPrice
-                ));
+            if (rec.sizeDescription !== null) {
+                sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity, rec.price, rec.coPrice));
+            }
         }
         const dataModelArray: MarketingModel[] = Array.from(sizeDateMap.values());
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
