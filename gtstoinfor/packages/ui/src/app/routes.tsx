@@ -96,6 +96,8 @@ import FabricStructuresGrid from "./masters/fabric-structure/fabric-structure.gr
 import FabricStructuresForm from "./masters/fabric-structure/fabric-structure.form"
 import FabricFinishTypesForm from "./masters/fabric-finish-types/fabric-finish-types.form"
 import FabricFinishTypesGrid from "./masters/fabric-finish-types/fabric-finish-types.grid"
+import BuyersDestinationForm from "./common/buyers-destination/buyer-destination.form"
+import BuyersDestinationGrid from "./common/buyers-destination/buyer-destination.grid"
 
 
 export const AppRoutes = () => {
@@ -336,7 +338,10 @@ export const AppRoutes = () => {
                             throw new Error("Function not implemented.")
                         } }/>}/>
                         <Route path='fabric-finish-type/fabric-finish-type-grid' element={<FabricFinishTypesGrid />}/>
-                    </Route>
+                        <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
+                        <Route path='buyers-destination/buyers-destination-grid' element={<BuyersDestinationGrid/>}/>
+
+                     </Route>
                     
                         <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
 
@@ -348,7 +353,7 @@ export const AppRoutes = () => {
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
-
+                        
                 </Route>
 
 

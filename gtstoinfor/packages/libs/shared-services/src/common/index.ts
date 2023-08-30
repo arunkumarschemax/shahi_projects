@@ -56,4 +56,5 @@ export * from './rosl-groups.service'
 export * from './buying-house.service'
 export * from './commission.service';
 export * from './fabric-structure.service';
-export * from './fabric-finish-types.service'
+export * from './fabric-finish-types.service';
+export * from './buyers-destination-service'

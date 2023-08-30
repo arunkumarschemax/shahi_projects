@@ -18,4 +18,16 @@ export class BuyersDestinationRequest {
     @ApiProperty()
     isActive: boolean;
 
+    @ApiProperty()
+    destinationId:number;
+
+    @ApiProperty()
+    sizeId:number;
+
+    @ApiProperty()
+    updateId:number;
+    
+@ApiProperty()
+buyerId:number;
+
 }

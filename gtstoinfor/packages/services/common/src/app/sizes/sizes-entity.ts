@@ -1,10 +1,11 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
+import { BuyersSize } from "../buyers-destination/buyers-sizes.entity";
 
 @Entity('size')
 export class Size{
   
-    @PrimaryGeneratedColumn("increment",{name:'size-id'})
+    @PrimaryGeneratedColumn("increment",{name:'size_id'})
 sizeId:number;
 
 @Column("varchar",{
@@ -50,7 +51,6 @@ updatedUser: string | null;
 })
 versionFlag: number;
 
-@OneToMany(type=>BuyersDestionations, buyers=>buyers.sizeInfo,{cascade: true})
-sizeInfo:BuyersDestionations;
-
+@OneToMany(type=>BuyersSize, buyers=>buyers.sizeInfo,{cascade: true})
+sizesInfo:BuyersSize;
 }

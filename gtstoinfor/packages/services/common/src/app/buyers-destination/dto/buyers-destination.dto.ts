@@ -1,5 +1,6 @@
 import {IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate,IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { MappingDetailsDto } from './mapping-details.dto';
 
 export class BuyersDestinationDTO {
   @ApiProperty()
@@ -30,12 +31,12 @@ export class BuyersDestinationDTO {
   versionFlag : number;
 
   @ApiProperty()
-  destinationId: number;
-  destinationName: string;
-    sizeId:number;
-    size:string;
-    colourId:number;
-    colour:string;
+  buyerId:number;
+
+  @ApiProperty()
+  mappingDetails: MappingDetailsDto[];
+
+  
 
 }
 

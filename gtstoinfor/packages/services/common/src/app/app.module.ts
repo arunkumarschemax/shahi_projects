@@ -50,6 +50,7 @@ import { BuyingHouseModule } from './buying-house/buying-house.module';
 import { CommissionModule } from './commission/commission.module';
 import { FabricStructuresModule } from './fabric structure/fabric.module';
 import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-types.module';
+import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
 
 
 @Module({
@@ -57,11 +58,16 @@ import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-typ
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
-      host: appConfig.database.host,
-      port: appConfig.database.port,
-      username: appConfig.database.username,
-      password: appConfig.database.password,
-      database: appConfig.database.dbName,
+      // host: appConfig.database.host,
+      // port: appConfig.database.port,
+      // username: appConfig.database.username,
+      // password: appConfig.database.password,
+      // database: appConfig.database.dbName,
+      host: 'localhost',
+      port:3306,
+      username: 'root',
+      password: '',
+      database:'crm',
    
       autoLoadEntities: true,
       synchronize: false,
@@ -100,7 +106,9 @@ import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-typ
     FabricStructuresModule,
     FabricFinishTypesModule,
   SizeModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
+  BuyersModule,
+  BuyersDestinationModule,
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule],
   controllers: [AppController],
   providers: [AppService],
 })

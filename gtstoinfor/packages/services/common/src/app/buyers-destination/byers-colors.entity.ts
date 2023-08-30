@@ -3,11 +3,11 @@ import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
 import { Buyers } from "../buyers/buyers.entity";
 
-@Entity('buyers_destination')
-export class BuyersDestionations {
+@Entity('buyers_color')
+export class BuyersColor {
 
-  @PrimaryGeneratedColumn("increment",{name:'bs_id'})
-  BsId:number;
+  @PrimaryGeneratedColumn("increment",{name:'buyer_color_id'})
+  BcId:number;
 
   @Column("boolean",{
     nullable:false,
@@ -49,12 +49,12 @@ export class BuyersDestionations {
       name: "version_flag"
   })
   versionFlag: number;
+   
+//   @ManyToOne(type=>Color, color=>color.buyercolorsInfo,{  nullable:false, })
+//   @JoinColumn({ name:"color_id"})
+//   colorInfo: Size;
 
-  @ManyToOne(type=>Destination, colours=>colours.destinationInfo,{  nullable:false, })
-  @JoinColumn({ name:"destination_id"})
-  buyerDesInfo: Destination;
-
-  @ManyToOne(type=>Buyers, destinations=>destinations.buyerDestinationInfo,{  nullable:false, })
+  @ManyToOne(type=>Buyers, color=>color.buyerColorsInfo,{  nullable:false, })
   @JoinColumn({ name:"buyer_id"})
   buyerInfo: Buyers;
-}
+ }

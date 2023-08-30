@@ -302,6 +302,12 @@ export const baseRouterList = [
                 path: "fabric-finish-type/fabric-finish-type-grid",
                 filepath: "fabric-finish-type/fabric-finish-type-grid",
             },
+            {
+                label: "Buyers Destination",
+                key: "buyers-destination",
+                path: "buyers-destination/buyers-destination-grid",
+                filepath: "buyers-destination/buyers-destination-grid",
+            },
         ],
     },
 

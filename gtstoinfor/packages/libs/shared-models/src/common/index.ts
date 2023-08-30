@@ -54,3 +54,4 @@ export * from './fabric-finish-types';
 export * from './sample types'
 export * from './sample sub types'
 export * from './destination'
+export * from './Buyers Destination'
