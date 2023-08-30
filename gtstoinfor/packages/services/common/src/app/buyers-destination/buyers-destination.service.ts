@@ -54,8 +54,8 @@ async createBuyersDestination(
         entity.createdUser = dto.createdUser
         entity.versionFlag = dto.versionFlag
         entity.isActive =dto.isActive
-        entity.buyerInfo = new Buyers()
-        entity.buyerInfo.buyerId = dto.buyerId
+        // entity.buyerInfo = new Buyers()
+        // entity.buyerInfo.buyerId = dto.buyerId
         
         for(const rec of dto.mappingDetails){
             // console.log(rec,'----------rec')

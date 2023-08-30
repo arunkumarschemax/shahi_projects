@@ -211,6 +211,7 @@ let tableData = []
         
     ]
     let map=[]
+    let mappingDetails = []
     const save = () => {
         if (isSizeEnabled) {
             if (size.length > 0) {
@@ -218,7 +219,9 @@ let tableData = []
                 sizedata.push(...mappedSizeData);
                 map.push(...map,...sizedata)
                 tableData =[...tableData,...size];
-                console.log(map,'............map')
+                console.log(...map,'............map')
+                mappingDetails.push({checkBoxName:'Size',map})
+
             } else {
                 message.error('Please select at least one size');
             }
@@ -229,6 +232,7 @@ let tableData = []
                 Desdata.push(...mappedDesData);
                 map.push(...map,...Desdata)
                 tableData =[...tableData,...destination];
+                mappingDetails.push({checkBoxName:'Destination',map})
 
             } else {
                 message.error('Please select at least one destination');
@@ -240,6 +244,7 @@ let tableData = []
                 colourData.push(...mappedColourData);
                 map.push(...map,...colourData)
                 tableData =[...tableData,...colour];
+                mappingDetails.push({checkBoxName:'Color',map})
 
             } else {
                 message.error('Please select at least one colour');
