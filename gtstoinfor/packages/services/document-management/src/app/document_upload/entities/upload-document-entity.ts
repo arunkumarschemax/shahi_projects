@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
-import {DoclListEnum} from '../../../../../../libs/shared-models/src/common/whatsapp/doc-list-enum'
+import {DoclListEnum, PoStatusEnum} from '../../../../../../libs/shared-models/src/common/whatsapp/doc-list-enum'
 @Entity('documents_list')
 export class DocumentsList {
     @PrimaryGeneratedColumn("increment", { name: 'documents_list_id' })
@@ -104,6 +104,14 @@ export class DocumentsList {
         name: "version_flag"
     })
     versionFlag: number;
+
+    @Column('enum', {
+        name: 'po_status',
+        nullable: false,
+        default:PoStatusEnum.Open,
+        enum: PoStatusEnum
+    })
+    poStatus: string;
 
 
 }

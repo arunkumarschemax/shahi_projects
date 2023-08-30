@@ -20,6 +20,8 @@ import { UploadFileDto } from "./models/upload-file.dto";
 import { UploadFilesEntity } from "./entities/upload-files.entity";
 import { OrdersEntity } from "../orders/entities/order.entity";
 import { GenericTransactionManager } from "packages/services/common/src/typeorm-transactions/generic-transaction-manager";
+import { throwError } from "rxjs";
+import { PoStatusEnum } from "packages/libs/shared-models/src/common/whatsapp/doc-list-enum";
 @Injectable()
 export class DocumentsListService {
     constructor(
@@ -66,6 +68,29 @@ export class DocumentsListService {
     }
 
 
+async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListResponseModel>{
+    try{
+        const query ='SELECT documents_list_id,document_category_id,customer_po,po_status,dl.status,is_uploaded FROM documents_list dl LEFT JOIN upload_files u ON u.document_list_id=dl.documents_list_id WHERE is_uploaded =0 AND dl.customer_po="'+poNumber+'" GROUP BY document_category_id'
+        const result=await this.documentsListRepository.query(query)
+        if(result){
+            return new UploadDocumentListResponseModel(true,1,'Data',result)
+        }else{
+            return new UploadDocumentListResponseModel(false,0,'Data',[])
+
+        }
+
+    }catch(err){
+        throw err
+    }
+
+}
+
+
+
+
+
+
+
      /**
    *
    * @param filePath
@@ -78,10 +103,20 @@ export class DocumentsListService {
 ): Promise<DocumentFileUploadResponse> {
     try{
         console.log(req)
+        let poStatus
+        const postatusData = await this.getDataDataToUpdatePoStatus(req.poNumber)
+        console.log(postatusData.data.length)
+        console.log(req,'********************************************************88')
+        if(postatusData.data.length == 0){
+            poStatus=PoStatusEnum.Closed
+        }else{
+            poStatus=PoStatusEnum.InProgress
+        }
+
         let flag :boolean = true;
         const uploadStatusUpdate = await this.documentsListRepository.update(
             {  documentsListId:req.documentsListId },
-            { isUploaded: true, status:req.status }
+            { isUploaded: true, status:req.status, poStatus:poStatus}
         );
         console.log (uploadStatusUpdate)
         if (uploadStatusUpdate.affected > 0) {

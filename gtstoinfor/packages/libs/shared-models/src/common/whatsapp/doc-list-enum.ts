@@ -4,3 +4,9 @@ export enum DoclListEnum{
     Pending = 'pending',
 
 }
+
+export enum PoStatusEnum{
+    Open='Open',
+    InProgress='In Progress',
+    Closed='Closed'
+}

@@ -28,6 +28,7 @@ export default function DocumentListupload() {
   const [fileList,setFilelist] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
   const [hide,setHide] = useState<boolean>(false)
+  const [statusval, setStatusVal]=useState('')
   let navigate = useNavigate();
   const [form] = Form.useForm();
   const { Option } = Select;
@@ -154,7 +155,7 @@ export default function DocumentListupload() {
         formData.append('fileName', `${data.fileName}`);
         formData.append('filePath', `${data.filePath}`);
         formData.append('uploadStatus', `${data.uploadStatus}`);
-        formData.append('status', `${data.status}`);
+        formData.append('status', `${statusval}`);
 
         // formData.append('uid',''\)
         const files = filesList;
@@ -293,6 +294,12 @@ export default function DocumentListupload() {
     console.log(data);
     mergeAndDownloadPDFs(data)
   };
+
+
+  const setStatus =(value) =>{
+    console.log(value)
+    setStatusVal(value)
+  }
   return(
     <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span><Button onClick={() => navigate('/document-management/upload-file-view')} type={'primary'}>View Documents Status</Button></span>}>
       <Form form={form}  layout='vertical' name="control-hooks" >
@@ -348,7 +355,7 @@ export default function DocumentListupload() {
             {docData?.length > 0 ? (
               docData?.map((response) => (
                 <UploadView form={form} docData={response} formData={onFinish} fileList={setFilelist} urls ={urls} 
-                // setStatusVal={setStatusval}
+                setStatus={setStatus}
                 />
               ))
             ) : (
