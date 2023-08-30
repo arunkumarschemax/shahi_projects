@@ -23,6 +23,7 @@ export interface UploadViewProps {
     formData: (value: any, filesList:any[]) => void;
     fileList: (value: any[]) => void;
     urls: any[];
+    setStatus:(status:any) => void;
 }
 
 const UploadView = (props: UploadViewProps) => {
@@ -32,7 +33,9 @@ const UploadView = (props: UploadViewProps) => {
   const [fileList, setFileList] = useState<any[]>([]);
   const [btndisable, setBtnDisable] = useState<boolean>(true);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
- 
+  const defaultValue = "option1";
+  const [selectedValue, setSelectedValue] = useState(defaultValue);
+  const [form] = Form.useForm()
 const handleRemoveFile = (fileToRemove) => {
   const updatedFileList = fileList.filter(file => file.uid !== fileToRemove.uid);
   setFileList(updatedFileList);
@@ -134,7 +137,9 @@ const CustomUploadList = ({ fileList, handleRemoveFile }) => {
 
 
 
+
 useEffect(() =>{
+  props.setStatus('fully uploaded')
   setFileList(props.docData.documentsPath);
 },[props.docData.documentsPath])
 
@@ -217,12 +222,10 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
 };
 
 
-
   const download = (data: any) => {
     console.log(data);
     mergeAndDownloadPDFs(data)
   };
-
 
   const handleFileUpload = (file: File) => {
     setFileList([...fileList, file]);
@@ -316,13 +319,15 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     // Handle the file upload for the specific documentListId
     // You can use the 'documentListId' to identify which row is being interacted with
   };
-
-  const handleStatusChange =() =>{
-    
+  const handleStatusChange =(value) =>{
+    console.log(value.target.value)
+    props.setStatus(value.target.value)
+    setSelectedValue(value.target.value)
   }
-  return (
 
-    <><Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
+  return (
+  <>
+    <Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
       <Card
         bordered={true}
         style={{
@@ -365,10 +370,10 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
           </Form.Item>
         </Text>
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-          <Form.Item name={`status${props.docData.documentsListId}`} initialValue={props.docData.docStatus}>
-            <Radio.Group buttonStyle="solid" onChange={handleStatusChange}>
-              <Radio.Button value="partially uploaded">partially</Radio.Button>
-              <Radio.Button value="fully uploaded">fully</Radio.Button>
+          <Form.Item name={`status${props.docData.documentsListId}`}>
+            <Radio.Group buttonStyle="solid" onChange={handleStatusChange} defaultValue={'fully uploaded'} value={'fully uploaded'}>
+              <Radio.Button value="partially uploaded">Partially</Radio.Button>
+              <Radio.Button value="fully uploaded">Fully</Radio.Button>
             </Radio.Group>
           </Form.Item>
         </Text>
@@ -405,9 +410,8 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
         <br /> */}
         {/* <><PdfMergeDownload/></> */}
       </Card>
-    </Col></>
-    
-   
+    </Col>
+    </>
   );
 };
 

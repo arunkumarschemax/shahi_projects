@@ -247,32 +247,32 @@ const UploadFileGrid = () =>{
       const downloadcomun = [
         {
           title:'PO STATUS',
-          dataIndex:'status',
+          dataIndex:'poStatus',
           align:'center',
-          render:(text: string, rowData: any, index: number) =>{
-            let hasNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value === 'No');
-            let hasYes = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('Yes'));
-            let hasSingleNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('No'));
+          // render:(text: string, rowData: any, index: number) =>{
+          //   let hasNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value === 'No');
+          //   let hasYes = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('Yes'));
+          //   let hasSingleNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('No'));
 
-            if(hasNo){
-              return text;
-            }else if(hasYes && hasSingleNo ){
-              return 'Partially Uploaded'
+          //   if(hasNo){
+          //     return text;
+          //   }else if(hasYes && hasSingleNo ){
+          //     return 'Partially Uploaded'
 
-            }else{
-              return 'Fully Uploaded'
-            }
+          //   }else{
+          //     return 'Fully Uploaded'
+          //   }
 
-            // if (!hasYes) {
-            //   return 'Pending';
-            // }
-            // else if (hasNo) {
-            //   return text;
-            // }
-            //  else {
-            //   return 'Fully Uploaded';
-            // }
-          }
+          //   // if (!hasYes) {
+          //   //   return 'Pending';
+          //   // }
+          //   // else if (hasNo) {
+          //   //   return text;
+          //   // }
+          //   //  else {
+          //   //   return 'Fully Uploaded';
+          //   // }
+          // }
         },
         {
           title: 'DOWNLOAD',
@@ -312,7 +312,7 @@ const UploadFileGrid = () =>{
           if(res.status){
             setItemData(res.data);
             const headerColumns = Object?.keys(res?.data[0])
-            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url')
+            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url' && header !== 'poStatus')
             .map(header => ({           
                 title: header.toUpperCase(),
                 dataIndex: header,
