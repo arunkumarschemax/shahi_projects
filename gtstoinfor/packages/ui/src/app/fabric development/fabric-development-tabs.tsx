@@ -126,7 +126,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
 
     },
     {
-      key: 'quality                                                                                                                12',
+      key: 'quality12',
       label: (
         <span style={{ color:"brown" }}>
           Quality 12
