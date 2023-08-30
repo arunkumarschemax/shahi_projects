@@ -4,9 +4,9 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
-import { SizeDto } from '@project-management-system/shared-models';
 import { SizeService } from './sizes-service';
 import { SizeRequest } from './dto/sizes-request';
+import { SizeDto } from './dto/sizes-dto';
 
 @ApiTags('size')
 @Controller('size')
@@ -16,7 +16,8 @@ export class SizeController{
         ) {}
 
         @Post('/createsize')
-        async createsize(@Body() sizeDTO:SizeDto,isUpdate:boolean=false): Promise<SizeResponseModel> {
+        @ApiBody({type: SizeDto})
+        async createsize(@Body() sizeDTO:any,isUpdate:boolean=false): Promise<SizeResponseModel> {
         try {
             return await this.sizeService.createSize(sizeDTO, false);
         } catch (error) {

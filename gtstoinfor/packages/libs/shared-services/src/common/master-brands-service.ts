@@ -21,7 +21,7 @@ export class MasterBrandsService extends CommonAxiosService{
   //   return this.axiosPostCall(this.URL + '/activateOrDeactivateBrand', brand)
 
   // }
-  async getAllActiveCurrencys(): Promise<AllBrandsResponseModel> {
+  async getAllActiveBrands(): Promise<AllBrandsResponseModel> {
     return this.axiosPostCall(this.URL + '/getAllActiveBrands')
   }
   async getBrandById(brandRequest:BrandsRequest): Promise<MasterBrandsResponseModel> {

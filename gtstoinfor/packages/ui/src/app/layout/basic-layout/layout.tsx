@@ -219,6 +219,32 @@ export const baseRouterList = [
                 filepath: "/masters/garmentcategory/garmentcategory-view",
             },
             {
+                label: "Payment Terms",
+                key: "paymentTerms",
+                path: "payment-terms/payment-terms-view",
+                filepath: "payment-terms/payment-terms-view",
+            },
+            {
+                label: "Package Terms",
+                key: "packageTerms",
+                path: "package-terms/package-terms-view",
+                filepath: "package-terms/package-terms-view",
+            },
+           
+            {
+                label: "Delivery Terms",
+                key: "delivery-terms",
+                path: "delivery-terms/delivery-terms-view",
+                filepath: "delivery-terms/delivery-terms-view",
+            },
+            {
+                label: "Locations",
+                key: "locations",
+                path: "locations/locations-view",
+                filepath: "locations/locations-view",
+            },
+            
+            {
                 label: "Profit Control Head",
                 key: "profit-control-head",
                 path: "profit-control-head/profit-control-head-view",
@@ -271,6 +297,24 @@ export const baseRouterList = [
                 key: "commission",
                 path: "commission/commission-view",
                 filepath: "commission/commission-view",
+            },
+            {
+                label: "Colours",
+                key: "colours",
+                path: "colour/colour-view",
+                filepath: "colour/colour-view",
+            },
+            {
+                label: "Department",
+                key: "department",
+                path: "department/department-view",
+                filepath: "department/department-view",
+            },
+            {
+                label: "Account Control Object",
+                key: "accountcontrolobjects",
+                path: "accountcontrolobjects/accountcontrolobjects-view",
+                filepath: "accountcontrolobjects/accountcontrolobjects-view",
             },
           
         ],
@@ -378,7 +422,12 @@ export const baseRouterList = [
             //     path: "phase-wise-grid",
             //     filepath: "phase-wise-grid",
             // }
-            
+            {
+                label: "Item Creation",
+                key: "item-creation",
+                path: "item-creation",
+                filepath: "item-creation",
+            },
         ],
     },
     {

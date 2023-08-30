@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProfitControlHeadService } from './profit-control-head.service';
 
-describe('P', () => {
+describe('profitcontrolHead', () => {
     let service: ProfitControlHeadService;
   
     beforeEach(async () => {
