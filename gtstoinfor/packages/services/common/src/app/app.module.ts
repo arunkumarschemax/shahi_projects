@@ -66,13 +66,9 @@ import { BomModule } from './bom-trim/bom.module';
       username: appConfig.database.username,
       password: appConfig.database.password,
       database: appConfig.database.dbName,
-      // host:'localhost',
-      // port: 3306,
-      // username: 'root',
-      // password: '',
-      // database: 'crm',
+
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
       logging: true,
       extra: {
         connectionLimit: 20
