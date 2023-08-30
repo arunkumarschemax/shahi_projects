@@ -1,17 +1,22 @@
 import { Button, Card, Col, Form, Input, Row, Select } from "antd";
 import { UndoOutlined } from "@ant-design/icons";
 import Commonscreen from "./common-screen";
-import { CurrencyService } from "@project-management-system/shared-services";
+import { CurrencyService, LiscenceTypeService } from "@project-management-system/shared-services";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 
 export const TrimsBomCreation = () => {
   const [form] = Form.useForm();
   const currencyServices = new CurrencyService();
+  const licenseservice = new LiscenceTypeService();
+
   const [currencydata,setCurrencyData] = useState([])
+  const [licenseTypeData,setLicenseTypeData] = useState([])
+
 
   useEffect (()=>{
     getAllCurrencies();
+    getAllActiveLiscenceTypes();
   },[])
 
 
@@ -30,7 +35,21 @@ export const TrimsBomCreation = () => {
   
 }
 
-   console.log(currencydata,"hhhhhhhhh")
+const getAllActiveLiscenceTypes=() =>{
+  licenseservice.getAllActiveLiscenceTypes().then(res =>{
+    if (res.status){
+      setLicenseTypeData(res.data);
+       
+    } else{
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  }).catch(err => {
+    setLicenseTypeData([]);
+     AlertMessages.getErrorMessage(err.message);
+   })
+  
+}
+
 
   const onReset = () => {
     form.resetFields();
@@ -441,8 +460,12 @@ export const TrimsBomCreation = () => {
                 >
                   <Form.Item label="Licence" name="licence">
                     <Select placeholder="Select Licence" allowClear>
-                    <option value="National">National</option>
-                    <option value="International">International</option>
+                    {licenseTypeData.map((rec) => (
+                    <option key={rec.liscenceTypeId} value={rec.liscenceTypeId}>
+                      {rec.liscenceType}
+                      </option>
+                       ))
+                       }
 
 
                     </Select>
