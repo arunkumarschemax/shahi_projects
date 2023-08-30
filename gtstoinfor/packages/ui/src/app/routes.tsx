@@ -88,6 +88,8 @@ import BuyingHouseForm from "./masters/buying-house/buying-house-form"
 import BuyingHouseGrid from "./masters/buying-house/buying-house-grid"
 import CommissionForm from "./masters/commission/commission-form"
 import CommissionGrid from "./masters/commission/commission-grid"
+import SampleRequestView from "./sample-development/sample-management-view"
+import SampleDevForm from "./sample-development/sample-management-form"
 
 
 export const AppRoutes = () => {
@@ -319,6 +321,8 @@ export const AppRoutes = () => {
 
                 </Route>
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
+                <Route path='/sample-development' element={<SampleDevForm />} />
+
 
                     <Route path='/excel-import'>
                         <Route path='excel-import' element={<ExcelImport />} />

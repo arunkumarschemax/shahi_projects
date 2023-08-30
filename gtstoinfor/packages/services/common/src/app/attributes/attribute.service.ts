@@ -95,15 +95,15 @@ export class AttributeService {
                        
                         if (attributeExists.isActive) {
                             if (attributeStatus.affected) {
-                                const componentResponse: AttributeResponse = new AttributeResponse(true, 10115, 'Attribute is de-activated successfully');
-                                return componentResponse;
+                                const response: AttributeResponse = new AttributeResponse(true, 10115, 'Attribute is de-activated successfully');
+                                return response;
                             } else {
                                 throw new AttributeResponse(false,10111, 'Attribute is already deactivated');
                             }
                         } else {
                             if (attributeStatus.affected) {
-                                const componentResponse: AttributeResponse = new AttributeResponse(true, 10114, 'Component is activated successfully');
-                                return componentResponse;
+                                const response: AttributeResponse = new AttributeResponse(true, 10114, 'Attribute is activated successfully');
+                                return response;
                             } else {
                                 throw new AttributeResponse(false,10112, 'Attribute is already  activated');
                             }
@@ -137,8 +137,8 @@ export class AttributeService {
           
           if (attributeEntity) {
             attributeEntity.forEach(attributeEntity => {
-              const convertedComponentDto: AttributeDto = this.attributeAdapter.convertEntityToDto( attributeEntity );
-              attributeDto.push(convertedComponentDto);
+              const convertedDto: AttributeDto = this.attributeAdapter.convertEntityToDto( attributeEntity );
+              attributeDto.push(convertedDto);
             });
   
             const response = new AllAttributesResponse(true,1,'Attributes retrieved successfully',attributeDto);

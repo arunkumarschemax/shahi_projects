@@ -46,7 +46,6 @@ export function DeliveryMethodForm(props: DeliveryMethodFormProps) {
   }
 
   const saveData = (values: DeliveryMethodDto) => {
-    console.log(values,'----------va')
     if(props.isUpdate){
       props.updateDeliveryMethod(values);
     }else{
@@ -76,8 +75,8 @@ export function DeliveryMethodForm(props: DeliveryMethodFormProps) {
                       
                     },
                     {
-                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                      message: `Should contain only alphabets and numbers.`
+                      pattern: /^[a-zA-Z][a-zA-Z\s]*$/,
+                      message: `Should contain only alphabets.`
                     }
                   ]}>
                   <Input placeholder='Enter Delivery Method'/>
