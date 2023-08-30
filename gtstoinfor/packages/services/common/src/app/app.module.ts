@@ -76,6 +76,7 @@ import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
     ItemCategoriesModule,
     ItemSubCategoriesModule,
     GarmentsModule,
+    LiscenceTypedModule,
     GarmentCategoriesModule,
     ComponentsModule,
     AttributeModule,
@@ -91,7 +92,8 @@ import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
     FabricSubTypeModule,
     FabricTypeModule,
     ColourModule,
-
+AccountControlObjectModule,
+DepartmentsModule,
   SizeModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule],
   controllers: [AppController],

@@ -361,7 +361,12 @@ export const baseRouterList = [
             //     path: "phase-wise-grid",
             //     filepath: "phase-wise-grid",
             // }
-            
+            {
+                label: "Item Creation",
+                key: "item-creation",
+                path: "item-creation",
+                filepath: "item-creation",
+            },
         ],
     },
 ];

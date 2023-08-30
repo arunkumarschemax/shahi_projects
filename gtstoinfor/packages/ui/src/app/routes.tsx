@@ -94,6 +94,7 @@ import DepartmentGrid from "./masters/departments/department-grid"
 import DepartmentForm from "./masters/departments/department-form"
 import AccountControlObjectGrid from "./masters/account-control-objects/account-control-objects-view"
 import AccountControlObjectForm from "./masters/account-control-objects/account-control-objects-form"
+import ItemCreation from "./orders/item-creation"
 
 
 export const AppRoutes = () => {
@@ -356,6 +357,7 @@ export const AppRoutes = () => {
                         <Route path='grid-view' element={<AllOrdersGridView />} />
                         <Route path='revert-orders' element={<FileRevert />} />
                         <Route path='version-grid' element={<VersionChanges />} />
+                        <Route path='item-creation' element={<ItemCreation/>}/>
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 
                     </Route>

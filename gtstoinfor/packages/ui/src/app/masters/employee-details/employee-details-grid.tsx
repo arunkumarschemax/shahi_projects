@@ -156,6 +156,12 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
         sorter: (a, b) => a.address.localeCompare(b.address),
     
       },
+      {
+        title: "Departments",
+        dataIndex: "deptName",
+        sorter: (a, b) => a.deptName.localeCompare(b.deptName),
+    
+      },
     
     {
       title: 'Status',
