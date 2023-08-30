@@ -48,6 +48,7 @@ import { DepartmentsModule } from './departments/departments.module';
 import { AccountControlObjectModule } from './account-control-objects/account-control-object-module';
 import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
 import { SettingsModule } from './settings/settings.module';
+import { BomModule } from './bom-trim/bom.module';
 
 
 @Module({
@@ -96,7 +97,7 @@ import { SettingsModule } from './settings/settings.module';
 AccountControlObjectModule,
 DepartmentsModule,
   SizeModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,BomModule],
   controllers: [AppController],
   providers: [AppService],
 })

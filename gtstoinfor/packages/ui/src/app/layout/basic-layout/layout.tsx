@@ -358,6 +358,28 @@ export const baseRouterList = [
 
     },
     {
+        label: "Fabric Development",
+        key: "fabricdevelopment",
+        icon:<FontAwesomeIcon icon={faShirt} />,
+        path: "fabricdevelopment",
+        filepath: "fabricdevelopment",
+        children:[
+            {
+                label: "BOM TRIM CREATION",
+                key: "bomtrimcreation",
+                path: "bomtrimcreation/bom-trim-creation",
+                filepath: "bomtrimcreation/bom-trim-creation",
+            },
+
+            {
+                label: "Fabic Development Request",
+                key: "Fabricdevelopmentrequest",
+                path: "FabricDevelopmentrequest/Fabric-Development-Request",
+                filepath: "FabricDevelopmentrequest/Fabric-Development-Request",
+            },
+        ]
+    },
+    {
         label: "Orders",
         key: "excel-import",
         path: "excel-import",
