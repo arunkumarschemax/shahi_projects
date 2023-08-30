@@ -58,4 +58,7 @@ export * from './commission.service';
 export * from './fabric-structure.service';
 export * from './fabric-finish-types.service';
 export * from './buyers-destination-service'
+export * from './colour-service'
+export * from './departments-service'
+export * from './account-control-objects-service'
 export * from './sample-development.service'

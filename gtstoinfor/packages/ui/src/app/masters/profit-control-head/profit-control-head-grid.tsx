@@ -253,7 +253,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
 <>
 <Row gutter={40}>
     <Col>
-<Card title={'Total PaymentMethods: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+<Card title={'Total ProfitControlHead: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
           <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>

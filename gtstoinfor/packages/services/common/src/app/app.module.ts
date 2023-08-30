@@ -16,7 +16,6 @@ import { ItemsModule } from './items/items.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { BuyersModule } from './buyers/buyers.module';
 import { CompanyModule } from './company/company.module';
-
 import { PaymentTermsModule } from './payment-terms/payment-terms.module';
 import { PackageTermsModule } from './packages-terms/package-terms.module';
 import { OperationGroupsModule } from './operation-groups/operation-groups.module';
@@ -24,7 +23,6 @@ import { DeliveryMethodModule } from './delivery-method/delivery-method.module';
 import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemSubCategoriesModule } from './item-sub-categories/item-sub-categories.module';
 import { DivisionModule } from './division/division.module';
-
 import { DeliveryTermsModule } from './delivery-terms/delivery-terms.module';
 import { CountriesModule } from './countries/countries.module';
 import { StyleModule } from './style/style-module';
@@ -48,10 +46,14 @@ import { CustomGroupsModule } from './custom groups/custom-groups.module';
 import { ROSLGroupsModule } from './rosl groups/rosl-groups.module';
 import { BuyingHouseModule } from './buying-house/buying-house.module';
 import { CommissionModule } from './commission/commission.module';
+import { ColourModule } from './colours/colour.module';
+import { DepartmentsModule } from './departments/departments.module';
+import { AccountControlObjectModule } from './account-control-objects/account-control-object-module';
 import { FabricStructuresModule } from './fabric structure/fabric.module';
 import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-types.module';
 import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
 import { SettingsModule } from './settings/settings.module';
+import { BomModule } from './bom-trim/bom.module';
 
 
 @Module({
@@ -59,16 +61,11 @@ import { SettingsModule } from './settings/settings.module';
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
-      // host: appConfig.database.host,
-      // port: appConfig.database.port,
-      // username: appConfig.database.username,
-      // password: appConfig.database.password,
-      // database: appConfig.database.dbName,
-      host: 'localhost',
-      port:3306,
-      username: 'root',
-      password: '',
-      database:'crm',
+      host: appConfig.database.host,
+      port: appConfig.database.port,
+      username: appConfig.database.username,
+      password: appConfig.database.password,
+      database: appConfig.database.dbName,
    
       autoLoadEntities: true,
       synchronize: false,
@@ -87,6 +84,7 @@ import { SettingsModule } from './settings/settings.module';
     ItemCategoriesModule,
     ItemSubCategoriesModule,
     GarmentsModule,
+    LiscenceTypedModule,
     GarmentCategoriesModule,
     ComponentsModule,
     AttributeModule,

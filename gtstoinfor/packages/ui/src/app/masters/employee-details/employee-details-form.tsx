@@ -3,7 +3,7 @@ import { Form, Input, Button, Select, Card, Row, Col, DatePicker, message } from
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { EmployeeDetailsResponse, EmployeeMarritalStatusEnum } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
-import { CurrencyService, EmployeeDetailsService } from '@project-management-system/shared-services';
+import { CurrencyService, DepartmentService, EmployeeDetailsService } from '@project-management-system/shared-services';
 import dayjs from 'dayjs';
 import moment from 'moment';
 
@@ -20,6 +20,8 @@ export const EmployeeDetsilsForm = (props:EmployeeDetailsFormProps) => {
   const [disable, setDisable] = useState<boolean>(false)
   const {Option} =Select
   const service = new EmployeeDetailsService();
+  const departmentservice = new DepartmentService();
+  const [department,setDepartment]=useState([]);
   let history = useLocation();
   let navigate = useNavigate();
 
@@ -39,8 +41,12 @@ export const EmployeeDetsilsForm = (props:EmployeeDetailsFormProps) => {
     }else{
       form.setFieldsValue({dateOfBirth:date})
     }
+
   },[])
   
+  useEffect(()=>{
+    getAllDepartments();
+  },[])
   const saveEmployee = (data: EmployeeDetailsResponse) => {
     data.employeeId = 0;
    if((props.isUpdate && data.mobileNumber == data.alterNativeMobileNumber) || (!props.isUpdate && data.mobileNumber == data.alterNativeMobileNumber)){
@@ -88,6 +94,20 @@ const alertNativeOnchange = (value) =>{
     message.info('Enter alternate mobile number')
   }
   
+}
+
+const getAllDepartments=()=>{
+  departmentservice.getAllActiveDepartments().then(res=>{
+    if(res.status){
+      setDepartment(res.data);
+
+    }else{
+      AlertMessages.getErrorMessage(res.internalMessage)
+    }
+  }).catch(err=>{
+    setDepartment([]);
+    AlertMessages.getErrorMessage(err.message)
+  })
 }
 
   const onReset = () => {
@@ -235,6 +255,31 @@ const alertNativeOnchange = (value) =>{
           <Input.TextArea rows={1}/>
         </Form.Item>
         </Col>
+        <Col
+                    xs={{ span: 24 }}
+                    sm={{ span: 24 }}
+                    md={{ span: 4 }}
+                    lg={{ span: 7 }}
+                    xl={{ span: 7 }}
+                  >
+                    <Form.Item
+                      name="deptName"
+                      label="Department"
+                    >
+                       <Select
+                        placeholder="Select Department"
+                        allowClear
+                      >
+                      {department.map((e)=>{
+                        return(
+                            <Option key={e.deptId} value={e.deptId}>
+                                {e.deptName}
+                            </Option>
+                        )
+                      })}
+                      </Select>
+                    </Form.Item>
+                  </Col>
         </Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
