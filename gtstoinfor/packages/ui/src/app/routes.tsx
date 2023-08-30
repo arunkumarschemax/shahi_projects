@@ -180,12 +180,6 @@ export const AppRoutes = () => {
                     isUpdate={false}
                     closeForm={()=>{}}
                     updateComponent={(undefined)=>{}}/>}/>
-                    <Route path="attributes/attributes-view" element ={<AttributesGrid/>}/>
-                    <Route path='attributes/attributes-form' element={<AttributesForm
-                    attributesData={undefined}
-                    isUpdate={false}
-                    closeForm={()=>{}}
-                    updateAttribute={(undefined)=>{}}/>}/>
                     <Route path="custom-groups/custom-groups-view" element ={<CustomGroupsGrid/>}/>
                     <Route path='custom-groups/custom-groups-form' element={<CustomGroupsForm
                     data={undefined}
@@ -238,7 +232,13 @@ export const AppRoutes = () => {
                     updateItem={(undefined) => { }}/>} />
             </Route>
                     <Route path='/global'>
-
+                        
+                    <Route path="attributes/attributes-view" element ={<AttributesGrid/>}/>
+                    <Route path='attributes/attributes-form' element={<AttributesForm
+                    attributesData={undefined}
+                    isUpdate={false}
+                    closeForm={()=>{}}
+                    updateAttribute={(undefined)=>{}}/>}/>
                     <Route path='factories/factories-view' element={<FactoriesView />} />
                         <Route path='factories/factories-form' element={<FactoriesForm />} />
                         <Route path='currencies/currency-form' element={<CurrenciesForm currencyData={undefined}

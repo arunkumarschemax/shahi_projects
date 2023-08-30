@@ -348,7 +348,7 @@ export function AttributesGrid(props: AttributesProps) {
       style={{ textAlign: "center"}}
       headStyle={{ border: 0 }}
       extra={
-        <Link to="/masters/attributes/attributes-form">
+        <Link to="/global/attributes/attributes-form">
           <span style={{ color: "white" }}>
             <Button type={"primary"}>New </Button>{" "}
           </span>

@@ -91,6 +91,7 @@ export const ComponentsMappingForm = () => {
                 if(res.status){
                     AlertMessages.getSuccessMessage(res.internalMessage)
                     onReset()
+                    navigate('/style-management/component-mapping/component-mapping-view')
                 } else{
                     AlertMessages.getErrorMessage(res.internalMessage)
                 }

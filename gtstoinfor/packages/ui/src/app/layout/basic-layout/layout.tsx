@@ -149,6 +149,12 @@ export const baseRouterList = [
                 path: "taxes/taxes-grid",
                 filepath: "taxes/taxes-grid",
             },
+            {
+                label: "Attributes",
+                key: "attributes",
+                path: "attributes/attributes-view",
+                filepath: "attributes/attributes-view",
+            },
         ]
     },
     {
@@ -205,12 +211,6 @@ export const baseRouterList = [
                 key: "garments",
                 path: "garments/garments-view",
                 filepath: "garments/garments-view",
-            },
-            {
-                label: "Attributes",
-                key: "attributes",
-                path: "attributes/attributes-view",
-                filepath: "attributes/attributes-view",
             },
             {
                 label: "Garment Categories",
