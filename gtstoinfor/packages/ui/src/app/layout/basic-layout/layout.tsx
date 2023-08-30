@@ -10,7 +10,7 @@ import { treeRouter } from '../../utils/common';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShirt} from '@fortawesome/free-solid-svg-icons';
+import { faCog, faShirt} from '@fortawesome/free-solid-svg-icons';
 
 const { useToken } = theme
 
@@ -48,12 +48,12 @@ export const baseRouterList = [
         ],
     },
     {
-        label: "Masters",
-        key: "masters",
-        path: "masters",
+        label:'Global Configurations',
+        key:'global',
+        path:'global',
+        filepath:'global',
         icon: <PicCenterOutlined />,
-        filepath: "masters",
-        children: [
+        children:[
             {
                 label: "Factories",
                 key: "factories",
@@ -72,7 +72,6 @@ export const baseRouterList = [
                 path: "company/company-grid",
                 filepath: "company/company-grid",
             },
-            ,
             {
                 label: "Company-Division",
                 key: "division",
@@ -89,25 +88,6 @@ export const baseRouterList = [
                 key: "destination",
                 path: "destination/destination-grid",
                 filepath: "destination/destination-grid",
-            },
-            {
-                label: "PaymentMethod",
-                key: "paymentmethod",
-                path: "paymentmethod/paymentmethod-view",
-                filepath: "paymentmethod/paymentmethod-view",
-            },
-           
-            {
-                label: "Brands",
-                key: "brands",
-                path: "brands/brand-view",
-                filepath: "brands/brand-view",
-            },
-            {
-                label: "Operations",
-                key: "operations",
-                path: "operations/operation-view",
-                filepath: "operations/operation-view",
             },
             {
                 label: "Buyers",
@@ -128,6 +108,75 @@ export const baseRouterList = [
                 filepath: "employee-details/employee-details-grid",
             },
             {
+                label: "PaymentMethod",
+                key: "paymentmethod",
+                path: "paymentmethod/paymentmethod-view",
+                filepath: "paymentmethod/paymentmethod-view",
+            },
+            {
+                label: "Payment Terms",
+                key: "paymentTerms",
+                path: "payment-terms/payment-terms-view",
+                filepath: "payment-terms/payment-terms-view",
+            },
+            {
+                label: "Package Terms",
+                key: "packageTerms",
+                path: "package-terms/package-terms-view",
+                filepath: "package-terms/package-terms-view",
+            },
+            {
+                label: "Delivery Terms",
+                key: "delivery-terms",
+                path: "delivery-terms/delivery-terms-view",
+                filepath: "delivery-terms/delivery-terms-view",
+            },
+            {
+                label: "Delivery Method",
+                key: "delivery-methods",
+                path: "delivery-methods/delivery-method-view",
+                filepath: "delivery-methods/delivery-method-view",
+            },
+            {
+                label: "Locations",
+                key: "locations",
+                path: "locations/locations-view",
+                filepath: "locations/locations-view",
+            },
+            {
+                label: "Taxes",
+                key: "taxes",
+                path: "taxes/taxes-grid",
+                filepath: "taxes/taxes-grid",
+            },
+            {
+                label: "Attributes",
+                key: "attributes",
+                path: "attributes/attributes-view",
+                filepath: "attributes/attributes-view",
+            },
+        ]
+    },
+    {
+        label: "Masters",
+        key: "masters",
+        path: "masters",
+        icon: <PicCenterOutlined />,
+        filepath: "masters",
+        children: [
+            {
+                label: "Brands",
+                key: "brands",
+                path: "brands/brand-view",
+                filepath: "brands/brand-view",
+            },
+            {
+                label: "Operations",
+                key: "operations",
+                path: "operations/operation-view",
+                filepath: "operations/operation-view",
+            },
+            {
                 label: "Operation Groups",
                 key: "operation-groups",
                 path: "operationgroups/operationgroups-view",
@@ -138,12 +187,6 @@ export const baseRouterList = [
                 key: "items",
                 path: "items/item-grid",
                 filepath:"items/item-grid",
-            },
-            {
-                label: "Delivery Method",
-                key: "delivery-methods",
-                path: "delivery-methods/delivery-method-view",
-                filepath: "delivery-methods/delivery-method-view",
             },
             {
                 label: "Item Categories",
@@ -168,12 +211,6 @@ export const baseRouterList = [
                 key: "garments",
                 path: "garments/garments-view",
                 filepath: "garments/garments-view",
-            },
-            {
-                label: "Attributes",
-                key: "attributes",
-                path: "attributes/attributes-view",
-                filepath: "attributes/attributes-view",
             },
             {
                 label: "Garment Categories",
@@ -220,12 +257,6 @@ export const baseRouterList = [
                 filepath: "liscence-type/liscence-type-grid",
             },
             {
-                label: "Taxes",
-                key: "taxes",
-                path: "taxes/taxes-grid",
-                filepath: "taxes/taxes-grid",
-            },
-            {
                 label: "Fabric Type",
                 key: "fabricType",
                 path: "fabricType/fabric-type-view",
@@ -236,12 +267,6 @@ export const baseRouterList = [
                 key: "fabricSubType",
                 path: "fabricSubType/fabric-sub-type-view",
                 filepath: "fabricSubType/fabric-sub-type-view",
-            },
-            {
-                label: "Settings",
-                key: "settings",
-                path: "settings/settings-form",
-                filepath: "settings/settings-form",
             },
             {
                 label: "Size",
@@ -291,10 +316,24 @@ export const baseRouterList = [
                 path: "accountcontrolobjects/accountcontrolobjects-view",
                 filepath: "accountcontrolobjects/accountcontrolobjects-view",
             },
+          
         ],
+    }, 
+    {
+        label: "Settings",
+        key: "settings",
+        icon:<FontAwesomeIcon icon={faCog} />,
+        path: "settings/settings-form",
+        filepath: "settings/settings-form",
+        // children:[
+        //     {
+        //         label:'Settings',
+        //         key:'settings',
+        //         path:'settings/settings-form',
+        //         filepath:'settings/settings-form'
+        //     }
+        // ]
     },
-
-    
     {
         label: "Style Management",
         key: "style-management",
@@ -369,6 +408,12 @@ export const baseRouterList = [
             },
         ],
     },
+    {
+        label: "Sample Development",
+        key: "sample-development",
+        path: "sample-development",
+        filepath: "sample-development"
+    }
 ];
 
 export default function BasicLayout() {

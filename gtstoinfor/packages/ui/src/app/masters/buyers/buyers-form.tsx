@@ -43,7 +43,7 @@ export function BuyersForm(props: BuyersFormProps) {
   useEffect(() => {
     getAllActiveCountries()
     getAllActiveCurrencys()
-    // getAllPaymentMethods()
+    getAllPaymentMethods()
     getAllPaymentTerms()
   }, [])
 
@@ -107,7 +107,7 @@ export function BuyersForm(props: BuyersFormProps) {
       if (res.status) {
         message.success('Buyer Details Created Successfully')
         onReset();
-        navigate('/masters/buyers/buyers-view')
+        navigate('/global/buyers/buyers-view')
       } else {
         message.error(res.internalMessage)
       }
@@ -145,7 +145,7 @@ export function BuyersForm(props: BuyersFormProps) {
  // props.customersData.currency=Number(props.customersData.currency);
   return (
     <>
-    <Card title={props.isUpdate ? 'Update Buyer' : 'Add Buyer'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>} size='small'>
+    <Card title={props.isUpdate ? 'Update Buyer' : 'Add Buyer'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/global/buyers/buyers-view')} type={'primary'}>View</Button></span>} size='small'>
         <Form form={form} onFinish={saveData} initialValues={props.buyersData} layout="vertical">
           <Form.Item name="buyerId" style={{ display: "none" }} >
             <Input hidden />
@@ -331,22 +331,18 @@ export function BuyersForm(props: BuyersFormProps) {
                   },
                 ]}
               >
-                {/* <Select
+                <Select
                   showSearch
                   // style={{ width: 200 }}
                   placeholder="Select Payment method"
                   optionFilterProp="children"
                   onChange={handlePaymentMode}
-                  onFocus={onFocus}
-                  onBlur={onBlur}
-                  onSearch={onSearch}
-                  defaultValue={'NA'}
                 >
                   {paymentMethodData.map((e) => {
                     return <Option key={e.paymentMethodId} value={e.paymentMethodId}>{e.paymentMethod}</Option>
                   })}
-                </Select> */}
-                <Input/>
+                </Select>
+                {/* <Input/> */}
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 4 }}>

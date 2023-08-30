@@ -1,4 +1,4 @@
 export const GlobalVariables = {
-    currencyId:2,
+    currencyId:1,
     countryId: 4
 }

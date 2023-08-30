@@ -117,10 +117,8 @@ export class DeliveryMethodService {
     }  
 
 async activateOrDeactivateDeliveryMethod(deliveryMethodReq: DeliveryMethodRequest): Promise<DeliveryMethodResponseModel> {
-  console.log(deliveryMethodReq,'hoioooo')
   try {
       const deliveryMethodExists = await this.getDeliveryMethodById(deliveryMethodReq.deliveryMethodId);
-      console.log(deliveryMethodExists,'sdfghjk')
       if (deliveryMethodExists) {
           if (!deliveryMethodExists) {
               throw new ErrorResponse(10113, 'Someone updated the current Delivery Method information. Refresh and try again');
@@ -129,7 +127,6 @@ async activateOrDeactivateDeliveryMethod(deliveryMethodReq: DeliveryMethodReques
                   const deliveryMethodStatus =  await this.deliveryMethodRepository.update(
                       { deliveryMethodId: deliveryMethodReq.deliveryMethodId },
                       { isActive: deliveryMethodReq.isActive,updatedUser: deliveryMethodReq.updatedUser });
-                      console.log(deliveryMethodStatus,'kkkkkkkkkkk')
                  
                   if (deliveryMethodExists.isActive) {
                       if (deliveryMethodStatus.affected) {

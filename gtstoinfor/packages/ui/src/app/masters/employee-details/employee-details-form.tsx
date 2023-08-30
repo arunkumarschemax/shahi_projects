@@ -57,7 +57,7 @@ export const EmployeeDetsilsForm = (props:EmployeeDetailsFormProps) => {
       setDisable(false)
         if (res.status) {
           AlertMessages.getSuccessMessage('employee Created Successfully');
-          navigate("/masters/employee-details/employee-details-grid")
+          navigate("/global/employee-details/employee-details-grid")
           onReset();
         } else {
             AlertMessages.getErrorMessage(res.internalMessage);
@@ -121,7 +121,7 @@ const getAllDepartments=()=>{
   return (
  <Card title={<span style={{color:'black'}}>Add Employee</span>}
     style={{textAlign:'left'}} 
-     extra={props.isUpdate==true?"":<Link to='/masters/employee-details/employee-details-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+     extra={props.isUpdate==true?"":<Link to='/global/employee-details/employee-details-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
 
       <Form layout={'vertical'} form={form} initialValues={props.employeeData} name="control-hooks"   onFinish={saveData}

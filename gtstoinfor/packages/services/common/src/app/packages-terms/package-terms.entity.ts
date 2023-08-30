@@ -1,4 +1,5 @@
-import {Column,Entity,Index,PrimaryGeneratedColumn,VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import {Column,Entity,Index,PrimaryGeneratedColumn,VersionColumn, UpdateDateColumn, CreateDateColumn, OneToMany} from "typeorm";
+import { Settings } from "../settings/settings.entity";
 @Entity('package_terms')
 export class PackageTerms {
 
@@ -53,4 +54,7 @@ export class PackageTerms {
       name: "version_flag"
   })
   versionFlag: number;
+
+  @OneToMany(type => Settings, settings => settings.packageTermsInfo,{cascade: true})
+  settingsInfo : Settings
 }

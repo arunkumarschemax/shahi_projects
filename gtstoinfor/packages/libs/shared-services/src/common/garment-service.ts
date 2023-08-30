@@ -11,7 +11,6 @@ export class GarmentService extends CommonAxiosService{
     }   
     
     async updateGarment(dto: GarmentsDto): Promise<GarmentResponse>{
-        console.log(dto,'_____________________________')
         return this.axiosPostCall(this.URL + '/updateGarment', dto)
     } 
 

@@ -27,4 +27,17 @@ export class BuyerRepository extends Repository<Buyers> {
        .orderBy(`b.buyer_name`)
        return data.getRawMany()
     }
+
+    async getActiveBuyerInfo():Promise<any[]>{
+        const data =  await this.createQueryBuilder('b')
+        .select(`b.buyer_id,b.buyer_code,b.buyer_name,b.gst_number,b.phone_no,b.contact_person,b.email,b.currency,b.public_note,b.private_note,b.payment_terms_id,b.payment_method_id,b.is_active,b.version_flag,cu.currency_name,paym.payment_method,payter.payment_terms_name,add.address_id,add.country_id,add.state,add.district,add.city,add.landmark,add.lane1,add.lane2,add.pincode,cou.country_name`)
+        .leftJoin(Currencies,'cu','cu.currency_id = b.currency')
+        .leftJoin(PaymentTerms,'payter','payter.payment_terms_id = b.payment_terms_id')
+        .leftJoin(PaymentMethod,'paym','paym.payment_method_id = b.payment_method_id')
+        .leftJoin(Address,'add','add.buyer_id = b.buyer_id')
+        .leftJoin(Countries,'cou','cou.country_id = add.country_id')
+        .where(`is_active is TRUE`)
+        .orderBy(`b.buyer_name`)
+        return data.getRawMany()
+     }
 }

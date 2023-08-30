@@ -60,7 +60,7 @@ export interface PaymentMethodFormProps{
 
           return(
             <Card title={<span >Payment Method </span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-            extra={props.isUpdate==true?"":<Link to='/masters/paymentmethod/paymentmethod-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+            extra={props.isUpdate==true?"":<Link to='/global/paymentmethod/paymentmethod-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
 >
     <Form 
     layout={'vertical'}
