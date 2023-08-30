@@ -18,14 +18,34 @@ export class SettingsModel{
     buyerGroup:string;
     agent : number;
     packageTerms: number;
-    paymentMethod:number;
+    paymentMethodId:number;
     paymentTerms:number;
-    deliveryMethod:number;
+    deliveryMethodId:number;
     deliveryTerms:number;
     isActive : boolean;
     versionFlag: number;
+    accountControlName?: string;
+    profitControlHead?: string;
+    companyName?: string;
+    name?: string;
+    divisionName?: string;
+    warehouseName?: string;
+    currencyName?: string;
+    liscenceType?: string;
+    salesPerson?: string;
+    fabricResponsible?: string;
+    itemResponsible?: string;
+    trimRespondsible?: string;
+    address?: string;
+    buyerName?: string;
+    agentName?: string;
+    packageTermsName?: string;
+    paymentMethod?: string;
+    paymentTermsName?: string;
+    deliveryMethod?: string;
+    deliveryTermsName?: string;
 
-    constructor(settingsId: number,accountControlId: number,pchId:number,companyId:number,facilityId:number,divisionId:number,warehouseId:number,coTypeId:number,currencyId:number,licencetypeId:number,discount:number,salesPersonId:number,fabricResponsibleId:number,itemResponsibleId:number,trimResponsibleId:number,buyerAddress:number,buyerGroup:string,agent : number,packageTerms: number,paymentMethod:number,paymentTerms:number,deliveryMethod:number,deliveryTerms:number,isActive : boolean,versionFlag: number){
+    constructor(settingsId: number,accountControlId: number,pchId:number,companyId:number,facilityId:number,divisionId:number,warehouseId:number,coTypeId:number,currencyId:number,licencetypeId:number,discount:number,salesPersonId:number,fabricResponsibleId:number,itemResponsibleId:number,trimResponsibleId:number,buyerAddress:number,buyerGroup:string,agent : number,packageTerms: number,paymentMethodId:number,paymentTerms:number,deliveryMethodId:number,deliveryTerms:number,isActive : boolean,versionFlag: number,accountControlName?: string,profitControlHead?: string,companyName?: string,name?: string,divisionName?: string,warehouseName?: string,currencyName?: string,liscenceType?: string,salesPerson?: string,fabricResponsible?: string,itemResponsible?: string,trimRespondsible?: string,address?: string,buyerName?: string,agentName?: string,packageTermsName?: string,paymentMethod?: string,paymentTermsName?: string,deliveryMethod?: string,deliveryTermsName?: string){
         this.settingsId = settingsId;
         this.accountControlId = accountControlId;
         this.pchId = pchId;
@@ -45,12 +65,33 @@ export class SettingsModel{
         this.buyerGroup = buyerGroup;
         this.agent = agent;
         this.packageTerms = packageTerms;
-        this.paymentMethod = paymentMethod;
+        this.paymentMethodId = paymentMethodId;
         this.paymentTerms = paymentTerms;
-        this.deliveryMethod = deliveryMethod;
+        this.deliveryMethodId = deliveryMethodId;
         this.deliveryTerms = deliveryTerms;
         this.isActive = isActive;
         this.versionFlag = versionFlag;
+        this.accountControlName = accountControlName;
+        this.profitControlHead = profitControlHead;
+        this.companyName = companyName;
+        this.name = name;
+        this.divisionName = divisionName;
+        this.warehouseName = warehouseName;
+        this.currencyName = currencyName;
+        this.liscenceType = liscenceType;
+        this.salesPerson = salesPerson;
+        this.fabricResponsible = fabricResponsible;
+        this.itemResponsible = itemResponsible;
+        this.trimRespondsible = trimRespondsible;
+        this.address = address;
+        this.buyerName = buyerName;
+        this.agentName = agentName;
+        this.packageTermsName = packageTermsName;
+        this.paymentMethod = paymentMethod;
+        this.paymentTermsName = paymentTermsName;
+        this.deliveryMethod = deliveryMethod;
+        this.deliveryTermsName = deliveryTermsName;
+
     }
 
 

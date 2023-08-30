@@ -90,6 +90,7 @@ import CommissionForm from "./masters/commission/commission-form"
 import CommissionGrid from "./masters/commission/commission-grid"
 import SampleRequestView from "./sample-development/sample-management-view"
 import SampleDevForm from "./sample-development/sample-management-form"
+import SettingsView from "./masters/settings/settings-view"
 
 
 export const AppRoutes = () => {
@@ -320,7 +321,10 @@ export const AppRoutes = () => {
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
 
                 </Route>
+                <Route path='settings'>
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
+                <Route path='settings/settings-view' element={<SettingsView/>}/>
+                </Route>
                 <Route path='/sample-development' element={<SampleDevForm />} />
 
 

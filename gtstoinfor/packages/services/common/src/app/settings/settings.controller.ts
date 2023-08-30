@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, SettingsRequest, SettingsResponseModel } from "@project-management-system/shared-models";
+import { BuyersResponseModel, CommonResponseModel, SettingsIdReq, SettingsRequest, SettingsResponseModel } from "@project-management-system/shared-models";
 import { SettingsService } from "./settings.service";
 
 @ApiTags('Settings')
@@ -16,18 +16,27 @@ export class SettingsController{
     @Post('/createSettings')
     async createSettings(@Body() req:any):Promise<SettingsResponseModel>{
         try{
-            return await this.settingsService.createSettings(req)
+            return await this.settingsService.createSettings(req,false)
+        }catch(err){
+            return this.applicationExceptionhandler.returnException(SettingsResponseModel,err)
+        }
+    }
+
+    @Post('/updateSettings')
+    async updateSettings(@Body() req:any):Promise<SettingsResponseModel>{
+        try{
+            return await this.settingsService.createSettings(req,true)
         }catch(err){
             return this.applicationExceptionhandler.returnException(SettingsResponseModel,err)
         }
     }
 
     @Post('/getAllSettingsInfo')
-    async getAllSettingsInfo():Promise<CommonResponseModel>{
+    async getAllSettingsInfo(@Body() req:SettingsIdReq):Promise<SettingsResponseModel>{
         try{
-            return await this.settingsService.getAllSettingsInfo()
+            return await this.settingsService.getAllSettingsInfo(req)
         }catch(err){
-            return this.applicationExceptionhandler.returnException(CommonResponseModel,err)
+            return this.applicationExceptionhandler.returnException(SettingsResponseModel,err)
         }
     }
 }
