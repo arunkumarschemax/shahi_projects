@@ -359,6 +359,12 @@ export const baseRouterList = [
             
         ],
     },
+    {
+        label: "Sample Development",
+        key: "sample-development",
+        path: "sample-development",
+        filepath: "sample-development"
+    }
 ];
 
 export default function BasicLayout() {
