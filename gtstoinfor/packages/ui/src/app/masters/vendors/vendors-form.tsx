@@ -73,7 +73,7 @@ export function VendorsForm(
       setDisable(false)
       if (res.status) {
         message.success('Created Successfully');
-        navigate('/masters/vendors/vendors-view')
+        navigate('/global/vendors/vendors-view')
         onReset();
       } else {
           message.error(res.internalMessage);
@@ -101,7 +101,7 @@ export function VendorsForm(
 
 
   return (
-    <Card size='small' title={props.isUpdate ? 'Update Vendor' : 'Add Vendor'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/vendors/vendors-view')} type={'primary'}>View</Button></span>}>
+    <Card size='small' title={props.isUpdate ? 'Update Vendor' : 'Add Vendor'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/global/vendors/vendors-view')} type={'primary'}>View</Button></span>}>
       <Form form={form} initialValues={props.vendorsData} name="control-hooks" onFinish={saveData}
         layout="vertical"
       >

@@ -75,7 +75,7 @@ export const CompanyForm = (props:CompanyFormProps) => {
   return (
 <Card title={<span style={{color:'white'}}>Company</span>}
     style={{textAlign:'center'}} 
-     extra={props.isUpdate==true?"":<Link to='/masters/company/company-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+     extra={props.isUpdate==true?"":<Link to='/global/company/company-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
 
 

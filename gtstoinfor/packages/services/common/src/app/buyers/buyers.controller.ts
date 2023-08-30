@@ -64,7 +64,7 @@ export class BuyersController {
     @Post('/getAllActiveBuyers')
     async getAllActiveBuyers(@Req() request: Request): Promise<AllBuyersResponseModel> {
         try {
-            return await this.buyersService.getAllActiveBuyers();
+            return await this.buyersService.getAllActiveBuyersInfo();
         } catch (error) {
             return this.applicationExceptionhandler.returnException(AllBuyersResponseModel, error)
         }
@@ -176,6 +176,15 @@ export class BuyersController {
             return await this.buyersOrderAttributeService.getBuyerId(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(BuyersOrderAttributeResponseModel, err);
+        }
+    }
+
+    @Post('/getAllAddress')
+    async getAllAddress(): Promise<CommonResponseModel> {
+        try {
+            return await this.buyersService.getAllAddress();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
 }

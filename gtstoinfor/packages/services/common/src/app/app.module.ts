@@ -46,6 +46,7 @@ import { ROSLGroupsModule } from './rosl groups/rosl-groups.module';
 import { BuyingHouseModule } from './buying-house/buying-house.module';
 import { CommissionModule } from './commission/commission.module';
 import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
+import { SettingsModule } from './settings/settings.module';
 import { BomModule } from './bom-trim/bom.module';
 
 
@@ -88,7 +89,7 @@ import { BomModule } from './bom-trim/bom.module';
     DeliveryTermsModule,
     LocationsModule,
     DivisionModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule,LiscenceTypedModule,BomModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule,LiscenceTypedModule,SettingsModule,BomModule],
   controllers: [AppController],
   providers: [AppService],
 })

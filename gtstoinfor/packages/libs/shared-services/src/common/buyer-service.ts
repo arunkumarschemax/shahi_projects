@@ -63,4 +63,8 @@ export class BuyersService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + "/getBuyerId",req)
     }
 
+    async getAllAddress(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllAddress")
+    }
+
 }

@@ -12,6 +12,7 @@ import {
   Row,
   Col,
   Drawer,
+  message,
 } from "antd";
 import {
   CheckCircleOutlined,
@@ -83,9 +84,9 @@ export function AttributesGrid(props: AttributesProps) {
       .activateOrDeactivateAttributes(attributesDto)
       .then((res) => {
         if (res.status) {
-          AlertMessages.getSuccessMessage("Success");
+          message.success(res.internalMessage,2);
         } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          message.success(res.internalMessage,2);
         }
       })
       .catch((err) => {
@@ -348,7 +349,7 @@ export function AttributesGrid(props: AttributesProps) {
       style={{ textAlign: "center"}}
       headStyle={{ border: 0 }}
       extra={
-        <Link to="/masters/attributes/attributes-form">
+        <Link to="/global/attributes/attributes-form">
           <span style={{ color: "white" }}>
             <Button type={"primary"}>New </Button>{" "}
           </span>

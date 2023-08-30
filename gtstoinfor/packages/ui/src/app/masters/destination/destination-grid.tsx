@@ -316,7 +316,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
         <Col>
-          <span><Button onClick={() => navigate('/masters/destination/destination-form')}
+          <span><Button onClick={() => navigate('/global/destination/destination-form')}
             type={'primary'}>New</Button></span>
         </Col>
       </Row><br></br>

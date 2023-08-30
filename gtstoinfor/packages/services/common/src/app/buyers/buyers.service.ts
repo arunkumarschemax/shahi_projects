@@ -113,34 +113,32 @@ export class BuyersService {
             return err;
         }
     }
-    async getAllActiveBuyers(): Promise<AllBuyersResponseModel> {
-        // const page: number = 1;
-        try {
-            const buyersDTO: BuyersDTO[] = [];
-            //retrieves all companies
-            const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'buyerName': 'ASC' },
-            relations: [
-                "cusAddressInfo",
-              ],
-              where:{isActive:true},
-         });
-            if (buyersEntities) {
-                // converts the data fetched from the database which of type companies array to type StateDto array.
-                buyersEntities.forEach(buyerEntity => {
-                    const convertedbuyersDto: BuyersDTO = this.buyersAdapter.convertEntityToDto(
-                        buyerEntity
-                    );
-                    buyersDTO.push(convertedbuyersDto);
-                });
-                const response = new AllBuyersResponseModel(true, 11108, "Buyers retrieved successfully", buyersDTO);
-                return response;
-            } else {
-                throw new ErrorResponse(99998, 'Data not found'); 
-            }
-        } catch (err) {
-            return err;
-        }
-    }
+    // async getAllActiveBuyers(): Promise<AllBuyersResponseModel> {
+    //     // const page: number = 1;
+    //     try {
+    //         const buyersDTO: BuyersDTO[] = [];
+    //         //retrieves all companies
+    //         const buyersEntities: Buyers[] = await this.buyersRepository.find({ order: { 'buyerName': 'ASC' },
+    //           where:{isActive:true},
+    //      });
+
+    //         if (buyersEntities) {
+    //             // converts the data fetched from the database which of type companies array to type StateDto array.
+    //             buyersEntities.forEach(buyerEntity => {
+    //                 const convertedbuyersDto: BuyersDTO = this.buyersAdapter.convertEntityToDto(
+    //                     buyerEntity
+    //                 );
+    //                 buyersDTO.push(convertedbuyersDto);
+    //             });
+    //             const response = new AllBuyersResponseModel(true, 11108, "Buyers retrieved successfully", buyersDTO);
+    //             return response;
+    //         } else {
+    //             throw new ErrorResponse(99998, 'Data not found'); 
+    //         }
+    //     } catch (err) {
+    //         return err;
+    //     }
+    // }
     /**
      * Activate or Deactivate Customer
      * @param buyerReq 
@@ -280,4 +278,42 @@ export class BuyersService {
     //         throw err;
     //     }
     // }
+
+    async getAllActiveBuyersInfo(): Promise<CommonResponseModel>{
+        try{
+            const buyerInfo = await this.buyersRepository.getBuyerInfo()
+            const buyerMap = new Map<number,BuyersDto>()
+            if(buyerInfo.length == 0){
+                return new CommonResponseModel(false,1,'No buyers found',[])
+            } else {
+                for(const rec of buyerInfo){
+                    if(!buyerMap.has(rec.id)){
+                        buyerMap.set(rec.buyer_id,new BuyersDto(rec.buyer_id,rec.buyer_code,rec.buyer_name,rec.gst_number,rec.contact_person,rec.phone_no,rec.email,rec.currency_name,rec.public_note,rec.private_note,rec.payment_terms,null,rec.payment_method_id,rec.is_active,null,null,rec.version_flag,rec.payment_terms_id,rec.payment_method,[]))
+                    }
+                    buyerMap.get(rec.buyer_id).addressInfo.push(new AddressDto(rec.address_id,rec.country_id,rec.state,rec.district,rec.city,rec.landmark,rec.lane1,rec.lane2,rec.pincode,null,null,null,null,rec.country_name))
+                }
+                const buyerModel: BuyersDto[] = [];
+                buyerMap.forEach((buyer => buyerModel.push(buyer)))
+                return new CommonResponseModel(true,1,'Data retrieved',buyerModel)
+            }
+
+        } catch(err){
+            throw err
+        }
+    }
+
+    async getAllAddress():Promise<CommonResponseModel>{
+        try{
+            const buyerAddress = await this.addressRepo.find({where:{isActive:true},relations:['countryInfo','buyerInfo']})
+            if(buyerAddress){
+                return new CommonResponseModel(true,1,'Data retrieved',buyerAddress)
+            }  else{
+                return new CommonResponseModel(false,1,'No buyers found',[])
+            }
+
+        }catch(err){
+            throw err
+        }
+    }
+
 }
