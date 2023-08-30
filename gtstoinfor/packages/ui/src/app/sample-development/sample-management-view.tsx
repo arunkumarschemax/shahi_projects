@@ -288,13 +288,13 @@ export const SampleRequestView = (props: BuyingHouseProps) => {
       title={<span>Sample Request</span>}
       style={{ textAlign: "center" }}
       headStyle={{ border: 0 }}
-      //   extra={
-      //     <Link to="/masters/buying-house/buying-house-form">
-      //       <span style={{ color: "white" }}>
-      //         <Button type={"primary"}>New </Button>{" "}
-      //       </span>
-      //     </Link>
-      //   }
+        extra={
+          <Link to="/sample-development/sample-management/sample-management-form">
+            <span style={{ color: "white" }}>
+              <Button type={"primary"}>New </Button>{" "}
+            </span>
+          </Link>
+        }
     >
       <Form form={form} onFinish={onFinish}>
         <Row gutter={24}>

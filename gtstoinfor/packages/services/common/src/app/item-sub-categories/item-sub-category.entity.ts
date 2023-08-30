@@ -25,7 +25,7 @@ export class ItemSubCategory {
 
   @Column("varchar", {
     nullable: true,
-    length: 50,
+    length: 255,
     name: "remarks"
   })
   remarks: string;

@@ -162,7 +162,7 @@ export function ItemSubCategoriesForm(
                   message: `Invalid Remarks`
                 }
               ]}>
-              <Input placeholder='Enter Remarks'/>
+              <TextArea rows={1} placeholder='Enter Remarks'/>
             </Form.Item>
           </Col>
 

@@ -1,11 +1,15 @@
 import axios from 'axios';
 import { DeliveryMethodDto, DeliveryMethodRequest } from 'packages/libs/shared-models/src/common/delivery-method';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { SampleFilterRequest } from '@project-management-system/shared-models';
+import { SampleDevelopmentRequest, SampleFilterRequest } from '@project-management-system/shared-models';
 
 
 export class SampleDevelopmentService extends CommonAxiosService{
 URL = '/sample-development';
+
+async createSampleDev(req: SampleDevelopmentRequest):Promise<any>{
+    return this.axiosPostCall(this.URL +  '/createSampleDev',req)
+}
 
         
 async getAllSampleDevelopment(req? : SampleFilterRequest): Promise<any> {

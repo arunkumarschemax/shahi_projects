@@ -53,12 +53,11 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
    * @param deliveryMethodData 
    */
   const deleteDeliveryMethod = (deliveryMethodData:DeliveryMethodDto) => {
-    console.log(deliveryMethodData,'hiiiiiiiiii')
     deliveryMethodData.isActive=deliveryMethodData.isActive?false:true;
     deliveryMethodDataService.activateOrDeactivateDeliveryMethod(deliveryMethodData).then(res => { console.log(res);
       if (res.status) {
         // getAllDeliveryMethods();
-        message.success('Success',2); 
+        message.success(res.internalMessage,2); 
       } else {
           message.error(res.internalMessage,2);
       }
