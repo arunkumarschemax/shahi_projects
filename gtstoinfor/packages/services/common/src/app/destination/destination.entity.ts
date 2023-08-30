@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
 @Entity('destination')
 export class Destination {
 
@@ -55,7 +56,7 @@ export class Destination {
   versionFlag: number;
 
 
-  //   @OneToMany(type=>Vendors, vendor=>vendor.currencyInfo,{cascade: true})
-  //   vendorInfo:Vendors[];
+    @OneToMany(type=>BuyersDestionations, vendor=>vendor.buyerDesInfo,{cascade: true})
+    destinationInfo:BuyersDestionations[];
 
 }

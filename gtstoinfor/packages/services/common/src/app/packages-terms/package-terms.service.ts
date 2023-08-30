@@ -25,7 +25,7 @@ export class PackageTermsService {
             if (!isUpdate) {
             const PackageTermsEntity = await this.getPackageTermsDetailsWithoutRelations(packageTermsDTO.packageTermsName);
             if (PackageTermsEntity) {
-                throw new PackageTermsResponseModel(false,11104, 'PackageTerms already exists');         
+                throw new PackageTermsResponseModel(false,11104, 'PackageTerm already exists');         
             } 
             // var notificationStatus='Created';
             }
@@ -35,7 +35,7 @@ export class PackageTermsService {
                 const PackageTermsEntity = await this.getPackageTermsDetailsWithoutRelations(packageTermsDTO.packageTermsName);
                 if (PackageTermsEntity) {
                     if(PackageTermsEntity.packageTermsId != packageTermsDTO.packageTermsId ){
-                        throw new PackageTermsResponseModel(false,11104, 'PackageTerms already exists');
+                        throw new PackageTermsResponseModel(false,11104, 'PackageTerm already exists');
                     }         
                 } 
               }
@@ -50,9 +50,9 @@ export class PackageTermsService {
             if (savedPackageTermsDto) {
                 const presentValue = savedPackageTermsDto.packageTermsName;
             // generating resposnse
-            const response = new PackageTermsResponseModel(true,isUpdate ? 11101 : 11100,isUpdate? 'PackageTerms Updated Successfully': 'PackageTerms Created Successfully',savedPackageTermsDto);
+            const response = new PackageTermsResponseModel(true,isUpdate ? 11101 : 11100,isUpdate? 'PackageTerm Updated Successfully': 'PackageTerm Created Successfully',savedPackageTermsDto);
             const name=isUpdate?'updated':'created'
-            const displayValue = isUpdate? 'PackageTerms Updated Successfully': 'PackageTerms Created Successfully'
+            const displayValue = isUpdate? 'PackageTerms Updated Successfully': 'PackageTerm Created Successfully'
             const userName = isUpdate? savedPackageTermsDto.updatedUser :savedPackageTermsDto.createdUser;
             return response;
             } else {
@@ -141,7 +141,7 @@ export class PackageTermsService {
           const packageTermsExists = await this.getPackageTermsById(packageTermsReq.packageTermsId);
           if (packageTermsExists) {
               if (packageTermsReq.versionFlag !== packageTermsExists.versionFlag) {
-                  throw new PackageTermsResponseModel(false, 10113, 'Someone updated the current PackageTerms information.Refresh and try again');
+                  throw new PackageTermsResponseModel(false, 10113, 'Someone updated the current PackageTerm information.Refresh and try again');
               } else {
                   
                       const packageTermsStatus =  await this.packageTermsRepository.update(
@@ -150,17 +150,17 @@ export class PackageTermsService {
                       console.log(packageTermsStatus,"pay////////")
                       if (packageTermsExists.isActive) {
                           if (packageTermsStatus.affected) {
-                              const packageTermsResponse: PackageTermsResponseModel = new PackageTermsResponseModel(true, 10115, 'PackageTerms is de-activated successfully');
+                              const packageTermsResponse: PackageTermsResponseModel = new PackageTermsResponseModel(true, 10115, 'PackageTerm is deactivated successfully');
                               return packageTermsResponse;
                           } else {
-                              throw new PackageTermsResponseModel(false,10111, 'PackageTerms is already deactivated');
+                              throw new PackageTermsResponseModel(false,10111, 'PackageTerm is already deactivated');
                           }
                       } else {
                           if (packageTermsStatus.affected) {
-                              const packageTermsResponse: PackageTermsResponseModel = new PackageTermsResponseModel(true, 10114, 'PackageTerms is activated successfully');
+                              const packageTermsResponse: PackageTermsResponseModel = new PackageTermsResponseModel(true, 10114, 'PackageTerm is activated successfully');
                               return packageTermsResponse;
                           } else {
-                              throw new PackageTermsResponseModel(false,10112, 'PackageTerms is already activated');
+                              throw new PackageTermsResponseModel(false,10112, 'PackageTerm is already activated');
                           }
                       }
                   // }

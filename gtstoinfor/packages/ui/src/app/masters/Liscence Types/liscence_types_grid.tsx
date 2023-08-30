@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -47,7 +47,9 @@ export const LiscenceTypesGrid = (props: LiscenceTypesGridProps) => {
     liscenceTypeData.isActive=liscenceTypeData.isActive?false:true;
     service.activateOrDeactivateLiscenceType(liscenceTypeData).then(res => { console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Success'); 
+        // AlertMessages.getSuccessMessage('Success'); 
+        message.success(res.internalMessage)
+
       } else {
           AlertMessages.getErrorMessage(res.internalMessage);
       }

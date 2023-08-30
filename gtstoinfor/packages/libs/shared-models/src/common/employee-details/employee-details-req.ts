@@ -12,6 +12,7 @@ export class EmployeeDetailsResponse{
     employeeId?:number
     updateUser?:string
     createdUser?:string
+    departments?:string
     constructor(
         employeeCode:string,
         firstName:string,
@@ -24,7 +25,8 @@ export class EmployeeDetailsResponse{
         pinCode: number,
       employeeId?:number,
       updateUser?:string,
-      createdUser?:string
+      createdUser?:string,
+      departments?:string,
 
     ){
         this.employeeCode=employeeCode
@@ -39,7 +41,7 @@ export class EmployeeDetailsResponse{
         this.employeeId=employeeId
         this.updateUser=updateUser
         this.createdUser=createdUser
-
+         this.departments=departments
     }
   
 }

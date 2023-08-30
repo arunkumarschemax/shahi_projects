@@ -127,24 +127,24 @@ async activateOrDeactivateLiscenceType(liscenceTypeReq: LiscenceTypeRequest): Pr
       //console.log(liscenceTypeExists,'sdfghjk')
       if (liscenceTypeExists) {
           if (!liscenceTypeExists) {
-              throw new ErrorResponse(10113, 'Someone updated the current Delivery Method information. Refresh and tryagain');
+              throw new ErrorResponse(10113, 'Someone updated the current Liscence Type information. Refresh and tryagain');
           } else {
               
                   const liscenceTypeStatus =  await this.liscenceTypeRepository.update(
                       { liscenceTypeId: liscenceTypeReq.liscenceTypeId },
                       { isActive: liscenceTypeReq.isActive,updatedUser: liscenceTypeReq.updatedUser });
-                      console.log(liscenceTypeStatus,'kkkkkkkkkkk')
+                      // console.log(liscenceTypeStatus,'kkkkkkkkkkk')
                  
                   if (liscenceTypeExists.isActive) {
                       if (liscenceTypeStatus.affected) {
-                          const liscenceTypeResponse: LiscenceTypeResponseModel = new LiscenceTypeResponseModel(true, 10115, 'Delivery Method is de-activated successfully');
+                          const liscenceTypeResponse: LiscenceTypeResponseModel = new LiscenceTypeResponseModel(true, 10115, 'Liscence Type is deactivated successfully');
                           return liscenceTypeResponse;
                       } else {
-                          throw new LiscenceTypeResponseModel(false,10111, 'Delivery Method is already deactivated');
+                          throw new LiscenceTypeResponseModel(false,10111, 'Liscence Type is already deactivated');
                       }
                   } else {
                       if (liscenceTypeStatus.affected) {
-                          const liscenceTypeResponse: LiscenceTypeResponseModel = new LiscenceTypeResponseModel(true, 10114, 'Delivery Method is activated successfully');
+                          const liscenceTypeResponse: LiscenceTypeResponseModel = new LiscenceTypeResponseModel(true, 10114, 'Liscence Type is activated successfully');
                           return liscenceTypeResponse;
                       } else {
                           throw new LiscenceTypeResponseModel(false,10112, 'Liscence Type is already  activated');

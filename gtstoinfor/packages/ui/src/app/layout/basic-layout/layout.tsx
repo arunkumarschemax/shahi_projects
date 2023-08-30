@@ -155,6 +155,12 @@ export const baseRouterList = [
                 path: "attributes/attributes-view",
                 filepath: "attributes/attributes-view",
             },
+            {
+                label: "Buyers Destination",
+                key: "buyers-destination",
+                path: "buyers-destination/buyers-destination-grid",
+                filepath: "buyers-destination/buyers-destination-grid",
+            },
         ]
     },
     {
@@ -219,6 +225,32 @@ export const baseRouterList = [
                 filepath: "/masters/garmentcategory/garmentcategory-view",
             },
             {
+                label: "Payment Terms",
+                key: "paymentTerms",
+                path: "payment-terms/payment-terms-view",
+                filepath: "payment-terms/payment-terms-view",
+            },
+            {
+                label: "Package Terms",
+                key: "packageTerms",
+                path: "package-terms/package-terms-view",
+                filepath: "package-terms/package-terms-view",
+            },
+           
+            {
+                label: "Delivery Terms",
+                key: "delivery-terms",
+                path: "delivery-terms/delivery-terms-view",
+                filepath: "delivery-terms/delivery-terms-view",
+            },
+            {
+                label: "Locations",
+                key: "locations",
+                path: "locations/locations-view",
+                filepath: "locations/locations-view",
+            },
+            
+            {
                 label: "Profit Control Head",
                 key: "profit-control-head",
                 path: "profit-control-head/profit-control-head-view",
@@ -229,6 +261,18 @@ export const baseRouterList = [
                 key: "liscence-type",
                 path: "liscence-type/liscence-type-grid",
                 filepath: "liscence-type/liscence-type-grid",
+            },
+            {
+                label: "Sample Types",
+                key: "sampleTypes",
+                path: "sampleTypes/sampleTypes-grid",
+                filepath: "sampleTypes/sampleTypes-grid",
+            },
+            {
+                label: "Sample Sub Types",
+                key: "sampleSubTypes",
+                path: "sampleSubTypes/sampleSubTypes-grid",
+                filepath: "sampleSubTypes/sampleSubTypes-grid",
             },
             {
                 label: "Fabric Type",
@@ -271,6 +315,37 @@ export const baseRouterList = [
                 key: "commission",
                 path: "commission/commission-view",
                 filepath: "commission/commission-view",
+            },
+            {
+                label: "Fabric Structure",
+                key: "fabric-structure",
+                path: "fabric-structure/fabric-structure-grid",
+                filepath: "fabric-structure/fabric-structure-grid",
+            },
+            {
+                label: "Fabric Finish Type",
+                key: "fabric-finish-type",
+                path: "fabric-finish-type/fabric-finish-type-grid",
+                filepath: "fabric-finish-type/fabric-finish-type-grid",
+            },
+         
+            {
+                label: "Colours",
+                key: "colours",
+                path: "colour/colour-view",
+                filepath: "colour/colour-view",
+            },
+            {
+                label: "Department",
+                key: "department",
+                path: "department/department-view",
+                filepath: "department/department-view",
+            },
+            {
+                label: "Account Control Object",
+                key: "accountcontrolobjects",
+                path: "accountcontrolobjects/accountcontrolobjects-view",
+                filepath: "accountcontrolobjects/accountcontrolobjects-view",
             },
           
         ],
@@ -320,6 +395,28 @@ export const baseRouterList = [
 
     },
     {
+        label: "Fabric Development",
+        key: "fabricdevelopment",
+        icon:<FontAwesomeIcon icon={faShirt} />,
+        path: "fabricdevelopment",
+        filepath: "fabricdevelopment",
+        children:[
+            {
+                label: "BOM TRIM CREATION",
+                key: "bomtrimcreation",
+                path: "bomtrimcreation/bom-trim-creation",
+                filepath: "bomtrimcreation/bom-trim-creation",
+            },
+
+            {
+                label: "Fabic Development Request",
+                key: "Fabricdevelopmentrequest",
+                path: "FabricDevelopmentrequest/Fabric-Development-Request",
+                filepath: "FabricDevelopmentrequest/Fabric-Development-Request",
+            },
+        ]
+    },
+    {
         label: "Orders",
         key: "excel-import",
         path: "excel-import",
@@ -362,7 +459,12 @@ export const baseRouterList = [
             //     path: "phase-wise-grid",
             //     filepath: "phase-wise-grid",
             // }
-            
+            {
+                label: "Item Creation",
+                key: "item-creation",
+                path: "item-creation",
+                filepath: "item-creation",
+            },
         ],
     },
     {

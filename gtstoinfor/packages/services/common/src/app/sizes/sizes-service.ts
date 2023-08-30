@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Raw, Repository } from 'typeorm';
-import { AllSizeResponseModel, SizeDto } from '@project-management-system/shared-models';
+import { AllSizeResponseModel } from '@project-management-system/shared-models';
 import { SizeResponseModel } from '@project-management-system/shared-models';
 import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 import { SizeAdapter } from './dto/sizes-adapter';
@@ -9,6 +9,7 @@ import { Size } from './sizes-entity';
 import { SizeRequest } from './dto/sizes-request';
 import { SizeRequestDto } from '@project-management-system/shared-models';
 import { Console } from 'console';
+import { SizeDto } from './dto/sizes-dto';
 
 @Injectable()
 export class SizeService{
@@ -124,37 +125,61 @@ export class SizeService{
           return err;
         }
       }  
-
       async getAllActiveSizes(): Promise<AllSizeResponseModel> {
         // const page: number = 1;
-        // const response = new AllSizeResponseModel();
         try {
-          const sizesDTO: SizeDto[] = [];
-          //retrieves all companies
-          const SizeEntity: Size[] = await this.SizeRepository.find({where:{"isActive":true},order :{'size':'ASC'}});
-          //console.log(statesEntities);
-          
-          if (SizeEntity) {
-            // converts the data fetched from the database which of type companies array to type StateDto array.
-            SizeEntity.forEach(SizeEntity => {
-              const convertedSizeDto: Size = this.SizeAdapter.convertEntityToDto(
-                SizeEntity
-              );
-              sizesDTO.push(convertedSizeDto);
-            });
-    
-            //generated response
-  
-            const response = new AllSizeResponseModel(true,1,'Size retrieved successfully',sizesDTO);
-            return response;
-          } else {
-            throw new SizeResponseModel(false,99998, 'Data not found');
-          }
-          // return response;
+            const SampleSubTypeDto: SizeDto[] = [];
+            //retrieves all companies
+            const SampleSubTypeEntities: Size[] = await this.SizeRepository.find({ order: { 'size': 'ASC' },where:{isActive:true}
+           });
+         console.log(SampleSubTypeEntities)
+            if (SampleSubTypeEntities) {
+                // converts the data fetched from the database which of type companies array to type StateDto array.
+                SampleSubTypeEntities.forEach(Entity => {
+                    const convertedBrandsDtos: SizeDto = this.SizeAdapter.convertEntityToDto(
+                      Entity
+                    );
+                    SampleSubTypeDto.push(convertedBrandsDtos);
+                });
+                const response = new AllSizeResponseModel(true, 11108, "Sample Sub Types retrieved successfully",SampleSubTypeDto);
+                return response;
+            } else {
+                throw new AllSizeResponseModel(false,99998, 'Data not found'); 
+            }
         } catch (err) {
-          return err;
+            return err;
         }
-      }  
+    }
+      // async getAllActiveSizes(): Promise<AllSizeResponseModel> {
+      //   // const page: number = 1;
+      //   // const response = new AllSizeResponseModel();
+      //   try {
+      //     const sizesDTO: SizeDto[] = [];
+      //     //retrieves all companies
+      //     const SizeEntity: Size[] = await this.SizeRepository.find({where:{"isActive":true},order :{'size':'ASC'}});
+      //     //console.log(statesEntities);
+          
+      //     if (SizeEntity) {
+      //       // converts the data fetched from the database which of type companies array to type StateDto array.
+      //       SizeEntity.forEach(SizeEntity => {
+      //         const convertedSizeDto: Size = this.SizeAdapter.convertEntityToDto(
+      //           SizeEntity
+      //         );
+      //         sizesDTO.push(convertedSizeDto);
+      //       });
+    
+      //       //generated response
+  
+      //       const response = new AllSizeResponseModel(true,1,'Size retrieved successfully',sizesDTO);
+      //       return response;
+      //     } else {
+      //       throw new SizeResponseModel(false,99998, 'Data not found');
+      //     }
+      //     // return response;
+      //   } catch (err) {
+      //     return err;
+      //   }
+      // }  
       
       async activateOrDeactivateSize(SizeReq: SizeRequest): Promise<SizeResponseModel> {
         try {
