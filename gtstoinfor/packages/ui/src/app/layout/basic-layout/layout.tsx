@@ -272,19 +272,6 @@ export const baseRouterList = [
                 path: "commission/commission-view",
                 filepath: "commission/commission-view",
             },
-            {
-                label: "BOM TRIM CREATION",
-                key: "bomtrimcreation",
-                path: "bomtrimcreation/bom-trim-creation",
-                filepath: "bomtrimcreation/bom-trim-creation",
-            },
-
-            {
-                label: "Fabic Development Request",
-                key: "Fabricdevelopmentrequest",
-                path: "FabricDevelopmentrequest/Fabric-Development-Request",
-                filepath: "FabricDevelopmentrequest/Fabric-Development-Request",
-            },
           
         ],
     }, 
@@ -325,6 +312,28 @@ export const baseRouterList = [
             
         ]
 
+    },
+    {
+        label: "Fabric Development",
+        key: "fabricdevelopment",
+        icon:<FontAwesomeIcon icon={faShirt} />,
+        path: "fabricdevelopment",
+        filepath: "fabricdevelopment",
+        children:[
+            {
+                label: "BOM TRIM CREATION",
+                key: "bomtrimcreation",
+                path: "bomtrimcreation/bom-trim-creation",
+                filepath: "bomtrimcreation/bom-trim-creation",
+            },
+
+            {
+                label: "Fabic Development Request",
+                key: "Fabricdevelopmentrequest",
+                path: "FabricDevelopmentrequest/Fabric-Development-Request",
+                filepath: "FabricDevelopmentrequest/Fabric-Development-Request",
+            },
+        ]
     },
     {
         label: "Orders",

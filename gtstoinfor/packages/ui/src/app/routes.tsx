@@ -310,9 +310,7 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
                <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
-                         <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
-                         <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentApproval/>}/>
-
+                        
                 </Route>
 
                     <Route path="style-management">
@@ -323,6 +321,11 @@ export const AppRoutes = () => {
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
+
+                </Route>
+                <Route path='fabricdevelopment'>
+                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
+                <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentApproval/>}/>
 
                 </Route>
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
