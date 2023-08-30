@@ -317,7 +317,7 @@ export const  BuyersView = () => {
                   if (rowData.isActive) {
                     openFormWithData(rowData);
                   } else {
-                    message.error('You Cannot Edit Deactivated Vendor');
+                    message.error('You Cannot Edit Deactivated Buyer');
                   }
                 }}
                 style={{ color: '#1890ff', fontSize: '14px' }}
@@ -327,8 +327,8 @@ export const  BuyersView = () => {
               <Popconfirm onConfirm={e =>{deleteBuyer(rowData);}}
               title={
                 rowData.isActive
-                  ? 'Are you sure to Deactivate vendor ?'
-                  :  'Are you sure to Activate vendor ?'
+                  ? 'Are you sure to Deactivate Buyer ?'
+                  :  'Are you sure to Activate Buyer ?'
               }
             >
               <Switch  size="default"
