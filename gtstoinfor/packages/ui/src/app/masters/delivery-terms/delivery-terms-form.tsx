@@ -82,7 +82,7 @@ export function DeliveryTermsForm(
 
   return (
 
-    <Card title={props.isUpdate ? 'Update Delivery Terms' : 'Add Delivery Term'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/delivery-terms/delivery-terms-view')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Update Delivery Terms' : 'Add Delivery Term'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/global/delivery-terms/delivery-terms-view')} type={'primary'}>View</Button></span>}>
     <Form layout="vertical" form={form} onFinish={saveData} initialValues={props.deliverytermsData} >
     <Form.Item name="deliveryTermsId" style={{ display: 'none' }}>
         <Input hidden />

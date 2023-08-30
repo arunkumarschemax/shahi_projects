@@ -403,7 +403,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
         <Col>
-        <span><Button onClick={() => navigate('/masters/currencies/currency-form')}
+        <span><Button onClick={() => navigate('/global/currencies/currency-form')}
               type={'primary'}>New</Button></span>
         </Col>
       </Row><br></br>
@@ -417,7 +417,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
             type: 'multiple',
           }}
           // cardProps={{
-          //   extra: <span><Button onClick={() => navigate('/masters/currencies/currency-form')}
+          //   extra: <span><Button onClick={() => navigate('/global/currencies/currency-form')}
           //     type={'primary'}>New</Button></span>
           // }}
           search={false} headerTitle={'Currencies'}

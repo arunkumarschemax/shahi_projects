@@ -1,4 +1,5 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { Settings } from "../settings/settings.entity";
 
 @Entity('division')
 export class Division {
@@ -78,5 +79,8 @@ updatedUser: string | null;
 
   // @OneToMany(type=>Vendors, vendor=>vendor.currencyInfo,{cascade: true})
   // vendorInfo:Vendors[];
+
+  @OneToMany(type => Settings, settings => settings.divisionInfo,{cascade: true})
+  settingsInfo : Settings
 
 }

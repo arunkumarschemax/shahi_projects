@@ -27,7 +27,7 @@ export function DeliveryMethodForm(props: DeliveryMethodFormProps) {
     deliveryMethodService.createDeliveryMethod(deliveryMethodDto).then(res => {
       if (res.status) {
         message.success('Delivery Method Created Successfully',2);
-        navigate("/masters/delivery-methods/delivery-method-view");
+        navigate("/global/delivery-methods/delivery-method-view");
         onReset();
       } else {
         if (res.status) {
@@ -55,7 +55,7 @@ export function DeliveryMethodForm(props: DeliveryMethodFormProps) {
   };
 
   return (
-    <Card title={<span >Delivery Method</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/masters/delivery-methods/delivery-method-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
+    <Card title={<span >Delivery Method</span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={props.isUpdate==true?"":<Link to='/global/delivery-methods/delivery-method-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
       <Form form={form } layout={'vertical'} initialValues={props.deliveryMethodData} name="control-hooks" onFinish={saveData}  >   
       <Form.Item name="deliveryMethodId" style={{display:"none"}} >
         <Input hidden/>

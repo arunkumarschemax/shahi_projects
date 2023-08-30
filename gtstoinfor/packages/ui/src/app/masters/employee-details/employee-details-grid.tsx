@@ -299,7 +299,7 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
 
   return (
       <>
-      <Card title='Employees' extra={<span><Button onClick={() => navigate('/masters/employee-details/employee-details-form')}
+      <Card title='Employees' extra={<span><Button onClick={() => navigate('/global/employee-details/employee-details-form')}
               type={'primary'}>New</Button></span>}>
       <Row gutter={40}>
         <Col>

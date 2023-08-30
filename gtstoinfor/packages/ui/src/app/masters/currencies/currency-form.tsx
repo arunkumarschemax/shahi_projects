@@ -95,7 +95,7 @@ export const CurrenciesForm = (props:CurrenciesFormProps) => {
   return (
 <Card title={<span style={{color:'white'}}>Currencies</span>}
     style={{textAlign:'center'}} 
-     extra={props.isUpdate==true?"":<Link to='/masters/currencies/currency-view' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+     extra={props.isUpdate==true?"":<Link to='/global/currencies/currency-view' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
 
 

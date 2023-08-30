@@ -94,7 +94,7 @@ const onBlur=() =>{
     
    <Card title={'Taxes'}
     
-    extra={props.isUpdate==true?"":<Link to='/masters/taxes/taxes-grid' ><Button className='panel_button' type={'primary'}>View </Button></Link>}
+    extra={props.isUpdate==true?"":<Link to='/global/taxes/taxes-grid' ><Button className='panel_button' type={'primary'}>View </Button></Link>}
     >
 
       <Form form={form} onFinish={saveData} initialValues={props.taxesData} layout="vertical" name="control-hooks"> 

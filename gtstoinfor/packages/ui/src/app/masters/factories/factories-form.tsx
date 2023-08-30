@@ -30,7 +30,7 @@ export default function FactoriesForm() {
   }
 
   return (
-    <Card title='Add factory' extra={<span><Button onClick={() => navigate('/masters/factories/factories-view')} type={'primary'}>View</Button></span>}>
+    <Card title='Add factory' extra={<span><Button onClick={() => navigate('/global/factories/factories-view')} type={'primary'}>View</Button></span>}>
         <Form form={form} title='Factories' layout='vertical' onFinish={submitForm}  >
             <Row gutter={24}>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>

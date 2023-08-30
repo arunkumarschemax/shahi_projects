@@ -118,7 +118,7 @@ export function VendorsView(
     vendorsService.activateOrDeactivateVendor(req).then(res => { 
       if (res.status) {
         getAllVendors();
-        message.success('Success');
+        message.success(res.internalMessage);
       } else {
           message.error(res.internalMessage);
       }

@@ -73,7 +73,7 @@ export default function FactoriesView() {
         type: 'multiple',
       }}
       cardProps={{
-        extra: <span><Button onClick={() => navigate('/masters/factories/factories-form')}
+        extra: <span><Button onClick={() => navigate('/global/factories/factories-form')}
           type={'primary'}>New</Button></span>
       }}
       search={false} headerTitle={'Factories'}

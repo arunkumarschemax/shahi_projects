@@ -113,7 +113,7 @@ export const BuyersGeneralAttributeForm = () => {
             service.updateGeneralAttribute(req).then(res => {
                 if(res.status){
                     AlertMessages.getSuccessMessage('Updated successfully')
-                    navigate('/masters/buyers/buyers-view')
+                    navigate('/global/buyers/buyers-view')
                 } else{
                     AlertMessages.getErrorMessage(res.internalMessage)
                 }
@@ -123,7 +123,7 @@ export const BuyersGeneralAttributeForm = () => {
             service.createGeneralAttribute(req).then(res => {
                 if(res.status){
                     AlertMessages.getSuccessMessage('Created successfully')
-                    navigate('/masters/buyers/buyers-view')
+                    navigate('/global/buyers/buyers-view')
                 } else {
                     AlertMessages.getErrorMessage(res.internalMessage)
                 }
@@ -146,7 +146,7 @@ export const BuyersGeneralAttributeForm = () => {
     const [firstHalfData, secondHalfData] = splitData(attributes);
 
     return(
-        <Card title='Buyer General Settings' size='small' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
+        <Card title='Buyer General Settings' size='small' extra={<span><Button onClick={() => navigate('/global/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
             {
                 attributes.length <= 10 ? (<>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>

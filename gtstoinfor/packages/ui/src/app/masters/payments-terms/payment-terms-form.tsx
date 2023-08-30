@@ -48,7 +48,7 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
         setDisable(false)
       if (res.status) {
         AlertMessages.getSuccessMessage('Created Successfully');
-        navigate('/masters/payment-terms/payment-terms-view')
+        navigate('/global/payment-terms/payment-terms-view')
         onReset();
       } else {
         if (res.status) {
@@ -84,7 +84,7 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
  console.log(PaymentTermsDto,"999999")
 
   return (
-    <Card title='Payment Terms' extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/payment-terms/payment-terms-view')} type={'primary'}>View</Button></span>}>
+    <Card title='Payment Terms' extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/global/payment-terms/payment-terms-view')} type={'primary'}>View</Button></span>}>
     <Form layout="vertical" form={form} onFinish={saveData} initialValues={props.paymentTermsData} >
     <Row>
     <Form.Item name="paymentTermsId" style={{ display: 'none' }}>
