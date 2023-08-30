@@ -1,6 +1,7 @@
 import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { Buyers } from "./buyers.entity";
 import { Countries } from "../countries/countries.entity";
+import { Settings } from "../settings/settings.entity";
 
 
 @Entity('address')
@@ -107,6 +108,9 @@ export class Address {
   @ManyToOne(type=>Buyers, buyers=>buyers.adressInfo,{  nullable:false, })
   @JoinColumn({ name:"buyer_id"})
   buyerInfo: Buyers[];
+
+  @OneToMany(type => Settings, settings => settings.addressInfo,{cascade: true})
+  settingsInfo : Settings
 
 
 

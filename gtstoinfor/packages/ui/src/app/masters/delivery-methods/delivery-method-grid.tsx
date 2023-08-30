@@ -53,12 +53,11 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
    * @param deliveryMethodData 
    */
   const deleteDeliveryMethod = (deliveryMethodData:DeliveryMethodDto) => {
-    console.log(deliveryMethodData,'hiiiiiiiiii')
     deliveryMethodData.isActive=deliveryMethodData.isActive?false:true;
     deliveryMethodDataService.activateOrDeactivateDeliveryMethod(deliveryMethodData).then(res => { console.log(res);
       if (res.status) {
         // getAllDeliveryMethods();
-        message.success('Success',2); 
+        message.success(res.internalMessage,2); 
       } else {
           message.error(res.internalMessage,2);
       }
@@ -267,7 +266,7 @@ export function DeliveryMethodGrid(props: DeliveryMethodProps) {
   return (
     <Card title={<span >Delivery Method</span>}
     style={{textAlign:'center'}} headStyle={{ border: 0 }} 
-    extra={<Link to='/masters/delivery-methods/delivery-method-form' >
+    extra={<Link to='/global/delivery-methods/delivery-method-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >
      <br></br>

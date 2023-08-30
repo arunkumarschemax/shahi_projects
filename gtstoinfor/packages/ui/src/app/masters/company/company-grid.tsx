@@ -435,7 +435,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
         <Col>
-          <span><Button onClick={() => navigate('/masters/company/company-form')}
+          <span><Button onClick={() => navigate('/global/company/company-form')}
             type={'primary'}>New</Button></span>
         </Col>
       </Row><br></br>

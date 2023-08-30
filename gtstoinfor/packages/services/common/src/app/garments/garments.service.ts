@@ -62,10 +62,12 @@ export class GarmentsService {
     async getAllGarments(): Promise<AllGarmentsResponse> {
         try {
             const garmentDto: GarmentDto[] = [];
+            console.log(garmentDto,"nnnnnnnnnnnnnn")
             const garmentEntities: Garments[] = await this.garmentsRepository.find({
                 order: { garmentName: "ASC" },
                 relations: ['garmentCategory']
             });
+            console.log(garmentEntities,"meowww")
             if (garmentEntities.length > 0) {
                 garmentEntities.forEach(garmentEntity => {
                     const convertedGarmentDto: GarmentDto = this.garmentsAdapter.convertEntityToDto(garmentEntity);

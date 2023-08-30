@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -123,16 +123,16 @@ export function ItemSubCategoriesGrid(
     subCategoryService.activateOrDeactivateItemSubCategory(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
-        AlertMessages.getSuccessMessage('Success'); 
+        message.success(res.internalMessage,2); 
       } else {
         if (res.status) {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          message.success(res.internalMessage,2);
         } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          message.success(res.internalMessage,2);
         }
       }
     }).catch(err => {
-      AlertMessages.getErrorMessage(err.message);
+      message.success(err.message,2);
     })
   }
 
@@ -246,7 +246,7 @@ export function ItemSubCategoriesGrid(
                 if (rowData.isActive) {
                   openFormWithData(rowData);
                 } else {
-                  AlertMessages.getErrorMessage('You Cannot Edit Deactivated Category');
+                  message.success('You Cannot Edit Deactivated Item Sub Category',2);
                 }
               }}
               style={{ color: '#1890ff', fontSize: '14px' }}

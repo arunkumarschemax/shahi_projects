@@ -82,7 +82,7 @@ export function LocationsForm(
 
   return (
 
-    <Card title={props.isUpdate ? 'Update Locations' : 'Add location'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/masters/delivery-terms/delivery-terms-view')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Update Locations' : 'Add location'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/global/locations/locations-view')} type={'primary'}>View</Button></span>}>
     <Form layout="vertical" form={form} onFinish={saveData} initialValues={props.locationsData} >
     <Form.Item name="locationId" style={{ display: 'none' }}>
         <Input hidden />

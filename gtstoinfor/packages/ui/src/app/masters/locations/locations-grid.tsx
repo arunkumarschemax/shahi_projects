@@ -268,7 +268,7 @@ export function LocationsGrid(props: LocationsGridProps) {
 
   return (
 <>
-<Card title='Locations' extra={<span><Button onClick={() => navigate('/masters/delivery-terms/delivery-terms-form')} type={'primary'}>New</Button></span>}>
+<Card title='Locations' extra={<span><Button onClick={() => navigate('/global/locations/locations-form')} type={'primary'}>New</Button></span>}>
  <br></br>
       <Row gutter={40}>
       <Col>

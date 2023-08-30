@@ -249,7 +249,7 @@ service.createPaymentMethod(variantData).then(res=>{
 
 return (
   <Card title={<span>Payment Method</span>}
-  style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/paymentmethod/paymentmethod-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+  style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/global/paymentmethod/paymentmethod-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
   <br></br>
     <>
     <Row gutter={40}>
@@ -263,7 +263,7 @@ return (
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
         {/* <Col>
-        <span><Button onClick={() => navigate('/masters/paymentmethod/paymentmethod-form')}
+        <span><Button onClick={() => navigate('/global/paymentmethod/paymentmethod-form')}
               type={'primary'}>New</Button></span>
         </Col> */}
     </Row>

@@ -74,7 +74,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
   return (
     <Card title={<span style={{ color: 'white' }}>Destination</span>}
       style={{ textAlign: 'center' }}
-      extra={props.isUpdate == true ? "" : <Link to='/masters/destination/destination-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+      extra={props.isUpdate == true ? "" : <Link to='/global/destination/destination-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
     >
 
 

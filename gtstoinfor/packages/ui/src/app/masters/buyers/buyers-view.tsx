@@ -317,7 +317,7 @@ export const  BuyersView = () => {
                   if (rowData.isActive) {
                     openFormWithData(rowData);
                   } else {
-                    message.error('You Cannot Edit Deactivated Vendor');
+                    message.error('You Cannot Edit Deactivated Buyer');
                   }
                 }}
                 style={{ color: '#1890ff', fontSize: '14px' }}
@@ -327,8 +327,8 @@ export const  BuyersView = () => {
               <Popconfirm onConfirm={e =>{deleteBuyer(rowData);}}
               title={
                 rowData.isActive
-                  ? 'Are you sure to Deactivate vendor ?'
-                  :  'Are you sure to Activate vendor ?'
+                  ? 'Are you sure to Deactivate Buyer ?'
+                  :  'Are you sure to Activate Buyer ?'
               }
             >
               <Switch  size="default"
@@ -347,9 +347,9 @@ export const  BuyersView = () => {
         dataIndex:'attributes',
         render:(text,rowData) => (
           <span>
-            <Button onClick={() => navigate('/masters/buyers/buyers-general-attributes-form',{state:{id:rowData.buyerId}})}>General</Button>
+            <Button onClick={() => navigate('/global/buyers/buyers-general-attributes-form',{state:{id:rowData.buyerId}})}>General</Button>
             <Divider type="vertical"/>
-            <Button onClick={() => navigate('/masters/buyers/buyers-order-attributes-form',{state:{id:rowData.buyerId}})}>Order</Button>
+            <Button onClick={() => navigate('/global/buyers/buyers-order-attributes-form',{state:{id:rowData.buyerId}})}>Order</Button>
           </span>
         )
       }
@@ -359,10 +359,10 @@ export const  BuyersView = () => {
 
 
   return (
-    <Card title='Buyers' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-form')} type={'primary'}>New</Button></span>} size='small'>
+    <Card title='Buyers' extra={<span><Button onClick={() => navigate('/global/buyers/buyers-form')} type={'primary'}>New</Button></span>} size='small'>
      <Row gutter={40} >
       <Col>
-          <Card title={'Total Vendors : ' + buyersData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          <Card title={'Total Buyers : ' + buyersData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
            <Card title={'Active: ' + buyersData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>

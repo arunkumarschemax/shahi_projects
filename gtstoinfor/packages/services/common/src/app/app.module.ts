@@ -51,6 +51,7 @@ import { CommissionModule } from './commission/commission.module';
 import { FabricStructuresModule } from './fabric structure/fabric.module';
 import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-types.module';
 import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
+import { SettingsModule } from './settings/settings.module';
 
 
 @Module({
@@ -108,7 +109,7 @@ import { BuyersDestinationModule } from './buyers-destination/buyers-destination
   SizeModule,
   BuyersModule,
   BuyersDestinationModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule,SettingsModule],
   controllers: [AppController],
   providers: [AppService],
 })

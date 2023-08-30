@@ -60,14 +60,14 @@ export class ItemSubCategoriesService {
                     throw new ErrorResponse(11104, 'Item category already exists');
                 }
             }
-            else {
-                const itemSubCatEntity = await this.getItemSubCategory(itemSubCategoryDto.itemSubCategory);
-                if (itemSubCatEntity) {
-                    if (!itemSubCategoryDto) {
-                        throw new ErrorResponse(11104, 'Item category already exists');
-                    }
-                }
-            }
+            // else {
+            //     const itemSubCatEntity = await this.getItemSubCategory(itemSubCategoryDto.itemSubCategory);
+            //     if (itemSubCatEntity) {
+            //         if (!itemSubCategoryDto) {
+            //             throw new ErrorResponse(11104, 'Item category already exists');
+            //         }
+            //     }
+            // }
           const convertedItemSubCategory: ItemSubCategory = this.itemSubcategoryAdapter.convertDtoToEntity(itemSubCategoryDto,isUpdate);
           console.log(convertedItemSubCategory);
           const savedItemSubCategoryEntity: ItemSubCategory = await this.ItemSubCategoryRepository.save(convertedItemSubCategory);
@@ -222,14 +222,14 @@ export class ItemSubCategoriesService {
                        
                         if (itemSubCatExists.isActive) {
                             if (itemCatSatatus.affected) {
-                                const itemcatResponse: ItemSubCategoryResponse = new ItemSubCategoryResponse(true, 10115, 'Item Sub category is de-activated successfully');
+                                const itemcatResponse: ItemSubCategoryResponse = new ItemSubCategoryResponse(true, 10115, 'Item Sub category is Deactivated successfully');
                                 return itemcatResponse;
                             } else {
                                 throw new ErrorResponse(10111, 'Item category is already deactivated');
                             }
                         } else {
                             if (itemCatSatatus.affected) {
-                                const itemcatResponse: ItemSubCategoryResponse = new ItemSubCategoryResponse(true, 10114, 'Item Sub category is activated successfully');
+                                const itemcatResponse: ItemSubCategoryResponse = new ItemSubCategoryResponse(true, 10114, 'Item Sub category is Activated successfully');
                                 return itemcatResponse;
                             } else {
                                 throw new ErrorResponse(10112, 'Item Sub category is already  activated');

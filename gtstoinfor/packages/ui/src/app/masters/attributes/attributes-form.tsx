@@ -31,7 +31,7 @@ export function AttributesForm(props: AttributesFormProps) {
       .then((res) => {
         if (res.status) {
           AlertMessages.getSuccessMessage("Attribute Created Successfully");
-          navigate("/masters/attributes/attributes-view");
+          navigate("/global/attributes/attributes-view");
           onReset();
         } else {
           if (res.status) {
@@ -69,7 +69,7 @@ export function AttributesForm(props: AttributesFormProps) {
           props.isUpdate == true ? (
             ""
           ) : (
-            <Link to="/masters/attributes/attributes-view">
+            <Link to="/global/attributes/attributes-view">
               <span style={{ color: "white" }}>
                 <Button type={"primary"}>View </Button>{" "}
               </span>

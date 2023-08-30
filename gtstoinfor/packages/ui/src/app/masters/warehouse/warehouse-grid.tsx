@@ -337,7 +337,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
         <Col>
-        <span><Button onClick={() => navigate('/masters/warehouse/warehouse-form')}
+        <span><Button onClick={() => navigate('/global/warehouse/warehouse-form')}
               type={'primary'}>New</Button></span>
         </Col>
       </Row><br></br>

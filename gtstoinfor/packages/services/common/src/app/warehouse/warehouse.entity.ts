@@ -1,4 +1,5 @@
 import {Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { Settings } from "../settings/settings.entity";
 
 
 @Entity('warehouse')
@@ -66,5 +67,8 @@ updatedUser: string | null;
 
   // @OneToMany(type=>EndCustomers, endCustomers=>endCustomers.currencyInfo,{cascade: true})
   // endCustomerInfo:EndCustomers[];
+
+  @OneToMany(type => Settings, settings => settings.wareHouseInfo,{cascade: true})
+  settingsInfo : Settings
 
 }
