@@ -347,9 +347,9 @@ export const  BuyersView = () => {
         dataIndex:'attributes',
         render:(text,rowData) => (
           <span>
-            <Button onClick={() => navigate('/masters/buyers/buyers-general-attributes-form',{state:{id:rowData.buyerId}})}>General</Button>
+            <Button onClick={() => navigate('/global/buyers/buyers-general-attributes-form',{state:{id:rowData.buyerId}})}>General</Button>
             <Divider type="vertical"/>
-            <Button onClick={() => navigate('/masters/buyers/buyers-order-attributes-form',{state:{id:rowData.buyerId}})}>Order</Button>
+            <Button onClick={() => navigate('/global/buyers/buyers-order-attributes-form',{state:{id:rowData.buyerId}})}>Order</Button>
           </span>
         )
       }
@@ -359,7 +359,7 @@ export const  BuyersView = () => {
 
 
   return (
-    <Card title='Buyers' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-form')} type={'primary'}>New</Button></span>} size='small'>
+    <Card title='Buyers' extra={<span><Button onClick={() => navigate('/global/buyers/buyers-form')} type={'primary'}>New</Button></span>} size='small'>
      <Row gutter={40} >
       <Col>
           <Card title={'Total Buyers : ' + buyersData.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>

@@ -286,7 +286,7 @@ export function PaymentTermsGrid(
 
   return (
     <Card title ="Payment Terms"
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/payment-terms/payment-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
+    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/global/payment-terms/payment-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
 
     >
      <br></br>

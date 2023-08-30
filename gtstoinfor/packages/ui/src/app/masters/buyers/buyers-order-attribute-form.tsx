@@ -422,7 +422,7 @@ export const BuyersOrderAttributeForm = () => {
             service.updateOrderAttribute(req).then(res => {
                 if(res.status){
                     AlertMessages.getSuccessMessage('Updated successfully')
-                    navigate('/masters/buyers/buyers-view')
+                    navigate('/global/buyers/buyers-view')
                 } else{
                     AlertMessages.getErrorMessage(res.internalMessage)
                 }
@@ -432,7 +432,7 @@ export const BuyersOrderAttributeForm = () => {
             service.createOrderAttribute(req).then(res => {
                 if(res.status){
                     AlertMessages.getSuccessMessage('Created successfully')
-                    navigate('/masters/buyers/buyers-view')
+                    navigate('/global/buyers/buyers-view')
                 } else {
                     AlertMessages.getErrorMessage(res.internalMessage)
                 }
@@ -455,7 +455,7 @@ export const BuyersOrderAttributeForm = () => {
     const [firstHalfData, secondHalfData] = splitData(attributes);
 
     return(
-        <Card title='Buyer Order Configuration' extra={<span><Button onClick={() => navigate('/masters/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
+        <Card title='Buyer Order Configuration' extra={<span><Button onClick={() => navigate('/global/buyers/buyers-view')} type={'primary'}>View</Button></span>}>
             {
                 attributes.length <= 10 ? (<>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 18 }}>
