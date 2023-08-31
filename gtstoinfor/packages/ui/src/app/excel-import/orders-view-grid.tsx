@@ -8,6 +8,7 @@ import moment from 'moment';
 import { Link, useNavigate } from 'react-router-dom';
 import AlertMessages from '../common/common-functions/alert-messages';
 import { OrdersReq } from '@project-management-system/shared-models';
+import { config } from 'packages/libs/shared-services/config';
 
 
 const AllOrdersGridView = () => {
@@ -125,8 +126,8 @@ const AllOrdersGridView = () => {
               console.log(res);
               setTimeout(() => {
                 const response = {
-                file:'https://edoc7api.shahi.co.in/api/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'+`${res}`,
-                    // filee: 'http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'+`${res}`
+                // file:'https://edoc7api.shahi.co.in/api/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'+`${res}`,
+                file:config.download_path+`${res}`
                 };
                 window.open(response.file);
       

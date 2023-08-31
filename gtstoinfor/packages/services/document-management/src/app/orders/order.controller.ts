@@ -9,6 +9,7 @@ import { extname } from 'path';
 import { OrdersService } from './order.service';
 import { SaveOrderDto } from './models/order.dto';
 import { FileUpdateStatusReq } from './models/file-request.dto';
+import { config } from 'packages/libs/shared-services/config';
 ''
 
 @Controller('orders')
@@ -124,6 +125,7 @@ export class OrdersController {
         limits: { files: 1 },
         storage: diskStorage({
             destination: './upload-files',
+            // destination: config.download_path,
             filename: (req, file, callback) => {
                 console.log(file.originalname);
                 const name = file.originalname;

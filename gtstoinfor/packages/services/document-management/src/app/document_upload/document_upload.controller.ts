@@ -21,6 +21,7 @@ import { PoReq, docreq,req } from "./requests/importedPoReq";
 import * as fs from 'fs';
 import { Express } from 'express'; 
 import { OrdersEntity } from "../orders/entities/order.entity";
+import { config } from "packages/libs/shared-services/config";
 @ApiTags('doc-upload')
 @Controller('doc-upload')
 export class DocumentUploadController {
@@ -47,7 +48,7 @@ export class DocumentUploadController {
         // destination: `./upload-files/PO-${req}`,
         destination: (req, file, callback) => {
           console.log(file);
-          const destinationPath = `./upload-files/PO-${req.body.poNumber}`;
+          const destinationPath = config.download_path+`/PO-${req.body.poNumber}`;
           try {
             // Attempt to create the directory if it doesn't exist
             fs.mkdirSync(destinationPath, { recursive: true });
