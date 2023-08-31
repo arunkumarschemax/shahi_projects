@@ -48,8 +48,8 @@ const AllOrdersGridView = () => {
         req.status=form.getFieldValue('orderStatus')
         if(form.getFieldValue('fromDate') != undefined){
             console.log(form.getFieldValue('fromDate'))
-        //  req.fromDate=form.getFieldValue('fromDate').format("YYYY-MM-DD")
-        req.fromDate=date
+         req.fromDate=form.getFieldValue('fromDate').format("YYYY-MM-DD")
+        // req.fromDate=date
         console.log(req.fromDate)
         }
         console.log(req)

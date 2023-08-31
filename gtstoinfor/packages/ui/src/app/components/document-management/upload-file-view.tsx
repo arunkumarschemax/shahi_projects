@@ -17,6 +17,7 @@ const UploadFileGrid = () =>{
 
     
     const service = new OrdersService()
+    const [page,setPage] = useState<number>(1);
     const [itemData, setItemData] = useState([])
     const [columns, setColumns] = useState([]);
     const [searchText, setSearchText] = useState('');
@@ -210,6 +211,13 @@ const UploadFileGrid = () =>{
       }
 
     const pocolumn = [
+      {
+        title: "S.No",
+        key: "sno",
+        responsive: ["sm"],
+        width:130,
+        render: (text,object,index) => (page - 1) * 10 + (index + 1)
+      },
         {
             title: 'PO NUMBER',
             dataIndex: 'PO',
@@ -374,7 +382,11 @@ const UploadFileGrid = () =>{
                     dataSource={itemData}
                     scroll={{ x: true }}
                     bordered
-                    pagination={false}
+                    pagination={{
+                      onChange(current) {
+                        setPage(current);
+                      }
+                    }}
                 />
             ) : (
                 <p>No Data</p>
