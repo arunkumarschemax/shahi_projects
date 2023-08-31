@@ -8,6 +8,7 @@ import moment from 'moment';
 import { Link, useNavigate } from 'react-router-dom';
 import AlertMessages from '../common/common-functions/alert-messages';
 import { OrdersReq } from '@project-management-system/shared-models';
+import { config } from "packages/libs/shared-services/config";
 
 
 const AllOrdersGridView = () => {
@@ -47,8 +48,8 @@ const AllOrdersGridView = () => {
         req.status=form.getFieldValue('orderStatus')
         if(form.getFieldValue('fromDate') != undefined){
             console.log(form.getFieldValue('fromDate'))
-        //  req.fromDate=form.getFieldValue('fromDate').format("YYYY-MM-DD")
-        req.fromDate=date
+         req.fromDate=form.getFieldValue('fromDate').format("YYYY-MM-DD")
+        // req.fromDate=date
         console.log(req.fromDate)
         }
         console.log(req)
@@ -125,7 +126,8 @@ const AllOrdersGridView = () => {
               console.log(res);
               setTimeout(() => {
                 const response = {
-                file:'https://edoc7api.shahi.co.in/api/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'+`${res}`,
+                    file:config.download_path+`${res}`
+                // file:'https://edoc7api.shahi.co.in/api/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'+`${res}`,
                     // filee: 'http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'+`${res}`
                 };
                 window.open(response.file);
