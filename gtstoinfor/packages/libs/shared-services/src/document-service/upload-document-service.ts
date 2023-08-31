@@ -1,6 +1,8 @@
 import {
+    ChallanReq,
     DocumentIdreq,
     DocumentsListRequest,
+    InvoiceReq,
     PoRoleRequest,
     UploadDocumentListDto,
     UploadDocumentListResponseModel,
@@ -34,4 +36,11 @@ export class UploadDocumentService extends CommonAxiosService {
     async getDocumentuploadedStaus(req:DocumentIdreq): Promise<UploadDocumentListResponseModel> {
         return this.axiosPostCall(this.url + "/getDocumentuploadedStaus",req)
       }
+
+      async getInvoiceByPo(req: InvoiceReq): Promise<UploadDocumentListResponseModel> {
+        return this.axiosPostCall(this.url + "/getInvoiceByPo",req)
+    }
+    async getChallanByPOandInvoice(req: ChallanReq): Promise<UploadDocumentListResponseModel> {
+        return this.axiosPostCall(this.url + "/getChallanByPOandInvoice",req)
+    }
 }
