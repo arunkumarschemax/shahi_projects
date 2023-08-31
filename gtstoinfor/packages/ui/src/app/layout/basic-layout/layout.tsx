@@ -316,6 +316,12 @@ export const baseRouterList = [
                 path: "accountcontrolobjects/accountcontrolobjects-view",
                 filepath: "accountcontrolobjects/accountcontrolobjects-view",
             },
+            {
+                label: "Fabrics",
+                key: "fabrics",
+                path: "fabrics/fabrics-view",
+                filepath: "fabrics/fabrics-view",
+            },
           
         ],
     }, 

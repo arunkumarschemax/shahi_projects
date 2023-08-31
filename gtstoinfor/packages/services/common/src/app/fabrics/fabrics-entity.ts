@@ -1,26 +1,34 @@
-
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
-import { EmplyeeDetails } from "../employee-details/dto/employee-details-entity";
 
 
-@Entity('departments')
-export class Departments{
+@Entity('fabrics')
+export class Fabrics{
 
-@PrimaryGeneratedColumn("increment",{name:'dept_id'})
-deptId:number;
+@PrimaryGeneratedColumn("increment",{name:'fabrics_id'})
+fabricsId:number;
 @Column("varchar",{
-    // nullable: true,
+    nullable: true,
     length:15,
-    name:"dept_name"
+    name:"fabrics_Name"
+
 })
-deptName:string;
+fabricsName:string;
 
-@Column("varchar", {
-      // nullable: true,
-      name: "dept_head"
-    })
-    deptHead: string;
+@Column("varchar",{
+    nullable: true,
+    length:15,
+    name:"fabrics_Code"
 
+})
+fabricsCode:string;
+
+@Column("varchar",{
+    nullable: true,
+    length:255,
+    name:"descrption"
+
+})
+description:string;
 
 @Column("boolean",{
     default:true,
@@ -58,6 +66,4 @@ updatedUser: string | null;
 })
 versionFlag: number;
 
-@OneToMany(()=>EmplyeeDetails,Employee=>Employee.Department,{cascade:true})
-Depart:EmplyeeDetails[];
 }

@@ -97,6 +97,8 @@ import AccountControlObjectForm from "./masters/account-control-objects/account-
 import ItemCreation from "./orders/item-creation"
 import SampleRequestView from "./sample-development/sample-management-view"
 import SampleDevForm from "./sample-development/sample-management-form"
+import FabricsGrid from "./masters/fabrics/fabrics-view"
+import { FabricsForm } from "./masters/fabrics/fabrics-form"
 
 
 export const AppRoutes = () => {
@@ -186,8 +188,13 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
 
                  <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
+                 <Route path='fabrics/fabrics-form' element={<FabricsForm fabricData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
 
-<Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
+                 <Route path='fabrics/fabrics-view' element={<FabricsGrid/>} />
+                  <Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
                     isUpdate={false}
                     closeForm={() => { }}
                     updateTax={(undefined) => { }}/>} />
@@ -397,7 +404,7 @@ export const AppRoutes = () => {
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
-
+                       
                 </Route>
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
                 <Route path='/sample-development' element={<SampleDevForm />} />
