@@ -19,6 +19,9 @@ const { Title, Text } = Typography;
 
 export default function DocumentListupload() {
   const [poNumber,setPoNumber] = useState<any[]>([])
+  const [invoiceNumber,setInvoiceNumber] = useState<any[]>([])
+  const [challanNumber,setChallanNumber] = useState<any[]>([])
+  const [orderId,setOrderId] = useState<number>(0)
   const [docData,setDocData] = useState<any[]>([])
   const [urls,setUrls] = useState<any[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,9 +49,39 @@ export default function DocumentListupload() {
       }
     })
   }
-  const getDocData =(value)=>{
-    console.log(localStorage.getItem("user"))
-    service.getDocumentDetailsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:value}).then(res=>{
+
+  const getInvoiceNumber =()=>{
+    let po = form.getFieldValue("customerPo")
+    service.getInvoiceByPo({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po}).then(res=>{
+      if(res.status){
+        setInvoiceNumber(res.data)
+      }else{
+        setInvoiceNumber([])
+      }
+    })
+  }
+
+  const getChallanNo =()=>{
+    let invoiceNo = form.getFieldValue("invoice")
+    let po = form.getFieldValue("customerPo")
+    service.getChallanByPOandInvoice({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po,invoice:invoiceNo}).then(res=>{
+      if(res.status){
+        setOrderId(res.data[0].orderId)
+        setChallanNumber(res.data)
+      }else{
+        setChallanNumber([])
+      }
+    })
+  }
+  const getDocData =()=>{
+    let invoiceNo = form.getFieldValue("invoice")
+    let challan = form.getFieldValue("challan")
+    let po = form.getFieldValue("customerPo")
+    console.log(invoiceNo)
+    console.log(challan)
+    console.log(po)
+
+    service.getDocumentDetailsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po,invoice:invoiceNo,challan:challan,orderId:orderId}).then(res=>{
       if(res.status){
         setDocData(res.data)
         setUrls(res.dataa);
@@ -66,7 +99,7 @@ export default function DocumentListupload() {
  useEffect(() =>{
   if(statePoNumber){
     form.setFieldsValue({customerPo:statePoNumber.data})
-    getDocData(statePoNumber.data)
+    getDocData()
   }
 
  },[])
@@ -170,7 +203,7 @@ export default function DocumentListupload() {
         console.log(formData)
         service.DocumentFileUpload(formData).then((res) => {
           if(res.status){
-            getDocData(form.getFieldValue("customerPo"));
+            getDocData();
             message.success(res.internalMessage)
             setFilelist([])
           }
@@ -314,13 +347,59 @@ export default function DocumentListupload() {
                }
              ]}
            >
-             <Select placeholder='Select PoNumber' onChange={getDocData} showSearch allowClear>
+             <Select placeholder='Select PoNumber' onChange={getInvoiceNumber} showSearch allowClear>
              {poNumber?.map(obj =>{
                        return <Option key={obj.poNumber} value={obj.poNumber}>{obj.poNumber}</Option>
                      })}
              </Select>
            </Form.Item>
          </Col>
+         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+           <Form.Item name='invoice' label='Invoice Number'
+             rules={[
+               {
+                 required: true,
+                 message: 'Select Invoice Number',
+
+               }
+             ]}
+           >
+             <Select placeholder='Select InvoiceNumber' onChange={getChallanNo} showSearch allowClear>
+             {invoiceNumber?.map(obj =>{
+                       return <Option key={obj.invoice} value={obj.invoice}>{obj.invoice}</Option>
+                     })}
+             </Select>
+           </Form.Item>
+         </Col>
+         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+           <Form.Item name='challan' label='Challan Number'
+             rules={[
+               {
+                 required: true,
+                 message: 'Select Challan Number',
+
+               }
+             ]}
+           >
+             <Select placeholder='Select ChallanNumber' showSearch allowClear>
+             {challanNumber?.map(obj =>{
+                       return <Option key={obj.challan} value={obj.challan}>{obj.challan}</Option>
+                     })}
+             </Select>
+           </Form.Item>
+         </Col>
+         <Col span={5} style={{paddingTop:'30px'}}>
+              <Button onClick={getDocData}
+                  style={{
+                    color: 'white',
+                    backgroundColor: 'green',
+                    width: '100%',
+                  }}
+                  icon={<DownloadOutlined />}
+                >
+                  Get Documents
+                </Button>
+            </Col> 
          {
           !hide ? "" :
             <Col span={5} style={{paddingTop:'30px'}}>

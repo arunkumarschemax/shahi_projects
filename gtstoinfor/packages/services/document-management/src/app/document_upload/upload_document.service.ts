@@ -12,7 +12,7 @@ import { DocumentRoleMappingRepository } from "./repository/document-role-reposi
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
 import { DataSource } from "typeorm";
-import { DocumentIdreq, PoRoleRequest, UploadDocumentListDto, docRequest, poReq } from "@project-management-system/shared-models";
+import { ChallanReq, CommonResponseModel, DocumentIdreq, InvoiceReq, PoRoleRequest, UploadDocumentListDto, docRequest, poReq } from "@project-management-system/shared-models";
 import { DocumentUploadDto } from "./requests/document-upload-dto";
 import { UploadFilesRepository } from "./repository/upload-files.repository";
 import { UploadFileDto } from "./models/upload-file.dto";
@@ -167,7 +167,7 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
 
     async getDocumentDetailsByPO(req:PoRoleRequest):Promise<UploadDocumentListResponseModel>{
         try{
-            const sqlQuery = "Select dl.status,is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"' and role_name ='"+req.role+"' Group by dl.documents_list_id";
+            const sqlQuery = "Select dl.status,is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"' and order_id = "+req.orderId+" and role_name ='"+req.role+"' Group by dl.documents_list_id";
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
             let docinfo: UploadDocumentListDto[] = [];
             let urls:any[] = [];
@@ -308,5 +308,37 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
           }
       }
   
+    async getInvoiceByPo(req: InvoiceReq): Promise<CommonResponseModel>{
+        try{
+            const sqlQuery = "select id AS orderId , invoice_no AS invoice from orders where po_no = '"+req.customerPo+"' group by po_no order by po_no ASC";
+            const result = await this.documentRoleMappingRepo.query(sqlQuery)
+            if(result.length >0){
+                return new CommonResponseModel(true,1,'data retrived sucessfully..',result)
+            }else{
+            return new CommonResponseModel(false,0,'no data found..',[])
+
+            }
+        }catch(error){
+            throw error
+        }
 
     }
+
+    async getChallanByPOandInvoice(req: ChallanReq): Promise<CommonResponseModel>{
+        try{
+            const sqlQuery = "select id AS orderId , challan_no AS challan from orders where po_no = '"+req.customerPo+"' and invoice_no = '"+req.invoice+"' group by po_no order by po_no ASC";
+            const result = await this.documentRoleMappingRepo.query(sqlQuery)
+            if(result.length >0){
+                return new CommonResponseModel(true,1,'data retrived sucessfully..',result)
+            }else{
+            return new CommonResponseModel(false,0,'no data found..',[])
+
+            }
+        }catch(error){
+            throw error
+        }
+
+    }
+
+
+}

@@ -12,8 +12,6 @@ import { AlertMessages, DocumentsListRequest, FileStatusReq, UploadDocumentListD
 import FormList from 'antd/es/form/FormList';
 import InputNumber from 'rc-input-number';
 import { number } from 'prop-types';
-import PDFMerger from 'pdf-merger-js/browser';
-import PdfMergeDownload from './merge-pdf';
 const { Title, Text } = Typography;
 import { saveAs } from 'file-saver';
 import axios, { AxiosRequestConfig } from 'axios';
