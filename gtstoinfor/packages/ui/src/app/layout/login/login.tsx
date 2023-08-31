@@ -87,8 +87,6 @@ export default function Login() {
           <Card
             style={{
               paddingTop: "10px",
-              height: "55%",
-              width: "55%",
               borderRadius: "10px",
               boxShadow: "1px 1px 5px 5px lightgrey",
               backgroundColor: "#29397d",
@@ -98,11 +96,12 @@ export default function Login() {
               <Title level={2} style={{ color: "#ffff", margin: "0" }}>
                 Log In
               </Title>
-              {/* <Text style={{color:`black`}}>Enter your credentials below to login</Text> */}
+              <Text style={{ color: `white` }}>Enter your credentials below to login</Text>
               <br />
             </div>
-
-            <LoginComponent />
+            <div>
+              <LoginComponent />
+            </div>
 
             {/* <Form form={loginForm} layout="vertical" className="content">
               <Form.Item
