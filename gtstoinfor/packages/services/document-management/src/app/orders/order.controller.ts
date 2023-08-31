@@ -123,7 +123,7 @@ export class OrdersController {
     @UseInterceptors(FileInterceptor('file', {
         limits: { files: 1 },
         storage: diskStorage({
-            destination: './upload-files',
+            destination: './upload_files',
             filename: (req, file, callback) => {
                 console.log(file.originalname);
                 const name = file.originalname;
