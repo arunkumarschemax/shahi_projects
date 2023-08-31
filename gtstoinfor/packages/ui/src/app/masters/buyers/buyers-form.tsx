@@ -406,6 +406,7 @@ export function BuyersForm(props: BuyersFormProps) {
                               <Select
                                 placeholder="Select Country"
                                 // onChange={getSkuCode}
+                                showSearch
                                 allowClear
                               >
                                 {countries.map(dropData => {

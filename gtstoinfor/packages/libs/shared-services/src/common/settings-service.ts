@@ -7,6 +7,10 @@ export class SettingsService extends CommonAxiosService{
     async createSettings(req: SettingsRequest): Promise<SettingsResponseModel> {
         return this.axiosPostCall(this.URL + '/createSettings',req)
      }
+
+     async updateSettings(req: SettingsRequest): Promise<SettingsResponseModel> {
+      return this.axiosPostCall(this.URL + '/updateSettings',req)
+      }  
      
      async getAllSettingsInfo(req:SettingsIdReq): Promise<SettingsResponseModel> {
         return this.axiosPostCall(this.URL + '/getAllSettingsInfo',req)

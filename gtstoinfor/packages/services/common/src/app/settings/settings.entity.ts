@@ -101,9 +101,9 @@ export class Settings {
       })
       versionFlag: number;
 
-    // @ManyToOne(type => ProfitControlHead,pch => pch.settingsInfo,{nullable:true})
-    // @JoinColumn({name:'pch_id'})
-    // pchInfo: ProfitControlHead
+    @ManyToOne(type => ProfitControlHead,pch => pch.settingsInfo,{nullable:true})
+    @JoinColumn({name:'pch_id'})
+    pchInfo: ProfitControlHead
 
     @ManyToOne(type => Company,com => com.settingsInfo,{nullable:true})
     @JoinColumn({name:'company_id'})
