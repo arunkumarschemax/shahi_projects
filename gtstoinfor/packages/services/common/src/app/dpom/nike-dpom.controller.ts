@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
-import { CommonResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { DpomService } from './nike-dpom.service';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -111,9 +111,10 @@ export class DpomController {
     }
 
     @Post('/getFactoryReportData')
-    async getFactoryReportData(): Promise<CommonResponseModel> {
+    @ApiBody ({type: PpmDateFilterRequest})
+    async getFactoryReportData(@Body() req?:any): Promise<CommonResponseModel> {
         try {
-            return await this.dpomService.getFactoryReportData();
+            return await this.dpomService.getFactoryReportData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

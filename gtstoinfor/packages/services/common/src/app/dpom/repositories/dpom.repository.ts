@@ -16,23 +16,23 @@ export class DpomRepository extends Repository<DpomEntity> {
         super(dpomRepository.target, dpomRepository.manager, dpomRepository.queryRunner);
     }
 
-    async getDivertReport(): Promise<any[]> {
-        const query = this.createQueryBuilder('dpm')
-            .select(`DISTINCT dpm.id,dpm.plant AS nPlant,dpm.dpom_item_line_status AS nLineStatus,
-            dpm.plant_name AS nPlantName,dpm.document_date AS nDocumentDate,
-            dpm.po_number AS npoNumber,dpm.po_line_item_number AS npoLine ,dpm.destination_country AS ndestination,
-            dpm.shipping_type AS nshipmentType,dpm.inventory_segment_code AS ninventorySegmentCode,
-            dpm.ogac AS nogac ,dpm.gac AS ngac ,dpm.product_code AS nproductCode,
-            dpm.item_vas_text AS nitemVasText,dpm.quantity AS nQuantity,dpc.plant AS oplant,
-            dpc.dpom_item_line_status AS onLineStatus,dpc.plant_name AS oPlantName ,
-            dpc.document_date AS oDocumentDate,dpc.po_number AS opoNumber, dpc.po_line_item_number AS opoLine,
-            dpc.destination_country AS odestination , dpc.shipping_type AS oshipmentType,dpc.inventory_segment_code AS oinventorySegmentCode,
-            dpc.ogac AS oogac,dpc.gac AS ogac,dpc.product_code AS oproductCode ,dpc.item_vas_text AS oitemVasText , dpc.quantity AS oquantity,dpm.created_at AS dpomCreatedDates `)
-            .leftJoin(DpomChildEntity,'dpc','dpc.parent_id = dpm.id')
-            .groupBy(`dpm.id,dpc.id`)
-            //.where(`dpm.dpom_item_line_status IN ('accepted','Unaccepted')`)
-        return await query.getRawMany()
-    }
+    // async getDivertReport(): Promise<any[]> {
+    //     const query = this.createQueryBuilder('dpm')
+    //         .select(`DISTINCT dpm.id,dpm.plant AS nPlant,dpm.dpom_item_line_status AS nLineStatus,
+    //         dpm.plant_name AS nPlantName,dpm.document_date AS nDocumentDate,
+    //         dpm.po_number AS npoNumber,dpm.po_line_item_number AS npoLine ,dpm.destination_country AS ndestination,
+    //         dpm.shipping_type AS nshipmentType,dpm.inventory_segment_code AS ninventorySegmentCode,
+    //         dpm.ogac AS nogac ,dpm.gac AS ngac ,dpm.product_code AS nproductCode,
+    //         dpm.item_vas_text AS nitemVasText,dpm.quantity AS nQuantity,dpc.plant AS oplant,
+    //         dpc.dpom_item_line_status AS onLineStatus,dpc.plant_name AS oPlantName ,
+    //         dpc.document_date AS oDocumentDate,dpc.po_number AS opoNumber, dpc.po_line_item_number AS opoLine,
+    //         dpc.destination_country AS odestination , dpc.shipping_type AS oshipmentType,dpc.inventory_segment_code AS oinventorySegmentCode,
+    //         dpc.ogac AS oogac,dpc.gac AS ogac,dpc.product_code AS oproductCode ,dpc.item_vas_text AS oitemVasText , dpc.quantity AS oquantity,dpm.created_at AS dpomCreatedDates `)
+    //         .leftJoin(DpomChildEntity,'dpc','dpc.parent_id = dpm.id')
+    //         .groupBy(`dpm.id,dpc.id`)
+    //         //.where(`dpm.dpom_item_line_status IN ('accepted','Unaccepted')`)
+    //     return await query.getRawMany()
+    // }
 
     async getCountForDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
@@ -254,6 +254,35 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPoAndQuantity(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
        .select(`po_number AS poNumber, total_item_qty AS totalItemQuantity,created_at AS createdAt`)
+        return await query.getRawMany();
+    }
+    async getDivertReport(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpm')
+            .select(`DISTINCT id,plant AS Plant,dpom_item_line_status AS LineStatus,
+            plant_name AS PlantName,document_date AS nDocumentDate,
+            po_number AS poNumber,po_line_item_number AS poLine ,destination_country AS destination,
+            shipping_type AS shipmentType,inventory_segment_code AS inventorySegmentCode,
+            ogac AS nogac ,gac AS ngac ,product_code AS productCode,
+            item_vas_text AS itemVasText,quantity AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos`)
+           //.groupBy(`id`)
+            .where(`diverted_to_pos IS NOT null`)
+        return await query.getRawMany()
+    }
+
+    async getDivertWithNewDataReport(req: [po: string, line: string]): Promise<any[]> {
+        const [po, line] = req; 
+        
+    console.log(po, line,"req")
+        const query = this.createQueryBuilder('dpm')
+            .select(`DISTINCT id, plant AS Plant, dpom_item_line_status AS LineStatus,
+            plant_name AS nPlantName, document_date AS nDocumentDate,
+            po_number AS npoNumber, po_line_item_number AS poLine, destination_country AS destination,
+            shipping_type AS shipmentType, inventory_segment_code AS inventorySegmentCode,
+            ogac AS ogac, gac AS gac, product_code AS productCode, dpom_item_line_status AS DPOMLineItemStatus,
+            item_vas_text AS itemVasText, quantity AS Quantity, created_at AS dpomCreatedDates, diverted_to_pos`)
+            .where(`diverted_to_pos IS NOT null`)
+            .andWhere(`po_number = :po AND po_line_item_number = :line`, { po, line }); 
+    
         return await query.getRawMany();
     }
 }
