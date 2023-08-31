@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, MarketingModel, OldDivertModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, dpomOrderColumnsName } from '@project-management-system/shared-models';
+import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, MarketingModel, NewDivertModel, OldDivertModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, dpomOrderColumnsName } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -1094,39 +1094,49 @@ export class DpomService {
         }
     }
 
-//     async getDivertReportData(): Promise<CommonResponseModel> {
-//         const reports = await this.dpomRepository.getDivertReport();
-//         let model:OldDivertModel[];
-//       let divertedPos=[]
-//       let po ;
-//       let line;
-//       let divertModel
-//       for(const report of reports){
-//         divertedPos = report.diverted_to_pos.split (',');
+    // async getDivertReportData(): Promise<CommonResponseModel> {
+    //     const reports = await this.dpomRepository.getDivertReport();
+    //     let model:OldDivertModel[];
+    //   let divertedPos=[]
+    //   let po ;
+    //   let line;
+    //   let divertModel =[]
+    //   for(const report of reports){
+    //     divertedPos = report.diverted_to_pos.split (',');
        
-//         for(const Po of divertedPos){
-//             // console.log(Po,"wwwwwwwwwwwwwwwwww")
+    //     for(const Po of divertedPos){
 
-//             const [po, line] = Po.split('/');
+    //         const [po, line] = Po.split('/');
 
+    //        console.log(line,"wwwwwwwwwwwwwwwwww")
+    //       const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line])
 
-// console.log(po,"ppppppppppppppppppppppppppppp")
-//           // const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line])
+    //     //  const  model = new DivertModel(report.po,newPoData.po)
+    //     // divertModel.push(model)
+    //     // //  console.log(model,'data after New Data')
 
-//         //  const  model = new DivertModel(report.po,newPoData)
-//         // divertModel.push(model)
-//         //  console.log(model,'data after New Data')
-//         }
+    //     if (po != undefined) {
+    //               const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line])
+    //                  console.log(po,"ppppppppp")
+
+    //              const  model = new DivertModel(report.purchaseOrderNumber,newPoData)
+    //              divertModel.push(model)
+    //              console.log(model,'data after New Data')
+    //         }
+    //     }
       
 
-//       }
+    //   }
 
-//         if (reports.length > 0) {
-//             return new CommonResponseModel(true, 1, 'Data Retrived Successfully', divertedPos);
-//         } else {
-//             return new CommonResponseModel(false, 0, 'No Data Found', []);
-//         }
-//     }
+    //     if (reports.length > 0) {
+    //         return new CommonResponseModel(true, 1, 'Data Retrived Successfully', divertedPos);
+    //     } else {
+    //         return new CommonResponseModel(false, 0, 'No Data Found', []);
+    //     }
+    // }
+
+    //+++++++++++++++++++++modified version 1
+
 async getDivertReportData(): Promise<CommonResponseModel> {
     const reports = await this.dpomRepository.getDivertReport();
     let model:OldDivertModel[];
@@ -1134,35 +1144,33 @@ async getDivertReportData(): Promise<CommonResponseModel> {
 let divertModelData: DivertModel[] = [];
   let po ;
   let line;
-  let divertModel
+  let divertModel =[]
   for(const report of reports){
     divertedPos = report.diverted_to_pos.split (',');
-   
-    for(const Po of divertedPos){
-        // console.log(Po,"wwwwwwwwwwwwwwwwww")
-        if(po !== undefined){
-            const [po, line] = Po.split('/');
-        }
-      
-     
-console.log(line,"ppppppppppppp")
-if (po == undefined) {
-      const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line])
-     const  model = new DivertModel(report.po,newPoData)
-   // divertModel.push(model)
-     console.log(model,'data after New Data')
-}
-    }
-  
+         
 
-  }
+   if(report.diverted_to_pos ){
+    for(const Po of divertedPos){
+       const [po, line] = Po.split('/');
+      const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po,line])
+
+      for (const newpoDivert of newPoData){
+       const  model  = new DivertModel(report,newpoDivert)
+        divertModel.push(model)
+    }
+    }
+ 
+   }
+    }
 
     if (reports.length > 0) {
-        return new CommonResponseModel(true, 1, 'Data Retrived Successfully', reports);
+        return new CommonResponseModel(true, 1, 'Data Retrived Successfully', divertModel);
     } else {
         return new CommonResponseModel(false, 0, 'No Data Found', []);
     }
 }
+
+ 
 
 }
 

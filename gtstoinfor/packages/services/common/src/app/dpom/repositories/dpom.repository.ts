@@ -258,28 +258,27 @@ export class DpomRepository extends Repository<DpomEntity> {
     }
     async getDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpm')
-            .select(`DISTINCT id,plant AS Plant,dpom_item_line_status AS LineStatus,
-            plant_name AS PlantName,document_date AS nDocumentDate,
+            .select(`DISTINCT id,item,plant AS Plant,dpom_item_line_status AS LineStatus,
+            plant_name AS PlantName,document_date AS DocumentDate,
             po_number AS poNumber,po_line_item_number AS poLine ,destination_country AS destination,
             shipping_type AS shipmentType,inventory_segment_code AS inventorySegmentCode,
-            ogac AS nogac ,gac AS ngac ,product_code AS productCode,
+            ogac AS ogac ,gac AS gac ,product_code AS productCode,
             item_vas_text AS itemVasText,quantity AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos`)
-           //.groupBy(`id`)
             .where(`diverted_to_pos IS NOT null`)
         return await query.getRawMany()
     }
 
+   
     async getDivertWithNewDataReport(req: [po: string, line: string]): Promise<any[]> {
         const [po, line] = req; 
         
-    console.log(po, line,"req")
         const query = this.createQueryBuilder('dpm')
-            .select(`DISTINCT id, plant AS Plant, dpom_item_line_status AS LineStatus,
+            .select(` id AS nId,item, plant AS nPlant, dpom_item_line_status AS nLineStatus,
             plant_name AS nPlantName, document_date AS nDocumentDate,
-            po_number AS npoNumber, po_line_item_number AS poLine, destination_country AS destination,
-            shipping_type AS shipmentType, inventory_segment_code AS inventorySegmentCode,
-            ogac AS ogac, gac AS gac, product_code AS productCode, dpom_item_line_status AS DPOMLineItemStatus,
-            item_vas_text AS itemVasText, quantity AS Quantity, created_at AS dpomCreatedDates, diverted_to_pos`)
+            po_number AS npoNumber, po_line_item_number AS npoLine, destination_country AS ndestination,
+            shipping_type AS nshipmentType, inventory_segment_code AS ninventorySegmentCode,
+            ogac AS nogac, gac AS ngac, product_code AS nproductCode, dpom_item_line_status AS nDPOMLineItemStatus,
+            item_vas_text AS nitemVasText, quantity AS nQuantity, created_at AS ndpomCreatedDates, diverted_to_pos`)
             .where(`diverted_to_pos IS NOT null`)
             .andWhere(`po_number = :po AND po_line_item_number = :line`, { po, line }); 
     

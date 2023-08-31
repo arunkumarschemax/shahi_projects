@@ -4,15 +4,12 @@ import { OldDivertModel } from "./Old-po-divert-report-model";
 
 export class DivertModel {
     
-   oldPo: OldDivertModel[];
+    oldPo: OldDivertModel[];
  
     newpo:NewDivertModel[]
+  
     
-   
-    
-    
-    constructor(
-        oldPo: OldDivertModel[],    newpo:NewDivertModel[]
+     constructor(  oldPo: OldDivertModel[], newpo:NewDivertModel[]
 
         ) {
 
