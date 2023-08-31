@@ -23,6 +23,8 @@ import {
   PaymentTermsService,
   ProfitControlHeadService,
   SampleDevelopmentService,
+  SampleSubTypesService,
+  SampleTypesService,
   SettingsService,
   StyleService,
   WarehouseService,
@@ -40,8 +42,11 @@ export const SampleDevForm = () => {
   const [form] = Form.useForm();
   const [pch, setPch] = useState<any[]>([]);
   const [locations, setLocations] = useState<any[]>([]);
+  const [dmm,setDMM] = useState<any[]>([])
   const [technicians, setTechnicians] = useState<any[]>([]);
   const [buyer, setBuyer] = useState<any[]>([]);
+  const [sampleTypes, setSampleTypes] = useState<any[]>([]);
+  const [subTypes, setSubTypes] = useState<any[]>([])
   const [styles, setStyles] = useState<any[]>([]);
   const [brands, setBrands] = useState<any[]>([]);
   const [currency, setCurrency] = useState<any[]>([]);
@@ -62,6 +67,7 @@ export const SampleDevForm = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [tabsData,setTabsData] = useState<any>()
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -79,6 +85,8 @@ export const SampleDevForm = () => {
   const divisionService = new DivisionService();
   const service = new SettingsService();
   const sampleService = new SampleDevelopmentService()
+  const sampleTypeService = new SampleTypesService()
+  const subTypeService = new SampleSubTypesService()
 
 
   useEffect(() => {
@@ -101,6 +109,9 @@ export const SampleDevForm = () => {
     getFabricResponsible();
     getEmployees();
     getCountries();
+    getSampleTypes();
+    getSampleSubTypes();
+    getDMM()
   }, []);
 
   const getBase64 = (file) =>
@@ -150,6 +161,22 @@ export const SampleDevForm = () => {
     });
   };
 
+  const getSampleTypes = () => {
+    sampleTypeService.getAllActiveSampleTypes().then((res) => {
+      if (res.status) {
+        setSampleTypes(res.data);
+      }
+    });
+  };
+
+  const getSampleSubTypes = () => {
+    subTypeService.getAllActiveSampleSubType().then((res) => {
+      if (res.status) {
+        setSubTypes(res.data);
+      }
+    });
+  };
+
   const getStyles = () => {
     styleService.getAllActiveStyle().then((res) => {
       if (res.status) {
@@ -162,6 +189,15 @@ export const SampleDevForm = () => {
     brandService.getAllBrands().then((res) => {
       if (res.status) {
         setBrands(res.data);
+      }
+    });
+  };
+
+  const getDMM = () => {
+    const req = new DepartmentReq("DMM");
+    employeeService.getAllActiveEmploeesByDepartment(req).then((res) => {
+      if (res.status) {
+        setDMM(res.data);
       }
     });
   };
@@ -222,14 +258,6 @@ export const SampleDevForm = () => {
     });
   };
 
-  // const getDeliveryTerms = () => {
-  //   deliveryTermsService.getAllActiveDeliveryTerms().then((res) => {
-  //     if (res.status) {
-  //       setDeliveryTerms(res.data);
-  //     }
-  //   });
-  // };
-
   const getDeliveryMethods = () => {
     deliveryMethodsService.getAllActiveDeliveryMethods().then((res) => {
       if (res.status) {
@@ -287,8 +315,9 @@ export const SampleDevForm = () => {
 
 
   const onFinish = (val) =>{
+    console.log(tabsData)
     const req = new SampleDevelopmentRequest(val.locationId,val.styleId,val.pchId,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.brandId,
-      val.costRef,val.m3Style,val.contact,val.extension,val.samValue,val.dmm,val.technicianId,val.product,val.type,val.conversion,val.madeIn,val.sizeInfo)
+      val.costRef,val.m3Style,val.contact,val.extension,val.samValue,val.dmmId,val.technicianId,val.product,val.type,val.conversion,val.madeIn,tabsData.sizeData)
       sampleService.createSampleDev(req).then((res)=>{
         if(res.status){
           message.success(res.internalMessage,2)
@@ -297,6 +326,11 @@ export const SampleDevForm = () => {
         }
       })
       console.log(req)
+  }
+
+  const handleSubmit = (data) => {
+    setTabsData(data)
+    console.log(data,'llllllllll')
   }
 
   return (
@@ -394,7 +428,7 @@ export const SampleDevForm = () => {
               label="User"
               rules={[
                 {
-                  pattern: /^[0-9]*$/,
+                  pattern: /^[0-9a-zA-Z]*$/,
                   message: `Only numbers are accepted`,
                 },
               ]}
@@ -423,7 +457,7 @@ export const SampleDevForm = () => {
                 {buyer.map((e) => {
                   return (
                     <Option key={e.buyerId} value={e.buyerId}>
-                      {e.buyer}
+                      {`${e.buyerCode} - ${e.buyerName}`}
                     </Option>
                   );
                 })}
@@ -440,7 +474,7 @@ export const SampleDevForm = () => {
             <Form.Item
               name="sampleTypeId"
               label="Type"
-              rules={[{ required: true, message: "Type is reqired" }]}
+              rules={[{ required: true, message: "Type is required" }]}
             >
               <Select
                 allowClear
@@ -448,10 +482,10 @@ export const SampleDevForm = () => {
                 optionFilterProp="children"
                 placeholder="Select Type"
               >
-                {division.map((e) => {
+                {sampleTypes.map((e) => {
                   return (
                     <Option key={e.sampleTypeId} value={e.sampleTypeId}>
-                      {e.sample}
+                      {e.sampleType}
                     </Option>
                   );
                 })}
@@ -482,7 +516,7 @@ export const SampleDevForm = () => {
                 optionFilterProp="children"
                 placeholder="Select Sub Type"
               >
-                {styles.map((e) => {
+                {subTypes.map((e) => {
                   return (
                     <Option key={e.sampleSubTypeId} value={e.sampleSubTypeId}>
                       {e.sampleSubType}
@@ -680,7 +714,7 @@ export const SampleDevForm = () => {
             xl={{ span: 4 }}
           >
             <Form.Item
-              name="extn"
+              name="extension"
               label="Extn"
               rules={[
                 {
@@ -730,10 +764,10 @@ export const SampleDevForm = () => {
                 optionFilterProp="children"
                 placeholder="Select DMM"
               >
-                {licenceType.map((e) => {
+                {dmm.map((e) => {
                   return (
-                    <Option key={e.dmmId} value={e.dmmId}>
-                      {e.dmm}
+                    <Option key={e.employeeId} value={e.employeeId}>
+                      {`${e.employeeCode} - ${e.lastName}`}
                     </Option>
                   );
                 })}
@@ -778,7 +812,7 @@ export const SampleDevForm = () => {
             <Form.Item
               name="productId"
               label="Product"
-              rules={[{ required: true, message: "" }]}
+              rules={[{ required: false, message: "" }]}
             >
               <Select
                 allowClear
@@ -806,7 +840,7 @@ export const SampleDevForm = () => {
             <Form.Item
               name="typeId"
               label="Type"
-              rules={[{ required: true, message: "" }]}
+              rules={[{ required: false, message: "" }]}
             >
               <Select
                 allowClear
@@ -882,7 +916,7 @@ export const SampleDevForm = () => {
             </Form.Item>
           </Col>
         </Row>
-        <SampleDevTabs/>
+        <SampleDevTabs handleSubmit={handleSubmit}/>
         <Row>
           <Col span={24} style={{ textAlign: "right" }}>
             <div

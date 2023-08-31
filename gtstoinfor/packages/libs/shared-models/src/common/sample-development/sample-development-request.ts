@@ -14,13 +14,13 @@ export class SampleDevelopmentRequest{
     contact : number
     extension : any
     samValue : number 
-    dmm : number
+    dmmId : number
     technician : number 
     product : string
     type : string
     conversion : any 
     madeIn : string
-    sizeInfo : SizeInfo[]
+    sizeData : SizeInfo[]
     fabricInfo : []
     sampleRequestId? : number
     requestNo? : string
@@ -40,13 +40,13 @@ export class SampleDevelopmentRequest{
         contact : number,
         extension : any,
         samValue : number, 
-        dmm : number,
+        dmmId : number,
         technician : number, 
         product : string,
         type : string,
         conversion : any, 
         madeIn : string,
-        sizeInfo : SizeInfo [],
+        sizeData : SizeInfo [],
         sampleRequestId? : number,
         requestNo? : string,
         facilityId? : number,
@@ -66,7 +66,7 @@ export class SampleDevelopmentRequest{
         this.contact = contact
         this.extension = extension
         this.samValue = samValue
-        this.dmm = dmm
+        this.dmmId = dmmId
         this.technician = technician
         this.product = product
         this.type = type
@@ -74,6 +74,6 @@ export class SampleDevelopmentRequest{
         this.madeIn = madeIn
         this.facilityId = facilityId
         this.status = status
-        this.sizeInfo = sizeInfo
+        this.sizeData = sizeData
     }
 }
