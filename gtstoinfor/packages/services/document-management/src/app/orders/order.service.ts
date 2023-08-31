@@ -452,8 +452,8 @@ export class OrdersService {
                 query=query+' and status="'+req.status+'"'    
             }
             if(req.fromDate){
-                // query =query+' and date(created_at)="'+req.fromDate+'"'
-                query =query+' and DATE_FORMAT(created_at, "%Y-%m-%d %H")="'+req.fromDate+'"'
+                query =query+' and date(created_at)="'+req.fromDate+'"'
+                // query =query+' and DATE_FORMAT(created_at, "%Y-%m-%d %H")="'+req.fromDate+'"'
 
             }
             const result = await this.fileUploadRepo.query(query)
