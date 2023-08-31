@@ -42,7 +42,7 @@ export const LoginComponent = () => {
     };
 
     return (
-        <Card style={{justifyContent: 'center',marginRight:'60%', marginTop:'8%',height: '55%',width: '300px'}}>
+        <Card style={{justifyContent: 'center',marginRight:'60%', marginTop:'35%',height: '55%',width: '300px'}}>
         <div style={{marginLeft:'15%'}}>
                 <img src={doclogo} width={150} height={'50%'}></img>
             </div>

@@ -1,6 +1,6 @@
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Form, Typography, message } from 'antd';
+import { Col, Form, Row, Typography, message } from 'antd';
 import axios from "axios";
 import { useState } from "react";
 import './app.css';
@@ -49,9 +49,23 @@ export function App() {
     <CustomSpinner loading={load} />
     <AppRoutes />
   </> :
-    <div style={{ backgroundImage: `url(${edocbkimg})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'start', height: '100vh' }}>
-      <LoginComponent />
-    </div>
+  
+    <>
+    <div style={{width:"100%"}}>
+    <Row gutter={24}>
+      <Col span={18}>
+        <span style={{ backgroundImage: `url(${edocbkimg})`, display: 'flex', backgroundSize: 'cover', justifyContent: 'center', alignItems: 'start', height: '100vh' , width:"100%"}}>
+          </span>
+      </Col>
+      <Col span={6}>
+        <span style={{width:"100%", marginTop:'20px'}}>
+            <LoginComponent />
+          </span>
+        </Col>
+    </Row>
+    
+      
+    </div></>
   );
 };
 
