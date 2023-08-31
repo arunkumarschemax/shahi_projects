@@ -109,6 +109,7 @@ import SampleRequestView from "./sample-development/sample-management-view"
 import SampleDevForm from "./sample-development/sample-management-form"
 import TrimsBomCreation from "./BOM/trims-bom-creation"
 import { FabricDevelopmentApproval } from "./fabric development/fabric-development-approval"
+import UomGrid from "./masters/uom/uom-grid"
 // import FabricDevelopmentApproval from "./fabric development/fabric-development-approval"
 
 
@@ -423,6 +424,7 @@ export const AppRoutes = () => {
                             throw new Error("Function not implemented.")
                         } }/>}/>
                         <Route path='fabric-finish-type/fabric-finish-type-grid' element={<FabricFinishTypesGrid />}/>
+                        <Route path='uom/uom-grid' element={<UomGrid />}/>
                                               
                  </Route>
 

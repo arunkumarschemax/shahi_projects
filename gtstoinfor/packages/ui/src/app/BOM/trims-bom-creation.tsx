@@ -1,7 +1,7 @@
 import { Button, Card, Col, Form, Input, Row, Select } from "antd";
 import { UndoOutlined } from "@ant-design/icons";
 import Commonscreen from "./common-screen";
-import { CurrencyService, LiscenceTypeService } from "@project-management-system/shared-services";
+import { CurrencyService, LiscenceTypeService, UomService } from "@project-management-system/shared-services";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 
@@ -9,14 +9,19 @@ export const TrimsBomCreation = () => {
   const [form] = Form.useForm();
   const currencyServices = new CurrencyService();
   const licenseservice = new LiscenceTypeService();
+  const uomservice = new UomService();
+
 
   const [currencydata,setCurrencyData] = useState([])
   const [licenseTypeData,setLicenseTypeData] = useState([])
+  const [uomData,setUomData] = useState([])
+
 
 
   useEffect (()=>{
     getAllCurrencies();
     getAllActiveLiscenceTypes();
+    getAllUoms();
   },[])
 
 
@@ -49,6 +54,19 @@ const getAllActiveLiscenceTypes=() =>{
    })
   
 }
+
+const getAllUoms = () => {
+  uomservice.getAllUoms().then((res) => {
+    if (res.status) {
+      setUomData(res.data);
+    }else{
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  }).catch(err => {
+    setUomData([]);
+     AlertMessages.getErrorMessage(err.message);
+   })
+};
 
 
   const onReset = () => {
@@ -292,9 +310,12 @@ const getAllActiveLiscenceTypes=() =>{
                     rules={[{ required: true, message: "Enter Basic UOM" }]}
                   >
                     <Select placeholder="Select Basic UOM" allowClear>
-                    <option value="Kg">Kg</option>
-                    <option value="Tons">Tons</option>
-
+                   
+                    {uomData.map((rec) => (
+                    <option key={rec.uomId} value={rec.uomId}>
+                      {rec.uom}
+                      </option>
+                       )) }
 
                     </Select>
                   </Form.Item>
@@ -310,11 +331,11 @@ const getAllActiveLiscenceTypes=() =>{
                   <Form.Item label="Alternate UOM" name="Alternateuom">
                     
                     <Select placeholder="Alternate UOM" allowClear>
-                    <option value="Tons">Tons</option>
-                    <option value="Kg">Kg</option>
-
-
-                    
+                    {uomData.map((rec) => (
+                    <option key={rec.uomId} value={rec.uomId}>
+                      {rec.uom}
+                      </option>
+                       )) }
                     </Select>
                   </Form.Item>
                 </Col>
@@ -464,8 +485,7 @@ const getAllActiveLiscenceTypes=() =>{
                     <option key={rec.liscenceTypeId} value={rec.liscenceTypeId}>
                       {rec.liscenceType}
                       </option>
-                       ))
-                       }
+                       )) }
 
 
                     </Select>

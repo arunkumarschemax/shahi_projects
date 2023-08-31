@@ -22,6 +22,8 @@ export const FabricDevelopmentApproval = () => {
   const [BuyerData,setBuyerData] = useState<any>([])
   const [fabricTypeData,setFabricTypeData] = useState<any>([])
   const [empData,setEmpData] = useState<any>([])
+  const [locationData,setLocationData] = useState<any>([])
+
 
 
 
@@ -30,13 +32,15 @@ export const FabricDevelopmentApproval = () => {
     const buyerService = new BuyersService()
     const fabrictypeservice = new FabricTypeService();
     const empDetailsservice = new EmployeeDetailsService();
-    const service = new LocationsService()
+    const locationservice = new LocationsService();
+
    
     useEffect (()=>{
       getAllActiveProfitControlHead();
       getAllActiveBuyers();
       getAllActiveFabricType();
       getAllActiveEmploee();
+      getAllActiveLocations();
     },[])
   
   
@@ -100,6 +104,22 @@ const getAllActiveEmploee=() =>{
 
 }
 
+const getAllActiveLocations=() =>{
+  locationservice.getAllActiveLocations().then(res =>{
+  if (res.status){
+    setLocationData(res.data);
+     
+  } else{
+    AlertMessages.getErrorMessage(res.internalMessage);
+     }
+}).catch(err => {
+  setLocationData([]);
+   AlertMessages.getErrorMessage(err.message);
+ })
+
+}
+  
+console.log(locationData,"143")
   
     
  console.log(fabricTypeData,"55")
@@ -140,7 +160,16 @@ const getAllActiveEmploee=() =>{
                 name="location"
                 rules={[{ required: true, message: "Location" }]}
               >
-                <Input placeholder="Location" allowClear />
+                <Select placeholder="Location" allowClear>
+                  
+                  {locationData.map((rec) => (
+                    <option key={rec.locationId} value={rec.locationId}>
+                      {rec.locationName}
+                     </option>
+                         ))}
+                         
+  
+                  </Select>
               </Form.Item>
             </Col>
 
@@ -152,7 +181,7 @@ const getAllActiveEmploee=() =>{
               xl={{ span: 4 }}
             >
               <Form.Item label="Request No" name="Requestno">
-                <Input placeholder="Request No" allowClear />
+                <Input placeholder="Request No" allowClear disabled={true} />
               </Form.Item>
             </Col>
             <Col

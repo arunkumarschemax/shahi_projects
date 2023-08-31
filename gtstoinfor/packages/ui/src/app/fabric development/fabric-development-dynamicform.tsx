@@ -2,7 +2,7 @@ import { Button, Card, Col, Divider, Form, FormInstance, Input, Popconfirm, Row,
 import React, { useEffect, useState } from 'react'
 import M3Items from './m3-model'
 import { DeleteOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons'
-import { ColourService } from '@project-management-system/shared-services'
+import { ColourService, UomService } from '@project-management-system/shared-services'
 import AlertMessages from '../common/common-functions/alert-messages'
 
 export interface FabricDevelopmentDynamicFormProps {
@@ -21,12 +21,18 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
   const [showTable, setShowTable] = useState<boolean>(false);
   const [BtnDisable, setBtnDisable] = useState<boolean>(false);
   const [colorData,setColorData] = useState<any>([])
+  const [uomData,setUomData] = useState([])
+
 
   const colorservice =new ColourService();
+  const uomservice = new UomService();
+
    
 
   useEffect (()=>{
     getAllActiveColour();
+    getAllUoms();
+
    
   },[])
 
@@ -45,6 +51,19 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
    })
   
 }
+
+const getAllUoms = () => {
+  uomservice.getAllUoms().then((res) => {
+    if (res.status) {
+      setUomData(res.data);
+    }else{
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  }).catch(err => {
+    setUomData([]);
+     AlertMessages.getErrorMessage(err.message);
+   })
+};
 
 
     const showModal = () => {
@@ -167,7 +186,7 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
                 label="Color"
                 name ="color"
               >
-                <Select placeholder="color" allowClear>
+                <Select placeholder="Color" allowClear>
                 {colorData.map((rec) => (
                   <option key={rec.colourId} value={rec.colourId}>
                     {rec.colour}
@@ -253,8 +272,12 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
                 name="uom"
               >
             <Select  placeholder="UOM" allowClear>
-              <option key="1" value="kg">kg</option>
-              <option key="2" value="ton">ton</option>
+            {uomData.map((rec) => (
+                    <option key={rec.uomId} value={rec.uomId}>
+                      {rec.uom}
+                      </option>
+                       )) }
+              
 
             </Select>
 
