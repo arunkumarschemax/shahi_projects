@@ -1,4 +1,4 @@
-import { SettingsResponseModel, SettingsRequest, CommonResponseModel } from "@project-management-system/shared-models";
+import { SettingsResponseModel, SettingsRequest, CommonResponseModel, SettingsIdReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class SettingsService extends CommonAxiosService{
@@ -7,8 +7,12 @@ export class SettingsService extends CommonAxiosService{
     async createSettings(req: SettingsRequest): Promise<SettingsResponseModel> {
         return this.axiosPostCall(this.URL + '/createSettings',req)
      }
+
+     async updateSettings(req: SettingsRequest): Promise<SettingsResponseModel> {
+      return this.axiosPostCall(this.URL + '/updateSettings',req)
+      }  
      
-     async getAllSettingsInfo(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + '/getAllSettingsInfo')
+     async getAllSettingsInfo(req:SettingsIdReq): Promise<SettingsResponseModel> {
+        return this.axiosPostCall(this.URL + '/getAllSettingsInfo',req)
      }
 }

@@ -107,8 +107,10 @@ import AccountControlObjectForm from "./masters/account-control-objects/account-
 import ItemCreation from "./orders/item-creation"
 import SampleRequestView from "./sample-development/sample-management-view"
 import SampleDevForm from "./sample-development/sample-management-form"
+import SettingsView from "./masters/settings/settings-view"
 import TrimsBomCreation from "./BOM/trims-bom-creation"
 import { FabricDevelopmentApproval } from "./fabric development/fabric-development-approval"
+import UomGrid from "./masters/uom/uom-grid"
 // import FabricDevelopmentApproval from "./fabric development/fabric-development-approval"
 
 
@@ -423,6 +425,7 @@ export const AppRoutes = () => {
                             throw new Error("Function not implemented.")
                         } }/>}/>
                         <Route path='fabric-finish-type/fabric-finish-type-grid' element={<FabricFinishTypesGrid />}/>
+                        <Route path='uom/uom-grid' element={<UomGrid />}/>
                                               
                  </Route>
 
@@ -435,13 +438,16 @@ export const AppRoutes = () => {
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
                         
-                </Route>
+                        </Route>
                 <Route path='fabricdevelopment'>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
                 <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentApproval/>}/>
 
                 </Route>
+                <Route path='settings'>
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
+                <Route path='settings/settings-view' element={<SettingsView/>}/>
+                </Route>
                 <Route path='/sample-development' element={<SampleDevForm />} />
 
 

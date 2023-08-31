@@ -54,6 +54,7 @@ import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-typ
 import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
 import { SettingsModule } from './settings/settings.module';
 import { BomModule } from './bom-trim/bom.module';
+import { UomModule } from './uom/uom.module';
 
 
 @Module({
@@ -107,7 +108,7 @@ import { BomModule } from './bom-trim/bom.module';
   SizeModule,
   BuyersModule,
   BuyersDestinationModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule,SettingsModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule,SettingsModule,AccountControlObjectModule,ColourModule,UomModule],
   controllers: [AppController],
   providers: [AppService],
 })
