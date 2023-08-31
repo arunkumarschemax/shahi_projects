@@ -44,5 +44,10 @@ import { AllLocationResponseModel, LocationDropDownResponseModel, LocationDto, L
       return this.axiosPostCall(this.URL + "/getLocationById", Request)
         
     }
+
+    async getAllActiveLocations(): Promise<AllLocationResponseModel> {
+      return this.axiosPostCall(this.URL + "/getAllActiveLocations")
+    }
+  
   }
   

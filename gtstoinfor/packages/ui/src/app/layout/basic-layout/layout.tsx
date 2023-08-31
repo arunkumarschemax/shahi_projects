@@ -161,6 +161,12 @@ export const baseRouterList = [
                 path: "buyers-destination/buyers-destination-grid",
                 filepath: "buyers-destination/buyers-destination-grid",
             },
+            {
+                label: "UOM",
+                key: "uom",
+                path: "uom/uom-grid",
+                filepath: "uom/uom-grid",
+            },
         ]
     },
     {
