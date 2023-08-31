@@ -14,6 +14,7 @@ import { PaymentTerms } from "../payment-terms/payment-terms.entity";
 import { DeliveryMethod } from "../delivery-method/delivery-method.entity";
 import { DeliveryTerms } from "../delivery-terms/delivery-terms.entity";
 import { Address } from "../buyers/address.entity";
+import { ProfitControlHead } from "../profit-control-head/profit-control-head-entity";
 
 @Injectable()
 export class SettingsService{
@@ -32,6 +33,9 @@ export class SettingsService{
             settingsEntity.buyerGroup = req.buyerGroup;
             settingsEntity.agent = req.agent;
             settingsEntity.discount = req.discount;
+            const pch = new ProfitControlHead();
+            pch.profitControlHeadId = req.pchId;
+            settingsEntity.pchInfo = pch;
             const company = new Company();
             company.companyId = req.companyId;
             settingsEntity.companyInfo = company;
@@ -77,7 +81,7 @@ export class SettingsService{
             const settingsSave = await this.settingsRepo.save(settingsEntity)
             if(settingsSave){
                 const info = new SettingsModel(settingsSave.settingsId,settingsSave.accountControlId,null,settingsSave.companyInfo.companyId,settingsSave.factoryInfo.id,settingsSave.divisionInfo.divisionId,settingsSave.wareHouseInfo.warehouseId,null,settingsSave.currencyInfo.currencyId,settingsSave.licenseTypeInfo.liscenceTypeId,settingsSave.discount,settingsSave.salesPersonId,settingsSave.fabricResponsibleId,settingsSave.itemResponsibleId,settingsSave.trimResponsibleId,settingsSave.addressInfo.addressId,settingsSave.buyerGroup,settingsSave.agent,settingsSave.packageTermsInfo.packageTermsId,settingsSave.paymentMethodInfo.paymentMethodId,settingsSave.paymentTermsInfo.paymentTermsId,settingsSave.deliveryMethodInfo.deliveryMethodId,settingsSave.deliveryTermsInfo.deliveryTermsId,settingsSave.isActive,settingsSave.versionFlag)
-                return new SettingsResponseModel(true,0,'Created successfully',[info])
+                return new SettingsResponseModel(true,0,isUpdate ? 'Updated successfully' : 'Created successfully',[info])
             } else {
                 return new SettingsResponseModel(false,1,'Something went wring in settings creation')
             }
@@ -93,7 +97,7 @@ export class SettingsService{
             const info = await this.settingsRepo.getAllSettingsInfo(req.settingsId)
             if(info){
                 for(const rec of info){
-                    data.push(new SettingsModel(rec.settings_id,rec.account_control_id,null,rec.company_id,rec.factory_id,rec.division_id,rec.warehouse_id,null,rec.currency_id,rec.license_type_id,rec.discount,rec.sales_person_id,rec.fabric_responsible_id,rec.item_responsible_id,rec.trim_responsible_id,rec.buyer_address_id,rec.buyer_group,rec.agentId,rec.package_terms_id,rec.payment_method_id,rec.payment_terms_id,rec.delivery_method_id,rec.delivery_terms_id,null,null,rec.accountControlName,null,rec.companyName,rec.name,rec.division_name,rec.warehouse_name,rec.currency_name,rec.liscence_type,rec.salesPerson,rec.fabricResponsible,rec.itemResponsible,rec.trimRespondsible,rec.address,rec.buyerName,rec.agentName,rec.package_terms_name,rec.payment_method,rec.payment_terms_name,rec.delivery_method,rec.delivery_terms_name))
+                    data.push(new SettingsModel(rec.settings_id,rec.account_control_id,rec.pch_id,rec.company_id,rec.factory_id,rec.division_id,rec.warehouse_id,null,rec.currency_id,rec.license_type_id,rec.discount,rec.sales_person_id,rec.fabric_responsible_id,rec.item_responsible_id,rec.trim_responsible_id,rec.buyer_address_id,rec.buyer_group,rec.agentId,rec.package_terms_id,rec.payment_method_id,rec.payment_terms_id,rec.delivery_method_id,rec.delivery_terms_id,null,null,rec.accountControlName,rec.profit_control_head,rec.companyName,rec.name,rec.division_name,rec.warehouse_name,rec.currency_name,rec.liscence_type,rec.salesPerson,rec.fabricResponsible,rec.itemResponsible,rec.trimRespondsible,rec.address,rec.buyerName,rec.agentName,rec.package_terms_name,rec.payment_method,rec.payment_terms_name,rec.delivery_method,rec.delivery_terms_name))
                 }
                 return new SettingsResponseModel(true,1,'Data retrieved',data)
             } else{

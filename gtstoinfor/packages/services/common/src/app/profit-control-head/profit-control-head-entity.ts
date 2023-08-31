@@ -52,6 +52,6 @@ versionFlag: number;
 @OneToMany(()=>AccountControlObject, account=>account.pch,{cascade:true})
 accountControl:AccountControlObject;
 
-// @OneToMany(type => Settings, settings => settings.pchInfo,{cascade: true})
-// settingsInfo : Settings
+@OneToMany(type => Settings, settings => settings.pchInfo,{cascade: true})
+settingsInfo : Settings
 }

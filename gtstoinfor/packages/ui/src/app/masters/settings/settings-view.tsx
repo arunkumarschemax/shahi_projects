@@ -35,7 +35,7 @@ export const SettingsView = () => {
         <Card title='Settings' size='small'   extra={<Button onClick={onUpdate} type={'primary'}>Change</Button>}>
              <Descriptions title='COMPANY DETAILS' size='small'>
                 <DescriptionsItem label='Account Control Head'>{data[0]?.accountControlName}</DescriptionsItem>
-                <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>
+                <DescriptionsItem label='PCH'>{data[0]?.profitControlHead}</DescriptionsItem>
                 <DescriptionsItem label='Company'>{data[0]?.companyName}</DescriptionsItem>
                 <DescriptionsItem label='Facility'>{data[0]?.name}</DescriptionsItem>
                 <DescriptionsItem label='Division'>{data[0]?.divisionName}</DescriptionsItem>
