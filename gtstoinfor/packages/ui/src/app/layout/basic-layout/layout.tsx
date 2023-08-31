@@ -360,16 +360,22 @@ export const baseRouterList = [
         label: "Settings",
         key: "settings",
         icon:<FontAwesomeIcon icon={faCog} />,
-        path: "settings/settings-form",
-        filepath: "settings/settings-form",
-        // children:[
-        //     {
-        //         label:'Settings',
-        //         key:'settings',
-        //         path:'settings/settings-form',
-        //         filepath:'settings/settings-form'
-        //     }
-        // ]
+        path: "settings",
+        filepath: "settings",
+        children:[
+            {
+                label:'Settings',
+                key:'settings',
+                path:'settings/settings-form',
+                filepath:'settings/settings-form'
+            },
+            {
+                label:'Settings View',
+                key:'settingsView',
+                path:'settings/settings-view',
+                filepath:'settings/settings-view'
+            },
+        ]
     },
     {
         label: "Style Management",
