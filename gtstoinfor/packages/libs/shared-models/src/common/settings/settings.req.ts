@@ -1,3 +1,5 @@
+import { create } from "domain";
+
 export class SettingsRequest{
     accountControlId: number;
     pchId:number;
@@ -21,9 +23,12 @@ export class SettingsRequest{
     paymentTerms:number;
     deliveryMethod:number;
     deliveryTerms:number;
+    createdUser: string;
+    updatedUser: string;
     settingsId?: number;
 
-    constructor(accountControlId: number,pchId:number,companyId:number,facilityId:number,divisionId:number,warehouseId:number,coTypeId:number,currencyId:number,licencetypeId:number,discount:number,salesPersonId:number,fabricResponsibleId:number,itemResponsibleId:number,trimResponsibleId:number,buyerAddress:number,buyerGroup:string,agent : number,packageTerms: number,paymentMethod:number,paymentTerms:number,deliveryMethod:number,deliveryTerms:number,settingsId?: number){
+
+    constructor(accountControlId: number,pchId:number,companyId:number,facilityId:number,divisionId:number,warehouseId:number,coTypeId:number,currencyId:number,licencetypeId:number,discount:number,salesPersonId:number,fabricResponsibleId:number,itemResponsibleId:number,trimResponsibleId:number,buyerAddress:number,buyerGroup:string,agent : number,packageTerms: number,paymentMethod:number,paymentTerms:number,deliveryMethod:number,deliveryTerms:number,createdUser: string,updatedUser: string,settingsId?: number){
         this.accountControlId = accountControlId;
         this.pchId = pchId;
         this.companyId = companyId;
@@ -46,6 +51,8 @@ export class SettingsRequest{
         this.paymentTerms = paymentTerms;
         this.deliveryMethod = deliveryMethod;
         this.deliveryTerms = deliveryTerms;
+        this.createdUser = createdUser;
+        this.updatedUser = updatedUser;
         this.settingsId = settingsId;
     }
 

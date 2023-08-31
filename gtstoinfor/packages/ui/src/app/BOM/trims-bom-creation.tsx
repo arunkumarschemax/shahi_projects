@@ -1,97 +1,43 @@
-// import { Card, Col, Form, Input, Row, Select } from 'antd'
-// import FormItem from 'antd/es/form/FormItem'
-// import React from 'react'
-
-//  export const  TrimsBomCreation = ()=> {
-
-//     const [form] = Form.useForm()
-
-//   return (
-//  <Card title= "Trim Details" >
-//     <Form form= {form} >
-//         <Row gutter={24}>
-
-//         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5}}>
-//         <FormItem label ="Trim Code" name= "TrimCode">
-//             <Input placeholder='Trim code' />
-//         </FormItem>
-//         </Col>
-
-//         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }}>
-//         <FormItem label ="Trim" name= "Trim">
-//             <Select
-//              placeholder="Trim">
-
-//             </Select>
-//         </FormItem>
-//         </Col>
-
-//         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }}>
-//         <FormItem label ="Type" name= "Type" >
-//             <Select
-//              placeholder="Type">
-
-//             </Select>
-//         </FormItem>
-//         </Col>
-
-//         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }}>
-//         <FormItem label ="Group" name= "group">
-//             <Select
-//              placeholder="Group">
-
-//             </Select>
-//         </FormItem>
-//         </Col>
-
-//         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }}>
-//         <FormItem label ="Use In Operation" name= "useinoperation">
-//             <Select
-//              placeholder="Use in Operation">
-
-//             </Select>
-//         </FormItem>
-//         </Col>
-
-//         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }}>
-//         <FormItem label ="Description" name= "description">
-//         <Input.TextArea rows={1} placeholder="Enter Description" />
-//         </FormItem>
-//         </Col>
-//         <br></br>
-//         <Card title="Performance Responsible Team">
-//             <Row gutter={24}>
-
-//             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5}}>
-//                <FormItem label ="Responsible" name= "responsible">
-//                  <Input placeholder='Responsible' />
-//                </FormItem>
-//             </Col>
-
-//             </Row>
-//         </Card>
-
-//         </Row>
-//     </Form>
-//  </Card>
-//   )
-// }
-
-// export default  TrimsBomCreation
-
 import { Button, Card, Col, Form, Input, Row, Select } from "antd";
 import { UndoOutlined } from "@ant-design/icons";
 import Commonscreen from "./common-screen";
+import { CurrencyService } from "@project-management-system/shared-services";
+import { useEffect, useState } from "react";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 export const TrimsBomCreation = () => {
   const [form] = Form.useForm();
+  const currencyServices = new CurrencyService();
+  const [currencydata,setCurrencyData] = useState([])
+
+  useEffect (()=>{
+    getAllCurrencies();
+  },[])
+
+
+  const getAllCurrencies=() =>{
+  currencyServices.getAllActiveCurrencys().then(res =>{
+    if (res.status){
+      setCurrencyData(res.data);
+       
+    } else{
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  }).catch(err => {
+    setCurrencyData([]);
+     AlertMessages.getErrorMessage(err.message);
+   })
+  
+}
+
+   console.log(currencydata,"hhhhhhhhh")
 
   const onReset = () => {
     form.resetFields();
   };
 
   const onFinish = (values: any) => {
-    console.log(values)
+    console.log(values,"values")
   };
 
   return (
@@ -136,7 +82,7 @@ export const TrimsBomCreation = () => {
                       name="TrimCode"
                       rules={[{ required: true, message: "Enter Trim Code" }]}
                     >
-                      <Input placeholder="Trim code" />
+                      <Input placeholder="Trim code" allowClear/>
                     </Form.Item>
                   </Col>
                   <Col
@@ -151,7 +97,12 @@ export const TrimsBomCreation = () => {
                       name="Trim"
                       rules={[{ required: true, message: "Enter Trim" }]}
                     >
-                      <Select placeholder="Select Trim"></Select>
+                      <Select placeholder="Select Trim" allowClear>
+                        <option value="Rivets">Rivets</option>
+                        <option value="Overriders">Overriders</option>
+                        <option value="Swing Tags">Swing Tags</option>
+
+                      </Select>
                     </Form.Item>
                   </Col>
 
@@ -163,7 +114,7 @@ export const TrimsBomCreation = () => {
                     xl={{ span: 4 }}
                   >
                     <Form.Item label="Generic Code" name="Generic Code">
-                      <Input placeholder="Generic Code" />
+                      <Input placeholder="Generic Code" allowClear/>
                     </Form.Item>
                   </Col>
                   <Col
@@ -178,7 +129,10 @@ export const TrimsBomCreation = () => {
                       name="Type"
                       rules={[{ required: true, message: "Enter Type" }]}
                     >
-                      <Select placeholder=" Select Type"></Select>
+                      <Select placeholder=" Select Type" allowClear>
+                      <option value="Type1">Type1</option>
+                       
+                      </Select>
                     </Form.Item>
                   </Col>
                   {/* </Row>
@@ -195,7 +149,10 @@ export const TrimsBomCreation = () => {
                       name="group"
                       rules={[{ required: true, message: "Enter Group" }]}
                     >
-                      <Select placeholder="Select Group"></Select>
+                      <Select placeholder="Select Group" allowClear>
+                      <option value="group1">Group1</option>
+
+                      </Select>
                     </Form.Item>
                   </Col>
                   <Col
@@ -212,7 +169,10 @@ export const TrimsBomCreation = () => {
                         { required: true, message: "Enter Use In Operation" },
                       ]}
                     >
-                      <Select placeholder="Select Use in Operation"></Select>
+                      <Select placeholder="Select Use in Operation" allowClear>
+                      <option value="Operation1">Operation1</option>
+
+                      </Select>
                     </Form.Item>
                   </Col>
                   <Col
@@ -226,6 +186,7 @@ export const TrimsBomCreation = () => {
                       <Input.TextArea
                         rows={1}
                         placeholder="Enter Description"
+                        allowClear
                       />
                     </Form.Item>
                   </Col>
@@ -278,7 +239,12 @@ export const TrimsBomCreation = () => {
                       <Select
                         placeholder="Select Development Responsible"
                         allowClear
-                      ></Select>
+                      >
+                      <option value="Team">Team1</option>
+                      <option value="Team1">Team2</option>
+
+                         
+                      </Select>
                     </Form.Item>
                   </Col>
                 </Row>
@@ -306,20 +272,10 @@ export const TrimsBomCreation = () => {
                     name="Basicuom"
                     rules={[{ required: true, message: "Enter Basic UOM" }]}
                   >
-                    <Select placeholder="Select Basic UOM"></Select>
-                  </Form.Item>
-                </Col>
+                    <Select placeholder="Select Basic UOM" allowClear>
+                    <option value="Kg">Kg</option>
+                    <option value="Tons">Tons</option>
 
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 4 }}
-                >
-                  <Form.Item label="Alternate UOM" name="Alternateuom">
-                    
-                    <Select placeholder="Alternate UOM">
 
                     </Select>
                   </Form.Item>
@@ -332,8 +288,27 @@ export const TrimsBomCreation = () => {
                   lg={{ span: 4 }}
                   xl={{ span: 4 }}
                 >
+                  <Form.Item label="Alternate UOM" name="Alternateuom">
+                    
+                    <Select placeholder="Alternate UOM" allowClear>
+                    <option value="Tons">Tons</option>
+                    <option value="Kg">Kg</option>
+
+
+                    
+                    </Select>
+                  </Form.Item>
+                </Col>
+
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 4 }}
+                >
                   <Form.Item label="Factor" name="factor">
-                    <Input placeholder="Factor" />
+                    <Input placeholder="Factor" allowClear/>
                   </Form.Item>
                 </Col>
 
@@ -346,7 +321,7 @@ export const TrimsBomCreation = () => {
                   xl={{ span: 4 }}
                 >
                   <Form.Item label="Order Multiple (BUOM)" name="ordermultiple">
-                    <Input placeholder="Order Multple" />
+                    <Input placeholder="Order Multple" allowClear />
                   </Form.Item>
                 </Col>
                 <Col
@@ -357,7 +332,7 @@ export const TrimsBomCreation = () => {
                   xl={{ span: 4 }}
                 >
                   <Form.Item label="MOQ" name="moq">
-                    <Input placeholder="MOQ" />
+                    <Input placeholder="MOQ" allowClear />
                   </Form.Item>
                 </Col>
                 <Col
@@ -368,7 +343,7 @@ export const TrimsBomCreation = () => {
                   xl={{ span: 4 }}
                 >
                   <Form.Item label="Order Multiple (AUOM)" name="OrderMultiple">
-                    <Input placeholder="Order Multiple" />
+                    <Input placeholder="Order Multiple" allowClear/>
                   </Form.Item>
                 </Col>
               </Row>
@@ -384,8 +359,19 @@ export const TrimsBomCreation = () => {
                     label="Currency"
                     name="currency"
                     rules={[{ required: true, message: "Select the Currency" }]}
+              
                   >
-                    <Select placeholder="Select Currency"></Select>
+                    <Select placeholder="Select Currency" allowClear>
+
+                    
+                    {currencydata.map((rec) => (
+                    <option key={rec.currencyId} value={rec.currencyId}>
+                      {rec.currencyName}
+                      </option>
+                       ))
+                       }
+                       
+                     </Select>
                   </Form.Item>
                 </Col>
                 <Col
@@ -400,7 +386,7 @@ export const TrimsBomCreation = () => {
                     name="price"
                     rules={[{ required: true, message: "Enter Price" }]}
                   >
-                    <Input placeholder="Price" />
+                    <Input placeholder="Price" allowClear/>
                   </Form.Item>
                 </Col>
                 <Col
@@ -414,7 +400,7 @@ export const TrimsBomCreation = () => {
                     label="Purchase Price Quantity"
                     name="purchaseorderquantity"
                   >
-                    <Input placeholder="Purchase Price Quantity" />
+                    <Input placeholder="Purchase Price Quantity" allowClear  />
                   </Form.Item>
                 </Col>
                 {/* </Row>
@@ -427,7 +413,12 @@ export const TrimsBomCreation = () => {
                   xl={{ span: 4 }}
                 >
                   <Form.Item label="Sales Tax" name="salesTax">
-                    <Select placeholder="Select Sales Tax"></Select>
+                    <Select placeholder="Select Sales Tax" allowClear>
+                    <option value="SaleTax1">Sale Tax</option>
+                    <option value="SaleTax2">Sale Taxs</option>
+
+
+                    </Select>
                   </Form.Item>
                 </Col>
                 <Col
@@ -438,7 +429,7 @@ export const TrimsBomCreation = () => {
                   xl={{ span: 4 }}
                 >
                   <Form.Item label="Excise Duty" name="Exciseduty">
-                    <Input placeholder="Excise Duty" />
+                    <Input placeholder="Excise Duty" allowClear />
                   </Form.Item>
                 </Col>
                 <Col
@@ -449,7 +440,12 @@ export const TrimsBomCreation = () => {
                   xl={{ span: 4 }}
                 >
                   <Form.Item label="Licence" name="licence">
-                    <Select placeholder="Select Licence"></Select>
+                    <Select placeholder="Select Licence" allowClear>
+                    <option value="National">National</option>
+                    <option value="International">International</option>
+
+
+                    </Select>
                   </Form.Item>
                 </Col>
               </Row>
@@ -491,7 +487,7 @@ export const TrimsBomCreation = () => {
                     xl={{ span: 8 }}
                   >
                     <Form.Item name="Issaleitem" label=" Is sale Item">
-                      <Select placeholder ="SaleItem">
+                      <Select placeholder ="SaleItem" allowClear>
                         <option key={1}>Not Sale Item</option>
                         <option key={2}>Sale Item</option>
 
@@ -524,7 +520,7 @@ export const TrimsBomCreation = () => {
                     xl={{ span: 8 }}
                   >
                     <Form.Item label="Consumption" name="consumption">
-                      <Input placeholder="Consumption" />
+                      <Input placeholder="Consumption" allowClear />
                     </Form.Item>
                   </Col>
                   <Col
@@ -535,7 +531,7 @@ export const TrimsBomCreation = () => {
                     xl={{ span: 8 }}
                   >
                     <Form.Item label="Wastage %" name="wastage">
-                      <Input placeholder="Wastage %" />
+                      <Input placeholder="Wastage %" allowClear />
                     </Form.Item>
                   </Col>
                   <Col
@@ -546,7 +542,7 @@ export const TrimsBomCreation = () => {
                     xl={{ span: 8 }}
                   >
                     <Form.Item label="Cost Group" name="costgroup">
-                      <Input placeholder="Cost Group" />
+                      <Input placeholder="Cost Group" allowClear />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -562,7 +558,7 @@ export const TrimsBomCreation = () => {
                       label="Placement/Usage Remarks"
                       name="placementremarks"
                     >
-                      <Input placeholder="Remarks" />
+                      <Input placeholder="Remarks" allowClear/>
                     </Form.Item>
                   </Col>
                 </Row>

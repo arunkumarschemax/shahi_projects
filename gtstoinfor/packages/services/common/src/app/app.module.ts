@@ -48,7 +48,11 @@ import { DepartmentsModule } from './departments/departments.module';
 import { AccountControlObjectModule } from './account-control-objects/account-control-object-module';
 import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
 import { SettingsModule } from './settings/settings.module';
+import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
 import { FabricsModule } from './fabrics/fabrics-module';
+import { BomModule } from './bom-trim/bom.module';
+import { FabricStructuresModule } from './fabric structure/fabric.module';
+import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-types.module';
 
 
 @Module({
@@ -56,11 +60,11 @@ import { FabricsModule } from './fabrics/fabrics-module';
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
-      host: 'localhost',
-      port: 3308,
-      username: 'root',
-      password: '',
-      database: 'crm',
+      host: appConfig.database.host,
+      port: appConfig.database.port,
+      username: appConfig.database.username,
+      password: appConfig.database.password,
+      database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -96,8 +100,13 @@ import { FabricsModule } from './fabrics/fabrics-module';
     ColourModule,
     AccountControlObjectModule,
     DepartmentsModule,
+    FabricStructuresModule,
+    FabricFinishTypesModule,
   SizeModule,
   FabricsModule,
+  BuyersModule,
+  BuyersDestinationModule,
+  BomModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule],
   controllers: [AppController],
   providers: [AppService],

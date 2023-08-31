@@ -43,6 +43,8 @@ export * from './components-service'
 export * from  './attribute-service'
 export * from './taxes-service'
 export * from './warehouse-service'
+export * from './sample-types-service';
+export * from './sample-sub-types-service';
 export * from './destination-service'
 export * from './fabric-type-service'
 export * from './fabric-sub-type-service'
@@ -52,7 +54,10 @@ export * from './size-service'
 export * from './custom-group.service'
 export * from './rosl-groups.service'
 export * from './buying-house.service'
-export * from './commission.service'
+export * from './commission.service';
+export * from './fabric-structure.service';
+export * from './fabric-finish-types.service';
+export * from './buyers-destination-service'
 export * from './departments-service'
 export * from './account-control-objects-service'
 export * from './sample-development.service'

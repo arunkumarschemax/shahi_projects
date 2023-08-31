@@ -55,13 +55,13 @@ export class PaymentTermsService {
             if (savedPaymentTermsDto) {
                 const presentValue = savedPaymentTermsDto.paymentTermsCategory+","+savedPaymentTermsDto.paymentTermsName;
             // generating resposnse
-            const response = new PaymentTermsResponseModel(true,isUpdate ? 11101 : 11100,isUpdate? 'PaymentTerms Updated Successfully': 'PaymentTerms Created Successfully',savedPaymentTermsDto);
+            const response = new PaymentTermsResponseModel(true,isUpdate ? 11101 : 11100,isUpdate? 'PaymentTerm Updated Successfully': 'PaymentTerm Created Successfully',savedPaymentTermsDto);
             const name=isUpdate?'updated':'created'
-            const displayValue = isUpdate? 'PaymentTerms Updated Successfully': 'PaymentTerms Created Successfully'
+            const displayValue = isUpdate? 'PaymentTerm Updated Successfully': 'PaymentTerm Created Successfully'
             const userName = isUpdate? savedPaymentTermsDto.updatedUser :savedPaymentTermsDto.createdUser;
             return response;
             } else {
-            throw new PaymentTermsResponseModel(false,11106,'PaymentTerms saved but issue while transforming into DTO');
+            throw new PaymentTermsResponseModel(false,11106,'PaymentTerm saved but issue while transforming into DTO');
             }
         } catch (error) {
             // when error occures while saving the data , the execution will come to catch block.
@@ -162,17 +162,17 @@ export class PaymentTermsService {
                       console.log(paymentTermsStatus,"pay////////")
                       if (paymentTermsExists.isActive) {
                           if (paymentTermsStatus.affected) {
-                              const paymentTermsResponse: PaymentTermsResponseModel = new PaymentTermsResponseModel(true, 10115, 'PaymentTerms is de-activated successfully');
+                              const paymentTermsResponse: PaymentTermsResponseModel = new PaymentTermsResponseModel(true, 10115, 'PaymentTerm is deactivated successfully');
                               return paymentTermsResponse;
                           } else {
-                              throw new PaymentTermsResponseModel(false,10111, 'PaymentTerms is already deactivated');
+                              throw new PaymentTermsResponseModel(false,10111, 'PaymentTerm is already deactivated');
                           }
                       } else {
                           if (paymentTermsStatus.affected) {
-                              const paymentTermsResponse: PaymentTermsResponseModel = new PaymentTermsResponseModel(true, 10114, 'PaymentTerms is activated successfully');
+                              const paymentTermsResponse: PaymentTermsResponseModel = new PaymentTermsResponseModel(true, 10114, 'PaymentTerm is activated successfully');
                               return paymentTermsResponse;
                           } else {
-                              throw new PaymentTermsResponseModel(false,10112, 'PaymentTerms is already activated');
+                              throw new PaymentTermsResponseModel(false,10112, 'PaymentTerm is already activated');
                           }
                       }
                   // }
