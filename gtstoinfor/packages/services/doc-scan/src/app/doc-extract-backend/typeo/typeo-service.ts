@@ -59,7 +59,7 @@ export class ScanService {
     const adapterData = this.adapter.convertDtoToEntity(req);
     await this.repository.save(adapterData)
     const internalMessage: string = req.Gst
-      ? "Updated Successfully"
+      ? "Created Successfully"
       : "Created Successfully";
     return new ScanResponseModel(true, 48896, internalMessage);
     
@@ -74,5 +74,4 @@ export class ScanService {
     }
     return new CommonResponseModel(true, 111111, "Data Retrieved Successfully", records)
   }
-
 }
