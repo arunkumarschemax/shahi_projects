@@ -5,11 +5,11 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { CommonResponseModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, MarketingModel, PoData, PoDataResDto, ReportType, dpomOrderColumnsName } from '@project-management-system/shared-models';
+import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, MarketingModel, NewDivertModel, OldDivertModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, dpomOrderColumnsName } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+import { Between, DataSource } from 'typeorm';
 import { DpomChildEntity } from './entites/dpom-child.entity';
 import { DpomDifferenceEntity } from './entites/dpom-difference.entity';
 import { DpomChildAdapter } from './dto/dpom-child.adapter';
@@ -22,7 +22,7 @@ import { DiaPDFDto } from './dto/diaPDF.dto';
 const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 import { PoAndQtyReq } from './dto/po-qty.req';
 import { PoQty } from './dto/poqty.req';
-import { WeeklyPoAndQtyReq } from './dto/weeklypoqty.req';
+import { Console } from 'console';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -198,7 +198,7 @@ export class DpomService {
                 planNo: '',
                 truckOutDate: '',
                 actualShippedQty: '',
-                coPrice: '',
+                coPrice: null,
                 shipToAddress: '',
                 paymentTerm: '',
                 styleDesc: '',
@@ -233,13 +233,26 @@ export class DpomService {
                 } else {
                     hanger = 'NO';
                 }
+
+                // Diverted PO's
+                const itemText = orderDetail.poLine.itemTextDetail.textDetails;
+                const pattern = /diverted to.*?Purchase Order (\d+ \/ \d+)/g;
+                const matches = [];
+
+                let match;
+                if (itemText !== null) {
+                    while ((match = pattern.exec(itemText)) !== null) {
+                        matches.push(match[1]);
+                    }
+                }
+
                 const dtoData = new DpomSaveDto(orderDetail.poHeader.documentDate, orderDetail.poHeader.poNumber, orderDetail.poLine.itemNumber, orderDetail.sizes.scheduleLineItemNumber, orderDetail.product.categoryCode, orderDetail.product.categoryDescription, orderDetail.poHeader.vendorCode, orderDetail.product.globalCategoryCoreFocusCode, orderDetail.product.globalCategoryCoreFocusDescription, orderDetail.product.genderAgeCode, orderDetail.product.genderAgeDescription, orderDetail.product.styleNumber,
                     orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null,
                     orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonDescription,
                     orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, null, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity,
                     orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVas.valueAddedServiceInstructions, orderDetail.poLine.itemTextDetail.textDetails, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
                     orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, orderDetail.sizes.sizePo.sizeQuantity, orderDetail.sizes.sizePo.sizeDescription, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVasPDF, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
-                    crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, hanger, orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, 'username')
+                    crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, hanger, orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, matches, 'username')
                 const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
                 const versionDetails = await this.dpomChildRepo.getVersion(dtoData.purchaseOrderNumber, dtoData.poLineItemNumber, dtoData.scheduleLineItemNumber)
                 let version = 1;
@@ -249,7 +262,7 @@ export class DpomService {
                 dtoData.odVersion = version
                 if (details) {
                     const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber }, {
-                        documentDate: dtoData.documentDate, categoryCode: dtoData.categoryCode, categoryDesc: dtoData.categoryDesc, vendorCode: dtoData.vendorCode, gccFocusCode: dtoData.gccFocusCode, gccFocusDesc: dtoData.gccFocusDesc, genderAgeCode: dtoData.genderAgeCode, genderAgeDesc: dtoData.genderAgeDesc, styleNumber: dtoData.styleNumber, productCode: dtoData.productCode, colorDesc: dtoData.colorDesc, destinationCountryCode: dtoData.destinationCountryCode, destinationCountry: dtoData.destinationCountry, plant: dtoData.plant, plantName: dtoData.plantName, tradingCoPoNumber: dtoData.tradingCoPoNumber, UPC: dtoData.UPC, directShipSONumber: dtoData.directShipSONumber, directShipSOItemNumber: dtoData.directShipSOItemNumber, customerPO: dtoData.customerPO, shipToCustomerNumber: dtoData.shipToCustomerNumber, shipToCustomerName: dtoData.shipToCustomerName, planningSeasonCode: dtoData.planningSeasonCode, planningSeasonYear: dtoData.planningSeasonYear, docTypeCode: dtoData.docTypeCode, docTypeDesc: dtoData.docTypeDesc, MRGAC: dtoData.MRGAC, OGAC: dtoData.OGAC, GAC: dtoData.GAC, originReceiptDate: dtoData.originReceiptDate, factoryDeliveryActDate: dtoData.factoryDeliveryActDate, GACReasonCode: dtoData.GACReasonCode, GACReasonDesc: dtoData.GACReasonDesc, shippingType: dtoData.shippingType, planningPriorityCode: dtoData.planningPriorityCode, planningPriorityDesc: dtoData.planningPriorityDesc, launchCode: dtoData.launchCode, DPOMLineItemStatus: dtoData.DPOMLineItemStatus, modeOfTransportationCode: dtoData.modeOfTransportationCode, inCoTerms: dtoData.inCoTerms, inventorySegmentCode: dtoData.inventorySegmentCode, purchaseGroupCode: dtoData.purchaseGroupCode, purchaseGroupName: dtoData.purchaseGroupName, totalItemQty: dtoData.totalItemQty, originReceiptQty: dtoData.originReceiptQty, VASSize: dtoData.VASSize, itemVasText: dtoData.itemVasText, itemText: dtoData.itemText, grossPriceFOB: dtoData.grossPriceFOB, FOBCurrencyCode: dtoData.FOBCurrencyCode, netIncludingDisc: dtoData.netIncludingDisc, netIncludingDiscCurrencyCode: dtoData.netIncludingDiscCurrencyCode, trCoNetIncludingDisc: dtoData.trCoNetIncludingDisc, trCoNetIncludingDiscCurrencyCode: dtoData.trCoNetIncludingDiscCurrencyCode, sizeQuantity: dtoData.sizeQuantity, sizeDescription: dtoData.sizeDescription, shipToAddressLegalPO: pdfData.shipToAddressLegalPO, quantity: pdfData.quantity, price: pdfData.price, itemVasPDF: pdfData.itemVasPDF, shipToAddressDIA: pdfData.shipToAddressDIA, CABCode: pdfData.CABCode, item: crmData.item, factory: crmData.factory, customerOrder: crmData.customerOrder, coFinalApprovalDate: crmData.coFinalApprovalDate, planNo: crmData.planNo, truckOutDate: crmData.truckOutDate, actualShippedQty: crmData.actualShippedQty, coPrice: crmData.coPrice, shipToAddress: crmData.shipToAddress, paymentTerm: crmData.paymentTerm, styleDesc: crmData.styleDesc, fabricContent: crmData.fabricContent, fabricSource: crmData.fabricSource, commission: crmData.commission, PCD: crmData.PCD, odVersion: dtoData.odVersion
+                        documentDate: dtoData.documentDate, categoryCode: dtoData.categoryCode, categoryDesc: dtoData.categoryDesc, vendorCode: dtoData.vendorCode, gccFocusCode: dtoData.gccFocusCode, gccFocusDesc: dtoData.gccFocusDesc, genderAgeCode: dtoData.genderAgeCode, genderAgeDesc: dtoData.genderAgeDesc, styleNumber: dtoData.styleNumber, productCode: dtoData.productCode, colorDesc: dtoData.colorDesc, destinationCountryCode: dtoData.destinationCountryCode, destinationCountry: dtoData.destinationCountry, plant: dtoData.plant, plantName: dtoData.plantName, tradingCoPoNumber: dtoData.tradingCoPoNumber, UPC: dtoData.UPC, directShipSONumber: dtoData.directShipSONumber, directShipSOItemNumber: dtoData.directShipSOItemNumber, customerPO: dtoData.customerPO, shipToCustomerNumber: dtoData.shipToCustomerNumber, shipToCustomerName: dtoData.shipToCustomerName, planningSeasonCode: dtoData.planningSeasonCode, planningSeasonYear: dtoData.planningSeasonYear, docTypeCode: dtoData.docTypeCode, docTypeDesc: dtoData.docTypeDesc, MRGAC: dtoData.MRGAC, OGAC: dtoData.OGAC, GAC: dtoData.GAC, originReceiptDate: dtoData.originReceiptDate, factoryDeliveryActDate: dtoData.factoryDeliveryActDate, GACReasonCode: dtoData.GACReasonCode, GACReasonDesc: dtoData.GACReasonDesc, shippingType: dtoData.shippingType, planningPriorityCode: dtoData.planningPriorityCode, planningPriorityDesc: dtoData.planningPriorityDesc, launchCode: dtoData.launchCode, DPOMLineItemStatus: dtoData.DPOMLineItemStatus, modeOfTransportationCode: dtoData.modeOfTransportationCode, inCoTerms: dtoData.inCoTerms, inventorySegmentCode: dtoData.inventorySegmentCode, purchaseGroupCode: dtoData.purchaseGroupCode, purchaseGroupName: dtoData.purchaseGroupName, totalItemQty: dtoData.totalItemQty, originReceiptQty: dtoData.originReceiptQty, VASSize: dtoData.VASSize, itemVasText: dtoData.itemVasText, itemText: dtoData.itemText, grossPriceFOB: dtoData.grossPriceFOB, FOBCurrencyCode: dtoData.FOBCurrencyCode, netIncludingDisc: dtoData.netIncludingDisc, netIncludingDiscCurrencyCode: dtoData.netIncludingDiscCurrencyCode, trCoNetIncludingDisc: dtoData.trCoNetIncludingDisc, trCoNetIncludingDiscCurrencyCode: dtoData.trCoNetIncludingDiscCurrencyCode, sizeQuantity: dtoData.sizeQuantity, sizeDescription: dtoData.sizeDescription, shipToAddressLegalPO: pdfData.shipToAddressLegalPO, quantity: pdfData.quantity, price: pdfData.price, itemVasPDF: pdfData.itemVasPDF, shipToAddressDIA: pdfData.shipToAddressDIA, CABCode: pdfData.CABCode, item: crmData.item, factory: crmData.factory, customerOrder: crmData.customerOrder, coFinalApprovalDate: crmData.coFinalApprovalDate, planNo: crmData.planNo, truckOutDate: crmData.truckOutDate, actualShippedQty: crmData.actualShippedQty, coPrice: crmData.coPrice, shipToAddress: crmData.shipToAddress, paymentTerm: crmData.paymentTerm, styleDesc: crmData.styleDesc, fabricContent: crmData.fabricContent, fabricSource: crmData.fabricSource, commission: crmData.commission, PCD: crmData.PCD, odVersion: dtoData.odVersion, divertedToPos: dtoData.divertedToPos.join(',')
                     })
                     if (!updateOrder.affected) {
                         await transactionManager.releaseTransaction();
@@ -333,7 +346,7 @@ export class DpomService {
                 planNo: '',
                 truckOutDate: '',
                 actualShippedQty: '',
-                coPrice: '',
+                coPrice: null,
                 shipToAddress: '',
                 paymentTerm: '',
                 styleDesc: '',
@@ -383,13 +396,26 @@ export class DpomService {
                 } else {
                     hanger = 'NO';
                 }
+
+                // Diverted PO's
+                const itemText = orderDetail.poLine.itemTextDetail.textDetails;
+                const pattern = /diverted to.*?Purchase Order (\d+ \/ \d+)/g;
+                const matches = [];
+
+                let match;
+                if (itemText !== null) {
+                    while ((match = pattern.exec(itemText)) !== null) {
+                        matches.push(match[1]);
+                    }
+                }
+
                 const dtoData = new DpomSaveDto(orderDetail.poHeader.documentDate, orderDetail.poHeader.poNumber, orderDetail.poLine.itemNumber, orderDetail.sizes.scheduleLineItemNumber, orderDetail.product.categoryCode, orderDetail.product.categoryDescription, orderDetail.poHeader.vendorCode, orderDetail.product.globalCategoryCoreFocusCode, orderDetail.product.globalCategoryCoreFocusDescription, orderDetail.product.genderAgeCode, orderDetail.product.genderAgeDescription, orderDetail.product.styleNumber,
                     orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null,
                     orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonDescription,
                     orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, null, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity,
                     orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVas.valueAddedServiceInstructions, orderDetail.poLine.itemTextDetail.textDetails, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
                     orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, orderDetail.sizes.sizePo.sizeQuantity, orderDetail.sizes.sizePo.sizeDescription, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVasPDF, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
-                    crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, hanger, orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, 'username', version)
+                    crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, hanger, orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, matches, 'username', version)
                 if (dtoData.purchaseOrderNumber != null) {
                     const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
                     const versionDetails = await this.dpomChildRepo.getVersion(dtoData.purchaseOrderNumber, dtoData.poLineItemNumber, dtoData.scheduleLineItemNumber)
@@ -400,7 +426,7 @@ export class DpomService {
                     if (details) {
                         // const updatedData = this.ordersAdapter.convertDtoToEntity(data);
                         const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber }, {
-                            documentDate: dtoData.documentDate, categoryCode: dtoData.categoryCode, categoryDesc: dtoData.categoryDesc, vendorCode: dtoData.vendorCode, gccFocusCode: dtoData.gccFocusCode, gccFocusDesc: dtoData.gccFocusDesc, genderAgeCode: dtoData.genderAgeCode, genderAgeDesc: dtoData.genderAgeDesc, styleNumber: dtoData.styleNumber, productCode: dtoData.productCode, colorDesc: dtoData.colorDesc, destinationCountryCode: dtoData.destinationCountryCode, destinationCountry: dtoData.destinationCountry, plant: dtoData.plant, plantName: dtoData.plantName, tradingCoPoNumber: dtoData.tradingCoPoNumber, UPC: dtoData.UPC, directShipSONumber: dtoData.directShipSONumber, directShipSOItemNumber: dtoData.directShipSOItemNumber, customerPO: dtoData.customerPO, shipToCustomerNumber: dtoData.shipToCustomerNumber, shipToCustomerName: dtoData.shipToCustomerName, planningSeasonCode: dtoData.planningSeasonCode, planningSeasonYear: dtoData.planningSeasonYear, docTypeCode: dtoData.docTypeCode, docTypeDesc: dtoData.docTypeDesc, MRGAC: dtoData.MRGAC, OGAC: dtoData.OGAC, GAC: dtoData.GAC, originReceiptDate: dtoData.originReceiptDate, factoryDeliveryActDate: dtoData.factoryDeliveryActDate, GACReasonCode: dtoData.GACReasonCode, GACReasonDesc: dtoData.GACReasonDesc, shippingType: dtoData.shippingType, planningPriorityCode: dtoData.planningPriorityCode, planningPriorityDesc: dtoData.planningPriorityDesc, launchCode: dtoData.launchCode, DPOMLineItemStatus: dtoData.DPOMLineItemStatus, modeOfTransportationCode: dtoData.modeOfTransportationCode, inCoTerms: dtoData.inCoTerms, inventorySegmentCode: dtoData.inventorySegmentCode, purchaseGroupCode: dtoData.purchaseGroupCode, purchaseGroupName: dtoData.purchaseGroupName, totalItemQty: dtoData.totalItemQty, originReceiptQty: dtoData.originReceiptQty, VASSize: dtoData.VASSize, itemVasText: dtoData.itemVasText, itemText: dtoData.itemText, grossPriceFOB: dtoData.grossPriceFOB, FOBCurrencyCode: dtoData.FOBCurrencyCode, netIncludingDisc: dtoData.netIncludingDisc, netIncludingDiscCurrencyCode: dtoData.netIncludingDiscCurrencyCode, trCoNetIncludingDisc: dtoData.trCoNetIncludingDisc, trCoNetIncludingDiscCurrencyCode: dtoData.trCoNetIncludingDiscCurrencyCode, sizeQuantity: dtoData.sizeQuantity, sizeDescription: dtoData.sizeDescription, shipToAddressLegalPO: pdfData.shipToAddressLegalPO, quantity: pdfData.quantity, price: pdfData.price, itemVasPDF: pdfData.itemVasPDF, shipToAddressDIA: pdfData.shipToAddressDIA, CABCode: pdfData.CABCode, item: crmData.item, factory: crmData.factory, customerOrder: crmData.customerOrder, coFinalApprovalDate: crmData.coFinalApprovalDate, planNo: crmData.planNo, truckOutDate: crmData.truckOutDate, actualShippedQty: crmData.actualShippedQty, coPrice: crmData.coPrice, shipToAddress: crmData.shipToAddress, paymentTerm: crmData.paymentTerm, styleDesc: crmData.styleDesc, fabricContent: crmData.fabricContent, fabricSource: crmData.fabricSource, commission: crmData.commission, PCD: crmData.PCD, odVersion: dtoData.odVersion
+                            documentDate: dtoData.documentDate, categoryCode: dtoData.categoryCode, categoryDesc: dtoData.categoryDesc, vendorCode: dtoData.vendorCode, gccFocusCode: dtoData.gccFocusCode, gccFocusDesc: dtoData.gccFocusDesc, genderAgeCode: dtoData.genderAgeCode, genderAgeDesc: dtoData.genderAgeDesc, styleNumber: dtoData.styleNumber, productCode: dtoData.productCode, colorDesc: dtoData.colorDesc, destinationCountryCode: dtoData.destinationCountryCode, destinationCountry: dtoData.destinationCountry, plant: dtoData.plant, plantName: dtoData.plantName, tradingCoPoNumber: dtoData.tradingCoPoNumber, UPC: dtoData.UPC, directShipSONumber: dtoData.directShipSONumber, directShipSOItemNumber: dtoData.directShipSOItemNumber, customerPO: dtoData.customerPO, shipToCustomerNumber: dtoData.shipToCustomerNumber, shipToCustomerName: dtoData.shipToCustomerName, planningSeasonCode: dtoData.planningSeasonCode, planningSeasonYear: dtoData.planningSeasonYear, docTypeCode: dtoData.docTypeCode, docTypeDesc: dtoData.docTypeDesc, MRGAC: dtoData.MRGAC, OGAC: dtoData.OGAC, GAC: dtoData.GAC, originReceiptDate: dtoData.originReceiptDate, factoryDeliveryActDate: dtoData.factoryDeliveryActDate, GACReasonCode: dtoData.GACReasonCode, GACReasonDesc: dtoData.GACReasonDesc, shippingType: dtoData.shippingType, planningPriorityCode: dtoData.planningPriorityCode, planningPriorityDesc: dtoData.planningPriorityDesc, launchCode: dtoData.launchCode, DPOMLineItemStatus: dtoData.DPOMLineItemStatus, modeOfTransportationCode: dtoData.modeOfTransportationCode, inCoTerms: dtoData.inCoTerms, inventorySegmentCode: dtoData.inventorySegmentCode, purchaseGroupCode: dtoData.purchaseGroupCode, purchaseGroupName: dtoData.purchaseGroupName, totalItemQty: dtoData.totalItemQty, originReceiptQty: dtoData.originReceiptQty, VASSize: dtoData.VASSize, itemVasText: dtoData.itemVasText, itemText: dtoData.itemText, grossPriceFOB: dtoData.grossPriceFOB, FOBCurrencyCode: dtoData.FOBCurrencyCode, netIncludingDisc: dtoData.netIncludingDisc, netIncludingDiscCurrencyCode: dtoData.netIncludingDiscCurrencyCode, trCoNetIncludingDisc: dtoData.trCoNetIncludingDisc, trCoNetIncludingDiscCurrencyCode: dtoData.trCoNetIncludingDiscCurrencyCode, sizeQuantity: dtoData.sizeQuantity, sizeDescription: dtoData.sizeDescription, shipToAddressLegalPO: pdfData.shipToAddressLegalPO, quantity: pdfData.quantity, price: pdfData.price, itemVasPDF: pdfData.itemVasPDF, shipToAddressDIA: pdfData.shipToAddressDIA, CABCode: pdfData.CABCode, item: crmData.item, factory: crmData.factory, customerOrder: crmData.customerOrder, coFinalApprovalDate: crmData.coFinalApprovalDate, planNo: crmData.planNo, truckOutDate: crmData.truckOutDate, actualShippedQty: crmData.actualShippedQty, coPrice: crmData.coPrice, shipToAddress: crmData.shipToAddress, paymentTerm: crmData.paymentTerm, styleDesc: crmData.styleDesc, fabricContent: crmData.fabricContent, fabricSource: crmData.fabricSource, commission: crmData.commission, PCD: crmData.PCD, odVersion: dtoData.odVersion, divertedToPos: dtoData.divertedToPos.join(',')
                         })
                         if (!updateOrder.affected) {
                             await transactionManager.releaseTransaction();
@@ -534,7 +560,6 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'updated successfully');
         } else {
             return new CommonResponseModel(false, 0, 'update failed');
-
         }
     }
 
@@ -548,7 +573,6 @@ export class DpomService {
         }
     }
 
-
     async getByFactoryStatus(req: DpomSaveDto) {
         const record = await this.dpomRepository.find({
             where: { DPOMLineItemStatus: req.DPOMLineItemStatus },
@@ -560,15 +584,6 @@ export class DpomService {
         }
     }
 
-    // async getPPMData(): Promise<CommonResponseModel> {
-    //     const details = await this.dpomRepository.find()
-    //     if (details.length > 0) {
-    //         return new CommonResponseModel(true, 1, 'data retrived', details)
-    //     } else {
-    //         return new CommonResponseModel(false, 0, 'data not found')
-    //     }
-    // }
-
     async getShipmentTrackerReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find();
         if (details.length > 0) {
@@ -577,24 +592,6 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'data not found')
         }
     }
-
-    // async getDivertReportData(): Promise<CommonResponseModel> {
-    //     const report = await this.dpomRepository.getDivertReport();
-
-    //     const acceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'accepted',);
-    //     const unacceptedArray = report.filter(item => item.lineStatus.toLowerCase() === 'unaccepted');
-    //     if (acceptedArray.length > 0 || unacceptedArray.length > 0) {
-    //         const response = new CommonResponseModel(true, report.length, 'data retrieved', {
-    //             accepted: acceptedArray,
-    //             unaccepted: unacceptedArray
-    //         });
-    //         return response;
-    //     } else {
-    //         return new CommonResponseModel(false, 0, 'No Data Found', []);
-    //     }
-    // }
-
-
 
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.getCountForDivertReport();
@@ -612,8 +609,6 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'data not found', undefined)
         }
     }
-
-
 
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPlantCount()
@@ -708,6 +703,7 @@ export class DpomService {
             return new CommonResponseModel(false, 1010, "The  PO Number of the uploaded document not exist")
         }
     }
+
     async getItemChangeData(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getItemChangeData()
         if (data.length > 0)
@@ -828,14 +824,14 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getDivertReportData(): Promise<CommonResponseModel> {
-        const report = await this.dpomRepository.getDivertReport();
-        if (report.length > 0) {
-            return new CommonResponseModel(true, 1, 'Data Retrived Successfully', report);
-        } else {
-            return new CommonResponseModel(false, 0, 'No Data Found', []);
-        }
-    }
+    // async getDivertReportData(): Promise<CommonResponseModel> {
+    //     const report = await this.dpomRepository.getDivertReport();
+    //     if (report.length > 0) {
+    //         return new CommonResponseModel(true, 1, 'Data Retrived Successfully', report);
+    //     } else {
+    //         return new CommonResponseModel(false, 0, 'No Data Found', []);
+    //     }
+    // }
     async getDestinationWisePo(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getDestinationPo()
         if (data.length > 0)
@@ -852,10 +848,25 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getFactoryReportData(): Promise<CommonResponseModel> {
+    async getFactoryReportData(req?:PpmDateFilterRequest): Promise<CommonResponseModel> {
         try {
-            const allDetails = await this.dpomRepository.find();
-            const details = allDetails.filter(record => record.DPOMLineItemStatus !== 'Cancelled')
+            
+            let whereConditions: any = {};
+
+            if (req && req.lastModifedStartDate && req.lastModifedEndtDate) {
+                whereConditions.lastModifiedDate = Between(req.lastModifedStartDate, req.lastModifedEndtDate);
+            }
+    
+            if (req && req.documentStartDate && req.documentEndtDate) {
+                whereConditions.documentDate = Between(req.documentStartDate, req.documentEndtDate);
+            }
+    
+            const allDetails = await this.dpomRepository.find({
+                where: whereConditions,
+            });
+
+            const filteredDetails = allDetails.filter(record => record.docTypeCode !== 'ZP26')
+            const details = filteredDetails.filter(record => record.DPOMLineItemStatus !== 'Cancelled')
             if (details.length === 0) {
                 return new CommonResponseModel(false, 0, 'data not found');
             }
@@ -864,11 +875,13 @@ export class DpomService {
                 if (!sizeDateMap.has(rec.poAndLine)) {
                     sizeDateMap.set(
                         rec.poAndLine,
-                        new FactoryReportModel(rec.lastModifiedDate, rec.item, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poLineItemNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc, rec.customerOrder, rec.coFinalApprovalDate, rec.planNo, rec.leadTime, rec.categoryCode, rec.categoryDesc, rec.vendorCode, rec.gccFocusCode, rec.gccFocusDesc, rec.genderAgeCode, rec.genderAgeDesc, rec.destinationCountryCode, rec.destinationCountry, rec.plant, rec.plantName, rec.tradingCoPoNumber, rec.UPC, rec.directShipSONumber, rec.directShipSOItemNumber, rec.customerPO, rec.shipToCustomerNumber, rec.shipToCustomerName, rec.planningSeasonCode, rec.planningSeasonYear, rec.docTypeCode, rec.docTypeDesc, rec.MRGAC, rec.OGAC, rec.GAC, rec.truckOutDate, rec.originReceiptDate, rec.factoryDeliveryActDate, rec.GACReasonCode, rec.GACReasonDesc, rec.shippingType, rec.planningPriorityCode, rec.planningPriorityDesc, rec.launchCode, rec.modeOfTransportationCode, rec.inCoTerms, rec.inventorySegmentCode, rec.purchaseGroupCode, rec.purchaseGroupName, rec.totalItemQty, rec.actualShippedQty, rec.VASSize, rec.itemVasText, rec.itemText, [])
+                        new FactoryReportModel(rec.lastModifiedDate, rec.item, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poLineItemNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc, rec.customerOrder, rec.coFinalApprovalDate, rec.planNo, rec.leadTime, rec.categoryCode, rec.categoryDesc, rec.vendorCode, rec.gccFocusCode, rec.gccFocusDesc, rec.genderAgeCode, rec.genderAgeDesc, rec.destinationCountryCode, rec.destinationCountry, rec.plant, rec.plantName, rec.tradingCoPoNumber, rec.UPC, rec.directShipSONumber, rec.directShipSOItemNumber, rec.customerPO, rec.shipToCustomerNumber, rec.shipToCustomerName, rec.planningSeasonCode, rec.planningSeasonYear, rec.docTypeCode, rec.docTypeDesc, rec.MRGAC, rec.OGAC, rec.GAC, rec.truckOutDate, rec.originReceiptDate, rec.factoryDeliveryActDate, rec.GACReasonCode, rec.GACReasonDesc, rec.shippingType, rec.planningPriorityCode, rec.planningPriorityDesc, rec.launchCode, rec.modeOfTransportationCode, rec.inCoTerms, rec.inventorySegmentCode, rec.purchaseGroupCode, rec.purchaseGroupName, rec.totalItemQty, rec.actualShippedQty, rec.VASSize, rec.itemVasText, rec.itemText,rec.price,rec.coPrice,rec.PCD,rec.shipToAddressLegalPO,rec.shipToAddressDIA,rec.CABCode,rec.grossPriceFOB,rec.netIncludingDisc,rec.trCoNetIncludingDisc, [])
                     );
                 }
                 const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
-                sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity));
+                if (rec.sizeDescription !== null) {
+                    sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity, rec.price, rec.coPrice));
+                }
             }
             const dataModelArray: FactoryReportModel[] = Array.from(sizeDateMap.values());
             return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
@@ -920,8 +933,18 @@ export class DpomService {
         return output.trim();
     }
 
-    async getPPMData(): Promise<CommonResponseModel> {
-        const details = await this.dpomRepository.find()
+    async getPPMData(req?:PpmDateFilterRequest): Promise<CommonResponseModel> {
+        let whereConditions: any = {};
+
+        if (req && req.lastModifedStartDate && req.lastModifedEndtDate) {
+            whereConditions.lastModifiedDate = Between(req.lastModifedStartDate, req.lastModifedEndtDate);
+        }
+
+        if (req && req.documentStartDate && req.documentEndtDate) {
+            whereConditions.documentDate = Between(req.documentStartDate, req.documentEndtDate);
+        }
+        const alldata = await this.dpomRepository.find({where: whereConditions});
+        const details = alldata.filter(record => record.docTypeCode !== 'ZP26')
         if (details.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found')
         }
@@ -930,11 +953,13 @@ export class DpomService {
             if (!sizeDateMap.has(rec.poAndLine)) {
                 sizeDateMap.set(
                     rec.poAndLine,
-                    new MarketingModel(rec.poLineItemNumber, rec.lastModifiedDate, rec.item, rec.totalItemQty, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc, [])
+                   new FactoryReportModel(rec.lastModifiedDate, rec.item, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poLineItemNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc, rec.customerOrder, rec.coFinalApprovalDate, rec.planNo, rec.leadTime, rec.categoryCode, rec.categoryDesc, rec.vendorCode, rec.gccFocusCode, rec.gccFocusDesc, rec.genderAgeCode, rec.genderAgeDesc, rec.destinationCountryCode, rec.destinationCountry, rec.plant, rec.plantName, rec.tradingCoPoNumber, rec.UPC, rec.directShipSONumber, rec.directShipSOItemNumber, rec.customerPO, rec.shipToCustomerNumber, rec.shipToCustomerName, rec.planningSeasonCode, rec.planningSeasonYear, rec.docTypeCode, rec.docTypeDesc, rec.MRGAC, rec.OGAC, rec.GAC, rec.truckOutDate, rec.originReceiptDate, rec.factoryDeliveryActDate, rec.GACReasonCode, rec.GACReasonDesc, rec.shippingType, rec.planningPriorityCode, rec.planningPriorityDesc, rec.launchCode, rec.modeOfTransportationCode, rec.inCoTerms, rec.inventorySegmentCode, rec.purchaseGroupCode, rec.purchaseGroupName, rec.totalItemQty, rec.actualShippedQty, rec.VASSize, rec.itemVasText, rec.itemText,rec.price,rec.coPrice ,rec.PCD,rec.shipToAddressLegalPO, rec.shipToAddressDIA,rec.CABCode,rec.grossPriceFOB,rec.netIncludingDisc,rec.trCoNetIncludingDisc,[])
                 );
             }
             const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
-            sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity));
+            if (rec.sizeDescription !== null) {
+                sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity, rec.price, rec.coPrice));
+            }
         }
         const dataModelArray: MarketingModel[] = Array.from(sizeDateMap.values());
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
@@ -1063,8 +1088,6 @@ export class DpomService {
                 dashboardPoGrnData.poQty.push(totalQty);
             });
 
-
-
             // const dashboardPoGrnData = new PoData();
             // dashboardPoGrnData.poQty = [];           
             // allNames.forEach(eachName => {
@@ -1074,93 +1097,94 @@ export class DpomService {
 
             const dashboardData = new PoDataResDto(names, dashboardPoGrnData);
             return new CommonResponseModel(true, 10000, 'Data Retrieved Successfully.', dashboardData);
-
         } catch (error) {
             return new CommonResponseModel(false, 0, 'failed', error);
         }
-
     }
 
-    // async weeklyPoAndQtyDashboard(req:WeeklyPoAndQtyReq): Promise<CommonResponseModel> {
+    
 
-    //     try{
+async getDivertReportData(): Promise<CommonResponseModel> {
+    const reports = await this.dpomRepository.getDivertReport();
+   // let model:OldDivertModel[];
+   let divertedPos=[]
+let divertModelData: DivertModel[] = [];
+  let po ;
+  let line;
+  let divertModel =[]
+  for(const report of reports){
+    divertedPos = report.diverted_to_pos.split (',');
+         
 
-    //         let query = '';
-    //         let monthNo=0;  
-    //         if(!req.month){
+   if(report.diverted_to_pos ){
+    for(const Po of divertedPos){
+       const [po, line] = Po.split('/');
+      const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po,line])
 
-    //             const dateData = new Date();
-    //             monthNo = dateData.getMonth();
-    //         }else{
-    //             monthNo=req.month;
-    //         }           
-    //         const names = []; 
-    //         const namesData = [];
-    //         const monthData ={1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun', 7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'};
-    //         let mapKey;
-    //         let querySelect;
+      for (const newpoDivert of newPoData){
+       const  model  = new DivertModel(report,newpoDivert)
+        divertModel.push(model)
+    }
+    }
+ 
+   }
+    }
 
-    //         let queryWhere;
-    //         let queryGroup;
-    //         const monthInfo=monthNo-1;
-    //         let allNames;
-
-    //         if(req.reportType == ReportType.WEEKWISE){
-    //             let month;      
-    //             if (monthNo < 10)
-    //             month = "0" + monthNo;            
-    //             const date = "01." + month + "." 
-    //             const first = moment(date, 'dd.MM.yyyy').startOf('month').week();
-    //             const last = moment(date, 'dd.MM.yyyy').endOf('month').week();
-    //             for (let i = first; i < last; i++) {
-    //                 namesData.push(i);
-    //                 names.push(i + " " + monthData[monthNo]);
-    //             }
-    //              /** Month QueryFilter */
-    //              querySelect = 'WEEK(created_at) AS reportedDate';
-    //              queryGroup = 'WEEK(created_at)';
-    //              queryWhere = 'MONTH(created_at)='+monthNo+'';
-    //              allNames = namesData;
-
-    //          }  
-
-    //       query =`SELECT po_number AS poNumber, total_item_qty AS totalItemQuantity,created_at AS createdAt,`+querySelect+`
-    //      FROM dpom WHERE total_item_qty >0 AND `+queryWhere+``;
-    //      query += ` group by `+ queryGroup +``;
-
-    //     const data = await this.dpomRepository.query(query)
-    //     if (data.length < 1){
-    //         return new CommonResponseModel(false, 0, 'No Records Found', [])
-    //     } 
-    //     const poMap = new Map<string, PoQty>();
-    //     for(const poData of data){
-
-    //         if(req.reportType == ReportType.WEEKWISE){ 
-    //             const mapKey = poData.reportedDate;
-    //             if(!poMap.has(mapKey)){
-    //                 const poObj = new PoQty();
-
-    //                 poObj.totalItemQuantity = poData.totalItemQuantity;                
-    //                 poMap.set(mapKey, poObj);   
-    //             }else{
-    //                 poMap.get(mapKey).totalItemQuantity += poData.poQty;     
-    //             }
-    //         }
-    //     }
-    //     const dashboardPoGrnData = new PoData();
-    //     dashboardPoGrnData.poQty = [];           
-    //     allNames.forEach(eachName => {
-    //         const PoGrnForQty = poMap.get(eachName); 
-    //         dashboardPoGrnData.poQty.push(PoGrnForQty? PoGrnForQty.totalItemQuantity : 0); 
-    //     })
-
-    //     const dashboardData = new PoDataResDto(names, dashboardPoGrnData);
-    //     return new CommonResponseModel(true, 10000, 'Data Retrieved Successfully.', dashboardData);
-
-    //     } catch (error) {
-    //         return new CommonResponseModel(false, 0, 'failed', error);
-    //     }
-
-    // }
+    if (reports.length > 0) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Successfully', divertModel);
+    } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', []);
+    }
 }
+///////////////////--------------------------------------------------------------------------------factory
+async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getPoLineforfactory()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+} 
+
+async getPpmItemForFactory(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getItemforfactory()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+} 
+async getPpmFactoryForFactory(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getFactoryForfactory()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+//-----------------------------------------------------------------------------marketing
+async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getPoLineforMarketing()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+async getPpmItemForMarketing(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getItemforMarketing()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+
+
+async getPpmFactoryForMarketing(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getFactoryforMarketing()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+}
+
+
+
 

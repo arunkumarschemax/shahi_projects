@@ -510,7 +510,7 @@ export class DpomChildEntity {
         length: 20,
         nullable: true
     })
-    coPrice: string;
+    coPrice: number;
 
     @Column('varchar', {
         name: "ship_to_address",
@@ -637,14 +637,20 @@ export class DpomChildEntity {
     })
     isActive: boolean;
 
-    @ManyToOne(() => DpomEntity, dpom => dpom.dpomChild)
-    @JoinColumn({ name: 'parent_id' })
-    dpom: DpomEntity;
-
     @Column('int', {
         nullable: true,
         name: 'file_id',
     })
     fileId: number;
+
+    @Column('varchar', {
+        nullable: true,
+        name: 'diverted_to_pos',
+    })
+    divertedToPos: string;
+
+    @ManyToOne(() => DpomEntity, dpom => dpom.dpomChild)
+    @JoinColumn({ name: 'parent_id' })
+    dpom: DpomEntity;
 
 }

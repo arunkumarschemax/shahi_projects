@@ -40,27 +40,39 @@ export const LoginComponent = () => {
     };
 
     return (
-        <Card >
-            <h1 style={{ textAlign: 'center' }}><Text style={{ color: 'black' }}>NIKE</Text></h1>
+
+        <Card
+            className="card-header"
+            style={{ height: '55%', width: '300px' }}
+        >
+            <div><b>NIKE</b></div>
             <br />
             <Form
                 name="login-form"
                 initialValues={{ remember: true }}
                 onFinish={handleLogin}
-                style={{ minWidth: 300 }}
             >
-                <Form.Item
+                <Form.Item style={{ width: '250px' }}
                     name="username"
-                    rules={[{ required: true, message: 'Please input your username!' }]}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input your Username!',
+                        },
+                        {
+                            type: 'email',
+                            message: 'The input is not valid E-mail!',
+                        },
+                    ]}
                 >
-                    <Input prefix={<UserOutlined />} placeholder="Username" />
+                    <Input width={215} prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" autoComplete="off" />
                 </Form.Item>
 
-                <Form.Item
+                <Form.Item style={{ width: '250px' }}
                     name="password"
                     rules={[{ required: true, message: 'Please input your password!' }]}
                 >
-                    <Input.Password prefix={<LockOutlined />} placeholder="Password" />
+                    <Input.Password width={215} prefix={<LockOutlined />} placeholder="Password" />
                 </Form.Item>
 
                 {/* <Form.Item>
@@ -73,7 +85,7 @@ export const LoginComponent = () => {
       </Form.Item> */}
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+                    <Button type="primary" htmlType="submit" style={{ width: '250px' }}>
                         Log In
                     </Button>
                     {/* Or <a href="/">register now!</a> */}

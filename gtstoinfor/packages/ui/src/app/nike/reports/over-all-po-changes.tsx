@@ -132,23 +132,6 @@ export function OrderAcceptance() {
         })
     }
 
-    const approveDpomLineItemStatus = (record) => {
-        const req = new DpomApproveRequest();
-        req.poLineItemNumber = record.poLineItemNumber
-        req.purchaseOrderNumber = record.purchaseOrderNumber
-        req.scheduleLineItemNumber = record.scheduleLineItemNumber
-        service.approveDpomLineItemStatus(req).then((res) => {
-            if (res.status) {
-                getOrderAcceptanceData()
-                message.success(res.internalMessage)
-            } else (
-                message.error(res.internalMessage)
-            )
-        })
-    }
-
-    console.log(data)
-
     const columns: any = [
         {
             title: "S.No",
@@ -196,28 +179,12 @@ export function OrderAcceptance() {
             ],
             filterMultiple: false,
             onFilter: (value, record) => { return record.DPOMLineItemStatus === value }
-        },
-        {
-            title: 'Action',
-            dataIndex: 'action',
-            render: (value, record) => {
-                if (record.DPOMLineItemStatus === 'Unaccepted') {
-                    return (
-                        <Popconfirm title="Are you sure to approve" onConfirm={() => approveDpomLineItemStatus(record)}>
-                            <Button>Accept</Button>
-                        </Popconfirm>
-                    );
-                } else {
-                    return null;
-                }
-            }
-
         }
     ]
 
     return (
         <>
-            <Card title="Nike Orders Register" headStyle={{ fontWeight: 'bold' }}>
+            <Card title="Over All PO Changes" headStyle={{ fontWeight: 'bold' }}>
                 <Form
                     onFinish={Finish}
                     form={form}

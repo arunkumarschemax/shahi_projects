@@ -1,5 +1,5 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { MarketingModel } from '@project-management-system/shared-models';
+import { MarketingModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
@@ -37,11 +37,25 @@ const PPMReport = () => {
   }, [])
 
   const getData = () => {
-    service.getPPMData().then(res => {
+    const req = new PpmDateFilterRequest()
+        if (form.getFieldValue('lastModifiedDate') !== undefined) {
+           req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
+          }
+        if (form.getFieldValue('lastModifiedDate') !== undefined) {
+        req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('documentDate') !== undefined) {
+            req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('documentDate') !== undefined) {
+        req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
+        }
+    service.getPPMData(req).then(res => {
       if (res.status) {
         setGridData(res.data)
         setFilterData(res.data)
         setFilteredData(res.data)
+        Finish(res.data)  
       }
     }).catch(err => {
       console.log(err.message)
@@ -62,74 +76,74 @@ const PPMReport = () => {
       { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
       { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
       { title: 'Item', dataIndex: 'Item' },
-      { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
       { title: 'Factory', dataIndex: 'Factory' },
-      { title: 'PCD', dataIndex: '' },
+      { title: 'PCD', dataIndex: 'PCD' },
       { title: 'Document Date', dataIndex: 'documentDate' },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
       { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
-      { title: 'Trading Co PO Number', dataIndex: '' },
+      { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
       { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
-      { title: 'Doc Type', dataIndex: '' },
-      { title: 'Doc Type Description', dataIndex: 'colorDesc' },
+      { title: 'DocType', dataIndex: 'docTypeCode' },
+      { title: 'DocType Description', dataIndex: 'docTypeDesc' },
       { title: 'Style Number', dataIndex: 'styleNumber' },
       { title: 'Product Code', dataIndex: 'productCode' },
       { title: 'Colour Description', dataIndex: 'colorDesc' },
-      { title: 'Planning Season Code', dataIndex: '' },
-      { title: 'Planning Season Year', dataIndex: '' },
-      { title: 'Co', dataIndex: '' },
-      { title: 'CO Final Approval Date', dataIndex: '' },
-      { title: 'Plan No', dataIndex: '' },
-      { title: 'Lead Time', dataIndex: '' },
-      { title: 'Category', dataIndex: '' },
-      { title: 'Category Description', dataIndex: '' },
-      { title: 'Vendor Code', dataIndex: '' },
-      { title: 'Global Category Core Focus', dataIndex: '' },
-      { title: 'Global Category Core Focus Description', dataIndex: '' },
-      { title: 'Gender Age', dataIndex: '' },
-      { title: 'Gender Age Description', dataIndex: '' },
-      { title: 'Destination Country Code', dataIndex: '' },
-      { title: 'Destination Country Name', dataIndex: '' },
-      { title: 'Plant Code', dataIndex: '' },
-      { title: 'plant Name', dataIndex: '' },
-      { title: 'UPS', dataIndex: '' },
-      { title: 'Sales Order Number', dataIndex: '' },
-      { title: 'Sales Order Item Number', dataIndex: '' },
-      { title: 'Customer PO', dataIndex: '' },
-      { title: 'Ship To Customer Number', dataIndex: '' },
-      { title: 'Ship To Customer Name', dataIndex: '' },
-      { title: 'Ship to Address Legal PO', dataIndex: '' },
-      { title: 'Ship to Address DIA', dataIndex: '' },
+      { title: 'Planning Season Code', dataIndex: 'planningSeasonCode' },
+      { title: 'Planning Season Year', dataIndex: 'planningSeasonYear' },
+      { title: 'Co', dataIndex: 'customerOrder' },
+      { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate' },
+      { title: 'Plan No', dataIndex: 'planNo' },
+      { title: 'Lead Time', dataIndex: 'leadTime' },
+      { title: 'Category', dataIndex: 'categoryCode' },
+      { title: 'Category Description', dataIndex: 'categoryDesc' },
+      { title: 'Vendor Code', dataIndex: 'vendorCode' },
+      { title: 'Global Category Core Focus', dataIndex: 'gccFocusCode' },
+      { title: 'Global Category Core Focus Description', dataIndex: 'gccFocusDesc' },
+      { title: 'Gender Age', dataIndex: 'genderAgeCode' },
+      { title: 'Gender Age Description', dataIndex: 'genderAgeDesc' },
+      { title: 'Destination Country Code', dataIndex: 'destinationCountryCode' },
+      { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
+      { title: 'Plant Code', dataIndex: 'plan' },
+      { title: 'plant Name', dataIndex: 'plantName' },
+      { title: 'UPC', dataIndex: 'UPC' },
+      { title: 'Sales Order Number', dataIndex: 'directShipSONumber' },
+      { title: 'Sales Order Item Number', dataIndex: 'directShipSOItemNumber' },
+      { title: 'Customer PO', dataIndex: 'customerPO' },
+      { title: 'Ship To Customer Number', dataIndex: 'shipToCustomerNumber' },
+      { title: 'Ship To Customer Name', dataIndex: 'shipToCustomerName' },
+      { title: 'Ship to Address Legal PO', dataIndex: 'shipToAddressLegalPO' },
+      { title: 'Ship to Address DIA', dataIndex: 'shipToAddressDIA' },
       { title: 'Diff of Ship to Address', dataIndex: '' },
-      { title: 'CAB Code', dataIndex: '' },
-      { title: 'MRGAC', dataIndex: '' },
-      { title: 'OGAC', dataIndex: '' },
-      { title: 'GAC', dataIndex: '' },
-      { title: 'Truck Out Date', dataIndex: '' },
-      { title: 'Origin Receipt Date', dataIndex: '' },
-      { title: 'Factory Delivery Actual Date', dataIndex: '' }, { title: 'GAC Reason Description', dataIndex: '' },
-      { title: 'GAC Reason Code', dataIndex: '' },
-      { title: 'Shipping Type', dataIndex: '' },
-      { title: 'Planning Priority Number', dataIndex: '' },
-      { title: 'Planning Priority Description', dataIndex: '' },
-      { title: 'Launch Code', dataIndex: '' },
-      { title: 'Mode of Transportation', dataIndex: '' },
-      { title: 'In Co Terms', dataIndex: '' },
-      { title: 'Inventory Segment Code', dataIndex: '' },
-      { title: 'Purchase Group', dataIndex: '' },
-      { title: 'Purchase Group Name', dataIndex: '' },
-      { title: 'Total Item Quantity', dataIndex: '' },
-      { title: 'Gross Price/FOB ', dataIndex: '' },
-      { title: 'Net including discounts', dataIndex: '' },
-      { title: 'Trading Co Net including discounts', dataIndex: '' },
-      { title: 'Legal PO Price', dataIndex: '' },
-      { title: 'CO Price', dataIndex: '' },
-      { title: 'Actual Shipped Qty', dataIndex: '' },
-      { title: 'VAS - Size', dataIndex: '' },
-      { title: 'Item Vas Text', dataIndex: '' },
+      { title: 'CAB Code', dataIndex: 'CABcode' },
+      { title: 'MRGAC', dataIndex: '"MRGAC' },
+      { title: 'OGAC', dataIndex: 'OGAC' },
+      { title: 'GAC', dataIndex: 'GAC' },
+      { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
+      { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
+      { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
+      { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
+      { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
+      { title: 'Shipping Type', dataIndex: 'shippingType' },
+      { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode' },
+      { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
+      { title: 'Launch Code', dataIndex: '"launchCode' },
+      { title: 'Mode of Transportation', dataIndex: 'modeOfTransportationCode' },
+      { title: 'In Co Terms', dataIndex: 'inCoTerms' },
+      { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
+      { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
+      { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
+      { title: 'Total Item Quantity', dataIndex: 'totalItemQty' },
+      { title: 'Gross Price/FOB ', dataIndex: 'grossPriceFOB' },
+      { title: 'Net including discounts', dataIndex: 'netIncludingDisc' },
+      { title: 'Trading Co Net including discounts', dataIndex: 'trCoNetIncludingDisc' },
+      { title: 'Legal PO Price', dataIndex: 'price' },
+      { title: 'CO Price', dataIndex: 'coPrice' },
+      { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
+      { title: 'VAS - Size', dataIndex: 'VASSize' },
+      { title: 'Item Vas Text', dataIndex: 'itemVasText' },
       { title: 'Item Vas Text in PDF PO', dataIndex: '' },
       { title: 'Diff of Item Vas Text', dataIndex: '' },
-      { title: 'Item Text', dataIndex: '' },
+      { title: 'Item Text', dataIndex: 'itemText' },
 
 
     ]
@@ -165,16 +179,17 @@ const PPMReport = () => {
   const { Option } = Select;
 
 
-  const EstimatedETDDate = (value) => {
-    if (value) {
-      const fromDate = value[0].format('YYYY-MM-DD');
-      const toDate = value[1].format('YYYY-MM-DD');
-      setSelectedEstimatedFromDate(fromDate)
-      setSelectedEstimatedToDate(toDate)
-    }
-  }
+  // const EstimatedETDDate = (value) => {
+  //   if (value) {
+  //     const fromDate = value[0].format('YYYY-MM-DD');
+  //     const toDate = value[1].format('YYYY-MM-DD');
+  //     setSelectedEstimatedFromDate(fromDate)
+  //     setSelectedEstimatedToDate(toDate)
+  //   }
+  // }
 
-  const Finish = (values: any) => {
+  const Finish = (data: any) => {
+    const values = form.getFieldsValue();
     if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
       setFilterData(gridData);
     } else {
@@ -182,12 +197,14 @@ const PPMReport = () => {
         values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
       );
       setFilterData(filteredData);
+      getData()
     }
   };
   
 
   const onReset = () => {
     form.resetFields()
+    getData()
   }
 
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -243,11 +260,12 @@ const PPMReport = () => {
 
   });
 
-
   function handleSearch(selectedKeys, confirm, dataIndex) {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
+    window.location.reload();
+
   };
 
   function handleReset(clearFilters) {
@@ -358,22 +376,106 @@ const getMap = (data: MarketingModel[]) => {
   sizeHeaders?.forEach(version => {
     columns.push({
         title: version,
-        dataIndex: version, 
+        dataIndex: version,
         key: version,
         width: 130,
-        align: 'right',
+        align: 'center',
+        children: [
+            {
+                title: 'Quantity',
+                dataIndex: '',
+                key: '',
+                render: (text, record) => {
+                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                    if (sizeData) {
+                        if (sizeData.sizeQty !== null) {
+                            const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                            return (
+                                formattedQty
+                            );
+                        } else {
+                            return (
+                                '-'
+                            );
+                        }
+                    } else {
+                        return '-';
+                    }
+                }
+            },
+            {
+                title: 'Legal PO Price',
+                dataIndex: '',
+                key: '',
+                render: (text, record) => {
+                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+                    if (sizeData) {
+                        if (sizeData.sizeQty !== null) {
+                            return (
+                                sizeData.price
+                            );
+                        } else {
+                            return (
+                                '-'
+                            );
+                        }
+                    } else {
+                        return '-';
+                    }
+                }
+            },
+            {
+                title: 'CO Price',
+                dataIndex: '',
+                key: '',
+                render: (text, record) => {
+                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+                    if (sizeData) {
+                        if (sizeData.sizeQty !== null) {
+                            return (
+                                sizeData.coPrice
+                            );
+                        } else {
+                            return (
+                                '-'
+                            );
+                        }
+                    } else {
+                        return '-';
+                    }
+                }
+            },
+            {
+                title: 'Price Variation',
+                dataIndex: '',
+                key: '',
+                render: (text, record) => {
+                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+                    if (sizeData) {
+                        if (sizeData.sizeQty !== null) {
+                            const priceVariation = sizeData.price - sizeData.coPrice;
+                            return (
+                                priceVariation
+                            );
+                        } else {
+                            return (
+                                '-'
+                            );
+                        }
+                    } else {
+                        return '-';
+                    }
+                }
+            },
+        ],
         render: (text, record) => {
-            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-            if (sizeData) {
-                return sizeData.sizeQty !== null ? Number(sizeData.sizeQty).toLocaleString('en-IN', {
-                    maximumFractionDigits: 0
-                }) : '-';
-            } else {
-                return '-';
-            }
+            return record.sizeWiseData.find(item => item.sizeDescription === version);
         }
     });
- })
+});
 
  
     return (<Table columns={columns} dataSource={filterData} pagination={{
@@ -393,15 +495,22 @@ const getMap = (data: MarketingModel[]) => {
           onClick={handleExport}
           icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
         <Form
-           onFinish={Finish}
+           onFinish={getData}
           form={form}
           layout='vertical'>
           <Row>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
-              <Form.Item label="PPM Report Date" name="fromDate">
-                <RangePicker onChange={EstimatedETDDate} />
-              </Form.Item>
-            </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+                            <Form.Item label="Last Modified Date" name="lastModifiedDate">
+                                <RangePicker  />
+
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+                            <Form.Item label="Document Date" name="documentDate">
+                                <RangePicker  />
+
+                            </Form.Item>
+                        </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
               <Form.Item name="DPOMLineItemStatus" label="PPM Status">
                 <Select

@@ -93,6 +93,7 @@ export class DpomChildAdapter {
         entity.leadTime = dto.leadTime
         entity.recordDate = dto.recordDate
         entity.odVersion = dto.odVersion
+        entity.divertedToPos = dto.divertedToPos ? dto.divertedToPos.join(',') : null
         const ordersEntity = new DpomEntity();
         ordersEntity.id = id;
         entity.dpom = ordersEntity;
