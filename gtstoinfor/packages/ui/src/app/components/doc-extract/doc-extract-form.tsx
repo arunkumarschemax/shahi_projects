@@ -12,7 +12,7 @@ const { Option } = Select;
 
 export interface DocFormProps {}
 
-export function DocForm(props: DocFormProps) {
+export function DocExtractForm(props: DocFormProps) {
     const navigate = useNavigate();
     const service = new ScanService();
     const [form] =Form.useForm();
@@ -494,7 +494,6 @@ export function DocForm(props: DocFormProps) {
     }
 
     const onFinish = (values: AllScanDto) => {
-
         values.Gst = gstNumbers
         values.Ifsc = ifscCodes
         values.Innvoice = invoiceDate
@@ -508,14 +507,11 @@ export function DocForm(props: DocFormProps) {
         values.Console = consoles
         values.PO = po
         values.Payref = payref
-
         values.Quantity = quantity
         values.InnvoiceNumber = innNumber
         values.Currency = currency
         values.Origin = origin
         values.Destination = destination
-
-
         console.log(gstNumbers[0], "gst####################")
         console.log(values, "*****")
         service.postdata(values).then(res => {
@@ -535,8 +531,6 @@ export function DocForm(props: DocFormProps) {
 
     return (
         <div >
-
-
             <div style={{ display: "flex", justifyContent: "center" }}>
                 <div style={{ width: "50%" }}>
                     {current === 1 && image && (
@@ -1032,4 +1026,4 @@ export function DocForm(props: DocFormProps) {
 };
 
 
-export default DocForm;
+export default DocExtractForm;
