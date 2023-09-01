@@ -841,7 +841,7 @@ export function DocForm(props: DocFormProps) {
                                                 
                                             </Row>
 
-                                            {/* <Row style={{ position: "relative", bottom: "215px", left: "43px" }}>
+                                            <Row style={{ position: "relative", bottom: "215px", left: "43px" }}>
                                             <Button type="primary" htmlType="submit"  style={{ position: "relative", left: "50px" }} >
                                                 Submit
                                             </Button>
@@ -858,7 +858,7 @@ export function DocForm(props: DocFormProps) {
                                                 Save As
                                             </Button>
 
-                                        </Row> */}
+                                        </Row>
                                         </Row>
                                     </Form>
                                 </>
