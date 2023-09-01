@@ -26,6 +26,7 @@ export const AppRoutes = () => {
             <Route path="/pending-approvals"/>
             <Route path="/dashboard"/>
             <Route path="/invoice-report"/>
+            
 
             {/* <Route path="/doc-extract-form" element={<DocForm/>}/> */}
 
