@@ -1,20 +1,37 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Card, Input, Space, Table } from 'antd';
+import { Button, Card, Input, Space, Table, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { ColumnType } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { SharedService } from 'packages/libs/shared-services/src/scan/scan-service';
 
 interface Item {
-  sno: number;
-  gstNumber: string;
-  panNumber: string;
-  imageFileName: string;
+  typedId: number,
+  Gst: string,
+  Ifsc: string,
+  Innvoice: string,
+  Customer: string,
+  Volume: string,
+  Weight: string,
+  Chargeable: string,
+  Packages: string,
+  Date: string,
+  Cartons: string,
+  Console: string,
+  PO: string,
+  Payref: string,
+  Quantity: string,
+  InnvoiceNumber: string,
+  Currency: string,
+  Origin: string,
+  Destination: string,
 }
 
 const View: React.FC = () => {
   const navigate = useNavigate();
+  const services = new SharedService();
   const [formdata, setFormData] = useState<Item[]>([]);
   const searchInput = useRef(null);
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -23,24 +40,20 @@ const View: React.FC = () => {
   const [sortedInfo, setSortedInfo] = useState<any>({});
 
   useEffect(() => {
-    get();
+    getdata();
   }, []);
 
-  const get = () => {
-    axios
-      .get("http://localhost:8003/scan/getdata")
-      .then((res) => {
+  const getdata = () => {
+    services.getdata().then((res) => {
         if (res.status) {
-          console.log(res, "#######");
-          setFormData(res.data);
+            setFormData(res.data);
+            message.success("Created Successfully");
+        } else {
+            setFormData([]);
+            message.error("Failed");
         }
-      })
-      .catch((error) => {
-        console.log(error.response);
-        alert(error.response);
-      });
-  };
-
+    })
+}
   const handleAddClick = () => {
     navigate('/doc-extract-form');
   };
@@ -143,19 +156,19 @@ const View: React.FC = () => {
       }
     },
     {
-      title: 'GST Number', dataIndex: 'GST', key: 'GST', ...getColumnSearchProps("GST"),
+      title: 'GST Number', dataIndex: 'Gst', key: 'Ifsc', ...getColumnSearchProps("GST"),
       // sorter: (a: { GST: string; }, b: { GST: any; }) => a.GST.localeCompare(b.GST),
       // sortDirections: ["ascend", "descend"],
-      render: (text: any, record: { GST: any; }) => {
-        return (<> {record.GST ? record.GST : '-'} </>)
+      render: (text: any, record: { Gst: any; }) => {
+        return (<> {record.Gst ? record.Gst : '-'} </>)
       }
     },
     {
-      title: 'IFSC Code', dataIndex: 'IFSC', key: 'IFSC', ...getColumnSearchProps("IFSC"),
+      title: 'IFSC Code', dataIndex: 'Ifsc', key: 'Ifsc', ...getColumnSearchProps("IFSC"),
       // sorter: (a: { IFSC: string; }, b: { IFSC: any; }) => a.IFSC.localeCompare(b.IFSC),
       // sortDirections: ["ascend", "descend"],
-      render: (text: any, record: { IFSC: any; }) => {
-        return (<> {record.IFSC ? record.IFSC : '-'} </>)
+      render: (text: any, record: { Ifsc: any; }) => {
+        return (<> {record.Ifsc ? record.Ifsc : '-'} </>)
       }
     },
     {

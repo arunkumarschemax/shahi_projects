@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeoController } from './typeo-controller';
-import { TypeoService } from './typeo-service';
+import { ScanService } from './typeo-service';
 import { ScanEntity } from '../entity/typeo-entity';
+import { ScanController } from './typeo-controller';
+import { ScanAdapter } from '../adapters/scan-adapters';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { ApplicationExceptionHandler } from 'packages/libs/backend-utils/src/exception-handling/application-exception-handler';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ScanEntity])],
-  controllers: [TypeoController],
-  providers: [TypeoService],
+  controllers: [ScanController],
+  providers: [ScanService,ScanAdapter,ApplicationExceptionHandler],
+  exports:[TypeOrmModule,ScanService]
 })
 export class TypeoModule {}

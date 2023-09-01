@@ -1,102 +1,78 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ScanEntity } from '../entity/typeo-entity';
+// import { Injectable, NotFoundException } from '@nestjs/common';
+// import { InjectRepository } from '@nestjs/typeorm';
+// import { Repository } from 'typeorm';
+// import { ScanEntity } from '../entity/typeo-entity';
+// import { ScanAdapter } from '../adapters/scan-adapters';
+// import { ScanDto } from '../dtos/typeo.dto';
+// @Injectable()
+// export class ScanService {
+//   constructor(
+//     private scanadapter:ScanAdapter,
+//     @InjectRepository(ScanEntity)
+//     private scanRepo: Repository<ScanEntity>,
+//   ) {}
 
-interface User {
-  typeId: number;
-  GST: string;
-  IFSC: string;
-  Innvoice: string;
-  Customer: string;
-  Packages: string;
-  Volume: string;
-  Weight: string;
-  Chargeable: string;
-  Date: string;
-  Cartons: string;
-  Console: string;
-  PO: string;
-  Payref: string;
-}
+
+//   async postdata(scanDto: ScanDto): Promise<any> {
+//     const entity :ScanEntity = this.scanadapter.convertDtoToEntity(scanDto);
+//     const count : ScanEntity = await this.scanRepo.save(entity);
+//     const saveDto: ScanDto = this.scanadapter.convertEntityToDto(count);
+//     return saveDto
+//   }
+
+
+//   async getdata():Promise<any> {
+//     const records=await this.scanRepo.find();
+//     if(!records.length){
+//       return records;
+//     }
+//     return records;
+//   }
+// }
+
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+// import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { CommonResponseModel, GlobalResponseObject } from "packages/libs/shared-models/src/common/global-response-object";
+import { Repository } from "typeorm";
+import { ScanEntity } from "../entity/typeo-entity";
+import { ScanAdapter } from "../adapters/scan-adapters";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { ScanDto } from "../dtos/typeo.dto";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import {ScanResponseModel} from "../../../../../../libs/shared-models/src/shared-model/scan-response-object";
+
 
 @Injectable()
-export class TypeoService {
+export class ScanService {
+
+
   constructor(
+    private adapter: ScanAdapter,
     @InjectRepository(ScanEntity)
-    private TypeoRepo: Repository<ScanEntity>,
-  ) {}
+    private repository: Repository<ScanEntity>,
+  ) { }
 
-  async userdata(user: User): Promise<ScanEntity | boolean> {
-    console.log(user, 'user');
-    const data = await this.TypeoRepo.findOne({
-      where: {
-        typeId: user.typeId,
-      },
-    });
-    console.log(data, 'data');
-    if (data) {
-      return false;
-    } else {
-      const newUser = await this.TypeoRepo.save({
-        typeId: user.typeId,
-        GST: user.GST,
-        IFSC: user.IFSC,
-        Innvoice: user.Innvoice,
-        Customer: user.Customer,
-        Packages: user.Packages,
-        Volume: user.Volume,
-        Weight: user.Weight,
-        Chargeable: user.Chargeable,
-        Date: user.Date,
-        Cartons: user.Cartons,
-        Console: user.Console,
-        PO: user.PO,
-        Payref: user.Payref,
-      });
-      console.log(newUser, 'type1');
-      return newUser;
+  async postdata(req: ScanDto): Promise<ScanResponseModel> {
+    const adapterData = this.adapter.convertDtoToEntity(req);
+    await this.repository.save(adapterData)
+    const internalMessage: string = req.Gst
+      ? "Updated Successfully"
+      : "Created Successfully";
+    return new ScanResponseModel(true, 48896, internalMessage);
+    
+  }
+
+
+  async getdata(): Promise<CommonResponseModel> {
+    
+    const records = await this.repository.find();
+    if (records.length === 0) {
+      return new GlobalResponseObject(false, 65645, "Data not Found")
     }
+    return new CommonResponseModel(true, 111111, "Data Retrieved Successfully", records)
   }
 
-  async getdata(): Promise<any> {
-    const records = await this.TypeoRepo.find();
-    if(!records.length){
-      return records;
-    }
-    return records;
-  }
-
-  async remove(typeId: number): Promise<void> {
-    await this.TypeoRepo.delete(typeId);
-  }
-
-  async editData(data: ScanEntity, typeId: number): Promise<ScanEntity> {
-    const editedData = await this.TypeoRepo.findOne({
-      where: {
-        typeId: typeId,
-      },
-    });
-    console.log(editedData, 'editeddata');
-    if (!editedData) {
-      throw new NotFoundException('Data is not found');
-    }
-    editedData.typeId = data.typeId;
-    editedData.GST = data.GST;
-    editedData.IFSC = data.IFSC;
-    editedData.Innvoice = data.Innvoice;
-    editedData.Customer = data.Customer;
-    editedData.Packages = data.Packages;
-    editedData.Volume = data.Volume;
-    editedData.Weight = data.Weight;
-    editedData.Chargeable = data.Chargeable;
-    editedData.Date = data.Date;
-    editedData.Cartons = data.Cartons;
-    editedData.Console = data.Console;
-    editedData.PO = data.PO;
-    editedData.Payref = data.Payref;
-
-    await this.TypeoRepo.save(editedData);
-    return editedData;
-  }
 }

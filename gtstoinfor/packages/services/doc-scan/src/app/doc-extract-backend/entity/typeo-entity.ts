@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-@Entity('po')
+@Entity('Innvoice')
 export class ScanEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
     name: 'type_id',
@@ -9,16 +9,23 @@ export class ScanEntity extends BaseEntity {
   @Column('varchar', {
     nullable: false,
     length: 50,
-    name: 'GST',
+    name: 'Gst',
   })
-  GST: string;
+  Gst: string;
 
   @Column('varchar', {
     nullable: false,
     length: 50,
-    name: 'IFSC',
+    name: 'Ifsc',
   })
-  IFSC: string;
+  Ifsc: string;
+
+  // @Column('varchar', {
+  //   nullable: false,
+  //   length: 50,
+  //   name: 'po_type',
+  // })
+  // PoType: string;
 
   @Column('varchar', {
     nullable: false,
