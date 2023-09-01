@@ -440,11 +440,17 @@ const FactoryPPMReport = () => {
                 dataIndex: 'customerPO',
             },
             {
+                title: 'Change Register',
+                dataIndex: 'displayName',
+                align: 'center',
+            },
+            {
                 title: 'Total Item Qty',
                 dataIndex: 'totalItemQty',
                 align: 'center',
                 render: (text) => <strong>{text}</strong>
             },
+           
 
         ];
         sizeHeaders?.forEach(version => {
