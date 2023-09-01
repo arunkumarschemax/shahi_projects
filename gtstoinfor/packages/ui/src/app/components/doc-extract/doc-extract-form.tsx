@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Select, Spin, message, Button, Input, Row, Form } from "antd";
 import Tesseract from "tesseract.js";
 import { useNavigate,useLocation } from "react-router-dom";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import axios from "axios";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
 import { ScanService } from "@project-management-system/shared-services";
 
@@ -10,12 +13,14 @@ const { Option } = Select;
 export interface DocFormProps {}
 
 export function DocForm(props: DocFormProps) {
-
     const navigate = useNavigate();
     const service = new ScanService();
     const [form] =Form.useForm();
     const { state }: any = useLocation();
     const { data } = state ? state : { data: null };
+
+
+
     const [imageScale, setImageScale] = useState(1);
     const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
     const [cursorStyle, setCursorStyle] = useState('auto');
@@ -42,7 +47,15 @@ export function DocForm(props: DocFormProps) {
     const [payref, setpayref] = useState("");
     const [igst, setIgst] = useState("");
     const [charges, setCharges] = useState("");
-    const [goods, setGoods] =useState("");
+    const [house, setHouse] = useState("");
+    const [goods, setGoods] = useState("");
+    const [containers, setContainers] = useState("");
+    const [ocean, setOcean] = useState("");
+    const [vessel, setVessel] = useState("");
+    const [voyage, setVoyage] = useState("");
+    const [rcm, setRcm] = useState("");
+    const [cosign, setCosign] = useState("");
+    const [eta, setEta] = useState("");
     const [quantity, setQuantity] = useState("any");
     const [innNumber, setInnnumber] = useState("");
     const [currency, setCurrency] = useState("");
@@ -84,7 +97,16 @@ export function DocForm(props: DocFormProps) {
             const extractedPayref = extractPayref(text);
             const extractedIgst = extractIgst(text);
             const extractedCharges = extractCharges(text);
-            const extractedGoods=extractGoods(text);
+            const extractedGoods = extractGoods(text);
+            const extractedHouse = extractHouse(text);
+            const extractedContainers = extractContainers(text);
+            const extractedOcean = extractOcean(text);
+            const extractedVessel = extractVessel(text);
+            const extractedVoyage = extractVoyage(text);
+            const extractedRcm = extractRcm(text);
+            const extractedCosign = extractCosign(text);
+            const extractedEta = extractEta(text);
+
 
 
 
@@ -115,6 +137,14 @@ export function DocForm(props: DocFormProps) {
             setIgst(extractedIgst);
             setCharges(extractedCharges);
             setGoods(extractedGoods);
+            setHouse(extractedHouse);
+            setContainers(extractedContainers);
+            setOcean(extractedOcean);
+            setVessel(extractedVessel);
+            setVoyage(extractedVoyage);
+            setRcm(extractedRcm);
+            setCosign(extractedCosign);
+            setEta(extractedEta);
 
             setQuantity(extractedQuantity);
             setInnnumber(extractedInnNumber);
@@ -158,8 +188,6 @@ export function DocForm(props: DocFormProps) {
         const extractedInvoiceDate = match ? match[0] : "";
         return extractedInvoiceDate;
     };
-
-
 
 
     const extractWeight = (text) => {
@@ -249,14 +277,69 @@ export function DocForm(props: DocFormProps) {
         return extractedCharges;
     };
 
-    
+
     const extractGoods = (text) => {
-        const goodsRegex =/CARTONS\s*:\s*(\d+)\s*(\d+%)\s*(COTTON)\s*(\d+%)\s*(POLYESTER)\s*(\d+%)\s*(ELASTANE)\s*(\w+)\s*(MENS SHORTS)/;
+        const goodsRegex = /CARTONS\s*:\s*(\d+)\s*(\d+%)\s*(COTTON)\s*(\d+%)\s*(POLYESTER)\s*(\d+%)\s*(ELASTANE)\s*(\w+)\s*(MENS SHORTS)/;
         const match = text.match(goodsRegex);
         const extractedGoods = match ? match[0] : "";
         return extractedGoods;
     };
 
+    const extractHouse = (text) => {
+        const houseRegex = /(\d{11})/;
+        const match = text.match(houseRegex);
+        const extractedHouse = match ? match[0] : "";
+        return extractedHouse;
+    };
+    const extractContainers = (text) => {
+        const containersRegex = /([A-Z0-9]+)\s+([0-9]+)/;
+        const match = text.match(containersRegex);
+        const extractedContainers = match ? match[0] : "";
+        return extractedContainers;
+    };
+
+    const extractOcean = (text) => {
+        const oceanRegex = /[A-Z]+\/[A-Z]+\/\d+/;
+        const match = text.match(oceanRegex);
+        const extractedOcean = match ? match[0] : "";
+        return extractedOcean;
+    };
+
+    const extractVessel = (text) => {
+        const vesselRegex = /VESSEL\s+([A-Z\s]+)/;
+        const match = text.match(vesselRegex);
+        const extractedVessel = match ? match[0] : "";
+        return extractedVessel;
+    };
+
+    const extractVoyage = (text) => {
+        const voyageRegex = /\b\d{4}[A-Z]?\b/;
+        const match = text.match(voyageRegex);
+        const extractedVoyage = match ? match[0] : "";
+        return extractedVoyage;
+    };
+
+    const extractRcm = (text) => {
+        const rcmRegex = /\b(?:YES|NO)\b/i;
+        const match = text.match(rcmRegex);
+        const extractedRcm = match ? match[0] : "";
+        return extractedRcm;
+    };
+
+    const extractCosign = (text) => {
+        const cosignregex = /[A-Z]+\s[A-Z]+\.[A-Z]+\.[A-Z]+/;
+        const match = text.match(cosignregex);
+        const extractedCosign = match ? match[0] : "";
+        return extractedCosign;
+    };
+
+
+    const extractEta = (text) => {
+        const etaRegex = /\b(\d{2}-[A-Za-z]{3}-\d{2})\b/;
+        const match = text.match(etaRegex);
+        const extractedEta = match ? match[0] : "";
+        return extractedEta;
+    };
 
 
 
@@ -381,7 +464,7 @@ export function DocForm(props: DocFormProps) {
         anchor.href = URL.createObjectURL(image);
         anchor.download = 'image.jpg';
         anchor.click();
-   
+
     };
 
     const handleApplyClick = async () => {
@@ -407,34 +490,34 @@ export function DocForm(props: DocFormProps) {
     };
 
     const handleBack = () => {
-        navigate("/scan-document/doc-extract-view");
+        navigate("/scan-document");
     }
 
-    const  onFinish = (values:AllScanDto) => {
-        
-        values.Gst=gstNumbers
-        values.Ifsc=ifscCodes
-        values.Innvoice=invoiceDate
-        values.Volume=volume
-        values.Customer=customerID
-        values.Weight=weight
-        values.Chargeable=chargeable
-        values.Packages=packages
-        values.Date=dt
-        values.Cartons=cartons
-        values.Console=consoles
-        values.PO=po
-        values.Payref=payref
+    const onFinish = (values: AllScanDto) => {
 
-        values.Quantity=quantity
-        values.InnvoiceNumber=innNumber
-        values.Currency=currency
-        values.Origin=origin
-        values.Destination=destination
+        values.Gst = gstNumbers
+        values.Ifsc = ifscCodes
+        values.Innvoice = invoiceDate
+        values.Volume = volume
+        values.Customer = customerID
+        values.Weight = weight
+        values.Chargeable = chargeable
+        values.Packages = packages
+        values.Date = dt
+        values.Cartons = cartons
+        values.Console = consoles
+        values.PO = po
+        values.Payref = payref
+
+        values.Quantity = quantity
+        values.InnvoiceNumber = innNumber
+        values.Currency = currency
+        values.Origin = origin
+        values.Destination = destination
 
 
         console.log(gstNumbers[0], "gst####################")
-        console.log(values,"*****")
+        console.log(values, "*****")
         service.postdata(values).then(res => {
             if (res.status) {
                 message.success("Created Successfully");
@@ -452,10 +535,10 @@ export function DocForm(props: DocFormProps) {
 
     return (
         <div >
-        
-      
+
+
             <div style={{ display: "flex", justifyContent: "center" }}>
-                <div style={{ width: "50%"}}>
+                <div style={{ width: "50%" }}>
                     {current === 1 && image && (
                         <Row
                             style={{
@@ -490,7 +573,7 @@ export function DocForm(props: DocFormProps) {
                         <>
                             <input
                                 disabled={loading}
-                                style={{ position:"relative",top:"110px",right:"50px" }}
+                                style={{ position: "relative", top: "110px", right: "50px" }}
                                 type="file"
                                 accept="image/*"
                                 multiple
@@ -499,23 +582,23 @@ export function DocForm(props: DocFormProps) {
                             <Select
                                 disabled={loading}
                                 defaultValue="PO"
-                                style={{ width: 120, position:"relative", right:"450px",top:"110px" }}
+                                style={{ width: 120, position: "relative", right: "450px", top: "110px" }}
                                 onChange={() => setSelectedType("")}
                             >
                                 <Option value="type1">PO</Option>
                                 <Option value="type2">NON-PO</Option>
                                 {/* <Option value="type3">Type 3</Option> */}
                             </Select>
-                            <Row style={{position:"relative", top:"130px", left:"50px"}}>
-                            <Button type="primary" style={{ left: "100px", top: "-60px", height: "40px", width: "80px" }} onClick={handleApplyClick} disabled={loading}>
-                                Apply
-                            </Button>
-                            &nbsp;
-                            <Button type="primary" style={{ left: "105px", top: "-60px", height: "40px", width: "80px" }} onClick={handleBack} disabled={loading}>
-                                View
-                            </Button>
-                          
-                            {loading ? <Spin size="large" style={{ position: "relative",right:"170px" }} /> : ""}
+                            <Row style={{ position: "relative", top: "130px", left: "50px" }}>
+                                <Button type="primary" style={{ left: "100px", top: "-60px", height: "40px", width: "80px" }} onClick={handleApplyClick} disabled={loading}>
+                                    Apply
+                                </Button>
+                                &nbsp;
+                                <Button type="primary" style={{ left: "105px", top: "-60px", height: "40px", width: "80px" }} onClick={handleBack} disabled={loading}>
+                                    View
+                                </Button>
+
+                                {loading ? <Spin size="large" style={{ position: "relative", right: "170px" }} /> : ""}
                             </Row>
 
                         </>
@@ -525,7 +608,7 @@ export function DocForm(props: DocFormProps) {
                             {selectedType === "PO" && (
 
                                 <>
-                                    <Row style={{position:"relative", right:"220px",top:"50px"}}>
+                                    <Row style={{ position: "relative", right: "220px", top: "50px" }}>
                                         <Button
                                             type="primary"
                                             onClick={handleZoomIn}
@@ -544,164 +627,221 @@ export function DocForm(props: DocFormProps) {
                                             onMouseEnter={() => setCursorStyle('zoom-out')}
                                             onMouseLeave={() => setCursorStyle('auto')}
                                             style={{
-                                                marginLeft:"10px",
+                                                marginLeft: "10px",
                                                 cursor: cursorStyle,
-                                           }}
+                                            }}
                                             disabled={imageScale <= 1}
                                         >
-                                             Zoom Out
+                                            Zoom Out
                                         </Button>
                                     </Row>
                                     <Form onFinish={onFinish} form={form} initialValues={data}>
-                                    <Row style={{ position: "relative", bottom: "60px" }}>
-                                        <Row style={{ position: "relative", bottom: "300px" }}>
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> GST Number </h4>
-                                            <Input
-                                                name="GST"
-                                                style={{ width: "150px", height: "30px" }}
-                                                value={gstNumbers}
-                                                onChange={(e) => setGstNumbers(e.target.value)}
-                                            />
+                                        <Row style={{ position: "relative", bottom: "60px" }}>
+                                            <Row style={{ position: "relative", bottom: "300px" }}>
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> GST Number </h4>
+                                                <Input
+                                                    name="GST"
+                                                    style={{ width: "150px", height: "30px" }}
+                                                    value={gstNumbers}
+                                                    onChange={(e) => setGstNumbers(e.target.value)}
+                                                />
 
 
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> IFSC Code </h4>
-                                            <Input
-                                                name="IFSC"
-                                                style={{ width: "150px", height: "30px" }}
-                                                value={ifscCodes}
-                                                onChange={(e) => setIfscCodes(e.target.value)}
-                                            />
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> IFSC Code </h4>
+                                                <Input
+                                                    name="IFSC"
+                                                    style={{ width: "150px", height: "30px" }}
+                                                    value={ifscCodes}
+                                                    onChange={(e) => setIfscCodes(e.target.value)}
+                                                />
 
 
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> Invoice Date</h4>
-                                            <Input
-                                                name="Innvoice"
-                                                style={{ width: "150px", height: "30px",position:"relative",right:"12px"  }}
-                                                value={invoiceDate}
-                                                onChange={(e) => setInvoiceDate(e.target.value)}
-                                            />
-                                        </Row>
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> Invoice Date</h4>
+                                                <Input
+                                                    name="Innvoice"
+                                                    style={{ width: "150px", height: "30px", position: "relative", right: "12px" }}
+                                                    value={invoiceDate}
+                                                    onChange={(e) => setInvoiceDate(e.target.value)}
+                                                />
+                                            </Row>
 
-                                        <Row style={{ position: "relative", bottom: "270px", left: "43px" }}>
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}>Payref</h4>
-                                            <Input
-                                                name="Payref"
-                                                style={{ width: "150px", height: "30px" }}
-                                                value={payref}
-                                                onChange={(e) => setpayref(e.target.value)}
-                                            />
+                                            <Row style={{ position: "relative", bottom: "270px", left: "43px" }}>
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}>Payref</h4>
+                                                <Input
+                                                    name="Payref"
+                                                    style={{ width: "150px", height: "30px" }}
+                                                    value={payref}
+                                                    onChange={(e) => setpayref(e.target.value)}
+                                                />
 
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> Customer ID</h4>
-                                            <Input
-                                                name="Customer"
-                                                style={{ width: "150px", height: "30px",position:"relative",right:"20px" }}
-                                                value={customerID}
-                                                onChange={(e) => setCustomerID(e.target.value)}
-                                            />
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> Customer ID</h4>
+                                                <Input
+                                                    name="Customer"
+                                                    style={{ width: "150px", height: "30px", position: "relative", right: "20px" }}
+                                                    value={customerID}
+                                                    onChange={(e) => setCustomerID(e.target.value)}
+                                                />
 
 
 
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> Volume</h4>
-                                            <Input
-                                                name="Volume"
-                                                style={{ width: "150px", height: "30px",position:"relative",left:"2px" }}
-                                                value={volume}
-                                                onChange={(e) => setVolume(e.target.value)}
-                                            />
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> Volume</h4>
+                                                <Input
+                                                    name="Volume"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "2px" }}
+                                                    value={volume}
+                                                    onChange={(e) => setVolume(e.target.value)}
+                                                />
 
-                                        </Row>
+                                            </Row>
 
-                                        <Row style={{ position: "relative", bottom: "240px", left: "43px" }}>
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }} > Weight</h4>
-                                            <Input
-                                                name="Weight"
-                                                style={{ width: "150px", height: "30px",position:"relative",right:"5px"  }}
-                                                value={weight}
-                                                onChange={(e) => setWeight(e.target.value)}
-                                            />
+                                            <Row style={{ position: "relative", bottom: "240px", left: "43px" }}>
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }} > Weight</h4>
+                                                <Input
+                                                    name="Weight"
+                                                    style={{ width: "150px", height: "30px", position: "relative", right: "5px" }}
+                                                    value={weight}
+                                                    onChange={(e) => setWeight(e.target.value)}
+                                                />
 
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> Chargeable</h4>
-                                            <Input
-                                                name="Chargeable"
-                                                style={{ width: "150px", height: "30px",position:"relative",right:"15px"  }}
-                                                value={chargeable}
-                                                onChange={(e) => setChargeable(e.target.value)}
-                                            />
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> Chargeable</h4>
+                                                <Input
+                                                    name="Chargeable"
+                                                    style={{ width: "150px", height: "30px", position: "relative", right: "15px" }}
+                                                    value={chargeable}
+                                                    onChange={(e) => setChargeable(e.target.value)}
+                                                />
 
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}>Date</h4>
-                                            <Input
-                                                name="Date"
-                                                style={{ width: "150px", height: "30px",position:"relative",left:"25px"  }}
-                                                value={dt}
-                                                onChange={(e) => setDt(e.target.value)}
-                                            />
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}>Date</h4>
+                                                <Input
+                                                    name="Date"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "25px" }}
+                                                    value={dt}
+                                                    onChange={(e) => setDt(e.target.value)}
+                                                />
 
-                                        </Row>
+                                            </Row>
 
-                                        <Row style={{ position: "relative", bottom: "220px", left: "43px" }}>
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }} > Cartons</h4>
-                                            <Input
-                                                name="Cartons"
-                                                style={{ width: "150px", height: "30px",position:"relative",right:"10px"   }}
-                                                value={cartons}
-                                                onChange={(e) => setCartons(e.target.value)}
-                                            />
+                                            <Row style={{ position: "relative", bottom: "220px", left: "43px" }}>
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }} > Cartons</h4>
+                                                <Input
+                                                    name="Cartons"
+                                                    style={{ width: "150px", height: "30px", position: "relative", right: "10px" }}
+                                                    value={cartons}
+                                                    onChange={(e) => setCartons(e.target.value)}
+                                                />
 
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }} > Console</h4>
-                                            <Input
-                                                name="Consoles"
-                                                style={{ width: "150px", height: "30px",position:"relative",left:"5px"   }}
-                                                value={consoles}
-                                                onChange={(e) => setConsoles(e.target.value)}
-                                            />
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }} > Console</h4>
+                                                <Input
+                                                    name="Consoles"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "5px" }}
+                                                    value={consoles}
+                                                    onChange={(e) => setConsoles(e.target.value)}
+                                                />
 
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}>PO</h4>
-                                            <Input
-                                                name="PO"
-                                                style={{ width: "150px", height: "30px",position:"relative",left:"60px"   }}
-                                                value={po}
-                                                onChange={(e) => setPO(e.target.value)}
-                                            />
+                                                <h4 style={{ left: "130px", position: "relative", bottom: "50px" }}>PO</h4>
+                                                <Input
+                                                    name="PO"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "60px" }}
+                                                    value={po}
+                                                    onChange={(e) => setPO(e.target.value)}
+                                                />
 
-                                        </Row>
+                                            </Row>
 
-                                        <Row style={{ position: "relative", bottom: "200px", left: "43px" }}>
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }} > Packages</h4>
-                                            <Input
-                                                name="Packages"
-                                                style={{ width: "150px", height: "30px",position:"relative",right:"20px"   }}
-                                                value={packages}
-                                                onChange={(e) => setPackages(e.target.value)}
-                                            />
+                                            <Row style={{ position: "relative", bottom: "200px", left: "43px" }}>
+                                                <h4 style={{ left: "90px", position: "relative", bottom: "50px" }} > Packages</h4>
+                                                <Input
+                                                    name="Packages"
+                                                    style={{ width: "150px", height: "30px", position: "relative", right: "20px" }}
+                                                    value={packages}
+                                                    onChange={(e) => setPackages(e.target.value)}
+                                                />
 
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }} > IGST</h4>
-                                            <Input
-                                                name="Igst"
-                                                style={{ width: "150px", height: "30px",position:"relative",left:"15px"   }}
-                                                value={igst}
-                                                onChange={(e) => setIgst(e.target.value)}
-                                            />
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "50px" }} > RCM </h4>
+                                                <Input
+                                                    name="Rcm"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "20px", bottom: "1px" }}
+                                                    value={rcm}
+                                                    onChange={(e) => setRcm(e.target.value)}
+                                                />
 
-                                            <h4 style={{ left: "100px", position: "relative", bottom: "50px" }} > CHARGES</h4>
-                                            <textarea
-                                                name="Charges"
-                                                style={{ width: "150px", height: "30px",position:"relative",left:"25px"   }}
-                                                value={charges}
-                                                onChange={(e) => setCharges(e.target.value)}
-                                            />
-                                        </Row>
+                                                <h4 style={{ left: "140px", position: "relative", bottom: "50px" }} > ETD </h4>
+                                                <Input
+                                                    name="ETA"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "65px", bottom: "1px" }}
+                                                    value={eta}
+                                                    onChange={(e) => setEta(e.target.value)}
+                                                />
 
-                                        <Row>
-                                        <h4 style={{ left: "100px", position: "relative", bottom: "100px" }} > CHARGES</h4>
-                                            <textarea
-                                                name="Goods Description"
-                                                style={{ width: "150px", height: "30px",position:"relative",left:"25px",bottom:"50px"   }}
-                                                value={goods}
-                                                onChange={(e) => setGoods(e.target.value)}
-                                            />
-                                        </Row>
+                                            </Row>
 
-                                        {/* <Row style={{ position: "relative", bottom: "215px", left: "43px" }}>
+                                            <Row>
+
+                                                <h4 style={{ left: "110px", position: "relative", bottom: "230px" }} > House Bill</h4>
+                                                <Input
+                                                    name="House Bill"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "10px", bottom: "180px" }}
+                                                    value={house}
+                                                    onChange={(e) => setHouse(e.target.value)}
+                                                />
+
+                                                <h4 style={{ left: "120px", position: "relative", bottom: "230px" }} > Goods Desc</h4>
+                                                <textarea
+                                                    name="Goods Description"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "5px", bottom: "180px" }}
+                                                    value={goods}
+                                                    onChange={(e) => setGoods(e.target.value)}
+                                                />
+
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "230px" }} > Ocean Bill</h4>
+                                                <Input
+                                                    name="Ocean Bill"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "10px", bottom: "180px" }}
+                                                    value={ocean}
+                                                    onChange={(e) => setOcean(e.target.value)}
+                                                />
+                                            </Row>
+                                            <Row>
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "80px" }} > Containers</h4>
+                                                <Input
+                                                    name="Containers"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "25px", bottom: "30px" }}
+                                                    value={containers}
+                                                    onChange={(e) => setContainers(e.target.value)}
+                                                />
+
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "80px" }} > Vessel </h4>
+                                                <Input
+                                                    name="Vessel"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "25px", bottom: "30px" }}
+                                                    value={vessel}
+                                                    onChange={(e) => setVessel(e.target.value)}
+                                                />
+
+
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "80px" }} > Voyage </h4>
+                                                <Input
+                                                    name="Voyage"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "25px", bottom: "30px" }}
+                                                    value={voyage}
+                                                    onChange={(e) => setVoyage(e.target.value)}
+                                                />
+
+                                            </Row>
+                                            <Row>
+
+                                                <h4 style={{ left: "100px", position: "relative", bottom: "80px" }} > Cosign </h4>
+                                                <Input
+                                                    name="Cosign"
+                                                    style={{ width: "150px", height: "30px", position: "relative", left: "25px", bottom: "30px" }}
+                                                    value={cosign}
+                                                    onChange={(e) => setCosign(e.target.value)}
+                                                />
+
+                                                
+                                            </Row>
+
+                                            {/* <Row style={{ position: "relative", bottom: "215px", left: "43px" }}>
                                             <Button type="primary" htmlType="submit"  style={{ position: "relative", left: "50px" }} >
                                                 Submit
                                             </Button>
@@ -719,7 +859,7 @@ export function DocForm(props: DocFormProps) {
                                             </Button>
 
                                         </Row> */}
-                                    </Row>
+                                        </Row>
                                     </Form>
                                 </>
                             )}
@@ -727,7 +867,7 @@ export function DocForm(props: DocFormProps) {
                             <div >
                                 {selectedType === "NON-PO" && (
                                     <>
-                                        <Row style={{position:'relative',right:"230px",top:"50px"}}>
+                                        <Row style={{ position: 'relative', right: "230px", top: "50px" }}>
                                             <Button
                                                 type="primary"
                                                 onClick={handleZoomIn}
@@ -736,76 +876,76 @@ export function DocForm(props: DocFormProps) {
                                                 Zoom In
                                             </Button>
                                             <Button
-                                            style={{position:"relative",left:"10px"}}
+                                                style={{ position: "relative", left: "10px" }}
                                                 type="primary"
                                                 onClick={handleZoomOut}
                                                 disabled={imageScale <= 1}
                                             >
                                                 Zoom Out
                                             </Button>
-                                            </Row>
-                                    <Form onFinish={onFinish} form={form} initialValues={data}>
+                                        </Row>
+                                        <Form onFinish={onFinish} form={form} initialValues={data}>
                                             <Row>
-                                                <h4 style={{ left: "85px", position: "relative",bottom:"400px" }}> Quantity </h4>
+                                                <h4 style={{ left: "85px", position: "relative", bottom: "400px" }}> Quantity </h4>
                                                 <Input
                                                     name="Quantity"
-                                                    style={{ width: "150px", height: "30px" ,position:"relative",bottom:"350px"}}
+                                                    style={{ width: "150px", height: "30px", position: "relative", bottom: "350px" }}
                                                     value={quantity}
                                                     onChange={(e) => setQuantity(e.target.value)}
                                                 />
-                                                <h4 style={{ left: "75px", position: "relative",bottom:"400px"  }}> Inn Number </h4>
+                                                <h4 style={{ left: "75px", position: "relative", bottom: "400px" }}> Inn Number </h4>
                                                 <Input
                                                     name="InnvoiceNumber"
-                                                    style={{ width: "150px", height: "30px",position:"relative",bottom:"350px",right:"40px" }}
+                                                    style={{ width: "150px", height: "30px", position: "relative", bottom: "350px", right: "40px" }}
                                                     value={innNumber}
                                                     onChange={(e) => setInnnumber(e.target.value)}
                                                 />
-                                                <h4 style={{ left: "50px", position: "relative",bottom:"400px", }}> Currency</h4>
+                                                <h4 style={{ left: "50px", position: "relative", bottom: "400px", }}> Currency</h4>
                                                 <Input
                                                     name="Currency"
-                                                    style={{ width: "150px", height: "30px",bottom:"350px",right:"45px"}}
+                                                    style={{ width: "150px", height: "30px", bottom: "350px", right: "45px" }}
                                                     value={currency}
                                                     onChange={(e) => setCurrency(e.target.value)}
                                                 />
-                                                </Row>
-                                                <Row>
-                                                <h4 style={{ left: "85px", position: "relative",bottom:"370px" }}> Origin</h4>
+                                            </Row>
+                                            <Row>
+                                                <h4 style={{ left: "85px", position: "relative", bottom: "370px" }}> Origin</h4>
                                                 <Input
                                                     name="Origin"
-                                                    style={{ width: "150px", height: "30px",bottom:"320px",left:"15px" }}
+                                                    style={{ width: "150px", height: "30px", bottom: "320px", left: "15px" }}
                                                     value={origin}
                                                     onChange={(e) => setOrigin(e.target.value)}
                                                 />
-                                   
-                                                <h4 style={{ left: "85px", position: "relative",bottom:"370px"  }}> Destination</h4>
+
+                                                <h4 style={{ left: "85px", position: "relative", bottom: "370px" }}> Destination</h4>
                                                 <Input
                                                     name="Destination"
-                                                    style={{ width: "150px", height: "30px",bottom:"320px",left:"-17px" }}
+                                                    style={{ width: "150px", height: "30px", bottom: "320px", left: "-17px" }}
                                                     value={destination}
                                                     onChange={(e) => setDestination(e.target.value)}
                                                 />
-                                           </Row >
-                                           <Row style={{position:"relative",bottom:"95px",left:"40px"}}>
-                                            <Button type="primary" htmlType="submit" >
-                                                Submit
-                                            </Button>
-                                            <Button type="primary"
-                                            style={{position:"relative",left:"15px"}}
-                                                onClick={handleCancelClick}
-                                            >
-                                                Cancel
-                                            </Button>
+                                            </Row >
+                                            <Row style={{ position: "relative", bottom: "95px", left: "40px" }}>
+                                                <Button type="primary" htmlType="submit" >
+                                                    Submit
+                                                </Button>
+                                                <Button type="primary"
+                                                    style={{ position: "relative", left: "15px" }}
+                                                    onClick={handleCancelClick}
+                                                >
+                                                    Cancel
+                                                </Button>
 
-                                            <Button
-                                            type="primary"
-                                                style={{ position: "relative", left: "30px" }}
-                                                onClick={handleSaveAsClick}
-                                            >
-                                                Save As
-                                            </Button>
-                                            
+                                                <Button
+                                                    type="primary"
+                                                    style={{ position: "relative", left: "30px" }}
+                                                    onClick={handleSaveAsClick}
+                                                >
+                                                    Save As
+                                                </Button>
+
                                             </Row>
-                                           </Form>
+                                        </Form>
 
                                     </>
                                 )}
