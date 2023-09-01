@@ -546,7 +546,7 @@ const DivertReport = () => {
                     onClick={exportExcel}
                     icon={<FileExcelFilled />}>Download Excel</Button>}>
                 <Row gutter={70}>
-                    <Col >
+                    {/* <Col >
                     <Card title={'Total Line Status Count  : ' + Number(dataLength[0]?.totalCount)} style={{ textAlign: 'left', width: 280, height: 38, backgroundColor: ' lightblue' }}></Card>
                 </Col>
                 <Col>
@@ -554,7 +554,7 @@ const DivertReport = () => {
                 </Col>
                 <Col>
                     <Card title={'Unaccepted : ' +Number(dataLength[0]?.unacceptedCount)} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
-                </Col> 
+                </Col>  */}
 
                 </Row><br></br>
                 <Card >

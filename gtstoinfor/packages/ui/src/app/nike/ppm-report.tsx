@@ -359,13 +359,16 @@ const getMap = (data: MarketingModel[]) => {
       sorter: (a, b) => a.productCode.length - b.productCode.length,
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('productCode'),
-      
-
     },
     {
       title: 'Colour Description',
       dataIndex: 'colorDesc'
     },
+    {
+      title: 'Change Register',
+      dataIndex: 'displayName',
+      align: 'center',
+  },
     {
       title: 'Total Item Qty',
       dataIndex: 'totalItemQty',

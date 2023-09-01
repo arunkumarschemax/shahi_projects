@@ -851,36 +851,26 @@ export class DpomService {
     async getFactoryReportData(req?:PpmDateFilterRequest): Promise<CommonResponseModel> {
         try {
             
-            let whereConditions: any = {};
+            const allDetails = await this.dpomRepository.getFactoryPpmData( req );
 
-            if (req && req.lastModifedStartDate && req.lastModifedEndtDate) {
-                whereConditions.lastModifiedDate = Between(req.lastModifedStartDate, req.lastModifedEndtDate);
-            }
-    
-            if (req && req.documentStartDate && req.documentEndtDate) {
-                whereConditions.documentDate = Between(req.documentStartDate, req.documentEndtDate);
-            }
-    
-            const allDetails = await this.dpomRepository.find({
-                where: whereConditions,
-            });
-
-            const filteredDetails = allDetails.filter(record => record.docTypeCode !== 'ZP26')
-            const details = filteredDetails.filter(record => record.DPOMLineItemStatus !== 'Cancelled')
+            const filteredDetails = allDetails.filter(record => record.doc_type_code !== 'ZP26')
+            const details = filteredDetails.filter(record => record.dpom_item_line_status !== 'Cancelled')
             if (details.length === 0) {
                 return new CommonResponseModel(false, 0, 'data not found');
             }
             const sizeDateMap = new Map<string, FactoryReportModel>();
             for (const rec of details) {
-                if (!sizeDateMap.has(rec.poAndLine)) {
+                if (!sizeDateMap.has(rec.po_and_line)) {
                     sizeDateMap.set(
-                        rec.poAndLine,
-                        new FactoryReportModel(rec.lastModifiedDate, rec.item, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poLineItemNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc, rec.customerOrder, rec.coFinalApprovalDate, rec.planNo, rec.leadTime, rec.categoryCode, rec.categoryDesc, rec.vendorCode, rec.gccFocusCode, rec.gccFocusDesc, rec.genderAgeCode, rec.genderAgeDesc, rec.destinationCountryCode, rec.destinationCountry, rec.plant, rec.plantName, rec.tradingCoPoNumber, rec.UPC, rec.directShipSONumber, rec.directShipSOItemNumber, rec.customerPO, rec.shipToCustomerNumber, rec.shipToCustomerName, rec.planningSeasonCode, rec.planningSeasonYear, rec.docTypeCode, rec.docTypeDesc, rec.MRGAC, rec.OGAC, rec.GAC, rec.truckOutDate, rec.originReceiptDate, rec.factoryDeliveryActDate, rec.GACReasonCode, rec.GACReasonDesc, rec.shippingType, rec.planningPriorityCode, rec.planningPriorityDesc, rec.launchCode, rec.modeOfTransportationCode, rec.inCoTerms, rec.inventorySegmentCode, rec.purchaseGroupCode, rec.purchaseGroupName, rec.totalItemQty, rec.actualShippedQty, rec.VASSize, rec.itemVasText, rec.itemText,rec.price,rec.coPrice,rec.PCD,rec.shipToAddressLegalPO,rec.shipToAddressDIA,rec.CABCode,rec.grossPriceFOB,rec.netIncludingDisc,rec.trCoNetIncludingDisc, [])
+                        rec.po_and_line,
+                        new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text,rec.price,rec.co_price,rec.pcd,rec.ship_to_address_legal_po,rec.ship_to_address_dia,rec.cab_code,rec.gross_price_fob,rec.ne_inc_disc,rec.trading_net_inc_disc,rec.displayName,[])
                     );
                 }
-                const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
-                if (rec.sizeDescription !== null) {
-                    sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity, rec.price, rec.coPrice));
+                
+                const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
+
+                if (rec.size_description !== null) {
+                    sizeWiseData.push(new FactoryReportSizeModel(rec.size_description, rec.size_qty, rec.price, rec.co_price));
                 }
             }
             const dataModelArray: FactoryReportModel[] = Array.from(sizeDateMap.values());
@@ -934,31 +924,23 @@ export class DpomService {
     }
 
     async getPPMData(req?:PpmDateFilterRequest): Promise<CommonResponseModel> {
-        let whereConditions: any = {};
-
-        if (req && req.lastModifedStartDate && req.lastModifedEndtDate) {
-            whereConditions.lastModifiedDate = Between(req.lastModifedStartDate, req.lastModifedEndtDate);
-        }
-
-        if (req && req.documentStartDate && req.documentEndtDate) {
-            whereConditions.documentDate = Between(req.documentStartDate, req.documentEndtDate);
-        }
-        const alldata = await this.dpomRepository.find({where: whereConditions});
-        const details = alldata.filter(record => record.docTypeCode !== 'ZP26')
+        
+        const alldata = await this.dpomRepository.getMarketingPpmData(req);
+        const details = alldata.filter(record => record.doc_type_code !== 'ZP26')
         if (details.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found')
         }
         const sizeDateMap = new Map<string, MarketingModel>();
         for (const rec of details) {
-            if (!sizeDateMap.has(rec.poAndLine)) {
+            if (!sizeDateMap.has(rec.po_and_line)) {
                 sizeDateMap.set(
-                    rec.poAndLine,
-                   new FactoryReportModel(rec.lastModifiedDate, rec.item, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poLineItemNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc, rec.customerOrder, rec.coFinalApprovalDate, rec.planNo, rec.leadTime, rec.categoryCode, rec.categoryDesc, rec.vendorCode, rec.gccFocusCode, rec.gccFocusDesc, rec.genderAgeCode, rec.genderAgeDesc, rec.destinationCountryCode, rec.destinationCountry, rec.plant, rec.plantName, rec.tradingCoPoNumber, rec.UPC, rec.directShipSONumber, rec.directShipSOItemNumber, rec.customerPO, rec.shipToCustomerNumber, rec.shipToCustomerName, rec.planningSeasonCode, rec.planningSeasonYear, rec.docTypeCode, rec.docTypeDesc, rec.MRGAC, rec.OGAC, rec.GAC, rec.truckOutDate, rec.originReceiptDate, rec.factoryDeliveryActDate, rec.GACReasonCode, rec.GACReasonDesc, rec.shippingType, rec.planningPriorityCode, rec.planningPriorityDesc, rec.launchCode, rec.modeOfTransportationCode, rec.inCoTerms, rec.inventorySegmentCode, rec.purchaseGroupCode, rec.purchaseGroupName, rec.totalItemQty, rec.actualShippedQty, rec.VASSize, rec.itemVasText, rec.itemText,rec.price,rec.coPrice ,rec.PCD,rec.shipToAddressLegalPO, rec.shipToAddressDIA,rec.CABCode,rec.grossPriceFOB,rec.netIncludingDisc,rec.trCoNetIncludingDisc,[])
+                    rec.po_and_line,
+                   new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text,rec.price,rec.co_price,rec.pcd,rec.ship_to_address_legal_po,rec.ship_to_address_dia,rec.cab_code,rec.gross_price_fob,rec.ne_inc_disc,rec.trading_net_inc_disc,rec.displayName,[])
                 );
             }
-            const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
-            if (rec.sizeDescription !== null) {
-                sizeWiseData.push(new FactoryReportSizeModel(rec.sizeDescription, rec.sizeQuantity, rec.price, rec.coPrice));
+            const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
+            if (rec.size_description !== null) {
+                sizeWiseData.push(new FactoryReportSizeModel(rec.size_description, rec.size_qty, rec.price, rec.co_price));
             }
         }
         const dataModelArray: MarketingModel[] = Array.from(sizeDateMap.values());
@@ -1101,7 +1083,6 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'failed', error);
         }
     }
-
     
 
 async getDivertReportData(): Promise<CommonResponseModel> {
