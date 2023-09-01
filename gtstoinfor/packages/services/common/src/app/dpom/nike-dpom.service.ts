@@ -23,6 +23,7 @@ const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 import { PoAndQtyReq } from './dto/po-qty.req';
 import { PoQty } from './dto/poqty.req';
 import { Console } from 'console';
+import { AppDataSource1, AppDataSource2 } from '../app-datasource';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -170,6 +171,33 @@ export class DpomService {
             }
         } catch (error) {
             return { status: false, error: error.message };
+        }
+    }
+
+    async getCRMOrderDetails(buyerPO: string): Promise<CommonResponseModel> {
+        const data = await AppDataSource1.query(`select * from movex.nike_co_view where byuer_po = ${buyerPO}`)
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'error')
+        }
+    }
+
+    async getCRMOrderDetails1(styleCode: string): Promise<CommonResponseModel> {
+        const data = await AppDataSource1.query(`select * from movex.nike_co_view where byuer_po = ${styleCode}`)
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'error')
+        }
+    }
+
+    async getCRMOrderDetails2(coNumber: string): Promise<CommonResponseModel> {
+        const data = await AppDataSource2.query(`select * from exports.nike_inv_view where CO_NUMB = ${coNumber}`)
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'error')
         }
     }
 
@@ -848,19 +876,19 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getFactoryReportData(req?:PpmDateFilterRequest): Promise<CommonResponseModel> {
+    async getFactoryReportData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
         try {
-            
+
             let whereConditions: any = {};
 
             if (req && req.lastModifedStartDate && req.lastModifedEndtDate) {
                 whereConditions.lastModifiedDate = Between(req.lastModifedStartDate, req.lastModifedEndtDate);
             }
-    
+
             if (req && req.documentStartDate && req.documentEndtDate) {
                 whereConditions.documentDate = Between(req.documentStartDate, req.documentEndtDate);
             }
-    
+
             const allDetails = await this.dpomRepository.find({
                 where: whereConditions,
             });
@@ -875,7 +903,7 @@ export class DpomService {
                 if (!sizeDateMap.has(rec.poAndLine)) {
                     sizeDateMap.set(
                         rec.poAndLine,
-                        new FactoryReportModel(rec.lastModifiedDate, rec.item, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poLineItemNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc, rec.customerOrder, rec.coFinalApprovalDate, rec.planNo, rec.leadTime, rec.categoryCode, rec.categoryDesc, rec.vendorCode, rec.gccFocusCode, rec.gccFocusDesc, rec.genderAgeCode, rec.genderAgeDesc, rec.destinationCountryCode, rec.destinationCountry, rec.plant, rec.plantName, rec.tradingCoPoNumber, rec.UPC, rec.directShipSONumber, rec.directShipSOItemNumber, rec.customerPO, rec.shipToCustomerNumber, rec.shipToCustomerName, rec.planningSeasonCode, rec.planningSeasonYear, rec.docTypeCode, rec.docTypeDesc, rec.MRGAC, rec.OGAC, rec.GAC, rec.truckOutDate, rec.originReceiptDate, rec.factoryDeliveryActDate, rec.GACReasonCode, rec.GACReasonDesc, rec.shippingType, rec.planningPriorityCode, rec.planningPriorityDesc, rec.launchCode, rec.modeOfTransportationCode, rec.inCoTerms, rec.inventorySegmentCode, rec.purchaseGroupCode, rec.purchaseGroupName, rec.totalItemQty, rec.actualShippedQty, rec.VASSize, rec.itemVasText, rec.itemText,rec.price,rec.coPrice,rec.PCD,rec.shipToAddressLegalPO,rec.shipToAddressDIA,rec.CABCode,rec.grossPriceFOB,rec.netIncludingDisc,rec.trCoNetIncludingDisc, [])
+                        new FactoryReportModel(rec.lastModifiedDate, rec.item, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poLineItemNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc, rec.customerOrder, rec.coFinalApprovalDate, rec.planNo, rec.leadTime, rec.categoryCode, rec.categoryDesc, rec.vendorCode, rec.gccFocusCode, rec.gccFocusDesc, rec.genderAgeCode, rec.genderAgeDesc, rec.destinationCountryCode, rec.destinationCountry, rec.plant, rec.plantName, rec.tradingCoPoNumber, rec.UPC, rec.directShipSONumber, rec.directShipSOItemNumber, rec.customerPO, rec.shipToCustomerNumber, rec.shipToCustomerName, rec.planningSeasonCode, rec.planningSeasonYear, rec.docTypeCode, rec.docTypeDesc, rec.MRGAC, rec.OGAC, rec.GAC, rec.truckOutDate, rec.originReceiptDate, rec.factoryDeliveryActDate, rec.GACReasonCode, rec.GACReasonDesc, rec.shippingType, rec.planningPriorityCode, rec.planningPriorityDesc, rec.launchCode, rec.modeOfTransportationCode, rec.inCoTerms, rec.inventorySegmentCode, rec.purchaseGroupCode, rec.purchaseGroupName, rec.totalItemQty, rec.actualShippedQty, rec.VASSize, rec.itemVasText, rec.itemText, rec.price, rec.coPrice, rec.PCD, rec.shipToAddressLegalPO, rec.shipToAddressDIA, rec.CABCode, rec.grossPriceFOB, rec.netIncludingDisc, rec.trCoNetIncludingDisc, [])
                     );
                 }
                 const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
@@ -933,7 +961,7 @@ export class DpomService {
         return output.trim();
     }
 
-    async getPPMData(req?:PpmDateFilterRequest): Promise<CommonResponseModel> {
+    async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
         let whereConditions: any = {};
 
         if (req && req.lastModifedStartDate && req.lastModifedEndtDate) {
@@ -943,7 +971,7 @@ export class DpomService {
         if (req && req.documentStartDate && req.documentEndtDate) {
             whereConditions.documentDate = Between(req.documentStartDate, req.documentEndtDate);
         }
-        const alldata = await this.dpomRepository.find({where: whereConditions});
+        const alldata = await this.dpomRepository.find({ where: whereConditions });
         const details = alldata.filter(record => record.docTypeCode !== 'ZP26')
         if (details.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found')
@@ -953,7 +981,7 @@ export class DpomService {
             if (!sizeDateMap.has(rec.poAndLine)) {
                 sizeDateMap.set(
                     rec.poAndLine,
-                   new FactoryReportModel(rec.lastModifiedDate, rec.item, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poLineItemNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc, rec.customerOrder, rec.coFinalApprovalDate, rec.planNo, rec.leadTime, rec.categoryCode, rec.categoryDesc, rec.vendorCode, rec.gccFocusCode, rec.gccFocusDesc, rec.genderAgeCode, rec.genderAgeDesc, rec.destinationCountryCode, rec.destinationCountry, rec.plant, rec.plantName, rec.tradingCoPoNumber, rec.UPC, rec.directShipSONumber, rec.directShipSOItemNumber, rec.customerPO, rec.shipToCustomerNumber, rec.shipToCustomerName, rec.planningSeasonCode, rec.planningSeasonYear, rec.docTypeCode, rec.docTypeDesc, rec.MRGAC, rec.OGAC, rec.GAC, rec.truckOutDate, rec.originReceiptDate, rec.factoryDeliveryActDate, rec.GACReasonCode, rec.GACReasonDesc, rec.shippingType, rec.planningPriorityCode, rec.planningPriorityDesc, rec.launchCode, rec.modeOfTransportationCode, rec.inCoTerms, rec.inventorySegmentCode, rec.purchaseGroupCode, rec.purchaseGroupName, rec.totalItemQty, rec.actualShippedQty, rec.VASSize, rec.itemVasText, rec.itemText,rec.price,rec.coPrice ,rec.PCD,rec.shipToAddressLegalPO, rec.shipToAddressDIA,rec.CABCode,rec.grossPriceFOB,rec.netIncludingDisc,rec.trCoNetIncludingDisc,[])
+                    new FactoryReportModel(rec.lastModifiedDate, rec.item, rec.factory, rec.documentDate, rec.purchaseOrderNumber, rec.poLineItemNumber, rec.poAndLine, rec.DPOMLineItemStatus, rec.styleNumber, rec.productCode, rec.colorDesc, rec.customerOrder, rec.coFinalApprovalDate, rec.planNo, rec.leadTime, rec.categoryCode, rec.categoryDesc, rec.vendorCode, rec.gccFocusCode, rec.gccFocusDesc, rec.genderAgeCode, rec.genderAgeDesc, rec.destinationCountryCode, rec.destinationCountry, rec.plant, rec.plantName, rec.tradingCoPoNumber, rec.UPC, rec.directShipSONumber, rec.directShipSOItemNumber, rec.customerPO, rec.shipToCustomerNumber, rec.shipToCustomerName, rec.planningSeasonCode, rec.planningSeasonYear, rec.docTypeCode, rec.docTypeDesc, rec.MRGAC, rec.OGAC, rec.GAC, rec.truckOutDate, rec.originReceiptDate, rec.factoryDeliveryActDate, rec.GACReasonCode, rec.GACReasonDesc, rec.shippingType, rec.planningPriorityCode, rec.planningPriorityDesc, rec.launchCode, rec.modeOfTransportationCode, rec.inCoTerms, rec.inventorySegmentCode, rec.purchaseGroupCode, rec.purchaseGroupName, rec.totalItemQty, rec.actualShippedQty, rec.VASSize, rec.itemVasText, rec.itemText, rec.price, rec.coPrice, rec.PCD, rec.shipToAddressLegalPO, rec.shipToAddressDIA, rec.CABCode, rec.grossPriceFOB, rec.netIncludingDisc, rec.trCoNetIncludingDisc, [])
                 );
             }
             const sizeWiseData = sizeDateMap.get(rec.poAndLine).sizeWiseData;
@@ -1102,87 +1130,85 @@ export class DpomService {
         }
     }
 
-    
+    async getDivertReportData(): Promise<CommonResponseModel> {
+        const reports = await this.dpomRepository.getDivertReport();
+        // let model:OldDivertModel[];
+        let divertedPos = []
+        let divertModelData: DivertModel[] = [];
+        let po;
+        let line;
+        let divertModel = []
+        for (const report of reports) {
+            divertedPos = report.diverted_to_pos.split(',');
 
-async getDivertReportData(): Promise<CommonResponseModel> {
-    const reports = await this.dpomRepository.getDivertReport();
-   // let model:OldDivertModel[];
-   let divertedPos=[]
-let divertModelData: DivertModel[] = [];
-  let po ;
-  let line;
-  let divertModel =[]
-  for(const report of reports){
-    divertedPos = report.diverted_to_pos.split (',');
-         
 
-   if(report.diverted_to_pos ){
-    for(const Po of divertedPos){
-       const [po, line] = Po.split('/');
-      const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po,line])
+            if (report.diverted_to_pos) {
+                for (const Po of divertedPos) {
+                    const [po, line] = Po.split('/');
+                    const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line])
 
-      for (const newpoDivert of newPoData){
-       const  model  = new DivertModel(report,newpoDivert)
-        divertModel.push(model)
+                    for (const newpoDivert of newPoData) {
+                        const model = new DivertModel(report, newpoDivert)
+                        divertModel.push(model)
+                    }
+                }
+            }
+        }
+        if (reports.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrived Successfully', divertModel);
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data Found', []);
+        }
     }
+
+    ///////////////////--------------------------------------------------------------------------------factory
+    async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPoLineforfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
- 
-   }
+
+    async getPpmItemForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getItemforfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    if (reports.length > 0) {
-        return new CommonResponseModel(true, 1, 'Data Retrived Successfully', divertModel);
-    } else {
-        return new CommonResponseModel(false, 0, 'No Data Found', []);
+    async getPpmFactoryForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getFactoryForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
-}
-///////////////////--------------------------------------------------------------------------------factory
-async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getPoLineforfactory()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-} 
 
-async getPpmItemForFactory(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getItemforfactory()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-} 
-async getPpmFactoryForFactory(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getFactoryForfactory()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-//-----------------------------------------------------------------------------marketing
-async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getPoLineforMarketing()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-async getPpmItemForMarketing(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getItemforMarketing()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
+    //-----------------------------------------------------------------------------marketing
+    async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPoLineforMarketing()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmItemForMarketing(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getItemforMarketing()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 
-
-async getPpmFactoryForMarketing(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getFactoryforMarketing()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
+    async getPpmFactoryForMarketing(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getFactoryforMarketing()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 }
 
 
