@@ -5,6 +5,7 @@ import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
+import { PpmDateFilterRequest } from "@project-management-system/shared-models";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
@@ -345,5 +346,33 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
+
+    async getFactoryPpmData(req:PpmDateFilterRequest): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom.*, od.display_name AS displayName `)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
+            // .groupBy(`od.po_number AND od.po_line_item_number`)
+            if (req.lastModifedStartDate !== undefined) {
+                query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
+            }
+            if (req.documentStartDate !== undefined) {
+                query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`)
+            }
+        return await query.getRawMany();
+    }
+
+    async getMarketingPpmData(req:PpmDateFilterRequest): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom.*, od.display_name AS displayName `)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
+            // .groupBy(`od.po_number AND od.po_line_item_number`)
+            if (req.lastModifedStartDate !== undefined) {
+                query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
+            }
+            if (req.documentStartDate !== undefined) {
+                query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`)
+            }
+        return await query.getRawMany();
+    }
 
 }

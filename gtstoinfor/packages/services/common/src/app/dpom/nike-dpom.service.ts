@@ -1145,36 +1145,37 @@ async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
         return new CommonResponseModel(false, 0, 'No data found');
 } 
 
-async getPpmItemForFactory(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getItemforfactory()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-} 
-async getPpmFactoryForFactory(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getFactoryForfactory()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-//-----------------------------------------------------------------------------marketing
-async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getPoLineforMarketing()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-async getPpmItemForMarketing(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getItemforMarketing()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
+    async getPpmItemForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getItemforfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 
+    async getPpmFactoryForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getFactoryForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
+    //-----------------------------------------------------------------------------marketing
+    async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPoLineforMarketing()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmItemForMarketing(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getItemforMarketing()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 
 async getPpmFactoryForMarketing(): Promise<CommonResponseModel> {
     const data = await this.dpomRepository.getFactoryforMarketing()
@@ -1183,42 +1184,6 @@ async getPpmFactoryForMarketing(): Promise<CommonResponseModel> {
     else
         return new CommonResponseModel(false, 0, 'No data found');
 }
-async getPpmPlantForMarketing(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getPpmPlantForMarketing()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-async getPpmProductCodeForMarketing(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getPpmProductCodeForMarketing()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-async getPpmColorDescForMarketing(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getPpmColorDescForMarketing()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-async getPpmCategoryDescForMarketing(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getPpmCategoryDescForMarketing()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-async getPpmDestinationCountryForMarketing(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getPpmDestinationCountryForMarketing()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
-
 }
 
 
