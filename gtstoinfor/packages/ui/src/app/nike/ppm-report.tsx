@@ -184,7 +184,7 @@ const PPMReport = () => {
       setFilterData(filteredData);
     }
   };
-  
+
 
   const onReset = () => {
     form.resetFields()
@@ -258,215 +258,216 @@ const PPMReport = () => {
   const getSizeWiseHeaders = (data: MarketingModel[]) => {
     const sizeHeaders = new Set<string>();
     data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
-        sizeHeaders.add('' + version.sizeDescription);
+      sizeHeaders.add('' + version.sizeDescription);
     }))
     return Array.from(sizeHeaders);
-};
-const getMap = (data: MarketingModel[]) => {
+  };
+  const getMap = (data: MarketingModel[]) => {
     const sizeWiseMap = new Map<string, Map<string, number>>();
     data?.forEach(rec => {
-        if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
-            sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
-        }
-        rec.sizeWiseData?.forEach(version => {
-            sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
-        })
+      if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
+        sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
+      }
+      rec.sizeWiseData?.forEach(version => {
+        sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
+      })
     });
     return sizeWiseMap;
-}
+  }
 
-  const renderReport =(data:MarketingModel[])=>{
+  const renderReport = (data: MarketingModel[]) => {
     const sizeHeaders = getSizeWiseHeaders(data);
     const sizeWiseMap = getMap(data);
 
-  const columns: any = [
-    {
-      title: "S.No",
-      render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
+    const columns: any = [
+      {
+        title: "S.No",
+        render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
 
-    },
+      },
 
-    {
+      {
 
-      title: "Po+Line",
-      dataIndex: 'Po+Line',
-      render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`
+        title: "Po+Line",
+        dataIndex: 'Po+Line',
+        render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`
 
 
-    },
-    {
-      title: 'Last Modified Date',
-      dataIndex: 'updatedAt',
-      render: (text) => moment(text).format('YYYY-MM-DD')
+      },
+      {
+        title: 'Last Modified Date',
+        dataIndex: 'updatedAt',
+        render: (text) => moment(text).format('YYYY-MM-DD')
 
-    },
-    {
-      title: 'Item',
-      dataIndex: 'item',
+      },
+      {
+        title: 'Item',
+        dataIndex: 'item',
 
-    },
-    {
-      title: 'Factory',
-      dataIndex: 'factory',
+      },
+      {
+        title: 'Factory',
+        dataIndex: 'factory',
 
-    },
-    {
-      title: 'Document Date',
-      dataIndex: 'documentDate',
-      // render: (text, record) => {
-      //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
-      // }
-    },
-    {
-      title: 'Purchase Order Number',
-      dataIndex: 'purchaseOrderNumber',
-    },
-    {
-      title: 'PO Line Item Number',
-      dataIndex: 'poLineItemNumber'
-    },
-    {
-      title: 'DPOM Line Item Status',
-      dataIndex: 'DPOMLineItemStatus'
-    },
-    {
-      title: 'Style Number',
-      dataIndex: 'styleNumber',
-      
+      },
+      {
+        title: 'Document Date',
+        dataIndex: 'documentDate',
+        // render: (text, record) => {
+        //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
+        // }
+      },
+      {
+        title: 'Purchase Order Number',
+        dataIndex: 'purchaseOrderNumber',
+      },
+      {
+        title: 'PO Line Item Number',
+        dataIndex: 'poLineItemNumber'
+      },
+      {
+        title: 'DPOM Line Item Status',
+        dataIndex: 'DPOMLineItemStatus'
+      },
+      {
+        title: 'Style Number',
+        dataIndex: 'styleNumber',
 
-    },
-    {
-      title: 'Product Code',
-      dataIndex: 'productCode', 
-      sorter: (a, b) => a.productCode.length - b.productCode.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('productCode'),
-      
 
-    },
-    {
-      title: 'Colour Description',
-      dataIndex: 'colorDesc'
-    },
-    {
-      title: 'Total Item Qty',
-      dataIndex: 'totalItemQty',
-      align:'center',
-      render: (text) => <strong>{text}</strong>
-  },
-  ]
-  sizeHeaders?.forEach(version => {
-    columns.push({
+      },
+      {
+        title: 'Product Code',
+        dataIndex: 'productCode',
+        sorter: (a, b) => a.productCode.length - b.productCode.length,
+        sortDirections: ['descend', 'ascend'],
+        ...getColumnSearchProps('productCode'),
+
+
+      },
+      {
+        title: 'Colour Description',
+        dataIndex: 'colorDesc'
+      },
+      {
+        title: 'Total Item Qty',
+        dataIndex: 'totalItemQty',
+        align: 'center',
+        render: (text) => <strong>{text}</strong>
+      },
+    ]
+    sizeHeaders?.forEach(version => {
+      columns.push({
         title: version,
         dataIndex: version,
         key: version,
         width: 130,
         align: 'center',
         children: [
-            {
-                title: 'Quantity',
-                dataIndex: '',
-                key: '',
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-                    if (sizeData) {
-                        if (sizeData.sizeQty !== null) {
-                            const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                            return (
-                                formattedQty
-                            );
-                        } else {
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
+          {
+            title: 'Quantity',
+            dataIndex: '',
+            key: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                  return (
+                    formattedQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
                 }
-            },
-            {
-                title: 'Legal PO Price',
-                dataIndex: '',
-                key: '',
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO Price',
+            dataIndex: '',
+            key: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
-                    if (sizeData) {
-                        if (sizeData.sizeQty !== null) {
-                            return (
-                                sizeData.price
-                            );
-                        } else {
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.price
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
                 }
-            },
-            {
-                title: 'CO Price',
-                dataIndex: '',
-                key: '',
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'CO Price',
+            dataIndex: '',
+            key: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
-                    if (sizeData) {
-                        if (sizeData.sizeQty !== null) {
-                            return (
-                                sizeData.coPrice
-                            );
-                        } else {
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.coPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
                 }
-            },
-            {
-                title: 'Price Variation',
-                dataIndex: '',
-                key: '',
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Price Variation',
+            dataIndex: '',
+            key: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
-                    if (sizeData) {
-                        if (sizeData.sizeQty !== null) {
-                            const priceVariation = sizeData.price - sizeData.coPrice;
-                            return (
-                                priceVariation
-                            );
-                        } else {
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  const priceVariation = sizeData.price - sizeData.coPrice;
+                  return (
+                    priceVariation
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
                 }
-            },
+              } else {
+                return '-';
+              }
+            }
+          },
         ],
         render: (text, record) => {
-            return record.sizeWiseData.find(item => item.sizeDescription === version);
+          return record.sizeWiseData.find(item => item.sizeDescription === version);
         }
+      });
     });
-});
 
- 
+
     return (<Table columns={columns} dataSource={filterData} pagination={{
-        onChange(current, pageSize) {
-            setPage(current);
-            setPageSize(pageSize)}
-    }}scroll={{ x: 'max-content' }} />)
+      onChange(current, pageSize) {
+        setPage(current);
+        setPageSize(pageSize)
+      }
+    }} scroll={{ x: 'max-content' }} />)
 
-}
+  }
 
   return (
     <>
@@ -477,10 +478,10 @@ const getMap = (data: MarketingModel[]) => {
           onClick={handleExport}
           icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
         <Form
-           onFinish={Finish}
+          onFinish={Finish}
           form={form}
           layout='vertical'>
-          <Row>
+          <Row gutter={24}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
               <Form.Item label="PPM Report Date" name="fromDate">
                 <RangePicker onChange={EstimatedETDDate} />
@@ -498,24 +499,92 @@ const getMap = (data: MarketingModel[]) => {
                   <Option value="Cancelled">CANCELLED</Option>
                   <Option value="Closed">CLOSED</Option>
                 </Select>
-                {/* <Select
-                  mode="multiple"
-                  placeholder="Inserted are removed"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  style={{ width: '100%' }}
-                  options={filteredOptions.map((item) => ({
-                    value: item,
-                    label: item,
-                  }))}
-                /> */}
-                
               </Form.Item>
             </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
+              <Form.Item name='Po+Line' label='Po+Line' >
+                <Select
+                  showSearch
+                  placeholder="Select Po+Line"
+                  optionFilterProp="children"
+                  allowClear
+                  defaultValue={''}
+                >
+                  {/* {Po+Line.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.po+Lone}>{inc.po+Line}</Option>
+                                })
+                                } */}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
+              <Form.Item name='colorDesc' label='Color Description' >
+                <Select
+                  showSearch
+                  placeholder="Select Color Description"
+                  optionFilterProp="children"
+                  allowClear
+                  defaultValue={''}
+                >
+                  {/* {colorDesc.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.color_desc}>{inc.color_desc}</Option>
+                                })
+                                } */}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+              <Form.Item name='productCode' label='Product Code' >
+                <Select
+                  showSearch
+                  placeholder="Select Product Code"
+                  optionFilterProp="children"
+                  allowClear
+                  defaultValue={''}
+                >
+                  {/* {productCode.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                                })
+                                } */}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+              <Form.Item name='item' label='Item' >
+                <Select
+                  showSearch
+                  placeholder="Select Item"
+                  optionFilterProp="children"
+                  allowClear
+                  defaultValue={''}
+                >
+                  {/* {item.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
+                                })
+                                } */}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+              <Form.Item name='factory' label='Factory' >
+                <Select
+                  showSearch
+                  placeholder="Select Factory"
+                  optionFilterProp="children"
+                  allowClear
+                  defaultValue={''}
+                >
+                  {/* {factory.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.factory}>{inc.factorys}</Option>
+                                })
+                                } */}
+                </Select>
+              </Form.Item>
+            </Col> 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 40 }} >
               <Form.Item>
                 <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Search</Button>
-                <Button style={{marginLeft:8}}  htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined/>}>Reset</Button>
+                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
               </Form.Item>
             </Col>
           </Row>
