@@ -945,7 +945,6 @@ export class DpomService {
         }
         const alldata = await this.dpomRepository.find({where: whereConditions});
         const details = alldata.filter(record => record.docTypeCode !== 'ZP26')
-        console.log(req,"request of ppm ")
         if (details.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found')
         }
@@ -1137,9 +1136,53 @@ let divertModelData: DivertModel[] = [];
         return new CommonResponseModel(false, 0, 'No Data Found', []);
     }
 }
+///////////////////--------------------------------------------------------------------------------factory
+async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getPoLineforfactory()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+} 
 
- 
+async getPpmItemForFactory(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getItemforfactory()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+} 
+async getPpmFactoryForFactory(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getFactoryForfactory()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+//-----------------------------------------------------------------------------marketing
+async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getPoLineforMarketing()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+async getPpmItemForMarketing(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getItemforMarketing()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
 
+
+async getPpmFactoryForMarketing(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getFactoryforMarketing()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
 }
 
 

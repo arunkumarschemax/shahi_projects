@@ -445,5 +445,65 @@ export class DpomController {
     //     }
     // }
    
+    @Post('/getPpmPoLineForFactory')
+    async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmPoLineForFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getPpmItemForFactory')
+    async getPpmItemForFactory(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmItemForFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getPpmFactoryForFactory')
+    async getPpmFactoryForFactory(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmFactoryForFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getPpmItemForMarketing')
+    async getPpmItemForMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmItemForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+////-----------------------------------------------------------------------------------------------marketing
+    @Post('/getPpmPoLineForMarketing')
+    async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmPoLineForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmItemForMarketing')
+    async getPpmItemForMarketingy(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmItemForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmFactoryForMarketing')
+    async getPpmFactoryForMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmFactoryForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
 

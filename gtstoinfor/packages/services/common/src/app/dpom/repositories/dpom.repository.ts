@@ -284,4 +284,40 @@ export class DpomRepository extends Repository<DpomEntity> {
     
         return await query.getRawMany();
     }
+
+    async getPoLineforfactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_and_line,dpom.id`)
+            .where(` dpom_item_line_status <> 'CANCELLED'`)
+        return await query.getRawMany();
+    }
+    async getItemforfactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.item,dpom.id`)
+            .where(` dpom_item_line_status <> 'CANCELLED'`)
+        return await query.getRawMany();
+    }
+    async getFactoryForfactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.factory,dpom.id`)
+            .where(` dpom_item_line_status <> 'CANCELLED'`)
+        return await query.getRawMany();
+    }
+    ///------------------------------------------------------------------------------------------marketing
+    async getPoLineforMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_and_line,dpom.id`)
+        return await query.getRawMany();
+    }
+    async getItemforMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.item,dpom.id`)
+        return await query.getRawMany();
+    }
+    async getFactoryforMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.factory,dpom.id`)
+        return await query.getRawMany();
+    }
+
 }
