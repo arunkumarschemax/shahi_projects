@@ -8,7 +8,7 @@ import Item from 'antd/es/descriptions/Item';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { ColumnsType } from 'antd/es/table';
-import { FactoryReportModel } from '@project-management-system/shared-models';
+import { FactoryReportModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 
 
 const FactoryPPMReport = () => {
@@ -27,22 +27,10 @@ const FactoryPPMReport = () => {
     const [searchedColumn, setSearchedColumn] = useState<any>([]);
     const [filterData, setFilterData] = useState<any>([]);
     const [pageSize, setPageSize] = useState<number>(null);
-    const [page, setPage] = React.useState(1)
+    const [page, setPage] = React.useState(1);
+    
 
-    const Finish = (values: any) => {
-        // if (values.DPOMLineItemStatus !== undefined) {
-        //     // getFactoryStatus(values)
-        // }/
-
-        if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
-            setFilterData(gridData);
-        } else {
-            const filteredData = gridData.filter(item =>
-                values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
-            );
-            setFilterData(filteredData);
-        }
-    }
+   
 
     const getFactoryStatus = (values: any) => {
         service.getByFactoryStatus().then(res => {
@@ -54,10 +42,16 @@ const FactoryPPMReport = () => {
         })
     }
 
+    const resetHandler = () => {
+        form.resetFields();
+        getData();
+
+    }
     const handleSearch = (selectedKeys: any, confirm: any, dataIndex: string) => {
         confirm();
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
+        window.location.reload();
     };
 
     const handleReset = (clearFilters: any) => {
@@ -127,14 +121,14 @@ const FactoryPPMReport = () => {
         form.resetFields();
     }
 
-    const EstimatedETDDate = (value) => {
-        if (value) {
-            const fromDate = value[0].format('YYYY-MM-DD');
-            const toDate = value[1].format('YYYY-MM-DD');
-            setSelectedEstimatedFromDate(fromDate)
-            setSelectedEstimatedToDate(toDate)
-        }
-    }
+    // const EstimatedETDDate = (value) => {
+    //     if (value) {
+    //         const fromDate = value[0].format('YYYY-MM-DD');
+    //         const toDate = value[1].format('YYYY-MM-DD');
+    //         setSelectedEstimatedFromDate(fromDate)
+    //         setSelectedEstimatedToDate(toDate)
+    //     }
+    // }
 
 
     useEffect(() => {
@@ -142,19 +136,47 @@ const FactoryPPMReport = () => {
     }, [])
 
     const getData = () => {
-        service.getFactoryReportData().then(res => {
+        const req = new PpmDateFilterRequest()
+        if (form.getFieldValue('lastModifiedDate') !== undefined) {
+            req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('lastModifiedDate') !== undefined) {
+        req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('documentDate') !== undefined) {
+            req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('documentDate') !== undefined) {
+        req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
+        }
+        service.getFactoryReportData(req).then(res => {
             if (res.status) {
                 setGridData(res.data)
                 setFilterData(res.data)
                 setFilteredData(res.data)
+                Finish(res.data)    
             }
+           
         }).catch(err => {
             console.log(err.message)
         })
+        console.log(req)
+
     }
 
-    // const handleExport = (e: any) => {
-    //     e.preventDefault();
+    const Finish = (data: any) => {
+        const values = form.getFieldsValue();
+           
+        if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
+            setFilterData(gridData);
+        } else {
+            const filteredData = gridData.filter(item =>
+                values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
+            );
+            setFilterData(filteredData);
+        }
+    }
+
 
     const handleExport = (e: any) => {
         e.preventDefault();
@@ -238,7 +260,6 @@ const FactoryPPMReport = () => {
                 'Po+Line': `${item.purchaseOrderNumber}-${item.poLineItemNumber}`,
                 'Last Modified Date': item.lastModifiedDate,
                 'Item': item.item,
-
             };
             sizeHeaders.forEach(sizeHeader => {
                 excelItem[sizeHeader] = item[sizeHeader];
@@ -548,13 +569,20 @@ const FactoryPPMReport = () => {
                     onClick={handleExport}
                     icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
                 <Form
-                    onFinish={Finish}
+                    onFinish={getData}
                     form={form}
                     layout='vertical'>
-                    <Row>
+                    <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
-                            <Form.Item label="Factory Report Date" name="fromDate">
-                                <RangePicker onChange={EstimatedETDDate} />
+                            <Form.Item label="Last Modified Date" name="lastModifiedDate">
+                                <RangePicker  />
+
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+                            <Form.Item label="Document Date" name="documentDate">
+                                <RangePicker  />
+
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
@@ -576,16 +604,8 @@ const FactoryPPMReport = () => {
                                 <Button htmlType="submit"
                                     icon={<SearchOutlined />}
                                     type="primary">SEARCH</Button>
-
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ padding: '42px' }}>
-                            <Form.Item>
-                                <Button
-                                    htmlType='button'
-                                    icon={<UndoOutlined />}
-                                    style={{ left: '-150px', width: 80, backgroundColor: "#162A6D", color: "white", position: "relative" }}
-                                    onClick={() => { ClearData(); }}
+                             <Button
+                                    htmlType='button' icon={<UndoOutlined />}  style={{  margin:10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
                                 >
                                     RESET
                                 </Button>

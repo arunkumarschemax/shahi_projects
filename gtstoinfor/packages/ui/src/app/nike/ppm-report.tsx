@@ -1,5 +1,5 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { MarketingModel } from '@project-management-system/shared-models';
+import { MarketingModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
@@ -11,7 +11,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
 
 
-// const OPTIONS = ['ACCEPTED', 'UNACCEPTED', 'CANCELLED', 'CLOSED'];
 
 
 
@@ -27,7 +26,6 @@ const PPMReport = () => {
   const service = new NikeService();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [filterData, setFilterData] = useState<any>([])
-  // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   const [pageSize, setPageSize] = useState<number>(null);
   const [page, setPage] = React.useState(1)
 
@@ -37,11 +35,25 @@ const PPMReport = () => {
   }, [])
 
   const getData = () => {
-    service.getPPMData().then(res => {
+    const req = new PpmDateFilterRequest()
+        if (form.getFieldValue('lastModifiedDate') !== undefined) {
+           req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
+          }
+        if (form.getFieldValue('lastModifiedDate') !== undefined) {
+        req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('documentDate') !== undefined) {
+            req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('documentDate') !== undefined) {
+        req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
+        }
+    service.getPPMData(req).then(res => {
       if (res.status) {
         setGridData(res.data)
         setFilterData(res.data)
         setFilteredData(res.data)
+        Finish(res.data)  
       }
     }).catch(err => {
       console.log(err.message)
@@ -165,16 +177,17 @@ const PPMReport = () => {
   const { Option } = Select;
 
 
-  const EstimatedETDDate = (value) => {
-    if (value) {
-      const fromDate = value[0].format('YYYY-MM-DD');
-      const toDate = value[1].format('YYYY-MM-DD');
-      setSelectedEstimatedFromDate(fromDate)
-      setSelectedEstimatedToDate(toDate)
-    }
-  }
+  // const EstimatedETDDate = (value) => {
+  //   if (value) {
+  //     const fromDate = value[0].format('YYYY-MM-DD');
+  //     const toDate = value[1].format('YYYY-MM-DD');
+  //     setSelectedEstimatedFromDate(fromDate)
+  //     setSelectedEstimatedToDate(toDate)
+  //   }
+  // }
 
-  const Finish = (values: any) => {
+  const Finish = (data: any) => {
+    const values = form.getFieldsValue();
     if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
       setFilterData(gridData);
     } else {
@@ -182,12 +195,14 @@ const PPMReport = () => {
         values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
       );
       setFilterData(filteredData);
+      getData()
     }
   };
 
 
   const onReset = () => {
     form.resetFields()
+    getData()
   }
 
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -243,11 +258,12 @@ const PPMReport = () => {
 
   });
 
-
   function handleSearch(selectedKeys, confirm, dataIndex) {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
+    window.location.reload();
+
   };
 
   function handleReset(clearFilters) {
@@ -348,6 +364,19 @@ const PPMReport = () => {
         title: 'Colour Description',
         dataIndex: 'colorDesc'
       },
+
+      { title: 'Category Description', 
+         dataIndex: 'categoryDesc'
+
+         },
+      { 
+        title:"Destination Country ",
+         dataIndex:'destinationCountry'
+        },
+      {
+        title:"Plant Code",
+         dataIndex:'plant'
+        },
       {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty',
@@ -482,11 +511,18 @@ const PPMReport = () => {
           form={form}
           layout='vertical'>
           <Row gutter={24}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
-              <Form.Item label="PPM Report Date" name="fromDate">
-                <RangePicker onChange={EstimatedETDDate} />
-              </Form.Item>
-            </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+                            <Form.Item label="Last Modified Date" name="lastModifiedDate">
+                                <RangePicker  />
+
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+                            <Form.Item label="Document Date" name="documentDate">
+                                <RangePicker  />
+
+                            </Form.Item>
+                        </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
               <Form.Item name="DPOMLineItemStatus" label="PPM Status">
                 <Select
@@ -517,7 +553,23 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+              <Form.Item name='plant' label='Plant Code' >
+                <Select
+                  showSearch
+                  placeholder="Select Plant Code"
+                  optionFilterProp="children"
+                  allowClear
+                  defaultValue={''}
+                >
+                  {/* {plant.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
+                                })
+                                } */}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
               <Form.Item name='colorDesc' label='Color Description' >
                 <Select
                   showSearch
@@ -533,7 +585,39 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+              <Form.Item name='categoryDesc' label='Category Description' >
+                <Select
+                  showSearch
+                  placeholder="Select Category Description"
+                  optionFilterProp="children"
+                  allowClear
+                  defaultValue={''}
+                >
+                  {/* {categoryDesc.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.category_desc}>{inc.category_desc}</Option>
+                                })
+                                } */}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+              <Form.Item name='destinationCountry' label='Destination Country' >
+                <Select
+                  showSearch
+                  placeholder="Select Destination Country"
+                  optionFilterProp="children"
+                  allowClear
+                  defaultValue={''}
+                >
+                  {/* {destinationCountry.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.destination_country}>{inc.destination_country}</Option>
+                                })
+                                } */}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4}}>
               <Form.Item name='productCode' label='Product Code' >
                 <Select
                   showSearch
@@ -549,7 +633,7 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4}}>
               <Form.Item name='item' label='Item' >
                 <Select
                   showSearch
@@ -565,7 +649,7 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
               <Form.Item name='factory' label='Factory' >
                 <Select
                   showSearch
@@ -581,7 +665,7 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col> 
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 40 }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 25 }} >
               <Form.Item>
                 <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Search</Button>
                 <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
