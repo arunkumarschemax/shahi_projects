@@ -4,8 +4,10 @@ import { ChildProtectionWrapper } from "./common/protected-child-wrapper"
 import BasicLayout from "./layout/basic-layout/layout"
 import Login from "./layout/login/login"
 import View from "./components/doc-extract/doc-extract-view"
-import DocExtractForm from "./components/doc-extract-new-form"
 import DocForm from "./components/doc-extract/doc-extract-form"
+import Form from "./components/doc-extract/doc-extract-form"
+import VendorGrid from "./components/vendor-view/vendor-view"
+import DocExtractForm from "./components/doc-extract/doc-extract-new-form"
 
 
 export const AppRoutes = () => {
@@ -31,6 +33,10 @@ export const AppRoutes = () => {
             <Route path="/invoice-report"/>
 
             <Route path="/doc-extract-form" element={<DocForm/>}/>
+            <Route path="/vendorGrid" element={<VendorGrid/>}/>
+
+            <Route path="/doc-extract-form" element={<Form/>}/>
+            
 
             <Route path="/doc-extract-new-form" element={<DocExtractForm invoiceData={undefined} type="" file={undefined}/>}/>
 

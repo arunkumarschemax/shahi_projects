@@ -3,9 +3,9 @@ import { Button, Layout, Menu, Tooltip, theme } from 'antd';
 import Icon, { SolutionOutlined, LogoutOutlined, EnvironmentOutlined, AppstoreOutlined, UserOutlined, NodeIndexOutlined, CarOutlined, TeamOutlined, FullscreenOutlined, InfoCircleOutlined, ProjectOutlined, FormOutlined, CheckSquareOutlined, FileProtectOutlined, HddOutlined } from '@ant-design/icons';
 import { Link, Outlet, Route, Routes } from 'react-router-dom';
 import { SubMenu } from 'rc-menu';
+import * as antdIcons from '@ant-design/icons';
 import schemaxlogo from './xpparel-logo.jpeg'
 import { logout, useIAMClientState } from '../../common';
-import * as antdIcons from '@ant-design/icons';
 // const icons = {
 //     TDSIcon: TDSIcon,
 //     ApprovalIcon: ApprovalIcon
