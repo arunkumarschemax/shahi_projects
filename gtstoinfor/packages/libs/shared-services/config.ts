@@ -7,9 +7,9 @@ export const config = {
     whatsapp_broadcast_url: 'http://206.189.138.212:3232/api',
     doc_management_url:'https://edoc7api.shahi.co.in/api',
     // doc_management_url:'http://localhost:8002/api',
-    // download_path:"https://localhost/"
     download_path:"https://edoc7.shahi.co.in/upload_files/",
-    // download_path:"https://edoc.shahiapps.in/upload-files/"
+    // download_path:"https://edoc.shahiapps.in/upload_files/"
+    // download_path:"https://localhost/"
 
 
 
