@@ -160,6 +160,7 @@ const FactoryPPMReport = () => {
         }).catch(err => {
             console.log(err.message)
         })
+        console.log(req)
 
     }
 
@@ -259,7 +260,6 @@ const FactoryPPMReport = () => {
                 'Po+Line': `${item.purchaseOrderNumber}-${item.poLineItemNumber}`,
                 'Last Modified Date': item.lastModifiedDate,
                 'Item': item.item,
-
             };
             sizeHeaders.forEach(sizeHeader => {
                 excelItem[sizeHeader] = item[sizeHeader];

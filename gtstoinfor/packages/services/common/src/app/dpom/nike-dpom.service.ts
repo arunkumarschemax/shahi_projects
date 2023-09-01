@@ -22,6 +22,7 @@ import { DiaPDFDto } from './dto/diaPDF.dto';
 const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 import { PoAndQtyReq } from './dto/po-qty.req';
 import { PoQty } from './dto/poqty.req';
+import { Console } from 'console';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -849,9 +850,7 @@ export class DpomService {
 
     async getFactoryReportData(req?:PpmDateFilterRequest): Promise<CommonResponseModel> {
         try {
-            // const allDetails = await this.dpomRepository.find({
-            //     where: {
-            //         lastModifiedDate: Between(req.lastModifedStartDate, req.lastModifedEndtDate),  documentDate: Between(req.documentStartDate, req.documentEndtDate)}});
+            
             let whereConditions: any = {};
 
             if (req && req.lastModifedStartDate && req.lastModifedEndtDate) {
@@ -868,7 +867,6 @@ export class DpomService {
 
             const filteredDetails = allDetails.filter(record => record.docTypeCode !== 'ZP26')
             const details = filteredDetails.filter(record => record.DPOMLineItemStatus !== 'Cancelled')
-            console.log(req,"request")
             if (details.length === 0) {
                 return new CommonResponseModel(false, 0, 'data not found');
             }
@@ -935,8 +933,19 @@ export class DpomService {
         return output.trim();
     }
 
-    async getPPMData(): Promise<CommonResponseModel> {
-        const details = await this.dpomRepository.find()
+    async getPPMData(req?:PpmDateFilterRequest): Promise<CommonResponseModel> {
+        let whereConditions: any = {};
+
+        if (req && req.lastModifedStartDate && req.lastModifedEndtDate) {
+            whereConditions.lastModifiedDate = Between(req.lastModifedStartDate, req.lastModifedEndtDate);
+        }
+
+        if (req && req.documentStartDate && req.documentEndtDate) {
+            whereConditions.documentDate = Between(req.documentStartDate, req.documentEndtDate);
+        }
+        const alldata = await this.dpomRepository.find({where: whereConditions});
+        const details = alldata.filter(record => record.docTypeCode !== 'ZP26')
+        console.log(req,"request of ppm ")
         if (details.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found')
         }
@@ -1094,52 +1103,11 @@ export class DpomService {
         }
     }
 
-    // async getDivertReportData(): Promise<CommonResponseModel> {
-    //     const reports = await this.dpomRepository.getDivertReport();
-    //     let model:OldDivertModel[];
-    //   let divertedPos=[]
-    //   let po ;
-    //   let line;
-    //   let divertModel =[]
-    //   for(const report of reports){
-    //     divertedPos = report.diverted_to_pos.split (',');
-       
-    //     for(const Po of divertedPos){
-
-    //         const [po, line] = Po.split('/');
-
-    //        console.log(line,"wwwwwwwwwwwwwwwwww")
-    //       const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line])
-
-    //     //  const  model = new DivertModel(report.po,newPoData.po)
-    //     // divertModel.push(model)
-    //     // //  console.log(model,'data after New Data')
-
-    //     if (po != undefined) {
-    //               const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line])
-    //                  console.log(po,"ppppppppp")
-
-    //              const  model = new DivertModel(report.purchaseOrderNumber,newPoData)
-    //              divertModel.push(model)
-    //              console.log(model,'data after New Data')
-    //         }
-    //     }
-      
-
-    //   }
-
-    //     if (reports.length > 0) {
-    //         return new CommonResponseModel(true, 1, 'Data Retrived Successfully', divertedPos);
-    //     } else {
-    //         return new CommonResponseModel(false, 0, 'No Data Found', []);
-    //     }
-    // }
-
-    //+++++++++++++++++++++modified version 1
+    
 
 async getDivertReportData(): Promise<CommonResponseModel> {
     const reports = await this.dpomRepository.getDivertReport();
-    let model:OldDivertModel[];
+   // let model:OldDivertModel[];
    let divertedPos=[]
 let divertModelData: DivertModel[] = [];
   let po ;

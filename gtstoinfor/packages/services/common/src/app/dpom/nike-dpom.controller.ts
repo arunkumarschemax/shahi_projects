@@ -102,9 +102,10 @@ export class DpomController {
     }
 
     @Post('/getPPMData')
-    async getPPMData(): Promise<CommonResponseModel> {
+    @ApiBody ({type: PpmDateFilterRequest})
+    async getPPMData(@Body() req?:any): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getPPMData();
+            return this.dpomService.getPPMData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

@@ -1,5 +1,5 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { MarketingModel } from '@project-management-system/shared-models';
+import { MarketingModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
@@ -37,11 +37,25 @@ const PPMReport = () => {
   }, [])
 
   const getData = () => {
-    service.getPPMData().then(res => {
+    const req = new PpmDateFilterRequest()
+        if (form.getFieldValue('lastModifiedDate') !== undefined) {
+           req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
+          }
+        if (form.getFieldValue('lastModifiedDate') !== undefined) {
+        req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('documentDate') !== undefined) {
+            req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('documentDate') !== undefined) {
+        req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
+        }
+    service.getPPMData(req).then(res => {
       if (res.status) {
         setGridData(res.data)
         setFilterData(res.data)
         setFilteredData(res.data)
+        Finish(res.data)  
       }
     }).catch(err => {
       console.log(err.message)
@@ -165,16 +179,17 @@ const PPMReport = () => {
   const { Option } = Select;
 
 
-  const EstimatedETDDate = (value) => {
-    if (value) {
-      const fromDate = value[0].format('YYYY-MM-DD');
-      const toDate = value[1].format('YYYY-MM-DD');
-      setSelectedEstimatedFromDate(fromDate)
-      setSelectedEstimatedToDate(toDate)
-    }
-  }
+  // const EstimatedETDDate = (value) => {
+  //   if (value) {
+  //     const fromDate = value[0].format('YYYY-MM-DD');
+  //     const toDate = value[1].format('YYYY-MM-DD');
+  //     setSelectedEstimatedFromDate(fromDate)
+  //     setSelectedEstimatedToDate(toDate)
+  //   }
+  // }
 
-  const Finish = (values: any) => {
+  const Finish = (data: any) => {
+    const values = form.getFieldsValue();
     if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
       setFilterData(gridData);
     } else {
@@ -182,12 +197,14 @@ const PPMReport = () => {
         values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
       );
       setFilterData(filteredData);
+      getData()
     }
   };
   
 
   const onReset = () => {
     form.resetFields()
+    getData()
   }
 
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -243,11 +260,12 @@ const PPMReport = () => {
 
   });
 
-
   function handleSearch(selectedKeys, confirm, dataIndex) {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
+    window.location.reload();
+
   };
 
   function handleReset(clearFilters) {
@@ -477,15 +495,22 @@ const getMap = (data: MarketingModel[]) => {
           onClick={handleExport}
           icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
         <Form
-           onFinish={Finish}
+           onFinish={getData}
           form={form}
           layout='vertical'>
           <Row>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
-              <Form.Item label="PPM Report Date" name="fromDate">
-                <RangePicker onChange={EstimatedETDDate} />
-              </Form.Item>
-            </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+                            <Form.Item label="Last Modified Date" name="lastModifiedDate">
+                                <RangePicker  />
+
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+                            <Form.Item label="Document Date" name="documentDate">
+                                <RangePicker  />
+
+                            </Form.Item>
+                        </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
               <Form.Item name="DPOMLineItemStatus" label="PPM Status">
                 <Select
