@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import { Select, Spin, message, Button, Input, Row, Form } from "antd";
 import Tesseract from "tesseract.js";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { SharedService } from "../../../../../libs/shared-services/src/scan/scan-service";
 import axios from "axios";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
+import { ScanService } from "@project-management-system/shared-services";
 
 const { Option } = Select;
 
-const DocForm = () => {
+export interface DocFormProps {}
+
+export function DocForm(props: DocFormProps) {
     const navigate = useNavigate();
-
-    const service = new SharedService();
-
-    const [form] = Form.useForm();
+    const service = new ScanService();
+    const [form] =Form.useForm();
     const { state }: any = useLocation();
     const { data } = state ? state : { data: null };
 
@@ -56,13 +56,11 @@ const DocForm = () => {
     const [rcm, setRcm] = useState("");
     const [cosign, setCosign] = useState("");
     const [eta, setEta] = useState("");
-
     const [quantity, setQuantity] = useState("any");
     const [innNumber, setInnnumber] = useState("");
     const [currency, setCurrency] = useState("");
     const [origin, setOrigin] = useState("");
     const [destination, setDestination] = useState("");
-
     const [customerno, setCustomerNo] = useState("");
     const [ackdata, setAckdata] = useState("");
     const [pannumber, setPannumber] = useState("");

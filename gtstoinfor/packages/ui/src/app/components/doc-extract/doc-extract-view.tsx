@@ -4,9 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ColumnType } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import { ScanService } from '@project-management-system/shared-services';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { SharedService } from 'packages/libs/shared-services/src/scan/scan-service';
-
 interface Item {
   typedId: number,
   Gst: string,
@@ -32,7 +31,7 @@ export interface DocViewProps {}
 
 export function DocView(props: DocViewProps) {
   const navigate = useNavigate();
-  const services = new SharedService();
+  const services = new ScanService();
   const [formdata, setFormData] = useState<Item[]>([]);
   const searchInput = useRef(null);
   const [searchedColumn, setSearchedColumn] = useState('');
