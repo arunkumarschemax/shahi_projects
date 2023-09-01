@@ -144,6 +144,11 @@ const PPMReport = () => {
       { title: 'Item Vas Text in PDF PO', dataIndex: '' },
       { title: 'Diff of Item Vas Text', dataIndex: '' },
       { title: 'Item Text', dataIndex: 'itemText' },
+      {
+        title: 'Change Register',
+        dataIndex: 'displayName',
+        align: 'center',
+    },
 
 
     ]
