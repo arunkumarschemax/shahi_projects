@@ -6,6 +6,16 @@ export class ScanEntity extends BaseEntity {
   })
   typeId: number;
 
+  @Column("varchar", {
+    name: "file_name"
+  })
+  fileName: string;
+  
+  @Column("varchar", {
+    name: "file_path"
+  })
+  filePath: string;
+
   @Column('varchar', {
     nullable: false,
     length: 50,
