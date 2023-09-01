@@ -48,6 +48,8 @@ const  DocForm = () => {
     const [igst, setIgst] = useState("");
     const [charges, setCharges] = useState("");
 
+    const [goods, setGoods] =useState("");
+
 
     const [quantity, setQuantity] = useState("any");
     const [innNumber, setInnnumber] = useState("");
@@ -91,6 +93,7 @@ const  DocForm = () => {
             const extractedPayref = extractPayref(text);
             const extractedIgst = extractIgst(text);
             const extractedCharges = extractCharges(text);
+            const extractedGoods=extractGoods(text);
 
 
 
@@ -120,6 +123,7 @@ const  DocForm = () => {
             setCartons(extractedCartons);
             setIgst(extractedIgst);
             setCharges(extractedCharges);
+            setGoods(extractedGoods);
 
             setQuantity(extractedQuantity);
             setInnnumber(extractedInnNumber);
@@ -253,6 +257,16 @@ const  DocForm = () => {
         const extractedCharges = match ? match[0] : "";
         return extractedCharges;
     };
+
+    
+    const extractGoods = (text) => {
+        const goodsRegex =/CARTONS\s*:\s*(\d+)\s*(\d+%)\s*(COTTON)\s*(\d+%)\s*(POLYESTER)\s*(\d+%)\s*(ELASTANE)\s*(\w+)\s*(MENS SHORTS)/;
+        const match = text.match(goodsRegex);
+        const extractedGoods = match ? match[0] : "";
+        return extractedGoods;
+    };
+
+
 
 
 
@@ -402,7 +416,7 @@ const  DocForm = () => {
     };
 
     const handleBack = () => {
-        navigate("/scan-document");
+        navigate("/scan-document/doc-extract-view");
     }
 
     const  onFinish = (values:AllScanDto) => {
@@ -427,7 +441,6 @@ const  DocForm = () => {
         values.Origin=origin
         values.Destination=destination
 
-        
 
         console.log(gstNumbers[0], "gst####################")
         console.log(values,"*****")
@@ -687,7 +700,17 @@ const  DocForm = () => {
                                             />
                                         </Row>
 
-                                        <Row style={{ position: "relative", bottom: "215px", left: "43px" }}>
+                                        <Row>
+                                        <h4 style={{ left: "100px", position: "relative", bottom: "100px" }} > CHARGES</h4>
+                                            <textarea
+                                                name="Goods Description"
+                                                style={{ width: "150px", height: "30px",position:"relative",left:"25px",bottom:"50px"   }}
+                                                value={goods}
+                                                onChange={(e) => setGoods(e.target.value)}
+                                            />
+                                        </Row>
+
+                                        {/* <Row style={{ position: "relative", bottom: "215px", left: "43px" }}>
                                             <Button type="primary" htmlType="submit"  style={{ position: "relative", left: "50px" }} >
                                                 Submit
                                             </Button>
@@ -704,7 +727,7 @@ const  DocForm = () => {
                                                 Save As
                                             </Button>
 
-                                        </Row>
+                                        </Row> */}
                                     </Row>
                                     </Form>
                                 </>
