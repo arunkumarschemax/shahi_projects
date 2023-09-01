@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card, Input, Space, Table, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ColumnType } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
@@ -28,8 +28,9 @@ interface Item {
   Origin: string,
   Destination: string,
 }
+export interface DocViewProps {}
 
-const View: React.FC = () => {
+export function DocView(props: DocViewProps) {
   const navigate = useNavigate();
   const services = new SharedService();
   const [formdata, setFormData] = useState<Item[]>([]);
@@ -201,15 +202,15 @@ const View: React.FC = () => {
 
   return (
     <div>
-      <Card style={{ position: "relative", bottom: "15px" }}>
-        <h1 style={{  fontSize: "25px" }}>Doc-Extract-Data</h1>
-        <Button type="primary" style={{ float: "right", position: "relative", bottom: "25px", height: "35px" }} onClick={handleAddClick}>
-          Add Item
-        </Button>
+      <Card title={"Documents Info"} style={{ position: "relative", bottom: "15px" }} extra={
+        <Link to="/doc-extract-form">
+          <Button className="panel_button">Upload Document </Button>
+        </Link>
+      }>
         <Table style={{ position: "relative", bottom: "20px" }} dataSource={formdata} columns={columns} />
       </Card>
     </div>
   );
 };
+export default DocView;
 
-export default View;
