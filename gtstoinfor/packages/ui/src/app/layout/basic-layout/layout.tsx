@@ -431,12 +431,7 @@ export const baseRouterList = [
         path: "materialCreation",
         filepath: "materialCreation",
         children:[
-            {
-                label: "BOM Trim Creation",
-                key: "bomtrimcreation",
-                path: "bomtrimcreation/bom-trim-creation",
-                filepath: "bomtrimcreation/bom-trim-creation",
-            },
+            
             {
                 label: "Item Creation",
                 key: "item-creation",
@@ -457,11 +452,17 @@ export const baseRouterList = [
                 filepath: "sku-list",
             },
             {
-                label: "Fabric BOM",
+                label: "Fabric Creation",
                 key: "fabric-bom-creation",
                 path: "fabric-bom-creation",
                 // icon: <PicCenterOutlined />,
                 filepath: "fabric-bom-creation",
+            },
+            {
+                label: "Trim Creation",
+                key: "bomtrimcreation",
+                path: "bomtrimcreation/bom-trim-creation",
+                filepath: "bomtrimcreation/bom-trim-creation",
             },
         ]
     },
