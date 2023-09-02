@@ -47,12 +47,10 @@ import { ColourModule } from './colours/colour.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { AccountControlObjectModule } from './account-control-objects/account-control-object-module';
 import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
-import { SettingsModule } from './settings/settings.module';
-import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
 import { FabricsModule } from './fabrics/fabrics-module';
-import { BomModule } from './bom-trim/bom.module';
 import { FabricStructuresModule } from './fabric structure/fabric.module';
 import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-types.module';
+import { UomModule } from './uom/uom.module';
 
 
 @Module({
@@ -105,9 +103,10 @@ import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-typ
   SizeModule,
   FabricsModule,
   BuyersModule,
+  ColourModule,
   BuyersDestinationModule,
   BomModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule],
   controllers: [AppController],
   providers: [AppService],
 })

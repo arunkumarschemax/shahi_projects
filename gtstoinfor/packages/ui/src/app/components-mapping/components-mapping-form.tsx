@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useNavigate } from "react-router-dom";
+import { config } from "packages/libs/shared-services/config";
 
 const CheckboxGroup = Checkbox.Group;
 const {Option}= Select;
@@ -105,13 +106,13 @@ export const ComponentsMappingForm = () => {
 
     const onStyleChange = (val,option) => {
         setStyle(option?.key)
-        // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+option?.styleName
-        // setStyleImg(updateImage)
-        setStyleImg([{
-            name:option?.styleName,
-            status:'done',
-            // url: appSettings.style_file_path+option?.styleFilepath,
-}])
+        const updateImage ='http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/'+option?.styleName
+        setStyleImg(updateImage)
+//         setStyleImg([{
+//             name:option?.styleName,
+//             status:'done',
+//             url: config.upload_file_path + option?.styleFilepath,
+// }])
 
     }
 

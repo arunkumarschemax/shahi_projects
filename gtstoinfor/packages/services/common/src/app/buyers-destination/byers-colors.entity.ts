@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, M
 import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
 import { Buyers } from "../buyers/buyers.entity";
+import { Colour } from "../colours/colour.entity";
 
 @Entity('buyers_color')
 export class BuyersColor {
@@ -50,9 +51,9 @@ export class BuyersColor {
   })
   versionFlag: number;
    
-//   @ManyToOne(type=>Color, color=>color.buyercolorsInfo,{  nullable:false, })
-//   @JoinColumn({ name:"color_id"})
-//   colorInfo: Size;
+  @ManyToOne(type=>Colour, color=>color.colorsInfo,{  nullable:false, })
+  @JoinColumn({ name:"colour_id"})
+  colorInfo: Colour;
 
   @ManyToOne(type=>Buyers, color=>color.buyerColorsInfo,{  nullable:false, })
   @JoinColumn({ name:"buyer_id"})

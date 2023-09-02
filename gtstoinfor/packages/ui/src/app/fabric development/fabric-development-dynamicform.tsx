@@ -1,7 +1,9 @@
 import { Button, Card, Col, Divider, Form, FormInstance, Input, Popconfirm, Row, Select, Table, Tooltip, Upload } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import M3Items from './m3-model'
 import { DeleteOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons'
+import { ColourService, UomService } from '@project-management-system/shared-services'
+import AlertMessages from '../common/common-functions/alert-messages'
 
 export interface FabricDevelopmentDynamicFormProps {
   
@@ -18,6 +20,51 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
   const [editingIndex, setEditingIndex] = useState(1);
   const [showTable, setShowTable] = useState<boolean>(false);
   const [BtnDisable, setBtnDisable] = useState<boolean>(false);
+  const [colorData,setColorData] = useState<any>([])
+  const [uomData,setUomData] = useState([])
+
+
+  const colorservice =new ColourService();
+  const uomservice = new UomService();
+
+   
+
+  useEffect (()=>{
+    getAllActiveColour();
+    getAllUoms();
+
+   
+  },[])
+
+
+  const getAllActiveColour=() =>{
+    colorservice.getAllActiveColour().then(res =>{
+    if (res.status){
+      setColorData(res.data);
+       
+    } else{
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  }).catch(err => {
+    setColorData([]);
+     AlertMessages.getErrorMessage(err.message);
+   })
+  
+}
+
+const getAllUoms = () => {
+  uomservice.getAllUoms().then((res) => {
+    if (res.status) {
+      setUomData(res.data);
+    }else{
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  }).catch(err => {
+    setUomData([]);
+     AlertMessages.getErrorMessage(err.message);
+   })
+};
+
 
     const showModal = () => {
         setModalVisible(true);
@@ -139,7 +186,13 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
                 label="Color"
                 name ="color"
               >
-                <Input placeholder="Color" allowClear/>
+                <Select placeholder="Color" allowClear>
+                {colorData.map((rec) => (
+                  <option key={rec.colourId} value={rec.colourId}>
+                    {rec.colour}
+                   </option>
+                       ))} 
+                </Select>
               </Form.Item>
             </Col>
 
@@ -219,8 +272,12 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
                 name="uom"
               >
             <Select  placeholder="UOM" allowClear>
-              <option key="1" value="kg">kg</option>
-              <option key="2" value="ton">ton</option>
+            {uomData.map((rec) => (
+                    <option key={rec.uomId} value={rec.uomId}>
+                      {rec.uom}
+                      </option>
+                       )) }
+              
 
             </Select>
 

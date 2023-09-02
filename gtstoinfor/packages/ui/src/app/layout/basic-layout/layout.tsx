@@ -161,6 +161,12 @@ export const baseRouterList = [
                 path: "buyers-destination/buyers-destination-grid",
                 filepath: "buyers-destination/buyers-destination-grid",
             },
+            {
+                label: "UOM",
+                key: "uom",
+                path: "uom/uom-grid",
+                filepath: "uom/uom-grid",
+            },
         ]
     },
     {
@@ -224,25 +230,7 @@ export const baseRouterList = [
                 path: "/masters/garmentcategory/garmentcategory-view",
                 filepath: "/masters/garmentcategory/garmentcategory-view",
             },
-            {
-                label: "Payment Terms",
-                key: "paymentTerms",
-                path: "payment-terms/payment-terms-view",
-                filepath: "payment-terms/payment-terms-view",
-            },
-            {
-                label: "Package Terms",
-                key: "packageTerms",
-                path: "package-terms/package-terms-view",
-                filepath: "package-terms/package-terms-view",
-            },
-           
-            {
-                label: "Delivery Terms",
-                key: "delivery-terms",
-                path: "delivery-terms/delivery-terms-view",
-                filepath: "delivery-terms/delivery-terms-view",
-            },
+            
             {
                 label: "Locations",
                 key: "locations",
@@ -476,6 +464,12 @@ export const baseRouterList = [
                 key: "sku-list",
                 path: "sku-list",
                 filepath: "sku-list",
+            },
+            {
+                label: "SKU Mapping",
+                key: "sku-mapping",
+                path: "sku-mapping",
+                filepath: "sku-mapping",
             },
         ],
     },

@@ -496,7 +496,7 @@ export const  FabricDevelopmentRequestQuality = () => {
             label="Fabric Code"
             name="fabriccode"
           >
-            <Input placeholder="Fabric Code" allowClear />
+            <Input placeholder="Fabric Code" allowClear disabled={true} />
           </Form.Item>
         </Col>
 

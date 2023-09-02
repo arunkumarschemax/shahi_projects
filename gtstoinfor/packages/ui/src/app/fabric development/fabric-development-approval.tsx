@@ -10,13 +10,119 @@ import {
   Space,
   Upload,
 } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FabricDevelopmentRequestQuality from "./fabric-development-quality-request";
 import FabricDevelopmentTabs from "./fabric-development-tabs";
+import { BuyersService, EmployeeDetailsService, FabricTypeService, LocationsService, ProfitControlHeadService } from "@project-management-system/shared-services";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 export const FabricDevelopmentApproval = () => {
   const [form] = Form.useForm();
+  const [pchData,setPchData] = useState<any>([])
+  const [BuyerData,setBuyerData] = useState<any>([])
+  const [fabricTypeData,setFabricTypeData] = useState<any>([])
+  const [empData,setEmpData] = useState<any>([])
+  const [locationData,setLocationData] = useState<any>([])
 
+
+
+
+
+    const Pchservice =new ProfitControlHeadService();
+    const buyerService = new BuyersService()
+    const fabrictypeservice = new FabricTypeService();
+    const empDetailsservice = new EmployeeDetailsService();
+    const locationservice = new LocationsService();
+
+   
+    useEffect (()=>{
+      getAllActiveProfitControlHead();
+      getAllActiveBuyers();
+      getAllActiveFabricType();
+      getAllActiveEmploee();
+      getAllActiveLocations();
+    },[])
+  
+  
+    const getAllActiveProfitControlHead=() =>{
+      Pchservice.getAllActiveProfitControlHead().then(res =>{
+      if (res.status){
+        setPchData(res.data);
+         
+      } else{
+        AlertMessages.getErrorMessage(res.internalMessage);
+         }
+    }).catch(err => {
+      setPchData([]);
+       AlertMessages.getErrorMessage(err.message);
+     })
+    
+  }
+
+  const getAllActiveBuyers=() =>{
+    buyerService.getAllActiveBuyers().then(res =>{
+    if (res.status){
+      setBuyerData(res.data);
+       
+    } else{
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  }).catch(err => {
+    setBuyerData([]);
+     AlertMessages.getErrorMessage(err.message);
+   })
+  
+}
+
+const getAllActiveFabricType=() =>{
+  fabrictypeservice.getAllActiveFabricType().then(res =>{
+  if (res.status){
+    setFabricTypeData(res.data);
+     
+  } else{
+    AlertMessages.getErrorMessage(res.internalMessage);
+     }
+}).catch(err => {
+  setFabricTypeData([]);
+   AlertMessages.getErrorMessage(err.message);
+ })
+
+}
+
+const getAllActiveEmploee=() =>{
+  empDetailsservice.getAllActiveEmploee().then(res =>{
+  if (res.status){
+    setEmpData(res.data);
+     
+  } else{
+    AlertMessages.getErrorMessage(res.internalMessage);
+     }
+}).catch(err => {
+  setEmpData([]);
+   AlertMessages.getErrorMessage(err.message);
+ })
+
+}
+
+const getAllActiveLocations=() =>{
+  locationservice.getAllActiveLocations().then(res =>{
+  if (res.status){
+    setLocationData(res.data);
+     
+  } else{
+    AlertMessages.getErrorMessage(res.internalMessage);
+     }
+}).catch(err => {
+  setLocationData([]);
+   AlertMessages.getErrorMessage(err.message);
+ })
+
+}
+  
+console.log(locationData,"143")
+  
+    
+ console.log(fabricTypeData,"55")
   const onReset = () => {
     form.resetFields();
   };
@@ -54,7 +160,16 @@ export const FabricDevelopmentApproval = () => {
                 name="location"
                 rules={[{ required: true, message: "Location" }]}
               >
-                <Input placeholder="Location" allowClear />
+                <Select placeholder="Location" allowClear>
+                  
+                  {locationData.map((rec) => (
+                    <option key={rec.locationId} value={rec.locationId}>
+                      {rec.locationName}
+                     </option>
+                         ))}
+                         
+  
+                  </Select>
               </Form.Item>
             </Col>
 
@@ -66,7 +181,7 @@ export const FabricDevelopmentApproval = () => {
               xl={{ span: 4 }}
             >
               <Form.Item label="Request No" name="Requestno">
-                <Input placeholder="Request No" allowClear />
+                <Input placeholder="Request No" allowClear disabled={true} />
               </Form.Item>
             </Col>
             <Col
@@ -92,8 +207,14 @@ export const FabricDevelopmentApproval = () => {
                 name="pch"
                 rules={[{ required: true, message: "PCH" }]}
               >
-                <Select placeholder="PCH">
-                <option key="1" value="type1">pch</option>
+                <Select placeholder="PCH" allowClear>
+                  
+                {pchData.map((rec) => (
+                  <option key={rec.profitControlHeadId} value={rec.profitControlHeadId}>
+                    {rec.profitControlHead}
+                   </option>
+                       ))}
+                       
 
                 </Select>
               </Form.Item>
@@ -111,8 +232,13 @@ export const FabricDevelopmentApproval = () => {
                 name="buyer"
                 rules={[{ required: true, message: "Buyer" }]}
               >
-                <Select placeholder="Buyer">
-                <option key="1" value="type1">SURESH</option>
+                <Select placeholder="Buyer" allowClear>
+                {BuyerData.map((rec) => (
+                  <option key={rec.buyerId} value={rec.buyerId}>
+                    {rec.buyerName}
+                   </option>
+                       ))}
+                       
 
                 </Select>
               </Form.Item>
@@ -127,14 +253,14 @@ export const FabricDevelopmentApproval = () => {
             >
               <Form.Item label="Light Source " name="lightsource">
                 <Space direction="horizontal">
-                  <Select placeholder="primary" style={{ width: 60 }} >
+                  <Select placeholder="primary" style={{ width: 60 }} allowClear >
                   <option key="1" value="type1">PRIM</option>
                   </Select>
-                  <Select placeholder="secondary" style={{ width: 60 }} >
+                  <Select placeholder="secondary" style={{ width: 60 }} allowClear >
                   <option key="1" value="type1">ESC</option>
                    
                   </Select>
-                  <Select placeholder="tertiary" style={{ width: 60 }} >
+                  <Select placeholder="tertiary" style={{ width: 60 }}  allowClear>
                   <option key="1" value="type1">TET</option>
 
                   </Select>
@@ -150,12 +276,16 @@ export const FabricDevelopmentApproval = () => {
               xl={{ span: 4 }}
             >
               <Form.Item
-                label="Type"
-                name="type"
+                label="Fabric Type"
+                name="Fabrictype"
                 rules={[{ required: true, message: "Type" }]}
               >
-                <Select placeholder="Sample Type">
-                  <option key="1" value="type1">type1</option>
+                <Select placeholder="Fabric Type" allowClear>
+                {fabricTypeData.map((rec) => (
+                  <option key={rec.fabricTypeId} value={rec.fabricTypeId}>
+                    {rec.fabricTypeName}
+                   </option>
+                       ))} 
                 </Select>
               </Form.Item>
             </Col>
@@ -172,8 +302,12 @@ export const FabricDevelopmentApproval = () => {
                 name="fabricresponsible"
                 rules={[{ required: true, message: "Fabric Responsible" }]}
               >
-                <Select placeholder="Fabric Responsible">
-                <option key="1" value="type1">SURESH</option>
+                <Select placeholder="Fabric Responsible" allowClear>
+                {empData.map((rec) => (
+                  <option key={rec.employeeId} value={rec.employeeId}>
+                    {rec.firstName} {rec.lastName}
+                   </option>
+                       ))} 
 
                 </Select>
               </Form.Item>

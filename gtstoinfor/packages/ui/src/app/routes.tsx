@@ -113,6 +113,8 @@ import SettingsView from "./masters/settings/settings-view"
 import TrimsBomCreation from "./BOM/trims-bom-creation"
 import { FabricDevelopmentApproval } from "./fabric development/fabric-development-approval"
 import SkuList from "./orders/sku-list"
+import SKUGeneration from "./orders/sku-generation"
+import UomGrid from "./masters/uom/uom-grid"
 // import FabricDevelopmentApproval from "./fabric development/fabric-development-approval"
 
 
@@ -432,6 +434,7 @@ export const AppRoutes = () => {
                             throw new Error("Function not implemented.")
                         } }/>}/>
                         <Route path='fabric-finish-type/fabric-finish-type-grid' element={<FabricFinishTypesGrid />}/>
+                        <Route path='uom/uom-grid' element={<UomGrid />}/>
                                               
                  </Route>
 
@@ -466,6 +469,7 @@ export const AppRoutes = () => {
                         <Route path='item-creation' element={<ItemCreation/>}/>
                         <Route path='sku-list' element={<SkuList/>}/>
 
+                        <Route path='sku-mapping' element={<SKUGeneration/>}/>
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 
                     </Route>

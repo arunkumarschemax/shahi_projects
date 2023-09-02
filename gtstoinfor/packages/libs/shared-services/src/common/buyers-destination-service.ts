@@ -1,4 +1,4 @@
-import { BuyersDestinationDto, BuyersDestinationRequest, BuyersDestinationResponseModel, ComponentMappingFilterReq, ComponentMappingModel, MappingResponseModel,  } from "@project-management-system/shared-models";
+import { BuyersDestinationDto, BuyersDestinationResponseModel, BuyersDestinationRequest } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class BuyerDestinationService  extends CommonAxiosService{
