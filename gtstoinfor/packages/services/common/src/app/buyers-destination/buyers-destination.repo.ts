@@ -6,6 +6,10 @@ import { BuyersDestionations } from "./buyers-destination.entity";
 import { Destination } from "../destination/destination.entity";
 import { Size } from "../sizes/sizes-entity";
 import { Buyers } from "../buyers/buyers.entity";
+import { BuyersColor } from "./byers-colors.entity";
+import { Colour } from "../colours/colour.entity";
+import { BuyersSize } from "./buyers-sizes.entity";
+import { BuyersDestinationRequest } from "@project-management-system/shared-models";
 
 @Injectable()
 export class buyersDestionationMappingRepository extends Repository<BuyersDestionations> {
@@ -42,14 +46,15 @@ export class buyersDestionationMappingRepository extends Repository<BuyersDestio
         return await query.getRawMany()
     }
 
-    async getAll():Promise<any[]>{
+    async getAll(req?: BuyersDestinationRequest):Promise<any[]>{
         const query = this.createQueryBuilder('bd')
-        .select(`d.destination_id,d.destination,s.sizes,s.sizeId`)
-        .leftJoin(Destination,`d`,`bd.destination_id = d.destination_id`)
-        .leftJoin(Buyers,'b','b.buyer_id = d.buyer_id')
-        .leftJoin(Size,'s','s.buyer_id = b.buyer_id')
-        .groupBy(`b.buyer_id`)
-        .orderBy(`b.buyer_id`)
+        .select(`d.destination_id,d.destination,b.buyer_id,b.buyer_name`)
+        .leftJoin(Buyers,'b','b.buyer_id = bd.buyer_id')
+        .leftJoin(Destination,`d`,`d.destination_id = bd.destination_id`)
+        if(req.buyerId !== undefined) {
+            query.where(`b.buyer_id = '${req.buyerId}'`)
+        }
+        query.orderBy(`b.buyer_id`)
         return await query.getRawMany()
     }
 }

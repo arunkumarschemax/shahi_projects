@@ -26,10 +26,10 @@ export class BuyersDestinationController{
 
 
     @Post('/getAll')
-    // @ApiBody({type:BuyersDestinationRequest})
-    async getBuyersDestinations():Promise<any>{
+    @ApiBody({type:BuyersDestinationRequest})
+    async getBuyersDestinations(@Body() req:any):Promise<any>{
         try{
-            return await this.buyersDesService.getAll()
+            return await this.buyersDesService.getAll(req)
         } catch(err){
             return this.applicationExceptionHandler.returnException(BuyersDestinationResponseModel, err);
         }

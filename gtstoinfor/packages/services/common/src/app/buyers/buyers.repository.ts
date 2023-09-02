@@ -7,6 +7,11 @@ import { PaymentTerms } from "../payment-terms/payment-terms.entity";
 import { PaymentMethod } from "../payment-methods/payment-method-entity";
 import { Address } from "./address.entity";
 import { Countries } from "../countries/countries.entity";
+import { BuyersSize } from "../buyers-destination/buyers-sizes.entity";
+import { BuyersColor } from "../buyers-destination/byers-colors.entity";
+import { Destination } from "../destination/destination.entity";
+import { Size } from "../sizes/sizes-entity";
+import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
 
 @Injectable()
 export class BuyerRepository extends Repository<Buyers> {
@@ -40,4 +45,18 @@ export class BuyerRepository extends Repository<Buyers> {
         .orderBy(`b.buyer_name`)
         return data.getRawMany()
      }
+
+     async getMappingData():Promise<any[]>{
+        const query = this.createQueryBuilder('b')
+        .select(`b.buyer_id,b.buyer_name,d.destination_id,d.destination,s.size_id,s.sizes `)
+        .leftJoin(BuyersDestionations,'bd','bd.buyer_id = b.buyer_id')
+        .leftJoin(BuyersColor,'bc',' bc.buyer_id = b.buyer_id')
+        .leftJoin(BuyersSize,'bs','bs.buyer_id = b.buyer_id')
+        .leftJoin(Size,'s','s.size_id= bs.size_id')
+        .leftJoin(Destination,'d','d.destination_id = bd.destination_id')
+        // .leftJoin(Colour,'c','c.colour_id = bc.colour_id')
+        // .groupBy(`b.buyer_id`)
+        .orderBy(`b.buyer_id`)
+        return await query.getRawMany()
+    }
 }
