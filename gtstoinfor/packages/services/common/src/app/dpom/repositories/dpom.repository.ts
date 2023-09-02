@@ -371,7 +371,10 @@ export class DpomRepository extends Repository<DpomEntity> {
             }
             if (req.documentStartDate !== undefined) {
                 query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`)
+            } if (req.productCode !== undefined) {
+                query.andWhere(`dpom.product_code ='${req.productCode}'`)
             }
+            console.log(req,"reqesty")
         return await query.getRawMany();
     }
 
