@@ -5,7 +5,7 @@ import { BuyersColor } from "../buyers-destination/byers-colors.entity";
 @Entity('colour')
 export class Colour{
 
-@PrimaryGeneratedColumn("increment",{name:'colour-id'})
+@PrimaryGeneratedColumn("increment",{name:'colour_id'})
 colourId:number;
 @Column("varchar",{
     nullable: true,
@@ -50,6 +50,6 @@ updatedUser: string | null;
 })
 versionFlag: number;
 
-// @OneToMany(type=>BuyersColor, buyers=>buyers.colorInfo,{cascade: true})
-// colorsInfo:BuyersColor;
+@OneToMany(type=>BuyersColor, buyers=>buyers.colorInfo,{cascade: true})
+colorsInfo?:BuyersColor;
 }

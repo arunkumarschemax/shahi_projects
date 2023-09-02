@@ -1,40 +1,34 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Style } from "../style/dto/style-entity";
-import { GarmentCategory } from "../garment-category/garment-category.entity";
-import { Garments } from "../garments/garments.entity";
-import { Components } from "../components/components.entity";
 import { BuyersDestionations } from "./buyers-destination.entity";
 import { BuyersDestinationDTO } from "./dto/buyers-destination.dto";
 import { Size } from "../sizes/sizes-entity";
 import { Destination } from "../destination/destination.entity";
 import { Buyers } from "../buyers/buyers.entity";
-import { BuyersController } from "../buyers/buyers.controller";
 import {
-  BuyersDestinationResponseModel,
+  BuyersDestinationResponseModel, BuyersMappingResponseModel, ColourInfoModel, CommonResponseModel, DestinationInfoModel, MappingModel, MappingResponseModel, SizeInfoModel,
 } from "@project-management-system/shared-models";
-import { buyersDestionationMappingRepository } from "./buyers-destination.repo";
-import { BuyersDestinationRequest } from "./dto/byers-destination.request";
-import { MappingDetailsDto } from "./dto/mapping-details.dto";
-import { SizeInfoDto } from "./dto/size-info-dto";
-import { DestinationInfoDto } from "./dto/destination-info-dto";
-import { ColourInfoDto } from "./dto/colour-info-dto";
+
 import { BuyersSize } from "./buyers-sizes.entity";
 import { BuyersColor } from "./byers-colors.entity";
+import { Colour } from "../colours/colour.entity";
+import { BuyerRepository } from "../buyers/buyers.repository";
+import { buyerColorsMappingRepository } from "./buyer-colors-repo";
+import { buyersSizesMappingRepository } from "./buyer-size-repo";
+import { buyersDestionationMappingRepository } from "./buyers-destination.repo";
+import { BuyersDestinationRequest } from "./dto/byers-destination.request";
 
 @Injectable()
 export class BuyersDestinationService {
   constructor(
-    @InjectRepository(BuyersDestionations)
-    private buyersDesRepo: Repository<BuyersDestionations>,
-    private repo: buyersDestionationMappingRepository,
+    private buyersDesRepo:buyersDestionationMappingRepository,
 
-    @InjectRepository(BuyersSize)
-        private buyerSizeRepo: Repository<BuyersSize>,
+    private repo:BuyerRepository,
 
-    @InjectRepository(BuyersColor)
-     private buyerColorRepo: Repository<BuyersColor>
+     private buyerColorRepo: buyerColorsMappingRepository,
+
+     private buyerSizeRepo: buyersSizesMappingRepository
 
   ) {}
 
@@ -43,295 +37,214 @@ async createBuyersDestination(
     dto: BuyersDestinationDTO,
   ): Promise<BuyersDestinationResponseModel> {
     try{
-    const data = await this.buyersDesRepo.find(
-    //   {where:{buyerInfo:{buyerId:dto.buyerId}}}
-    );
-    if(data.length > 0){
-        return new BuyersDestinationResponseModel(false,0,' already exists')
-      } else {
+    
+   
         const entity = new BuyersDestionations()
         entity.BsId = dto.BsId
         entity.createdUser = dto.createdUser
         entity.versionFlag = dto.versionFlag
         entity.isActive =dto.isActive
-        // entity.buyerInfo = new Buyers()
-        // entity.buyerInfo.buyerId = dto.buyerId
+        entity.buyerInfo = new Buyers()
+        entity.buyerInfo.buyerId = dto.buyerId
         
         for(const rec of dto.mappingDetails){
-            // console.log(rec,'----------rec')
-          let mappedData = [];
+            if(rec.mappedAgainst === "Size"){
+              for(const res of rec.mappedData){
+                // console.log(rec.mappedAgainst,'----------rec')
+                const existingSize = await this.buyerSizeRepo.findOne({
+                  where: { buyerInfo: { buyerId: dto.buyerId }, sizeInfo: { sizeId: res.id } },
+                });
+      
+                if (!existingSize) {
+                const size = new Size()
+                const sizesInfo = new BuyersSize();
+                size.sizeId = res.id
+                console.log(res.id,'----------res   ')
+                size.size = res.name
+                sizesInfo.sizeInfo = size
+                sizesInfo.buyerInfo = new Buyers();
+                sizesInfo.buyerInfo.buyerId = dto.buyerId
+                const saveSize = await this.buyerSizeRepo.save(sizesInfo);
+                console.log(sizesInfo,'----------rec')
 
-        if (rec.mappingAgainst = "Size") {
-          for (const mappedItem of rec.mappedData) {
-                    
-        //     for(const res of mappedItem.size){
-        //         // console.log(res,'--------res')
-        //         const sizesInfo = new BuyersSize();
-        //         const size = new Size();
-        //         size.sizeId = res.sizeId
-        //         size.size = res.size
-        //         sizesInfo.sizeInfo = size  
-        //         sizesInfo.buyerInfo = new Buyers();
-        //         sizesInfo.buyerInfo.buyerId = dto.buyerId
-        //         const saveSize = await this.buyerSizeRepo.save(sizesInfo);
-        //         // Create a new object with savedSize data and push it into mappedData
-        //         mappedData.push({
-        //             size: { sizeId: saveSize.sizeInfo.sizeId, size: saveSize.sizeInfo.size },
-        //         });
-        //         console.log(saveSize, 'size');
-        //     }
-        // }
-        // const mappedSizeData = mappedItem.size.map((res) => ({
-        //     sizeId: res.sizeId,
-        //     size: res.size,
-        // }));
+                console.log(saveSize,'size')
+                }
+                else{
+                  return new BuyersDestinationResponseModel(false,0,`Buyer Size  "${res.name}" Already exists`);
 
-        // for (const sizeData of mappedSizeData) {
-        //     const sizesInfo = new BuyersSize();
-        //     sizesInfo.sizeInfo = new Size();
-        //     sizesInfo.sizeInfo.sizeId = sizeData.sizeId;
-        //     sizesInfo.sizeInfo.size = sizeData.size;
-        //     sizesInfo.buyerInfo = new Buyers();
-        //     sizesInfo.buyerInfo.buyerId = dto.buyerId;
-        //     const saveSize = await this.buyerSizeRepo.save(sizesInfo);
-        //     console.log(saveSize, 'size');
-        // }
+                }
+              }
+            }
+            if(rec.mappedAgainst === 'Destination'){
+              for(const res of rec.mappedData){
+                const existingDes = await this.buyersDesRepo.findOne({
+                  where: { buyerInfo: { buyerId: dto.buyerId }, buyerDesInfo: { destinationId: res.id } },
+                });
+      
+                if (!existingDes) {
+                const des = new Destination()
+                const desInfo = new BuyersDestionations()
+                des.destinationId = res.id
+                des.destination = res.name
+                desInfo.buyerDesInfo = des
+                desInfo.buyerInfo = new Buyers()
+                desInfo.buyerInfo.buyerId = dto.buyerId
+                const saveDest = await this.buyersDesRepo.save(desInfo);
+                console.log(saveDest,'saveDest')
+              }
+              else{
+                return new BuyersDestinationResponseModel(false,0,`Buyer Destination  "${res.name}" Already exists`);
+
+              }
+            }
+            }
+            if(rec.mappedAgainst === 'Color'){
+              for(const res of rec.mappedData){
+                const existingDes = await this.buyerColorRepo.findOne({
+                  where: { buyerInfo: { buyerId: dto.buyerId }, colorInfo: { colourId: res.id } },
+                });
+      
+                if(!existingDes) 
+                {
+                const color = new Colour()
+                const colorInfo = new BuyersColor()
+                colorInfo.buyerInfo = new Buyers()
+                 colorInfo.colorInfo = color
+                color.colourId = res.id
+                color.colour = res.name
+                colorInfo.buyerInfo.buyerId = dto.buyerId
+                const saveColor = await this.buyerColorRepo.save(colorInfo);
+                console.log(saveColor,'saveColor')
+              }
+              else{
+                return new BuyersDestinationResponseModel(false,0,`Buyer Colour ${res.name} Already exists`);
+              }
+            }
+          }
+          }
+          return new BuyersDestinationResponseModel(true,0,'mappedsuccesfully');
+
+      }
+       catch(err){
+          throw err
+      }
     }
 
-            }
-            console.log(rec,'=========')
-             if(rec.mappingAgainst === "Destination") {
-                console.log(rec,'.............')
-                // for (const mappedItem of rec.mappedData) {
-                //     const mappedDestData = mappedItem.destination.map((res) => ({
-                //         destinationId: res.destinationId,
-                //         destination: res.destination,
-                //     }));
-        
-                //     for (const destData of mappedDestData) {
-                //         const destinationInfo = new BuyersDestionations();
-                //         destinationInfo.buyerDesInfo = new Destination();
-                //         destinationInfo.buyerDesInfo.destinationId = destData.destinationId;
-                //         destinationInfo.buyerDesInfo.destination = destData.destination;
-                //         destinationInfo.buyerInfo = new Buyers();
-                //         destinationInfo.buyerInfo.buyerId = dto.buyerId;
-                //         const saveDest = await this.buyersDesRepo.save(destinationInfo);
-                //         console.log(saveDest, 'destination');
-                //     }
-                // }
-            }
-        
-        // else if (rec.mappingAgainst = 'Color') {
-        //   for (const mappedItem of rec.mappedData) {
-        //     for(const res of mappedItem.colour){  
-        //     const colorInfo = new BuyersColor();
-        //     colorInfo.colorInfo= new Colors()
-        //     colorInfo.colourId = res.colourId;
-        //     colorInfo.colourName = res.colour;
-//              colorInfo.buyerInfo = new Buyers()
-//              colorInfo.buyerInfo.buyerId = dto.buyerId
-        //     mappedData.push(colorInfo);}
-        // const saveColor = await this.buyerColorRepo.save(colorInfo)
-
-        //   }
-        // }
-
-         rec.mappedData = mappedData;
-        }
-    
-    // const save = await this.buyersDesRepo.save(dto)
-
-    return new BuyersDestinationResponseModel(true,0,'mappedsuccesfully');
-    }
-} catch(err){
-    throw err
-}
-}
-  async getAll(
-    // req: BuyersDestinationRequest
-  ): Promise<any> {
+  async getAll(req:BuyersDestinationRequest): Promise<BuyersMappingResponseModel> {
     try {
-        const data = await this.buyersDesRepo.find({
-            relations:['buyerInfo','buyerInfo.buyerSizesInfo']
-        })
-        console.log(data,'data')
-        return data
-    //   const data = await this.buyersDesRepo.find({
-    //     // where:{styleInfo:{styleId:req.styleId},garmentcategoryInfo:{garmentCategoryId:req.garmentCategoryId},garmentInfo:{garmentId:req.garmentId}},
-    //     relations: ["sizeInfo", "buyerInfo", "buyerDesInfo"],
-    //   });
+        const size = await this.buyerSizeRepo.getAll(req)
+        const des = await this.buyersDesRepo.getAll(req)
+        const color = await this.buyerColorRepo.getAll(req)
+        console.log(size,'size-------')
+        console.log(des,'des-------')
+       let mappDetails : MappingModel[] =[]
+       let sizeInfo:SizeInfoModel[] =[]
+       let colorInfo=[]
+       let desInfo = []
+       let buyerId:number;
+       let buyerName:string;
+       const buyersInfo: { [key: number]: MappingModel } = {};
 
-    //   if (data) {
-    //     const groupedData: Record<string, BuyersDestinationModel> = {};
+       for (const res of color) {
+           const buyerId = res.buyer_id;
+           const buyerName = res.buyer_name;
+       
+           if (!buyersInfo[buyerId]) {
+               buyersInfo[buyerId] = {
+                   buyerId,
+                   buyerName,
+                   size: [],
+                   destination: [],
+                   color: [],
+               };
+           }
+       
+           buyersInfo[buyerId].color.push({ colourId: res.colour_id, colour: res.colour });
+           console.log(buyersInfo,'buyerscolor')
+       }
+       
+       for (const sizeRes of size) {
+           const buyerId = sizeRes.buyer_id;
+           const buyerName = sizeRes.buyer_name;
+       
+           if (!buyersInfo[buyerId]) {
+               buyersInfo[buyerId] = {
+                   buyerId,
+                   buyerName,
+                   size: [],
+                   destination: [],
+                   color: [],
+               };
+           }
+       
+           buyersInfo[buyerId].size.push({ sizeId: sizeRes.size_id, size: sizeRes.sizes });
+           console.log(buyersInfo,'buyerssize')
 
-    //     for (const rec of data) {
-    //       const key = `${rec.sizeInfo.size}-${rec.buyerDesInfo.destination}`;
-    //       if (!groupedData[key]) {
-    //         groupedData[key] = {
-    //           BsId: rec.BsId,
-    //           buyerDetails: [],
-    //           createdUser: rec.createdUser,
-    //           updatedUser: rec.updatedUser,
-    //           isActive: rec.isActive,
-    //           versionFlag: rec.versionFlag,
-    //           sizeDetails: [],
-    //           colourDetails: [],
-    //           destinationDetails: [],
-    //           //   sizeDetails: rec.sizeInfo.size,
-    //           //   destination: rec.buyerDesInfo.destination,
-    //           //   colour: 'rec.colourInfo.colour',
-    //         };
+       }
+       
+       for (const desRes of des) {
+           const buyerId = desRes.buyer_id;
+           const buyerName = desRes.buyer_name;
+       
+           if (!buyersInfo[buyerId]) {
+               buyersInfo[buyerId] = {
+                   buyerId,
+                   buyerName,
+                   size: [],
+                   destination: [],
+                   color: [],
+               };
+           }
+       
+           buyersInfo[buyerId].destination.push({ destinationId: desRes.destination_id, destination: desRes.destination });
+           console.log(buyersInfo,'buyersdes')
+
+       }
+       
+       // Convert the buyersInfo object to an array of MappingModel objects
+       for (const buyerId in buyersInfo) {
+               mappDetails.push(buyersInfo[buyerId]);
+           
+       }
+     
+    //    for(const res of color){
+    //     colorInfo.push({colorId:res.colour_id,color:res.colour})
+    //     buyerId= res.buyer_id;
+    //     buyerName = res.buyer_name
+    //     console.log(buyerId,'buyercolor')
+    //    }
+    //    for (const sizeRes of size) {
+    //             sizeInfo.push({ sizeId: sizeRes.size_id, size: sizeRes.sizes })
+    //        buyerId = sizeRes.buyer_id
+    //        buyerName = sizeRes.buyer_name
+    //        console.log(buyerId,'buyersize')
+
     //       }
-    //       groupedData[key].buyerDetails.push({
-    //         buyerId: rec.buyerInfo.buyerId,
-    //         buyerName: rec.buyerInfo.buyerName,
-    //       });
-    //       groupedData[key].sizeDetails.push({
-    //         sizeId: rec.sizeInfo.sizeId,
-    //         size: rec.sizeInfo.size,
-    //       });
-    //       groupedData[key].destinationDetails.push({
-    //         destinationId: rec.buyerDesInfo.destinationId,
-    //         destination: rec.buyerDesInfo.destination,
-    //       });
-    //       groupedData[key].colourDetails.push({
-    //         colourId: 1, // rec.colourInfo.colourId,
-    //         colour: " rec.colourInfo.colour",
-    //       });
-    //     }
+    //         for (const desRes of des) {
 
-    //     const info = Object.values(groupedData);
+    //            desInfo.push({ destinationId: desRes.destination_id, destination: desRes.destination })
+    //            buyerName = desRes.buyer_name
+    //            buyerId = desRes.buyer_id
+    //            console.log(buyerId,'buyerdes')
+          
+        
+    // }
+  //   mappDetails.push({
+  //     buyerId:buyerId,
+  //     buyerName:buyerName , // Replace with actual value
+  //     size: sizeInfo,
+  //     destination: desInfo,
+  //     color: colorInfo
+  // });
+     
+        return new BuyersMappingResponseModel(true, 0, 'Data retrieved', mappDetails);
 
-    //     return new BuyersDestinationResponseModel(
-    //       true,
-    //       1,
-    //       "Data retrieved",
-    //       info
-    //     );
-    //   } else 
-    // {
-    //     return new BuyersDestinationResponseModel(
-    //       false,
-    //       1,
-    //       "Data retrieved",
-    //       []
-    //     );
-    //   }
     } catch (err) {
-      throw err;
+        throw err;
     }
-  }
-  //   async getBuyersDestinations(req:BuyersDestinationRequest): Promise<BuyersDestinationResponseModel> {
-  //     try {
-  //       const data = await this.buyersDesRepo.find({where:{sizeInfo:{sizeId:req.sizeId},destinationInfo:{destinationId:req.destinationId}
-  //                     // ,colourInfo:{colourId:req.colourId}
-  //                 },
-  //         relations: ['sizeInfo', 'colourInfo', 'destinationInfo', 'buyerInfo'],
-  //       });
+}
 
-  //       if (data) {
-  //         const groupedData: Record<string, BuyersDestinationResponseModel> = {};
 
-  //         for (const rec of data) {
-  //           const key = `${rec.sizeInfo.size}-${rec.destinationInfo.destination}`;
-  //           if (!groupedData[key]) {
-  //             groupedData[key] = {
-  //                 BsId: rec.BsId,
-  //                 sizeId: rec.sizeInfo.sizeId,
-  //               destinationId: rec.destinationInfo.destinationId,
-  //               colourId: 'rec.colourInfo.colourId',
-  //               buyerDetails: [],
-  //               createdUser: rec.createdUser,
-  //               updatedUser : rec.updatedUser,
-  //               isActive : rec.isActive,
-  //               versionFlag: rec.versionFlag,
-  //               size: rec.sizeInfo.size,
-  //               destination: rec.destinationInfo.destination,
-  //               colour: 'rec.colourInfo.colour',
-  //             };
-  //           }
-  //           groupedData[key].buyerDetails.push({
-  //             buyerId: rec.buyerInfo.buyerId,
-  //             buyer: rec.buyerInfo.buyerName,
-  //           });
-  //         }
 
-  //         const info = Object.values(groupedData);
 
-  //        return new BuyersDestinationResponseModel(true,1,'Data retrieved',info)
-
-  //       } else {
-  //         return new BuyersDestinationResponseModel(false,1,'Data retrieved',[])
-
-  //       }
-  //     } catch (err) {
-  //       throw err;
-  //     }
-  //   }
-
-  // async getSizeDropDown():Promise<BuyersDestinationResponseModel>{
-  //   try{
-  //     // const data = await this.buyersDesRepo.find({select:['styleInfo'],
-  //     //   relations: ['garmentInfo', 'garmentcategoryInfo', 'styleInfo', 'componentInfo'],
-  //     // });
-  //     const data = await this.repo.getSizesDropDown()
-  //     let info = [];
-  //     if(data.length > 0){
-  //       for(const rec of data){
-  //         // info.push(new BuyersDestinationModel(null,rec.sizeId,null,null,[],null,null,null,null,rec.size,null,null))
-
-  //       }
-  //       return new BuyersDestinationResponseModel(true,1,'Data retrieved',info)
-  //     } else{
-  //       return new BuyersDestinationResponseModel(false,0,'No data found')
-  //     }
-
-  //   } catch(err){
-  //     throw err
-  //   }
-  // }
-
-  // async getDestinationDropDown():Promise<BuyersDestinationResponseModel>{
-  //   try{
-  //     // const data = await this.buyersDesRepo.find({select:['garmentcategoryInfo'],
-  //     //   relations: ['garmentInfo', 'garmentcategoryInfo', 'styleInfo', 'componentInfo'],
-  //     // });
-  //     const data = await this.repo.getDestinationDropDown()
-  //     let info = [];
-  //     if(data.length > 0){
-  //       for(const rec of data){
-  //         // info.push(new BuyersDestinationModel(null,null,rec.destinationId,null,[],null,null,null,null,null,rec.destination))
-
-  //       }
-  //       return new BuyersDestinationResponseModel(true,1,'Data retrieved',info)
-  //     } else{
-  //       return new BuyersDestinationResponseModel(false,0,'No data found')
-  //     }
-
-  //   } catch(err){
-  //     throw err
-  //   }
-  // }
-
-  // async getColourDropDown():Promise<BuyersDestinationResponseModel>{
-  //   try{
-  //     // const data = await this.buyersDesRepo.find({select:['garmentInfo'],
-  //     //   relations: ['garmentInfo', 'garmentcategoryInfo', 'styleInfo', 'componentInfo'],
-  //     // });
-  //     const data = await this.repo.get()
-  //     let info = [];
-  //     if(data.length > 0){
-  //       for(const rec of data){
-  //         info.push(new BuyersDestinationModel(null,null,null,rec.garment_id,[],null,null,null,null,null,null,rec.garment_name))
-
-  //       }
-  //       return new buyersDesResponseModel(true,1,'Data retrieved',info)
-  //     } else{
-  //       return new buyersDesResponseModel(false,0,'No data found')
-  //     }
-
-  //   } catch(err){
-  //     throw err
-  //   }
-  // }
 }

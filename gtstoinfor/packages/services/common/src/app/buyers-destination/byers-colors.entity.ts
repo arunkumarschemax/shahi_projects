@@ -51,9 +51,9 @@ export class BuyersColor {
   })
   versionFlag: number;
    
-  // @ManyToOne(type=>Colour, color=>color.colorsInfo,{  nullable:false, })
-  // @JoinColumn({ name:"colour-id"})
-  // colorInfo: Colour;
+  @ManyToOne(type=>Colour, color=>color.colorsInfo,{  nullable:false, })
+  @JoinColumn({ name:"colour_id"})
+  colorInfo: Colour;
 
   @ManyToOne(type=>Buyers, color=>color.buyerColorsInfo,{  nullable:false, })
   @JoinColumn({ name:"buyer_id"})

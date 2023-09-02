@@ -3,7 +3,7 @@ import { MappedData } from "packages/libs/shared-models/src/common/Buyers Destin
 
 export class MappingDetailsDto{
     @ApiProperty()
-    mappingAgainst: string;
+    mappedAgainst: string;
 
     @ApiProperty()
     mappedData: MappedData[];

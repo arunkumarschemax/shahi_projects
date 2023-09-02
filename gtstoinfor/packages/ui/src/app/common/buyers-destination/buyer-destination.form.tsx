@@ -8,6 +8,7 @@ import {
 import {
     BuyerDestinationService,
     BuyersService,
+    ColourService,
     DestinationService,
     SizeService,
 } from "@project-management-system/shared-services";
@@ -41,7 +42,6 @@ export const BuyersDestinationForm = () => {
     const [form] = Form.useForm();
     const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
     const [size, setSize] = useState<any[]>([]);
-    const [buyer, setBuyer] = useState<any[]>([]);
     const [destination, setDestination] = useState<any[]>([]);
     const [sizes, setSizes] = useState<any[]>([]);
     const [destinations, setDestinations] = useState<any[]>([]);
@@ -56,24 +56,25 @@ export const BuyersDestinationForm = () => {
     const sizeService = new SizeService();
     const buyerService = new BuyersService();
     const desService = new DestinationService();
+    const colorService = new ColourService()
     const [mapping] = Form.useForm()
-    const { Panel } = Collapse;
     const [selectedBuyer, setSelectedBuyer] = useState(null);
     const [checkBoxName, setCheckBoxName] = useState('');
+    const [names, setName] = useState('');
+    const [sizeCheck, setSizeCheck] = useState('');
+    const [desCheck, setDesCheck] = useState('');
+    const [colorCheck, setColorCheck] = useState('');
     const [isBuyerSelected, setIsBuyerSelected] = useState(false);
     
     let sizedata = []
     let Desdata = []
     let colourData = []
     let TotalData =[]
-    let destinationObject = {};
-    let colourObject = {};
-    let sizeObject = {};
-
+   
     useEffect(() => {
         getSizes();
         getDestinations();
-        // getColours();
+        getColours();
         getBuyers();
     }, []);
 let tableData = []
@@ -95,19 +96,17 @@ let tableData = []
             }
         });
     };
-    // const getColours = () => {
-    //     desService.getAllActiveColour().then((res) => {
-    //         if (res.status) {
-    //             setColours(res.data);
-    //         } else {
-    //             setColours([]);
-    //         }
-    //     });
-    // };
+    const getColours = () => {
+        colorService.getAllColour().then((res) => {
+            if (res.status) {
+                setColours(res.data);
+            } else {
+                setColours([]);
+            }
+        });
+    };
     const getBuyers = () => {
         buyerService.getAllBuyer().then((res) => {
-
-
             if (res.status) {
                 setBuyers(res.data);
             }
@@ -115,15 +114,20 @@ let tableData = []
     };
     const onReset = () => {
         form.resetFields();
-        setDestination([]);
+        setSelectedOptions([]);
         setSize([]);
-        setSelectedOptions([])
-         setColour([])
-         setIsSizeEnabled(false)
-         setIsDestinationEnabled(false)
-         setIsBuyerSelected(false)
-         setSelectedOptions([])
-
+        setDestination([]);
+        setColour([]);
+        setIsSizeEnabled(false);
+        setIsDestinationEnabled(false);
+        setIsColorEnabled(false);
+        setIsBuyerSelected(false);
+        form.setFieldsValue({
+            buyer: undefined,
+            size: undefined, 
+            destination: undefined, 
+            colour: undefined, 
+          });
     };
     const handleBuyerSelection = (selectedIds) => {
         setSelectedBuyerIds(selectedIds);
@@ -148,9 +152,6 @@ let tableData = []
     };
    
 
-    // const onColourCange = (val,option) => {
-    //     setColour(option?.key)
-    // }
     const handleCheckboxChange = (isChecked, checkboxName) => {
         setIsSizeEnabled(checkboxName === "Size" ? isChecked : false);
         setIsDestinationEnabled(checkboxName === "Destination" ? isChecked : false);
@@ -214,6 +215,7 @@ let tableData = []
     let mappingDetails = []
     const save = () => {
         if (isSizeEnabled) {
+            setSizeCheck('Size')
             if (size.length > 0) {
                 const mappedSizeData = size.map(item => ({ id: item.sizeId, name: item.size }));
                 sizedata.push(...mappedSizeData);
@@ -227,6 +229,7 @@ let tableData = []
             }
         } 
          if(isDestinationEnabled) {
+            setDesCheck('Destination')
             if (destination.length > 0) {
                 const mappedDesData = destination.map(item => ({ id: item.destinationId, name: item.destination }));
                 Desdata.push(...mappedDesData);
@@ -239,6 +242,7 @@ let tableData = []
             }
         }
          if(isColorEnabled) {
+            setColorCheck('Color')
             if (colour.length > 0) {
                 const mappedColourData = colour.map(item => ({ id: item.colourId, name: item.colour }));
                 colourData.push(...mappedColourData);
@@ -262,50 +266,33 @@ let tableData = []
         TotalData = [...sizedata, ...Desdata, ...colourData];
         console.log(TotalData);
     };
-    
-//     const save =()=>{
-  
-//     if(isSizeEnabled){
-//        if(size.length >0){
-//         tableData =[...tableData,...size];
-//         size.map(e=>console.log(e.sizeId))
-//        }else{
-//         message.error('please select atleast one size')
 
-//        }
-//     } else if(isDestinationEnabled){
-//         if(destination.length >0){
-//             tableData =[...tableData,...destination];
 
-//                    }else{
-//             message.error('please select atleast one destination')
-//            }
-//     } else if(isColorEnabled){
-//         if(colour.length >0){
-//             tableData =[...tableData, ...colour];
+let mappingData:MappedDetails[] = [];
 
-//         }else{
-//             message.error('please select atleast one colour')
-            
-//            }
-//     }
-//     if (tableData.length === 0) {
-        
-//         message.error('Please select at least one option');
-//     } else {
-//         console.log(tableData,'==============')
-//         setSelectedOptions(tableData);
-
-//     }
-//     console.log(TotalData,'//////////')
-// }
  const onFinish = (values) => {
    
-        console.log(TotalData,'data-----')
         if (buyers.length > 0) {
-const mappDetails = new MappedDetails(checkBoxName,map)
-console.log(mappDetails,'details')
-            const req = new BuyersDestinationDto(0,form.getFieldValue('buyer'),true,'admin','ADMIN',1,[mappDetails])
+            if(size.length>0){
+                const mappedSizeData = size.map(item => ({ id: item.sizeId, name: item.size }));
+                sizedata.push(...mappedSizeData);
+                mappingData.push({mappedAgainst:sizeCheck,mappedData:sizedata})
+            }
+            if(destination.length>0){
+                const mappedDesData = destination.map(item => ({ id: item.destinationId, name: item.destination }));
+                Desdata.push(...mappedDesData)
+                mappingData.push({mappedAgainst:desCheck,mappedData:Desdata})
+            }
+            if(colour.length>0){
+                const mappedColourData = colour.map(item => ({ id: item.colourId, name: item.colour }));
+                colourData.push(...mappedColourData);
+                mappingData.push({mappedAgainst:colorCheck,mappedData:colourData})
+            }
+            console.log(mappingData, 'Mapped Data=========5556320');
+
+            const req = new BuyersDestinationDto(0,form.getFieldValue('buyer'),true,'admin','ADMIN',1,mappingData)
+            console.log(req,'req-----')
+
             service.create(req).then((res) => {
                 if (res.status) {
                     AlertMessages.getSuccessMessage(res.internalMessage);
@@ -419,7 +406,7 @@ console.log(mappDetails,'details')
                             <Form.Item
                                 label="Size"
                                 name="size"
-                            //   rules={[{required:true,message:'Size is required'}]}
+                              rules={[{required:true,message:'Size is required'}]}
                             >
                                 <Select
                                     showSearch
@@ -451,8 +438,8 @@ console.log(mappDetails,'details')
                         {isDestinationEnabled && (
                             <Form.Item
                                 label="Destination"
-                                name="destinationId"
-                            //    rules={[{required:true,message:'Destination is required'}]}
+                                name="destination"
+                               rules={[{required:true,message:'Destination is required'}]}
                             >
                                 <Select
                                     showSearch
@@ -483,9 +470,9 @@ console.log(mappDetails,'details')
                     >
                         {isColorEnabled && (
                             <Form.Item
-                                label="Colour"
-                                name="colouId"
-                            //   rules={[{required:true,message:'Colour is required'}]}
+                                label="Color"
+                                name="color"
+                              rules={[{required:true,message:'Colour is required'}]}
                             >
                                 <Select
                                     showSearch
@@ -496,13 +483,13 @@ console.log(mappDetails,'details')
                                     disabled={!isColorEnabled || !isBuyerSelected}
                                     onChange={onColourCange}
                                 >
-                                    {/* {
-                                colour.map((e) => {
+                                    {
+                                colours.map((e) => {
                                     return(
                                         <Option key={e.colour} value={e.colourId}>{e.colour}</Option>
                                     )
                                 })
-                            } */}
+                            }
                                     <Option key={1} value={1}>
                                         colour
                                     </Option>
@@ -533,32 +520,31 @@ console.log(mappDetails,'details')
                                 
                                 <Card title="Mapped items">
                                    <Row gutter={[24,24]}>
-                                    {size.length>0 &&<Card title='Sizes'>
+                                    {size.length>0 &&
+                                    <Card title='Sizes' style={{marginLeft:100,alignContent:'center'}} headStyle={{textAlign:'center'}}>
                                     {size.map((item, index) => (<ul><li>{item.size} <br/></li></ul> ))}
-
-                                    </Card>}
-                                   {destination.length >0 && <Card title='Destinations'>
+                                    </Card>
+                                    }
+                                   {destination.length >0 && 
+                                   <Card title='Destinations'style={{marginLeft:100,alignContent:'center'}}  headStyle={{textAlign:'center'}}>
                                     {destination.map((item, index) => (<ul><li>{item.destination} <br/></li></ul> ))}
 
                                     </Card>}
+                                    {colour.length >0 && 
+                                    <Card title='Colors'style={{marginLeft:100,alignContent:'center'}}  headStyle={{textAlign:'center'}}>
+                                    {colour.map((item, index) => (<ul><li>{item.colour} <br/></li></ul> ))}
+
+                                    </Card>}
                                     {/* <Card title='Colors'>
-                                    {color.map((item, index) => (<ul><li>{item.size} <br/></li></ul> ))}
-
+                                        {colours.length>0 &&
+                                        <Card>
+                                    {colour.map((item, index) => (<ul><li>{item.colour} <br/></li></ul> ))}
+                                           </Card>}
                                     </Card> */}
-                                    </Row>
-                    {/* <Descriptions >
-                       
-                         <Descriptions.Item label={'size'}> {size.map((item, index) => (<ul><li>{item.size} <br/></li></ul> ))}</Descriptions.Item> */}
-
-                        {/* {selectedOptions.map((item, index) => ( */}
-                         {/* <Descriptions.Item label={'Destination'}> {destination.map((item, index) => (<ul key={index}><li>{item.destination}</li></ul> ))}</Descriptions.Item> */}
-                         {/* ))} */}
-                       
-                    {/* </Descriptions> */}
+                                    </Row> 
+                    
                     </Card>
                 )}
-                {/* {selectedOptions.length > 0 && (
-                    <Table columns={columns} dataSource={selectedOptions} pagination={false} />)} */}
 
                             <Row justify={"end"}>
                     <Col
@@ -569,7 +555,7 @@ console.log(mappDetails,'details')
                         xl={{ span: 2 }}
                     >
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" >
+                            <Button type="primary" htmlType="submit" disabled={selectedOptions.length === 0}>
                                 Submit
                             </Button>
                         </Form.Item>

@@ -66,7 +66,7 @@ import { BomModule } from './bom-trim/bom.module';
       username: appConfig.database.username,
       password: appConfig.database.password,
       database: appConfig.database.dbName,
-
+     
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -106,6 +106,7 @@ import { BomModule } from './bom-trim/bom.module';
     FabricFinishTypesModule,
   SizeModule,
   BuyersModule,
+  ColourModule,
   BuyersDestinationModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule,SettingsModule],
   controllers: [AppController],
