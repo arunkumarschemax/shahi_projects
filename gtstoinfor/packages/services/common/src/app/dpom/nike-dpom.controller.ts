@@ -505,5 +505,47 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getPpmPlantForMarketing')
+    async getPpmPlantForMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmPlantForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmProductCodeForMarketing')
+    async getPpmProductCodeForMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmProductCodeForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmColorDescForMarketing')
+    async getPpmColorDescForMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmColorDescForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmCategoryDescForMarketing')
+    async getPpmCategoryDescForMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmCategoryDescForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmDestinationCountryForMarketing')
+    async getPpmDestinationCountryForMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmDestinationCountryForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
+    
 }
 
