@@ -51,6 +51,9 @@ import { FabricsModule } from './fabrics/fabrics-module';
 import { FabricStructuresModule } from './fabric structure/fabric.module';
 import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-types.module';
 import { UomModule } from './uom/uom.module';
+import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
+import { BomModule } from './bom-trim/bom.module';
+import { SettingsModule } from './settings/settings.module';
 
 
 @Module({
