@@ -107,9 +107,12 @@ import AccountControlObjectForm from "./masters/account-control-objects/account-
 import ItemCreation from "./orders/item-creation"
 import SampleRequestView from "./sample-development/sample-management-view"
 import SampleDevForm from "./sample-development/sample-management-form"
+import FabricsGrid from "./masters/fabrics/fabrics-view"
+import { FabricsForm } from "./masters/fabrics/fabrics-form"
 import SettingsView from "./masters/settings/settings-view"
 import TrimsBomCreation from "./BOM/trims-bom-creation"
 import { FabricDevelopmentApproval } from "./fabric development/fabric-development-approval"
+import SkuList from "./orders/sku-list"
 import SKUGeneration from "./orders/sku-generation"
 import UomGrid from "./masters/uom/uom-grid"
 // import FabricDevelopmentApproval from "./fabric development/fabric-development-approval"
@@ -202,8 +205,13 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
 
                  <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
+                 <Route path='fabrics/fabrics-form' element={<FabricsForm fabricData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
 
-<Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
+                 <Route path='fabrics/fabrics-view' element={<FabricsGrid/>} />
+                  <Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
                     isUpdate={false}
                     closeForm={() => { }}
                     updateTax={(undefined) => { }}/>} />
@@ -438,7 +446,7 @@ export const AppRoutes = () => {
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
-                        
+                                               
                         </Route>
                 <Route path='fabricdevelopment'>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
@@ -459,6 +467,8 @@ export const AppRoutes = () => {
                         <Route path='revert-orders' element={<FileRevert />} />
                         <Route path='version-grid' element={<VersionChanges />} />
                         <Route path='item-creation' element={<ItemCreation/>}/>
+                        <Route path='sku-list' element={<SkuList/>}/>
+
                         <Route path='sku-mapping' element={<SKUGeneration/>}/>
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 

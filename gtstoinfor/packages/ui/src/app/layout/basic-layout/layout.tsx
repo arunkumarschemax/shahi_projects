@@ -335,6 +335,12 @@ export const baseRouterList = [
                 path: "accountcontrolobjects/accountcontrolobjects-view",
                 filepath: "accountcontrolobjects/accountcontrolobjects-view",
             },
+            {
+                label: "Fabrics",
+                key: "fabrics",
+                path: "fabrics/fabrics-view",
+                filepath: "fabrics/fabrics-view",
+            },
           
         ],
     }, 
@@ -452,6 +458,12 @@ export const baseRouterList = [
                 key: "item-creation",
                 path: "item-creation",
                 filepath: "item-creation",
+            },
+            {
+                label: "SKU List",
+                key: "sku-list",
+                path: "sku-list",
+                filepath: "sku-list",
             },
             {
                 label: "SKU Mapping",
