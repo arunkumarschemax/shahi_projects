@@ -1,10 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, Select, Tooltip } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
+import { ColourService } from '@project-management-system/shared-services';
 
-const SizeDetail = () => {
+const SizeDetail = ({props}) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
+  const [color, setColor] = useState<any[]>([])
+  const colorService = new ColourService()
+  const { Option } = Select;
+
+  useEffect(()=>{
+    getColors()
+  },[])
+
+  const getColors = () => {
+    colorService.getAllActiveColour().then((res) => {
+      if (res.status) {
+        console.log(res,'size data')
+        setColor(res.data);
+      }
+    });
+  };
 
   const handleAddRow = () => {
     const newRow = {
@@ -14,14 +31,15 @@ const SizeDetail = () => {
     setCount(count + 1);
   };
 
-  const handleInputChange = (e, key, field) => {
+  const handleInputChange = (value, key, field) => {
     const updatedData = data.map((record) => {
       if (record.key === key) {
-        return { ...record, [field]: e.target.value };
+        return { ...record, [field]: value };
       }
       return record;
     });
     setData(updatedData);
+    props(updatedData)
   };
 
   const handleDelete = (key) => {
@@ -41,95 +59,108 @@ const SizeDetail = () => {
     },
     {
       title: 'Color',
-      dataIndex: 'color',
+      // dataIndex: 'colourId',
       width:"25%",
       render: (_, record) => (
         <Select
-          value={record.color}
-          onChange={(e) => handleInputChange(e, record.key, 'color')}
+          value={record.colourId}
+          onChange={(value) => handleInputChange(value, record.key, 'colourId')}
           style={{width:"100%"}}
           allowClear
           showSearch
           optionFilterProp="children"
           placeholder="Select Color"
         >
+          {color.map((e) => {
+                  return (
+                    <Option key={e.colourId} value={e.colourId}>
+                      {e.colour}
+                    </Option>
+                  );
+                })}
           </Select>
       ),
     },
     {
-      title: 'Size',
+      title: 'Quantity by Size',
       dataIndex: 'size',
       width:"10%",
       children :[
         {
           title: 'XS',
-          dataIndex: 'xs',
+          dataIndex: 'quantity',
           render: (_, record) => (
             <Input
               value={record.xs}
-              onChange={(e) => handleInputChange(e, record.key, 'xs')}
+              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
               type='number'
               min={0}
+              placeholder='Quantity'
             />
           ),
         },
         {
           title: 'S',
-          dataIndex: 'small',
+          dataIndex: 'quantity',
           render: (_, record) => (
             <Input
               value={record.s}
-              onChange={(e) => handleInputChange(e, record.key, 's')}
+              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
               type='number'
               min={0}
+              placeholder='Quantity'
             />
           ),
         },
         {
           title: 'M',
-          dataIndex: 'medium',
+          dataIndex: 'quantity',
           render: (_, record) => (
             <Input
               value={record.m}
-              onChange={(e) => handleInputChange(e, record.key, 'm')}
+              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
               type='number'
               min={0}
+              placeholder='Quantity'
             />
           ),
         },
         {
           title: 'L',
-          dataIndex: 'large',
+          dataIndex: 'quantity',
           render: (_, record) => (
             <Input
               value={record.l}
-              onChange={(e) => handleInputChange(e, record.key, 'l')}
+              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
               type='number'
               min={0}
+              placeholder='Quantity'
             />
           ),
         },
         {
           title: 'XL',
-          dataIndex: 'xl',
+          dataIndex: 'quantity',
           render: (_, record) => (
             <Input
               value={record.xl}
-              onChange={(e) => handleInputChange(e, record.key, 'xl')}
+              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
               type='number'
               min={0}
+              placeholder='Quantity'
             />
           ),
         },
         {
           title: 'XXL',
-          dataIndex: 'xxl',
+          dataIndex: 'quantity',
           render: (_, record) => (
             <Input
               value={record.xxl}
-              onChange={(e) => handleInputChange(e, record.key, 'xxl')}
+              onChange={(e) => handleInputChange(e, record.key, 'quantity')}
               type='number'
               min={0}
+              placeholder='Quantity'
             />
           ),
         },
