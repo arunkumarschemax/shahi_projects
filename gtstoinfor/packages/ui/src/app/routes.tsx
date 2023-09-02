@@ -105,12 +105,14 @@ import DepartmentForm from "./masters/departments/department-form"
 import AccountControlObjectGrid from "./masters/account-control-objects/account-control-objects-view"
 import AccountControlObjectForm from "./masters/account-control-objects/account-control-objects-form"
 import ItemCreation from "./orders/item-creation"
-import SampleRequestView from "./sample-development/sample-management-view"
+import SampleRequestView, { SampleDevView } from "./sample-development/sample-management-view"
 import SampleDevForm from "./sample-development/sample-management-form"
 import SettingsView from "./masters/settings/settings-view"
 import TrimsBomCreation from "./BOM/trims-bom-creation"
 import { FabricDevelopmentApproval } from "./fabric development/fabric-development-approval"
 import UomGrid from "./masters/uom/uom-grid"
+import SampleDevDetail from "./sample-development/sample-request-detailed-view"
+import FabricBomCreation from "./BOM/fabric-creation"
 // import FabricDevelopmentApproval from "./fabric development/fabric-development-approval"
 
 
@@ -448,7 +450,13 @@ export const AppRoutes = () => {
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
                 <Route path='settings/settings-view' element={<SettingsView/>}/>
                 </Route>
-                <Route path='/sample-development' element={<SampleDevForm />} />
+
+                <Route path='sample-development' >
+                    <Route path="sample-development-form" element={<SampleDevForm />}/>
+                    <Route path="sample-development-view" element={<SampleDevView />}/>
+                    <Route path="sample-development-detail" element={<SampleDevDetail />}/>
+                </Route>
+                <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
 
 
                     <Route path='/excel-import'>

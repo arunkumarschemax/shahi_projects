@@ -459,7 +459,28 @@ export const baseRouterList = [
         label: "Sample Development",
         key: "sample-development",
         path: "sample-development",
-        filepath: "sample-development"
+        filepath: "sample-development",
+        children:[
+            {
+                label: "Sample Development",
+                key: "sample-development",
+                path: "sample-development-form",
+                filepath: "sample-development-form"
+            },
+            {
+                label: "Sample Development View",
+                key: "sample-development",
+                path: "sample-development-view",
+                filepath: "sample-development-view"
+            }
+        ]
+    },
+    {
+        label: "Fabric BOM",
+        key: "fabric-bom-creation",
+        path: "fabric-bom-creation",
+        icon: <PicCenterOutlined />,
+        filepath: "fabric-bom-creation",
     }
 ];
 

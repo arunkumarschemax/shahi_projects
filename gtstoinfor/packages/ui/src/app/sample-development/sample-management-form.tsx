@@ -1,37 +1,9 @@
 import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import {
-  DepartmentReq,
-  SampleDevelopmentRequest,
-  SettingsRequest,
-} from "@project-management-system/shared-models";
-import {
-  BuyersService,
-  CompanyService,
-  CountryService,
-  CurrencyService,
-  DeliveryMethodService,
-  DeliveryTermsService,
-  DivisionService,
-  EmployeeDetailsService,
-  FactoryService,
-  LiscenceTypeService,
-  LocationsService,
-  MasterBrandsService,
-  PackageTermsService,
-  PaymentMethodService,
-  PaymentTermsService,
-  ProfitControlHeadService,
-  SampleDevelopmentService,
-  SampleSubTypesService,
-  SampleTypesService,
-  SettingsService,
-  StyleService,
-  WarehouseService,
-} from "@project-management-system/shared-services";
+import { DepartmentReq,SampleDevelopmentRequest } from "@project-management-system/shared-models";
+import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,LiscenceTypeService,LocationsService,MasterBrandsService,ProfitControlHeadService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Modal, Row, Select, message } from "antd";
 import { useEffect, useState } from "react";
-import AlertMessages from "../common/common-functions/alert-messages";
 import TextArea from "antd/es/input/TextArea";
 import Upload, { RcFile } from "antd/es/upload";
 import SampleDevTabs from "./sample-dev-tabs";
@@ -52,17 +24,6 @@ export const SampleDevForm = () => {
   const [currency, setCurrency] = useState<any[]>([]);
   const [country, setCountry] = useState <any[]>([]);
   const [licenceType, setLicenceType] = useState<any[]>([]);
-  const [fabricResponsible, setFabricResponsible] = useState<any[]>([]);
-  const [itemResponsible, setItemResponsible] = useState<any[]>([]);
-  const [trimResponsible, setTrimResponsible] = useState<any[]>([]);
-  const [employee, setEmployee] = useState<any[]>([]);
-  const [buyerAddress, setBuyerAddress] = useState<any[]>([]);
-  const [packageTerms, setPackageTerms] = useState<any[]>([]);
-  const [paymentMethos, setPaymentMethod] = useState<any[]>([]);
-  const [paymentTerms, setPaymentTerms] = useState<any>([]);
-  // const [deliveryTerms, setDeliveryTerms] = useState<any[]>([]);
-  const [deliveryMethods, setDeliveryMethods] = useState<any[]>([]);
-  const [division, setDivision] = useState<any[]>([]);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -77,37 +38,19 @@ export const SampleDevForm = () => {
   const locationService = new LocationsService();
   const countryService = new CountryService();
   const buyerService = new BuyersService();
-  const packageTermsService = new PackageTermsService();
-  const paymentMethodSerivce = new PaymentMethodService();
-  const paymentTermsService = new PaymentTermsService();
-  const deliveryTermsService = new DeliveryTermsService();
-  const deliveryMethodsService = new DeliveryMethodService();
-  const divisionService = new DivisionService();
-  const service = new SettingsService();
   const sampleService = new SampleDevelopmentService()
   const sampleTypeService = new SampleTypesService()
   const subTypeService = new SampleSubTypesService()
 
 
   useEffect(() => {
+    getLocations();
     getPCHData();
     getBuyers();
     getStyles();
     getBrands();
     getTechnicians();
     getCurrency();
-    getLicenceType();
-    getPackageTerms();
-    getPaymentMethods();
-    getPaymentTerms();
-    getDeliveryMethods();
-    // getDeliveryTerms();
-    getDivision();
-    getLocations();
-    getItemResponsible();
-    getTrimResponsible();
-    getFabricResponsible();
-    getEmployees();
     getCountries();
     getSampleTypes();
     getSampleSubTypes();
@@ -226,89 +169,6 @@ export const SampleDevForm = () => {
     });
   };
 
-  const getLicenceType = () => {
-    licenceTypeService.getAllActiveLiscenceTypes().then((res) => {
-      if (res.status) {
-        setCurrency(res.data);
-      }
-    });
-  };
-
-  const getPackageTerms = () => {
-    packageTermsService.getAllActivePackageTerms().then((res) => {
-      if (res.status) {
-        setPackageTerms(res.data);
-      }
-    });
-  };
-
-  const getPaymentTerms = () => {
-    paymentTermsService.getAllActivePaymentTerms().then((res) => {
-      if (res.status) {
-        setPaymentTerms(res.data);
-      }
-    });
-  };
-
-  const getPaymentMethods = () => {
-    paymentMethodSerivce.getAllActiveMethod().then((res) => {
-      if (res.status) {
-        setPaymentMethod(res.data);
-      }
-    });
-  };
-
-  const getDeliveryMethods = () => {
-    deliveryMethodsService.getAllActiveDeliveryMethods().then((res) => {
-      if (res.status) {
-        setDeliveryMethods(res.data);
-      }
-    });
-  };
-
-  const getDivision = () => {
-    divisionService.getAllActiveDivision().then((res) => {
-      if (res.status) {
-        setDivision(res.data);
-      }
-    });
-  };
-
-  const getFabricResponsible = () => {
-    const req = new DepartmentReq("Fabric");
-    employeeService.getAllActiveEmploeesByDepartment(req).then((res) => {
-      if (res.status) {
-        setFabricResponsible(res.data);
-      }
-    });
-  };
-
-  const getItemResponsible = () => {
-    const req = new DepartmentReq("Item");
-    employeeService.getAllActiveEmploeesByDepartment(req).then((res) => {
-      if (res.status) {
-        setItemResponsible(res.data);
-      }
-    });
-  };
-
-  const getTrimResponsible = () => {
-    const req = new DepartmentReq("Trim");
-    employeeService.getAllActiveEmploeesByDepartment(req).then((res) => {
-      if (res.status) {
-        setTrimResponsible(res.data);
-      }
-    });
-  };
-
-  const getEmployees = () => {
-    employeeService.getAllActiveEmploee().then((res) => {
-      if (res.status) {
-        setEmployee(res.data);
-      }
-    });
-  };
-
   const onReset = () => {
     form.resetFields();
   };
@@ -330,7 +190,6 @@ export const SampleDevForm = () => {
 
   const handleSubmit = (data) => {
     setTabsData(data)
-    console.log(data,'llllllllll')
   }
 
   return (
@@ -340,13 +199,7 @@ export const SampleDevForm = () => {
           <Input hidden />
         </Form.Item>
         <Row gutter={16}>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="locationId"
               label="Location"
@@ -368,13 +221,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }}sm={{ span: 24 }}md={{ span: 8 }}lg={{ span: 8 }}xl={{ span: 4 }}>
             <Form.Item
               name="requestNo"
               label="Request No"
@@ -388,13 +235,7 @@ export const SampleDevForm = () => {
               <Input disabled />
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="pchId"
               label="PCH"
@@ -416,13 +257,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="user"
               label="User"
@@ -436,13 +271,7 @@ export const SampleDevForm = () => {
               <Input placeholder="Enter User" />
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="buyerId"
               label="Buyer"
@@ -464,13 +293,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="sampleTypeId"
               label="Type"
@@ -492,14 +315,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-            style={{ margin: 0 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} style={{ margin: 0 }} >
             <Form.Item
               name="sampleSubTypeId"
               label="Sub Type"
@@ -526,13 +342,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="styleId"
               label="Style"
@@ -554,13 +364,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="description"
               label="Description"
@@ -577,13 +381,7 @@ export const SampleDevForm = () => {
               <TextArea rows={1} placeholder="Enter Description" />
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="brandId"
               label="Brand"
@@ -605,13 +403,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="costRef"
               label="Cost Ref"
@@ -625,7 +417,7 @@ export const SampleDevForm = () => {
               <Input />
             </Form.Item>
           </Col>
-          {/* <Col
+          <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
             md={{ span: 8 }}
@@ -634,7 +426,7 @@ export const SampleDevForm = () => {
           >
             <Form.Item name="image" label="Attach File">
               <Upload
-                action="" // Use your upload URL
+                action="http://165.22.220.143/crm/gtstoinfor/upload-files/" // Use your upload URL
                 listType="picture-card"
                 fileList={fileList}
                 onPreview={handlePreview}
@@ -656,14 +448,8 @@ export const SampleDevForm = () => {
                 )}
               </Upload>
             </Form.Item>
-          </Col> */}
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="m3Style"
               label="M3 Style No"
@@ -686,13 +472,7 @@ export const SampleDevForm = () => {
                 </Select> */}
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="contact"
               label="Contact No"
@@ -706,13 +486,7 @@ export const SampleDevForm = () => {
               <Input placeholder="Enter discount" />
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="extension"
               label="Extn"
@@ -726,13 +500,7 @@ export const SampleDevForm = () => {
               <Input placeholder="Enter Extn" />
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="sam"
               label="SAM"
@@ -746,13 +514,7 @@ export const SampleDevForm = () => {
               <Input placeholder="Enter SAM" />
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="dmmId"
               label="DMM"
@@ -774,13 +536,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="technicianId"
               label="Technician"
@@ -802,13 +558,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="productId"
               label="Product"
@@ -830,13 +580,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="typeId"
               label="Type"
@@ -858,13 +602,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="conversion"
               label="Conversion"
@@ -873,13 +611,7 @@ export const SampleDevForm = () => {
               <Input placeholder="Enter Conversion" />
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="countryId"
               label="Made In"
@@ -901,13 +633,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 8 }}
-            lg={{ span: 8 }}
-            xl={{ span: 4 }}
-          >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="remarks"
               label="Remarks"
