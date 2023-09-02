@@ -144,10 +144,10 @@ export const SKUGeneration = () => {
 
   return (
     <Card size="small" title="SKU mapping">
-      <Form size="small" layout="vertical" form={form}>
+      <Form layout="horizontal" form={form}>
       <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
-            <Form.Item label='Item' name='itemCode'>
+            <Form.Item label='Item' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
                 <Select showSearch allowClear placeholder='Select Item'>
                     <Option key='' value=''>Item Codes </Option>
                     {/* {
@@ -169,7 +169,7 @@ export const SKUGeneration = () => {
                 {color?.map((comment, index) => (
                     <Card
                         // key={comment.colourId}
-                        style={{ background: '#f7c78d', marginBottom: '10px' }}
+                        style={{ background: '#f7c78d', marginBottom: '10px',height:'30%' }}
                         draggable
                         onDragStart={(event) => handleColorDragStart(event, comment)}
                     >

@@ -106,13 +106,13 @@ export const ComponentsMappingForm = () => {
 
     const onStyleChange = (val,option) => {
         setStyle(option?.key)
-        // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+option?.styleName
-        // setStyleImg(updateImage)
-        setStyleImg([{
-            name:option?.styleName,
-            status:'done',
-            url: config.upload_file_path + option?.styleFilepath,
-}])
+        const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+option?.styleName
+        setStyleImg(updateImage)
+//         setStyleImg([{
+//             name:option?.styleName,
+//             status:'done',
+//             url: config.upload_file_path + option?.styleFilepath,
+// }])
 
     }
 
