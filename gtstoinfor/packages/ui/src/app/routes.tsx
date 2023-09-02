@@ -110,6 +110,7 @@ import SampleDevForm from "./sample-development/sample-management-form"
 import SettingsView from "./masters/settings/settings-view"
 import TrimsBomCreation from "./BOM/trims-bom-creation"
 import { FabricDevelopmentApproval } from "./fabric development/fabric-development-approval"
+import SKUGeneration from "./orders/sku-generation"
 import UomGrid from "./masters/uom/uom-grid"
 import SampleDevDetail from "./sample-development/sample-request-detailed-view"
 import FabricBomCreation from "./BOM/fabric-creation"
@@ -466,6 +467,7 @@ export const AppRoutes = () => {
                         <Route path='revert-orders' element={<FileRevert />} />
                         <Route path='version-grid' element={<VersionChanges />} />
                         <Route path='item-creation' element={<ItemCreation/>}/>
+                        <Route path='sku-mapping' element={<SKUGeneration/>}/>
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 
                     </Route>
