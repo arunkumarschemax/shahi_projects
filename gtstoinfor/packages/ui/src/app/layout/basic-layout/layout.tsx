@@ -389,91 +389,6 @@ export const baseRouterList = [
 
     },
     {
-        label: "Fabric Development",
-        key: "fabricdevelopment",
-        icon:<FontAwesomeIcon icon={faShirt} />,
-        path: "fabricdevelopment",
-        filepath: "fabricdevelopment",
-        children:[
-            {
-                label: "BOM TRIM CREATION",
-                key: "bomtrimcreation",
-                path: "bomtrimcreation/bom-trim-creation",
-                filepath: "bomtrimcreation/bom-trim-creation",
-            },
-
-            {
-                label: "Fabic Development Request",
-                key: "Fabricdevelopmentrequest",
-                path: "FabricDevelopmentrequest/Fabric-Development-Request",
-                filepath: "FabricDevelopmentrequest/Fabric-Development-Request",
-            },
-        ]
-    },
-    {
-        label: "Orders",
-        key: "excel-import",
-        path: "excel-import",
-        icon: <FileExcelOutlined />,
-        filepath: "excel-import",
-        children: [
-            {
-                label: "Add Orders",
-                key: "excel-import",
-                path: "excel-import",
-                filepath: "excel-import",
-            },
-            {
-                label: "Compare Orders",
-                key: "changes-view",
-                path: "changes-view",
-                filepath: "changes-view",
-            },
-            {
-                label: "View Orders",
-                key: "grid-view",
-                path: "grid-view",
-                filepath: "grid-view",
-            },
-            {
-                label: "Uploaded Files",
-                key: "revert-orders",
-                path: "revert-orders",
-                filepath: "revert-orders",
-            },
-            {
-                label: "Versions Data",
-                key: "version-grid",
-                path: "version-grid",
-                filepath: "version-grid",
-            },
-            // {
-            //     label: "Phase Wise Data",
-            //     key: "phase-wise-grid",
-            //     path: "phase-wise-grid",
-            //     filepath: "phase-wise-grid",
-            // }
-            {
-                label: "Item Creation",
-                key: "item-creation",
-                path: "item-creation",
-                filepath: "item-creation",
-            },
-            {
-                label: "SKU List",
-                key: "sku-list",
-                path: "sku-list",
-                filepath: "sku-list",
-            },
-            {
-                label: "SKU Mapping",
-                key: "sku-mapping",
-                path: "sku-mapping",
-                filepath: "sku-mapping",
-            },
-        ],
-    },
-    {
         label: "Sample Development",
         key: "sample-development",
         path: "sample-development",
@@ -494,12 +409,127 @@ export const baseRouterList = [
         ]
     },
     {
-        label: "Fabric BOM",
-        key: "fabric-bom-creation",
-        path: "fabric-bom-creation",
-        icon: <PicCenterOutlined />,
-        filepath: "fabric-bom-creation",
-    }
+        label: "Fabric Development",
+        key: "fabricdevelopment",
+        icon:<FontAwesomeIcon icon={faShirt} />,
+        path: "fabricdevelopment",
+        filepath: "fabricdevelopment",
+        children:[
+
+            {
+                label: "Fabic Development Request",
+                key: "Fabricdevelopmentrequest",
+                path: "FabricDevelopmentrequest/Fabric-Development-Request",
+                filepath: "FabricDevelopmentrequest/Fabric-Development-Request",
+            },
+        ]
+    },
+    {
+        label: "Material Creation",
+        key: "materialCreation",
+        icon:<FontAwesomeIcon icon={faShirt} />,
+        path: "materialCreation",
+        filepath: "materialCreation",
+        children:[
+            {
+                label: "BOM Trim Creation",
+                key: "bomtrimcreation",
+                path: "bomtrimcreation/bom-trim-creation",
+                filepath: "bomtrimcreation/bom-trim-creation",
+            },
+            {
+                label: "Item Creation",
+                key: "item-creation",
+                path: "item-creation",
+                filepath: "item-creation",
+            },
+            
+            {
+                label: "SKU Generation",
+                key: "sku-mapping",
+                path: "sku-mapping",
+                filepath: "sku-mapping",
+            },
+            {
+                label: "SKU List",
+                key: "sku-list",
+                path: "sku-list",
+                filepath: "sku-list",
+            },
+            {
+                label: "Fabric BOM",
+                key: "fabric-bom-creation",
+                path: "fabric-bom-creation",
+                // icon: <PicCenterOutlined />,
+                filepath: "fabric-bom-creation",
+            },
+        ]
+    },
+    // {
+    //     label: "Orders",
+    //     key: "excel-import",
+    //     path: "excel-import",
+    //     icon: <FileExcelOutlined />,
+    //     filepath: "excel-import",
+    //     children: [
+    //         {
+    //             label: "Add Orders",
+    //             key: "excel-import",
+    //             path: "excel-import",
+    //             filepath: "excel-import",
+    //         },
+    //         {
+    //             label: "Compare Orders",
+    //             key: "changes-view",
+    //             path: "changes-view",
+    //             filepath: "changes-view",
+    //         },
+    //         {
+    //             label: "View Orders",
+    //             key: "grid-view",
+    //             path: "grid-view",
+    //             filepath: "grid-view",
+    //         },
+    //         {
+    //             label: "Uploaded Files",
+    //             key: "revert-orders",
+    //             path: "revert-orders",
+    //             filepath: "revert-orders",
+    //         },
+    //         {
+    //             label: "Versions Data",
+    //             key: "version-grid",
+    //             path: "version-grid",
+    //             filepath: "version-grid",
+    //         },
+    //         // {
+    //         //     label: "Phase Wise Data",
+    //         //     key: "phase-wise-grid",
+    //         //     path: "phase-wise-grid",
+    //         //     filepath: "phase-wise-grid",
+    //         // }
+    //         {
+    //             label: "Item Creation",
+    //             key: "item-creation",
+    //             path: "item-creation",
+    //             filepath: "item-creation",
+    //         },
+    //         {
+    //             label: "SKU List",
+    //             key: "sku-list",
+    //             path: "sku-list",
+    //             filepath: "sku-list",
+    //         },
+    //         {
+    //             label: "SKU Mapping",
+    //             key: "sku-mapping",
+    //             path: "sku-mapping",
+    //             filepath: "sku-mapping",
+    //         },
+    //     ],
+    // },
+
+   
 ];
 
 export default function BasicLayout() {

@@ -51,6 +51,11 @@ import { FabricsModule } from './fabrics/fabrics-module';
 import { FabricStructuresModule } from './fabric structure/fabric.module';
 import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-types.module';
 import { UomModule } from './uom/uom.module';
+import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
+import { BomModule } from './bom-trim/bom.module';
+import { SettingsModule } from './settings/settings.module';
+import { SampleTypesModule } from './sample Types/sample-types.module';
+import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module';
 
 
 @Module({
@@ -106,7 +111,7 @@ import { UomModule } from './uom/uom.module';
   ColourModule,
   BuyersDestinationModule,
   BomModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -451,7 +451,6 @@ export const AppRoutes = () => {
                                                
                         </Route>
                 <Route path='fabricdevelopment'>
-                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
                 <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentApproval/>}/>
 
                 </Route>
@@ -465,7 +464,14 @@ export const AppRoutes = () => {
                     <Route path="sample-development-view" element={<SampleDevView />}/>
                     <Route path="sample-development-detail" element={<SampleDevDetail />}/>
                 </Route>
+                <Route path='/materialCreation'>
+                <Route path='sku-list' element={<SkuList/>}/>
+                <Route path='sku-mapping' element={<SKUGeneration/>}/>
+                <Route path='item-creation' element={<ItemCreation/>}/>
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
+                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
+
+                </Route>
 
 
                     <Route path='/excel-import'>
@@ -474,10 +480,7 @@ export const AppRoutes = () => {
                         <Route path='grid-view' element={<AllOrdersGridView />} />
                         <Route path='revert-orders' element={<FileRevert />} />
                         <Route path='version-grid' element={<VersionChanges />} />
-                        <Route path='item-creation' element={<ItemCreation/>}/>
-                        <Route path='sku-list' element={<SkuList/>}/>
 
-                        <Route path='sku-mapping' element={<SKUGeneration/>}/>
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 
                     </Route>
