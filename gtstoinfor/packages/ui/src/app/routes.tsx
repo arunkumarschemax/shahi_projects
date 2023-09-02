@@ -112,6 +112,7 @@ import { FabricsForm } from "./masters/fabrics/fabrics-form"
 import SettingsView from "./masters/settings/settings-view"
 import TrimsBomCreation from "./BOM/trims-bom-creation"
 import { FabricDevelopmentApproval } from "./fabric development/fabric-development-approval"
+import SkuList from "./orders/sku-list"
 // import FabricDevelopmentApproval from "./fabric development/fabric-development-approval"
 
 
@@ -463,6 +464,8 @@ export const AppRoutes = () => {
                         <Route path='revert-orders' element={<FileRevert />} />
                         <Route path='version-grid' element={<VersionChanges />} />
                         <Route path='item-creation' element={<ItemCreation/>}/>
+                        <Route path='sku-list' element={<SkuList/>}/>
+
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 
                     </Route>

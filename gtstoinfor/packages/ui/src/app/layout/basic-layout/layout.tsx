@@ -471,6 +471,12 @@ export const baseRouterList = [
                 path: "item-creation",
                 filepath: "item-creation",
             },
+            {
+                label: "SKU List",
+                key: "sku-list",
+                path: "sku-list",
+                filepath: "sku-list",
+            },
         ],
     },
     {
