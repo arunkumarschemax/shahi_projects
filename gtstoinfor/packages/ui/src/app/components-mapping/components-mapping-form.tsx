@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useNavigate } from "react-router-dom";
+import { config } from "packages/libs/shared-services/config";
 
 const CheckboxGroup = Checkbox.Group;
 const {Option}= Select;
@@ -27,6 +28,7 @@ export const ComponentsMappingForm = () => {
     const garmentCategoryService = new GarmentCategoryService()
     const germentService = new GarmentService()
     const componentService = new ComponentService()
+    const [styleimg, setStyleImg]=useState<any>()
 
     useEffect(() => {
         getStyles();
@@ -104,6 +106,14 @@ export const ComponentsMappingForm = () => {
 
     const onStyleChange = (val,option) => {
         setStyle(option?.key)
+        // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+option?.styleName
+        // setStyleImg(updateImage)
+        setStyleImg([{
+            name:option?.styleName,
+            status:'done',
+            url: config.upload_file_path + option?.styleFilepath,
+}])
+
     }
 
     const onGarmentCategoryChange = (val,option) => {
@@ -139,7 +149,7 @@ export const ComponentsMappingForm = () => {
                             {
                                 styleInfo.map((e) => {
                                     return(
-                                        <Option key={e.style} value={e.styleId}>{e.style}--{e.description}</Option>
+                                        <Option key={e.style} value={e.styleId} styleName={e.styleFileName} stylePath={e.styleFilepath}>{e.style}--{e.description}</Option>
                                     )
                                 })
                             }
@@ -188,7 +198,7 @@ export const ComponentsMappingForm = () => {
                     </Col>
                 </Row>
                 <Row gutter={24}>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                     <Card  style={{height:'100%'}}>
                         <h1>Map Components</h1>
                     <CheckboxGroup style={{ width: '100%' }} value={components.map((component) => component.componentId)} onChange={onChange}>
@@ -202,7 +212,7 @@ export const ComponentsMappingForm = () => {
                     </CheckboxGroup>
                     </Card>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                         <Card  style={{height:'100%'}}>
                             <h1>Mapped Components</h1>
                             <Row>
@@ -221,6 +231,20 @@ export const ComponentsMappingForm = () => {
                                     )
                                     
                                 })}
+                            </Row>
+                        </Card>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
+                        <Card  style={{height:'100%'}}>
+                            <h1>Style</h1>
+                            <Row gutter={24}>
+                            <Form.Item >
+                                <img src={styleimg} alt="Preview"  
+                                height={'300px'} 
+                                width={'500px'}   
+                                style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                                /> 
+                                </Form.Item>  
                             </Row>
                         </Card>
                     </Col>

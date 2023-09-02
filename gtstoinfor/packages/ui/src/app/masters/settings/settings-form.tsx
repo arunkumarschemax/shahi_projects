@@ -1,10 +1,11 @@
 import { UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { DepartmentReq, SettingsRequest } from "@project-management-system/shared-models";
+import { DepartmentReq, SettingsIdReq, SettingsRequest } from "@project-management-system/shared-models";
 import { BuyersService, CompanyService, CurrencyService, DeliveryMethodService, DeliveryTermsService, DivisionService, EmployeeDetailsService, FactoryService, LiscenceTypeService, PackageTermsService, PaymentMethodService, PaymentTermsService, ProfitControlHeadService, SettingsService, WarehouseService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Select } from "antd"
 import { useEffect, useState } from "react";
 import AlertMessages from "../../common/common-functions/alert-messages";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const {Option} = Select;
 
@@ -45,6 +46,12 @@ export const SettingsForm = () => {
     const divisionService = new DivisionService()
     const [division,setDivision] = useState<any[]>([])
     const service = new SettingsService()
+    const navigate = useNavigate()
+    const [initialData,setInitialData] = useState<any>()
+    const [updateKey,setUpdateKey] = useState<number>(0)
+
+    const { state } = useLocation();
+
 
     useEffect(() => {
         getPCHData()
@@ -66,6 +73,62 @@ export const SettingsForm = () => {
         getEmployees()
         getBuyerAddress()
     },[])
+
+    useEffect(() => {
+        if(state?.id){
+            getAllInfo()
+        }
+    },[state])
+
+    useEffect(()=> {
+        if(initialData){
+            console.log(initialData)
+        }
+    },[initialData])
+
+    useEffect(()=>{
+        if(initialData){
+            // form.setFieldsValue({
+            //     settingId:initialData?.settingsId,
+            //     accountControlId: initialData?.accountControlId,
+            //     pchId: initialData?.pchId,
+            //     companyId: initialData?.companyId,
+            //     facilityId: initialData?.name,
+            //     divisionId: initialData?.divisionName,
+            //     warehouseId: initialData?.warehouseName,
+            //     coTypeId: initialData?.coTypeId,
+            //     currencyId: initialData?.currencyName,
+            //     licencetypeId: initialData?.liscenceType,
+            //     salesPersonId: initialData?.salesPerson,
+            //     fabricResponsibleId: initialData?.fabricResponsible,
+            //     itemResponsibleId: initialData?.itemResponsible,
+            //     trimResponsibleId: initialData?.trimRespondsible,
+            //     discount:initialData?.discount,
+            //     buyerAddress:initialData?.buyerAddress,
+            //     buyerName:initialData?.buyerName,
+            //     buyerGroup:initialData?.buyerGroup,
+            //     agent:initialData?.agentName,
+            //     packageTerms:initialData?.packageTermsName,
+            //     paymentMethodId:initialData?.paymentMethod,
+            //     paymentTerms:initialData?.paymentTermsName,
+            //     deliveryMethodId:initialData?.deliveryMethod,
+            //     deliveryTerms:initialData?.deliveryTermsName,
+            // })
+        }
+
+    },[initialData])
+
+    const getAllInfo = () => {
+        const req = new SettingsIdReq(state?.id)
+        service.getAllSettingsInfo(req).then(res => {
+            if(res.status){
+                setInitialData(res.data[0])
+                setUpdateKey(prevState => prevState+1)
+
+            }
+        })
+    }
+
 
     const getPCHData = () => {
         pchService.getAllActiveProfitControlHead().then(res => {
@@ -223,16 +286,39 @@ export const SettingsForm = () => {
         form.resetFields()
     }
 
-    const onFinish = (val) => {
-        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethod,val.paymentTerms,val.deliveryMethod,val.deliveryTerms)
-        service.createSettings(req).then(res => {
+    const updateValues = (val) => {
+        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethodId,val.paymentTerms,val.deliveryMethodId,val.deliveryTerms,'','admin',state?.id)
+        console.log(req)
+        service.updateSettings(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 form.resetFields()
+                navigate('/settings/settings/settings-view')
             } else{
                 AlertMessages.getSuccessMessage(res.internalMessage)
             }
         })
+    }
+
+    const onSave = (val) => {
+        const req = new SettingsRequest(val.accountControlId,val.pchId,val.companyId,val.facilityId,val.divisionId,val.warehouseId,val.coTypeId,val.currencyId,val.licencetypeId,val.discount,val.salesPersonId,val.fabricResponsibleId,val.itemResponsibleId,val.trimResponsibleId,val.buyerAddress,val.buyerGroup,val.agent,val.packageTerms,val.paymentMethodId,val.paymentTerms,val.deliveryMethodId,val.deliveryTerms,'admin','')
+        service.createSettings(req).then(res => {
+            if(res.status){
+                AlertMessages.getSuccessMessage(res.internalMessage)
+                form.resetFields()
+                navigate('/settings/settings/settings-form')
+            } else{
+                AlertMessages.getSuccessMessage(res.internalMessage)
+            }
+        })
+    }
+
+    const onFinish = (val) => {
+        if(state?.id){
+            updateValues(val)
+        } else{
+            onSave(val)
+        }
     }
 
     const onAddressChange = (val,object) => {
@@ -240,8 +326,8 @@ export const SettingsForm = () => {
     }
 
     return(
-        <Card title='Settings'>
-            <Form layout="vertical" form={form} onFinish={onFinish}>
+        <Card title='Settings' size='small'>
+            <Form layout="vertical" form={form} onFinish={onFinish} initialValues={initialData} key={updateKey}>
                 <Form.Item name='settingId' style={{display:'none'}}>
                     <Input hidden/>
                 </Form.Item>
@@ -251,7 +337,7 @@ export const SettingsForm = () => {
                     <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>COMPANY DETAILS</h1>
                     <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8}}>
-                        <Form.Item name='accountControlId' label='Account Control' rules={[{required:true,message:'Account Control is reqired'}]}>
+                        <Form.Item name='accountControlId' label='Account Control' rules={[{required:true,message:'Account Control is requried'}]}>
                         <Select allowClear showSearch optionFilterProp="children" placeholder='Select Account Control'>
                                 {employee.map((e) => {
                                     return(
@@ -262,7 +348,7 @@ export const SettingsForm = () => {
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name='pchId' label='PCH' rules={[{required:true,message:'PCH is reqired'}]}>
+                        <Form.Item name='pchId' label='PCH' rules={[{required:true,message:'PCH is requried'}]}>
                             <Select allowClear showSearch optionFilterProp="children" placeholder='Select PCH'>
                                 {pch.map((e) => {
                                     return(
@@ -273,7 +359,7 @@ export const SettingsForm = () => {
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name='companyId' label='Company' rules={[{required:true,message:'Company is reqired'}]}>
+                        <Form.Item name='companyId' label='Company' rules={[{required:true,message:'Company is requried'}]}>
                             <Select allowClear showSearch optionFilterProp="children" placeholder='Select Comapny'>
                                 {company.map((e) => {
                                     return(
@@ -286,7 +372,7 @@ export const SettingsForm = () => {
                     </Row>
                     <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name='facilityId' label='Facility' rules={[{required:true,message:'Facility is reqired'}]}>
+                        <Form.Item name='facilityId' label='Facility' rules={[{required:true,message:'Facility is requried'}]}>
                         <Select allowClear showSearch optionFilterProp="children" placeholder='Select Facility'>
                                 {facility.map((e) => {
                                     return(
@@ -297,7 +383,7 @@ export const SettingsForm = () => {
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name='divisionId' label='Division' rules={[{required:true,message:'Division is reqired'}]}>
+                        <Form.Item name='divisionId' label='Division' rules={[{required:true,message:'Division is requried'}]}>
                         <Select allowClear showSearch optionFilterProp="children" placeholder='Select Division'>
                                 {division.map((e) => {
                                     return(
@@ -308,7 +394,7 @@ export const SettingsForm = () => {
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name='warehouseId' label='Warehouse' rules={[{required:true,message:'Warehouse is reqired'}]}>
+                        <Form.Item name='warehouseId' label='Warehouse' rules={[{required:true,message:'Warehouse is requried'}]}>
                         <Select allowClear showSearch optionFilterProp="children" placeholder='Select Warehouse'>
                                 {warehouse.map((e) => {
                                     return(
@@ -321,7 +407,7 @@ export const SettingsForm = () => {
                     </Row>
                     <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name='coTypeId' label='CO Type' rules={[{required:true,message:'CO Type is reqired'}]}>
+                        <Form.Item name='coTypeId' label='CO Type' rules={[{required:true,message:'CO Type is requried'}]}>
                         {/* <Select allowClear showSearch optionFilterProp="children" placeholder='Select CO Type'>
                                 {coType.map((e) => {
                                     return(
@@ -336,7 +422,7 @@ export const SettingsForm = () => {
                     <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>PRODUCT DETAILS</h1>
                     <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name='currencyId' label='Currency' rules={[{required:true,message:'Currency is reqired'}]}>
+                        <Form.Item name='currencyId' label='Currency' rules={[{required:true,message:'Currency is requried'}]}>
                         <Select allowClear showSearch optionFilterProp="children" placeholder='Select Currency'>
                                 {currency.map((e) => {
                                     return(
@@ -347,7 +433,7 @@ export const SettingsForm = () => {
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                        <Form.Item name='licencetypeId' label='Licence Type' rules={[{required:true,message:'Licence Type is reqired'}]}>
+                        <Form.Item name='licencetypeId' label='Licence Type' rules={[{required:true,message:'Licence Type is requried'}]}>
                         <Select allowClear showSearch optionFilterProp="children" placeholder='Select Licence Type'>
                                 {licenceType.map((e) => {
                                     return(
@@ -377,7 +463,7 @@ export const SettingsForm = () => {
                         <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>TEAM DETAILS</h1>
                             <Row gutter={8}>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                                <Form.Item name='salesPersonId' label='Sales Person' rules={[{required:true,message:'Sales Person is reqired'}]}>
+                                <Form.Item name='salesPersonId' label='Sales Person' rules={[{required:true,message:'Sales Person is requried'}]}>
                                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Sales Person'>
                                 {salesPerson.map((e) => {
                                     return(
@@ -388,7 +474,7 @@ export const SettingsForm = () => {
                                 </Form.Item>
                             </Col>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                                <Form.Item name='fabricResponsibleId' label='Fabric Responsible' rules={[{required:true,message:'Fabric Responsible is reqired'}]}>
+                                <Form.Item name='fabricResponsibleId' label='Fabric Responsible' rules={[{required:true,message:'Fabric Responsible is requried'}]}>
                                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Fabric Responsible'>
                                 {fabricResponsible.map((e) => {
                                     return(
@@ -401,7 +487,7 @@ export const SettingsForm = () => {
                             </Row>
                             <Row gutter={8}>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                                <Form.Item name='itemResponsibleId' label='Item Responsible' rules={[{required:true,message:'Item Responsible is reqired'}]}>
+                                <Form.Item name='itemResponsibleId' label='Item Responsible' rules={[{required:true,message:'Item Responsible is requried'}]}>
                                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Item Responsible'>
                                 {itemResponsible.map((e) => {
                                     return(
@@ -412,7 +498,7 @@ export const SettingsForm = () => {
                                 </Form.Item>
                             </Col>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                                <Form.Item name='trimResponsibleId' label='Trim Responsible' rules={[{required:true,message:'Trim Responsible is reqired'}]}>
+                                <Form.Item name='trimResponsibleId' label='Trim Responsible' rules={[{required:true,message:'Trim Responsible is requried'}]}>
                                     <Select allowClear showSearch optionFilterProp="children" placeholder='Select Trim Responsible'>
                                 {trimResponsible.map((e) => {
                                     return(
@@ -426,7 +512,7 @@ export const SettingsForm = () => {
                             <h1 style={{ color: 'grey', fontSize: '20px', textAlign: 'left' }}>CUSTOMER DETAILS</h1>
                             <Row gutter={8}>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                                <Form.Item name='buyerAddress' label='Buyer Address' rules={[{required:true,message:'Buyer Address is reqired'}]}>
+                                <Form.Item name='buyerAddress' label='Buyer Address' rules={[{required:true,message:'Buyer Address is requried'}]}>
                                 <Select allowClear showSearch optionFilterProp="children" placeholder='Select Buyer Address' onChange={onAddressChange}>
                                 {buyerAddress.map((e) => {
                                     return(
@@ -449,7 +535,7 @@ export const SettingsForm = () => {
                             </Row>
                             <Row gutter={8}>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                                <Form.Item name='agent' label='Agent' rules={[{required:true,message:'Agent is reqired'}]}>
+                                <Form.Item name='agent' label='Agent' rules={[{required:true,message:'Agent is requried'}]}>
                                 <Select allowClear showSearch optionFilterProp="children" placeholder='Select Agent'>
                                 {employee.map((e) => {
                                     return(
@@ -460,7 +546,7 @@ export const SettingsForm = () => {
                                 </Form.Item>
                             </Col>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                                <Form.Item name='packageTerms' label='Package Terms' rules={[{required:true,message:'Package Terms is reqired'}]}>
+                                <Form.Item name='packageTerms' label='Package Terms' rules={[{required:true,message:'Package Terms is requried'}]}>
                                 <Select allowClear showSearch optionFilterProp="children" placeholder='Select Package Terms'>
                                 {packageTerms.map((e) => {
                                     return(
@@ -471,7 +557,7 @@ export const SettingsForm = () => {
                                 </Form.Item>
                             </Col>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                                <Form.Item name='paymentMethod' label='Payment Method' rules={[{required:true,message:'Payment Method is reqired'}]}>
+                                <Form.Item name='paymentMethodId' label='Payment Method' rules={[{required:true,message:'Payment Method is requried'}]}>
                                 <Select allowClear showSearch optionFilterProp="children" placeholder='Select Payment Method'>
                                 {paymentMethos.map((e) => {
                                     return(
@@ -484,7 +570,7 @@ export const SettingsForm = () => {
                             </Row>
                             <Row gutter={8}>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                                <Form.Item name='paymentTerms' label='Payment Terms' rules={[{required:true,message:'Payment Terms is reqired'}]}>
+                                <Form.Item name='paymentTerms' label='Payment Terms' rules={[{required:true,message:'Payment Terms is requried'}]}>
                                 <Select allowClear showSearch optionFilterProp="children" placeholder='Select Payment Terms'>
                                 {paymentTerms.map((e) => {
                                     return(
@@ -495,7 +581,7 @@ export const SettingsForm = () => {
                                 </Form.Item>
                             </Col>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                                <Form.Item name='deliveryMethod' label='Delivery Method' rules={[{required:true,message:'Delivery Method is reqired'}]}>
+                                <Form.Item name='deliveryMethodId' label='Delivery Method' rules={[{required:true,message:'Delivery Method is requried'}]}>
                                 <Select allowClear showSearch optionFilterProp="children" placeholder='Select Delivery Method'>
                                 {deliveryMethods.map((e) => {
                                     return(
@@ -506,7 +592,7 @@ export const SettingsForm = () => {
                                 </Form.Item>
                             </Col>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 8 }}>
-                                <Form.Item name='deliveryTerms' label='Delivery Terms' rules={[{required:true,message:'Delivery Terms is reqired'}]}>
+                                <Form.Item name='deliveryTerms' label='Delivery Terms' rules={[{required:true,message:'Delivery Terms is requried'}]}>
                                 <Select allowClear showSearch optionFilterProp="children" placeholder='Select Delivery Terms'>
                                 {deliveryTerms.map((e) => {
                                     return(
