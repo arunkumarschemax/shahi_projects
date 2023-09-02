@@ -308,41 +308,49 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPoLineforMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.po_and_line,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
         return await query.getRawMany();
     }
     async getItemforMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.item,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
         return await query.getRawMany();
     }
     async getFactoryforMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.factory,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
         return await query.getRawMany();
     }
     async getPpmPlantForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.plant,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
         return await query.getRawMany();
     }
     async getPpmProductCodeForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.productCode,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
         return await query.getRawMany();
     }
     async getPpmColorDescForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.colorDesc,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
         return await query.getRawMany();
     }
     async getPpmCategoryDescForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.categoryDesc,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
         return await query.getRawMany();
     }
     async getPpmDestinationCountryForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.destinationCountry,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
         return await query.getRawMany();
     }
 
@@ -373,6 +381,27 @@ export class DpomRepository extends Repository<DpomEntity> {
                 query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`)
             } if (req.productCode !== undefined) {
                 query.andWhere(`dpom.product_code ='${req.productCode}'`)
+            }
+            if (req.poandLine !== undefined) {
+                query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
+            }
+            if (req.colorDesc !== undefined) {
+                query.andWhere(`dpom.color_desc ='${req.colorDesc}'`)
+            }
+            if (req.categoryDesc !== undefined) {
+                query.andWhere(`dpom.category_desc ='${req.categoryDesc}'`)
+            }
+            if (req.destinationCountry !== undefined) {
+                query.andWhere(`dpom.destination_country ='${req.destinationCountry}'`)
+            }
+            if (req.plant !== undefined) {
+                query.andWhere(`dpom.plant ='${req.plant}'`)
+            }
+            if (req.item !== undefined) {
+                query.andWhere(`dpom.item ='${req.item}'`)
+            }
+            if (req.factory !== undefined) {
+                query.andWhere(`dpom.factory ='${req.factory}'`)
             }
             console.log(req,"reqesty")
         return await query.getRawMany();

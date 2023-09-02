@@ -111,27 +111,27 @@ const PPMReport = () => {
     if (form.getFieldValue('productCode') !== undefined) {
       req.productCode = form.getFieldValue('productCode')
     }
-    // if (form.getFieldValue('poandLine') !== undefined) {
-    //   req.poandLine = form.getFieldValue('poandLine')
-    // }
-    // if (form.getFieldValue('colorDescription') !== undefined) {
-    //   req.colorDescription = form.getFieldValue('colorDescription')
-    // }
-    // if (form.getFieldValue('categoryDescription') !== undefined) {
-    //   req.categoryDescription = form.getFieldValue('categoryDescription')
-    // }
-    // if (form.getFieldValue('destinationCountry') !== undefined) {
-    //   req.destinationCountry = form.getFieldValue('destinationCountry')
-    // }
-    // if (form.getFieldValue('palntcode') !== undefined) {
-    //   req.palntcode = form.getFieldValue('palntcode')
-    // }
-    // if (form.getFieldValue('item') !== undefined) {
-    //   req.item = form.getFieldValue('item')
-    // }
-    // if (form.getFieldValue('factory') !== undefined) {
-    //   req.factory = form.getFieldValue('factory')
-    // }
+    if (form.getFieldValue('poandLine') !== undefined) {
+      req.poandLine = form.getFieldValue('poandLine')
+    }
+    if (form.getFieldValue('colorDesc') !== undefined) {
+      req.colorDesc = form.getFieldValue('colorDesc')
+    }
+    if (form.getFieldValue('categoryDesc') !== undefined) {
+      req.categoryDesc = form.getFieldValue('categoryDesc')
+    }
+    if (form.getFieldValue('destinationCountry') !== undefined) {
+      req.destinationCountry = form.getFieldValue('destinationCountry')
+    }
+    if (form.getFieldValue('plant') !== undefined) {
+      req.plant = form.getFieldValue('plant')
+    }
+    if (form.getFieldValue('item') !== undefined) {
+      req.item = form.getFieldValue('item')
+    }
+    if (form.getFieldValue('factory') !== undefined) {
+      req.factory = form.getFieldValue('factory')
+    }
 
     
     service.getPPMData(req).then(res => {
@@ -187,7 +187,7 @@ const PPMReport = () => {
       { title: 'Gender Age Description', dataIndex: 'genderAgeDesc' },
       { title: 'Destination Country Code', dataIndex: 'destinationCountryCode' },
       { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
-      { title: 'Plant Code', dataIndex: 'plan' },
+      { title: 'Plant Code', dataIndex: 'plant' },
       { title: 'plant Name', dataIndex: 'plantName' },
       { title: 'UPC', dataIndex: 'UPC' },
       { title: 'Sales Order Number', dataIndex: 'directShipSONumber' },
@@ -630,7 +630,7 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-              <Form.Item name='poLine' label='Po+Line' >
+              <Form.Item name='poandLine' label='Po+Line' >
                 <Select
                   showSearch
                   placeholder="Select Po+Line"
@@ -691,7 +691,7 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-              <Form.Item name='plantCode' label='Plant Code' >
+              <Form.Item name='plant' label='Plant Code' >
                 <Select
                   showSearch
                   placeholder="Select Plant Code"

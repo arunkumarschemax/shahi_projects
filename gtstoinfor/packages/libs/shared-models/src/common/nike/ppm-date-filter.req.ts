@@ -3,33 +3,33 @@ export class PpmDateFilterRequest {
     lastModifedEndtDate?: any;
     documentStartDate?:any;
     documentEndtDate?:any;
-    productCode?:any;
-    poandLine?:any;
-    colorDescription?:any;
-    categoryDescription?:any;
-    destinationCountry?:any;
-    palntcode?:any;
-    item?:any;
-    factory?:any;
+    productCode?:string;
+    poandLine?:string;
+    colorDesc?:string;
+    categoryDesc?:string;
+    destinationCountry?:string;
+    plant?:string;
+    item?:string;
+    factory?:string;
     
-    constructor(lastModifedStartDate?: any,lastModifedEndtDate?: any,documentStartDate?:any,documentEndtDate?:any, productCode?:any,
-        poandLine?:any,
-        colorDescription?:any,
-        categoryDescription?:any,
-        destinationCountry?:any,
-        palntcode?:any,
-        item?:any,
-        factory?:any){
+    constructor(lastModifedStartDate?: any,lastModifedEndtDate?: any,documentStartDate?:any,documentEndtDate?:any, productCode?:string,
+        poandLine?:string,
+        colorDesc?:string,
+        categoryDesc?:string,
+        destinationCountry?:string,
+        plant?:string,
+        item?:string,
+        factory?:string){
             this.lastModifedStartDate = lastModifedStartDate
             this.lastModifedEndtDate = lastModifedEndtDate
             this.documentStartDate = documentStartDate
             this.documentEndtDate= documentEndtDate
             this.productCode= productCode
             this.poandLine= poandLine
-            this.colorDescription= colorDescription
-            this.categoryDescription= categoryDescription
+            this.colorDesc= colorDesc
+            this.categoryDesc= categoryDesc
             this.destinationCountry= destinationCountry
-            this.palntcode= palntcode
+            this.plant= plant
             this.item= item
             this.factory= factory
 
