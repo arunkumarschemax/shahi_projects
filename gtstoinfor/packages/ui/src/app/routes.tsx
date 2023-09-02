@@ -23,6 +23,7 @@ import ShipmentTrackerReport from "./nike/reports/shipment-tracker-report"
 import ShipmentChangesCompareGrid from "./nike/shipment-compare-po"
 import VASChangesCompareGrid from "./nike/vas-compare-report"
 import DPOMSyncManually from "./nike/components/dpom-manual-sync"
+import { FOBPriceVariationReport } from "./nike/reports/fob-price-variation-report"
 
 
 export const AppRoutes = () => {
@@ -124,6 +125,7 @@ export const AppRoutes = () => {
                         <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
                         <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                         <Route path='shipment-report' element={<ShipmentTrackerReport />} />
+                        <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
                     </Route>
                     <Route path='nike-dashboard' element={<NikeDashboard />} />
                     <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

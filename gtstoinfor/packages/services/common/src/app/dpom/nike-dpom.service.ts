@@ -1189,6 +1189,23 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
+    async getPriceDifferenceReport(): Promise<CommonResponseModel> {
+        // const query = `SELECT d.po_number as poNumber,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode,d.gross_price_fob-f.shahi_confirmed_gross_price AS difference FROM dpom d
+        //  LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
+        //  WHERE d.gross_price_fob-f.shahi_confirmed_gross_price <> 0 ORDER BY d.gross_price_fob-f.shahi_confirmed_gross_price DESC`;
+        const query = `SELECT d.po_number as poNumber,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
+        LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL
+        GROUP BY d.po_number,d.style_number,d.size_description`;
+
+           const data = await this.dpomRepository.query(query)
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'error')
+        }
+    }
 }
 
 

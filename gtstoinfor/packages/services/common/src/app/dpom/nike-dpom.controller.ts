@@ -505,5 +505,13 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getPriceDifferenceReport')
+    async getPriceDifferenceReport(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPriceDifferenceReport();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
 
