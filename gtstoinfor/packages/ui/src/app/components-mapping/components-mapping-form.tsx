@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useNavigate } from "react-router-dom";
+import { config } from "packages/libs/shared-services/config";
 
 const CheckboxGroup = Checkbox.Group;
 const {Option}= Select;
@@ -110,7 +111,7 @@ export const ComponentsMappingForm = () => {
         setStyleImg([{
             name:option?.styleName,
             status:'done',
-            // url: appSettings.style_file_path+option?.styleFilepath,
+            url: config.upload_file_path + option?.styleFilepath,
 }])
 
     }
