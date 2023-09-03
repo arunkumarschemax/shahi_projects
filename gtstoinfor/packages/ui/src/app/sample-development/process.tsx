@@ -3,7 +3,7 @@ import { Table, Button, Input, Select, Tooltip } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 
-const ProcessForm = () => {
+const ProcessForm = ({props}) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
 
@@ -23,6 +23,7 @@ const ProcessForm = () => {
       return record;
     });
     setData(updatedData);
+    props(updatedData)
   };
 
   const handleDelete = (key) => {
