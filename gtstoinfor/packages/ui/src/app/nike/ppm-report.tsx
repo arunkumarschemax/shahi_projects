@@ -10,12 +10,6 @@ import RangePicker from 'rc-picker/lib/RangePicker';
 import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
 
-
-// const OPTIONS = ['ACCEPTED', 'UNACCEPTED', 'CANCELLED', 'CLOSED'];
-
-
-
-
 const PPMReport = () => {
   const [ppm, setPPM] = useState([]);
   const [form] = Form.useForm();
@@ -27,35 +21,125 @@ const PPMReport = () => {
   const service = new NikeService();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [filterData, setFilterData] = useState<any>([])
-  // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   const [pageSize, setPageSize] = useState<number>(null);
-  const [page, setPage] = React.useState(1)
+  const [page, setPage] = React.useState(1);
+  const [productCode, setProductCode] = useState<any>([]);
+  const { RangePicker } = DatePicker;
+  const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
+  const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
+  const { Option } = Select;
+  const [poLine, setPoLine] = useState<any>([]);
+  const [colorDesc, setColorDesc] = useState<any>([]);
+  const [categoryDesc, setCategoryDesc] = useState<any>([]);
+  const [countryDestination, setCountryDestination] = useState<any>([]);
+  const [plantCode, setPlantCode] = useState<any>([]);
+  const [item, setItem] = useState<any>([]);
+  const [factory, setFactory] = useState<any>([]);
 
 
   useEffect(() => {
     getData();
+    getProductCode();
+    getPoLine();
+    getColorDesc();
+    getcategoryDesc();
+    getcountrydestination();
+    getplantCode();
+    getItem();
+    getFactory();
+
   }, [])
+
+
+  const getProductCode = () => {
+    service.getPpmProductCodeForMarketing().then(res => {
+      setProductCode(res.data)
+    })
+  }
+  const getPoLine = () => {
+    service.getPpmPoLineForMarketing().then(res => {
+      setPoLine(res.data)
+    })
+  }
+  const getColorDesc = () => {
+    service.getPpmColorDescForMarketing().then(res => {
+      setColorDesc(res.data)
+    })
+  }
+  const getcategoryDesc = () => {
+    service.getPpmCategoryDescForMarketing().then(res => {
+      setCategoryDesc(res.data)
+
+    })
+  }
+  const getcountrydestination = () => {
+    service.getPpmDestinationCountryForMarketing().then(res => {
+      setCountryDestination(res.data)
+    })
+  }
+  const getplantCode = () => {
+    service.getPpmPlantForMarketing().then(res => {
+      setPlantCode(res.data)
+    })
+
+  }
+  const getItem = () => {
+    service.getPpmItemForMarketing().then(res => {
+      setItem(res.data)
+    })
+  }
+  const getFactory = () => {
+    service.getPpmFactoryForMarketing().then(res => {
+      setFactory(res.data)
+    })
+  }
 
   const getData = () => {
     const req = new PpmDateFilterRequest()
-        if (form.getFieldValue('lastModifiedDate') !== undefined) {
-           req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
-          }
-        if (form.getFieldValue('lastModifiedDate') !== undefined) {
-        req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
-        }
-        if (form.getFieldValue('documentDate') !== undefined) {
-            req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD')
-        }
-        if (form.getFieldValue('documentDate') !== undefined) {
-        req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
-        }
+    if (form.getFieldValue('lastModifiedDate') !== undefined) {
+      req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
+    }
+    if (form.getFieldValue('lastModifiedDate') !== undefined) {
+      req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
+    }
+    if (form.getFieldValue('documentDate') !== undefined) {
+      req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD')
+    }
+    if (form.getFieldValue('documentDate') !== undefined) {
+      req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
+    }
+    if (form.getFieldValue('productCode') !== undefined) {
+      req.productCode = form.getFieldValue('productCode')
+    }
+    if (form.getFieldValue('poandLine') !== undefined) {
+      req.poandLine = form.getFieldValue('poandLine')
+    }
+    if (form.getFieldValue('colorDesc') !== undefined) {
+      req.colorDesc = form.getFieldValue('colorDesc')
+    }
+    if (form.getFieldValue('categoryDesc') !== undefined) {
+      req.categoryDesc = form.getFieldValue('categoryDesc')
+    }
+    if (form.getFieldValue('destinationCountry') !== undefined) {
+      req.destinationCountry = form.getFieldValue('destinationCountry')
+    }
+    if (form.getFieldValue('plant') !== undefined) {
+      req.plant = form.getFieldValue('plant')
+    }
+    if (form.getFieldValue('item') !== undefined) {
+      req.item = form.getFieldValue('item')
+    }
+    if (form.getFieldValue('factory') !== undefined) {
+      req.factory = form.getFieldValue('factory')
+    }
+
+    
     service.getPPMData(req).then(res => {
       if (res.status) {
         setGridData(res.data)
         setFilterData(res.data)
         setFilteredData(res.data)
-        Finish(res.data)  
+        Finish(res.data)
       }
     }).catch(err => {
       console.log(err.message)
@@ -103,7 +187,7 @@ const PPMReport = () => {
       { title: 'Gender Age Description', dataIndex: 'genderAgeDesc' },
       { title: 'Destination Country Code', dataIndex: 'destinationCountryCode' },
       { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
-      { title: 'Plant Code', dataIndex: 'plan' },
+      { title: 'Plant Code', dataIndex: 'plant' },
       { title: 'plant Name', dataIndex: 'plantName' },
       { title: 'UPC', dataIndex: 'UPC' },
       { title: 'Sales Order Number', dataIndex: 'directShipSONumber' },
@@ -173,20 +257,6 @@ const PPMReport = () => {
     return formattedDate;
   }
 
-  const { RangePicker } = DatePicker;
-  const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
-  const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
-  const { Option } = Select;
-
-
-  // const EstimatedETDDate = (value) => {
-  //   if (value) {
-  //     const fromDate = value[0].format('YYYY-MM-DD');
-  //     const toDate = value[1].format('YYYY-MM-DD');
-  //     setSelectedEstimatedFromDate(fromDate)
-  //     setSelectedEstimatedToDate(toDate)
-  //   }
-  // }
 
   const Finish = (data: any) => {
     const values = form.getFieldsValue();
@@ -200,12 +270,14 @@ const PPMReport = () => {
       getData()
     }
   };
-  
+
 
   const onReset = () => {
     form.resetFields()
     getData()
   }
+
+
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -276,218 +348,230 @@ const PPMReport = () => {
   const getSizeWiseHeaders = (data: MarketingModel[]) => {
     const sizeHeaders = new Set<string>();
     data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
-        sizeHeaders.add('' + version.sizeDescription);
+      sizeHeaders.add('' + version.sizeDescription);
     }))
     return Array.from(sizeHeaders);
-};
-const getMap = (data: MarketingModel[]) => {
+  };
+  const getMap = (data: MarketingModel[]) => {
     const sizeWiseMap = new Map<string, Map<string, number>>();
     data?.forEach(rec => {
-        if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
-            sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
-        }
-        rec.sizeWiseData?.forEach(version => {
-            sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
-        })
+      if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
+        sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
+      }
+      rec.sizeWiseData?.forEach(version => {
+        sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
+      })
     });
     return sizeWiseMap;
-}
+  }
 
-  const renderReport =(data:MarketingModel[])=>{
+  const renderReport = (data: MarketingModel[]) => {
     const sizeHeaders = getSizeWiseHeaders(data);
     const sizeWiseMap = getMap(data);
 
-  const columns: any = [
-    {
-      title: "S.No",
-      render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
+    const columns: any = [
+      {
+        title: "S.No",
+        render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
 
-    },
+      },
 
-    {
+      {
 
-      title: "Po+Line",
-      dataIndex: 'Po+Line',
-      render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`
+        title: "Po+Line",
+        dataIndex: 'Po+Line',
+        render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`
 
 
-    },
-    {
-      title: 'Last Modified Date',
-      dataIndex: 'updatedAt',
-      render: (text) => moment(text).format('YYYY-MM-DD')
+      },
+      {
+        title: 'Last Modified Date',
+        dataIndex: 'updatedAt',
+        render: (text) => moment(text).format('YYYY-MM-DD')
 
-    },
-    {
-      title: 'Item',
-      dataIndex: 'item',
+      },
+      {
+        title: 'Item',
+        dataIndex: 'item',
 
-    },
-    {
-      title: 'Factory',
-      dataIndex: 'factory',
+      },
+      {
+        title: 'Factory',
+        dataIndex: 'factory',
 
-    },
-    {
-      title: 'Document Date',
-      dataIndex: 'documentDate',
-      // render: (text, record) => {
-      //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
-      // }
-    },
-    {
-      title: 'Purchase Order Number',
-      dataIndex: 'purchaseOrderNumber',
-    },
-    {
-      title: 'PO Line Item Number',
-      dataIndex: 'poLineItemNumber'
-    },
-    {
-      title: 'DPOM Line Item Status',
-      dataIndex: 'DPOMLineItemStatus'
-    },
-    {
-      title: 'Style Number',
-      dataIndex: 'styleNumber',
-      
+      },
+      {
+        title: 'Document Date',
+        dataIndex: 'documentDate',
+        // render: (text, record) => {
+        //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
+        // }
+      },
+      {
+        title: 'Purchase Order Number',
+        dataIndex: 'purchaseOrderNumber',
+      },
+      {
+        title: 'PO Line Item Number',
+        dataIndex: 'poLineItemNumber'
+      },
+      {
+        title: 'DPOM Line Item Status',
+        dataIndex: 'DPOMLineItemStatus'
+      },
+      {
+        title: 'Style Number',
+        dataIndex: 'styleNumber',
 
-    },
-    {
-      title: 'Product Code',
-      dataIndex: 'productCode', 
-      sorter: (a, b) => a.productCode.length - b.productCode.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('productCode'),
-    },
-    {
-      title: 'Colour Description',
-      dataIndex: 'colorDesc'
-    },
-    {
-      title: 'Change Register',
-      dataIndex: 'displayName',
-      align: 'center',
-  },
-    {
-      title: 'Total Item Qty',
-      dataIndex: 'totalItemQty',
-      align:'center',
-      render: (text) => <strong>{text}</strong>
-  },
-  ]
-  sizeHeaders?.forEach(version => {
-    columns.push({
+
+      },
+      {
+        title: 'Product Code',
+        dataIndex: 'productCode',
+        sorter: (a, b) => a.productCode.length - b.productCode.length,
+        sortDirections: ['descend', 'ascend'],
+        ...getColumnSearchProps('productCode'),
+
+
+      },
+      {
+        title: 'Colour Description',
+        dataIndex: 'colorDesc'
+      },
+
+      {
+        title: 'Category Description',
+        dataIndex: 'categoryDesc'
+
+      },
+      {
+        title: "Destination Country ",
+        dataIndex: 'destinationCountry'
+      },
+      {
+        title: "Plant Code",
+        dataIndex: 'plant'
+      },
+      {
+        title: 'Total Item Qty',
+        dataIndex: 'totalItemQty',
+        align: 'center',
+        render: (text) => <strong>{text}</strong>
+      },
+    ]
+    sizeHeaders?.forEach(version => {
+      columns.push({
         title: version,
         dataIndex: version,
         key: version,
         width: 130,
         align: 'center',
         children: [
-            {
-                title: 'Quantity',
-                dataIndex: '',
-                key: '',
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-                    if (sizeData) {
-                        if (sizeData.sizeQty !== null) {
-                            const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                            return (
-                                formattedQty
-                            );
-                        } else {
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
+          {
+            title: 'Quantity',
+            dataIndex: '',
+            key: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                  return (
+                    formattedQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
                 }
-            },
-            {
-                title: 'Legal PO Price',
-                dataIndex: '',
-                key: '',
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO Price',
+            dataIndex: '',
+            key: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
-                    if (sizeData) {
-                        if (sizeData.sizeQty !== null) {
-                            return (
-                                sizeData.price
-                            );
-                        } else {
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.price
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
                 }
-            },
-            {
-                title: 'CO Price',
-                dataIndex: '',
-                key: '',
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'CO Price',
+            dataIndex: '',
+            key: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
-                    if (sizeData) {
-                        if (sizeData.sizeQty !== null) {
-                            return (
-                                sizeData.coPrice
-                            );
-                        } else {
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.coPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
                 }
-            },
-            {
-                title: 'Price Variation',
-                dataIndex: '',
-                key: '',
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Price Variation',
+            dataIndex: '',
+            key: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
-                    if (sizeData) {
-                        if (sizeData.sizeQty !== null) {
-                            const priceVariation = sizeData.price - sizeData.coPrice;
-                            return (
-                                priceVariation
-                            );
-                        } else {
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  const priceVariation = sizeData.price - sizeData.coPrice;
+                  return (
+                    priceVariation
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
                 }
-            },
+              } else {
+                return '-';
+              }
+            }
+          },
         ],
         render: (text, record) => {
-            return record.sizeWiseData.find(item => item.sizeDescription === version);
+          return record.sizeWiseData.find(item => item.sizeDescription === version);
         }
+      });
     });
-});
 
- 
+
     return (<Table columns={columns} dataSource={filterData} pagination={{
-        onChange(current, pageSize) {
-            setPage(current);
-            setPageSize(pageSize)}
-    }}scroll={{ x: 'max-content' }} />)
+      onChange(current, pageSize) {
+        setPage(current);
+        setPageSize(pageSize)
+      }
+    }} scroll={{ x: 'max-content' }} />)
 
-}
+  }
 
   return (
     <>
@@ -498,22 +582,22 @@ const getMap = (data: MarketingModel[]) => {
           onClick={handleExport}
           icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
         <Form
-           onFinish={getData}
+          onFinish={getData}
           form={form}
           layout='vertical'>
-          <Row>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
-                            <Form.Item label="Last Modified Date" name="lastModifiedDate">
-                                <RangePicker  />
+          <Row gutter={24}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+              <Form.Item label="Last Modified Date" name="lastModifiedDate">
+                <RangePicker />
 
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
-                            <Form.Item label="Document Date" name="documentDate">
-                                <RangePicker  />
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+              <Form.Item label="Document Date" name="documentDate">
+                <RangePicker />
 
-                            </Form.Item>
-                        </Col>
+              </Form.Item>
+            </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
               <Form.Item name="DPOMLineItemStatus" label="PPM Status">
                 <Select
@@ -526,24 +610,137 @@ const getMap = (data: MarketingModel[]) => {
                   <Option value="Cancelled">CANCELLED</Option>
                   <Option value="Closed">CLOSED</Option>
                 </Select>
-                {/* <Select
-                  mode="multiple"
-                  placeholder="Inserted are removed"
-                  value={selectedItems}
-                  onChange={setSelectedItems}
-                  style={{ width: '100%' }}
-                  options={filteredOptions.map((item) => ({
-                    value: item,
-                    label: item,
-                  }))}
-                /> */}
-                
+
+
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 40 }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
+              <Form.Item name='productCode' label='Product Code' >
+                <Select
+                  showSearch
+                  placeholder="Select Product Code"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {productCode.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+              <Form.Item name='poandLine' label='Po+Line' >
+                <Select
+                  showSearch
+                  placeholder="Select Po+Line"
+                  optionFilterProp="children"
+                  allowClear
+
+                >
+                  {poLine.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+              <Form.Item name='colorDesc' label='Color Description' >
+                <Select
+                  showSearch
+                  placeholder="Select Color Description"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {colorDesc.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.color_desc}>{inc.color_desc}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+              <Form.Item name='categoryDesc' label='Category Description' >
+                <Select
+                  showSearch
+                  placeholder="Select Category Description"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {categoryDesc.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.category_desc}>{inc.category_desc}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+              <Form.Item name='destinationCountry' label='Destination Country' >
+                <Select
+                  showSearch
+                  placeholder="Select Destination Country"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {countryDestination.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.destination_country}>{inc.destination_country}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+              <Form.Item name='plant' label='Plant Code' >
+                <Select
+                  showSearch
+                  placeholder="Select Plant Code"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {plantCode.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+              <Form.Item name='item' label='Item' >
+                <Select
+                  showSearch
+                  placeholder="Select Item"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {item.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+              <Form.Item name='factory' label='Factory' >
+                <Select
+                  showSearch
+                  placeholder="Select Factory"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {factory.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+
+
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 25 }} >
               <Form.Item>
                 <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Search</Button>
-                <Button style={{marginLeft:8}}  htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined/>}>Reset</Button>
+                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
               </Form.Item>
             </Col>
           </Row>
