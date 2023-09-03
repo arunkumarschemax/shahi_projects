@@ -23,6 +23,7 @@ const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 import { PoAndQtyReq } from './dto/po-qty.req';
 import { PoQty } from './dto/poqty.req';
 import { Console } from 'console';
+import { FactoryUpdate } from './dto/factory-update.req';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -1164,6 +1165,40 @@ async getPpmFactoryForMarketing(): Promise<CommonResponseModel> {
     else
         return new CommonResponseModel(false, 0, 'No data found');
 }
+
+// async updateDispatchScPrintStatus(req: VehicleTrackRequest): Promise<TrackActionResponse> {
+//     try {
+//         const trackTruckDetails = await this.indentTruckTrackRepo.getByTruckId(req.pickRequestLineTruckId)
+//         const updateTrackTruckStatus = await this.indentTruckTrackRepo.update({ id: trackTruckDetails[0].indentTruckTrackId }, { dispatchStatus: req.dispatchStatus, sourceOutWeight: req.sourceOutWeight,lifeCycleStatus:req.lifeCycleStatus ,sourceOutUom:req.sourceOutWeightUom ,loadingStatus:req.loadingStatus})
+//         console.log(req,"666666666666666")
+      
+//         if (updateTrackTruckStatus.affected) {
+//             return new TrackActionResponse(true, 1, 'Vehicle dispatch status updated Successfully', true)
+//         } else {
+//             return new TrackActionResponse(false, 0, 'Error', false)
+//         }
+//     } catch (err) {
+//         throw err
+//     }
+// }
+
+async updateFactoryStatusColumns(req: FactoryUpdate): Promise<CommonResponseModel> {
+        try {
+            console.log(req,"1111111111111111111111111111")
+
+             const docDetails = await this.dpomRepository.getFactoryDataById(req.poAndLine)
+            const updateTrackTruckStatus = await this.dpomRepository.update({ poAndLine: docDetails[0].poline }, {  actualUnit: req.actualUnit, allocatedQuantity: req.allocatedQuantity})
+             console.log({ poAndLine: docDetails[0].poAndLine },"666666666666666")
+          
+            if (updateTrackTruckStatus.affected) {
+                return new CommonResponseModel(true, 1, 'Data updated Successfully', true)
+            } else {
+                return new CommonResponseModel(false, 0, 'Error', false)
+            }
+        } catch (err) {
+            throw err
+        }
+    }
 }
 
 
