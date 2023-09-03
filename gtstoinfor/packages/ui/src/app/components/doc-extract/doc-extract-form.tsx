@@ -633,64 +633,66 @@ export function DocExtractForm(props: DocFormProps) {
                                         <Row style={{ position: "relative", bottom: "60px" }}>
                                             <Row style={{ position: "relative", bottom: "300px" }}>
                                                 <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> GST Number </h4>
-                                                <Input
+                                                {/* <Input
+
+
                                                     name="GST"
                                                     style={{ width: "150px", height: "30px" }}
                                                     value={gstNumbers}
                                                     onChange={(e) => setGstNumbers(e.target.value)}
-                                                />
+                                                /> */}
 
 
                                                 <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> IFSC Code </h4>
-                                                <Input
+                                                {/* <Input
                                                     name="IFSC"
                                                     style={{ width: "150px", height: "30px" }}
                                                     value={ifscCodes}
                                                     onChange={(e) => setIfscCodes(e.target.value)}
-                                                />
+                                                /> */}
 
 
                                                 <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> Invoice Date</h4>
-                                                <Input
+                                                {/* <Input
                                                     name="Innvoice"
                                                     style={{ width: "150px", height: "30px", position: "relative", right: "12px" }}
                                                     value={invoiceDate}
                                                     onChange={(e) => setInvoiceDate(e.target.value)}
-                                                />
+                                                /> */}
                                             </Row>
 
                                             <Row style={{ position: "relative", bottom: "270px", left: "43px" }}>
                                                 <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}>Payref</h4>
-                                                <Input
+                                                {/* <Input
                                                     name="Payref"
                                                     style={{ width: "150px", height: "30px" }}
                                                     value={payref}
                                                     onChange={(e) => setpayref(e.target.value)}
-                                                />
+                                                /> */}
 
                                                 <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> Customer ID</h4>
-                                                <Input
+                                                {/* <Input
                                                     name="Customer"
                                                     style={{ width: "150px", height: "30px", position: "relative", right: "20px" }}
                                                     value={customerID}
                                                     onChange={(e) => setCustomerID(e.target.value)}
-                                                />
+                                                /> */}
 
 
 
                                                 <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}> Volume</h4>
-                                                <Input
+                                                {/* <Input
                                                     name="Volume"
                                                     style={{ width: "150px", height: "30px", position: "relative", left: "2px" }}
                                                     value={volume}
                                                     onChange={(e) => setVolume(e.target.value)}
-                                                />
+                                                /> */}
 
                                             </Row>
 
                                             <Row style={{ position: "relative", bottom: "240px", left: "43px" }}>
                                                 <h4 style={{ left: "100px", position: "relative", bottom: "50px" }} > Weight</h4>
-                                                <Input
+                                                {/* <Input
                                                     name="Weight"
                                                     style={{ width: "150px", height: "30px", position: "relative", right: "5px" }}
                                                     value={weight}
@@ -703,7 +705,7 @@ export function DocExtractForm(props: DocFormProps) {
                                                     style={{ width: "150px", height: "30px", position: "relative", right: "15px" }}
                                                     value={chargeable}
                                                     onChange={(e) => setChargeable(e.target.value)}
-                                                />
+                                                /> */}
 
                                                 <h4 style={{ left: "100px", position: "relative", bottom: "50px" }}>Date</h4>
                                                 <Input
@@ -733,7 +735,7 @@ export function DocExtractForm(props: DocFormProps) {
                                                 />
 
                                                 <h4 style={{ left: "130px", position: "relative", bottom: "50px" }}>PO</h4>
-                                                <Input
+                                                {/* <Input
                                                     name="PO"
                                                     style={{ width: "150px", height: "30px", position: "relative", left: "60px" }}
                                                     value={po}
@@ -757,10 +759,10 @@ export function DocExtractForm(props: DocFormProps) {
                                                     style={{ width: "150px", height: "30px", position: "relative", left: "20px", bottom: "1px" }}
                                                     value={rcm}
                                                     onChange={(e) => setRcm(e.target.value)}
-                                                />
+                                                /> */}
 
                                                 <h4 style={{ left: "140px", position: "relative", bottom: "50px" }} > ETD </h4>
-                                                <Input
+                                                {/* <Input
                                                     name="ETA"
                                                     style={{ width: "150px", height: "30px", position: "relative", left: "65px", bottom: "1px" }}
                                                     value={eta}
@@ -777,18 +779,18 @@ export function DocExtractForm(props: DocFormProps) {
                                                     style={{ width: "150px", height: "30px", position: "relative", left: "10px", bottom: "180px" }}
                                                     value={house}
                                                     onChange={(e) => setHouse(e.target.value)}
-                                                />
+                                                /> */}
 
                                                 <h4 style={{ left: "120px", position: "relative", bottom: "230px" }} > Goods Desc</h4>
-                                                <textarea
+                                                {/* <textarea
                                                     name="Goods Description"
                                                     style={{ width: "150px", height: "30px", position: "relative", left: "5px", bottom: "180px" }}
                                                     value={goods}
-                                                    onChange={(e) => setGoods(e.target.value)}
-                                                />
+                                                    onChange={(e) => setGoods(e.target.value)} */}
+                                                {/* /> */}
 
                                                 <h4 style={{ left: "100px", position: "relative", bottom: "230px" }} > Ocean Bill</h4>
-                                                <Input
+                                                {/* <Input
                                                     name="Ocean Bill"
                                                     style={{ width: "150px", height: "30px", position: "relative", left: "10px", bottom: "180px" }}
                                                     value={ocean}
@@ -802,9 +804,9 @@ export function DocExtractForm(props: DocFormProps) {
                                                     style={{ width: "150px", height: "30px", position: "relative", left: "25px", bottom: "30px" }}
                                                     value={containers}
                                                     onChange={(e) => setContainers(e.target.value)}
-                                                />
+                                                /> */}
 
-                                                <h4 style={{ left: "100px", position: "relative", bottom: "80px" }} > Vessel </h4>
+                                                {/* <h4 style={{ left: "100px", position: "relative", bottom: "80px" }} > Vessel </h4>
                                                 <Input
                                                     name="Vessel"
                                                     style={{ width: "150px", height: "30px", position: "relative", left: "25px", bottom: "30px" }}
@@ -819,7 +821,7 @@ export function DocExtractForm(props: DocFormProps) {
                                                     style={{ width: "150px", height: "30px", position: "relative", left: "25px", bottom: "30px" }}
                                                     value={voyage}
                                                     onChange={(e) => setVoyage(e.target.value)}
-                                                />
+                                                /> */}
 
                                             </Row>
                                             <Row>

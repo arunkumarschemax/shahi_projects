@@ -20,12 +20,14 @@ const BasicLayout = () => {
     
     function renderIcon(iconType, iconName) {
         // if (iconType === "antd") { 
-            const SpecificIcon = antdIcons["SolutionOutlined"]; 
-            return <SpecificIcon /> 
+            // const SpecificIcon = antdIcons["SolutionOutlined"]; 
+            // return <SpecificIcon /> 
         // }
         // else {
         //     const SpecificIcon = icons[iconName];
         //     return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
+        const SpecificIcon = antdIcons[iconName];
+            return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
         // }
     }
     const getSubMenu = (route) => {
