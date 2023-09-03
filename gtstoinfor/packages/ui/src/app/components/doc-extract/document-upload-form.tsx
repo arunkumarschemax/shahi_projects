@@ -32,7 +32,7 @@ export function DocumentUploadForm(props: DocumentUploadFormProps) {
                 <UploadDocumentForm />
             </div>
             <div style={{ width: "50%" }}>
-                <Card title={"Document Details"} bordered={true} style={{marginBottom: 16, borderRadius: 8, boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', background: '#fff',borderTop: '1px solid #e8e8e8' }}>
+                <Card title={"Document Details"} headStyle={{ backgroundColor: '#77dfec', border: 0 }} bordered={true} style={{marginBottom: 16, borderRadius: 8, boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', background: '#fff',borderTop: '1px solid #e8e8e8' }}>
                     <DocumentForm form={mainForm}/>
                     <DocumentItemForm form={itemform} data={undefined} />
                     <Col span={24}>

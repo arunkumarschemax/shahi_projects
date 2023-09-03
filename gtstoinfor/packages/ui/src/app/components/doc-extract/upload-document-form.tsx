@@ -102,7 +102,7 @@ export function UploadDocumentForm(props: UploadDocumentFormProps) {
 
     return (
         <>
-        <Card title={"Upload Document"} bordered={true} style={{marginBottom: 16, borderRadius: 8, boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', background: '#fff',borderTop: '1px solid #e8e8e8' }}>
+        <Card title={"Upload Document"} headStyle={{ backgroundColor: '#77dfec', border: 0 }} bordered={true} style={{marginBottom: 16, borderRadius: 8, boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', background: '#fff',borderTop: '1px solid #e8e8e8' }}>
             <Form layout='vertical' form={uploadForm} onFinish={handleUploadDocument}>
                 <Row gutter={24}>
                     <Col span={6}>

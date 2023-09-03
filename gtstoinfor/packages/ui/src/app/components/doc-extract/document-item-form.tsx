@@ -51,7 +51,7 @@ export function DocumentItemForm(props: DocumentItemFormProps) {
       ];
 
     return (
-        <Card title={"Item Details"} bordered={true} style={{marginBottom: 16, borderRadius: 8, boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', background: '#fff',borderTop: '1px solid #e8e8e8' }}>
+        <Card title={"Item Details"} headStyle={{ backgroundColor: '#77dfec', border: 0 }} bordered={true} style={{marginBottom: 16, borderRadius: 8, boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', background: '#fff',borderTop: '1px solid #e8e8e8' }}>
             <Form layout='vertical' form={props.form} onFinish={handleDocument}>
                 <Row gutter={24}>
                     <Col span={6}>
