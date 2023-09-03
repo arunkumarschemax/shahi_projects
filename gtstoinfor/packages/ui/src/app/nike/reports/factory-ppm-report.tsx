@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Table, Row, Input, Col, Form, DatePicker, Select, Button } from 'antd';
+import { Card, Table, Row, Input, Col, Form, DatePicker, Select, Button, Checkbox, message } from 'antd';
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { NikeService } from '@project-management-system/shared-services';
@@ -10,7 +10,15 @@ import { Excel } from 'antd-table-saveas-excel';
 import { ColumnsType } from 'antd/es/table';
 import { FactoryReportModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 
-
+interface ExpandedRows {
+    [key: string]: boolean;
+}
+interface FactoryUpdateRequest {
+    poAndLine: string;
+    actualUnit?: string; // Optional field
+    allocatedQuantity?: string; // Optional field
+  }
+  
 const FactoryPPMReport = () => {
 
     const [factory, setFactory] = useState([]);
@@ -28,9 +36,84 @@ const FactoryPPMReport = () => {
     const [filterData, setFilterData] = useState<any>([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [page, setPage] = React.useState(1);
-    
+    const [expandedRows, setExpandedRows] = useState<ExpandedRows>({});
+    const [textareaValues, setTextareaValues] = useState<{ [key: string]: string }>({});
+    const [expandedActualUnit, setExpandedActualUnit] = useState({});
+    const [expandedQuantityAllocation, setExpandedQuantityAllocation] = useState({});
+    const [textareaValuesActualUnit, setTextareaValuesActualUnit] = useState({});
+    const [textareaValuesQuantityAllocation, setTextareaValuesQuantityAllocation] = useState({});
 
-   
+    useEffect(() => {
+        getData();
+    }, [])
+
+    
+    const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
+        const req: FactoryUpdateRequest = {
+            poAndLine: poAndLine,
+          };
+        
+          if (actualUnit !== null && actualUnit !== undefined && actualUnit !== '') {
+            req.actualUnit = actualUnit;
+          }
+        
+          if (
+            allocatedQuantity !== null &&
+            allocatedQuantity !== undefined &&
+            allocatedQuantity !== ''
+          ) {
+            req.allocatedQuantity = allocatedQuantity;
+          }
+      
+        service.updateFactoryStatusColumns(req).then((res) => {
+          if (res.status) {
+            message.success(res.internalMessage);
+            getData();
+            console.log(res, "requested response");
+          } else {
+            message.error(res.internalMessage);
+          }
+        });
+      };
+      
+
+    const handleCheckboxChange = (column, poAndLine) => {
+        if (column === 'ActualUnit') {
+            setExpandedActualUnit((prevRows) => ({
+                ...prevRows,
+                [poAndLine]: !prevRows[poAndLine],
+            }));
+        } else if (column === 'QuantityAllocation') {
+            setExpandedQuantityAllocation((prevRows) => ({
+                ...prevRows,
+                [poAndLine]: !prevRows[poAndLine],
+            }));
+        }
+    };
+
+    const handleTextareaChange = (column, poAndLine, value) => {
+        if (column === 'ActualUnit') {
+            setTextareaValuesActualUnit((prevValues) => ({
+                ...prevValues,
+                [poAndLine]: value,
+            }));
+        } else if (column === 'QuantityAllocation') {
+            setTextareaValuesQuantityAllocation((prevValues) => ({
+                ...prevValues,
+                [poAndLine]: value,
+            }));
+        }
+    };
+
+    // const handleSubmit = (column, poAndLine) => {
+    //     if (column === 'ActualUnit') {
+    //       console.log(`Actual Unit value for ID ${poAndLine}:`, textareaValuesActualUnit[poAndLine]);
+    //     } else if (column === 'QuantityAllocation') {
+    //       console.log(`Quantity Allocation value for ID ${poAndLine}:`, textareaValuesQuantityAllocation[poAndLine]);
+    //     }
+    //   };
+
+    
 
     const getFactoryStatus = (values: any) => {
         service.getByFactoryStatus().then(res => {
@@ -121,19 +204,10 @@ const FactoryPPMReport = () => {
         form.resetFields();
     }
 
-    // const EstimatedETDDate = (value) => {
-    //     if (value) {
-    //         const fromDate = value[0].format('YYYY-MM-DD');
-    //         const toDate = value[1].format('YYYY-MM-DD');
-    //         setSelectedEstimatedFromDate(fromDate)
-    //         setSelectedEstimatedToDate(toDate)
-    //     }
-    // }
+ 
 
 
-    useEffect(() => {
-        getData();
-    }, [])
+    
 
     const getData = () => {
         const req = new PpmDateFilterRequest()
@@ -163,6 +237,9 @@ const FactoryPPMReport = () => {
         console.log(req)
 
     }
+   
+   
+   
 
     const Finish = (data: any) => {
         const values = form.getFieldsValue();
@@ -450,7 +527,123 @@ const FactoryPPMReport = () => {
                 align: 'center',
                 render: (text) => <strong>{text}</strong>
             },
-           
+            
+
+            {
+                title: 'Edit Unit Allocation',
+                align:'center',
+                children: [
+                  {
+                    
+                    dataIndex: '',
+                    render: (text, rowData) => (
+                      <span>
+                        <Form.Item>
+                          <Checkbox
+                            onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
+                            checked={expandedActualUnit[rowData.poAndLine] || false}
+                          />
+                        </Form.Item>
+                      </span>
+                    ),
+                  },
+                  {
+                    
+                    render: (text, rowData) => (
+                      <div>
+                        {expandedActualUnit[rowData.poAndLine] && (
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Input
+                              name='actualUnit'
+                              allowClear
+                              style={{ marginRight: '10px' }}
+                              placeholder="Enter text"
+                              value={textareaValuesActualUnit[rowData.poAndLine] || ''}
+                              onChange={(e) =>
+                                handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
+                              }
+                            />
+                            <Button
+                              type="primary"
+                              onClick={() => {
+                                updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
+              
+                                // Additionally, you can clear the expanded state and textarea value here
+                                handleCheckboxChange('ActualUnit', rowData.poAndLine);
+                                handleTextareaChange('ActualUnit', rowData.poAndLine, '');
+                              }}
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ),
+                  },
+                ],
+              },
+              {
+                title: 'Actual Unit',
+                dataIndex: 'actualUnit',
+                align: 'center',
+            },
+              {
+                title: 'Quantity Allocation',
+                children: [
+                  {
+                  
+                    render: (text, rowData) => (
+                      <span>
+                        <Form.Item>
+                          <Checkbox
+                            onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
+                            checked={expandedQuantityAllocation[rowData.poAndLine] || false}
+                          />
+                        </Form.Item>
+                      </span>
+                    ),
+                  },
+                  {
+                    dataIndex: 'id',
+                    render: (text, rowData) => (
+                      <div>
+                        {expandedQuantityAllocation[rowData.poAndLine] && (
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Input
+                              name='allocatedQuantity'
+                              allowClear
+                              style={{ marginRight: '10px' }}
+                              placeholder="Enter text"
+                              value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
+                              onChange={(e) =>
+                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
+                              }
+                            />
+                            <Button
+                              type="primary"
+                              onClick={() => {
+                                updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
+              
+                                // Additionally, you can clear the expanded state and textarea value here
+                                handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
+                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
+                              }}
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ),
+                  },
+                ],
+              },
+              {
+                title: 'Reallocated Quantity',
+                dataIndex: 'allocatedQuantity',
+                align: 'center',
+            },
+  
 
         ];
         sizeHeaders?.forEach(version => {
@@ -483,73 +676,73 @@ const FactoryPPMReport = () => {
                             }
                         }
                     },
-                    {
-                        title: 'Legal PO Price',
-                        dataIndex: '',
-                        key: '',
-                        render: (text, record) => {
-                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                    // {
+                    //     title: 'Legal PO Price',
+                    //     dataIndex: '',
+                    //     key: '',
+                    //     render: (text, record) => {
+                    //         const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
-                            if (sizeData) {
-                                if (sizeData.sizeQty !== null) {
-                                    return (
-                                        sizeData.price
-                                    );
-                                } else {
-                                    return (
-                                        '-'
-                                    );
-                                }
-                            } else {
-                                return '-';
-                            }
-                        }
-                    },
-                    {
-                        title: 'CO Price',
-                        dataIndex: '',
-                        key: '',
-                        render: (text, record) => {
-                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                    //         if (sizeData) {
+                    //             if (sizeData.sizeQty !== null) {
+                    //                 return (
+                    //                     sizeData.price
+                    //                 );
+                    //             } else {
+                    //                 return (
+                    //                     '-'
+                    //                 );
+                    //             }
+                    //         } else {
+                    //             return '-';
+                    //         }
+                    //     }
+                    // },
+                    // {
+                    //     title: 'CO Price',
+                    //     dataIndex: '',
+                    //     key: '',
+                    //     render: (text, record) => {
+                    //         const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
-                            if (sizeData) {
-                                if (sizeData.sizeQty !== null) {
-                                    return (
-                                        sizeData.coPrice
-                                    );
-                                } else {
-                                    return (
-                                        '-'
-                                    );
-                                }
-                            } else {
-                                return '-';
-                            }
-                        }
-                    },
-                    {
-                        title: 'Price Variation',
-                        dataIndex: '',
-                        key: '',
-                        render: (text, record) => {
-                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                    //         if (sizeData) {
+                    //             if (sizeData.sizeQty !== null) {
+                    //                 return (
+                    //                     sizeData.coPrice
+                    //                 );
+                    //             } else {
+                    //                 return (
+                    //                     '-'
+                    //                 );
+                    //             }
+                    //         } else {
+                    //             return '-';
+                    //         }
+                    //     }
+                    // },
+                    // {
+                    //     title: 'Price Variation',
+                    //     dataIndex: '',
+                    //     key: '',
+                    //     render: (text, record) => {
+                    //         const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
-                            if (sizeData) {
-                                if (sizeData.sizeQty !== null) {
-                                    const priceVariation = sizeData.price - sizeData.coPrice;
-                                    return (
-                                        priceVariation
-                                    );
-                                } else {
-                                    return (
-                                        '-'
-                                    );
-                                }
-                            } else {
-                                return '-';
-                            }
-                        }
-                    },
+                    //         if (sizeData) {
+                    //             if (sizeData.sizeQty !== null) {
+                    //                 const priceVariation = sizeData.price - sizeData.coPrice;
+                    //                 return (
+                    //                     priceVariation
+                    //                 );
+                    //             } else {
+                    //                 return (
+                    //                     '-'
+                    //                 );
+                    //             }
+                    //         } else {
+                    //             return '-';
+                    //         }
+                    //     }
+                    // },
                 ],
                 render: (text, record) => {
                     return record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -609,7 +802,7 @@ const FactoryPPMReport = () => {
                             <Form.Item>
                                 <Button htmlType="submit"
                                     icon={<SearchOutlined />}
-                                    type="primary">SEARCH</Button>
+                                    type="primary">Get Report</Button>
                              <Button
                                     htmlType='button' icon={<UndoOutlined />}  style={{  margin:10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
                                 >
