@@ -10,6 +10,7 @@ import { DiaPDFDto } from './dto/diaPDF.dto';
 import { PoAndQtyReq } from './dto/po-qty.req';
 import { log } from 'console';
 import { type } from 'os';
+import { FactoryUpdate } from './dto/factory-update.req';
 
 @Controller('/nike-dpom')
 export class DpomController {
@@ -503,6 +504,18 @@ export class DpomController {
             return this.dpomService.getPpmFactoryForMarketing();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+
+    @Post('/updateFactoryStatusColumns') 
+    @ApiBody ({type: FactoryUpdate})
+    async updateFactoryStatusColumns(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.updateFactoryStatusColumns(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
         }
     }
     @Post('/getPriceDifferenceReport')

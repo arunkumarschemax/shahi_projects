@@ -175,6 +175,9 @@ export class NikeService extends CommonAxiosService {
     async getPoAndQtyDashboard(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPoAndQtyDashboard", req)
     } 
+    async updateFactoryStatusColumns(req?:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/updateFactoryStatusColumns",req)
+    }
 
     async getPriceDifferenceReport(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPriceDifferenceReport")

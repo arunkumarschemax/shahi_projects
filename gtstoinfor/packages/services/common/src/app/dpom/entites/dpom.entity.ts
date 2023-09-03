@@ -653,6 +653,20 @@ export class DpomEntity {
     })
     divertedToPos: string;
 
+    @Column('varchar', {
+        name: "actual_unit",
+        length: 20,
+        nullable: true
+    })
+    actualUnit : string;
+
+    @Column('varchar', {
+        name: "allocated_quantity",
+        length: 20,
+        nullable: true
+    })
+    allocatedQuantity : string;
+
     @OneToMany(() => DpomChildEntity, (dpomChild) => { dpomChild.dpom }, { cascade: true })
     dpomChild: DpomChildEntity;
 
