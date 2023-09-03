@@ -15,16 +15,14 @@ interface ExpandedRows {
 }
 interface FactoryUpdateRequest {
     poAndLine: string;
-    actualUnit?: string; // Optional field
-    allocatedQuantity?: string; // Optional field
+    actualUnit?: string; 
+    allocatedQuantity?: string; 
   }
   
 const FactoryPPMReport = () => {
 
     const [factory, setFactory] = useState([]);
     const { RangePicker } = DatePicker;
-    const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
-    const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
     const { Option } = Select;
@@ -36,8 +34,6 @@ const FactoryPPMReport = () => {
     const [filterData, setFilterData] = useState<any>([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [page, setPage] = React.useState(1);
-    const [expandedRows, setExpandedRows] = useState<ExpandedRows>({});
-    const [textareaValues, setTextareaValues] = useState<{ [key: string]: string }>({});
     const [expandedActualUnit, setExpandedActualUnit] = useState({});
     const [expandedQuantityAllocation, setExpandedQuantityAllocation] = useState({});
     const [textareaValuesActualUnit, setTextareaValuesActualUnit] = useState({});
@@ -69,7 +65,8 @@ const FactoryPPMReport = () => {
           if (res.status) {
             message.success(res.internalMessage);
             getData();
-            console.log(res, "requested response");
+          // window.location.reload();
+            
           } else {
             message.error(res.internalMessage);
           }
@@ -104,26 +101,17 @@ const FactoryPPMReport = () => {
             }));
         }
     };
-
-    // const handleSubmit = (column, poAndLine) => {
-    //     if (column === 'ActualUnit') {
-    //       console.log(`Actual Unit value for ID ${poAndLine}:`, textareaValuesActualUnit[poAndLine]);
-    //     } else if (column === 'QuantityAllocation') {
-    //       console.log(`Quantity Allocation value for ID ${poAndLine}:`, textareaValuesQuantityAllocation[poAndLine]);
-    //     }
-    //   };
-
     
 
-    const getFactoryStatus = (values: any) => {
-        service.getByFactoryStatus().then(res => {
-            if (res.status) {
-                setGridData(res.data)
-            } else {
-                setGridData([])
-            }
-        })
-    }
+    // const getFactoryStatus = (values: any) => {
+    //     service.getByFactoryStatus().then(res => {
+    //         if (res.status) {
+    //             setGridData(res.data)
+    //         } else {
+    //             setGridData([])
+    //         }
+    //     })
+    // }
 
     const resetHandler = () => {
         form.resetFields();
@@ -392,6 +380,9 @@ const FactoryPPMReport = () => {
             {
                 title: 'Last Modified Date',
                 dataIndex: 'lastModifiedDate',
+                render: (text, record) => {
+                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('YYYY-MM-DD') : '-';
+                  },
             },
             {
                 title: 'Item',
@@ -406,10 +397,10 @@ const FactoryPPMReport = () => {
             {
                 title: 'Document Date',
                 dataIndex: 'documentDate',
-                // render: (text, record) => {
-                //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
-                // },
-            },
+                render: (text, record) => {
+                  return record.documentDate ? moment(record.documentDate).format('YYYY-MM-DD') : '-';
+                },
+              },              
             {
                 title: 'Purchase Order Number',
                 dataIndex: 'purchaseOrderNumber',
@@ -521,21 +512,13 @@ const FactoryPPMReport = () => {
                 dataIndex: 'displayName',
                 align: 'center',
             },
-            {
-                title: 'Total Item Qty',
-                dataIndex: 'totalItemQty',
-                align: 'center',
-                render: (text) => <strong>{text}</strong>
-            },
-            
-
-            {
-                title: 'Edit Unit Allocation',
+            {  
                 align:'center',
                 children: [
                   {
-                    
+                    title: 'Edit Unit Allocation',
                     dataIndex: '',
+                    align:"center",
                     render: (text, rowData) => (
                       <span>
                         <Form.Item>
@@ -548,7 +531,7 @@ const FactoryPPMReport = () => {
                     ),
                   },
                   {
-                    
+                    align:'center',
                     render: (text, rowData) => (
                       <div>
                         {expandedActualUnit[rowData.poAndLine] && (
@@ -567,8 +550,6 @@ const FactoryPPMReport = () => {
                               type="primary"
                               onClick={() => {
                                 updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
-              
-                                // Additionally, you can clear the expanded state and textarea value here
                                 handleCheckboxChange('ActualUnit', rowData.poAndLine);
                                 handleTextareaChange('ActualUnit', rowData.poAndLine, '');
                               }}
@@ -588,10 +569,11 @@ const FactoryPPMReport = () => {
                 align: 'center',
             },
               {
-                title: 'Quantity Allocation',
+                
                 children: [
                   {
-                  
+                    title: 'Quantity Allocation',
+                  align:'center',
                     render: (text, rowData) => (
                       <span>
                         <Form.Item>
@@ -605,6 +587,7 @@ const FactoryPPMReport = () => {
                   },
                   {
                     dataIndex: 'id',
+                    align:'center',
                     render: (text, rowData) => (
                       <div>
                         {expandedQuantityAllocation[rowData.poAndLine] && (
@@ -623,8 +606,6 @@ const FactoryPPMReport = () => {
                               type="primary"
                               onClick={() => {
                                 updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
-              
-                                // Additionally, you can clear the expanded state and textarea value here
                                 handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
                                 handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
                               }}
@@ -642,6 +623,12 @@ const FactoryPPMReport = () => {
                 title: 'Reallocated Quantity',
                 dataIndex: 'allocatedQuantity',
                 align: 'center',
+            },
+            {
+                title: 'Total Item Qty',
+                dataIndex: 'totalItemQty',
+                align: 'center',
+                render: (text) => <strong>{text}</strong>
             },
   
 

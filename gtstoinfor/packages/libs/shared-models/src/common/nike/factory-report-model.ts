@@ -146,8 +146,9 @@ export class FactoryReportModel {
        this.netIncludingDisc = netIncludingDisc
        this.trCoNetIncludingDisc=trCoNetIncludingDisc
        this.displayName = displayName
-       this.sizeWiseData = sizeWiseData
+      
         this.actualUnit = actualUnit
         this.allocatedQuantity = allocatedQuantity
+        this.sizeWiseData = sizeWiseData
     };
 }
