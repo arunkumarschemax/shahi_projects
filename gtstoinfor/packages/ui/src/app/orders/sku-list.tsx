@@ -5,6 +5,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
 import FormItem from "antd/es/form/FormItem";
 import { SKUlistService } from "@project-management-system/shared-services";
+import { SKUlistFilterRequest } from "@project-management-system/shared-models";
 
 
 export const SkuList=()=>{
@@ -12,8 +13,8 @@ export const SkuList=()=>{
    const [itemData, setItemData] = useState([]);
    const [selectedItem, setSelectedItem] = useState(null); // State to track the selected item
    const [isModalVisible, setIsModalVisible] = useState(false); // State to control the modal visibility
-   const [selectedItemCode, setSelectedItemCode] = useState(null); // State to track the selected item code
-    const service = new SKUlistService
+   const [selectedItemNo, setSelectedItemNo] = useState(null);
+       const service = new SKUlistService
     const [sku,setSKU]=useState([]);
     const [data,setData]=useState([]);
     const { Option } = Select;
@@ -23,6 +24,11 @@ export const SkuList=()=>{
     Dropdown();
     Filters();
   }, []);
+useEffect(() => {
+  setSelectedItemNo([]); // Set the default selected item number
+  Dropdown(); // Call Dropdown to fetch SKUs for the default item
+  Filters(); // Call Filters to fetch other data if needed
+}, []);
 
 //   const fetchItemData = () => {
 //   const mockItemData = [
@@ -73,14 +79,7 @@ export const SkuList=()=>{
 // };
 
 
-const Dropdown=()=>{
-service.getAllMapItems().then(res=>{
-    if(res){
-        console.log(res,'lllllllll')
-        setSKU(res.data);
-    }
-})
-}
+
  
 // const handleSearch = () => {
 //     // Check if an item number is selected
@@ -107,6 +106,24 @@ const Filters =()=>{
     })
 }
 
+// const handleCardClick = (item) => {
+//     if (selectedItem === item) {
+//       setSelectedItem(null);
+//     } else {
+//       setSelectedItem(item);
+  
+//       // Fetch SKUs for the selected item
+//       const req = new SKUlistFilterRequest(item.itemsNo); // Assuming item.itemsNo contains the selected item number
+//       service.getAllMapItems(req).then((res) => {
+//         if (res) {
+//           // Update the `sku` state with the response data
+//           setSKU(res.data);
+//         }
+//       });
+//     }
+//   };
+  
+
 const handleCardClick = (item) => {
     if (selectedItem === item) {
       setSelectedItem(null);
@@ -114,8 +131,47 @@ const handleCardClick = (item) => {
       setSelectedItem(item);
     }
   };
+  const handleSearch = () => {
+    if (selectedItemNo) {
+        const req= new SKUlistFilterRequest(selectedItemNo);
+        service.getAllMapItems(req).then((res) => {
+        if (res) {
+          // Update the `itemData` state with the response data
+          setItemData(res);
+          console.log(res,'9999999999999')
+        }
+      });
+    } else {
+      // Handle the case where no item number is selected
+      // You can display an error message or take appropriate action.
+      console.log("Please select an item number");
+    }
+  };
+  const Sku =(val,data) =>{
+console.log(data,'22222222222')
+setSelectedItemNo(data.code)
+Dropdown()
+  }
+  const Dropdown=()=>{
+   
+    const req= new SKUlistFilterRequest(selectedItemNo);
+    console.log(req,'Im dropdown')
 
-  
+service.getAllMapItems(req).then(res=>{
+    if(res){
+        console.log(res,'lllllllll')
+        setSKU(res.data);
+    }
+})
+}
+
+const handleItemSelect = (selectedItemsNo) => {
+    // Find the selected item using itemsNo
+    const selectedItem = itemData.find((item) => item.itemsNo === selectedItemsNo);
+
+    // Set the selected item in the state
+    setSelectedItem(selectedItem);
+  };
 
      return(
         <>
@@ -141,17 +197,19 @@ const handleCardClick = (item) => {
                     style={{flexDirection:'row'}}
                       label="Item No"
                       name="itemsNo"
-                      rules={[{ required: true, message: "Enter Item No" }]}
+                     
                     >
                         <Select
                         allowClear
                         showSearch
                         optionFilterProp="children"
                         placeholder="Select Item No"
+                        onChange={(val,text)=>Sku(val,text)}
                     >
                         {data.map((e) => {
+                            console.log(e.itemNoId,'itemId')
                         return (
-                            <Option key={e.itemNoId} value={e.itemNoId}>
+                            <Option key={e.itemNoId} value={e.itemNoId} code={e.itemsNo} >
                             {e.itemsNo}
                             </Option>
                         );
@@ -170,7 +228,7 @@ const handleCardClick = (item) => {
                     style={{flexDirection:'row'}}
                       label="Size"
                       name="size"
-                      rules={[{ required: true, message: "Enter Size" }]}
+                      
                     >
                       <Select
                       placeholder="Select Size"
@@ -200,7 +258,7 @@ const handleCardClick = (item) => {
                     style={{flexDirection:'row'}}
                       label="Colour"
                       name="colour"
-                      rules={[{ required: true, message: "Enter Colour" }]}
+                     
                     >
                      <Select
                       placeholder="Select Colour"
@@ -230,7 +288,7 @@ const handleCardClick = (item) => {
                     style={{flexDirection:'row'}}
                       label="Destination"
                       name="destination"
-                      rules={[{ required: true, message: "Enter Destination" }]}
+                     
                     >
                       <Select
                       placeholder="Select Destination"
@@ -249,9 +307,15 @@ const handleCardClick = (item) => {
                     </Form.Item>
                   </Col>   
                   <Col  >
-          <Button type="primary" icon={<SearchOutlined />} style={{marginLeft:'20%'}} >
-            Search
-          </Button>
+                  <Button
+                type="primary"
+                icon={<SearchOutlined />}
+                style={{ marginLeft: "20%" }}
+                onClick={handleSearch} // Call the search function
+              >
+                Search
+              </Button>
+
         </Col>      
         <Col
         >
@@ -263,53 +327,60 @@ const handleCardClick = (item) => {
 
 
          
-    <div>
-      {itemData.map((item) => (
+            <div>
+  {itemData.map((item) => (
+    <Card
+      key={item.itemsNo}
+      title={`Item No: ${item.itemsNo}`}
+      style={{ marginBottom: 16, cursor: 'pointer' }}
+      onClick={() => handleCardClick(item)}
+    >
+      {/* Display the item code here */}
+    </Card>
+  ))}
+
+  {/* Display SKUs for the selected item */}
+  {selectedItem && (
+  <div>
+    <h2>Selected Item: {selectedItem.itemsNo}</h2>
+    {sku
+      .filter((skuItem) => skuItem.itemsNo === selectedItem.itemsNo)
+      .map((filteredSku) => (
         <Card
-          key={item.itemCode}
-          title={`Item Code: ${item.itemCode}`}
-          style={{ marginBottom: 16, cursor: 'pointer' }}
-          onClick={() => handleCardClick(item)}
+          key={filteredSku.skuId}
+          style={{
+            marginBottom: 16,
+            backgroundColor: "#E7F8EB",
+            width: "30%",
+            marginRight: "16px",
+          }}
         >
-          {/* Display the item code here */}
+          <Row gutter={16}>
+            <Col span={12}>
+              <strong>SKU Code:</strong> {filteredSku.skuId}
+            </Col>
+            <Col span={12}>
+              <strong>Size:</strong> {filteredSku.sizes}
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}>
+              <strong>Destinations:</strong> {filteredSku.destinations}
+            </Col>
+            <Col span={12}>
+              <strong>Colour:</strong> {filteredSku.colour}
+            </Col>
+          </Row>
         </Card>
       ))}
+    {sku.filter((skuItem) => skuItem.itemsNo === selectedItem.itemsNo).length === 0 && (
+      <p>No SKUs available for the selected item.</p>
+    )}
+  </div>
+)}
 
-      {/* Display SKUs for the selected item */}
-      {selectedItem && (
-        <div>
-          <h2>Selected Item: {selectedItem.itemCode}</h2>
-          {selectedItem.skus.map((sku) => (
-            <Card
-              key={sku.skuId}
-              style={{
-                marginBottom: 16,
-                backgroundColor: '#E7F8EB',
-                width: '30%',
-                marginRight: '16px',
-              }}
-            >
-              <Row gutter={16}>
-                <Col span={12}>
-                  <strong>SKU ID:</strong> {sku.skuId}
-                </Col>
-                <Col span={12}>
-                  <strong>Size:</strong> {sku.sizes}
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={12}>
-                  <strong>Destinations:</strong> {sku.destinations}
-                </Col>
-                <Col span={12}>
-                  <strong>Colour:</strong> {sku.colour}
-                </Col>
-              </Row>
-            </Card>
-          ))}
-        </div>
-      )}
-    </div>
+</div>
+
 
           </Form>
           </Card>
