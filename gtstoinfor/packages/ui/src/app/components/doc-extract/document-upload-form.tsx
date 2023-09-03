@@ -9,6 +9,7 @@ import DocumentForm from "./document-form";
 import DocumentItemForm from "./document-item-form";
 import Card from "antd/es/card/Card";
 import UploadDocumentForm from "./upload-document-form";
+import { MenuFoldOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -18,13 +19,16 @@ export function DocumentUploadForm(props: DocumentUploadFormProps) {
 
     const [mainForm] = Form.useForm();
     const [itemform] = Form.useForm();
-
+    const [collapsed, setcollapsed] = useState(true);
     const [submitVisible,setSubmitVisible] = useState<boolean>(false)
-
+    const toggle = () => {
+        setcollapsed(!collapsed);
+    }
     return (
         <>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
             <div style={{ width: "50%" }}>
+            {/* <MenuFoldOutlined className="trigger" type={collapsed ? 'menu-unfold' : 'menu-unfold'} onClick={toggle} /> */}
                 <UploadDocumentForm />
             </div>
             <div style={{ width: "50%" }}>

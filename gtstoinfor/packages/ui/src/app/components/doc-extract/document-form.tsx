@@ -32,7 +32,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
                                         message: `Should contain only alphabets.`,
                                     }
-                                ]} name='GST No' label='gstNo'>
+                                ]} label='GST No' name='gstNo'>
                             <Input type={"text"} />
                         </Form.Item>    
                     </Col>
@@ -46,7 +46,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
                                         message: `Should contain only alphabets.`,
                                     }
-                                ]} name='IFSC Code' label='ifscCode'>
+                                ]} label='IFSC Code' name='ifscCode'>
                             <Input type={"text"} />
                         </Form.Item>
                     </Col>
@@ -60,7 +60,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
                                         message: `Should contain only alphabets.`,
                                     }
-                                ]} name='Invoice No' label='invoiceNo'>
+                                ]} label='Invoice No' name='invoiceNo'>
                             <Input type={"text"} />
                         </Form.Item>
                     </Col>
@@ -74,65 +74,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
                                         message: `Should contain only alphabets.`,
                                     }
-                                ]} name='Payment Reference' label='PayRef'>
-                            <Input type={"text"} />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={24}>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='Customer' label='customer'>
-                            <Input type={"text"} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='Volume' label='volume'>
-                            <Input type={"text"} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='Weight' label='weight'>
-                            <Input type={"text"} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='Chargeable' label='chargeable'>
+                                ]} label='Payment Reference' name='PayRef'>
                             <Input type={"text"} />
                         </Form.Item>
                     </Col>
@@ -148,7 +90,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
                                         message: `Should contain only alphabets.`,
                                     }
-                                ]} name='Invoice Date' label='invoiceDate'>
+                                ]} label='Customer' name='customer'>
                             <Input type={"text"} />
                         </Form.Item>
                     </Col>
@@ -162,7 +104,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
                                         message: `Should contain only alphabets.`,
                                     }
-                                ]} name='Cartons' label='cartons'>
+                                ]} label='Volume' name='volume'>
                             <Input type={"text"} />
                         </Form.Item>
                     </Col>
@@ -176,7 +118,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
                                         message: `Should contain only alphabets.`,
                                     }
-                                ]} name='Po' label='po'>
+                                ]} label='Weight' name='weight'>
                             <Input type={"text"} />
                         </Form.Item>
                     </Col>
@@ -190,123 +132,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
                                         message: `Should contain only alphabets.`,
                                     }
-                                ]} name='Packages' label='packages'>
-                            <Input type={"text"} />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Row gutter={24}>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='RCM' label='rcm'>
-                            <Input type={"text"} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='ETA' label='eta'>
-                            <Input type={"text"} />
-                        </Form.Item> 
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='House Bill' label='houseBill'>
-                            <Input type={"text"} />
-                        </Form.Item> 
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='Goods Description' label='goodsDescription'>
-                            <Input type={"text"} />
-                        </Form.Item> 
-                    </Col>
-                </Row>
-                <Row gutter={24}>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='Ocean Bill' label='oceanBill'>
-                            <Input type={"text"} />
-                        </Form.Item> 
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='Containers' label='containers'>
-                            <Input type={"text"} />
-                        </Form.Item> 
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='Vessel' label='vessel'>
-                            <Input type={"text"} />
-                        </Form.Item> 
-                    </Col>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                    {
-                                        required: true,
-                                        message: 'Owner is required'
-                                    },
-                                    {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                        message: `Should contain only alphabets.`,
-                                    }
-                                ]} name='Voyage' label='Voyage'>
+                                ]} label='Chargeable' name='chargeable'>
                             <Input type={"text"} />
                         </Form.Item>
                     </Col>
@@ -322,7 +148,181 @@ export function DocumentForm(props: DocumentFormProps) {
                                         pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
                                         message: `Should contain only alphabets.`,
                                     }
-                                ]} name='Cosign' label='Cosign'>
+                                ]} label='Invoice Date' name='invoiceDate'>
+                            <Input type={"text"} />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='Cartons' name='cartons'>
+                            <Input type={"text"} />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='Po' name='po'>
+                            <Input type={"text"} />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='Packages' name='packages'>
+                            <Input type={"text"} />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row gutter={24}>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='RCM' name='rcm'>
+                            <Input type={"text"} />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='ETA' name='eta'>
+                            <Input type={"text"} />
+                        </Form.Item> 
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='House Bill' name='houseBill'>
+                            <Input type={"text"} />
+                        </Form.Item> 
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='Goods Description' name='goodsDescription'>
+                            <Input type={"text"} />
+                        </Form.Item> 
+                    </Col>
+                </Row>
+                <Row gutter={24}>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='Ocean Bill' name='oceanBill'>
+                            <Input type={"text"} />
+                        </Form.Item> 
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='Containers' name='containers'>
+                            <Input type={"text"} />
+                        </Form.Item> 
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='Vessel' name='vessel'>
+                            <Input type={"text"} />
+                        </Form.Item> 
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='Voyage' name='Voyage'>
+                            <Input type={"text"} />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row gutter={24}>
+                    <Col span={6}>
+                        <Form.Item rules={[
+                                    {
+                                        required: true,
+                                        message: 'Owner is required'
+                                    },
+                                    {
+                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        message: `Should contain only alphabets.`,
+                                    }
+                                ]} label='Cosign' name='Cosign'>
                             <Input type={"text"} />
                         </Form.Item>
                     </Col>
