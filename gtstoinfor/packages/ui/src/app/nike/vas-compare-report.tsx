@@ -325,6 +325,22 @@ const VASChangesCompareGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
+            title: 'Report Generate Date',
+            dataIndex: 'report_generate_date'
+        },
+        {
+            title: 'Item',
+            dataIndex: 'item'
+        },
+        {
+            title: 'Factory',
+            dataIndex: 'factory'
+        },
+        {
+            title: 'Document Date',
+            dataIndex: 'document_date'
+        },
+        {
             title: 'PO Number',
             dataIndex: 'po_number',
             ...getColumnSearchProps('po_number')
@@ -334,17 +350,63 @@ const VASChangesCompareGrid = () => {
             dataIndex: 'po_line_item_number'
         },
         {
+            title: 'Total Item Quantity',
+            dataIndex: 'total_item_Quantity'
+        },
+        {
+            title: 'Product Code',
+            dataIndex: 'product_code'
+        },
+        {
+            title: 'OGAC',
+            dataIndex: 'ogac'
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'gac'
+        },
+        {
+            title: 'Change from Direct Ship Sales Order Number',
+            dataIndex: 'change_from_direct_ship_sales_order_number'
+        },
+        {
+            title: 'Change from Direct Ship Sales Order Item',
+            dataIndex: 'change_from_direct_ship_sales_order_item'
+        },
+        {
+            title: 'Change to Direct Ship Sales Order Number',
+            dataIndex: 'change_to_direct_ship_sales_order_number'
+        },
+        {
+            title: 'Change to Direct Ship Sales Order Item',
+            dataIndex: 'change_to_direct_ship_sales_order_item'
+        },
+        {
+            title: 'Change from Item Vas Text',
+            dataIndex: 'change_from_item_vas_text'
+        },
+        {
+            title: 'Change to Item Vas Text',
+            dataIndex: 'change_to_item_vas_text'
+        },
+        {
+            title: 'Item VAS PDF PO',
+            dataIndex: 'item_vas_pdf_po'
+        },
+        {
+            title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to DPOM)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
+            dataIndex: 'item_vas_pdf_po',
+            width :'300px',
+        },
+        {
+            title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
+            dataIndex: 'item_vas_pdf_po',
+            width :'300px',
+        },
+        {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
             ...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'Item',
-            dataIndex: 'item'
-        },
-        {
-            title: 'Unit',
-            dataIndex: 'unit'
         },
         {
             title: 'Previous Order Quantity Pieces',
@@ -644,7 +706,7 @@ const VASChangesCompareGrid = () => {
         {
             key: '1',
             label: <b>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table bordered dataSource={filteredQtyData} columns={columns} />,
+            children: <Table bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }}/>,
         },
         {
             key: '2',
