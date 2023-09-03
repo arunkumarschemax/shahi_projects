@@ -32,21 +32,12 @@ export function DocumentUploadForm(props: DocumentUploadFormProps) {
                 <UploadDocumentForm />
             </div>
             <div style={{ width: "50%" }}>
-                <Card title={"Invoice"}>
+                <Card title={"Document Details"} bordered={true} style={{marginBottom: 16, borderRadius: 8, boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', background: '#fff',borderTop: '1px solid #e8e8e8' }}>
                     <DocumentForm form={mainForm}/>
-                    <DocumentItemForm form={itemform}/>
-                    <Col span={6}>
-                        <Form.Item rules={[
-                                {
-                                    required: true,
-                                    message: 'Owner is required'
-                                },
-                                {
-                                    pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
-                                    message: `Should contain only alphabets.`,
-                                }
-                            ]}>
-                            <Button type="primary" htmlType="submit" style={{ marginLeft: 30 }} className="ant-submit-btn" disabled={submitVisible}>
+                    <DocumentItemForm form={itemform} data={undefined} />
+                    <Col span={24}>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" style={{ marginLeft: 30, float:'right' }} className="ant-submit-btn" disabled={submitVisible}>
                                 Submit
                             </Button>
                         </Form.Item>
@@ -54,14 +45,6 @@ export function DocumentUploadForm(props: DocumentUploadFormProps) {
                 </Card>
             </div>
         </div>
-        {/* <Row gutter={24}>
-                <Col span={12}>
-                    <DocExtractForm />
-                </Col>
-                <Col span={12}>
-                    <DocumentForm />
-                </Col>
-            </Row> */}
         </>
     )
 }

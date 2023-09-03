@@ -1,26 +1,57 @@
 import React, { useState } from "react";
-import { Select, Spin, message, Button, Input, Row, Form, Col, Card } from "antd";
+import { Select, Spin, message, Button, Input, Row, Form, Col, Card, Table } from "antd";
 import Tesseract from "tesseract.js";
 import { useNavigate,useLocation } from "react-router-dom";
 import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
 import { ScanService } from "@project-management-system/shared-services";
 import DocExtractForm from "./doc-extract-form";
+import { ColumnProps } from "antd/es/table/Column";
 
 const { Option } = Select;
 
 export interface DocumentItemFormProps {
     form:any;
+    data:any[]
 }
 
 export function DocumentItemForm(props: DocumentItemFormProps) {
 
     const [submitVisible,setSubmitVisible] = useState<boolean>(false)
+    const [page, setPage] = React.useState(1);
+
     const handleDocument = () => {
         console.log("hiii")
     }
 
+    const columnsSkelton: ColumnProps<any>[] = [
+        {
+          title: 'HSN',
+          dataIndex: 'hsnCode',
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+        },
+        {
+            title: 'Tax Type',
+            dataIndex: 'taxType',
+        },
+        {
+            title: 'Tax Amount',
+            dataIndex: 'taxAmount',
+        },
+        {
+            title: 'Charge Amount',
+            dataIndex: 'amount',
+        },
+        {
+            title: 'Action',
+            dataIndex: 'action',
+        },
+      ];
+
     return (
-        <Card title={"Document Item Details"}>
+        <Card title={"Item Details"} bordered={true} style={{marginBottom: 16, borderRadius: 8, boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', background: '#fff',borderTop: '1px solid #e8e8e8' }}>
             <Form layout='vertical' form={props.form} onFinish={handleDocument}>
                 <Row gutter={24}>
                     <Col span={6}>
@@ -95,6 +126,14 @@ export function DocumentItemForm(props: DocumentItemFormProps) {
                     </Col>
                 </Row>
             </Form>
+            <Table pagination={{
+        onChange(current) {
+        setPage(current);
+        }
+        }} columns={columnsSkelton}
+        dataSource={props.data} scroll={{ x: 500 }}
+        size="large"
+        bordered />
         </Card>
     )
 }

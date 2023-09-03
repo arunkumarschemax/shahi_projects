@@ -19,7 +19,7 @@ export function DocumentForm(props: DocumentFormProps) {
     }
 
     return (
-        <Card title={"Document Details"}>
+        // <Card title={"Document Details"}>
             <Form layout='vertical' form={props.form} onFinish={handleDocument}>
                 <Row gutter={24}>
                     <Col span={6}>
@@ -328,7 +328,7 @@ export function DocumentForm(props: DocumentFormProps) {
                     </Col>
                 </Row>
             </Form>
-        </Card>
+        // </Card>
     )
 }
 export default DocumentForm;
