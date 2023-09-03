@@ -256,11 +256,10 @@ const FactoryPPMReport = () => {
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
             { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-            { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
+            { title: 'Last Modified Date',dataIndex: 'lastModifiedDate',render: (text, record) => { return record.lastModifiedDate ? moment(record.lastModifiedDate).format('YYYY-MM-DD') : '-';} },
             { title: 'Item', dataIndex: 'item' },
-            // { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
             { title: 'Factory', dataIndex: 'factory' },
-            { title: 'Document Date', dataIndex: 'documentDate' },
+            { title: 'Document Date', dataIndex: 'documentDate',render: (text, record) => { return record.documentDate ? moment(record.documentDate).format('YYYY-MM-DD') : '-';} },
             { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber' },
             { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
             { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
@@ -311,11 +310,13 @@ const FactoryPPMReport = () => {
             { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
             { title: 'Total Item Quantity', dataIndex: 'totalItemQty' },
-            { title: 'Grand Total', dataIndex: ' ' },
             { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
             { title: 'VAS-Size', dataIndex: 'VASSize' },
             { title: 'Item Vas Text', dataIndex: 'itemVasText' },
             { title: 'Item Text', dataIndex: 'itemText' },
+            { title: 'Actual Unit',dataIndex: 'actualUnit', align: 'center' },
+            { title: 'Reallocated Quantity',dataIndex: 'allocatedQuantity', align: 'center'},
+            { title: 'Hanger Po',dataIndex: 'allocatedQuantity', align: 'center'},
 
         ]
         const sizeHeaders = new Set<string>();
@@ -387,12 +388,12 @@ const FactoryPPMReport = () => {
             {
                 title: 'Item',
                 dataIndex: 'item',
-                ...getColumnSearch('item'),
+                // ...getColumnSearch('item'),
             },
             {
                 title: 'Factory',
                 dataIndex: 'factory',
-                ...getColumnSearch('factory'),
+                // ...getColumnSearch('factory'),
             },
             {
                 title: 'Document Date',
@@ -416,12 +417,12 @@ const FactoryPPMReport = () => {
             {
                 title: 'Style Number',
                 dataIndex: 'styleNumber',
-                ...getColumnSearch('styleNumber'),
+                // ...getColumnSearch('styleNumber'),
             },
             {
                 title: 'Product Code',
                 dataIndex: 'productCode',
-                ...getColumnSearch('productCode'),
+                // ...getColumnSearch('productCode'),
             },
             {
                 title: 'Colour Description',
@@ -507,6 +508,57 @@ const FactoryPPMReport = () => {
                 title: 'Customer PO',
                 dataIndex: 'customerPO',
             },
+            {
+                title: 'Ship To Customer Number',
+                dataIndex: 'shipToCustomerNumber',
+                align: 'center',
+            },
+            {
+                title: 'Ship To Customer Name',
+                dataIndex: 'shipToCustomerName',
+                align: 'center',
+            },
+            {
+                title: 'Planning Season Code',
+                dataIndex: 'planningSeasonCode',
+                align: 'center',
+            },
+            {
+                title: 'Planning Season Year',
+                dataIndex: 'planningSeasonYear',
+                align: 'center',
+            },
+            {
+                title: 'Doc Type',
+                dataIndex: 'docTypeCode',
+                align: 'center',
+            },
+            {
+                title: 'Doc Type Description',
+                dataIndex: 'docTypeDesc',
+                align: 'center',
+            },
+            { title: 'MRGAC', dataIndex: 'MRGAC' },
+            { title: 'OGAC', dataIndex: 'OGAC' },
+            { title: 'GAC', dataIndex: 'GAC' },
+            { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
+            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
+            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
+            { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
+            { title: 'GAC Reason Description', dataIndex: ' ' },
+            { title: 'Shipping Type', dataIndex: 'shippingType' },
+            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode' },
+            { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
+            { title: 'Launch Code', dataIndex: 'launchCode' },
+            { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
+            { title: 'In Co Terms', dataIndex: 'inCoTerms' },
+            { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
+            { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
+            { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
+            { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
+            { title: 'VAS-Size', dataIndex: 'VASSize' },
+            { title: 'Item Vas Text', dataIndex: 'itemVasText' },
+            { title: 'Item Text', dataIndex: 'itemText' },
             {
                 title: 'Change Register',
                 dataIndex: 'displayName',
@@ -737,7 +789,7 @@ const FactoryPPMReport = () => {
             });
         });
 
-        return (<Table columns={columns} dataSource={filterData} pagination={{
+        return (<Table columns={columns} size='small' dataSource={filterData} pagination={{
             onChange(current, pageSize) {
                 setPage(current);
                 setPageSize(pageSize)
