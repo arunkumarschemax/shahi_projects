@@ -1023,7 +1023,6 @@ const ChangesGrid = () => {
             setFilteredWarehouseDateDate(filteredReqWhData)
         }
         if (startDate && endDate) {
-            console.log(filteredQtyData)
             filteredContractData = filteredContractData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
             filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
             filteredReqWhData = filteredReqWhData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)

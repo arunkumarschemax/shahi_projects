@@ -5,13 +5,18 @@ import { FactoriesModule } from './factories/factories.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { appConfig } from '../../config';
-import { OrdersModule } from './orders/orders.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { DpomModule } from './dpom/nike-dpom.module';
+import { SupplierModule } from './supplier/supplier.module';
+import { DataSource } from 'typeorm';
+import { AppDataSource, AppDataSource1, AppDataSource2 } from './app-datasource';
 
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: "mysql",
       timezone: 'Z',
@@ -28,10 +33,35 @@ import { OrdersModule } from './orders/orders.module';
       }
     }),
     FactoriesModule,
+    SupplierModule,
     UsersModule,
-    OrdersModule,
-    AuthModule, JwtModule],
+    AuthModule, JwtModule, DpomModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: DataSource,
+    useFactory: async () => {
+      await AppDataSource.initialize()
+        .then(() => {
+          console.log('Data Source has been initialized!');
+        })
+        .catch((err) => {
+          console.error('Error during Data Source initialization', err);
+        });
+      await AppDataSource1.initialize()
+        .then(() => {
+          console.log('Data Source has been initialized!');
+        })
+        .catch((err) => {
+          console.error('Error during Data Source initialization', err);
+        });
+      await AppDataSource2.initialize()
+        .then(() => {
+          console.log('Data Source has been initialized!');
+        })
+        .catch((err) => {
+          console.error('Error during Data Source initialization', err);
+        });
+    }
+  }],
 })
 export class AppModule { }

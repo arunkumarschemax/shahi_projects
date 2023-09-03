@@ -13,6 +13,8 @@ import {
 import React from "react";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
+import LogOutComponent from "../../nike/iam-client-react/log-out-component/log-out-component";
+import { LoginComponent } from "../../nike/iam-client-react";
 const { Text, Link, Title } = Typography;
 const { useToken } = theme;
 
@@ -85,8 +87,6 @@ export default function Login() {
           <Card
             style={{
               paddingTop: "10px",
-              height: "55%",
-              width: "55%",
               borderRadius: "10px",
               boxShadow: "1px 1px 5px 5px lightgrey",
               backgroundColor: "#29397d",
@@ -96,10 +96,14 @@ export default function Login() {
               <Title level={2} style={{ color: "#ffff", margin: "0" }}>
                 Log In
               </Title>
-              {/* <Text style={{color:`black`}}>Enter your credentials below to login</Text> */}
+              <Text style={{ color: `white` }}>Enter your credentials below to login</Text>
               <br />
             </div>
-            <Form form={loginForm} layout="vertical" className="content">
+            <div>
+              <LoginComponent />
+            </div>
+
+            {/* <Form form={loginForm} layout="vertical" className="content">
               <Form.Item
                 name="username"
                 label={<label style={{ color: "white" }}>Username</label>}
@@ -136,7 +140,7 @@ export default function Login() {
               >
                 Login
               </Button>
-            </Row>
+            </Row> */}
           </Card>
           <div
             style={{
