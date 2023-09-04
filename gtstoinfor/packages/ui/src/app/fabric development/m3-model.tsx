@@ -1,92 +1,39 @@
-// import React, { useState } from 'react';
-// import { Modal, Form, Input, Row, Col, Table, Select } from 'antd';
-
-
-// const M3Items = ({ visible, onClose }) => {
-//     const [M3Item] = Form.useForm();
-
-//     const columns:any= [
-//         {
-//             title:"Map Items",
-//             dataIndex:"m3items"
-//         },
-//         {
-//             title:"Descriptions",
-//             dataIndex:"description"
-//         }
-//     ]
-
-  
-//     const handleOk = () => {
-//       M3Item.validateFields()
-//         .then(values => {
-//           // Do something with the form values
-//           console.log(values);
-//           M3Item.resetFields();
-//           onClose(); // Close the modal
-//         })
-//         .catch(error => {
-//           console.error("Validation error:", error);
-//         });
-//     };
-  
-//     const handleCancel = () => {
-//       M3Item.resetFields();
-//       // onClose(); // Close the modal
-//     };
-  
-//     return (
-
-//       <Modal
-//         // title="Maps Items"
-//         visible={visible}
-//         onOk={handleOk}
-//         onCancel={handleCancel}
-//       > 
-//            <Form form={M3Item}>
-//            <Col
-//                     xs={{ span: 24 }}
-//                     sm={{ span: 24 }}
-//                     md={{ span: 8 }}
-//                     lg={{ span: 8}}
-//                     xl={{ span: 8 }}
-//                   >
-//             <Form.Item
-//               label="Item No"
-//               name="ItemNo"
-                           
-//             >
-//               <Select placeholder="Item No" allowClear>
-//               </Select>
-//             </Form.Item>
-//             </Col>
-//             </Form>
-//         <Table  columns={columns}/>
-//       </Modal>
-//     );
-//   };
-  
-//   export default M3Items;
-
-
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, Row, Col, Table, Select } from 'antd';
+import { FabricDevelopmentService } from '@project-management-system/shared-services';
+import { FabricFilterRequest } from '@project-management-system/shared-models';
 
-const M3Items = ({ visible, onClose }) => {
+export interface M3ItemsProps {
+  
+  itemList: (ItemsDataData: any[]) => void;
+  visible:boolean
+  onClose :() => void
+}
+
+const M3Items = (props:M3ItemsProps) => {
   const [M3Item] = Form.useForm();
   const [selectedItemNo, setSelectedItemNo] = useState(null);
+  const [data, setData] = useState<any[]>([]);
+  const [filterData, setFilterData] = useState<any[]>([]);
 
-  const hardcodedData = [
-    { m3items: 'Item001', description: 'Description for Item001' },
-    { m3items: 'Item002', description: 'Description for Item002' },
-    { m3items: 'Item003', description: 'Description for Item003' },
-    // ... Add more data items as needed
-  ];
+
+  const service = new FabricDevelopmentService();
+
+  useEffect(() => {
+    getAllitemsCode();
+  }, []);
+
+  const getAllitemsCode = () => {
+    service.getAllitemsCode().then((res) => {
+        setData(res);
+        console.log(res,'itemscode')
+    });
+  };
 
   const columns = [
     {
-      title: 'Map Items',
-      dataIndex: 'm3items',
+      title: 'Map ItemsCode',
+      dataIndex: 'itemsCode',
     },
     {
       title: 'Descriptions',
@@ -94,37 +41,36 @@ const M3Items = ({ visible, onClose }) => {
     },
   ];
 
-  const handleOk = () => {
-    M3Item.validateFields()
-      .then((values) => {
-        // Do something with the form values
-        console.log(values);
-        M3Item.resetFields();
-        onClose(); // Close the modal
-      })
-      .catch((error) => {
-        console.error('Validation error:', error);
-      });
-  };
+
+  const handleOk = (value) =>{
+    props.onClose(); // Close the modal
+    props.itemList(filterData)
+
+    
+  }
 
   const handleCancel = () => {
     M3Item.resetFields();
-    onClose(); // Close the modal
+    props.onClose(); // Close the modal
   };
 
   const handleItemNoChange = (value) => {
-    // Update the selected Item No and reset filtered data
-    setSelectedItemNo(value);
+    console.log(value,"hhh")
+    const req = new FabricFilterRequest(value);
+    console.log(req,"4544")
+    service.getAllMapItems(req).then((res) => {
+      setFilterData(res);
+      props.itemList(res)
+  });
+  
   };
 
-  // Filter the hardcoded data based on the selected Item No
-  const filteredData = selectedItemNo
-    ? hardcodedData.filter((item) => item.m3items === selectedItemNo)
-    : [];
+  console.log(filterData,'filterdata')
 
+  
   return (
-    <Modal visible={visible} onOk={handleOk} onCancel={handleCancel}>
-      <Form form={M3Item}>
+    <Modal visible={props.visible} onOk={handleOk} onCancel={handleCancel}>
+      <Form form={M3Item} >
         <Col
           xs={{ span: 24 }}
           sm={{ span: 24 }}
@@ -132,23 +78,25 @@ const M3Items = ({ visible, onClose }) => {
           lg={{ span: 8 }}
           xl={{ span: 8 }}
         >
-          <Form.Item label="Item No" name="ItemNo">
+          <Form.Item label="Item No" name="itemsId">
             <Select
               placeholder="Item No"
               allowClear
+              mode="multiple"
               onChange={handleItemNoChange}
             >
-              {hardcodedData.map((item) => (
-                <Select.Option key={item.m3items} value={item.m3items}>
-                  {item.m3items}
+              {data.map((item) => (
+                <Select.Option key={item.itemsId} value={item.itemsId}>
+                  {item.itemsCode}
                 </Select.Option>
               ))}
             </Select>
           </Form.Item>
+          
         </Col>
       </Form>
       
-        <Table columns={columns} dataSource={filteredData} />
+        <Table columns={columns} dataSource = {filterData} pagination={false}/>
       
     </Modal>
   );

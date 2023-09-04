@@ -4,17 +4,20 @@ import M3Items from './m3-model'
 import { DeleteOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons'
 import { ColourService, UomService } from '@project-management-system/shared-services'
 import AlertMessages from '../common/common-functions/alert-messages'
+import { FabricInfo } from '@project-management-system/shared-models'
 
 export interface FabricDevelopmentDynamicFormProps {
   
   form:FormInstance<any>
+  itemsData:(itemsInfo:any[])=>void
+  dynamicformData: (dynamicInfo: any[]) => void;
+
   
 }
 
 export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormProps) =>{
 
   // const [form] = Form.useForm();
-  const [tblkey, setTblkey] = useState<number>(0);
   const [modalVisible, setModalVisible] = useState(false); 
   const [formData, setFormData] = useState([]);
   const [editingIndex, setEditingIndex] = useState(1);
@@ -22,12 +25,65 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
   const [BtnDisable, setBtnDisable] = useState<boolean>(false);
   const [colorData,setColorData] = useState<any>([])
   const [uomData,setUomData] = useState([])
+  const [itemsData,setItemsData] = useState<any>([])
+  const [garmentQuantity,setGarmentQuantity] = useState<any>()
+  const [consumptionData,setConsumptionData] = useState<any>()
+  const [wastageData,setWastageData] = useState<any>()
 
 
-  const colorservice =new ColourService();
+
+
+
+
+  const colorservice = new ColourService();
   const uomservice = new UomService();
+  
+  console.log(itemsData,"hygreev")
 
-   
+  //  const req = new FabricInfo()
+  
+  
+ 
+   const onChangeGarment = (e) =>{
+    // console.log( props.form.getFieldValue("garmentQuantity"),"khyg")
+      e.target.value
+     setGarmentQuantity(e.target.value)
+   }
+
+   const onChangeConsumption = (e) =>{
+    // console.log(props.form.getFieldValue("consumption"),"7777")
+    setConsumptionData(e.target.value)
+   }
+
+   const onChangeWastage = (e) =>{
+    // console.log(props.form.getFieldValue("wastage"),"8888")
+    setWastageData(e.target.value)
+
+   }
+
+  //  useEffect(()=>{
+  //   if(wastageData){
+  //     const cal = ((garmentQuantity*consumptionData)+( (garmentQuantity*consumptionData/100)))
+  //     props.form.setFieldsValue({FabricQuantity:cal})
+
+  //   }
+  //  },[onChangeWastage])
+
+  useEffect(() => {
+    if (garmentQuantity && consumptionData && wastageData) {
+      const cal:any = ((garmentQuantity*consumptionData)+( (garmentQuantity*consumptionData/100)))
+      props.form.setFieldsValue({FabricQuantity:cal})
+     
+    }
+  }, [garmentQuantity, consumptionData, wastageData]);
+
+
+   console.log(garmentQuantity,"0000")
+   console.log(consumptionData,"9898897")
+   console.log(wastageData,"121212")
+
+
+
 
   useEffect (()=>{
     getAllActiveColour();
@@ -35,6 +91,13 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
 
    
   },[])
+
+  const itemList = (data) =>{
+    console.log(data,"itemdata")
+    setItemsData(data)
+    props.itemsData(data)
+  
+  }
 
 
   const getAllActiveColour=() =>{
@@ -82,6 +145,8 @@ const getAllUoms = () => {
        const addData = () => {
         props.form.validateFields().then((values) => {
           console.log(values, '555');
+      
+
           if (editingIndex !== 1) {
             const updatedFormData = [...formData];
             updatedFormData[editingIndex] = values;
@@ -89,13 +154,19 @@ const getAllUoms = () => {
             setEditingIndex(1);
           } else {
             setFormData([...formData, values]);
+            props.dynamicformData([...formData, values])
+
           }
           props.form.resetFields();
           setShowTable(true); // Set showTable to true when data is added
           setBtnDisable(false)
+          
+
       
         });
       };
+
+      console.log(formData,"dynamicformdata")
 
       const setEditForm = (rowData: any, index: number) => {
         setEditingIndex(index); // Set the index of the row being edited
@@ -188,7 +259,7 @@ const getAllUoms = () => {
               >
                 <Select placeholder="Color" allowClear>
                 {colorData.map((rec) => (
-                  <option key={rec.colourId} value={rec.colourId}>
+                  <option key={rec.colourId} value={rec.colour}>
                     {rec.colour}
                    </option>
                        ))} 
@@ -207,7 +278,7 @@ const getAllUoms = () => {
                 label="Garment Quantity"
                 name="garmentQuantity"
               >
-                <Input placeholder="Garment Quantity" allowClear/>
+                <Input placeholder="Garment Quantity"  onChange={onChangeGarment}allowClear/>
               </Form.Item>
             </Col>
 
@@ -222,7 +293,7 @@ const getAllUoms = () => {
                 label="Consumption(YY)"
                 name = "consumption"
               >
-                <Input placeholder="Consumption" allowClear/>
+                <Input placeholder="Consumption"  onChange={onChangeConsumption} allowClear/>
               </Form.Item>
             </Col>
 
@@ -237,7 +308,7 @@ const getAllUoms = () => {
                 label="Wastage(X%)"
                 name="wastage"
               >
-            <Input placeholder="wastage" allowClear/>
+            <Input placeholder="wastage" onChange={onChangeWastage} allowClear/>
 
               </Form.Item>
             </Col>
@@ -252,6 +323,8 @@ const getAllUoms = () => {
               <Form.Item
                 label="Fabric Quantity"
                 name="FabricQuantity"
+                
+                
               >
             <Input placeholder="Fabric Quantity" allowClear />
 
@@ -339,7 +412,7 @@ const getAllUoms = () => {
 
         <Form.Item> 
            <Button type="primary" onClick={showModal} style={{marginTop:100,marginLeft:60}} > Map items</Button> 
-           <M3Items visible={modalVisible} onClose={closeModal}/> 
+           <M3Items visible={modalVisible} onClose={closeModal} itemList = {itemList}/> 
            </Form.Item>
         </Row>
         
