@@ -13,7 +13,6 @@ import { FactoryReportModel, PpmDateFilterRequest } from '@project-management-sy
 
 const FactoryPPMReport = () => {
 
-    const [factory, setFactory] = useState([]);
     const { RangePicker } = DatePicker;
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
     const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
@@ -28,9 +27,18 @@ const FactoryPPMReport = () => {
     const [filterData, setFilterData] = useState<any>([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [page, setPage] = React.useState(1);
-    
+    const [factory, setFactory] = useState<any>([]);
+    const [poLine, setPoLine] = useState<any>([]);
+    const [colorDesc, setColorDesc] = useState<any>([]);
+    const [categoryDesc, setCategoryDesc] = useState<any>([]);
+    const [countryDestination, setCountryDestination] = useState<any>([]);
+    const [plantCode, setPlantCode] = useState<any>([]);
+    const [item, setItem] = useState<any>([]);
+    const [productCode, setProductCode] = useState<any>([]);
 
-   
+
+
+
 
     const getFactoryStatus = (values: any) => {
         service.getByFactoryStatus().then(res => {
@@ -52,6 +60,7 @@ const FactoryPPMReport = () => {
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
         window.location.reload();
+        console.log()
     };
 
     const handleReset = (clearFilters: any) => {
@@ -120,20 +129,61 @@ const FactoryPPMReport = () => {
     const ClearData = () => {
         form.resetFields();
     }
-
-    // const EstimatedETDDate = (value) => {
-    //     if (value) {
-    //         const fromDate = value[0].format('YYYY-MM-DD');
-    //         const toDate = value[1].format('YYYY-MM-DD');
-    //         setSelectedEstimatedFromDate(fromDate)
-    //         setSelectedEstimatedToDate(toDate)
-    //     }
-    // }
-
-
     useEffect(() => {
         getData();
+        getProductCode();
+        getPoLine();
+        getColorDesc();
+        getcategoryDesc();
+        getcountrydestination();
+        getplantCode();
+        getItem();
+        getFactory();
     }, [])
+    const getProductCode =  () => {
+        service.getPpmProductCodeForFactory().then(res => {
+          setProductCode(res.data)
+        })
+        
+      }
+      const getPoLine = () => {
+        service.getPpmPoLineForFactory().then(res => {
+          setPoLine(res.data)
+        })
+      }
+      const getColorDesc = () => {
+        service.getPpmColorDescForFactory().then(res => {
+          setColorDesc(res.data)
+        })
+      }
+      const getcategoryDesc = () => {
+        service.getPpmCategoryDescForFactory().then(res => {
+          setCategoryDesc(res.data)
+    
+        })
+      }
+      const getcountrydestination = () => {
+        service.getPpmDestinationCountryForFactory().then(res => {
+          setCountryDestination(res.data)
+        })
+      }
+      const getplantCode = () => {
+        service.getPpmPlantForFactory().then(res => {
+          setPlantCode(res.data)
+        })
+    
+      }
+      const getItem = () => {
+        service.getPpmItemForFactory().then(res => {
+          setItem(res.data)
+        })
+      }
+      const getFactory = () => {
+        service.getPpmFactoryForFactory().then(res => {
+          setFactory(res.data)
+        })
+      } 
+
 
     const getData = () => {
         const req = new PpmDateFilterRequest()
@@ -141,22 +191,47 @@ const FactoryPPMReport = () => {
             req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
         }
         if (form.getFieldValue('lastModifiedDate') !== undefined) {
-        req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
+            req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
         }
         if (form.getFieldValue('documentDate') !== undefined) {
             req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD')
         }
         if (form.getFieldValue('documentDate') !== undefined) {
-        req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
+            req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
         }
+        if (form.getFieldValue('productCode') !== undefined) {
+            req.productCode = form.getFieldValue('productCode')
+          }
+          if (form.getFieldValue('poandLine') !== undefined) {
+            req.poandLine = form.getFieldValue('poandLine')
+          }
+          if (form.getFieldValue('colorDesc') !== undefined) {
+            req.colorDesc = form.getFieldValue('colorDesc')
+          }
+          if (form.getFieldValue('categoryDesc') !== undefined) {
+            req.categoryDesc = form.getFieldValue('categoryDesc')
+          }
+          if (form.getFieldValue('destinationCountry') !== undefined) {
+            req.destinationCountry = form.getFieldValue('destinationCountry')
+          }
+          if (form.getFieldValue('plant') !== undefined) {
+            req.plant = form.getFieldValue('plant')
+          }
+          if (form.getFieldValue('item') !== undefined) {
+            req.item = form.getFieldValue('item')
+          }
+          if (form.getFieldValue('factory') !== undefined) {
+            req.factory = form.getFieldValue('factory')
+          }
+      
         service.getFactoryReportData(req).then(res => {
             if (res.status) {
                 setGridData(res.data)
                 setFilterData(res.data)
                 setFilteredData(res.data)
-                Finish(res.data)    
+                Finish(res.data)
             }
-           
+
         }).catch(err => {
             console.log(err.message)
         })
@@ -166,7 +241,7 @@ const FactoryPPMReport = () => {
 
     const Finish = (data: any) => {
         const values = form.getFieldsValue();
-           
+
         if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
             setFilterData(gridData);
         } else {
@@ -450,7 +525,7 @@ const FactoryPPMReport = () => {
                 align: 'center',
                 render: (text) => <strong>{text}</strong>
             },
-           
+
 
         ];
         sizeHeaders?.forEach(version => {
@@ -581,13 +656,13 @@ const FactoryPPMReport = () => {
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
                             <Form.Item label="Last Modified Date" name="lastModifiedDate">
-                                <RangePicker  />
+                                <RangePicker />
 
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
                             <Form.Item label="Document Date" name="documentDate">
-                                <RangePicker  />
+                                <RangePicker />
 
                             </Form.Item>
                         </Col>
@@ -605,13 +680,134 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '42px' }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
+                            <Form.Item name='productCode' label='Product Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Product Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {productCode.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                            <Form.Item name='poandLine' label='Po+Line' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Po+Line"
+                                    optionFilterProp="children"
+                                    allowClear
+
+                                >
+                                    {poLine.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                            <Form.Item name='colorDesc' label='Color Description' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Color Description"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {colorDesc.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.color_desc}>{inc.color_desc}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                            <Form.Item name='categoryDesc' label='Category Description' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Category Description"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {categoryDesc.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.category_desc}>{inc.category_desc}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                            <Form.Item name='destinationCountry' label='Destination Country' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Destination Country"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {countryDestination.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.destination_country}>{inc.destination_country}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                            <Form.Item name='plant' label='Plant Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Plant Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {plantCode.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                            <Form.Item name='item' label='Item' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Item"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {item.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                            <Form.Item name='factory' label='Factory' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Factory"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {factory.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                             <Form.Item>
                                 <Button htmlType="submit"
                                     icon={<SearchOutlined />}
                                     type="primary">SEARCH</Button>
-                             <Button
-                                    htmlType='button' icon={<UndoOutlined />}  style={{  margin:10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
+                                <Button
+                                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
                                 >
                                     RESET
                                 </Button>

@@ -859,8 +859,7 @@ export class DpomService {
     
             if (req && req.documentStartDate && req.documentEndtDate) {
                 whereConditions.documentDate = Between(req.documentStartDate, req.documentEndtDate);
-            }
-    
+            } 
             const allDetails = await this.dpomRepository.find({
                 where: whereConditions,
             });
@@ -1151,6 +1150,42 @@ async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+    async getPpmPlantForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPlantForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmProductCodeForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getProductCodeForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmColorDescForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getColorDescForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmCategoryDescForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getCategoryDescForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmDestinationCountryForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getDestinationCountryForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
 
     //-----------------------------------------------------------------------------marketing
     async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
@@ -1211,6 +1246,7 @@ async getPpmDestinationCountryForMarketing(): Promise<CommonResponseModel> {
     else
         return new CommonResponseModel(false, 0, 'No data found');
 }
+
 }
 
 
