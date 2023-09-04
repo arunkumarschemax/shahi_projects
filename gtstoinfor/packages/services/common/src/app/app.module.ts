@@ -27,6 +27,7 @@ import { DeliveryTermsModule } from './delivery-terms/delivery-terms.module';
 import { CountriesModule } from './countries/countries.module';
 import { StyleModule } from './style/style-module';
 import { PaymentMethodModule } from './payment-methods/paymeny-method-module';
+import { LocationsModule } from './locations/location.module';
 import { GarmentsModule } from './garments/garments.module';
 import { AttributeModule } from './attributes/attribute.module';
 import { ComponentsModule } from './components/components.module';
@@ -34,10 +35,6 @@ import { GarmentCategoriesModule } from './garment-category/garment-category.mod
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
 import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
-import { SampleTypesModule } from './sample Types/sample-types.module';
-import { LocationsModule } from './locations/location.module';
-import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module';
-import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
 import { DestinationModule } from './destination/destination.module';
 import { FabricTypeModule } from './fabric-types/fabric-type.module';
 import { FabricSubTypeModule } from './fabric-sub-types/fabric-sub-type.module';
@@ -49,12 +46,16 @@ import { CommissionModule } from './commission/commission.module';
 import { ColourModule } from './colours/colour.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { AccountControlObjectModule } from './account-control-objects/account-control-object-module';
+import { LiscenceTypedModule } from './liscence-type/liscenec-type.module';
+import { FabricsModule } from './fabrics/fabrics-module';
 import { FabricStructuresModule } from './fabric structure/fabric.module';
 import { FabricFinishTypesModule } from './fabric-finish-types/fabric-finish-types.module';
-import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
-import { SettingsModule } from './settings/settings.module';
-import { BomModule } from './bom-trim/bom.module';
 import { UomModule } from './uom/uom.module';
+import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
+import { BomModule } from './bom-trim/bom.module';
+import { SettingsModule } from './settings/settings.module';
+import { SampleTypesModule } from './sample Types/sample-types.module';
+import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module';
 
 
 @Module({
@@ -67,7 +68,6 @@ import { UomModule } from './uom/uom.module';
       username: appConfig.database.username,
       password: appConfig.database.password,
       database: appConfig.database.dbName,
-   
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
@@ -98,17 +98,20 @@ import { UomModule } from './uom/uom.module';
     DeliveryTermsModule,
     LocationsModule,
     DivisionModule,
-    SampleTypesModule,
-    SampleSubTypesModule,
-    LiscenceTypedModule,
     FabricSubTypeModule,
     FabricTypeModule,
+    ColourModule,
+    AccountControlObjectModule,
+    DepartmentsModule,
     FabricStructuresModule,
     FabricFinishTypesModule,
   SizeModule,
+  FabricsModule,
   BuyersModule,
+  ColourModule,
   BuyersDestinationModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule,SettingsModule,AccountControlObjectModule,ColourModule,UomModule],
+  BomModule,
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule],
   controllers: [AppController],
   providers: [AppService],
 })

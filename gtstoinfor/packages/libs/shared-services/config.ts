@@ -3,6 +3,7 @@ export const config = {
     whatsapp_redirection_url: 'http://dev.schemaxtech.in/#',
     whatsapp_notification_url: 'http://206.189.138.212:3000',
     whatsapp_broadcast_url: 'http://206.189.138.212:3232/api',
+    upload_file_path: 'http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/'
 
 
 

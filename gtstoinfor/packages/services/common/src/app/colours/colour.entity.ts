@@ -1,10 +1,10 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
-
+import { BuyersColor } from "../buyers-destination/byers-colors.entity";
 
 @Entity('colour')
 export class Colour{
 
-@PrimaryGeneratedColumn("increment",{name:'colour-id'})
+@PrimaryGeneratedColumn("increment",{name:'colour_id'})
 colourId:number;
 @Column("varchar",{
     nullable: true,
@@ -48,4 +48,10 @@ updatedUser: string | null;
     name: "version_flag"
 })
 versionFlag: number;
+
+// @OneToMany(type=>BuyersColor, buyers=>buyers.colorInfo,{cascade: true})
+// colorsInfo:BuyersColor;
+
+@OneToMany(type=>BuyersColor, buyers=>buyers.colorInfo,{cascade: true})
+colorsInfo?:BuyersColor;
 }

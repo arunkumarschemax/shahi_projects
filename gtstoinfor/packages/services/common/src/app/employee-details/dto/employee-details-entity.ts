@@ -1,4 +1,5 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { Departments } from "../../departments/departments.entity";
 
 @Entity('employee_details')
 export class EmplyeeDetails {
@@ -110,4 +111,7 @@ updatedUser: string | null;
   })
   versionFlag: number;
 
+  @ManyToOne(()=>Departments,department=>department.Depart)
+  @JoinColumn({name:'dept_id'})
+  Department:Departments
 }

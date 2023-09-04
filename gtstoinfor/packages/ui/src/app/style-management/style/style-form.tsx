@@ -36,7 +36,8 @@ export function StyleForm(props: StyleFormProps) {
   useEffect(() => {
    if(props.styleData){
     console.log(props.styleData.styleFileName)
-    const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+props.styleData.styleFileName
+    const updateImage ='http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/'+props.styleData.styleFileName
+    // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+props.styleData.styleFileName
     setisUpdateImg(updateImage)
    }
   }, [])

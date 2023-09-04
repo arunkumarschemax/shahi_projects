@@ -105,11 +105,17 @@ import DepartmentForm from "./masters/departments/department-form"
 import AccountControlObjectGrid from "./masters/account-control-objects/account-control-objects-view"
 import AccountControlObjectForm from "./masters/account-control-objects/account-control-objects-form"
 import ItemCreation from "./orders/item-creation"
-import SampleRequestView from "./sample-development/sample-management-view"
+import SampleRequestView, { SampleDevView } from "./sample-development/sample-management-view"
 import SampleDevForm from "./sample-development/sample-management-form"
+import FabricsGrid from "./masters/fabrics/fabrics-view"
+import { FabricsForm } from "./masters/fabrics/fabrics-form"
 import SettingsView from "./masters/settings/settings-view"
 import TrimsBomCreation from "./BOM/trims-bom-creation"
+import SkuList from "./orders/sku-list"
+import SKUGeneration from "./orders/sku-generation"
 import UomGrid from "./masters/uom/uom-grid"
+import SampleDevDetail from "./sample-development/sample-request-detailed-view"
+import FabricBomCreation from "./BOM/fabric-creation"
 import FabricDevelopmentRequest from "./fabric development/fabric-development-request"
 
 
@@ -200,8 +206,13 @@ export const AppRoutes = () => {
                 updateItem={(undefined) => { }}/>} />
 
                  <Route path='paymentmethod/paymentmethod-view' element={<PaymentMethodGrid/>} />
+                 <Route path='fabrics/fabrics-form' element={<FabricsForm fabricData={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                updateItem={(undefined) => { }}/>} />
 
-<Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
+                 <Route path='fabrics/fabrics-view' element={<FabricsGrid/>} />
+                  <Route path='taxes/taxes-form' element={<TaxesForm taxesData={undefined}
                     isUpdate={false}
                     closeForm={() => { }}
                     updateTax={(undefined) => { }}/>} />
@@ -436,10 +447,9 @@ export const AppRoutes = () => {
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
-                        
+                                               
                         </Route>
                 <Route path='fabricdevelopment'>
-                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
                 <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest/>}/>
 
                 </Route>
@@ -447,7 +457,20 @@ export const AppRoutes = () => {
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
                 <Route path='settings/settings-view' element={<SettingsView/>}/>
                 </Route>
-                <Route path='/sample-development' element={<SampleDevForm />} />
+
+                <Route path='sample-development' >
+                    <Route path="sample-development-form" element={<SampleDevForm />}/>
+                    <Route path="sample-development-view" element={<SampleDevView />}/>
+                    <Route path="sample-development-detail" element={<SampleDevDetail />}/>
+                </Route>
+                <Route path='/materialCreation'>
+                <Route path='sku-list' element={<SkuList/>}/>
+                <Route path='sku-mapping' element={<SKUGeneration/>}/>
+                <Route path='item-creation' element={<ItemCreation/>}/>
+                <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
+                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
+
+                </Route>
 
 
                     <Route path='/excel-import'>
@@ -456,7 +479,7 @@ export const AppRoutes = () => {
                         <Route path='grid-view' element={<AllOrdersGridView />} />
                         <Route path='revert-orders' element={<FileRevert />} />
                         <Route path='version-grid' element={<VersionChanges />} />
-                        <Route path='item-creation' element={<ItemCreation/>}/>
+
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 
                     </Route>
