@@ -109,9 +109,8 @@ import SampleRequestView from "./sample-development/sample-management-view"
 import SampleDevForm from "./sample-development/sample-management-form"
 import SettingsView from "./masters/settings/settings-view"
 import TrimsBomCreation from "./BOM/trims-bom-creation"
-import { FabricDevelopmentApproval } from "./fabric development/fabric-development-approval"
 import UomGrid from "./masters/uom/uom-grid"
-// import FabricDevelopmentApproval from "./fabric development/fabric-development-approval"
+import FabricDevelopmentRequest from "./fabric development/fabric-development-request"
 
 
 export const AppRoutes = () => {
@@ -441,7 +440,7 @@ export const AppRoutes = () => {
                         </Route>
                 <Route path='fabricdevelopment'>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
-                <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentApproval/>}/>
+                <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest/>}/>
 
                 </Route>
                 <Route path='settings'>

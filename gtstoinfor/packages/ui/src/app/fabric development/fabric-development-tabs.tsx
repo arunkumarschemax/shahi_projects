@@ -15,6 +15,12 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
     console.log('onChange', key)
     setActiveTab(key);
   };
+
+  const itemsInfo = (data) => {
+    console.log(data)
+  }
+
+
  console.log(props.key,"key")
   const items: TabsProps['items'] = [
     {
@@ -24,7 +30,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
          Quality 1
         </span>
       ),
-      children: <FabricDevelopmentRequestQuality />,
+      children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>,
     },
     {
       key: 'quality2',
@@ -33,7 +39,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
          Quality 2
         </span>
       ),
-      children: <FabricDevelopmentRequestQuality />,
+      children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>,
 
     },
     {
@@ -43,7 +49,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
           Quality 3
         </span>
       ),
-      children: <FabricDevelopmentRequestQuality />,
+      children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>,
 
     },
     {
@@ -53,7 +59,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
           Quality 4
         </span>
       ),
-      children: <FabricDevelopmentRequestQuality />,
+      children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>,
 
     },
     {
@@ -63,7 +69,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
           Quality 5
         </span>
       ),
-     children: <FabricDevelopmentRequestQuality />,
+     children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>,
 
     },
     {
@@ -73,7 +79,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
           Quality 6
         </span>
       ),
-      children: <FabricDevelopmentRequestQuality />
+      children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>
     },
     {
       key: 'quality7',
@@ -82,7 +88,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
           Quality 7
         </span>
       ),
-        children: <FabricDevelopmentRequestQuality />,
+        children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>,
 
     },
     {
@@ -92,7 +98,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
           Quality 8
         </span>
       ),
-        children: <FabricDevelopmentRequestQuality />,
+        children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>,
 
     },
     {
@@ -102,7 +108,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
           Quality 9
         </span>
       ),
-        children: <FabricDevelopmentRequestQuality />,
+        children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>,
 
     },
     {
@@ -112,7 +118,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
           Quality 10
         </span>
       ),
-        children: <FabricDevelopmentRequestQuality />,
+        children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>,
 
     },
     {
@@ -122,7 +128,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
           Quality 11
         </span>
       ),
-      children: <FabricDevelopmentRequestQuality />,
+      children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>,
 
     },
     {
@@ -132,7 +138,7 @@ const FabricDevelopmentTabs = (props: FabricDevelopmentTabsProps) => {
           Quality 12
         </span>
       ),
-        children: <FabricDevelopmentRequestQuality />,
+        children: <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo}/>,
 
     }
     
