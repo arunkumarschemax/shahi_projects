@@ -7,6 +7,7 @@ import View from "./components/doc-extract/doc-extract-view"
 import Form from "./components/doc-extract/doc-extract-form"
 import DocExtractForm from "./components/doc-extract/doc-extract-new-form"
 import VendorGrid from "./components/vendor-view/vendor-view"
+import VendorBranchInfoGrid from "./components/vendor-view/detail-view"
 
 
 export const AppRoutes = () => {
@@ -26,7 +27,7 @@ export const AppRoutes = () => {
                 <Route path="doc-extract-view" element={<View />}/>
                 <Route path="doc-extract-view" key='/doc-extract-view'  element={<View />}/>
             </Route>
-            {/* <Route path="/vendors" /> */}
+            
             <Route path="/scan-document" />
             <Route path="/invoices"/>
             <Route path="/pending-approvals"/>
@@ -34,6 +35,9 @@ export const AppRoutes = () => {
             <Route path="/invoice-report"/>
 
             <Route path="/vendors" element={<VendorGrid/>}/>
+            <Route path="/VendorBranchInfoGrid" element={<VendorBranchInfoGrid />} />
+
+
 
             <Route path="/doc-extract-form" element={<Form/>}/>
             

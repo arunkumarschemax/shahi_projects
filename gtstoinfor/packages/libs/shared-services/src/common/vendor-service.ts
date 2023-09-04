@@ -7,7 +7,7 @@ export class VendorService extends CommonAxiosService {
 
 
   async getAllVendors(): Promise<any> {
-    console.log('*****************************');
+   // console.log('*****************************');
     return this.getvendorpostcall("https://tms-backend.shahiapps.in/api/vendor-master-data/getAllVendors");
   }
   
