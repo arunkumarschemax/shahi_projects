@@ -70,13 +70,13 @@ const ShipmentChangesCompareGrid = () => {
     }
 
     function convertToYYYYMMDD(inputDate) {
-        const formatsToTry = ['DD-MM-YYYY', 'MM/DD/YYYY'];
+        const formatsToTry = ['DD-MM-YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD'];
         let formattedDate = null;
 
         for (const format of formatsToTry) {
             const parsedDate = moment(inputDate, format);
             if (parsedDate.isValid()) {
-                formattedDate = parsedDate.format('YYYY-MM-DD');
+                formattedDate = parsedDate.format('MM/DD/YYYY');
                 break;
             }
         }
@@ -715,7 +715,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             key: '1',
             label: <b>GAC Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }}/>,
+            children: <Table bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '2',
@@ -725,7 +725,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             key: '3',
             label: <b >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
-            children: <Table bordered dataSource={itemChangeData} columns={columns1} scroll={{ x: 'max-content' }}/>,
+            children: <Table bordered dataSource={itemChangeData} columns={columns1} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '4',

@@ -4,7 +4,6 @@ import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons
 import moment from 'moment';
 import { NikeService } from '@project-management-system/shared-services';
 import Highlighter from 'react-highlight-words';
-import Item from 'antd/es/descriptions/Item';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { ColumnsType } from 'antd/es/table';
@@ -15,10 +14,10 @@ interface ExpandedRows {
 }
 interface FactoryUpdateRequest {
     poAndLine: string;
-    actualUnit?: string; 
-    allocatedQuantity?: string; 
-  }
-  
+    actualUnit?: string;
+    allocatedQuantity?: string;
+}
+
 const FactoryPPMReport = () => {
 
     const [factory, setFactory] = useState([]);
@@ -42,36 +41,36 @@ const FactoryPPMReport = () => {
         getData();
     }, [])
 
-    
+
     const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
         const req: FactoryUpdateRequest = {
             poAndLine: poAndLine,
-          };
-        
-          if (actualUnit !== null && actualUnit !== undefined && actualUnit !== '') {
+        };
+
+        if (actualUnit !== null && actualUnit !== undefined && actualUnit !== '') {
             req.actualUnit = actualUnit;
-          }
-        
-          if (
+        }
+
+        if (
             allocatedQuantity !== null &&
             allocatedQuantity !== undefined &&
             allocatedQuantity !== ''
-          ) {
+        ) {
             req.allocatedQuantity = allocatedQuantity;
-          }
-      
+        }
+
         service.updateFactoryStatusColumns(req).then((res) => {
-          if (res.status) {
-            message.success(res.internalMessage);
-            getData();
-          // window.location.reload();
-            
-          } else {
-            message.error(res.internalMessage);
-          }
+            if (res.status) {
+                message.success(res.internalMessage);
+                getData();
+                // window.location.reload();
+
+            } else {
+                message.error(res.internalMessage);
+            }
         });
-      };
-      
+    };
+
 
     const handleCheckboxChange = (column, poAndLine) => {
         if (column === 'ActualUnit') {
@@ -100,7 +99,7 @@ const FactoryPPMReport = () => {
             }));
         }
     };
-   
+    
 
     // const getFactoryStatus = (values: any) => {
     //     service.getByFactoryStatus().then(res => {
@@ -191,10 +190,10 @@ const FactoryPPMReport = () => {
         form.resetFields();
     }
 
- 
 
 
-    
+
+
 
     const getData = () => {
         const req = new PpmDateFilterRequest()
@@ -202,35 +201,30 @@ const FactoryPPMReport = () => {
             req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
         }
         if (form.getFieldValue('lastModifiedDate') !== undefined) {
-        req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
+            req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
         }
         if (form.getFieldValue('documentDate') !== undefined) {
             req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD')
         }
         if (form.getFieldValue('documentDate') !== undefined) {
-        req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
+            req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
         }
         service.getFactoryReportData(req).then(res => {
             if (res.status) {
                 setGridData(res.data)
                 setFilterData(res.data)
                 setFilteredData(res.data)
-                Finish(res.data)    
+                Finish(res.data)
             }
-           
+
         }).catch(err => {
             console.log(err.message)
         })
-        console.log(req)
-
     }
-   
-   
-   
 
     const Finish = (data: any) => {
         const values = form.getFieldsValue();
-           
+
         if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
             setFilterData(gridData);
         } else {
@@ -266,7 +260,11 @@ const FactoryPPMReport = () => {
             { title: 'Product Code', dataIndex: 'productCode' },
             { title: 'Colour Description', dataIndex: 'colorDesc' },
             { title: 'CO', dataIndex: 'customerOrder' },
-            { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate' },
+            {
+                title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => {
+                    return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-'
+                }
+            },
             { title: 'Plan No', dataIndex: 'planNo' },
             { title: 'Lead Time', dataIndex: 'leadTime' },
             { title: 'Category', dataIndex: 'categoryCode' },
@@ -295,9 +293,21 @@ const FactoryPPMReport = () => {
             { title: 'MRGAC', dataIndex: 'MRGAC' },
             { title: 'OGAC', dataIndex: 'OGAC' },
             { title: 'GAC', dataIndex: 'GAC' },
-            { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
-            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
-            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
+            {
+                title: 'Truck Out Date', dataIndex: 'truckOutDate', render: (text, record) => {
+                    return record.truckOutDate ? moment(record.truckOutDate).format('MM/DD/YYYY') : '-'
+                }
+            },
+            {
+                title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', render: (text, record) => {
+                    return record.originReceiptDate ? moment(record.originReceiptDate).format('MM/DD/YYYY') : '-'
+                }
+            },
+            {
+                title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', render: (text, record) => {
+                    return record.factoryDeliveryActDate ? moment(record.factoryDeliveryActDate).format('MM/DD/YYYY') : '-'
+                }
+            },
             { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
             { title: 'GAC Reason Description', dataIndex: ' ' },
             { title: 'Shipping Type', dataIndex: 'shippingType' },
@@ -382,8 +392,8 @@ const FactoryPPMReport = () => {
                 title: 'Last Modified Date',
                 dataIndex: 'lastModifiedDate',
                 render: (text, record) => {
-                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('YYYY-MM-DD') : '-';
-                  },
+                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-';
+                },
             },
             {
                 title: 'Item',
@@ -399,9 +409,9 @@ const FactoryPPMReport = () => {
                 title: 'Document Date',
                 dataIndex: 'documentDate',
                 render: (text, record) => {
-                  return record.documentDate ? moment(record.documentDate).format('YYYY-MM-DD') : '-';
+                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-';
                 },
-              },              
+            },
             {
                 title: 'Purchase Order Number',
                 dataIndex: 'purchaseOrderNumber',
@@ -435,6 +445,9 @@ const FactoryPPMReport = () => {
             {
                 title: 'CO Final Approval Date',
                 dataIndex: 'coFinalApprovalDate',
+                render: (text, record) => {
+                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
+                }
             },
             {
                 title: 'Plan No',
@@ -560,114 +573,113 @@ const FactoryPPMReport = () => {
                 dataIndex: 'displayName',
                 align: 'center',
             },
-            {  
-                align:'center',
+            {
+                align: 'center',
                 children: [
-                  {
-                    title: 'Edit Unit Allocation',
-                    dataIndex: '',
-                    align:"center",
-                    render: (text, rowData) => (
-                      <span>
-                        <Form.Item>
-                          <Checkbox
-                            onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
-                            checked={expandedActualUnit[rowData.poAndLine] || false}
-                          />
-                        </Form.Item>
-                      </span>
-                    ),
-                  },
-                  {
-                    align:'center',
-                    render: (text, rowData) => (
-                      <div>
-                        {expandedActualUnit[rowData.poAndLine] && (
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Input
-                              name='actualUnit'
-                              allowClear
-                              style={{ marginRight: '10px' }}
-                              placeholder="Enter text"
-                              value={textareaValuesActualUnit[rowData.poAndLine] || ''}
-                              onChange={(e) =>
-                                handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
-                              }
-                            />
-                            <Button
-                              type="primary"
-                              onClick={() => {
-                                updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
-                                handleCheckboxChange('ActualUnit', rowData.poAndLine);
-                                handleTextareaChange('ActualUnit', rowData.poAndLine, '');
-                              }}
-                            >
-                              Submit
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    ),
-                  },
+                    {
+                        title: 'Edit Unit Allocation',
+                        dataIndex: '',
+                        align: "center",
+                        render: (text, rowData) => (
+                            <span>
+                                <Form.Item>
+                                    <Checkbox
+                                        onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
+                                        checked={expandedActualUnit[rowData.poAndLine] || false}
+                                    />
+                                </Form.Item>
+                            </span>
+                        ),
+                    },
+                    {
+                        align: 'center',
+                        render: (text, rowData) => (
+                            <div>
+                                {expandedActualUnit[rowData.poAndLine] && (
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Input
+                                            name='actualUnit'
+                                            allowClear
+                                            style={{ marginRight: '10px' }}
+                                            placeholder="Enter text"
+                                            value={textareaValuesActualUnit[rowData.poAndLine] || ''}
+                                            onChange={(e) =>
+                                                handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
+                                            }
+                                        />
+                                        <Button
+                                            type="primary"
+                                            onClick={() => {
+                                                updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
+                                                handleCheckboxChange('ActualUnit', rowData.poAndLine);
+                                                handleTextareaChange('ActualUnit', rowData.poAndLine, '');
+                                            }}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        ),
+                    },
                 ],
-              },
-              {
+            },
+            {
                 title: 'Actual Unit',
                 dataIndex: 'actualUnit',
                 align: 'center',
             },
-              {
-                
+            {
                 children: [
-                  {
-                    title: 'Quantity Allocation',
-                  align:'center',
-                    render: (text, rowData) => (
-                      <span>
-                        <Form.Item>
-                          <Checkbox
-                            onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
-                            checked={expandedQuantityAllocation[rowData.poAndLine] || false}
-                          />
-                        </Form.Item>
-                      </span>
-                    ),
-                  },
-                  {
-                    dataIndex: 'id',
-                    align:'center',
-                    render: (text, rowData) => (
-                      <div>
-                        {expandedQuantityAllocation[rowData.poAndLine] && (
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Input
-                              name='allocatedQuantity'
-                              allowClear
-                              style={{ marginRight: '10px' }}
-                              placeholder="Enter text"
-                              value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
-                              onChange={(e) =>
-                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
-                              }
-                            />
-                            <Button
-                              type="primary"
-                              onClick={() => {
-                                updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
-                                handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
-                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
-                              }}
-                            >
-                              Submit
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    ),
-                  },
+                    {
+                        title: 'Quantity Allocation',
+                        align: 'center',
+                        render: (text, rowData) => (
+                            <span>
+                                <Form.Item>
+                                    <Checkbox
+                                        onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
+                                        checked={expandedQuantityAllocation[rowData.poAndLine] || false}
+                                    />
+                                </Form.Item>
+                            </span>
+                        ),
+                    },
+                    {
+                        dataIndex: 'id',
+                        align: 'center',
+                        render: (text, rowData) => (
+                            <div>
+                                {expandedQuantityAllocation[rowData.poAndLine] && (
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Input
+                                            name='allocatedQuantity'
+                                            allowClear
+                                            style={{ marginRight: '10px' }}
+                                            placeholder="Enter text"
+                                            value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
+                                            onChange={(e) =>
+                                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
+                                            }
+                                        />
+                                        <Button
+                                            type="primary"
+                                            onClick={() => {
+                                                updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
+                                                handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
+                                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
+                                            }}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        ),
+                    },
                 ],
-              },
-              {
+            },
+            {
                 title: 'Reallocated Quantity',
                 dataIndex: 'allocatedQuantity',
                 align: 'center',
@@ -677,9 +689,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'totalItemQty',
                 align: 'center',
                 render: (text) => <strong>{text}</strong>
-            },
-  
-
+            }
         ];
         sizeHeaders?.forEach(version => {
             columns.push({
@@ -710,74 +720,7 @@ const FactoryPPMReport = () => {
                                 return '-';
                             }
                         }
-                    },
-                    // {
-                    //     title: 'Legal PO Price',
-                    //     dataIndex: '',
-                    //     key: '',
-                    //     render: (text, record) => {
-                    //         const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-
-                    //         if (sizeData) {
-                    //             if (sizeData.sizeQty !== null) {
-                    //                 return (
-                    //                     sizeData.price
-                    //                 );
-                    //             } else {
-                    //                 return (
-                    //                     '-'
-                    //                 );
-                    //             }
-                    //         } else {
-                    //             return '-';
-                    //         }
-                    //     }
-                    // },
-                    // {
-                    //     title: 'CO Price',
-                    //     dataIndex: '',
-                    //     key: '',
-                    //     render: (text, record) => {
-                    //         const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-
-                    //         if (sizeData) {
-                    //             if (sizeData.sizeQty !== null) {
-                    //                 return (
-                    //                     sizeData.coPrice
-                    //                 );
-                    //             } else {
-                    //                 return (
-                    //                     '-'
-                    //                 );
-                    //             }
-                    //         } else {
-                    //             return '-';
-                    //         }
-                    //     }
-                    // },
-                    // {
-                    //     title: 'Price Variation',
-                    //     dataIndex: '',
-                    //     key: '',
-                    //     render: (text, record) => {
-                    //         const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-
-                    //         if (sizeData) {
-                    //             if (sizeData.sizeQty !== null) {
-                    //                 const priceVariation = sizeData.price - sizeData.coPrice;
-                    //                 return (
-                    //                     priceVariation
-                    //                 );
-                    //             } else {
-                    //                 return (
-                    //                     '-'
-                    //                 );
-                    //             }
-                    //         } else {
-                    //             return '-';
-                    //         }
-                    //     }
-                    // },
+                    }
                 ],
                 render: (text, record) => {
                     return record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -809,13 +752,13 @@ const FactoryPPMReport = () => {
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
                             <Form.Item label="Last Modified Date" name="lastModifiedDate">
-                                <RangePicker  />
+                                <RangePicker />
 
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
                             <Form.Item label="Document Date" name="documentDate">
-                                <RangePicker  />
+                                <RangePicker />
 
                             </Form.Item>
                         </Col>
@@ -838,8 +781,8 @@ const FactoryPPMReport = () => {
                                 <Button htmlType="submit"
                                     icon={<SearchOutlined />}
                                     type="primary">Get Report</Button>
-                             <Button
-                                    htmlType='button' icon={<UndoOutlined />}  style={{  margin:10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
+                                <Button
+                                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
                                 >
                                     RESET
                                 </Button>

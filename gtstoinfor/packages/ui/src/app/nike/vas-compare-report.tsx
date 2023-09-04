@@ -63,13 +63,13 @@ const VASChangesCompareGrid = () => {
     }
 
     function convertToYYYYMMDD(inputDate) {
-        const formatsToTry = ['DD-MM-YYYY', 'MM/DD/YYYY'];
+        const formatsToTry = ['DD-MM-YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD'];
         let formattedDate = null;
 
         for (const format of formatsToTry) {
             const parsedDate = moment(inputDate, format);
             if (parsedDate.isValid()) {
-                formattedDate = parsedDate.format('YYYY-MM-DD');
+                formattedDate = parsedDate.format('MM/DD/YYYY');
                 break;
             }
         }
@@ -396,12 +396,12 @@ const VASChangesCompareGrid = () => {
         {
             title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to DPOM)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
             dataIndex: 'item_vas_pdf_po',
-            width :'300px',
+            width: '300px',
         },
         {
             title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
             dataIndex: 'item_vas_pdf_po',
-            width :'300px',
+            width: '300px',
         },
         {
             title: 'Schedule Line Item No',
@@ -706,7 +706,7 @@ const VASChangesCompareGrid = () => {
         {
             key: '1',
             label: <b>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }}/>,
+            children: <Table bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '2',
