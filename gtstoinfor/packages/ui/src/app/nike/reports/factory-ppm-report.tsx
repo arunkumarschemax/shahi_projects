@@ -28,9 +28,9 @@ const FactoryPPMReport = () => {
     const [filterData, setFilterData] = useState<any>([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [page, setPage] = React.useState(1);
-    
 
-   
+
+
 
     const getFactoryStatus = (values: any) => {
         service.getByFactoryStatus().then(res => {
@@ -141,22 +141,22 @@ const FactoryPPMReport = () => {
             req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
         }
         if (form.getFieldValue('lastModifiedDate') !== undefined) {
-        req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
+            req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
         }
         if (form.getFieldValue('documentDate') !== undefined) {
             req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD')
         }
         if (form.getFieldValue('documentDate') !== undefined) {
-        req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
+            req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
         }
         service.getFactoryReportData(req).then(res => {
             if (res.status) {
                 setGridData(res.data)
                 setFilterData(res.data)
                 setFilteredData(res.data)
-                Finish(res.data)    
+                Finish(res.data)
             }
-           
+
         }).catch(err => {
             console.log(err.message)
         })
@@ -166,7 +166,7 @@ const FactoryPPMReport = () => {
 
     const Finish = (data: any) => {
         const values = form.getFieldsValue();
-           
+
         if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
             setFilterData(gridData);
         } else {
@@ -450,7 +450,7 @@ const FactoryPPMReport = () => {
                 align: 'center',
                 render: (text) => <strong>{text}</strong>
             },
-           
+
 
         ];
         sizeHeaders?.forEach(version => {
@@ -557,12 +557,21 @@ const FactoryPPMReport = () => {
             });
         });
 
+        const getRowClassName = (record) => {
+            if (record.displayName) {
+                return 'colored-row';
+            }
+            return '';
+        };
+
         return (<Table columns={columns} dataSource={filterData} pagination={{
             onChange(current, pageSize) {
                 setPage(current);
                 setPageSize(pageSize)
             }
-        }} scroll={{ x: 'max-content' }} />)
+        }} scroll={{ x: 'max-content' }}
+            rowClassName={getRowClassName}
+        />)
     }
 
     return (
@@ -581,13 +590,13 @@ const FactoryPPMReport = () => {
                     <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
                             <Form.Item label="Last Modified Date" name="lastModifiedDate">
-                                <RangePicker  />
+                                <RangePicker />
 
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
                             <Form.Item label="Document Date" name="documentDate">
-                                <RangePicker  />
+                                <RangePicker />
 
                             </Form.Item>
                         </Col>
@@ -610,8 +619,8 @@ const FactoryPPMReport = () => {
                                 <Button htmlType="submit"
                                     icon={<SearchOutlined />}
                                     type="primary">SEARCH</Button>
-                             <Button
-                                    htmlType='button' icon={<UndoOutlined />}  style={{  margin:10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
+                                <Button
+                                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
                                 >
                                     RESET
                                 </Button>
