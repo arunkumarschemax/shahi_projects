@@ -143,13 +143,13 @@ export const SKUGeneration = () => {
 
 
   return (
-    <Card size="small" title="SKU mapping">
+    <Card size="small" title="SKU mapping" extra={<p style={{color:'red',fontSize:'110%'}}><b>Note: To Map the Components drag and drop from Available to Selected</b></p>}>
       <Form layout="horizontal" form={form}>
       <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
             <Form.Item label='Item' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
                 <Select showSearch allowClear placeholder='Select Item'>
-                    <Option key='' value=''>Item Codes </Option>
+                    <Option key='itemcode' value='itemcode'>Item Codes </Option>
                     {/* {
                         color.map((e)=>{
                             return(
@@ -169,7 +169,8 @@ export const SKUGeneration = () => {
                 {color?.map((comment, index) => (
                     <Card
                         // key={comment.colourId}
-                        style={{ background: '#f7c78d', marginBottom: '10px',height:'30%' }}
+                        size='small'
+                        style={{ background: '#f7c78d', marginBottom: '10px'}}
                         draggable
                         onDragStart={(event) => handleColorDragStart(event, comment)}
                     >
@@ -187,6 +188,7 @@ export const SKUGeneration = () => {
             {selectedColors?.map((comment, index) => (
                 <Card
                     // key={comment}
+                    size='small'
                     style={{ background: '#f7c78d', marginBottom: '10px' }}
                     draggable
                     onDragStart={(event) => handleAssignedColorDragStart(event, comment)}
@@ -199,7 +201,7 @@ export const SKUGeneration = () => {
         </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-            <Card title='Available Sizes'
+            <Card title='Available Sizes' size='small'
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}>
                 {size?.map((comment, index) => (
@@ -217,7 +219,7 @@ export const SKUGeneration = () => {
             </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-          <Card title='Selected Sizes'
+          <Card title='Selected Sizes' size='small'
             onDragOver={handleDragOver}
             onDrop={handleDrop}>
             {selectedSizes?.map((comment, index) => (
@@ -235,7 +237,7 @@ export const SKUGeneration = () => {
         </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-            <Card title='Available Destinations'
+            <Card title='Available Destinations' size='small'
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}>
                 {destination?.map((comment, index) => (
@@ -253,7 +255,7 @@ export const SKUGeneration = () => {
             </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-          <Card title='Selected Destinations'
+          <Card title='Selected Destinations' size='small'
             onDragOver={handleDragOver}
             onDrop={handleDrop}>
             {selectedDestinations?.map((comment, index) => (
@@ -273,9 +275,8 @@ export const SKUGeneration = () => {
         </Row>
         <Row justify={'end'}>
           <Form.Item>
-            <Button type='primary' onClick={onSubmit}>Submit</Button>
+            <Button type='primary' onClick={onSubmit} disabled={form.getFieldValue('itemCode') !== undefined && selectedColors.length > 0 && selectedSizes.length > 0 && selectedDestinations.length > 0 ? false : true}>Submit</Button>
           </Form.Item>
-
         </Row>
       </Form>
     </Card>

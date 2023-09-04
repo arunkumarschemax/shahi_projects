@@ -389,13 +389,13 @@ export function BuyersForm(props: BuyersFormProps) {
                       <Form.Item>
                         <Button type='dashed' style={{ backgroundColor: 'darkseagreen' }} onClick={() => add()} block icon={<PlusOutlined />}>Add Address</Button>
                       </Form.Item>
-                      <Row gutter={24}>
+                      <Row gutter={8}>
                         {fields.map((field,index) => (
                           <Space key={field.key}>
                             <Form.Item {...field} name={[field.name,'addressId']} fieldKey={[field.key, 'id']} style={{display:'none'}}>
                             <Input hidden />
                             </Form.Item>
-                            <Col>
+                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 24 }}>
                             <Form.Item  {...field} label='Country' name={[field.name, 'countryId']} fieldKey={[field.key, 'countryId']}
                               rules={[
                                 {
@@ -415,7 +415,7 @@ export function BuyersForm(props: BuyersFormProps) {
                               </Select>
                             </Form.Item>
                           </Col>
-                          <Col>
+                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 24 }}>
                           <Form.Item {...field} label='State' name={[field.name, 'state']} fieldKey={[field.key, 'state']}
                             rules={[
                               {
@@ -437,7 +437,7 @@ export function BuyersForm(props: BuyersFormProps) {
                           <Input placeholder='Enter District'/>
                         </Form.Item>
                         </Col>
-                      <Col>
+                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 24 }}>
                         <Form.Item {...field} label='City' name={[field.name, 'city']} fieldKey={[field.key, 'city']}
                           rules={[
                             {
@@ -448,7 +448,7 @@ export function BuyersForm(props: BuyersFormProps) {
                           <Input placeholder='Enter City'/>
                         </Form.Item>
                       </Col>
-                      <Col>
+                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 24 }}>
                         <Form.Item {...field} label='Landmark' name={[field.name, 'landmark']} fieldKey={[field.key, 'landmark']}
                           rules={[
                             {
@@ -459,7 +459,7 @@ export function BuyersForm(props: BuyersFormProps) {
                           <Input placeholder='Enter Landmark'/>
                         </Form.Item>
                       </Col>
-                      <Col>
+                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 24 }}>
                         <Form.Item {...field} label='Lane 1' name={[field.name, 'lane1']} fieldKey={[field.key, 'lane1']}
                           rules={[
                             {
@@ -470,13 +470,13 @@ export function BuyersForm(props: BuyersFormProps) {
                           <Input placeholder='Enter Lane 1'/>
                         </Form.Item>
                       </Col>
-                        <Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 24 }}>
                           <Form.Item {...field} label='Lane 2' name={[field.name, 'lane2']} fieldKey={[field.key, 'lane2']}
                           >
                             <Input placeholder='Enter Lane 2'/>
                           </Form.Item>
                         </Col>
-                        <Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 12 }} xl={{ span: 24 }}>
                           <Form.Item {...field} label='Pincode' name={[field.name, 'pincode']} fieldKey={[field.key, 'pincode']}
                             rules={[
                               {
