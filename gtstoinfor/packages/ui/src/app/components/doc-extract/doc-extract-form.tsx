@@ -3,7 +3,7 @@ import { Select, Spin, message, Button, Input, Row, Form } from "antd";
 import Tesseract from "tesseract.js";
 import { useNavigate,useLocation } from "react-router-dom";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import axios from "axios";
+// import axios from "axios";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
 import { ScanService } from "@project-management-system/shared-services";
@@ -279,7 +279,7 @@ export function DocExtractForm(props: DocFormProps) {
 
 
     const extractGoods = (text) => {
-        const goodsRegex = /CARTONS\s*:\s*(\d+)\s*(\d+%)\s*(COTTON)\s*(\d+%)\s*(POLYESTER)\s*(\d+%)\s*(ELASTANE)\s*(\w+)\s*(MENS SHORTS)/;
+        const goodsRegex = /s*\s*(\d+)\s*(\d+%)\s*(COTTON)\s*(\d+%)\s*(POLYESTER)\s*(\d+%)\s*(ELASTANE)\s*(\w+)\s*(MENS SHORTS)/;
         const match = text.match(goodsRegex);
         const extractedGoods = match ? match[0] : "";
         return extractedGoods;
@@ -306,7 +306,8 @@ export function DocExtractForm(props: DocFormProps) {
     };
 
     const extractVessel = (text) => {
-        const vesselRegex = /VESSEL\s+([A-Z\s]+)/;
+        const vesselRegex = /^(.*?) \/ (.*?) \/ (.*?)$/;
+        // const pattern = /^(.*?) \/ (.*?) \/ (.*?)$/;
         const match = text.match(vesselRegex);
         const extractedVessel = match ? match[0] : "";
         return extractedVessel;
@@ -471,8 +472,7 @@ export function DocExtractForm(props: DocFormProps) {
         if (!fileSelected) {
             message.error("Select an Image File");
             return;
-        } else {
-            message.success('Applied Successfully');
+        
 
         }
 
@@ -492,6 +492,7 @@ export function DocExtractForm(props: DocFormProps) {
     const handleBack = () => {
         navigate("/scan-document");
     }
+
 
     const onFinish = (values: AllScanDto) => {
         values.Gst = gstNumbers
@@ -518,7 +519,7 @@ export function DocExtractForm(props: DocFormProps) {
             if (res.status) {
                 message.success("Created Successfully");
                 setTimeout(() => {
-                    navigate("/scan-document/doc-extract-view");
+                    navigate("/scan-document");
                 }, 500);
             } else {
                 message.error("Error")
@@ -527,6 +528,8 @@ export function DocExtractForm(props: DocFormProps) {
             console.log(err.message)
         })
     };
+
+    
 
 
     return (
