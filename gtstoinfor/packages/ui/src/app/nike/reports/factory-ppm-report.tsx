@@ -131,7 +131,6 @@ const FactoryPPMReport = () => {
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
         window.location.reload();
-        console.log()
     };
 
     const handleReset = (clearFilters: any) => {
@@ -304,7 +303,6 @@ const FactoryPPMReport = () => {
             }
 
         }).catch(err => {
-            console.log(err.message)
         })
     }
 
