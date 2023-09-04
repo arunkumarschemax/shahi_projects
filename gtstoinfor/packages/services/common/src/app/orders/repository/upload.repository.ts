@@ -19,6 +19,20 @@ export class FileUploadRepository extends Repository<FileUploadEntity> {
         return await query.getRawMany();
     }
 
+    async getlatestFileIdAgainstMonth(): Promise<any[]> {
+        const query = `SELECT id, created_at, month, file_name
+        FROM (
+            SELECT id, created_at, month, file_name,
+                   ROW_NUMBER() OVER (PARTITION BY month ORDER BY created_at DESC) AS rn
+            FROM file_upload
+            WHERE is_active = 1
+        ) AS ranked
+        WHERE rn = 1
+        ORDER BY month ASC`
+        const result = await this.query(query)
+        return result
+    }
+
     async deleteChildData(id: number): Promise<void> {
         const queryBuilder = this.createQueryBuilder('fup');
         queryBuilder.where(`id = '${id}'`);

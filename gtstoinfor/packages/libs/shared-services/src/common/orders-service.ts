@@ -5,13 +5,11 @@ import axios from "axios";
 export class OrdersService extends CommonAxiosService {
     private ordersController = "/orders"
 
-    // async saveOrder(data: any, id:number): Promise<CommonResponseModel> {
-    //     return this.axiosPostCall(this.ordersController + "/saveOrder", data,{id})
-    // }
-
-    async saveOrder(data: any, id: number): Promise<CommonResponseModel> {
+    async saveOrder(data: any, id: number, month: any): Promise<CommonResponseModel> {
+        console.log(month)
         const idn = id;
-        const url = `/orders/saveOrder/${idn}`;
+        const montId = month
+        const url = `/orders/saveOrder/${idn}/${montId}`;
         return this.axiosPostCall(url, data);
     }
 
@@ -47,8 +45,14 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getMaximumChangedOrders")
     }
 
-    async fileUpload(file: any): Promise<CommonResponseModel> {
-        return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
+    // async fileUpload(file: any): Promise<CommonResponseModel> {
+    //     return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
+    // }
+
+    async fileUpload(file: any, month: number): Promise<CommonResponseModel> {
+        const monthId = month;
+        const url = `/orders/fileUpload/${monthId}`;
+        return this.axiosPostCall(url, file);
     }
 
     async updateFileStatus(req: any): Promise<CommonResponseModel> {
@@ -73,5 +77,12 @@ export class OrdersService extends CommonAxiosService {
 
     async getPhaseWiseExcelData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getPhaseWiseExcelData")
+    }
+    async getAllLatestFileMonthWisedata(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getAllLatestFileMonthWisedata")
+    }
+
+    async getMonthWiseData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getMonthWiseData")
     }
 }
