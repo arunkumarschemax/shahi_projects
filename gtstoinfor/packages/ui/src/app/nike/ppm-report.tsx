@@ -133,7 +133,6 @@ const PPMReport = () => {
       req.factory = form.getFieldValue('factory')
     }
 
-    
     service.getPPMData(req).then(res => {
       if (res.status) {
         setGridData(res.data)
@@ -158,11 +157,11 @@ const PPMReport = () => {
     let exportingColumns: IExcelColumn[] = []
     exportingColumns = [
       { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
+      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text, record) => { return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-' } },
       { title: 'Item', dataIndex: 'Item' },
       { title: 'Factory', dataIndex: 'Factory' },
       { title: 'PCD', dataIndex: 'PCD' },
-      { title: 'Document Date', dataIndex: 'documentDate' },
+      { title: 'Document Date', dataIndex: 'documentDate', render: (text, record) => { return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-' } },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
       { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
       { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
@@ -175,7 +174,7 @@ const PPMReport = () => {
       { title: 'Planning Season Code', dataIndex: 'planningSeasonCode' },
       { title: 'Planning Season Year', dataIndex: 'planningSeasonYear' },
       { title: 'Co', dataIndex: 'customerOrder' },
-      { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate' },
+      { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => { return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-' } },
       { title: 'Plan No', dataIndex: 'planNo' },
       { title: 'Lead Time', dataIndex: 'leadTime' },
       { title: 'Category', dataIndex: 'categoryCode' },
@@ -202,9 +201,9 @@ const PPMReport = () => {
       { title: 'MRGAC', dataIndex: '"MRGAC' },
       { title: 'OGAC', dataIndex: 'OGAC' },
       { title: 'GAC', dataIndex: 'GAC' },
-      { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
-      { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
-      { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
+      { title: 'Truck Out Date', dataIndex: 'truckOutDate', render: (text, record) => { return record.truckOutDate ? moment(record.truckOutDate).format('MM/DD/YYYY') : '-' } },
+      { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', render: (text, record) => { return record.originReceiptDate ? moment(record.originReceiptDate).format('MM/DD/YYYY') : '-' } },
+      { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', render: (text, record) => { return record.factoryDeliveryActDate ? moment(record.factoryDeliveryActDate).format('MM/DD/YYYY') : '-' } },
       { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
       { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
       { title: 'Shipping Type', dataIndex: 'shippingType' },
@@ -228,6 +227,11 @@ const PPMReport = () => {
       { title: 'Item Vas Text in PDF PO', dataIndex: '' },
       { title: 'Diff of Item Vas Text', dataIndex: '' },
       { title: 'Item Text', dataIndex: 'itemText' },
+      {
+        title: 'Change Register',
+        dataIndex: 'displayName',
+        align: 'center',
+      },
 
 
     ]
@@ -243,20 +247,6 @@ const PPMReport = () => {
 
   const totalItemQty = gridData?.map(i => i.totalItemQty)
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
-
-  function convertToYYYYMMDD(inputDate) {
-    const formatsToTry = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY', 'YYYY-MM-DD'];
-    let formattedDate = null;
-    for (const format of formatsToTry) {
-      const parsedDate = moment(inputDate, format);
-      if (parsedDate.isValid()) {
-        formattedDate = parsedDate.format('YYYY-MM-DD');
-        break;
-      }
-    }
-    return formattedDate;
-  }
-
 
   const Finish = (data: any) => {
     const values = form.getFieldsValue();
@@ -373,43 +363,36 @@ const PPMReport = () => {
       {
         title: "S.No",
         render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
-
       },
-
       {
-
         title: "Po+Line",
         dataIndex: 'Po+Line',
         render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`
-
-
       },
       {
         title: 'Last Modified Date',
         dataIndex: 'updatedAt',
-        render: (text) => moment(text).format('YYYY-MM-DD')
-
+        render: (text) => moment(text).format('MM/DD/YYYY')
       },
       {
         title: 'Item',
         dataIndex: 'item',
-
       },
       {
         title: 'Factory',
         dataIndex: 'factory',
-
       },
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
-        // render: (text, record) => {
-        //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
-        // }
+        render: (text, record) => {
+          return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
+        }
       },
       {
         title: 'Purchase Order Number',
         dataIndex: 'purchaseOrderNumber',
+        ...getColumnSearchProps('purchaseOrderNumber'),
       },
       {
         title: 'PO Line Item Number',
@@ -422,8 +405,6 @@ const PPMReport = () => {
       {
         title: 'Style Number',
         dataIndex: 'styleNumber',
-
-
       },
       {
         title: 'Product Code',
@@ -431,8 +412,6 @@ const PPMReport = () => {
         sorter: (a, b) => a.productCode.length - b.productCode.length,
         sortDirections: ['descend', 'ascend'],
         ...getColumnSearchProps('productCode'),
-
-
       },
       {
         title: 'Colour Description',
@@ -442,7 +421,6 @@ const PPMReport = () => {
       {
         title: 'Category Description',
         dataIndex: 'categoryDesc'
-
       },
       {
         title: "Destination Country ",
@@ -459,6 +437,7 @@ const PPMReport = () => {
         render: (text) => <strong>{text}</strong>
       },
     ]
+
     sizeHeaders?.forEach(version => {
       columns.push({
         title: version,
@@ -563,14 +542,12 @@ const PPMReport = () => {
       });
     });
 
-
     return (<Table columns={columns} dataSource={filterData} pagination={{
       onChange(current, pageSize) {
         setPage(current);
         setPageSize(pageSize)
       }
     }} scroll={{ x: 'max-content' }} />)
-
   }
 
   return (
@@ -610,8 +587,6 @@ const PPMReport = () => {
                   <Option value="Cancelled">CANCELLED</Option>
                   <Option value="Closed">CLOSED</Option>
                 </Select>
-
-
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
@@ -636,7 +611,6 @@ const PPMReport = () => {
                   placeholder="Select Po+Line"
                   optionFilterProp="children"
                   allowClear
-
                 >
                   {poLine.map((inc: any) => {
                     return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
@@ -735,8 +709,6 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-
-
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 25 }} >
               <Form.Item>
                 <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Search</Button>
@@ -745,7 +717,6 @@ const PPMReport = () => {
             </Col>
           </Row>
         </Form>
-
         <Row gutter={80}>
           <Col >
             <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40, backgroundColor: 'lightblue' }}></Card>
@@ -756,7 +727,6 @@ const PPMReport = () => {
           <Col>
             <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
-
         </Row><br></br>
         <Row gutter={80}>
           <Col >
@@ -774,16 +744,13 @@ const PPMReport = () => {
           <Col>
             <Card title={'Cancelled Po: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
-
         </Row><br></br>
         <div>
-
           {/* <Table columns={Columns} 
           // dataSource={gridData}
            dataSource={filterData}
             bordered
           /> */}
-
         </div>
         {renderReport(filterData)}
       </Card>

@@ -489,4 +489,14 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
+    async getFactoryDataById(poline: string): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom.id as docId,dpom.po_and_line as poline`)
+            .where(`dpom.po_and_line = :poline`, { poline });
+    
+        return await query.getRawMany();
+    }
+    
+    
+
 }

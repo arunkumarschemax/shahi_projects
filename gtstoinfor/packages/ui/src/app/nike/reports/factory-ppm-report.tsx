@@ -1,21 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Table, Row, Input, Col, Form, DatePicker, Select, Button } from 'antd';
+import { Card, Table, Row, Input, Col, Form, DatePicker, Select, Button, Checkbox, message } from 'antd';
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { NikeService } from '@project-management-system/shared-services';
 import Highlighter from 'react-highlight-words';
-import Item from 'antd/es/descriptions/Item';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { ColumnsType } from 'antd/es/table';
 import { FactoryReportModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 
+interface ExpandedRows {
+    [key: string]: boolean;
+}
+interface FactoryUpdateRequest {
+    poAndLine: string;
+    actualUnit?: string;
+    allocatedQuantity?: string;
+}
 
 const FactoryPPMReport = () => {
 
     const { RangePicker } = DatePicker;
-    const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
-    const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
     const { Option } = Select;
@@ -27,6 +32,15 @@ const FactoryPPMReport = () => {
     const [filterData, setFilterData] = useState<any>([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [page, setPage] = React.useState(1);
+    const [expandedActualUnit, setExpandedActualUnit] = useState({});
+    const [expandedQuantityAllocation, setExpandedQuantityAllocation] = useState({});
+    const [textareaValuesActualUnit, setTextareaValuesActualUnit] = useState({});
+    const [textareaValuesQuantityAllocation, setTextareaValuesQuantityAllocation] = useState({});
+
+    useEffect(() => {
+        getData();
+    }, [])
+
     const [factory, setFactory] = useState<any>([]);
     const [poLine, setPoLine] = useState<any>([]);
     const [colorDesc, setColorDesc] = useState<any>([]);
@@ -38,17 +52,74 @@ const FactoryPPMReport = () => {
 
 
 
+    const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
+        const req: FactoryUpdateRequest = {
+            poAndLine: poAndLine,
+        };
 
+        if (actualUnit !== null && actualUnit !== undefined && actualUnit !== '') {
+            req.actualUnit = actualUnit;
+        }
 
-    const getFactoryStatus = (values: any) => {
-        service.getByFactoryStatus().then(res => {
+        if (
+            allocatedQuantity !== null &&
+            allocatedQuantity !== undefined &&
+            allocatedQuantity !== ''
+        ) {
+            req.allocatedQuantity = allocatedQuantity;
+        }
+
+        service.updateFactoryStatusColumns(req).then((res) => {
             if (res.status) {
-                setGridData(res.data)
+                message.success(res.internalMessage);
+                getData();
+                // window.location.reload();
+
             } else {
-                setGridData([])
+                message.error(res.internalMessage);
             }
-        })
-    }
+        });
+    };
+
+
+    const handleCheckboxChange = (column, poAndLine) => {
+        if (column === 'ActualUnit') {
+            setExpandedActualUnit((prevRows) => ({
+                ...prevRows,
+                [poAndLine]: !prevRows[poAndLine],
+            }));
+        } else if (column === 'QuantityAllocation') {
+            setExpandedQuantityAllocation((prevRows) => ({
+                ...prevRows,
+                [poAndLine]: !prevRows[poAndLine],
+            }));
+        }
+    };
+
+    const handleTextareaChange = (column, poAndLine, value) => {
+        if (column === 'ActualUnit') {
+            setTextareaValuesActualUnit((prevValues) => ({
+                ...prevValues,
+                [poAndLine]: value,
+            }));
+        } else if (column === 'QuantityAllocation') {
+            setTextareaValuesQuantityAllocation((prevValues) => ({
+                ...prevValues,
+                [poAndLine]: value,
+            }));
+        }
+    };
+
+
+    // const getFactoryStatus = (values: any) => {
+    //     service.getByFactoryStatus().then(res => {
+    //         if (res.status) {
+    //             setGridData(res.data)
+    //         } else {
+    //             setGridData([])
+    //         }
+    //     })
+    // }
 
     const resetHandler = () => {
         form.resetFields();
@@ -235,8 +306,6 @@ const FactoryPPMReport = () => {
         }).catch(err => {
             console.log(err.message)
         })
-        console.log(req)
-
     }
 
     const Finish = (data: any) => {
@@ -266,11 +335,19 @@ const FactoryPPMReport = () => {
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
             { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-            { title: 'Last Modified Date', dataIndex: 'lastModifiedDate' },
+            {
+                title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text, record) => {
+                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-'
+                }
+            },
             { title: 'Item', dataIndex: 'item' },
             // { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
             { title: 'Factory', dataIndex: 'factory' },
-            { title: 'Document Date', dataIndex: 'documentDate' },
+            {
+                title: 'Document Date', dataIndex: 'documentDate', render: (text, record) => {
+                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
+                }
+            },
             { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber' },
             { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
             { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
@@ -278,7 +355,11 @@ const FactoryPPMReport = () => {
             { title: 'Product Code', dataIndex: 'productCode' },
             { title: 'Colour Description', dataIndex: 'colorDesc' },
             { title: 'CO', dataIndex: 'customerOrder' },
-            { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate' },
+            {
+                title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => {
+                    return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-'
+                }
+            },
             { title: 'Plan No', dataIndex: 'planNo' },
             { title: 'Lead Time', dataIndex: 'leadTime' },
             { title: 'Category', dataIndex: 'categoryCode' },
@@ -306,9 +387,21 @@ const FactoryPPMReport = () => {
             { title: 'MRGAC', dataIndex: 'MRGAC' },
             { title: 'OGAC', dataIndex: 'OGAC' },
             { title: 'GAC', dataIndex: 'GAC' },
-            { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
-            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
-            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
+            {
+                title: 'Truck Out Date', dataIndex: 'truckOutDate', render: (text, record) => {
+                    return record.truckOutDate ? moment(record.truckOutDate).format('MM/DD/YYYY') : '-'
+                }
+            },
+            {
+                title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', render: (text, record) => {
+                    return record.originReceiptDate ? moment(record.originReceiptDate).format('MM/DD/YYYY') : '-'
+                }
+            },
+            {
+                title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', render: (text, record) => {
+                    return record.factoryDeliveryActDate ? moment(record.factoryDeliveryActDate).format('MM/DD/YYYY') : '-'
+                }
+            },
             { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
             { title: 'GAC Reason Description', dataIndex: ' ' },
             { title: 'Shipping Type', dataIndex: 'shippingType' },
@@ -390,6 +483,9 @@ const FactoryPPMReport = () => {
             {
                 title: 'Last Modified Date',
                 dataIndex: 'lastModifiedDate',
+                render: (text, record) => {
+                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-';
+                },
             },
             {
                 title: 'Item',
@@ -404,9 +500,9 @@ const FactoryPPMReport = () => {
             {
                 title: 'Document Date',
                 dataIndex: 'documentDate',
-                // render: (text, record) => {
-                //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
-                // },
+                render: (text, record) => {
+                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-';
+                },
             },
             {
                 title: 'Purchase Order Number',
@@ -441,6 +537,9 @@ const FactoryPPMReport = () => {
             {
                 title: 'CO Final Approval Date',
                 dataIndex: 'coFinalApprovalDate',
+                render: (text, record) => {
+                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
+                }
             },
             {
                 title: 'Plan No',
@@ -520,13 +619,122 @@ const FactoryPPMReport = () => {
                 align: 'center',
             },
             {
+                align: 'center',
+                children: [
+                    {
+                        title: 'Edit Unit Allocation',
+                        dataIndex: '',
+                        align: "center",
+                        render: (text, rowData) => (
+                            <span>
+                                <Form.Item>
+                                    <Checkbox
+                                        onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
+                                        checked={expandedActualUnit[rowData.poAndLine] || false}
+                                    />
+                                </Form.Item>
+                            </span>
+                        ),
+                    },
+                    {
+                        align: 'center',
+                        render: (text, rowData) => (
+                            <div>
+                                {expandedActualUnit[rowData.poAndLine] && (
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Input
+                                            name='actualUnit'
+                                            allowClear
+                                            style={{ marginRight: '10px' }}
+                                            placeholder="Enter text"
+                                            value={textareaValuesActualUnit[rowData.poAndLine] || ''}
+                                            onChange={(e) =>
+                                                handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
+                                            }
+                                        />
+                                        <Button
+                                            type="primary"
+                                            onClick={() => {
+                                                updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
+                                                handleCheckboxChange('ActualUnit', rowData.poAndLine);
+                                                handleTextareaChange('ActualUnit', rowData.poAndLine, '');
+                                            }}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        ),
+                    },
+                ],
+            },
+            {
+                title: 'Actual Unit',
+                dataIndex: 'actualUnit',
+                align: 'center',
+            },
+            {
+                children: [
+                    {
+                        title: 'Quantity Allocation',
+                        align: 'center',
+                        render: (text, rowData) => (
+                            <span>
+                                <Form.Item>
+                                    <Checkbox
+                                        onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
+                                        checked={expandedQuantityAllocation[rowData.poAndLine] || false}
+                                    />
+                                </Form.Item>
+                            </span>
+                        ),
+                    },
+                    {
+                        dataIndex: 'id',
+                        align: 'center',
+                        render: (text, rowData) => (
+                            <div>
+                                {expandedQuantityAllocation[rowData.poAndLine] && (
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Input
+                                            name='allocatedQuantity'
+                                            allowClear
+                                            style={{ marginRight: '10px' }}
+                                            placeholder="Enter text"
+                                            value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
+                                            onChange={(e) =>
+                                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
+                                            }
+                                        />
+                                        <Button
+                                            type="primary"
+                                            onClick={() => {
+                                                updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
+                                                handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
+                                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
+                                            }}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        ),
+                    },
+                ],
+            },
+            {
+                title: 'Reallocated Quantity',
+                dataIndex: 'allocatedQuantity',
+                align: 'center',
+            },
+            {
                 title: 'Total Item Qty',
                 dataIndex: 'totalItemQty',
                 align: 'center',
                 render: (text) => <strong>{text}</strong>
-            },
-
-
+            }
         ];
         sizeHeaders?.forEach(version => {
             columns.push({
@@ -557,74 +765,7 @@ const FactoryPPMReport = () => {
                                 return '-';
                             }
                         }
-                    },
-                    {
-                        title: 'Legal PO Price',
-                        dataIndex: '',
-                        key: '',
-                        render: (text, record) => {
-                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-
-                            if (sizeData) {
-                                if (sizeData.sizeQty !== null) {
-                                    return (
-                                        sizeData.price
-                                    );
-                                } else {
-                                    return (
-                                        '-'
-                                    );
-                                }
-                            } else {
-                                return '-';
-                            }
-                        }
-                    },
-                    {
-                        title: 'CO Price',
-                        dataIndex: '',
-                        key: '',
-                        render: (text, record) => {
-                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-
-                            if (sizeData) {
-                                if (sizeData.sizeQty !== null) {
-                                    return (
-                                        sizeData.coPrice
-                                    );
-                                } else {
-                                    return (
-                                        '-'
-                                    );
-                                }
-                            } else {
-                                return '-';
-                            }
-                        }
-                    },
-                    {
-                        title: 'Price Variation',
-                        dataIndex: '',
-                        key: '',
-                        render: (text, record) => {
-                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-
-                            if (sizeData) {
-                                if (sizeData.sizeQty !== null) {
-                                    const priceVariation = sizeData.price - sizeData.coPrice;
-                                    return (
-                                        priceVariation
-                                    );
-                                } else {
-                                    return (
-                                        '-'
-                                    );
-                                }
-                            } else {
-                                return '-';
-                            }
-                        }
-                    },
+                    }
                 ],
                 render: (text, record) => {
                     return record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -805,7 +946,7 @@ const FactoryPPMReport = () => {
                             <Form.Item>
                                 <Button htmlType="submit"
                                     icon={<SearchOutlined />}
-                                    type="primary">SEARCH</Button>
+                                    type="primary">Get Report</Button>
                                 <Button
                                     htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
                                 >
