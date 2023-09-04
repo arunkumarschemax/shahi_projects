@@ -20,12 +20,15 @@ const BasicLayout = () => {
     
     function renderIcon(iconType, iconName) {
         // if (iconType === "antd") { 
-            const SpecificIcon = antdIcons["SolutionOutlined"]; 
-            return <SpecificIcon /> 
+            // const SpecificIcon = antdIcons["SolutionOutlined"]; 
+            // return <SpecificIcon /> 
         // }
         // else {
         //     const SpecificIcon = icons[iconName];
         //     return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
+        const SpecificIcon = antdIcons[iconName];
+        console.log(SpecificIcon)
+            return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
         // }
     }
     const getSubMenu = (route) => {
@@ -68,10 +71,9 @@ const BasicLayout = () => {
         token: { colorBgContainer },
     } = theme.useToken();
     return (
-        <Layout className="layout">
-            <Header style={{ alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.88)', height: "100%" }}>
-                <div style={{ float: 'left', marginTop: '0%' }}>
-                    {/* <img src={logo} width={200} height={52}></img> */}
+        <Layout className="layout" style={{marginTop:'-8px', width:"104%", marginLeft:"-8px"}}>
+            <Header style={{ alignItems: 'center', backgroundColor: '#001529', minHeight: "85px", }}>
+                <div style={{ float: 'left', marginTop: '2px', marginLeft:'-46px' }}>
                     <img src={schemaxlogo} width={150} height={80}></img>
                 </div>
                 <h1 style={{color: '#f3bf13',textAlign: 'center',marginTop:'0.2px'}}>Scan Document Management</h1>
@@ -81,7 +83,7 @@ const BasicLayout = () => {
                     theme="light"
                     mode="horizontal"
                     selectedKeys={[]}
-                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.88)', width: '75%', height: '61%', marginLeft: '160px', marginTop: '-3.8%',color:'white' }}
+                    style={{ backgroundColor: '#001529', width: '75%', height: '61%', marginLeft: '110px', marginTop: '-3.8%',color:'white' }}
                 >
                     
                     {getAllSubMenus()}

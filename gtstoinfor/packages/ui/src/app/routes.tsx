@@ -6,6 +6,7 @@ import Login from "./layout/login/login"
 import View from "./components/doc-extract/doc-extract-view"
 import Form, { DocExtractForm } from "./components/doc-extract/doc-extract-form"
 import VendorGrid from "./components/vendor-view/vendor-view"
+import DocumentUploadForm from "./components/doc-extract/document-upload-form"
 
 
 export const AppRoutes = () => {
@@ -30,7 +31,7 @@ export const AppRoutes = () => {
 
             {/* <Route path="/doc-extract-form" element={<DocForm/>}/> */}
 
-            <Route path="/doc-extract-form" element={<DocExtractForm/>}/>
+            <Route path="/doc-extract-form" element={<DocumentUploadForm/>}/>
             
 
             {/* <Route path="/doc-extract-new-form" element={<DocExtractForm invoiceData={undefined} type="" file={undefined}/>}/> */}
