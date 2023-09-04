@@ -305,7 +305,7 @@ export class OrdersService {
         entity.filePath = filePath;
         entity.month = month;
         entity.status = 'uploading';
-        const file = await this.fileUploadRepo.findOne({ where: { fileName: filename } })
+        const file = await this.fileUploadRepo.findOne({ where: { fileName: filename, isActive: true } })
         if (file) {
             return new CommonResponseModel(false, 0, 'File with same name already uploaded');
         } else {
