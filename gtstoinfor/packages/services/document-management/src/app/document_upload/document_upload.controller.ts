@@ -49,6 +49,8 @@ export class DocumentUploadController {
         destination: (req, file, callback) => {
           console.log(file);
           const destinationPath = `./upload_files/PO-${req.body.poNumber}`;
+          // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
+
           // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
 
           try {
