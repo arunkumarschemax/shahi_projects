@@ -201,11 +201,12 @@ export const SKUGeneration = () => {
         </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-            <Card title='Available Sizes' size='small'
+            <Card title='Available Sizes' 
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}>
                 {size?.map((comment, index) => (
                     <Card
+                    size='small'
                         // key={comment.colourId}
                         style={{ background: '#f7c78d', marginBottom: '10px' }}
                         draggable
@@ -219,11 +220,12 @@ export const SKUGeneration = () => {
             </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-          <Card title='Selected Sizes' size='small'
+          <Card title='Selected Sizes' 
             onDragOver={handleDragOver}
             onDrop={handleDrop}>
             {selectedSizes?.map((comment, index) => (
                 <Card
+                size='small'
                     // key={comment}
                     style={{ background: '#f7c78d', marginBottom: '10px' }}
                     draggable
@@ -237,11 +239,12 @@ export const SKUGeneration = () => {
         </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-            <Card title='Available Destinations' size='small'
+            <Card title='Available Destinations' 
                 onDragOver={handleDragOver}
                 onDrop={handleAvailableDrop}>
                 {destination?.map((comment, index) => (
                     <Card
+                    size='small'
                         // key={comment.colourId}
                         style={{ background: '#f7c78d', marginBottom: '10px' }}
                         draggable
@@ -255,11 +258,12 @@ export const SKUGeneration = () => {
             </Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 4 }}>
-          <Card title='Selected Destinations' size='small'
+          <Card title='Selected Destinations'
             onDragOver={handleDragOver}
             onDrop={handleDrop}>
             {selectedDestinations?.map((comment, index) => (
                 <Card
+                size='small'
                     // key={comment}
                     style={{ background: '#f7c78d', marginBottom: '10px' }}
                     draggable
