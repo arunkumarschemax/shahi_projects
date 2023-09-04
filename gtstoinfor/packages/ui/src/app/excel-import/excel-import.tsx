@@ -24,6 +24,9 @@ export default function ExcelImport() {
     getUploadFilesData();
   }, [])
 
+  const userData = JSON.parse(localStorage.getItem('currentUser'))
+  const loginUser = userData.user.userName
+
   const getUploadFilesData = () => {
     ordersService.getUploadFilesData().then((res) => {
       if (res.status) {
@@ -83,14 +86,16 @@ export default function ExcelImport() {
                 if (res.status) {
                   const req = new FileStatusReq()
                   req.fileId = fileRes?.data?.id;
-                  req.status = 'Success'
+                  req.status = 'Success';
+                  req.userName = loginUser ? loginUser : null;
                   ordersService.updateFileStatus(req)
                   message.success(res.internalMessage)
                   navigate("/excel-import/grid-view");
                 } else {
                   const req = new FileStatusReq()
                   req.fileId = fileRes?.data?.id;
-                  req.status = 'Failed'
+                  req.status = 'Failed';
+                  req.userName = loginUser ? loginUser : null;
                   ordersService.updateFileStatus(req)
                   message.error('File upload failed')
                 }

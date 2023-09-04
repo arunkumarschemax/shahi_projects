@@ -322,9 +322,9 @@ export class OrdersService {
     async updateFileStatus(req: FileStatusReq): Promise<CommonResponseModel> {
         let update
         if (req.status === 'Failed') {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false });
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, isActive: false, createdUser: req.userName });
         } else {
-            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status })
+            update = await this.fileUploadRepo.update({ id: req.fileId }, { status: req.status, createdUser: req.userName })
         }
         if (update.affected) {
             return new CommonResponseModel(true, 1, 'updated successfully');
