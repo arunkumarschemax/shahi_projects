@@ -12,7 +12,7 @@ export interface DocExtractFormprops{
    
   }
 
-const DocExtractForm = (props:DocExtractFormprops) => {
+const DocExtractForm1 = (props:DocExtractFormprops) => {
     const navigate = useNavigate();
     const [form] = Form.useForm()
     const [itemsForm] = Form.useForm()
@@ -288,4 +288,4 @@ const StaticData =()=>{
 };
 
 
-export default DocExtractForm;
+export default DocExtractForm1;

@@ -1,24 +1,41 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-@Entity('po')
+@Entity('Innvoice')
 export class ScanEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
     name: 'type_id',
   })
   typeId: number;
 
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'GST',
+  @Column("varchar", {
+    name: "file_name"
   })
-  GST: string;
+  fileName: string;
+  
+  @Column("varchar", {
+    name: "file_path"
+  })
+  filePath: string;
 
   @Column('varchar', {
     nullable: false,
     length: 50,
-    name: 'IFSC',
+    name: 'Gst',
   })
-  IFSC: string;
+  Gst: string;
+
+  @Column('varchar', {
+    nullable: false,
+    length: 50,
+    name: 'Ifsc',
+  })
+  Ifsc: string;
+
+  // @Column('varchar', {
+  //   nullable: false,
+  //   length: 50,
+  //   name: 'po_type',
+  // })
+  // PoType: string;
 
   @Column('varchar', {
     nullable: false,
