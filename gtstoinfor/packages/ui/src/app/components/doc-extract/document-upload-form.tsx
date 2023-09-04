@@ -25,6 +25,7 @@ export function DocumentUploadForm(props: DocumentUploadFormProps) {
         setcollapsed(!collapsed);
     }
     return (
+        // eslint-disable-next-line react/jsx-no-useless-fragment
         <>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
             <div style={{ width: "50%" }}>
