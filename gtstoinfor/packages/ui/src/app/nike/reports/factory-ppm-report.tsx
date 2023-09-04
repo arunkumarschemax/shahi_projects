@@ -31,14 +31,13 @@ const FactoryPPMReport = () => {
     const searchInput = useRef<any>(null);
     const [searchText, setSearchText] = useState<any>([]);
     const [searchedColumn, setSearchedColumn] = useState<any>([]);
-    const [filterData, setFilterData] = useState<any>([]);
+    const [filterData, setFilterData] = useState([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [page, setPage] = React.useState(1);
     const [expandedActualUnit, setExpandedActualUnit] = useState({});
     const [expandedQuantityAllocation, setExpandedQuantityAllocation] = useState({});
     const [textareaValuesActualUnit, setTextareaValuesActualUnit] = useState({});
     const [textareaValuesQuantityAllocation, setTextareaValuesQuantityAllocation] = useState({});
-
     useEffect(() => {
         getData();
     }, [])
@@ -101,7 +100,7 @@ const FactoryPPMReport = () => {
             }));
         }
     };
-    
+   
 
     // const getFactoryStatus = (values: any) => {
     //     service.getByFactoryStatus().then(res => {
@@ -281,6 +280,7 @@ const FactoryPPMReport = () => {
             { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
             { title: 'Plant Code', dataIndex: 'plant' },
             { title: 'Plant Name', dataIndex: 'plantName' },
+            { title: 'Geo Code', dataIndex: '' },
             { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
             { title: 'UPC', dataIndex: 'UPC' },
             { title: 'Sales Order Number', dataIndex: ' ' },
@@ -533,11 +533,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'docTypeCode',
                 align: 'center',
             },
-            {
-                title: 'Doc Type Description',
-                dataIndex: 'docTypeDesc',
-                align: 'center',
-            },
+            { title: 'Doc Type Description',dataIndex: 'docTypeDesc',align: 'center'},
             { title: 'MRGAC', dataIndex: 'MRGAC' },
             { title: 'OGAC', dataIndex: 'OGAC' },
             { title: 'GAC', dataIndex: 'GAC' },
