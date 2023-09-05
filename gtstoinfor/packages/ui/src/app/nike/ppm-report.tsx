@@ -94,62 +94,72 @@ const PPMReport = () => {
     })
   }
 
-  const getData = () => {
-    const req = new PpmDateFilterRequest()
-    const selectedLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
-    if (form.getFieldValue('lastModifiedDate') !== undefined) {
-      req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
-    }
-    if (form.getFieldValue('lastModifiedDate') !== undefined) {
-      req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
-    }
-    if (form.getFieldValue('documentDate') !== undefined) {
-      req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD')
-    }
-    if (form.getFieldValue('documentDate') !== undefined) {
-      req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
-    }
-    if (form.getFieldValue('productCode') !== undefined) {
-      req.productCode = form.getFieldValue('productCode')
-    }
-    if (form.getFieldValue('poandLine') !== undefined) {
-      req.poandLine = form.getFieldValue('poandLine')
-    }
-    if (form.getFieldValue('colorDesc') !== undefined) {
-      req.colorDesc = form.getFieldValue('colorDesc')
-    }
-    if (form.getFieldValue('categoryDesc') !== undefined) {
-      req.categoryDesc = form.getFieldValue('categoryDesc')
-    }
-    if (form.getFieldValue('destinationCountry') !== undefined) {
-      req.destinationCountry = form.getFieldValue('destinationCountry')
-    }
-    if (form.getFieldValue('plant') !== undefined) {
-      req.plant = form.getFieldValue('plant')
-    }
-    if (form.getFieldValue('item') !== undefined) {
-      req.item = form.getFieldValue('item') 
-    }
-    if (form.getFieldValue('factory') !== undefined) {
-      req.factory = form.getFieldValue('factory')
-    }
-    if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
-      req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus')
-    }
-        if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
-            req.DPOMLineItemStatus = selectedLineItemStatus;
-        }  
-console.log(req,'request')
-    service.getPPMData(req).then(res => {
-      if (res.status) {
-        setGridData(res.data)
-        setFilterData(res.data)
-        setFilteredData(res.data)
-        Finish(res.data)
-      }
-    }).catch(err => {
-    })
+
+const getData = () => {
+  const req = new PpmDateFilterRequest();
+  const selectedLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
+
+  if (form.getFieldValue('lastModifiedDate') !== undefined) {
+    req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD');
   }
+  if (form.getFieldValue('lastModifiedDate') !== undefined) {
+    req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD');
+  }
+  if (form.getFieldValue('documentDate') !== undefined) {
+    req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
+  }
+  if (form.getFieldValue('documentDate') !== undefined) {
+    req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
+  }
+  if (form.getFieldValue('productCode') !== undefined) {
+    req.productCode = form.getFieldValue('productCode');
+  }
+  if (form.getFieldValue('poandLine') !== undefined) {
+    req.poandLine = form.getFieldValue('poandLine');
+  }
+  if (form.getFieldValue('colorDesc') !== undefined) {
+    req.colorDesc = form.getFieldValue('colorDesc');
+  }
+  if (form.getFieldValue('categoryDesc') !== undefined) {
+    req.categoryDesc = form.getFieldValue('categoryDesc');
+  }
+  if (form.getFieldValue('destinationCountry') !== undefined) {
+    req.destinationCountry = form.getFieldValue('destinationCountry');
+  }
+  if (form.getFieldValue('plant') !== undefined) {
+    req.plant = form.getFieldValue('plant');
+  }
+  if (form.getFieldValue('item') !== undefined) {
+    req.item = form.getFieldValue('item');
+  }
+  if (form.getFieldValue('factory') !== undefined) {
+    req.factory = form.getFieldValue('factory');
+  }
+  if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
+    req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
+  }
+  if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
+    req.DPOMLineItemStatus = selectedLineItemStatus;
+  }
+
+  service.getPPMData(req)
+    .then(res => {
+      if (res.status) {
+        setGridData(res.data);
+        setFilterData(res.data);
+        setFilteredData(res.data);
+        Finish(res.data);
+      } else {
+              setGridData([]); 
+        setFilterData([]); 
+        setFilteredData([]); 
+      }
+    })
+    .catch(err => {
+      console.error(err);
+    });
+};
+
   const handleExport = (e: any) => {
     e.preventDefault();
 
@@ -545,14 +555,30 @@ console.log(req,'request')
     });
 
 
-    return (<Table columns={columns} dataSource={filterData} size='large' pagination={{
-      onChange(current, pageSize) {
-        setPage(current);
-        setPageSize(pageSize)
-      }
-    }} scroll={{ x: 'max-content' }} />)
+  return (
+    <>
+    
+      {filterData.length > 0 ? (
+        <Table
+          columns={columns}
+          dataSource={filterData}
+          size='large'
+          pagination={{
+            onChange(current, pageSize) {
+              setPage(current);
+              setPageSize(pageSize);
+            }
+          }}
+          scroll={{ x: 'max-content' }}
+        />
+      ) : ( <Table size='large' />
+      )}
+    </>
+  );
+  
+  
+  
   }
-
   return (
     <>
       <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
