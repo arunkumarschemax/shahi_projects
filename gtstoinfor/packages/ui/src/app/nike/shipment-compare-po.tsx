@@ -70,13 +70,13 @@ const ShipmentChangesCompareGrid = () => {
     }
 
     function convertToYYYYMMDD(inputDate) {
-        const formatsToTry = ['DD-MM-YYYY', 'MM/DD/YYYY'];
+        const formatsToTry = ['DD-MM-YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD'];
         let formattedDate = null;
 
         for (const format of formatsToTry) {
             const parsedDate = moment(inputDate, format);
             if (parsedDate.isValid()) {
-                formattedDate = parsedDate.format('YYYY-MM-DD');
+                formattedDate = parsedDate.format('MM/DD/YYYY');
                 break;
             }
         }
@@ -332,6 +332,18 @@ const ShipmentChangesCompareGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
+            title: 'Report Generate Date',
+            dataIndex: 'report_generate_date'
+        },
+        {
+            title: 'Item',
+            dataIndex: 'item'
+        },
+        {
+            title: 'Unit',
+            dataIndex: 'unit'
+        },
+        {
             title: 'PO Number',
             dataIndex: 'po_number',
             ...getColumnSearchProps('po_number')
@@ -341,17 +353,33 @@ const ShipmentChangesCompareGrid = () => {
             dataIndex: 'po_line_item_number'
         },
         {
+            title: 'Document Date',
+            dataIndex: 'document_date'
+        },
+        {
+            title: 'Change from OGAC',
+            dataIndex: 'change_from_ogac'
+        },
+        {
+            title: 'Change to OGAC',
+            dataIndex: 'change_to_ogac'
+        },
+        {
+            title: 'Change from GAC',
+            dataIndex: 'change_from_gac'
+        },
+        {
+            title: 'Change to GAC',
+            dataIndex: 'change_to_gac'
+        },
+        {
+            title: 'RC Code',
+            dataIndex: 'rc_code'
+        },
+        {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
             ...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'Item',
-            dataIndex: 'item'
-        },
-        {
-            title: 'Unit',
-            dataIndex: 'unit'
         },
         {
             title: 'Previous Order Quantity Pieces',
@@ -415,6 +443,18 @@ const ShipmentChangesCompareGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
+            title: 'Report Generate Date',
+            dataIndex: 'report_generate_date'
+        },
+        {
+            title: 'Item',
+            dataIndex: 'item'
+        },
+        {
+            title: 'Unit',
+            dataIndex: 'unit'
+        },
+        {
             title: 'PO Number',
             dataIndex: 'po_number',
             ...getColumnSearchProps('po_number')
@@ -422,6 +462,30 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'PO Line Item No',
             dataIndex: 'po_line_item_number'
+        },
+        {
+            title: 'CO Number',
+            dataIndex: 'co_number'
+        },
+        {
+            title: 'Document Date',
+            dataIndex: 'document_date'
+        },
+        {
+            title: 'OGAC',
+            dataIndex: 'ogac'
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'gac'
+        },
+        {
+            title: 'Mode of Transportation Code in DPOM',
+            dataIndex: 'mode_of_transportation_code_in_DPOM'
+        },
+        {
+            title: 'Mode of Transportation Code in CRM CO',
+            dataIndex: 'mode_of_transportation_code_in_crm_co'
         },
         {
             title: 'Schedule Line Item No',
@@ -651,7 +715,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             key: '1',
             label: <b>GAC Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table bordered dataSource={filteredQtyData} columns={columns} />,
+            children: <Table bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '2',
@@ -661,7 +725,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             key: '3',
             label: <b >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
-            children: <Table bordered dataSource={itemChangeData} columns={columns1} />,
+            children: <Table bordered dataSource={itemChangeData} columns={columns1} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '4',

@@ -61,10 +61,21 @@ export class FactoryReportModel {
     VASSize: string;
     itemVasText: string;
     itemText: string;
+    price:number;
+    coPrice:number;
+    PCD: string;
+    shipToAddressLegalPO: string;
+    shipToAddressDIA: string;
+    CABCode: string;
+    grossPriceFOB: string;
+    netIncludingDisc: string;
+    trCoNetIncludingDisc: string;
+    displayName:string;
+    actualUnit:string;
+    allocatedQuantity: string;
     sizeWiseData: FactoryReportSizeModel[];
-
     constructor(lastModifiedDate: string, item: string, factory: string, documentDate: string, purchaseOrderNumber: string, poLineItemNumber: number, poAndLine: string, DPOMLineItemStatus: string, styleNumber: string, productCode: string, colorDesc: string, customerOrder: string, coFinalApprovalDate: string, planNo: string, leadTime: string, categoryCode: string, categoryDesc: string, vendorCode: string, gccFocusCode: string, gccFocusDesc: string, genderAgeCode: string, genderAgeDesc: string, destinationCountryCode: string, destinationCountry: string, plant: string, plantName: string, tradingCoPoNumber: string, UPC: string, directShipSONumber: string, directShipSOItemNumber: string, customerPO: string, shipToCustomerNumber: string, shipToCustomerName: string, planningSeasonCode: string, planningSeasonYear: string, docTypeCode: string, docTypeDesc: string, MRGAC: string, OGAC: string, GAC: string, truckOutDate: string, originReceiptDate: string, factoryDeliveryActDate: string, GACReasonCode: string, GACReasonDesc: string, shippingType: string, planningPriorityCode: string, planningPriorityDesc: string, launchCode: string, modeOfTransportationCode: string, inCoTerms: string, inventorySegmentCode: string, purchaseGroupCode: string, purchaseGroupName: string, totalItemQty: string, actualShippedQty: string, VASSize: string, itemVasText: string, itemText: string,
-        sizeWiseData: FactoryReportSizeModel[]) {
+        price:number,coPrice:number,PCD: string,shipToAddressLegalPO: string, shipToAddressDIA: string,CABCode: string,grossPriceFOB: string,netIncludingDisc: string, trCoNetIncludingDisc: string,displayName:string,actualUnit:string,allocatedQuantity: string,sizeWiseData: FactoryReportSizeModel[]) {
 
         this.lastModifiedDate = lastModifiedDate;
         this.item = item
@@ -125,6 +136,19 @@ export class FactoryReportModel {
         this.VASSize = VASSize
         this.itemVasText = itemVasText
         this.itemText = itemText
+        this.price = price
+        this.coPrice = coPrice
+        this.PCD = PCD
+        this.shipToAddressLegalPO = shipToAddressLegalPO
+       this.shipToAddressDIA=  shipToAddressDIA
+       this.CABCode= CABCode
+       this.grossPriceFOB = grossPriceFOB
+       this.netIncludingDisc = netIncludingDisc
+       this.trCoNetIncludingDisc=trCoNetIncludingDisc
+       this.displayName = displayName
+      
+        this.actualUnit = actualUnit
+        this.allocatedQuantity = allocatedQuantity
         this.sizeWiseData = sizeWiseData
     };
 }

@@ -67,7 +67,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         showUploadList: false
     };
 
-    async function extractPoPdfData(pdf: PDFDocumentProxy, pdfText: any) {
+    async function extractPoPdfData(pdf: any, pdfText: any) {
         type LegalPoPdfType = InstanceType<typeof LegalPoPdfModel>;
         const legalPoPdf: LegalPoPdfType = new LegalPoPdfModel()
         const legalPoPdfArr: LegalPoPdfType[] = []
@@ -83,7 +83,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         }
     }
 
-    async function extractDiaDocumentData(pdf: PDFDocumentProxy, pdfText: any) {
+    async function extractDiaDocumentData(pdf: any, pdfText: any) {
         const diaPDF: DiaPDFModel = new DiaPDFModel()
         const targetStrForPo = 'Delivery Instructions';
         const deliveryInstrunctionStr = pdfText.items.find(item => item.str.includes(targetStrForPo)).str.split(":")[1];

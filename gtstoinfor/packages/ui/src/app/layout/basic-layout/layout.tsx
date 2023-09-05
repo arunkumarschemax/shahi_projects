@@ -50,43 +50,43 @@ export default function BasicLayout() {
 
 
     function renderIcon(iconType, iconName) {
-        // // if (iconType === "antd") { 
-        //     const SpecificIcon = antdIcons["SolutionOutlined"]; 
-        //     return <SpecificIcon /> 
+        // if (iconType === "antd") { 
+        const SpecificIcon = antdIcons["SolutionOutlined"];
+        return <SpecificIcon />
         // }
         // else {
-        const SpecificIcon = antdIcons[iconName];
-        return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
-        // }
+        //     const SpecificIcon = icons[iconName];
+        //     return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} /
+
     }
 
     const getSubMenu = (route) => {
-        console.log(route)
 
-        if (route && route[0].subMenuId && route.length) {
+        if (route && route.subMenuData && route.subMenuData.length) {
             return (
-                <Menu.Item key={route[0].subMenuId} ><Link to={route[0].path}><span><span> {renderIcon(route[0].subMenuIconType, route[0].subMenuIconName)} <span>{route[0].subMenuName}</span> </span></span></Link> </Menu.Item>
+                <SubMenu key={route.menuId} title={<span> {renderIcon(route.iconType, route.iconName)} <span>{route.menuName}</span> </span>}  >
+                    <div style={{ backgroundColor: 'white', color: 'black' }}>
 
+                        {route.subMenuData.map(item => getSubMenu(item))}
+                    </div>
+                </SubMenu>
             )
         } else {
             return (
-                <div style={{ backgroundColor: 'white', color: 'white' }}>
-
+                <div style={{ backgroundColor: 'white', color: 'black' }}>
+                    <Menu.Item key={route.subMenuId} ><Link to={route.path}><span><span> {route.icon} <span>{route.subMenuName}</span> </span></span></Link> </Menu.Item>
                 </div>
 
             )
         }
     }
-
     const getAllSubMenus = () => {
-        console.log(localStorage.getItem("currentUser"));
+        // console.log(localStorage.getItem("currentUser"));
         const subMenus = [];
         const menu = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : [];
-        console.log(menu)
         // const menuAccess = localStorage.getItem("currentUser")? JSON.parse(localStorage.getItem("currentUser"))["menuAccessObject"]:[];
         menu?.forEach(eachRoutes => {
-            console.log(eachRoutes)
-            subMenus.push(getSubMenu(eachRoutes.subMenuData));
+            subMenus.push(getSubMenu(eachRoutes));
         });
         return subMenus;
     }

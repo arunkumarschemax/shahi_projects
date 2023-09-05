@@ -5,6 +5,7 @@ import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
+import { PpmDateFilterRequest } from "@project-management-system/shared-models";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
@@ -16,23 +17,23 @@ export class DpomRepository extends Repository<DpomEntity> {
         super(dpomRepository.target, dpomRepository.manager, dpomRepository.queryRunner);
     }
 
-    async getDivertReport(): Promise<any[]> {
-        const query = this.createQueryBuilder('dpm')
-            .select(`DISTINCT dpm.id,dpm.plant AS nPlant,dpm.dpom_item_line_status AS nLineStatus,
-            dpm.plant_name AS nPlantName,dpm.document_date AS nDocumentDate,
-            dpm.po_number AS npoNumber,dpm.po_line_item_number AS npoLine ,dpm.destination_country AS ndestination,
-            dpm.shipping_type AS nshipmentType,dpm.inventory_segment_code AS ninventorySegmentCode,
-            dpm.ogac AS nogac ,dpm.gac AS ngac ,dpm.product_code AS nproductCode,
-            dpm.item_vas_text AS nitemVasText,dpm.quantity AS nQuantity,dpc.plant AS oplant,
-            dpc.dpom_item_line_status AS onLineStatus,dpc.plant_name AS oPlantName ,
-            dpc.document_date AS oDocumentDate,dpc.po_number AS opoNumber, dpc.po_line_item_number AS opoLine,
-            dpc.destination_country AS odestination , dpc.shipping_type AS oshipmentType,dpc.inventory_segment_code AS oinventorySegmentCode,
-            dpc.ogac AS oogac,dpc.gac AS ogac,dpc.product_code AS oproductCode ,dpc.item_vas_text AS oitemVasText , dpc.quantity AS oquantity,dpm.created_at AS dpomCreatedDates `)
-            .leftJoin(DpomChildEntity,'dpc','dpc.parent_id = dpm.id')
-            .groupBy(`dpm.id,dpc.id`)
-            //.where(`dpm.dpom_item_line_status IN ('accepted','Unaccepted')`)
-        return await query.getRawMany()
-    }
+    // async getDivertReport(): Promise<any[]> {
+    //     const query = this.createQueryBuilder('dpm')
+    //         .select(`DISTINCT dpm.id,dpm.plant AS nPlant,dpm.dpom_item_line_status AS nLineStatus,
+    //         dpm.plant_name AS nPlantName,dpm.document_date AS nDocumentDate,
+    //         dpm.po_number AS npoNumber,dpm.po_line_item_number AS npoLine ,dpm.destination_country AS ndestination,
+    //         dpm.shipping_type AS nshipmentType,dpm.inventory_segment_code AS ninventorySegmentCode,
+    //         dpm.ogac AS nogac ,dpm.gac AS ngac ,dpm.product_code AS nproductCode,
+    //         dpm.item_vas_text AS nitemVasText,dpm.quantity AS nQuantity,dpc.plant AS oplant,
+    //         dpc.dpom_item_line_status AS onLineStatus,dpc.plant_name AS oPlantName ,
+    //         dpc.document_date AS oDocumentDate,dpc.po_number AS opoNumber, dpc.po_line_item_number AS opoLine,
+    //         dpc.destination_country AS odestination , dpc.shipping_type AS oshipmentType,dpc.inventory_segment_code AS oinventorySegmentCode,
+    //         dpc.ogac AS oogac,dpc.gac AS ogac,dpc.product_code AS oproductCode ,dpc.item_vas_text AS oitemVasText , dpc.quantity AS oquantity,dpm.created_at AS dpomCreatedDates `)
+    //         .leftJoin(DpomChildEntity,'dpc','dpc.parent_id = dpm.id')
+    //         .groupBy(`dpm.id,dpc.id`)
+    //         //.where(`dpm.dpom_item_line_status IN ('accepted','Unaccepted')`)
+    //     return await query.getRawMany()
+    // }
 
     async getCountForDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
@@ -256,4 +257,164 @@ export class DpomRepository extends Repository<DpomEntity> {
        .select(`po_number AS poNumber, total_item_qty AS totalItemQuantity,created_at AS createdAt`)
         return await query.getRawMany();
     }
+    async getDivertReport(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpm')
+            .select(`DISTINCT id,item,plant AS Plant,dpom_item_line_status AS LineStatus,
+            plant_name AS PlantName,document_date AS DocumentDate,
+            po_number AS poNumber,po_line_item_number AS poLine ,destination_country AS destination,
+            shipping_type AS shipmentType,inventory_segment_code AS inventorySegmentCode,
+            ogac AS ogac ,gac AS gac ,product_code AS productCode,
+            item_vas_text AS itemVasText,quantity AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos`)
+            .where(`diverted_to_pos IS NOT null`)
+        return await query.getRawMany()
+    }
+
+   
+    async getDivertWithNewDataReport(req: [po: string, line: string]): Promise<any[]> {
+        const [po, line] = req; 
+        
+        const query = this.createQueryBuilder('dpm')
+            .select(` id AS nId,item, plant AS nPlant, dpom_item_line_status AS nLineStatus,
+            plant_name AS nPlantName, document_date AS nDocumentDate,
+            po_number AS npoNumber, po_line_item_number AS npoLine, destination_country AS ndestination,
+            shipping_type AS nshipmentType, inventory_segment_code AS ninventorySegmentCode,
+            ogac AS nogac, gac AS ngac, product_code AS nproductCode, dpom_item_line_status AS nDPOMLineItemStatus,
+            item_vas_text AS nitemVasText, quantity AS nQuantity, created_at AS ndpomCreatedDates, diverted_to_pos`)
+            .where(`diverted_to_pos IS NOT null`)
+            .andWhere(`po_number = :po AND po_line_item_number = :line`, { po, line }); 
+    
+        return await query.getRawMany();
+    }
+
+    async getPoLineforfactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_and_line,dpom.id`)
+            .where(` dpom_item_line_status <> 'CANCELLED'`)
+        return await query.getRawMany();
+    }
+    async getItemforfactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.item,dpom.id`)
+            .where(` dpom_item_line_status <> 'CANCELLED'`)
+        return await query.getRawMany();
+    }
+    async getFactoryForfactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.factory,dpom.id`)
+            .where(` dpom_item_line_status <> 'CANCELLED'`)
+        return await query.getRawMany();
+    }
+    ///------------------------------------------------------------------------------------------marketing
+    async getPoLineforMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_and_line,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
+        return await query.getRawMany();
+    }
+    async getItemforMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.item,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
+        return await query.getRawMany();
+    }
+    async getFactoryforMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.factory,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
+        return await query.getRawMany();
+    }
+    async getPpmPlantForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.plant,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
+        return await query.getRawMany();
+    }
+    async getPpmProductCodeForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.productCode,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
+        return await query.getRawMany();
+    }
+    async getPpmColorDescForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.colorDesc,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
+        return await query.getRawMany();
+    }
+    async getPpmCategoryDescForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.categoryDesc,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
+        return await query.getRawMany();
+    }
+    async getPpmDestinationCountryForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.destinationCountry,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26'`)
+        return await query.getRawMany();
+    }
+
+
+    async getFactoryPpmData(req:PpmDateFilterRequest): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom.*, od.display_name AS displayName `)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
+            // .groupBy(`od.po_number AND od.po_line_item_number`)
+            if (req.lastModifedStartDate !== undefined) {
+                query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
+            }
+            if (req.documentStartDate !== undefined) {
+                query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`)
+            }
+        return await query.getRawMany();
+    }
+
+    async getMarketingPpmData(req:PpmDateFilterRequest): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom.*, od.display_name AS displayName `)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
+            // .groupBy(`od.po_number AND od.po_line_item_number`)
+            if (req.lastModifedStartDate !== undefined) {
+                query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
+            }
+            if (req.documentStartDate !== undefined) {
+                query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`)
+            } if (req.productCode !== undefined) {
+                query.andWhere(`dpom.product_code ='${req.productCode}'`)
+            }
+            if (req.poandLine !== undefined) {
+                query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
+            }
+            if (req.colorDesc !== undefined) {
+                query.andWhere(`dpom.color_desc ='${req.colorDesc}'`)
+            }
+            if (req.categoryDesc !== undefined) {
+                query.andWhere(`dpom.category_desc ='${req.categoryDesc}'`)
+            }
+            if (req.destinationCountry !== undefined) {
+                query.andWhere(`dpom.destination_country ='${req.destinationCountry}'`)
+            }
+            if (req.plant !== undefined) {
+                query.andWhere(`dpom.plant ='${req.plant}'`)
+            }
+            if (req.item !== undefined) {
+                query.andWhere(`dpom.item ='${req.item}'`)
+            }
+            if (req.factory !== undefined) {
+                query.andWhere(`dpom.factory ='${req.factory}'`)
+            }
+            console.log(req,"reqesty")
+        return await query.getRawMany();
+    }
+
+    async getFactoryDataById(poline: string): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom.id as docId,dpom.po_and_line as poline`)
+            .where(`dpom.po_and_line = :poline`, { poline });
+    
+        return await query.getRawMany();
+    }
+    
+    
+
 }
