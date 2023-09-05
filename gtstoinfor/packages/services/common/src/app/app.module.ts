@@ -10,6 +10,7 @@ import { appConfig } from '../../config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DpomModule } from './dpom/nike-dpom.module';
 import { SupplierModule } from './supplier/supplier.module';
+import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.module';
 
 
 @Module({
@@ -33,7 +34,7 @@ import { SupplierModule } from './supplier/supplier.module';
     FactoriesModule,
     SupplierModule,
     UsersModule,
-    AuthModule, JwtModule, DpomModule],
+    AuthModule, JwtModule, DpomModule,AdobeAcrobatApiModule],
   controllers: [AppController],
   providers: [AppService],
 })
