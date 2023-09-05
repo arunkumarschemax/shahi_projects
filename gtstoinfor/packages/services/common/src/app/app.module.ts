@@ -55,7 +55,6 @@ import { UomModule } from './uom/uom.module';
 import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
 import { BomModule } from './bom-trim/bom.module';
 import { SettingsModule } from './settings/settings.module';
-<<<<<<<<< Temporary merge branch 1
 import { SampleTypesModule } from './sample Types/sample-types.module';
 import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module';
 
