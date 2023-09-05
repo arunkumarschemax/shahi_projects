@@ -96,6 +96,7 @@ const PPMReport = () => {
 
   const getData = () => {
     const req = new PpmDateFilterRequest()
+    const selectedLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
     if (form.getFieldValue('lastModifiedDate') !== undefined) {
       req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
     }
@@ -127,14 +128,18 @@ const PPMReport = () => {
       req.plant = form.getFieldValue('plant')
     }
     if (form.getFieldValue('item') !== undefined) {
-      req.item = form.getFieldValue('item')
+      req.item = form.getFieldValue('item') 
     }
     if (form.getFieldValue('factory') !== undefined) {
       req.factory = form.getFieldValue('factory')
     }
-    req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
-
-
+    if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
+      req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus')
+    }
+        if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
+            req.DPOMLineItemStatus = selectedLineItemStatus;
+        }  
+console.log(req,'request')
     service.getPPMData(req).then(res => {
       if (res.status) {
         setGridData(res.data)
@@ -251,16 +256,6 @@ const PPMReport = () => {
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
 
   const Finish = (data: any) => {
-    // const values = form.getFieldsValue();
-    // if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
-    //   setFilterData(gridData);
-    // } else {
-    //   const filteredData = gridData.filter(item =>
-    //     values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
-    //   );
-    //   setFilterData(filteredData);
-    //   getData()
-    // }
   };
 
 

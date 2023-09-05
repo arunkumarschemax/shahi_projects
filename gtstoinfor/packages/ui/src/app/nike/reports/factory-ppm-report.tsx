@@ -198,6 +198,7 @@ const FactoryPPMReport = () => {
 
     const getData = () => {
         const req = new PpmDateFilterRequest()
+        const selectedLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
         if (form.getFieldValue('lastModifiedDate') !== undefined) {
             req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
         }
@@ -210,8 +211,10 @@ const FactoryPPMReport = () => {
         if (form.getFieldValue('documentDate') !== undefined) {
             req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
         }
-        req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
-        service.getFactoryReportData(req).then(res => {
+        if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
+            req.DPOMLineItemStatus = selectedLineItemStatus;
+        }       
+         service.getFactoryReportData(req).then(res => {
             if (res.status) {
                 setGridData(res.data)
                 setFilterData(res.data)
@@ -225,16 +228,7 @@ const FactoryPPMReport = () => {
     }
 
     const Finish = (data: any) => {
-        // const values = form.getFieldsValue();
-
-        // if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
-        //     setFilterData(gridData);
-        // } else {
-        //     const filteredData = gridData.filter(item =>
-        //         values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
-        //     );
-        //     setFilterData(filteredData);
-        // }
+       
     }
 
 
