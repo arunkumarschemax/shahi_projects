@@ -8,7 +8,8 @@ import { Document, pdfjs } from 'react-pdf';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-models';
-import { NikeService } from '@project-management-system/shared-services';
+import { AdobeAcrobatApiService, NikeService } from '@project-management-system/shared-services';
+import PoPdfTable from './po-pdf-table';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 interface IPdfUploadProps {
 
@@ -27,7 +28,7 @@ const pdfFilesValidationObject = [
         pdfKeyText: 'D E L I V E R Y   I N S T R U C T I O N S'
     }, {
         pdfName: 'PO PDF',
-        pdfKeyText: 'BUYER:  NIKE Trading Company'
+        pdfKeyText: 'BUYER:'
     }
 ]
 
@@ -41,10 +42,12 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [diaPDFValues, setDiaPDFValues] = useState<DiaPDFModel>()
     const [resultProps, setResultProps] = useState<ResultPropsModel>()
+    const [poPdfData,setPoPdfData] = useState<any>([])
 
 
     const [diaPDfForm] = Form.useForm()
-    const nikeDpomService = new NikeService()
+    const nikeDpomService = new NikeService();
+    const adobeAcrobatApi = new AdobeAcrobatApiService()
 
     const uploadProps: UploadProps = {
         name: 'file',
@@ -129,7 +132,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         text += textContent.items.map((item: any) => item.str).join(' ');
         let title = pdfFilesValidationObject.filter((val) => text.match(val.pdfKeyText) != undefined)[0]?.pdfName
         if (title === "PO PDF") {
-            extractPoPdfData(pdf, textContent)
+            uploadPoPdf(pdfFile)
 
         } else if (title === "DIA Document") {
             extractDiaDocumentData(pdf, textContent)
@@ -182,10 +185,19 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
     function renderLegalPoForm() {
         return (
-            <h1>Legal Po Form will be rendered here</h1>
+            <PoPdfTable data={poPdfData} />
         )
     }
 
+    const uploadPoPdf = (pdfFile) => {
+        const formData = new FormData();
+        formData.append('file', pdfFile);
+        adobeAcrobatApi.extractTextFromPdf(formData).then((res) => {
+            console.log(res)
+            setPoPdfData(res)
+        })
+    }
+console.log(poPdfData)
     const saveDiaPdfFields = () => {
         const formValues = diaPDfForm.getFieldsValue()
         nikeDpomService.saveDiaPDFFields(formValues).then((res) => {
@@ -230,8 +242,9 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
                             resultProps.title.includes("PO PDF") ?
                                 renderLegalPoForm() :
                                 <></>
-                    }
+                    } 
                 </Col>
+              
                     <Col span={2}>
                         <Button onClick={saveDiaPdfFields} type={'primary'} >Submit</Button>
                     </Col>
@@ -240,6 +253,11 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
                     </Col>
                 </>
                 }
+            </Row>
+            <Row gutter={24}>
+            {poPdfData && poPdfData.length && <Col span={24}>
+                    <PoPdfTable data={poPdfData} />
+                </Col>}
             </Row>
         </Card>
     )
