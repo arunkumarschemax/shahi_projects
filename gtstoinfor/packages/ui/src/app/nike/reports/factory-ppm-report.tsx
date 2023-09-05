@@ -316,18 +316,53 @@ const FactoryPPMReport = () => {
 
     }
 
+    let exportingColumns: IExcelColumn[] = []
+
 
     const handleExport = (e: any) => {
         e.preventDefault();
-
-
         const currentDate = new Date()
             .toISOString()
             .slice(0, 10)
             .split("-")
             .join("/");
 
-        let exportingColumns: IExcelColumn[] = []
+        const excel = new Excel();
+        excel.addSheet("Sheet1");
+        excel.addRow();
+        excel.addColumns(exportingColumns);
+        excel.addDataSource(gridData);
+        excel.saveAs(`factory-report-${currentDate}.xlsx`);
+    }
+
+    const getSizeWiseHeaders = (data: FactoryReportModel[]) => {
+        const sizeHeaders = new Set<string>();
+        data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
+            sizeHeaders.add('' + version.sizeDescription);
+        }))
+        return Array.from(sizeHeaders);
+    };
+
+    const getMap = (data: FactoryReportModel[]) => {
+        const sizeWiseMap = new Map<string, Map<string, number>>();
+        data?.forEach(rec => {
+            if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
+                sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
+            }
+            rec.sizeWiseData?.forEach(version => {
+                sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
+            })
+        });
+        return sizeWiseMap;
+    }
+
+    const totalItemQty = gridData?.map(i => i.totalItemQty)
+    const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
+
+    const renderReport = (data: FactoryReportModel[]) => {
+        const sizeHeaders = getSizeWiseHeaders(data);
+        const sizeWiseMap = getMap(data);
+
         exportingColumns = [
             { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
             {
@@ -418,57 +453,6 @@ const FactoryPPMReport = () => {
             { title: 'Hanger Po', dataIndex: 'allocatedQuantity', align: 'center' },
 
         ]
-        const sizeHeaders = new Set<string>();
-
-        const excelData = gridData.map(item => {
-            const excelItem: any = {
-                'Po+Line': `${item.purchaseOrderNumber}-${item.poLineItemNumber}`,
-                'Last Modified Date': item.lastModifiedDate,
-                'Item': item.item,
-            };
-            sizeHeaders.forEach(sizeHeader => {
-                excelItem[sizeHeader] = item[sizeHeader];
-            });
-
-            return excelItem;
-        });
-
-        const excel = new Excel();
-        excel.addSheet("Sheet1");
-        excel.addRow();
-        excel.addColumns(exportingColumns);
-        excel.addDataSource(gridData);
-        excel.saveAs(`factory-report-${currentDate}.xlsx`);
-    }
-
-    const getSizeWiseHeaders = (data: FactoryReportModel[]) => {
-        const sizeHeaders = new Set<string>();
-        data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
-            sizeHeaders.add('' + version.sizeDescription);
-        }))
-        return Array.from(sizeHeaders);
-    };
-
-    const getMap = (data: FactoryReportModel[]) => {
-        const sizeWiseMap = new Map<string, Map<string, number>>();
-        data?.forEach(rec => {
-            if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
-                sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
-            }
-            rec.sizeWiseData?.forEach(version => {
-                sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
-            })
-        });
-        return sizeWiseMap;
-    }
-
-    const totalItemQty = gridData?.map(i => i.totalItemQty)
-    const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
-
-    const renderReport = (data: FactoryReportModel[]) => {
-        const sizeHeaders = getSizeWiseHeaders(data);
-        const sizeWiseMap = getMap(data);
-
 
         const columns: ColumnsType<any> = [
             {
@@ -780,6 +764,7 @@ const FactoryPPMReport = () => {
                 render: (text) => <strong>{text}</strong>
             }
         ];
+
         sizeHeaders?.forEach(version => {
             columns.push({
                 title: version,
@@ -792,6 +777,38 @@ const FactoryPPMReport = () => {
                         title: 'Quantity',
                         dataIndex: '',
                         key: '',
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                            if (sizeData) {
+                                if (sizeData.sizeQty !== null) {
+                                    const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                                    return (
+                                        formattedQty
+                                    );
+                                } else {
+                                    return (
+                                        '-'
+                                    );
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    }
+                ],
+                render: (text, record) => {
+                    return record.sizeWiseData.find(item => item.sizeDescription === version);
+                }
+            });
+            exportingColumns.push({
+                title: version,
+                dataIndex: '',
+                width: 130,
+                align: 'center',
+                children: [
+                    {
+                        title: 'Quantity',
+                        dataIndex: '',
                         render: (text, record) => {
                             const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
                             if (sizeData) {
