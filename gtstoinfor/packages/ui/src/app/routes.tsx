@@ -18,10 +18,10 @@ import SupplierForm from "./masters/supplier/supplier-form"
 import SupplierView from "./masters/supplier/supplier-view"
 import { FactoryDto, SupplierCreateDto } from "@project-management-system/shared-models"
 import PdfUpload from "./nike/pdf-reader/pdf-upload"
-import ShipmentTrackerReport from "./nike/reports/shipment-tracker-report"
+// import ShipmentTrackerReport from "./nike/reports/shipment-tracker-report"
 import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
-import DivertReport from "./nike/reports/divert-report"
+// import DivertReport from "./nike/reports/divert-report"
 import PPMReport from "./nike/ppm-report"
 import FactoryPPMReport from "./nike/reports/factory-ppm-report"
 import FabricTrackerReport from "./nike/reports/fabric-tracker-report"
@@ -29,6 +29,14 @@ import { NikeDashboard } from "./nike/nike-dash-components/nike-dashboard"
 import { OrderAcceptance } from "./nike/components/order-acceptance"
 import ShipmentPlanningChart from "./nike/shipment-planning-chart"
 import NikeFileRevert from "./nike/components/file-revert"
+import DivertReport from "./nike/reports/divert-report"
+import ShipmentTrackerReport from "./nike/reports/shipment-tracker-report"
+import ShipmentChangesCompareGrid from "./nike/shipment-compare-po"
+import VASChangesCompareGrid from "./nike/vas-compare-report"
+import DPOMSyncManually from "./nike/components/dpom-manual-sync"
+import { FOBPriceVariationReport } from "./nike/reports/fob-price-variation-report"
+import FabricTrackerReport1 from "./nike/reports/fabric-tracker-report1"
+import FabricTrackerReport2 from "./nike/reports/fabric-tracker-report2"
 
 
 export const AppRoutes = () => {
@@ -62,6 +70,8 @@ export const AppRoutes = () => {
                     <Route path='factory-report' element={<FactoryPPMReport />} />
                     <Route path="ppm-report" element={<PPMReport />} />
                     <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
+                    <Route path='fabrick-tracker-report1' element={<FabricTrackerReport1 />} />
+                    <Route path='fabrick-tracker-report2' element={<FabricTrackerReport2 />} />
                     <Route path='order-acceptance' element={<OrderAcceptance />} />
                     <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
@@ -74,47 +84,61 @@ export const AppRoutes = () => {
     ))
 
     return (
-        
-            <Routes>
-                <Route path='/' element={
+
+        <Routes>
+            <Route path='/' element={
+                <>
                     <>
-                        <>
-                            <BasicLayout />
-                        </>
+                        <BasicLayout />
                     </>
-                } >
-                    <Route path='/user-management/users-from' element={<UserCreationForm />} />
-                    <Route path='/user-management/users-view' element={<UsersView />} />
-                    <Route path='/masters'>
-                        <Route path='factories/factories-view' element={<FactoriesView />} />
-                        <Route path='factories/factories-form' element={<FactoriesForm Data={undefined} updateItem={function (Data: FactoryDto): void {
+                </>
+            } >
+                <Route path='/user-management/users-from' element={<UserCreationForm />} />
+                <Route path='/user-management/users-view' element={<UsersView />} />
+                <Route path='/masters'>
+                    <Route path='factories/factories-view' element={<FactoriesView />} />
+                    <Route path='factories/factories-form' element={<FactoriesForm Data={undefined} updateItem={function (Data: FactoryDto): void {
+                        throw new Error("Function not implemented.")
+                    }} isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    }} />} />
+                    {/* <Route path='supplier/supplier-view' element={<SupplierView />} />
+                                <Route path='supplier/supplier-form' element={<SupplierForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
                             throw new Error("Function not implemented.")
                         }} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
-                        }} />} />
-                    </Route>
-                    <Route path='/nike'>
-                        <Route path='file-import' element={<PoFileImport />} />
-                        <Route path='file-revert' element={<NikeFileRevert />} />
-                        <Route path='order-acceptance' element={<OrderAcceptance />} />
-                        <Route path='pdf-upload' element={<PdfUpload />} />
+                        }} />} /> */}
 
-                    </Route>
-                    <Route path='/reports'>
-                        <Route path='factory-report' element={<FactoryPPMReport />} />
-                        <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
-                        <Route path='divert-report' element={<DivertReport />} />
-                        <Route path='factory-report' element={<FactoryPPMReport />} />
-                        <Route path='ppm-report' element={<PPMReport />} />
-                        <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
-                        <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
-                        <Route path='shipment-report' element={<ShipmentTrackerReport />} />
-                    </Route>
-                    <Route path='nike-dashboard' element={<NikeDashboard />} />
-                    <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
                 </Route>
-                <Route path="/login" element={<Login />} />
-            </Routes>
-        
+                <Route path='/nike'>
+                    <Route path='nike-dashboard' element={<NikeDashboard />} />
+                    <Route path='dpom-sync' element={<DPOMSyncManually />} />
+                    <Route path='file-import' element={<PoFileImport />} />
+                    <Route path='file-revert' element={<NikeFileRevert />} />
+                    <Route path='order-acceptance' element={<OrderAcceptance />} />
+                    <Route path='pdf-upload' element={<PdfUpload />} />
+
+                </Route>
+                <Route path='/reports'>
+                    <Route path='factory-report' element={<FactoryPPMReport />} />
+                    <Route path='shipment-compare' key='/shipment-compare' element={<ShipmentChangesCompareGrid />} />
+                    <Route path='vas-compare' key='/vas-compare' element={<VASChangesCompareGrid />} />
+                    <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
+                    <Route path='divert-report' element={<DivertReport />} />
+                    <Route path='factory-report' element={<FactoryPPMReport />} />
+                    <Route path='ppm-report' element={<PPMReport />} />
+                    <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} /> 
+                    <Route path='fabrick-tracker-report1' element={<FabricTrackerReport1 />} />
+                    <Route path='fabrick-tracker-report2' element={<FabricTrackerReport2 />} />
+                    <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
+                    <Route path='shipment-report' element={<ShipmentTrackerReport />} />
+                        <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
+                </Route>
+                <Route path='nike-dashboard' element={<NikeDashboard />} />
+                <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
+            </Route>
+            <Route path="/login" element={<Login />} />
+        </Routes>
+
     )
 }
