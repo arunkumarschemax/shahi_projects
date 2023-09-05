@@ -51,6 +51,10 @@ export class DocumentUploadController {
           console.log(file);
           // const destinationPath = config.download_path+`/PO-${req.body.poNumber}`;
           const destinationPath = `./upload_files/PO-${req.body.poNumber}`;
+          // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
+
+          // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
+
           try {
             // Attempt to create the directory if it doesn't exist
             fs.mkdirSync(destinationPath, { recursive: true });
