@@ -210,6 +210,7 @@ const FactoryPPMReport = () => {
         getItem();
         getFactory();
     }, [])
+
     const getProductCode =  () => {
         service.getPpmProductCodeForFactory().then(res => {
           setProductCode(res.data)
@@ -293,7 +294,7 @@ const FactoryPPMReport = () => {
           if (form.getFieldValue('factory') !== undefined) {
             req.factory = form.getFieldValue('factory')
           }
-      
+          console.log(req,"request")
         service.getFactoryReportData(req).then(res => {
             if (res.status) {
                 setGridData(res.data)
@@ -304,6 +305,7 @@ const FactoryPPMReport = () => {
 
         }).catch(err => {
         })
+        console.log(filteredData,'response')
     }
 
     const Finish = (data: any) => {
