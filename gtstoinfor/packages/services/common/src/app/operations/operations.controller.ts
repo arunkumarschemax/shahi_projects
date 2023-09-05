@@ -52,7 +52,7 @@ export class OperationsController {
        @Post('/getAllActiveOpreations')
        async getAll(@Req() request: Request): Promise<AllOperationsResponseModel> {
            try {
-               return await this.operationService.getAllOperations();
+               return await this.operationService.getAllActiveOperations();
            } catch (error) {
                return this.applicationExceptionHandler.returnException(AllOperationsResponseModel, error)
            }

@@ -117,6 +117,7 @@ import UomGrid from "./masters/uom/uom-grid"
 import SampleDevDetail from "./sample-development/sample-request-detailed-view"
 import FabricBomCreation from "./BOM/fabric-creation"
 import FabricDevelopmentRequest from "./fabric development/fabric-development-request"
+import OperationSequenceForm from "./orders/operations-squence-form"
 
 
 export const AppRoutes = () => {
@@ -469,6 +470,7 @@ export const AppRoutes = () => {
                 <Route path='item-creation' element={<ItemCreation/>}/>
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
+                <Route path='operation-sequence' element={<OperationSequenceForm/>} />
 
                 </Route>
 

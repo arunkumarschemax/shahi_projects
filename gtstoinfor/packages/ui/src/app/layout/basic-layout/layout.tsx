@@ -464,6 +464,12 @@ export const baseRouterList = [
                 path: "bomtrimcreation/bom-trim-creation",
                 filepath: "bomtrimcreation/bom-trim-creation",
             },
+            {
+                label: "Operation Sequence",
+                key: "operation-sequence",
+                path: "operation-sequence",
+                filepath: "operation-sequence",
+            },
         ]
     },
     // {
