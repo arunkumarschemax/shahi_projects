@@ -256,61 +256,70 @@ const FactoryPPMReport = () => {
       } 
 
 
-    const getData = () => {
-        const req = new PpmDateFilterRequest()
+      const getData = () => {
+        const req = new PpmDateFilterRequest();
         const selectedLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
+      
         if (form.getFieldValue('lastModifiedDate') !== undefined) {
-            req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
+          req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('lastModifiedDate') !== undefined) {
-            req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD')
+          req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('documentDate') !== undefined) {
-            req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD')
+          req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('documentDate') !== undefined) {
-            req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
+          req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('productCode') !== undefined) {
-            req.productCode = form.getFieldValue('productCode')
-          }
-          if (form.getFieldValue('poandLine') !== undefined) {
-            req.poandLine = form.getFieldValue('poandLine')
-          }
-          if (form.getFieldValue('colorDesc') !== undefined) {
-            req.colorDesc = form.getFieldValue('colorDesc')
-          }
-          if (form.getFieldValue('categoryDesc') !== undefined) {
-            req.categoryDesc = form.getFieldValue('categoryDesc')
-          }
-          if (form.getFieldValue('destinationCountry') !== undefined) {
-            req.destinationCountry = form.getFieldValue('destinationCountry')
-          }
-          if (form.getFieldValue('plant') !== undefined) {
-            req.plant = form.getFieldValue('plant')
-          }
-          if (form.getFieldValue('item') !== undefined) {
-            req.item = form.getFieldValue('item')
-          }
-          if (form.getFieldValue('factory') !== undefined) {
-            req.factory = form.getFieldValue('factory')
-          }
-          console.log(req,"request")
+          req.productCode = form.getFieldValue('productCode');
+        }
+        if (form.getFieldValue('poandLine') !== undefined) {
+          req.poandLine = form.getFieldValue('poandLine');
+        }
+        if (form.getFieldValue('colorDesc') !== undefined) {
+          req.colorDesc = form.getFieldValue('colorDesc');
+        }
+        if (form.getFieldValue('categoryDesc') !== undefined) {
+          req.categoryDesc = form.getFieldValue('categoryDesc');
+        }
+        if (form.getFieldValue('destinationCountry') !== undefined) {
+          req.destinationCountry = form.getFieldValue('destinationCountry');
+        }
+        if (form.getFieldValue('plant') !== undefined) {
+          req.plant = form.getFieldValue('plant');
+        }
+        if (form.getFieldValue('item') !== undefined) {
+          req.item = form.getFieldValue('item');
+        }
+        if (form.getFieldValue('factory') !== undefined) {
+          req.factory = form.getFieldValue('factory');
+        }
+        if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
+          req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
+        }
         if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
-            req.DPOMLineItemStatus = selectedLineItemStatus;
-        }       
-         service.getFactoryReportData(req).then(res => {
+          req.DPOMLineItemStatus = selectedLineItemStatus;
+        }
+      
+        service.getPPMData(req)
+          .then(res => {
             if (res.status) {
-                setGridData(res.data)
-                setFilterData(res.data)
-                setFilteredData(res.data)
-                Finish(res.data)
+              setGridData(res.data);
+              setFilterData(res.data);
+              setFilteredData(res.data);
+              Finish(res.data);
+            } else {            
+              setGridData([]); 
+              setFilterData([]); 
+              setFilteredData([]); 
             }
-
-        }).catch(err => {
-        })
-        console.log(filteredData,'response')
-    }
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      };
 
     const Finish = (data: any) => {
        
@@ -809,12 +818,26 @@ const FactoryPPMReport = () => {
             });
         });
 
-        return (<Table columns={columns} size='small' dataSource={filterData} pagination={{
-            onChange(current, pageSize) {
-                setPage(current);
-                setPageSize(pageSize)
-            }
-        }} scroll={{ x: 'max-content' }} />)
+        return (
+            <>
+            
+              {filterData.length > 0 ? (
+                <Table
+                  columns={columns}
+                  dataSource={filterData}
+                  size='large'
+                  pagination={{
+                    onChange(current, pageSize) {
+                      setPage(current);
+                      setPageSize(pageSize);
+                    }
+                  }}
+                  scroll={{ x: 'max-content' }}
+                />
+              ) : ( <Table size='large' />
+              )}
+            </>
+          );
     }
 
     return (
@@ -843,7 +866,7 @@ const FactoryPPMReport = () => {
 
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
                             <Form.Item name="DPOMLineItemStatus" label="Factory Status">
                                 <Select
                                     showSearch
@@ -857,7 +880,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
                             <Form.Item name='productCode' label='Product Code' >
                                 <Select
                                     showSearch
@@ -872,7 +895,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
                             <Form.Item name='poandLine' label='Po+Line' >
                                 <Select
                                     showSearch
