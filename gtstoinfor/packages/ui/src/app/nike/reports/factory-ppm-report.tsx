@@ -72,7 +72,7 @@ const FactoryPPMReport = () => {
             if (res.status) {
                 getData();
                 message.success(res.internalMessage);
-               
+
                 // window.location.reload();
 
             } else {
@@ -109,7 +109,7 @@ const FactoryPPMReport = () => {
             }));
         }
     };
-    
+
 
     // const getFactoryStatus = (values: any) => {
     //     service.getByFactoryStatus().then(res => {
@@ -211,49 +211,49 @@ const FactoryPPMReport = () => {
         getFactory();
     }, [])
 
-    const getProductCode =  () => {
+    const getProductCode = () => {
         service.getPpmProductCodeForFactory().then(res => {
-          setProductCode(res.data)
+            setProductCode(res.data)
         })
-        
-      }
-      const getPoLine = () => {
+
+    }
+    const getPoLine = () => {
         service.getPpmPoLineForFactory().then(res => {
-          setPoLine(res.data)
+            setPoLine(res.data)
         })
-      }
-      const getColorDesc = () => {
+    }
+    const getColorDesc = () => {
         service.getPpmColorDescForFactory().then(res => {
-          setColorDesc(res.data)
+            setColorDesc(res.data)
         })
-      }
-      const getcategoryDesc = () => {
+    }
+    const getcategoryDesc = () => {
         service.getPpmCategoryDescForFactory().then(res => {
-          setCategoryDesc(res.data)
-    
+            setCategoryDesc(res.data)
+
         })
-      }
-      const getcountrydestination = () => {
+    }
+    const getcountrydestination = () => {
         service.getPpmDestinationCountryForFactory().then(res => {
-          setCountryDestination(res.data)
+            setCountryDestination(res.data)
         })
-      }
-      const getplantCode = () => {
+    }
+    const getplantCode = () => {
         service.getPpmPlantForFactory().then(res => {
-          setPlantCode(res.data)
+            setPlantCode(res.data)
         })
-    
-      }
-      const getItem = () => {
+
+    }
+    const getItem = () => {
         service.getPpmItemForFactory().then(res => {
-          setItem(res.data)
+            setItem(res.data)
         })
-      }
-      const getFactory = () => {
+    }
+    const getFactory = () => {
         service.getPpmFactoryForFactory().then(res => {
-          setFactory(res.data)
+            setFactory(res.data)
         })
-      } 
+    }
 
 
     const getData = () => {
@@ -273,33 +273,33 @@ const FactoryPPMReport = () => {
         }
         if (form.getFieldValue('productCode') !== undefined) {
             req.productCode = form.getFieldValue('productCode')
-          }
-          if (form.getFieldValue('poandLine') !== undefined) {
+        }
+        if (form.getFieldValue('poandLine') !== undefined) {
             req.poandLine = form.getFieldValue('poandLine')
-          }
-          if (form.getFieldValue('colorDesc') !== undefined) {
+        }
+        if (form.getFieldValue('colorDesc') !== undefined) {
             req.colorDesc = form.getFieldValue('colorDesc')
-          }
-          if (form.getFieldValue('categoryDesc') !== undefined) {
+        }
+        if (form.getFieldValue('categoryDesc') !== undefined) {
             req.categoryDesc = form.getFieldValue('categoryDesc')
-          }
-          if (form.getFieldValue('destinationCountry') !== undefined) {
+        }
+        if (form.getFieldValue('destinationCountry') !== undefined) {
             req.destinationCountry = form.getFieldValue('destinationCountry')
-          }
-          if (form.getFieldValue('plant') !== undefined) {
+        }
+        if (form.getFieldValue('plant') !== undefined) {
             req.plant = form.getFieldValue('plant')
-          }
-          if (form.getFieldValue('item') !== undefined) {
+        }
+        if (form.getFieldValue('item') !== undefined) {
             req.item = form.getFieldValue('item')
-          }
-          if (form.getFieldValue('factory') !== undefined) {
+        }
+        if (form.getFieldValue('factory') !== undefined) {
             req.factory = form.getFieldValue('factory')
-          }
-          console.log(req,"request")
+        }
+        console.log(req, "request")
         if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
             req.DPOMLineItemStatus = selectedLineItemStatus;
-        }       
-         service.getFactoryReportData(req).then(res => {
+        }
+        service.getFactoryReportData(req).then(res => {
             if (res.status) {
                 setGridData(res.data)
                 setFilterData(res.data)
@@ -309,11 +309,11 @@ const FactoryPPMReport = () => {
 
         }).catch(err => {
         })
-        console.log(filteredData,'response')
+        console.log(filteredData, 'response')
     }
 
     const Finish = (data: any) => {
-       
+
     }
 
 
@@ -330,10 +330,18 @@ const FactoryPPMReport = () => {
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
             { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-            { title: 'Last Modified Date',dataIndex: 'lastModifiedDate',render: (text, record) => { return record.lastModifiedDate ? moment(record.lastModifiedDate).format('YYYY-MM-DD') : '-';} },
+            {
+                title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text, record) => {
+                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-'
+                }
+            },
             { title: 'Item', dataIndex: 'item' },
             { title: 'Factory', dataIndex: 'factory' },
-            { title: 'Document Date', dataIndex: 'documentDate',render: (text, record) => { return record.documentDate ? moment(record.documentDate).format('YYYY-MM-DD') : '-';} },
+            {
+                title: 'Document Date', dataIndex: 'documentDate', render: (text, record) => {
+                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
+                }
+            },
             { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber' },
             { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
             { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
@@ -405,9 +413,9 @@ const FactoryPPMReport = () => {
             { title: 'VAS-Size', dataIndex: 'VASSize' },
             { title: 'Item Vas Text', dataIndex: 'itemVasText' },
             { title: 'Item Text', dataIndex: 'itemText' },
-            { title: 'Actual Unit',dataIndex: 'actualUnit', align: 'center' },
-            { title: 'Reallocated Quantity',dataIndex: 'allocatedQuantity', align: 'center'},
-            { title: 'Hanger Po',dataIndex: 'allocatedQuantity', align: 'center'},
+            { title: 'Actual Unit', dataIndex: 'actualUnit', align: 'center' },
+            { title: 'Reallocated Quantity', dataIndex: 'allocatedQuantity', align: 'center' },
+            { title: 'Hanger Po', dataIndex: 'allocatedQuantity', align: 'center' },
 
         ]
         const sizeHeaders = new Set<string>();
@@ -627,7 +635,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'docTypeCode',
                 align: 'center',
             },
-            { title: 'Doc Type Description',dataIndex: 'docTypeDesc',align: 'center'},
+            { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center' },
             { title: 'MRGAC', dataIndex: 'MRGAC' },
             { title: 'OGAC', dataIndex: 'OGAC' },
             { title: 'GAC', dataIndex: 'GAC' },
