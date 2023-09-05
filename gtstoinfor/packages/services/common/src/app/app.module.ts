@@ -33,7 +33,8 @@ import { AttributeModule } from './attributes/attribute.module';
 import { ComponentsModule } from './components/components.module';
 import { GarmentCategoriesModule } from './garment-category/garment-category.module';
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
-import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';import { TaxesModule } from './taxes/taxes.module';
+import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';
+import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { DestinationModule } from './destination/destination.module';
 import { FabricTypeModule } from './fabric-types/fabric-type.module';
@@ -54,9 +55,7 @@ import { UomModule } from './uom/uom.module';
 import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
 import { BomModule } from './bom-trim/bom.module';
 import { SettingsModule } from './settings/settings.module';
-import { BuyersDestinationModule } from './buyers-destination/buyers-destination.module';
-import { BomModule } from './bom-trim/bom.module';
-import { SettingsModule } from './settings/settings.module';
+<<<<<<<<< Temporary merge branch 1
 import { SampleTypesModule } from './sample Types/sample-types.module';
 import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module';
 
