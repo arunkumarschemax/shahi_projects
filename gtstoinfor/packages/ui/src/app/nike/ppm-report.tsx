@@ -132,6 +132,8 @@ const PPMReport = () => {
     if (form.getFieldValue('factory') !== undefined) {
       req.factory = form.getFieldValue('factory')
     }
+    req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
+
 
     service.getPPMData(req).then(res => {
       if (res.status) {
@@ -249,16 +251,16 @@ const PPMReport = () => {
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
 
   const Finish = (data: any) => {
-    const values = form.getFieldsValue();
-    if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
-      setFilterData(gridData);
-    } else {
-      const filteredData = gridData.filter(item =>
-        values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
-      );
-      setFilterData(filteredData);
-      getData()
-    }
+    // const values = form.getFieldsValue();
+    // if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
+    //   setFilterData(gridData);
+    // } else {
+    //   const filteredData = gridData.filter(item =>
+    //     values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
+    //   );
+    //   setFilterData(filteredData);
+    //   getData()
+    // }
   };
 
 
@@ -394,7 +396,6 @@ const PPMReport = () => {
       {
         title: 'Purchase Order Number',
         dataIndex: 'purchaseOrderNumber',
-        ...getColumnSearchProps('purchaseOrderNumber'),
       },
       {
         title: 'PO Line Item Number',

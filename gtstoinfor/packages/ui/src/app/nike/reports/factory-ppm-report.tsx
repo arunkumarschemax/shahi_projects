@@ -61,8 +61,9 @@ const FactoryPPMReport = () => {
 
         service.updateFactoryStatusColumns(req).then((res) => {
             if (res.status) {
-                message.success(res.internalMessage);
                 getData();
+                message.success(res.internalMessage);
+               
                 // window.location.reload();
 
             } else {
@@ -209,6 +210,7 @@ const FactoryPPMReport = () => {
         if (form.getFieldValue('documentDate') !== undefined) {
             req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
         }
+        req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
         service.getFactoryReportData(req).then(res => {
             if (res.status) {
                 setGridData(res.data)
@@ -223,16 +225,16 @@ const FactoryPPMReport = () => {
     }
 
     const Finish = (data: any) => {
-        const values = form.getFieldsValue();
+        // const values = form.getFieldsValue();
 
-        if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
-            setFilterData(gridData);
-        } else {
-            const filteredData = gridData.filter(item =>
-                values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
-            );
-            setFilterData(filteredData);
-        }
+        // if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
+        //     setFilterData(gridData);
+        // } else {
+        //     const filteredData = gridData.filter(item =>
+        //         values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
+        //     );
+        //     setFilterData(filteredData);
+        // }
     }
 
 
