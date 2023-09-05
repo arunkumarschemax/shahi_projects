@@ -148,7 +148,6 @@ console.log(req,'request')
         Finish(res.data)
       }
     }).catch(err => {
-      console.log(err.message)
     })
   }
   const handleExport = (e: any) => {

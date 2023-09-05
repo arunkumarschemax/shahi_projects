@@ -1139,6 +1139,42 @@ async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+    async getPpmPlantForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPlantForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmProductCodeForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getProductCodeForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmColorDescForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getColorDescForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmCategoryDescForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getCategoryDescForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmDestinationCountryForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getDestinationCountryForfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
 
     //-----------------------------------------------------------------------------marketing
     async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
@@ -1167,7 +1203,7 @@ async getPpmFactoryForMarketing(): Promise<CommonResponseModel> {
 
 async updateFactoryStatusColumns(req: FactoryUpdate): Promise<CommonResponseModel> {
         try {
-            console.log(req,"1111111111111111111111111111")
+            // console.log(req,"1111111111111111111111111111")
 
              const docDetails = await this.dpomRepository.getFactoryDataById(req.poAndLine)
             const updateRecord = await this.dpomRepository.update({ poAndLine: docDetails[0].poline }, {  actualUnit: req.actualUnit, allocatedQuantity: req.allocatedQuantity})
@@ -1234,6 +1270,7 @@ async getPpmDestinationCountryForMarketing(): Promise<CommonResponseModel> {
     else
         return new CommonResponseModel(false, 0, 'No data found');
 }
+
 }
 
 
