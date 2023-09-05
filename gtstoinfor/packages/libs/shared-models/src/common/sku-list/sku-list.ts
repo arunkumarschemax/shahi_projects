@@ -6,7 +6,7 @@ export class SKUlistFilterRequest{
     colourId?:number;
     colour?:string;
     destinationsId?:number;
-    destinations:string;
+    destinations?:string;
     constructor(itemNoId?:number,itemsNo?:string,sizeId?:number,size?:string,colour?:string,destinations?:string,colourId?:number,destinationsId?:number){
         this.itemNoId = itemNoId;
         this.size=size;
@@ -16,5 +16,6 @@ export class SKUlistFilterRequest{
         this.sizeId=sizeId;
         this.destinationsId=destinationsId;
         this.destinations=destinations;
+        this.colour = colour
     }
 }

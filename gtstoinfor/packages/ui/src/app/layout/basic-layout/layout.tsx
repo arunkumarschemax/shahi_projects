@@ -471,6 +471,7 @@ export const baseRouterList = [
                 path: "sku-mapping",
                 filepath: "sku-mapping",
             },
+          
         ],
     },
     {

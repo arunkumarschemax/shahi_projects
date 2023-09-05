@@ -470,6 +470,7 @@ export const AppRoutes = () => {
                         <Route path='sku-list' element={<SkuList/>}/>
 
                         <Route path='sku-mapping' element={<SKUGeneration/>}/>
+
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 
                     </Route>

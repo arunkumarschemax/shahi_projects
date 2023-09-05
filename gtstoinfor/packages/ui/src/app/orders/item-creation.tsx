@@ -893,7 +893,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                 <Row gutter={24} justify="end">
                 <Space size={16}>
                   <Button type="primary" >
-                  ➡️ Submit
+                   Submit
                   </Button>
                   {/* <Link to="">
                     <Button type="primary" icon={<HomeOutlined />}>
