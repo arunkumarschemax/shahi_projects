@@ -130,6 +130,7 @@ export const OperationSequence = () => {
     operationSequenceService.createOperationSequence(req).then(res => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage)
+        form.resetFields()
       } else{
         AlertMessages.getErrorMessage(res.internalMessage)
       }
