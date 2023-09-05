@@ -15,6 +15,7 @@ import FabricDevelopmentRequestQuality from "./fabric-development-quality-reques
 import FabricDevelopmentTabs from "./fabric-development-tabs";
 import { BuyersService, EmployeeDetailsService, FabricTypeService, LocationsService, ProfitControlHeadService } from "@project-management-system/shared-services";
 import AlertMessages from "../common/common-functions/alert-messages";
+import { Link } from "react-router-dom";
 
 export const FabricDevelopmentApproval = () => {
   const [form] = Form.useForm();
@@ -135,9 +136,12 @@ console.log(locationData,"143")
       size="small"
       title="Fabric Development "
       extra={
+        <Link to="/fabricdevelopment/fabric-development-request/fabric-development-request-view">
+
         <span>
           <Button type={"primary"}>View </Button>{" "}
         </span>
+        </Link>
       }
     >
       <Form
