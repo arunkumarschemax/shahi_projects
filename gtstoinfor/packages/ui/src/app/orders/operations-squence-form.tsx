@@ -8,9 +8,11 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Form, Select, Table,Row, Button } from 'antd';
+import { Card, Col, Form, Select, Table,Row, Button, Input } from 'antd';
 import type { ColumnProps, ColumnsType } from 'antd/es/table';
-import { OperationsService } from '@project-management-system/shared-services';
+import { OperationSequenceService, OperationsService } from '@project-management-system/shared-services';
+import { OperationSequenceRequest } from '@project-management-system/shared-models';
+import AlertMessages from '../common/common-functions/alert-messages';
 
 const {Option} = Select;
 
@@ -38,18 +40,13 @@ export const OperationSequence = () => {
   const [page, setPage] = React.useState(1);
   const [dataSource,setDataSource] = useState<any[]>([])
   const [form] = Form.useForm()
-
+  const operationSequenceService = new OperationSequenceService()
   const operationService = new OperationsService()
 
   useEffect(() => {
       getOperations()
   },[])
 
-  useEffect(()=> {
-    if(dataSource.length > 0){
-      console.log(dataSource)
-    }
-  },[dataSource])
 
   const getOperations = () => {
       operationService.getAllActiveOperations().then(res => {
@@ -127,17 +124,34 @@ export const OperationSequence = () => {
   };
 
   const onSubmit = () => {
-    console.log(form.getFieldValue('itemcode'),dataSource)
+    // const req = new OperationSequenceRequest(form.getFieldValue('itemcode'),form.getFieldValue('itemId'),dataSource,'admin')
+    const req = new OperationSequenceRequest('I0001',1,dataSource,'admin')
+    console.log(req)
+    operationSequenceService.createOperationSequence(req).then(res => {
+      if(res.status){
+        AlertMessages.getSuccessMessage(res.internalMessage)
+      } else{
+        AlertMessages.getErrorMessage(res.internalMessage)
+      }
+    })
+  }
+
+  const onItemCodeChange = (val,option) => {
+    form.setFieldsValue({itemId:option.key})
   }
 
   return (
     <Card title='Operation Sequence' size='small'>
       <Form layout="horizontal" form={form}>
+          <Form.Item name='itemId' style={{display:'none'}}>
+                <Input hidden/>
+            </Form.Item>
             <Row gutter={24}>
+
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
             <Form.Item label='Item' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
-                <Select showSearch allowClear placeholder='Select Item'>
-                    <Option key='itemcode' value='itemcode'>Item Codes </Option>
+                <Select showSearch allowClear placeholder='Select Item' onChange={onItemCodeChange}>
+                    <Option key='itemid' value='itemcode'>Item Codes </Option>
                     {/* {
                         color.map((e)=>{
                             return(
