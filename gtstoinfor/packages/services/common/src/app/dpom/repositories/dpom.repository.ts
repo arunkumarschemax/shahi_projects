@@ -422,6 +422,9 @@ export class DpomRepository extends Repository<DpomEntity> {
             if (req.documentStartDate !== undefined) {
                 query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`)
             }
+            if (req.DPOMLineItemStatus !== undefined) {
+                query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+            }
             if (req.productCode !== undefined) {
                 query.andWhere(`dpom.product_code ='${req.productCode}'`)
             }
@@ -485,7 +488,9 @@ export class DpomRepository extends Repository<DpomEntity> {
             if (req.factory !== undefined) {
                 query.andWhere(`dpom.factory ='${req.factory}'`)
             }
-            console.log(req,"reqesty")
+            if (req.DPOMLineItemStatus !== undefined) {
+                query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+            }
         return await query.getRawMany();
     }
 
