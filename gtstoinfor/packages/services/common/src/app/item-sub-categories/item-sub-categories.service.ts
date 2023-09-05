@@ -57,7 +57,7 @@ export class ItemSubCategoriesService {
           if (!isUpdate) {
             const itemSubCatEntity = await this.getItemSubCategory(itemSubCategoryDto.itemSubCategory);
                 if (itemSubCatEntity) {
-                    throw new ErrorResponse(11104, 'Item category already exists');
+                    throw new ItemSubCategoryResponse(false,11104, 'Item category already exists');
                 }
             }
             // else {
@@ -118,7 +118,7 @@ export class ItemSubCategoriesService {
                 return response;
             } else {
                 //   console.log('yest')
-                throw new ErrorResponse(99998, 'No Records Found');
+                throw new AllItemSubCategoryResponse(false,99998, 'No Records Found');
             }
         } catch (err) {
             return err;
@@ -141,7 +141,7 @@ export class ItemSubCategoriesService {
                 const response = new ItemSubCategoriesDropDownResponse(true, 11108, "Item sub categories retrieved successfully", itemSubcategoryDTO);
                 return response;
             } else {
-                throw new ErrorResponse(99998, 'Data not found');
+                throw new ItemSubCategoryResponse(false,99998, 'Data not found');
             }
         } catch (err) {
             return err;
@@ -201,7 +201,7 @@ export class ItemSubCategoriesService {
                 const response = new ItemSubCategoriesDropDownResponse(true, 11108, "Item sub categories retrieved successfully", itemSubCategoryEntities);
                 return response;
             } else {
-                throw new ErrorResponse(99998, 'Data not found');
+                throw new ItemSubCategoriesDropDownResponse(false,99998, 'Data not found');
             }
         } catch (err) {
             return err;
@@ -213,7 +213,7 @@ export class ItemSubCategoriesService {
             const itemSubCatExists = await this.getItemSubCategoryById(itemReq.itemSubCategoryId);
             if (itemSubCatExists) {
                 if (!itemSubCatExists) {
-                    throw new ErrorResponse(10113, 'Someone updated the current item category information.Refresh and try again');
+                    throw new ItemSubCategoryResponse(false,10113, 'Someone updated the current item category information.Refresh and try again');
                 } else {
                     
                         const itemCatSatatus =  await this.ItemSubCategoryRepository.update(
@@ -225,20 +225,20 @@ export class ItemSubCategoriesService {
                                 const itemcatResponse: ItemSubCategoryResponse = new ItemSubCategoryResponse(true, 10115, 'Item Sub category is Deactivated successfully');
                                 return itemcatResponse;
                             } else {
-                                throw new ErrorResponse(10111, 'Item category is already deactivated');
+                                throw new ItemSubCategoryResponse(false,10111, 'Item category is already deactivated');
                             }
                         } else {
                             if (itemCatSatatus.affected) {
                                 const itemcatResponse: ItemSubCategoryResponse = new ItemSubCategoryResponse(true, 10114, 'Item Sub category is Activated successfully');
                                 return itemcatResponse;
                             } else {
-                                throw new ErrorResponse(10112, 'Item Sub category is already  activated');
+                                throw new ItemSubCategoryResponse(false,10112, 'Item Sub category is already  activated');
                             }
                         }
                     // }
                 }
             } else {
-                throw new ErrorResponse(99998, 'No Records Found');
+                throw new ItemSubCategoryResponse(false,99998, 'No Records Found');
             }
         } catch (err) {
             return err;

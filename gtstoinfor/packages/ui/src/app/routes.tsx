@@ -105,17 +105,19 @@ import DepartmentForm from "./masters/departments/department-form"
 import AccountControlObjectGrid from "./masters/account-control-objects/account-control-objects-view"
 import AccountControlObjectForm from "./masters/account-control-objects/account-control-objects-form"
 import ItemCreation from "./orders/item-creation"
-import SampleRequestView from "./sample-development/sample-management-view"
+import SampleRequestView, { SampleDevView } from "./sample-development/sample-management-view"
 import SampleDevForm from "./sample-development/sample-management-form"
 import FabricsGrid from "./masters/fabrics/fabrics-view"
 import { FabricsForm } from "./masters/fabrics/fabrics-form"
 import SettingsView from "./masters/settings/settings-view"
 import TrimsBomCreation from "./BOM/trims-bom-creation"
-import { FabricDevelopmentApproval } from "./fabric development/fabric-development-approval"
 import SkuList from "./orders/sku-list"
 import SKUGeneration from "./orders/sku-generation"
 import UomGrid from "./masters/uom/uom-grid"
-// import FabricDevelopmentApproval from "./fabric development/fabric-development-approval"
+import SampleDevDetail from "./sample-development/sample-request-detailed-view"
+import FabricBomCreation from "./BOM/fabric-creation"
+import FabricDevelopmentRequest from "./fabric development/fabric-development-request"
+import OperationSequenceForm from "./orders/operations-squence-form"
 
 
 export const AppRoutes = () => {
@@ -449,15 +451,28 @@ export const AppRoutes = () => {
                                                
                         </Route>
                 <Route path='fabricdevelopment'>
-                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
-                <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentApproval/>}/>
+                <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest/>}/>
 
                 </Route>
                 <Route path='settings'>
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
                 <Route path='settings/settings-view' element={<SettingsView/>}/>
                 </Route>
-                <Route path='/sample-development' element={<SampleDevForm />} />
+
+                <Route path='sample-development' >
+                    <Route path="sample-development-form" element={<SampleDevForm />}/>
+                    <Route path="sample-development-view" element={<SampleDevView />}/>
+                    <Route path="sample-development-detail" element={<SampleDevDetail />}/>
+                </Route>
+                <Route path='/materialCreation'>
+                <Route path='sku-list' element={<SkuList/>}/>
+                <Route path='sku-mapping' element={<SKUGeneration/>}/>
+                <Route path='item-creation' element={<ItemCreation/>}/>
+                <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
+                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
+                <Route path='operation-sequence' element={<OperationSequenceForm/>} />
+
+                </Route>
 
 
                     <Route path='/excel-import'>
@@ -466,10 +481,7 @@ export const AppRoutes = () => {
                         <Route path='grid-view' element={<AllOrdersGridView />} />
                         <Route path='revert-orders' element={<FileRevert />} />
                         <Route path='version-grid' element={<VersionChanges />} />
-                        <Route path='item-creation' element={<ItemCreation/>}/>
-                        <Route path='sku-list' element={<SkuList/>}/>
 
-                        <Route path='sku-mapping' element={<SKUGeneration/>}/>
 
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 

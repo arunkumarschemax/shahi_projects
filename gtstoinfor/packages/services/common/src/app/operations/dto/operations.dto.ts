@@ -47,6 +47,9 @@ export class OperationDTO {
   operationGroupId: number;
   operationGroupName: string;
 
+  @ApiProperty()
+  key?: number
+
 
 }
 

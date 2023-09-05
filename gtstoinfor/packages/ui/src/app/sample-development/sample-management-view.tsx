@@ -35,7 +35,7 @@ import { SampleFilterRequest } from "@project-management-system/shared-models";
 
 export interface BuyingHouseProps {}
 
-export const SampleRequestView = (props: BuyingHouseProps) => {
+export const SampleDevView = (props: BuyingHouseProps) => {
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const [searchText, setSearchText] = useState("");
@@ -87,7 +87,7 @@ export const SampleRequestView = (props: BuyingHouseProps) => {
 
   const DetailView = (val: any) => {
     console.log("ok", val);
-    return navigate(`/sample-request-detailed-view`, { state: { id: val } });
+    return navigate(`/sample-development/sample-development-detail`, { state: { id: val } });
   };
 
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -374,4 +374,4 @@ export const SampleRequestView = (props: BuyingHouseProps) => {
   );
 };
 
-export default SampleRequestView;
+export default SampleDevView;

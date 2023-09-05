@@ -6,6 +6,7 @@ export class OperationsDTO{
     updatedUser:string;
     versionFlag:number;
     operationGroupId:number;
+    key?:number;
 
     /**
      * 
@@ -17,7 +18,7 @@ export class OperationsDTO{
 
      */
     
-    constructor(operationId:number,operationCode:string, operationName:string,isActive:boolean,updatedUser:string,versionFlag:number,operationGroupId:number){
+    constructor(operationId:number,operationCode:string, operationName:string,isActive:boolean,updatedUser:string,versionFlag:number,operationGroupId:number,key?: number){
         this.operationId = operationId;
         this.updatedUser = updatedUser;
         this.operationCode = operationCode
@@ -25,5 +26,6 @@ export class OperationsDTO{
         this.versionFlag = versionFlag
         this.operationName = operationName
         this.operationGroupId = operationGroupId
+        this.key = key
     }
 }

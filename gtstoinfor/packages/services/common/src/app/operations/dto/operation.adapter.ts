@@ -29,8 +29,9 @@ export class OperationsAdapter {
     }
     return operations;
   }
-  public convertEntityToDto(operationsObject: Operations): OperationDTO {
+  public convertEntityToDto(operationsObject: Operations,index?:number): OperationDTO {
     const operationsDto = new OperationDTO();
+    operationsDto.key = index+1
     operationsDto.operationId = operationsObject.operationId;
     operationsDto.operationName = operationsObject.operationName;
     operationsDto.operationGroupId = (operationsObject.operationGroupInfo)?.operationGroupId;
