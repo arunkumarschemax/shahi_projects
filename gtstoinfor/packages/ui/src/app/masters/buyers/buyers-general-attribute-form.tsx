@@ -176,7 +176,7 @@ export const BuyersGeneralAttributeForm = () => {
                 <Row justify='end'>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>
                     <Form.Item>
-                        <Button onClick={onSubmit} type='primary' htmlType='submit'>Submit</Button>
+                        <Button onClick={onSubmit} type='primary' htmlType='submit' disabled={attributeValue.length > 0? false: true}>Submit</Button>
                     </Form.Item>                   
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 2 }}>

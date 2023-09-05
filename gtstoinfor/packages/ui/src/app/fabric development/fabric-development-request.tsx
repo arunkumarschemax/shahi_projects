@@ -8,16 +8,21 @@ import {
   Row,
   Select,
   Space,
-  Upload,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import FabricDevelopmentRequestQuality from "./fabric-development-quality-request";
 import FabricDevelopmentTabs from "./fabric-development-tabs";
 import { BuyersService, EmployeeDetailsService, FabricTypeService, LocationsService, ProfitControlHeadService } from "@project-management-system/shared-services";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
 
-export const FabricDevelopmentApproval = () => {
+// const forms = []
+// for (let i= 0 ;i <10 ; i++ ){
+//   forms[i]= Form.useForm();
+   
+//  }
+
+
+export const FabricDevelopmentRequest = () => {
   const [form] = Form.useForm();
   const [pchData,setPchData] = useState<any>([])
   const [BuyerData,setBuyerData] = useState<any>([])
@@ -26,7 +31,7 @@ export const FabricDevelopmentApproval = () => {
   const [locationData,setLocationData] = useState<any>([])
 
 
-
+   
 
 
     const Pchservice =new ProfitControlHeadService();
@@ -131,6 +136,8 @@ console.log(locationData,"143")
   const onFinish = (values) => {
     console.log(values, "values");
   };
+
+  
   return (
     <Card
       size="small"
@@ -139,7 +146,7 @@ console.log(locationData,"143")
         <Link to="/fabricdevelopment/fabric-development-request/fabric-development-request-view">
 
         <span>
-          <Button type={"primary"}>View </Button>{" "}
+          <Button type={"primary"}>View </Button>
         </span>
         </Link>
       }
@@ -404,4 +411,4 @@ console.log(locationData,"143")
   );
 };
 
-export default FabricDevelopmentApproval;
+export default FabricDevelopmentRequest;

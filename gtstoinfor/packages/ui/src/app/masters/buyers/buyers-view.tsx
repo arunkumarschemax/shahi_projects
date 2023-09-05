@@ -1,7 +1,7 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import { BuyerIdReq, BuyerRequest, BuyersDto, FactoryActivateDeactivateDto, FactoryDto, OperationGroupsDto } from '@project-management-system/shared-models'
 import { BuyersService, FactoryService } from '@project-management-system/shared-services'
-import { Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
+import { Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Radio, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
 import { forEachObject } from 'for-each'
 import { useNavigate } from 'react-router-dom'
 import TableActions from '../../common/table-actions/table-actions'
@@ -44,58 +44,6 @@ export const  BuyersView = () => {
       }
     })
   }
-
-  // const getColumnSearchProps = (dataIndex:any): ColumnType<string> => ({
-  //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-  //     <div style={{ padding: 8 }}>
-  //       <Input
-  //         ref={ searchInput }
-  //         placeholder={`Search ${dataIndex}`}
-  //         value={selectedKeys[0]}
-  //         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-  //         onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-  //         style={{ width: 188, marginBottom: 8, display: 'block' }}
-  //       />
-  //       <Button
-  //         type="primary"
-  //         onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-  //         icon={<SearchOutlined />}
-  //         size="small"
-  //         style={{ width: 90, marginRight: 8 }}
-  //       >
-  //         Search
-  //       </Button>
-  //       <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-  //         Reset
-  //       </Button>
-  //     </div>
-  //   ),
-  //   filterIcon: filtered => (
-  //     <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-  //   ),
-  //   onFilter: (value, record) =>
-  //   record[dataIndex]
-  //   ? record[dataIndex]
-  //      .toString()
-  //       .toLowerCase()
-  //       .includes((value as string).toLowerCase()):false,
-  //   onFilterDropdownVisibleChange: visible => {
-  //     if (visible) {    setTimeout(() => searchInput.current.select());   }
-  //   },
-  //   render: text =>
-  //     text ?(
-  //     searchedColumn === dataIndex ? (
-  //       <Highlighter
-  //         highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-  //         searchWords={[searchText]}
-  //         autoEscape
-  //         textToHighlight={text.toString()}
-  //       />
-  //     ) :text
-  //     )
-  //     : null
-     
-  // });
 
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
@@ -284,7 +232,7 @@ export const  BuyersView = () => {
             {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
             
           </>
-        ),
+      ),
         filters: [
           {
             text: 'Active',
@@ -300,7 +248,7 @@ export const  BuyersView = () => {
         {
           // === is not work
           return record.isActive === value;
-        },
+      },
         
       },
       {

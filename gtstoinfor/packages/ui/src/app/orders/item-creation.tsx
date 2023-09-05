@@ -193,7 +193,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                       rules={[{ required: true, message: "Enter Style" }]}
                     >
                       <Select
-                      placeholder="Select Currency"
+                      placeholder="Select Style"
                       allowClear
                       >
                     {styledata.map((e)=>{

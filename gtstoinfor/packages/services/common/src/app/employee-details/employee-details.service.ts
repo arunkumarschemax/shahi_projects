@@ -6,6 +6,7 @@ import { EmplyeeDetails } from './dto/employee-details-entity';
 import { EmployeeIdReq } from './dto/employee-id-req';
 import { EmployeeDetailsResponse } from './dto/employee-details-request';
 import { DepartmentReq } from './dto/department-name.req';
+import { Departments } from '../departments/departments.entity';
 
 @Injectable()
 export class EmployeeDetailsService {
@@ -30,6 +31,9 @@ export class EmployeeDetailsService {
             employeeEntity.emial=req.emial
             employeeEntity.address=req.address
             employeeEntity.pinCode=req.pinCode
+            const depar = new Departments()
+            depar.deptId = req.departments;
+            employeeEntity.Department= depar
             if (isUpdate) {
                 employeeEntity.employeeId = req.employeeId;
                 employeeEntity.employeeCode=req.employeeCode
