@@ -20,7 +20,6 @@ interface FactoryUpdateRequest {
 
 const FactoryPPMReport = () => {
 
-    const [factory, setFactory] = useState([]);
     const { RangePicker } = DatePicker;
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
@@ -41,6 +40,16 @@ const FactoryPPMReport = () => {
     useEffect(() => {
         getData();
     }, [])
+
+    const [factory, setFactory] = useState<any>([]);
+    const [poLine, setPoLine] = useState<any>([]);
+    const [colorDesc, setColorDesc] = useState<any>([]);
+    const [categoryDesc, setCategoryDesc] = useState<any>([]);
+    const [countryDestination, setCountryDestination] = useState<any>([]);
+    const [plantCode, setPlantCode] = useState<any>([]);
+    const [item, setItem] = useState<any>([]);
+    const [productCode, setProductCode] = useState<any>([]);
+
 
 
     const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
@@ -190,10 +199,61 @@ const FactoryPPMReport = () => {
     const ClearData = () => {
         form.resetFields();
     }
+    useEffect(() => {
+        getData();
+        getProductCode();
+        getPoLine();
+        getColorDesc();
+        getcategoryDesc();
+        getcountrydestination();
+        getplantCode();
+        getItem();
+        getFactory();
+    }, [])
 
-
-
-
+    const getProductCode =  () => {
+        service.getPpmProductCodeForFactory().then(res => {
+          setProductCode(res.data)
+        })
+        
+      }
+      const getPoLine = () => {
+        service.getPpmPoLineForFactory().then(res => {
+          setPoLine(res.data)
+        })
+      }
+      const getColorDesc = () => {
+        service.getPpmColorDescForFactory().then(res => {
+          setColorDesc(res.data)
+        })
+      }
+      const getcategoryDesc = () => {
+        service.getPpmCategoryDescForFactory().then(res => {
+          setCategoryDesc(res.data)
+    
+        })
+      }
+      const getcountrydestination = () => {
+        service.getPpmDestinationCountryForFactory().then(res => {
+          setCountryDestination(res.data)
+        })
+      }
+      const getplantCode = () => {
+        service.getPpmPlantForFactory().then(res => {
+          setPlantCode(res.data)
+        })
+    
+      }
+      const getItem = () => {
+        service.getPpmItemForFactory().then(res => {
+          setItem(res.data)
+        })
+      }
+      const getFactory = () => {
+        service.getPpmFactoryForFactory().then(res => {
+          setFactory(res.data)
+        })
+      } 
 
 
     const getData = () => {
@@ -210,6 +270,31 @@ const FactoryPPMReport = () => {
         if (form.getFieldValue('documentDate') !== undefined) {
             req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD')
         }
+        if (form.getFieldValue('productCode') !== undefined) {
+            req.productCode = form.getFieldValue('productCode')
+          }
+          if (form.getFieldValue('poandLine') !== undefined) {
+            req.poandLine = form.getFieldValue('poandLine')
+          }
+          if (form.getFieldValue('colorDesc') !== undefined) {
+            req.colorDesc = form.getFieldValue('colorDesc')
+          }
+          if (form.getFieldValue('categoryDesc') !== undefined) {
+            req.categoryDesc = form.getFieldValue('categoryDesc')
+          }
+          if (form.getFieldValue('destinationCountry') !== undefined) {
+            req.destinationCountry = form.getFieldValue('destinationCountry')
+          }
+          if (form.getFieldValue('plant') !== undefined) {
+            req.plant = form.getFieldValue('plant')
+          }
+          if (form.getFieldValue('item') !== undefined) {
+            req.item = form.getFieldValue('item')
+          }
+          if (form.getFieldValue('factory') !== undefined) {
+            req.factory = form.getFieldValue('factory')
+          }
+          console.log(req,"request")
         service.getFactoryReportData(req).then(res => {
             if (res.status) {
                 setGridData(res.data)
@@ -219,8 +304,8 @@ const FactoryPPMReport = () => {
             }
 
         }).catch(err => {
-            console.log(err.message)
         })
+        console.log(filteredData,'response')
     }
 
     const Finish = (data: any) => {
@@ -736,7 +821,128 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '42px' }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
+                            <Form.Item name='productCode' label='Product Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Product Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {productCode.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                            <Form.Item name='poandLine' label='Po+Line' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Po+Line"
+                                    optionFilterProp="children"
+                                    allowClear
+
+                                >
+                                    {poLine.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                            <Form.Item name='colorDesc' label='Color Description' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Color Description"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {colorDesc.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.color_desc}>{inc.color_desc}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                            <Form.Item name='categoryDesc' label='Category Description' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Category Description"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {categoryDesc.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.category_desc}>{inc.category_desc}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                            <Form.Item name='destinationCountry' label='Destination Country' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Destination Country"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {countryDestination.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.destination_country}>{inc.destination_country}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                            <Form.Item name='plant' label='Plant Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Plant Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {plantCode.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                            <Form.Item name='item' label='Item' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Item"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {item.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                            <Form.Item name='factory' label='Factory' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Factory"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {factory.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                             <Form.Item>
                                 <Button htmlType="submit"
                                     icon={<SearchOutlined />}

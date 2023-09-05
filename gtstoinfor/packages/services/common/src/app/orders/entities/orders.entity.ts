@@ -978,5 +978,11 @@ export class OrdersEntity {
         nullable: true,
         name: 'file_id',
     })
-    fileId: number;
+    fileId : number;
+
+    @Column('int', {
+        nullable:true,
+        name: 'month',
+    })
+    month : number;
 }

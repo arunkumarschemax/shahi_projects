@@ -141,7 +141,6 @@ const PPMReport = () => {
         Finish(res.data)
       }
     }).catch(err => {
-      console.log(err.message)
     })
   }
   const handleExport = (e: any) => {

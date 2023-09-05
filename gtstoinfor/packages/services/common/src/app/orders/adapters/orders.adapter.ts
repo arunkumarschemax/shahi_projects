@@ -3,7 +3,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 
 export class OrdersAdapter {
 
-    public convertDtoToEntity(dto: SaveOrderDto , id:number): OrdersEntity {
+    public convertDtoToEntity(dto: SaveOrderDto , id:number,month:number): OrdersEntity {
         const entity = new OrdersEntity()
         entity.productionPlanId = dto.productionPlanId;
         entity.year = dto.year;
@@ -141,6 +141,7 @@ export class OrdersAdapter {
         entity.createdUser = dto.userName
         entity.version = dto.version ? dto.version : 1
         entity.fileId = id
+        entity.month=month
         return entity
     }
 }

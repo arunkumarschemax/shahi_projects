@@ -57,4 +57,10 @@ export class FileUploadEntity {
         name: "status"
     })
     status: string;
+
+    @Column("int", {
+        nullable: true,
+        name: "month"
+    })
+    month: number;
 }
