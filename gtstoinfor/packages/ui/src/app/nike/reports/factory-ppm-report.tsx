@@ -29,14 +29,13 @@ const FactoryPPMReport = () => {
     const searchInput = useRef<any>(null);
     const [searchText, setSearchText] = useState<any>([]);
     const [searchedColumn, setSearchedColumn] = useState<any>([]);
-    const [filterData, setFilterData] = useState<any>([]);
+    const [filterData, setFilterData] = useState([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [page, setPage] = React.useState(1);
     const [expandedActualUnit, setExpandedActualUnit] = useState({});
     const [expandedQuantityAllocation, setExpandedQuantityAllocation] = useState({});
     const [textareaValuesActualUnit, setTextareaValuesActualUnit] = useState({});
     const [textareaValuesQuantityAllocation, setTextareaValuesQuantityAllocation] = useState({});
-
     useEffect(() => {
         getData();
     }, [])
@@ -71,8 +70,9 @@ const FactoryPPMReport = () => {
 
         service.updateFactoryStatusColumns(req).then((res) => {
             if (res.status) {
-                message.success(res.internalMessage);
                 getData();
+                message.success(res.internalMessage);
+               
                 // window.location.reload();
 
             } else {
@@ -109,7 +109,7 @@ const FactoryPPMReport = () => {
             }));
         }
     };
-
+    
 
     // const getFactoryStatus = (values: any) => {
     //     service.getByFactoryStatus().then(res => {
@@ -258,6 +258,7 @@ const FactoryPPMReport = () => {
 
     const getData = () => {
         const req = new PpmDateFilterRequest()
+        const selectedLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
         if (form.getFieldValue('lastModifiedDate') !== undefined) {
             req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
         }
@@ -295,7 +296,10 @@ const FactoryPPMReport = () => {
             req.factory = form.getFieldValue('factory')
           }
           console.log(req,"request")
-        service.getFactoryReportData(req).then(res => {
+        if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
+            req.DPOMLineItemStatus = selectedLineItemStatus;
+        }       
+         service.getFactoryReportData(req).then(res => {
             if (res.status) {
                 setGridData(res.data)
                 setFilterData(res.data)
@@ -309,16 +313,7 @@ const FactoryPPMReport = () => {
     }
 
     const Finish = (data: any) => {
-        const values = form.getFieldsValue();
-
-        if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
-            setFilterData(gridData);
-        } else {
-            const filteredData = gridData.filter(item =>
-                values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
-            );
-            setFilterData(filteredData);
-        }
+       
     }
 
 
@@ -335,19 +330,10 @@ const FactoryPPMReport = () => {
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
             { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-            {
-                title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text, record) => {
-                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-'
-                }
-            },
+            { title: 'Last Modified Date',dataIndex: 'lastModifiedDate',render: (text, record) => { return record.lastModifiedDate ? moment(record.lastModifiedDate).format('YYYY-MM-DD') : '-';} },
             { title: 'Item', dataIndex: 'item' },
-            // { title: 'Total Item Qty', dataIndex: 'totalItemQty' },
             { title: 'Factory', dataIndex: 'factory' },
-            {
-                title: 'Document Date', dataIndex: 'documentDate', render: (text, record) => {
-                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
-                }
-            },
+            { title: 'Document Date', dataIndex: 'documentDate',render: (text, record) => { return record.documentDate ? moment(record.documentDate).format('YYYY-MM-DD') : '-';} },
             { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber' },
             { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
             { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
@@ -373,6 +359,7 @@ const FactoryPPMReport = () => {
             { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
             { title: 'Plant Code', dataIndex: 'plant' },
             { title: 'Plant Name', dataIndex: 'plantName' },
+            { title: 'Geo Code', dataIndex: '' },
             { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
             { title: 'UPC', dataIndex: 'UPC' },
             { title: 'Sales Order Number', dataIndex: ' ' },
@@ -414,11 +401,13 @@ const FactoryPPMReport = () => {
             { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
             { title: 'Total Item Quantity', dataIndex: 'totalItemQty' },
-            { title: 'Grand Total', dataIndex: ' ' },
             { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
             { title: 'VAS-Size', dataIndex: 'VASSize' },
             { title: 'Item Vas Text', dataIndex: 'itemVasText' },
             { title: 'Item Text', dataIndex: 'itemText' },
+            { title: 'Actual Unit',dataIndex: 'actualUnit', align: 'center' },
+            { title: 'Reallocated Quantity',dataIndex: 'allocatedQuantity', align: 'center'},
+            { title: 'Hanger Po',dataIndex: 'allocatedQuantity', align: 'center'},
 
         ]
         const sizeHeaders = new Set<string>();
@@ -490,12 +479,12 @@ const FactoryPPMReport = () => {
             {
                 title: 'Item',
                 dataIndex: 'item',
-                ...getColumnSearch('item'),
+                // ...getColumnSearch('item'),
             },
             {
                 title: 'Factory',
                 dataIndex: 'factory',
-                ...getColumnSearch('factory'),
+                // ...getColumnSearch('factory'),
             },
             {
                 title: 'Document Date',
@@ -519,12 +508,12 @@ const FactoryPPMReport = () => {
             {
                 title: 'Style Number',
                 dataIndex: 'styleNumber',
-                ...getColumnSearch('styleNumber'),
+                // ...getColumnSearch('styleNumber'),
             },
             {
                 title: 'Product Code',
                 dataIndex: 'productCode',
-                ...getColumnSearch('productCode'),
+                // ...getColumnSearch('productCode'),
             },
             {
                 title: 'Colour Description',
@@ -613,6 +602,53 @@ const FactoryPPMReport = () => {
                 title: 'Customer PO',
                 dataIndex: 'customerPO',
             },
+            {
+                title: 'Ship To Customer Number',
+                dataIndex: 'shipToCustomerNumber',
+                align: 'center',
+            },
+            {
+                title: 'Ship To Customer Name',
+                dataIndex: 'shipToCustomerName',
+                align: 'center',
+            },
+            {
+                title: 'Planning Season Code',
+                dataIndex: 'planningSeasonCode',
+                align: 'center',
+            },
+            {
+                title: 'Planning Season Year',
+                dataIndex: 'planningSeasonYear',
+                align: 'center',
+            },
+            {
+                title: 'Doc Type',
+                dataIndex: 'docTypeCode',
+                align: 'center',
+            },
+            { title: 'Doc Type Description',dataIndex: 'docTypeDesc',align: 'center'},
+            { title: 'MRGAC', dataIndex: 'MRGAC' },
+            { title: 'OGAC', dataIndex: 'OGAC' },
+            { title: 'GAC', dataIndex: 'GAC' },
+            { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
+            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
+            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
+            { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
+            { title: 'GAC Reason Description', dataIndex: ' ' },
+            { title: 'Shipping Type', dataIndex: 'shippingType' },
+            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode' },
+            { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
+            { title: 'Launch Code', dataIndex: 'launchCode' },
+            { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
+            { title: 'In Co Terms', dataIndex: 'inCoTerms' },
+            { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
+            { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
+            { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
+            { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
+            { title: 'VAS-Size', dataIndex: 'VASSize' },
+            { title: 'Item Vas Text', dataIndex: 'itemVasText' },
+            { title: 'Item Text', dataIndex: 'itemText' },
             {
                 title: 'Change Register',
                 dataIndex: 'displayName',
@@ -773,7 +809,7 @@ const FactoryPPMReport = () => {
             });
         });
 
-        return (<Table columns={columns} dataSource={filterData} pagination={{
+        return (<Table columns={columns} size='small' dataSource={filterData} pagination={{
             onChange(current, pageSize) {
                 setPage(current);
                 setPageSize(pageSize)

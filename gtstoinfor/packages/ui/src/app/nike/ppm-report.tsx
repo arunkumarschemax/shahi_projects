@@ -96,6 +96,7 @@ const PPMReport = () => {
 
   const getData = () => {
     const req = new PpmDateFilterRequest()
+    const selectedLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
     if (form.getFieldValue('lastModifiedDate') !== undefined) {
       req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD')
     }
@@ -127,12 +128,18 @@ const PPMReport = () => {
       req.plant = form.getFieldValue('plant')
     }
     if (form.getFieldValue('item') !== undefined) {
-      req.item = form.getFieldValue('item')
+      req.item = form.getFieldValue('item') 
     }
     if (form.getFieldValue('factory') !== undefined) {
       req.factory = form.getFieldValue('factory')
     }
-
+    if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
+      req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus')
+    }
+        if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
+            req.DPOMLineItemStatus = selectedLineItemStatus;
+        }  
+console.log(req,'request')
     service.getPPMData(req).then(res => {
       if (res.status) {
         setGridData(res.data)
@@ -156,11 +163,11 @@ const PPMReport = () => {
     let exportingColumns: IExcelColumn[] = []
     exportingColumns = [
       { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text, record) => { return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-' } },
+      { title: 'Last Modified Date',dataIndex: 'lastModifiedDate',render: (text) => moment(text).format('YYYY-MM-DD')},
       { title: 'Item', dataIndex: 'Item' },
       { title: 'Factory', dataIndex: 'Factory' },
       { title: 'PCD', dataIndex: 'PCD' },
-      { title: 'Document Date', dataIndex: 'documentDate', render: (text, record) => { return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-' } },
+      { title: 'Document Date', dataIndex: 'documentDate',render: (text) => moment(text).format('YYYY-MM-DD') },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
       { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
       { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
@@ -170,6 +177,8 @@ const PPMReport = () => {
       { title: 'Style Number', dataIndex: 'styleNumber' },
       { title: 'Product Code', dataIndex: 'productCode' },
       { title: 'Colour Description', dataIndex: 'colorDesc' },
+      { title: 'DESCRIPTION WITH FABRIC CONTENT',dataIndex: ''}, 
+      { title: 'Fabric Content as Per Washcare Label',dataIndex: ''},
       { title: 'Planning Season Code', dataIndex: 'planningSeasonCode' },
       { title: 'Planning Season Year', dataIndex: 'planningSeasonYear' },
       { title: 'Co', dataIndex: 'customerOrder' },
@@ -187,6 +196,7 @@ const PPMReport = () => {
       { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
       { title: 'Plant Code', dataIndex: 'plant' },
       { title: 'plant Name', dataIndex: 'plantName' },
+      { title: 'Geo Code', dataIndex: '' },
       { title: 'UPC', dataIndex: 'UPC' },
       { title: 'Sales Order Number', dataIndex: 'directShipSONumber' },
       { title: 'Sales Order Item Number', dataIndex: 'directShipSOItemNumber' },
@@ -197,14 +207,15 @@ const PPMReport = () => {
       { title: 'Ship to Address DIA', dataIndex: 'shipToAddressDIA' },
       { title: 'Diff of Ship to Address', dataIndex: '' },
       { title: 'CAB Code', dataIndex: 'CABcode' },
-      { title: 'MRGAC', dataIndex: '"MRGAC' },
+      { title: 'Final Destination', dataIndex: '' },
+      { title: 'MRGAC', dataIndex: 'MRGAC' },
       { title: 'OGAC', dataIndex: 'OGAC' },
       { title: 'GAC', dataIndex: 'GAC' },
-      { title: 'Truck Out Date', dataIndex: 'truckOutDate', render: (text, record) => { return record.truckOutDate ? moment(record.truckOutDate).format('MM/DD/YYYY') : '-' } },
-      { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', render: (text, record) => { return record.originReceiptDate ? moment(record.originReceiptDate).format('MM/DD/YYYY') : '-' } },
-      { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', render: (text, record) => { return record.factoryDeliveryActDate ? moment(record.factoryDeliveryActDate).format('MM/DD/YYYY') : '-' } },
       { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
       { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
+      { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
+      { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
+      { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
       { title: 'Shipping Type', dataIndex: 'shippingType' },
       { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode' },
       { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
@@ -226,11 +237,7 @@ const PPMReport = () => {
       { title: 'Item Vas Text in PDF PO', dataIndex: '' },
       { title: 'Diff of Item Vas Text', dataIndex: '' },
       { title: 'Item Text', dataIndex: 'itemText' },
-      {
-        title: 'Change Register',
-        dataIndex: 'displayName',
-        align: 'center',
-      },
+      { title: 'Change Register',dataIndex: 'displayName',align: 'center',},
 
 
     ]
@@ -248,16 +255,6 @@ const PPMReport = () => {
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
 
   const Finish = (data: any) => {
-    const values = form.getFieldsValue();
-    if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
-      setFilterData(gridData);
-    } else {
-      const filteredData = gridData.filter(item =>
-        values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
-      );
-      setFilterData(filteredData);
-      getData()
-    }
   };
 
 
@@ -358,20 +355,23 @@ const PPMReport = () => {
     const sizeHeaders = getSizeWiseHeaders(data);
     const sizeWiseMap = getMap(data);
 
-    const columns: any = [
-      {
-        title: "S.No",
-        render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
-      },
+    const columns: ColumnsType<any> = [
+      // {
+      //   title: "S.No",
+      //   render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
+
+      // },
+
       {
         title: "Po+Line",
-        dataIndex: 'Po+Line',
-        render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`
+        dataIndex: 'Po+Line',fixed:'left', 
+        render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`,
       },
       {
         title: 'Last Modified Date',
-        dataIndex: 'updatedAt',
-        render: (text) => moment(text).format('MM/DD/YYYY')
+        dataIndex: 'lastModifiedDate',
+        render: (text) => moment(text).format('YYYY-MM-DD')
+
       },
       {
         title: 'Item',
@@ -384,14 +384,12 @@ const PPMReport = () => {
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
-        render: (text, record) => {
-          return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
-        }
+        render: (text) => moment(text).format('YYYY-MM-DD') 
+       
       },
       {
         title: 'Purchase Order Number',
         dataIndex: 'purchaseOrderNumber',
-        ...getColumnSearchProps('purchaseOrderNumber'),
       },
       {
         title: 'PO Line Item Number',
@@ -408,15 +406,19 @@ const PPMReport = () => {
       {
         title: 'Product Code',
         dataIndex: 'productCode',
-        sorter: (a, b) => a.productCode.length - b.productCode.length,
-        sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('productCode'),
       },
       {
         title: 'Colour Description',
         dataIndex: 'colorDesc'
       },
-
+      {
+        title: 'DESCRIPTION WITH FABRIC CONTENT',
+        dataIndex: ''
+      }, 
+      {
+        title: 'Fabric Content as Per Washcare Label',
+        dataIndex: ''
+      },
       {
         title: 'Category Description',
         dataIndex: 'categoryDesc'
@@ -429,6 +431,7 @@ const PPMReport = () => {
         title: "Plant Code",
         dataIndex: 'plant'
       },
+      { title: 'Geo Code', dataIndex: '' },
       {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty',
@@ -541,7 +544,8 @@ const PPMReport = () => {
       });
     });
 
-    return (<Table columns={columns} dataSource={filterData} pagination={{
+
+    return (<Table columns={columns} dataSource={filterData} size='large' pagination={{
       onChange(current, pageSize) {
         setPage(current);
         setPageSize(pageSize)
@@ -562,19 +566,19 @@ const PPMReport = () => {
           form={form}
           layout='vertical'>
           <Row gutter={24}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >
               <Form.Item label="Last Modified Date" name="lastModifiedDate">
                 <RangePicker />
 
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >
               <Form.Item label="Document Date" name="documentDate">
                 <RangePicker />
 
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name="DPOMLineItemStatus" label="PPM Status">
                 <Select
                   showSearch
@@ -588,7 +592,7 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='productCode' label='Product Code' >
                 <Select
                   showSearch
@@ -603,7 +607,7 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{marginTop:20}}>
               <Form.Item name='poandLine' label='Po+Line' >
                 <Select
                   showSearch
@@ -708,9 +712,11 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 25 }} >
+
+
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 25 }} >
               <Form.Item>
-                <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Search</Button>
+                <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Get Report</Button>
                 <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
               </Form.Item>
             </Col>
