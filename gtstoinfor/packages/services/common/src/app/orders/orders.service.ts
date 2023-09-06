@@ -101,15 +101,11 @@ export class OrdersService {
                             const existingDataKeys = Object.keys(details)
                             const currentDataKeys = Object.keys(dtoData)
                             for (const existingDataKey of existingDataKeys) {
-                                if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId') {
+                                if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month') {
                                     const orderDiffObj = new OrdersDifferenceEntity();
                                     if (existingDataKey === 'lastUpdateDate' || existingDataKey === 'requestedWhDate' || existingDataKey === 'contractedDate' || existingDataKey === 'EXF') {
-                                        console.log(details[existingDataKey], 'existingOld')
                                         const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
-                                        console.log(oldValue, 'oldValue');
-                                        console.log(dtoData[existingDataKey], 'existingNew')
                                         const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
-                                        console.log(newValue, 'newValue')
                                         orderDiffObj.oldValue = details[existingDataKey]
                                         orderDiffObj.newValue = dtoData[existingDataKey]
                                         orderDiffObj.columnName = orderColumnValues[existingDataKey]
