@@ -10,6 +10,7 @@ import { appConfig } from '../../config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DpomModule } from './dpom/nike-dpom.module';
 import { SupplierModule } from './supplier/supplier.module';
+import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.module';
 import { DataSource } from 'typeorm';
 import { AppDataSource, AppDataSource1, AppDataSource2 } from './app-datasource';
 
@@ -35,7 +36,7 @@ import { AppDataSource, AppDataSource1, AppDataSource2 } from './app-datasource'
     FactoriesModule,
     SupplierModule,
     UsersModule,
-    AuthModule, JwtModule, DpomModule],
+    AuthModule, JwtModule, DpomModule,AdobeAcrobatApiModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
