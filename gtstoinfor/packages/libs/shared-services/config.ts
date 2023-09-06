@@ -12,6 +12,7 @@ export const config = {
     // download_path:'http://edoc.shahiapps.in/document-management'
 
 
+    
 
 
 }
