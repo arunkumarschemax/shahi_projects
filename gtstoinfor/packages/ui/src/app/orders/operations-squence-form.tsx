@@ -185,7 +185,7 @@ export const OperationSequence = () => {
                     {
                         itemCodes.map((e)=>{
                             return(
-                                <Option key={e.itemId} value={e.itemCode}>{e.itemCode}</Option>
+                                <Option key={e.itemId} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
                             )
                         })
                     }
