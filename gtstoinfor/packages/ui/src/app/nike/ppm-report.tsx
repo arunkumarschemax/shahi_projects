@@ -462,7 +462,7 @@ const PPMReport = () => {
         title: "OGAC",
         dataIndex: 'OGAC'
       },
-     
+
       {
         title: "UPC",
         dataIndex: 'UPC'
@@ -508,38 +508,38 @@ const PPMReport = () => {
         dataIndex: 'genderAgeDesc'
       },
       {
-        title:"Shipping Type",
-        dataIndex:'shippingType'
+        title: "Shipping Type",
+        dataIndex: 'shippingType'
       },
       {
-        title:"Planning Priority Number",
-        dataIndex:'planningPriorityCode'
+        title: "Planning Priority Number",
+        dataIndex: 'planningPriorityCode'
       },
       {
-        title:"Planning Priority Description",
-        dataIndex:'planningPriorityDesc'
+        title: "Planning Priority Description",
+        dataIndex: 'planningPriorityDesc'
       },
       {
-        title:"Mode Of Transportation",
-        dataIndex:'modeOfTransportationCode' 
+        title: "Mode Of Transportation",
+        dataIndex: 'modeOfTransportationCode'
       },
       {
-        title:"In Co Terms",
-        dataIndex:'inCoTerms'
+        title: "In Co Terms",
+        dataIndex: 'inCoTerms'
       },
       {
-        title:"Purchase Group",
-        dataIndex:'purchaseGroupCode'
+        title: "Purchase Group",
+        dataIndex: 'purchaseGroupCode'
       },
       {
-        title:"Purchase Group Name",
-        dataIndex:'purchaseGroupName'
-      }, 
+        title: "Purchase Group Name",
+        dataIndex: 'purchaseGroupName'
+      },
       {
         title: 'Change Register',
         dataIndex: 'displayName',
         align: 'center',
-    },
+      },
 
     ]
 
@@ -929,11 +929,16 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
 
-
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 25 }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
               <Form.Item>
-                <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Get Report</Button>
-                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
+                <Button htmlType="submit"
+                  icon={<SearchOutlined />}
+                  type="primary">Get Report</Button>
+                <Button
+                  htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={onReset}
+                >
+                  RESET
+                </Button>
               </Form.Item>
             </Col>
           </Row>
