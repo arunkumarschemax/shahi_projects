@@ -575,7 +575,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Gender Age Description',
-                dataIndex: '',
+                dataIndex: 'genderAgeDesc',
             },
             {
                 title: 'Destination Country Code',
@@ -618,6 +618,68 @@ const FactoryPPMReport = () => {
                 dataIndex: 'displayName',
                 align: 'center',
             },
+            {
+                title:"Purchase Group Name",
+                dataIndex:'purchaseGroupName'
+
+            },
+            {
+                title:"Purchase Group",
+                dataIndex:'purchaseGroupCode'
+            },
+            {
+                title:"In Co Terms",
+                dataIndex:'inCoTerms' 
+            },
+            {
+                title:"Mode Of Transportation",
+                dataIndex:'modeOfTransportationCode' 
+            },
+            {
+                title:"Launch Code",
+                dataIndex:'launchCode' 
+            },
+            {
+                title:"Planning Priority Description",
+                dataIndex:'planningPriorityDesc' 
+            },
+            {
+                title:"Planning Priority Number",
+                dataIndex:'planningPriorityCode' 
+            },
+            {
+                title:"Shipping Type",
+                dataIndex:'shippingType' 
+            },
+            {
+                title:"GAC",
+                dataIndex:'GAC' 
+            },
+            {
+                title:"OGAC",
+                dataIndex:'OGAC' 
+            },
+            {
+                title:"MRGAC",
+                dataIndex:'MRGAC' 
+            },
+            {
+                title:"Doc Type Description",
+                dataIndex:'docTypeDesc' 
+            },
+            {
+                title:"Doc Type",
+                dataIndex:'docTypeCode' 
+            },
+            {
+                title:"Planning Season Year",
+                dataIndex:'planningSeasonYear'
+            },
+            {
+                title:"Planning Season Code",
+                dataIndex:'planningSeasonCode'
+            },
+
             {
                 align: 'center',
                 children: [

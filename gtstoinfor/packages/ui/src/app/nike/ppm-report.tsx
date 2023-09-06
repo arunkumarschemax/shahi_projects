@@ -426,8 +426,16 @@ const PPMReport = () => {
         dataIndex: 'destinationCountry'
       },
       {
+        title: "Destination Country Code",
+        dataIndex: 'destinationCountryCode'
+      },
+      {
         title: "Plant Code",
         dataIndex: 'plant'
+      },
+      {
+        title: "Plant Name",
+        dataIndex: 'plantName'
       },
       {
         title: 'Total Item Qty',
@@ -435,6 +443,97 @@ const PPMReport = () => {
         align: 'center',
         render: (text) => <strong>{text}</strong>
       },
+      {
+        title: "GAC",
+        dataIndex: 'GAC'
+      },
+      {
+        title: "MRGAC",
+        dataIndex: 'MRGAC'
+      },
+      {
+        title: "OGAC",
+        dataIndex: 'OGAC'
+      },
+     
+      {
+        title: "UPC",
+        dataIndex: 'UPC'
+      },
+      {
+        title: "Trading Co Po Number",
+        dataIndex: 'tradingCoPoNumber'
+      },
+      {
+        title: "Doc Type",
+        dataIndex: 'docTypeCode'
+      },
+      {
+        title: "Doc Type Description ",
+        dataIndex: 'docTypeDesc'
+      },
+      {
+        title: "Doc Type Description ",
+        dataIndex: 'docTypeDesc'
+      },
+      {
+        title: "Planning Season Code",
+        dataIndex: 'planningSeasonCode'
+      },
+      {
+        title: "Planning Season Year",
+        dataIndex: 'planningSeasonYear'
+      },
+      {
+        title: "Category",
+        dataIndex: 'categoryCode'
+      },
+      {
+        title: "Vendor Code",
+        dataIndex: 'vendorCode'
+      },
+      {
+        title: "Gender Age",
+        dataIndex: 'genderAgeCode'
+      },
+      {
+        title: "Gender Age Description",
+        dataIndex: 'genderAgeDesc'
+      },
+      {
+        title:"Shipping Type",
+        dataIndex:'shippingType'
+      },
+      {
+        title:"Planning Priority Number",
+        dataIndex:'planningPriorityCode'
+      },
+      {
+        title:"Planning Priority Description",
+        dataIndex:'planningPriorityDesc'
+      },
+      {
+        title:"Mode Of Transportation",
+        dataIndex:'modeOfTransportationCode' 
+      },
+      {
+        title:"In Co Terms",
+        dataIndex:'inCoTerms'
+      },
+      {
+        title:"Purchase Group",
+        dataIndex:'purchaseGroupCode'
+      },
+      {
+        title:"Purchase Group Name",
+        dataIndex:'purchaseGroupName'
+      }, 
+      {
+        title: 'Change Register',
+        dataIndex: 'displayName',
+        align: 'center',
+    },
+
     ]
 
     sizeHeaders?.forEach(version => {
@@ -710,7 +809,7 @@ const PPMReport = () => {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 25 }} >
               <Form.Item>
-                <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Search</Button>
+                <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Get Report</Button>
                 <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
               </Form.Item>
             </Col>
