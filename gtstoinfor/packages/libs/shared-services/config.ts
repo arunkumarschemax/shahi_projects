@@ -7,5 +7,5 @@ export const config = {
     whatsapp_broadcast_url: 'http://206.189.138.212:3232/api',
     doc_management_url:'https://edoc7api.shahi.co.in/api',
     // doc_management_url:'http://localhost:8002/api',
-    download_path: 'https://206.189.138.212/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'
+    download_path: 'https://edoc-backend.shahiapps.in/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'
 }
