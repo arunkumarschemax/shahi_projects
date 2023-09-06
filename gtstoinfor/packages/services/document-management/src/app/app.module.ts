@@ -14,7 +14,7 @@ import { join } from 'path';
   imports: [
     ServeStaticModule.forRootAsync({
       useFactory: () => ([{
-        rootPath: join(__dirname, '../../../..', 'dist/pacakages/services/document-management/upload_files'),
+        rootPath: join(__dirname, '../../../..', 'upload_fil'),
         serveStaticOptions: {
           redirect: false,
           index: false
