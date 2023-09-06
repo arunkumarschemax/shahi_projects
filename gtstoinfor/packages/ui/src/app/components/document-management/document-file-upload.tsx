@@ -248,7 +248,6 @@ export default function DocumentListupload() {
   const fetchPdfBytesArrayWithAxios = async (pdfUrls) => {
     try {
       const pdfPromises = pdfUrls.map(async (res, index) => {
-        console.log(res);
         // if(index != 0){
           const response = await axios.get(res, {
             responseType: 'arraybuffer',
