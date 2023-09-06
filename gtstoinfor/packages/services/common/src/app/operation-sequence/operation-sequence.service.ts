@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { OperationSequenceRepository } from "./operation-sequence.repository";
-import { OperationSequenceRequest, OperationSequenceResponse } from "@project-management-system/shared-models";
+import { CommonResponseModel, ItemCodeRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest } from "@project-management-system/shared-models";
 import { OperationSequence } from "./operation-sequence.entity";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
@@ -22,7 +22,7 @@ export class OperationSequenceService{
             await transactionalEntityManager.startTransaction();
             let statusFlag = []
             const itemCode = await this.repo.find({where:{itemCode:req.itemCode}})
-            if(itemCode){
+            if(itemCode.length >0){
                 await transactionalEntityManager.releaseTransaction();
                 return  new OperationSequenceResponse(false,0,'Item Code already exist')
             } else{
@@ -62,6 +62,67 @@ export class OperationSequenceService{
             throw err
         }
 
+    }
+
+    async getInfoByItemCode(req:ItemCodeRequest):Promise<CommonResponseModel>{
+        try{
+            const info = await this.repo.find({where:{itemCode:req.itemCode}})
+            if(info.length > 0){
+                return new CommonResponseModel(true,1,'Data retrieved',info)
+            } else{
+                return new CommonResponseModel(false,0,'No data found')
+            }
+
+        }catch(err){
+            throw err
+        }
+
+    }
+
+    async getOperationSequenceInfo():Promise<OperationSequenceResponse>{
+        try{
+            const info = await this.repo.find({relations:['itemInfo','operationsInfo','operationGroupInfo']})
+            const operationSequenceMap = new Map<string,OperationSequenceModel>()
+            if(info.length > 0){
+                for(const rec of info){
+                    if(!operationSequenceMap.has(rec.itemCode)){
+                        operationSequenceMap.set(rec.itemCode,new OperationSequenceModel(rec.operationSequenceId,rec.itemCode,rec.itemInfo.itemId,[]))
+                    }
+                    operationSequenceMap.get(rec.itemCode).operatrionsInfo.push(new OperationsInfoRequest(rec.operationGroupName,rec.operationGroupInfo.operationGroupId,rec.operationName,rec.operationsInfo.operationId,rec.sequence))
+                }
+                const operationSequenceModel : OperationSequenceModel[] = [];
+                operationSequenceMap.forEach((os => operationSequenceModel.push(os)))
+                return new OperationSequenceResponse(true,1,'Data retrieved',operationSequenceModel)
+            } else{
+                return new OperationSequenceResponse(false,0,'No data found')
+            }
+
+        }catch(err){
+            throw err
+        }
+    }
+
+    async getOperationSequenceInfoByItemCode(req:ItemCodeRequest):Promise<OperationSequenceResponse>{
+        try{
+            const info = await this.repo.find({relations:['itemInfo','operationsInfo','operationGroupInfo'],where:{itemCode:req.itemCode}})
+            const operationSequenceMap = new Map<string,OperationSequenceModel>()
+            if(info.length > 0){
+                for(const rec of info){
+                    if(!operationSequenceMap.has(rec.itemCode)){
+                        operationSequenceMap.set(rec.itemCode,new OperationSequenceModel(rec.operationSequenceId,rec.itemCode,rec.itemInfo.itemId,[]))
+                    }
+                    operationSequenceMap.get(rec.itemCode).operatrionsInfo.push(new OperationsInfoRequest(rec.operationGroupName,rec.operationGroupInfo.operationGroupId,rec.operationName,rec.operationsInfo.operationId,rec.sequence))
+                }
+                const operationSequenceModel : OperationSequenceModel[] = [];
+                operationSequenceMap.forEach((os => operationSequenceModel.push(os)))
+                return new OperationSequenceResponse(true,1,'Data retrieved',operationSequenceModel)
+            } else{
+                return new OperationSequenceResponse(false,0,'No data found')
+            }
+
+        }catch(err){
+            throw err
+        }
     }
 
 }
