@@ -128,7 +128,8 @@ const AllOrdersGridView = () => {
                 const response = {
                 // file:'https://edoc7api.shahi.co.in/api/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'+`${res}`,
                 
-                file:config.download_path+'/dist/packages/services/document-management/'+`${res}`
+                // file:config.download_path+'/dist/packages/services/document-management/'+`${res}`
+                file:config.download_path+`${res}`
                 };
                 window.open(response.file);
       
