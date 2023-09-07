@@ -15,6 +15,7 @@ import UploadView from './upload-view';
 import { saveAs } from 'file-saver';
 import axios, { AxiosRequestConfig } from 'axios';
 import { PDFDocument } from 'pdf-lib';
+import PdfMergeDownload from './merge-pdf';
 const { Title, Text } = Typography;
 
 export default function DocumentListupload() {
@@ -270,6 +271,7 @@ export default function DocumentListupload() {
   };
   const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     try {
+      console.log(pathsData);
       // Load the initial PDF file (you need to provide a valid URL)
       const initialPdfUrl = pathsData[0];
       // 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';

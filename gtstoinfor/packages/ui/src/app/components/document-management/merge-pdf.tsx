@@ -27,7 +27,7 @@ const PdfMergeDownload = () => {
   const mergeAndDownloadPDFs = async () => {
     try {
       // Load the initial PDF file (you need to provide a valid URL)
-      const initialPdfUrl = 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';
+      const initialPdfUrl = 'http://localhost:8002/PO-428278-6555/sample-c2dc.pdf';
 
       const initialPdfResponse = await axios.request({
         url: initialPdfUrl,
@@ -42,7 +42,7 @@ const PdfMergeDownload = () => {
 
       // Load additional PDFs from URLs (you need to provide valid PDF URLs)
       const pdfUrls = [
-        'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf',
+        'http://localhost:8002/PO-428278-6555/sample-c2d.pdf',
       ];
       // const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
       //   const response = await fetch(url, { mode: 'no-cors' });
