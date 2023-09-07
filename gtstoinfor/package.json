@@ -5,6 +5,7 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@adobe/pdfservices-node-sdk": "^3.4.2",
     "@ant-design/icons": "4.7.0",
     "@ant-design/plots": "1.2.2",
     "@ant-design/pro-components": "^2.6.2",
@@ -21,6 +22,7 @@
     "@nrwl/nest": "14.7.5",
     "@types/passport-jwt": "3.0.8",
     "@types/react-highlight-words": "0.16.4",
+    "adm-zip": "^0.5.10",
     "antd": "^5.5.1",
     "antd-table-saveas-excel": "2.2.1",
     "apexcharts": "3.36.0",

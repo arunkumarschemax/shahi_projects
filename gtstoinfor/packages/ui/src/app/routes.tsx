@@ -127,12 +127,12 @@ export const AppRoutes = () => {
                     <Route path='divert-report' element={<DivertReport />} />
                     <Route path='factory-report' element={<FactoryPPMReport />} />
                     <Route path='ppm-report' element={<PPMReport />} />
-                    <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} /> 
+                    <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
                     <Route path='fabrick-tracker-report1' element={<FabricTrackerReport1 />} />
                     <Route path='fabrick-tracker-report2' element={<FabricTrackerReport2 />} />
                     <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
-                        <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
+                    <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

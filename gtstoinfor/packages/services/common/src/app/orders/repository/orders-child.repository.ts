@@ -72,14 +72,14 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return await query.getRawMany();
     }
 
-    async getPhaseWiseData(fileId1: number, fileId2: number): Promise<any[]> {
+    async getPhaseWiseData(fileId1: number, fileId2?: number, fileId3?: number, fileId4?: number, fileId5?: number): Promise<any[]> {
         const query1 = this.createQueryBuilder('o')
-            .select(` item_code, itemName ,'All Phases' as prod_plan_type_name, SUM(CASE WHEN file_id = ${fileId1} THEN order_qty_pcs ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
+            .select(` item_code, itemName ,'All Phases' as prod_plan_type_name, SUM(CASE WHEN file_id = ${fileId5 ? fileId5 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value3, SUM(CASE WHEN file_id = ${fileId4 ? fileId4 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value2, SUM(CASE WHEN file_id = ${fileId3 ? fileId3 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value1, SUM(CASE WHEN file_id = ${fileId2 ? fileId2 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId1} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
             .groupBy(` item_code`)
             .orderBy(` item_code`)
             .getRawMany()
         const query2 = this.createQueryBuilder('o')
-            .select(` item_code, itemName , prod_plan_type_name, SUM(CASE WHEN file_id = ${fileId1} THEN order_qty_pcs ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
+            .select(` item_code, itemName , prod_plan_type_name, SUM(CASE WHEN file_id = ${fileId5 ? fileId5 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value3, SUM(CASE WHEN file_id = ${fileId4 ? fileId4 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value2, SUM(CASE WHEN file_id = ${fileId3 ? fileId3 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value1, SUM(CASE WHEN file_id = ${fileId2 ? fileId2 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId1} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
             .groupBy(` item_code, prod_plan_type_name`)
             .orderBy(` item_code`)
             .getRawMany()
@@ -87,14 +87,14 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return data
     }
 
-    async getPhaseWiseData1(fileId2: number): Promise<any[]> {
+    async getMonthWiseData(fileId1: number, fileId2?: number, fileId3?: number, fileId4?: number, fileId5?: number): Promise<any[]> {
         const query1 = this.createQueryBuilder('o')
-            .select(` item_code, itemName ,'All Phases' as prod_plan_type_name, 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
+            .select(` item_code, itemName ,'All Phases' as prod_plan_type_name, SUM(CASE WHEN file_id = ${fileId5 ? fileId5 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value5, SUM(CASE WHEN file_id = ${fileId4 ? fileId4 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value4, SUM(CASE WHEN file_id = ${fileId3 ? fileId3 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value3, SUM(CASE WHEN file_id = ${fileId2 ? fileId2 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value2, SUM(CASE WHEN file_id = ${fileId1} THEN order_qty_pcs ELSE 0 END) AS old_qty_value1 `)
             .groupBy(` item_code`)
             .orderBy(` item_code`)
             .getRawMany()
         const query2 = this.createQueryBuilder('o')
-            .select(` item_code, itemName , prod_plan_type_name, 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) AS new_qty_value `)
+            .select(` item_code, itemName , prod_plan_type_name, SUM(CASE WHEN file_id = ${fileId5 ? fileId5 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value5, SUM(CASE WHEN file_id = ${fileId4 ? fileId4 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value4, SUM(CASE WHEN file_id = ${fileId3 ? fileId3 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value3, SUM(CASE WHEN file_id = ${fileId2 ? fileId2 : null} THEN order_qty_pcs ELSE 0 END) AS old_qty_value2, SUM(CASE WHEN file_id = ${fileId1} THEN order_qty_pcs ELSE 0 END) AS old_qty_value1 `)
             .groupBy(` item_code, prod_plan_type_name`)
             .orderBy(` item_code`)
             .getRawMany()
@@ -102,4 +102,15 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return data
     }
 
+    // async getlatestFileIdAgainstMonth(): Promise<any[]>{
+    //     const query= `SELECT t1.month, t1.file_id as fileId
+    //     FROM orders_child t1
+    //     INNER JOIN (
+    //         SELECT MONTH, MAX(created_at) AS latest_created_at
+    //         FROM orders_child
+    //         GROUP BY MONTH
+    //     ) t2 ON t1.month = t2.month AND t1.created_at = t2.latest_created_at`
+    //     const result = await this.query(query)
+    //     return result
+    // }
 }
