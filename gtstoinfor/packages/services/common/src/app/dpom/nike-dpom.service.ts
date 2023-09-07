@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, MarketingModel, NewDivertModel, OldDivertModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, dpomOrderColumnsName } from '@project-management-system/shared-models';
+import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, MarketingModel, NewDivertModel, OldDivertModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -684,14 +684,32 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getOrderAcceptanceData(): Promise<CommonResponseModel> {
-        const data = await this.dpomRepository.find()
-        if (data.length > 0) {
-            return new CommonResponseModel(true, 1, 'Data retrieved', data)
-        } else {
+    // async getOrderAcceptanceData(req:PpmDateFilterRequest): Promise<CommonResponseModel> {
+    //     const data = await this.dpomRepository.find()
+    //     if (data.length > 0) {
+    //         return new CommonResponseModel(true, 1, 'Data retrieved', data)
+    //     } else {
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    //     }
+    // }
+
+    async getOrderAcceptanceData(req: nikeFilterRequest): Promise<CommonResponseModel> {
+        try {
+          const data = await this.dpomRepository.find({
+            where: req,
+          });
+          console.log(req,'request')
+          if (data.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data retrieved', data);
+          } else {
             return new CommonResponseModel(false, 0, 'No data found');
+          }
+        } catch (err) {
+          throw err;
         }
-    }
+      }
+      
+
 
     async approveDpomLineItemStatus(req: DpomApproveReq): Promise<CommonResponseModel> {
         const purchaseOrderNumber = req.purchaseOrderNumber
@@ -1105,6 +1123,8 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'failed', error);
         }
     }
+
+  
 
     async getDivertReportData(): Promise<CommonResponseModel> {
         const reports = await this.dpomRepository.getDivertReport();
