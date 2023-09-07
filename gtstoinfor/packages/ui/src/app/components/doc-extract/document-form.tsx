@@ -29,7 +29,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern:  /[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='GST No' name='gstNo'>
@@ -43,7 +43,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /[A-Z]{4}0[A-Z0-9]{6}/g,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='IFSC Code' name='ifscCode'>
@@ -57,7 +57,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /\b(?:\d{1,2}-[A-Za-z]{3}-\d{2}|\d{4} [A-Za-z]{3} \d{1,2}|\d{1,2}\/\d{1,2}\/(?:\d{2}|\d{4}))\b/g,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Invoice No' name='invoiceNo'>
@@ -71,7 +71,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /\b[A-Za-z]\d{11}\b/g,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Payment Reference' name='PayRef'>
@@ -87,7 +87,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /\bCUSTOMER ID:\s*([A-Za-z\s]+)\b/i,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Customer' name='customer'>
@@ -101,7 +101,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /((\d*\.?\d+)([A-Za-z\s])\s*(lbs?|M3))/i,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Volume' name='volume'>
@@ -115,7 +115,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern:  /((\d*\.?\d+)\s*(lbs?|KG))/i,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Weight' name='weight'>
@@ -129,7 +129,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /((\d*\.?\d+)([A-Za-z\s])+\s*(lbs?|M3))/i,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Chargeable' name='chargeable'>
@@ -145,7 +145,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /\b(?:\d{1,2}-[A-Za-z]{3}-\d{2}|\d{4} [A-Za-z]{3} \d{1,2}|\d{1,2}\/\d{1,2}\/(?:\d{2}|\d{4}))\b/g,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Invoice Date' name='invoiceDate'>
@@ -159,7 +159,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern:  /((\d+)\s*(\d+\s*%))/,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Cartons' name='cartons'>
@@ -173,7 +173,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /([A-Z]{1}[0-9]{4})-/,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Po' name='po'>
@@ -187,7 +187,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /((\d*\.?\d+)\s*(?:CTN|CTNS))\b/i,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Packages' name='packages'>
@@ -203,7 +203,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /\b(?:YES|NO)\b/i,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='RCM' name='rcm'>
@@ -217,7 +217,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /\b(\d{2}-[A-Za-z]{3}-\d{2})\b/,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='ETA' name='eta'>
@@ -231,7 +231,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /(\d{11})/,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='House Bill' name='houseBill'>
@@ -245,7 +245,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /s*\s*(\d+)\s*(\d+%)\s*(COTTON)\s*(\d+%)\s*(POLYESTER)\s*(\d+%)\s*(ELASTANE)\s*(\w+)\s*(MENS SHORTS)/,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Goods Description' name='goodsDescription'>
@@ -261,7 +261,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern:/[A-Z]+\/[A-Z]+\/\d+/,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Ocean Bill' name='oceanBill'>
@@ -275,7 +275,7 @@ export function DocumentForm(props: DocumentFormProps) {
                                         message: 'Owner is required'
                                     },
                                     {
-                                        pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z. ]*$/,
+                                        pattern: /([A-Z0-9]+)\s+([0-9]+)/,
                                         message: `Should contain only alphabets.`,
                                     }
                                 ]} label='Containers' name='containers'>
