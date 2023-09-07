@@ -2,6 +2,7 @@ import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { DpomApproveRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, message } from "antd";
+import moment from "moment";
 import React, { useRef } from "react";
 import { useEffect, useState } from "react";
 import Highlighter from 'react-highlight-words';
@@ -157,6 +158,11 @@ export function OrderAcceptance() {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
+            title: 'Document Date',
+            dataIndex: 'documentDate',
+            render: (text) => moment(text).format('YYYY-MM-DD')
+        },
+        {
             title: 'Plant Name',
             dataIndex: 'plantName'
         },
@@ -168,10 +174,6 @@ export function OrderAcceptance() {
         {
             title: 'Purchase Group Name',
             dataIndex: 'purchaseGroupName'
-        },
-        {
-            title: 'Product Code',
-            dataIndex: 'productCode'
         },
         {
             title: 'Product Code',
@@ -222,13 +224,13 @@ export function OrderAcceptance() {
                     onFinish={Finish}
                     form={form}
                     layout='vertical'>
-                    <Row>
+                    <Row gutter={24}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
                             <Form.Item label="Factory Report Date" name="fromDate">
                                 <RangePicker onChange={EstimatedETDDate} />
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
                             <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
                                 <Select
                                     showSearch
@@ -241,20 +243,16 @@ export function OrderAcceptance() {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '42px' }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ margin:33, }} >
                             <Form.Item>
                                 <Button htmlType="submit"
                                     icon={<SearchOutlined />}
                                     type="primary">SEARCH</Button>
-
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ padding: '42px' }}>
-                            <Form.Item>
+                          
                                 <Button
                                     htmlType='button'
                                     icon={<UndoOutlined />}
-                                    style={{ left: '-150px', width: 80, backgroundColor: "#162A6D", color: "white", position: "relative" }}
+                                    style={{margin:10, width: 80, backgroundColor: "#162A6D", color: "white", position: "relative" }}
                                     onClick={() => { ClearData(); }}
                                 >
                                     RESET
@@ -267,6 +265,7 @@ export function OrderAcceptance() {
                     columns={columns}
                     dataSource={data}
                     bordered
+                    scroll={{ x: 'max-content' }}
                 >
                 </Table>
             </Card>
