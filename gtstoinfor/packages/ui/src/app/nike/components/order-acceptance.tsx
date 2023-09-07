@@ -1,5 +1,5 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
-import { DpomApproveRequest } from "@project-management-system/shared-models";
+import { DpomApproveRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, message } from "antd";
 import moment from "moment";
@@ -20,6 +20,9 @@ export function OrderAcceptance() {
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
     const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
     const { RangePicker } = DatePicker;
+    const [productCode, setProductCode] = useState<any>([]);
+    const [poLine, setPoLine] = useState<any>([]);
+
 
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -38,14 +41,14 @@ export function OrderAcceptance() {
         //     // getFactoryStatus(values)
         // }/
 
-        if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
-            setFilterData(data);
-        } else {
-            const filteredData = data.filter(item =>
-                values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
-            );
-            setFilterData(filteredData);
-        }
+        // if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
+        //     setFilterData(data);
+        // } else {
+        //     const filteredData = data.filter(item =>
+        //         values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
+        //     );
+        //     setFilterData(filteredData);
+        // }
     }
 
     const getColumnSearchProps = (dataIndex: string) => ({
@@ -109,28 +112,56 @@ export function OrderAcceptance() {
         form.resetFields();
     }
 
-    const EstimatedETDDate = (value) => {
-        if (value) {
-            const fromDate = value[0].format('YYYY-MM-DD');
-            const toDate = value[1].format('YYYY-MM-DD');
-            setSelectedEstimatedFromDate(fromDate)
-            setSelectedEstimatedToDate(toDate)
-        }
-    }
 
     useEffect(() => {
         getOrderAcceptanceData()
+        getProductCode()
+        getPoLine()
     }, [])
 
-    const getOrderAcceptanceData = () => {
-        service.getOrderAcceptanceData().then((res) => {
+    const getProductCode = () => {
+        service.getPpmProductCodeForOrderCreation().then(res => {
+          setProductCode(res.data)
+          console.log(res.data,"rrrrrrrrrrrrrrrrr")
+        })
+      }
+      const getPoLine = () => {
+        service.getPpmPoLineForOrderCreation().then(res => {
+          setPoLine(res.data)
+        })
+      }
+      const onReset = () => {
+        form.resetFields()
+        getOrderAcceptanceData()
+      }
+  const getOrderAcceptanceData = () => {
+         const req = new nikeFilterRequest();
+    if (form.getFieldValue('documentDate') !== undefined) {
+      req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
+    }
+    if (form.getFieldValue('documentDate') !== undefined) {
+      req.documentEndDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
+    }
+    if (form.getFieldValue('productCode') !== undefined) {
+      req.productCode = form.getFieldValue('productCode');
+    }
+    if (form.getFieldValue('poandLine') !== undefined) {
+      req.poandLine = form.getFieldValue('poandLine');
+    }
+    if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
+        req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
+      }
+        service.getOrderAcceptanceData1(req).then((res) => {
             if (res.data) {
                 setData(res.data)
+                Finish(data)
                 // message.success(res.internalMessage)
             } else (
                 message.error(res.internalMessage)
             )
-        })
+        })        
+        console.log(data,"reqqqqqqqqqqqqqqqqqqqqqqqqqqq")
+
     }
 
     const approveDpomLineItemStatus = (record) => {
@@ -148,7 +179,7 @@ export function OrderAcceptance() {
         })
     }
 
-    console.log(data)
+  
 
     const columns: any = [
         {
@@ -156,54 +187,59 @@ export function OrderAcceptance() {
             key: "sno",
             responsive: ["sm"],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            fixed:'left'
+        },
+        {
+            title: 'PO Number + Line',
+            dataIndex: 'po_and_line',
+            fixed:'left',
+           // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
             title: 'Document Date',
-            dataIndex: 'documentDate',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            dataIndex: 'document_date',
+            render: (text) => moment(text).format('YYYY-MM-DD'),
+           
         },
+       
         {
             title: 'Plant Name',
-            dataIndex: 'plantName'
+            dataIndex: 'plant_name'
         },
-        {
-            title: 'PO Number',
-            dataIndex: 'purchaseOrderNumber',
-            ...getColumnSearchProps('purchaseOrderNumber')
-        },
+       
         {
             title: 'Purchase Group Name',
-            dataIndex: 'purchaseGroupName'
+            dataIndex: 'purchase_group_name'
         },
         {
             title: 'Product Code',
-            dataIndex: 'productCode'
+            dataIndex: 'product_code'
         },
         {
             title: 'Category',
-            dataIndex: 'categoryDesc'
+            dataIndex: 'category_desc'
         },
         {
             title: 'Shipping Type',
-            dataIndex: 'shippingType'
+            dataIndex: 'shipping_type'
         },
         {
             title: 'DPOM Line Item Status',
-            dataIndex: 'DPOMLineItemStatus',
+            dataIndex: 'dpom_item_line_status',
             filters: [
                 { text: 'Accepted', value: 'Accepted' },
                 { text: 'Unaccepted', value: 'Unaccepted' },
-                { text: 'Closed', value: 'Closed' },
-                { text: 'Cancelled', value: 'Cancelled' }
+                // { text: 'Closed', value: 'Closed' },
+                // { text: 'Cancelled', value: 'Cancelled' }
             ],
             filterMultiple: false,
-            onFilter: (value, record) => { return record.DPOMLineItemStatus === value }
+            onFilter: (value, record) => { return record.dpom_item_line_status === value }
         },
         {
             title: 'Action',
             dataIndex: 'action',
             render: (value, record) => {
-                if (record.DPOMLineItemStatus === 'Unaccepted') {
+                if (record.dpom_item_line_status === 'Unaccepted') {
                     return (
                         <Popconfirm title="Are you sure to approve" onConfirm={() => approveDpomLineItemStatus(record)}>
                             <Button>Accept</Button>
@@ -221,15 +257,15 @@ export function OrderAcceptance() {
         <>
             <Card title="Nike Orders Register" headStyle={{ fontWeight: 'bold' }}>
                 <Form
-                    onFinish={Finish}
+                    onFinish={getOrderAcceptanceData}
                     form={form}
                     layout='vertical'>
                     <Row gutter={24}>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
-                            <Form.Item label="Factory Report Date" name="fromDate">
-                                <RangePicker onChange={EstimatedETDDate} />
-                            </Form.Item>
-                        </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >
+                      <Form.Item label="Document Date" name="documentDate">
+                         <RangePicker />
+                        </Form.Item>
+                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
                             <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
                                 <Select
@@ -243,20 +279,46 @@ export function OrderAcceptance() {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ margin:33, }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='productCode' label='Product Code' >
+                <Select
+                  showSearch
+                  placeholder="Select Product Code"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {productCode.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                  })
+                  }
+                       </Select>
+                       </Form.Item>
+                         </Col>
+                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
+                  <Form.Item name='poandLine' label='Po+Line' >
+                <Select
+                  showSearch
+                  placeholder="Select Po+Line"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {poLine.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop:40, }} >
                             <Form.Item>
                                 <Button htmlType="submit"
                                     icon={<SearchOutlined />}
                                     type="primary">SEARCH</Button>
                           
-                                <Button
-                                    htmlType='button'
-                                    icon={<UndoOutlined />}
-                                    style={{margin:10, width: 80, backgroundColor: "#162A6D", color: "white", position: "relative" }}
-                                    onClick={() => { ClearData(); }}
-                                >
-                                    RESET
-                                </Button>
+                                  <Button style={{ marginLeft:8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
+
+                                  
+                                
                             </Form.Item>
                         </Col>
                     </Row>

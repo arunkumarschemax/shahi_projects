@@ -779,11 +779,7 @@ const  OrdersCompareGrid = () => {
             )
 
         },
-        {
-            title: 'Order Status',
-            dataIndex: 'dpom_item_line_status',
-            render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
-        }
+       
     ];
     const columns3: any = [
         {
@@ -1219,7 +1215,7 @@ const  OrdersCompareGrid = () => {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <b>Order Qty Revised PO's : {filteredQtyData?.length} </b>,
+            label: <b style={{ color: '#25CB2D' }}>Order Qty Revised PO's : {filteredQtyData?.length} </b>,
             children: <Table bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
@@ -1229,7 +1225,7 @@ const  OrdersCompareGrid = () => {
         },
         {
             key: '3',
-            label: <b >Item Changed PO's : {itemChangeData?.length}</b>,
+            label: <b style={{ color: '#29D6DE' }}>Item Changed PO's : {itemChangeData?.length}</b>,
             children: <Table bordered dataSource={itemChangeData} columns={columns1} scroll={{ x: 'max-content' }} />,
         },
         {
@@ -1239,7 +1235,7 @@ const  OrdersCompareGrid = () => {
         },
         {
             key: '5',
-            label: <b>Price & currency change in FOB : {priceChaneData?.length}</b>,
+            label: <b style={{ color: '#B229DE' }}>Price & currency change in FOB : {priceChaneData?.length}</b>,
             children: <Table bordered dataSource={priceChaneData} columns={columns2} scroll={{ x: 'max-content' }}/>,
         },
         {
@@ -1249,7 +1245,7 @@ const  OrdersCompareGrid = () => {
         },
         {
             key: '7',
-            label: <b>Mode of transportation: {modeOTransportChaneData?.length}</b>,
+            label: <b style={{ color: '#DEAD29' }}>Mode of transportation: {modeOTransportChaneData?.length}</b>,
             children: <Table bordered dataSource={modeOTransportChaneData} columns={columns3} scroll={{ x: 'max-content' }}/>,
         },
         {

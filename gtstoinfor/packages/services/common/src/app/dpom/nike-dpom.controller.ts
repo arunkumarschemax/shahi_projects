@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
-import { CommonResponseModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, PpmDateFilterRequest, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomService } from './nike-dpom.service';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -203,9 +203,10 @@ export class DpomController {
     }
 
     @Post('/getOrderAcceptanceData')
-    async getOrderAcceptanceData(): Promise<CommonResponseModel> {
+    @ApiBody({ type: nikeFilterRequest })
+    async getOrderAcceptanceData(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getOrderAcceptanceData();
+            return this.dpomService.getOrderAcceptanceData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
@@ -616,6 +617,22 @@ export class DpomController {
     async getPpmDestinationCountryForMarketing(): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getPpmDestinationCountryForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmProductCodeForOrderCreation')
+    async getPpmProductCodeForOrderCreation(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmProductCodeForOrderCreation();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmPoLineForOrderCreation')
+    async getPpmPoLineForOrderCreation(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmPoLineForOrderCreation();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

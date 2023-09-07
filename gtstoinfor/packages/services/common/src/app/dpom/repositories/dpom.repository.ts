@@ -5,7 +5,8 @@ import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
-import { PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
+import { group } from "console";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
@@ -507,6 +508,38 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
     
-    
+    async getOrderAcceptanceDat(req:nikeFilterRequest): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom.*`)
+            .where(`dpom_item_line_status IN('Accepted','Unaccepted')`)
+            .groupBy(`dpom.po_and_line`)
+            if (req.documentStartDate !== undefined) {
+                query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
+            } 
+            if (req.productCode !== undefined) {
+                query.andWhere(`dpom.product_code ='${req.productCode}'`)
+            }
+            if (req.poandLine !== undefined) {
+                query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
+            }
+            if (req.DPOMLineItemStatus !== undefined) {
+                query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+            }
+        return await query.getRawMany();
+    }
+    async getPpmProductCodeForOrderCreation(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.productCode,dpom.id`)
+            .where(`dpom.dpom_item_line_status IN('Accepted','Unaccepted')`)
+            .groupBy(`dpom.productCode`)
+        return await query.getRawMany();
+    }
 
+    async getPoLineforOrderCreation(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_and_line,dpom.id`)
+            .where(`dpom.dpom_item_line_status IN('Accepted','Unaccepted')`)
+            .groupBy(`dpom.po_and_line`)
+        return await query.getRawMany();
+    }
 }
