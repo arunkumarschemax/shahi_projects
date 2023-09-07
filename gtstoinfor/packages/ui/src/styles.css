@@ -3,3 +3,14 @@
     background-color: rgb(253, 253, 253) !important;
     box-shadow: 0 4px 8px 0 #00000033 !important;
 } */
+
+.colored-row {
+    background-color: #C9F97A ;
+    color:"white"
+  }
+
+  /* .uncolored-row{
+    background-color: rgb(99, 65, 134);
+    color:"black"
+  } */
+
