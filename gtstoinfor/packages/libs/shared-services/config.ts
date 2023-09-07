@@ -5,7 +5,7 @@ export const config = {
     whatsapp_redirection_url: 'http://dev.schemaxtech.in/#',
     whatsapp_notification_url: 'http://206.189.138.212:3000',
     whatsapp_broadcast_url: 'http://206.189.138.212:3232/api',
-    doc_management_url:'https://edoc7api.shahi.co.in/api',
-    // doc_management_url:'http://localhost:3002/api',
-    download_path:'https://edoc7api.shahi.co.in/',
+    doc_management_url:'http://172.20.50.169:3002/api',
+    // doc_management_url:'http://localhost:8002/api',
+    download_path: 'http://172.20.50.169:3002'
 }
