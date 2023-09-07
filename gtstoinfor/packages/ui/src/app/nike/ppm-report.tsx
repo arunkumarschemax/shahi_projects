@@ -47,7 +47,6 @@ const PPMReport = () => {
     getplantCode();
     getItem();
     getFactory();
-
   }, [])
 
 
@@ -274,7 +273,7 @@ const PPMReport = () => {
       <div style={{ padding: 8 }}>
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Search ${dataIndex}`} 
           value={selectedKeys[0]}
           onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -311,7 +310,7 @@ const PPMReport = () => {
       text ? (
         searchedColumn === dataIndex ? (
           <Highlighter
-            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            highlightStyle={{ backgroundColor:'#ffc069', padding: 0 }}
             searchWords={[searchText]}
             autoEscape
             textToHighlight={text.toString()}
@@ -542,14 +541,14 @@ const PPMReport = () => {
       });
     });
 
+
     const getRowClassName = (record) => {
       if (record.displayName) {
-        // Add a custom class to colored rows
         return 'colored-row';
       }
-      // Default class for other rows
       return '';
     };
+      
 
     return (<Table columns={columns} dataSource={filterData} pagination={{
       onChange(current, pageSize) {
