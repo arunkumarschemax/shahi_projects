@@ -8,7 +8,7 @@ import Highlighter from 'react-highlight-words';
 
 export function OrderAcceptance() {
     const [page, setPage] = React.useState(1);
-    const [pageSize, setPageSize] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
     const [data, setData] = useState<any[]>([])
     const [searchedColumn, setSearchedColumn] = useState('');
     const [form] = Form.useForm();
@@ -19,6 +19,7 @@ export function OrderAcceptance() {
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
     const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
     const { RangePicker } = DatePicker;
+    const pageSize = 10;
 
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -154,7 +155,7 @@ export function OrderAcceptance() {
             title: "S.No",
             key: "sno",
             responsive: ["sm"],
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            render: (text, object, index) => (currentPage - 1) * pageSize + (index + 1),
         },
         {
             title: 'Plant Name',
@@ -263,10 +264,24 @@ export function OrderAcceptance() {
                         </Col>
                     </Row>
                 </Form>
-                <Table
+                {/* <Table
                     columns={columns}
                     dataSource={data}
                     bordered
+                >
+                </Table> */}
+
+                <Table
+                    columns={columns}
+                    dataSource={filterData.length > 0 ? filterData : data}
+                    bordered
+                    pagination={{
+                        current: currentPage,
+                        pageSize: pageSize,
+                        onChange: (page) => {
+                            setCurrentPage(page);
+                        },
+                    }}
                 >
                 </Table>
             </Card>
