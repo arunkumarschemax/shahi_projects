@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Select, Spin, message, Button, Input, Row, Form, Col, Typography, UploadProps, Upload, Radio, Table, Divider, DatePicker } from "antd";
 import Tesseract from "tesseract.js";
-import { useNavigate, useLocation } from "react-router-dom";
+// import { useNavigate, useLocation } from "react-router-dom";
 // import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
 // import { ScanService } from "@project-management-system/shared-services";
 // import DocExtractForm from "./doc-extract-form";
@@ -10,9 +10,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 // import DocumentItemForm from "./document-item-form";
 import Card from "antd/es/card/Card";
 import { UploadOutlined } from "@ant-design/icons";
-const { Title, Text } = Typography;
+// const { Title, Text } = Typography;
 
-const { Option } = Select;
+// const { Option } = Select;
 
 // export interface UploadDocumentFormProps { }
 
@@ -149,19 +149,19 @@ const [dragStartY, setDragStartY] = useState(0);
   };
 
 
-  const extractWeight = (text) => {
-    const weightRegex = /((\d*\.?\d+)\s*(lbs?|KG))/i;
-    const match = text.match(weightRegex);
-    const extractedWeight = match ? match[1] : "";
-    return extractedWeight;
-  };
+  // const extractWeight = (text) => {
+  //   const weightRegex = /((\d*\.?\d+)\s*(lbs?|KG))/i;
+  //   const match = text.match(weightRegex);
+  //   const extractedWeight = match ? match[1] : "";
+  //   return extractedWeight;
+  // };
 
-  const extractVolume = (text) => {
-    const volumeRegex = /((\d*\.?\d+)([A-Za-z\s])\s*(lbs?|M3))/i;
-    const match = text.match(volumeRegex);
-    const extractedVolume = match ? match[1] : "";
-    return extractedVolume.trim();
-  };
+  // const extractVolume = (text) => {
+  //   const volumeRegex = /((\d*\.?\d+)([A-Za-z\s])\s*(lbs?|M3))/i;
+  //   const match = text.match(volumeRegex);
+  //   const extractedVolume = match ? match[1] : "";
+  //   return extractedVolume.trim();
+  // };
 
   // const extractChargeable = (text) => {
   //   const chargeableRegex = /((\d*\.?\d+)([A-Za-z\s])+\s*(lbs?|M3))/i;
@@ -179,12 +179,12 @@ const [dragStartY, setDragStartY] = useState(0);
 
 
 
-  const extractCustomerID = (text) => {
-    const customerIDRegex = /\bCUSTOMER ID:\s*([A-Za-z\s]+)\b/i;
-    const match = text.match(customerIDRegex);
-    const extractedCustomerID = match ? match[1] : "";
-    return extractedCustomerID.trim();
-  };
+  // const extractCustomerID = (text) => {
+  //   const customerIDRegex = /\bCUSTOMER ID:\s*([A-Za-z\s]+)\b/i;
+  //   const match = text.match(customerIDRegex);
+  //   const extractedCustomerID = match ? match[1] : "";
+  //   return extractedCustomerID.trim();
+  // };
 
   // const extractPackages = (text) => {
   //   const packagesRegex = /((\d*\.?\d+)\s*(?:CTN|CTNS))\b/i;
@@ -194,67 +194,67 @@ const [dragStartY, setDragStartY] = useState(0);
   //   return extractedPackages.trim();
   // };
 
-  const extractConsole = (text) => {
-    const ConsoleRegex = /\b[A-Za-z]\d{11}\b/g;
-    const match = text.match(ConsoleRegex);
-    const extractedConsole = match ? match[1] : "";
-    return extractedConsole.trim();
-  };
+  // const extractConsole = (text) => {
+  //   const ConsoleRegex = /\b[A-Za-z]\d{11}\b/g;
+  //   const match = text.match(ConsoleRegex);
+  //   const extractedConsole = match ? match[1] : "";
+  //   return extractedConsole.trim();
+  // };
 
-  const extractCartons = (text) => {
-    const cartonsRegex = /((\d+)\s*(\d+\s*%))/;
-    const match = text.match(cartonsRegex);
-    const extractedCartons = match ? match[1] : "";
-    return extractedCartons.trim();
-  };
+  // const extractCartons = (text) => {
+  //   const cartonsRegex = /((\d+)\s*(\d+\s*%))/;
+  //   const match = text.match(cartonsRegex);
+  //   const extractedCartons = match ? match[1] : "";
+  //   return extractedCartons.trim();
+  // };
 
-  const extractPO = (text) => {
-    const poRegex = /([A-Z]{1}[0-9]{4})-/;
-    const match = text.match(poRegex);
-    const extractedPO = match ? match[1] : "";
-    return extractedPO.trim();
-  };
+  // const extractPO = (text) => {
+  //   const poRegex = /([A-Z]{1}[0-9]{4})-/;
+  //   const match = text.match(poRegex);
+  //   const extractedPO = match ? match[1] : "";
+  //   return extractedPO.trim();
+  // };
 
-  const extractDt = (text) => {
-    const dtRegex = /((0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[1,2])\/(19|20)\d{2})/;
-    const match = text.match(dtRegex);
-    const extractedDt = match ? match[1] : "";
-    return extractedDt.trim();
-  };
+  // const extractDt = (text) => {
+  //   const dtRegex = /((0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[1,2])\/(19|20)\d{2})/;
+  //   const match = text.match(dtRegex);
+  //   const extractedDt = match ? match[1] : "";
+  //   return extractedDt.trim();
+  // };
 
-  const extractPayref = (text) => {
-    const payrefRegex = /\b[A-Za-z]\d{11}\b/g;
-    const match = text.match(payrefRegex);
-    const extractedPayref = match ? match[0] : "";
-    return extractedPayref;
-  };
+  // const extractPayref = (text) => {
+  //   const payrefRegex = /\b[A-Za-z]\d{11}\b/g;
+  //   const match = text.match(payrefRegex);
+  //   const extractedPayref = match ? match[0] : "";
+  //   return extractedPayref;
+  // };
 
-  const extractHouse = (text) => {
-    const houseRegex = /(\d{11})/;
-    const match = text.match(houseRegex);
-    const extractedHouse = match ? match[0] : "";
-    return extractedHouse;
-  };
-  const extractContainers = (text) => {
-    const containersRegex = /([A-Z0-9]+)\s+([0-9]+)/;
-    const match = text.match(containersRegex);
-    const extractedContainers = match ? match[0] : "";
-    return extractedContainers;
-  };
+  // const extractHouse = (text) => {
+  //   const houseRegex = /(\d{11})/;
+  //   const match = text.match(houseRegex);
+  //   const extractedHouse = match ? match[0] : "";
+  //   return extractedHouse;
+  // };
+  // const extractContainers = (text) => {
+  //   const containersRegex = /([A-Z0-9]+)\s+([0-9]+)/;
+  //   const match = text.match(containersRegex);
+  //   const extractedContainers = match ? match[0] : "";
+  //   return extractedContainers;
+  // };
 
-  const extractOcean = (text) => {
-    const oceanRegex = /[A-Z]+\/[A-Z]+\/\d+/;
-    const match = text.match(oceanRegex);
-    const extractedOcean = match ? match[0] : "";
-    return extractedOcean;
-  };
+  // const extractOcean = (text) => {
+  //   const oceanRegex = /[A-Z]+\/[A-Z]+\/\d+/;
+  //   const match = text.match(oceanRegex);
+  //   const extractedOcean = match ? match[0] : "";
+  //   return extractedOcean;
+  // };
 
-  const extractGoods = (text) => {
-    const goodsRegex = /s*\s*(\d+)\s*(\d+%)\s*(COTTON)\s*(\d+%)\s*(POLYESTER)\s*(\d+%)\s*(ELASTANE)\s*(\w+)\s*(MENS SHORTS)/;
-    const match = text.match(goodsRegex);
-    const extractedGoods = match ? match[0] : "";
-    return extractedGoods;
-  };
+  // const extractGoods = (text) => {
+  //   const goodsRegex = /s*\s*(\d+)\s*(\d+%)\s*(COTTON)\s*(\d+%)\s*(POLYESTER)\s*(\d+%)\s*(ELASTANE)\s*(\w+)\s*(MENS SHORTS)/;
+  //   const match = text.match(goodsRegex);
+  //   const extractedGoods = match ? match[0] : "";
+  //   return extractedGoods;
+  // };
 
   const handleDateChange = (date) => {
     setInvoiceDate(date);
@@ -415,15 +415,15 @@ const [dragStartY, setDragStartY] = useState(0);
           // const extractedPackages = extractPackages(text);
           // const extractedInnvoicecurrency = extractInnvoicecurrency(text);
 
-          const extractedConsole = extractConsole(text);
-          const extractedCartons = extractCartons(text);
-          const extractedGoods = extractGoods(text);
-          const extractedPO = extractPO(text);
-          const extractedDt = extractDt(text);
-          const extractedPayref = extractPayref(text);
-          const extractedHouse = extractHouse(text);
-          const extractedContainers = extractContainers(text);
-          const extractedOcean = extractOcean(text);
+          // const extractedConsole = extractConsole(text);
+          // const extractedCartons = extractCartons(text);
+          // const extractedGoods = extractGoods(text);
+          // const extractedPO = extractPO(text);
+          // const extractedDt = extractDt(text);
+          // const extractedPayref = extractPayref(text);
+          // const extractedHouse = extractHouse(text);
+          // const extractedContainers = extractContainers(text);
+          // const extractedOcean = extractOcean(text);
 
 
 
@@ -443,11 +443,11 @@ const [dragStartY, setDragStartY] = useState(0);
           // setChargeable(extractedChargeable);
           // setPackages(extractedPackages);
           // setInnvoicecurrency(extractedcurrency);
-          setPO(extractedPO);
-          setDt(extractedDt);
+          // setPO(extractedPO);
+          // setDt(extractedDt);
           // setpayref(extractedPayref);
-          setConsoles(extractedConsole);
-          setCartons(extractedCartons);
+          // setConsoles(extractedConsole);
+          // setCartons(extractedCartons);
           // setGoods(extractedGoods);
           // setHouse(extractedHouse);
           // setContainers(extractedContainers);
@@ -680,7 +680,7 @@ const [dragStartY, setDragStartY] = useState(0);
       </div>
 
 
-
+      <Form>
       <div style={{ display: 'flex', flexDirection: 'column', height: '-10px', }}>
         <Card
           title={"Document"}
@@ -1022,6 +1022,7 @@ const [dragStartY, setDragStartY] = useState(0);
           <Table style={{ position: "relative", top: "20px" }} dataSource={extractedData} columns={columns} />
         </Card>
       </div>
+    </Form>
     </div>
 
   );
