@@ -1,5 +1,6 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { Operations } from "../operations/operation.entity";
+import { OperationSequence } from "../operation-sequence/operation-sequence.entity";
 
 @Entity('operation_groups')
 export class OperationGroups {
@@ -64,5 +65,8 @@ updatedUser: string | null;
 
   @OneToMany(type=>Operations, operation=>operation.operationGroupInfo,{cascade: true})
   operationInfo:Operations;
+
+  @OneToMany(type=>OperationSequence, operation=>operation.operationGroupInfo,{cascade: true})
+  operationGroupSequenceInfo:OperationSequence;
 
 }

@@ -26,7 +26,7 @@ export class EmployeeDetailsResponse{
   @ApiProperty()
   createdUser?:string
   @ApiProperty()
-  departments?:string
+  departments?:number
   constructor(
       employeeCode:string,
       firstName:string,
@@ -40,8 +40,7 @@ export class EmployeeDetailsResponse{
     employeeId?:number,
     updateUser?:string,
     createdUser?:string,
-    departments?:string
-
+    departments?:number,
   ){
       this.employeeCode=employeeCode
       this.firstName=firstName;
