@@ -51,10 +51,15 @@ export default function DocumentListupload() {
     })
   }
 
-  const getInvoiceNumber =()=>{
+  const getInvoiceNumber =(value)=>{
+    let po
     form.resetFields(['invoice','challan'])
-    let po = form.getFieldValue("customerPo")
-    service.getInvoiceByPo({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po}).then(res=>{
+    // if(statePoNumber){
+    //   po =statePoNumber.data
+    // }else{
+    //   po = form.getFieldValue("customerPo")
+    // }
+    service.getInvoiceByPo({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:value}).then(res=>{
       if(res.status){
         setInvoiceNumber(res.data)
       }else{
@@ -102,6 +107,11 @@ export default function DocumentListupload() {
  useEffect(() =>{
   if(statePoNumber){
     form.setFieldsValue({customerPo:statePoNumber.data})
+    getInvoiceNumber(statePoNumber.data)
+    console.log(invoiceNumber)
+    // if(invoiceNumber.length == 1){
+    //   form.setFieldsValue({invoice:})
+    // }
     getDocData()
   }
 
