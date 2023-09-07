@@ -6,11 +6,8 @@ import Login from "./layout/login/login"
 import View from "./components/doc-extract/doc-extract-view"
 import Form, { DocExtractForm } from "./components/doc-extract/doc-extract-form"
 import VendorGrid from "./components/vendor-view/vendor-view"
-<<<<<<< HEAD
 import VendorBranchInfoGrid from "./components/vendor-view/detail-view"
-=======
 import DocumentUploadForm from "./components/doc-extract/document-upload-form"
->>>>>>> a32cb0f30485891f99dfed32c1e47151eb58741e
 
 
 export const AppRoutes = () => {
