@@ -335,6 +335,12 @@ export const baseRouterList = [
                 path: "accountcontrolobjects/accountcontrolobjects-view",
                 filepath: "accountcontrolobjects/accountcontrolobjects-view",
             },
+            {
+                label: "Fabric Weave",
+                key: "fabric-weave",
+                path: "fabric-weave/fabric-weave-view",
+                filepath: "fabric-weave/fabric-weave-view",
+            }
           
         ],
     }, 

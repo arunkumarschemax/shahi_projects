@@ -289,7 +289,7 @@ export const SampleDevView = (props: BuyingHouseProps) => {
       style={{ textAlign: "center" }}
       headStyle={{ border: 0 }}
         extra={
-          <Link to="/sample-development/sample-management/sample-management-form">
+          <Link to="/sample-development/sample-development-form">
             <span style={{ color: "white" }}>
               <Button type={"primary"}>New </Button>{" "}
             </span>

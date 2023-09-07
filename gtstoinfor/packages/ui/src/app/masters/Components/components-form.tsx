@@ -75,8 +75,8 @@ export function ComponentsForm(props: ComponentsFormProps) {
                       
                     },
                     {
-                      pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                      message: `Should contain only alphabets and numbers.`
+                      pattern: /^[a-zA-Z ]+$/,
+                      message: `Should contain only alphabets.`
                     }
                   ]}>
                   <Input placeholder='Enter Component'/>

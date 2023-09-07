@@ -55,6 +55,7 @@ import { BuyersDestinationModule } from './buyers-destination/buyers-destination
 import { SettingsModule } from './settings/settings.module';
 import { BomModule } from './bom-trim/bom.module';
 import { UomModule } from './uom/uom.module';
+import { FabricWeaveModule } from './fabric weave/fabric-weave.module';
 
 
 @Module({
@@ -109,7 +110,7 @@ import { UomModule } from './uom/uom.module';
   BuyersModule,
   ColourModule,
   BuyersDestinationModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule,SettingsModule,AccountControlObjectModule,ColourModule,UomModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,DestinationModule,SettingsModule,AccountControlObjectModule,ColourModule,UomModule,FabricWeaveModule],
   controllers: [AppController],
   providers: [AppService],
 })

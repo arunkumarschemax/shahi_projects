@@ -114,6 +114,8 @@ import SKUGeneration from "./orders/sku-generation"
 import UomGrid from "./masters/uom/uom-grid"
 import SampleDevDetail from "./sample-development/sample-request-detailed-view"
 import FabricBomCreation from "./BOM/fabric-creation"
+import FabricWeaveForm from "./masters/fabric-weave/fabric-weave-form"
+import FabricWeaveGrid from "./masters/fabric-weave/fabric-weave-grid"
 // import FabricDevelopmentApproval from "./fabric development/fabric-development-approval"
 
 
@@ -329,6 +331,14 @@ export const AppRoutes = () => {
                  isUpdate={false}
                 closeForm={() => { }}
                 updateDetails={(undefined) => { }}/>} />
+
+                <Route path="fabric-weave/fabric-weave-form" element={<FabricWeaveForm
+                data={undefined}
+                isUpdate={false}
+                closeForm={()=>{}}
+                updateFabricWeave={(undefined)=>{}}/>}/>
+                <Route path="fabric-weave/fabric-weave-view" element={<FabricWeaveGrid/>}/>
+
             </Route>
                     <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
