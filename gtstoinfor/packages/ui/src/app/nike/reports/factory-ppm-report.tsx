@@ -843,6 +843,13 @@ const FactoryPPMReport = () => {
             });
         });
 
+        const getRowClassName = (record) => {
+            if (record.displayName) {
+                return 'colored-row';
+            }
+            return '';
+        };
+
         return (
             <>
             
@@ -858,6 +865,7 @@ const FactoryPPMReport = () => {
                     }
                   }}
                   scroll={{ x: 'max-content' }}
+                  rowClassName={getRowClassName}
                 />
               ) : ( <Table size='large' />
               )}
