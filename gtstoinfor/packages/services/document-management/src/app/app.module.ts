@@ -28,7 +28,7 @@ import { join } from 'path';
       port: appConfig.database.port,
       username: appConfig.database.username,
       password: appConfig.database.password,
-      database: appConfig.database.docdbName,
+      database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
       logging: true,
