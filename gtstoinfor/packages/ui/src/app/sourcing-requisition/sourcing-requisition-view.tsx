@@ -203,7 +203,7 @@ export const SorcingRequisitionView = () => {
         },
         {
             title:'Weight',
-            dataIndex:'weigth'
+            dataIndex:'weigth',
         },
         {
             title:'Width',
@@ -219,11 +219,13 @@ export const SorcingRequisitionView = () => {
         },
         {
             title:'Finish',
-            dataIndex:'finish'
+            dataIndex:'finish',
+          //   sorter: (a, b) => a.finish.length - b.finish.length,
+          // sortDirections: ['descend', 'ascend'],
         },
         {
             title:'Shrinkage',
-            dataIndex:'shrinkage'
+            dataIndex:'shrinkage',
         },
         {
             title:'Color',
@@ -292,7 +294,7 @@ export const SorcingRequisitionView = () => {
           </Col>
           </Row>
           <br></br>
-            <Table columns={columns} dataSource={data} scroll={{ x: 'max-content' }}  pagination={{
+            <Table className='custom-table-wrapper' columns={columns} dataSource={data} scroll={{ x: 'max-content' }}  pagination={{
                     onChange(current) {
                         setPage(current);
                     }

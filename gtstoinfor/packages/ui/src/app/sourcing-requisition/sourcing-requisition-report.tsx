@@ -2,7 +2,7 @@ import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Input, Row, Table, Form, Select, DatePicker } from "antd"
 import { Excel } from "antd-table-saveas-excel";
 import { ColumnProps, ColumnType } from "antd/es/table"
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import {  useNavigate } from "react-router-dom";
 import './sourcing-requisition.css'
@@ -109,17 +109,30 @@ export const SorcingRequisitionReport = () => {
         }
     ])
 
+    const [tableData,setTableData] = useState<any[]>([])
+
+    useEffect(() => {
+        if(data){
+            setTableData(data)
+        }
+
+    },[data])
+
     const onReset = () => {
         form.resetFields()
+        setTableData(data)
     }
 
     const onSearch = () => {
-        // let tableData;
-        // console.log(form.getFieldValue('status'))
-        // if(form.getFieldValue('status') !== undefined){
-        //     tableData = data.filter(e => e.status == form.getFieldValue('status'))
-        //     setData(tableData)
-        // }
+        let serachData;
+        if(form.getFieldValue('status') !== undefined){
+            serachData = data.filter(e => e.status == form.getFieldValue('status'))
+            setTableData(serachData)
+        } 
+        if(form.getFieldValue('fabricType') !== undefined){
+            serachData = data.filter(e => e.fabricType == form.getFieldValue('fabricType'))
+            setTableData(serachData)
+        }
     }
 
 
@@ -340,9 +353,9 @@ export const SorcingRequisitionReport = () => {
                     <Form.Item name='fabricType' label='Fabric Type'>
                         {/* <Input placeholder="Enter Fabric Type"/> */}
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Fabric Type'>
-                            <Option key='cotton' value='cotton'>Cotton</Option>
-                            <Option key='wool' value='wool'>Wool</Option>
-                            <Option key='silk' value='silk'>Silk</Option>
+                            <Option key='cotton' value='Cotton'>Cotton</Option>
+                            <Option key='wool' value='Wool'>Wool</Option>
+                            <Option key='silk' value='Silk'>Silk</Option>
                         </Select>
                     </Form.Item>
                 </Col>
@@ -350,7 +363,7 @@ export const SorcingRequisitionReport = () => {
                     <Form.Item name='pch' label='PCH'>
                         {/* <Input placeholder="Enter Fabric Type"/> */}
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select PCH'>
-                            <Option key='srinivas' value='srinivas'>Srinivas</Option>
+                            <Option key='srinivas' value='Srinivas'>Srinivas</Option>
                             {/* <Option key='wool' value='wool'>Wool</Option>
                             <Option key='silk' value='silk'>Silk</Option> */}
 
@@ -361,7 +374,7 @@ export const SorcingRequisitionReport = () => {
                     <Form.Item name='supplier' label='Supplier'>
                         {/* <Input placeholder="Enter Fabric Type"/> */}
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Supplier'>
-                            <Option key='rajesh' value='rajesh'>Rajesh</Option>
+                            <Option key='rajesh' value='Rajesh'>Rajesh</Option>
                             {/* <Option key='wool' value='wool'>Wool</Option>
                             <Option key='silk' value='silk'>Silk</Option> */}
 
@@ -372,7 +385,7 @@ export const SorcingRequisitionReport = () => {
                     <Form.Item name='buyer' label='Buyer'>
                         {/* <Input placeholder="Enter Fabric Type"/> */}
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Buyer'>
-                            <Option key='naidu' value='naidu'>Naidu</Option>
+                            <Option key='naidu' value='Naidu'>Naidu</Option>
                             {/* <Option key='wool' value='wool'>Wool</Option>
                             <Option key='silk' value='silk'>Silk</Option> */}
 
@@ -408,7 +421,7 @@ export const SorcingRequisitionReport = () => {
                 </Col>
               </Row>
             </Form>
-            <Table columns={columns} dataSource={data} scroll={{ x: 'max-content' }} pagination={{
+            <Table className="custom-table-wrapper" columns={columns} dataSource={tableData} scroll={{ x: 'max-content' }} pagination={{
                     onChange(current) {
                         setPage(current);
                     }

@@ -2,3 +2,7 @@
     background-color: powderblue;
     text-align: center;
   }
+
+  .custom-table-wrapper .ant-table-thead > tr > th {
+    background-color: lavender;
+  }
