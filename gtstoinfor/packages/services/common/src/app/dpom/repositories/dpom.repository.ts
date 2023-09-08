@@ -5,7 +5,8 @@ import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
-import { PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
+import { group } from "console";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
@@ -92,11 +93,14 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
-    async getTotalItemQtyChangeData(): Promise<any[]> {
+    async getTotalItemQtyChangeData(req:nikeFilterRequest): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(`dpom.po_number, dpom.po_line_item_number, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.dpom_item_line_status, dpom.item, dpom.factory,dpom.document_date,dpom.style_number,dpom.product_code,dpom.color_desc,dpom.destination_country,dpom.ogac,dpom.gac,dpom.item_text,            od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
             .where(` od.column_name='total_item_qty' `)
+            if (req.poandLine !== undefined) {
+                query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
+            }
         return await query.getRawMany();
     }
 
@@ -138,6 +142,9 @@ export class DpomRepository extends Repository<DpomEntity> {
             o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
             .where(` od.column_name = 'gross_price_fob'`)
+            // if (req.poandLine !== undefined) {
+            //     query.andWhere(`o.po_and_line ='${req.poandLine}'`)
+            // }
         return await query.getRawMany();
     }
 
@@ -159,7 +166,8 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getGACChangeData(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
+            .select(`o.po_number, o.po_line_item_number, o.item, o.factory,o.document_date,o.style_number,o.product_code,o.color_desc,o.destination_country,o.ogac,o.gac,o.item_text,
+            o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
             .where(` od.column_name='gac' `)
         return await query.getRawMany();
@@ -507,6 +515,46 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
     
-    
+    async getOrderAcceptanceDat(req:nikeFilterRequest): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom.*`)
+            .where(`dpom_item_line_status IN('Accepted','Unaccepted')`)
+            .groupBy(`dpom.po_and_line`)
+            if (req.documentStartDate !== undefined) {
+                query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
+            } 
+            if (req.productCode !== undefined) {
+                query.andWhere(`dpom.product_code ='${req.productCode}'`)
+            }
+            if (req.poandLine !== undefined) {
+                query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
+            }
+            if (req.DPOMLineItemStatus !== undefined) {
+                query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+            }
+        return await query.getRawMany();
+    }
+    async getPpmProductCodeForOrderCreation(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.productCode,dpom.id`)
+            .where(`dpom.dpom_item_line_status IN('Accepted','Unaccepted')`)
+            .groupBy(`dpom.productCode`)
+        return await query.getRawMany();
+    }
 
+    async getPoLineforOrderCreation(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_and_line,dpom.id`)
+            .where(`dpom.dpom_item_line_status IN('Accepted','Unaccepted')`)
+            .groupBy(`dpom.po_and_line`)
+        return await query.getRawMany();
+    }
+    async getPpmPoLineForNikeOrder(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_and_line,dpom.id`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
+            .groupBy(`dpom.po_and_line`)
+            .where(` od.column_name='total_item_qty' `)
+        return await query.getRawMany();
+    }
 }

@@ -337,7 +337,8 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'report_generate_date'
+            dataIndex: 'document_date',
+            render: (text) => moment(text).format('YYYY-MM-DD')
         },
         {
             title: 'Item',
@@ -356,10 +357,7 @@ const ShipmentChangesCompareGrid = () => {
             title: 'PO Line Item No',
             dataIndex: 'po_line_item_number'
         },
-        {
-            title: 'Document Date',
-            dataIndex: 'document_date'
-        },
+        
         {
             title: 'Change from OGAC',
             dataIndex: 'change_from_ogac'
@@ -380,11 +378,11 @@ const ShipmentChangesCompareGrid = () => {
             title: 'RC Code',
             dataIndex: 'rc_code'
         },
-        {
-            title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number',
-            ...getColumnSearchProps('schedule_line_item_number')
-        },
+        // {
+        //     title: 'Schedule Line Item No',
+        //     dataIndex: 'schedule_line_item_number',
+        //     ...getColumnSearchProps('schedule_line_item_number')
+        // },
         {
             title: 'Previous Order Quantity Pieces',
             dataIndex: 'old_val',
@@ -432,11 +430,11 @@ const ShipmentChangesCompareGrid = () => {
         //     sorter: (a, b) => a.version - b.version,
         //     sortDirections: ['descend', 'ascend'],
         // },
-        {
-            title: 'Order Status',
-            dataIndex: 'dpom_item_line_status',
-            // render: (value) => <Tag color={value == 'ACCEPTED' ? 'green' : 'green-inverse'} >{value}</Tag>
-        }
+        // {
+        //     title: 'Order Status',
+        //     dataIndex: 'dpom_item_line_status',
+        //     // render: (value) => <Tag color={value == 'ACCEPTED' ? 'green' : 'green-inverse'} >{value}</Tag>
+        // }
     ];
 
     const columns1: any = [

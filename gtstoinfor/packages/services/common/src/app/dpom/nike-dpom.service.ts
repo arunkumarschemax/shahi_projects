@@ -695,10 +695,8 @@ export class DpomService {
 
     async getOrderAcceptanceData(req: nikeFilterRequest): Promise<CommonResponseModel> {
         try {
-          const data = await this.dpomRepository.find({
-            where: req,
-          });
-          console.log(req,'request')
+          const data = await this.dpomRepository.getOrderAcceptanceDat(req);
+        //   console.log(req,'request')
           if (data.length > 0) {
             return new CommonResponseModel(true, 1, 'Data retrieved', data);
           } else {
@@ -723,8 +721,8 @@ export class DpomService {
         }
     }
 
-    async getTotalItemQtyChangeData(): Promise<CommonResponseModel> {
-        const data = await this.dpomRepository.getTotalItemQtyChangeData()
+    async getTotalItemQtyChangeData(req?:nikeFilterRequest): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getTotalItemQtyChangeData(req)
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
@@ -1313,7 +1311,36 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+    
+    async getPpmProductCodeForOrderCreation(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPpmProductCodeForOrderCreation()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 
+    async getPpmPoLineForOrderCreation(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPoLineforOrderCreation()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmPoLineForNikeOrder(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPpmPoLineForNikeOrder()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPpmPoLineForPo(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPpmPoLineForNikeOrder()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 }
 
 
