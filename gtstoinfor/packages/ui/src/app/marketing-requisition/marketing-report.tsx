@@ -4,10 +4,11 @@ import { Button, Card, Col, Input, Row, Select, Table,Form } from "antd"
 import { Excel } from "antd-table-saveas-excel";
 import form from "antd/es/form";
 import { ColumnProps, ColumnType } from "antd/es/table"
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
 import './marketing-requisition.css'
+import { table } from "console";
 
 export const MarketingReqReport = () => {
     const [page, setPage] = React.useState(1);
@@ -21,6 +22,12 @@ export const MarketingReqReport = () => {
     const sizeService = new SizeService
   const colorService = new ColourService
   const [form] = Form.useForm()
+  const [tableData, setTableData] = useState<any[]>([])
+
+  useEffect(() => {
+    setTableData(data1);
+    // getReqNo();
+  }, []);
 
   const [data1,setData] = useState<any[]>([
     {
@@ -153,6 +160,35 @@ const OnReset = () => {
         clearFilters();
         setSearchText('');
       };
+
+      const onReset = () => {
+        form.resetFields()
+        setTableData(data1)
+    }
+
+    const onSearch = () => {
+        let searchData;
+        if(form.getFieldValue('status') !== undefined){
+            searchData = data1.filter(e => e.status == form.getFieldValue('status'))
+            setTableData(searchData)
+        } 
+        if(form.getFieldValue('trimType') !== undefined){
+            searchData = data1.filter(e => e.trimType == form.getFieldValue('trimType'))
+            setTableData(searchData)
+        }
+        if(form.getFieldValue('trimCode') !== undefined){
+            searchData = data1.filter(e => e.trimCode == form.getFieldValue('trimCode'))
+            setTableData(searchData)
+        } 
+        if(form.getFieldValue('size') !== undefined){
+            searchData = data1.filter(e => e.size == form.getFieldValue('size'))
+            setTableData(searchData)
+        }
+        if(form.getFieldValue('color') !== undefined){
+            searchData = data1.filter(e => e.color == form.getFieldValue('color'))
+            setTableData(searchData)
+        }
+    }
     
 
     const columns : ColumnProps<any>[] = [
@@ -222,20 +258,20 @@ const OnReset = () => {
           {
               title: 'Status',
               dataIndex: 'status',
-              filters: [
-                  {
-                    text: 'Open',
-                    value: "OPEN",
-                  },
-                  {
-                    text: 'In Progress',
-                    value: "INPROGRESS",
-                  },
-                  {
-                    text: 'Completed',
-                    value: "COMPLETED",
-                  },
-                ],
+            //   filters: [
+            //       {
+            //         text: 'Open',
+            //         value: "OPEN",
+            //       },
+            //       {
+            //         text: 'In Progress',
+            //         value: "INPROGRESS",
+            //       },
+            //       {
+            //         text: 'Completed',
+            //         value: "COMPLETED",
+            //       },
+            //     ],
             },
     ]
 
@@ -349,19 +385,19 @@ const OnReset = () => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item>
-                        <Button icon={<SearchOutlined />} htmlType="submit" type='primary' className='panel_button'>Search</Button>
+                        <Button icon={<SearchOutlined />} htmlType="submit" type='primary' className='panel_button' onClick={onSearch}>Search</Button>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 1 }} style={{marginTop:'2%'}}>
                     <Form.Item>
-                        <Button danger icon={<UndoOutlined />}>Reset</Button>
+                        <Button danger icon={<UndoOutlined />} onClick={onReset}>Reset</Button>
                     </Form.Item>
                     </Col>
                     
                 </Row>
             </Form>
 
-            <Table columns={columns} dataSource={data1} scroll={{ x: 'max-content' }} pagination={{
+            <Table columns={columns} dataSource={tableData} scroll={{ x: 'max-content' }} pagination={{
                     onChange(current) {
                         setPage(current);
                     }

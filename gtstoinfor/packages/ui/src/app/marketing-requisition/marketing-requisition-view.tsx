@@ -105,9 +105,9 @@ export function MarketingReqGrid(props: MarketingReqProps) {
     data.isActive = data.isActive?false:true;
     Service.activateOrDeactivate(data).then(res => {
       if (res.status) {
-        message.success('Success',2); 
+        message.success('Activated Successfully',2); 
       } else {
-          message.error(res.internalMessage,2);
+          message.error("Deactivated Successfully",2);
       }
     }).catch(err => {
       message.error(err.message,2);
@@ -406,7 +406,7 @@ export function MarketingReqGrid(props: MarketingReqProps) {
           </Row>
           <br></br>
           <Table
-          size='small'
+          // size='small'
           rowKey={record => record.marketingReqId}
           columns={columnsSkelton}
           dataSource={data1}
