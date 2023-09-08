@@ -10,8 +10,8 @@ import { CSS } from '@dnd-kit/utilities';
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Form, Select, Table,Row, Button, Input } from 'antd';
 import type { ColumnProps, ColumnsType } from 'antd/es/table';
-import { OperationSequenceService, OperationsService } from '@project-management-system/shared-services';
-import { OperationSequenceRequest } from '@project-management-system/shared-models';
+import { ItemsService, OperationSequenceService, OperationsService } from '@project-management-system/shared-services';
+import { ItemCodeRequest, OperationSequenceRequest } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 
 const {Option} = Select;
@@ -42,9 +42,14 @@ export const OperationSequence = () => {
   const [form] = Form.useForm()
   const operationSequenceService = new OperationSequenceService()
   const operationService = new OperationsService()
+  const [showTable,setShowTable] = useState<boolean>(false)
+  const [showSubmit,setShowSubmit] = useState<boolean>(true)
+  const [itemCodes,setItemCodes] = useState<any[]>([])
+  const itemService = new ItemsService()
 
   useEffect(() => {
       getOperations()
+      getAllItemCodes()
   },[])
 
 
@@ -54,6 +59,26 @@ export const OperationSequence = () => {
             setDataSource(res.data)
           }
       })
+  }
+
+  const getInfoByItemCode = (val) => {
+    const req = new ItemCodeRequest(val)
+    operationSequenceService.getInfoByItemCode(req).then(res =>{
+      if(res.status){
+        setShowSubmit(false)
+      } else{
+        setShowSubmit(true)
+      }
+    })
+
+  }
+
+  const getAllItemCodes = () => {
+    itemService.getAllItems().then(res => {
+      if(res.status){
+        setItemCodes(res.data)
+      }
+    })
   }
 
   // const [dataSource, setDataSource] = useState([
@@ -124,13 +149,15 @@ export const OperationSequence = () => {
   };
 
   const onSubmit = () => {
-    // const req = new OperationSequenceRequest(form.getFieldValue('itemcode'),form.getFieldValue('itemId'),dataSource,'admin')
-    const req = new OperationSequenceRequest('I0001',1,dataSource,'admin')
+    const req = new OperationSequenceRequest(form.getFieldValue('itemCode'),form.getFieldValue('itemId'),dataSource,'admin')
+    // const req = new OperationSequenceRequest('I0001',1,dataSource,'admin')
     console.log(req)
     operationSequenceService.createOperationSequence(req).then(res => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage)
         form.resetFields()
+        getOperations()
+        setShowSubmit(false)
       } else{
         AlertMessages.getErrorMessage(res.internalMessage)
       }
@@ -138,7 +165,9 @@ export const OperationSequence = () => {
   }
 
   const onItemCodeChange = (val,option) => {
-    form.setFieldsValue({itemId:option.key})
+    form.setFieldsValue({itemId:option?.key})
+    setShowTable(true)
+    getInfoByItemCode(val)
   }
 
   return (
@@ -152,19 +181,23 @@ export const OperationSequence = () => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
             <Form.Item label='Item' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
                 <Select showSearch allowClear placeholder='Select Item' onChange={onItemCodeChange}>
-                    <Option key='itemid' value='itemcode'>Item Codes </Option>
-                    {/* {
-                        color.map((e)=>{
+                    {/* <Option key='itemid' value='itemcode'>Item Codes </Option> */}
+                    {
+                        itemCodes.map((e)=>{
                             return(
-                                <Option key={e.colourId} value={e.colourId}>{e.colourId}</Option>
+                                <Option key={e.itemId} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
                             )
                         })
-                    } */}
+                    }
                 </Select>
             </Form.Item>
         </Col>
         </Row>
-    
+        {showTable && !showSubmit ? (<>
+        <p style={{color:'blue',fontSize:'15px'}}>Operation Sequence is already allocated for this Item</p>
+        </>) : (<></>)}
+    {
+      showTable ? (<>
     <DndContext sensors={sensors} onDragEnd={onDragEnd}>
       <SortableContext
         // rowKey array
@@ -178,13 +211,18 @@ export const OperationSequence = () => {
               row: RowProps,
             },
           }}
-        
+          pagination={false}
           columns={columns}
           dataSource={dataSource}
         />
       </SortableContext>
     </DndContext>
-    <Row justify={'end'}>
+      </>) : (<></>)
+    }
+    <br/>
+    {
+      showSubmit && showTable? (<>
+      <Row justify={'end'}>
     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
 
     <Form.Item>
@@ -192,6 +230,9 @@ export const OperationSequence = () => {
     </Form.Item>
     </Col>
     </Row>
+    </>) : (<></>)
+    }
+   
     </Form>
     </Card>
     
