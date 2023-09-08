@@ -656,9 +656,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'displayName',
                 align: 'center',
             },  
-            {
-                align: 'center',
-                children: [
+            
                     {
                         title: 'Edit Unit Allocation',
                         dataIndex: '',
@@ -704,16 +702,15 @@ const FactoryPPMReport = () => {
                                 )}
                             </div>
                         ),
-                    },
-                ],
+                   
             },
             {
                 title: 'Actual Unit',
                 dataIndex: 'actualUnit',
                 align: 'center',
             },
-            {
-                children: [
+            
+               
                     {
                         title: 'Quantity Allocation',
                         align: 'center',
@@ -759,8 +756,7 @@ const FactoryPPMReport = () => {
                                 )}
                             </div>
                         ),
-                    },
-                ],
+                    
             },
             {
                 title: 'Reallocated Quantity',
@@ -865,6 +861,7 @@ const FactoryPPMReport = () => {
                       setPageSize(pageSize);
                     }
                   }}
+                  className="custom-table-wrapper"
                   scroll={{ x: 'max-content' }}
                   rowClassName={getRowClassName}
                 />
