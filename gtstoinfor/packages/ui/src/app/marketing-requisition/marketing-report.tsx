@@ -7,6 +7,7 @@ import { ColumnProps, ColumnType } from "antd/es/table"
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
+import './marketing-requisition.css'
 
 export const MarketingReqReport = () => {
     const [page, setPage] = React.useState(1);
@@ -21,48 +22,58 @@ export const MarketingReqReport = () => {
   const colorService = new ColourService
   const [form] = Form.useForm()
 
-    const [data1,setData] = useState<any[]>([
-        {
-            trimType: "Button",
-            trimCode: "BTN001",
-            description: "Metallic Gold Button",
-            size: 12,
-            color: "Gold",
-            quantity: 100,
-            remarks: "Shiny finish",
-            status: "OPEN"
-          },
-          {
-            trimType: "Zipper",
-            trimCode: "ZIP002",
-            description: "Nylon Zipper",
-            size: 8,
-            color: "Black",
-            quantity: 50,
-            remarks: "Water-resistant",
-            status: "CLOSED"
-          },
-          {
-            trimType: "Thread",
-            trimCode: "THR003",
-            description: "Cotton Sewing Thread",
-            size: 40,
-            color: "White",
-            quantity: 200,
-            remarks: "Strong and durable",
-            status: "OPEN"
-          },
-          {
-            trimType: "Fabric",
-            trimCode: "FAB004",
-            description: "Cotton Blend Fabric",
-            size: 2.5, // Measured in meters
-            color: "Blue",
-            quantity: 30,
-            remarks: "Soft and breathable",
-            status: "INPROGRESS"
-          },
-    ])
+  const [data1,setData] = useState<any[]>([
+    {
+      trimType: "Button",
+      trimCode: "BTN001",
+      description: "Metallic Gold Button",
+      size: "1cm", // Size in centimeters
+      color: "Gold",
+      quantity: 100,
+      remarks: "Shiny finish",
+      status: "OPEN",
+      isActive: "true"
+    },
+    {
+      trimType: "Zipper",
+      trimCode: "ZIP002",
+      description: "Nylon Zipper",
+      size: "20cm", // Size in centimeters
+      color: "Black",
+      quantity: 50,
+      remarks: "Water-resistant",
+      status: "COMPLETED",
+      isActive: "false"
+    },
+    {
+      trimType: "Thread",
+      trimCode: "THR003",
+      description: "Cotton Sewing Thread",
+      size: "100m", // Size in meters
+      color: "White",
+      quantity: 200,
+      remarks: "Strong and durable",
+      status: "OPEN",
+      isActive: "true"
+    },
+    {
+      trimType: "Fabric",
+      trimCode: "FAB004",
+      description: "Cotton Blend Fabric",
+      size: "2.5m", // Size in meters
+      color: "Blue",
+      quantity: 30,
+      remarks: "Soft and breathable",
+      status: "INPROGRESS",
+      isActive: "true"
+    },
+])
+
+const OnReset = () => {
+    form.resetFields()
+    setData([])
+
+}
 
     const getSize = () =>{
         sizeService.getAllActiveSize().then((res)=>{
@@ -254,14 +265,14 @@ export const MarketingReqReport = () => {
           .saveAs('Marketing Requisition Report.xlsx');
     }
     return(
-        <Card title='Marketing Requisition Report' size='small'  extra={data1.length > 0 ? (
+        <Card className="card-header" title='Marketing Requisition Report' style={{textAlign:"center"}}  extra={data1.length > 0 ? (
             <>
-              <Button className='panel_button' type='primary' onClick={() => exportExcel()}>Get Excel</Button>
+              <Button className='panel_button' style={{backgroundColor:'green',color:'white'}} onClick={() => exportExcel()}>Get Excel</Button>
             </>
           ) : (<></>)}>
             <Form layout="vertical" form={form} >
                 <Row gutter={8}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item label='Trim Type' name='trimType'>
                         <Select
                             showSearch
@@ -269,14 +280,14 @@ export const MarketingReqReport = () => {
                             optionFilterProp="children"
                             allowClear
                         >
-                            {/* {indentCodes.map((inc: any) => {
-                                return <Option key={inc.indent_code} value={inc.indent_code}>{inc.indent_code}</Option>
-                            })
-                            } */}
+                            <Option value="Button">Button</Option>
+                        <Option value="Zipper">Zipper</Option>
+                        <Option value="Thread">Thread</Option>
+                        <Option value="Fabric">Fabric</Option>
                         </Select>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item label='Trim Code' name='trimCode'>
                         <Select
                             showSearch
@@ -284,14 +295,14 @@ export const MarketingReqReport = () => {
                             optionFilterProp="children"
                             allowClear
                         >
-                            {/* {routes.map((e) => {
-                                return <Option key={e.routeId} value={e.routeId}>{e.route}</Option>
-                            })
-                            }                         */}
+                        <Option value="BTN001">BTN001</Option>
+                        <Option value="ZIP002">ZIP002</Option>
+                        <Option value="THR003">THR003</Option>
+                        <Option value="FAB004">FAB004</Option>
                         </Select>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item label='Size' name='size'>
                         <Select
                             showSearch
@@ -299,14 +310,14 @@ export const MarketingReqReport = () => {
                             optionFilterProp="children"
                             allowClear
                         >
-                            {size.map((e) => {
-                                return <Option key={e.sizeId} value={e.sizeId}>{e.size}</Option>
-                            })
-                            }    
+                            <Option value="1cm">1cm</Option>
+                        <Option value="20cm">20cm</Option>
+                        <Option value="100m">100m</Option>
+                        <Option value="2.5m">2.5m</Option>  
                         </Select>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item label='Color' name='colorId'>
                         <Select
                             showSearch
@@ -314,14 +325,14 @@ export const MarketingReqReport = () => {
                             optionFilterProp="children"
                             allowClear
                         >
-                            {color.map((e) => {
-                                return <Option key={e.colourId} value={e.colourId}>{e.colour}</Option>
-                            })
-                            } 
+                            <Option value="Gold">Gold</Option>
+                        <Option value="Black">Black</Option>
+                        <Option value="White">White</Option>
+                        <Option value="Blue">Blue</Option>  
                         </Select>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
                     <Form.Item label='Status' name='status'>
                         <Select
                             showSearch
@@ -335,6 +346,16 @@ export const MarketingReqReport = () => {
                             })
                             } 
                         </Select>
+                    </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
+                    <Form.Item>
+                        <Button icon={<SearchOutlined />} htmlType="submit" type='primary' className='panel_button'>Search</Button>
+                    </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 1 }} style={{marginTop:'2%'}}>
+                    <Form.Item>
+                        <Button danger icon={<UndoOutlined />}>Reset</Button>
                     </Form.Item>
                     </Col>
                     

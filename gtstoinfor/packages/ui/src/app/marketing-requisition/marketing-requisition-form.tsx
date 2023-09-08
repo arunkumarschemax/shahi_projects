@@ -4,6 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MarketingRequisitionDto } from "@project-management-system/shared-models";
 import { ColourService, MarketingReqService, SizeService } from "@project-management-system/shared-services";
 import AlertMessages from "../common/common-functions/alert-messages";
+import './marketing-requisition.css'
+
 
 const { TextArea } = Input;
 const { Option } = Select
@@ -81,7 +83,7 @@ export function MarketingReqForm(props: MarketingReqFormProps) {
   };
 
   return (
-    <Card
+    <Card className="card-header"
       title={<span>Marketing Requisition</span>}
       style={{ textAlign: "center" }}
       extra={
