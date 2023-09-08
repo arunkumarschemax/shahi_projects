@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { UserOutlined, DashboardOutlined, PicCenterOutlined, LogoutOutlined, FileExcelOutlined, GlobalOutlined } from '@ant-design/icons'
+import { UserOutlined, DashboardOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { ProBreadcrumb, ProConfigProvider } from '@ant-design/pro-components';
 import logo from './logo.png'
@@ -10,7 +10,7 @@ import { treeRouter } from '../../utils/common';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown, faCog, faGears, faGem, faGlobe, faHatCowboy, faLayerGroup, faPen, faPeopleRoof, faShirt, faShoppingCart, faTshirt, faVestPatches} from '@fortawesome/free-solid-svg-icons';
+import { faGears, faGlobe, faHatCowboy, faLayerGroup, faPeopleRoof, faShirt, faShoppingCart} from '@fortawesome/free-solid-svg-icons';
 
 const { useToken } = theme
 
