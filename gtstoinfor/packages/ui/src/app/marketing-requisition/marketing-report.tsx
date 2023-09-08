@@ -7,6 +7,7 @@ import { ColumnProps, ColumnType } from "antd/es/table"
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
+import './marketing-requisition.css'
 
 export const MarketingReqReport = () => {
     const [page, setPage] = React.useState(1);
@@ -264,9 +265,9 @@ const OnReset = () => {
           .saveAs('Marketing Requisition Report.xlsx');
     }
     return(
-        <Card title='Marketing Requisition Report' style={{textAlign:"center"}}  extra={data1.length > 0 ? (
+        <Card className="card-header" title='Marketing Requisition Report' style={{textAlign:"center"}}  extra={data1.length > 0 ? (
             <>
-              <Button className='panel_button' type='primary' onClick={() => exportExcel()}>Get Excel</Button>
+              <Button className='panel_button' style={{backgroundColor:'green',color:'white'}} onClick={() => exportExcel()}>Get Excel</Button>
             </>
           ) : (<></>)}>
             <Form layout="vertical" form={form} >
@@ -349,7 +350,7 @@ const OnReset = () => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item>
-                        <Button icon={<SearchOutlined />} htmlType="submit" className='panel_button'>Search</Button>
+                        <Button icon={<SearchOutlined />} htmlType="submit" type='primary' className='panel_button'>Search</Button>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 1 }} style={{marginTop:'2%'}}>

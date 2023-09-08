@@ -32,7 +32,7 @@ export const SorcingRequisitionView = () => {
           grnDate:'09-08-2023',
           buyer:'Naidu',
           xlNo:'24',
-          status:'Open'
+          status:'OPEN'
       },
       {
           content:'Natural Fabrics',
@@ -53,7 +53,7 @@ export const SorcingRequisitionView = () => {
           grnDate:'09-08-2023',
           buyer:'Naidu',
           xlNo:'24',
-          status:'Open'
+          status:'OPEN'
 
       },
       {
@@ -75,7 +75,7 @@ export const SorcingRequisitionView = () => {
           grnDate:'09-08-2023',
           buyer:'Naidu',
           xlNo:'24',
-          status:'Completed'
+          status:'COMPLETED'
 
       },
       {
@@ -97,7 +97,7 @@ export const SorcingRequisitionView = () => {
           grnDate:'09-08-2023',
           buyer:'Naidu',
           xlNo:'24',
-          status:'Inprogress'
+          status:'INPROGRESS'
 
       }
   ])

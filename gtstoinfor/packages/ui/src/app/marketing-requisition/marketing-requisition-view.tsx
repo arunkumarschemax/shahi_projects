@@ -8,6 +8,8 @@ import { MarketingRequisitionDto } from '@project-management-system/shared-model
 import { MarketingReqService } from '@project-management-system/shared-services';
 import MarketingReqForm from './marketing-requisition-form';
 import { Overlay } from 'antd/es/popconfirm/PurePanel';
+import './marketing-requisition.css'
+
 
 
 export interface MarketingReqProps {}
@@ -376,7 +378,7 @@ export function MarketingReqGrid(props: MarketingReqProps) {
     console.log('params', pagination, filters, sorter, extra);
   }
   return (
-    <Card title={<span >Marketing Requisition</span>}
+    <Card className='card-header' title={<span >Marketing Requisition</span>}
     style={{textAlign:'center'}}
     extra={<Link to='/marketing-requisition-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>

@@ -1,4 +1,4 @@
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Input, Row, Table, Form, Select, DatePicker } from "antd"
 import { Excel } from "antd-table-saveas-excel";
 import { ColumnProps, ColumnType } from "antd/es/table"
@@ -39,7 +39,7 @@ export const SorcingRequisitionReport = () => {
             grnDate:'09-08-2023',
             buyer:'Naidu',
             xlNo:'24',
-            status:'Open'
+            status:'OPEN'
         },
         {
             content:'Natural Fabrics',
@@ -60,7 +60,7 @@ export const SorcingRequisitionReport = () => {
             grnDate:'09-08-2023',
             buyer:'Naidu',
             xlNo:'24',
-            status:'Open'
+            status:'OPEN'
   
         },
         {
@@ -82,7 +82,7 @@ export const SorcingRequisitionReport = () => {
             grnDate:'09-08-2023',
             buyer:'Naidu',
             xlNo:'24',
-            status:'Completed'
+            status:'COMPLETED'
   
         },
         {
@@ -104,7 +104,7 @@ export const SorcingRequisitionReport = () => {
             grnDate:'09-08-2023',
             buyer:'Naidu',
             xlNo:'24',
-            status:'Inprogress'
+            status:'INPROGRESS'
   
         }
     ])
@@ -386,9 +386,9 @@ export const SorcingRequisitionReport = () => {
                     <Form.Item name='status' label='Status'>
                         {/* <Input placeholder="Enter Fabric Type"/> */}
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select status'>
-                            <Option key='open' value='open'>Open</Option>
-                            <Option key='inprogress' value='inprogress'>Inprogress</Option>
-                            <Option key='completed' value='completed'>Completed</Option>
+                            <Option key='open' value='OPEN'>OPEN</Option>
+                            <Option key='inprogress' value='INPROGRESS'>INPROGRESS</Option>
+                            <Option key='completed' value='COMPLETED'>COMPLETED</Option>
 
                         </Select>
                     </Form.Item>
@@ -400,7 +400,7 @@ export const SorcingRequisitionReport = () => {
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 1 }}  style={{marginTop:'2%'}}>
                     <Form.Item>
-                        <Button onClick={onReset} danger >Reset</Button>
+                        <Button onClick={onReset} danger icon={<UndoOutlined />}>Reset</Button>
                     </Form.Item>
                 </Col>
               </Row>
