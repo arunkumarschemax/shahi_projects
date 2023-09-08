@@ -116,11 +116,16 @@ import SKUGeneration from "./orders/sku-generation"
 import UomGrid from "./masters/uom/uom-grid"
 import SampleDevDetail from "./sample-development/sample-request-detailed-view"
 import FabricBomCreation from "./BOM/fabric-creation"
+import FabricWeaveForm from "./masters/fabric-weave/fabric-weave-form"
+import FabricWeaveGrid from "./masters/fabric-weave/fabric-weave-grid"
 import FabricDevelopmentRequest from "./fabric development/fabric-development-request"
 import OperationSequenceForm from "./orders/operations-squence-form"
 import OperationReportingView from "./orders/operation-reporting-view"
 import MarketingReqForm from "./marketing-requisition/marketing-requisition-form"
 import MarketingReqGrid from "./marketing-requisition/marketing-requisition-view"
+import SourcingRequisitionForm from "./sourcing-requisition/sourcing-requisition-form"
+import SourcingRequisitionView from "./sourcing-requisition/sourcing-requisition-view"
+import SourcingRequisitionReport from "./sourcing-requisition/sourcing-requisition-report"
 
 
 export const AppRoutes = () => {
@@ -340,6 +345,14 @@ export const AppRoutes = () => {
                  isUpdate={false}
                 closeForm={() => { }}
                 updateDetails={(undefined) => { }}/>} />
+
+                <Route path="fabric-weave/fabric-weave-form" element={<FabricWeaveForm
+                data={undefined}
+                isUpdate={false}
+                closeForm={()=>{}}
+                updateFabricWeave={(undefined)=>{}}/>}/>
+                <Route path="fabric-weave/fabric-weave-view" element={<FabricWeaveGrid/>}/>
+
             </Route>
                     <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
@@ -487,6 +500,10 @@ export const AppRoutes = () => {
                 update={(undefined) => { }}
                 />}/>
                 <Route path='marketing-requisition-view' element={<MarketingReqGrid/>} />
+                    <Route path='/sourcing-requisition' element={<SourcingRequisitionForm/>}/>
+                    <Route path='/sourcing-requisition-view' element={<SourcingRequisitionView/>}/>
+                    <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
+
 
 
                     <Route path='/excel-import'>

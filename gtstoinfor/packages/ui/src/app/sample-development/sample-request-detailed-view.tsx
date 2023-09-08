@@ -28,7 +28,7 @@ export const SampleDevDetail = () => {
     
 
     const onUpdate = () => {
-        navigate('/settings/settings/settings-form',{state:{id:data[0]?.settingsId}})
+        navigate('/sample-development/sample-development-form',{state:{id:data[0]?.settingsId}})
     }
 
     return(
