@@ -43,7 +43,7 @@ export const SorcingRequisitionReport = () => {
         },
         {
             content:'Natural Fabrics',
-            fabricType:'Slik',
+            fabricType:'Silk',
             weave:'Plain Weave',
             weigth:'200kg',
             width:'100',
