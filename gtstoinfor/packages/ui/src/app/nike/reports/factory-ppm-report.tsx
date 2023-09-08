@@ -538,6 +538,15 @@ const FactoryPPMReport = () => {
             {
                 title: 'Lead Time',
                 dataIndex: 'leadTime',
+                render:(text)=>{
+                     if (!isNaN(parseFloat(text))) {
+      // If it's a valid number, render it
+      return parseFloat(text).toFixed(2); // You can format it as needed
+    } else {
+      // If it's not a valid number, render a placeholder or an empty string
+      return 'N/A'; // Or any other desired text
+    }
+                }
             },
             {
                 title: 'Category',
