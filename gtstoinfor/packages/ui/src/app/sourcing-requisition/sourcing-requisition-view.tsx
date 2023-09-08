@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Input, Table } from "antd"
+import { Button, Card, Col, Input, Row, Table } from "antd"
 import { ColumnProps, ColumnType } from "antd/es/table"
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
@@ -11,6 +11,96 @@ export const SorcingRequisitionView = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const navigate = useNavigate()
+
+    const [data,setData] = useState<any[]>([
+      {
+          content:'content',
+          fabricType:'Cotton',
+          weave:'Plain Weave',
+          weigth:'100kg',
+          width:'100',
+          construction:'Cotton',
+          yarnCount:'100',
+          finish:'Cotton',
+          shrinkage:'Cotton',
+          color:'Blue',
+          pch:'Srinivas',
+          moq:'Cotton',
+          season:'Summer',
+          moqPrice:'100INR',
+          supplier:'Rajesh',
+          grnDate:'09-08-2023',
+          buyer:'Naidu',
+          xlNo:'24',
+          status:'Open'
+      },
+      {
+          content:'content',
+          fabricType:'Slik',
+          weave:'Plain Weave',
+          weigth:'200kg',
+          width:'100',
+          construction:'Cotton',
+          yarnCount:'100',
+          finish:'Cotton',
+          shrinkage:'Cotton',
+          color:'Green',
+          pch:'Srinivas',
+          moq:'Cotton',
+          season:'Spring',
+          moqPrice:'100INR',
+          supplier:'Rajesh',
+          grnDate:'09-08-2023',
+          buyer:'Naidu',
+          xlNo:'24',
+          status:'Open'
+
+      },
+      {
+          content:'content',
+          fabricType:'Wool',
+          weave:'Basket Weave',
+          weigth:'100kg',
+          width:'100',
+          construction:'Cotton',
+          yarnCount:'100',
+          finish:'Cotton',
+          shrinkage:'Cotton',
+          color:'Yellow',
+          pch:'Srinivas',
+          moq:'Cotton',
+          season:'Winter',
+          moqPrice:'100INR',
+          supplier:'Rajesh',
+          grnDate:'09-08-2023',
+          buyer:'Naidu',
+          xlNo:'24',
+          status:'Completed'
+
+      },
+      {
+          content:'content',
+          fabricType:'Cotton',
+          weave:'Checked Weave',
+          weigth:'250kg',
+          width:'100',
+          construction:'Cotton',
+          yarnCount:'100',
+          finish:'Cotton',
+          shrinkage:'Cotton',
+          color:'White',
+          pch:'Srinivas',
+          moq:'Cotton',
+          season:'Summer',
+          moqPrice:'100INR',
+          supplier:'Rajesh',
+          grnDate:'09-08-2023',
+          buyer:'Naidu',
+          xlNo:'24',
+          status:'Inprogress'
+
+      }
+  ])
 
 
     const getColumnSearchProps = (dataIndex:any): ColumnType<string> => ({
@@ -169,10 +259,29 @@ export const SorcingRequisitionView = () => {
             title:'XL No',
             dataIndex:'xlNo'
         },
+        {
+          title:'Status',
+          dataIndex:'status'
+        }
     ]
     return(
-        <Card title='Sourcing Requistion View' size='small' extra={<span><Button onClick={() => navigate('/sourcing-requisition')} type={'primary'}>New</Button></span>}>
-            <Table columns={columns} dataSource={[]} scroll={{ x: 'max-content' }}  pagination={{
+        <Card title='Sourcing Requistion View' style={{textAlign:'center'}}  size='small' extra={<span><Button onClick={() => navigate('/sourcing-requisition')} type={'primary'}>New</Button></span>}>
+              <Row gutter={40} >
+      <Col>
+          <Card title={'Total : ' + data.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          </Col>
+          <Col>
+           <Card title={'Open: ' + data.filter(el => el.status === 'Open').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'cyan'}}></Card>
+          </Col>
+          <Col>
+           <Card title={'Inprogress :' + data.filter(el => el.status == 'Inprogress').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'yellow'}}></Card>
+          </Col>
+          <Col>
+           <Card title={'Completed :' + data.filter(el => el.status == 'Completed').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          </Col>
+          </Row>
+          <br></br>
+            <Table columns={columns} dataSource={data} scroll={{ x: 'max-content' }}  pagination={{
                     onChange(current) {
                         setPage(current);
                     }
