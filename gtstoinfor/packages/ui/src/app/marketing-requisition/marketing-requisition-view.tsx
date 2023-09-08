@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Space } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { ColumnProps } from 'antd/lib/table';
+import { ColumnProps, ColumnType } from 'antd/lib/table';
 import { Link } from 'react-router-dom';
 import { MarketingRequisitionDto } from '@project-management-system/shared-models';
 import { MarketingReqService } from '@project-management-system/shared-services';
@@ -136,62 +136,68 @@ export function MarketingReqGrid(props: MarketingReqProps) {
    * used for column filter
    * @param dataIndex column data index
    */
-   const getColumnSearchProps = (dataIndex: string) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div style={{ padding: 8 }}>
-            <Input
-                ref={searchInput}
-                placeholder={`Search ${dataIndex}`}
-                value={selectedKeys[0]}
-                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                style={{ width: 188, marginBottom: 8, display: 'block' }}
-            />
-            <Button
-                type="primary"
-                onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                icon={<SearchOutlined />}
-                size="small"
-                style={{ width: 90, marginRight: 8 }}
-            >
-                Search
-            </Button>
-            <Button size="small" style={{ width: 90 }}
-                onClick={() => {
-                    handleReset(clearFilters)
-                    setSearchedColumn(dataIndex);
-                    confirm({ closeDropdown: true });
-                }}>
-                Reset
-            </Button>
-        </div>
+   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() =>{
+              handleReset(clearFilters)
+              setSearchedColumn(dataIndex)
+              confirm({closeDropdown:true})
+            }
+               }
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+         
+        </Space>
+      </div>
     ),
-    filterIcon: filtered => (
-        <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
     ),
     onFilter: (value, record) =>
-        record[dataIndex]
-            ? record[dataIndex]
-                .toString()
-                .toLowerCase()
-                .includes(value.toLowerCase())
-            : false,
-    onFilterDropdownVisibleChange: visible => {
-        if (visible) { setTimeout(() => searchInput.current.select()); }
+      record[dataIndex] ?record[dataIndex]     
+         .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()):false,
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
     },
-    render: text =>
-        text ? (
-            searchedColumn === dataIndex ? (
-                <Highlighter
-                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                    searchWords={[searchText]}
-                    autoEscape
-                    textToHighlight={text.toString()}
-                />
-            ) : text
-        )
-            : null
-})
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
 
   /**
    * 

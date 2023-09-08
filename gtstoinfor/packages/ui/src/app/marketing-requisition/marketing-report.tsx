@@ -339,12 +339,11 @@ const OnReset = () => {
                             placeholder="Select Status"
                             optionFilterProp="children"
                             allowClear
-                            defaultValue='All'
+                            // defaultValue='All'
                         >
-                            {data1.map((e) => {
-                                return <Option key={e.status} value={e.status}>{e.colour}</Option>
-                            })
-                            } 
+                            <Option value="OPEN">Open</Option>
+                        <Option value="INPROGRESS">In Progress</Option>
+                        <Option value="Completed">Completed</Option>  
                         </Select>
                     </Form.Item>
                     </Col>
