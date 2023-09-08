@@ -101,7 +101,7 @@ export const SourcingRequisitionForm = () => {
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select weave'>
                         {weave.map(e => {
                                 return(
-                                    <Option key={e.colourId} value={e.colourId}> {e.colour}</Option>
+                                    <Option key={e.fabricWeaveId} value={e.fabricWeaveId}> {e.fabricWeaveName}</Option>
                                 )
                             })}
                         </Select>
