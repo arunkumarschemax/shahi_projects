@@ -565,7 +565,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Gender Age Description',
-                dataIndex: '',
+                dataIndex: 'genderAgeDesc',
             },
             {
                 title: 'Destination Country Code',
@@ -654,7 +654,7 @@ const FactoryPPMReport = () => {
                 title: 'Change Register',
                 dataIndex: 'displayName',
                 align: 'center',
-            },
+            },  
             {
                 align: 'center',
                 children: [

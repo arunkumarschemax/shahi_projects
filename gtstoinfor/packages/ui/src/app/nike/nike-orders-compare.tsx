@@ -385,6 +385,20 @@ const  OrdersCompareGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
+            title: 'PO Number',
+            dataIndex: 'po_number',
+            ...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number'
+        },
+        {
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+            ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
             render: (text) => moment(text).format('YYYY-MM-DD')
@@ -396,16 +410,7 @@ const  OrdersCompareGrid = () => {
         {
             title: 'Factory',
             dataIndex: 'factory'
-        },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
-        },
+        }, 
         {
             title: 'Document Date',
             dataIndex: 'document_date',
