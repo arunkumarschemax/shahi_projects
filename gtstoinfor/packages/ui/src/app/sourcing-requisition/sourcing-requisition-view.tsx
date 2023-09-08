@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Input, Row, Table } from "antd"
+import { Button, Card, Col, Input, Row, Space, Table } from "antd"
 import { ColumnProps, ColumnType } from "antd/es/table"
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
@@ -36,7 +36,7 @@ export const SorcingRequisitionView = () => {
       },
       {
           content:'Natural Fabrics',
-          fabricType:'Slik',
+          fabricType:'Silk',
           weave:'Plain Weave',
           weigth:'200kg',
           width:'100',
@@ -103,57 +103,68 @@ export const SorcingRequisitionView = () => {
   ])
 
 
-    const getColumnSearchProps = (dataIndex:any): ColumnType<string> => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-          <div style={{ padding: 8 }}>
-            <Input
-              ref={ searchInput }
-              placeholder={`Search ${dataIndex}`}
-              value={selectedKeys[0]}
-              onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-              onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              style={{ width: 188, marginBottom: 8, display: 'block' }}
-            />
-            <Button
-              type="primary"
-              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              icon={<SearchOutlined />}
-              size="small"
-              style={{ width: 90, marginRight: 8 }}
-            >
-              Search
-            </Button>
-            <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-              Reset
-            </Button>
-          </div>
-        ),
-        filterIcon: filtered => (
-          <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-        ),
-        onFilter: (value, record) =>
-        record[dataIndex]
-        ? record[dataIndex]
-           .toString()
-            .toLowerCase()
-            .includes((value as string).toLowerCase()):false,
-        onFilterDropdownVisibleChange: visible => {
-          if (visible) {    setTimeout(() => searchInput.current.select());   }
-        },
-        render: text =>
-          text ?(
-          searchedColumn === dataIndex ? (
-            <Highlighter
-              highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-              searchWords={[searchText]}
-              autoEscape
-              textToHighlight={text.toString()}
-            />
-          ) :text
-          )
-          : null
+  const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() =>{
+              handleReset(clearFilters)
+              setSearchedColumn(dataIndex)
+              confirm({closeDropdown:true})
+            }
+               }
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
          
-      });
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex] ?record[dataIndex]     
+         .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()):false,
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
 
       function handleSearch(selectedKeys, confirm, dataIndex) {
         confirm();
@@ -271,13 +282,13 @@ export const SorcingRequisitionView = () => {
           <Card title={'Total : ' + data.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
-           <Card title={'Open: ' + data.filter(el => el.status === 'Open').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'cyan'}}></Card>
+           <Card title={'Open: ' + data.filter(el => el.status === 'OPEN').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'cyan'}}></Card>
           </Col>
           <Col>
-           <Card title={'Inprogress :' + data.filter(el => el.status == 'Inprogress').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'yellow'}}></Card>
+           <Card title={'Inprogress :' + data.filter(el => el.status == 'INPROGRESS').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'yellow'}}></Card>
           </Col>
           <Col>
-           <Card title={'Completed :' + data.filter(el => el.status == 'Completed').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+           <Card title={'Completed :' + data.filter(el => el.status == 'COMPLETED').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
           </Col>
           </Row>
           <br></br>

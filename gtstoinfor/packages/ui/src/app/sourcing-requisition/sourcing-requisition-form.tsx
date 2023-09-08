@@ -98,10 +98,10 @@ export const SourcingRequisitionForm = () => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='weave' label='Weave'  rules={[{required:true,message:'Weave is required'}]}>
-                        <Select showSearch allowClear optionFilterProp="children">
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select weave'>
                         {weave.map(e => {
                                 return(
-                                    <Option key={e.colourId} value={e.colourId}> {e.colour}</Option>
+                                    <Option key={e.fabricWeaveId} value={e.fabricWeaveId}> {e.fabricWeaveName}</Option>
                                 )
                             })}
                         </Select>

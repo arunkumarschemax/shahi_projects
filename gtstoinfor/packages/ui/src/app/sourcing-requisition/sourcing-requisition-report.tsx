@@ -43,7 +43,7 @@ export const SorcingRequisitionReport = () => {
         },
         {
             content:'Natural Fabrics',
-            fabricType:'Slik',
+            fabricType:'Silk',
             weave:'Plain Weave',
             weigth:'200kg',
             width:'100',
@@ -114,8 +114,11 @@ export const SorcingRequisitionReport = () => {
     }
 
     const onSearch = () => {
+        // let tableData;
+        // console.log(form.getFieldValue('status'))
         // if(form.getFieldValue('status') !== undefined){
-        //     setData(data.filter(e => e.status == form.getFieldValue('status')))
+        //     tableData = data.filter(e => e.status == form.getFieldValue('status'))
+        //     setData(tableData)
         // }
     }
 
