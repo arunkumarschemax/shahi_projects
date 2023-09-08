@@ -483,7 +483,7 @@ export const SampleDevForm = () => {
                 },
               ]}
             >
-              <Input placeholder="Enter discount" />
+              <Input placeholder="Enter discount" type="number"/>
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>

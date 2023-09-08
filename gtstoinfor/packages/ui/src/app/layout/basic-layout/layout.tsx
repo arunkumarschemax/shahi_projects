@@ -355,6 +355,12 @@ export const baseRouterList = [
     //             path: "fabrics/fabrics-view",
     //             filepath: "fabrics/fabrics-view",
     //         },
+    // {
+    //     label: "Fabric Weave",
+    //     key: "fabric-weave",
+    //     path: "fabric-weave/fabric-weave-view",
+    //     filepath: "fabric-weave/fabric-weave-view",
+    // }
           
     //     ],
     // }, 
