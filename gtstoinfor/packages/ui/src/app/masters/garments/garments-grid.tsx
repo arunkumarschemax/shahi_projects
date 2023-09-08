@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -31,7 +31,6 @@ export function GarmentsGrid(
 
   const getAll = () => {
     garmentService.getAllGarments().then(res =>{
-      console.log(res,'asdfghj')
       if(res.status){
         setGarmentData(res.data)
       }else{
@@ -123,7 +122,7 @@ export function GarmentsGrid(
     garmentService.activateOrDeactivateGarment(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
-        AlertMessages.getSuccessMessage('Success'); 
+        message.success(res.internalMessage,2); 
       } else {
         if (res.status) {
           AlertMessages.getErrorMessage(res.internalMessage);

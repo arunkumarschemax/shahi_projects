@@ -341,6 +341,12 @@ export const baseRouterList = [
                 path: "fabrics/fabrics-view",
                 filepath: "fabrics/fabrics-view",
             },
+            {
+                label: "Fabric Weave",
+                key: "fabric-weave",
+                path: "fabric-weave/fabric-weave-view",
+                filepath: "fabric-weave/fabric-weave-view",
+            }
           
         ],
     }, 
@@ -409,6 +415,7 @@ export const baseRouterList = [
         key: "sample-development",
         path: "sample-development",
         filepath: "sample-development",
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>👔</div>,
         children:[
             {
                 label: "Sample Development",
