@@ -5,6 +5,7 @@ import { ColumnProps, ColumnType } from "antd/es/table"
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import {  useNavigate } from "react-router-dom";
+import './sourcing-requisition.css'
 
 const {Option} = Select
 const { RangePicker } = DatePicker;
@@ -325,9 +326,9 @@ export const SorcingRequisitionReport = () => {
           .saveAs('Sourcing Requisition Report.xlsx');
     }
     return(
-        <Card title='Sourcing Requistion Report' style={{textAlign:'center'}} size='small'  extra={data.length > 0 ? (
+        <Card title='Sourcing Requistion Report' className="card-header" style={{textAlign:'center',color:'#00ffff'}}  extra={data.length > 0 ? (
             <>
-              <Button className='panel_button' type='primary' onClick={() => exportExcel()}>Get Excel</Button>
+              <Button className='panel_button' style={{backgroundColor:"green",color:'white'}}onClick={() => exportExcel()}>Get Excel</Button>
             </>
           ) : (<></>)}>
             <Form layout="vertical" form={form}>

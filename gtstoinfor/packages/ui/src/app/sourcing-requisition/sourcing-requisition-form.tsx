@@ -77,7 +77,7 @@ export const SourcingRequisitionForm = () => {
     };
 
     return(
-        <Card title='Sourcing Requisition' style={{textAlign:'center'}}  extra={<span><Button onClick={() => navigate('/sourcing-requisition-view')} type={'primary'}>View</Button></span>}>
+        <Card title='Sourcing Requisition' className="card-header" style={{textAlign:'center'}}  extra={<span><Button onClick={() => navigate('/sourcing-requisition-view')} type={'primary'}>View</Button></span>}>
             <Form form={form} layout='vertical' onFinish={saveData}>
                 <Row gutter={24}>
                     <h1 style={{ color: '#6b54bf', fontSize: '20px', textAlign: 'left' }}>FABRIC DETAILS</h1>
