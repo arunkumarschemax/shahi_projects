@@ -5,6 +5,7 @@ import { ColumnProps, ColumnType } from "antd/es/table"
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import {  useNavigate } from "react-router-dom";
+import './sourcing-requisition.css'
 
 const {Option} = Select
 const { RangePicker } = DatePicker;
@@ -16,6 +17,7 @@ export const SorcingRequisitionReport = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const navigate = useNavigate()
+    const [form] = Form.useForm()
 
     const [data,setData] = useState<any[]>([
         {
@@ -106,6 +108,16 @@ export const SorcingRequisitionReport = () => {
   
         }
     ])
+
+    const onReset = () => {
+        form.resetFields()
+    }
+
+    const onSearch = () => {
+        // if(form.getFieldValue('status') !== undefined){
+        //     setData(data.filter(e => e.status == form.getFieldValue('status')))
+        // }
+    }
 
 
     const getColumnSearchProps = (dataIndex:any): ColumnType<string> => ({
@@ -314,12 +326,12 @@ export const SorcingRequisitionReport = () => {
           .saveAs('Sourcing Requisition Report.xlsx');
     }
     return(
-        <Card title='Sourcing Requistion Report' style={{textAlign:'center'}} size='small'  extra={data.length > 0 ? (
+        <Card title='Sourcing Requistion Report' className="card-header" style={{textAlign:'center',color:'#00ffff'}}  extra={data.length > 0 ? (
             <>
-              <Button className='panel_button' type='primary' onClick={() => exportExcel()}>Get Excel</Button>
+              <Button className='panel_button' style={{backgroundColor:"green",color:'white'}}onClick={() => exportExcel()}>Get Excel</Button>
             </>
           ) : (<></>)}>
-            <Form layout="vertical">
+            <Form layout="vertical" form={form}>
               <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                     <Form.Item name='fabricType' label='Fabric Type'>
@@ -379,6 +391,16 @@ export const SorcingRequisitionReport = () => {
                             <Option key='completed' value='completed'>Completed</Option>
 
                         </Select>
+                    </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
+                    <Form.Item>
+                        <Button onClick={onSearch} type='primary' icon={<SearchOutlined/>}>Search</Button>
+                    </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 1 }}  style={{marginTop:'2%'}}>
+                    <Form.Item>
+                        <Button onClick={onReset} danger >Reset</Button>
                     </Form.Item>
                 </Col>
               </Row>
