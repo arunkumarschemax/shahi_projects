@@ -6,7 +6,7 @@ export class CompanyService extends CommonAxiosService{
   apiUrl = "https://172.17.3.115:23005/m3api-rest/execute/MNS100MI/LstDivisions?CONO=111";
   
   async createCompany(company: CompanyDto): Promise<CompanyResponseModel> {
-    console.log('testss',company)
+    // console.log('testss',company)
     return this.axiosPostCall(this.URL + "/createCompany", company)
 }
 
@@ -17,9 +17,7 @@ export class CompanyService extends CommonAxiosService{
     return this.axiosPostCall(this.URL + '/getAllCompany',req)
   }
 
-  async ActivatedeActivateCompany(
-    companyDto: CompanyDto
-  ): Promise<CompanyResponseModel> {
+  async ActivatedeActivateCompany(companyDto: CompanyDto ): Promise<CompanyResponseModel> {
     return this.axiosPostCall(this.URL + '/activateOrDeactivateCompany', companyDto)
 
   }

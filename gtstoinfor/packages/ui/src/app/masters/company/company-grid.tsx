@@ -313,8 +313,8 @@ export const CompanyGrid = (props: CompanyGridProps) => {
     service.ActivatedeActivateCompany(ViewData).then(res => {
       console.log(res);
       if (res.status) {
-        getAllCompany();
-        AlertMessages.getSuccessMessage('Success');
+        // getAllCompany();
+        AlertMessages.getSuccessMessage('  Company Activated Successfully');
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -424,7 +424,8 @@ export const CompanyGrid = (props: CompanyGridProps) => {
   return (
 
     <>
-      <Row gutter={40}>
+    <Card title='Company' extra={<span><Button onClick={() => navigate('/global/company/company-form')} type={'primary'}>New</Button></span>}>
+   <Row gutter={40}>
         <Col>
           <Card title={'Total Company: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -434,10 +435,10 @@ export const CompanyGrid = (props: CompanyGridProps) => {
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-        <Col>
+        {/* <Col>
           <span><Button onClick={() => navigate('/global/company/company-form')}
             type={'primary'}>New</Button></span>
-        </Col>
+        </Col> */}
       </Row><br></br>
       <Card >
         <Table
@@ -465,6 +466,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
             closeForm={closeDrawer} />
         </Card>
       </Drawer>
+       </Card> 
       <Modal
         className='print-docket-modal'
         // key={'modal' + Date.now()}

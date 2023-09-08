@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { UserOutlined, DashboardOutlined, PicCenterOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
+import { UserOutlined, DashboardOutlined, PicCenterOutlined, LogoutOutlined, FileExcelOutlined, GlobalOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { ProBreadcrumb, ProConfigProvider } from '@ant-design/pro-components';
 import logo from './logo.png'
@@ -10,7 +10,7 @@ import { treeRouter } from '../../utils/common';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faShirt} from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faCog, faGears, faGem, faGlobe, faHatCowboy, faLayerGroup, faPen, faPeopleRoof, faShirt, faShoppingCart, faTshirt, faVestPatches} from '@fortawesome/free-solid-svg-icons';
 
 const { useToken } = theme
 
@@ -28,7 +28,8 @@ export const baseRouterList = [
         label: "User Management",
         key: "user-management",
         path: "user-management",
-        icon: <UserOutlined />,
+        icon:<FontAwesomeIcon icon={faPeopleRoof} />,
+
         filepath: "../",
         children: [
             {
@@ -52,7 +53,7 @@ export const baseRouterList = [
         key:'global',
         path:'global',
         filepath:'global',
-        icon: <PicCenterOutlined />,
+         icon:<FontAwesomeIcon icon={faGlobe} />,
         children:[
             {
                 label: "Factories",
@@ -173,7 +174,7 @@ export const baseRouterList = [
         label: "Masters",
         key: "masters",
         path: "masters",
-        icon: <PicCenterOutlined />,
+        icon: <FontAwesomeIcon icon={faLayerGroup} />,
         filepath: "masters",
         children: [
             {
@@ -347,7 +348,7 @@ export const baseRouterList = [
     {
         label: "Settings",
         key: "settings",
-        icon:<FontAwesomeIcon icon={faCog} />,
+        icon:<FontAwesomeIcon icon={faGears} />,
         path: "settings",
         filepath: "settings",
         children:[
@@ -366,11 +367,11 @@ export const baseRouterList = [
         ]
     },
     {
-        label: "Style Management",
+        label: "       Style Management",
         key: "style-management",
         path: "style-management",
-        icon:<FontAwesomeIcon icon={faShirt} />,
-        filepath: "style-management",
+        icon: <FontAwesomeIcon icon={faHatCowboy} />,
+         filepath: "style-management",
         children: [
             {
                 label: "Style",
@@ -427,7 +428,7 @@ export const baseRouterList = [
     {
         label: "Material Creation",
         key: "materialCreation",
-        icon:<FontAwesomeIcon icon={faShirt} />,
+        icon: <FontAwesomeIcon icon={faShoppingCart} />,
         path: "materialCreation",
         filepath: "materialCreation",
         children:[

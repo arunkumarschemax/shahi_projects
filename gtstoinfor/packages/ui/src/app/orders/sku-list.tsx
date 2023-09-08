@@ -1,23 +1,31 @@
-import { Button, Card, Checkbox, Col, DatePicker, Descriptions, Form, Input, Modal, Row, Segmented, Select, Space, Table, Tabs } from "antd";
+import { Button, Card, Checkbox, Col, DatePicker, Descriptions, Form, Input, Modal, Row, Segmented, Select, Space, Table, Tabs, Tag } from "antd";
 import { CreditCardOutlined, HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { AppstoreOutlined } from "@ant-design/icons";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
 import FormItem from "antd/es/form/FormItem";
 import { SKUlistService } from "@project-management-system/shared-services";
 import { SKUlistFilterRequest } from "@project-management-system/shared-models";
+import Highlighter from "react-highlight-words";
 
 
    export const SkuList=()=>{
    const  [form] = Form.useForm();
    const [itemData, setItemData] = useState([]);
    const [selectedItemNo, setSelectedItemNo] = useState(null);
+   const [selectedSIze, setSelectedSizeId] = useState(null);
+   const [selectedcolour, setSelectedColourId] = useState(null);
+   const [selecteddestination, setSelecteddestinationId] = useState(null);
+   const [selectedValue, setSelectedValue] = useState('cards');
    const service = new SKUlistService
    const [data,setData]=useState([]);
    const { Option } = Select;
    const { TabPane } = Tabs;
+   const searchInput = useRef(null);
+   const [searchText, setSearchText] = useState(''); 
+   const [searchedColumn, setSearchedColumn] = useState('');
    const [selectView, setSelectedView]= useState<any>('cards');
    const [options, setOptions] = useState(['Cards','View']);
     useEffect(() => {
@@ -41,6 +49,18 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
               setSelectedItemNo(val);
               };
 
+              const Size = (val,data) => {
+                setSelectedSizeId(val);
+                };
+  
+                const colour=(val,data) => {
+                  setSelectedColourId(val);
+                  };
+
+                  const destination = (val,data) => {
+                    setSelecteddestinationId(val);
+                    };
+      
               const Dropdown = () => {
                 service.getAllitemsCode().then((res) => {
                   if (res) {
@@ -50,13 +70,81 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
                 });
               };
               
+              function handledSearch(selectedKeys, confirm, dataIndex) {
+                confirm();
+                setSearchText(selectedKeys[0]);
+                setSearchedColumn(dataIndex);
+              };
+              
+              function handleReset(clearFilters) {
+                clearFilters();
+                setSearchText('');
+              };
+              
               const resetForm = () => {
                 form.resetFields();
                 setItemData([]);
               };
+
               const handleViewChange =(view)=>{
                 setSelectedView(view)
               }
+              const getColumnSearchProps = (dataIndex: string) => ({
+                filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+                    <div style={{ padding: 8 }}>
+                        <Input
+                            ref={searchInput}
+                            placeholder={`Search ${dataIndex}`}
+                            value={selectedKeys[0]}
+                            onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                            onPressEnter={() => handledSearch(selectedKeys, confirm, dataIndex)}
+                            style={{ width: 188, marginBottom: 8, display: 'block' }}
+                        />
+                        <Button
+                            type="primary"
+                            onClick={() => handledSearch(selectedKeys, confirm, dataIndex)}
+                            icon={<SearchOutlined />}
+                            size="small"
+                            style={{ width: 90, marginRight: 8 }}
+                        >
+                            Search
+                        </Button>
+                        <Button size="small" style={{ width: 90 }}
+                            onClick={() => {
+                                handleReset(clearFilters)
+                                setSearchedColumn(dataIndex);
+                                confirm({ closeDropdown: true });
+                            }}>
+                            Reset
+                        </Button>
+                    </div>
+                ),
+                filterIcon: filtered => (
+                    <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+                ),
+                onFilter: (value, record) =>
+                    record[dataIndex]
+                        ? record[dataIndex]
+                            .toString()
+                            .toLowerCase()
+                            .includes(value.toLowerCase())
+                        : false,
+                onFilterDropdownVisibleChange: visible => {
+                    if (visible) { setTimeout(() => searchInput.current.select()); }
+                },
+                render: text =>
+                    text ? (
+                        searchedColumn === dataIndex ? (
+                            <Highlighter
+                                highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                                searchWords={[searchText]}
+                                autoEscape
+                                textToHighlight={text.toString()}
+                            />
+                        ) : text
+                    )
+                        : null
+            })
               const columnsSkelton:any=[
               
                   {
@@ -71,15 +159,20 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
                     title: 'Sizes',
                     dataIndex: 'sizes',
                     key: 'sizes',
-                    width:'300px'
-
+                    width:'300px',
+                    sorter: (a, b) => a.sizes.localeCompare(b.sizes),
+                    sortDirections: ['descend', 'ascend'],
+                    ...getColumnSearchProps('sizes')
                     // render: (skus) => skus.map((sku) => sku.sizes),
                   },
                   {
                     title: 'Destinations',
                     dataIndex: 'destinations',
                     key: 'destinations',
-                    width:'300px'
+                    width:'300px',
+                    sorter: (a, b) => a.destinations.localeCompare(b.destinations),
+                    sortDirections: ['descend', 'ascend'],
+                    ...getColumnSearchProps('destinations')
 
                     // render: (skus) => skus.map((sku) => sku.destinations),
                   },
@@ -87,9 +180,29 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
                     title: 'Colours',
                     dataIndex: 'colour',
                     key: 'colours',
-                    width:'300px'
-
-                    // render: (skus) => skus.map((sku) => sku.colour),
+                    width:'300px',
+                    
+                    sorter: (a, b) => a.colours.localeCompare(b.colours),
+                    sortDirections: ['descend', 'ascend'],
+                    ...getColumnSearchProps('colours'),
+                    // render: (colours,rowData) => {
+                    //   console.log(rowData)
+                    //   let co;
+                    //   if(rowData.colour == 'White'){
+                    //     co = 'black'
+                    //   } else{
+                    //     co = 'white'
+                    //   }
+                    //   return(
+                    //     <Tag color={colours} style={{color:co}}>{colours}</Tag>
+                    //   )
+                    // }
+                    render: (colours,rowData) => (
+                      <Tag color={colours} style={{ color: rowData.colour == 'White' ? 'black' : 'white' }}>
+                        {colours}
+                      </Tag>
+                    ),
+                    
                   },
                
         
@@ -144,7 +257,7 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
                       allowClear
                       showSearch
                         optionFilterProp="children"
-                        onChange={(val,text)=>Sku(val,text)}
+                        onChange={(val,text)=>Size(val,text)}
                       >
                       {data.map((e) => {
                         return (
@@ -175,6 +288,8 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
                       allowClear
                       showSearch
                         optionFilterProp="children"
+                            onChange={(val,text)=>colour(val,text)}
+
                       >
                       {data.map((e) => {
                         return (
@@ -197,7 +312,7 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
                     <Form.Item
                     style={{flexDirection:'row'}}
                       label="Destination"
-                      name="destination"
+                      name="destinations"
                      
                     >
                       <Select
@@ -205,10 +320,12 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
                       allowClear
                       showSearch
                         optionFilterProp="children"
+                         onChange={(val,text)=>destination(val,text)}
+
                       >
                       {data.map((e) => {
                         return (
-                        <Option key={e.destinationId} value={e.destinationId}>
+                        <Option key={e.destinationsId} value={e.destinationsId}>
                         {e.destinations}
                         </Option>
                         );
@@ -245,19 +362,17 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
               </Col> 
               </Row>           
               </Row>
-
-     
-
           </Form>
           </Card>     
-
+<Row  >
+  <Col>
 <div>
 <Space direction="vertical" style={{fontSize:"16px"}}>
       <Segmented options={[
         {
           label: (
             <>
-              <CreditCardOutlined  style={{ marginRight: "8px" }} />
+              <CreditCardOutlined  style={{ marginRight: "8px",color: "red"  }} />
               <span style={{ fontSize: "16px" }}>Cards</span>
             </>
           ),
@@ -266,7 +381,7 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
         {
           label: (
             <>
-              <AppstoreOutlined style={{ marginRight: "8px" }} />
+              <AppstoreOutlined style={{ marginRight: "8px",color: "blue"  }} />
               <span style={{ fontSize: "16px" }}>Grid</span>
             </>
           ),
@@ -287,7 +402,15 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
              style={{ cursor: 'pointer' }}
              >
              <Row gutter={[-1, -1]}>
-             {item.skus.map((e) => (
+             {item.skus.map((e) => {
+              let co;
+              if(e.color == 'white'){
+                co = 'balck'
+              } else {
+                co = 'white'
+              }
+              return(
+
                <Col
                xs={{ span: 24 }}
                sm={{ span: 24 }}
@@ -296,17 +419,32 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
                xl={{ span: 5 }}
                key={e.skuId}
              >
+              
             <div>
            <Card style={{ width: '70%', height: '100%' , backgroundColor: '#E3F1E1 '}}>
           <Descriptions column={1} style={{ fontSize: '2px' }} title={`SKU Code: ${e.skuId}`}>
             <Descriptions.Item label='Size'>{e.sizes}</Descriptions.Item>
-            <Descriptions.Item label='Colour'>{e.colour}</Descriptions.Item>
-            <Descriptions.Item label='Destination'>{e.destinations}</Descriptions.Item>
+            <Descriptions.Item label='Colour'>
+  <Tag
+    color={e.colour}
+    // style={{
+    //   color: item.colour === 'white' ? 'black' : 'inherit',
+    //   borderColor: item.colour === 'white' ? 'black' : 'inherit'
+    // }}
+    style={{ color: e.colour == 'White' ? 'black' : 'white' }}
+  >
+    {e.colour}
+  </Tag>
+</Descriptions.Item>      
+             <Descriptions.Item label='Destination'>{e.destinations}</Descriptions.Item>
           </Descriptions>
         </Card>
       </div>
     </Col>
-  ))}
+              )
+             }
+              
+  )}
 </Row>
     </Card>
      
@@ -327,7 +465,8 @@ import { SKUlistFilterRequest } from "@project-management-system/shared-models";
     </Space>
          
 </div>
-        
+</Col>
+</Row>
         </>
         
     );

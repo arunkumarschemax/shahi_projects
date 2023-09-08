@@ -73,8 +73,7 @@ export const CompanyForm = (props:CompanyFormProps) => {
     form.resetFields();
   };
   return (
-<Card title={<span style={{color:'white'}}>Company</span>}
-    style={{textAlign:'center'}} 
+    <Card title="Company" style={{textAlign:"start"}} 
      extra={props.isUpdate==true?"":<Link to='/global/company/company-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
 
@@ -125,11 +124,11 @@ export const CompanyForm = (props:CompanyFormProps) => {
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:5}}> <Form.Item
           name="organizationCode"
-          label="Organisation Name"
+          label="Organization Name"
           rules={[
             {
               required: true,
-              message:'Oraganisation Code Is Required'
+              message:'Oraganization Code Is Required'
             },
           ]}
         >

@@ -28,20 +28,21 @@ async getAllitemsCode():Promise<any>{
         {
             itemsNo:'IT002',
             itemNoId:2,
+
             skus:[
                 {
-                    skuId: 'SKU02',
+                    skuId: 'SKU031',
                      sizes:'L',
                      sizeId:2,
                      destinations: 'Domestic',
-                     colour: 'Blue',
+                     colour: 'Black',
                      colourId:3, 
                      destinationId:1, 
                 },
                 {
-                    skuId: 'SKU03',
+                    skuId: 'SKU032',
                      sizes:'S',
-                     sizeId:1,
+                     sizeId:3,
                      destinations: 'Domestic',
                      colour: 'White',
                      colourId:1, 
@@ -57,7 +58,7 @@ async getAllitemsCode():Promise<any>{
                 {
                     skuId: 'SKU04',
                      sizes:'L',
-                     sizeId:2,
+                     sizeId:4,
                      destinations: 'Domestic',
                      colour: 'Brown',
                      colourId:3, 
@@ -66,7 +67,7 @@ async getAllitemsCode():Promise<any>{
                 {
                     skuId: 'SKU05',
                      sizes:'S',
-                     sizeId:1,
+                     sizeId:5,
                      destinations: 'India',
                      colour: 'White',
                      colourId:1, 
@@ -75,7 +76,7 @@ async getAllitemsCode():Promise<any>{
                 {
                     skuId: 'SKU06',
                      sizes:'XL',
-                     sizeId:2,
+                     sizeId:6,
                      destinations: 'Domestic',
                      colour: 'Black',
                      colourId:3, 
@@ -91,7 +92,7 @@ async getAllitemsCode():Promise<any>{
                 {
                     skuId: 'SKU07',
                      sizes:'L',
-                     sizeId:2,
+                     sizeId:7,
                      destinations: 'Domestic',
                      colour: 'Brown',
                      colourId:3, 
@@ -100,7 +101,7 @@ async getAllitemsCode():Promise<any>{
                 {
                     skuId: 'SKU08',
                      sizes:'XS',
-                     sizeId:1,
+                     sizeId:8,
                      destinations: 'India',
                      colour: 'White',
                      colourId:1, 
@@ -109,7 +110,7 @@ async getAllitemsCode():Promise<any>{
                 {
                     skuId: 'SKU09',
                      sizes:'XXL',
-                     sizeId:2,
+                     sizeId:9,
                      destinations: 'Usa',
                      colour: 'Pink',
                      colourId:3, 
@@ -118,18 +119,76 @@ async getAllitemsCode():Promise<any>{
                 {
                     skuId: 'SKU010',
                      sizes:'XXL',
-                     sizeId:2,
+                     sizeId:10,
                      destinations: 'Uk',
+                     colour: 'Cyan',
+                     colourId:3, 
+                     destinationId:1, 
+                },
+
+            ]
+
+        },
+        {
+            itemsNo:'IT005',
+            itemNoId:5,
+            skus:[
+                {
+                    skuId: 'SKU011',
+                     sizes:'L',
+                     sizeId:11,
+                     destinations: 'Domestic',
+                     colour: 'Brown',
+                     colourId:3, 
+                     destinationId:1, 
+                },
+                {
+                    skuId: 'SKU012',
+                     sizes:'XS',
+                     sizeId:12,
+                     destinations: 'India',
+                     colour: 'White',
+                     colourId:1, 
+                     destinationId:1, 
+                },
+                {
+                    skuId: 'SKU013',
+                     sizes:'XXL',
+                     sizeId:13,
+                     destinations: 'Usa',
                      colour: 'Pink',
                      colourId:3, 
                      destinationId:1, 
                 },
+                {
+                    skuId: 'SKU014',
+                     sizes:'XXL',
+                     sizeId:14,
+                     destinations: 'Uk',
+                     colour: 'Cyan',
+                     colourId:3, 
+                     destinationId:1, 
+                },
+                {
+                    skuId: 'SKU015',
+                     sizes:'XXL',
+                     sizeId:15,
+                     destinations: 'Uk',
+                     colour: 'Magenta',
+                     colourId:3, 
+                     destinationId:1, 
+                },
+                
             ]
 
-        }
+        },
+
+
     ]
     return  mockItemData
 }
+
+
 async getAllMapItems(req?: SKUlistFilterRequest): Promise<any> {
     const dummyMapItemsNo = [
         {
@@ -139,24 +198,15 @@ async getAllMapItems(req?: SKUlistFilterRequest): Promise<any> {
             skus:[
                 {
                     skuId: 'SKU001',
-                     sizes:'L',
+                     sizes:'S',
                      sizeId:1,
                      destinations: 'Domestic',
                      colour: 'Red',
                      colourId:2, 
                      destinationId:1, 
                 },
-                {
-                    skuId: 'SKU002',
-                     sizes:'S',
-                     sizeId:1,
-                     destinations: 'Domestic',
-                     colour: 'White',
-                     colourId:1, 
-                     destinationId:1, 
-                },
+            
             ]
-
         },
         {
             itemsNo:'IT002',
@@ -175,7 +225,7 @@ async getAllMapItems(req?: SKUlistFilterRequest): Promise<any> {
                 {
                     skuId: 'SKU032',
                      sizes:'S',
-                     sizeId:1,
+                     sizeId:3,
                      destinations: 'Domestic',
                      colour: 'White',
                      colourId:1, 
@@ -191,7 +241,7 @@ async getAllMapItems(req?: SKUlistFilterRequest): Promise<any> {
                 {
                     skuId: 'SKU04',
                      sizes:'L',
-                     sizeId:2,
+                     sizeId:4,
                      destinations: 'Domestic',
                      colour: 'Brown',
                      colourId:3, 
@@ -200,7 +250,7 @@ async getAllMapItems(req?: SKUlistFilterRequest): Promise<any> {
                 {
                     skuId: 'SKU05',
                      sizes:'S',
-                     sizeId:1,
+                     sizeId:5,
                      destinations: 'India',
                      colour: 'White',
                      colourId:1, 
@@ -209,7 +259,7 @@ async getAllMapItems(req?: SKUlistFilterRequest): Promise<any> {
                 {
                     skuId: 'SKU06',
                      sizes:'XL',
-                     sizeId:2,
+                     sizeId:6,
                      destinations: 'Domestic',
                      colour: 'Black',
                      colourId:3, 
@@ -225,7 +275,7 @@ async getAllMapItems(req?: SKUlistFilterRequest): Promise<any> {
                 {
                     skuId: 'SKU07',
                      sizes:'L',
-                     sizeId:2,
+                     sizeId:7,
                      destinations: 'Domestic',
                      colour: 'Brown',
                      colourId:3, 
@@ -234,7 +284,7 @@ async getAllMapItems(req?: SKUlistFilterRequest): Promise<any> {
                 {
                     skuId: 'SKU08',
                      sizes:'XS',
-                     sizeId:1,
+                     sizeId:8,
                      destinations: 'India',
                      colour: 'White',
                      colourId:1, 
@@ -243,7 +293,7 @@ async getAllMapItems(req?: SKUlistFilterRequest): Promise<any> {
                 {
                     skuId: 'SKU09',
                      sizes:'XXL',
-                     sizeId:2,
+                     sizeId:9,
                      destinations: 'Usa',
                      colour: 'Pink',
                      colourId:3, 
@@ -252,15 +302,69 @@ async getAllMapItems(req?: SKUlistFilterRequest): Promise<any> {
                 {
                     skuId: 'SKU010',
                      sizes:'XXL',
-                     sizeId:2,
+                     sizeId:10,
                      destinations: 'Uk',
+                     colour: 'Cyan',
+                     colourId:3, 
+                     destinationId:1, 
+                },
+
+            ]
+
+        },
+        {
+            itemsNo:'IT005',
+            itemNoId:5,
+            skus:[
+                {
+                    skuId: 'SKU011',
+                     sizes:'L',
+                     sizeId:11,
+                     destinations: 'Domestic',
+                     colour: 'Brown',
+                     colourId:3, 
+                     destinationId:1, 
+                },
+                {
+                    skuId: 'SKU012',
+                     sizes:'XS',
+                     sizeId:12,
+                     destinations: 'India',
+                     colour: 'White',
+                     colourId:1, 
+                     destinationId:1, 
+                },
+                {
+                    skuId: 'SKU013',
+                     sizes:'XXL',
+                     sizeId:13,
+                     destinations: 'Usa',
                      colour: 'Pink',
                      colourId:3, 
                      destinationId:1, 
                 },
+                {
+                    skuId: 'SKU014',
+                     sizes:'XXL',
+                     sizeId:14,
+                     destinations: 'Uk',
+                     colour: 'Cyan',
+                     colourId:3, 
+                     destinationId:1, 
+                },
+                {
+                    skuId: 'SKU015',
+                     sizes:'XXL',
+                     sizeId:15,
+                     destinations: 'Uk',
+                     colour: 'Magenta',
+                     colourId:3, 
+                     destinationId:1, 
+                },
+                
             ]
 
-        }
+        },
 
 
     ]
