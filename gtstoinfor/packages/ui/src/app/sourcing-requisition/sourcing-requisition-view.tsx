@@ -12,6 +12,96 @@ export const SorcingRequisitionView = () => {
     const searchInput = useRef(null);
     const navigate = useNavigate()
 
+    const [data,setData] = useState<any[]>([
+      {
+          content:'content',
+          fabricType:'Cotton',
+          weave:'Plain Weave',
+          weigth:'100kg',
+          width:'100',
+          construction:'Cotton',
+          yarnCount:'100',
+          finish:'Cotton',
+          shrinkage:'Cotton',
+          color:'Blue',
+          pch:'Srinivas',
+          moq:'Cotton',
+          season:'Summer',
+          moqPrice:'100INR',
+          supplier:'Rajesh',
+          grnDate:'09-08-2023',
+          buyer:'Naidu',
+          xlNo:'24',
+          status:'Open'
+      },
+      {
+          content:'content',
+          fabricType:'Slik',
+          weave:'Plain Weave',
+          weigth:'200kg',
+          width:'100',
+          construction:'Cotton',
+          yarnCount:'100',
+          finish:'Cotton',
+          shrinkage:'Cotton',
+          color:'Green',
+          pch:'Srinivas',
+          moq:'Cotton',
+          season:'Spring',
+          moqPrice:'100INR',
+          supplier:'Rajesh',
+          grnDate:'09-08-2023',
+          buyer:'Naidu',
+          xlNo:'24',
+          status:'Open'
+
+      },
+      {
+          content:'content',
+          fabricType:'Wool',
+          weave:'Basket Weave',
+          weigth:'100kg',
+          width:'100',
+          construction:'Cotton',
+          yarnCount:'100',
+          finish:'Cotton',
+          shrinkage:'Cotton',
+          color:'Yellow',
+          pch:'Srinivas',
+          moq:'Cotton',
+          season:'Winter',
+          moqPrice:'100INR',
+          supplier:'Rajesh',
+          grnDate:'09-08-2023',
+          buyer:'Naidu',
+          xlNo:'24',
+          status:'Completed'
+
+      },
+      {
+          content:'content',
+          fabricType:'Cotton',
+          weave:'Checked Weave',
+          weigth:'250kg',
+          width:'100',
+          construction:'Cotton',
+          yarnCount:'100',
+          finish:'Cotton',
+          shrinkage:'Cotton',
+          color:'White',
+          pch:'Srinivas',
+          moq:'Cotton',
+          season:'Summer',
+          moqPrice:'100INR',
+          supplier:'Rajesh',
+          grnDate:'09-08-2023',
+          buyer:'Naidu',
+          xlNo:'24',
+          status:'Inprogress'
+
+      }
+  ])
+
 
     const getColumnSearchProps = (dataIndex:any): ColumnType<string> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -169,10 +259,14 @@ export const SorcingRequisitionView = () => {
             title:'XL No',
             dataIndex:'xlNo'
         },
+        {
+          title:'Status',
+          dataIndex:'status'
+        }
     ]
     return(
-        <Card title='Sourcing Requistion View' size='small' extra={<span><Button onClick={() => navigate('/sourcing-requisition')} type={'primary'}>New</Button></span>}>
-            <Table columns={columns} dataSource={[]} scroll={{ x: 'max-content' }}  pagination={{
+        <Card title='Sourcing Requistion View' style={{textAlign:'center'}}  size='small' extra={<span><Button onClick={() => navigate('/sourcing-requisition')} type={'primary'}>New</Button></span>}>
+            <Table columns={columns} dataSource={data} scroll={{ x: 'max-content' }}  pagination={{
                     onChange(current) {
                         setPage(current);
                     }
