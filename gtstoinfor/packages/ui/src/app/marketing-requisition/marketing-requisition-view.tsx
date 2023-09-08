@@ -34,8 +34,8 @@ export function MarketingReqGrid(props: MarketingReqProps) {
   const getAll = () => {
     Service.getAllMarketingReq().then(res => {
       if (res) {
+        setData(res);
         console.log(res,'lllllllll')
-        setData(res.data);
       } else {
         if (res.data) {
           setData([]);
@@ -256,32 +256,32 @@ export function MarketingReqGrid(props: MarketingReqProps) {
             },
           ],
       },
-    {
-      title: 'Status',
-      dataIndex: 'isActive',
-      render: (isActive, rowData) => (
-        <>
-          {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-        </>
-      ),
-      filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
+    // {
+    //   title: 'Status',
+    //   dataIndex: 'isActive',
+    //   render: (isActive, rowData) => (
+    //     <>
+    //       {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+    //     </>
+    //   ),
+    //   filterMultiple: false,
+    //   onFilter: (value, record) => 
+    //   {
+    //     // === is not work
+    //     return record.isActive === value;
+    //   },
+    //   filters: [
+    //     {
+    //       text: 'Active',
+    //       value: true,
+    //     },
+    //     {
+    //       text: 'InActive',
+    //       value: false,
+    //     },
+    //   ],
 
-    },
+    // },
     {
       title:`Action`,
       dataIndex: 'action',
@@ -331,12 +331,12 @@ export function MarketingReqGrid(props: MarketingReqProps) {
   }
   return (
     <Card title={<span >Marketing Requisition</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    style={{textAlign:'center'}}
     extra={<Link to='/marketing-requisition-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >
      <br></br>
-     <Row gutter={40}>
+     {/* <Row gutter={40}>
       
         <Col>
           <Card title={'Total ROSL Groups: ' + data.length} style={{ textAlign: 'left', width: 220, height: 41, backgroundColor: '#bfbfbf' }}></Card>
@@ -347,7 +347,7 @@ export function MarketingReqGrid(props: MarketingReqProps) {
         <Col>
           <Card title={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-          </Row>
+          </Row> */}
           <br></br>
           <Table
           size='small'
