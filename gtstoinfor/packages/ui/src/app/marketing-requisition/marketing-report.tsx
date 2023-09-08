@@ -361,7 +361,7 @@ const OnReset = () => {
                 </Row>
             </Form>
 
-            <Table columns={columns} dataSource={data1} scroll={{ x: 'max-content' }} pagination={{
+            <Table className='custom-table-wrapper' columns={columns} dataSource={data1} scroll={{ x: 'max-content' }} pagination={{
                     onChange(current) {
                         setPage(current);
                     }

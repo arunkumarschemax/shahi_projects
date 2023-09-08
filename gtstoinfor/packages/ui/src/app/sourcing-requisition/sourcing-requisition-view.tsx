@@ -294,7 +294,7 @@ export const SorcingRequisitionView = () => {
           </Col>
           </Row>
           <br></br>
-            <Table columns={columns} dataSource={data} scroll={{ x: 'max-content' }}  pagination={{
+            <Table className='custom-table-wrapper' columns={columns} dataSource={data} scroll={{ x: 'max-content' }}  pagination={{
                     onChange(current) {
                         setPage(current);
                     }

@@ -406,6 +406,7 @@ export function MarketingReqGrid(props: MarketingReqProps) {
           </Row>
           <br></br>
           <Table
+          className='custom-table-wrapper'
           size='small'
           rowKey={record => record.marketingReqId}
           columns={columnsSkelton}
