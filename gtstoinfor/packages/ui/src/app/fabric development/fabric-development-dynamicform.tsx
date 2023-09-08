@@ -1,4 +1,4 @@
-import { Button, Card, Col, Divider, Form, FormInstance, Input, Popconfirm, Row, Select, Table, Tooltip, Upload } from 'antd'
+import { Button, Card, Col, Divider, Form, FormInstance, Input, Popconfirm, Row, Select, Table, Tooltip, Upload, UploadProps, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import M3Items from './m3-model'
 import { DeleteOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons'
@@ -29,9 +29,49 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
   const [garmentQuantity,setGarmentQuantity] = useState<any>()
   const [consumptionData,setConsumptionData] = useState<any>()
   const [wastageData,setWastageData] = useState<any>()
+  const [pollutionFilelist,setPollutionFilelist] = useState<any[]>([]);
 
 
 
+  const fileuploadFieldProps: UploadProps = {
+    multiple: false,
+    onRemove: (file:any) => {
+        setPollutionFilelist([]);
+      // uploadFileList([]);
+    },
+    beforeUpload: (file: any) => {
+      if (!file.name.match(/\.(jpg|jpeg|png)$/)) {
+        message.error("Only pdf and image files are allowed!");
+        return true;
+      }
+      var reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onload = data => {
+        if (pollutionFilelist.length === 1) {
+          message.error("You Cannot Upload More Than One File At A Time");
+          return true;
+        } else {
+            setPollutionFilelist([...pollutionFilelist, file]);
+          // uploadFileList([...filelist, file]);
+
+          return false;
+        }
+      };
+
+      // Add a default return value for cases where none of the conditions are met
+      return false;
+    },
+    progress: {
+      strokeColor: {
+        '0%': '#108ee9',
+        '100%': '#87d068',
+      },
+      strokeWidth: 3,
+      format: (percent:any) => `${parseFloat(percent.toFixed(2))}%`,
+    },
+    fileList: pollutionFilelist
+  };
+  console.log(pollutionFilelist,'-----------AAAAAA')
 
 
 
@@ -370,7 +410,8 @@ const getAllUoms = () => {
                 label="File"
                 name="file"
               >
-              <Upload>
+                
+              <Upload {...fileuploadFieldProps}  accept='.jpeg,.png,.jpg'>
              <Button icon={<UploadOutlined />}>
               Choose File
              </Button>

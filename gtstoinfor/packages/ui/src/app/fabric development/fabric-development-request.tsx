@@ -13,12 +13,9 @@ import React, { useEffect, useState } from "react";
 import FabricDevelopmentTabs from "./fabric-development-tabs";
 import { BuyersService, EmployeeDetailsService, FabricTypeService, LocationsService, ProfitControlHeadService } from "@project-management-system/shared-services";
 import AlertMessages from "../common/common-functions/alert-messages";
+import FabricDevelopmentRequestQuality from "./fabric-development-quality-request";
 
-// const forms = []
-// for (let i= 0 ;i <10 ; i++ ){
-//   forms[i]= Form.useForm();
-   
-//  }
+
 
 
 export const FabricDevelopmentRequest = () => {
@@ -38,6 +35,11 @@ export const FabricDevelopmentRequest = () => {
     const fabrictypeservice = new FabricTypeService();
     const empDetailsservice = new EmployeeDetailsService();
     const locationservice = new LocationsService();
+
+
+    const itemsInfo = (data) => {
+    console.log(data)
+  }
 
    
     useEffect (()=>{
@@ -366,8 +368,11 @@ console.log(locationData,"143")
               </Form.Item>
             </Col> */}
           </Row>
-          <div>
+          {/* <div>
             <FabricDevelopmentTabs key="1" />
+          </div> */}
+          <div>
+            <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo} />
           </div>
         </Card>
 
