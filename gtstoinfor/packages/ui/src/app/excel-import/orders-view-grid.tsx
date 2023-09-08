@@ -126,7 +126,7 @@ const AllOrdersGridView = () => {
               console.log(res);
               setTimeout(() => {
                 const response = {
-                    file:config.download_path+`${res}`
+                    file:config.importdownloadPath+`${res}`
                 // file:'https://edoc7api.shahi.co.in/api/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'+`${res}`,
                     // filee: 'http://165.22.220.143/document-management/gtstoinfor/dist/packages/services/document-management/upload-files/'+`${res}`
                 };
