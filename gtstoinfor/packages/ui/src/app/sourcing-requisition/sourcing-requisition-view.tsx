@@ -282,13 +282,13 @@ export const SorcingRequisitionView = () => {
           <Card title={'Total : ' + data.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
-           <Card title={'Open: ' + data.filter(el => el.status === 'Open').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'cyan'}}></Card>
+           <Card title={'Open: ' + data.filter(el => el.status === 'OPEN').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'cyan'}}></Card>
           </Col>
           <Col>
-           <Card title={'Inprogress :' + data.filter(el => el.status == 'Inprogress').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'yellow'}}></Card>
+           <Card title={'Inprogress :' + data.filter(el => el.status == 'INPROGRESS').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'yellow'}}></Card>
           </Col>
           <Col>
-           <Card title={'Completed :' + data.filter(el => el.status == 'Completed').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+           <Card title={'Completed :' + data.filter(el => el.status == 'COMPLETED').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
           </Col>
           </Row>
           <br></br>
