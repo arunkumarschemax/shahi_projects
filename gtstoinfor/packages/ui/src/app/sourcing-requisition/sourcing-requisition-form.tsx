@@ -105,7 +105,7 @@ export const SourcingRequisitionForm = () => {
                                 )
                             })}
                         </Select>
-                        <Input placeholder="Enter Weave"/>
+                        {/* <Input placeholder="Enter Weave"/> */}
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
