@@ -1,4 +1,4 @@
-import { BuyersService, ColourService, ProfitControlHeadService, VendorsService } from "@project-management-system/shared-services";
+import { BuyersService, ColourService, FabricWeaveService, ProfitControlHeadService, VendorsService } from "@project-management-system/shared-services";
 import { Card, Col, Row ,Form, Select, Input, Button, DatePicker} from "antd"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,12 +17,15 @@ export const SourcingRequisitionForm = () => {
     const buyerService = new BuyersService()
     const [buyer,setBuyer] = useState<any[]>([])
     const navigate = useNavigate()
+    const weaveService = new FabricWeaveService()
+    const [weave,setWeave] = useState<any[]>([])
 
     useEffect(()=>{
         getColor()
         getPCH()
         getSupplier()
         getBuyer()
+        getweave()
     },[])
 
     const getColor = () => {
@@ -57,6 +60,14 @@ export const SourcingRequisitionForm = () => {
         })
     }
 
+    const getweave = () => {
+        weaveService.getAllActiveFabricWeave().then(res =>{
+            if(res.status) {
+                setWeave(res.data)
+            }
+        })
+    }
+
     const onReset = () => {
         form.resetFields();
     };
@@ -75,9 +86,8 @@ export const SourcingRequisitionForm = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='content' label='Content' rules={[{required:true,message:'Content is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Content'>
-                            <Option key='content' value='content'>
-                                Content
-                            </Option>
+                        <Option key='naturalFabrics' value='naturalFabrics'>Natural Fabrics</Option>
+                            <Option key='manufacturedFabrics' value='manufacturedFabrics'>Manufactured Fabrics</Option>
                         </Select>
                     </Form.Item>
                     </Col>
@@ -88,11 +98,13 @@ export const SourcingRequisitionForm = () => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='weave' label='Weave'  rules={[{required:true,message:'Weave is required'}]}>
-                        {/* <Select showSearch allowClear optionFilterProp="children">
-                            <Option key='content' value='content'>
-                                Content
-                            </Option>
-                        </Select> */}
+                        <Select showSearch allowClear optionFilterProp="children">
+                        {weave.map(e => {
+                                return(
+                                    <Option key={e.colourId} value={e.colourId}> {e.colour}</Option>
+                                )
+                            })}
+                        </Select>
                         <Input placeholder="Enter Weave"/>
                     </Form.Item>
                     </Col>
@@ -104,8 +116,8 @@ export const SourcingRequisitionForm = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item name='weightUnit'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            <Option key='content' value='content'>
-                                Content
+                            <Option key='kg' value='kg'>
+                                Kg
                             </Option>
                         </Select>
                     </Form.Item>
@@ -128,9 +140,8 @@ export const SourcingRequisitionForm = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item name='yarnUnit'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            <Option key='content' value='content'>
-                                Content
-                            </Option>
+                            <Option key='tex' value='tex'>TEX</Option>
+
                         </Select>
                     </Form.Item>
                     </Col>
@@ -185,8 +196,8 @@ export const SourcingRequisitionForm = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item name='moqUnit'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            <Option key='content' value='content'>
-                                Content
+                            <Option key='pieces' value='pieces'>
+                                Pieces
                             </Option>
                         </Select>
                     </Form.Item>
@@ -210,8 +221,8 @@ export const SourcingRequisitionForm = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
                     <Form.Item name='moqPriceUnit'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
-                            <Option key='content' value='content'>
-                                Content
+                            <Option key='inr' value='inr'>
+                                INR
                             </Option>
                         </Select>
                     </Form.Item>
