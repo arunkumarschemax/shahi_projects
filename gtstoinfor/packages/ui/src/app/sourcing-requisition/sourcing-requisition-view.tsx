@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Input, Table } from "antd"
+import { Button, Card, Col, Input, Row, Table } from "antd"
 import { ColumnProps, ColumnType } from "antd/es/table"
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
@@ -266,6 +266,21 @@ export const SorcingRequisitionView = () => {
     ]
     return(
         <Card title='Sourcing Requistion View' style={{textAlign:'center'}}  size='small' extra={<span><Button onClick={() => navigate('/sourcing-requisition')} type={'primary'}>New</Button></span>}>
+              <Row gutter={40} >
+      <Col>
+          <Card title={'Total : ' + data.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          </Col>
+          <Col>
+           <Card title={'Open: ' + data.filter(el => el.status === 'Open').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'cyan'}}></Card>
+          </Col>
+          <Col>
+           <Card title={'Inprogress :' + data.filter(el => el.status == 'Inprogress').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'yellow'}}></Card>
+          </Col>
+          <Col>
+           <Card title={'Completed :' + data.filter(el => el.status == 'Completed').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          </Col>
+          </Row>
+          <br></br>
             <Table columns={columns} dataSource={data} scroll={{ x: 'max-content' }}  pagination={{
                     onChange(current) {
                         setPage(current);
