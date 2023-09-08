@@ -9,7 +9,7 @@ import Highlighter from 'react-highlight-words';
 
 export function OrderAcceptance() {
     const [page, setPage] = React.useState(1);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
     const [data, setData] = useState<any[]>([])
     const [searchedColumn, setSearchedColumn] = useState('');
     const [form] = Form.useForm();
@@ -121,35 +121,35 @@ export function OrderAcceptance() {
 
     const getProductCode = () => {
         service.getPpmProductCodeForOrderCreation().then(res => {
-          setProductCode(res.data)
+            setProductCode(res.data)
         })
-      }
-      const getPoLine = () => {
+    }
+    const getPoLine = () => {
         service.getPpmPoLineForOrderCreation().then(res => {
-          setPoLine(res.data)
+            setPoLine(res.data)
         })
-      }
-      const onReset = () => {
+    }
+    const onReset = () => {
         form.resetFields()
         getOrderAcceptanceData()
-      }
-  const getOrderAcceptanceData = () => {
-         const req = new nikeFilterRequest();
-    if (form.getFieldValue('documentDate') !== undefined) {
-      req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
     }
-    if (form.getFieldValue('documentDate') !== undefined) {
-      req.documentEndDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
-    }
-    if (form.getFieldValue('productCode') !== undefined) {
-      req.productCode = form.getFieldValue('productCode');
-    }
-    if (form.getFieldValue('poandLine') !== undefined) {
-      req.poandLine = form.getFieldValue('poandLine');
-    }
-    if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
-        req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
-      }
+    const getOrderAcceptanceData = () => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('documentDate') !== undefined) {
+            req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('documentDate') !== undefined) {
+            req.documentEndDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('productCode') !== undefined) {
+            req.productCode = form.getFieldValue('productCode');
+        }
+        if (form.getFieldValue('poandLine') !== undefined) {
+            req.poandLine = form.getFieldValue('poandLine');
+        }
+        if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
+            req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
+        }
         service.getOrderAcceptanceData1(req).then((res) => {
             if (res.data) {
                 setData(res.data)
@@ -158,8 +158,8 @@ export function OrderAcceptance() {
             } else (
                 message.error(res.internalMessage)
             )
-        })        
-        console.log(data,"reqqqqqqqqqqqqqqqqqqqqqqqqqqq")
+        })
+        console.log(data, "reqqqqqqqqqqqqqqqqqqqqqqqqqqq")
 
     }
 
@@ -178,7 +178,7 @@ export function OrderAcceptance() {
         })
     }
 
-  
+
 
     const columns: any = [
         {
@@ -186,26 +186,26 @@ export function OrderAcceptance() {
             key: "sno",
             responsive: ["sm"],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-            fixed:'left'
+            fixed: 'left'
         },
         {
             title: 'PO Number + Line',
             dataIndex: 'po_and_line',
-            fixed:'left',
-           // ...getColumnSearchProps('purchaseOrderNumber')
+            fixed: 'left',
+            // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('YYYY-MM-DD'),
-           
+
         },
-       
+
         {
             title: 'Plant Name',
             dataIndex: 'plant_name'
         },
-       
+
         {
             title: 'Purchase Group Name',
             dataIndex: 'purchase_group_name'
@@ -260,11 +260,11 @@ export function OrderAcceptance() {
                     form={form}
                     layout='vertical'>
                     <Row gutter={24}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >
-                      <Form.Item label="Document Date" name="documentDate">
-                         <RangePicker />
-                        </Form.Item>
-                         </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >
+                            <Form.Item label="Document Date" name="documentDate">
+                                <RangePicker />
+                            </Form.Item>
+                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
                             <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
                                 <Select
@@ -279,45 +279,45 @@ export function OrderAcceptance() {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-              <Form.Item name='productCode' label='Product Code' >
-                <Select
-                  showSearch
-                  placeholder="Select Product Code"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {productCode.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
-                  })
-                  }
-                       </Select>
-                       </Form.Item>
-                         </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-                  <Form.Item name='poandLine' label='Po+Line' >
-                <Select
-                  showSearch
-                  placeholder="Select Po+Line"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {poLine.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop:40, }} >
+                            <Form.Item name='productCode' label='Product Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Product Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {productCode.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
+                            <Form.Item name='poandLine' label='Po+Line' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Po+Line"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {poLine.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 40, }} >
                             <Form.Item>
                                 <Button htmlType="submit"
                                     icon={<SearchOutlined />}
                                     type="primary">SEARCH</Button>
-                          
-                                  <Button style={{ marginLeft:8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
 
-                                  
-                                
+                                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
+
+
+
                             </Form.Item>
                         </Col>
                     </Row>
@@ -335,10 +335,9 @@ export function OrderAcceptance() {
                     dataSource={filterData.length > 0 ? filterData : data}
                     bordered
                     pagination={{
-                        current: currentPage,
-                        pageSize: pageSize,
-                        onChange: (page) => {
-                            setCurrentPage(page);
+                        onChange(current, pageSize) {
+                            setPage(current);
+                            setPageSize(pageSize);
                         },
                     }}
                 >

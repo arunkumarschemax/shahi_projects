@@ -37,14 +37,14 @@ export class DpomController {
         }
     }
 
-    @Post('/getCRMOrderDetails')
-    async getCRMOrderDetails() {
-        try {
-            return await this.dpomService.getCRMOrderDetails()
-        } catch (error) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
-        }
-    }
+    // @Post('/getCRMOrderDetails')
+    // async getCRMOrderDetails() {
+    //     try {
+    //         return await this.dpomService.getCRMOrderDetails()
+    //     } catch (error) {
+    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+    //     }
+    // }
 
     @Post('/saveDPOMDataToDataBase')
     async saveDPOMDataToDataBase() {
@@ -204,7 +204,7 @@ export class DpomController {
 
     @Post('/getOrderAcceptanceData')
     @ApiBody({ type: nikeFilterRequest })
-    async getOrderAcceptanceData(@Body() req:any): Promise<CommonResponseModel> {
+    async getOrderAcceptanceData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getOrderAcceptanceData(req);
         } catch (err) {
@@ -249,7 +249,7 @@ export class DpomController {
     }
 
     @Post('/getTotalItemQtyChangeData')
-    async getTotalItemQtyChangeData(@Body () req:nikeFilterRequest): Promise<CommonResponseModel> {
+    async getTotalItemQtyChangeData(@Body() req: nikeFilterRequest): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getTotalItemQtyChangeData(req);
         } catch (err) {
@@ -644,7 +644,7 @@ export class DpomController {
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
-    } 
+    }
     // @Post('/getPpmPoLineForPo')
     // async getPpmPoLineForPo(): Promise<CommonResponseModel> {
     //     try {
