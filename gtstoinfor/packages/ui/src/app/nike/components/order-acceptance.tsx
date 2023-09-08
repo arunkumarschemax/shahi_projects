@@ -334,6 +334,7 @@ export function OrderAcceptance() {
                     columns={columns}
                     dataSource={filterData.length > 0 ? filterData : data}
                     bordered
+                    className="custom-table-wrapper"
                     pagination={{
                         onChange(current, pageSize) {
                             setPage(current);
