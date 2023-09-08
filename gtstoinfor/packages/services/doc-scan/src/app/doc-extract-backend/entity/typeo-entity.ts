@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity,OneToMany,PrimaryGeneratedColumn } from 'typeorm';
 @Entity('Innvoice')
 export class ScanEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
@@ -8,8 +8,8 @@ export class ScanEntity extends BaseEntity {
 
   @Column("varchar", {
     name: "file_name"
-  })
-  fileName: string;
+    })
+    fileName: string;
   
   @Column("varchar", {
     name: "file_path"
@@ -19,107 +19,25 @@ export class ScanEntity extends BaseEntity {
   @Column('varchar', {
     nullable: false,
     length: 50,
-    name: 'Gst',
+    name: 'GST',
   })
-  Gst: string;
+  GST: string;
 
   @Column('varchar', {
     nullable: false,
     length: 50,
-    name: 'Ifsc',
+    name: 'Vendor',
   })
-  Ifsc: string;
+  Vendor: string;
 
-  // @Column('varchar', {
-  //   nullable: false,
-  //   length: 50,
-  //   name: 'po_type',
-  // })
-  // PoType: string;
+  
 
   @Column('varchar', {
     nullable: false,
     length: 50,
-    name: 'Innvoice',
+    name: 'invoiceDate',
   })
-  Innvoice: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'Customer',
-  })
-  Customer: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'Packages',
-  })
-  Packages: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'Volume',
-  })
-  Volume: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'Weight',
-  })
-  Weight: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'Chargeable',
-  })
-  Chargeable: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'Date',
-  })
-  Date: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'Cartons',
-  })
-  Cartons: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'Console',
-  })
-  Console: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'PO',
-  })
-  PO: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'Payref',
-  })
-  Payref: string;
-
-  @Column('varchar', {
-    nullable: false,
-    length: 50,
-    name: 'Quantity',
-  })
-  Quantity: string;
+  invoiceDate: string;
 
   @Column('varchar', {
     nullable: false,
@@ -131,25 +49,37 @@ export class ScanEntity extends BaseEntity {
   @Column('varchar', {
     nullable: false,
     length: 50,
-    name: 'Currency',
+    name: 'Cgst',
   })
-  Currency: string;
+  Cgst: string;
 
   @Column('varchar', {
     nullable: false,
     length: 50,
-    name: 'Origin',
+    name: 'IGST',
   })
-  Origin: string;
+  IGST: string;
 
   @Column('varchar', {
     nullable: false,
     length: 50,
-    name: 'Destination',
+    name: 'Sgst',
   })
-  Destination: string;
+  Sgst: string;
+
+  @Column('varchar', {
+    nullable: false,
+    length: 50,
+    name: 'InnvoiceAmount',
+  })
+  InnvoiceAmount: string;
 
 
-  versionFlag: number;
-  isActive: boolean;
+  @Column('varchar', {
+    nullable: false,
+    length: 50,
+    name: 'InnvoiceCurrency',
+  })
+  InnvoiceCurrency: string;
+
 }
