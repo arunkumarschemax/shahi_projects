@@ -175,8 +175,7 @@ export class DpomService {
     }
 
 
-    async getCRMOrderDetails(): Promise<CommonResponseModel> {
-        const buyerPO = 'DV3934'
+    async getCRMOrderDetails(buyerPO: string): Promise<CommonResponseModel> {
         const data = await AppDataSource1.query(`select * from movex.nike_co_view where byuer_po = '${buyerPO}'`)
         if (data.length) {
             return new CommonResponseModel(true, 1, 'data retrived', data)
@@ -209,10 +208,12 @@ export class DpomService {
         try {
             await transactionManager.startTransaction()
             const orderDetails = await this.getDPOMOrderDetails();
-            // const CRMData = this.getCRMOrderDetails('DV3934');
-            // const CRMData1 = this.getCRMOrderDetails1('476F');
-            // const CRMData2 = this.getCRMOrderDetails2('2000601403')
+            const CRMData = this.getCRMOrderDetails('DV3934');
+            const CRMData1 = this.getCRMOrderDetails1('476F');
+            const CRMData2 = this.getCRMOrderDetails2('2000601403')
             // console.log(CRMData)
+            // console.log(CRMData1)
+            // console.log(CRMData2)
             if (!orderDetails.status) return new CommonResponseModel(false, 0, orderDetails.error)
             const flag = new Set();
             const pdfData = {
