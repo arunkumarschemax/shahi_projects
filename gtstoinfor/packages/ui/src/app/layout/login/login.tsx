@@ -25,6 +25,10 @@ export default function Login() {
 
   const onLogin = () => {
     console.log("login called");
+    console.log(loginForm.getFieldsValue())
+    localStorage.setItem('userName',loginForm.getFieldsValue().username)
+    console.log(localStorage.getItem('userName'))
+
     // loginForm.validateFields().then((values) => {
     //     console.log(values)
     //     const loginDto = new LoginDto(values.username,values.password)
