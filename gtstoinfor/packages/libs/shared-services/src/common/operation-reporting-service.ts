@@ -1,0 +1,44 @@
+import { OperationReportingRequest, OperationReportingResponseModel, TabNameReq } from "@project-management-system/shared-models";
+import { CommonAxiosService } from "../common-axios-service-prs";
+
+export class OperationReportingService extends CommonAxiosService{
+  URL = "/operationReporting";
+
+  async createOperationReporting(req: OperationReportingRequest): Promise<OperationReportingResponseModel> {
+    return this.axiosPostCall(this.URL + "/createOperationReporting", req)
+  }
+
+  async getOperationReportingData(req:TabNameReq): Promise<OperationReportingResponseModel> {
+    // return this.axiosPostCall(this.URL + "/getOperationReportingData", req)
+    if(req.tabName == 'Cutting'){
+      return({status: true, errorCode: 11208, internalMessage: "success",
+      data:[{'jobNumber' : 'J001','skuCode' : 'S001','poNumber' : 'P001','issuedQuantity' : 500},
+      {'jobNumber' : 'J002','skuCode' : 'S002','poNumber' : 'P002','issuedQuantity' : 600},
+      {'jobNumber' : 'J003','skuCode' : 'S003','poNumber' : 'P003','issuedQuantity' : 1000},
+      // {'jobNumber' : 'J004','skuCode' : 'S004','poNumber' : 'P004','issuedQuantity' : 200},
+      // {'jobNumber' : 'J005','skuCode' : 'S005','poNumber' : 'P005','issuedQuantity' : 400},
+      // {'jobNumber' : 'J006','skuCode' : 'S006','poNumber' : 'P006','issuedQuantity' : 300},
+      ]})
+    } 
+    else if(req.tabName == 'Sewing Body'){
+      return({status: true, errorCode: 11208, internalMessage: "success",
+      data:[
+      {'jobNumber' : 'J004','skuCode' : 'S004','poNumber' : 'P004','issuedQuantity' : 200},
+      {'jobNumber' : 'J005','skuCode' : 'S005','poNumber' : 'P005','issuedQuantity' : 400},
+      {'jobNumber' : 'J006','skuCode' : 'S006','poNumber' : 'P006','issuedQuantity' : 300},
+      ]})
+    } else if(req.tabName == 'Sewing Hands'){
+      return({status: true, errorCode: 11208, internalMessage: "success",
+      data:[
+      {'jobNumber' : 'J004','skuCode' : 'S004','poNumber' : 'P004','issuedQuantity' : 200},
+      {'jobNumber' : 'J007','skuCode' : 'S005','poNumber' : 'P005','issuedQuantity' : 400},
+      {'jobNumber' : 'J009','skuCode' : 'S006','poNumber' : 'P006','issuedQuantity' : 300},
+      ]})
+    }
+    else{
+      return({status: false, errorCode: 11208, internalMessage: "error",
+      })
+    }
+  }
+
+}

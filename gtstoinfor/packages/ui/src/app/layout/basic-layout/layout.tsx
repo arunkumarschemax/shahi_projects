@@ -389,6 +389,22 @@ export const baseRouterList = [
 
     },
     {
+        label: "Fabric Development",
+        key: "fabricdevelopment",
+        icon:<FontAwesomeIcon icon={faShirt} />,
+        path: "fabricdevelopment",
+        filepath: "fabricdevelopment",
+        children:[
+
+            {
+                label: "Fabic Development Request",
+                key: "Fabricdevelopmentrequest",
+                path: "FabricDevelopmentrequest/Fabric-Development-Request",
+                filepath: "FabricDevelopmentrequest/Fabric-Development-Request",
+            },
+        ]
+    },
+    {
         label: "Sample Development",
         key: "sample-development",
         path: "sample-development",
@@ -408,22 +424,7 @@ export const baseRouterList = [
             }
         ]
     },
-    {
-        label: "Fabric Development",
-        key: "fabricdevelopment",
-        icon:<FontAwesomeIcon icon={faShirt} />,
-        path: "fabricdevelopment",
-        filepath: "fabricdevelopment",
-        children:[
-
-            {
-                label: "Fabic Development Request",
-                key: "Fabricdevelopmentrequest",
-                path: "FabricDevelopmentrequest/Fabric-Development-Request",
-                filepath: "FabricDevelopmentrequest/Fabric-Development-Request",
-            },
-        ]
-    },
+   
     {
         label: "Material Creation",
         key: "materialCreation",
@@ -437,19 +438,6 @@ export const baseRouterList = [
                 key: "item-creation",
                 path: "item-creation",
                 filepath: "item-creation",
-            },
-            
-            {
-                label: "SKU Generation",
-                key: "sku-mapping",
-                path: "sku-mapping",
-                filepath: "sku-mapping",
-            },
-            {
-                label: "SKU List",
-                key: "sku-list",
-                path: "sku-list",
-                filepath: "sku-list",
             },
             {
                 label: "Fabric Creation",
@@ -465,10 +453,28 @@ export const baseRouterList = [
                 filepath: "bomtrimcreation/bom-trim-creation",
             },
             {
+                label: "SKU Generation",
+                key: "sku-mapping",
+                path: "sku-mapping",
+                filepath: "sku-mapping",
+            },
+            {
+                label: "SKU List",
+                key: "sku-list",
+                path: "sku-list",
+                filepath: "sku-list",
+            },
+            {
                 label: "Operation Sequence",
                 key: "operation-sequence",
                 path: "operation-sequence",
                 filepath: "operation-sequence",
+            },
+            {
+                label: "Operation Reporting",
+                key: "operation-reporting",
+                path: "operation-reporting",
+                filepath: "operation-reporting",
             },
         ]
     },

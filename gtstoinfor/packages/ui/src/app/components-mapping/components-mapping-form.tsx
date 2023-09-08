@@ -106,14 +106,15 @@ export const ComponentsMappingForm = () => {
 
     const onStyleChange = (val,option) => {
         setStyle(option?.key)
-        const updateImage ='http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/'+option?.styleName
+        console.log(option)
+        const updateImage =config.upload_file_path +option?.styleName
         setStyleImg(updateImage)
-//         setStyleImg([{
-//             name:option?.styleName,
-//             status:'done',
-//             url: config.upload_file_path + option?.styleFilepath,
-// }])
-
+        console.log(config.upload_file_path)
+        // setStyleImg([{
+        //     name:option?.styleName,
+        //     status:'done',
+        //     url: config.upload_file_path + option.styleName,
+        // }])
     }
 
     const onGarmentCategoryChange = (val,option) => {
@@ -149,7 +150,7 @@ export const ComponentsMappingForm = () => {
                             {
                                 styleInfo.map((e) => {
                                     return(
-                                        <Option key={e.style} value={e.styleId} styleName={e.styleFileName} stylePath={e.styleFilepath}>{e.style}--{e.description}</Option>
+                                        <Option key={e.style} value={e.styleId} styleName={e.styleFileName} stylePath={e.styleFilePath}>{e.style}--{e.description}</Option>
                                     )
                                 })
                             }
