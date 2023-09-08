@@ -21,14 +21,14 @@ export const baseRouterList = [
         label: "Dashboard",
         key: "dashboard",
         path: "dashboard",
-        icon: <DashboardOutlined />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>📶</div>,
         filepath: "/dashboard.tsx",
     },
     {
         label: "User Management",
         key: "user-management",
         path: "user-management",
-        icon:<FontAwesomeIcon icon={faPeopleRoof} />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>👨‍💻</div>,
 
         filepath: "../",
         children: [
@@ -53,7 +53,8 @@ export const baseRouterList = [
         key:'global',
         path:'global',
         filepath:'global',
-         icon:<FontAwesomeIcon icon={faGlobe} />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>🌎</div>,
+
         children:[
             {
                 label: "Factories",
@@ -174,7 +175,7 @@ export const baseRouterList = [
         label: "Masters",
         key: "masters",
         path: "masters",
-        icon: <FontAwesomeIcon icon={faLayerGroup} />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>🎓</div>,
         filepath: "masters",
         children: [
             {
@@ -354,7 +355,7 @@ export const baseRouterList = [
     {
         label: "Settings",
         key: "settings",
-        icon:<FontAwesomeIcon icon={faGears} />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>⚙️</div>,
         path: "settings",
         filepath: "settings",
         children:[
@@ -373,10 +374,10 @@ export const baseRouterList = [
         ]
     },
     {
-        label: "       Style Management",
+        label: "Style Management",
         key: "style-management",
         path: "style-management",
-        icon: <FontAwesomeIcon icon={faHatCowboy} />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>👗</div>,
          filepath: "style-management",
         children: [
             {
@@ -398,7 +399,7 @@ export const baseRouterList = [
     {
         label: "Fabric Development",
         key: "fabricdevelopment",
-        icon:<FontAwesomeIcon icon={faShirt} />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>🥻</div>,
         path: "fabricdevelopment",
         filepath: "fabricdevelopment",
         children:[
@@ -436,7 +437,7 @@ export const baseRouterList = [
     {
         label: "Material Creation",
         key: "materialCreation",
-        icon: <FontAwesomeIcon icon={faShoppingCart} />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>🧵</div>,
         path: "materialCreation",
         filepath: "materialCreation",
         children:[
