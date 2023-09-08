@@ -21,9 +21,9 @@ export const baseMRouterList = [
     {
         label: "Marketing Requisition",
         key: "marketing-requisition",
-        path: "marketing-requisition-form",
+        path: "marketing-requisition-view",
         // icon: <DashboardOutlined />,
-        filepath: "marketing-requisition-form",
+        filepath: "marketing-requisition-view",
     },
     {
         label: "Marketing Requisition Report",

@@ -167,16 +167,16 @@ const OnReset = () => {
             title: 'Trim Type',
             dataIndex: 'trimType',
             // responsive: ['lg'],
-            sorter: (a, b) => a.trimType.localeCompare(b.trimType),
-            sortDirections: ['descend', 'ascend'],
+            // sorter: (a, b) => a.trimType.localeCompare(b.trimType),
+            // sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('trimType')
           },
           {
             title: 'Trim Code',
             dataIndex: 'trimCode',
             // responsive: ['lg'],
-            sorter: (a, b) => a.trimCode.localeCompare(b.trimCode),
-            sortDirections: ['descend', 'ascend'],
+            // sorter: (a, b) => a.trimCode.localeCompare(b.trimCode),
+            // sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('trimCode')
           },
           {
@@ -191,24 +191,24 @@ const OnReset = () => {
             title: 'Size',
             dataIndex: 'size',
             // responsive: ['lg'],
-            sorter: (a, b) => a.size.localeCompare(b.size),
-            sortDirections: ['descend', 'ascend'],
+            // sorter: (a, b) => a.size.localeCompare(b.size),
+            // sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('size')
           },
           {
             title: 'Color',
             dataIndex: 'color',
             // responsive: ['lg'],
-            sorter: (a, b) => a.color.localeCompare(b.color),
-            sortDirections: ['descend', 'ascend'],
+            // sorter: (a, b) => a.color.localeCompare(b.color),
+            // sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('color')
           },
           {
             title: 'Quantity',
             dataIndex: 'quantity',
             // responsive: ['lg'],
-            sorter: (a, b) => a.quantity.localeCompare(b.quantity),
-            sortDirections: ['descend', 'ascend'],
+            // sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+            // sortDirections: ['descend', 'ascend'],
           //   ...getColumnSearchProps('quantity')
           },
           {
