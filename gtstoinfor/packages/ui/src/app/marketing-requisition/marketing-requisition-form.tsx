@@ -84,7 +84,6 @@ export function MarketingReqForm(props: MarketingReqFormProps) {
     <Card
       title={<span>Marketing Requisition</span>}
       style={{ textAlign: "center" }}
-      headStyle={{ border: 0 }}
       extra={
         props.isUpdate == true ? (
           ""

@@ -38,6 +38,12 @@ export const baseRouterList = [
         // icon: <DashboardOutlined />,
         filepath: "marketing-requisition-form",
     },
+    {
+        label: "Marketing Requisition Report",
+        key: "marketing-requisition",
+        path: "marketing-requisition-report",
+        filepath: "marketing-requisition-report",
+    },
     // {
     //     label: "User Management",
     //     key: "user-management",

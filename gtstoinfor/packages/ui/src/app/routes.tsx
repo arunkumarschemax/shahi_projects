@@ -126,6 +126,7 @@ import MarketingReqGrid from "./marketing-requisition/marketing-requisition-view
 import SourcingRequisitionForm from "./sourcing-requisition/sourcing-requisition-form"
 import SourcingRequisitionView from "./sourcing-requisition/sourcing-requisition-view"
 import SourcingRequisitionReport from "./sourcing-requisition/sourcing-requisition-report"
+import MarketingReqReport from "./marketing-requisition/marketing-report"
 
 
 export const AppRoutes = () => {
@@ -500,6 +501,7 @@ export const AppRoutes = () => {
                 update={(undefined) => { }}
                 />}/>
                 <Route path='marketing-requisition-view' element={<MarketingReqGrid/>} />
+                <Route path='marketing-requisition-report' element={<MarketingReqReport/>} />
                     <Route path='/sourcing-requisition' element={<SourcingRequisitionForm/>}/>
                     <Route path='/sourcing-requisition-view' element={<SourcingRequisitionView/>}/>
                     <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
