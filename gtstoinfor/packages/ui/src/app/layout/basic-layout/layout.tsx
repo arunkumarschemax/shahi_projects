@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
 import { UserOutlined, DashboardOutlined, PicCenterOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
@@ -16,7 +16,19 @@ const { useToken } = theme
 
 
 
+export const baseMRouterList = [
+    
+    {
+        label: "Marketing Requisition",
+        key: "marketing-requisition",
+        path: "marketing-requisition-form",
+        // icon: <DashboardOutlined />,
+        filepath: "marketing-requisition-form",
+    },
+]
+
 export const baseRouterList = [
+    
     {
         label: "Sourcing Requisition",
         key: "sourcingRequisition",
@@ -31,13 +43,13 @@ export const baseRouterList = [
         // icon: <DashboardOutlined />,
         filepath: "/sourcing-requisition-report",
     },
-    {
-        label: "Marketing Requisition",
-        key: "marketingRequisition",
-        path: "marketingRequisition",
-        // icon: <DashboardOutlined />,
-        filepath: "/marketingRequisition",
-    },
+    // {
+    //     label: "Marketing Requisition",
+    //     key: "marketing-requisition",
+    //     path: "marketing-requisition-form",
+    //     // icon: <DashboardOutlined />,
+    //     filepath: "marketing-requisition-form",
+    // },
     // {
     //     label: "User Management",
     //     key: "user-management",
@@ -571,7 +583,9 @@ export default function BasicLayout() {
     const navigate = useNavigate();
     const [settings, setSettings] = useState<any>({ colorPrimary: '1890ff', fixedHeader: true })
     const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg } } = useToken()
-
+    // useEffect(()=> {
+        console.log(localStorage.getItem('userName'))
+    // },[])
 
 
     return (
@@ -595,8 +609,7 @@ export default function BasicLayout() {
                     token={{ header: { colorBgHeader: 'transparent' }, sider: { colorBgMenuItemSelected: colorPrimaryBg } }}
                     route={{
                         path: '/',
-                        routes: treeRouter(baseRouterList),
-                    }}
+                        routes: treeRouter(localStorage.getItem('userName') == 'sourceUser'? baseRouterList:baseMRouterList),                    }}
                     location={{
                         pathname,
                     }}

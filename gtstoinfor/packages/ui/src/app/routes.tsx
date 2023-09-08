@@ -121,6 +121,8 @@ import FabricWeaveGrid from "./masters/fabric-weave/fabric-weave-grid"
 import FabricDevelopmentRequest from "./fabric development/fabric-development-request"
 import OperationSequenceForm from "./orders/operations-squence-form"
 import OperationReportingView from "./orders/operation-reporting-view"
+import MarketingReqForm from "./marketing-requisition/marketing-requisition-form"
+import MarketingReqGrid from "./marketing-requisition/marketing-requisition-view"
 import SourcingRequisitionForm from "./sourcing-requisition/sourcing-requisition-form"
 import SourcingRequisitionView from "./sourcing-requisition/sourcing-requisition-view"
 import SourcingRequisitionReport from "./sourcing-requisition/sourcing-requisition-report"
@@ -487,8 +489,17 @@ export const AppRoutes = () => {
                 <Route path='operation-sequence' element={<OperationSequenceForm/>} />
                 <Route path='operation-reporting' element={<OperationReportingView/>} />
 
+                
+
 
                 </Route>
+                <Route path="marketing-requisition-form" element={<MarketingReqForm 
+                data={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                update={(undefined) => { }}
+                />}/>
+                <Route path='marketing-requisition-view' element={<MarketingReqGrid/>} />
                     <Route path='/sourcing-requisition' element={<SourcingRequisitionForm/>}/>
                     <Route path='/sourcing-requisition-view' element={<SourcingRequisitionView/>}/>
                     <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
