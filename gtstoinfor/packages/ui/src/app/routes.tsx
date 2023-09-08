@@ -119,6 +119,9 @@ import FabricBomCreation from "./BOM/fabric-creation"
 import FabricDevelopmentRequest from "./fabric development/fabric-development-request"
 import OperationSequenceForm from "./orders/operations-squence-form"
 import OperationReportingView from "./orders/operation-reporting-view"
+import SourcingRequisitionForm from "./sourcing-requisition/sourcing-requisition-form"
+import SourcingRequisitionView from "./sourcing-requisition/sourcing-requisition-view"
+import SourcingRequisitionReport from "./sourcing-requisition/sourcing-requisition-report"
 
 
 export const AppRoutes = () => {
@@ -476,6 +479,10 @@ export const AppRoutes = () => {
 
 
                 </Route>
+                    <Route path='/sourcing-requisition' element={<SourcingRequisitionForm/>}/>
+                    <Route path='/sourcing-requisition-view' element={<SourcingRequisitionView/>}/>
+                    <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
+
 
 
                     <Route path='/excel-import'>
