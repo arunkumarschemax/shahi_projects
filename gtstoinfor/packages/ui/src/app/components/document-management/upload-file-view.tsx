@@ -315,8 +315,9 @@ const UploadFileGrid = () =>{
         setSearchedColumn(dataIndex);
       };
 
-    const getDocumentData = () => {
-        service.getDynamicDataForDocList().then((res) => {
+    const getDocumentData = () => {  
+      console.log(JSON.parse(localStorage.getItem('currentUser')).user.roles)
+        service.getDynamicDataForDocList({role:JSON.parse(localStorage.getItem('currentUser')).user.roles}).then((res) => {
           if(res.status){
             setItemData(res.data);
             const headerColumns = Object?.keys(res?.data[0])
@@ -325,15 +326,15 @@ const UploadFileGrid = () =>{
                 title: header.toUpperCase(),
                 dataIndex: header,
                 key: header,
-              ...getColumnSearchProps([header]),
-                
+              ...getColumnSearchProps([header]),       
+
                 render:(data, record) =>{
                     // console.log(res.data,'header')
                     const backgroundColor = data === 'Yes' ? 'green' : 'red'
                     return    (
                         <div style={{color:backgroundColor ,textAlign:'center'}} ><b>{data}</b></div>
                     )
-              
+
                 }
             }));
             setColumns([...pocolumn,...headerColumns,...downloadcomun]);

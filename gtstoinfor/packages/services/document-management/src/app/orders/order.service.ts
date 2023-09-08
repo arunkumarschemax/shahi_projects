@@ -1,6 +1,6 @@
 
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileIdReq, FileStatusReq, OrdersReq, PoRoleRequest, docRequest, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileIdReq, FileStatusReq, OrdersReq, PoRoleRequest, RoleReq, docRequest, orderColumnValues } from '@project-management-system/shared-models';
 import { DataSource, EntityManager, QueryResult, getConnection } from 'typeorm';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { OrdersAdapter } from './adapters/order.adapter';
@@ -404,8 +404,14 @@ export class OrdersService {
         return new CommonResponseModel(true, 0, 'Data Retrived Successfully', data)
     }
 
-    async getDynamicDataForDocList(): Promise<CommonResponseModel> {
-        const query = `SELECT DISTINCT document_name FROM document where is_active=1 order by priority ASC`;
+    async getDynamicDataForDocList(req?:RoleReq): Promise<CommonResponseModel> {
+        let query
+         query = `SELECT DISTINCT document_name FROM document d LEFT JOIN documents_list dl ON d.id=dl.document_category_id where d.is_active=1`;
+         if(req.role != 'Admin'){
+            query=query+' and dl.role_name="'+req.role+'"  order by priority ASC'
+         }else{
+            query=query+' order by priority ASC'
+         }
         const documentNames = await this.dataSource.query(query)
         const dynamicSQL = `SELECT o.challan_no AS challanNo, o.invoice_no AS invoiceNo,"" AS url, dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END ELSE '-' END) AS '${name.document_name}'
         `).join(',')},dl.documents_list_id as docListId,dl.file_path as filePath,dl.status,dl.po_status as poStatus
@@ -414,8 +420,7 @@ export class OrdersService {
       LEFT JOIN
         document d ON d.id = dl.document_category_id
         LEFT JOIN orders o on o.id = dl.order_id
-      GROUP BY
-        dl.order_id ORDER BY o.po_no,o.invoice_no,o.challan_no ASC
+        GROUP BY dl.order_id ORDER BY o.po_no,o.invoice_no,o.challan_no ASC
     `;
         const data = await this.dataSource.query(dynamicSQL)
         let urls:any[] = [];

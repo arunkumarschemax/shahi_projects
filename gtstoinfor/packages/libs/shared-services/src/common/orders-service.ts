@@ -1,4 +1,4 @@
-import { CommonResponseModel, FileIdReq, FileStatusReq, OrdersReq, SaveOrderDto, UploadDocumentListResponseModel } from "@project-management-system/shared-models"
+import { CommonResponseModel, FileIdReq, FileStatusReq, OrdersReq, RoleReq, SaveOrderDto, UploadDocumentListResponseModel } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
@@ -89,8 +89,9 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getDynamicData")
     }
 
-    async getDynamicDataForDocList(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getDynamicDataForDocList")
+    async getDynamicDataForDocList(req:RoleReq): Promise<CommonResponseModel> {
+        console.log(req.role)
+        return this.axiosPostCall(this.ordersController + "/getDynamicDataForDocList",req)
     }
     async getuploadeOrdersdata(req?:OrdersReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getuploadeOrdersdata",req)
