@@ -1,7 +1,7 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { MarketingModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
@@ -47,7 +47,6 @@ const PPMReport = () => {
     getplantCode();
     getItem();
     getFactory();
-
   }, [])
 
 
@@ -197,7 +196,7 @@ const PPMReport = () => {
       <div style={{ padding: 8 }}>
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Search ${dataIndex}`} 
           value={selectedKeys[0]}
           onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -234,7 +233,7 @@ const PPMReport = () => {
       text ? (
         searchedColumn === dataIndex ? (
           <Highlighter
-            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            highlightStyle={{ backgroundColor:'#ffc069', padding: 0 }}
             searchWords={[searchText]}
             autoEscape
             textToHighlight={text.toString()}
@@ -745,6 +744,13 @@ const PPMReport = () => {
     });
 
 
+    const getRowClassName = (record) => {
+      if (record.displayName) {
+        return 'colored-row';
+      }
+      return '';
+    };
+
     return (
       <>
 
@@ -760,6 +766,7 @@ const PPMReport = () => {
               }
             }}
             scroll={{ x: 'max-content' }}
+            rowClassName={getRowClassName}
           />
         ) : (<Table size='large' />
         )}
@@ -907,7 +914,7 @@ const PPMReport = () => {
                   allowClear
                 >
                   {item.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
+                    return <Option key=  {inc.id} value={inc.item}>{inc.item}</Option>
                   })
                   }
                 </Select>
