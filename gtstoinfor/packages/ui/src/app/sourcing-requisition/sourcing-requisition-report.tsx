@@ -114,8 +114,11 @@ export const SorcingRequisitionReport = () => {
     }
 
     const onSearch = () => {
+        // let tableData;
+        // console.log(form.getFieldValue('status'))
         // if(form.getFieldValue('status') !== undefined){
-        //     setData(data.filter(e => e.status == form.getFieldValue('status')))
+        //     tableData = data.filter(e => e.status == form.getFieldValue('status'))
+        //     setData(tableData)
         // }
     }
 
