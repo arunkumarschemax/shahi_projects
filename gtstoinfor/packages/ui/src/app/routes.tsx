@@ -119,6 +119,8 @@ import FabricBomCreation from "./BOM/fabric-creation"
 import FabricDevelopmentRequest from "./fabric development/fabric-development-request"
 import OperationSequenceForm from "./orders/operations-squence-form"
 import OperationReportingView from "./orders/operation-reporting-view"
+import MarketingReqForm from "./marketing-requisition/marketing-requisition-form"
+import MarketingReqGrid from "./marketing-requisition/marketing-requisition-view"
 
 
 export const AppRoutes = () => {
@@ -474,8 +476,17 @@ export const AppRoutes = () => {
                 <Route path='operation-sequence' element={<OperationSequenceForm/>} />
                 <Route path='operation-reporting' element={<OperationReportingView/>} />
 
+                
+
 
                 </Route>
+                <Route path="marketing-requisition-form" element={<MarketingReqForm 
+                data={undefined}
+                isUpdate={false}
+                closeForm={() => { }}
+                update={(undefined) => { }}
+                />}/>
+                <Route path='marketing-requisition-view' element={<MarketingReqGrid/>} />
 
 
                     <Route path='/excel-import'>

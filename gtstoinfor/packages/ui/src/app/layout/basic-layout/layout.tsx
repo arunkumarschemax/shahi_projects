@@ -26,10 +26,10 @@ export const baseRouterList = [
     },
     {
         label: "Marketing Requisition",
-        key: "marketingRequisition",
-        path: "marketingRequisition",
+        key: "marketing-requisition",
+        path: "marketing-requisition-form",
         // icon: <DashboardOutlined />,
-        filepath: "/marketingRequisition",
+        filepath: "marketing-requisition-form",
     },
     // {
     //     label: "User Management",
