@@ -63,8 +63,8 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/approveDpomLineItemStatus", req)
     }
 
-    async getTotalItemQtyChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getTotalItemQtyChangeData")
+    async getTotalItemQtyChangeData(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getTotalItemQtyChangeData",req)
     }
 
     async poLineItemStatusChange(): Promise<CommonResponseModel> {
@@ -233,5 +233,16 @@ export class NikeService extends CommonAxiosService {
     async getPpmFactoryForMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmFactoryForMarketing")
     }
-
+    async getOrderAcceptanceData1(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getOrderAcceptanceData",req)
+    }
+    async getPpmProductCodeForOrderCreation(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmProductCodeForOrderCreation")
+    }
+    async getPpmPoLineForOrderCreation(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmPoLineForOrderCreation")
+    }
+    async getPpmPoLineForNikeOrder(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmPoLineForNikeOrder")
+    }
 }   
