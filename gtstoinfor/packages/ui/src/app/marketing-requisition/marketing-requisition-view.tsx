@@ -19,14 +19,59 @@ export function MarketingReqGrid(props: MarketingReqProps) {
   const [searchedColumn, setSearchedColumn] = useState('');
 
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [data, setData] = useState<MarketingRequisitionDto[]>([]);
+  const [data1,setData] = useState<any[]>([
+    {
+      trimType: "Button",
+      trimCode: "BTN001",
+      description: "Metallic Gold Button",
+      size: "1cm", // Size in centimeters
+      color: "Gold",
+      quantity: 100,
+      remarks: "Shiny finish",
+      status: "OPEN",
+      isActive: "true"
+    },
+    {
+      trimType: "Zipper",
+      trimCode: "ZIP002",
+      description: "Nylon Zipper",
+      size: "20cm", // Size in centimeters
+      color: "Black",
+      quantity: 50,
+      remarks: "Water-resistant",
+      status: "COMPLETED",
+      isActive: "false"
+    },
+    {
+      trimType: "Thread",
+      trimCode: "THR003",
+      description: "Cotton Sewing Thread",
+      size: "100m", // Size in meters
+      color: "White",
+      quantity: 200,
+      remarks: "Strong and durable",
+      status: "OPEN",
+      isActive: "true"
+    },
+    {
+      trimType: "Fabric",
+      trimCode: "FAB004",
+      description: "Cotton Blend Fabric",
+      size: "2.5m", // Size in meters
+      color: "Blue",
+      quantity: 30,
+      remarks: "Soft and breathable",
+      status: "INPROGRESS",
+      isActive: "true"
+    },
+])
   const [selectedData, setSelectedData] = useState<any>(undefined);
   
   const Service = new MarketingReqService();
 
-  useEffect(() => {
-    getAll();
-  }, []);
+  // useEffect(() => {
+  //   getAll();
+  // }, []);
 
   /**
    * 
@@ -34,10 +79,11 @@ export function MarketingReqGrid(props: MarketingReqProps) {
   const getAll = () => {
     Service.getAllMarketingReq().then(res => {
       if (res) {
-        setData(res);
-        console.log(res,'lllllllll')
+        setData(res.data);
+        console.log(res.data,'lllllllll')
       } else {
         if (res.data) {
+          console.log(res.data,'kkkkkkkkk')
           setData([]);
             message.error(res.internalMessage,2);
         } else {
@@ -256,32 +302,32 @@ export function MarketingReqGrid(props: MarketingReqProps) {
             },
           ],
       },
-    // {
-    //   title: 'Status',
-    //   dataIndex: 'isActive',
-    //   render: (isActive, rowData) => (
-    //     <>
-    //       {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-    //     </>
-    //   ),
-    //   filterMultiple: false,
-    //   onFilter: (value, record) => 
-    //   {
-    //     // === is not work
-    //     return record.isActive === value;
-    //   },
-    //   filters: [
-    //     {
-    //       text: 'Active',
-    //       value: true,
-    //     },
-    //     {
-    //       text: 'InActive',
-    //       value: false,
-    //     },
-    //   ],
+    {
+      title: 'Status',
+      dataIndex: 'isActive',
+      render: (isActive, rowData) => (
+        <>
+          {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+        </>
+      ),
+      filterMultiple: false,
+      onFilter: (value, record) => 
+      {
+        // === is not work
+        return record.isActive === value;
+      },
+      filters: [
+        {
+          text: 'Active',
+          value: true,
+        },
+        {
+          text: 'InActive',
+          value: false,
+        },
+      ],
 
-    // },
+    },
     {
       title:`Action`,
       dataIndex: 'action',
@@ -336,24 +382,26 @@ export function MarketingReqGrid(props: MarketingReqProps) {
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >
      <br></br>
-     {/* <Row gutter={40}>
-      
-        <Col>
-          <Card title={'Total ROSL Groups: ' + data.length} style={{ textAlign: 'left', width: 220, height: 41, backgroundColor: '#bfbfbf' }}></Card>
-        </Col>
-        <Col>
-          <Card title={'Active: ' + data.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
-        </Col>
-        <Col>
-          <Card title={'In-Active: ' + data.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
-        </Col>
-          </Row> */}
+     <Row gutter={40} >
+      <Col>
+          <Card title={'Total : ' + data1.length} style={{textAlign: 'left', width: 210, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          </Col>
+          <Col>
+           <Card title={'Open: ' + data1.filter(el => el.status === 'OPEN').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'cyan'}}></Card>
+          </Col>
+          <Col>
+           <Card title={'Inprogress :' + data1.filter(el => el.status == 'INPROGRESS').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'yellow'}}></Card>
+          </Col>
+          <Col>
+           <Card title={'Completed :' + data1.filter(el => el.status == 'COMPLETED').length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#52c41a'}}></Card>
+          </Col>
+          </Row>
           <br></br>
           <Table
           size='small'
           rowKey={record => record.marketingReqId}
           columns={columnsSkelton}
-          dataSource={data}
+          dataSource={data1}
           scroll={{x:'max-content'}}
           pagination={{
             onChange(current) {
