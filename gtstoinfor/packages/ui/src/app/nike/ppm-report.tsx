@@ -431,16 +431,115 @@ const PPMReport = () => {
         dataIndex: 'destinationCountry'
       },
       {
+        title: "Destination Country Code",
+        dataIndex: 'destinationCountryCode'
+      },
+      {
         title: "Plant Code",
         dataIndex: 'plant'
       },
       { title: 'Geo Code', dataIndex: '' },
+      {
+        title: "Plant Name",
+        dataIndex: 'plantName'
+      },
       {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty',
         align: 'center',
         render: (text) => <strong>{text}</strong>
       },
+      {
+        title: "GAC",
+        dataIndex: 'GAC'
+      },
+      {
+        title: "MRGAC",
+        dataIndex: 'MRGAC'
+      },
+      {
+        title: "OGAC",
+        dataIndex: 'OGAC'
+      },
+
+      {
+        title: "UPC",
+        dataIndex: 'UPC'
+      },
+      {
+        title: "Trading Co Po Number",
+        dataIndex: 'tradingCoPoNumber'
+      },
+      {
+        title: "Doc Type",
+        dataIndex: 'docTypeCode'
+      },
+      {
+        title: "Doc Type Description ",
+        dataIndex: 'docTypeDesc'
+      },
+      {
+        title: "Doc Type Description ",
+        dataIndex: 'docTypeDesc'
+      },
+      {
+        title: "Planning Season Code",
+        dataIndex: 'planningSeasonCode'
+      },
+      {
+        title: "Planning Season Year",
+        dataIndex: 'planningSeasonYear'
+      },
+      {
+        title: "Category",
+        dataIndex: 'categoryCode'
+      },
+      {
+        title: "Vendor Code",
+        dataIndex: 'vendorCode'
+      },
+      {
+        title: "Gender Age",
+        dataIndex: 'genderAgeCode'
+      },
+      {
+        title: "Gender Age Description",
+        dataIndex: 'genderAgeDesc'
+      },
+      {
+        title: "Shipping Type",
+        dataIndex: 'shippingType'
+      },
+      {
+        title: "Planning Priority Number",
+        dataIndex: 'planningPriorityCode'
+      },
+      {
+        title: "Planning Priority Description",
+        dataIndex: 'planningPriorityDesc'
+      },
+      {
+        title: "Mode Of Transportation",
+        dataIndex: 'modeOfTransportationCode'
+      },
+      {
+        title: "In Co Terms",
+        dataIndex: 'inCoTerms'
+      },
+      {
+        title: "Purchase Group",
+        dataIndex: 'purchaseGroupCode'
+      },
+      {
+        title: "Purchase Group Name",
+        dataIndex: 'purchaseGroupName'
+      },
+      {
+        title: 'Change Register',
+        dataIndex: 'displayName',
+        align: 'center',
+      },
+
     ]
 
     sizeHeaders?.forEach(version => {
@@ -837,11 +936,16 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
 
-
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 25 }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
               <Form.Item>
-                <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Get Report</Button>
-                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
+                <Button htmlType="submit"
+                  icon={<SearchOutlined />}
+                  type="primary">Get Report</Button>
+                <Button
+                  htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={onReset}
+                >
+                  RESET
+                </Button>
               </Form.Item>
             </Col>
           </Row>
@@ -851,10 +955,10 @@ const PPMReport = () => {
             <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Total Shipped: ' + factory.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Balance to ship: ' + factory.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
         </Row><br></br>
         <Row gutter={80}>
