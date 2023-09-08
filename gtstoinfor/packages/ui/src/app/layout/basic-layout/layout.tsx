@@ -38,9 +38,9 @@ export const baseRouterList = [
     {
         label: "Sourcing Requisition",
         key: "sourcingRequisition",
-        path: "sourcing-requisition",
+        path: "sourcing-requisition-view",
         // icon: <DashboardOutlined />,
-        filepath: "/sourcing-requisition",
+        filepath: "/sourcing-requisition-view",
     },
     {
         label: "Sourcing Requisition Report",
