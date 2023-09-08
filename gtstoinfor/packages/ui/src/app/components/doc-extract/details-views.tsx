@@ -1,11 +1,16 @@
 import React from 'react';
-import { Descriptions } from 'antd';
-import { useLocation } from 'react-router-dom';
+import { Button, Descriptions } from 'antd';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function ScanDetailView() {
   // Check if location and location.state are defined
 
+  const navigate=useNavigate();
   const  rowData  = useLocation();
+
+  const handleBack =() =>{
+    navigate('/scan-document')
+  }
   
   console.log(rowData.state.rowData,"kkkkkkkkkkk")
   return (
@@ -13,43 +18,81 @@ function ScanDetailView() {
     <>
   <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }}>
         <Descriptions.Item
-          label="typedId"
+          label="Sno"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.typeId}
         </Descriptions.Item>
         <Descriptions.Item
-          label="Gst"
+          label="GST"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.Gst}
+          {rowData.state.rowData.GST}
         </Descriptions.Item>
         <Descriptions.Item
-          label="Ifsc"
+          label="Vendor Name"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.Ifsc}
+          {rowData.state.rowData.Vendor}
 
         </Descriptions.Item>
         <Descriptions.Item
-          label="Innvoice"
+          label="InvoiceDate"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.Innvoice}
+          {rowData.state.rowData.invoiceDate}
 
         </Descriptions.Item>
         <Descriptions.Item
-          label="Customer"
+          label="InnvoiceNumber"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.Customer}
+          {rowData.state.rowData.InnvoiceNumber}
 
         </Descriptions.Item>
-       
+
+        <Descriptions.Item
+          label="CGST"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.Cgst}
+
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label="IGST"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.IGST}
+
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label="SGST"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.Sgst}
+
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label="InnvoiceAmount"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.InnvoiceAmount}
+
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label="Innvoice Currency"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.InnvoiceCurrency}
+
+        </Descriptions.Item>    
       </Descriptions>
 
-  
-     
+<Button type="primary"  onClick={handleBack}> Back </Button>
     </>
   );
 }
@@ -57,21 +100,6 @@ function ScanDetailView() {
 export default ScanDetailView;
 
 
-// import React from 'react'
-// import { useLocation } from 'react-router-dom'
-
-
-// function ScanDetailView() {
-
-//   const  location = useLocation();
-
-//   console.log(location.state.rowData.state,"rowdata.state")
-//   return (
-//     <div>ScanDetailView</div>
-//   )
-// }
-
-// export default ScanDetailView
 
 
 

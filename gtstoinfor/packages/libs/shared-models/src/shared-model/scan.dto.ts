@@ -1,76 +1,68 @@
 export class AllScanDto {
-    typedId: number;
-    Gst: string;
-    Ifsc: string;
-    Innvoice: string;
-    Customer: string;
-    Volume: string;
-    Weight: string;
-    Chargeable: string;
-    Packages: string;
-    Date: string;
-    Cartons: string;
-    Console: string;
-    PO: string;
-    Payref: string;
-
-    Quantity: string;
+    GST: string;
+    Vendor: string;
+    invoiceDate: string;
+    Cgst: string;
+    IGST: string;
+    Sgst: string;
     InnvoiceNumber: string;
-    Currency: string;
-    Origin: string;
-    Destination: string;
-
-    createdUser: string;
-    isActive?: boolean;
-    versionFlag?: number;
+    InnvoiceAmount: string;
+    InnvoiceCurrency: string;
     constructor(
-        typedId: number,
-        Gst: string,
-        Ifsc: string,
-        Innvoice: string,
-        Customer: string,
-        Volume: string,
-        Weight: string,
-        Chargeable: string,
-        Packages: string,
-        Date: string,
-        Cartons: string,
-        Console: string,
-        PO: string,
-        Payref: string,
-
-        Quantity: string,
+        GST: string,
+        Vendor: string,
+        invoiceDate: string,
+        Cgst: string,
+        IGST: string,
+        Sgst: string,
         InnvoiceNumber: string,
-        Currency: string,
-        Origin: string,
-        Destination: string,
-
-        createdUser: string,
-        isActive?: boolean,
-        versionFlag?: number) {
-        this.typedId = typedId;
-        this.Gst = Gst;
-        this.Ifsc = Ifsc;
-        this.Innvoice = Innvoice;
-        this.Customer = Customer;
-        this.Volume = Volume;
-        this.Weight = Weight;
-        this.Chargeable = Chargeable;
-        this.Packages = Packages;
-        this.Date = Date;
-        this.Cartons = Cartons;
-        this.Console = Console;
-        this.PO = PO;
-        this.Payref = Payref;
-        
-        this.Quantity = Quantity;
-        this.InnvoiceNumber = InnvoiceNumber;
-        this.Currency = Currency;
-        this.Origin = Origin;
-        this.Destination = Destination;
-
-        this.createdUser = createdUser;
-        this.isActive = isActive;
-        this.versionFlag = versionFlag;
+        InnvoiceAmount: string,
+        InnvoiceCurrency: string)
+        {
+  
+            this.GST= GST;
+      this.Vendor= Vendor;
+      this. invoiceDate= invoiceDate;
+      this. Cgst= Cgst;
+      this. IGST= IGST;
+      this.Sgst= Sgst;
+      this.InnvoiceNumber= InnvoiceNumber;
+      this.InnvoiceAmount= InnvoiceAmount;
+      this. InnvoiceCurrency= InnvoiceCurrency;
+        }
     }
-}
+
+
+
+// export class AllScanDto {
+//     GST: string;
+//     Vendor: string;
+//     invoiceDate: string;
+//     Cgst: string;
+//     IGST: string;
+//     Sgst: string;
+//     InnvoiceNumber: string;
+//     InnvoiceAmount: string;
+//     InnvoiceCurrency: string;
+//       constructor(
+//           GST: string,
+//           Vendor: string,
+//           invoiceDate: string,
+//           Cgst: string,
+//           IGST: string,
+//           Sgst: string,
+//           InnvoiceNumber: string,
+//           InnvoiceAmount: string,
+//           InnvoiceCurrency: string) {
+  
+//           this.GST= GST;
+//     this.Vendor= Vendor;
+//     this. invoiceDate= invoiceDate;
+//     this. Cgst= Cgst;
+//     this. IGST= IGST;
+//     this.Sgst= Sgst;
+//     this.InnvoiceNumber= InnvoiceNumber;
+//     this.InnvoiceAmount= InnvoiceAmount;
+//     this. InnvoiceCurrency= InnvoiceCurrency;
+//       }
+//   }

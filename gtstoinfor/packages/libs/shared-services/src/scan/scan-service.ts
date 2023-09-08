@@ -4,7 +4,7 @@ import {AllScanDto} from "../../../shared-models/src/shared-model/scan.dto";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {AllScanResponseModel} from "../../../shared-models/src/shared-model/scan-response";
 
-export class ScanService extends CommonAxiosService {
+export class SharedService extends CommonAxiosService {
   private ScanController = "/docs/";
 
   async postdata(payload: AllScanDto): Promise<AllScanResponseModel> {
