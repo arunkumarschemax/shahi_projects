@@ -111,7 +111,7 @@ export default function ExcelImport() {
                 req.updatedUser = JSON.parse(localStorage.getItem("currentUser")).user.userName;
                 console.log(req);
                 ordersService.updateFileStatus(req)
-                message.error('File upload failed')
+                message.error('You Have Already Upload File with same Data')
               }
             }).finally(() => {
               setLoading(false);

@@ -54,7 +54,6 @@ export class OrdersService {
             const poRequest : req[] =[];
             for(const res of poNumbers){
                 if(res[0] === undefined || res[0] === ""){
-                    console.log("&&&&&&&&")
                 }
                 else{
                     poRequest.push(new req(res[0]));
@@ -76,28 +75,30 @@ export class OrdersService {
                 }
                 return updatedObj;
             });
-
             let requestData = [];
             let orderDetails:OrdersEntity[] = [];
             for (const data of convertedData) {
-                console.log(data)
                 let dtoData:SaveOrderDto;
-                if(data.challan_no != null && data.invoice_no != null && data.po_no != null){
-                    dtoData = new SaveOrderDto(data.id, data.buyer, data.challan_no, data.invoice_no, data.style, data.po_no, data.date, data.dest, data.tc_status, data.ship_qty, data.ctns, data.created_user, data.updated_user, data.created_at, data.updated_at, 1, id)
+                if(data.challa_no != null && data.invoice_no != null && data.po_no != null){
+                    dtoData = new SaveOrderDto(data.id, data.buyer, data.challa_no, data.invoice_no, data.style, data.po_no, data.date, data.dest, data.tc_status, data.ship_qty, data.ctns, data.created_user, data.updated_user, data.created_at, data.updated_at, 1, id)
+
                     dtoData.version = 1
+
                     let checkChallanExist = await transactionManager.getRepository(OrdersEntity).findOne({where:{
                         invoiceNo:dtoData.invoiceNo, poNo:dtoData.poNo, challanNo:dtoData.challanNo, dest:dtoData.dest
                     }})
-                    if(checkChallanExist.id > 0){
+                    console.log(checkChallanExist,'checkChallanExist')
+                    if(checkChallanExist != null ){
+                        
                         flag.add(false)
-                        await transactionManager.releaseTransaction();
-                        break;
+                        // await transactionManager.releaseTransaction();
+                        continue
+                        // break;
                     }
                     else{
                         const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
-                        // console.log(convertedExcelEntity, 'convertedExcelEntity')
                         const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
-                        // console.log(saveExcelEntity, 'saveExcelEntity')
+                      
                         orderDetails.push(saveExcelEntity);
                         // for(const po of data.po_no){
                         const uniquePoNos = {};                
@@ -122,7 +123,6 @@ export class OrdersService {
                     }
                 }
             }
-            // console.log(requestData,'requestData')
             if (!flag.has(false)) {
                 const documentSave = await this.documentService.createDocList(orderDetails);
                 if(!documentSave.status){
@@ -130,6 +130,7 @@ export class OrdersService {
                     await transactionManager.releaseTransaction();
                 }
                 else{
+
                     await transactionManager.completeTransaction()
                     return new CommonResponseModel(true, 1, 'Data saved sucessfully')
                 }
@@ -447,7 +448,7 @@ export class OrdersService {
     async getuploadeOrdersdata(req?:OrdersReq):Promise<CommonResponseModel>{
         try{
             let query
-             query='select updated_user AS uploadedUser,file_name as fileName,file_path as filePath,status,date(created_at) as createdAt,DATE_FORMAT(created_at, "%Y-%m-%d %H") AS DateAndHours from file_upload where id>0'
+             query='select updated_user AS uploadedUser,file_name as fileName,file_path as filePath,status,date(created_at) as createdAt,DATE_FORMAT(created_at, "%Y-%m-%d %H") AS DateAndHours from file_upload where id>0 and status="Success"'
             if(req.status){
                 query=query+' and status="'+req.status+'"'    
             }
