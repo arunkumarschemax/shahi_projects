@@ -67,7 +67,6 @@ export class GarmentsService {
                 order: { garmentName: "ASC" },
                 relations: ['garmentCategory']
             });
-            console.log(garmentEntities,"meowww")
             if (garmentEntities.length > 0) {
                 garmentEntities.forEach(garmentEntity => {
                     const convertedGarmentDto: GarmentDto = this.garmentsAdapter.convertEntityToDto(garmentEntity);
@@ -99,14 +98,14 @@ export class GarmentsService {
                        
                         if (garmentExists.isActive) {
                             if (garmentStatus.affected) {
-                                const garmentResponse: GarmentResponse = new GarmentResponse(true, 10115, 'Garment is de-activated successfully');
+                                const garmentResponse: GarmentResponse = new GarmentResponse(true, 10115, 'Garment is Deactivated successfully');
                                 return garmentResponse;
                             } else {
                                 throw new ErrorResponse(10111, 'Garment is already deactivated');
                             }
                         } else {
                             if (garmentStatus.affected) {
-                                const garmentResponse: GarmentResponse = new GarmentResponse(true, 10114, 'Garment is activated successfully');
+                                const garmentResponse: GarmentResponse = new GarmentResponse(true, 10114, 'Garment is Activated successfully');
                                 return garmentResponse;
                             } else {
                                 throw new ErrorResponse(10112, 'Garment is already  activated');

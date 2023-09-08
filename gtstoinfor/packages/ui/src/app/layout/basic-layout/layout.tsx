@@ -341,6 +341,12 @@ export const baseRouterList = [
                 path: "fabrics/fabrics-view",
                 filepath: "fabrics/fabrics-view",
             },
+            {
+                label: "Fabric Weave",
+                key: "fabric-weave",
+                path: "fabric-weave/fabric-weave-view",
+                filepath: "fabric-weave/fabric-weave-view",
+            }
           
         ],
     }, 
@@ -389,26 +395,6 @@ export const baseRouterList = [
 
     },
     {
-        label: "Sample Development",
-        key: "sample-development",
-        path: "sample-development",
-        filepath: "sample-development",
-        children:[
-            {
-                label: "Sample Development",
-                key: "sample-development",
-                path: "sample-development-form",
-                filepath: "sample-development-form"
-            },
-            {
-                label: "Sample Development View",
-                key: "sample-development",
-                path: "sample-development-view",
-                filepath: "sample-development-view"
-            }
-        ]
-    },
-    {
         label: "Fabric Development",
         key: "fabricdevelopment",
         icon:<FontAwesomeIcon icon={faShirt} />,
@@ -425,6 +411,28 @@ export const baseRouterList = [
         ]
     },
     {
+        label: "Sample Development",
+        key: "sample-development",
+        path: "sample-development",
+        filepath: "sample-development",
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>👔</div>,
+        children:[
+            {
+                label: "Sample Development",
+                key: "sample-development",
+                path: "sample-development-form",
+                filepath: "sample-development-form"
+            },
+            {
+                label: "Sample Development View",
+                key: "sample-development",
+                path: "sample-development-view",
+                filepath: "sample-development-view"
+            }
+        ]
+    },
+   
+    {
         label: "Material Creation",
         key: "materialCreation",
         icon:<FontAwesomeIcon icon={faShirt} />,
@@ -438,7 +446,19 @@ export const baseRouterList = [
                 path: "item-creation",
                 filepath: "item-creation",
             },
-            
+            {
+                label: "Fabric Creation",
+                key: "fabric-bom-creation",
+                path: "fabric-bom-creation",
+                // icon: <PicCenterOutlined />,
+                filepath: "fabric-bom-creation",
+            },
+            {
+                label: "Trim Creation",
+                key: "bomtrimcreation",
+                path: "bomtrimcreation/bom-trim-creation",
+                filepath: "bomtrimcreation/bom-trim-creation",
+            },
             {
                 label: "SKU Generation",
                 key: "sku-mapping",
@@ -452,17 +472,16 @@ export const baseRouterList = [
                 filepath: "sku-list",
             },
             {
-                label: "Fabric Creation",
-                key: "fabric-bom-creation",
-                path: "fabric-bom-creation",
-                // icon: <PicCenterOutlined />,
-                filepath: "fabric-bom-creation",
+                label: "Operation Sequence",
+                key: "operation-sequence",
+                path: "operation-sequence",
+                filepath: "operation-sequence",
             },
             {
-                label: "Trim Creation",
-                key: "bomtrimcreation",
-                path: "bomtrimcreation/bom-trim-creation",
-                filepath: "bomtrimcreation/bom-trim-creation",
+                label: "Operation Reporting",
+                key: "operation-reporting",
+                path: "operation-reporting",
+                filepath: "operation-reporting",
             },
         ]
     },

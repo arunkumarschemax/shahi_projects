@@ -116,7 +116,11 @@ import SKUGeneration from "./orders/sku-generation"
 import UomGrid from "./masters/uom/uom-grid"
 import SampleDevDetail from "./sample-development/sample-request-detailed-view"
 import FabricBomCreation from "./BOM/fabric-creation"
+import FabricWeaveForm from "./masters/fabric-weave/fabric-weave-form"
+import FabricWeaveGrid from "./masters/fabric-weave/fabric-weave-grid"
 import FabricDevelopmentRequest from "./fabric development/fabric-development-request"
+import OperationSequenceForm from "./orders/operations-squence-form"
+import OperationReportingView from "./orders/operation-reporting-view"
 import IssueScreen from "./operation-tracking/issue"
 
 
@@ -337,6 +341,14 @@ export const AppRoutes = () => {
                  isUpdate={false}
                 closeForm={() => { }}
                 updateDetails={(undefined) => { }}/>} />
+
+                <Route path="fabric-weave/fabric-weave-form" element={<FabricWeaveForm
+                data={undefined}
+                isUpdate={false}
+                closeForm={()=>{}}
+                updateFabricWeave={(undefined)=>{}}/>}/>
+                <Route path="fabric-weave/fabric-weave-view" element={<FabricWeaveGrid/>}/>
+
             </Route>
                     <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
@@ -470,6 +482,9 @@ export const AppRoutes = () => {
                 <Route path='item-creation' element={<ItemCreation/>}/>
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
+                <Route path='operation-sequence' element={<OperationSequenceForm/>} />
+                <Route path='operation-reporting' element={<OperationReportingView/>} />
+
 
                 </Route>
                 <Route path='/operation-tracking'>
