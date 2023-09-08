@@ -6,6 +6,7 @@ import moment from 'moment';
 import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
+import { nikeFilterRequest } from '@project-management-system/shared-models';
 
 const  OrdersCompareGrid = () => {
 
@@ -32,6 +33,7 @@ const  OrdersCompareGrid = () => {
     const [itemTextChaneData, setItemTextChangeData] = useState([])
 
     const [modeOTransportChaneData, setmodeOfTransportChangeData] = useState([])
+    const [poLine, setPoLine] = useState<any>([]);
 
 
     useEffect(() => {
@@ -43,10 +45,20 @@ const  OrdersCompareGrid = () => {
         PlantCodeChange()
         ModeOfTransportChange()
         ItemTextChangeData()
+        getPoLine()
     }, [])
 
+    const getPoLine = () => {
+        service.getPpmPoLineForNikeOrder().then(res => {
+          setPoLine(res.data)
+        })
+      }
     const getQtyChangeData = () => {
-        service.getTotalItemQtyChangeData().then((res) => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poandLine') !== undefined) {
+            req.poandLine = form.getFieldValue('poandLine');
+          }
+        service.getTotalItemQtyChangeData(req).then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
         })
@@ -73,6 +85,10 @@ const  OrdersCompareGrid = () => {
     }
 
     const PriceAndCurrencyChangeFob = () => {
+        const req = new nikeFilterRequest();
+        // if (form.getFieldValue('poandLine') !== undefined) {
+        //     req.poandLine = form.getFieldValue('poandLine');
+        //   }
         service.getFOBPriceChangeData().then((res) => {
             setPriseChangeData(res.data)
             setFilteredPOStatusData(res.data)
@@ -115,32 +131,39 @@ const  OrdersCompareGrid = () => {
 
     const exportExcel = () => {
         const excel = new Excel();
-        if (filteredQtyData.length > 0) {
-            excel
-                .addSheet('Quantity changes')
-                .addColumns(data1)
-                .addDataSource(filteredQtyData, { str2num: true })
+      
+        if (filteredQtyData && filteredQtyData.length > 0) {
+          excel
+            .addSheet('Quantity changes')
+            .addColumns(data1)
+            .addDataSource(filteredQtyData, { str2num: true });
         }
-        if (unitChangeData.length > 0) {
-            excel
-                .addSheet('Unit changes')
-                .addColumns(data4)
-                .addDataSource(unitChangeData, { str2num: true })
+      
+        if (unitChangeData && unitChangeData.length > 0) {
+          excel
+            .addSheet('Unit changes')
+            .addColumns(data4)
+            .addDataSource(unitChangeData, { str2num: true });
         }
-        if (itemChangeData.length > 0) {
-            excel
-                .addSheet('Item changes')
-                .addColumns(data2)
-                .addDataSource(itemChangeData, { str2num: true })
+      
+        if (itemChangeData && itemChangeData.length > 0) {
+          excel
+            .addSheet('Item changes')
+            .addColumns(data2)
+            .addDataSource(itemChangeData, { str2num: true });
         }
-        if (poStatusData.length > 0) {
-            excel
-                .addSheet('PO Line Item Status Change')
-                .addColumns(data3)
-                .addDataSource(poStatusData, { str2num: true })
+      
+        if (poStatusData && poStatusData.length > 0) {
+          excel
+            .addSheet('PO Line Item Status Change')
+            .addColumns(data3)
+            .addDataSource(poStatusData, { str2num: true });
         }
+      
         excel.saveAs('revisedPOs.xlsx');
-    }
+      };
+      
+      
 
     const data1 = [
         {
@@ -1271,44 +1294,41 @@ const  OrdersCompareGrid = () => {
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
             <Form form={form} layout={"vertical"} >
-                <Row gutter={[24, 24]}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
-                        <Form.Item name="contractDate"
-                            label="Order Revised Date"
-                        >
-                            <RangePicker onChange={EstimatedETDDate} />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="orderStatus"
-                            label="Order Status"
-                        >
-                            <Select
-                                allowClear
-                                placeholder='select order status'
-                            >
-                                <Option key='Accepted' value="Accepted">Accepted</Option>
-                                <Option key='Unaccepted' value="Unaccepted">Unaccepted</Option>
-                                <Option key='Closed' value="Closed">Closed</Option>
-                                <Option key='Cancelled' value="Cancelled">Cancelled</Option>
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
+                <Row gutter={24}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
+                  <Form.Item name='poandLine' label='Po+Line' >
+                <Select
+                  showSearch
+                  placeholder="Select Po+Line"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {poLine.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                  })
+                  }
+                   </Select>
+                 </Form.Item>
+                </Col>
+                
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 20 }}>
+                    
                         <Button
                             type="primary"
                             icon={<SearchOutlined />}
                             style={{ marginRight: 50, width: 100 }}
                             htmlType="button"
-                            onClick={getFilterdData}>Search</Button>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
-                        <Button
+                            onClick={getFilterdData}>Search</Button>  </Col>
+                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 20 }}>
+                    <Button
                             type="primary"
+
                             icon={<UndoOutlined />}
                             htmlType="submit"
                             onClick={onReset}>Reset</Button>
+                            
                     </Col>
+
                 </Row>
             </Form>
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>

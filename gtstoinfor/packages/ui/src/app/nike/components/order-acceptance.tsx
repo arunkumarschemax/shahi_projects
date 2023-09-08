@@ -122,7 +122,6 @@ export function OrderAcceptance() {
     const getProductCode = () => {
         service.getPpmProductCodeForOrderCreation().then(res => {
           setProductCode(res.data)
-          console.log(res.data,"rrrrrrrrrrrrrrrrr")
         })
       }
       const getPoLine = () => {
@@ -294,7 +293,7 @@ export function OrderAcceptance() {
                        </Select>
                        </Form.Item>
                          </Col>
-                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
                   <Form.Item name='poandLine' label='Po+Line' >
                 <Select
                   showSearch
