@@ -339,7 +339,8 @@ const VASChangesCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'report_generate_date'
+            dataIndex: 'document_date',
+            render: (text) => moment(text).format('YYYY-MM-DD')
         },
         {
             title: 'Item',
@@ -349,10 +350,10 @@ const VASChangesCompareGrid = () => {
             title: 'Factory',
             dataIndex: 'factory'
         },
-        {
-            title: 'Document Date',
-            dataIndex: 'document_date'
-        },
+        // {
+        //     title: 'Document Date',
+        //     dataIndex: 'document_date'
+        // },
         {
             title: 'PO Number',
             dataIndex: 'po_number',
@@ -364,19 +365,19 @@ const VASChangesCompareGrid = () => {
         },
         {
             title: 'Total Item Quantity',
-            dataIndex: 'total_item_Quantity'
+            dataIndex: 'totalItemQty'
         },
         {
             title: 'Product Code',
-            dataIndex: 'product_code'
+            dataIndex: 'productCode'
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac'
+            dataIndex: 'OGAC'
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'GAC'
         },
         {
             title: 'Change from Direct Ship Sales Order Number',
@@ -412,12 +413,12 @@ const VASChangesCompareGrid = () => {
             dataIndex: 'item_vas_pdf_po',
             width: '300px',
         },
-        {
-            title: 'DIFFERENCE IN ITEM VAS TEXT ',
-            // ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
-            dataIndex: 'item_vas_pdf_po',
-            width: '300px',
-        },
+        // {
+        //     title: 'DIFFERENCE IN ITEM VAS TEXT ',
+        //     // ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
+        //     dataIndex: 'item_vas_pdf_po',
+        //     width: '300px',
+        // },
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',

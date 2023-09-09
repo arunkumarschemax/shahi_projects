@@ -248,7 +248,7 @@ export class DpomController {
     @Post('/getTotalItemQtyChangeData')
     async getTotalItemQtyChangeData(@Body() req: nikeFilterRequest): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getTotalItemQtyChangeData();
+            return this.dpomService.getTotalItemQtyChangeData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

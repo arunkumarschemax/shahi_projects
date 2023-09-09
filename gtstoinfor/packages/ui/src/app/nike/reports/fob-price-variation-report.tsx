@@ -129,7 +129,6 @@ export const FOBPriceVariationReport = () => {
             render:(text,record) => {
                 let diff;
                 let convertedPrice;
-                console.log(record.fobCurrencyCode)
                 if(record.fobCurrencyCode === 'PHP'){
                     convertedPrice = record.grossPriceFob*0.01765;
                 } else if(record.fobCurrencyCode === 'TWD'){
@@ -147,12 +146,11 @@ export const FOBPriceVariationReport = () => {
                 } else if(record.fobCurrencyCode === 'USD'){
                     convertedPrice = record.grossPriceFob*1;
                 } 
-                console.log(convertedPrice)
                 diff = record.shahiConfirmedgrossPrice - convertedPrice
-                console.log(diff)
                 return(
                     <>
                     {record.grossPriceFob ? Number(diff).toLocaleString('en-IN'): '-'}
+                    {/* return diff !== 0 ? Number(diff).toLocaleString('en-IN') : ''; */}
                     </>
                 )
             }

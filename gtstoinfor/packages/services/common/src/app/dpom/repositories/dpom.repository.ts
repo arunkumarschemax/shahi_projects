@@ -95,7 +95,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getTotalItemQtyChangeData(req: nikeFilterRequest): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(`dpom.po_number, dpom.po_line_item_number, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
+            .select(`dpom.po_number,dpom.item,dpom.factory,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty ,dpom.po_line_item_number, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
             .where(` od.column_name='total_item_qty' `)
         if (req.poandLine !== undefined) {
