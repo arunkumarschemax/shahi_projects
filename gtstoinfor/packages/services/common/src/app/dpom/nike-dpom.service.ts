@@ -208,7 +208,7 @@ export class DpomService {
         try {
             const m3Config = appConfig.m3Cred.headerRequest()
             const fourDigitItemCode = req.itemNo.substring(0, 4)
-            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/MMS200MI/Get?ITNO=${fourDigitItemCode}`;
+            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.poNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${req.styleNumber}`;
             const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
             if (response.data['@type'])
                 return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
@@ -708,15 +708,6 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    // async getOrderAcceptanceData(req:PpmDateFilterRequest): Promise<CommonResponseModel> {
-    //     const data = await this.dpomRepository.find()
-    //     if (data.length > 0) {
-    //         return new CommonResponseModel(true, 1, 'Data retrieved', data)
-    //     } else {
-    //         return new CommonResponseModel(false, 0, 'No data found');
-    //     }
-    // }
-
     async getOrderAcceptanceData(req: nikeFilterRequest): Promise<CommonResponseModel> {
         try {
             const data = await this.dpomRepository.getOrderAcceptanceDat(req);
@@ -730,8 +721,6 @@ export class DpomService {
             throw err;
         }
     }
-
-
 
     async approveDpomLineItemStatus(req: DpomApproveReq): Promise<CommonResponseModel> {
         const purchaseOrderNumber = req.purchaseOrderNumber

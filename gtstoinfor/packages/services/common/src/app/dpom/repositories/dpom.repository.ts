@@ -5,7 +5,7 @@ import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
-import { PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
