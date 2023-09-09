@@ -22,19 +22,19 @@ const ShipmentChangesCompareGrid = () => {
     const [phaseExcelData, setPhaseWiseExcelData] = useState<any[]>([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [unitChangeData, setUnitChangeData] = useState([])
+    const [page, setPage] = React.useState(1);
     const [currentPage, setCurrentPage] = React.useState(1);
     const [form] = Form.useForm();
     const { Text } = Typography;
     const { RangePicker } = DatePicker
     const { Option } = Select
-    const page = 10;
 
     useEffect(() => {
         getPlantCodeChangeData()
         getGACChangeData()
         getMRGACChangeData()
         getModeOfTransportChangeData()
-       
+
     }, [])
 
     const getGACChangeData = () => {
@@ -70,9 +70,9 @@ const ShipmentChangesCompareGrid = () => {
             setFilteredPOStatusData(res.data)
         })
     }
-    
 
-   
+
+
 
     function convertToYYYYMMDD(inputDate) {
         const formatsToTry = ['DD-MM-YYYY', 'MM/DD/YYYY', 'YYYY-MM-DD'];
@@ -334,7 +334,7 @@ const ShipmentChangesCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: '60px',
-            render: (text, object, index) => (currentPage - 1) * page + (index + 1),
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
             title: 'Report Generate Date',
@@ -358,7 +358,7 @@ const ShipmentChangesCompareGrid = () => {
             title: 'PO Line Item No',
             dataIndex: 'po_line_item_number'
         },
-        
+
         {
             title: 'Change from OGAC',
             dataIndex: 'change_from_ogac'
@@ -443,7 +443,7 @@ const ShipmentChangesCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: '60px',
-            render: (text, object, index) => (currentPage - 1) * page + (index + 1),
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
             title: 'Report Generate Date',
@@ -533,7 +533,7 @@ const ShipmentChangesCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: '60px',
-            render: (text, object, index) => (currentPage - 1) * page + (index + 1),
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
             title: 'PO Number',
@@ -580,17 +580,17 @@ const ShipmentChangesCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: '60px',
-            render: (text, object, index) => (currentPage - 1) * page+ (index + 1),
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
             title: 'Report Genarate Date',
             dataIndex: '',
-           // ...getColumnSearchProps('po_number')
+            // ...getColumnSearchProps('po_number')
         },
         {
             title: 'Item',
             dataIndex: 'item',
-           // ...getColumnSearchProps('item')
+            // ...getColumnSearchProps('item')
         },
         {
             title: 'Factory',
@@ -636,14 +636,14 @@ const ShipmentChangesCompareGrid = () => {
             dataIndex: '',
             ...getColumnSearchProps('')
         },
-       
+
     ];
 
     const columns4: any = [
         {
             title: 'S No',
             key: 'sno',
-            render: (text, object, index) => (currentPage- 1) * page + (index + 1)
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1)
         },
         {
             title: 'PO Number',
@@ -694,7 +694,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'Document Date',
             dataIndex: '',
-          //  ...getColumnSearchProps('factory')
+            //  ...getColumnSearchProps('factory')
         },
         {
             title: 'PO Number',
@@ -722,47 +722,47 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'Change from Inventory Segment Code',
             dataIndex: '',
-           // ...getColumnSearchProps('')
+            // ...getColumnSearchProps('')
         },
         {
             title: 'Change To Inventory Segment Code',
             dataIndex: '',
-           // ...getColumnSearchProps('')
+            // ...getColumnSearchProps('')
         },
         {
             title: 'Change from Destination Country Name',
             dataIndex: '',
-           // ...getColumnSearchProps('')
+            // ...getColumnSearchProps('')
         },
         {
             title: 'Change To Destination Country Name',
             dataIndex: '',
-           // ...getColumnSearchProps('')
-        }, 
+            // ...getColumnSearchProps('')
+        },
         {
             title: 'Change from Ship To Customer Number',
             dataIndex: '',
-           // ...getColumnSearchProps('')
+            // ...getColumnSearchProps('')
         },
         {
             title: 'Change to Ship To Customer Number',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Ship To Customer Number in DIA',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change from Plant Code',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change to Plant Code',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         // {
         //     title: ' Sum Of Qrd Qty last Week',
@@ -855,34 +855,52 @@ const ShipmentChangesCompareGrid = () => {
         {
             key: '1',
             label: <b>GAC Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
-        },
-        {
-            key: '2',
-            label: <b>MRGAC Revised PO's : {unitChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} />,
-        },
-        {
-            key: '3',
-            label: <b >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns3} scroll={{ x: 'max-content' }} />,
-        },
-        {
-            key: '4',
-            label: <b>Plant Code Revised PO's : {poStatusData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns5} scroll={{ x: 'max-content' }}/>,
-        },
-        {
-            key: '5',
-            label: <b>Shipment Type Revised PO's : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} pagination={{
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} pagination={{
                 current: currentPage,
                 pageSize: page,
                 onChange: (page) => {
                     setCurrentPage(page);
                 },
             }} />,
-        }
+        },
+        {
+            key: '2',
+            label: <b>MRGAC Revised PO's : {unitChangeData?.length}</b>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} pagination={{
+                current: currentPage,
+                pageSize: page,
+                onChange: (page) => {
+                    setCurrentPage(page);
+                },
+            }} />,
+        },
+        {
+            key: '3',
+            label: <b >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns3} scroll={{ x: 'max-content' }} pagination={{
+                current: currentPage,
+                pageSize: page,
+                onChange: (page) => {
+                    setCurrentPage(page);
+                },
+            }} />,
+        },
+        {
+            key: '4',
+            label: <b>Plant Code Revised PO's : {poStatusData?.length}</b>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns5} scroll={{ x: 'max-content' }} pagination={{
+                current: currentPage,
+                pageSize: page,
+                onChange: (page) => {
+                    setCurrentPage(page);
+                },
+            }} />,
+        },
+        // {
+        //     key: '5',
+        //     label: <b>Shipment Type Revised PO's : {poStatusData?.length}</b>,
+        //     children: <Table bordered dataSource={poStatusData} columns={columns2} />,
+        // }
     ];
 
     const onReset = () => {

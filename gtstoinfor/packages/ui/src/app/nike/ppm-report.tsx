@@ -1,7 +1,7 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { MarketingModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
@@ -47,7 +47,6 @@ const PPMReport = () => {
     getplantCode();
     getItem();
     getFactory();
-
   }, [])
 
 
@@ -372,8 +371,24 @@ const PPMReport = () => {
         render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`,
       },
       {
+        title: 'Last Modified Date',
+        dataIndex: 'lastModifiedDate',
+        render: (text) => moment(text).format('YYYY-MM-DD')
+
+      },
+      {
         title: 'Item',
         dataIndex: 'item',
+      },
+      {
+        title: 'Factory',
+        dataIndex: 'factory',
+      },
+      {
+        title: 'Document Date',
+        dataIndex: 'documentDate',
+        render: (text) => moment(text).format('YYYY-MM-DD')
+
       },
       {
         title: 'Purchase Order Number',
@@ -384,6 +399,10 @@ const PPMReport = () => {
         dataIndex: 'poLineItemNumber'
       },
       {
+        title: 'DPOM Line Item Status',
+        dataIndex: 'DPOMLineItemStatus'
+      },
+      {
         title: 'Style Number',
         dataIndex: 'styleNumber',
       },
@@ -391,52 +410,6 @@ const PPMReport = () => {
         title: 'Product Code',
         dataIndex: 'productCode',
       },
-      {
-        title: "Plant Code",
-        dataIndex: 'plant'
-      },
-      {
-        title: 'Total Item Qty',
-        dataIndex: 'totalItemQty',
-        align: 'center',
-        render: (text) => <strong>{text}</strong>
-      },
-      {
-        title: "Category",
-        dataIndex: 'categoryCode'
-      },
-      {
-        title: "Planning Priority Number",
-        dataIndex: 'planningPriorityCode'
-      },
-      {
-        title: "Purchase Group",
-        dataIndex: 'purchaseGroupCode'
-      },
-      {
-        title: "Gender Age",
-        dataIndex: 'genderAgeCode'
-      },
-      {
-        title: 'Last Modified Date',
-        dataIndex: 'lastModifiedDate',
-        render: (text) => moment(text).format('YYYY-MM-DD')
-
-      }, 
-      {
-        title: 'Factory',
-        dataIndex: 'factory',
-      },
-      {
-        title: 'Document Date',
-        dataIndex: 'documentDate',
-        render: (text) => moment(text).format('YYYY-MM-DD')
-
-      },  
-      {
-        title: 'DPOM Line Item Status',
-        dataIndex: 'DPOMLineItemStatus'
-      },  
       {
         title: 'Colour Description',
         dataIndex: 'colorDesc'
@@ -460,15 +433,22 @@ const PPMReport = () => {
       {
         title: "Destination Country Code",
         dataIndex: 'destinationCountryCode'
-      }, 
+      },
       {
-         title: 'Geo Code',
-          dataIndex: '' 
-        },
+        title: "Plant Code",
+        dataIndex: 'plant'
+      },
+      { title: 'Geo Code', dataIndex: '' },
       {
         title: "Plant Name",
         dataIndex: 'plantName'
-      }, 
+      },
+      {
+        title: 'Total Item Qty',
+        dataIndex: 'totalItemQty',
+        align: 'center',
+        render: (text) => <strong>{text}</strong>
+      },
       {
         title: "GAC",
         dataIndex: 'GAC'
@@ -509,11 +489,19 @@ const PPMReport = () => {
       {
         title: "Planning Season Year",
         dataIndex: 'planningSeasonYear'
-      }, 
+      },
+      {
+        title: "Category",
+        dataIndex: 'categoryCode'
+      },
       {
         title: "Vendor Code",
         dataIndex: 'vendorCode'
-      }, 
+      },
+      {
+        title: "Gender Age",
+        dataIndex: 'genderAgeCode'
+      },
       {
         title: "Gender Age Description",
         dataIndex: 'genderAgeDesc'
@@ -521,7 +509,11 @@ const PPMReport = () => {
       {
         title: "Shipping Type",
         dataIndex: 'shippingType'
-      }, 
+      },
+      {
+        title: "Planning Priority Number",
+        dataIndex: 'planningPriorityCode'
+      },
       {
         title: "Planning Priority Description",
         dataIndex: 'planningPriorityDesc'
@@ -533,7 +525,11 @@ const PPMReport = () => {
       {
         title: "In Co Terms",
         dataIndex: 'inCoTerms'
-      }, 
+      },
+      {
+        title: "Purchase Group",
+        dataIndex: 'purchaseGroupCode'
+      },
       {
         title: "Purchase Group Name",
         dataIndex: 'purchaseGroupName'
@@ -748,6 +744,13 @@ const PPMReport = () => {
     });
 
 
+    const getRowClassName = (record) => {
+      if (record.displayName) {
+        return 'colored-row';
+      }
+      return '';
+    };
+
     return (
       <>
 
@@ -769,16 +772,19 @@ const PPMReport = () => {
         ) : (<Table size='large' />
         )}
       </>
-    ); 
+    );
+
+
+
   }
   return (
     <>
       <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
-        extra={ <Button
+        extra={filteredData.length > 0 ? (<Button
           type="default"
           style={{ color: 'green' }}
           onClick={handleExport}
-          icon={<FileExcelFilled />}>Download Excel</Button>}>
+          icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
         <Form
           onFinish={getData}
           form={form}

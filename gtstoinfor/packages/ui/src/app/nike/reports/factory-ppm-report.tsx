@@ -256,70 +256,70 @@ const FactoryPPMReport = () => {
     }
 
 
-      const getData = () => {
+    const getData = () => {
         const req = new PpmDateFilterRequest();
         const selectedLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
-      
+
         if (form.getFieldValue('lastModifiedDate') !== undefined) {
-          req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD');
+            req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('lastModifiedDate') !== undefined) {
-          req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD');
+            req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('documentDate') !== undefined) {
-          req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
+            req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('documentDate') !== undefined) {
-          req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
+            req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('productCode') !== undefined) {
-          req.productCode = form.getFieldValue('productCode');
+            req.productCode = form.getFieldValue('productCode');
         }
         if (form.getFieldValue('poandLine') !== undefined) {
-          req.poandLine = form.getFieldValue('poandLine');
+            req.poandLine = form.getFieldValue('poandLine');
         }
         if (form.getFieldValue('colorDesc') !== undefined) {
-          req.colorDesc = form.getFieldValue('colorDesc');
+            req.colorDesc = form.getFieldValue('colorDesc');
         }
         if (form.getFieldValue('categoryDesc') !== undefined) {
-          req.categoryDesc = form.getFieldValue('categoryDesc');
+            req.categoryDesc = form.getFieldValue('categoryDesc');
         }
         if (form.getFieldValue('destinationCountry') !== undefined) {
-          req.destinationCountry = form.getFieldValue('destinationCountry');
+            req.destinationCountry = form.getFieldValue('destinationCountry');
         }
         if (form.getFieldValue('plant') !== undefined) {
-          req.plant = form.getFieldValue('plant');
+            req.plant = form.getFieldValue('plant');
         }
         if (form.getFieldValue('item') !== undefined) {
-          req.item = form.getFieldValue('item');
+            req.item = form.getFieldValue('item');
         }
         if (form.getFieldValue('factory') !== undefined) {
-          req.factory = form.getFieldValue('factory');
+            req.factory = form.getFieldValue('factory');
         }
         if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
-          req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
+            req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
         }
         if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
-          req.DPOMLineItemStatus = selectedLineItemStatus;
+            req.DPOMLineItemStatus = selectedLineItemStatus;
         }
-      
+
         service.getPPMData(req)
-          .then(res => {
-            if (res.status) {
-              setGridData(res.data);
-              setFilterData(res.data);
-              setFilteredData(res.data);
-              Finish(res.data);
-            } else {            
-              setGridData([]); 
-              setFilterData([]); 
-              setFilteredData([]); 
-            }
-          })
-          .catch(err => {
-            console.error(err);
-          });
-      };
+            .then(res => {
+                if (res.status) {
+                    setGridData(res.data);
+                    setFilterData(res.data);
+                    setFilteredData(res.data);
+                    Finish(res.data);
+                } else {
+                    setGridData([]);
+                    setFilterData([]);
+                    setFilteredData([]);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    };
 
     const Finish = (data: any) => {
 
@@ -386,7 +386,7 @@ const FactoryPPMReport = () => {
                     return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
                 }
             },
-            { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber',align:'center' },
+            { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber', align: 'center' },
             { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
             { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
             { title: 'Style Number', dataIndex: 'styleNumber' },
@@ -409,7 +409,7 @@ const FactoryPPMReport = () => {
             { title: 'Gender Age Description', dataIndex: ' ' },
             { title: 'Destination Country Code ', dataIndex: 'destinationCountryCode' },
             { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
-            { title: 'Plant Code', dataIndex: 'plant',align:'center' },
+            { title: 'Plant Code', dataIndex: 'plant', align: 'center' },
             { title: 'Plant Name', dataIndex: 'plantName' },
             { title: 'Geo Code', dataIndex: '' },
             { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
@@ -496,7 +496,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Purchase Order Number',
-                dataIndex: 'purchaseOrderNumber',align:'center'
+                dataIndex: 'purchaseOrderNumber', align: 'center'
             },
             {
                 title: 'PO Line Item Number',
@@ -538,14 +538,14 @@ const FactoryPPMReport = () => {
             {
                 title: 'Lead Time',
                 dataIndex: 'leadTime',
-                render:(text)=>{
-                     if (!isNaN(parseFloat(text))) {
-      // If it's a valid number, render it
-      return parseFloat(text).toFixed(2); // You can format it as needed
-    } else {
-      // If it's not a valid number, render a placeholder or an empty string
-      return 'N/A'; // Or any other desired text
-    }
+                render: (text) => {
+                    if (!isNaN(parseFloat(text))) {
+                        // If it's a valid number, render it
+                        return parseFloat(text).toFixed(2); // You can format it as needed
+                    } else {
+                        // If it's not a valid number, render a placeholder or an empty string
+                        return 'N/A'; // Or any other desired text
+                    }
                 }
             },
             {
@@ -587,7 +587,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Plant Code',
                 dataIndex: 'plant',
-                align:'center'
+                align: 'center'
             },
             {
                 title: 'Plant Name',
@@ -664,108 +664,106 @@ const FactoryPPMReport = () => {
                 title: 'Change Register',
                 dataIndex: 'displayName',
                 align: 'center',
-            },  
-            
-                    {
-                        title: 'Edit Unit Allocation',
-                        dataIndex: '',
-                        align: "center",
-                        render: (text, rowData) => (
-                            <span>
-                                <Form.Item>
-                                    <Checkbox
-                                        onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
-                                        checked={expandedActualUnit[rowData.poAndLine] || false}
-                                    />
-                                </Form.Item>
-                            </span>
-                        ),
-                    },
-                    {
-                        align: 'center',
-                        render: (text, rowData) => (
-                            <div>
-                                {expandedActualUnit[rowData.poAndLine] && (
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Input
-                                            name='actualUnit'
-                                            allowClear
-                                            style={{ marginRight: '10px' }}
-                                            placeholder="Enter text"
-                                            value={textareaValuesActualUnit[rowData.poAndLine] || ''}
-                                            onChange={(e) =>
-                                                handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
-                                            }
-                                        />
-                                        <Button
-                                            type="primary"
-                                            onClick={() => {
-                                                updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
-                                                handleCheckboxChange('ActualUnit', rowData.poAndLine);
-                                                handleTextareaChange('ActualUnit', rowData.poAndLine, '');
-                                            }}
-                                        >
-                                            Submit
-                                        </Button>
-                                    </div>
-                                )}
+            },
+
+            {
+                title: 'Edit Unit Allocation',
+                dataIndex: '',
+                align: "center",
+                render: (text, rowData) => (
+                    <span>
+                        <Form.Item>
+                            <Checkbox
+                                onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
+                                checked={expandedActualUnit[rowData.poAndLine] || false}
+                            />
+                        </Form.Item>
+                    </span>
+                ),
+            },
+            {
+                align: 'center',
+                render: (text, rowData) => (
+                    <div>
+                        {expandedActualUnit[rowData.poAndLine] && (
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Input
+                                    name='actualUnit'
+                                    allowClear
+                                    style={{ marginRight: '10px' }}
+                                    placeholder="Enter text"
+                                    value={textareaValuesActualUnit[rowData.poAndLine] || ''}
+                                    onChange={(e) =>
+                                        handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
+                                    }
+                                />
+                                <Button
+                                    type="primary"
+                                    onClick={() => {
+                                        updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
+                                        handleCheckboxChange('ActualUnit', rowData.poAndLine);
+                                        handleTextareaChange('ActualUnit', rowData.poAndLine, '');
+                                    }}
+                                >
+                                    Submit
+                                </Button>
                             </div>
-                        ),
-                   
+                        )}
+                    </div>
+                ),
+
             },
             {
                 title: 'Actual Unit',
                 dataIndex: 'actualUnit',
                 align: 'center',
             },
-            
-               
-                    {
-                        title: 'Quantity Allocation',
-                        align: 'center',
-                        render: (text, rowData) => (
-                            <span>
-                                <Form.Item>
-                                    <Checkbox
-                                        onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
-                                        checked={expandedQuantityAllocation[rowData.poAndLine] || false}
-                                    />
-                                </Form.Item>
-                            </span>
-                        ),
-                    },
-                    {
-                        dataIndex: 'id',
-                        align: 'center',
-                        render: (text, rowData) => (
-                            <div>
-                                {expandedQuantityAllocation[rowData.poAndLine] && (
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Input
-                                            name='allocatedQuantity'
-                                            allowClear
-                                            style={{ marginRight: '10px' }}
-                                            placeholder="Enter text"
-                                            value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
-                                            onChange={(e) =>
-                                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
-                                            }
-                                        />
-                                        <Button
-                                            type="primary"
-                                            onClick={() => {
-                                                updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
-                                                handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
-                                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
-                                            }}
-                                        >
-                                            Submit
-                                        </Button>
-                                    </div>
-                                )}
+            {
+                title: 'Quantity Allocation',
+                align: 'center',
+                render: (text, rowData) => (
+                    <span>
+                        <Form.Item>
+                            <Checkbox
+                                onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
+                                checked={expandedQuantityAllocation[rowData.poAndLine] || false}
+                            />
+                        </Form.Item>
+                    </span>
+                ),
+            },
+            {
+                dataIndex: 'id',
+                align: 'center',
+                render: (text, rowData) => (
+                    <div>
+                        {expandedQuantityAllocation[rowData.poAndLine] && (
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Input
+                                    name='allocatedQuantity'
+                                    allowClear
+                                    style={{ marginRight: '10px' }}
+                                    placeholder="Enter text"
+                                    value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
+                                    onChange={(e) =>
+                                        handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
+                                    }
+                                />
+                                <Button
+                                    type="primary"
+                                    onClick={() => {
+                                        updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
+                                        handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
+                                        handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
+                                    }}
+                                >
+                                    Submit
+                                </Button>
                             </div>
-                        ),
-                    
+                        )}
+                    </div>
+                ),
+
             },
             {
                 title: 'Reallocated Quantity',
@@ -849,27 +847,35 @@ const FactoryPPMReport = () => {
             });
         });
 
+        const getRowClassName = (record) => {
+            if (record.displayName) {
+                return 'colored-row';
+            }
+            return '';
+        };
+
         return (
             <>
-            
-              {filterData.length > 0 ? (
-                <Table
-                  columns={columns}
-                  dataSource={filterData}
-                  size='small'
-                  pagination={{
-                    onChange(current, pageSize) {
-                      setPage(current);
-                      setPageSize(pageSize);
-                    }
-                  }}
-                  className="custom-table-wrapper"
-                  scroll={{ x: 'max-content' }}
-                />
-              ) : ( <Table size='large' />
-              )}
+
+                {filterData.length > 0 ? (
+                    <Table
+                        columns={columns}
+                        dataSource={filterData}
+                        size='small'
+                        pagination={{
+                            onChange(current, pageSize) {
+                                setPage(current);
+                                setPageSize(pageSize);
+                            }
+                        }}
+                        className="custom-table-wrapper"
+                        scroll={{ x: 'max-content' }}
+                        rowClassName={getRowClassName}
+                    />
+                ) : (<Table size='large' />
+                )}
             </>
-          );
+        );
     }
 
     return (
