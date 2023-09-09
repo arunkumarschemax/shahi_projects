@@ -4,6 +4,7 @@ import { Button, Card, Descriptions } from "antd"
 import DescriptionsItem from "antd/es/descriptions/Item"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import SettingsForm from "./settings-form"
 
 export const SettingsView = () => {
 
@@ -28,11 +29,15 @@ export const SettingsView = () => {
     
 
     const onUpdate = () => {
-        navigate('/settings/settings/settings-form',{state:{id:data[0]?.settingsId}})
+        navigate('/settings/settings-form',{state:{id:data[0]?.settingsId}})
     }
 
     return(
-        <Card title='Settings' size='small'   extra={<Button onClick={onUpdate} type={'primary'}>Change</Button>}>
+        <>
+        {
+            data.length > 0 ? (<>
+            
+            <Card title='Settings' size='small'   extra={<Button onClick={onUpdate} type={'primary'}>Change</Button>}>
              <Descriptions title='COMPANY DETAILS' size='small'>
                 <DescriptionsItem label='Account Control Head'>{data[0]?.accountControlName}</DescriptionsItem>
                 <DescriptionsItem label='PCH'>{data[0]?.profitControlHead}</DescriptionsItem>
@@ -66,6 +71,12 @@ export const SettingsView = () => {
             </Descriptions>
 
         </Card>
+            </>) : (<>
+            <SettingsForm/>
+            </>)
+        }
+        
+        </>
     )
 
 }

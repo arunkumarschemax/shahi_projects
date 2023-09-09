@@ -465,10 +465,10 @@ export const AppRoutes = () => {
                 <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest/>}/>
 
                 </Route>
-                <Route path='settings'>
+                {/* <Route path='settings'> */}
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
                 <Route path='settings/settings-view' element={<SettingsView/>}/>
-                </Route>
+                {/* </Route> */}
 
                 <Route path='sample-development' >
                     <Route path="sample-development-form" element={<SampleDevForm />}/>

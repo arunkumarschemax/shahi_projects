@@ -17,13 +17,13 @@ const { useToken } = theme
 
 
 export const baseRouterList = [
-    {
-        label: "Dashboard",
-        key: "dashboard",
-        path: "dashboard",
-        icon: <DashboardOutlined />,
-        filepath: "/dashboard.tsx",
-    },
+    // {
+    //     label: "Dashboard",
+    //     key: "dashboard",
+    //     path: "dashboard",
+    //     icon: <DashboardOutlined />,
+    //     filepath: "/dashboard.tsx",
+    // },
     {
         label: "User Management",
         key: "user-management",
@@ -354,22 +354,22 @@ export const baseRouterList = [
         label: "Settings",
         key: "settings",
         icon:<FontAwesomeIcon icon={faCog} />,
-        path: "settings",
-        filepath: "settings",
-        children:[
-            {
-                label:'Settings',
-                key:'settings',
-                path:'settings/settings-form',
-                filepath:'settings/settings-form'
-            },
-            {
-                label:'Settings View',
-                key:'settingsView',
-                path:'settings/settings-view',
-                filepath:'settings/settings-view'
-            },
-        ]
+        path: "settings/settings-view",
+        filepath: "settings/settings-view",
+        // children:[
+        //     {
+        //         label:'Settings',
+        //         key:'settings',
+        //         path:'settings/settings-form',
+        //         filepath:'settings/settings-form'
+        //     },
+        //     {
+        //         label:'Settings View',
+        //         key:'settingsView',
+        //         path:'settings/settings-view',
+        //         filepath:'settings/settings-view'
+        //     },
+        // ]
     },
     {
         label: "Style Management",

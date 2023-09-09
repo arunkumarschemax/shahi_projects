@@ -65,7 +65,7 @@ export const OperationReportingView = () => {
     }
 
     const onJobCompleted = (record) => {
-        const req = new OperationReportingRequest(record.jobNumner,record.skuCode,record.poNumber,record.issuedQuantity,reportedQuantity,rejectedQuantity,wastedQuantity)
+        const req = new OperationReportingRequest(form.getFieldValue('itemCode'),record.jobNumber,record.skuCode,record.poNumber,record.issuedQuantity,reportedQuantity,rejectedQuantity,wastedQuantity)
         service.createOperationReporting(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
