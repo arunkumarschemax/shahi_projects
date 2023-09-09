@@ -46,7 +46,7 @@ export function FabricSubTypeForm(
     service.createFabricSubType(Data).then(res => {
       if (res.status) {
         AlertMessages.getSuccessMessage('Created Successfully');
-        navigate("/masters/fabric-sub-type/fabric-sub-type-view")
+        navigate("/masters/fabric-sub-type-view/fabric-sub-type-view")
         onReset();
       } else {
         if (res.status) {

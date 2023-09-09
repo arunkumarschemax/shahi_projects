@@ -314,7 +314,7 @@ export const AppRoutes = () => {
                     closeForm={() => { }}
                     updateItem={(undefined) => { }}/>} />
                     <Route path='fabric-sub-type-view/fabric-sub-type-view' element={<FabricSubTypeGrid/>} />
-                    <Route path='fabric-sub-type/fabric-sub-type-form' key ='fabric-sub-type/fabric-sub-type-form' element={<FabricSubTypeForm  fabricsubtypeData={undefined}
+                    <Route path='fabric-sub-type-form/fabric-sub-type-form' key ='fabric-sub-type-form/fabric-sub-type-form' element={<FabricSubTypeForm  fabricsubtypeData={undefined}
 
                     isUpdate={false}
                     closeForm={() => { }}
