@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, MarketingModel, NewDivertModel, OldDivertModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, MarketingModel, NewDivertModel, OldDivertModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, dpomOrderColumnsName } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -175,7 +175,8 @@ export class DpomService {
     }
 
 
-    async getCRMOrderDetails(buyerPO: string): Promise<CommonResponseModel> {
+    async getCRMOrderDetails(): Promise<CommonResponseModel> {
+        const buyerPO = 'DV3934'
         const data = await AppDataSource1.query(`select * from movex.nike_co_view where byuer_po = '${buyerPO}'`)
         if (data.length) {
             return new CommonResponseModel(true, 1, 'data retrived', data)
