@@ -209,11 +209,11 @@ export class DpomService {
             await transactionManager.startTransaction()
             const orderDetails = await this.getDPOMOrderDetails();
             const CRMData = this.getCRMOrderDetails('DV3934');
+            // const CRMData = this.getCRMOrderDetails('DV3934');
             const CRMData1 = this.getCRMOrderDetails1('476F');
-            const CRMData2 = this.getCRMOrderDetails2('2000601403')
-            // console.log(CRMData)
-            // console.log(CRMData1)
-            // console.log(CRMData2)
+            // const CRMData1 = this.getCRMOrderDetails1('476F');
+            const CRMData2 = this.getCRMOrderDetails2('2000593977');
+            // const CRMData2 = this.getCRMOrderDetails2('2000593977');
             if (!orderDetails.status) return new CommonResponseModel(false, 0, orderDetails.error)
             const flag = new Set();
             const pdfData = {
@@ -226,21 +226,21 @@ export class DpomService {
             }
 
             const crmData = {
-                item: '012A',
-                factory: '',
-                customerOrder: '',
-                coFinalApprovalDate: '',
-                planNo: '',
+                item: CRMData[0]?.ITEMNO,
+                factory: CRMData2[0]?.PLAN_UNIT,
+                customerOrder: CRMData[0]?.ORDNO,
+                coFinalApprovalDate: CRMData[0]?.CO_FINAL_APP_DATE,
+                planNo: CRMData2[0]?.PLAN_NUMB,
                 truckOutDate: '',
                 actualShippedQty: '',
-                coPrice: null,
+                coPrice: CRMData[0]?.PRICE,
                 shipToAddress: '',
-                paymentTerm: '',
+                paymentTerm: CRMData2[0]?.PAY_TERM_DESC,
                 styleDesc: '',
                 fabricContent: '',
                 fabricSource: '',
-                commission: '',
-                PCD: ''
+                commission: CRMData[0]?.COMMISION,
+                PCD: CRMData[0]?.PCD
             }
 
             const date = new Date();
@@ -696,18 +696,18 @@ export class DpomService {
 
     async getOrderAcceptanceData(req: nikeFilterRequest): Promise<CommonResponseModel> {
         try {
-          const data = await this.dpomRepository.getOrderAcceptanceDat(req);
-        //   console.log(req,'request')
-          if (data.length > 0) {
-            return new CommonResponseModel(true, 1, 'Data retrieved', data);
-          } else {
-            return new CommonResponseModel(false, 0, 'No data found');
-          }
+            const data = await this.dpomRepository.getOrderAcceptanceDat(req);
+            //   console.log(req,'request')
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 1, 'Data retrieved', data);
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found');
+            }
         } catch (err) {
-          throw err;
+            throw err;
         }
-      }
-      
+    }
+
 
 
     async approveDpomLineItemStatus(req: DpomApproveReq): Promise<CommonResponseModel> {
@@ -722,7 +722,7 @@ export class DpomService {
         }
     }
 
-    async getTotalItemQtyChangeData(req?:nikeFilterRequest): Promise<CommonResponseModel> {
+    async getTotalItemQtyChangeData(req?: nikeFilterRequest): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getTotalItemQtyChangeData(req)
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
@@ -1123,7 +1123,7 @@ export class DpomService {
         }
     }
 
-  
+
 
     async getDivertReportData(): Promise<CommonResponseModel> {
         const reports = await this.dpomRepository.getDivertReport();
@@ -1228,6 +1228,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getPpmItemForMarketing(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getItemforMarketing()
         if (data.length > 0)
@@ -1243,7 +1244,6 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
-
 
     async updateFactoryStatusColumns(req: FactoryUpdate): Promise<CommonResponseModel> {
         try {
@@ -1312,7 +1312,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
-    
+
     async getPpmProductCodeForOrderCreation(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmProductCodeForOrderCreation()
         if (data.length > 0)
@@ -1328,6 +1328,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getPpmPoLineForNikeOrder(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmPoLineForNikeOrder()
         if (data.length > 0)
@@ -1335,6 +1336,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getPpmPoLineForPo(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmPoLineForNikeOrder()
         if (data.length > 0)
