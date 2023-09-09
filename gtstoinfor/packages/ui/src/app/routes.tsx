@@ -166,7 +166,10 @@ export const AppRoutes = () => {
 
                     <Route path='/masters'>
                         <Route path='factories/factories-view' element={<FactoriesView />} />
-                        <Route path='factories/factories-form' element={<FactoriesForm />} />
+                        <Route path='factories/factories-form' element={<FactoriesForm factoryData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateFactory={(undefined) => { }}/>} />
                         <Route path='items/item-grid' element={<ItemsGrid />} />
 
                         <Route path='currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
@@ -360,7 +363,10 @@ export const AppRoutes = () => {
                     closeForm={()=>{}}
                     updateAttribute={(undefined)=>{}}/>}/>
                     <Route path='factories/factories-view' element={<FactoriesView />} />
-                        <Route path='factories/factories-form' element={<FactoriesForm />} />
+                        <Route path='factories/factories-form' element={<FactoriesForm factoryData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateFactory={(undefined) => { }}/>} />
                         <Route path='currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
