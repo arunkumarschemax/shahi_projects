@@ -8,7 +8,7 @@ import Highlighter from 'react-highlight-words';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { nikeFilterRequest } from '@project-management-system/shared-models';
 
-const  OrdersCompareGrid = () => {
+const OrdersCompareGrid = () => {
 
     const service = new NikeService()
     const [poStatusData, setPOStatusData] = useState([])
@@ -19,8 +19,6 @@ const  OrdersCompareGrid = () => {
     const [filteredItemChangeData, setFilteredItemChangeData] = useState([])
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
     const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
-    const [phaseData, setPhaseWiseData] = useState<any[]>([]);
-    const [phaseExcelData, setPhaseWiseExcelData] = useState<any[]>([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [unitChangeData, setUnitChangeData] = useState([])
     const [page, setPage] = React.useState(1);
@@ -50,14 +48,14 @@ const  OrdersCompareGrid = () => {
 
     const getPoLine = () => {
         service.getPpmPoLineForNikeOrder().then(res => {
-          setPoLine(res.data)
+            setPoLine(res.data)
         })
-      }
+    }
     const getQtyChangeData = () => {
         const req = new nikeFilterRequest();
         if (form.getFieldValue('poandLine') !== undefined) {
             req.poandLine = form.getFieldValue('poandLine');
-          }
+        }
         service.getTotalItemQtyChangeData(req).then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
@@ -94,7 +92,7 @@ const  OrdersCompareGrid = () => {
             setFilteredPOStatusData(res.data)
         })
     }
-    
+
     const PlantCodeChange = () => {
         service.getPlantCodeChangeData().then((res) => {
             setProductCodeChangeData(res.data)
@@ -131,39 +129,39 @@ const  OrdersCompareGrid = () => {
 
     const exportExcel = () => {
         const excel = new Excel();
-      
+
         if (filteredQtyData && filteredQtyData.length > 0) {
-          excel
-            .addSheet('Quantity changes')
-            .addColumns(data1)
-            .addDataSource(filteredQtyData, { str2num: true });
+            excel
+                .addSheet('Quantity changes')
+                .addColumns(data1)
+                .addDataSource(filteredQtyData, { str2num: true });
         }
-      
+
         if (unitChangeData && unitChangeData.length > 0) {
-          excel
-            .addSheet('Unit changes')
-            .addColumns(data4)
-            .addDataSource(unitChangeData, { str2num: true });
+            excel
+                .addSheet('Unit changes')
+                .addColumns(data4)
+                .addDataSource(unitChangeData, { str2num: true });
         }
-      
+
         if (itemChangeData && itemChangeData.length > 0) {
-          excel
-            .addSheet('Item changes')
-            .addColumns(data2)
-            .addDataSource(itemChangeData, { str2num: true });
+            excel
+                .addSheet('Item changes')
+                .addColumns(data2)
+                .addDataSource(itemChangeData, { str2num: true });
         }
-      
+
         if (poStatusData && poStatusData.length > 0) {
-          excel
-            .addSheet('PO Line Item Status Change')
-            .addColumns(data3)
-            .addDataSource(poStatusData, { str2num: true });
+            excel
+                .addSheet('PO Line Item Status Change')
+                .addColumns(data3)
+                .addDataSource(poStatusData, { str2num: true });
         }
-      
+
         excel.saveAs('revisedPOs.xlsx');
-      };
-      
-      
+    };
+
+
 
     const data1 = [
         {
@@ -410,7 +408,7 @@ const  OrdersCompareGrid = () => {
         {
             title: 'Factory',
             dataIndex: 'factory'
-        }, 
+        },
         {
             title: 'Document Date',
             dataIndex: 'document_date',
@@ -685,12 +683,12 @@ const  OrdersCompareGrid = () => {
         {
             title: 'Size Description',
             dataIndex: '',
-           // ...getColumnSearchProps('po_number')
+            // ...getColumnSearchProps('po_number')
         },
         {
             title: 'Change From Gross Price',
             dataIndex: '',
-           // ...getColumnSearchProps('po_number')
+            // ...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Gross Price currency code',
@@ -740,17 +738,17 @@ const  OrdersCompareGrid = () => {
         {
             title: 'Change from Net including discounts',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change From Net including discounts currency code',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change to Net including discounts',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'change to Net including discounts currency code',
@@ -760,12 +758,12 @@ const  OrdersCompareGrid = () => {
         {
             title: 'Legal PDF PO Price',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Legal PDF PO Price Currency',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'CRM CO Price',
@@ -775,17 +773,17 @@ const  OrdersCompareGrid = () => {
         {
             title: 'CRM CO Price Currency',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'comparission of CRM CO Price to Legal PDF PO Price',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Schedule Line Item No',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Previous Line Item Status',
@@ -794,7 +792,7 @@ const  OrdersCompareGrid = () => {
         },
         {
             title: 'Revised Line Item Status',
-            dataIndex: 'new_val',align: 'center',
+            dataIndex: 'new_val', align: 'center',
         },
         {
             title: 'Order Quantity Pieces',
@@ -807,7 +805,7 @@ const  OrdersCompareGrid = () => {
             )
 
         },
-       
+
     ];
     const columns3: any = [
         {
@@ -824,7 +822,7 @@ const  OrdersCompareGrid = () => {
         {
             title: 'Item',
             dataIndex: 'item',
-           // ...getColumnSearchProps('item')
+            // ...getColumnSearchProps('item')
         },
         {
             title: 'Factory',
@@ -870,7 +868,7 @@ const  OrdersCompareGrid = () => {
             dataIndex: '',
             ...getColumnSearchProps('')
         },
-       
+
     ];
     const columns4: any = [
         {
@@ -937,7 +935,7 @@ const  OrdersCompareGrid = () => {
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
-          //  ...getColumnSearchProps('schedule_line_item_number')
+            //  ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Previous Unit',
@@ -965,7 +963,7 @@ const  OrdersCompareGrid = () => {
         {
             title: 'Item',
             dataIndex: 'item',
-           // ...getColumnSearchProps('item')
+            // ...getColumnSearchProps('item')
         },
         {
             title: 'Factory',
@@ -1072,7 +1070,7 @@ const  OrdersCompareGrid = () => {
         },
         {
             title: 'Item',
-            dataIndex:'item',
+            dataIndex: 'item',
         },
         {
             title: 'Factory',
@@ -1111,47 +1109,47 @@ const  OrdersCompareGrid = () => {
         {
             title: 'Change from Inventory Segment Code',
             dataIndex: '',
-           // ...getColumnSearchProps('')
+            // ...getColumnSearchProps('')
         },
         {
             title: 'Change To Inventory Segment Code',
             dataIndex: '',
-           // ...getColumnSearchProps('')
+            // ...getColumnSearchProps('')
         },
         {
             title: 'Change from Destination Country Name',
             dataIndex: '',
-           // ...getColumnSearchProps('')
+            // ...getColumnSearchProps('')
         },
         {
             title: 'Change To Destination Country Name',
             dataIndex: '',
-           // ...getColumnSearchProps('')
-        }, 
+            // ...getColumnSearchProps('')
+        },
         {
             title: 'Change from Ship To Customer Number',
             dataIndex: '',
-           // ...getColumnSearchProps('')
+            // ...getColumnSearchProps('')
         },
         {
             title: 'Change to Ship To Customer Number',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Ship To Customer Number in DIA',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change from Plant Code',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change to Plant Code',
             dataIndex: '',
-           // ...getColumnSearchProps('schedule_line_item_number')
+            // ...getColumnSearchProps('schedule_line_item_number')
         },
         // {
         //     title: ' Sum Of Qrd Qty last Week',
@@ -1244,7 +1242,7 @@ const  OrdersCompareGrid = () => {
         {
             key: '1',
             label: <b style={{ color: '#25CB2D' }}>Order Qty Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table  className="custom-table-wrapper"bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '2',
@@ -1264,7 +1262,7 @@ const  OrdersCompareGrid = () => {
         {
             key: '5',
             label: <b style={{ color: '#B229DE' }}>Price & currency change in FOB : {priceChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={priceChaneData} columns={columns2} scroll={{ x: 'max-content' }}/>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={priceChaneData} columns={columns2} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '6',
@@ -1274,12 +1272,12 @@ const  OrdersCompareGrid = () => {
         {
             key: '7',
             label: <b style={{ color: '#DEAD29' }}>Mode of transportation: {modeOTransportChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={modeOTransportChaneData} columns={columns3} scroll={{ x: 'max-content' }}/>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={modeOTransportChaneData} columns={columns3} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '8',
             label: <b>Item Text changed PO's : {itemTextChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={itemTextChaneData} columns={columns5} scroll={{ x: 'max-content' }}/>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemTextChaneData} columns={columns5} scroll={{ x: 'max-content' }} />,
         }
     ];
 
@@ -1300,38 +1298,38 @@ const  OrdersCompareGrid = () => {
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
             <Form form={form} layout={"vertical"} >
                 <Row gutter={24}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
-                  <Form.Item name='poandLine' label='Po+Line' >
-                <Select
-                  showSearch
-                  placeholder="Select Po+Line"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {poLine.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
-                  })
-                  }
-                   </Select>
-                 </Form.Item>
-                </Col>
-                
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
+                        <Form.Item name='poandLine' label='Po+Line' >
+                            <Select
+                                showSearch
+                                placeholder="Select Po+Line"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {poLine.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 20 }}>
-                    
+
                         <Button
                             type="primary"
                             icon={<SearchOutlined />}
                             style={{ marginRight: 50, width: 100 }}
                             htmlType="button"
                             onClick={getFilterdData}>Search</Button>  </Col>
-                   <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 20 }}>
-                    <Button
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 20 }}>
+                        <Button
                             type="primary"
 
                             icon={<UndoOutlined />}
                             htmlType="submit"
                             onClick={onReset}>Reset</Button>
-                            
+
                     </Col>
 
                 </Row>

@@ -196,7 +196,7 @@ const PPMReport = () => {
       <div style={{ padding: 8 }}>
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`} 
+          placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -233,7 +233,7 @@ const PPMReport = () => {
       text ? (
         searchedColumn === dataIndex ? (
           <Highlighter
-            highlightStyle={{ backgroundColor:'#ffc069', padding: 0 }}
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
             searchWords={[searchText]}
             autoEscape
             textToHighlight={text.toString()}
@@ -915,7 +915,7 @@ const PPMReport = () => {
                   allowClear
                 >
                   {item.map((inc: any) => {
-                    return <Option key=  {inc.id} value={inc.item}>{inc.item}</Option>
+                    return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
                   })
                   }
                 </Select>

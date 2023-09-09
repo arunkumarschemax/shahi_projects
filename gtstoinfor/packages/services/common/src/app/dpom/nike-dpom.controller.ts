@@ -37,14 +37,14 @@ export class DpomController {
         }
     }
 
-    // @Post('/getCRMOrderDetails')
-    // async getCRMOrderDetails() {
-    //     try {
-    //         return await this.dpomService.getCRMOrderDetails()
-    //     } catch (error) {
-    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
-    //     }
-    // }
+    @Post('/getCRMOrderDetails2')
+    async getCRMOrderDetails2() {
+        try {
+            return await this.dpomService.getCRMOrderDetails2('2000593977')
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
 
     @Post('/saveDPOMDataToDataBase')
     async saveDPOMDataToDataBase() {
@@ -142,7 +142,6 @@ export class DpomController {
             return await this.dpomService.getShipmentTrackerReport();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-
         }
     }
 
@@ -161,10 +160,8 @@ export class DpomController {
             return await this.dpomService.getFabricTrackerReport();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-
         }
     }
-
 
     @Post('/getCountForDivertReport')
     async getCountForDivertReport(): Promise<CommonResponseModel> {
@@ -251,7 +248,7 @@ export class DpomController {
     @Post('/getTotalItemQtyChangeData')
     async getTotalItemQtyChangeData(@Body() req: nikeFilterRequest): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getTotalItemQtyChangeData(req);
+            return this.dpomService.getTotalItemQtyChangeData();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
@@ -646,6 +643,7 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
    
    @Post('/getPriceDiffPoLinedd')
    async getPriceDiffPoLinedd(): Promise<CommonResponseModel> {

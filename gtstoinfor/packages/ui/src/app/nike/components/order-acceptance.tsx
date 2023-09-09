@@ -24,7 +24,6 @@ export function OrderAcceptance() {
     const [poLine, setPoLine] = useState<any>([]);
 
 
-
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -112,7 +111,6 @@ export function OrderAcceptance() {
         form.resetFields();
     }
 
-
     useEffect(() => {
         getOrderAcceptanceData()
         getProductCode()
@@ -159,8 +157,6 @@ export function OrderAcceptance() {
                 message.error(res.internalMessage)
             )
         })
-        console.log(data, "reqqqqqqqqqqqqqqqqqqqqqqqqqqq")
-
     }
 
     const approveDpomLineItemStatus = (record) => {
@@ -205,7 +201,6 @@ export function OrderAcceptance() {
             title: 'Plant Name',
             dataIndex: 'plant_name'
         },
-
         {
             title: 'Purchase Group Name',
             dataIndex: 'purchase_group_name'
@@ -326,7 +321,6 @@ export function OrderAcceptance() {
                     columns={columns}
                     dataSource={data}
                     bordered
-                    scroll={{ x: 'max-content' }}
                 >
                 </Table> */}
 

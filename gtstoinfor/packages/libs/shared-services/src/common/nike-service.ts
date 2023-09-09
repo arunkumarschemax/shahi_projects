@@ -63,8 +63,8 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/approveDpomLineItemStatus", req)
     }
 
-    async getTotalItemQtyChangeData(req:any): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getTotalItemQtyChangeData",req)
+    async getTotalItemQtyChangeData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getTotalItemQtyChangeData", req)
     }
 
     async poLineItemStatusChange(): Promise<CommonResponseModel> {
@@ -90,8 +90,6 @@ export class NikeService extends CommonAxiosService {
     async getPPMData(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPPMData", req)
     }
-
-
 
     async getPlanShipmentWiseData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPlanShipmentWiseData")
@@ -171,35 +169,44 @@ export class NikeService extends CommonAxiosService {
     async getSeasonWisePo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getSeasonWisePo")
     }
+
     async getPoAndQtyDashboard(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPoAndQtyDashboard", req)
     }
+
     //---------------------------------------------------------------------------------------->factory
     async getPpmProductCodeForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmProductCodeForFactory")
-
     }
+
     async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmPoLineForFactory")
     }
+
     async getPpmColorDescForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmColorDescForFactory")
     }
+
     async getPpmCategoryDescForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmCategoryDescForFactory")
     }
+
     async getPpmDestinationCountryForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmDestinationCountryForFactory")
     }
+
     async getPpmPlantForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmPlantForFactory")
     }
+
     async getPpmItemForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmItemForFactory")
     }
+
     async getPpmFactoryForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmFactoryForFactory")
     }
+
     //-------------------------------------------------------------------------------------------->ppm marketing
     async updateFactoryStatusColumns(req?: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/updateFactoryStatusColumns", req)
@@ -212,36 +219,47 @@ export class NikeService extends CommonAxiosService {
     async getPpmProductCodeForMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmProductCodeForMarketing")
     }
+
     async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmPoLineForMarketing")
     }
+
     async getPpmColorDescForMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmColorDescForMarketing")
     }
+
     async getPpmCategoryDescForMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmCategoryDescForMarketing")
     }
+
     async getPpmDestinationCountryForMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmDestinationCountryForMarketing")
     }
+
     async getPpmPlantForMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmPlantForMarketing")
     }
+
     async getPpmItemForMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmItemForMarketing")
     }
+
     async getPpmFactoryForMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmFactoryForMarketing")
     }
+
     async getOrderAcceptanceData1(req: any): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getOrderAcceptanceData",req)
+        return this.axiosPostCall(this.dpomController + "/getOrderAcceptanceData", req)
     }
+
     async getPpmProductCodeForOrderCreation(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmProductCodeForOrderCreation")
     }
+
     async getPpmPoLineForOrderCreation(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmPoLineForOrderCreation")
     }
+
     async getPpmPoLineForNikeOrder(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmPoLineForNikeOrder")
     }

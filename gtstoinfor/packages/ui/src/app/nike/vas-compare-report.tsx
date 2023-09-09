@@ -41,14 +41,14 @@ const VASChangesCompareGrid = () => {
 
     const getPoLine = () => {
         service.getPpmPoLineForNikeOrder().then(res => {
-          setPoLine(res.data)
+            setPoLine(res.data)
         })
-      }
+    }
     const getQtyChangeData = () => {
         const req = new nikeFilterRequest();
         if (form.getFieldValue('poandLine') !== undefined) {
             req.poandLine = form.getFieldValue('poandLine');
-          }
+        }
         service.getTotalItemQtyChangeData(req).then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
@@ -408,13 +408,13 @@ const VASChangesCompareGrid = () => {
         },
         {
             title: 'DIFFERENCE IN ITEM VAS TEXT ',
-           // ( between DPOM to DPOM)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
+            // ( between DPOM to DPOM)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
             dataIndex: 'item_vas_pdf_po',
             width: '300px',
         },
         {
             title: 'DIFFERENCE IN ITEM VAS TEXT ',
-           // ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
+            // ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
             dataIndex: 'item_vas_pdf_po',
             width: '300px',
         },
@@ -721,7 +721,7 @@ const VASChangesCompareGrid = () => {
         {
             key: '1',
             label: <b>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData}  columns={columns} scroll={{ x: 'max-content' }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '2',
