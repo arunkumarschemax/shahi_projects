@@ -1,6 +1,6 @@
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileIdReq, OrdersReq } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileIdReq, OrdersReq, RoleReq } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiConsumes } from '@nestjs/swagger';
@@ -223,9 +223,10 @@ export class OrdersController {
     }
 
     @Post('/getDynamicDataForDocList')
-    async getDynamicDataForDocList(): Promise<CommonResponseModel> {
+    async getDynamicDataForDocList(@Body() req?:RoleReq): Promise<CommonResponseModel> {
+        console.log(req)
         try {
-            return this.ordersService.getDynamicDataForDocList();
+            return this.ordersService.getDynamicDataForDocList(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

@@ -40,3 +40,10 @@ export class poReq{
         this.customerPo=customerPo
     }
 }
+
+export class RoleReq{
+    role:string
+    constructor(role:string){
+        this.role=role
+    }
+}

@@ -28,6 +28,7 @@ const UploadFileGrid = () =>{
     const [documentdat,setDocumentsData]=useState<any[]>([])
     const [form] = Form.useForm()
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [pageSize, setPageSize] = useState<number>(1);
 
     const uploadDcoService = new UploadDocumentService()
     let navigate = useNavigate();
@@ -215,8 +216,7 @@ const UploadFileGrid = () =>{
         title: "S.No",
         key: "sno",
         responsive: ["sm"],
-        width:130,
-        render: (text,object,index) => (page - 1) * 10 + (index + 1)
+        render: (text, object, index) => (page - 1) * pageSize + (index + 1),
       },
         {
             title: 'PO NUMBER',
@@ -253,10 +253,10 @@ const UploadFileGrid = () =>{
       ];
 
       const downloadcomun = [
-        {
-          title:'PO STATUS',
-          dataIndex:'poStatus',
-          align:'center',
+        // {
+        //   title:'PO STATUS',
+        //   dataIndex:'poStatus',
+        //   align:'center',
           // render:(text: string, rowData: any, index: number) =>{
           //   let hasNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value === 'No');
           //   let hasYes = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('Yes'));
@@ -281,7 +281,7 @@ const UploadFileGrid = () =>{
           //   //   return 'Fully Uploaded';
           //   // }
           // }
-        },
+        // },
         {
           title: 'DOWNLOAD',
           dataIndex: 'documentName',
@@ -315,8 +315,9 @@ const UploadFileGrid = () =>{
         setSearchedColumn(dataIndex);
       };
 
-    const getDocumentData = () => {
-        service.getDynamicDataForDocList().then((res) => {
+    const getDocumentData = () => {  
+      console.log(JSON.parse(localStorage.getItem('currentUser')).user.roles)
+        service.getDynamicDataForDocList({role:JSON.parse(localStorage.getItem('currentUser')).user.roles}).then((res) => {
           if(res.status){
             setItemData(res.data);
             const headerColumns = Object?.keys(res?.data[0])
@@ -325,15 +326,15 @@ const UploadFileGrid = () =>{
                 title: header.toUpperCase(),
                 dataIndex: header,
                 key: header,
-              ...getColumnSearchProps([header]),
-                
+              ...getColumnSearchProps([header]),       
+
                 render:(data, record) =>{
                     // console.log(res.data,'header')
                     const backgroundColor = data === 'Yes' ? 'green' : 'red'
                     return    (
                         <div style={{color:backgroundColor ,textAlign:'center'}} ><b>{data}</b></div>
                     )
-              
+
                 }
             }));
             setColumns([...pocolumn,...headerColumns,...downloadcomun]);
@@ -363,6 +364,9 @@ const UploadFileGrid = () =>{
     const handleCancel =()=>{
       setIsModalOpen(false)
     }
+    const onChange = (pagination, filters, sorter, extra) => {
+      console.log('params', pagination, filters, sorter, extra);
+    }
     return (<Form form={form}>
         <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span>{JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" ?<Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button>:""}</span>}>
             {columns.length > 0 && itemData.length > 0 ? (
@@ -383,9 +387,10 @@ const UploadFileGrid = () =>{
                     scroll={{ x: true }}
                     bordered
                     pagination={{
-                      onChange(current) {
+                      onChange(current, pageSize) {
                         setPage(current);
-                      }
+                        setPageSize(pageSize);
+                      },
                     }}
                 />
             ) : (

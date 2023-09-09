@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, UploadFile, Radio } from 'antd';
+import { Alert, Button, Card, Col, Descriptions, Divider, Form, Input, message, Modal, Row, Select, Spin, Table, Tag, Typography, Upload, UploadProps,FormInstance, UploadFile, Radio, Tooltip } from 'antd';
 import { PDFDocument } from 'pdf-lib';
 import Papa from 'papaparse'
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
@@ -137,7 +137,7 @@ const CustomUploadList = ({ fileList, handleRemoveFile }) => {
 
 
 useEffect(() =>{
-  props.setStatus('fully uploaded')
+  props.setStatus('Fully Uploaded')
   setFileList(props.docData.documentsPath);
 },[props.docData.documentsPath])
 
@@ -265,8 +265,8 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     },
     // onDownload: handleFileDownload,
     beforeUpload: (file: any) => {
-        if (!file.name.match(/\.(pdf|jpg|jpeg|png)$/)) {
-            message.error("Only pdf and image files are allowed!");
+        if (!file.name.match(/\.(pdf)$/)) {
+            message.error("Only pdf files are allowed!");
             return true;
         }
         var reader = new FileReader();
@@ -322,7 +322,7 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     props.setStatus(value.target.value)
     setSelectedValue(value.target.value)
   }
-
+console.log(props.docData)
   return (
   <>
     <Col xs={24} sm={12} md={8} lg={6} xl={6} key={props.docData.documentsListId}>
@@ -357,21 +357,28 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
                 key={props.docData.documentsListId}
                 style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                 icon={<UploadOutlined />}
+                disabled={props.docData.docStatus == 'Fully Uploaded' && props.docData.isUploaded == true
+               ? true:false}
               >
                 Choose File
               </Button>
               <br />
               <Typography.Text type="secondary">
-                (Supported formats pdf, jpeg, jpg, png)
+                (Supports Only Pdf Format)
               </Typography.Text>
             </Upload>
           </Form.Item>
         </Text>
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-          <Form.Item name={`status${props.docData.documentsListId}`}>
-            <Radio.Group buttonStyle="solid" onChange={handleStatusChange} defaultValue={'fully uploaded'} value={'fully uploaded'}>
-              <Radio.Button value="partially uploaded">Partially</Radio.Button>
-              <Radio.Button value="fully uploaded">Fully</Radio.Button>
+          <Form.Item name={`status${props.docData.documentsListId}`}
+          //  initialValue={props.docData.docStatus?props.docData.docStatus:'Fully Uploaded'}
+           >
+            <Radio.Group buttonStyle="solid" onChange={handleStatusChange} 
+            defaultValue={props.docData.docStatus?props.docData.docStatus:'Fully Uploaded'}
+            //  value={props.docData.docStatus?props.docData.docStatus:'Fully Uploaded'}
+             >
+              <Radio.Button value="Partially Uploaded">Partially</Radio.Button>
+              <Radio.Button value="Fully Uploaded">Fully</Radio.Button>
             </Radio.Group>
           </Form.Item>
         </Text>

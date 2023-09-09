@@ -290,7 +290,7 @@ const AllOrdersGridView = () => {
                                         optionFilterProp="children"
                                         allowClear>
                                         <Option key='Failed' value="Failed">Failed</Option>
-                                        <Option key='Sucess' value="Sucess">Sucess</Option>
+                                        <Option key='Success' value="Success">Success</Option>
                                         <Option key='Uploading' value="Uploading">Uploading</Option>
                                     </Select>
                                 </Form.Item>

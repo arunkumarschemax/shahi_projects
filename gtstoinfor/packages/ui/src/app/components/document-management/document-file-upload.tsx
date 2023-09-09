@@ -51,9 +51,15 @@ export default function DocumentListupload() {
     })
   }
 
-  const getInvoiceNumber =()=>{
-    let po = form.getFieldValue("customerPo")
-    service.getInvoiceByPo({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po}).then(res=>{
+  const getInvoiceNumber =(value)=>{
+    let po
+    form.resetFields(['invoice','challan'])
+    // if(statePoNumber){
+    //   po =statePoNumber.data
+    // }else{
+    //   po = form.getFieldValue("customerPo")
+    // }
+    service.getInvoiceByPo({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:value}).then(res=>{
       if(res.status){
         setInvoiceNumber(res.data)
       }else{
@@ -63,6 +69,7 @@ export default function DocumentListupload() {
   }
 
   const getChallanNo =()=>{
+    form.resetFields(['challan'])
     let invoiceNo = form.getFieldValue("invoice")
     let po = form.getFieldValue("customerPo")
     service.getChallanByPOandInvoice({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po,invoice:invoiceNo}).then(res=>{
@@ -100,6 +107,11 @@ export default function DocumentListupload() {
  useEffect(() =>{
   if(statePoNumber){
     form.setFieldsValue({customerPo:statePoNumber.data})
+    getInvoiceNumber(statePoNumber.data)
+    console.log(invoiceNumber)
+    // if(invoiceNumber.length == 1){
+    //   form.setFieldsValue({invoice:})
+    // }
     getDocData()
   }
 
@@ -335,6 +347,9 @@ export default function DocumentListupload() {
     console.log(value)
     setStatusVal(value)
   }
+  const challanaOnchange=() =>{
+    setBtnDisable(false)
+  }
   return(
     <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span><Button onClick={() => navigate('/document-management/upload-file-view')} type={'primary'}>View Documents Status</Button></span>}>
       <Form form={form}  layout='vertical' name="control-hooks" >
@@ -383,7 +398,7 @@ export default function DocumentListupload() {
                }
              ]}
            >
-             <Select placeholder='Select ChallanNumber' showSearch allowClear>
+             <Select placeholder='Select ChallanNumber' showSearch allowClear onChange={challanaOnchange}>
              {challanNumber?.map(obj =>{
                        return <Option key={obj.challan} value={obj.challan}>{obj.challan}</Option>
                      })}
@@ -395,8 +410,9 @@ export default function DocumentListupload() {
                   style={{
                     color: 'white',
                     backgroundColor: 'green',
-                    width: '100%',
+                    width: '110%',
                   }}
+                  disabled={btndisable}
                   icon={<DownloadOutlined />}
                 >
                   Get Documents
@@ -409,7 +425,7 @@ export default function DocumentListupload() {
                   style={{
                     color: 'white',
                     backgroundColor: 'green',
-                    width: '100%',
+                    width: '109%',
                   }}
                   icon={<DownloadOutlined />}
                 >
