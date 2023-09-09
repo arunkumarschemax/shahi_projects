@@ -22,11 +22,12 @@ const ShipmentChangesCompareGrid = () => {
     const [phaseExcelData, setPhaseWiseExcelData] = useState<any[]>([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [unitChangeData, setUnitChangeData] = useState([])
-    const [page, setPage] = React.useState(1);
+    const [currentPage, setCurrentPage] = React.useState(1);
     const [form] = Form.useForm();
     const { Text } = Typography;
     const { RangePicker } = DatePicker
     const { Option } = Select
+    const page = 10;
 
     useEffect(() => {
         getPlantCodeChangeData()
@@ -333,7 +334,7 @@ const ShipmentChangesCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            render: (text, object, index) => (currentPage - 1) * page + (index + 1),
         },
         {
             title: 'Report Generate Date',
@@ -442,7 +443,7 @@ const ShipmentChangesCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            render: (text, object, index) => (currentPage - 1) * page + (index + 1),
         },
         {
             title: 'Report Generate Date',
@@ -532,7 +533,7 @@ const ShipmentChangesCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            render: (text, object, index) => (currentPage - 1) * page + (index + 1),
         },
         {
             title: 'PO Number',
@@ -579,7 +580,7 @@ const ShipmentChangesCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            render: (text, object, index) => (currentPage - 1) * page+ (index + 1),
         },
         {
             title: 'Report Genarate Date',
@@ -642,7 +643,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+            render: (text, object, index) => (currentPage- 1) * page + (index + 1)
         },
         {
             title: 'PO Number',
@@ -854,28 +855,34 @@ const ShipmentChangesCompareGrid = () => {
         {
             key: '1',
             label: <b>GAC Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '2',
             label: <b>MRGAC Revised PO's : {unitChangeData?.length}</b>,
-            children: <Table bordered dataSource={unitChangeData} columns={columns4} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} />,
         },
         {
             key: '3',
             label: <b >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
-            children: <Table bordered dataSource={itemChangeData} columns={columns3} scroll={{ x: 'max-content' }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns3} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '4',
             label: <b>Plant Code Revised PO's : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns5} scroll={{ x: 'max-content' }}/>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns5} scroll={{ x: 'max-content' }}/>,
         },
-        // {
-        //     key: '5',
-        //     label: <b>Shipment Type Revised PO's : {poStatusData?.length}</b>,
-        //     children: <Table bordered dataSource={poStatusData} columns={columns2} />,
-        // }
+        {
+            key: '5',
+            label: <b>Shipment Type Revised PO's : {poStatusData?.length}</b>,
+            children: <Table bordered dataSource={poStatusData} columns={columns2} pagination={{
+                current: currentPage,
+                pageSize: page,
+                onChange: (page) => {
+                    setCurrentPage(page);
+                },
+            }} />,
+        }
     ];
 
     const onReset = () => {

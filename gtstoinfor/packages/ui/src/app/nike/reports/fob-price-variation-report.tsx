@@ -112,11 +112,13 @@ export const FOBPriceVariationReport = () => {
 
     return(
         <Card title='FOB Price Variation'>
-            <Table  columns={columns} dataSource={data}  pagination={{
+            <Table  columns={columns} dataSource={data} 
+            className="custom-table-wrapper" pagination={{
             onChange(current, pageSize) {
                 setPage(current);
                 setPageSize(pageSize)
             }
+            
         }}/>
             
         </Card>

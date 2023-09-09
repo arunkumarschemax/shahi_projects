@@ -20,7 +20,7 @@ export default function BasicLayout() {
     const [subMenu, setSubmenu] = useState<string[]>([]);
     const navigate = useNavigate();
     type MenuItem = Required<MenuProps>['items'][number];
-    
+
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
 
@@ -47,7 +47,7 @@ export default function BasicLayout() {
     }
     const authdata = JSON.parse(localStorage.getItem('currentUser'))
 
-   
+
 
     function renderIcon(iconType, iconName) {
         // if (iconType === "antd") { 
@@ -59,7 +59,7 @@ export default function BasicLayout() {
         //     return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} /
 
     }
-    
+
     const getSubMenu = (route) => {
 
         if (route && route.subMenuData && route.subMenuData.length) {
@@ -94,52 +94,52 @@ export default function BasicLayout() {
     return (
         <Layout style={{ minHeight: '100vh' }}>
             {/* <Router> */}
-                <Layout className="site-layout" style={{ background: ' #f0f2f5' }}>
-                    <Sider
-                        className='layout'
-                        trigger={null}
-                        breakpoint='lg'
-                        collapsedWidth='60'
-                        style={{
-                            overflow: 'auto',
-                            height: '100vh',
-                            position: 'fixed',
-                            left: 0,
-                            background: '#fff',
-                            marginTop: '83px' ,
-                            borderRadius:'5px'
-                        }}
-                    >           
-                    <Menu
-                    theme="light"
-                    mode="inline"
-                    // defaultSelectedKeys={['1']}
-                    // style={{ marginTop: '20px' }}
-                    // 230
-                    selectedKeys={[]}
-                    // style={{ backgroundColor: '#000', width: '75%', height: '61%', marginLeft: '160px', marginTop: '-3.8%',color:'white' }}
+            <Layout className="site-layout" style={{ background: ' #f0f2f5' }}>
+                <Sider
+                    className='layout'
+                    trigger={null}
+                    breakpoint='lg'
+                    collapsedWidth='60'
+                    style={{
+                        overflow: 'auto',
+                        height: '100vh',
+                        position: 'fixed',
+                        left: 0,
+                        background: '#fff',
+                        marginTop: '83px',
+                        borderRadius: '5px'
+                    }}
                 >
-                    
-                    {getAllSubMenus()}
-                </Menu>         
-                      
-
-
-                    </Sider>
-                    <CommonHeader key={Date.now()} toggle={toggle} collapsed={collapsed} />
-                    <Content
-                        className="site-layout-background"
-                        style={{
-                            marginTop: '70px',
-                            padding: 14,
-                            height: '100%',
-                            marginLeft: 198
-                        }}
+                    <Menu
+                        theme="light"
+                        mode="inline"
+                        // defaultSelectedKeys={['1']}
+                        // style={{ marginTop: '20px' }}
+                        // 230
+                        selectedKeys={[]}
+                    // style={{ backgroundColor: '#000', width: '75%', height: '61%', marginLeft: '160px', marginTop: '-3.8%',color:'white' }}
                     >
-                        <Outlet />
-                    </Content>
-                    {/* <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>©2023 Design and Developed by SchemaX</Footer> */}
-                </Layout>
+
+                        {getAllSubMenus()}
+                    </Menu>
+
+
+
+                </Sider>
+                <CommonHeader key={Date.now()} toggle={toggle} collapsed={collapsed} />
+                <Content
+                    className="site-layout-background"
+                    style={{
+                        marginTop: '70px',
+                        padding: 14,
+                        height: '100%',
+                        marginLeft: 198
+                    }}
+                >
+                    <Outlet />
+                </Content>
+                {/* <Footer style={{ textAlign: 'center', background: '#f0f2f5' }}>©2023 Design and Developed by SchemaX</Footer> */}
+            </Layout>
             {/* </Router> */}
         </Layout>
     )

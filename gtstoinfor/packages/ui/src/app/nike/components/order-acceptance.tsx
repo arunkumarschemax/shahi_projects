@@ -1,8 +1,7 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
-import { DpomApproveRequest, nikeFilterRequest } from "@project-management-system/shared-models";
+import { DpomApproveRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, message } from "antd";
-import moment from "moment";
 import React, { useRef } from "react";
 import { useEffect, useState } from "react";
 import Highlighter from 'react-highlight-words';
@@ -20,9 +19,7 @@ export function OrderAcceptance() {
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
     const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
     const { RangePicker } = DatePicker;
-    const [productCode, setProductCode] = useState<any>([]);
-    const [poLine, setPoLine] = useState<any>([]);
-
+    const pageSize = 10;
 
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -41,14 +38,14 @@ export function OrderAcceptance() {
         //     // getFactoryStatus(values)
         // }/
 
-        // if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
-        //     setFilterData(data);
-        // } else {
-        //     const filteredData = data.filter(item =>
-        //         values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
-        //     );
-        //     setFilterData(filteredData);
-        // }
+        if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
+            setFilterData(data);
+        } else {
+            const filteredData = data.filter(item =>
+                values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
+            );
+            setFilterData(filteredData);
+        }
     }
 
     const getColumnSearchProps = (dataIndex: string) => ({
@@ -112,11 +109,17 @@ export function OrderAcceptance() {
         form.resetFields();
     }
 
+    const EstimatedETDDate = (value) => {
+        if (value) {
+            const fromDate = value[0].format('YYYY-MM-DD');
+            const toDate = value[1].format('YYYY-MM-DD');
+            setSelectedEstimatedFromDate(fromDate)
+            setSelectedEstimatedToDate(toDate)
+        }
+    }
 
     useEffect(() => {
         getOrderAcceptanceData()
-        getProductCode()
-        getPoLine()
     }, [])
 
     const getProductCode = () => {
@@ -153,14 +156,11 @@ export function OrderAcceptance() {
         service.getOrderAcceptanceData1(req).then((res) => {
             if (res.data) {
                 setData(res.data)
-                Finish(data)
                 // message.success(res.internalMessage)
             } else (
                 message.error(res.internalMessage)
             )
         })
-        console.log(data, "reqqqqqqqqqqqqqqqqqqqqqqqqqqq")
-
     }
 
     const approveDpomLineItemStatus = (record) => {
@@ -203,42 +203,51 @@ export function OrderAcceptance() {
 
         {
             title: 'Plant Name',
-            dataIndex: 'plant_name'
+            dataIndex: 'plantName'
+        },
+        {
+            title: 'PO Number',
+            dataIndex: 'purchaseOrderNumber',
+            ...getColumnSearchProps('purchaseOrderNumber')
         },
 
         {
             title: 'Purchase Group Name',
-            dataIndex: 'purchase_group_name'
+            dataIndex: 'purchaseGroupName'
         },
         {
             title: 'Product Code',
-            dataIndex: 'product_code'
+            dataIndex: 'productCode'
+        },
+        {
+            title: 'Product Code',
+            dataIndex: 'productCode'
         },
         {
             title: 'Category',
-            dataIndex: 'category_desc'
+            dataIndex: 'categoryDesc'
         },
         {
             title: 'Shipping Type',
-            dataIndex: 'shipping_type'
+            dataIndex: 'shippingType'
         },
         {
             title: 'DPOM Line Item Status',
-            dataIndex: 'dpom_item_line_status',
+            dataIndex: 'DPOMLineItemStatus',
             filters: [
                 { text: 'Accepted', value: 'Accepted' },
                 { text: 'Unaccepted', value: 'Unaccepted' },
-                // { text: 'Closed', value: 'Closed' },
-                // { text: 'Cancelled', value: 'Cancelled' }
+                { text: 'Closed', value: 'Closed' },
+                { text: 'Cancelled', value: 'Cancelled' }
             ],
             filterMultiple: false,
-            onFilter: (value, record) => { return record.dpom_item_line_status === value }
+            onFilter: (value, record) => { return record.DPOMLineItemStatus === value }
         },
         {
             title: 'Action',
             dataIndex: 'action',
             render: (value, record) => {
-                if (record.dpom_item_line_status === 'Unaccepted') {
+                if (record.DPOMLineItemStatus === 'Unaccepted') {
                     return (
                         <Popconfirm title="Are you sure to approve" onConfirm={() => approveDpomLineItemStatus(record)}>
                             <Button>Accept</Button>
@@ -256,7 +265,7 @@ export function OrderAcceptance() {
         <>
             <Card title="Nike Orders Register" headStyle={{ fontWeight: 'bold' }}>
                 <Form
-                    onFinish={getOrderAcceptanceData}
+                    onFinish={Finish}
                     form={form}
                     layout='vertical'>
                     <Row gutter={24}>
@@ -326,7 +335,6 @@ export function OrderAcceptance() {
                     columns={columns}
                     dataSource={data}
                     bordered
-                    scroll={{ x: 'max-content' }}
                 >
                 </Table> */}
 
@@ -334,6 +342,7 @@ export function OrderAcceptance() {
                     columns={columns}
                     dataSource={filterData.length > 0 ? filterData : data}
                     bordered
+                    className="custom-table-wrapper"
                     pagination={{
                         onChange(current, pageSize) {
                             setPage(current);

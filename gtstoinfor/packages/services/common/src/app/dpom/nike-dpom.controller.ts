@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
-import { CommonResponseModel, PpmDateFilterRequest, nikeFilterRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { DpomService } from './nike-dpom.service';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -203,7 +203,7 @@ export class DpomController {
     @ApiBody({ type: nikeFilterRequest })
     async getOrderAcceptanceData(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getOrderAcceptanceData(req);
+            return this.dpomService.getOrderAcceptanceData();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
@@ -248,7 +248,7 @@ export class DpomController {
     @Post('/getTotalItemQtyChangeData')
     async getTotalItemQtyChangeData(@Body() req: nikeFilterRequest): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getTotalItemQtyChangeData(req);
+            return this.dpomService.getTotalItemQtyChangeData();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

@@ -6,7 +6,6 @@ import moment from 'moment';
 import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
-import { nikeFilterRequest } from '@project-management-system/shared-models';
 
 const VASChangesCompareGrid = () => {
 
@@ -28,28 +27,16 @@ const VASChangesCompareGrid = () => {
     const { Text } = Typography;
     const { RangePicker } = DatePicker
     const { Option } = Select
-    const [poLine, setPoLine] = useState<any>([]);
-
 
     useEffect(() => {
         poLineItemStatusChange()
         getQtyChangeData()
         getUnitChangeData()
         getItemChangeData()
-        getPoLine()
     }, [])
 
-    const getPoLine = () => {
-        service.getPpmPoLineForNikeOrder().then(res => {
-          setPoLine(res.data)
-        })
-      }
     const getQtyChangeData = () => {
-        const req = new nikeFilterRequest();
-        if (form.getFieldValue('poandLine') !== undefined) {
-            req.poandLine = form.getFieldValue('poandLine');
-          }
-        service.getTotalItemQtyChangeData(req).then((res) => {
+        service.getTotalItemQtyChangeData().then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
         })
@@ -407,12 +394,14 @@ const VASChangesCompareGrid = () => {
             dataIndex: 'item_vas_pdf_po'
         },
         {
-            title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to DPOM)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
+            title: 'DIFFERENCE IN ITEM VAS TEXT ',
+           // ( between DPOM to DPOM)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
             dataIndex: 'item_vas_pdf_po',
             width: '300px',
         },
         {
-            title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
+            title: 'DIFFERENCE IN ITEM VAS TEXT ',
+           // ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
             dataIndex: 'item_vas_pdf_po',
             width: '300px',
         },
@@ -719,27 +708,27 @@ const VASChangesCompareGrid = () => {
         {
             key: '1',
             label: <b>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData}  columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '2',
             label: <b>Ship to customer Revised PO's : {unitChangeData?.length}</b>,
-            children: <Table bordered dataSource={unitChangeData} columns={columns4} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} />,
         },
         {
             key: '3',
             label: <b >Inventory Segment Code Revised PO's : {itemChangeData?.length}</b>,
-            children: <Table bordered dataSource={itemChangeData} columns={columns1} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns1} />,
         },
         {
             key: '4',
             label: <b>Direct Ship SO No Revised PO's : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns2} />,
         },
         {
             key: '5',
             label: <b>Destination Country Revised PO's : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns2} />,
         }
     ];
 
@@ -760,21 +749,28 @@ const VASChangesCompareGrid = () => {
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
             <Form form={form} layout={"vertical"} >
                 <Row gutter={[24, 24]}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-                  <Form.Item name='poandLine' label='Po+Line' >
-                <Select
-                  showSearch
-                  placeholder="Select Po+Line"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {poLine.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
-                  })
-                  }
-                   </Select>
-                 </Form.Item>
-                </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+                        <Form.Item name="contractDate"
+                            label="Order Revised Date"
+                        >
+                            <RangePicker onChange={EstimatedETDDate} />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name="orderStatus"
+                            label="Order Status"
+                        >
+                            <Select
+                                allowClear
+                                placeholder='select order status'
+                            >
+                                <Option key='Accepted' value="Accepted">Accepted</Option>
+                                <Option key='Unaccepted' value="Unaccepted">Unaccepted</Option>
+                                <Option key='Closed' value="Closed">Closed</Option>
+                                <Option key='Cancelled' value="Cancelled">Cancelled</Option>
+                            </Select>
+                        </Form.Item>
+                    </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
                         <Button
                             type="primary"
