@@ -9,6 +9,14 @@
     color:"white"
   }
 
+  .custom-table-wrapper .ant-table-thead > tr > th {
+    background-color: lavender;
+  }
+  .card-header > .ant-card-head {
+    background-color: powderblue;
+    text-align: center;
+  }
+
   /* .uncolored-row{
     background-color: rgb(99, 65, 134);
     color:"black"

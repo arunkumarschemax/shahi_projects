@@ -386,7 +386,7 @@ const FactoryPPMReport = () => {
                     return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
                 }
             },
-            { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber' },
+            { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber',align:'center' },
             { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
             { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
             { title: 'Style Number', dataIndex: 'styleNumber' },
@@ -409,7 +409,7 @@ const FactoryPPMReport = () => {
             { title: 'Gender Age Description', dataIndex: ' ' },
             { title: 'Destination Country Code ', dataIndex: 'destinationCountryCode' },
             { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
-            { title: 'Plant Code', dataIndex: 'plant' },
+            { title: 'Plant Code', dataIndex: 'plant',align:'center' },
             { title: 'Plant Name', dataIndex: 'plantName' },
             { title: 'Geo Code', dataIndex: '' },
             { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
@@ -496,7 +496,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Purchase Order Number',
-                dataIndex: 'purchaseOrderNumber',
+                dataIndex: 'purchaseOrderNumber',align:'center'
             },
             {
                 title: 'PO Line Item Number',
@@ -578,6 +578,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Plant Code',
                 dataIndex: 'plant',
+                align:'center'
             },
             {
                 title: 'Plant Name',
@@ -655,9 +656,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'displayName',
                 align: 'center',
             },  
-            {
-                align: 'center',
-                children: [
+            
                     {
                         title: 'Edit Unit Allocation',
                         dataIndex: '',
@@ -703,16 +702,15 @@ const FactoryPPMReport = () => {
                                 )}
                             </div>
                         ),
-                    },
-                ],
+                   
             },
             {
                 title: 'Actual Unit',
                 dataIndex: 'actualUnit',
                 align: 'center',
             },
-            {
-                children: [
+            
+               
                     {
                         title: 'Quantity Allocation',
                         align: 'center',
@@ -758,8 +756,7 @@ const FactoryPPMReport = () => {
                                 )}
                             </div>
                         ),
-                    },
-                ],
+                    
             },
             {
                 title: 'Reallocated Quantity',
@@ -857,13 +854,14 @@ const FactoryPPMReport = () => {
                 <Table
                   columns={columns}
                   dataSource={filterData}
-                  size='large'
+                  size='small'
                   pagination={{
                     onChange(current, pageSize) {
                       setPage(current);
                       setPageSize(pageSize);
                     }
                   }}
+                  className="custom-table-wrapper"
                   scroll={{ x: 'max-content' }}
                   rowClassName={getRowClassName}
                 />
