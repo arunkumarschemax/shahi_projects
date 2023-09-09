@@ -273,8 +273,8 @@ export const baseRouterList = [
             {
                 label: "Fabric Sub-Type",
                 key: "fabricSubType",
-                path: "fabricSubType/fabric-sub-type-view",
-                filepath: "fabricSubType/fabric-sub-type-view",
+                path: "fabric-sub-type-view/fabric-sub-type-view",
+                filepath: "fabric-sub-type-view/fabric-sub-type-view",
             },
             {
                 label: "Size",

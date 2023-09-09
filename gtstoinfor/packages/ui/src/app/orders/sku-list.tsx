@@ -368,12 +368,14 @@ import Highlighter from "react-highlight-words";
   <Col>
 <div>
 <Space direction="vertical" style={{fontSize:"16px"}}>
-      <Segmented options={[
+      <Segmented
+      style={{background:'#cce3de'}}
+       options={[
         {
           label: (
             <>
               <CreditCardOutlined  style={{ marginRight: "8px",color: "red"  }} />
-              <span style={{ fontSize: "16px" }}>Cards</span>
+              <span style={{ fontSize: "12px",fontWeight: "bold" }}>Cards</span>
             </>
           ),
           value: "cards",
@@ -382,7 +384,7 @@ import Highlighter from "react-highlight-words";
           label: (
             <>
               <AppstoreOutlined style={{ marginRight: "8px",color: "blue"  }} />
-              <span style={{ fontSize: "16px" }}>Grid</span>
+              <span style={{ fontSize: "12px" ,fontWeight: "bold"}}>Grid</span>
             </>
           ),
           value: "grid",

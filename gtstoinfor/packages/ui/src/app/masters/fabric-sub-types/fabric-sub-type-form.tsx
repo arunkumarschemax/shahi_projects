@@ -22,29 +22,23 @@ export function FabricSubTypeForm(
 ) {
   const [form] = Form.useForm();
   const service = new FabricSubtypeservice;
+  const services = new FabricTypeService;
   let navigate = useNavigate();
 
-  const [fabricSubtypeData, setFabricSubtypeData] = useState<FabricSubTypeDto[]>([]);
-  const FabricSubtypeService = new FabricTypeService();
+  const [fabricSubtype, setFabricSubtypeData] = useState<FabricTypesDto[]>([]);
+  // const FabricSubtypeService = new FabricTypeService();
   const [selectedFabricSubtype, setSelectedFabricSubtype] = useState<number>(null);
 
   useEffect(() => {
-    getAllFabricSubtype();
+    getAllFabrictype();
   }, []);
 
-  const getAllFabricSubtype = () => {
-    service.getAllFabricSubType().then(res => {
+  const getAllFabrictype = () => {
+    services.getAllActiveFabricType().then(res => {
       if (res.status) {
         setFabricSubtypeData(res.data);
-      } else {
-        if (res.status) {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
-      }
-    }).catch(err => {
-      AlertMessages.getErrorMessage(err.message);
+        console.log(res.data,'kkkkkkkkkkkkkkkkkkkkkkkk')
+      } 
     })
   }
 
@@ -75,7 +69,7 @@ export function FabricSubTypeForm(
   }
 
   const handleFabricSubType = (value, item) => {
-    setFabricSubtypeData(value);
+    // setFabricSubtypeData(value);
   }
 
   const onReset = () => {
@@ -83,7 +77,7 @@ export function FabricSubTypeForm(
   };
 
   return (
-    <Card title={<span >Fabric Sub-Type</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }} extra={props.isUpdate == true ? "" : <Link to='/masters/fabric-sub-type/fabric-sub-type-view' ><Button type={'primary'} >View </Button></Link>}
+    <Card title={<span >Fabric Sub-Type</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }} extra={props.isUpdate == true ? "" : <Link to='/masters/fabric-sub-type-view/fabric-sub-type-view' ><Button type={'primary'} >View </Button></Link>}
     >
       <Form layout="vertical" form={form} initialValues={props.fabricsubtypeData} name="control-hooks" onFinish={saveData}>
         <Form.Item name="fabricSubTypeId" style={{ display: "none" }} >
@@ -112,7 +106,7 @@ export function FabricSubTypeForm(
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
               >
-                {fabricSubtypeData?.map(dropData => {
+                {fabricSubtype?.map(dropData => {
                   return <Option key={dropData.fabricTypeId} value={dropData.fabricTypeId}>{dropData.fabricTypeName}</Option>
                 })}
               </Select>
