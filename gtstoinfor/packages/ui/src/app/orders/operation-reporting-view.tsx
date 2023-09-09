@@ -160,7 +160,6 @@ export const OperationReportingView = () => {
     ]
 
     const onSegmentChange = (view) => {
-        console.log(view)
         getData(view)
     }
 

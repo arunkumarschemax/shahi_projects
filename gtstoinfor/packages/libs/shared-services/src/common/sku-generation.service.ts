@@ -5,7 +5,6 @@ export class SKUGenerationService extends CommonAxiosService{
     URL ="/skumapping";
 
     async skuGeneration(req: SKUGenerationReq): Promise<SKUGenerationResponseModel> {
-        console.log(req)
         return this.axiosPostCall(this.URL + "/skuGeneration", req)
     } 
 
