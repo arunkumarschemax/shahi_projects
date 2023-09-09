@@ -24,6 +24,7 @@ import { PoAndQtyReq } from './dto/po-qty.req';
 import { PoQty } from './dto/poqty.req';
 import { FactoryUpdate } from './dto/factory-update.req';
 import { AppDataSource1, AppDataSource2 } from '../app-datasource';
+import { appConfig } from 'packages/services/common/config';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -199,6 +200,27 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'data retrived', data)
         } else {
             return new CommonResponseModel(false, 0, 'error')
+        }
+    }
+
+    async createCOline(req: any): Promise<CommonResponseModel> {
+        try {
+            const m3Config = appConfig.m3Cred.headerRequest()
+            const fourDigitItemCode = req.itemNo.substring(0, 4)
+            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/MMS200MI/Get?ITNO=${fourDigitItemCode}`;
+            const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
+            if (response.data['@type'])
+                return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
+            if (!response.data?.MIRecord && !response.data?.MIRecord.length)
+                return new CommonResponseModel(false, 0, "No data found for this item")
+            const meToCustomObj = [{ m3Key: 'STAT', yourKey: 'status' }, { m3Key: 'ITNO', yourKey: 'itemNO' }]
+            const myObj = construnctDataFromM3Result(meToCustomObj, response.data.MIRecord)
+            if (myObj[0].status !== '20')
+                return new CommonResponseModel(false, 1, `Validation failed as the status of Item went to ${myObj[0].status}`)
+            return new CommonResponseModel(true, 1, `Item status validated`)
+        } catch (err) {
+            console.log(err)
+            throw err
         }
     }
 
@@ -1346,6 +1368,7 @@ export class DpomService {
     }
 }
 
-
-
+function construnctDataFromM3Result(meToCustomObj: { m3Key: string; yourKey: string; }[], MIRecord: any) {
+    throw new Error('Function not implemented.');
+}
 
