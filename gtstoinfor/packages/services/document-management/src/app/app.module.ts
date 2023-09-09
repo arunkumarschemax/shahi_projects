@@ -14,7 +14,7 @@ import { join } from 'path';
   imports: [
     ServeStaticModule.forRootAsync({
       useFactory: () => ([{
-        rootPath: join(__dirname, '../../../..', 'upload_files'),
+        rootPath: join(__dirname, '../../../../', 'dist/packages/services/document-management/upload_files/'),
         serveStaticOptions: {
           redirect: false,
           index: false
@@ -28,9 +28,9 @@ import { join } from 'path';
       port: appConfig.database.port,
       username: appConfig.database.username,
       password: appConfig.database.password,
-      database: appConfig.database.docdbName,
+      database: appConfig.database.dbName,
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       logging: true,
       extra: {
         connectionLimit: 20
