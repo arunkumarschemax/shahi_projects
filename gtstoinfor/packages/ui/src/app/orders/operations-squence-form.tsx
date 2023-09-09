@@ -138,7 +138,6 @@ export const OperationSequence = () => {
   );
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
-    console.log(active)
     if (active.id !== over?.id) {
       setDataSource((prev) => {
         const activeIndex = prev.findIndex((i) => i.key === active.id);
@@ -151,7 +150,6 @@ export const OperationSequence = () => {
   const onSubmit = () => {
     const req = new OperationSequenceRequest(form.getFieldValue('itemCode'),form.getFieldValue('itemId'),dataSource,'admin')
     // const req = new OperationSequenceRequest('I0001',1,dataSource,'admin')
-    console.log(req)
     operationSequenceService.createOperationSequence(req).then(res => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage)

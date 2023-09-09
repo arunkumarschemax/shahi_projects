@@ -17,13 +17,13 @@ const { useToken } = theme
 
 
 export const baseRouterList = [
-    {
-        label: "Dashboard",
-        key: "dashboard",
-        path: "dashboard",
-        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>📶</div>,
-        filepath: "/dashboard.tsx",
-    },
+    // {
+    //     label: "Dashboard",
+    //     key: "dashboard",
+    //     path: "dashboard",
+    //     icon: <DashboardOutlined />,
+    //     filepath: "/dashboard.tsx",
+    // },
     {
         label: "User Management",
         key: "user-management",
@@ -358,20 +358,20 @@ export const baseRouterList = [
         icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>⚙️</div>,
         path: "settings",
         filepath: "settings",
-        children:[
-            {
-                label:'Settings',
-                key:'settings',
-                path:'settings/settings-form',
-                filepath:'settings/settings-form'
-            },
-            {
-                label:'Settings View',
-                key:'settingsView',
-                path:'settings/settings-view',
-                filepath:'settings/settings-view'
-            },
-        ]
+        // children:[
+        //     {
+        //         label:'Settings',
+        //         key:'settings',
+        //         path:'settings/settings-form',
+        //         filepath:'settings/settings-form'
+        //     },
+        //     {
+        //         label:'Settings View',
+        //         key:'settingsView',
+        //         path:'settings/settings-view',
+        //         filepath:'settings/settings-view'
+        //     },
+        // ]
     },
     {
         label: "Style Management",
@@ -486,6 +486,24 @@ export const baseRouterList = [
                 path: "operation-reporting",
                 filepath: "operation-reporting",
             },
+        ]
+    },
+    {
+        label: "Operation Tracking",
+        key: "operationtracking",
+        // icon:<FontAwesomeIcon icon={faShirt} />,
+        path: "operation-tracking",
+        filepath: "operation-tracking",
+        children:[
+            
+            {
+                label: "Issuing",
+                key: "issuing",
+                path: "operation-tracking/issuing",
+                filepath: "operation-tracking/issuing",
+            }
+            
+         
         ]
     },
     // {

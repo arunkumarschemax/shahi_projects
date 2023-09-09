@@ -121,6 +121,7 @@ import FabricWeaveGrid from "./masters/fabric-weave/fabric-weave-grid"
 import FabricDevelopmentRequest from "./fabric development/fabric-development-request"
 import OperationSequenceForm from "./orders/operations-squence-form"
 import OperationReportingView from "./orders/operation-reporting-view"
+import IssueScreen from "./operation-tracking/issue"
 
 
 export const AppRoutes = () => {
@@ -166,7 +167,10 @@ export const AppRoutes = () => {
 
                     <Route path='/masters'>
                         <Route path='factories/factories-view' element={<FactoriesView />} />
-                        <Route path='factories/factories-form' element={<FactoriesForm />} />
+                        <Route path='factories/factories-form' element={<FactoriesForm factoryData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateFactory={(undefined) => { }}/>} />
                         <Route path='items/item-grid' element={<ItemsGrid />} />
 
                         <Route path='currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
@@ -360,7 +364,10 @@ export const AppRoutes = () => {
                     closeForm={()=>{}}
                     updateAttribute={(undefined)=>{}}/>}/>
                     <Route path='factories/factories-view' element={<FactoriesView />} />
-                        <Route path='factories/factories-form' element={<FactoriesForm />} />
+                        <Route path='factories/factories-form' element={<FactoriesForm factoryData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateFactory={(undefined) => { }}/>} />
                         <Route path='currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
@@ -465,10 +472,10 @@ export const AppRoutes = () => {
                 <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest/>}/>
 
                 </Route>
-                <Route path='settings'>
+                {/* <Route path='settings'> */}
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
                 <Route path='settings/settings-view' element={<SettingsView/>}/>
-                </Route>
+                {/* </Route> */}
 
                 <Route path='sample-development' >
                     <Route path="sample-development-form" element={<SampleDevForm />}/>
@@ -484,6 +491,11 @@ export const AppRoutes = () => {
                 <Route path='operation-sequence' element={<OperationSequenceForm/>} />
                 <Route path='operation-reporting' element={<OperationReportingView/>} />
 
+
+                </Route>
+                <Route path='/operation-tracking'>
+                <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
+                
 
                 </Route>
 

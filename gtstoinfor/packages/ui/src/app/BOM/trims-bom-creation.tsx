@@ -1,7 +1,7 @@
 import { Button, Card, Col, Form, Input, Row, Select } from "antd";
 import { UndoOutlined } from "@ant-design/icons";
 import Commonscreen from "./common-screen";
-import { CurrencyService, LiscenceTypeService, UomService } from "@project-management-system/shared-services";
+import { CurrencyService, LiscenceTypeService, TaxesService, UomService } from "@project-management-system/shared-services";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 
@@ -10,11 +10,15 @@ export const TrimsBomCreation = () => {
   const currencyServices = new CurrencyService();
   const licenseservice = new LiscenceTypeService();
   const uomservice = new UomService();
+  const taxService = new TaxesService
+
 
 
   const [currencydata,setCurrencyData] = useState([])
   const [licenseTypeData,setLicenseTypeData] = useState([])
   const [uomData,setUomData] = useState([])
+  const [tax,setTax] = useState([])
+
 
 
 
@@ -22,6 +26,7 @@ export const TrimsBomCreation = () => {
     getAllCurrencies();
     getAllActiveLiscenceTypes();
     getAllUoms();
+    getTax();
   },[])
 
 
@@ -67,6 +72,15 @@ const getAllUoms = () => {
      AlertMessages.getErrorMessage(err.message);
    })
 };
+
+const getTax = () =>{
+  taxService.getAllActiveTaxes().then((res)=>{
+      if(res.status){
+          setTax(res.data)
+      }
+  })
+}
+
 
 
   const onReset = () => {
@@ -429,6 +443,31 @@ const getAllUoms = () => {
                     <Input placeholder="Price" allowClear/>
                   </Form.Item>
                 </Col>
+                <span style={{ fontSize: "24px", lineHeight: "70px" }}>+</span>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Form.Item label="Tax" name="tax">
+                        <Select
+                        placeholder="Select Tax"
+                        // onChange={handleTaxChange}
+                        defaultValue="0"
+                        allowClear
+                        >
+                            {tax.map((e)=>(
+                                <option key={e.taxId} value={e.taxId}>
+                                    {e.taxPercentage}
+                                </option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                </Col>
+                <span style={{ fontSize: "24px", lineHeight: "70px" }}>=</span>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Form.Item label="Total" name="total">
+                        <Input disabled 
+                        // value={calculateTotal()}
+                         />
+                    </Form.Item>
+                </Col>
                 <Col
                   xs={{ span: 24 }}
                   sm={{ span: 24 }}
@@ -610,7 +649,7 @@ const getAllUoms = () => {
           </Row>
 
           <Row gutter={24} justify="end">
-            <Col
+            {/* <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
@@ -635,7 +674,23 @@ const getAllUoms = () => {
                   Reset
                 </Button>
               </Form.Item>
-            </Col>
+            </Col> */}
+            <Col>
+              <Form.Item>
+                  <Button type="primary" htmlType="submit" className="ant-submit-btn" >
+                      Submit
+                  </Button>
+                  <Button
+                      type="default"
+                      danger
+                      icon={<UndoOutlined />}
+                      onClick={onReset}
+                      style={{ marginLeft: 30 }}
+                  >
+                      Reset
+                  </Button>
+              </Form.Item>
+              </Col>
           </Row>
         </Form>
       </Card>
