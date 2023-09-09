@@ -1,7 +1,7 @@
 import { Button, Card, Col, Divider, Form, FormInstance, Input, Popconfirm, Row, Select, Table, Tooltip, Upload, UploadProps, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import M3Items from './m3-model'
-import { DeleteOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons'
 import { ColourService, UomService } from '@project-management-system/shared-services'
 import AlertMessages from '../common/common-functions/alert-messages'
 import { FabricInfo } from '@project-management-system/shared-models'
@@ -445,9 +445,18 @@ const getAllUoms = () => {
               xl={{ span: 4 }}
             >
           <Form.Item >
-            <Button onClick={onReset} style={{marginTop:100,marginLeft:30}}  >
+            {/* <Button onClick={onReset} style={{marginTop:100,marginLeft:30}}  >
               Reset
-            </Button>
+            </Button> */}
+            <Button
+                  type="default"
+                  danger
+                  icon={<UndoOutlined />}
+                  onClick={onReset}
+                  style={{marginTop:100,marginLeft:20}}
+                >
+                  Reset
+                </Button>
           </Form.Item>
         </Col>
 

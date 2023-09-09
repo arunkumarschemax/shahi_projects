@@ -182,7 +182,7 @@ console.log(locationData,"143")
               </Form.Item>
             </Col>
 
-            <Col
+            {/* <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
@@ -192,7 +192,7 @@ console.log(locationData,"143")
               <Form.Item label="Request No" name="Requestno">
                 <Input placeholder="Request No" allowClear disabled={true} />
               </Form.Item>
-            </Col>
+            </Col> */}
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -253,7 +253,7 @@ console.log(locationData,"143")
               </Form.Item>
             </Col>
 
-            <Col
+            {/* <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
@@ -275,7 +275,34 @@ console.log(locationData,"143")
                   </Select>
                 </Space>
               </Form.Item>
-            </Col>
+            </Col> */}
+              <Col xs={24} sm={24} md={8} lg={8} xl={8}>
+              <Form.Item label="Light Source" name="lightsource">
+                <Row gutter={16}> {/* Use Row to display items side by side */}
+                  <Col span={8}>
+                    <Form.Item name="primary">
+                      <Select placeholder="primary">
+                        {/* Add dropdown options here */}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item name="secondary">
+                      <Select placeholder="secondary">
+                        {/* Add dropdown options here */}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item name="tertiary">
+                      <Select placeholder="tertiary">
+                        {/* Add dropdown options here */}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Form.Item>
+              </Col>
 
             <Col
               xs={{ span: 24 }}
