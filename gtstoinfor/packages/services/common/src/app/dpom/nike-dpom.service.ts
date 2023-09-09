@@ -1383,7 +1383,31 @@ export class DpomService {
     async getPriceDiffPoLinedd(): Promise<CommonResponseModel> {
         const query = `SELECT DISTINCT d.id,d.po_and_line as poAndLine,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
-        WHERE f.shahi_confirmed_gross_price IS NOT NULL`;
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL  GROUP BY d.po_and_line`;
+
+        const data = await this.dpomRepository.query(query)
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'error')
+        }
+    }
+    async getPriceDiffStyleNumber(): Promise<CommonResponseModel> {
+        const query = `SELECT DISTINCT d.id,d.style_number as styleNumber,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
+        LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL  GROUP BY d.style_number`;
+
+        const data = await this.dpomRepository.query(query)
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'error')
+        }
+    }
+    async getPriceDiffSizeDescription(): Promise<CommonResponseModel> {
+        const query = `SELECT DISTINCT d.id,d.size_description AS sizeDescription FROM dpom d
+        LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL  GROUP BY d.size_description`;
 
         const data = await this.dpomRepository.query(query)
         if (data.length) {

@@ -654,6 +654,22 @@ export class DpomController {
        } catch (err) {
            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
        }
+   } 
+   @Post('/getPriceDiffStyleNumber')
+   async getPriceDiffStyleNumber(): Promise<CommonResponseModel> {
+       try {
+           return this.dpomService.getPriceDiffStyleNumber();
+       } catch (err) {
+           return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+       }
+   }
+   @Post('/getPriceDiffSizeDescription')
+   async getPriceDiffSizeDescription(): Promise<CommonResponseModel> {
+       try {
+           return this.dpomService.getPriceDiffSizeDescription();
+       } catch (err) {
+           return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+       }
    }
 }
 

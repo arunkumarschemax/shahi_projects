@@ -1,4 +1,5 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { FobPriceDiffRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Row, Select, Table } from "antd"
 import { ColumnProps } from "antd/es/table";
@@ -11,6 +12,9 @@ export const FOBPriceVariationReport = () => {
     const service = new NikeService()
     const [data,setData] = useState<any[]>([]);
     const [poAndLine,setPoAndLine] = useState<any>([]);
+    const [styleNumber,setStyleNumber] = useState<any>([]);
+    const [size,setSize] = useState<any>([]);
+
     const [form] = Form.useForm();
     const { Option } = Select;
 
@@ -19,6 +23,8 @@ export const FOBPriceVariationReport = () => {
     useEffect(() => {
         getData()
         PoandLine()
+        getSize()
+        StyleNumber ()
     },[])
 
     
@@ -30,11 +36,38 @@ export const FOBPriceVariationReport = () => {
             }
         })
     }
+    const getSize = ()=>{
+        service.getPriceDiffSizeDescription().then(res => {
+            if(res.status){
+                setSize(res.data)
+            }
+        })
+    }
+    const StyleNumber = ()=>{
+        service.getPriceDiffStyleNumber().then(res => {
+            if(res.status){
+                setStyleNumber(res.data)
+            }
+        })
+    }
     const getData = () => {
+        const req = new FobPriceDiffRequest();
 
-        service.getPriceDifferenceReport().then(res => {
+        if (form.getFieldValue('poandLine') !== undefined) {
+            req.poAndLine = form.getFieldValue('poandLine');
+          }
+          if (form.getFieldValue('styleNumber') !== undefined) {
+            req.styleNumber = form.getFieldValue('styleNumber');
+          }
+          if (form.getFieldValue('sizeDescription') !== undefined) {
+            req.sizeDescription = form.getFieldValue('sizeDescription');
+          }
+        service.getPriceDifferenceReport(req).then(res => {
             if(res.status){
                 setData(res.data)
+            }
+            else{
+                setData([])
             }
         })
     }
@@ -147,6 +180,39 @@ export const FOBPriceVariationReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
+                      
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                            <Form.Item name='styleNumber' label='Style Number' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Style Number"
+                                    optionFilterProp="children"
+                                    allowClear
+
+                                >
+                                    {styleNumber.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.styleNumber}>{inc.styleNumber}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                            <Form.Item name='sizeDescription' label='Size Description' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Size Description"
+                                    optionFilterProp="children"
+                                    allowClear
+
+                                >
+                                    {size.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.sizeDescription}>{inc.sizeDescription    }</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                             <Form.Item>
                                 <Button htmlType="submit"
@@ -161,6 +227,8 @@ export const FOBPriceVariationReport = () => {
                         </Col>
                         </Row>
                         </Form>
+                        <>
+                        {data.length > 0 ? (
             <Table  columns={columns} dataSource={data} 
             className="custom-table-wrapper" pagination={{
             onChange(current, pageSize) {
@@ -168,7 +236,9 @@ export const FOBPriceVariationReport = () => {
                 setPageSize(pageSize)
             }
             
-        }}/>
+        }}/>) : (<Table size='large' />
+        )}
+        </>
         
             
         </Card>
