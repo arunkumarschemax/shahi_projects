@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, MarketingModel, NewDivertModel, OldDivertModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FobPriceDiffRequest, MarketingModel, NewDivertModel, OldDivertModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -1259,19 +1259,57 @@ export class DpomService {
         }
     }
 
-    async getPriceDifferenceReport(): Promise<CommonResponseModel> {
-        const query = `SELECT d.po_number as poNumber,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
-        LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
-        WHERE f.shahi_confirmed_gross_price IS NOT NULL
-        GROUP BY d.po_number,d.style_number,d.size_description`;
+    // async getPriceDifferenceReport( req: FobPriceDiffRequest): Promise<CommonResponseModel> {
+    //     const query = `SELECT d.po_number as poNumber,d.po_and_line as poAndLine,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
+    //     LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
+    //     WHERE f.shahi_confirmed_gross_price IS NOT NULL
+    //     GROUP BY d.po_number,d.style_number,d.size_description`;
 
-        const data = await this.dpomRepository.query(query)
-        if (data.length) {
-            return new CommonResponseModel(true, 1, 'data retrived', data)
-        } else {
-            return new CommonResponseModel(false, 0, 'error')
+    //     const data = await this.dpomRepository.query(query)
+    //     if (data.length) {
+    //         return new CommonResponseModel(true, 1, 'data retrived', data)
+    //     } else {
+    //         return new CommonResponseModel(false, 0, 'error')
+    //     }
+    // }
+
+    
+      async getPriceDifferenceReport(req: FobPriceDiffRequest): Promise<CommonResponseModel> {
+        const conditions = [];
+        const queryParams: any[] = [];
+        
+        let query = `SELECT DISTINCT d.po_number as poNumber,d.po_and_line as poAndLine,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
+        LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL `;
+      
+        if (req.poAndLine) {
+          conditions.push(`d.po_and_line = ?`);
+          queryParams.push(req.poAndLine);
         }
-    }
+        if (req.styleNumber) {
+          conditions.push(`d.style_number = ?`);
+          queryParams.push(req.styleNumber);
+        }
+        if (req.sizeDescription) {
+          conditions.push(`d.size_description = ?`);
+          queryParams.push(req.sizeDescription);
+        }
+      
+        if (conditions.length > 0) {
+          const conditionString = conditions.join(' AND ');
+          query += ` AND (${conditionString})`;
+        }
+      
+        const data = await this.dpomRepository.query(query, queryParams);
+      
+        if (data.length) {
+          return new CommonResponseModel(true, 1, 'data retrieved', data);
+        } else {
+          return new CommonResponseModel(false, 0, 'error');
+        }
+      }
+      
+      
 
     async getPpmPlantForMarketing(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmPlantForMarketing()
@@ -1341,6 +1379,18 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
             return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPriceDiffPoLinedd(): Promise<CommonResponseModel> {
+        const query = `SELECT DISTINCT d.id,d.po_and_line as poAndLine,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
+        LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL`;
+
+        const data = await this.dpomRepository.query(query)
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'error')
+        }
     }
 }
 

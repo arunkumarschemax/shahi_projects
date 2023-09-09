@@ -761,8 +761,8 @@ const VASChangesCompareGrid = () => {
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
             <Form form={form} layout={"vertical"} >
-                <Row gutter={[24, 24]}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
+                <Row gutter={24}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 4 }} >
                   <Form.Item name='poandLine' label='Po+Line' >
                 <Select
                   showSearch
@@ -777,7 +777,7 @@ const VASChangesCompareGrid = () => {
                    </Select>
                  </Form.Item>
                 </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4  }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
                         <Button
                             type="primary"
                             icon={<SearchOutlined />}
@@ -785,7 +785,7 @@ const VASChangesCompareGrid = () => {
                             htmlType="button"
                             onClick={getFilterdData}>Search</Button>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
                         <Button
                             type="primary"
                             icon={<UndoOutlined />}

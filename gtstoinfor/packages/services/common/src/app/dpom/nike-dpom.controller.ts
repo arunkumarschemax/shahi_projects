@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
-import { CommonResponseModel, PpmDateFilterRequest, nikeFilterRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, FobPriceDiffRequest, PpmDateFilterRequest, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomService } from './nike-dpom.service';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -569,9 +569,10 @@ export class DpomController {
     }
 
     @Post('/getPriceDifferenceReport')
-    async getPriceDifferenceReport(): Promise<CommonResponseModel> {
+    @ApiBody({ type: FobPriceDiffRequest })
+    async getPriceDifferenceReport(@Body()req:any ): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getPriceDifferenceReport();
+            return this.dpomService.getPriceDifferenceReport(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
@@ -645,13 +646,14 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
-    // @Post('/getPpmPoLineForPo')
-    // async getPpmPoLineForPo(): Promise<CommonResponseModel> {
-    //     try {
-    //         return this.dpomService.getPpmPoLineForPo();
-    //     } catch (err) {
-    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-    //     }
-    // }
+   
+   @Post('/getPriceDiffPoLinedd')
+   async getPriceDiffPoLinedd(): Promise<CommonResponseModel> {
+       try {
+           return this.dpomService.getPriceDiffPoLinedd();
+       } catch (err) {
+           return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+       }
+   }
 }
 

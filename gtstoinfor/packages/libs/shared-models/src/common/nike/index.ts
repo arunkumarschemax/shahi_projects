@@ -14,3 +14,4 @@ export * from './New-po-divert-report-model';
 export * from './ppm-date-filter.req';
 export * from './factory-update.request';
 export * from './nike-order-filter.req';
+export * from './fob-price-Diff.req';

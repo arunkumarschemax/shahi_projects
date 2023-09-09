@@ -36,10 +36,6 @@ const FactoryPPMReport = () => {
     const [expandedQuantityAllocation, setExpandedQuantityAllocation] = useState({});
     const [textareaValuesActualUnit, setTextareaValuesActualUnit] = useState({});
     const [textareaValuesQuantityAllocation, setTextareaValuesQuantityAllocation] = useState({});
-    useEffect(() => {
-        getData();
-    }, [])
-
     const [factory, setFactory] = useState<any>([]);
     const [poLine, setPoLine] = useState<any>([]);
     const [colorDesc, setColorDesc] = useState<any>([]);
@@ -48,6 +44,10 @@ const FactoryPPMReport = () => {
     const [plantCode, setPlantCode] = useState<any>([]);
     const [item, setItem] = useState<any>([]);
     const [productCode, setProductCode] = useState<any>([]);
+
+    useEffect(() => {
+        getData();
+    }, [])
 
 
 

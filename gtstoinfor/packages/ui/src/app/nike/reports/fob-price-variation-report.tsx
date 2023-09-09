@@ -1,5 +1,6 @@
+import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { NikeService } from "@project-management-system/shared-services";
-import { Card, Table } from "antd"
+import { Button, Card, Col, Form, Row, Select, Table } from "antd"
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
 import { receiveMessageOnPort } from "worker_threads";
@@ -8,20 +9,40 @@ export const FOBPriceVariationReport = () => {
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(1);
     const service = new NikeService()
-    const [data,setData] = useState<any[]>([])
+    const [data,setData] = useState<any[]>([]);
+    const [poAndLine,setPoAndLine] = useState<any>([]);
+    const [form] = Form.useForm();
+    const { Option } = Select;
+
+
 
     useEffect(() => {
         getData()
+        PoandLine()
     },[])
 
+    
+
+    const PoandLine = ()=>{
+        service.getPriceDiffPoLinedd().then(res => {
+            if(res.status){
+                setPoAndLine(res.data)
+            }
+        })
+    }
     const getData = () => {
+
         service.getPriceDifferenceReport().then(res => {
             if(res.status){
                 setData(res.data)
             }
         })
     }
+    const resetHandler = () => {
+        form.resetFields();
+        getData();
 
+    }
 
     const columns:  ColumnProps<any>[] = [
         {
@@ -32,14 +53,10 @@ export const FOBPriceVariationReport = () => {
             
         },
         {
-            title:'PO Number',
-            dataIndex :'poNumber'
+            title:'PO And Line',
+            dataIndex :'poAndLine'
         },
-        {
-            title:'PO Line Item Number',
-            dataIndex :'poLineItemNumber',
-            // align:'right'
-        },
+       
         {
             title:'Style Number',
             dataIndex :'styleNumber'
@@ -111,7 +128,39 @@ export const FOBPriceVariationReport = () => {
     ]
 
     return(
-        <Card title='FOB Price Variation'>
+        <Card title='FOB Price Variation' >
+            <Form onFinish={getData} form={form} layout='vertical'>
+                <Row gutter={24}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                            <Form.Item name='poandLine' label='Po+Line' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Po+Line"
+                                    optionFilterProp="children"
+                                    allowClear
+
+                                >
+                                    {poAndLine.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.poAndLine}>{inc.poAndLine}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+                            <Form.Item>
+                                <Button htmlType="submit"
+                                    icon={<SearchOutlined />}
+                                    type="primary">Get Report</Button>
+                                <Button
+                                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={resetHandler}
+                                >
+                                    RESET
+                                </Button>
+                            </Form.Item>
+                        </Col>
+                        </Row>
+                        </Form>
             <Table  columns={columns} dataSource={data} 
             className="custom-table-wrapper" pagination={{
             onChange(current, pageSize) {
@@ -120,6 +169,7 @@ export const FOBPriceVariationReport = () => {
             }
             
         }}/>
+        
             
         </Card>
     )
