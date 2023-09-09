@@ -394,12 +394,14 @@ const VASChangesCompareGrid = () => {
             dataIndex: 'item_vas_pdf_po'
         },
         {
-            title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to DPOM)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
+            title: 'DIFFERENCE IN ITEM VAS TEXT ',
+           // ( between DPOM to DPOM)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
             dataIndex: 'item_vas_pdf_po',
             width: '300px',
         },
         {
-            title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
+            title: 'DIFFERENCE IN ITEM VAS TEXT ',
+           // ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
             dataIndex: 'item_vas_pdf_po',
             width: '300px',
         },
@@ -706,27 +708,27 @@ const VASChangesCompareGrid = () => {
         {
             key: '1',
             label: <b>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData}  columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '2',
             label: <b>Ship to customer Revised PO's : {unitChangeData?.length}</b>,
-            children: <Table bordered dataSource={unitChangeData} columns={columns4} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} />,
         },
         {
             key: '3',
             label: <b >Inventory Segment Code Revised PO's : {itemChangeData?.length}</b>,
-            children: <Table bordered dataSource={itemChangeData} columns={columns1} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns1} />,
         },
         {
             key: '4',
             label: <b>Direct Ship SO No Revised PO's : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns2} />,
         },
         {
             key: '5',
             label: <b>Destination Country Revised PO's : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns2} />,
         }
     ];
 
