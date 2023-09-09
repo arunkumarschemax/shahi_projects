@@ -8,7 +8,7 @@ export const config = {
     doc_management_url:'http://172.20.50.169:3002/api',
     // doc_management_url:'http://localhost:8002/api',
     download_path: 'http://172.20.50.169:3002',
-    importdownloadPath: 'http://172.20.50.169:3002'
+    importdownloadPath: 'http://172.20.50.169/edoc7/gtstoinfor/dist/packages/services/document-management/'
 
 }
     
