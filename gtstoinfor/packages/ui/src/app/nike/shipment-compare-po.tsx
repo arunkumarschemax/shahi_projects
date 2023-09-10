@@ -339,7 +339,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item',

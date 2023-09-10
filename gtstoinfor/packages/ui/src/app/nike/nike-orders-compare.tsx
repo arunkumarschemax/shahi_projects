@@ -399,7 +399,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
             title: 'Item',
@@ -412,7 +412,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Document Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Style Number',
@@ -539,7 +539,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Factory',
@@ -557,7 +557,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Document Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY')
 
         },
         {
@@ -639,7 +639,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item',
@@ -817,7 +817,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item',
@@ -879,7 +879,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item No',
@@ -897,7 +897,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Document Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY')
 
         },
         {
@@ -958,7 +958,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item',
@@ -1066,7 +1066,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item',
@@ -1080,7 +1080,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Document Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('MM/DD/YYYY')
 
         },
         {

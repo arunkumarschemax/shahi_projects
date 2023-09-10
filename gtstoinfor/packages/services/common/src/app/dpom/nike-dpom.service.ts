@@ -177,39 +177,38 @@ export class DpomService {
     }
 
 
-    async getCRMOrderDetails(): Promise<CommonResponseModel> {
+    async getCRMOrderDetails1(): Promise<any> {
         const buyerPO = 'DV3934'
         const data = await AppDataSource1.query(`select * from movex.nike_co_view where byuer_po = '${buyerPO}'`)
         if (data.length > 0) {
-            return new CommonResponseModel(true, 1, 'Success', data);
+            return { status: true, data: data };
         } else {
-            return new CommonResponseModel(false, 0, 'error')
+            return { status: false, error: 'No results found' };
         }
     }
 
-    async getCRMOrderDetails1(): Promise<CommonResponseModel> {
-        const styleCode = '476F'
-        const data = await AppDataSource1.query(`select * from movex.nike_co_view where byuer_po = '${styleCode}'`)
-        if (data.length) {
-            return data;
-        } else {
-            return new CommonResponseModel(false, 0, 'error')
-        }
-    }
-
-    async getCRMOrderDetails2(): Promise<CommonResponseModel> {
+    async getCRMOrderDetails2(): Promise<any> {
         const coNumber = '2000593977'
         const data = await AppDataSource2.query(`select * from exports.nike_inv_view where CO_NUMB = '${coNumber}'`)
-        if (data.length) {
-            return data;
+        if (data.length > 0) {
+            return { status: true, data: data };
         } else {
-            return new CommonResponseModel(false, 0, 'error')
+            return { status: false, error: 'No results found' };
+        }
+    }
+
+    async getCRMOrderDetails3(): Promise<any> {
+        const styleCode = '476F'
+        const data = await AppDataSource1.query(`select * from movex.nike_fab_view where stylecode = '${styleCode}'`)
+        if (data.length > 0) {
+            return { status: true, data: data };
+        } else {
+            return { status: false, error: 'No results found' };
         }
     }
 
     async createCOline(req: any): Promise<CommonResponseModel> {
         try {
-            console.log(req,'req')
             req.styleNumber = 'FN389'
             const m3Config = appConfig.m3Cred.headerRequest()
             const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.poNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${req.styleNumber}`;
@@ -239,47 +238,16 @@ export class DpomService {
             const flag = new Set();
             const orderDetails = await this.getDPOMOrderDetails();
             // const getCRMData = this.getCRMOrderDetails();
-            const CRMData = this.getCRMOrderDetails();
-            const CRMData1 = this.getCRMOrderDetails1();
-            const CRMData2 = this.getCRMOrderDetails2();
+            const CRMData1 = await this.getCRMOrderDetails1();
+            const CRMData2 = await this.getCRMOrderDetails2();
+            const CRMData3 = await this.getCRMOrderDetails3();
 
-            // let data3;
-            if (await CRMData && await CRMData1) {
-                let data1;
-                let data2;
-                CRMData
-                    .then(commonResponse => {
-                        if (commonResponse.data && Array.isArray(commonResponse.data) && commonResponse.data.length > 0) {
-                            data1 = commonResponse.data[0];
-                        } else {
-                            console.error("Response does not contain valid data.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                    });
-                CRMData1
-                    .then(commonResponse => {
-                        if (commonResponse.data && Array.isArray(commonResponse.data) && commonResponse.data.length > 0) {
-                            data2 = commonResponse.data[0];
-                        } else {
-                            console.error("Response does not contain valid data.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                    });
-                // CRMData2
-                //     .then(commonResponse => {
-                //         if (commonResponse.data && Array.isArray(commonResponse.data) && commonResponse.data.length > 0) {
-                //             data3 = commonResponse.data[0];
-                //         } else {
-                //             console.error("Response does not contain valid data.");
-                //         }
-                //     })
-                //     .catch(error => {
-                //         console.error("Error:", error);
-                //     });
+            console.log(CRMData1, CRMData2)
+            if (CRMData1.status && CRMData2.status) {
+                const data1 = CRMData1?.data[0];
+                const data2 = CRMData2?.data[0];
+                const data3 = CRMData3?.data[0];
+
                 if (!orderDetails.status) return new CommonResponseModel(false, 0, orderDetails.error)
                 const pdfData = {
                     shipToAddressLegalPO: '',
