@@ -37,10 +37,10 @@ export class DpomController {
         }
     }
 
-    @Post('/getCRMOrderDetails2')
-    async getCRMOrderDetails2() {
+    @Post('/getCRMOrderDetails')
+    async getCRMOrderDetails() {
         try {
-            return await this.dpomService.getCRMOrderDetails2('2000593977')
+            return await this.dpomService.getCRMOrderDetails()
         } catch (error) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
