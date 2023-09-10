@@ -46,6 +46,15 @@ export class DpomController {
         }
     }
 
+    @Post('/createCOline')
+    async createCOline() {
+        try {
+            return await this.dpomService.createCOline({ poNumber: 3504865987, poLineItemNumber: 10000, scheduleLineItemNumber: 100 })
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
     @Post('/saveDPOMDataToDataBase')
     async saveDPOMDataToDataBase() {
         try {

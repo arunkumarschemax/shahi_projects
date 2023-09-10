@@ -25,6 +25,7 @@ import { PoQty } from './dto/poqty.req';
 import { FactoryUpdate } from './dto/factory-update.req';
 import { AppDataSource1, AppDataSource2 } from '../app-datasource';
 import { appConfig } from 'packages/services/common/config';
+import { construnctDataFromM3Result } from '@project-management-system/backend-utils';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -208,26 +209,27 @@ export class DpomService {
 
     async createCOline(req: any): Promise<CommonResponseModel> {
         try {
+            console.log(req,'req')
+            req.styleNumber = 'FN389'
             const m3Config = appConfig.m3Cred.headerRequest()
-            const fourDigitItemCode = req.itemNo.substring(0, 4)
             const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.poNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${req.styleNumber}`;
             const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
+            console.log(response, 'response')
+            console.log(response.data?.MIRecord, 'MIRecord')
             if (response.data['@type'])
                 return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
             if (!response.data?.MIRecord && !response.data?.MIRecord.length)
                 return new CommonResponseModel(false, 0, "No data found for this item")
-            const meToCustomObj = [{ m3Key: 'STAT', yourKey: 'status' }, { m3Key: 'ORNO', yourKey: 'orderNO' }, { m3Key: 'PONR', yourKey: 'poLine' }]
-            const myObj = construnctDataFromM3Result(meToCustomObj, response.data.MIRecord)
-            if (myObj[0].status !== '20')
-                return new CommonResponseModel(false, 1, `Validation failed as the status of Item went to ${myObj[0].status}`)
+            // const meToCustomObj = [{ m3Key: 'STAT', yourKey: 'status' }, { m3Key: 'ORNO', yourKey: 'orderNO' }, { m3Key: 'PONR', yourKey: 'poLine' }]
+            // const myObj = construnctDataFromM3Result(meToCustomObj, response.data.MIRecord)
+            if (response.status !== 200)
+                return new CommonResponseModel(false, 1, `Validation failed as`)
             return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {
             console.log(err)
             throw err
         }
     }
-
-
 
     @Cron('0 8 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
@@ -1397,9 +1399,5 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
-}
-
-function construnctDataFromM3Result(meToCustomObj: { m3Key: string; yourKey: string; }[], MIRecord: any) {
-    throw new Error('Function not implemented.');
 }
 
