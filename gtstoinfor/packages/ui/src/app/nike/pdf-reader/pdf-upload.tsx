@@ -10,6 +10,7 @@ import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-models';
 import { AdobeAcrobatApiService, NikeService } from '@project-management-system/shared-services';
 import PoPdfTable from './po-pdf-table';
+import {extractDataFromPoPdf} from './po-pdf-extraction-helper'
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 interface IPdfUploadProps {
 
@@ -42,7 +43,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [diaPDFValues, setDiaPDFValues] = useState<DiaPDFModel>()
     const [resultProps, setResultProps] = useState<ResultPropsModel>()
-    const [poPdfData,setPoPdfData] = useState<any>([])
+    const [poPdfData,setPoPdfData] = useState<any>()
 
 
     const [diaPDfForm] = Form.useForm()
@@ -75,12 +76,9 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         let poNumber = pdfText.items[`${indexOfPoNumber + pdfIndexes.poNumber}`].str.split("/")[1]
         legalPoPdf.poNumber = poNumber
         legalPoPdfArr.push(legalPoPdf)
-        for (let i = 1; i < pdf.numPages; i++) {
-            const page = await pdf.getPage(1);
-            const textContent: any = await page.getTextContent();
-            for (const [index, rec] of textContent.items.entries()) {
-            }
-        }
+        const poData = await extractDataFromPoPdf(pdf)
+        setPoPdfData(poData)
+       
     }
 
     async function extractDiaDocumentData(pdf: any, pdfText: any) {
@@ -132,8 +130,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         text += textContent.items.map((item: any) => item.str).join(' ');
         let title = pdfFilesValidationObject.filter((val) => text.match(val.pdfKeyText) != undefined)[0]?.pdfName
         if (title === "PO PDF") {
-            uploadPoPdf(pdfFile)
-
+            extractPoPdfData(pdf,textContent)
         } else if (title === "DIA Document") {
             extractDiaDocumentData(pdf, textContent)
         }
@@ -189,15 +186,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         )
     }
 
-    const uploadPoPdf = (pdfFile) => {
-        const formData = new FormData();
-        formData.append('file', pdfFile);
-        adobeAcrobatApi.extractTextFromPdf(formData).then((res) => {
-            console.log(res)
-            setPoPdfData(res)
-        })
-    }
-console.log(poPdfData)
+   
     const saveDiaPdfFields = () => {
         const formValues = diaPDfForm.getFieldsValue()
         nikeDpomService.saveDiaPDFFields(formValues).then((res) => {
@@ -214,10 +203,10 @@ console.log(poPdfData)
         setFileList([]);
         setResultProps(undefined)
     }
-    console.log(resultProps?.title.includes("PO PDF"))
     return (
         <Card title='Upload PDF'>
-            {resultProps === undefined && <Row gutter={24} >
+            {resultProps === undefined &&
+             <Row gutter={24} >
                 <Col span={24}>
                     <Dragger {...uploadProps} >
                         <p className="ant-upload-drag-icon">
@@ -255,7 +244,7 @@ console.log(poPdfData)
                 }
             </Row>
             <Row gutter={24}>
-            {poPdfData && poPdfData.length && <Col span={24}>
+            {poPdfData  && <Col span={24}>
                     <PoPdfTable data={poPdfData} />
                 </Col>}
             </Row>
