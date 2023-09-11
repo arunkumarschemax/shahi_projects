@@ -1,3 +1,4 @@
+import { OperationFilterModel } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -20,7 +21,7 @@ async getAllitemsCode(): Promise<any> {
     
 }
 
-async getAllOperation(itemsId:number): Promise<any> {
+async getAllOperation(req:OperationFilterModel): Promise<any> {
 
   const data = [
     {itemCode:"IT001", itemsId: 1, operation:[{operationName:"Garment stitching"},{operationName:"Stitching Alteration"}],sequence:[1,2]},
@@ -31,28 +32,28 @@ async getAllOperation(itemsId:number): Promise<any> {
     ]
 
 
-  if (itemsId) {
-      const filteredItems = data.filter(item => item.itemsId === itemsId);
+  if (req.itemsId) {
+      const filteredItems = data.filter(item => item.itemsId ===req.itemsId);
       return filteredItems;
-  } else if (itemsId === undefined) {
+  } else if (req.itemsId === undefined) {
     return []
   }
 
   return data;
 }
 
+ 
 
-
-async getAllOperationData(itemsId: number, operationName: string): Promise<any> {
+async getAllOperationData(req:OperationFilterModel): Promise<any> {
     const data = [
         {  itemsId: 1, operationName: "Garment stitching" ,SKUinfo: [{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "50"},{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "70"}] },
         {  itemsId: 1, operationName: "Stitching Alteration" ,SKUinfo: [{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "50"},{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "70"}] },
        
     ] 
-    if (itemsId && operationName ) {
-                 const filteredItems = data.filter(item => item.itemsId === itemsId &&  item.operationName === operationName );
+    if (req. itemsId && req.operationName ) {
+                 const filteredItems = data.filter(item => item.itemsId === req.itemsId &&  item.operationName === req.operationName );
                     return filteredItems;
-                } else if (itemsId === undefined) {
+                } else if (req.itemsId === undefined) {
                   return []
                 }
     return data;
