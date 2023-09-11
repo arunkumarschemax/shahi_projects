@@ -360,7 +360,19 @@ export const AppRoutes = () => {
                 <Route path='sampleSubTypes/sampleSubTypes-form' element={<SampleSubTypesForm SampleSubTypesData={undefined}
                 isUpdate={false}
                 closeForm={()=> {}}
-                updateSampleSubTypes={(undefined) => { }}/>}/>  
+                updateSampleSubTypes={(undefined) => { }}/>}/> 
+                <Route path='fabric-finish-type/fabric-finish-type-grid' element={<FabricFinishTypesGrid />}/> 
+                <Route path='fabric-structure/fabric-structure-form'element={<FabricStructuresForm FabriStructuresData={undefined} updateDetails={function (fabricStructureDto: FabricStructuresDTO): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } }/>}/>
+                        <Route path='fabric-structure/fabric-structure-grid' element={<FabricStructuresGrid />}/>
+                        <Route path='fabric-finish-type/fabric-finish-type-form'element={<FabricFinishTypesForm FabriFinishTypesData={undefined} updateDetails={function (fabricFinishTypeDto: FabricFinishTypesDTO): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } }/>}/>
             </Route>
                     <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
@@ -441,18 +453,8 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
                <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
-                        <Route path='fabric-structure/fabric-structure-form'element={<FabricStructuresForm FabriStructuresData={undefined} updateDetails={function (fabricStructureDto: FabricStructuresDTO): void {
-                            throw new Error("Function not implemented.")
-                        } } isUpdate={false} closeForm={function (): void {
-                            throw new Error("Function not implemented.")
-                        } }/>}/>
-                        <Route path='fabric-structure/fabric-structure-grid' element={<FabricStructuresGrid />}/>
-                        <Route path='fabric-finish-type/fabric-finish-type-form'element={<FabricFinishTypesForm FabriFinishTypesData={undefined} updateDetails={function (fabricFinishTypeDto: FabricFinishTypesDTO): void {
-                            throw new Error("Function not implemented.")
-                        } } isUpdate={false} closeForm={function (): void {
-                            throw new Error("Function not implemented.")
-                        } }/>}/>
-                        <Route path='fabric-finish-type/fabric-finish-type-grid' element={<FabricFinishTypesGrid />}/>
+                       
+                        
                         <Route path='uom/uom-grid' element={<UomGrid />}/>
                                               
                  </Route>

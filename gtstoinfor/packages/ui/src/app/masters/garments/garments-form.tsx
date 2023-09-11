@@ -105,7 +105,7 @@ export function GarmentsForm(
   ) : null;
 
   return (
-    <Card title={<span >Garments</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }} extra={props.isUpdate == true ? "" : <Link to='/masters/garments/garments-view' ><Button type={'primary'} >View </Button></Link>}
+    <Card title={<span >Garments</span>} extra={props.isUpdate == true ? "" : <Link to='/masters/garments/garments-view' ><Button type={'primary'} >View </Button></Link>}
     >
       <Form layout="vertical" form={form} initialValues={props.garmentData} name="control-hooks" onFinish={saveData}>
       <Form.Item name="garmentId" style={{ display: "none" }} >

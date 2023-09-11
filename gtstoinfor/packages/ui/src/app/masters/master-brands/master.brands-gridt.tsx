@@ -352,7 +352,7 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
     
     // >
     //  <br></br>
-<Card title='Brands' extra={<span><Button onClick={() => navigate('/masters/masters-brands/master-brands-form')} type={'primary'}>New</Button></span>}>
+<Card title='Brands' extra={<span><Button onClick={() => navigate('/masters/brands/brand-form')} type={'primary'}>New</Button></span>}>
      <Row gutter={40} >
       <Col>
           <Card title={'Total Brands: ' + masterBrandData.length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#bfbfbf'}}></Card>
