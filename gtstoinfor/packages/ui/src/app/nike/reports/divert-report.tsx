@@ -215,7 +215,11 @@ const DivertReport = () => {
 
     const columns: ColumnProps<any>[] = [
         {
-            title: 'old',
+            title: (
+                <div style={{ background: '#CFCFF4 ', padding: '10px' , borderRadius: '5px', display: 'flex', alignItems: 'center', height: 40, justifyContent: 'center' }}>
+                  Old
+                </div>
+              ),
             children: [
                 {
                     title: 'S.No',
@@ -340,7 +344,11 @@ const DivertReport = () => {
             ] as unknown as null,
         },
         {
-            title: 'New',
+            title: (
+                <div style={{ background: '#D1D1FF', borderRadius: '5px', display: 'flex', alignItems: 'center', height: 40, justifyContent: 'center', padding: '8px'  }}>
+                  New
+                </div>
+              ),
             children: [
                 {
                     title: 'OGAC Date',

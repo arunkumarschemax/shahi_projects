@@ -795,43 +795,43 @@ const OrdersCompareGrid = () => {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <b>Order Qty Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
+            label: <b style={{ color: '#25CB2D' }}>Order Qty Revised PO's : {filteredQtyData?.length} </b>,
+            children: <Table  className="custom-table-wrapper"bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '2',
             label: <b>Unit changed PO's : {unitChangeData?.length}</b>,
-            children: <Table bordered dataSource={unitChangeData} columns={columns4} scroll={{ x: 'max-content' }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '3',
-            label: <b >Item Changed PO's : {itemChangeData?.length}</b>,
-            children: <Table bordered dataSource={itemChangeData} columns={columns1} scroll={{ x: 'max-content' }} />,
+            label: <b style={{ color: '#29D6DE' }}>Item Changed PO's : {itemChangeData?.length}</b>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns1} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '4',
             label: <b>PO Line Item Status Revised PO's : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns2} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '5',
-            label: <b>Price & currency change in FOB : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
+            label: <b style={{ color: '#B229DE' }}>Price & currency change in FOB : {priceChaneData?.length}</b>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={priceChaneData} columns={columns2} scroll={{ x: 'max-content' }}/>,
         },
         {
             key: '6',
-            label: <b>Price & currency change in Net Incl.Discount : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
+            label: <b>Plant Code revised : {productCodeChaneData?.length}</b>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '7',
-            label: <b>Price & currency change in Trading Net Incl.Discount : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
+            label: <b style={{ color: '#DEAD29' }}>Mode of transportation: {modeOTransportChaneData?.length}</b>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={modeOTransportChaneData} columns={columns3} scroll={{ x: 'max-content' }}/>,
         },
         {
             key: '8',
-            label: <b>Item Text changed PO's : {poStatusData?.length}</b>,
-            children: <Table bordered dataSource={poStatusData} columns={columns2} />,
+            label: <b>Item Text changed PO's : {itemTextChaneData?.length}</b>,
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemTextChaneData} columns={columns5} scroll={{ x: 'max-content' }}/>,
         }
     ];
 
