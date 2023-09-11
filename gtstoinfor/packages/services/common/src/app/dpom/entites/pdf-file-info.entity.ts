@@ -14,6 +14,12 @@ export class PDFFileInfoEntity {
         nullable:false
     })
     pdfFileName: string;
+    @Column('varchar', {
+        name: "po_number",
+        length: 50,
+        nullable:false
+    })
+    poNumber: string;
     @Column({
         type: 'enum',
         nullable: false,
