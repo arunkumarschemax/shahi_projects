@@ -1504,5 +1504,15 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'error')
         }
     }
+    async getPdfFileInfo(): Promise<CommonResponseModel> {
+        const manager = this.dataSource
+        const pdfInfoQry = `select * from pdf_file_data`;
+        const pdfInfo = await manager.query(pdfInfoQry)
+        if(pdfInfo.length > 0){
+            return new CommonResponseModel(true, 1, 'data retrived', pdfInfo)
+        }else{
+            return new CommonResponseModel(false, 0, 'No data')
+        }
+    }
 }
 

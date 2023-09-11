@@ -653,6 +653,7 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
     @Post('/getPpmPoLineForNikeOrder')
     async getPpmPoLineForNikeOrder(): Promise<CommonResponseModel> {
         try {
@@ -662,7 +663,6 @@ export class DpomController {
         }
     }
 
-
     @Post('/getPriceDiffPoLinedd')
     async getPriceDiffPoLinedd(): Promise<CommonResponseModel> {
         try {
@@ -671,6 +671,7 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
     @Post('/getPriceDiffStyleNumber')
     async getPriceDiffStyleNumber(): Promise<CommonResponseModel> {
         try {
@@ -679,10 +680,20 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
     @Post('/getPriceDiffSizeDescription')
     async getPriceDiffSizeDescription(): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getPriceDiffSizeDescription();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getPdfFileInfo')
+    async getPdfFileInfo(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPdfFileInfo();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

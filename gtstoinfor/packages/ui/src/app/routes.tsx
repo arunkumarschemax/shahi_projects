@@ -26,6 +26,8 @@ import DPOMSyncManually from "./nike/components/dpom-manual-sync"
 import { FOBPriceVariationReport } from "./nike/reports/fob-price-variation-report"
 import FabricTrackerReport1 from "./nike/reports/fabric-tracker-report1"
 import FabricTrackerReport2 from "./nike/reports/fabric-tracker-report2"
+import POPDFInfoGrid from "./nike/pdf-reader/pdf-file-info-grid"
+import PoPdfTable from "./nike/pdf-reader/po-pdf-table"
 
 
 export const AppRoutes = () => {
@@ -73,6 +75,7 @@ export const AppRoutes = () => {
                     <Route path='order-acceptance' element={<OrderAcceptance />} />
                     <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
+                    
 
                 </Route>
                 <Route path='/nike-dashboard' element={<NikeDashboard />} />
@@ -116,6 +119,8 @@ export const AppRoutes = () => {
                     <Route path='file-revert' element={<NikeFileRevert />} />
                     <Route path='order-acceptance' element={<OrderAcceptance />} />
                     <Route path='pdf-upload' element={<PdfUpload />} />
+                    <Route path='pdf-file-info-grid' element={<POPDFInfoGrid />} />
+                    <Route path='po-pdf-table' element={<PoPdfTable data={undefined}/>} />
 
                 </Route>
                 <Route path='/reports'>
