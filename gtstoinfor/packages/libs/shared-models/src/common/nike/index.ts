@@ -16,3 +16,5 @@ export * from './factory-update.request';
 export * from './legal-po-item-details';
 export * from './legal-po-item-variant-details';
 export * from './legal-po-details';
+export * from './nike-order-filter.req';
+export * from './fob-price-Diff.req';

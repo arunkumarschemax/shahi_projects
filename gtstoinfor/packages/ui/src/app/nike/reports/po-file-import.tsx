@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Descriptions, Divider, Form, message, UploadProps } from 'antd';
+import { Button, Card, Descriptions, Divider, Form, message, Upload, UploadProps } from 'antd';
 import { NikeService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { FileStatusReq } from '@project-management-system/shared-models';
+import { UploadOutlined } from '@ant-design/icons';
 
 
 export default function PoFileImport() {
@@ -163,14 +164,18 @@ export default function PoFileImport() {
         </span>
         <Divider></Divider>
         <>
-          <Form.Item>
-            <input type="file" accept=".csv" onChange={handleFileChange} />
+        <Form.Item name="file">
+            <Upload {...uploadFieldProps} onChange={(info) => handleFileChange(info.file)}>
+              <Button style={{color:'blue'}} icon={<UploadOutlined /> }>Upload .csv File</Button>
+              <p>(Only .csv files are allowed)</p>
+            </Upload>
           </Form.Item>
           <Button
             type="primary"
             onClick={handleUpload}
             loading={loading}
             disabled={!selectedFile}
+            
           >
             Upload
           </Button>

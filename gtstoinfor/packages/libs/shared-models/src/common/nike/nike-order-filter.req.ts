@@ -1,8 +1,7 @@
-export class PpmDateFilterRequest {
-    lastModifedStartDate?: any;
-    lastModifedEndtDate?: any;
-    documentStartDate?: any;
-    documentEndtDate?: any;
+export class nikeFilterRequest {
+   
+    documentStartDate?: string;
+    documentEndDate?: string;
     productCode?: string;
     poandLine?: string;
     colorDesc?: string;
@@ -14,15 +13,14 @@ export class PpmDateFilterRequest {
     DPOMLineItemStatus?:string;
 
     constructor(
-        lastModifedStartDate?: any ,lastModifedEndtDate?: any ,documentStartDate?: any,
-        documentEndtDate?: any,productCode?: string,poandLine?: string,
+        documentStartDate?: string,
+        documentEndtDate?: string,productCode?: string,poandLine?: string,
         colorDesc?: string,categoryDesc?: string,destinationCountry?: string,
         plant?: string,item?: string,factory?: string,DPOMLineItemStatus?:string
     ) {
-        this.lastModifedStartDate = lastModifedStartDate;
-        this.lastModifedEndtDate = lastModifedEndtDate;
+     
         this.documentStartDate = documentStartDate;
-        this.documentEndtDate = documentEndtDate;
+        this.documentEndDate = documentEndtDate;
         this.productCode = productCode;
         this.poandLine = poandLine;
         this.colorDesc = colorDesc;

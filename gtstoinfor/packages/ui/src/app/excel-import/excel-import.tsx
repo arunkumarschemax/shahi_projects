@@ -60,37 +60,51 @@ export default function ExcelImport() {
       setSelectedFile(null);
     }
   };
-
   const handleUpload = async () => {
     try {
+
       if (selectedFile) {
+        let integerPart
+        //  console.log(selectedFile.name,'selectedFile') 
+        const inputString = selectedFile.name
+        const match = inputString.match(/(\d+)\.\d+/);
+        if (match) {
+          integerPart = parseInt(match[1]);
+        } else {
+          console.log("No integer part found in the input string.");
+        }
         const formData = new FormData();
         formData.append('file', selectedFile);
-        ordersService.fileUpload(formData).then((fileRes) => {
-          if (fileRes.status) {
-            ordersService.saveOrder(data, fileRes?.data?.id).then((res) => {
-              setLoading(true)
-              if (res.status) {
-                const req = new FileStatusReq()
-                req.fileId = fileRes?.data?.id;
-                req.status = 'Success'
-                ordersService.updateFileStatus(req)
-                message.success(res.internalMessage)
-                navigate("/excel-import/grid-view");
-              } else {
-                const req = new FileStatusReq()
-                req.fileId = fileRes?.data?.id;
-                req.status = 'Failed'
-                ordersService.updateFileStatus(req)
-                message.error('File upload failed')
-              }
-            }).finally(() => {
-              setLoading(false);
-            })
-          } else {
-            message.error(fileRes.internalMessage)
-          }
-        });
+        if (integerPart) {
+          ordersService.fileUpload(formData, integerPart).then((fileRes) => {
+            if (fileRes.status) {
+              ordersService.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
+                setLoading(true)
+                if (res.status) {
+                  const req = new FileStatusReq()
+                  req.fileId = fileRes?.data?.id;
+                  req.status = 'Success'
+                  ordersService.updateFileStatus(req)
+                  message.success(res.internalMessage)
+                  navigate("/excel-import/grid-view");
+                } else {
+                  const req = new FileStatusReq()
+                  req.fileId = fileRes?.data?.id;
+                  req.status = 'Failed'
+                  ordersService.updateFileStatus(req)
+                  message.error('File upload failed')
+                }
+              }).finally(() => {
+                setLoading(false);
+              })
+            } else {
+              message.error(fileRes.internalMessage)
+            }
+          });
+        } else {
+          message.info('month not avilable')
+        }
+
       }
     } catch (error) {
       message.error(error.message)
@@ -145,7 +159,7 @@ export default function ExcelImport() {
               {filesData[0]?.fileName}
             </Descriptions.Item>
             <Descriptions.Item label={<b>Uploaded Date</b>}>
-              {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).utc().format('YYYY-MM-DD HH:mm:ss') : '-'}
+              {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).format('YYYY-MM-DD HH:mm:ss') : '-'}
             </Descriptions.Item>
             <Descriptions.Item label={<b>Uploaded User</b>}>
               {filesData[0]?.createdUser}

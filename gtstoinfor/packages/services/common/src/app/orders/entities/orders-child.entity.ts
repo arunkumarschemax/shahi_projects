@@ -981,4 +981,11 @@ export class OrdersChildEntity {
         name: 'file_id',
     })
     fileId : number;
+    
+    @Column('int', {
+        nullable:true,
+        name: 'month',
+    })
+    month : number;
+
 }
