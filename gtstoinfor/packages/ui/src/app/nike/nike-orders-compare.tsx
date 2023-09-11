@@ -394,6 +394,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
+            align:'center',
             ...getColumnSearchProps('schedule_line_item_number')
         },
         {
@@ -409,18 +410,18 @@ const OrdersCompareGrid = () => {
             title: 'Factory',
             dataIndex: 'factory'
         },
-        {
-            title: 'Document Date',
-            dataIndex: 'document_date',
-            render: (text) => moment(text).format('MM/DD/YYYY')
-        },
+        // {
+        //     title: 'Document Date',
+        //     dataIndex: 'document_date',
+        //     render: (text) => moment(text).format('MM/DD/YYYY')
+        // },
         {
             title: 'Style Number',
-            dataIndex: 'style_number'
+            dataIndex: 'styleNumber'
         },
         {
             title: 'Product Code',
-            dataIndex: 'product_code'
+            dataIndex: 'productCode'
         },
         {
             title: 'Color Description',
@@ -428,15 +429,16 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac'
+            dataIndex: 'OGAC'
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'GAC'
         },
         {
             title: 'Destination Country',
-            dataIndex: 'destination_country'
+            dataIndex: 'desCtry',
+            align:'center',
         },
         {
             title: 'Item Text',
@@ -501,7 +503,8 @@ const OrdersCompareGrid = () => {
         // },
         {
             title: 'Size Description',
-            dataIndex: 'size_description'
+            dataIndex: 'size_description',
+            align:'center',
         },
         // {
         //     title: 'S',
@@ -525,8 +528,12 @@ const OrdersCompareGrid = () => {
         // },
         {
             title: 'Total Quantity',
-            dataIndex: 'total_item_qty'
-        },
+            align: 'right',
+            dataIndex: 'total_item_qty',
+            render: (text) => (
+              <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+            ),
+          },
     ];
 
     const columns1: any = [
@@ -644,7 +651,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Item',
             dataIndex: 'item',
-            ...getColumnSearchProps('item')
+           // ...getColumnSearchProps('item')
         },
         {
             title: 'Factory',
@@ -661,13 +668,8 @@ const OrdersCompareGrid = () => {
             dataIndex: 'po_line_item_number'
         },
         {
-            title: 'Document Date',
-            dataIndex: '',
-            //...getColumnSearchProps('po_number')
-        },
-        {
             title: 'Product Code',
-            dataIndex: '',
+            dataIndex: 'product_code',
             //...getColumnSearchProps('')
         },
         {
@@ -677,17 +679,17 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'CO Number',
-            dataIndex: '',
+            dataIndex: 'customer_order',
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Size Description',
-            dataIndex: '',
-            // ...getColumnSearchProps('po_number')
+            dataIndex: 'size_description',
+            // ...getColumnSearchProps('size_description')
         },
         {
             title: 'Change From Gross Price',
-            dataIndex: '',
+            dataIndex: 'old_val',
             // ...getColumnSearchProps('po_number')
         },
         {
@@ -697,7 +699,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Change to Gross Price',
-            dataIndex: '',
+            dataIndex: 'new_val',
             //...getColumnSearchProps('po_number')
         },
         {
@@ -782,7 +784,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Schedule Line Item No',
-            dataIndex: '',
+            dataIndex: 'schedule_line_item_number',
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
@@ -1202,6 +1204,171 @@ const OrdersCompareGrid = () => {
         // },
 
     ];
+    const columns7: any = [
+        {
+            title: 'S No',
+            key: 'sno',
+            width: '60px',
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+        },
+        {
+            title: 'Report Generate Date',
+            dataIndex: 'created_at',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        },
+        {
+            title: 'Item',
+            dataIndex: 'item',
+           // ...getColumnSearchProps('item')
+        },
+        {
+            title: 'Factory',
+            dataIndex: 'factory',
+            ...getColumnSearchProps('factory')
+        },
+        {
+            title: 'PO Number',
+            dataIndex: 'po_number',
+            ...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number'
+        },
+        {
+            title: 'Product Code',
+            dataIndex: 'product_code',
+            //...getColumnSearchProps('')
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'gac',
+            ...getColumnSearchProps('gac')
+        },
+        {
+            title: 'CO Number',
+            dataIndex: 'customer_order',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Size Description',
+            dataIndex: 'size_description',
+            // ...getColumnSearchProps('size_description')
+        },
+        
+        {
+            title: 'Change from Gross Price currency code',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        
+        {
+            title: 'Change to Gross Price currency code',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Shahi Offered Price from Master File  ',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Shahi Offered Price currency from Master File ',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Change from Trading Co Net including discounts',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Change from Trading Co Net including discounts currency code',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Change to Trading Co Net including discounts',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Change to Trading Co Net including discounts currency code',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Change from Net including discounts',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'Change From Net including discounts currency code',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'Change to Net including discounts',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'change to Net including discounts currency code',
+            dataIndex: '',
+            //...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'Legal PDF PO Price',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'Legal PDF PO Price Currency',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        // {
+        //     title: 'CRM CO Price',
+        //     dataIndex: '',
+        //     ...getColumnSearchProps('schedule_line_item_number')
+        // },
+        // {
+        //     title: 'CRM CO Price Currency',
+        //     dataIndex: '',
+        //     // ...getColumnSearchProps('schedule_line_item_number')
+        // },
+        {
+            title: 'comparission of CRM CO Price to Legal PDF PO Price',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'Previous Line Item Status',
+            dataIndex: 'old_val',
+            align: 'center',
+        },
+        {
+            title: 'Revised Line Item Status',
+            dataIndex: 'new_val', align: 'center',
+        },
+        {
+            title: 'Order Quantity Pieces',
+            dataIndex: 'total_item_qty',
+            align: 'right',
+            render: (text, record) => (
+                <>
+                    {Number(record.total_item_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                </>
+            )
+
+        },
+
+    ];
 
     const EstimatedETDDate = (value) => {
         if (value) {
@@ -1257,7 +1424,7 @@ const OrdersCompareGrid = () => {
         {
             key: '4',
             label: <b>PO Line Item Status Revised PO's : {poStatusData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns2} scroll={{ x: 'max-content' }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns7} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '5',

@@ -223,7 +223,7 @@ function ShipmentTrackerReport() {
         },
         {
             title: 'Plant Code',
-            dataIndex: 'plantCode',
+            dataIndex: 'plant',
             ...getColumnSearch('plantCode'),
 
         },
@@ -240,9 +240,10 @@ function ShipmentTrackerReport() {
         },
         {
             title: 'General Age Description',
-            dataIndex: 'generalAgeDescription',
+            dataIndex: 'gender_age_desc',
 
         },
+
         {
             title: 'Destination Country Name',
             dataIndex: 'destinationCountry',
