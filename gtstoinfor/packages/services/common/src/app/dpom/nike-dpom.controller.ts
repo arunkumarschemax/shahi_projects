@@ -678,5 +678,13 @@ export class DpomController {
            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
        }
    }
+   @Post('/getPdfFileInfo')
+   async getPdfFileInfo(): Promise<CommonResponseModel> {
+       try {
+           return this.dpomService.getPdfFileInfo();
+       } catch (err) {
+           return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+       }
+   }
 }
 
