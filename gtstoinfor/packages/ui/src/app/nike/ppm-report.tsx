@@ -38,7 +38,6 @@ const PPMReport = () => {
 
 
   useEffect(() => {
-    getData();
     getProductCode();
     getPoLine();
     getColorDesc();
@@ -47,6 +46,7 @@ const PPMReport = () => {
     getplantCode();
     getItem();
     getFactory();
+    getData();
   }, [])
 
 
@@ -55,44 +55,48 @@ const PPMReport = () => {
       setProductCode(res.data)
     })
   }
+
   const getPoLine = () => {
     service.getPpmPoLineForMarketing().then(res => {
       setPoLine(res.data)
     })
   }
+
   const getColorDesc = () => {
     service.getPpmColorDescForMarketing().then(res => {
       setColorDesc(res.data)
     })
   }
+
   const getcategoryDesc = () => {
     service.getPpmCategoryDescForMarketing().then(res => {
       setCategoryDesc(res.data)
-
     })
   }
+
   const getcountrydestination = () => {
     service.getPpmDestinationCountryForMarketing().then(res => {
       setCountryDestination(res.data)
     })
   }
+
   const getplantCode = () => {
     service.getPpmPlantForMarketing().then(res => {
       setPlantCode(res.data)
     })
-
   }
+
   const getItem = () => {
     service.getPpmItemForMarketing().then(res => {
       setItem(res.data)
     })
   }
+
   const getFactory = () => {
     service.getPpmFactoryForMarketing().then(res => {
       setFactory(res.data)
     })
   }
-
 
   const getData = () => {
     const req = new PpmDateFilterRequest();
@@ -513,16 +517,16 @@ const PPMReport = () => {
       {
         title: "Planning Priority Number",
         dataIndex: 'planningPriorityCode',
-        align:'center'
+        align: 'center'
       },
       {
         title: "Planning Priority Description",
-        dataIndex: 'planningPriorityDesc',align:'center'
+        dataIndex: 'planningPriorityDesc', align: 'center'
 
       },
       {
         title: "Mode Of Transportation",
-        dataIndex: 'modeOfTransportationCode',align:'center'
+        dataIndex: 'modeOfTransportationCode', align: 'center'
 
       },
       {

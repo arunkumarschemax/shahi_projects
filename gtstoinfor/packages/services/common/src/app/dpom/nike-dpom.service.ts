@@ -397,8 +397,9 @@ export class DpomService {
     async saveDIAPDFData(req: DiaPDFDto): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
+            await transactionManager.startTransaction()
             const orderDetails = await this.dpomRepository.find({ where: { purchaseOrderNumber: req.poNumber, poLineItemNumber: req.lineNo } })
-            if (orderDetails.length > 0) {
+            if (orderDetails) {
                 for (const detail of orderDetails) {
                     const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: detail.purchaseOrderNumber, poLineItemNumber: detail.poLineItemNumber, scheduleLineItemNumber: detail.scheduleLineItemNumber }, {
                         shipToAddressDIA: req.shipToAddress, CABCode: req.cabCode
@@ -409,10 +410,10 @@ export class DpomService {
                     }
                 }
                 await transactionManager.completeTransaction()
-                return new CommonResponseModel(true, 1, 'Data retrived successfully')
+                return new CommonResponseModel(true, 1, 'PDF data updated successfully')
             } else {
                 await transactionManager.releaseTransaction();
-                return new CommonResponseModel(false, 0, 'No POs found')
+                return new CommonResponseModel(false, 0, 'No POs data found relavent to PDF uploaded')
             }
         } catch (error) {
             await transactionManager.releaseTransaction()
@@ -423,9 +424,10 @@ export class DpomService {
     async saveLegalPOPDFData(req: any): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
-
+            console.log(req)
+            await transactionManager.startTransaction()
             const orderDetails = await this.dpomRepository.find({ where: { purchaseOrderNumber: req.poNumber } })
-            if (orderDetails.length > 0) {
+            if (orderDetails) {
                 for (const item of req.poItemDetails) {
                     const itemText = item.itemVasText ? item.itemVasText : null;
                     const matches = [];
@@ -460,7 +462,7 @@ export class DpomService {
                 return new CommonResponseModel(true, 1, 'Data retrived successfully')
             } else {
                 await transactionManager.releaseTransaction();
-                return new CommonResponseModel(false, 0, 'No POs found')
+                return new CommonResponseModel(false, 0, 'No POs data found relavent to PDF uploaded')
             }
         } catch (error) {
             await transactionManager.releaseTransaction()
@@ -1508,9 +1510,9 @@ export class DpomService {
         const manager = this.dataSource
         const pdfInfoQry = `select * from pdf_file_data`;
         const pdfInfo = await manager.query(pdfInfoQry)
-        if(pdfInfo.length > 0){
+        if (pdfInfo.length > 0) {
             return new CommonResponseModel(true, 1, 'data retrived', pdfInfo)
-        }else{
+        } else {
             return new CommonResponseModel(false, 0, 'No data')
         }
     }

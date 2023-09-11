@@ -19,6 +19,14 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/saveDPOMDataToDataBase")
     }
 
+    async saveLegalPOPDFData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/saveLegalPOPDFData", req)
+    }
+
+    async saveDIAPDFData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/saveDIAPDFData", req)
+    }
+
     async updateFileStatus(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/updateFileStatus", req)
     }
@@ -96,10 +104,6 @@ export class NikeService extends CommonAxiosService {
     }
     async getFabricTrackerReport(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getFabricTrackerReport")
-    }
-
-    async saveDiaPDFFields(req: DiaPDFModel): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/saveDiaPDFFields", req)
     }
 
     async getItemChangeData(): Promise<CommonResponseModel> {
@@ -212,8 +216,8 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/updateFactoryStatusColumns", req)
     }
 
-    async getPriceDifferenceReport(req:any): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getPriceDifferenceReport",req)
+    async getPriceDifferenceReport(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPriceDifferenceReport", req)
     }
 
     async getPpmProductCodeForMarketing(): Promise<CommonResponseModel> {
@@ -275,5 +279,5 @@ export class NikeService extends CommonAxiosService {
     async getPdfFileInfo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPdfFileInfo")
     }
-    
+
 }   

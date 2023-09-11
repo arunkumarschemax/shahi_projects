@@ -172,17 +172,30 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         )
     }
 
-
-
-    const saveDiaPdfFields = () => {
-        const formValues = diaPDfForm.getFieldsValue()
-        nikeDpomService.saveDiaPDFFields(formValues).then((res) => {
-            if (res.status) {
-                message.success(res.internalMessage)
-            } else {
-                message.error(res.internalMessage)
-            }
-        })
+    const savePdfFields = () => {
+        if (resultProps?.title.includes('DIA Document')) {
+            const formValues = diaPDfForm.getFieldsValue();
+            nikeDpomService.saveDIAPDFData(formValues).then((res) => {
+                if (res.status) {
+                    onReset()
+                    alert(res.internalMessage)
+                    message.success(res.internalMessage)
+                } else {
+                    message.error(res.internalMessage)
+                }
+            })
+        } else {
+            console.log(poPdfData)
+            nikeDpomService.saveDIAPDFData(poPdfData).then((res) => {
+                if (res.status) {
+                    onReset()
+                    alert(res.internalMessage)
+                    message.success(res.internalMessage)
+                } else {
+                    message.error(res.internalMessage)
+                }
+            })
+        }
     }
 
     function onReset() {
@@ -194,9 +207,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
     function renderPDFOutPut() {
         if (resultProps && resultProps.status == 'success') {
-            console.log(resultProps,'upload sucess')
-            if (resultProps?.title.includes('PO PDF') && poPdfData  ) {
-                console.log(resultProps,'po pdf data')
+            if (resultProps?.title.includes('PO PDF') && poPdfData) {
                 return <PoPdfTable data={poPdfData} />
             }
             if (resultProps?.title.includes('DIA Document') && diaPDFValues) {
@@ -205,6 +216,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         }
         return <></>
     }
+
     return (
         <Card title='Upload PDF'>
             {resultProps === undefined &&
@@ -233,7 +245,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
                                 {renderPDFOutPut()}
                             </Col>
                             <Col span={2}>
-                                <Button onClick={saveDiaPdfFields} type={'primary'} >Submit</Button>
+                                <Button onClick={savePdfFields} type={'primary'} >Submit</Button>
                             </Col>
                             <Col span={2}>
                                 <Button onClick={onReset} >Reset</Button>
@@ -246,7 +258,5 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         </Card>
     )
 }
-
-
 
 export default PdfUpload;
