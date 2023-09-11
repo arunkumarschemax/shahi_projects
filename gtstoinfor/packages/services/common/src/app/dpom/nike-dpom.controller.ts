@@ -37,10 +37,10 @@ export class DpomController {
         }
     }
 
-    @Post('/getCRMOrderDetails')
-    async getCRMOrderDetails() {
+    @Post('/getCRMOrderDetails2')
+    async getCRMOrderDetails2() {
         try {
-            return await this.dpomService.getCRMOrderDetails()
+            return await this.dpomService.getCRMOrderDetails2('2000593977')
         } catch (error) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
@@ -120,16 +120,16 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
-    @Post('/getFabricTrackerReport')
-    @ApiBody({ type: PpmDateFilterRequest })
-    async getFabricTrackerReport(@Body() req?: any): Promise<CommonResponseModel> {
-        try {
-            return await this.dpomService.getFabricTrackerReport(req);
-        } catch (err) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    // @Post('/getFabricTrackerReport')
+    // @ApiBody({ type: PpmDateFilterRequest })
+    // async getFabricTrackerReport(@Body() req?: any): Promise<CommonResponseModel> {
+    //     try {
+    //         return await this.dpomService.getFabricTrackerReport(req);
+    //     } catch (err) {
+    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
 
-        }
-    }
+    //     }
+    // }
 
     @Post('/getFactoryReportData')
     @ApiBody({ type: PpmDateFilterRequest })
@@ -152,7 +152,6 @@ export class DpomController {
             return await this.dpomService.getShipmentTrackerReport();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-
         }
     }
 
@@ -163,7 +162,16 @@ export class DpomController {
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
-    } 
+    }
+
+    @Post('/getFabricTrackerReport')
+    async getFabricTrackerReport(): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getFabricTrackerReport();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 
     @Post('/getCountForDivertReport')
     async getCountForDivertReport(): Promise<CommonResponseModel> {
@@ -201,14 +209,15 @@ export class DpomController {
         }
     }
 
-    @Post('/getOrderAcceptanceData')
-    async getOrderAcceptanceData(): Promise<CommonResponseModel> {
-        try {
-            return this.dpomService.getOrderAcceptanceData();
-        } catch (err) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/getOrderAcceptanceData')
+    // @ApiBody({ type: nikeFilterRequest })
+    // async getOrderAcceptanceData(@Body() req: any): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.dpomService.getOrderAcceptanceData();
+    //     } catch (err) {
+    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
 
     @Post('/getShipmentWiseData')
     async getShipmentWiseData(): Promise<CommonResponseModel> {
@@ -247,7 +256,7 @@ export class DpomController {
     }
 
     @Post('/getTotalItemQtyChangeData')
-    async getTotalItemQtyChangeData(): Promise<CommonResponseModel> {
+    async getTotalItemQtyChangeData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getTotalItemQtyChangeData();
         } catch (err) {
