@@ -1,6 +1,6 @@
 import { SettingsIdReq, SettingsModel } from "@project-management-system/shared-models"
 import { SettingsService } from "@project-management-system/shared-services"
-import { Button, Card, Descriptions } from "antd"
+import { Button, Card, Descriptions, Tag } from "antd"
 import DescriptionsItem from "antd/es/descriptions/Item"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -38,7 +38,7 @@ export const SettingsView = () => {
             data.length > 0 ? (<>
             
             <Card title='Settings' size='small'   extra={<Button onClick={onUpdate} type={'primary'}>Change</Button>}>
-             <Descriptions title='COMPANY DETAILS' size='small'>
+             <Descriptions title={<Tag color="gold" style={{fontSize:'15px'}}>COMPANY DETAILS</Tag>} size='small'>
                 <DescriptionsItem label='Account Control Head'>{data[0]?.accountControlName}</DescriptionsItem>
                 <DescriptionsItem label='PCH'>{data[0]?.profitControlHead}</DescriptionsItem>
                 <DescriptionsItem label='Company'>{data[0]?.companyName}</DescriptionsItem>
@@ -47,17 +47,20 @@ export const SettingsView = () => {
                 <DescriptionsItem label='Warehouse'>{data[0]?.warehouseName}</DescriptionsItem>
                 <DescriptionsItem label='CO Type'>{}</DescriptionsItem>
             </Descriptions>
-            <Descriptions title='TEAM DETAILS' size='small'>
+            <br/>
+            <Descriptions title={<Tag color="lime" style={{fontSize:'15px'}}>TEAM DETAILS</Tag>} size='small'>
                 <DescriptionsItem label='Sales Person'>{data[0]?.salesPerson}</DescriptionsItem>
                 <DescriptionsItem label='Fabric Responsible'>{data[0]?.fabricResponsible}</DescriptionsItem>
                 <DescriptionsItem label='Item Responsible'>{data[0]?.itemResponsible}</DescriptionsItem>
                 <DescriptionsItem label='Trim Responsible'>{data[0]?.trimRespondsible}</DescriptionsItem>
             </Descriptions>
-            <Descriptions title='PRODUCT DETAILS' size='small'>
+            <br/>
+            <Descriptions title={<Tag color="gold" style={{fontSize:'15px'}}>PRODUCT DETAILS</Tag>} size='small'>
                 <DescriptionsItem label='Currency'>{data[0]?.currencyName}</DescriptionsItem>
                 <DescriptionsItem label='Licence Type'>{data[0]?.liscenceType}</DescriptionsItem>
             </Descriptions>
-            <Descriptions title='CUSTOMER DETAILS' size='small'>
+            <br/>
+            <Descriptions title={<Tag color="lime" style={{fontSize:'15px'}}>CUSTOMER DETAILS</Tag>} size='small'>
                 <DescriptionsItem label='Buyer Address'>{data[0]?.address}</DescriptionsItem>
                 <DescriptionsItem label='Buyer Name'>{data[0]?.buyerName}</DescriptionsItem>
                 <DescriptionsItem label='Buyer Group'>{data[0]?.buyerGroup}</DescriptionsItem>
