@@ -106,7 +106,7 @@ export function POPDFInfoGrid() {
     })
     const setMoreData = (record) => {
         console.log(record.file_data)
-        // navigate('/nike/po-pdf-table')
+        navigate('/nike/po-pdf-table',{state : record.file_data})
 
     }
     const columns: any = [
@@ -146,6 +146,7 @@ export function POPDFInfoGrid() {
 
         }
     ]
+    
     return (
         <>
         <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>

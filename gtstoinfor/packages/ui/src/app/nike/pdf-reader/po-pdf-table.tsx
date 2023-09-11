@@ -2,6 +2,7 @@ import { LegalPoDetails } from '@project-management-system/shared-models'
 import { Card, Table } from 'antd'
 import React from 'react'
 import './pdf-reader.css'
+import { useLocation } from 'react-router-dom'
 
 export interface IPoPdfTableProps {
     data: LegalPoDetails
@@ -9,6 +10,8 @@ export interface IPoPdfTableProps {
 
 export default function PoPdfTable(props: IPoPdfTableProps) {
     const {data} = props
+      const location = useLocation();
+    console.log(location)
     const columns = [
         { title: 'Item No', dataIndex: 'itemNo' },
         { title: 'Material', dataIndex: 'matrial' },
