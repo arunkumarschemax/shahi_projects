@@ -9,52 +9,29 @@ export interface IPoPdfTableProps {
 }
 
 export default function PoPdfTable(props: IPoPdfTableProps) {
-  const { state } = useLocation();
-  const [pdfData, setPdfData] = useState<any>();
-  const [updateKey, setUpdateKey] = useState<any>();
+    const { state } = useLocation();
+    const [pdfData, setPdfData] = useState<any>();
 
-useEffect(()=> {
-    console.log(pdfData)
-},[pdfData])
-useEffect(()=>{
-    if(props.data){
-        setPdfData(props.data)
-        setUpdateKey(prevState => prevState+1)
-    }
 
-},[props.data])
-useEffect(()=>{
-    
-    if(state.data){
-        setPdfData(state.data)
-        setUpdateKey(prevState => prevState+1)
-    }
-},[state.data])
-    // const {data} = props
-    const columns = [
-        { title: 'Item No', dataIndex: 'itemNo' },
-        { title: 'Material', dataIndex: 'matrial' },
-        { title: 'Description', dataIndex: 'description' },
-        { title: 'Acceptance date', dataIndex: 'acceptanceDate' },
-        { title: 'Delivery  date', dataIndex: 'deliveryDate' },
-        { title: 'Delivery  date', dataIndex: 'deliveryDate' },
-        { title: 'Mode', dataIndex: 'mode' },
-        { title: 'Item Variants', render: (value, i) => <Table columns={itemVariantColumns} dataSource={value.poItemVariantDetails} /> }
+    useEffect(() => {
+        if (props.data) {
+            setPdfData(props.data)
+        }
 
-    ]
+    }, [props.data])
+    useEffect(() => {
+        if (state.data) {
+            const parsedData = JSON.parse(state.data)
+            console.log(parsedData)
+            setPdfData(parsedData)
+            // setUpdateKey(prevState => prevState+1)
+        }
+    }, [state.data])
 
-    const itemVariantColumns = [
-        { title: 'UOM', dataIndex: 'uom' },
-        { title: 'Size', dataIndex: 'size' },
-        { title: 'Unit PRice', dataIndex: 'unitPrice' },
-        { title: 'Quantity', dataIndex: 'qunatity' },
-        { title: 'Amount', dataIndex: 'amount' }
-
-    ]
     return (
         <Card>
 
-            <table className='ta-b' style={{width:'100%'}} >
+            <table className='ta-b' style={{ width: '100%' }} >
                 <tr className='ta-b'>
                     <th className='ta-b'>PO NUMBER</th>
                     <th className='ta-b'>PO DOC DATE</th>
