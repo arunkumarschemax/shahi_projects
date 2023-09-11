@@ -8,7 +8,7 @@ import Tesseract from "tesseract.js";
 // import DocumentForm from "./document-form";
 // import DocumentItemForm from "./document-item-form";
 import Card from "antd/es/card/Card";
-import { UploadOutlined } from "@ant-design/icons";
+import { CalendarOutlined, UploadOutlined } from "@ant-design/icons";
 import { SharedService } from "@project-management-system/shared-services";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
@@ -42,6 +42,7 @@ export function UploadDocumentForm() {
   const [Taxtype, setTaxtype] = useState("");
   const [Taxamount, setTaxamount] = useState("");
   const [Charge, setCharge] = useState("");
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [zoomFactor, setZoomFactor] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
@@ -66,11 +67,17 @@ export function UploadDocumentForm() {
   const [Sgst, setSgst] = useState("");
   const [Innvoiceamount, setInnvoiceamount] = useState("");
   const [vendor, setVendor] = useState("");
+  const [routing, setRouting] = useState("");
+  const [comment, setComment] = useState("");
+  const [financialyear, setFinancialyear] = useState("");
+  const [timecreated, setTimecreated] = useState("");
   const [consoles, setConsoles] = useState("");
   const [cartons, setCartons] = useState("");
   const [po, setPO] = useState("");
   const [dt, setDt] = useState("");
   const [Innvoicecurrency, setInnvoicecurrency] = useState("");
+
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -94,6 +101,16 @@ export function UploadDocumentForm() {
       }
     }
   };
+  const handleTimecreatedChange = (date) => {
+    // Use moment to format the selected date and time
+    const formattedDate = date ? date.format('YYYY-MM-DD HH:mm:ss') : null;
+    setTimecreated(formattedDate);
+    setIsDatePickerVisible(false); // Close the DatePicker when a date is selected
+  };
+  const handleInputChange = (e) => {
+    // Update the state when the input field changes
+    setTimecreated(e.target.value);
+  };
 
 
   const extractGstNumbers = (text) => {
@@ -103,27 +120,31 @@ export function UploadDocumentForm() {
     setGstNumbers(extractedGstNumbers.join(', '));
     return extractedGstNumbers;
   };
-  
+
   const extractIgst = (text) => {
-    const IgstRegex = /\b\d{1,3}(?:,\d{3})*(?:\.\d{2})\b/;
+    const IgstRegex = /(\d,\d{3}\.\d{2})/g;
     const match = text.match(IgstRegex);
     const extractedIgst = match ? match[0] : "";
     return extractedIgst;
   };
 
+  const extractInnvoiceamount = (text) => {
+    const InnvoiceamountRegex = /(\d{1,3}(?:,\d{3})*\.\d{2})/g;
+    const match = text.match(InnvoiceamountRegex);
+    const extractedInvoiceamount = match ? match[0] : "";
+    return extractedInvoiceamount;
+  };
   const extractCgst = (text) => {
-    const CgstRegex =
-    /CGST\s+(\d{1,3}(?:,\d{3})*(?:\.\d+)?)/;
+    const CgstRegex = /^\d+\.\d{2}$/;
     const match = text.match(CgstRegex);
-    const extractedCgst = match ? match[0] : "";
+    const extractedCgst = match ? match[0] : "0.00";
     return extractedCgst;
   };
 
   const extractSgst = (text) => {
-    const SgstRegex =
-   /\d{1,3}(?:,\d{3})*(?:\.\d+)?/;
+    const SgstRegex = /^\d+\.\d{2}$/;
     const match = text.match(SgstRegex);
-    const extractedSgst = match ? match[0] : "";
+    const extractedSgst = match ? match[0] : "0.00";
     return extractedSgst;
   };
 
@@ -139,15 +160,55 @@ export function UploadDocumentForm() {
     const invoiceDateRegex =
       /\b(?:\d{1,2}-[A-Za-z]{3}-\d{2}|\d{4} [A-Za-z]{3} \d{1,2})\b/g;
     const match = text.match(invoiceDateRegex);
-    const extractedInvoiceDate = match ? match[0] : "";
-    return extractedInvoiceDate;
+
+    if (match) {
+      const extractedDate = match[0];
+
+      // Split the extracted date into parts based on different formats
+      const parts = extractedDate.split(/-| /);
+
+      if (parts.length === 3) {
+        const day = parts[0];
+        const month = getMonthNumber(parts[1]);
+        const year = formatYear(parts[2]);
+
+        return `${year}-${month}-${day}`;
+      }
+    }
+
+    return "";
   };
+
+  const getMonthNumber = (monthStr) => {
+    const monthNames = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
+    // Find the index of the month abbreviation in the array and add 1 for 1-based index
+    return String(monthNames.indexOf(monthStr) + 1).padStart(2, "0");
+  };
+
+  const formatYear = (yearStr) => {
+    if (yearStr.length === 2) {
+      // If the year is 2 digits, assume it's in the 20th century (e.g., 21 for 2021)
+      return `20${yearStr}`;
+    } else {
+      return yearStr;
+    }
+  };
+
+  // Example usage:
+  const textWithDate = "Invoice Date: 21-Sep-08";
+  const formattedDate = extractInvoiceDate(textWithDate);
+  console.log("Formatted Date:", formattedDate); // Output: Formatted Date: 2008-09-21
+
 
   const extractInnvoicecurrency = (text) => {
     const InvoicecuurencyRegex =
-    /(INR|DOLLARS|DINARS)/g;
+      /(INR|DOLLARS|DINARS)/g;
     const match = text.match(InvoicecuurencyRegex);
-    const extractedInnvoicecurrency= match ? match[0] : "";
+    const extractedInnvoicecurrency = match ? match[0] : "";
     return extractedInnvoicecurrency;
   };
 
@@ -158,13 +219,16 @@ export function UploadDocumentForm() {
     return extractedInnvoicenum;
   };
 
-  const extractInnvoiceamount = (text) => {
-    const InnvoiceamountRegex =
-    /\b\d{1,3}(?:,\d{3})*(?:\.\d{2})\b/;
-    const match = text.match(InnvoiceamountRegex);
-    const extractedInvoiceamount = match ? match[0] : "";
-    return extractedInvoiceamount;
+
+  const extractFinancialyear = (text) => {
+    const FinancialyearRegex = /\b\d{4}-\d{4}\b/g;
+    const match = text.match(FinancialyearRegex);
+    const extractedFinancialyear = match ? match[0].trim() : "";
+    return extractedFinancialyear;
   };
+
+
+
 
   const handleDateChange = (date) => {
     setInvoiceDate(date);
@@ -191,7 +255,7 @@ export function UploadDocumentForm() {
       setExtractedData(updatedTableData);
       setIsEditing(false);
       setEditingItem(null);
-      setButtonText("Add"); 
+      setButtonText("Add");
     } else {
       setExtractedData([...extractedData, newItem]);
     }
@@ -201,6 +265,17 @@ export function UploadDocumentForm() {
     setTaxtype("");
     setTaxamount("");
     setCharge("");
+  };
+
+
+  const getCurrentFinancialYear = () => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const isAprilOrLater = currentDate.getMonth() >= 3;
+    const startYear = isAprilOrLater ? currentYear : currentYear - 1;
+    const endYear = startYear + 1;
+
+    return `${startYear}-${endYear}`;
   };
 
   const columns = [
@@ -253,15 +328,15 @@ export function UploadDocumentForm() {
   //   setHSN(item.HSN);
   //   setDescription(item.description);
   //   setTaxtype(item.Taxtype);
-  
+
   //   const taxAmountObj = item.Taxamount;
-  
+
   //   if (typeof taxAmountObj === 'object' && taxAmountObj.hasOwnProperty('percentage') && taxAmountObj.hasOwnProperty('amount')) {
   //     setTaxamount(`${taxAmountObj.percentage}% = ₹${taxAmountObj.amount}`);
   //   } else {
   //     setTaxamount(item.Taxamount);
   //   }
-  
+
   //   setCharge(item.Charge);
   //   setIsEditing(true);
   //   setEditingItem(item);
@@ -269,28 +344,25 @@ export function UploadDocumentForm() {
   // };
 
   const handleEdit = (item) => {
-  setHSN(item.HSN);
-  setDescription(item.description);
-  setTaxtype(item.Taxtype);
+    setHSN(item.HSN);
+    setDescription(item.description);
+    setTaxtype(item.Taxtype);
 
-  const taxAmountObj = item.Taxamount;
+    const taxAmountObj = item.Taxamount;
 
-  // Check if taxAmountObj is an object with percentage and amount properties
-  if (typeof taxAmountObj === 'object' && 'percentage' in taxAmountObj && 'amount' in taxAmountObj) {
-    setTaxamount(`${taxAmountObj.percentage}% = ₹${taxAmountObj.amount}`);
-  } else {
-    // If it's not an object, set it as is
-    setTaxamount(item.Taxamount);
-  }
+    // Check if taxAmountObj is an object with percentage and amount properties
+    if (typeof taxAmountObj === 'object' && 'percentage' in taxAmountObj && 'amount' in taxAmountObj) {
+      setTaxamount(`${taxAmountObj.percentage}% = ₹${taxAmountObj.amount}`);
+    } else {
+      // If it's not an object, set it as is
+      setTaxamount(item.Taxamount);
+    }
 
-  setCharge(item.Charge);
-  setIsEditing(true);
-  setEditingItem(item);
-  setButtonText("Update"); 
-};
-
-  
-  
+    setCharge(item.Charge);
+    setIsEditing(true);
+    setEditingItem(item);
+    setButtonText("Update");
+  };
 
   const handleDelete = (item) => {
     const updatedTableData = extractedData.filter((i) => i !== item);
@@ -309,8 +381,14 @@ export function UploadDocumentForm() {
     }
   }
 
+  const handleIconClick = () => {
+    setIsDatePickerVisible(!isDatePickerVisible);
+  };
+
   const handleUploadDocument = () => {
     if (file) {
+
+
       const reader = new FileReader();
       reader.onload = (e) => {
         setSelectedImage(e.target.result);
@@ -331,10 +409,11 @@ export function UploadDocumentForm() {
           const extractedInnvoiceamount = extractInnvoiceamount(text);
           const extractedInnvoicecurrency = extractInnvoicecurrency(text);
           const extractedIgst = extractIgst(text);
+          const extractedFinancialyear = extractFinancialyear(text);
           const extractedCgst = extractCgst(text);
           const extractedSgst = extractSgst(text);
 
-         
+
           setGstNumbers(extractedGstNumbers);
           setInnvoiceamount(extractedInnvoiceamount);
           setInnvoicecurrency(extractedInnvoicecurrency);
@@ -344,6 +423,7 @@ export function UploadDocumentForm() {
           setIgst(extractedIgst);
           setCgst(extractedCgst);
           setSgst(extractedSgst);
+          setFinancialyear(extractedFinancialyear);
 
           const lines = text.split('\n');
 
@@ -402,6 +482,14 @@ export function UploadDocumentForm() {
             "Entire Data": allLines,
           };
 
+          const currentFinancialYear = getCurrentFinancialYear();
+          setFinancialyear(currentFinancialYear);
+
+          const currentDate = new Date();
+          const formattedDate = currentDate.toLocaleString();
+          setTimecreated(formattedDate);
+
+
           console.log("Result (JSON):", JSON.stringify(result, null, 2));
         });
 
@@ -424,7 +512,7 @@ export function UploadDocumentForm() {
         console.log(text);
       });
 
-      setFile(file); 
+      setFile(file);
 
       return false;
     },
@@ -457,7 +545,7 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    // const req = new AllScanDto(gstNumbers,vendor,invoiceDate ,Innvoiceamount,Innvoicecurrency,Innvoicenum,Cgst,Igst,Sgst)
+    // const req = new AllScanDto(gstNumbers,vendor,invoiceDate ,Innvoiceamount,Innvoicecurrency,Innvoicenum,Cgst,Igst,Sgst,Routing,Financialyear,Timecreated,Comment)
     const req: any = {
       GST: gstNumbers,
       invoiceDate: invoiceDate,
@@ -467,7 +555,11 @@ export function UploadDocumentForm() {
       Cgst: Cgst,
       IGST: Igst,
       Sgst: Sgst,
-      Vendor: vendor
+      Vendor: vendor,
+      Routing: routing,
+      Comment: comment,
+      Financialyear: financialyear,
+      Timecreated: timecreated
     }
 
     console.log(req, "submit")
@@ -488,8 +580,8 @@ export function UploadDocumentForm() {
 
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', alignItems: 'stretch' }}>
-      <Card title="Upload Document" bordered={true} style={{ flex: 1 }} headStyle={{ backgroundColor: '#77dfec', border: 0 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', }}>
+      <Card title="Upload Document" bordered={true} style={{ flex: 1, }} headStyle={{ backgroundColor: '#77dfec', border: 0 }}>
         <Form layout="vertical" form={uploadForm} onFinish={handleUploadDocument}>
           <Row gutter={12}>
             <Col span={6}>
@@ -536,7 +628,7 @@ export function UploadDocumentForm() {
                 <Button
                   type="primary"
                   icon={<UploadOutlined />}
-                  style={{ position: 'relative', top: '10px' }}
+                  style={{ position: 'relative', top: "10px" }}
                   onClick={handleUploadDocument}
                   disabled={isLoading}
                 >
@@ -571,9 +663,11 @@ export function UploadDocumentForm() {
           title="Image Form"
           bordered={true}
           headStyle={{ backgroundColor: '#77dfec', border: 0 }}
-          style={{ flex: 1, position: 'relative',top:"5px",  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-          background: '#fff',
-          borderTop: '1px solid #e8e8e8', }}
+          style={{
+            flex: 1, position: 'relative', top: "5px", boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+            background: '#fff',
+            borderTop: '1px solid #e8e8e8',
+          }}
         >
           <div
             style={{
@@ -617,7 +711,7 @@ export function UploadDocumentForm() {
       <Form form={GstForm}>
         <div style={{ display: 'flex', flexDirection: 'column', height: '-10px', }}>
           <Card
-            title={"Document"}
+            title={"Document Details"}
             headStyle={{ backgroundColor: '#77dfec', border: 0 }}
             bordered={true}
             style={{
@@ -633,25 +727,12 @@ export function UploadDocumentForm() {
           >
             <Form.Item >
               <Row gutter={24} >
-
-                <Col span={6}>
-                  <label htmlFor="GST" style={{ color: 'black', fontWeight: 'bold' }}>
-                    GST
-                  </label>
-                  <Input
-                    title="GST"
-                    name="GST"
-                    style={{ width: '150px', height: '30px' }}
-                    value={gstNumbers}
-                    onChange={(e) => setGstNumbers(e.target.value)}
-                  />
-                </Col>
-                <Col span={6}>
-                  <label htmlFor="Vendor" style={{ color: 'black', fontWeight: 'bold' }}>Vendor</label>
+              <Col span={8}>
+                  <label htmlFor="Vendor" style={{ color: 'black', fontWeight: 'bold' }}>Vendor Name</label>
                   <Select
                     title="Vendor"
                     id="Vendor"
-                    style={{ width: "150px" }}
+                    style={{ width: "190px", }}
                     value={vendor}
                     onChange={(value) => setVendor(value)}
                     defaultValue="option1"
@@ -662,8 +743,31 @@ export function UploadDocumentForm() {
                     <Select.Option value="INDIA PVT LTD">INDIA PVT LTD</Select.Option>
                   </Select>
                 </Col>
-
                 <Col span={6}>
+                  <label htmlFor="GST" style={{ color: 'black', fontWeight: 'bold',position:"relative",left:"10px" }}>
+                    GST
+                  </label>
+                  <Input
+                    title="GST"
+                    name="GST"
+                    style={{ width: '190px', height: '30px',position:"relative",left:"10px" }}
+                    value={gstNumbers}
+                    onChange={(e) => setGstNumbers(e.target.value)}
+                  />
+                </Col>
+                
+                <Col span={9}>
+                  <label htmlFor="Financialyear" style={{ color: 'black', fontWeight: 'bold',position:"relative",left:"75px" }}>Financial year</label>
+                  <Input
+                    id="Financialyear"
+                    name="Financialyear"
+                    style={{ width: "180px", height: "30px",position:"relative",left:"75px" }}
+                    value={financialyear}
+                    onChange={(e) => setFinancialyear(e.target.value)}
+                  />
+                </Col>
+
+                {/* <Col span={6}>
                   <label htmlFor="invoiceDate" style={{ color: 'black', fontWeight: 'bold' }}>
                     Invoice Date
                   </label>
@@ -680,74 +784,145 @@ export function UploadDocumentForm() {
                       onChange={handleDateChange}
                     />
                   </div>
+                </Col> */}
+
+                
+              </Row>
+              <Row gutter={24} style={{ marginTop: '20px' }}>
+                <Col span={8}>
+                  <label htmlFor="invoiceDate" style={{ color: 'black', fontWeight: 'bold' }}>
+                    Invoice Date
+                  </label>
+                  <Input
+                    id="invoiceDate"
+                    name="invoiceDate"
+                    style={{ width: '190px', height: '30px' }}
+                    value={invoiceDate}
+                    onChange={(e) => setInvoiceDate(e.target.value)}
+                  />
                 </Col>
-                <Col span={6}>
-                  <label htmlFor="InnvoiceNumber" style={{ color: 'black', fontWeight: 'bold' }}>InnvoiceNumber</label>
+
+                <Col span={8}>
+                  <label htmlFor="InnvoiceNumber" style={{ color: 'black', fontWeight: 'bold',position:"relative",left:"10px" }}>Innvoice Number</label>
                   <Input
                     id="InnvoiceNumber"
                     name="InnvoiceNumber"
-                    style={{ width: "150px", height: "30px" }}
+                    style={{ width: "190px", height: "30px",position:"relative",left:"10px" }}
                     value={Innvoicenum}
                     onChange={(e) => setInnvoicenum(e.target.value)}
+                  />
+                </Col>
+
+                <Col span={6}>
+                  <label htmlFor="InnvoiceAmount" style={{ color: 'black', fontWeight: 'bold',position:"relative",left:"20px" }}>Innvoice Amount</label>
+                  <Input
+                    id="InnvoiceAmount"
+                    name="InnvoiceAmount"
+                    style={{ width: "180px", height: "30px" ,position:"relative",left:"20px"}}
+                    value={Innvoiceamount}
+                    onChange={(e) => setInnvoiceamount(e.target.value)}
                   />
                 </Col>
               </Row>
 
               <Row gutter={24} style={{ marginTop: '20px' }}>
-                <Col span={6}>
-                  <label htmlFor="Cgst" style={{ color: 'black', fontWeight: 'bold' }}>CSGT</label>
+                <Col span={7}>
+                  <label htmlFor="IGST" style={{ color: 'black', fontWeight: 'bold' }}>IGST</label>
+                  <Input
+                    id="IGST"
+                    name="IGST"
+                    style={{ width: "190px", height: "30px" }}
+                    value={Igst}
+                    onChange={(e) => setIgst(e.target.value)}
+                  />
+                </Col>
+                <Col span={7}>
+                  <label htmlFor="Cgst" style={{ color: 'black', fontWeight: 'bold',position:"relative",left:"40px"  }}>CSGT</label>
                   <Input
                     id="Cgst"
                     name="Cgst"
-                    style={{ width: "150px", height: "30px" }}
+                    style={{ width: "190px", height: "30px",position:"relative",left:"40px" }}
                     value={Cgst}
                     onChange={(e) => setCgst(e.target.value)}
                   />
                 </Col>
 
                 <Col span={6}>
-                  <label htmlFor="IGST" style={{ color: 'black', fontWeight: 'bold' }}>IGST</label>
-                  <Input
-                    id="IGST"
-                    name="IGST"
-                    style={{ width: "150px", height: "30px" }}
-                    value={Igst}
-                    onChange={(e) => setIgst(e.target.value)}
-                  />
-                </Col>
-
-                <Col span={6}>
-                  <label htmlFor="Sgst" style={{ color: 'black', fontWeight: 'bold' }}>SGST</label>
+                  <label htmlFor="Sgst" style={{ color: 'black', fontWeight: 'bold',position:"relative",left:"75px" }}>SGST</label>
                   <Input
                     id="Sgst"
                     name="Sgst"
-                    style={{ width: "150px", height: "30px" }}
+                    style={{ width: "180px", height: "30px",position:"relative",left:"75px" }}
                     value={Sgst}
                     onChange={(e) => setSgst(e.target.value)}
                   />
                 </Col>
 
-                <Col span={6}>
-                  <label htmlFor="InnvoiceAmount" style={{ color: 'black', fontWeight: 'bold' }}>InnvoiceAmount</label>
-                  <Input
-                    id="InnvoiceAmount"
-                    name="InnvoiceAmount"
-                    style={{ width: "150px", height: "30px" }}
-                    value={Innvoiceamount}
-                    onChange={(e) => setInnvoiceamount(e.target.value)}
-                  />
-                </Col>
-              </Row>
+                </Row>
+               
               <Row gutter={24} style={{ marginTop: '20px' }}>
-                <Col span={6}>
+                <Col span={8}>
                   <label htmlFor="Innvoice Currency" style={{ color: 'black', fontWeight: 'bold' }}>Innvoice Currency</label>
                   <Input
                     id="Innvoice Currency"
                     name="Innvoice Currency"
-                    style={{ width: "150px", height: "30px" }}
+                    style={{ width: "190px", height: "30px" }}
                     value={Innvoicecurrency}
                     onChange={(e) => setInnvoicecurrency(e.target.value)}
                   />
+                </Col>
+
+                <Col span={7}>
+                  <label htmlFor="Routing" style={{ color: 'black', fontWeight: 'bold',position:"relative",left:"15px" }}>Routing</label>
+                  <Select
+                    title="Routing"
+                    id="Routing"
+                    className="center-options"
+                    style={{ width: "190px",position:"relative",left:"10px" }}
+                    value={routing}
+                    onChange={(value) => setRouting(value)}
+                  >
+                    {/* <Select.Option value="">Accept</Select.Option> */}
+                    <Select.Option value="Accept">Accept</Select.Option>
+                  </Select>
+                </Col>
+
+                <Col span={8}>
+                  <label htmlFor="Comment" style={{ color: 'black', fontWeight: 'bold',position:"relative",left:"45px" }}>Comment</label>
+                  <Input
+                    id="Comment"
+                    name="Comment"
+                    style={{ width: "180px", height: "30px",position:"relative",left:"45px" }}
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                  />
+                </Col>
+               
+              </Row>
+
+              <Row gutter={16} style={{ marginTop: '20px' }}>
+                <Col span={6}>
+                  <label htmlFor="Timecreated" style={{ color: 'black', fontWeight: 'bold' }}>Timecreated</label>
+                  <Input
+                    id="Timecreated"
+                    name="Timecreated"
+                    style={{ width: '200px', height: '30px', paddingRight: '30px' }} 
+                    value={timecreated || ''}
+                    onChange={(e) => setTimecreated(e.target.value)}
+                  />
+                  <CalendarOutlined
+                    style={{ position: 'absolute', top: '30px', right: '-30px', cursor: 'pointer' }}
+                    onClick={handleIconClick}
+                  />
+                  {isDatePickerVisible && (
+                    <DatePicker
+                      showTime
+                      format="YYYY-MM-DD HH:mm:ss"
+                      style={{ position: 'absolute', zIndex: 1, top: '21px', left: '8px',width:"200px" }}
+                      onChange={handleTimecreatedChange}
+                      onBlur={() => setIsDatePickerVisible(false)}
+                    />
+                  )}
                 </Col>
               </Row>
               <Button type="primary" htmlType="submit" style={{ position: "relative", top: "10px" }} onClick={onSumbit}>

@@ -30,4 +30,19 @@ export class ScanDto {
   @ApiProperty()
   InnvoiceCurrency: string;
 
+  @ApiProperty()
+  Routing: string;
+
+   @ApiProperty()
+   Comment: string;
+
+  @ApiProperty()
+  Financialyear: string;
+
+  @ApiProperty()
+  Timecreated: string;
+
+
+
+
 }

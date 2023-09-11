@@ -17,12 +17,12 @@ function ScanDetailView() {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
   <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }}>
-        <Descriptions.Item
+        {/* <Descriptions.Item
           label="Sno"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.typeId}
-        </Descriptions.Item>
+        </Descriptions.Item> */}
         <Descriptions.Item
           label="GST"
           labelStyle={{ color: "black", fontWeight: "bold" }}
@@ -88,8 +88,49 @@ function ScanDetailView() {
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.InnvoiceCurrency}
-
         </Descriptions.Item>    
+
+        <Descriptions.Item
+          label="Routing"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.Routing}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label="Innvoice Currency"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.InnvoiceCurrency}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label="Innvoice Currency"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.InnvoiceCurrency}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label="Comment"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.Comment}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label="Financialyear"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.Financialyear}
+        </Descriptions.Item>
+
+        <Descriptions.Item
+          label="Timecreated"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.Timecreated}
+        </Descriptions.Item>
       </Descriptions>
 
 <Button type="primary"  onClick={handleBack}> Back </Button>

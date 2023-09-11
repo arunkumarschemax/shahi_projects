@@ -8,6 +8,12 @@ export class AllScanDto {
     InnvoiceNumber: string;
     InnvoiceAmount: string;
     InnvoiceCurrency: string;
+    Routing: string;
+    Comment: string;
+    Timecreated: string;
+    Financialyear: string;
+
+
     constructor(
         GST: string,
         Vendor: string,
@@ -17,7 +23,11 @@ export class AllScanDto {
         Sgst: string,
         InnvoiceNumber: string,
         InnvoiceAmount: string,
-        InnvoiceCurrency: string)
+        InnvoiceCurrency: string,
+        Routing: string,
+    Comment: string,
+    Timecreated: string,
+    Financialyear: string,)
         {
   
             this.GST= GST;
@@ -29,6 +39,10 @@ export class AllScanDto {
       this.InnvoiceNumber= InnvoiceNumber;
       this.InnvoiceAmount= InnvoiceAmount;
       this. InnvoiceCurrency= InnvoiceCurrency;
+      this.Routing=Routing;
+      this.Comment=Comment;
+      this.Financialyear=Financialyear;
+      this.Timecreated=Timecreated;
         }
     }
 

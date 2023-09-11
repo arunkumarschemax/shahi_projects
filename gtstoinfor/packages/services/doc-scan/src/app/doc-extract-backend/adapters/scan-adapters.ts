@@ -15,6 +15,10 @@ export class ScanAdapter {
         dto.InnvoiceNumber = entity.InnvoiceNumber;
         dto.InnvoiceAmount = entity.InnvoiceAmount;
         dto.InnvoiceCurrency = entity.InnvoiceCurrency;
+        dto.Routing=entity.Routing;
+        dto. Comment=entity.Comment;
+        dto. Financialyear=entity.Financialyear;
+        dto. Timecreated=entity.Timecreated;
         
         return dto;
     }
@@ -30,6 +34,10 @@ export class ScanAdapter {
         entity.InnvoiceNumber = dto.InnvoiceNumber;
         entity.InnvoiceAmount = dto.InnvoiceAmount;
         entity.InnvoiceCurrency = dto.InnvoiceCurrency;
+        entity.Routing=dto.Routing;
+        entity.Comment=dto.Comment;
+        entity. Financialyear=dto.Financialyear;
+        entity. Timecreated=dto.Timecreated;
         return entity;
     }
 }

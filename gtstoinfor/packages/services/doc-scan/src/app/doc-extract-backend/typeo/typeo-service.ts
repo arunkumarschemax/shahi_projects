@@ -24,6 +24,7 @@ export class ScanService {
   ) { }
 
   async postdata(req: ScanDto): Promise<ScanResponseModel> {
+    console.log(req,"88888888888")
     const adapterData = this.adapter.convertDtoToEntity(req);
     await this.repository.save(adapterData)
     const internalMessage: string = req.GST
