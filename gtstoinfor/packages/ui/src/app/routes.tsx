@@ -351,7 +351,16 @@ export const AppRoutes = () => {
                 closeForm={()=>{}}
                 updateFabricWeave={(undefined)=>{}}/>}/>
                 <Route path="fabric-weave/fabric-weave-view" element={<FabricWeaveGrid/>}/>
-
+                <Route path='sampleTypes/sampleTypes-grid' element={<SampleTypesGrid/>}/>
+                <Route path='sampleTypes/sampleTypes-form' element={<SampleTypeForm sampleTypeData={undefined}
+                isUpdate={false}
+                closeForm={()=> {}}
+                updateDetails={(undefined) => { }}/>}/>
+                 <Route path='sampleSubTypes/sampleSubTypes-grid' element={<SampleSubTypesGrid/>}/>
+                <Route path='sampleSubTypes/sampleSubTypes-form' element={<SampleSubTypesForm SampleSubTypesData={undefined}
+                isUpdate={false}
+                closeForm={()=> {}}
+                updateSampleSubTypes={(undefined) => { }}/>}/>  
             </Route>
                     <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
@@ -423,17 +432,7 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
-                <Route path='locations/locations-view' element={<LocationsGrid/>}/>
-                         <Route path='sampleTypes/sampleTypes-grid' element={<SampleTypesGrid/>}/>
-                        <Route path='sampleTypes/sampleTypes-form' element={<SampleTypeForm sampleTypeData={undefined}
-                        isUpdate={false}
-                        closeForm={()=> {}}
-                        updateDetails={(undefined) => { }}/>}/>
-                            <Route path='sampleSubTypes/sampleSubTypes-grid' element={<SampleSubTypesGrid/>}/>
-                        <Route path='sampleSubTypes/sampleSubTypes-form' element={<SampleSubTypesForm SampleSubTypesData={undefined}
-                        isUpdate={false}
-                        closeForm={()=> {}}
-                        updateSampleSubTypes={(undefined) => { }}/>}/>                         
+                <Route path='locations/locations-view' element={<LocationsGrid/>}/>                       
                <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
                         <Route path='buyers/buyers-order-attributes-form' key='buyers/buyers-order-attributes-form' element={<BuyersOrderAttributeForm/>} />
 
@@ -466,7 +465,8 @@ export const AppRoutes = () => {
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
-                                               
+                        <Route path='operation-sequence' element={<OperationSequenceForm/>} />
+                   
                         </Route>
                 <Route path='fabricdevelopment'>
                 <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest/>}/>
@@ -488,7 +488,6 @@ export const AppRoutes = () => {
                 <Route path='item-creation' element={<ItemCreation/>}/>
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
-                <Route path='operation-sequence' element={<OperationSequenceForm/>} />
 
 
                 </Route>
