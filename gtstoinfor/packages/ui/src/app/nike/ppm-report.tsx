@@ -512,15 +512,18 @@ const PPMReport = () => {
       },
       {
         title: "Planning Priority Number",
-        dataIndex: 'planningPriorityCode'
+        dataIndex: 'planningPriorityCode',
+        align:'center'
       },
       {
         title: "Planning Priority Description",
-        dataIndex: 'planningPriorityDesc'
+        dataIndex: 'planningPriorityDesc',align:'center'
+
       },
       {
         title: "Mode Of Transportation",
-        dataIndex: 'modeOfTransportationCode'
+        dataIndex: 'modeOfTransportationCode',align:'center'
+
       },
       {
         title: "In Co Terms",

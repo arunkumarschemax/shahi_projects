@@ -215,7 +215,7 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'Gender Age Description',
-            dataIndex: 'genderAgeDesc',
+            dataIndex: 'gender_age_desc',
         },
         {
             title: 'Fabric Content as per washcare label',

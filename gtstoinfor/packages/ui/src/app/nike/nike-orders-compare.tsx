@@ -394,6 +394,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
+            align:'center',
             ...getColumnSearchProps('schedule_line_item_number')
         },
         {
@@ -409,18 +410,18 @@ const OrdersCompareGrid = () => {
             title: 'Factory',
             dataIndex: 'factory'
         },
-        {
-            title: 'Document Date',
-            dataIndex: 'document_date',
-            render: (text) => moment(text).format('MM/DD/YYYY')
-        },
+        // {
+        //     title: 'Document Date',
+        //     dataIndex: 'document_date',
+        //     render: (text) => moment(text).format('MM/DD/YYYY')
+        // },
         {
             title: 'Style Number',
-            dataIndex: 'style_number'
+            dataIndex: 'styleNumber'
         },
         {
             title: 'Product Code',
-            dataIndex: 'product_code'
+            dataIndex: 'productCode'
         },
         {
             title: 'Color Description',
@@ -428,15 +429,16 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac'
+            dataIndex: 'OGAC'
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'GAC'
         },
         {
             title: 'Destination Country',
-            dataIndex: 'destination_country'
+            dataIndex: 'desCtry',
+            align:'center',
         },
         {
             title: 'Item Text',
@@ -501,7 +503,8 @@ const OrdersCompareGrid = () => {
         // },
         {
             title: 'Size Description',
-            dataIndex: 'size_description'
+            dataIndex: 'size_description',
+            align:'center',
         },
         // {
         //     title: 'S',
@@ -525,8 +528,12 @@ const OrdersCompareGrid = () => {
         // },
         {
             title: 'Total Quantity',
-            dataIndex: 'total_item_qty'
-        },
+            align: 'right',
+            dataIndex: 'total_item_qty',
+            render: (text) => (
+              <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+            ),
+          },
     ];
 
     const columns1: any = [
@@ -659,11 +666,6 @@ const OrdersCompareGrid = () => {
         {
             title: 'PO Line Item No',
             dataIndex: 'po_line_item_number'
-        },
-        {
-            title: 'Document Date',
-            dataIndex: '',
-            //...getColumnSearchProps('po_number')
         },
         {
             title: 'Product Code',

@@ -71,13 +71,13 @@ export class DpomRepository extends Repository<DpomEntity> {
             shipping_type AS shippingType,doc_type_desc AS docTypeDescription,purchase_group_name AS purchaseGroupName,item,factory,plan_no AS plan,
             ship_to_address_legal_po AS shipToAddressToLegalPo,
             gross_price_fob AS fob,payment_term AS paymentTerm,fabric_content AS desFabricContent,fabric_source AS fabricLocation,
-            ship_to_address_dia AS shipToAddressDia,cab_code AS cabCode,hanger,customer_order AS co,commission`)
+            ship_to_address_dia AS shipToAddressDia,cab_code AS cabCode,hanger,customer_order AS co,commission,gender_age_desc`)
         return await query.getRawMany();
     }
 
     async getTotalItemQtyChangeData(req: nikeFilterRequest): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(`dpom.po_number,dpom.item,dpom.factory,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty ,dpom.po_line_item_number, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
+            .select(`dpom.po_number,dpom.item,dpom.factory,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.style_number AS styleNumber,dpom.destination_country AS desCtry,dpom.color_desc,dpom.size_description,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty ,dpom.po_line_item_number, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
             .where(` od.column_name='total_item_qty' `)
         if (req && req.poandLine !== undefined) {
