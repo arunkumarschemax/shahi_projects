@@ -5,6 +5,7 @@ import React from "react";
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
+import PoPdfTable from "./po-pdf-table";
 
 
 export function POPDFInfoGrid() {
@@ -106,7 +107,7 @@ export function POPDFInfoGrid() {
     })
     const setMoreData = (record) => {
         console.log(record.file_data)
-        // navigate('/nike/po-pdf-table')
+        navigate('/nike/po-pdf-table',{ state: { data: record.file_data} })
 
     }
     const columns: any = [
@@ -146,6 +147,7 @@ export function POPDFInfoGrid() {
 
         }
     ]
+    
     return (
         <>
         <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>

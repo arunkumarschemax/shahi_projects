@@ -1,38 +1,37 @@
 import { LegalPoDetails } from '@project-management-system/shared-models'
 import { Card, Table } from 'antd'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './pdf-reader.css'
+import { useLocation } from 'react-router-dom'
 
 export interface IPoPdfTableProps {
     data: LegalPoDetails
 }
 
 export default function PoPdfTable(props: IPoPdfTableProps) {
-    const {data} = props
-    const columns = [
-        { title: 'Item No', dataIndex: 'itemNo' },
-        { title: 'Material', dataIndex: 'matrial' },
-        { title: 'Description', dataIndex: 'description' },
-        { title: 'Acceptance date', dataIndex: 'acceptanceDate' },
-        { title: 'Delivery  date', dataIndex: 'deliveryDate' },
-        { title: 'Delivery  date', dataIndex: 'deliveryDate' },
-        { title: 'Mode', dataIndex: 'mode' },
-        { title: 'Item Variants', render: (value, i) => <Table columns={itemVariantColumns} dataSource={value.poItemVariantDetails} /> }
+    const { state } = useLocation();
+    const [pdfData, setPdfData] = useState<any>();
 
-    ]
 
-    const itemVariantColumns = [
-        { title: 'UOM', dataIndex: 'uom' },
-        { title: 'Size', dataIndex: 'size' },
-        { title: 'Unit PRice', dataIndex: 'unitPrice' },
-        { title: 'Quantity', dataIndex: 'qunatity' },
-        { title: 'Amount', dataIndex: 'amount' }
+    useEffect(() => {
+        if (props.data) {
+            setPdfData(props.data)
+        }
 
-    ]
+    }, [props.data])
+    useEffect(() => {
+        if (state.data) {
+            const parsedData = JSON.parse(state.data)
+            console.log(parsedData)
+            setPdfData(parsedData)
+            // setUpdateKey(prevState => prevState+1)
+        }
+    }, [state.data])
+
     return (
         <Card>
 
-            <table className='ta-b' style={{width:'100%'}} >
+            <table className='ta-b' style={{ width: '100%' }} >
                 <tr className='ta-b'>
                     <th className='ta-b'>PO NUMBER</th>
                     <th className='ta-b'>PO DOC DATE</th>
@@ -43,15 +42,15 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <th className='ta-b'>FACTORY LOCATION</th>
                 </tr>
                 <tr className='ta-b'>
-                    <td className='ta-b'>{data.poNumber}</td>
-                    <td className='ta-b'>{data.poDocDate}</td>
-                    <td className='ta-b'>{data.seasonYear}</td>
-                    <td className='ta-b'>{data.divisionBuyGroup}</td>
-                    <td className='ta-b'>{data.currency}</td>
-                    <td className='ta-b'>{data.incoterms}</td>
-                    <td className='ta-b'>{data.factoryLocation}</td>
+                    <td className='ta-b'>{pdfData?.poNumber}</td>
+                    <td className='ta-b'>{pdfData?.poDocDate}</td>
+                    <td className='ta-b'>{pdfData?.seasonYear}</td>
+                    <td className='ta-b'>{pdfData?.divisionBuyGroup}</td>
+                    <td className='ta-b'>{pdfData?.currency}</td>
+                    <td className='ta-b'>{pdfData?.incoterms}</td>
+                    <td className='ta-b'>{pdfData?.factoryLocation}</td>
                 </tr>
-                {props.data.poItemDetails.map((i) => {
+                {pdfData?.poItemDetails?.map((i) => {
                     return <>
                         <tr className='ta-b'>
                             <th></th>

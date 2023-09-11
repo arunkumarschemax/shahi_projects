@@ -28,20 +28,29 @@ const ShipmentChangesCompareGrid = () => {
     const { Text } = Typography;
     const { RangePicker } = DatePicker
     const { Option } = Select
+    const [poLine, setPoLine] = useState<any>([]);
+
 
     useEffect(() => {
-        getPlantCodeChangeData()
         getGACChangeData()
+        getPlantCodeChangeData()
+        
         getMRGACChangeData()
         getModeOfTransportChangeData()
-
+        getPoLine()
     }, [])
+    const getPoLine = () => {
+        service.getPpmPoLineForNikeOrder().then(res => {
+            setPoLine(res.data)
+        })
+    }
 
     const getGACChangeData = () => {
         service.getGACChangeData().then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
         })
+        console.log(filteredQtyData,"filteredQtyData")
     }
 
     const getMRGACChangeData = () => {
@@ -379,14 +388,14 @@ const ShipmentChangesCompareGrid = () => {
             title: 'RC Code',
             dataIndex: 'rc_code'
         },
-        // {
-        //     title: 'Schedule Line Item No',
-        //     dataIndex: 'schedule_line_item_number',
-        //     ...getColumnSearchProps('schedule_line_item_number')
-        // },
+        {
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+            ...getColumnSearchProps('schedule_line_item_number')
+        },
         {
             title: 'Previous Order Quantity Pieces',
-            dataIndex: 'old_val',
+            dataIndex: '',
             align: 'right',
         },
         {
@@ -825,76 +834,56 @@ const ShipmentChangesCompareGrid = () => {
         }
     }
 
-    const getFilterdData = () => {
-        let orderStatus = form.getFieldValue('orderStatus');
-        let startDate = selectedEstimatedFromDate;
-        let endDate = selectedEstimatedToDate;
-        let filteredItemChangeData = itemChangeData;
-        let filteredQtyData = qtyData
-        let filteredPOStatusData = poStatusData
-        if (orderStatus) {
-            filteredItemChangeData = itemChangeData.filter(record => record.order_status === orderStatus);
-            filteredQtyData = filteredQtyData.filter(record => record.order_status === orderStatus)
-            filteredPOStatusData = poStatusData.filter(record => record.order_status === orderStatus)
-            setItemChangeData(filteredItemChangeData);
-            setFilteredQtyData(filteredQtyData)
-            setFilteredPOStatusData(filteredPOStatusData)
-        }
-        if (startDate && endDate) {
-            console.log(filteredQtyData)
-            filteredItemChangeData = itemChangeData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
-            filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-            filteredPOStatusData = poStatusData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-            setItemChangeData(filteredItemChangeData);
-            setFilteredQtyData(filteredQtyData)
-            setFilteredPOStatusData(filteredPOStatusData)
-        }
-    }
+    // const getFilterdData = () => {
+    //     let orderStatus = form.getFieldValue('orderStatus');
+    //     let startDate = selectedEstimatedFromDate;
+    //     let endDate = selectedEstimatedToDate;
+    //     let filteredItemChangeData = itemChangeData;
+    //     let filteredQtyData = qtyData
+    //     let filteredPOStatusData = poStatusData
+    //     if (orderStatus) {
+    //         filteredItemChangeData = itemChangeData.filter(record => record.order_status === orderStatus);
+    //         filteredQtyData = filteredQtyData.filter(record => record.order_status === orderStatus)
+    //         filteredPOStatusData = poStatusData.filter(record => record.order_status === orderStatus)
+    //         setItemChangeData(filteredItemChangeData);
+    //         setFilteredQtyData(filteredQtyData)
+    //         setFilteredPOStatusData(filteredPOStatusData)
+    //     }
+    //     if (startDate && endDate) {
+    //         console.log(filteredQtyData)
+    //         filteredItemChangeData = itemChangeData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
+    //         filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
+    //         filteredPOStatusData = poStatusData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
+    //         setItemChangeData(filteredItemChangeData);
+    //         setFilteredQtyData(filteredQtyData)
+    //         setFilteredPOStatusData(filteredPOStatusData)
+    //     }
+    // }
 
     const items: TabsProps['items'] = [
         {
             key: '1',
             label: <b>GAC Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} pagination={{
-                current: currentPage,
-                pageSize: page,
-                onChange: (page) => {
-                    setCurrentPage(page);
-                },
-            }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} 
+                 />,
         },
         {
             key: '2',
             label: <b>MRGAC Revised PO's : {unitChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} pagination={{
-                current: currentPage,
-                pageSize: page,
-                onChange: (page) => {
-                    setCurrentPage(page);
-                },
-            }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} 
+             />,
         },
         {
             key: '3',
             label: <b >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns3} scroll={{ x: 'max-content' }} pagination={{
-                current: currentPage,
-                pageSize: page,
-                onChange: (page) => {
-                    setCurrentPage(page);
-                },
-            }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns3} scroll={{ x: 'max-content' }}
+           />,
         },
         {
             key: '4',
             label: <b>Plant Code Revised PO's : {poStatusData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns5} scroll={{ x: 'max-content' }} pagination={{
-                current: currentPage,
-                pageSize: page,
-                onChange: (page) => {
-                    setCurrentPage(page);
-                },
-            }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns5} scroll={{ x: 'max-content' }}
+             />,
         },
         // {
         //     key: '5',
@@ -920,25 +909,18 @@ const ShipmentChangesCompareGrid = () => {
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
             <Form form={form} layout={"vertical"} >
                 <Row gutter={[24, 24]}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
-                        <Form.Item name="contractDate"
-                            label="Order Revised Date"
-                        >
-                            <RangePicker onChange={EstimatedETDDate} />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="orderStatus"
-                            label="Order Status"
-                        >
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
+                        <Form.Item name='poandLine' label='Po+Line' >
                             <Select
+                                showSearch
+                                placeholder="Select Po+Line"
+                                optionFilterProp="children"
                                 allowClear
-                                placeholder='select order status'
                             >
-                                <Option key='Accepted' value="Accepted">Accepted</Option>
-                                <Option key='Unaccepted' value="Unaccepted">Unaccepted</Option>
-                                <Option key='Closed' value="Closed">Closed</Option>
-                                <Option key='Cancelled' value="Cancelled">Cancelled</Option>
+                                {poLine.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                })
+                                }
                             </Select>
                         </Form.Item>
                     </Col>
@@ -948,7 +930,8 @@ const ShipmentChangesCompareGrid = () => {
                             icon={<SearchOutlined />}
                             style={{ marginRight: 50, width: 100 }}
                             htmlType="button"
-                            onClick={getFilterdData}>Search</Button>
+                           // onClick={getFilterdData}
+                            >Search</Button>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
                         <Button
