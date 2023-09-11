@@ -1,5 +1,5 @@
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AdobeAcrobatApiService } from './adobe-acrobat-api.service';
+import { AdobeAcrobatApiService, CreateCompletionDto } from './adobe-acrobat-api.service';
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CommonResponseModel } from '@project-management-system/shared-models';
 import { ApiConsumes } from '@nestjs/swagger';
@@ -10,12 +10,17 @@ import { Express } from 'express'; // Import Express type
 @Controller('adobe-acrobat-api')
 export class AdobeAcrobatApiController {
     constructor(
-        private adobeAcrobatApiService : AdobeAcrobatApiService,
+        private adobeAcrobatApiService: AdobeAcrobatApiService,
         private readonly applicationExceptionHandler: ApplicationExceptionHandler
 
-    ){ }
+    ) { }
 
-    
+    @Post('/createCompletion')
+    async createCompletion(@Body() createCompletionDto: any) {
+        return this.adobeAcrobatApiService.createCompletion(createCompletionDto);
+    }
+
+
     @Post('/extractTextFromPdf')
     @ApiConsumes('multipart/form-data')
     @UseInterceptors(FileInterceptor('file', {
@@ -43,5 +48,5 @@ export class AdobeAcrobatApiController {
         }
     }
 
-   
+
 }
