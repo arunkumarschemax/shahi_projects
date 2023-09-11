@@ -409,6 +409,42 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.destinationCountry`)
         return await query.getRawMany();
     }
+    ///----------------------------------------------------------------------------------------------------------------->fabric tracker 
+    async getFabricTrackerForFactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.factory,dpom.id`)
+            .where('dpom.style_number != :styleNumber', { styleNumber: 'FN9102' })
+            .groupBy(`dpom.factory`)
+        return await query.getRawMany();
+    }
+    async getFabricTrackerForItem(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.item,dpom.id`)
+            .where('dpom.style_number != :styleNumber', { styleNumber: 'FN9102' })
+            .groupBy(`dpom.item`)
+        return await query.getRawMany();
+    }
+    async getFabricTrackerForProductCode(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.productCode,dpom.id`)
+            .where('dpom.style_number != :styleNumber', { styleNumber: 'FN9102' })
+            .groupBy(`dpom.productCode`)
+        return await query.getRawMany();
+    }
+    async getFabricTrackerForStyleNumber(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.styleNumber,dpom.id`)
+            .where('dpom.style_number != :styleNumber', { styleNumber: 'FN9102' })
+            .groupBy(`dpom.styleNumber`)
+        return await query.getRawMany();
+    }
+    async getFabricTrackerForColorDesc(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.colorDesc,dpom.id`)
+            .where('dpom.style_number != :styleNumber', { styleNumber: 'FN9102' })
+            .groupBy(`dpom.colorDesc`)
+        return await query.getRawMany();
+    } 
 
 ///--------------------------------------------------------------------------------------------------------------------------->factory
     async getFactoryPpmData(req:PpmDateFilterRequest): Promise<any[]> {
@@ -452,6 +488,28 @@ export class DpomRepository extends Repository<DpomEntity> {
  
         return await query.getRawMany();
     }
+    //---------------------------------------------------------------------------------------------------------->fabric tracker
+
+    async getFabricTrackerReport(req:PpmDateFilterRequest): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom.*, od.display_name AS displayName `)
+            if (req.productCode !== undefined) {
+                query.andWhere(`dpom.product_code ='${req.productCode}'`)
+            }
+            if (req.item !== undefined) {
+                query.andWhere(`dpom.item ='${req.item}'`)
+            }
+            if (req.factory !== undefined) {
+                query.andWhere(`dpom.factory ='${req.factory}'`)
+            }
+            if (req.colorDesc !== undefined) {
+                query.andWhere(`dpom.color_desc ='${req.colorDesc}'`)
+            }
+            if (req.styleNumber !== undefined) {
+                query.andWhere(`dpom.style_number ='${req.styleNumber}'`)
+            }
+            return await query.getRawMany(); 
+    } 
     ///-------------------------------------------------------------------------------------------------------------->ppm marketing
 
     async getMarketingPpmData(req:PpmDateFilterRequest): Promise<any[]> {
@@ -492,7 +550,7 @@ export class DpomRepository extends Repository<DpomEntity> {
                 query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
             }
         return await query.getRawMany();
-    }
+    } 
 
     async getFactoryDataById(poline: string): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
@@ -500,8 +558,6 @@ export class DpomRepository extends Repository<DpomEntity> {
             .where(`dpom.po_and_line = :poline`, { poline });
     
         return await query.getRawMany();
-    }
-    
-    
+    } 
 
 }

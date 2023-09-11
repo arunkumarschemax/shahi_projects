@@ -120,6 +120,16 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getFabricTrackerReport')
+    @ApiBody({ type: PpmDateFilterRequest })
+    async getFabricTrackerReport(@Body() req?: any): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getFabricTrackerReport(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
 
     @Post('/getFactoryReportData')
     @ApiBody({ type: PpmDateFilterRequest })
@@ -153,18 +163,7 @@ export class DpomController {
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
-    }
-
-    @Post('/getFabricTrackerReport')
-    async getFabricTrackerReport(): Promise<CommonResponseModel> {
-        try {
-            return await this.dpomService.getFabricTrackerReport();
-        } catch (err) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-
-        }
-    }
-
+    } 
 
     @Post('/getCountForDivertReport')
     async getCountForDivertReport(): Promise<CommonResponseModel> {
@@ -520,17 +519,8 @@ export class DpomController {
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
-    }
-
-
-    // @Post('/getPpmItemForMarketing')
-    // async getPpmItemForMarketing(): Promise<CommonResponseModel> {
-    //     try {
-    //         return this.dpomService.getPpmItemForMarketing();
-    //     } catch (err) {
-    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-    //     }
-    // }
+    } 
+    
     ////-----------------------------------------------------------------------------------------------marketing
     @Post('/getPpmPoLineForMarketing')
     async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
@@ -619,6 +609,48 @@ export class DpomController {
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
+    } 
+//-----------------------------------------------------------------------------------------------------------> fabric tracker 
+@Post('/getFabricTrackerForFactory')
+async getFabricTrackerForFactory(): Promise<CommonResponseModel> {
+    try {
+        return this.dpomService.getFabricTrackerForFactory();
+    } catch (err) {
+        return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
     }
+}
+@Post('/getFabricTrackerForItem')
+async getFabricTrackerForItem(): Promise<CommonResponseModel> {
+    try {
+        return this.dpomService.getFabricTrackerForItem();
+    } catch (err) {
+        return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    }
+}
+@Post('/getFabricTrackerForProductCode')
+async getFabricTrackerForProductCode(): Promise<CommonResponseModel> {
+    try {
+        return this.dpomService.getFabricTrackerForProductCode();
+    } catch (err) {
+        return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    }
+}
+@Post('/getFabricTrackerForStyleNumber')
+async getFabricTrackerForStyleNumber(): Promise<CommonResponseModel> {
+    try {
+        return this.dpomService.getFabricTrackerForStyleNumber();
+    } catch (err) {
+        return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    }
+}
+@Post('/getFabricTrackerForColorDesc')
+async getFabricTrackerForColorDesc(): Promise<CommonResponseModel> {
+    try {
+        return this.dpomService.getFabricTrackerForColorDesc();
+    } catch (err) {
+        return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    }
+}
+
 }
 
