@@ -477,12 +477,6 @@ export const baseRouterList = [
                 path: "operation-sequence",
                 filepath: "operation-sequence",
             },
-            {
-                label: "Operation Reporting",
-                key: "operation-reporting",
-                path: "operation-reporting",
-                filepath: "operation-reporting",
-            },
         ]
     },
     {
@@ -498,7 +492,13 @@ export const baseRouterList = [
                 key: "issuing",
                 path: "operation-tracking/issuing",
                 filepath: "operation-tracking/issuing",
-            }
+            },
+            {
+                label: "Reporting",
+                key: "operation-reporting",
+                path: "operation-reporting",
+                filepath: "operation-reporting",
+            },
             
          
         ]

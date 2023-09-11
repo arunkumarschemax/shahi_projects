@@ -489,12 +489,13 @@ export const AppRoutes = () => {
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
                 <Route path='operation-sequence' element={<OperationSequenceForm/>} />
-                <Route path='operation-reporting' element={<OperationReportingView/>} />
 
 
                 </Route>
                 <Route path='/operation-tracking'>
                 <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
+                <Route path='operation-reporting' element={<OperationReportingView/>} />
+
                 
 
                 </Route>
