@@ -40,7 +40,16 @@ export class DpomController {
     @Post('/getCRMOrderDetails2')
     async getCRMOrderDetails2() {
         try {
-            return await this.dpomService.getCRMOrderDetails2('2000593977')
+            return await this.dpomService.getCRMOrderDetails2()
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/createCOline')
+    async createCOline() {
+        try {
+            return await this.dpomService.createCOline({ poNumber: 3504865987, poLineItemNumber: 10000, scheduleLineItemNumber: 100 })
         } catch (error) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }

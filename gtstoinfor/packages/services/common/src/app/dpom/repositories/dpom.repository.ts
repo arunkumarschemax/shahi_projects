@@ -17,24 +17,6 @@ export class DpomRepository extends Repository<DpomEntity> {
         super(dpomRepository.target, dpomRepository.manager, dpomRepository.queryRunner);
     }
 
-    // async getDivertReport(): Promise<any[]> {
-    //     const query = this.createQueryBuilder('dpm')
-    //         .select(`DISTINCT dpm.id,dpm.plant AS nPlant,dpm.dpom_item_line_status AS nLineStatus,
-    //         dpm.plant_name AS nPlantName,dpm.document_date AS nDocumentDate,
-    //         dpm.po_number AS npoNumber,dpm.po_line_item_number AS npoLine ,dpm.destination_country AS ndestination,
-    //         dpm.shipping_type AS nshipmentType,dpm.inventory_segment_code AS ninventorySegmentCode,
-    //         dpm.ogac AS nogac ,dpm.gac AS ngac ,dpm.product_code AS nproductCode,
-    //         dpm.item_vas_text AS nitemVasText,dpm.quantity AS nQuantity,dpc.plant AS oplant,
-    //         dpc.dpom_item_line_status AS onLineStatus,dpc.plant_name AS oPlantName ,
-    //         dpc.document_date AS oDocumentDate,dpc.po_number AS opoNumber, dpc.po_line_item_number AS opoLine,
-    //         dpc.destination_country AS odestination , dpc.shipping_type AS oshipmentType,dpc.inventory_segment_code AS oinventorySegmentCode,
-    //         dpc.ogac AS oogac,dpc.gac AS ogac,dpc.product_code AS oproductCode ,dpc.item_vas_text AS oitemVasText , dpc.quantity AS oquantity,dpm.created_at AS dpomCreatedDates `)
-    //         .leftJoin(DpomChildEntity,'dpc','dpc.parent_id = dpm.id')
-    //         .groupBy(`dpm.id,dpc.id`)
-    //         //.where(`dpm.dpom_item_line_status IN ('accepted','Unaccepted')`)
-    //     return await query.getRawMany()
-    // }
-
     async getCountForDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(`COUNT(dpom_item_line_status ) AS totalCount,SUM(dpom_item_line_status = 'accepted') AS acceptedCount, SUM(dpom_item_line_status = 'Unaccepted') AS unacceptedCount `)
@@ -98,10 +80,11 @@ export class DpomRepository extends Repository<DpomEntity> {
             .select(`dpom.po_number,dpom.item,dpom.factory,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty ,dpom.po_line_item_number, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
             .where(` od.column_name='total_item_qty' `)
-        if (req.poandLine !== undefined) {
+        if (req && req.poandLine !== undefined) {
             query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
-        }
-        return await query.getRawMany();
+            return await query.getRawMany();
+        } else
+            return await query.getRawMany();
     }
 
     async poLineItemStatusChange(): Promise<any[]> {
@@ -510,7 +493,6 @@ export class DpomRepository extends Repository<DpomEntity> {
         const query = this.createQueryBuilder('dpom')
             .select(`dpom.id as docId,dpom.po_and_line as poline`)
             .where(`dpom.po_and_line = :poline`, { poline });
-
         return await query.getRawMany();
     }
 
@@ -556,6 +538,12 @@ export class DpomRepository extends Repository<DpomEntity> {
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
             .groupBy(`dpom.po_and_line`)
             .where(` od.column_name='total_item_qty' `)
+        return await query.getRawMany();
+    }
+
+    async getOrdersDetails(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_number,dpom.po_line_item_number, dpom.schedule_line_item_number`)
         return await query.getRawMany();
     }
 }
