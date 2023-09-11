@@ -572,11 +572,11 @@ const VASChangesCompareGrid = () => {
             )
 
         },
-        {
-            title: 'Order Status',
-            dataIndex: 'dpom_item_line_status',
-            render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
-        }
+        // {
+        //     title: 'Order Status',
+        //     dataIndex: 'dpom_item_line_status',
+        //     render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
+        // }
     ];
 
     const columns3: any = [
