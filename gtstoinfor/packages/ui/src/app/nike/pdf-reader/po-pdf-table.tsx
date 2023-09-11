@@ -1,6 +1,6 @@
 import { LegalPoDetails } from '@project-management-system/shared-models'
 import { Card, Table } from 'antd'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './pdf-reader.css'
 import { useLocation } from 'react-router-dom'
 
@@ -9,9 +9,28 @@ export interface IPoPdfTableProps {
 }
 
 export default function PoPdfTable(props: IPoPdfTableProps) {
-    const {data} = props
-      const location = useLocation();
-    console.log(location)
+  const { state } = useLocation();
+  const [pdfData, setPdfData] = useState<any>();
+  const [updateKey, setUpdateKey] = useState<any>();
+
+useEffect(()=> {
+    console.log(pdfData)
+},[pdfData])
+useEffect(()=>{
+    if(props.data){
+        setPdfData(props.data)
+        setUpdateKey(prevState => prevState+1)
+    }
+
+},[props.data])
+useEffect(()=>{
+    
+    if(state.data){
+        setPdfData(state.data)
+        setUpdateKey(prevState => prevState+1)
+    }
+},[state.data])
+    // const {data} = props
     const columns = [
         { title: 'Item No', dataIndex: 'itemNo' },
         { title: 'Material', dataIndex: 'matrial' },
@@ -46,15 +65,15 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <th className='ta-b'>FACTORY LOCATION</th>
                 </tr>
                 <tr className='ta-b'>
-                    <td className='ta-b'>{data.poNumber}</td>
-                    <td className='ta-b'>{data.poDocDate}</td>
-                    <td className='ta-b'>{data.seasonYear}</td>
-                    <td className='ta-b'>{data.divisionBuyGroup}</td>
-                    <td className='ta-b'>{data.currency}</td>
-                    <td className='ta-b'>{data.incoterms}</td>
-                    <td className='ta-b'>{data.factoryLocation}</td>
+                    <td className='ta-b'>{pdfData?.poNumber}</td>
+                    <td className='ta-b'>{pdfData?.poDocDate}</td>
+                    <td className='ta-b'>{pdfData?.seasonYear}</td>
+                    <td className='ta-b'>{pdfData?.divisionBuyGroup}</td>
+                    <td className='ta-b'>{pdfData?.currency}</td>
+                    <td className='ta-b'>{pdfData?.incoterms}</td>
+                    <td className='ta-b'>{pdfData?.factoryLocation}</td>
                 </tr>
-                {props.data.poItemDetails.map((i) => {
+                {pdfData?.poItemDetails?.map((i) => {
                     return <>
                         <tr className='ta-b'>
                             <th></th>

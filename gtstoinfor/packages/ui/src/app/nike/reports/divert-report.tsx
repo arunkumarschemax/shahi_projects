@@ -236,7 +236,10 @@ const DivertReport = () => {
                 },
                 {
                     title: "Request Date",
-                    dataIndex: "",
+                    dataIndex: "DocumentDate",
+                    render: (text, record) => {
+                        return record.oldPo.DocumentDate ? moment(record.oldPo.DocumentDate).format('MM/DD/YYYY') : "-";
+                    }
                 },
                 {
                     title: "From Item",
@@ -256,13 +259,13 @@ const DivertReport = () => {
                     dataIndex: ['oldPo', 'LineStatus'],
                     // ...getColumnSearchProps("lineStatus"),
                 },
-                {
-                    title: 'Document Date',
-                    dataIndex: ['oldPo', 'DocumentDate'],
-                    render: (text, record) => {
-                        return record.oldPo.DocumentDate ? moment(record.oldPo.DocumentDate).format('MM/DD/YYYY') : "-";
-                    }
-                },
+                // {
+                //     title: 'Document Date',
+                //     dataIndex: ['oldPo', 'DocumentDate'],
+                //     render: (text, record) => {
+                //         return record.oldPo.DocumentDate ? moment(record.oldPo.DocumentDate).format('MM/DD/YYYY') : "-";
+                //     }
+                // },
                 {
                     title: 'Old Po',
                     dataIndex: ['oldPo', 'poNumber'],
