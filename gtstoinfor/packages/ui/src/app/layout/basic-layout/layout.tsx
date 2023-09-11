@@ -49,6 +49,13 @@ export const baseRouterList = [
         // icon: <DashboardOutlined />,
         filepath: "/sourcing-requisition-report",
     },
+    {
+        label: "Sourcing Requisition Form",
+        key: "sourcingRequisition",
+        path: "sourcing-requisition-form",
+        // icon: <DashboardOutlined />,
+        filepath: "/sourcing-requisition-form",
+    },
     // {
     //     label: "Marketing Requisition",
     //     key: "marketing-requisition",

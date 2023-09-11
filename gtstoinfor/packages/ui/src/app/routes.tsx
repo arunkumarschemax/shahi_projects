@@ -127,6 +127,7 @@ import SourcingRequisitionForm from "./sourcing-requisition/sourcing-requisition
 import SourcingRequisitionView from "./sourcing-requisition/sourcing-requisition-view"
 import SourcingRequisitionReport from "./sourcing-requisition/sourcing-requisition-report"
 import MarketingReqReport from "./marketing-requisition/marketing-report"
+import SourcingRequisitionDynamicForm from "./sourcing-requisition/sourcing-requisition-dynamic-form"
 
 
 export const AppRoutes = () => {
@@ -505,6 +506,8 @@ export const AppRoutes = () => {
                     <Route path='/sourcing-requisition' element={<SourcingRequisitionForm/>}/>
                     <Route path='/sourcing-requisition-view' element={<SourcingRequisitionView/>}/>
                     <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
+                    <Route path='/sourcing-requisition-form' element={<SourcingRequisitionDynamicForm/>}/>
+                    
 
 
 
