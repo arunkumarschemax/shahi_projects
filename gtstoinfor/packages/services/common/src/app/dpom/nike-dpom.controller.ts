@@ -37,14 +37,14 @@ export class DpomController {
         }
     }
 
-    @Post('/getCRMOrderDetails2')
-    async getCRMOrderDetails2() {
-        try {
-            return await this.dpomService.getCRMOrderDetails2()
-        } catch (error) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
-        }
-    }
+    // @Post('/getCRMOrderDetails2')
+    // async getCRMOrderDetails2() {
+    //     try {
+    //         return await this.dpomService.getCRMOrderDetails2()
+    //     } catch (error) {
+    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+    //     }
+    // }
 
     @Post('/createCOline')
     async createCOline() {
@@ -59,6 +59,24 @@ export class DpomController {
     async saveDPOMDataToDataBase() {
         try {
             return await this.dpomService.saveDPOMApiDataToDataBase()
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/saveDIAPDFData')
+    async saveDIAPDFData(@Body() req: any) {
+        try {
+            return await this.dpomService.saveDIAPDFData(req)
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/saveLegalPOPDFData')
+    async saveLegalPOPDFData(@Body() req: any) {
+        try {
+            return await this.dpomService.saveLegalPOPDFData(req)
         } catch (error) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
@@ -272,14 +290,6 @@ export class DpomController {
         }
     }
 
-    @Post('/saveDiaPDFFields')
-    async saveDiaPDFFields(@Body() req: DiaPDFDto): Promise<CommonResponseModel> {
-        try {
-            return this.dpomService.saveDiaPDFFields(req);
-        } catch (err) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-        }
-    }
     @Post('/getItemChangeData')
     async getItemChangeData(): Promise<CommonResponseModel> {
         try {
@@ -288,7 +298,6 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
-
 
     @Post('/getUnitChangeData')
     async getUnitChangeData(): Promise<CommonResponseModel> {
@@ -576,7 +585,7 @@ export class DpomController {
 
     @Post('/getPriceDifferenceReport')
     @ApiBody({ type: FobPriceDiffRequest })
-    async getPriceDifferenceReport(@Body()req:any ): Promise<CommonResponseModel> {
+    async getPriceDifferenceReport(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getPriceDifferenceReport(req);
         } catch (err) {
@@ -653,30 +662,30 @@ export class DpomController {
         }
     }
 
-   
-   @Post('/getPriceDiffPoLinedd')
-   async getPriceDiffPoLinedd(): Promise<CommonResponseModel> {
-       try {
-           return this.dpomService.getPriceDiffPoLinedd();
-       } catch (err) {
-           return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-       }
-   } 
-   @Post('/getPriceDiffStyleNumber')
-   async getPriceDiffStyleNumber(): Promise<CommonResponseModel> {
-       try {
-           return this.dpomService.getPriceDiffStyleNumber();
-       } catch (err) {
-           return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-       }
-   }
-   @Post('/getPriceDiffSizeDescription')
-   async getPriceDiffSizeDescription(): Promise<CommonResponseModel> {
-       try {
-           return this.dpomService.getPriceDiffSizeDescription();
-       } catch (err) {
-           return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-       }
-   }
+
+    @Post('/getPriceDiffPoLinedd')
+    async getPriceDiffPoLinedd(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPriceDiffPoLinedd();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPriceDiffStyleNumber')
+    async getPriceDiffStyleNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPriceDiffStyleNumber();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPriceDiffSizeDescription')
+    async getPriceDiffSizeDescription(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPriceDiffSizeDescription();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
 
