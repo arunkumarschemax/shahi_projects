@@ -34,7 +34,7 @@ const ShipmentChangesCompareGrid = () => {
     useEffect(() => {
         getGACChangeData()
         getPlantCodeChangeData()
-        
+
         getMRGACChangeData()
         getModeOfTransportChangeData()
         getPoLine()
@@ -50,7 +50,7 @@ const ShipmentChangesCompareGrid = () => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
         })
-        console.log(filteredQtyData,"filteredQtyData")
+        console.log(filteredQtyData, "filteredQtyData")
     }
 
     const getMRGACChangeData = () => {
@@ -367,7 +367,6 @@ const ShipmentChangesCompareGrid = () => {
             title: 'PO Line Item No',
             dataIndex: 'po_line_item_number'
         },
-
         {
             title: 'Change from OGAC',
             dataIndex: 'change_from_ogac'
@@ -387,64 +386,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'RC Code',
             dataIndex: 'rc_code'
-        },
-        {
-            title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number',
-            ...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'Previous Order Quantity Pieces',
-            dataIndex: '',
-            align: 'right',
-        },
-        {
-            title: 'Revised Order Quantity Pieces',
-            dataIndex: 'new_val',
-            align: 'right',
-            render: (text, record) => (
-                <span  {...record.new_val}>
-                    <>
-                        {Number(record.old_val) === Number(record.new_val) ? <span style={{ color: '' }}>{Number(record.new_val).toLocaleString('en-IN', {
-                            maximumFractionDigits: 0
-                        })}</span> : ''}
-                        {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{Number(record.new_val).toLocaleString('en-IN', {
-                            maximumFractionDigits: 0
-                        })}</span> : ''}
-                        {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{Number(record.new_val).toLocaleString('en-IN', {
-                            maximumFractionDigits: 0
-                        })}</span> : ''}
-                    </>
-                </span>
-            )
-        },
-        {
-            title: 'Difference',
-            dataIndex: 'Diff',
-            align: 'right',
-            render: (text, record) => (
-                < >
-                    {Number(record.Diff) === 0 ? '-' : ''}
-                    {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
-                    {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
-                </>
-            )
-        },
-        // {
-        //     title: 'Version',
-        //     dataIndex: 'version',
-        //     sorter: (a, b) => a.version - b.version,
-        //     sortDirections: ['descend', 'ascend'],
-        // },
-        // {
-        //     title: 'Order Status',
-        //     dataIndex: 'dpom_item_line_status',
-        //     // render: (value) => <Tag color={value == 'ACCEPTED' ? 'green' : 'green-inverse'} >{value}</Tag>
-        // }
+        }
     ];
 
     const columns1: any = [
@@ -669,11 +611,11 @@ const ShipmentChangesCompareGrid = () => {
             ...getColumnSearchProps('schedule_line_item_number')
         },
         {
-            title: 'Previous Unit',
+            title: 'Previous MRGAC',
             dataIndex: 'old_val',
         },
         {
-            title: 'Revised Unit',
+            title: 'Revised MRGAC',
             dataIndex: 'new_val',
             // width :'190px',
         },
@@ -864,26 +806,26 @@ const ShipmentChangesCompareGrid = () => {
         {
             key: '1',
             label: <b>GAC Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} 
-                 />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }}
+            />,
         },
         {
             key: '2',
             label: <b>MRGAC Revised PO's : {unitChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} 
-             />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4}
+            />,
         },
         {
             key: '3',
             label: <b >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns3} scroll={{ x: 'max-content' }}
-           />,
+            />,
         },
         {
             key: '4',
             label: <b>Plant Code Revised PO's : {poStatusData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns5} scroll={{ x: 'max-content' }}
-             />,
+            />,
         },
         // {
         //     key: '5',
@@ -909,7 +851,7 @@ const ShipmentChangesCompareGrid = () => {
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
             <Form form={form} layout={"vertical"} >
                 <Row gutter={[24, 24]}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
                         <Form.Item name='poandLine' label='Po+Line' >
                             <Select
                                 showSearch
@@ -930,8 +872,8 @@ const ShipmentChangesCompareGrid = () => {
                             icon={<SearchOutlined />}
                             style={{ marginRight: 50, width: 100 }}
                             htmlType="button"
-                           // onClick={getFilterdData}
-                            >Search</Button>
+                        // onClick={getFilterdData}
+                        >Search</Button>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
                         <Button
