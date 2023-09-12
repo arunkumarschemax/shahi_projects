@@ -44,5 +44,19 @@ export class ScanDto {
 
 
 
+@ApiProperty()
+createdAt:Date;
 
+@ApiProperty()
+createdUser:string;
+
+@ApiProperty()
+updatedAt:Date;
+
+@ApiProperty()
+updatedUser:string
+
+
+@ApiProperty()
+versionFlag:number;
 }

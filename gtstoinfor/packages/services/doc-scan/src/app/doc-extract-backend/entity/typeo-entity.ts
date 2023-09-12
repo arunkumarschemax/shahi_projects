@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 @Entity('Innvoice')
 export class ScanEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
@@ -108,5 +108,48 @@ export class ScanEntity extends BaseEntity {
     name: 'time_created',
   })
   Timecreated: string;
+
+
+
+
+  @CreateDateColumn({
+    name: "created_at",
+    type: "datetime"
+  })
+  createdAt: Date;
+
+  @Column("varchar", {
+
+    name: "created_user",
+    length: 50
+  })
+  createdUser: string;
+
+
+  @UpdateDateColumn({
+    name: "updated_at",
+    type: 'datetime'
+  })
+  updatedAt: Date;
+
+  @Column("varchar", {
+
+    name: "updated_user",
+    length: 50
+  })
+  updatedUser: string;
+
+
+  @VersionColumn({
+
+    name: "version_flag",
+    default:1
+  })
+  versionFlag: number;
+
+
+
+
+
 
 }

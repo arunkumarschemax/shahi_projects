@@ -12,6 +12,11 @@ export class AllScanDto {
     Comment: string;
     Timecreated: string;
     Financialyear: string;
+    createdAt:Date;
+    createdUser:string;
+    updatedAt?:Date;
+    updatedUser?:string;
+    versionFlag?:number
 
 
     constructor(
@@ -25,12 +30,21 @@ export class AllScanDto {
         InnvoiceAmount: string,
         InnvoiceCurrency: string,
         Routing: string,
-    Comment: string,
-    Timecreated: string,
-    Financialyear: string,)
+        Comment: string,
+        Timecreated: string,
+        Financialyear: string,
+        createdAt:Date,
+        createdUser:string,
+        updatedAt?:Date,
+        updatedUser?:string,
+        versionFlag?:number
+    
+    
+    
+    )
         {
   
-            this.GST= GST;
+     this.GST= GST;
       this.Vendor= Vendor;
       this. invoiceDate= invoiceDate;
       this. Cgst= Cgst;
@@ -43,6 +57,12 @@ export class AllScanDto {
       this.Comment=Comment;
       this.Financialyear=Financialyear;
       this.Timecreated=Timecreated;
+      this.createdAt=createdAt;
+      this.createdUser=createdUser;
+      this.updatedAt=updatedAt;
+      this.updatedUser=updatedUser
+      this.versionFlag = versionFlag
+
         }
     }
 
