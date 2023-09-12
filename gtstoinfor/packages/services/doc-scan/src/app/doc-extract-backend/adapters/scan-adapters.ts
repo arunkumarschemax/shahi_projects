@@ -19,11 +19,9 @@ export class ScanAdapter {
         dto. Comment=entity.Comment;
         dto. Financialyear=entity.Financialyear;
         dto. Timecreated=entity.Timecreated;
-        dto.createdAt=entity.createdAt;
         dto.createdUser=entity.createdUser;
-        dto.updatedAt=entity.updatedAt;
         dto.updatedUser=entity.updatedUser;
-        dto.versionFlag=entity.versionFlag
+        
         
         return dto;
     }
@@ -43,11 +41,9 @@ export class ScanAdapter {
         entity.Comment=dto.Comment;
         entity. Financialyear=dto.Financialyear;
         entity. Timecreated=dto.Timecreated;
-        entity.createdAt=dto.createdAt;
         entity.createdUser=dto.createdUser;
-        entity.updatedAt=dto.updatedAt;
         entity.updatedUser=dto.updatedUser;
-        entity.versionFlag=dto.versionFlag
+       
 
 
         return entity;

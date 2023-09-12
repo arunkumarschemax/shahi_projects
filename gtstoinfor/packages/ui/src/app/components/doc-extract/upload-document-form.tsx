@@ -656,22 +656,22 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    // const req = new AllScanDto(gstNumbers,vendor,invoiceDate ,Innvoiceamount,Innvoicecurrency,Innvoicenum,Cgst,Igst,Sgst,Routing,Financialyear,Timecreated,Comment)
-    const req: any = {
-      GST: gstNumbers,
-      invoiceDate: invoiceDate,
-      InnvoiceAmount: Innvoiceamount,
-      InnvoiceCurrency: Innvoicecurrency,
-      InnvoiceNumber: Innvoicenum,
-      Cgst: Cgst,
-      IGST: Igst,
-      Sgst: Sgst,
-      Vendor: vendor,
-      Routing: routing,
-      Comment: comment,
-      Financialyear: financialyear,
-      Timecreated: timecreated
-    }
+    const req = new AllScanDto(gstNumbers,vendor,invoiceDate,Cgst,Igst,Sgst,Innvoicenum,Innvoiceamount,Innvoicecurrency,routing,comment,timecreated,financialyear,JSON.parse(localStorage.getItem('currentUser')).user.userName)
+    // const req: any = {
+    //   GST: gstNumbers,
+    //   invoiceDate: invoiceDate,
+    //   InnvoiceAmount: Innvoiceamount,
+    //   InnvoiceCurrency: Innvoicecurrency,
+    //   InnvoiceNumber: Innvoicenum,
+    //   Cgst: Cgst,
+    //   IGST: Igst,
+    //   Sgst: Sgst,
+    //   Vendor: vendor,
+    //   Routing: routing,
+    //   Comment: comment,
+    //   Financialyear: financialyear,
+    //   Timecreated: timecreated
+    // }
 
     console.log(req, "submit")
     service
