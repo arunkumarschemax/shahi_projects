@@ -303,7 +303,7 @@ const FactoryPPMReport = () => {
             req.DPOMLineItemStatus = selectedLineItemStatus;
         }
 
-        service.getPPMData(req)
+        service.getFactoryReportData(req)
             .then(res => {
                 if (res.status) {
                     setGridData(res.data);
