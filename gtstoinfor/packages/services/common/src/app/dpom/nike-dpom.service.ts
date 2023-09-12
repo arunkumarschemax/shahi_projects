@@ -1379,9 +1379,9 @@ export class DpomService {
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
         WHERE f.shahi_confirmed_gross_price IS NOT NULL `;
 
-        if (req.poAndLine) {
-            conditions.push(`d.po_and_line = ?`);
-            queryParams.push(req.poAndLine);
+        if (req.poNumber) {
+            conditions.push(`d.po_number = ?`);
+            queryParams.push(req.poNumber);
         }
         if (req.styleNumber) {
             conditions.push(`d.style_number = ?`);
@@ -1480,9 +1480,9 @@ export class DpomService {
     }
 
     async getPriceDiffPoLinedd(): Promise<CommonResponseModel> {
-        const query = `SELECT DISTINCT d.id,d.po_and_line as poAndLine,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
+        const query = `SELECT DISTINCT d.id,d.po_number as poNumber,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
-        WHERE f.shahi_confirmed_gross_price IS NOT NULL  GROUP BY d.po_and_line`;
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL  GROUP BY d.po_number`;
 
         const data = await this.dpomRepository.query(query)
         if (data.length) {
@@ -1526,6 +1526,20 @@ export class DpomService {
         } else {
             return new CommonResponseModel(false, 0, 'No data')
         }
+    }
+    async getPpmPoNumberForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPoforfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPppoNumberForMarketing(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPoNumberforMarketing()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 }
 

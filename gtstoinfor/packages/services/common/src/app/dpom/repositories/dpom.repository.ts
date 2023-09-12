@@ -430,8 +430,8 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.productCode !== undefined) {
             query.andWhere(`dpom.product_code ='${req.productCode}'`)
         }
-        if (req.poandLine !== undefined) {
-            query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
+        if (req.poNumber !== undefined) {
+            query.andWhere(`dpom.po_number ='${req.poNumber}'`)
         }
         if (req.colorDesc !== undefined) {
             query.andWhere(`dpom.color_desc ='${req.colorDesc}'`)
@@ -469,8 +469,8 @@ export class DpomRepository extends Repository<DpomEntity> {
         } if (req.productCode !== undefined) {
             query.andWhere(`dpom.product_code ='${req.productCode}'`)
         }
-        if (req.poandLine !== undefined) {
-            query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
+        if (req.poNumber !== undefined) {
+            query.andWhere(`dpom.po_number ='${req.poNumber}'`)
         }
         if (req.colorDesc !== undefined) {
             query.andWhere(`dpom.color_desc ='${req.colorDesc}'`)
@@ -553,6 +553,20 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getOrdersDetails(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.po_number,dpom.po_line_item_number, dpom.schedule_line_item_number`)
+        return await query.getRawMany();
+    }
+    async getPoforfactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_number,dpom.id`)
+            .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED'`)
+            .groupBy(`dpom.po_number`)
+        return await query.getRawMany();
+    }
+    async getPoNumberforMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_number,dpom.id`)
+            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .groupBy(`dpom.po_number`)
         return await query.getRawMany();
     }
 }

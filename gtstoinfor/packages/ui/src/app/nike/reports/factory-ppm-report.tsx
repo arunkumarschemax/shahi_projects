@@ -44,9 +44,19 @@ const FactoryPPMReport = () => {
     const [plantCode, setPlantCode] = useState<any>([]);
     const [item, setItem] = useState<any>([]);
     const [productCode, setProductCode] = useState<any>([]);
+    const [poNumber,setPoNumber] = useState<any>([]);
 
     useEffect(() => {
         getData();
+        getProductCode();
+        getPoLine();
+        getColorDesc();
+        getcategoryDesc();
+        getcountrydestination();
+        getplantCode();
+        getItem();
+        getFactory();
+        getPonumber();
     }, [])
 
 
@@ -199,17 +209,7 @@ const FactoryPPMReport = () => {
     const ClearData = () => {
         form.resetFields();
     }
-    useEffect(() => {
-        getData();
-        getProductCode();
-        getPoLine();
-        getColorDesc();
-        getcategoryDesc();
-        getcountrydestination();
-        getplantCode();
-        getItem();
-        getFactory();
-    }, [])
+    
 
     const getProductCode = () => {
         service.getPpmProductCodeForFactory().then(res => {
@@ -254,7 +254,12 @@ const FactoryPPMReport = () => {
             setFactory(res.data)
         })
     }
-
+    const getPonumber = () => {
+        service.getPpmPoNumberForFactory().then(res => {
+            setPoNumber(res.data)
+        })
+        console.log(poNumber,"test")
+    }
 
     const getData = () => {
         const req = new PpmDateFilterRequest();
@@ -275,8 +280,8 @@ const FactoryPPMReport = () => {
         if (form.getFieldValue('productCode') !== undefined) {
             req.productCode = form.getFieldValue('productCode');
         }
-        if (form.getFieldValue('poandLine') !== undefined) {
-            req.poandLine = form.getFieldValue('poandLine');
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
         }
         if (form.getFieldValue('colorDesc') !== undefined) {
             req.colorDesc = form.getFieldValue('colorDesc');
@@ -984,16 +989,16 @@ const FactoryPPMReport = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-                            <Form.Item name='poandLine' label='Po+Line' >
+                            <Form.Item name='poNumber' label='Po Number' >
                                 <Select
                                     showSearch
-                                    placeholder="Select Po+Line"
+                                    placeholder="Select Po Number"
                                     optionFilterProp="children"
                                     allowClear
 
                                 >
-                                    {poLine.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                    {poNumber.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                     })
                                     }
                                 </Select>

@@ -11,7 +11,7 @@ export const FOBPriceVariationReport = () => {
     const [pageSize, setPageSize] = useState<number>(1);
     const service = new NikeService()
     const [data, setData] = useState<any[]>([]);
-    const [poAndLine, setPoAndLine] = useState<any>([]);
+    const [poNumber, setPoNumber] = useState<any>([]);
     const [styleNumber, setStyleNumber] = useState<any>([]);
     const [size, setSize] = useState<any>([]);
 
@@ -32,7 +32,7 @@ export const FOBPriceVariationReport = () => {
     const PoandLine = () => {
         service.getPriceDiffPoLinedd().then(res => {
             if (res.status) {
-                setPoAndLine(res.data)
+                setPoNumber(res.data)
             }
         })
     }
@@ -53,8 +53,8 @@ export const FOBPriceVariationReport = () => {
     const getData = () => {
         const req = new FobPriceDiffRequest();
 
-        if (form.getFieldValue('poandLine') !== undefined) {
-            req.poAndLine = form.getFieldValue('poandLine');
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
         }
         if (form.getFieldValue('styleNumber') !== undefined) {
             req.styleNumber = form.getFieldValue('styleNumber');
@@ -86,8 +86,8 @@ export const FOBPriceVariationReport = () => {
 
         },
         {
-            title: 'PO And Line',
-            dataIndex: 'poAndLine'
+            title: 'PO Number',
+            dataIndex: 'poNumber'
         },
 
         {
@@ -165,16 +165,16 @@ export const FOBPriceVariationReport = () => {
             <Form onFinish={getData} form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='poandLine' label='Po+Line' >
+                        <Form.Item name='poNumber' label='Po Number' >
                             <Select
                                 showSearch
-                                placeholder="Select Po+Line"
+                                placeholder="Select Po Number"
                                 optionFilterProp="children"
                                 allowClear
 
                             >
-                                {poAndLine.map((inc: any) => {
-                                    return <Option key={inc.id} value={inc.poAndLine}>{inc.poAndLine}</Option>
+                                {poNumber.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.poNumber}>{inc.poNumber}</Option>
                                 })
                                 }
                             </Select>

@@ -35,6 +35,8 @@ const PPMReport = () => {
   const [plantCode, setPlantCode] = useState<any>([]);
   const [item, setItem] = useState<any>([]);
   const [factory, setFactory] = useState<any>([]);
+  const [poNumber,setPoNumber] = useState<any>([]);
+
 
 
   useEffect(() => {
@@ -47,6 +49,7 @@ const PPMReport = () => {
     getItem();
     getFactory();
     getData();
+    getPonumber();
   }, [])
 
 
@@ -97,6 +100,12 @@ const PPMReport = () => {
       setFactory(res.data)
     })
   }
+  const getPonumber = () => {
+    service.getPppoNumberForMarketing().then(res => {
+        setPoNumber(res.data)
+    })
+    console.log(poNumber,"test")
+}
 
   const getData = () => {
     const req = new PpmDateFilterRequest();
@@ -117,8 +126,8 @@ const PPMReport = () => {
     if (form.getFieldValue('productCode') !== undefined) {
       req.productCode = form.getFieldValue('productCode');
     }
-    if (form.getFieldValue('poandLine') !== undefined) {
-      req.poandLine = form.getFieldValue('poandLine');
+    if (form.getFieldValue('poNumber') !== undefined) {
+      req.poNumber = form.getFieldValue('poNumber');
     }
     if (form.getFieldValue('colorDesc') !== undefined) {
       req.colorDesc = form.getFieldValue('colorDesc');
@@ -872,15 +881,15 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-              <Form.Item name='poandLine' label='Po+Line' >
+              <Form.Item name='poNumber' label='Po Number' >
                 <Select
                   showSearch
-                  placeholder="Select Po+Line"
+                  placeholder="Select Po Number"
                   optionFilterProp="children"
                   allowClear
                 >
-                  {poLine.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                  {poNumber.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                   })
                   }
                 </Select>
