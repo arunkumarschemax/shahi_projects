@@ -1391,11 +1391,12 @@ export class DpomService {
             conditions.push(`d.size_description = ?`);
             queryParams.push(req.sizeDescription);
         }
-
         if (conditions.length > 0) {
             const conditionString = conditions.join(' AND ');
             query += ` AND (${conditionString})`;
         }
+
+        query += ` GROUP BY d.po_number, d.size_description `;
 
         const data = await this.dpomRepository.query(query, queryParams);
 
