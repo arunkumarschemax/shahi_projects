@@ -2,12 +2,14 @@ import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, S
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
-import { BuyersService, ColourService, FabricWeaveService, ProfitControlHeadService, StyleService, VendorsService } from "@project-management-system/shared-services";
+import { BuyersService, ColourService, FabricWeaveService, ProfitControlHeadService, SizeService, StyleService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
 import { SourcingRequisitionReq } from "@project-management-system/shared-models";
+import FormItem from "antd/es/form/FormItem";
+import TextArea from "antd/es/input/TextArea";
 
 
 const {Option} = Select;
@@ -40,6 +42,17 @@ export const SourcingRequisitionDynamicForm = () => {
     const styleService = new StyleService()
     const [style,setStyle] = useState<any[]>([])
     const [fabricTableVisible,setFabricTableVisible] = useState<boolean>(false)
+    const [trimsTableData,setTrimsTableData] = useState<any[]>([])
+    const [trimTableVisible,setTrimTableVisible] = useState<boolean>(false)
+    const [defaultTrimFormData, setDefaultTrimFormData] = useState<any>(undefined);
+    const [trimIndexVal, setTrimIndexVal] = useState(undefined);
+    const [size,setSize] = useState<any[]>([])
+    const [trimForm] = Form.useForm()
+    const [trimColor,setTrimColor] = useState<string>('')
+    const [trimSize , setTrimSize] = useState<string>('')
+    const sizeService = new SizeService()
+
+
 
     let tableData: any[] = []
 
@@ -51,6 +64,7 @@ export const SourcingRequisitionDynamicForm = () => {
         getBuyer()
         getweave()
         getStyle()
+        getSize()
     },[])
 
     const getColor = () => {
@@ -101,6 +115,14 @@ export const SourcingRequisitionDynamicForm = () => {
         })
     }
 
+    const getSize = () => {
+        sizeService.getAllActiveSize().then(res =>{
+            if(res.status) {
+                setSize(res.data)
+            }
+        })
+    }
+
 
     const onSegmentChange = (val) => {
         setTabName(val)
@@ -111,6 +133,11 @@ export const SourcingRequisitionDynamicForm = () => {
         setFabricIndexVal(index)
     }
 
+    const editForm = (rowData : any , index:any) =>{
+        setDefaultTrimFormData(rowData)
+        setTrimIndexVal(index)
+    }
+
     const deleteData = (index:any) => {
     tableData = [...fabricTableData]
     tableData.splice(index,1)
@@ -118,6 +145,15 @@ export const SourcingRequisitionDynamicForm = () => {
     if (tableData.length == 0) {
         setFabricTableVisible(false)
     }
+    }
+
+    const deleteTrim = (index:any) => {
+        tableData = [...trimsTableData]
+        tableData.splice(index,1)
+        setTrimsTableData(tableData)
+        if (tableData.length == 0) {
+            setTrimTableVisible(false)
+        }
     }
 
     useEffect(() => {
@@ -149,6 +185,21 @@ export const SourcingRequisitionDynamicForm = () => {
         }
 
     },[defaultFabricFormData])
+
+
+    useEffect(()=>{
+        if(defaultTrimFormData){
+            trimForm.setFieldsValue({
+                trimType : defaultTrimFormData.trimType,
+                trimCode : defaultTrimFormData.trimCode,
+                size : defaultTrimFormData.size,
+                color : defaultTrimFormData.color,
+                quantity : defaultTrimFormData.quantity,
+                description : defaultTrimFormData.description,
+                remarks : defaultTrimFormData.remarks
+            })
+        }
+    },[defaultTrimFormData])
 
     const columns : ColumnProps<any>[] = [
         {
@@ -313,6 +364,88 @@ export const SourcingRequisitionDynamicForm = () => {
         }
     ]
 
+    const columnsSkelton: any = [
+        {
+          title: 'S No',
+          key: 'sno',
+          width: '70px',
+          responsive: ['sm'],
+          render: (text, object, index) => (page-1) * 10 +(index+1)
+        },
+        {
+          title: 'Trim Type',
+          dataIndex: 'trimType',
+        },
+        {
+          title: 'Trim Code',
+          dataIndex: 'trimCode',
+        },
+        {
+          title: 'Size',
+          dataIndex: 'size',
+          render: (text,record) => {
+            return(
+                <>
+                {record.size ? trimSize : '-'}
+                </>
+            )
+        }
+        },
+        {
+          title: 'Color',
+          dataIndex: 'color',
+            render: (text,record) => {
+              return(
+                  <>
+                  {record.color ? trimColor : '-'}
+                  </>
+              )
+          }
+        },
+        {
+          title: 'Quantity',
+          dataIndex: 'quantity',
+        },
+        {
+          title: 'Description',
+          dataIndex: 'description',
+        },
+        {
+          title: 'Remarks',
+          dataIndex: 'remarks',
+        },
+        {
+            title: "Action",
+            dataIndex: 'action',
+            render: (text: any, rowData: any, index: any) => (
+                <span>
+                    <Tooltip placement="top" title='Edit'>
+                        <Tag >
+                            <EditOutlined className={'editSamplTypeIcon'} type="edit"
+                                onClick={() => {
+                                    editForm(rowData,index)
+                                }}
+                                style={{ color: '#1890ff', fontSize: '14px' }}
+                            />
+                        </Tag>
+                    </Tooltip>
+                    <Divider type="vertical" />
+                    
+                    <Tooltip placement="top" title='delete'>
+                    <Tag >
+                        <Popconfirm title='Sure to delete?' onConfirm={e =>{deleteTrim(index);}}>
+                        <MinusCircleOutlined 
+
+                        style={{ color: '#1890ff', fontSize: '14px' }} />
+                        </Popconfirm>
+                    </Tag>
+                    </Tooltip>
+                </span>
+            )
+        }
+    ]
+
+
 
     const onFabricAdd = (values) => {
         if(fabricIndexVal !== undefined){
@@ -327,6 +460,22 @@ export const SourcingRequisitionDynamicForm = () => {
         fabricForm.resetFields()
         setFabricTableVisible(true)
     }
+
+    const onTrimAdd = (values) => {
+        if(trimIndexVal !== undefined){
+            console.log(trimIndexVal)
+            trimsTableData[trimIndexVal] = values;
+            tableData = [...trimsTableData]
+            setTrimIndexVal(undefined)
+        } else{
+            tableData = [...trimsTableData,values]
+        }
+        setTrimsTableData(tableData)
+        trimForm.resetFields()
+        setTrimTableVisible(true)
+        console.log(values,'namaste')
+    }
+
 
     const onFabricColorChange = (val,option) => {
         setFabricColor(option?.name)
@@ -344,14 +493,24 @@ export const SourcingRequisitionDynamicForm = () => {
         setFabricBuyer(option?.name)
     }
 
+    const onColorChange = (val,option) => {
+        setTrimColor(option?.name)
+    }
+
+    const onSizeChange = (val, option) => {
+    const selectedSize = option?.name || ''; // Ensure a fallback value
+    setTrimSize(selectedSize);
+}
+
     const onReset = () => {
         setFabricTableVisible(false)
         fabricForm.resetFields()
         sourcingForm.resetFields()
+        trimForm.resetFields()
     }
 
     const onSubmit = () =>{
-        const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),fabricTableData,[])
+        const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),fabricTableData,trimsTableData)
         console.log(req)
     }
 
@@ -602,8 +761,142 @@ export const SourcingRequisitionDynamicForm = () => {
             <div>
                 {tabName === 'Trim' ? (<>
                 <Card title='Trim Details'>
-
+                    <Form layout="vertical" onFinish={onTrimAdd} form={trimForm}>
+                <Row gutter={24}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+                        <Form.Item
+                        name="trimType"
+                        label="Trim Type"
+                        rules={[
+                            {
+                              required: true,
+                              message: "Trim Type Is Required",
+                            },
+                            {
+                                pattern:/^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                                message: `Should contain only alphabets.`,
+                            },
+                        ]}>
+                            <Input placeholder="Enter Trim Type" />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+                        <Form.Item
+                        name="trimCode"
+                        label="Trim Code"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Trim Code Is Required",
+                            },
+                            {
+                                pattern:/^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                                message: `Should contain only alphabets.`,
+                            },
+                        ]}>
+                            <Input placeholder="Enter Trim Code" />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+                        <Form.Item
+                        name="size"
+                        label="Size"
+                        rules={[{ required: true, message: "Please Select Size" }]}
+                        >
+                            <Select
+                            allowClear
+                            showSearch
+                            optionFilterProp="children"
+                            placeholder="Select Size"
+                            onChange={onSizeChange}
+                            >
+                                {size.map((e) => {
+                                  return (
+                                    <Option key={e.sizeId} value={e.sizeId} name={e.size}>
+                                  {e.size}
+                                </Option>
+                              );
+                            })}
+                            </Select>
+                        </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+                            <Form.Item
+                            name="color"
+                            label="Color"
+                            rules={[{ required: true, message: "Please Select Color" }]}
+                        >
+                            <Select
+                            allowClear
+                            showSearch
+                            optionFilterProp="children"
+                            placeholder="Select Color"
+                            onChange={onColorChange}
+                            >
+                                {color.map((e) => {
+                                  return (
+                                    <Option key={e.colourId} value={e.colourId} name={e.colour}>
+                                  {e.colour}
+                                </Option>
+                              );
+                            })}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+                        <Form.Item
+                        name="quantity"
+                        label="Quantity"
+                        rules={[
+                            {
+                              required: true,
+                              message: "Quantity Is Required",
+                            },
+                            {
+                                pattern:/^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                                message: `Should contain only alphabets.`,
+                            },
+                        ]}>
+                            <Input placeholder="Enter Quantity" />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
+                        <Form.Item
+                        name="description"
+                        label="Description"
+                        // rules={[
+                        //     {
+                        //         required: true,
+                        //         message: "Trim Description Is Required",
+                        //     },
+                        //     {
+                        //         pattern:/^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                        //         message: `Should contain only alphabets.`,
+                        //     },
+                        // ]}
+                        >
+                            <TextArea rows={1} placeholder="Enter Trim Description" />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                        <Form.Item
+                        name="remarks"
+                        label="Remarks"
+                        >
+                            <TextArea rows={1} placeholder="Enter Remarks" />
+                        </Form.Item>
+                    </Col>
+                    </Row>
+                    <Row justify={'end'}>
+                        <Button type='primary' htmlType="submit">Add</Button>
+                    </Row>
+                    </Form>
                 </Card>
+                {
+                    trimTableVisible ? (<>
+                        <Table columns={columnsSkelton} dataSource={trimsTableData} scroll={{x:'max-content'}}/>
+                    </>) : (<></>)
+                }
                 </>) : (<></>)}
             </div>
                         
