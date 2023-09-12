@@ -30,7 +30,7 @@ import { join } from 'path';
       password: appConfig.database.password,
       database: appConfig.database.dbName,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
       logging: true,
       extra: {
         connectionLimit: 20
