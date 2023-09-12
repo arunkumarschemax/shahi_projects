@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Descriptions } from 'antd';
+import { Button, Card, Descriptions } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function ScanDetailView() {
@@ -15,27 +15,29 @@ function ScanDetailView() {
   console.log(rowData.state.rowData,"kkkkkkkkkkk")
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
-  <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+    <Card style={{ width: '1000px' }}>
+  <Descriptions>
         {/* <Descriptions.Item
           label="Sno"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.typeId}
         </Descriptions.Item> */}
-        <Descriptions.Item
-          label="GST"
-          labelStyle={{ color: "black", fontWeight: "bold" }}
-        >
-          {rowData.state.rowData.GST}
-        </Descriptions.Item>
-        <Descriptions.Item
+         <Descriptions.Item
           label="Vendor Name"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.Vendor}
 
         </Descriptions.Item>
+        <Descriptions.Item
+          label="GST"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.GST}
+        </Descriptions.Item>
+       
         <Descriptions.Item
           label="InvoiceDate"
           labelStyle={{ color: "black", fontWeight: "bold" }}
@@ -134,7 +136,8 @@ function ScanDetailView() {
       </Descriptions>
 
 <Button type="primary"  onClick={handleBack}> Back </Button>
-    </>
+</Card>
+</div>
   );
 }
 
