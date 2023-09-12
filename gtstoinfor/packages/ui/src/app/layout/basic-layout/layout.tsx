@@ -38,9 +38,9 @@ export const baseRouterList = [
     {
         label: "Sourcing Requisition",
         key: "sourcingRequisition",
-        path: "sourcing-requisition-view",
+        path: "sourcing-requisition-dynamic-view",
         // icon: <DashboardOutlined />,
-        filepath: "/sourcing-requisition-view",
+        filepath: "/sourcing-requisition-dynamic-view",
     },
     {
         label: "Sourcing Requisition Report",
@@ -49,13 +49,13 @@ export const baseRouterList = [
         // icon: <DashboardOutlined />,
         filepath: "/sourcing-requisition-report",
     },
-    {
-        label: "Sourcing Requisition Form",
-        key: "sourcingRequisition",
-        path: "sourcing-requisition-form",
-        // icon: <DashboardOutlined />,
-        filepath: "/sourcing-requisition-form",
-    },
+    // {
+    //     label: "Sourcing Requisition Form",
+    //     key: "sourcingRequisition",
+    //     path: "sourcing-requisition-form",
+    //     // icon: <DashboardOutlined />,
+    //     filepath: "/sourcing-requisition-form",
+    // },
     // {
     //     label: "Marketing Requisition",
     //     key: "marketing-requisition",
