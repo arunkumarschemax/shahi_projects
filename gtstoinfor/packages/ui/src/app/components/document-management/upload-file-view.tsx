@@ -56,20 +56,21 @@ const UploadFileGrid = () =>{
     };
     const mergeAndDownloadPDFs = async (pathsData:any[], poNo:string) => {
       try {
+        console.log(pathsData)
         // Load the initial PDF file (you need to provide a valid URL)
-        const initialPdfUrl = pathsData[0].url;
+        // const initialPdfUrl = pathsData[0].url;
         // 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';
-    
-        const initialPdfResponse = await axios.request({
-          url: initialPdfUrl,
-          method: 'get',
-          responseType: 'arraybuffer',
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-          },
-        });
-        const initialPdfBytes = initialPdfResponse.data;
-        console.log('*&*&*&', initialPdfBytes)
+        // console.log(initialPdfUrl)
+        // const initialPdfResponse = await axios.request({
+        //   url: initialPdfUrl,
+        //   method: 'get',
+        //   responseType: 'arraybuffer',
+        //   headers: {
+        //     'X-Requested-With': 'XMLHttpRequest',
+        //   },
+        // });
+        // const initialPdfBytes = initialPdfResponse.data;
+        // console.log('*&*&*&', initialPdfBytes)
     
         // Load additional PDFs from URLs (you need to provide valid PDF URLs)
         const pdfUrls = [
@@ -89,9 +90,9 @@ const UploadFileGrid = () =>{
         const mergedPdf = await PDFDocument.create();
     
         // Add the pages from the initial PDF
-        const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
-        const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
-        initialPages.forEach((page) => mergedPdf.addPage(page));
+        // const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
+        // const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
+        // initialPages.forEach((page) => mergedPdf.addPage(page));
     
         // Loop through each PDF and add its pages to the merged PDF
         for (const pdfBytes of pdfBytesArray) {
@@ -286,12 +287,14 @@ const UploadFileGrid = () =>{
           title: 'DOWNLOAD',
           dataIndex: 'documentName',
           render :(text, rowData, index) =>{
+            console.log(rowData)
             return (<div style={{alignContent:'center'}}>
                <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
-                  {rowData.status === "pending" ? "-" :<Button type="primary" 
+                 <Button type="primary" 
+                 disabled ={rowData.poStatus == 'In Progress' ? false:true}
                 onClick={() => mergeAndDownloadPDFs(rowData.url, rowData.PO)}>
               <DownloadOutlined/>
-              </Button>}
+              </Button>
                </Form.Item>   
                </div>     
                 )
@@ -337,8 +340,13 @@ const UploadFileGrid = () =>{
 
                 }
             }));
-            setColumns([...pocolumn,...headerColumns]);
-        }
+            if(JSON.parse(localStorage.getItem('currentUser')).user.roles == 'Admin' ){
+              setColumns([...pocolumn,...headerColumns,...downloadcomun]);
+            }else{
+              setColumns([...pocolumn,...headerColumns]);
+            }
+            }
+           
         else{
         }
         });
