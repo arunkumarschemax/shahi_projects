@@ -215,7 +215,11 @@ const DivertReport = () => {
 
     const columns: ColumnProps<any>[] = [
         {
-            title: 'old',
+            title: (
+                <div style={{ background: '#CFCFF4 ', padding: '10px' , borderRadius: '5px', display: 'flex', alignItems: 'center', height: 40, justifyContent: 'center' }}>
+                  Old
+                </div>
+              ),
             children: [
                 {
                     title: 'S.No',
@@ -232,7 +236,10 @@ const DivertReport = () => {
                 },
                 {
                     title: "Request Date",
-                    dataIndex: "",
+                    dataIndex: "DocumentDate",
+                    render: (text, record) => {
+                        return record.oldPo.DocumentDate ? moment(record.oldPo.DocumentDate).format('MM/DD/YYYY') : "-";
+                    }
                 },
                 {
                     title: "From Item",
@@ -252,13 +259,13 @@ const DivertReport = () => {
                     dataIndex: ['oldPo', 'LineStatus'],
                     // ...getColumnSearchProps("lineStatus"),
                 },
-                {
-                    title: 'Document Date',
-                    dataIndex: ['oldPo', 'DocumentDate'],
-                    render: (text, record) => {
-                        return record.oldPo.DocumentDate ? moment(record.oldPo.DocumentDate).format('MM/DD/YYYY') : "-";
-                    }
-                },
+                // {
+                //     title: 'Document Date',
+                //     dataIndex: ['oldPo', 'DocumentDate'],
+                //     render: (text, record) => {
+                //         return record.oldPo.DocumentDate ? moment(record.oldPo.DocumentDate).format('MM/DD/YYYY') : "-";
+                //     }
+                // },
                 {
                     title: 'Old Po',
                     dataIndex: ['oldPo', 'poNumber'],
@@ -340,7 +347,11 @@ const DivertReport = () => {
             ] as unknown as null,
         },
         {
-            title: 'New',
+            title: (
+                <div style={{ background: '#D1D1FF', borderRadius: '5px', display: 'flex', alignItems: 'center', height: 40, justifyContent: 'center', padding: '8px'  }}>
+                  New
+                </div>
+              ),
             children: [
                 {
                     title: 'OGAC Date',

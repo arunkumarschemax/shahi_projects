@@ -38,7 +38,6 @@ const PPMReport = () => {
 
 
   useEffect(() => {
-    getData();
     getProductCode();
     getPoLine();
     getColorDesc();
@@ -47,6 +46,7 @@ const PPMReport = () => {
     getplantCode();
     getItem();
     getFactory();
+    getData();
   }, [])
 
 
@@ -55,44 +55,48 @@ const PPMReport = () => {
       setProductCode(res.data)
     })
   }
+
   const getPoLine = () => {
     service.getPpmPoLineForMarketing().then(res => {
       setPoLine(res.data)
     })
   }
+
   const getColorDesc = () => {
     service.getPpmColorDescForMarketing().then(res => {
       setColorDesc(res.data)
     })
   }
+
   const getcategoryDesc = () => {
     service.getPpmCategoryDescForMarketing().then(res => {
       setCategoryDesc(res.data)
-
     })
   }
+
   const getcountrydestination = () => {
     service.getPpmDestinationCountryForMarketing().then(res => {
       setCountryDestination(res.data)
     })
   }
+
   const getplantCode = () => {
     service.getPpmPlantForMarketing().then(res => {
       setPlantCode(res.data)
     })
-
   }
+
   const getItem = () => {
     service.getPpmItemForMarketing().then(res => {
       setItem(res.data)
     })
   }
+
   const getFactory = () => {
     service.getPpmFactoryForMarketing().then(res => {
       setFactory(res.data)
     })
   }
-
 
   const getData = () => {
     const req = new PpmDateFilterRequest();
@@ -196,7 +200,7 @@ const PPMReport = () => {
       <div style={{ padding: 8 }}>
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`} 
+          placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -233,7 +237,7 @@ const PPMReport = () => {
       text ? (
         searchedColumn === dataIndex ? (
           <Highlighter
-            highlightStyle={{ backgroundColor:'#ffc069', padding: 0 }}
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
             searchWords={[searchText]}
             autoEscape
             textToHighlight={text.toString()}
@@ -283,11 +287,11 @@ const PPMReport = () => {
 
     exportingColumns = [
       { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text) => moment(text).format('YYYY-MM-DD') },
+      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text) => moment(text).format('MM/DD/YYYY') },
       { title: 'Item', dataIndex: 'Item' },
       { title: 'Factory', dataIndex: 'Factory' },
       { title: 'PCD', dataIndex: 'PCD' },
-      { title: 'Document Date', dataIndex: 'documentDate', render: (text) => moment(text).format('YYYY-MM-DD') },
+      { title: 'Document Date', dataIndex: 'documentDate', render: (text) => moment(text).format('MM/DD/YYYY') },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
       { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
       { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
@@ -373,7 +377,7 @@ const PPMReport = () => {
       {
         title: 'Last Modified Date',
         dataIndex: 'lastModifiedDate',
-        render: (text) => moment(text).format('YYYY-MM-DD')
+        render: (text) => moment(text).format('MM/DD/YYYY')
 
       },
       {
@@ -387,7 +391,7 @@ const PPMReport = () => {
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
-        render: (text) => moment(text).format('YYYY-MM-DD')
+        render: (text) => moment(text).format('MM/DD/YYYY')
 
       },
       {
@@ -431,16 +435,118 @@ const PPMReport = () => {
         dataIndex: 'destinationCountry'
       },
       {
+        title: "Destination Country Code",
+        dataIndex: 'destinationCountryCode'
+      },
+      {
         title: "Plant Code",
         dataIndex: 'plant'
       },
       { title: 'Geo Code', dataIndex: '' },
+      {
+        title: "Plant Name",
+        dataIndex: 'plantName'
+      },
       {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty',
         align: 'center',
         render: (text) => <strong>{text}</strong>
       },
+      {
+        title: "GAC",
+        dataIndex: 'GAC'
+      },
+      {
+        title: "MRGAC",
+        dataIndex: 'MRGAC'
+      },
+      {
+        title: "OGAC",
+        dataIndex: 'OGAC'
+      },
+
+      {
+        title: "UPC",
+        dataIndex: 'UPC'
+      },
+      {
+        title: "Trading Co Po Number",
+        dataIndex: 'tradingCoPoNumber'
+      },
+      {
+        title: "Doc Type",
+        dataIndex: 'docTypeCode'
+      },
+      {
+        title: "Doc Type Description ",
+        dataIndex: 'docTypeDesc'
+      },
+      {
+        title: "Doc Type Description ",
+        dataIndex: 'docTypeDesc'
+      },
+      {
+        title: "Planning Season Code",
+        dataIndex: 'planningSeasonCode'
+      },
+      {
+        title: "Planning Season Year",
+        dataIndex: 'planningSeasonYear'
+      },
+      {
+        title: "Category",
+        dataIndex: 'categoryCode'
+      },
+      {
+        title: "Vendor Code",
+        dataIndex: 'vendorCode'
+      },
+      {
+        title: "Gender Age",
+        dataIndex: 'genderAgeCode'
+      },
+      {
+        title: "Gender Age Description",
+        dataIndex: 'genderAgeDesc'
+      },
+      {
+        title: "Shipping Type",
+        dataIndex: 'shippingType'
+      },
+      {
+        title: "Planning Priority Number",
+        dataIndex: 'planningPriorityCode',
+        align: 'center'
+      },
+      {
+        title: "Planning Priority Description",
+        dataIndex: 'planningPriorityDesc', align: 'center'
+
+      },
+      {
+        title: "Mode Of Transportation",
+        dataIndex: 'modeOfTransportationCode', align: 'center'
+
+      },
+      {
+        title: "In Co Terms",
+        dataIndex: 'inCoTerms'
+      },
+      {
+        title: "Purchase Group",
+        dataIndex: 'purchaseGroupCode'
+      },
+      {
+        title: "Purchase Group Name",
+        dataIndex: 'purchaseGroupName'
+      },
+      {
+        title: 'Change Register',
+        dataIndex: 'displayName',
+        align: 'center',
+      },
+
     ]
 
     sizeHeaders?.forEach(version => {
@@ -667,6 +773,7 @@ const PPMReport = () => {
               }
             }}
             scroll={{ x: 'max-content' }}
+            className="custom-table-wrapper"
             rowClassName={getRowClassName}
           />
         ) : (<Table size='large' />
@@ -815,7 +922,7 @@ const PPMReport = () => {
                   allowClear
                 >
                   {item.map((inc: any) => {
-                    return <Option key=  {inc.id} value={inc.item}>{inc.item}</Option>
+                    return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
                   })
                   }
                 </Select>
@@ -837,11 +944,16 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
 
-
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 25 }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
               <Form.Item>
-                <Button htmlType="submit" type="primary" icon={<SearchOutlined />}>Get Report</Button>
-                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
+                <Button htmlType="submit"
+                  icon={<SearchOutlined />}
+                  type="primary">Get Report</Button>
+                <Button
+                  htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={onReset}
+                >
+                  RESET
+                </Button>
               </Form.Item>
             </Col>
           </Row>
@@ -851,10 +963,10 @@ const PPMReport = () => {
             <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Total Shipped: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Total Shipped: ' + factory.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Balance to ship: ' + ppm.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Balance to ship: ' + factory.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
         </Row><br></br>
         <Row gutter={80}>

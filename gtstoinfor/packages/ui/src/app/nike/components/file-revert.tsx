@@ -99,6 +99,7 @@ export function NikeFileRevert() {
                 <Table
                     columns={columns}
                     dataSource={data}
+                    className="custom-table-wrapper"
                     scroll={{ x: 1000 }}
                     pagination={{
                         onChange(current, pageSize) {

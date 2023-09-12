@@ -101,7 +101,7 @@ export function DestinationWisePoOrderGraph() {
       // tickAmount: 16,
       // tickPixelInterval: 100,
       title: {
-        text: 'Accept & unAccepted Po s'
+        text: 'Accepted & UnAccepted Po s'
       },
       enabled: true,
       style: {

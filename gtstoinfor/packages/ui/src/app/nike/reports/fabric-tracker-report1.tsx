@@ -106,6 +106,7 @@ extra={filteredData.length > 0 ?
             columns={Columns}
             dataSource={gridData}
             bordered
+            className="custom-table-wrapper"
         ></Table>
     </Card>
 </>
