@@ -999,10 +999,7 @@ export class DpomService {
 
     async getFactoryReportData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
         try {
-            const allDetails = await this.dpomRepository.getFactoryPpmData(req);
-
-            const filteredDetails = allDetails.filter(record => record.doc_type_code !== 'ZP26')
-            const details = filteredDetails.filter(record => record.dpom_item_line_status !== 'Cancelled')
+            const details = await this.dpomRepository.getFactoryPpmData(req);
             if (details.length === 0) {
                 return new CommonResponseModel(false, 0, 'data not found');
             }
@@ -1070,8 +1067,7 @@ export class DpomService {
     }
 
     async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
-        const alldata = await this.dpomRepository.getMarketingPpmData(req);
-        const details = alldata.filter(record => record.doc_type_code !== 'ZP26')
+        const details = await this.dpomRepository.getMarketingPpmData(req);
         if (details.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found')
         }
@@ -1381,7 +1377,7 @@ export class DpomService {
 
         let query = `SELECT DISTINCT d.po_number as poNumber,d.po_and_line as poAndLine,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
-        WHERE f.shahi_confirmed_gross_price IS NOT NULL GROUP BY d.po_number, d.size_description `;
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL `;
 
         if (req.poAndLine) {
             conditions.push(`d.po_and_line = ?`);
