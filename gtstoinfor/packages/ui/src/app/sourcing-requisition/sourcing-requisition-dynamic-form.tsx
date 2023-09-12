@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, Segmented, Select, Space, Table, Tag, Tooltip } from "antd"
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, Segmented, Select, Space, Table, Tag, Tooltip, message } from "antd"
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
@@ -55,6 +55,7 @@ export const SourcingRequisitionDynamicForm = () => {
 
 
     let tableData: any[] = []
+    let trimTableInfo : any[] = []
 
 
     useEffect(()=>{
@@ -148,10 +149,10 @@ export const SourcingRequisitionDynamicForm = () => {
     }
 
     const deleteTrim = (index:any) => {
-        tableData = [...trimsTableData]
-        tableData.splice(index,1)
-        setTrimsTableData(tableData)
-        if (tableData.length == 0) {
+        trimTableInfo = [...trimsTableData]
+        trimTableInfo.splice(index,1)
+        setTrimsTableData(trimTableInfo)
+        if (trimTableInfo.length == 0) {
             setTrimTableVisible(false)
         }
     }
@@ -221,7 +222,13 @@ export const SourcingRequisitionDynamicForm = () => {
         {
             title:'Weave',
             dataIndex:'weave',
-            
+            render: (text,record) => {
+                return(
+                    <>
+                    {record.weave ? record.weaveName : '-'}
+                    </>
+                )
+            }
         },
         {
             title:'Weight',
@@ -255,7 +262,7 @@ export const SourcingRequisitionDynamicForm = () => {
             render: (text,record) => {
                 return(
                     <>
-                    {record.color ? fabricColor : '-'}
+                    {record.color ? record.colorName : '-'}
                     </>
                 )
             }
@@ -267,7 +274,7 @@ export const SourcingRequisitionDynamicForm = () => {
             render: (text,record) => {
                 return(
                     <>
-                    {record.pch ? fabricPch : '-'}
+                    {record.pch ? record.pchName : '-'}
                     </>
                 )
             }
@@ -292,7 +299,7 @@ export const SourcingRequisitionDynamicForm = () => {
             render: (text,record) => {
                 return(
                     <>
-                    {record.supplier ? fabricSupplier : '-'}
+                    {record.supplier ? record.supplierName : '-'}
                     </>
                 )
             }
@@ -316,7 +323,7 @@ export const SourcingRequisitionDynamicForm = () => {
             render: (text,record) => {
                 return(
                     <>
-                    {record.buyer ? fabricBuyer : '-'}
+                    {record.buyer ? record.buyerName : '-'}
                     </>
                 )
             }
@@ -386,7 +393,7 @@ export const SourcingRequisitionDynamicForm = () => {
           render: (text,record) => {
             return(
                 <>
-                {record.size ? trimSize : '-'}
+                {record.size ? record.sizeName : '-'}
                 </>
             )
         }
@@ -397,7 +404,7 @@ export const SourcingRequisitionDynamicForm = () => {
             render: (text,record) => {
               return(
                   <>
-                  {record.color ? trimColor : '-'}
+                  {record.color ? record.colorName : '-'}
                   </>
               )
           }
@@ -448,29 +455,34 @@ export const SourcingRequisitionDynamicForm = () => {
 
 
     const onFabricAdd = (values) => {
-        if(fabricIndexVal !== undefined){
-            console.log(fabricIndexVal)
-            fabricTableData[fabricIndexVal] = values;
-            tableData = [...fabricTableData]
-            setFabricIndexVal(undefined)
-        } else{
-            tableData = [...fabricTableData,values]
-        }
-        setFabricTableData(tableData)
-        fabricForm.resetFields()
-        setFabricTableVisible(true)
+        fabricForm.validateFields().then(() => {
+
+            if(fabricIndexVal !== undefined){
+                console.log(fabricIndexVal)
+                fabricTableData[fabricIndexVal] = values;
+                tableData = [...fabricTableData]
+                setFabricIndexVal(undefined)
+            } else{
+                tableData = [...fabricTableData,values]
+            }
+            setFabricTableData(tableData)
+            fabricForm.resetFields()
+            setFabricTableVisible(true)
+        }).catch(() => {
+            message.error('Please fill all required fields')
+        })
     }
 
     const onTrimAdd = (values) => {
         if(trimIndexVal !== undefined){
             console.log(trimIndexVal)
             trimsTableData[trimIndexVal] = values;
-            tableData = [...trimsTableData]
+            trimTableInfo = [...trimsTableData]
             setTrimIndexVal(undefined)
         } else{
-            tableData = [...trimsTableData,values]
+            trimTableInfo = [...trimsTableData,values]
         }
-        setTrimsTableData(tableData)
+        setTrimsTableData(trimTableInfo)
         trimForm.resetFields()
         setTrimTableVisible(true)
         console.log(values,'namaste')
@@ -479,27 +491,38 @@ export const SourcingRequisitionDynamicForm = () => {
 
     const onFabricColorChange = (val,option) => {
         setFabricColor(option?.name)
+        fabricForm.setFieldsValue({colorName: option?.name})
     }
 
     const onPCHChange = (val,option) => {
         setFabricPch(option?.name)
+        fabricForm.setFieldsValue({pchName: option?.name})
     }
 
     const onSupplierChange = (val,option) => {
         setFabricSupplier(option?.name)
+        fabricForm.setFieldsValue({supplierName:option?.name})
     }
 
     const onBuyerChange = (val,option) => {
         setFabricBuyer(option?.name)
+        fabricForm.setFieldsValue({buyerName:option?.name})
+    }
+
+    const onWeaveChange = (val,option) => {
+        fabricForm.setFieldsValue({weaveName:option?.name})
     }
 
     const onColorChange = (val,option) => {
         setTrimColor(option?.name)
+        trimForm.setFieldsValue({colorName:option?.name})
+
     }
 
     const onSizeChange = (val, option) => {
     const selectedSize = option?.name || ''; // Ensure a fallback value
     setTrimSize(selectedSize);
+    trimForm.setFieldsValue({sizeName:selectedSize})
 }
 
     const onReset = () => {
@@ -507,11 +530,20 @@ export const SourcingRequisitionDynamicForm = () => {
         fabricForm.resetFields()
         sourcingForm.resetFields()
         trimForm.resetFields()
+        setFabricTableData([])
+        setTrimsTableData([])
+        setTrimTableVisible(false)
     }
 
     const onSubmit = () =>{
-        const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),fabricTableData,trimsTableData)
-        console.log(req)
+        sourcingForm.validateFields().then(() => {
+
+            const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),fabricTableData,trimsTableData)
+            console.log(req)
+            onReset()
+        }).catch(() => {
+            message.error('Please fill all fields')
+        })
     }
 
 
@@ -560,6 +592,24 @@ export const SourcingRequisitionDynamicForm = () => {
                             <Card>
                                 <Form layout="vertical" onFinish={onFabricAdd} form={fabricForm}>
                     <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>FABRIC DETAILS</h1>
+                    <Form.Item name='sourcingRequisitionId' style={{display:'none'}}>
+                            <Input disabled/>
+                        </Form.Item>
+                        <Form.Item name='colorName' style={{display:'none'}}>
+                            <Input disabled/>
+                        </Form.Item>
+                        <Form.Item name='pchName' style={{display:'none'}}>
+                            <Input disabled/>
+                        </Form.Item>
+                        <Form.Item name='supplierName' style={{display:'none'}}>
+                            <Input disabled/>
+                        </Form.Item>
+                        <Form.Item name='buyerName' style={{display:'none'}}>
+                            <Input disabled/>
+                        </Form.Item>
+                        <Form.Item name='weaveName' style={{display:'none'}}>
+                            <Input disabled/>
+                        </Form.Item>
                 <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='content' label='Content' rules={[{required:true,message:'Content is required'}]}>
@@ -576,7 +626,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='weave' label='Weave'  rules={[{required:true,message:'Weave is required'}]}>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select weave'>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select weave' onChange={onWeaveChange}>
                         {weave.map(e => {
                                 return(
                                     <Option key={e.fabricWeaveId} value={e.fabricWeaveId} name={e.fabricWeaveName}> {e.fabricWeaveName}</Option>
@@ -592,7 +642,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='weightUnit'>
+                    <Form.Item name='weightUnit' rules={[{required:true,message:'Weight unit is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             <Option key='kg' value='kg'>
                                 Kg
@@ -616,7 +666,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='yarnUnit'>
+                    <Form.Item name='yarnUnit' rules={[{required:true,message:'Yarn unit is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             <Option key='tex' value='tex'>TEX</Option>
 
@@ -663,7 +713,8 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='moq' label='MOQ'>
+                    <Form.Item name='moq' label='MOQ'
+                    >
                         {/* <Select showSearch allowClear optionFilterProp="children">
                             <Option key='content' value='content'>
                                 Content
@@ -673,7 +724,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='moqUnit'>
+                    <Form.Item name='moqUnit' rules={[{required: fabricForm.getFieldValue('moq') !== undefined ? true : false}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             <Option key='pieces' value='pieces'>
                                 Pieces
@@ -698,7 +749,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='moqPriceUnit'>
+                    <Form.Item name='moqPriceUnit' rules={[{required: fabricForm.getFieldValue('moqPrice') !== undefined ? true : false}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             <Option key='inr' value='inr'>
                                 INR
@@ -760,8 +811,15 @@ export const SourcingRequisitionDynamicForm = () => {
             </div>
             <div>
                 {tabName === 'Trim' ? (<>
-                <Card title='Trim Details'>
+                <Card>
                     <Form layout="vertical" onFinish={onTrimAdd} form={trimForm}>
+                    <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>TRIM DETAILS</h1>
+                        <Form.Item name='sizeName' style={{display:'none'}}>
+                            <Input disabled/>
+                        </Form.Item>
+                        <Form.Item name='colorName' style={{display:'none'}}>
+                            <Input disabled/>
+                        </Form.Item>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
                         <Form.Item
@@ -904,7 +962,7 @@ export const SourcingRequisitionDynamicForm = () => {
                 </Row>
                 <Row justify={'end'}>
                     <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }}>
-                    <Button type="primary" onClick={onSubmit}>Submit</Button>
+                    <Button type="primary" onClick={onSubmit} disabled={fabricTableData.length > 0 && trimsTableData.length > 0 ? false : true}>Submit</Button>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2}}>
                     <Button onClick={onReset}>Reset</Button>
