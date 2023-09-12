@@ -74,6 +74,13 @@ const Columns:any =[
     {
         title: 'Item',
         dataIndex: 'item',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
        
       },
       {
