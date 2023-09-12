@@ -628,6 +628,7 @@ const OrdersCompareGrid = () => {
             title: 'Change from Gross Price currency code',
             dataIndex: '',
             //...getColumnSearchProps('po_number')
+            render: (text, record) => ('USD')
         },
         {
             title: 'Change to Gross Price',
@@ -638,6 +639,7 @@ const OrdersCompareGrid = () => {
             title: 'Change to Gross Price currency code',
             dataIndex: '',
             //...getColumnSearchProps('po_number')
+            render: (text, record) => ('USD')
         },
         {
             title: 'Shahi Offered Price from Master File  ',
@@ -713,35 +715,9 @@ const OrdersCompareGrid = () => {
             title: 'comparission of CRM CO Price to Legal PDF PO Price',
             dataIndex: '',
             // ...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number',
-            // ...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'Previous Line Item Status',
-            dataIndex: 'old_val',
-            align: 'center',
-        },
-        {
-            title: 'Revised Line Item Status',
-            dataIndex: 'new_val',
-            align: 'center',
-        },
-        {
-            title: 'Order Quantity Pieces',
-            dataIndex: 'total_item_qty',
-            align: 'right',
-            render: (text, record) => (
-                <>
-                    {Number(record.total_item_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                </>
-            )
-
-        },
-
+        }
     ];
+
     const columns3: any = [
         {
             title: 'S No',
@@ -861,28 +837,14 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'From Factory',
-            dataIndex: 'from_factory'
+            dataIndex: 'old_val'
         },
         {
             title: 'Change to Factory',
-            dataIndex: 'change_to_factory'
-        },
-        {
-            title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number',
-            //  ...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'Previous Unit',
-            dataIndex: 'old_val',
-        },
-        {
-            title: 'Revised Unit',
-            dataIndex: 'new_val',
-            // width :'190px',
-        },
-
+            dataIndex: 'new_val'
+        }
     ];
+
     const columns5: any = [
         {
             title: 'S No',
@@ -1188,93 +1150,6 @@ const OrdersCompareGrid = () => {
             dataIndex: 'size_description',
             // ...getColumnSearchProps('size_description')
         },
-
-        {
-            title: 'Change from Gross Price currency code',
-            dataIndex: '',
-            //...getColumnSearchProps('po_number')
-        },
-
-        {
-            title: 'Change to Gross Price currency code',
-            dataIndex: '',
-            //...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'Shahi Offered Price from Master File  ',
-            dataIndex: '',
-            //...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'Shahi Offered Price currency from Master File ',
-            dataIndex: '',
-            //...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'Change from Trading Co Net including discounts',
-            dataIndex: '',
-            //...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'Change from Trading Co Net including discounts currency code',
-            dataIndex: '',
-            //...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'Change to Trading Co Net including discounts',
-            dataIndex: '',
-            //...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'Change to Trading Co Net including discounts currency code',
-            dataIndex: '',
-            //...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'Change from Net including discounts',
-            dataIndex: '',
-            // ...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'Change From Net including discounts currency code',
-            dataIndex: '',
-            // ...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'Change to Net including discounts',
-            dataIndex: '',
-            // ...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'change to Net including discounts currency code',
-            dataIndex: '',
-            //...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'Legal PDF PO Price',
-            dataIndex: '',
-            // ...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'Legal PDF PO Price Currency',
-            dataIndex: '',
-            // ...getColumnSearchProps('schedule_line_item_number')
-        },
-        // {
-        //     title: 'CRM CO Price',
-        //     dataIndex: '',
-        //     ...getColumnSearchProps('schedule_line_item_number')
-        // },
-        // {
-        //     title: 'CRM CO Price Currency',
-        //     dataIndex: '',
-        //     // ...getColumnSearchProps('schedule_line_item_number')
-        // },
-        {
-            title: 'comparission of CRM CO Price to Legal PDF PO Price',
-            dataIndex: '',
-            // ...getColumnSearchProps('schedule_line_item_number')
-        },
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
@@ -1366,7 +1241,7 @@ const OrdersCompareGrid = () => {
         },
         {
             key: '6',
-            label: <b>Plant Code revised : {productCodeChaneData?.length}</b>,
+            label: <b>Product Code Revised : {productCodeChaneData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} scroll={{ x: 'max-content' }} />,
         },
         {
@@ -1385,9 +1260,7 @@ const OrdersCompareGrid = () => {
         form.resetFields();
         setSelectedEstimatedFromDate(undefined);
         setSelectedEstimatedToDate(undefined);
-        // getContractDateChangeData()
         getQtyChangeData()
-        // getWharehouseDateChangeData()
     }
 
     return (

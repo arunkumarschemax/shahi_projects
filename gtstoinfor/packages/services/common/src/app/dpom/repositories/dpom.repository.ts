@@ -504,10 +504,11 @@ export class DpomRepository extends Repository<DpomEntity> {
     }
 
     async getOrderAcceptanceDat(req: nikeFilterRequest): Promise<any[]> {
-        const query = this.createQueryBuilder('dpom')
+        let query = this.createQueryBuilder('dpom')
             .select(`dpom.*`)
             .where(`dpom_item_line_status IN('Accepted','Unaccepted')`)
             .groupBy(`dpom.po_and_line`)
+            .orderBy(`CASE WHEN dpom.dpom_item_line_status = 'Unaccepted' THEN 0 ELSE 1 END`, 'ASC')
         if (req.documentStartDate !== undefined) {
             query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
         }
@@ -520,6 +521,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.DPOMLineItemStatus !== undefined) {
             query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
         }
+
         return await query.getRawMany();
     }
 
