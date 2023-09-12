@@ -1381,7 +1381,7 @@ export class DpomService {
 
         let query = `SELECT DISTINCT d.po_number as poNumber,d.po_and_line as poAndLine,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
-        WHERE f.shahi_confirmed_gross_price IS NOT NULL GROUP BY d.po_number, d.size_description `;
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL  `;
 
         if (req.poAndLine) {
             conditions.push(`d.po_and_line = ?`);
