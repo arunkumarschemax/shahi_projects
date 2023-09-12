@@ -5,7 +5,7 @@ import { appConfig } from 'packages/services/common/config';
 import { LegalPoPdfDto } from './dto/legal-po-pdf.dto';
 import { ACCEPTNACE_DATE, DELIVERY_DATE_INDEX, DESCRIPTION_INDEX, ITEM_NO_INDEX, MATERIAL_INDEX, MODE_INDEX, PO_NUMBER_POSITION } from './pdf-positions-constants';
 import { PoItemDetailsDto } from './dto/po-item-details.dto';
-import { OpenAIApi, Configuration, CreateCompletionRequest } from 'openai';
+// import { OpenAIApi, Configuration, CreateCompletionRequest } from 'openai';
 import { PoItemVariantDto } from './dto/po-item-variant-details';
 const AdmZip = require('adm-zip');
 const path = require('path');
@@ -17,7 +17,7 @@ export class CreateCompletionDto {
 }
 @Injectable()
 export class AdobeAcrobatApiService {
-    private openAIApi: OpenAIApi;
+    // private openAIApi: OpenAIApi;
     constructor() {
 
     }
@@ -28,20 +28,20 @@ export class AdobeAcrobatApiService {
         temperature,
     }: CreateCompletionDto) {
         try {
-            const configuration = new Configuration({
-                // organization:'org-aACNaAwGXVoOc2ELjyhPYulY',
-                apiKey: process.env.OPENAI_API_KEY,
-            });
+            // const configuration = new Configuration({
+            //     // organization:'org-aACNaAwGXVoOc2ELjyhPYulY',
+            //     apiKey: process.env.OPENAI_API_KEY,
+            // });
 
-            this.openAIApi = new OpenAIApi(configuration);
-            const params: CreateCompletionRequest = {
-                prompt: question,
-                model: model || 'gpt-3.5-turbo',
-                temperature: temperature || 1,
-            };
-            const { data } = await this.openAIApi.createCompletion(params);
+            // this.openAIApi = new OpenAIApi(configuration);
+            // const params: CreateCompletionRequest = {
+            //     prompt: question,
+            //     model: model || 'gpt-3.5-turbo',
+            //     temperature: temperature || 1,
+            // };
+            // const { data } = await this.openAIApi.createCompletion(params);
 
-            return data;
+            // return data;
         } catch (e) {
             console.log(e)
             throw new Error(e);
@@ -101,26 +101,26 @@ export class AdobeAcrobatApiService {
                 ("0" + date.getMinutes()).slice(-2) + "-" + ("0" + date.getSeconds()).slice(-2);
             return ("output/ExtractTextTableWithTableStructure/extract" + dateString + ".zip");
         }
-        console.log('pdf file',pdfFile)
-        await this.usePdf2Json(pdfFile)
+        console.log('pdf file', pdfFile)
+        // await this.usePdf2Json(pdfFile)
         const tableWiseMap = await this.extractJSONObject(outputFilePath)
         const poPdfData = await this.constructDataFromPdfJson(tableWiseMap)
         return poPdfData
     }
 
-    async usePdf2Json(pdfFile){
-        console.log(pdfFile,'pdf 2 json called');
-        
-        import('pdf2json/pdfparser').then(async (pdfParser:any) => {
-            await pdfParser.loadPDF(pdfFile.path)
-            await pdfParser.on("pdfParser_dataError", (errData:any) => console.error(errData.parserError) );
-            await pdfParser.on("pdfParser_dataReady", pdfData => {
-                console.log(pdfData)
-            });
-        
-        })
-       
-    }
+    // async usePdf2Json(pdfFile){
+    //     console.log(pdfFile,'pdf 2 json called');
+
+    //     import('pdf2json/pdfparser').then(async (pdfParser:any) => {
+    //         await pdfParser.loadPDF(pdfFile.path)
+    //         await pdfParser.on("pdfParser_dataError", (errData:any) => console.error(errData.parserError) );
+    //         await pdfParser.on("pdfParser_dataReady", pdfData => {
+    //             console.log(pdfData)
+    //         });
+
+    //     })
+
+    // }
 
 
     async extractJSONObject(filepath) {
