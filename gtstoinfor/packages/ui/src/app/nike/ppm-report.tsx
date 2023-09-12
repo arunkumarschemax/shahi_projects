@@ -383,6 +383,13 @@ const PPMReport = () => {
       {
         title: 'Item',
         dataIndex: 'item',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
       },
       {
         title: 'Factory',
@@ -451,7 +458,14 @@ const PPMReport = () => {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty',
         align: 'center',
-        render: (text) => <strong>{text}</strong>
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return <strong>{text}</strong>;
+          }
+        },
+
       },
       {
         title: "GAC",
@@ -472,7 +486,13 @@ const PPMReport = () => {
       },
       {
         title: "Trading Co Po Number",
-        dataIndex: 'tradingCoPoNumber'
+        dataIndex: 'tradingCoPoNumber', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
       },
       {
         title: "Doc Type",
@@ -517,11 +537,24 @@ const PPMReport = () => {
       {
         title: "Planning Priority Number",
         dataIndex: 'planningPriorityCode',
-        align: 'center'
+        align: 'center',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
       },
       {
         title: "Planning Priority Description",
-        dataIndex: 'planningPriorityDesc', align: 'center'
+        dataIndex: 'planningPriorityDesc', align: 'center', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
 
       },
       {

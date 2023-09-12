@@ -118,6 +118,13 @@ const ShipmentPlanningChart = () => {
         {
             title: 'Item',
             dataIndex: 'item',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              },
         },
         {
             title: 'Factory',
@@ -215,7 +222,13 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'Gender Age Description',
-            dataIndex: 'gender_age_desc',
+            dataIndex: 'gender_age_desc', render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              },
         },
         {
             title: 'Fabric Content as per washcare label',

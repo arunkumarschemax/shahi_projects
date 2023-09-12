@@ -73,7 +73,7 @@ export function FabricTrackerReport() {
           {title:"FABRIC QUALITY DESCRIPTION", dataIndex:''},
           {title:"Fabric Width", dataIndex:''},
           {title:"MILL", dataIndex:''},
-          {title:"MRGAC", dataIndex:'MRGAC'},
+          {title:"MRGAC", dataIndex:'MRGAC',},
           {title:"OGAC", dataIndex:'OGAC'},
           {title:"GAC", dataIndex:'GAC'},
           {title:"Consumption", dataIndex:''},
@@ -222,7 +222,14 @@ export function FabricTrackerReport() {
           },
           {
             title:"MRGAC",
-            dataIndex:'MRGAC'
+            dataIndex:'MRGAC',
+            render: (text, record) => {
+              if (!text || text.trim() === '') {
+                return '-';
+              } else {
+                return text;
+              }
+            },
 
           },
           {

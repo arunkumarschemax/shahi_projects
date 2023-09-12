@@ -181,6 +181,13 @@ function ShipmentTrackerReport() {
             title: 'Item',
             dataIndex: 'item',
             ...getColumnSearch('item'),
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              },
 
         },
         {
@@ -241,6 +248,13 @@ function ShipmentTrackerReport() {
         {
             title: 'General Age Description',
             dataIndex: 'gender_age_desc',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              },
 
         },
 
@@ -267,7 +281,13 @@ function ShipmentTrackerReport() {
         },
         {
             title: 'GAC reason Code',
-            dataIndex: 'GACReasonCode',
+            dataIndex: 'GACReasonCode', render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              },
 
         },
         {
