@@ -1,5 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { PrimaryGeneratedColumn } from "typeorm";
 export class ScanDto {
+  @PrimaryGeneratedColumn("increment", {
+    name: "id",
+  })
+  Id: number;
+ 
   @ApiProperty()
   GST: string;
 
