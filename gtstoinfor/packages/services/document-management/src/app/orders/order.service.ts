@@ -421,7 +421,7 @@ export class OrdersService {
         let docinfo: any[] = [];
         for (const res of data){
             // console.log(res)
-            const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("https://172.20.50.169/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po ="'+res.PO+'"';
+            const doctlistQuery = 'SELECT customer_po,uid,u.file_name AS NAME,dl.documents_list_id,CONCAT("http://172.20.50.169/edoc7/gtstoinfor",u.file_name) AS url, u.file_path,"application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id   LEFT JOIN document d ON d.id = dl.document_category_id where dl.customer_po ="'+res.PO+'"';
             const docres = await this.uploadFilesRepository.query(doctlistQuery)
             console.log(docres)
             console.log('#################################')
