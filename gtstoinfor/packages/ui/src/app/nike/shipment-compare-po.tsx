@@ -348,7 +348,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('MM/DD/YYYY')
+            render: (text) => moment(text).format('DD/MM/YYYY')
         },
         {
             title: 'Item',
@@ -398,7 +398,8 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'report_generate_date'
+            dataIndex: 'report_generate_date',
+
         },
         {
             title: 'Item',
@@ -535,7 +536,7 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Report Genarate Date',
-            dataIndex: '',
+            dataIndex: 'created_at',
             // ...getColumnSearchProps('po_number')
         },
         {
@@ -807,7 +808,7 @@ const ShipmentChangesCompareGrid = () => {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <b>GAC Revised PO's : {filteredQtyData?.length} </b>,
+            label: <b  style={{ color: '#B229DE' }}>GAC Revised PO's : {filteredQtyData?.length} </b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }}
             />,
         },
@@ -819,7 +820,7 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             key: '3',
-            label: <b >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
+            label: <b style={{ color: '#29D6DE' }} >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns3} scroll={{ x: 'max-content' }}
             />,
         },
@@ -851,7 +852,7 @@ const ShipmentChangesCompareGrid = () => {
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
-            <Form form={form} layout={"vertical"} >
+            {/* <Form form={form} layout={"vertical"} >
                 <Row gutter={[24, 24]}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
                         <Form.Item name='poandLine' label='Po+Line' >
@@ -885,7 +886,7 @@ const ShipmentChangesCompareGrid = () => {
                             onClick={onReset}>Reset</Button>
                     </Col>
                 </Row>
-            </Form>
+            </Form> */}
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
             </> : <></>}

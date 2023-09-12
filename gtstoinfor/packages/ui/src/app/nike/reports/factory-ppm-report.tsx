@@ -475,7 +475,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'lastModifiedDate',
                 className: "right-column",
                 render: (text, record) => {
-                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-';
+                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('DD/MM/YYYY') : '-';
                 },
             },
             {
@@ -493,7 +493,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'documentDate',
                 className: "right-column",
                 render: (text, record) => {
-                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-';
+                    return record.documentDate ? moment(record.documentDate).format('DD/MM/YYYY') : '-';
                 },
             },
             {

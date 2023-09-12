@@ -340,7 +340,7 @@ const VASChangesCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('DD/MM/YYYY')
         },
         {
             title: 'Item',
@@ -722,7 +722,7 @@ const VASChangesCompareGrid = () => {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <b>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
+            label: <b style={{ color: '#25CB2D' }}>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
@@ -732,7 +732,7 @@ const VASChangesCompareGrid = () => {
         },
         {
             key: '3',
-            label: <b >Inventory Segment Code Revised PO's : {itemChangeData?.length}</b>,
+            label: <b style={{ color: '#65A1FD' }}>Inventory Segment Code Revised PO's : {itemChangeData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns1} />,
         },
         {
@@ -742,7 +742,7 @@ const VASChangesCompareGrid = () => {
         },
         {
             key: '5',
-            label: <b>Destination Country Revised PO's : {poStatusData?.length}</b>,
+            label: <b style={{ color: '#F39292' }}>Destination Country Revised PO's : {poStatusData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns2} />,
         }
     ];
@@ -762,7 +762,7 @@ const VASChangesCompareGrid = () => {
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
-            <Form form={form} layout={"vertical"} >
+            {/* <Form form={form} layout={"vertical"} >
                 <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 4 }} >
                   <Form.Item name='poandLine' label='Po+Line' >
@@ -795,7 +795,7 @@ const VASChangesCompareGrid = () => {
                             onClick={onReset}>Reset</Button>
                     </Col>
                 </Row>
-            </Form>
+            </Form> */}
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
             </> : <></>}

@@ -377,7 +377,7 @@ const PPMReport = () => {
       {
         title: 'Last Modified Date',
         dataIndex: 'lastModifiedDate',
-        render: (text) => moment(text).format('MM/DD/YYYY')
+        render: (text) => moment(text).format('DD/MM/YYYY')
 
       },
       {
@@ -398,7 +398,7 @@ const PPMReport = () => {
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
-        render: (text) => moment(text).format('MM/DD/YYYY')
+        render: (text) => moment(text).format('DD/MM/YYYY')
 
       },
       {
