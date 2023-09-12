@@ -446,12 +446,23 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Old Quantity',
-            dataIndex: 'old_val'
+            dataIndex: 'old_val',
+            align:'right',
         },
+        
         {
             title: 'New Quantity',
-            dataIndex: 'new_val'
-        },
+            dataIndex: 'new_val',
+            align:'right',
+            render: (text, record) => {
+              if (!text || text.trim() === '') {
+                return '-';
+              } else {
+                return text;
+              }
+            },
+          },
+          
         {
             title: 'Difference',
             dataIndex: 'Diff',
@@ -473,26 +484,7 @@ const OrdersCompareGrid = () => {
             dataIndex: 'size_description',
             align: 'center',
         },
-        // {
-        //     title: 'S',
-        //     dataIndex: 's'
-        // },
-        // {
-        //     title: 'M',
-        //     dataIndex: 'm'
-        // },
-        // {
-        //     title: 'L',
-        //     dataIndex: 'l'
-        // },
-        // {
-        //     title: 'XL',
-        //     dataIndex: 'xl'
-        // },
-        // {
-        //     title: 'XXL',
-        //     dataIndex: 'xxl'
-        // },
+        
         {
             title: 'Total Quantity',
             align: 'right',

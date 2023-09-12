@@ -391,6 +391,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
+
             ...getColumnSearchProps('schedule_line_item_number')
         },
         {
@@ -654,18 +655,20 @@ const ShipmentChangesCompareGrid = () => {
             key: 'sno',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1)
         },
+        // {
+        //     title: 'PO Number',
+        //     dataIndex: 'po_number',
+        // },
         {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
+            title: 'PO And Line ',
+            dataIndex: 'po_and_line',align:'center',
+            ...getColumnSearchProps('po_and_line')
+
         },
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
+            align:'center',
             ...getColumnSearchProps('schedule_line_item_number')
         },
         {
@@ -870,7 +873,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             key: '2',
             label: <b>MRGAC Revised PO's : {unitChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} 
+            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} scroll={{ x: 'max-content' }}
              />,
         },
         {

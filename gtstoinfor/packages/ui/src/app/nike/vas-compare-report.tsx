@@ -539,27 +539,32 @@ const VASChangesCompareGrid = () => {
             width: '60px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
+        // {
+        //     title: 'PO Number',
+        //     dataIndex: 'po_number',
+        //     ...getColumnSearchProps('po_number')
+        // },
         {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
+            title: 'PO Line ',
+            dataIndex: 'po_and_line',
+            ...getColumnSearchProps('po_and_line')
+
         },
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
-            ...getColumnSearchProps('schedule_line_item_number')
+            ...getColumnSearchProps('schedule_line_item_number'),
+            align:'center'
         },
         {
             title: 'Previous Line Item Status',
             dataIndex: 'old_val',
+            align:'center'
         },
         {
             title: 'Revised Line Item Status',
             dataIndex: 'new_val',
+            align:'center'
         },
         {
             title: 'Order Quantity Pieces',
@@ -572,11 +577,7 @@ const VASChangesCompareGrid = () => {
             )
 
         },
-        {
-            title: 'Order Status',
-            dataIndex: 'dpom_item_line_status',
-            render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
-        }
+        
     ];
 
     const columns3: any = [
