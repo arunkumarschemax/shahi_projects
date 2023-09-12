@@ -337,7 +337,7 @@ const UploadFileGrid = () =>{
 
                 }
             }));
-            setColumns([...pocolumn,...headerColumns,...downloadcomun]);
+            setColumns([...pocolumn,...headerColumns]);
         }
         else{
         }

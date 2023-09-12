@@ -79,23 +79,17 @@ export class OrdersService {
             let orderDetails:OrdersEntity[] = [];
             for (const data of convertedData) {
                 let dtoData:SaveOrderDto;
-                if(data.challa_no != null && data.invoice_no != null && data.po_no != null){
+                console.log(data)
+                if(data.challa_no != null && data.invoice_no != null && data.po_no != null)
+                {
                     dtoData = new SaveOrderDto(data.id, data.buyer, data.challa_no, data.invoice_no, data.style, data.po_no, data.date, data.dest, data.tc_status, data.ship_qty, data.ctns, data.created_user, data.updated_user, data.created_at, data.updated_at, 1, id)
-
+                    console.log(dtoData)
                     dtoData.version = 1
 
                     let checkChallanExist = await transactionManager.getRepository(OrdersEntity).findOne({where:{
                         invoiceNo:dtoData.invoiceNo, poNo:dtoData.poNo, challanNo:dtoData.challanNo, dest:dtoData.dest
                     }})
-                    console.log(checkChallanExist,'checkChallanExist')
-                    if(checkChallanExist != null ){
-                        
-                        flag.add(false)
-                        // await transactionManager.releaseTransaction();
-                        continue
-                        // break;
-                    }
-                    else{
+                  if(!checkChallanExist){
                         const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
                         const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
                       

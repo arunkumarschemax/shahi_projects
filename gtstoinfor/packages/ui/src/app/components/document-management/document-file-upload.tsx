@@ -316,9 +316,9 @@ export default function DocumentListupload() {
       const mergedPdf = await PDFDocument.create();
   
       // Add the pages from the initial PDF
-      const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
-      const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
-      initialPages.forEach((page) => mergedPdf.addPage(page));
+      // const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
+      // const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
+      // initialPages.forEach((page) => mergedPdf.addPage(page));
   
       // Loop through each PDF and add its pages to the merged PDF
       for (const pdfBytes of pdfBytesArray) {
