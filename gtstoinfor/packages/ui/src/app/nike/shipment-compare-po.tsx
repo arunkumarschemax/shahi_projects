@@ -356,7 +356,7 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Unit',
-            dataIndex: 'unit'
+            dataIndex: 'factory'
         },
         {
             title: 'PO Number',
@@ -377,11 +377,14 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Change from GAC',
-            dataIndex: 'change_from_gac'
+            dataIndex: 'old_val',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+
         },
         {
             title: 'Change to GAC',
-            dataIndex: 'change_to_gac'
+            dataIndex: 'new_val',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'RC Code',
@@ -615,12 +618,13 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'Previous MRGAC',
             dataIndex: 'old_val',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Revised MRGAC',
             dataIndex: 'new_val',
-            // width :'190px',
-        },
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        }
     ];
     const columns5: any = [
         {
