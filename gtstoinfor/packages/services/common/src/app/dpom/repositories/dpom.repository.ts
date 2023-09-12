@@ -412,7 +412,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
-    ///--------------------------------------------------------------------------------------------------------------------------->factory
+    ///-------------------------------------------------------------------->factory
     async getFactoryPpmData(req: PpmDateFilterRequest): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(`dpom.*, od.display_name AS displayName `)

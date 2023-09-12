@@ -185,8 +185,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
                 }
             })
         } else {
-            console.log(poPdfData)
-            nikeDpomService.saveDIAPDFData(poPdfData).then((res) => {
+            nikeDpomService.saveLegalPOPDFData(poPdfData).then((res) => {
                 if (res.status) {
                     onReset()
                     alert(res.internalMessage)

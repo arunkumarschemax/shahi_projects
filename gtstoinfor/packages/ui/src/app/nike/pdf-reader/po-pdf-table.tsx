@@ -17,16 +17,16 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
         if (props.data) {
             setPdfData(props.data)
         }
-
     }, [props.data])
+
     useEffect(() => {
-        if (state.data) {
+        if (state?.data) {
             const parsedData = JSON.parse(state.data)
             console.log(parsedData)
             setPdfData(parsedData)
             // setUpdateKey(prevState => prevState+1)
         }
-    }, [state.data])
+    }, [state?.data])
 
     return (
         <Card>

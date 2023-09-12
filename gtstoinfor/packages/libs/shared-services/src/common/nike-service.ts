@@ -27,6 +27,10 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/saveDIAPDFData", req)
     }
 
+    async createCOline(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/createCOline", req)
+    }
+
     async updateFileStatus(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/updateFileStatus", req)
     }

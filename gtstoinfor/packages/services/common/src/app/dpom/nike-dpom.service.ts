@@ -208,9 +208,12 @@ export class DpomService {
 
     async createCOline(req: any): Promise<CommonResponseModel> {
         try {
-            req.styleNumber = 'FN389'
+            req.purchaseOrderNumber = 3504865987
+            req.poLineItemNumber = 10000
+            req.scheduleLineItemNumber = 100
+            const styleNumber = 'FN389'
             const m3Config = appConfig.m3Cred.headerRequest()
-            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.poNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${req.styleNumber}`;
+            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.purchaseOrderNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${styleNumber}`;
             const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
             console.log(response, 'response')
             console.log(response.data?.MIRecord, 'MIRecord')
@@ -222,6 +225,7 @@ export class DpomService {
             // const myObj = construnctDataFromM3Result(meToCustomObj, response.data.MIRecord)
             if (response.status !== 200)
                 return new CommonResponseModel(false, 1, `Validation failed as`)
+            await this.approveDpomLineItemStatus(req);
             return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {
             console.log(err)
@@ -424,13 +428,14 @@ export class DpomService {
     async saveLegalPOPDFData(req: any): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
-            console.log(req)
             await transactionManager.startTransaction()
             const orderDetails = await this.dpomRepository.find({ where: { purchaseOrderNumber: req.poNumber } })
             if (orderDetails) {
                 for (const item of req.poItemDetails) {
+                    console.log('BBBBBBBBB')
                     const itemText = item.itemVasText ? item.itemVasText : null;
                     const matches = [];
+                    let hanger = '-';
                     if (itemText != null) {
                         const pattern = /diverted to.*?Purchase Order (\d+ \/ \d+)/g;
 
@@ -440,17 +445,26 @@ export class DpomService {
                                 matches.push(match[1]);
                             }
                         }
+
+                        const searchText = "HANGING IS REQUIRED";
+                        if (itemText.includes(searchText)) {
+                            hanger = 'YES'
+                        } else {
+                            hanger = 'NO';
+                        }
                     }
-                    const searchText = "HANGING IS REQUIRED";
-                    let hanger: string;
-                    if (itemText.includes(searchText)) {
-                        hanger = 'YES'
-                    } else {
-                        hanger = 'NO';
-                    }
+
+                    const regex = /(\d+\.\d+)/; // This regex matches a number with decimal places
+                    let price
                     for (const size of item.poItemVariantDetails) {
+                        console.log(item.poItemVariantDetails)
+                        const match = size.unitPrice.match(regex);
+
+                        if (match && match.length > 1) {
+                            price = match[1];
+                        }
                         const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: req.poNumber, poLineItemNumber: parseInt(item.itemNo, 10), sizeDescription: size.size }, {
-                            shipToAddressLegalPO: item.shipToAddress, quantity: size.qunatity, price: size.unitPrice, itemVasPDF: req.itemVasText, divertedToPos: matches.join(',')
+                            shipToAddressLegalPO: item.shipToAddress, quantity: Number(size.qunatity), price: price, itemVasPDF: req.itemVasText, divertedToPos: matches.join(',')
                         })
                         if (!updateOrder.affected) {
                             await transactionManager.releaseTransaction();
@@ -1367,7 +1381,7 @@ export class DpomService {
 
         let query = `SELECT DISTINCT d.po_number as poNumber,d.po_and_line as poAndLine,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
-        WHERE f.shahi_confirmed_gross_price IS NOT NULL `;
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL GROUP BY d.po_number, d.size_description `;
 
         if (req.poAndLine) {
             conditions.push(`d.po_and_line = ?`);
