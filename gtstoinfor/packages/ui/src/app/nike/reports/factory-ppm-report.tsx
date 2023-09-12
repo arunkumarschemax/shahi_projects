@@ -601,6 +601,13 @@ const FactoryPPMReport = () => {
             {
                 title: 'Trading Co PO Number',
                 dataIndex: 'tradingCoPoNumber',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                      return '-';
+                    } else {
+                      return text;
+                    }
+                  },
             },
             {
                 title: 'UPC',
@@ -651,12 +658,24 @@ const FactoryPPMReport = () => {
             { title: 'Truck Out Date', dataIndex: 'truckOutDate',className:"right-column", },
             { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate',className:"right-column", },
             { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate',className:"right-column", },
-            { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
+            { title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              }, },
             { title: 'GAC Reason Description', dataIndex: ' ' },
             { title: 'Shipping Type', dataIndex: 'shippingType' },
             { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode',className: 'centered-column',  },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
-            { title: 'Launch Code', dataIndex: 'launchCode' },
+            { title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              }, },
             { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
             { title: 'In Co Terms', dataIndex: 'inCoTerms' },
             { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
@@ -664,7 +683,13 @@ const FactoryPPMReport = () => {
              dataIndex: 'purchaseGroupCode',
             className: 'centered-column',  },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
-            { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
+            { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              }, },
             { title: 'VAS-Size', dataIndex: 'VASSize' },
             { title: 'Item Vas Text', dataIndex: 'itemVasText' },
             { title: 'Item Text', dataIndex: 'itemText' },
@@ -672,6 +697,13 @@ const FactoryPPMReport = () => {
                 title: 'Change Register',
                 dataIndex: 'displayName',
                 align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                      return '-';
+                    } else {
+                      return text;
+                    }
+                  },
             },
 
             {
