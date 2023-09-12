@@ -237,7 +237,7 @@ export function UploadDocumentForm() {
 
 
   const handleAddToTable = () => {
-    if (!HSN || !Taxtype || !Taxamount || !Charge) {
+    if (!HSN || !Taxtype || !Taxamount || !Charge || !unitprice || !unitquantity || !quotation) {
       message.error("Please fill all fields.");
       return;
     }
@@ -248,6 +248,9 @@ export function UploadDocumentForm() {
       Taxtype,
       Taxamount,
       Charge,
+      unitprice,
+      unitquantity,
+      quotation
     };
 
     if (isEditing) {
@@ -266,6 +269,10 @@ export function UploadDocumentForm() {
     setTaxtype("");
     setTaxamount("");
     setCharge("");
+    setUnitprice("");
+    setUnitquantity("");
+    setQuotation("");
+  
   };
 
   const handleEdit = (item) => {
@@ -283,6 +290,12 @@ export function UploadDocumentForm() {
     } else {
       setTaxamount(item.Taxamount);
       setCharge(item.Charge);
+      setUnitprice(item.unitprice);
+
+      setUnitquantity(item.unitquantity);
+
+      setQuotation(item.quotation);
+
     }
 
     setIsEditing(true);
@@ -302,6 +315,9 @@ export function UploadDocumentForm() {
     setTaxtype("");
     setTaxamount("");
     setCharge("");
+    setUnitprice("");
+    setUnitquantity("");
+    setQuotation("");
 
     setIsEditing(false);
     setEditingItem(null);
