@@ -420,16 +420,19 @@ export class OrdersService {
         let urls:any[] = [];
         let docinfo: any[] = [];
         for (const res of data){
-            const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("https://edoc-backend.shahiapps.in/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where u.document_list_id ='+res.docListId;
+            // console.log(res)
+            const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("https://edoc-backend.shahiapps.in/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po ="'+res.PO+'"';
             const docres = await this.uploadFilesRepository.query(doctlistQuery)
+            console.log(docres)
+            console.log('#################################')
 
             const docReq:docRequest[] =[];
             for(const res of docres){
-                console.log(res);
+                // console.log(res);
                 urls.push(res.url);
                 let data = new docRequest(res.uid,res.name,res.status,res.type,res.url,res.documentName);
-                console.log(data);
-                console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                // console.log(data);
+                // console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
                 docReq.push(data);
             }

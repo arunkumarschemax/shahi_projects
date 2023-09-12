@@ -29,14 +29,23 @@ export const LoginComponent = () => {
             }
             return true;
         } catch (error: any) {
+
             notification.config({ maxCount: 3, duration: 3, placement: 'top' });
             notification.destroy();
             notification.error(
                 {
-                    message: 'Error',
+                    message: 'Login Failed',
                     description: error.message,
                 }
-            );
+            );
+            // notification.config({ maxCount: 3, duration: 3, placement: 'top' });
+            // notification.destroy();
+            // notification.error(
+            //     {
+            //         message: 'Error',
+            //         description: error.message,
+            //     }
+            // );
             return false;
         }
     };

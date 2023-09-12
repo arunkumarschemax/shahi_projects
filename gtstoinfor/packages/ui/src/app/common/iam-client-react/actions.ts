@@ -42,9 +42,21 @@ export const loginUser = async (dispatch: React.Dispatch<IAMClientAuthActions>, 
             throw Error(res.internalMessage);
         }
     } catch (error: any) {
-        const errorMessage: any = { errorMessage: error.message };
+        let errorMessageText = ``
+        if (error.response.status === 401) {
+            errorMessageText = `Invalid username or password. Please try again later.`;
+        } else if (error.response.status === 404) {
+            errorMessageText = `The requested resource was not found on the server.`;
+        } else {
+            errorMessageText = `An error occurred during login. Please try again later.`;
+        }
+        const errorMessage: any = { errorMessage: errorMessageText };
         dispatch({ type: ActionTypes.LOGIN_ERROR, payload: errorMessage });
-        throw Error(error.message);
+        throw Error(errorMessageText);
+
+        // const errorMessage: any = { errorMessage: error.message };
+        // dispatch({ type: ActionTypes.LOGIN_ERROR, payload: errorMessage });
+        // throw Error(error.message);
     }
 }
 
