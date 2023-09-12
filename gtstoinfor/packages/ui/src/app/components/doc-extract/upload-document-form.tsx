@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, Spin, message, Button, Input, Row, Form, Col, Typography, UploadProps, Upload, Radio, Table, Divider, DatePicker } from "antd";
 import Tesseract from "tesseract.js";
 // import { useNavigate, useLocation } from "react-router-dom";
@@ -9,7 +9,7 @@ import Tesseract from "tesseract.js";
 // import DocumentItemForm from "./document-item-form";
 import Card from "antd/es/card/Card";
 import { CalendarOutlined, UploadOutlined } from "@ant-design/icons";
-import { SharedService } from "@project-management-system/shared-services";
+import { SharedService, VendorService } from "@project-management-system/shared-services";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
 import { useNavigate } from "react-router-dom";
@@ -43,9 +43,9 @@ export function UploadDocumentForm() {
   const [Taxamount, setTaxamount] = useState("");
   const[Taxpercentage,setTaxPercentage]=useState("");
   const [Charge, setCharge] = useState("");
-  const[unitprice, setUnitprice]=useState("");
-  const[unitquantity, setUnitquantity]=useState("");
-  const[quotation,setQuotation]=useState("");
+  const [unitprice, setUnitprice] = useState("");
+  const [unitquantity, setUnitquantity] = useState("");
+  const [quotation, setQuotation] = useState("");
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [zoomFactor, setZoomFactor] = useState(1);
@@ -81,7 +81,43 @@ export function UploadDocumentForm() {
   const [dt, setDt] = useState("");
   const [Innvoicecurrency, setInnvoicecurrency] = useState("");
 
+
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+
+
+
+
+
+  const [data1 , setData1]=useState<any[]>([]);
+
+  const servicess=new VendorService();
+  
+  
+    useEffect(() => {
+  
+      getdata1();
+    }, []);
+  
+  
+    const getdata1 = () => {
+      servicess.getAllVendors().then(res => {
+        if (res.status) {
+          setData1(res.data)
+        } else {
+          setData1([])
+        }
+      }).catch(err => {
+        console.log(err.message)
+      })
+     
+  
+    }
+
+
+
+
+
+
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -604,22 +640,22 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    // const req = new AllScanDto(gstNumbers,vendor,invoiceDate ,Innvoiceamount,Innvoicecurrency,Innvoicenum,Cgst,Igst,Sgst,Routing,Financialyear,Timecreated,Comment)
-    const req: any = {
-      GST: gstNumbers,
-      invoiceDate: invoiceDate,
-      InnvoiceAmount: Innvoiceamount,
-      InnvoiceCurrency: Innvoicecurrency,
-      InnvoiceNumber: Innvoicenum,
-      Cgst: Cgst,
-      IGST: Igst,
-      Sgst: Sgst,
-      Vendor: vendor,
-      Routing: routing,
-      Comment: comment,
-      Financialyear: financialyear,
-      Timecreated: timecreated
-    }
+    const req = new AllScanDto(gstNumbers,vendor,invoiceDate,Cgst,Igst,Sgst,Innvoicenum,Innvoiceamount,Innvoicecurrency,routing,comment,timecreated,financialyear,JSON.parse(localStorage.getItem('currentUser')).user.userName)
+    // const req: any = {
+    //   GST: gstNumbers,
+    //   invoiceDate: invoiceDate,
+    //   InnvoiceAmount: Innvoiceamount,
+    //   InnvoiceCurrency: Innvoicecurrency,
+    //   InnvoiceNumber: Innvoicenum,
+    //   Cgst: Cgst,
+    //   IGST: Igst,
+    //   Sgst: Sgst,
+    //   Vendor: vendor,
+    //   Routing: routing,
+    //   Comment: comment,
+    //   Financialyear: financialyear,
+    //   Timecreated: timecreated
+    // }
 
     console.log(req, "submit")
     service
@@ -789,17 +825,17 @@ export function UploadDocumentForm() {
                 <Col span={8}>
                   <label htmlFor="Vendor" style={{ color: 'black', fontWeight: 'bold' }}>Vendor Name</label>
                   <Select
-                    title="Vendor"
                     id="Vendor"
-                    style={{ width: "190px", }}
+                    style={{ width: "150px" }}
                     value={vendor}
                     onChange={(value) => setVendor(value)}
                     defaultValue="option1"
-
                   >
-                    <Select.Option value="EXPO FREIGHT PVT LTD">EXPO FREIGHT PVT LTD</Select.Option>
-                    <Select.Option value="API LOGISTICS PVT LTD">API LOGISTICS PVT LTD</Select.Option>
-                    <Select.Option value="INDIA PVT LTD">INDIA PVT LTD</Select.Option>
+                    {data1.map((option) => (
+                      <option value={option.businessName}>
+                        {option.businessName}
+                      </option>
+                    ))}
                   </Select>
                 </Col>
                 <Col span={6}>
@@ -987,10 +1023,10 @@ export function UploadDocumentForm() {
               </Button>
 
             </Form.Item>
-         
 
-        {/* <div style={{ display: 'flex', flexDirection: 'column', }}> */}
-          {/* <Card title="HSN Details"
+
+            {/* <div style={{ display: 'flex', flexDirection: 'column', }}> */}
+            {/* <Card title="HSN Details"
             headStyle={{ backgroundColor: '#77dfec', border: 0 }}
             bordered={true} style={{ flex: 1, position: "relative", left: "733px", bottom: "812px" }} > */}
             <Form layout='vertical' >
@@ -1094,13 +1130,13 @@ export function UploadDocumentForm() {
             >
               Go to Database
             </Button> */}
-          {/* </Card> */}
-        {/* </div> */}
+            {/* </Card> */}
+            {/* </div> */}
 
-        </Card>
+          </Card>
         </div>
       </Form>
-      
+
     </div>
 
   );
