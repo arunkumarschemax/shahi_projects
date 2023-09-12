@@ -73,7 +73,7 @@ export const CommonHeader = (props: IProps) => {
       <Row justify='space-between' align='middle'>
         <Col span={4}>
           <div className="logo" >
-            <span style={{ color: colorPrimary }}>{'SHAHI'}</span>
+            <span style={{ color: colorPrimary, fontSize: 50 }}><b>{'SHAHI'}</b></span>
           </div>
         </Col>
         <Col span={1} >
@@ -86,11 +86,12 @@ export const CommonHeader = (props: IProps) => {
         </Col>
         <Col span={4}></Col>
         <Col span={6}>
+          <span style={{ alignSelf: 'center', fontSize: 24, color: 'darkblue' }}><b>{'NIKE ORDERS MANGEMENT'}</b></span>
           {/* <Select  onSelect={(e) => {navigate('/'+e)}} className='header-search' showSearch  allowClear style={{width:'100%',marginBottom:'60px'}}  placeholder='search for forms and views' options={options} suffixIcon={<SearchOutlined style={{color:colorPrimary}}/>} /> */}
         </Col>
         <Col span={7} style={{ textAlign: 'right' }}>
           <Dropdown menu={{ items }}>
-            <Avatar style={{ marginBottom: '5px', cursor:'pointer' }} size={45} shape="circle" icon={<UserOutlined style={{ fontSize: '25px' }} />} />
+            <Avatar style={{ marginBottom: '5px', cursor: 'pointer' }} size={45} shape="circle" icon={<UserOutlined style={{ fontSize: '25px' }} />} />
           </Dropdown>
         </Col>
         <Col></Col>

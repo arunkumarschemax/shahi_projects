@@ -473,7 +473,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Last Modified Date',
                 dataIndex: 'lastModifiedDate',
-                className:"right-column",
+                className: "right-column",
                 render: (text, record) => {
                     return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-';
                 },
@@ -491,7 +491,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Document Date',
                 dataIndex: 'documentDate',
-                className:"right-column",
+                className: "right-column",
                 render: (text, record) => {
                     return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-';
                 },
@@ -503,7 +503,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'PO Line Item Number',
                 dataIndex: 'poLineItemNumber',
-                className: 'centered-column', 
+                className: 'centered-column',
             },
             {
                 title: 'DPOM Line Item Status',
@@ -530,7 +530,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'CO Final Approval Date',
                 dataIndex: 'coFinalApprovalDate',
-                className:"right-column",
+                className: "right-column",
                 render: (text, record) => {
                     return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
                 }
@@ -575,7 +575,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Gender Age',
                 dataIndex: 'genderAgeCode',
-                className: 'centered-column', 
+                className: 'centered-column',
             },
             {
                 title: 'Gender Age Description',
@@ -603,11 +603,11 @@ const FactoryPPMReport = () => {
                 dataIndex: 'tradingCoPoNumber',
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
-                      return '-';
+                        return '-';
                     } else {
-                      return text;
+                        return text;
                     }
-                  },
+                },
             },
             {
                 title: 'UPC',
@@ -639,7 +639,7 @@ const FactoryPPMReport = () => {
                 title: 'Planning Season Code',
                 dataIndex: 'planningSeasonCode',
                 align: 'center',
-                className: 'centered-column', 
+                className: 'centered-column',
             },
             {
                 title: 'Planning Season Year',
@@ -652,44 +652,52 @@ const FactoryPPMReport = () => {
                 align: 'center',
             },
             { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center' },
-            { title: 'MRGAC', dataIndex: 'MRGAC',className:"right-column", },
-            { title: 'OGAC', dataIndex: 'OGAC',className:"right-column", },
-            { title: 'GAC', dataIndex: 'GAC',className:"right-column", },
-            { title: 'Truck Out Date', dataIndex: 'truckOutDate',className:"right-column", },
-            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate',className:"right-column", },
-            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate',className:"right-column", },
-            { title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
-                if (!text || text.trim() === '') {
-                  return '-';
-                } else {
-                  return text;
-                }
-              }, },
+            { title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column", },
+            { title: 'OGAC', dataIndex: 'OGAC', className: "right-column", },
+            { title: 'GAC', dataIndex: 'GAC', className: "right-column", },
+            { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", },
+            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", },
+            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", },
+            {
+                title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
             { title: 'GAC Reason Description', dataIndex: ' ' },
             { title: 'Shipping Type', dataIndex: 'shippingType' },
-            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode',className: 'centered-column',  },
+            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
-            { title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
-                if (!text || text.trim() === '') {
-                  return '-';
-                } else {
-                  return text;
-                }
-              }, },
+            {
+                title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
             { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
             { title: 'In Co Terms', dataIndex: 'inCoTerms' },
             { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
-            { title: 'Purchase Group',
-             dataIndex: 'purchaseGroupCode',
-            className: 'centered-column',  },
+            {
+                title: 'Purchase Group',
+                dataIndex: 'purchaseGroupCode',
+                className: 'centered-column',
+            },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
-            { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', render: (text, record) => {
-                if (!text || text.trim() === '') {
-                  return '-';
-                } else {
-                  return text;
-                }
-              }, },
+            {
+                title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
             { title: 'VAS-Size', dataIndex: 'VASSize' },
             { title: 'Item Vas Text', dataIndex: 'itemVasText' },
             { title: 'Item Text', dataIndex: 'itemText' },
@@ -699,11 +707,11 @@ const FactoryPPMReport = () => {
                 align: 'center',
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
-                      return '-';
+                        return '-';
                     } else {
-                      return text;
+                        return text;
                     }
-                  },
+                },
             },
 
             {
@@ -814,7 +822,7 @@ const FactoryPPMReport = () => {
                 title: 'Total Item Qty',
                 dataIndex: 'totalItemQty',
                 align: 'center',
-                className: 'centered-column', 
+                className: 'centered-column',
                 render: (text) => <strong>{text}</strong>
             }
         ];
@@ -831,7 +839,7 @@ const FactoryPPMReport = () => {
                         title: 'Quantity',
                         dataIndex: '',
                         key: '',
-                        className: 'centered-column', 
+                        className: 'centered-column',
                         render: (text, record) => {
                             const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
                             if (sizeData) {
@@ -1100,10 +1108,10 @@ const FactoryPPMReport = () => {
                         <Card title={'Total order Qty : ' + count} style={{ textAlign: 'left', width: 250, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Total Shipped : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 45 }}></Card>
+                        <Card title={'Total Shipped : ' + '0'} style={{ textAlign: 'left', width: 180, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Balance to ship : ' + factory.length} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
+                        <Card title={'Balance to ship : ' + '0'} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
                     </Col>
                 </Row><br></br>
 
