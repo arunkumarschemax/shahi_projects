@@ -311,6 +311,8 @@ export function UploadDocumentForm() {
 
   };
 
+  console.log(extractedData,"extracted data");
+  
   const handleEdit = (item) => {
     setHSN(item.HSN);
     setDescription(item.description);
@@ -402,11 +404,12 @@ export function UploadDocumentForm() {
       title: 'Charge Amount',
       dataIndex: 'Charge',
       key: 'Charge',
-      render: (Charge, record) => {
+      render: (Charge, record,index) => {
         if (record.Taxamount && record.Taxamount.percentage !== undefined && record.Taxamount.amount !== undefined) {
           const percentage = record.Taxamount.percentage;
           const amount = record.Taxamount.amount;
           const equivalentFor100Percent = (amount * 100) / percentage;
+          // extractedData[index].Charge = String(equivalentFor100Percent)
           return ` ${equivalentFor100Percent.toFixed(2)}`;
         }
         return ` ${Charge}` || '0';

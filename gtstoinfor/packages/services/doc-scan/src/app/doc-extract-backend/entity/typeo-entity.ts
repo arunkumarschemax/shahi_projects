@@ -1,4 +1,5 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
+import { HSNEntity } from './hsn-entity';
 @Entity('Innvoice')
 export class ScanEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
@@ -109,9 +110,6 @@ export class ScanEntity extends BaseEntity {
   })
   Timecreated: string;
 
-
-
-
   @CreateDateColumn({
     name: "created_at",
     type: "datetime"
@@ -146,6 +144,9 @@ export class ScanEntity extends BaseEntity {
     default:1
   })
   versionFlag: number;
+
+  @OneToMany(()=>HSNEntity,SCAN=>SCAN.data,{cascade:true})
+  scanentity:HSNEntity
 
 
 

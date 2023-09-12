@@ -1,11 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 export class ScanDto {
-
- 
   @ApiProperty()
   GST: string;
 
-   @ApiProperty()
+  @ApiProperty()
   Vendor: string;
 
   @ApiProperty()
@@ -14,14 +12,13 @@ export class ScanDto {
   @ApiProperty()
   Cgst: string;
 
-
   @ApiProperty()
   IGST: string;
 
   @ApiProperty()
   Sgst: string;
 
-   @ApiProperty()
+  @ApiProperty()
   InnvoiceNumber: string;
 
   @ApiProperty()
@@ -33,8 +30,8 @@ export class ScanDto {
   @ApiProperty()
   Routing: string;
 
-   @ApiProperty()
-   Comment: string;
+  @ApiProperty()
+  Comment: string;
 
   @ApiProperty()
   Financialyear: string;
@@ -42,21 +39,18 @@ export class ScanDto {
   @ApiProperty()
   Timecreated: string;
 
+  @ApiProperty()
+  createdAt: Date;
 
+  @ApiProperty()
+  createdUser: string;
 
-@ApiProperty()
-createdAt:Date;
+  @ApiProperty()
+  updatedAt: Date;
 
-@ApiProperty()
-createdUser:string;
+  @ApiProperty()
+  updatedUser: string;
 
-@ApiProperty()
-updatedAt:Date;
-
-@ApiProperty()
-updatedUser:string
-
-
-@ApiProperty()
-versionFlag:number;
+  @ApiProperty()
+  versionFlag: number;
 }
