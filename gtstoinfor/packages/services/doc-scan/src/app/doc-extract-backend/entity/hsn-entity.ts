@@ -1,112 +1,112 @@
-import { Column, CreateDateColumn,ManyToOne, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn, JoinColumn } from 'typeorm';
-import { ScanEntity } from './typeo-entity';
-@Entity('InVoiceItems')
+import {
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  VersionColumn,
+  JoinColumn,
+} from "typeorm";
+import { ScanEntity } from "./typeo-entity";
+import { StatusEnum } from "../../../../../../libs/shared-models/src/common/enum/status.enum";
+
+@Entity("InVoiceItems")
 export class HSNEntity {
-  @PrimaryGeneratedColumn('increment', {
-    name: 'hsn_id',
+  @PrimaryGeneratedColumn("increment", {
+    name: "hsn_id",
   })
   HsnId: number;
 
-  @Column('varchar', {
-    
+  @Column("varchar", {
     length: 50,
-    name: 'hsn_code',
+    name: "hsn_code",
   })
   HSN: string;
 
-  @Column('varchar', {
-  
+  @Column("varchar", {
     length: 50,
-    name: 'tax_type',
+    name: "tax_type",
   })
-  TaxType: string;
+  Taxtype: string;
 
-  
-  @Column('varchar', {
-   
+  @Column("varchar", {
     length: 50,
-    name: 'tax_amount',
+    name: "tax_amount",
   })
-  TaxAmount: string;
+  Taxamount: string;
 
-  
-  @Column('varchar', {
-    
+  @Column("varchar", {
     length: 50,
-    name: 'charge',
+    name: "tax_percentage",
+  })
+  Taxpercentage: string;
+
+  @Column("varchar", {
+    length: 50,
+    name: "charge",
   })
   Charge: string;
 
-
-  @Column('varchar', {
-    
+  @Column("varchar", {
     length: 50,
-    name: 'unit_quantity',
+    name: "unit_quantity",
   })
-  UnitQuantity: string;
+  unitquantity: string;
 
+  // @Column("varchar", {
+  //   length: 50,
+  //   name: "unit_price",
+  // })
+  // UnitPrice: string;
 
-  @Column('varchar', {
-    
+  @Column("varchar", {
     length: 50,
-    name: 'unit_price',
+    name: "quotation",
   })
-  UnitPrice: string;
+  quotation: string;
 
-
-  @Column('varchar', {
-    
+  @Column("varchar", {
     length: 50,
-    name: 'charges',
+    name: "variance",
   })
-  Charges: string;
+  variance: string;
 
-
-  @Column('varchar', {
-    
-    length: 50,
-    name: 'quotation',
+  @Column("enum", {
+    name: "variance_status",
+    enum: StatusEnum,
   })
-  Quotation: string;
-
+  VarianceStatus: StatusEnum;
 
   @CreateDateColumn({
-    name: 'created_at'
-})
-createdAt: string;
+    name: "created_at",
+  })
+  createdAt: string;
 
-
-@Column('varchar', {
+  @Column("varchar", {
     length: 40,
-    name: 'created_user'
-})
-createdUser: string 
+    name: "created_user",
+  })
+  createdUser: string;
 
+  @UpdateDateColumn({
+    name: "updated_at",
+  })
+  updatedAt: string;
 
-@UpdateDateColumn({
-    name: 'updated_at'
-})
-updatedAt: string;
-
-
-@Column('varchar', {
+  @Column("varchar", {
     length: 40,
-    name: 'updated_user'
-})
-updatedUser: string 
+    name: "updated_user",
+  })
+  updatedUser: string;
 
-
-@VersionColumn({
+  @VersionColumn({
     default: 1,
-    name: 'version_flag'
-})
-versionFlag: number;
+    name: "version_flag",
+  })
+  versionFlag: number;
 
-
-@ManyToOne(type=>ScanEntity,HSN=>HSN.scanentity,{nullable:false})
-@JoinColumn({name:'id'})
-data:ScanEntity
-
-
-
+  @ManyToOne((type) => ScanEntity, (HSN) => HSN.scanentity, { nullable: false })
+  @JoinColumn({ name: "id" })
+  data: ScanEntity;
 }

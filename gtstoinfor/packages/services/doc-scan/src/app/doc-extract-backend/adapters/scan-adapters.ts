@@ -20,7 +20,6 @@ export class ScanAdapter {
         dto. Financialyear=entity.Financialyear;
         dto. Timecreated=entity.Timecreated;
         dto.createdUser=entity.createdUser;
-        dto.updatedUser=entity.updatedUser;
         
         
         return dto;
@@ -42,7 +41,6 @@ export class ScanAdapter {
         entity. Financialyear=dto.Financialyear;
         entity. Timecreated=dto.Timecreated;
         entity.createdUser=dto.createdUser;
-        entity.updatedUser=dto.updatedUser;
        
 
 

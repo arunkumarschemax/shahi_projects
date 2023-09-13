@@ -401,6 +401,7 @@ export function UploadDocumentForm() {
       title: 'Unit Quantity',
       dataIndex: 'unitquantity',
       key: 'unitquantity',
+      
     },
     {
       title: 'Unit Price',
@@ -411,6 +412,7 @@ export function UploadDocumentForm() {
       title: 'Quotation',
       dataIndex: 'quotation',
       key: 'quotation',
+      
     },
     {
       title: 'Action',
