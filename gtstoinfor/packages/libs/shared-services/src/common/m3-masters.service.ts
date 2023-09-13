@@ -5,6 +5,7 @@ export class M3MastersService extends CommonAxiosService{
     URL = "/m3-masters";
 
   async create(req: M3MastersReq): Promise<M3MastersResponseModel> {
+    console.log(req,'///////////')
     return this.axiosPostCall(this.URL + "/create",req)
   }
 

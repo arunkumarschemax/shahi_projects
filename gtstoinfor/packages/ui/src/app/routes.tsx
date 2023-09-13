@@ -129,11 +129,14 @@ import SourcingRequisitionReport from "./sourcing-requisition/sourcing-requisiti
 import MarketingReqReport from "./marketing-requisition/marketing-report"
 import SourcingRequisitionDynamicForm from "./sourcing-requisition/sourcing-requisition-dynamic-form"
 import SourcingRequisitionDynamicView from "./sourcing-requisition/sourcing-requisition-dynamic-view"
-import StoreIssuesView from "./sample-development/store-issues-view"
-import SourceIssuesDetailView from "./sample-development/store-issues-detail-view"
+import StoreIssue, { SampleRequests } from "./sample-development/source-issue"
+import StoreIssueDetailed, { SourceIssueDetailed } from "./sample-development/source-issue-detailed-view"
+import SourceIssuesDetailView from "./sample-development/source-issues-detail-view"
 import M3Masters from "./m3Masters/m3-masters"
 import M3MastersView from "./m3Masters/m3-masters-view"
 import { StockView } from "./sourcing-requisition/stock-view"
+import SourceIssue from "./sample-development/source-issue"
+import SourceIssuesView from "./sample-development/source-issues-view"
 
 
 export const AppRoutes = () => {
@@ -487,10 +490,15 @@ export const AppRoutes = () => {
                     <Route path="sample-development-form" element={<SampleDevForm />}/>
                     <Route path="sample-development-view" element={<SampleDevView />}/>
                     <Route path="sample-development-detail" element={<SampleDevDetail />}/>
+                    <Route path="sample-requests" element={<SampleRequests/>}/>
+                    <Route path="source-issue-detail" element={<SourceIssueDetailed/>}/>
+                    <Route path="source-issues-view" element={<StoreIssue />}/>
+                    <Route path="source-issues-detail-view" element={<SourceIssuesDetailView />}/>
+                
                 </Route>
 
                 <Route path='source-issues'>
-                <Route path="source-issues-view" element={<StoreIssuesView />}/>
+                <Route path="source-issues-view" element={<SourceIssuesView />}/>
                     <Route path="source-issues-detail-view" element={<SourceIssuesDetailView />}/>
 
                 </Route>
@@ -522,7 +530,10 @@ export const AppRoutes = () => {
                     <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
                     <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
                     <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
-                    <Route path='/m3-masters' element={<M3Masters/>}/>
+                    <Route path='/m3-masters' element={<M3Masters
+                        isUpdate={false}
+                        closeForm={() => { } }
+                        updateDetails={(undefined) => { } } m3MasterData={undefined}/>}/>
                     <Route path='/m3-masters-view' element={<M3MastersView/>}/>
 
 

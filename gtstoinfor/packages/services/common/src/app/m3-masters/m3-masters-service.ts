@@ -14,6 +14,7 @@ export class M3MastersService{
 
     async create(req:M3MastersReq,isUpdate:boolean):Promise<M3MastersResponseModel>{
         try{
+            console.log(req,'backend---------')
             const entity = new M3MastersEntity()
             entity.category = req.category;
             entity.m3Code = req.m3Code;
