@@ -21,7 +21,6 @@ export class ScanAdapter {
         dto. Timecreated=entity.Timecreated;
         dto. buyerCode=entity.buyerCode;
         dto.createdUser=entity.createdUser;
-        dto.updatedUser=entity.updatedUser;
         
         
         return dto;
@@ -44,7 +43,6 @@ export class ScanAdapter {
         entity. Timecreated=dto.Timecreated;
         entity. buyerCode=dto.buyerCode;
         entity.createdUser=dto.createdUser;
-        entity.updatedUser=dto.updatedUser;
        
 
 
