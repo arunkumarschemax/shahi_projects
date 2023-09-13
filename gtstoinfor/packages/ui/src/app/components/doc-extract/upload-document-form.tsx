@@ -30,7 +30,7 @@ export function UploadDocumentForm() {
 
   const navigate = useNavigate();
   const service = new SharedService();
-  const [extractedData, setExtractedData] = useState<Item[]>([]);
+  const [extractedData, setExtractedData] = useState<any>([]);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -93,7 +93,8 @@ export function UploadDocumentForm() {
 
     getdata1();
   }, []);
-
+  
+   console.log(extractedData,"extracted data")
 
   const getdata1 = () => {
     servicess.getAllVendors().then(res => {
@@ -645,7 +646,8 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated, financialyear, JSON.parse(localStorage.getItem('currentUser')).user.userName)
+    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated, financialyear, JSON.parse(localStorage.getItem('currentUser')).user.userName,extractedData)
+
     // const req: any = {
     //   GST: gstNumbers,
     //   invoiceDate: invoiceDate,
@@ -713,7 +715,7 @@ export function UploadDocumentForm() {
                   <Button
                     key="file"
                     style={{ color: 'black', backgroundColor: '#7ec1ff' }}
-                    icon={<UploadOutlined />}
+                    // icon={<UploadOutlined />}
 
                   >
                     Choose File
@@ -999,7 +1001,7 @@ export function UploadDocumentForm() {
 
               <Row gutter={16} style={{ marginTop: '20px' }}>
                 <Col span={6}>
-                  <label htmlFor="Timecreated" style={{ color: 'black', fontWeight: 'bold' }}>Timecreated</label>
+                  <label htmlFor="Timecreated" style={{ color: 'black', fontWeight: 'bold' }}>Time Created</label>
                   <Input
                     id="Timecreated"
                     name="Timecreated"

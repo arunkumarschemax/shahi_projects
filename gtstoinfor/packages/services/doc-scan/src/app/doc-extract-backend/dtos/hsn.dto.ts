@@ -9,10 +9,10 @@ export class HsnDto {
   HSN: string;
 
   @ApiProperty()
-  TaxType: string;
+  Taxtype: string;
 
   @ApiProperty()
-  TaxAmount: string;
+  Taxamount: string;
 
   @ApiProperty()
   Taxpercentage: string;
@@ -21,21 +21,20 @@ export class HsnDto {
   Charge: string;
 
   @ApiProperty()
-  UnitQuantity: string;
+  unitquantity: string;
 
   //   @ApiProperty()
   //   UnitPrice: string;
 
   @ApiProperty()
-  Quotation: string;
+  quotation: string;
 
   @ApiProperty()
-  Variance: string;
+  variance: string;
 
   @ApiProperty()
   VarianceStatus: StatusEnum;
 
-  @ApiProperty()
   @ApiProperty()
   HsnId?: number;
 }

@@ -1,3 +1,5 @@
+import { HsnDto } from "./hsn.dto";
+
 export class AllScanDto {
     GST: string;
     Vendor: string;
@@ -13,7 +15,10 @@ export class AllScanDto {
     Timecreated: string;
     Financialyear: string;
     createdUser:string;
+    Hsninfo:HsnDto[]
     updatedUser?:string;
+    
+    
 
 
     constructor(
@@ -31,7 +36,9 @@ export class AllScanDto {
         Timecreated: string,
         Financialyear: string,
         createdUser:string,
+        Hsninfo:HsnDto[],
         updatedUser?:string,
+
     
     )
         {
@@ -50,6 +57,7 @@ export class AllScanDto {
       this.Financialyear=Financialyear;
       this.Timecreated=Timecreated;
       this.createdUser=createdUser;
+      this.Hsninfo = Hsninfo;
       this.updatedUser=updatedUser
 
         }

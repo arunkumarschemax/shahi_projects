@@ -46,8 +46,8 @@ export class ScanDto {
   @ApiProperty()
   createdUser: string;
 
-  // @ApiProperty()
-  // HsnInfo: HsnDto[]
+  @ApiProperty()
+  Hsninfo: HsnDto[]
 
   @ApiProperty()
   Id?: number;

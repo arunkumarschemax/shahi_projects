@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { ScanDto } from "../dtos/typeo.dto";
 import { ScanEntity } from "../entity/typeo-entity";
+import { HsnDto } from "../dtos/hsn.dto";
+import { HSNEntity } from "../entity/hsn-entity";
 
 @Injectable()
 export class ScanAdapter {
@@ -20,12 +22,14 @@ export class ScanAdapter {
         dto. Financialyear=entity.Financialyear;
         dto. Timecreated=entity.Timecreated;
         dto.createdUser=entity.createdUser;
+
         
         
         return dto;
     }
 
     convertDtoToEntity(dto: ScanDto): ScanEntity {
+        console.log(dto,'----')
         const entity = new ScanEntity();
         entity.GST = dto.GST;
         entity.Vendor = dto.Vendor;
@@ -41,7 +45,22 @@ export class ScanAdapter {
         entity. Financialyear=dto.Financialyear;
         entity. Timecreated=dto.Timecreated;
         entity.createdUser=dto.createdUser;
-       
+        const hsnDetails: HSNEntity[] = []
+        for (const record of dto.Hsninfo  ){
+                const entity2 = new HSNEntity()
+                entity2.Charge = record.Charge
+                entity2.Taxamount = record.Taxamount
+                entity2.Taxpercentage = record.Taxpercentage
+                entity2.Taxtype = record.Taxtype
+                entity2.HSN = record.HSN
+                entity2.variance = record.variance
+                entity2.quotation = record.quotation
+                entity2.unitquantity = record.unitquantity
+                hsnDetails.push(entity2)
+            }
+        
+        entity.scanentity = hsnDetails
+
 
 
         return entity;

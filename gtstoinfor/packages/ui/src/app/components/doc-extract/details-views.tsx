@@ -227,9 +227,10 @@ function ScanDetailView() {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+      <Card extra ={<Button  type="primary" onClick={handleBack}>View</Button>}>
       <Table columns={columns} dataSource={dataSource} bordered pagination={false}   />
+      </Card>
       <div style={{ marginTop: '16px' }}>
-        <Button style={{position:"relative",left:"700px",top:"10px"}} type="primary" onClick={handleBack}>Back</Button>
       </div>
   </div>
   );
