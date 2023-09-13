@@ -2,7 +2,7 @@ import { GlobalResponseObject } from "../global-response-object";
 import { SourcingRequisitionModel } from "./sourcing-requisition-model";
 
 export class SourcingRequisitionResponse extends GlobalResponseObject {
-    data: SourcingRequisitionModel;
+    data: SourcingRequisitionModel[];
     /**
     * 
     * @param status 
@@ -10,7 +10,7 @@ export class SourcingRequisitionResponse extends GlobalResponseObject {
     * @param internalMessage 
     * @param data 
     */
-    constructor(status: boolean, errorCode: number, internalMessage: string, data: SourcingRequisitionModel) {
+    constructor(status: boolean, errorCode: number, internalMessage: string, data: SourcingRequisitionModel[]) {
         super(status, errorCode, internalMessage);
         this.data = data;
     }

@@ -68,3 +68,6 @@ export * from './operation-sequence'
 export * from './operation-reporting'
 export * from './marketing-requistion'
 export * from './sourcing-requisition'
+export * from './source-issues'
+
+export * from './m3-masters'
