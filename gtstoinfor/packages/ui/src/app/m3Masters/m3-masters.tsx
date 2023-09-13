@@ -22,7 +22,7 @@ export const M3Masters = () => {
     }
 
     return(
-        <Card extra={<span><Button onClick={() => navigate('/m3-masters-view')} type={'primary'}>View</Button></span>} className="card-header">
+        <Card title='M3 Master' extra={<span><Button onClick={() => navigate('/m3-masters-view')} type={'primary'}>View</Button></span>} className="card-header">
             <Form form={form} layout="vertical" onFinish={onSubmit}>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>

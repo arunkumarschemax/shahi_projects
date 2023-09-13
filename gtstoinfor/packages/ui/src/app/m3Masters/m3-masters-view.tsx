@@ -43,8 +43,8 @@ export const M3MastersView = () => {
     ]
 
     return(
-        <Card extra={<span><Button onClick={() => navigate('/m3-masters')} type={'primary'}>New</Button></span>} className="card-header">
-            <Table columns={columns} dataSource={data} size='small'/>
+        <Card title='M3 Master' extra={<span><Button onClick={() => navigate('/m3-masters')} type={'primary'}>New</Button></span>} className="card-header">
+            <Table columns={columns} dataSource={data} size='small' className="custom-table-wrapper"/>
             
         </Card>
     )
