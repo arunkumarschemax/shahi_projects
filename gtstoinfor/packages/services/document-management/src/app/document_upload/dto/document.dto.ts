@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { DocumentDownloadEnum } from "@project-management-system/shared-models";
 
 export class DocumentDto{
   @ApiProperty()
@@ -19,6 +20,8 @@ export class DocumentDto{
   id?:number
   @ApiProperty()
   priority?:number
+  @ApiProperty()
+  isDownload : DocumentDownloadEnum;
   constructor(
     documentName?: string,
     createdUser?: string,
@@ -27,7 +30,9 @@ export class DocumentDto{
     updatedAt?: Date,
     createdAt?: Date,
     versionFlag?: number,
-    id?:number,priority?:number)
+    id?:number,priority?:number,
+    isDownload ?: DocumentDownloadEnum
+    )
   {
     this.documentName=documentName
     this.createdUser=createdUser
@@ -38,6 +43,7 @@ export class DocumentDto{
     this.versionFlag=versionFlag
     this.id=id
     this.priority=priority
+    this.isDownload=isDownload
   }
 
 

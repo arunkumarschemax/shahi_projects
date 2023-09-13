@@ -12,10 +12,11 @@ import { FileUploadEntity } from './entities/file-upload.entity';
 import { SaveOrderDto } from './models/order.dto';
 import { DocumentService } from '../document_upload/document.service';
 import { DocumentsListService } from '../document_upload/upload_document.service';
-import { config } from 'packages/libs/shared-services/config';
 import { DocumentsListRequest } from '../document_upload/requests/document-list.request';
 import { appConfig } from 'packages/services/document-management/config';
 import { error } from 'console';
+import { config } from 'packages/libs/shared-services/config';
+
 let moment = require('moment');
 moment().format();
 import { req } from '../document_upload/requests/importedPoReq';
@@ -81,14 +82,16 @@ export class OrdersService {
             for (const data of convertedData) {
                 let dtoData:SaveOrderDto;
                 console.log(data)
-                if(data.challa_no != null && data.invoice_no != null && data.po_no != null)
+                // if(data.challa_no != null && data.invoice_no != null && data.po_no != null)
+                if(data.po_no != null)
+
                 {
                     dtoData = new SaveOrderDto(data.id, data.buyer, data.challa_no, data.invoice_no, data.style, data.po_no, data.date, data.dest, data.tc_status, data.ship_qty, data.ctns, data.created_user, data.updated_user, data.created_at, data.updated_at, 1, id)
                     console.log(dtoData)
                     dtoData.version = 1
 
                     let checkChallanExist = await transactionManager.getRepository(OrdersEntity).findOne({where:{
-                        invoiceNo:dtoData.invoiceNo, poNo:dtoData.poNo, challanNo:dtoData.challanNo, dest:dtoData.dest
+                       poNo:dtoData.poNo
                     }})
                   if(!checkChallanExist){
                         const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
@@ -415,24 +418,23 @@ export class OrdersService {
       LEFT JOIN
         document d ON d.id = dl.document_category_id
         LEFT JOIN orders o on o.id = dl.order_id
-        GROUP BY dl.order_id ORDER BY o.po_no,o.invoice_no,o.challan_no ASC
+        GROUP BY  dl.customer_po ORDER BY o.po_no,o.invoice_no,o.challan_no ASC
     `;
         const data = await this.dataSource.query(dynamicSQL)
         let urls:any[] = [];
         let docinfo: any[] = [];
         for (const res of data){
             // console.log(res)
-
-            const doctlistQuery = 'SELECT customer_po,uid,u.file_name AS NAME,dl.documents_list_id,concat("'+config.download_path+'/PO-",dl.customer_po,"/",u.file_name) AS url, u.file_path,"application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id   LEFT JOIN document d ON d.id = dl.document_category_id where dl.customer_po ="'+res.PO+'"';
+            const doctlistQuery = 'SELECT d.is_download AS downloadStatus,uid,u.file_name AS name, concat("'+config.download_path+'/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po ="'+res.PO+'" and d.is_download = "Yes"';
             const docres = await this.uploadFilesRepository.query(doctlistQuery)
             console.log(docres)
             console.log('#################################')
 
             const docReq:docRequest[] =[];
-            for(const res of docres){
+            for(const res1 of docres){
                 // console.log(res);
-                urls.push(res.url);
-                let data = new docRequest(res.uid,res.name,res.status,res.type,res.url,res.documentName);
+                urls.push(res1.url);
+                let data = new docRequest(res1.uid,res1.name,res1.status,res1.type,res1.url,res1.documentName,res1.downloadStatus);
                 // console.log(data);
                 // console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 

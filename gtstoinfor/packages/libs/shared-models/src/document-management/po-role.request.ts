@@ -1,11 +1,11 @@
 export class PoRoleRequest{
     role:string;
     customerPo:string;
-    invoice:string;
-    challan:string
-    orderId:number
+    invoice?:string;
+    challan?:string
+    orderId?:number
 
-    constructor(role:string,customerPo:string, invoice:string, challan:string, orderId:number){
+    constructor(role:string,customerPo:string, invoice?:string, challan?:string, orderId?:number){
         this.role = role;
         this.customerPo=customerPo
         this.invoice=invoice

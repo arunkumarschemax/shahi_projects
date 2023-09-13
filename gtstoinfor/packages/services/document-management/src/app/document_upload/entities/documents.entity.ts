@@ -1,3 +1,4 @@
+import { DocumentDownloadEnum } from "@project-management-system/shared-models";
 import { Column, Entity, Index, PrimaryGeneratedColumn, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 
 @Entity('document')
@@ -54,4 +55,10 @@ export class DocumentEntity {
         default:0
     })
     priority:number
+
+    @Column('enum',{
+        name:'is_download',
+        enum:DocumentDownloadEnum
+    })
+    isDownload : string;
 }

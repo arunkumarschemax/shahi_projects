@@ -237,20 +237,20 @@ const UploadFileGrid = () =>{
               //   <a href={`#/document-management/document-file-upload?text=${encodeURIComponent(text)}`}>{text}</a>
               // ),
         },
-        {
-          title: 'INVOICE NO',
-          dataIndex: 'invoiceNo',
-          fixed: 'left',
-          align:'center',
-            ...getColumnSearchProps('invoiceNo'),
-        },
-        {
-          title: 'CHALLAN NO',
-          dataIndex: 'challanNo',
-          fixed: 'left',
-          align:'center',
-            ...getColumnSearchProps('challanNo'),
-        },
+        // {
+        //   title: 'INVOICE NO',
+        //   dataIndex: 'invoiceNo',
+        //   fixed: 'left',
+        //   align:'center',
+        //     ...getColumnSearchProps('invoiceNo'),
+        // },
+        // {
+        //   title: 'CHALLAN NO',
+        //   dataIndex: 'challanNo',
+        //   fixed: 'left',
+        //   align:'center',
+        //     ...getColumnSearchProps('challanNo'),
+        // },
       ];
 
       const downloadcomun = [
@@ -291,7 +291,7 @@ const UploadFileGrid = () =>{
             return (<div style={{alignContent:'center'}}>
                <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
                  <Button type="primary" 
-                 disabled ={rowData.poStatus == 'In Progress' ? false:true}
+                 disabled ={rowData.poStatus == 'Closed' ? false:true}
                 onClick={() => mergeAndDownloadPDFs(rowData.url, rowData.PO)}>
               <DownloadOutlined/>
               </Button>

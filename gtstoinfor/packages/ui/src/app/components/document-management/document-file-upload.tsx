@@ -52,20 +52,22 @@ export default function DocumentListupload() {
   }
 
   const getInvoiceNumber =(value)=>{
-    let po
-    form.resetFields(['invoice','challan'])
-    // if(statePoNumber){
-    //   po =statePoNumber.data
-    // }else{
-    //   po = form.getFieldValue("customerPo")
-    // }
-    service.getInvoiceByPo({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:value}).then(res=>{
-      if(res.status){
-        setInvoiceNumber(res.data)
-      }else{
-        setInvoiceNumber([])
-      }
-    })
+    setBtnDisable(false)
+
+    // let po
+    // form.resetFields(['invoice','challan'])
+    // // if(statePoNumber){
+    // //   po =statePoNumber.data
+    // // }else{
+    // //   po = form.getFieldValue("customerPo")
+    // // }
+    // service.getInvoiceByPo({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:value}).then(res=>{
+    //   if(res.status){
+    //     setInvoiceNumber(res.data)
+    //   }else{
+    //     setInvoiceNumber([])
+    //   }
+    // })
   }
 
   const getChallanNo =()=>{
@@ -85,11 +87,11 @@ export default function DocumentListupload() {
     let invoiceNo = form.getFieldValue("invoice")
     let challan = form.getFieldValue("challan")
     let po = form.getFieldValue("customerPo")
-    console.log(invoiceNo)
-    console.log(challan)
-    console.log(po)
+    // console.log(invoiceNo)
+    // console.log(challan)
+    // console.log(po)
 
-    service.getDocumentDetailsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po,invoice:invoiceNo,challan:challan,orderId:orderId}).then(res=>{
+    service.getDocumentDetailsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po}).then(res=>{
       if(res.status){
         setDocData(res.data)
         setUrls(res.dataa);
@@ -282,57 +284,64 @@ export default function DocumentListupload() {
   };
   const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     try {
-      console.log(pathsData);
-      // Load the initial PDF file (you need to provide a valid URL)
-      const initialPdfUrl = pathsData[0];
-      // 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';
-  
-      const initialPdfResponse = await axios.request({
-        url: initialPdfUrl,
-        method: 'get',
-        responseType: 'arraybuffer',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-        },
-      });
-      const initialPdfBytes = initialPdfResponse.data;
-      console.log('*&*&*&', initialPdfBytes)
-  
-      // Load additional PDFs from URLs (you need to provide valid PDF URLs)
-      const pdfUrls = [
-        'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf',
-      ];
-      // const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
-      //   const response = await fetch(url, { mode: 'no-cors' });
-      //   if (!response.ok) {
-      //     throw new Error(`Failed to fetch ${url}`);
-      //   }
-      //   return response.arrayBuffer();
-      // }));
-      const pdfBytesArray = await fetchPdfBytesArrayWithAxios(pathsData)
-  
-  
-      // Create a new PDF document
-      const mergedPdf = await PDFDocument.create();
-  
-      // Add the pages from the initial PDF
-      // const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
-      // const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
-      // initialPages.forEach((page) => mergedPdf.addPage(page));
-  
-      // Loop through each PDF and add its pages to the merged PDF
-      for (const pdfBytes of pdfBytesArray) {
-        const pdfDoc = await PDFDocument.load(pdfBytes);
-        const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
-        pages.forEach((page) => mergedPdf.addPage(page));
+      if(pathsData.length > 0){
+
+        console.log(pathsData);
+        // Load the initial PDF file (you need to provide a valid URL)
+        const initialPdfUrl = pathsData[0];
+        // 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';
+    
+        const initialPdfResponse = await axios.request({
+          url: initialPdfUrl,
+          method: 'get',
+          responseType: 'arraybuffer',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        });
+        const initialPdfBytes = initialPdfResponse.data;
+        console.log('*&*&*&', initialPdfBytes)
+    
+        // Load additional PDFs from URLs (you need to provide valid PDF URLs)
+        const pdfUrls = [
+          'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf',
+        ];
+        // const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
+        //   const response = await fetch(url, { mode: 'no-cors' });
+        //   if (!response.ok) {
+        //     throw new Error(`Failed to fetch ${url}`);
+        //   }
+        //   return response.arrayBuffer();
+        // }));
+        const pdfBytesArray = await fetchPdfBytesArrayWithAxios(pathsData)
+    
+    
+        // Create a new PDF document
+        const mergedPdf = await PDFDocument.create();
+    
+        // Add the pages from the initial PDF
+        // const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
+        // const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
+        // initialPages.forEach((page) => mergedPdf.addPage(page));
+    
+        // Loop through each PDF and add its pages to the merged PDF
+          for (const pdfBytes of pdfBytesArray) {
+            const pdfDoc = await PDFDocument.load(pdfBytes);
+            const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+            pages.forEach((page) => mergedPdf.addPage(page));
+          }
+      
+          // Save the merged PDF as a blob
+          const mergedPdfBytes = await mergedPdf.save();
+      
+          // Create a Blob and trigger a download
+          const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+          saveAs(blob, 'PO-'+docData[0].customerPo+'.pdf');
       }
-  
-      // Save the merged PDF as a blob
-      const mergedPdfBytes = await mergedPdf.save();
-  
-      // Create a Blob and trigger a download
-      const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
-      saveAs(blob, 'PO-'+docData[0].customerPo+'.pdf');
+      else{
+        AlertMessages.getInfoMessage("Download access disabled. ");
+        console.log('test');
+      }
     } catch (error) {
       console.error('Error merging and downloading PDFs:', error);
     }
@@ -371,7 +380,7 @@ export default function DocumentListupload() {
              </Select>
            </Form.Item>
          </Col>
-         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
            <Form.Item name='invoice' label='Invoice Number'
              rules={[
                {
@@ -387,8 +396,8 @@ export default function DocumentListupload() {
                      })}
              </Select>
            </Form.Item>
-         </Col>
-         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+         </Col> */}
+         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
            <Form.Item name='challan' label='Challan Number'
              rules={[
                {
@@ -404,8 +413,8 @@ export default function DocumentListupload() {
                      })}
              </Select>
            </Form.Item>
-         </Col>
-         <Col span={5} style={{paddingTop:'30px'}}>
+         </Col> */}
+         <Col span={5} style={{paddingTop:'30px', marginRight:'10px'}}>
               <Button onClick={getDocData}
                   style={{
                     color: 'white',

@@ -1,11 +1,12 @@
 import {  CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined } from '@ant-design/icons';
-import { Table, Input, Popconfirm, Card, Button, Space, Divider, Switch, Tag, Tooltip, message, Drawer, InputNumber, Form } from 'antd';
+import { Table, Input, Popconfirm, Card, Button, Space, Divider, Switch, Tag, Tooltip, message, Drawer, InputNumber, Form, Select } from 'antd';
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { DocumentService, UploadDocumentService } from '@project-management-system/shared-services';
-import { AlertMessages, DocumentDto } from '@project-management-system/shared-models';
+import { AlertMessages, DocumentDownloadEnum, DocumentDto } from '@project-management-system/shared-models';
 import DocumentForm from './document-form';
+import { error } from 'console';
 
 
 
@@ -18,7 +19,7 @@ const DocumentGrid = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedRoutesData, setSelectedRoutesData] = useState<any>(undefined);
   const [form] = Form.useForm();
-
+  const {Option} = Select
 const docuListService = new UploadDocumentService()
   useEffect(() => {
     getDocumentData();
@@ -113,6 +114,25 @@ const orders = (value, index, rowData) => {
   }
 }
 
+  const updateDownloadStatus =(value,record)=>{  
+    console.log(record.id)
+    services.updateDownloadStatus({documentId:record.id,isDownload:value}).then(res =>{
+  if(res.status){
+    message.success(res.internalMessage)
+  }else{
+    message.error(res.internalMessage)
+  }
+    })
+  }
+
+  const isDownloadOnchange =(value,record) =>{
+    console.log(value)
+    console.log(record.id)
+    updateDownloadStatus(value,record)
+    getDocumentData();
+
+  }
+
   const columns = [
     { title: 'S.no', render: (text: any, object: any, index: any) => (page - 1) * 10 + (index + 1), },
 
@@ -146,6 +166,22 @@ const orders = (value, index, rowData) => {
           </Form>
           </>
         )
+      }
+    },
+    {
+      title:'Is Download',
+      width:'200px',
+      render:(value,record)=>{
+        return <Form.Item name='isDownload' initialValue={record.isDownload}>
+          <Select
+          defaultValue={record.isDownload}
+          onChange={(value) =>isDownloadOnchange(value,record)}
+          >
+          {Object.values(DocumentDownloadEnum).map((key,value) => {
+                  return <Option key={key} value={key}>{key}</Option>
+                })}
+          </Select>
+        </Form.Item>
       }
     },
     {
