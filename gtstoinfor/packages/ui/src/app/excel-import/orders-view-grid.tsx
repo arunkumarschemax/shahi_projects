@@ -150,17 +150,17 @@ const AllOrdersGridView = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'FileName',
+            title: 'File Name',
             dataIndex: 'fileName'
         },
         {
-            title: 'uploaded At',
-            // dataIndex: 'createdAt',
-            render: (_, record) => {
-                return record.DateAndHours
-                  ? moment(record.DateAndHours).format("YYYY-MM-DD")
-                  : "-";
-              },
+            title: 'Uploaded At',
+            dataIndex: 'DateAndHours',
+            // render: (_, record) => {
+            //     return record.createdAt
+            //       ? moment(record.createdAt,'YYYY-MM-DDT').format('YYYY-MM-DDHH:mm')
+            //       : "-";
+            //   },
         },
         {
             title: 'Uploaded By',
@@ -302,7 +302,7 @@ const AllOrdersGridView = () => {
                                 icon={<SearchOutlined />}
                                 // style={{ marginRight: 50, width: 80 }}
                                 htmlType="button"
-                                onClick={getOrdersData}>get Data</Button>
+                                onClick={getOrdersData}>Get Data</Button>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 23 }} >
                             <Button
