@@ -5,41 +5,48 @@ import DescriptionsItem from "antd/es/descriptions/Item"
 import TabPane from "antd/es/tabs/TabPane"
 import SourceFabrics from "./source-fabrics"
 import SourceTrims from "./source-trims"
+import { SourceFabricsTrimsService, SourceIssuesService } from "@project-management-system/shared-services"
 
 export const SourceIssuesDetailView=()=>{
 
     const navigate = useNavigate()
     const [data,setData] = useState<any[]>([])
-
+    const service = new SourceFabricsTrimsService
 
     useEffect(()=>{
-
+      getSource()
     },[])
 
- 
+  const getSource=()=>{
+    service.getSourceIssueByID().then((res)=>{
+      setData(res)
+      console.log(res,'-----------')
+    })
+  }
     return(
       <Card title="Request No" size="small" >
       <Descriptions size='small'>
-         <DescriptionsItem label='Location'>{data[0]?.accountControlName}</DescriptionsItem>
-         <DescriptionsItem label='PCH'>{data[0]?.profitControlHead}</DescriptionsItem>
-         <DescriptionsItem label='Buyer'>{data[0]?.name}</DescriptionsItem>
-         <DescriptionsItem label='Sample Type'>{data[0]?.divisionName}</DescriptionsItem>
-         <DescriptionsItem label='Sample Sub Type'>{data[0]?.warehouseName}</DescriptionsItem>
-         <DescriptionsItem label='Style'>{}</DescriptionsItem>
-         <DescriptionsItem label='Description'>{data[0]?.salesPerson}</DescriptionsItem>
-         <DescriptionsItem label='Brand'>{data[0]?.fabricResponsible}</DescriptionsItem>
-         <DescriptionsItem label='Cost Ref'>{data[0]?.itemResponsible}</DescriptionsItem>
-         <DescriptionsItem label='M3 Style No'>{data[0]?.trimRespondsible}</DescriptionsItem>
-         <DescriptionsItem label='Contact No'>{data[0]?.currencyName}</DescriptionsItem>
-         <DescriptionsItem label='Extn'>{data[0]?.liscenceType}</DescriptionsItem>
-         <DescriptionsItem label='SAM'>{data[0]?.address}</DescriptionsItem>
-         <DescriptionsItem label='DMM'>{data[0]?.buyerName}</DescriptionsItem>
-         <DescriptionsItem label='Technician'>{data[0]?.buyerGroup}</DescriptionsItem>
+         <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>
+         <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>
+         <DescriptionsItem label='User'>{data[0]?.user}</DescriptionsItem>
+         <DescriptionsItem label='Buyer'>{data[0]?.buyer}</DescriptionsItem>
+         <DescriptionsItem label='Sample Type'>{data[0]?.sampleType}</DescriptionsItem>
+         <DescriptionsItem label='Sample Sub Type'>{data[0]?.sampleSubType}</DescriptionsItem>
+         <DescriptionsItem label='Style'>{data[0]?.style}</DescriptionsItem>
+         <DescriptionsItem label='Description'>{data[0]?.description}</DescriptionsItem>
+         <DescriptionsItem label='Brand'>{data[0]?.brand}</DescriptionsItem>
+         <DescriptionsItem label='Cost Ref'>{data[0]?.costRef}</DescriptionsItem>
+         <DescriptionsItem label='M3 Style No'>{data[0]?.m3StyleNo}</DescriptionsItem>
+         <DescriptionsItem label='Contact No'>{data[0]?.contactNo}</DescriptionsItem>
+         <DescriptionsItem label='Extn'>{data[0]?.extn}</DescriptionsItem>
+         <DescriptionsItem label='SAM'>{data[0]?.sam}</DescriptionsItem>
+         <DescriptionsItem label='DMM'>{data[0]?.dmm}</DescriptionsItem>
+         <DescriptionsItem label='Technician'>{data[0]?.technician}</DescriptionsItem>
          <DescriptionsItem label='Product'>{data[0]?.agentName}</DescriptionsItem>
-         <DescriptionsItem label='Type'>{data[0]?.packageTermsName}</DescriptionsItem>
-         <DescriptionsItem label='Conversion'>{data[0]?.paymentMethod}</DescriptionsItem>
-         <DescriptionsItem label='Made In'>{data[0]?.paymentTermsName}</DescriptionsItem>
-         <DescriptionsItem label='Remarks'>{data[0]?.deliveryMethod}</DescriptionsItem>
+         <DescriptionsItem label='Type'>{data[0]?.productType}</DescriptionsItem>
+         <DescriptionsItem label='Conversion'>{data[0]?.Conversion}</DescriptionsItem>
+         <DescriptionsItem label='Made In'>{data[0]?.madeIn}</DescriptionsItem>
+         <DescriptionsItem label='Remarks'>{data[0]?.remarks}</DescriptionsItem>
       </Descriptions>
       <Card size='small'>
         <Tabs type={'card'} tabPosition={'top'}>

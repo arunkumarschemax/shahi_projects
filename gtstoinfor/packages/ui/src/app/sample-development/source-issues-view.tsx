@@ -26,7 +26,7 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
 
   
 
-  export const SourceIssuesView =()=>{
+  export const StoreIssuesView =()=>{
     const searchInput = useRef(null);
     const service = new SourceIssuesService
     const [page, setPage] = React.useState(1);
@@ -234,7 +234,7 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
 
       return (
         <Card 
-        title={<span>Source Issues View</span>}
+        title={<span>Store Issues View</span>}
         className="card-header"
         style={{ textAlign:"center" ,color:'#00ffff'}}
         headStyle={{border:0}}
@@ -314,4 +314,4 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
     </Card>
       )
   }
-  export default SourceIssuesView
+  export default StoreIssuesView

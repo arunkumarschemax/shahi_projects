@@ -140,7 +140,7 @@ export const StoreIssueDetailed = () => {
       ];
 
     return(
-        <Card title='Source Issue' className="card-header" onClick={onUpdate} extra={<Button type={'primary'}>View</Button>}>
+        <Card title='Store Issue' className="card-header" onClick={onUpdate} extra={<Button type={'primary'}>View</Button>}>
              <Descriptions size='small'>
                 <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>
                 <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>
@@ -158,7 +158,7 @@ export const StoreIssueDetailed = () => {
                 <DescriptionsItem label='SAM'>{data[0]?.sam}</DescriptionsItem>
                 <DescriptionsItem label='DMM'>{data[0]?.dmm}</DescriptionsItem>
                 <DescriptionsItem label='Technician'>{data[0]?.technician}</DescriptionsItem>
-                <DescriptionsItem label='Product'>{data[0]?.agentName}</DescriptionsItem>
+                <DescriptionsItem label='Product'>{data[0]?.product}</DescriptionsItem>
                 <DescriptionsItem label='Type'>{data[0]?.productType}</DescriptionsItem>
                 <DescriptionsItem label='Conversion'>{data[0]?.Conversion}</DescriptionsItem>
                 <DescriptionsItem label='Made In'>{data[0]?.madeIn}</DescriptionsItem>

@@ -75,4 +75,37 @@ async getAllTrims():Promise<any>{
     return dummyData
 
 }
+async getSourceIssueByID():Promise<any>{
+    const dummyData=[
+        {
+            id:"1",
+            requestNo: "REQ001",
+            date: "2023-08-01",
+            location: "Adivaram",
+            pch: "PCH001",
+            user: "Proto",
+            buyer: "Virat Kohil",
+            styleNo: "STL001",
+            sampleType: "T-Shirt",
+            sampleSubType: "T-Shirt",
+
+            style: "Casual",
+            description: "Plain white cotton t-shirt",
+            brand: "Nike",
+            costRef: "TC001",
+            m3StyleNo: "12345",
+            contactNo: "8885556666",
+            extn: "123",
+            sam: "4.5",
+            dmm: "Rajesh",
+            product:"product",
+            technician: "Suresh",
+            productType: "Apparel",
+            Conversion: "INR",
+            madeIn: "USA",
+            remarks: "Sample for approval",
+        }
+    ]
+    return dummyData
+}
 }
