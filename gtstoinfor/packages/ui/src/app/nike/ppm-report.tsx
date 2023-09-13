@@ -463,31 +463,20 @@ const PPMReport = () => {
         title: "Plant Name",
         dataIndex: 'plantName'
       },
-      {
-        title: 'Total Item Qty',
-        dataIndex: 'totalItemQty',
-        align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return <strong>{text}</strong>;
-          }
-        },
-
-      },
-      {
-        title: "GAC",
-        dataIndex: 'GAC'
-      },
+     
+      { title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
+        return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
+    },   },
       {
         title: "MRGAC",
-        dataIndex: 'MRGAC'
+        dataIndex: 'MRGAC',render: (text, record) => {
+          return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-';
       },
-      {
-        title: "OGAC",
-        dataIndex: 'OGAC'
       },
+      { title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
+        return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-';
+    }, },
+    
 
       {
         title: "UPC",
@@ -588,7 +577,19 @@ const PPMReport = () => {
         dataIndex: 'displayName',
         align: 'center',
       },
+      {
+        title: 'Total Item Qty',
+        dataIndex: 'totalItemQty',
+        align: 'center',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return <strong>{text}</strong>;
+          }
+        },
 
+      },
     ]
 
     sizeHeaders?.forEach(version => {

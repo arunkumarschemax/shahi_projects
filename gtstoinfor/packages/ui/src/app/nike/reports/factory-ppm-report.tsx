@@ -398,7 +398,13 @@ const FactoryPPMReport = () => {
             { title: 'Style Number', dataIndex: 'styleNumber' },
             { title: 'Product Code', dataIndex: 'productCode' },
             { title: 'Colour Description', dataIndex: 'colorDesc' },
-            { title: 'CO', dataIndex: 'customerOrder' },
+            { title: 'CO', dataIndex: 'customerOrder', render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                } 
+            }},
             {
                 title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => {
                     return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-'
@@ -528,10 +534,22 @@ const FactoryPPMReport = () => {
             {
                 title: 'Colour Description',
                 dataIndex: 'colorDesc',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }}
             },
             {
                 title: 'CO',
                 dataIndex: 'customerOrder',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }}
             },
             {
                 title: 'CO Final Approval Date',
@@ -659,8 +677,12 @@ const FactoryPPMReport = () => {
             },
             { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center' },
             { title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column", },
-            { title: 'OGAC', dataIndex: 'OGAC', className: "right-column", },
-            { title: 'GAC', dataIndex: 'GAC', className: "right-column", },
+            { title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
+                return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-';
+            }, },
+            { title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
+                return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
+            },  },
             { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", },
             { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", },
             { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", },
