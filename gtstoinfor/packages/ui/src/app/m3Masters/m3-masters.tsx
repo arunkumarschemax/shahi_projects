@@ -3,15 +3,29 @@ import { M3MastersService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Form, Input, Row } from "antd"
 import { useNavigate } from "react-router-dom"
 import AlertMessages from "../common/common-functions/alert-messages"
-
-export const M3Masters = () => {
+import { useState } from "react"
+export interface M3MastersProps {
+    m3MasterData: M3MastersReq;
+    updateDetails: (m3MasterData: M3MastersReq) => void;
+    isUpdate: boolean;
+  //   saveItem:(varirantData:VariantDto) => void;
+    closeForm: () => void;
+  }
+export const M3Masters = (
+    props: M3MastersProps
+) => {
     const navigate = useNavigate()
     const [form] = Form.useForm()
     const service = new M3MastersService()
+    const [disable, setDisable] = useState<boolean>(false)
 
     const onSubmit = (val) => {
-        const req = new M3MastersReq(val.category,val.m3Code)
+        console.log(val,'frontend')
+        const req = new M3MastersReq(val.category,val.m3Code,val.m3Id)
+        
         service.create(req).then(res => {
+            console.log(req,'=========');
+
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 form.resetFields()
@@ -20,11 +34,25 @@ export const M3Masters = () => {
             }
         })
     }
-
+    const saveData = (values: M3MastersReq) => {
+        setDisable(false)
+        if(props.isUpdate){
+          props.updateDetails(values);
+          console.log(values,'...........');
+          
+        }else{
+          setDisable(false)
+          onSubmit(values);
+        }
+      
+      };
     return(
-        <Card extra={<span><Button onClick={() => navigate('/m3-masters-view')} type={'primary'}>View</Button></span>} className="card-header">
-            <Form form={form} layout="vertical" onFinish={onSubmit}>
+        <Card title={props.isUpdate ? 'Update Delivery Terms' : 'Add Delivery Term'} extra={props.isUpdate === true?"":<span><Button onClick={() => navigate('/m3-masters-view')} type={'primary'}>View</Button></span>}className="card-header">
+            <Form form={form} layout="vertical" onFinish={saveData} initialValues={props.m3MasterData}>
                 <Row gutter={24}>
+                <Form.Item name="m3Id" style={{display:'none'}}>
+                    <Input hidden/>
+                </Form.Item>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='category' label='Category' rules={[{required:true,message:'Category is required'}]}>
                             <Input placeholder="Enter Category"/>
