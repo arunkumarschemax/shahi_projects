@@ -396,14 +396,14 @@ import Highlighter from "react-highlight-words";
         <SKUGrid/>
       ):(<div> */}
       {selectView === 'cards'?(
-        <div>
+        <div >
       {itemData.map((item) => (
              <Card
              key={item.itemsNo}
              title={`Item No: ${item.itemsNo}`}
              style={{ cursor: 'pointer' }}
              >
-             <Row gutter={[-1, -1]}>
+             <Row gutter={[20, 16]}>
              {item.skus.map((e) => {
               let co;
               if(e.color == 'white'){
@@ -418,12 +418,12 @@ import Highlighter from "react-highlight-words";
                sm={{ span: 24 }}
                md={{ span: 3 }}
                lg={{ span: 6 }}
-               xl={{ span: 5 }}
+               xl={{ span:5 }}
                key={e.skuId}
              >
               
             <div>
-           <Card style={{ width: '70%', height: '100%' , backgroundColor: '#E3F1E1 '}}>
+           <Card style={{ width: '100%', height: '100%' , backgroundColor: '#E3F1E1 ', marginRight:"-50px"}}>
           <Descriptions column={1} style={{ fontSize: '2px' }} title={`SKU Code: ${e.skuId}`}>
             <Descriptions.Item label='Size'>{e.sizes}</Descriptions.Item>
             <Descriptions.Item label='Colour'>
