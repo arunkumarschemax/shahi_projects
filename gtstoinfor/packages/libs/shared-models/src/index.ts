@@ -9,3 +9,4 @@ export * from './common/users/users-active-deactive.dto'
 export * from './common/factory/factory-activate-deactivate.dto'
 export * from './document-management'
 export * from './shared-model';
+export * from './price-model'
