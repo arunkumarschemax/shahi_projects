@@ -13,7 +13,8 @@ export class RequisitionService extends CommonAxiosService{
         style:'WV34D103',
         styleDescription:'ROLL CUFFSHORT',
         requestNo:'REQ001',
-        expectedDate:"09-09-2023",
+        expectedDate:"15-09-2023",
+        indentDate:"12-09-2023",
         fabricInfo: [
             {
                 content:'Natural Fabrics',
@@ -121,7 +122,8 @@ export class RequisitionService extends CommonAxiosService{
         style:'WV34D104',
         styleDescription:'Bagee phant',
         requestNo:'REQ002',
-        expectedDate:"09-09-2023",
+        expectedDate:"17-09-2023",
+        indentDate:"13-09-2023",
         fabricInfo: [
             {
                 content:'Natural Fabrics',

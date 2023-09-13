@@ -8,17 +8,19 @@ export class SourcingRequisitionModel{
     styleDescription: string;
     requestNo:string;
     expectedDate:any;
+    indentDate:any;
     fabricInfo: FabricInfoModel[];
     trimInfo: TrimInfoModel[];
     versionFlag: number;
 
-    constructor(sourcingRequisitionId: number,styleId:number,style:string,styleDescription: string,requestNo:string,expectedDate:any,fabricInfo:FabricInfoModel[],trimInfo:TrimInfoModel[],versionFlag:number){
+    constructor(sourcingRequisitionId: number,styleId:number,style:string,styleDescription: string,requestNo:string,expectedDate:any,indentDate:any,fabricInfo:FabricInfoModel[],trimInfo:TrimInfoModel[],versionFlag:number){
         this.sourcingRequisitionId = sourcingRequisitionId;
         this.styleId = styleId
         this.style = style;
         this.styleDescription = styleDescription;
         this.requestNo = requestNo;
         this.expectedDate = expectedDate;
+        this.indentDate = indentDate;
         this.fabricInfo = fabricInfo;
         this.trimInfo = trimInfo;
         this.versionFlag = versionFlag;

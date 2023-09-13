@@ -570,7 +570,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const onSubmit = () =>{
         sourcingForm.validateFields().then(() => {
 
-            const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),sourcingForm.getFieldValue('expectedDate'),sourcingForm.getFieldValue('requestNo'),fabricTableData,trimsTableData)
+            const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),sourcingForm.getFieldValue('expectedDate'),sourcingForm.getFieldValue('requestNo'),sourcingForm.getFieldValue('indentDate'),fabricTableData,trimsTableData)
             console.log(req)
             onReset()
         }).catch(() => {
@@ -592,6 +592,11 @@ export const SourcingRequisitionDynamicForm = () => {
                                 )
                             })}
                         </Select>
+                    </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+                    <Form.Item name='indentDate' label='Indent Date' rules={[{required:true,message:'Indent Date is required'}]} initialValue={dayjs(dayjs())}>
+                        <DatePicker style={{width:'100%'}} defaultValue={dayjs(dayjs())}/>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>

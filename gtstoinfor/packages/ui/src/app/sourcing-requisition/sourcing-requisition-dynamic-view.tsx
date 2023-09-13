@@ -468,7 +468,7 @@ export const SourcingRequisitionDynamicView = () => {
     }
 
     const HeaderRow = (props: any,) => {
-        const {requestNo,style,styleDescription} = props
+        const {requestNo,style,styleDescription,expectedDate,indentDate} = props
           
           return (
             <div style={{ display: "flex" }}>
@@ -477,6 +477,10 @@ export const SourcingRequisitionDynamicView = () => {
               <span>Style : {<b>{style}</b>}</span>
               <span style={{width:'10px'}}></span>
               <span>Description : {<b>{styleDescription}</b>}</span>
+              <span style={{width:'10px'}}></span>
+              <span>Indent Date : {<b>{indentDate}</b>}</span>
+              <span style={{width:'10px'}}></span>
+              <span>Expected Date : {<b>{expectedDate}</b>}</span>
 
             </div>
           );
@@ -538,7 +542,7 @@ export const SourcingRequisitionDynamicView = () => {
 
             <Collapse expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} >
                       {tableData.map((item: any, index: any) => (
-                        <Collapse.Panel header={<HeaderRow requestNo={item.requestNo} style={item.style} styleDescription={item.styleDescription}/>} key={index}>
+                        <Collapse.Panel header={<HeaderRow requestNo={item.requestNo} style={item.style} styleDescription={item.styleDescription} expectedDate={item.expectedDate} indentDate={item.indentDate}/>} key={index}>
                         <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
                     <Segmented onChange={onSegmentChange} style={{backgroundColor:'#68cc6b'}}
                       options={[
