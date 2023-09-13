@@ -129,13 +129,12 @@ import SourcingRequisitionReport from "./sourcing-requisition/sourcing-requisiti
 import MarketingReqReport from "./marketing-requisition/marketing-report"
 import SourcingRequisitionDynamicForm from "./sourcing-requisition/sourcing-requisition-dynamic-form"
 import SourcingRequisitionDynamicView from "./sourcing-requisition/sourcing-requisition-dynamic-view"
-import StoreIssue, { SampleRequests } from "./sample-development/source-issue"
-import StoreIssueDetailed, { SourceIssueDetailed } from "./sample-development/source-issue-detailed-view"
+import StoreIssue, { SampleRequests } from "./sample-development/sample-requests"
+import StoreIssueDetailed from "./sample-development/store-issue-detailed-view"
 import SourceIssuesDetailView from "./sample-development/source-issues-detail-view"
 import M3Masters from "./m3Masters/m3-masters"
 import M3MastersView from "./m3Masters/m3-masters-view"
 import { StockView } from "./sourcing-requisition/stock-view"
-import SourceIssue from "./sample-development/source-issue"
 import SourceIssuesView from "./sample-development/source-issues-view"
 
 
@@ -491,17 +490,14 @@ export const AppRoutes = () => {
                     <Route path="sample-development-view" element={<SampleDevView />}/>
                     <Route path="sample-development-detail" element={<SampleDevDetail />}/>
                     <Route path="sample-requests" element={<SampleRequests/>}/>
-                    <Route path="source-issue-detail" element={<SourceIssueDetailed/>}/>
-                    <Route path="source-issues-view" element={<StoreIssue />}/>
-                    <Route path="source-issues-detail-view" element={<SourceIssuesDetailView />}/>
-                
+                    <Route path="source-issue-detail" element={<StoreIssueDetailed/>}/>
                 </Route>
 
-                <Route path='source-issues'>
-                <Route path="source-issues-view" element={<SourceIssuesView />}/>
-                    <Route path="source-issues-detail-view" element={<SourceIssuesDetailView />}/>
-
+                <Route path='store-issues'>
+                    <Route path="store-issues-view" element={<SourceIssuesView />}/>
+                    <Route path="store-issues-detail-view" element={<SourceIssuesDetailView />}/>
                 </Route>
+
                 <Route path='/materialCreation'>
                 <Route path='sku-list' element={<SkuList/>}/>
                 <Route path='sku-mapping' element={<SKUGeneration/>}/>

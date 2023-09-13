@@ -26,7 +26,7 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
 
   
 
-  export const SourceIssuesView =()=>{
+  export const StoreIssuesView =()=>{
     const searchInput = useRef(null);
     const service = new SourceIssuesService
     const [page, setPage] = React.useState(1);
@@ -53,7 +53,7 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
         })
     }
     const  DetailView =(val:any)=>{
-        return navigate(`/source-issues/source-issues-detail-view`,{state:{id:val}});
+        return navigate(`/store-issues/store-issues-detail-view`,{state:{id:val}});
     }
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({
@@ -314,4 +314,4 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
     </Card>
       )
   }
-  export default SourceIssuesView
+  export default StoreIssuesView
