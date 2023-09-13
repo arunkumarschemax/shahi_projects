@@ -104,7 +104,6 @@ const PPMReport = () => {
     service.getPppoNumberForMarketing().then(res => {
         setPoNumber(res.data)
     })
-    console.log(poNumber,"test")
 }
 
   const getData = () => {
@@ -154,6 +153,7 @@ const PPMReport = () => {
       req.DPOMLineItemStatus = selectedLineItemStatus;
     }
 
+    console.log(req,"reqppm")
     service.getPPMData(req)
       .then(res => {
         if (res.status) {
