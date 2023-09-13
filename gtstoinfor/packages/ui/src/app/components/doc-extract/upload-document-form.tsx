@@ -41,6 +41,7 @@ export function UploadDocumentForm() {
   const [description, setDescription] = useState("");
   const [Taxtype, setTaxtype] = useState("");
   const [Taxamount, setTaxamount] = useState("");
+  const[Taxpercentage,setTaxPercentage]=useState("");
   const [Charge, setCharge] = useState("");
   const [unitprice, setUnitprice] = useState("");
   const [unitquantity, setUnitquantity] = useState("");
@@ -271,10 +272,9 @@ export function UploadDocumentForm() {
     setInvoiceDate(date);
   };
 
-
   const handleAddToTable = () => {
-    if (!HSN || !Taxtype || !Taxamount || !Charge || !unitprice || !unitquantity || !quotation) {
-      message.error("Please fill all fields.");
+    if (!HSN || !Taxtype || !Taxamount ||!Taxpercentage|| !Charge || !unitprice || !unitquantity || !quotation) {
+      message.error('Please fill all fields.');
       return;
     }
 
@@ -286,7 +286,8 @@ export function UploadDocumentForm() {
       Charge,
       unitprice,
       unitquantity,
-      quotation
+      quotation,
+      Taxpercentage, 
     };
 
     if (isEditing) {
@@ -296,68 +297,57 @@ export function UploadDocumentForm() {
       setExtractedData(updatedTableData);
       setIsEditing(false);
       setEditingItem(null);
-      setButtonText("Add");
+      setButtonText('Add');
     } else {
       setExtractedData([...extractedData, newItem]);
     }
-    setHSN("");
-    setDescription("");
-    setTaxtype("");
-    setTaxamount("");
-    setCharge("");
-    setUnitprice("");
-    setUnitquantity("");
-    setQuotation("");
-
+    setHSN('');
+    setDescription('');
+    setTaxtype('');
+    setTaxamount('');
+    setCharge('');
+    setTaxPercentage('');
+    setUnitprice('');
+    setUnitquantity('');
+    setQuotation('');
   };
 
+  console.log(extractedData,"extracted data");
+  
   const handleEdit = (item) => {
     setHSN(item.HSN);
     setDescription(item.description);
     setTaxtype(item.Taxtype);
-
-    const taxAmountObj = item.Taxamount;
-    if (typeof taxAmountObj === 'object' && 'percentage' in taxAmountObj && 'amount' in taxAmountObj) {
-      setTaxamount(`${taxAmountObj.percentage}% = ₹${taxAmountObj.amount}`);
-      const percentage = taxAmountObj.percentage;
-      const amount = taxAmountObj.amount;
-      const equivalentFor100Percent = (amount * 100) / percentage;
-      setCharge(equivalentFor100Percent.toFixed(2));
-    } else {
-      setTaxamount(item.Taxamount);
-      setCharge(item.Charge);
-      setUnitprice(item.unitprice);
-
-      setUnitquantity(item.unitquantity);
-
-      setQuotation(item.quotation);
-
-    }
+    setTaxamount(item.Taxamount);
+    setTaxPercentage(item.Taxpercentage); // Set TaxPercentage
+    setCharge(item.Charge);
+    setUnitprice(item.unitprice);
+    setUnitquantity(item.unitquantity);
+    setQuotation(item.quotation);
 
     setIsEditing(true);
     setEditingItem(item);
-    setButtonText("Update");
+    setButtonText('Update');
   };
 
   const handleDelete = (item) => {
     const updatedTableData = extractedData.filter((data) => data !== item);
     setExtractedData(updatedTableData);
   };
-
-
   const handleReset = () => {
-    setHSN("");
-    setDescription("");
-    setTaxtype("");
-    setTaxamount("");
-    setCharge("");
-    setUnitprice("");
-    setUnitquantity("");
-    setQuotation("");
-
+    // Reset all input fields and editing state
+    setHSN('');
+    setDescription('');
+    setTaxtype('');
+    setTaxamount('');
+    setCharge('');
+    setTaxPercentage('');
+    setUnitprice('');
+    setUnitquantity('');
+    setQuotation('');
     setIsEditing(false);
     setEditingItem(null);
-    setButtonText("Add");
+    setButtonText('Add');
   };
 
   const columns = [
@@ -377,39 +367,34 @@ export function UploadDocumentForm() {
       title: 'Tax Amount',
       dataIndex: 'Taxamount',
       key: 'Taxamount',
-      render: (Taxamount) => {
-        if (Taxamount && Taxamount.percentage !== undefined && Taxamount.amount !== undefined) {
-          return `${Taxamount.percentage}% = ₹${Taxamount.amount}`;
-        }
-        return Taxamount;
-      },
+      render: (Taxamount) => (Taxamount !== null ? `₹${Taxamount}` : ''),
     },
-    // {
-    //   title: 'Charge Amount',
-    //   dataIndex: 'Charge',
-    //   key: 'Charge',
-    //   render: (Charge, record) => {
-    //     if (record.Taxamount && record.Taxamount.percentage !== undefined && record.Taxamount.amount !== undefined) {
-    //       const percentage = record.Taxamount.percentage;
-    //       const amount = record.Taxamount.amount;
-    //       const equivalentFor100Percent = (amount * 100) / percentage;
-    //       return `₹${equivalentFor100Percent}`;
-    //     }
-    //     return Charge || '0';
-    //   },
-    // },    
+    {
+      title: 'Tax Percentage',
+      dataIndex: 'Taxpercentage', 
+      key: 'Taxpercentage',
+      render: (Taxpercentage, record) => {
+        if (Taxpercentage !== null) {
+          return `${Taxpercentage}%`;
+        } else if (record.Taxpercentage !== null) {
+          return `${record.Taxpercentage}%`;
+        }
+        return '';
+      },
+    },   
     {
       title: 'Charge Amount',
       dataIndex: 'Charge',
       key: 'Charge',
-      render: (Charge, record) => {
-        if (record.Taxamount && record.Taxamount.percentage !== undefined && record.Taxamount.amount !== undefined) {
-          const percentage = record.Taxamount.percentage;
-          const amount = record.Taxamount.amount;
-          const equivalentFor100Percent = (amount * 100) / percentage;
-          return ` ${equivalentFor100Percent.toFixed(2)}`;
+      render: (Charge, record,index) => {
+        if (record.Taxamount && record.Taxamount.Taxpercentage !== undefined && record.Taxamount.Taxamount !== undefined) {
+          const Taxpercentage = record.Taxamount.Taxpercentage;
+          const Taxamount = record.Taxamount.Taxamount;
+          const equivalentFor100Percent = (Taxamount * 100) / Taxpercentage; 
+          // extractedData[index].Charge = String(equivalentFor100Percent)
+          return `₹${equivalentFor100Percent.toFixed(2)}`;
         }
-        return ` ${Charge}` || '0';
+        return `${Charge || '0'}`;
       },
     },
     {
@@ -448,8 +433,8 @@ export function UploadDocumentForm() {
 
   //   const taxAmountObj = item.Taxamount;
 
-  //   if (typeof taxAmountObj === 'object' && taxAmountObj.hasOwnProperty('percentage') && taxAmountObj.hasOwnProperty('amount')) {
-  //     setTaxamount(`${taxAmountObj.percentage}% = ₹${taxAmountObj.amount}`);
+  //   if (typeof taxAmountObj === 'object' && taxAmountObj.hasOwnProperty('Taxpercentage') && taxAmountObj.hasOwnProperty('amount')) {
+  //     setTaxamount(`${taxAmountObj.Taxpercentage}% = ₹${taxAmountObj.amount}`);
   //   } else {
   //     setTaxamount(item.Taxamount);
   //   }
@@ -466,8 +451,8 @@ export function UploadDocumentForm() {
   //   setTaxtype(item.Taxtype);
 
   //   const taxAmountObj = item.Taxamount;
-  //   if (typeof taxAmountObj === 'object' && 'percentage' in taxAmountObj && 'amount' in taxAmountObj) {
-  //     setTaxamount(`${taxAmountObj.percentage}% = ₹${taxAmountObj.amount}`);
+  //   if (typeof taxAmountObj === 'object' && 'Taxpercentage' in taxAmountObj && 'amount' in taxAmountObj) {
+  //     setTaxamount(`${taxAmountObj.Taxpercentage}% = ₹${taxAmountObj.amount}`);
   //   } else {
   //     setTaxamount(item.Taxamount);
   //   }
@@ -501,19 +486,17 @@ export function UploadDocumentForm() {
 
   const handleUploadDocument = () => {
     if (file) {
-
       const reader = new FileReader();
       reader.onload = (e) => {
         setSelectedImage(e.target.result);
       };
       reader.readAsDataURL(file);
       setIsLoading(true);
-
+  
       console.log("Uploading file:", file);
-
+  
       Tesseract.recognize(file, 'eng', { logger: (m) => console.log(m) })
         .then(({ data: { text } }) => {
-
           setIsLoading(false);
           const extractedGstNumbers = extractGstNumbers(text);
           const extractedvendor = extractVendor(text);
@@ -525,8 +508,7 @@ export function UploadDocumentForm() {
           const extractedFinancialyear = extractFinancialyear(text);
           const extractedCgst = extractCgst(text);
           const extractedSgst = extractSgst(text);
-
-
+  
           setGstNumbers(extractedGstNumbers);
           setInnvoiceamount(extractedInnvoiceamount);
           setInnvoicecurrency(extractedInnvoicecurrency);
@@ -537,17 +519,17 @@ export function UploadDocumentForm() {
           setCgst(extractedCgst);
           setSgst(extractedSgst);
           setFinancialyear(extractedFinancialyear);
-
+  
           const lines = text.split('\n');
-
+  
           const allLines = lines.map((line, index) => ({
             id: index + 1,
             content: line.trim(),
           }));
-
+  
           const structuredHSNLines = [];
           let currentHSN = null;
-
+  
           for (const line of allLines) {
             if (line.content.includes('HSN') || line.content.match(/^\d{6}$/)) {
               if (currentHSN) {
@@ -560,12 +542,12 @@ export function UploadDocumentForm() {
                 description: null,
                 chargeINR: null,
               };
-
+  
               const taxAmountMatch = line.content.match(/(\d+(\.\d{0,2})?)%=(\d+(\.\d{0,2})?)/);
               if (taxAmountMatch) {
                 currentHSN.Taxamount = {
-                  percentage: parseFloat(taxAmountMatch[1]),
-                  amount: parseFloat(taxAmountMatch[3]),
+                  Taxpercentage: parseFloat(taxAmountMatch[1]),
+                  Taxamount: parseFloat(taxAmountMatch[3]),
                 };
               }
             } else if (line.content.includes('IGST|CGST|GSTS|GST')) {
@@ -577,39 +559,45 @@ export function UploadDocumentForm() {
                 currentHSN.chargeINR = parseFloat(chargeValueMatch[1].replace(/,/g, ''));
               }
             }
-
+  
             if (currentHSN && !currentHSN.description) {
               currentHSN.description = line.content.trim();
             }
           }
-
+  
           if (currentHSN) {
             structuredHSNLines.push(currentHSN);
           }
-
+  
+          structuredHSNLines.forEach((line) => {
+            if (line.Taxamount) {
+              line.Taxpercentage = line.Taxamount.Taxpercentage;
+              line.Taxamount = line.Taxamount.Taxamount;
+            }
+          });
+  
           console.log("Structured HSN Lines (JSON):", JSON.stringify(structuredHSNLines, null, 2));
-
+  
           setExtractedData(structuredHSNLines);
-
+  
           const result = {
             "Entire Data": allLines,
           };
-
+  
           const currentFinancialYear = getCurrentFinancialYear();
           setFinancialyear(currentFinancialYear);
-
+  
           const currentDate = new Date();
           const formattedDate = currentDate.toLocaleString();
           setTimecreated(formattedDate);
-
-
+  
           console.log("Result (JSON):", JSON.stringify(result, null, 2));
         });
-
     } else {
       message.error("Please select a file to upload.");
     }
   };
+  
 
   const gstUploadFieldProps: UploadProps = {
     onRemove: () => {
@@ -656,22 +644,22 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    // const req = new AllScanDto(gstNumbers,vendor,invoiceDate ,Innvoiceamount,Innvoicecurrency,Innvoicenum,Cgst,Igst,Sgst,Routing,Financialyear,Timecreated,Comment)
-    const req: any = {
-      GST: gstNumbers,
-      invoiceDate: invoiceDate,
-      InnvoiceAmount: Innvoiceamount,
-      InnvoiceCurrency: Innvoicecurrency,
-      InnvoiceNumber: Innvoicenum,
-      Cgst: Cgst,
-      IGST: Igst,
-      Sgst: Sgst,
-      Vendor: vendor,
-      Routing: routing,
-      Comment: comment,
-      Financialyear: financialyear,
-      Timecreated: timecreated
-    }
+    const req = new AllScanDto(gstNumbers,vendor,invoiceDate,Cgst,Igst,Sgst,Innvoicenum,Innvoiceamount,Innvoicecurrency,routing,comment,timecreated,financialyear,JSON.parse(localStorage.getItem('currentUser')).user.userName)
+    // const req: any = {
+    //   GST: gstNumbers,
+    //   invoiceDate: invoiceDate,
+    //   InnvoiceAmount: Innvoiceamount,
+    //   InnvoiceCurrency: Innvoicecurrency,
+    //   InnvoiceNumber: Innvoicenum,
+    //   Cgst: Cgst,
+    //   IGST: Igst,
+    //   Sgst: Sgst,
+    //   Vendor: vendor,
+    //   Routing: routing,
+    //   Comment: comment,
+    //   Financialyear: financialyear,
+    //   Timecreated: timecreated
+    // }
 
     console.log(req, "submit")
     service
@@ -827,7 +815,7 @@ export function UploadDocumentForm() {
             bordered={true}
             style={{
               flex: 1,
-              width: '720px',
+              width: '760px',
               position: "relative",
               left: "735px",
               bottom: "815px",
@@ -1078,7 +1066,22 @@ export function UploadDocumentForm() {
                     onChange={(e) => setTaxamount(e.target.value)}
                   />
                 </Col>
+
                 <Col span={6}>
+                  <label htmlFor="Taxpercentage" style={{ color: 'black', fontWeight: 'bold' }}>Taxpercentage</label>
+                  <Input
+                    id="Taxpercentage"
+                    name="Taxpercentage"
+                    style={{ width: '150px', height: '30px' }}
+                    value={Taxpercentage}
+                    onChange={(e) => setTaxPercentage(e.target.value)}
+                  />
+                </Col>
+
+              </Row>
+              <Row gutter={12}>
+                
+              <Col span={6}>
                   <label htmlFor="Charge" style={{ color: 'black', fontWeight: 'bold' }}>Charge Amount </label>
                   <Input
                     id="Charge"
@@ -1088,8 +1091,6 @@ export function UploadDocumentForm() {
                     onChange={(e) => setCharge(e.target.value)}
                   />
                 </Col>
-              </Row>
-              <Row gutter={12}>
                 <Col span={6}>
                   <label htmlFor="unitquantity" style={{ color: 'black', fontWeight: 'bold' }}>Unit Quantity</label>
                   <Input
@@ -1126,7 +1127,7 @@ export function UploadDocumentForm() {
             <Button style={{ position: "relative", top: "10px" }} type="primary" onClick={handleAddToTable}>{isEditing ? buttonText : "Add"}
             </Button>
             <Button type="primary" danger style={{ position: "relative", top: "10px", marginLeft: '10px' }} onClick={handleReset}>Reset</Button>
-            <Table style={{ position: "relative", top: "20px" }} dataSource={extractedData} columns={columns} />
+            <Table style={{ position: "relative", top: "25px",right:"25px"}} dataSource={extractedData} columns={columns} />
             {/* <Button
               style={{ position: 'relative', top: '22px' }}
               type="primary"
