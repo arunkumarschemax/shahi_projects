@@ -308,6 +308,7 @@ const FactoryPPMReport = () => {
             req.DPOMLineItemStatus = selectedLineItemStatus;
         }
 
+        console.log(req,'request')
         service.getFactoryReportData(req)
             .then(res => {
                 if (res.status) {
@@ -959,20 +960,7 @@ const FactoryPPMReport = () => {
 
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-                            <Form.Item name="DPOMLineItemStatus" label="Factory Status">
-                                <Select
-                                    showSearch
-                                    placeholder="Select Factory Status"
-                                    optionFilterProp="children"
-                                    allowClear mode='multiple'>
-                                    <Option value="Accepted">ACCEPTED</Option>
-                                    <Option value="Unaccepted">UNACCEPTED</Option>
-                                    {/* <Option value="Cancelled">CANCELLED</Option> */}
-                                    <Option value="Closed">CLOSED</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
+                        
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
                             <Form.Item name='productCode' label='Product Code' >
                                 <Select
@@ -1004,7 +992,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
                             <Form.Item name='colorDesc' label='Color Description' >
                                 <Select
                                     showSearch
@@ -1091,6 +1079,20 @@ const FactoryPPMReport = () => {
                                         return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
                                     })
                                     }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
+                            <Form.Item name="DPOMLineItemStatus" label="Factory Status">
+                                <Select
+                                    showSearch
+                                    placeholder="Select Factory Status"
+                                    optionFilterProp="children"
+                                    allowClear mode='multiple'>
+                                    <Option value="Accepted">ACCEPTED</Option>
+                                    <Option value="Unaccepted">UNACCEPTED</Option>
+                                    {/* <Option value="Cancelled">CANCELLED</Option> */}
+                                    <Option value="Closed">CLOSED</Option>
                                 </Select>
                             </Form.Item>
                         </Col>

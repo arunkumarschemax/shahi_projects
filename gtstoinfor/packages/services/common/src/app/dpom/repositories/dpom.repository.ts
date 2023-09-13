@@ -424,9 +424,12 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.documentStartDate !== undefined) {
             query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`)
         }
-        if (req.DPOMLineItemStatus !== undefined) {
+        if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length > 0) {
             query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+        } else if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length === 0) {
+            query.andWhere(`1=1`);
         }
+        
         if (req.productCode !== undefined) {
             query.andWhere(`dpom.product_code ='${req.productCode}'`)
         }
@@ -490,8 +493,10 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.factory !== undefined) {
             query.andWhere(`dpom.factory ='${req.factory}'`)
         }
-        if (req.DPOMLineItemStatus !== undefined) {
+        if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length > 0) {
             query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+        } else if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length === 0) {
+            query.andWhere(`1=1`);
         }
         return await query.getRawMany();
     }
