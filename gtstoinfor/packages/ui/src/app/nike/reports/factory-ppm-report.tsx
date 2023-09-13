@@ -8,6 +8,7 @@ import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { ColumnsType } from 'antd/es/table';
 import { FactoryReportModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
+const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 
 interface ExpandedRows {
     [key: string]: boolean;
@@ -499,7 +500,8 @@ const FactoryPPMReport = () => {
                 title: 'Factory',
                 dataIndex: 'factory',
                 // ...getColumnSearch('factory'),
-            },
+            }, 
+            
             {
                 title: 'Document Date',
                 dataIndex: 'documentDate',
@@ -515,11 +517,30 @@ const FactoryPPMReport = () => {
             {
                 title: 'PO Line Item Number',
                 dataIndex: 'poLineItemNumber',
-                className: 'centered-column',
+                className: 'centered-column',align: 'center'
+            },
+            {
+                title: 'Trading Co PO Number',
+                dataIndex: 'tradingCoPoNumber',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }}
+                
             },
             {
                 title: 'DPOM Line Item Status',
                 dataIndex: 'DPOMLineItemStatus',
+            },
+            {
+                title: 'Doc Type',
+                dataIndex: 'docTypeCode',
+            },
+            {
+                title: 'Doc Type Description',
+                dataIndex: 'docTypeDesc',
             },
             {
                 title: 'Style Number',
@@ -541,6 +562,39 @@ const FactoryPPMReport = () => {
                         return text;
                     }}
             },
+            {
+                title: 'DESCRIPTION WITH FABRIC CONTENT ',
+                dataIndex: '',
+               
+            },
+            {
+                title: 'Fabric Content as per washcare label',
+                dataIndex: '',
+               
+            },
+            {
+                title: 'Planning Season Code',
+                dataIndex: 'planningSeasonCode',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }}
+               
+            },
+            {
+                title: 'Planning Season Year',
+                dataIndex: 'planningSeasonYear',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }}
+               
+            },
+
             {
                 title: 'CO',
                 dataIndex: 'customerOrder',
@@ -610,8 +664,12 @@ const FactoryPPMReport = () => {
                 dataIndex: 'destinationCountryCode',
             },
             {
-                title: 'destination country Name',
+                title: 'Destination country Name',
                 dataIndex: 'destinationCountry',
+            },
+            {
+                title: 'Geo Code',
+                dataIndex: '',
             },
             {
                 title: 'Plant Code',
@@ -660,32 +718,86 @@ const FactoryPPMReport = () => {
                 align: 'center',
             },
             {
-                title: 'Planning Season Code',
-                dataIndex: 'planningSeasonCode',
+                title: 'Ship to Address Legal PO',
+                dataIndex: 'shipToAddressLegalPO',
                 align: 'center',
-                className: 'centered-column',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
             },
             {
-                title: 'Planning Season Year',
-                dataIndex: 'planningSeasonYear',
+                title: 'Ship to Address DIA',
+                dataIndex: 'shipToAddressDIA',
                 align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
             },
+            
             {
-                title: 'Doc Type',
-                dataIndex: 'docTypeCode',
+                title: 'Diff of Ship to Address',
+                dataIndex: '',
                 align: 'center',
+                render: (text, record) => {
+                    const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+                    const text1 = lines1.join('');
+            
+                    const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+                    const text2 = lines2.join('');
+            
+                    const dmp = new DiffMatchPatch();
+                    const diff = dmp.diff_main(text1, text2);
+                    dmp.diff_cleanupSemantic(diff);
+            
+                    let output = '';
+                    for (const [op, text] of diff) {
+                        if (op === DiffMatchPatch.DIFF_INSERT) {
+                            if (text.trim() !== '') {
+                                output += `${text} `;
+                            }
+                        } else if (op === DiffMatchPatch.DIFF_DELETE) {
+                            if (text.trim() !== '') {
+                                output += `${text} `;
+                            }
+                        }
+                    }
+                    return output.trim()
+                },
             },
-            { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center' },
-            { title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column", },
+            // {
+            //     title: 'Planning Season Code',
+            //     dataIndex: 'planningSeasonCode',
+            //     align: 'center',
+            //     className: 'centered-column',
+            // },
+            // {
+            //     title: 'Planning Season Year',
+            //     dataIndex: 'planningSeasonYear',
+            //     align: 'center',
+            // },
+            // {
+            //     title: 'Doc Type',
+            //     dataIndex: 'docTypeCode',
+            //    align: 'center',
+            //},
+          //  { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center' },
+            { title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column",render: (text, record) => {
+                return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-';
+            },  },
             { title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
                 return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-';
             }, },
             { title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
                 return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
             },  },
-            { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", },
-            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", },
-            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", },
             {
                 title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
                     if (!text || text.trim() === '') {
@@ -696,6 +808,10 @@ const FactoryPPMReport = () => {
                 },
             },
             { title: 'GAC Reason Description', dataIndex: ' ' },
+            { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", },
+            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", },
+            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", },
+            
             { title: 'Shipping Type', dataIndex: 'shippingType' },
             { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
@@ -949,6 +1065,7 @@ const FactoryPPMReport = () => {
                         className="custom-table-wrapper"
                         scroll={{ x: 'max-content' }}
                         rowClassName={getRowClassName}
+                        bordered
                     />
                 ) : (<Table size='large' />
                 )}
