@@ -129,6 +129,8 @@ import SourcingRequisitionReport from "./sourcing-requisition/sourcing-requisiti
 import MarketingReqReport from "./marketing-requisition/marketing-report"
 import SourcingRequisitionDynamicForm from "./sourcing-requisition/sourcing-requisition-dynamic-form"
 import SourcingRequisitionDynamicView from "./sourcing-requisition/sourcing-requisition-dynamic-view"
+import StoreIssue, { SampleRequests } from "./sample-development/source-issue"
+import StoreIssueDetailed, { SourceIssueDetailed } from "./sample-development/source-issue-detailed-view"
 
 
 export const AppRoutes = () => {
@@ -482,6 +484,8 @@ export const AppRoutes = () => {
                     <Route path="sample-development-form" element={<SampleDevForm />}/>
                     <Route path="sample-development-view" element={<SampleDevView />}/>
                     <Route path="sample-development-detail" element={<SampleDevDetail />}/>
+                    <Route path="sample-requests" element={<SampleRequests/>}/>
+                    <Route path="source-issue-detail" element={<SourceIssueDetailed/>}/>
                 </Route>
                 <Route path='/materialCreation'>
                 <Route path='sku-list' element={<SkuList/>}/>
