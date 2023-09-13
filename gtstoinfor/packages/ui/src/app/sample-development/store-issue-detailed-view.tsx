@@ -11,7 +11,7 @@ import { DeleteOutlined } from "@ant-design/icons"
 import TextArea from "antd/es/input/TextArea"
 import React from "react"
 
-export const SourceIssueDetailed = () => {
+export const StoreIssueDetailed = () => {
 
     const navigate = useNavigate()
     const service = new SampleDevelopmentService()
@@ -140,7 +140,7 @@ export const SourceIssueDetailed = () => {
       ];
 
     return(
-        <Card title='Source Issue' className="card-header" onClick={onUpdate} extra={<Button type={'primary'}>View</Button>}>
+        <Card title='Issue Material' className="card-header"  extra={<Button onClick={onUpdate} type={'primary'}>View</Button>}>
              <Descriptions size='small'>
                 <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>
                 <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>
@@ -201,4 +201,4 @@ export const SourceIssueDetailed = () => {
 
 }
 
-export default SourceIssueDetailed
+export default StoreIssueDetailed

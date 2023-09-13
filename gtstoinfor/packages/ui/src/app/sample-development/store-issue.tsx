@@ -55,8 +55,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
   };
 
   const DetailView = (val: any) => {
-    // console.log(val,'llllllllllllllll')
-    return navigate(`/sample-development/source-issue-detail`, { state: { id: val } });
+    return navigate(`/sample-development/store-issue-detail`);
   };
 
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -230,13 +229,14 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       render: (text, rowData, index) => (
         <span style={{ display: 'flex', justifyContent: 'center' }}>
           {" "}
-          <Tooltip placement="top" title="Source Issue">
+          {/* <Tooltip placement="top" title="Source Issue">
             <ExportOutlined
               onClick={() => DetailView(rowData.id)}
               style={{ color: "blue", fontSize: 20 }}
               size={30}
             />
-          </Tooltip>
+          </Tooltip> */}
+          <Button onClick={() => DetailView(rowData.id)}>Issue Material</Button>
         </span>
       ),
     },

@@ -53,7 +53,7 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
         })
     }
     const  DetailView =(val:any)=>{
-        return navigate(`/source-issues/source-issues-detail-view`,{state:{id:val}});
+        return navigate(`/store-issues/store-issues-detail-view`,{state:{id:val}});
     }
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({
