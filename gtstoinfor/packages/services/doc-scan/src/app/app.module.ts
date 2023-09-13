@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { appConfig } from '../../config';
 import { TypeoModule } from './doc-extract-backend/typeo/typeo-module';
+import { PriceModule } from './vendor-price-backend/price-back/price-module';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { TypeoModule } from './doc-extract-backend/typeo/typeo-module';
         connectionLimit: 20
       }
     }),
-    TypeoModule,AppModule
+    TypeoModule,AppModule,PriceModule
   ],
   controllers: [AppController],
   providers: [AppService],

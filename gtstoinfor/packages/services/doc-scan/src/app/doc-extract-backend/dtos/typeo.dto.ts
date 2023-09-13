@@ -1,15 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { PrimaryGeneratedColumn } from "typeorm";
+import { HsnDto } from "./hsn.dto";
 export class ScanDto {
-  @PrimaryGeneratedColumn("increment", {
-    name: "id",
-  })
-  Id: number;
+  
  
   @ApiProperty()
   GST: string;
 
-   @ApiProperty()
+  @ApiProperty()
   Vendor: string;
 
   @ApiProperty()
@@ -18,14 +16,13 @@ export class ScanDto {
   @ApiProperty()
   Cgst: string;
 
-
   @ApiProperty()
   IGST: string;
 
   @ApiProperty()
   Sgst: string;
 
-   @ApiProperty()
+  @ApiProperty()
   InnvoiceNumber: string;
 
   @ApiProperty()
@@ -37,8 +34,8 @@ export class ScanDto {
   @ApiProperty()
   Routing: string;
 
-   @ApiProperty()
-   Comment: string;
+  @ApiProperty()
+  Comment: string;
 
   @ApiProperty()
   Financialyear: string;
@@ -46,21 +43,13 @@ export class ScanDto {
   @ApiProperty()
   Timecreated: string;
 
+  @ApiProperty()
+  createdUser: string;
 
+  // @ApiProperty()
+  // HsnInfo: HsnDto[]
 
-@ApiProperty()
-createdAt:Date;
+  @ApiProperty()
+  Id?: number;
 
-@ApiProperty()
-createdUser:string;
-
-@ApiProperty()
-updatedAt:Date;
-
-@ApiProperty()
-updatedUser:string
-
-
-@ApiProperty()
-versionFlag:number;
 }

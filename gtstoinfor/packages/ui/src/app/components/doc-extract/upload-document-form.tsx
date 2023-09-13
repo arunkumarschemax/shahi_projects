@@ -300,6 +300,9 @@ export function UploadDocumentForm() {
     setUnitquantity('');
     setQuotation('');
   };
+
+  console.log(extractedData,"extracted data");
+  
   const handleEdit = (item) => {
     setHSN(item.HSN);
     setDescription(item.description);
@@ -376,11 +379,12 @@ export function UploadDocumentForm() {
       title: 'Charge',
       dataIndex: 'Charge',
       key: 'Charge',
-      render: (Charge, record) => {
+      render: (Charge, record,index) => {
         if (record.Taxamount && record.Taxamount.Taxpercentage !== undefined && record.Taxamount.Taxamount !== undefined) {
           const Taxpercentage = record.Taxamount.Taxpercentage;
           const Taxamount = record.Taxamount.Taxamount;
           const equivalentFor100Percent = (Taxamount * 100) / Taxpercentage;
+          // extractedData[index].Charge = String(equivalentFor100Percent)
           return `₹${equivalentFor100Percent.toFixed(2)}`;
         }
         return `${Charge || '0'}`;
@@ -390,6 +394,7 @@ export function UploadDocumentForm() {
       title: 'Quotation',
       dataIndex: 'quotation',
       key: 'quotation',
+      
     },
     {
       title: 'Variance',
@@ -402,6 +407,7 @@ export function UploadDocumentForm() {
       title: 'Status',
       dataIndex: 'variance_status',
       key: 'variance_status',
+      
     },
     {
       title: 'Action',
