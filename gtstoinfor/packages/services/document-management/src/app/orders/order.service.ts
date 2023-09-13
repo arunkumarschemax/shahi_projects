@@ -12,6 +12,7 @@ import { FileUploadEntity } from './entities/file-upload.entity';
 import { SaveOrderDto } from './models/order.dto';
 import { DocumentService } from '../document_upload/document.service';
 import { DocumentsListService } from '../document_upload/upload_document.service';
+import { config } from 'packages/libs/shared-services/config';
 import { DocumentsListRequest } from '../document_upload/requests/document-list.request';
 import { appConfig } from 'packages/services/document-management/config';
 import { error } from 'console';
@@ -421,7 +422,8 @@ export class OrdersService {
         let docinfo: any[] = [];
         for (const res of data){
             // console.log(res)
-            const doctlistQuery = 'SELECT customer_po,uid,u.file_name AS NAME,dl.documents_list_id,CONCAT("http://172.20.50.169/edoc7/gtstoinfor",u.file_name) AS url, u.file_path,"application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id   LEFT JOIN document d ON d.id = dl.document_category_id where dl.customer_po ="'+res.PO+'"';
+
+            const doctlistQuery = 'SELECT customer_po,uid,u.file_name AS NAME,dl.documents_list_id,concat("'+config.download_path+'/PO-",dl.customer_po,"/",u.file_name) AS url, u.file_path,"application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id   LEFT JOIN document d ON d.id = dl.document_category_id where dl.customer_po ="'+res.PO+'"';
             const docres = await this.uploadFilesRepository.query(doctlistQuery)
             console.log(docres)
             console.log('#################################')
