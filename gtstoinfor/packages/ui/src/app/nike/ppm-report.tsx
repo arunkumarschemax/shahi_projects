@@ -9,6 +9,8 @@ import moment from 'moment';
 import RangePicker from 'rc-picker/lib/RangePicker';
 import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
+const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
+
 
 const PPMReport = () => {
   const [ppm, setPPM] = useState([]);
@@ -401,6 +403,17 @@ const PPMReport = () => {
         dataIndex: 'factory',
       },
       {
+        title: 'PCD',
+        dataIndex: 'pcd',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }}
+        // ...getColumnSearch('factory'),
+    },
+      {
         title: 'Document Date',
         dataIndex: 'documentDate',
         render: (text) => moment(text).format('MM/DD/YYYY')
@@ -414,9 +427,28 @@ const PPMReport = () => {
         dataIndex: 'poLineItemNumber'
       },
       {
+        title: 'Trading Co PO Number',
+        dataIndex: 'tradingCoPoNumber',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }}
+        
+    },
+      {
         title: 'DPOM Line Item Status',
         dataIndex: 'DPOMLineItemStatus'
       },
+      {
+        title: 'Doc Type',
+        dataIndex: 'docTypeCode',
+    },
+    {
+        title: 'Doc Type Description',
+        dataIndex: 'docTypeDesc',
+    },
       {
         title: 'Style Number',
         dataIndex: 'styleNumber',
@@ -438,28 +470,196 @@ const PPMReport = () => {
         dataIndex: ''
       },
       {
+        title: 'Planning Season Code',
+        dataIndex: 'planningSeasonCode',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }}
+       
+    },
+    {
+        title: 'Planning Season Year',
+        dataIndex: 'planningSeasonYear',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }}
+       
+    },
+
+    {
+        title: 'CO',
+        dataIndex: 'customerOrder',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }}
+    },
+    {
+        title: 'CO Final Approval Date',
+        dataIndex: 'coFinalApprovalDate',
+        className: "right-column",
+        render: (text, record) => {
+            return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
+        }
+    },
+    {
+        title: 'Plan No',
+        dataIndex: 'planNo',
+    },
+    {
+        title: 'Lead Time',
+        dataIndex: 'leadTime',
+        render: (text) => {
+            if (!isNaN(parseFloat(text))) {
+                // If it's a valid number, render it
+                return parseFloat(text).toFixed(2); // You can format it as needed
+            } else {
+                // If it's not a valid number, render a placeholder or an empty string
+                return 'N/A'; // Or any other desired text
+            }
+        }
+    },
+    {
+        title: 'Category',
+        dataIndex: 'categoryCode',
+    },
+      {
         title: 'Category Description',
         dataIndex: 'categoryDesc'
       },
-      {
-        title: "Destination Country ",
-        dataIndex: 'destinationCountry'
-      },
-      {
-        title: "Destination Country Code",
-        dataIndex: 'destinationCountryCode'
-      },
+       {
+        title: 'Vendor Code',
+        dataIndex: 'vendorCode',
+    },
+    {
+        title: 'Global Category Core Focus',
+        dataIndex: 'gccFocusCode',
+    },
+    {
+        title: 'Global Category Core Focus Description',
+        dataIndex: 'gccFocusDesc',
+    },
+    {
+        title: 'Gender Age',
+        dataIndex: 'genderAgeCode',
+        className: 'centered-column',
+    },
+    {
+      title: 'Gender Age Description',
+      dataIndex: 'genderAgeDesc',
+     },
+     {
+      title: "Destination Country Code",
+      dataIndex: 'destinationCountryCode'
+    },
+     {
+      title: "Destination Country Name ",
+      dataIndex: 'destinationCountry'
+    },
+      
+      { title: 'Geo Code', dataIndex: '' },
       {
         title: "Plant Code",
         dataIndex: 'plant'
       },
       {
-        title: 'Geo Code',
-        dataIndex: ''
-      },
-      {
         title: "Plant Name",
         dataIndex: 'plantName'
+      }, 
+    {
+        title: 'UPC',
+        dataIndex: 'UPC',
+    },
+    {
+        title: 'Sales Order Number',
+        dataIndex: '',
+    },
+    {
+        title: 'Sales Order Item Number',
+        dataIndex: '',
+    },
+    {
+        title: 'Customer PO',
+        dataIndex: 'customerPO',
+    },
+    {
+        title: 'Ship To Customer Number',
+        dataIndex: 'shipToCustomerNumber',
+        align: 'center',
+    },
+    {
+        title: 'Ship To Customer Name',
+        dataIndex: 'shipToCustomerName',
+        align: 'center',
+    },
+    {
+        title: 'Ship to Address Legal PO',
+        dataIndex: 'shipToAddressLegalPO',
+        align: 'center',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }
+        },
+    },
+    {
+        title: 'Ship to Address DIA',
+        dataIndex: 'shipToAddressDIA',
+        align: 'center',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }
+        },
+    },
+    
+    {
+        title: 'Diff of Ship to Address',
+        dataIndex: '',
+        align: 'center',
+        render: (text, record) => {
+            const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+            const text1 = lines1.join('');
+    
+            const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+            const text2 = lines2.join('');
+    
+            const dmp = new DiffMatchPatch();
+            const diff = dmp.diff_main(text1, text2);
+            dmp.diff_cleanupSemantic(diff);
+    
+            let output = '';
+            for (const [op, text] of diff) {
+                if (op === DiffMatchPatch.DIFF_INSERT) {
+                    if (text.trim() !== '') {
+                        output += `${text} `;
+                    }
+                } else if (op === DiffMatchPatch.DIFF_DELETE) {
+                    if (text.trim() !== '') {
+                        output += `${text} `;
+                    }
+                }
+            }
+            return output.trim()
+        },
+    },
+    { title:"CAB Code",
+      dataIndex:'CABCode',},
+      {
+        title:'Final Destination',
+        dataIndex:'',
       },
       {
         title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
@@ -477,101 +677,67 @@ const PPMReport = () => {
           return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-';
         },
       },
-      {
-        title: "UPC",
-        dataIndex: 'UPC'
-      },
-      {
-        title: "Trading Co Po Number",
-        dataIndex: 'tradingCoPoNumber', render: (text, record) => {
+    {
+      title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
           if (!text || text.trim() === '') {
-            return '-';
+              return '-';
           } else {
-            return text;
+              return text;
           }
-        },
       },
-      {
-        title: "Doc Type",
-        dataIndex: 'docTypeCode'
-      },
-      {
-        title: "Doc Type Description ",
-        dataIndex: 'docTypeDesc'
-      },
-      {
-        title: "Planning Season Code",
-        dataIndex: 'planningSeasonCode'
-      },
-      {
-        title: "Planning Season Year",
-        dataIndex: 'planningSeasonYear'
-      },
-      {
-        title: "Category",
-        dataIndex: 'categoryCode'
-      },
-      {
-        title: "Vendor Code",
-        dataIndex: 'vendorCode'
-      },
-      {
-        title: "Gender Age",
-        dataIndex: 'genderAgeCode'
-      },
-      {
-        title: "Gender Age Description",
-        dataIndex: 'genderAgeDesc'
-      },
-      {
-        title: "Shipping Type",
-        dataIndex: 'shippingType'
-      },
-      {
-        title: "Planning Priority Number",
-        dataIndex: 'planningPriorityCode',
-        align: 'center',
-        render: (text, record) => {
+  },
+    
+    { title: 'GAC Reason Description', dataIndex: ' ' },
+    { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", },
+    { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", },
+    { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", },
+    
+    { title: 'Shipping Type', dataIndex: 'shippingType' },
+    { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', },
+    { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', render: (text, record) => {
+      if (!text || text.trim() === '') {
+        return '-';
+      } else {
+        return text;
+      }
+    }, },
+    
+     
+    {
+      title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
           if (!text || text.trim() === '') {
-            return '-';
+              return '-';
           } else {
-            return text;
+              return text;
           }
-        },
       },
-      {
-        title: "Planning Priority Description",
-        dataIndex: 'planningPriorityDesc', align: 'center', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-
-      },
-      {
-        title: "Mode Of Transportation",
-        dataIndex: 'modeOfTransportationCode', align: 'center'
-
-      },
-      {
-        title: "In Co Terms",
-        dataIndex: 'inCoTerms'
-      },
-      {
-        title: "Purchase Group",
-        dataIndex: 'purchaseGroupCode'
-      },
-      {
-        title: "Purchase Group Name",
-        dataIndex: 'purchaseGroupName'
-      },
+  },
+  { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
+  { title: 'In Co Terms', dataIndex: 'inCoTerms' },
+  { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
+  {
+      title: 'Purchase Group',
+      dataIndex: 'purchaseGroupCode',
+      className: 'centered-column',
+  },
+  { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
+  
       {
         title: 'Change Register',
         dataIndex: 'displayName',
         align: 'center',
       },
+      {
+        title: 'Trading Co PO Number',
+        dataIndex: 'tradingCoPoNumber',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }
+        },
+    },
       {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty',
@@ -815,6 +981,7 @@ const PPMReport = () => {
             scroll={{ x: 'max-content' }}
             className="custom-table-wrapper"
             rowClassName={getRowClassName}
+            bordered
           />
         ) : (<Table size='large' />
         )}
