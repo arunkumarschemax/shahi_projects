@@ -410,10 +410,12 @@ export const SourcingRequisitionDynamicView = () => {
     }
 
     const HeaderRow = (props: any,) => {
-        const {style,styleDescription} = props
+        const {requestNo,style,styleDescription} = props
           
           return (
             <div style={{ display: "flex" }}>
+              <span>Request Number : {<b>{requestNo}</b>}</span>
+              <span style={{width:'10px'}}></span>
               <span>Style : {<b>{style}</b>}</span>
               <span style={{width:'10px'}}></span>
               <span>Description : {<b>{styleDescription}</b>}</span>
@@ -435,7 +437,7 @@ export const SourcingRequisitionDynamicView = () => {
     }
 
     return(
-        <Card className="card-header" title='Sourcing Requisition Info' extra={<span><Button onClick={() => navigate('/sourcing-requisition-form')} type={'primary'}>New</Button></span>}>
+        <Card className="card-header" title='Requisition'>
             <Form form={sourcingForm}>
                 <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
@@ -465,7 +467,7 @@ export const SourcingRequisitionDynamicView = () => {
 
             <Collapse expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} style={{ width: 1500 }}>
                       {tableData.map((item: any, index: any) => (
-                        <Collapse.Panel header={<HeaderRow style={item.style} styleDescription={item.styleDescription}/>} key={index}>
+                        <Collapse.Panel header={<HeaderRow requestNo={item.requestNo} style={item.style} styleDescription={item.styleDescription}/>} key={index}>
                         <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
                     <Segmented onChange={onSegmentChange} style={{backgroundColor:'#68cc6b'}}
                       options={[

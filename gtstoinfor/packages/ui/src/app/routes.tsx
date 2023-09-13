@@ -129,6 +129,8 @@ import SourcingRequisitionReport from "./sourcing-requisition/sourcing-requisiti
 import MarketingReqReport from "./marketing-requisition/marketing-report"
 import SourcingRequisitionDynamicForm from "./sourcing-requisition/sourcing-requisition-dynamic-form"
 import SourcingRequisitionDynamicView from "./sourcing-requisition/sourcing-requisition-dynamic-view"
+import M3Masters from "./m3Masters/m3-masters"
+import M3MastersView from "./m3Masters/m3-masters-view"
 import { StockView } from "./sourcing-requisition/stock-view"
 
 
@@ -510,8 +512,10 @@ export const AppRoutes = () => {
                     <Route path='/sourcing-requisition' element={<SourcingRequisitionForm/>}/>
                     <Route path='/sourcing-requisition-view' element={<SourcingRequisitionView/>}/>
                     <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
-                    <Route path='/sourcing-requisition-form' element={<SourcingRequisitionDynamicForm/>}/>
-                    <Route path='/sourcing-requisition-dynamic-view' element={<SourcingRequisitionDynamicView/>}/>
+                    <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
+                    <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
+                    <Route path='/m3-masters' element={<M3Masters/>}/>
+                    <Route path='/m3-masters-view' element={<M3MastersView/>}/>
 
 
 

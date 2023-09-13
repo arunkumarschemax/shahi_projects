@@ -34,13 +34,26 @@ export const baseMRouterList = [
 ]
 
 export const baseRouterList = [
-    
     {
-        label: "Sourcing Requisition",
-        key: "sourcingRequisition",
-        path: "sourcing-requisition-dynamic-view",
+        label: "M3 Masters",
+        key: "m3-masters",
+        path: "m3-masters",
         // icon: <DashboardOutlined />,
-        filepath: "/sourcing-requisition-dynamic-view",
+        filepath: "/m3-masters",
+    },
+    {
+        label: "Indent",
+        key: "indent",
+        path: "indent-form",
+        // icon: <DashboardOutlined />,
+        filepath: "/indent-form",
+    },
+    {
+        label: "Requisition",
+        key: "requisition",
+        path: "requisition-view",
+        // icon: <DashboardOutlined />,
+        filepath: "/requisition-view",
     },
     {
         label: "Sourcing Requisition Report",
