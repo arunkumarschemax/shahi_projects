@@ -24,8 +24,6 @@ export const M3Masters = (
         const req = new M3MastersReq(val.category,val.m3Code,val.m3Id)
         
         service.create(req).then(res => {
-            console.log(req,'=========');
-
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 form.resetFields()
@@ -37,9 +35,7 @@ export const M3Masters = (
     const saveData = (values: M3MastersReq) => {
         setDisable(false)
         if(props.isUpdate){
-          props.updateDetails(values);
-          console.log(values,'...........');
-          
+          props.updateDetails(values);          
         }else{
           setDisable(false)
           onSubmit(values);
@@ -47,7 +43,7 @@ export const M3Masters = (
       
       };
     return(
-        <Card  title={props.isUpdate ? 'Update Delivery Terms' : 'Add Delivery Term'} extra={props.isUpdate === true?"":<span><Button onClick={() => navigate('/m3-masters-view')} type={'primary'}>View</Button></span>}className="card-header">
+        <Card  title={props.isUpdate ? 'Update Item Codes' : 'Item Codes'} extra={props.isUpdate === true?"":<span><Button onClick={() => navigate('/m3-masters-view')} type={'primary'}>View</Button></span>}className="card-header">
             <Form form={form} layout="vertical" onFinish={saveData} initialValues={props.m3MasterData}>
                 <Row gutter={24}>
                 <Form.Item name="m3Id" style={{display:'none'}}>
