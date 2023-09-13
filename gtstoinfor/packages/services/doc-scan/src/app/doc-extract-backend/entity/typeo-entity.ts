@@ -110,6 +110,13 @@ export class ScanEntity extends BaseEntity {
   })
   Timecreated: string;
 
+  @Column('varchar', {
+    nullable: false,
+    length: 50,
+    name: 'buyerCode',
+  })
+  buyerCode: string;
+
   @CreateDateColumn({
     name: "created_at",
     type: "datetime"

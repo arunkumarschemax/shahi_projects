@@ -19,6 +19,7 @@ export class ScanAdapter {
         dto. Comment=entity.Comment;
         dto. Financialyear=entity.Financialyear;
         dto. Timecreated=entity.Timecreated;
+        dto. buyerCode=entity.buyerCode;
         dto.createdUser=entity.createdUser;
         
         
@@ -40,6 +41,7 @@ export class ScanAdapter {
         entity.Comment=dto.Comment;
         entity. Financialyear=dto.Financialyear;
         entity. Timecreated=dto.Timecreated;
+        entity. buyerCode=dto.buyerCode;
         entity.createdUser=dto.createdUser;
        
 
