@@ -32,6 +32,8 @@ const PPMReport = () => {
   const [plantCode, setPlantCode] = useState<any>([]);
   const [item, setItem] = useState<any>([]);
   const [factory, setFactory] = useState<any>([]);
+  const [poNumber, setPoNumber] = useState<any>([]);
+
 
 
   useEffect(() => {
@@ -44,6 +46,7 @@ const PPMReport = () => {
     getItem();
     getFactory();
     getData();
+    getPonumber();
   }, [])
 
 
@@ -94,6 +97,11 @@ const PPMReport = () => {
       setFactory(res.data)
     })
   }
+  const getPonumber = () => {
+    service.getPppoNumberForMarketing().then(res => {
+      setPoNumber(res.data)
+    })
+  }
 
   const getData = () => {
     const req = new PpmDateFilterRequest();
@@ -114,8 +122,8 @@ const PPMReport = () => {
     if (form.getFieldValue('productCode') !== undefined) {
       req.productCode = form.getFieldValue('productCode');
     }
-    if (form.getFieldValue('poandLine') !== undefined) {
-      req.poandLine = form.getFieldValue('poandLine');
+    if (form.getFieldValue('poNumber') !== undefined) {
+      req.poNumber = form.getFieldValue('poNumber');
     }
     if (form.getFieldValue('colorDesc') !== undefined) {
       req.colorDesc = form.getFieldValue('colorDesc');
@@ -142,6 +150,7 @@ const PPMReport = () => {
       req.DPOMLineItemStatus = selectedLineItemStatus;
     }
 
+    console.log(req, "reqppm")
     service.getPPMData(req)
       .then(res => {
         if (res.status) {
@@ -453,28 +462,20 @@ const PPMReport = () => {
         dataIndex: 'plantName'
       },
       {
-        title: 'Total Item Qty',
-        dataIndex: 'totalItemQty',
-        align: 'center',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return <strong>{text}</strong>;
-          }
+        title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
+          return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
         },
       },
       {
-        title: "GAC",
-        dataIndex: 'GAC'
-      },
-      {
         title: "MRGAC",
-        dataIndex: 'MRGAC'
+        dataIndex: 'MRGAC', render: (text, record) => {
+          return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-';
+        },
       },
       {
-        title: "OGAC",
-        dataIndex: 'OGAC'
+        title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
+          return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-';
+        },
       },
       {
         title: "UPC",
@@ -571,7 +572,19 @@ const PPMReport = () => {
         dataIndex: 'displayName',
         align: 'center',
       },
+      {
+        title: 'Total Item Qty',
+        dataIndex: 'totalItemQty',
+        align: 'center',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return <strong>{text}</strong>;
+          }
+        },
 
+      },
     ]
 
     sizeHeaders?.forEach(version => {
@@ -833,20 +846,6 @@ const PPMReport = () => {
 
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-              <Form.Item name="DPOMLineItemStatus" label="PPM Status">
-                <Select
-                  showSearch
-                  placeholder="Select PPM Status"
-                  optionFilterProp="children"
-                  allowClear mode='multiple'>
-                  <Option value="Accepted">ACCEPTED</Option>
-                  <Option value="Unaccepted">UNACCEPTED</Option>
-                  <Option value="Cancelled">CANCELLED</Option>
-                  <Option value="Closed">CLOSED</Option>
-                </Select>
-              </Form.Item>
-            </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='productCode' label='Product Code' >
                 <Select
@@ -863,21 +862,21 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-              <Form.Item name='poandLine' label='Po+Line' >
+              <Form.Item name='poNumber' label='Po Number' >
                 <Select
                   showSearch
-                  placeholder="Select Po+Line"
+                  placeholder="Select Po Number"
                   optionFilterProp="children"
                   allowClear
                 >
-                  {poLine.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                  {poNumber.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                   })
                   }
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='colorDesc' label='Color Description' >
                 <Select
                   showSearch
@@ -964,6 +963,20 @@ const PPMReport = () => {
                     return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
                   })
                   }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }} >
+              <Form.Item name="DPOMLineItemStatus" label="PPM Status">
+                <Select
+                  showSearch
+                  placeholder="Select PPM Status"
+                  optionFilterProp="children"
+                  allowClear mode='multiple'>
+                  <Option value="Accepted">ACCEPTED</Option>
+                  <Option value="Unaccepted">UNACCEPTED</Option>
+                  <Option value="Cancelled">CANCELLED</Option>
+                  <Option value="Closed">CLOSED</Option>
                 </Select>
               </Form.Item>
             </Col>

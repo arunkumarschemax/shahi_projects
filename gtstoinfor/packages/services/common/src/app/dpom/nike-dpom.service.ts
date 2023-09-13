@@ -1076,8 +1076,10 @@ export class DpomService {
             if (!sizeDateMap.has(rec.po_and_line)) {
                 sizeDateMap.set(
                     rec.po_and_line,
+                    
                     new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.price, rec.co_price, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.gross_price_fob, rec.ne_inc_disc, rec.trading_net_inc_disc, rec.displayName, rec.actual_unit, rec.allocated_quantity, [])
                 );
+
             }
             const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
             if (rec.size_description !== null) {
@@ -1379,9 +1381,9 @@ export class DpomService {
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
         WHERE f.shahi_confirmed_gross_price IS NOT NULL `;
 
-        if (req.poAndLine) {
-            conditions.push(`d.po_and_line = ?`);
-            queryParams.push(req.poAndLine);
+        if (req.poNumber) {
+            conditions.push(`d.po_number = ?`);
+            queryParams.push(req.poNumber);
         }
         if (req.styleNumber) {
             conditions.push(`d.style_number = ?`);
@@ -1480,9 +1482,9 @@ export class DpomService {
     }
 
     async getPriceDiffPoLinedd(): Promise<CommonResponseModel> {
-        const query = `SELECT DISTINCT d.id,d.po_and_line as poAndLine,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
+        const query = `SELECT DISTINCT d.id,d.po_number as poNumber,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
-        WHERE f.shahi_confirmed_gross_price IS NOT NULL  GROUP BY d.po_and_line`;
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL  GROUP BY d.po_number`;
 
         const data = await this.dpomRepository.query(query)
         if (data.length) {
@@ -1526,6 +1528,20 @@ export class DpomService {
         } else {
             return new CommonResponseModel(false, 0, 'No data')
         }
+    }
+    async getPpmPoNumberForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPoforfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPppoNumberForMarketing(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPoNumberforMarketing()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 }
 

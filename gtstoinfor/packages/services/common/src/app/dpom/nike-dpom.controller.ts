@@ -698,5 +698,21 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getPpmPoNumberForFactory')
+    async getPpmPoNumberForFactory(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmPoNumberForFactory();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPppoNumberForMarketing')
+    async getPppoNumberForMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPppoNumberForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
 

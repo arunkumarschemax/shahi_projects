@@ -44,9 +44,19 @@ const FactoryPPMReport = () => {
     const [plantCode, setPlantCode] = useState<any>([]);
     const [item, setItem] = useState<any>([]);
     const [productCode, setProductCode] = useState<any>([]);
+    const [poNumber,setPoNumber] = useState<any>([]);
 
     useEffect(() => {
         getData();
+        getProductCode();
+        getPoLine();
+        getColorDesc();
+        getcategoryDesc();
+        getcountrydestination();
+        getplantCode();
+        getItem();
+        getFactory();
+        getPonumber();
     }, [])
 
 
@@ -199,17 +209,7 @@ const FactoryPPMReport = () => {
     const ClearData = () => {
         form.resetFields();
     }
-    useEffect(() => {
-        getData();
-        getProductCode();
-        getPoLine();
-        getColorDesc();
-        getcategoryDesc();
-        getcountrydestination();
-        getplantCode();
-        getItem();
-        getFactory();
-    }, [])
+    
 
     const getProductCode = () => {
         service.getPpmProductCodeForFactory().then(res => {
@@ -254,7 +254,12 @@ const FactoryPPMReport = () => {
             setFactory(res.data)
         })
     }
-
+    const getPonumber = () => {
+        service.getPpmPoNumberForFactory().then(res => {
+            setPoNumber(res.data)
+        })
+        console.log(poNumber,"test")
+    }
 
     const getData = () => {
         const req = new PpmDateFilterRequest();
@@ -275,8 +280,8 @@ const FactoryPPMReport = () => {
         if (form.getFieldValue('productCode') !== undefined) {
             req.productCode = form.getFieldValue('productCode');
         }
-        if (form.getFieldValue('poandLine') !== undefined) {
-            req.poandLine = form.getFieldValue('poandLine');
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
         }
         if (form.getFieldValue('colorDesc') !== undefined) {
             req.colorDesc = form.getFieldValue('colorDesc');
@@ -303,6 +308,7 @@ const FactoryPPMReport = () => {
             req.DPOMLineItemStatus = selectedLineItemStatus;
         }
 
+        console.log(req,'request')
         service.getFactoryReportData(req)
             .then(res => {
                 if (res.status) {
@@ -392,7 +398,13 @@ const FactoryPPMReport = () => {
             { title: 'Style Number', dataIndex: 'styleNumber' },
             { title: 'Product Code', dataIndex: 'productCode' },
             { title: 'Colour Description', dataIndex: 'colorDesc' },
-            { title: 'CO', dataIndex: 'customerOrder' },
+            { title: 'CO', dataIndex: 'customerOrder', render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                } 
+            }},
             {
                 title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => {
                     return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-'
@@ -522,10 +534,22 @@ const FactoryPPMReport = () => {
             {
                 title: 'Colour Description',
                 dataIndex: 'colorDesc',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }}
             },
             {
                 title: 'CO',
                 dataIndex: 'customerOrder',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }}
             },
             {
                 title: 'CO Final Approval Date',
@@ -653,8 +677,12 @@ const FactoryPPMReport = () => {
             },
             { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center' },
             { title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column", },
-            { title: 'OGAC', dataIndex: 'OGAC', className: "right-column", },
-            { title: 'GAC', dataIndex: 'GAC', className: "right-column", },
+            { title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
+                return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-';
+            }, },
+            { title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
+                return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
+            },  },
             { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", },
             { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", },
             { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", },
@@ -954,20 +982,7 @@ const FactoryPPMReport = () => {
 
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-                            <Form.Item name="DPOMLineItemStatus" label="Factory Status">
-                                <Select
-                                    showSearch
-                                    placeholder="Select Factory Status"
-                                    optionFilterProp="children"
-                                    allowClear mode='multiple'>
-                                    <Option value="Accepted">ACCEPTED</Option>
-                                    <Option value="Unaccepted">UNACCEPTED</Option>
-                                    {/* <Option value="Cancelled">CANCELLED</Option> */}
-                                    <Option value="Closed">CLOSED</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
+                        
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
                             <Form.Item name='productCode' label='Product Code' >
                                 <Select
@@ -984,22 +999,22 @@ const FactoryPPMReport = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-                            <Form.Item name='poandLine' label='Po+Line' >
+                            <Form.Item name='poNumber' label='Po Number' >
                                 <Select
                                     showSearch
-                                    placeholder="Select Po+Line"
+                                    placeholder="Select Po Number"
                                     optionFilterProp="children"
                                     allowClear
 
                                 >
-                                    {poLine.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                    {poNumber.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                     })
                                     }
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
                             <Form.Item name='colorDesc' label='Color Description' >
                                 <Select
                                     showSearch
@@ -1086,6 +1101,20 @@ const FactoryPPMReport = () => {
                                         return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
                                     })
                                     }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
+                            <Form.Item name="DPOMLineItemStatus" label="Factory Status">
+                                <Select
+                                    showSearch
+                                    placeholder="Select Factory Status"
+                                    optionFilterProp="children"
+                                    allowClear mode='multiple'>
+                                    <Option value="Accepted">ACCEPTED</Option>
+                                    <Option value="Unaccepted">UNACCEPTED</Option>
+                                    {/* <Option value="Cancelled">CANCELLED</Option> */}
+                                    <Option value="Closed">CLOSED</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
