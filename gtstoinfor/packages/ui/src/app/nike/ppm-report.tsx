@@ -981,25 +981,25 @@ const PPMReport = () => {
     },
     {
       title: 'Gross Price/FOB',
-      dataIndex: '',
-      // render: (text, record) => {
-      //     if (!text || text.trim() === '') {
-      //         return '-';
-      //     } else {
-      //         return text;
-      //     }
-      // },
+      dataIndex: 'grossPriceFOB',
+      render: (text, record) => {
+          if (!text || text.trim() === '') {
+              return '-';
+          } else {
+              return text;
+          }
+      },
   },
   {
     title: 'Gross Price/FOB currency code',
-    dataIndex: '',
-    // render: (text, record) => {
-    //     if (!text || text.trim() === '') {
-    //         return '-';
-    //     } else {
-    //         return text;
-    //     }
-    // },
+    dataIndex: 'fobCurrCode',
+    render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    },
 },
 {
   title: 'Buyer Confirmed Gross Price/FOB',
@@ -1047,7 +1047,7 @@ const PPMReport = () => {
 },
 {
   title: 'Legal PO Price',
-  dataIndex: '',
+  dataIndex: 'price',
   
 },
 {
