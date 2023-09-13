@@ -1,4 +1,4 @@
-import { CommonResponseModel, DocumentDto, DocumentResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, DocumentDto, DocumentIdReq, DocumentResponseModel } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class DocumentService extends CommonAxiosService {
@@ -32,5 +32,7 @@ async getDocumentsNotMapped(): Promise<DocumentResponseModel> {
 async updatePriority(req:DocumentDto):Promise<CommonResponseModel>{
   return this.axiosPostCall(this.url + "/updatePriority", req)
 }
-
+async updateDownloadStatus(req:DocumentIdReq):Promise<DocumentResponseModel>{
+  return this.axiosPostCall(this.url + "/updateDownloadStatus", req)
+}
 }

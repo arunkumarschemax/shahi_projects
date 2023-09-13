@@ -60,5 +60,5 @@ export class DocumentEntity {
         name:'is_download',
         enum:DocumentDownloadEnum
     })
-    isDownload : DocumentDownloadEnum;
+    isDownload : string;
 }

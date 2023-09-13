@@ -7,7 +7,7 @@ import { DocumentDto } from './dto/document.dto';
 import { DeleteDto } from './dto/delete-dto';
 import {DocumentResponseModel} from '../../../../../libs/shared-models/src/document-management/document-response.model'
 import { DocumentRepository } from './repository/documents.repository';
-import { CommonResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, DocumentIdReq } from '@project-management-system/shared-models';
 import { DocumentRoleMappingRepository } from './repository/document-role-repository';
 import { UploadFilesRepository } from './repository/upload-files.repository';
 import { DocumentsListRepository } from './repository/documents-list.repository';
@@ -24,7 +24,7 @@ export class DocumentService {
     ) { }
 
     async getAllDocuments(): Promise<DocumentResponseModel> {
-        const query= 'select document_name as documentName,id,created_user as createdUser,updated_user as updatedUser,is_active as isActive,version_flag as versionFlag, priority AS priority from document ORDER BY priority ASC' 
+        const query= 'select document_name as documentName,id,created_user as createdUser,updated_user as updatedUser,is_active as isActive,version_flag as versionFlag, priority AS priority,is_download as isDownload from document ORDER BY priority ASC' 
         const data = await this.repository.query(query)
         console.log(data,'dataa')
         if (data) {
@@ -173,6 +173,18 @@ export class DocumentService {
       }catch(error){
           throw error
         }
+    }
+
+    async updateDownloadStatus(req:DocumentIdReq):Promise<DocumentResponseModel>{
+
+      const update = await this.repository.update({id:req.documentId},{isDownload:req.isDownload})
+      if(update){
+        return new DocumentResponseModel(true,1,'Download Status Update SucessFully')
+      }else{
+        return new DocumentResponseModel(false,0,'Something went wrong',[])
+      }
+
+
     }
 
 

@@ -40,3 +40,15 @@ export class DocumentDto{
 
   }
   }
+
+  export class DocumentIdReq{
+    documentId:number
+    isDownload:string
+    constructor(documentId:number,
+    isDownload:string
+
+      ){
+      this.documentId=documentId
+      this.isDownload=isDownload
+    }
+  }
