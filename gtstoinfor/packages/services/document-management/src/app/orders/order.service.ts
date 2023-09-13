@@ -15,6 +15,8 @@ import { DocumentsListService } from '../document_upload/upload_document.service
 import { DocumentsListRequest } from '../document_upload/requests/document-list.request';
 import { appConfig } from 'packages/services/document-management/config';
 import { error } from 'console';
+import { config } from 'packages/libs/shared-services/config';
+
 let moment = require('moment');
 moment().format();
 import { req } from '../document_upload/requests/importedPoReq';
@@ -423,16 +425,16 @@ export class OrdersService {
         let docinfo: any[] = [];
         for (const res of data){
             // console.log(res)
-            const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("https://edoc-backend.shahiapps.in/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po ="'+res.PO+'"';
+            const doctlistQuery = 'SELECT d.is_download AS downloadStatus,uid,u.file_name AS name, concat("'+config.download_path+'/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po ="'+res.PO+'" and d.is_download = "Yes"';
             const docres = await this.uploadFilesRepository.query(doctlistQuery)
             console.log(docres)
             console.log('#################################')
 
             const docReq:docRequest[] =[];
-            for(const res of docres){
+            for(const res1 of docres){
                 // console.log(res);
-                urls.push(res.url);
-                let data = new docRequest(res.uid,res.name,res.status,res.type,res.url,res.documentName);
+                urls.push(res1.url);
+                let data = new docRequest(res1.uid,res1.name,res1.status,res1.type,res1.url,res1.documentName,res1.downloadStatus);
                 // console.log(data);
                 // console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 

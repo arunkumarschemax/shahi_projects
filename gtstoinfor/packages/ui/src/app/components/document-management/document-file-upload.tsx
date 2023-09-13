@@ -283,57 +283,64 @@ export default function DocumentListupload() {
   };
   const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     try {
-      console.log(pathsData);
-      // Load the initial PDF file (you need to provide a valid URL)
-      const initialPdfUrl = pathsData[0];
-      // 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';
-  
-      const initialPdfResponse = await axios.request({
-        url: initialPdfUrl,
-        method: 'get',
-        responseType: 'arraybuffer',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-        },
-      });
-      const initialPdfBytes = initialPdfResponse.data;
-      console.log('*&*&*&', initialPdfBytes)
-  
-      // Load additional PDFs from URLs (you need to provide valid PDF URLs)
-      const pdfUrls = [
-        'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf',
-      ];
-      // const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
-      //   const response = await fetch(url, { mode: 'no-cors' });
-      //   if (!response.ok) {
-      //     throw new Error(`Failed to fetch ${url}`);
-      //   }
-      //   return response.arrayBuffer();
-      // }));
-      const pdfBytesArray = await fetchPdfBytesArrayWithAxios(pathsData)
-  
-  
-      // Create a new PDF document
-      const mergedPdf = await PDFDocument.create();
-  
-      // Add the pages from the initial PDF
-      // const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
-      // const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
-      // initialPages.forEach((page) => mergedPdf.addPage(page));
-  
-      // Loop through each PDF and add its pages to the merged PDF
-      for (const pdfBytes of pdfBytesArray) {
-        const pdfDoc = await PDFDocument.load(pdfBytes);
-        const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
-        pages.forEach((page) => mergedPdf.addPage(page));
+      if(pathsData.length > 0){
+
+        console.log(pathsData);
+        // Load the initial PDF file (you need to provide a valid URL)
+        const initialPdfUrl = pathsData[0];
+        // 'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf';
+    
+        const initialPdfResponse = await axios.request({
+          url: initialPdfUrl,
+          method: 'get',
+          responseType: 'arraybuffer',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        });
+        const initialPdfBytes = initialPdfResponse.data;
+        console.log('*&*&*&', initialPdfBytes)
+    
+        // Load additional PDFs from URLs (you need to provide valid PDF URLs)
+        const pdfUrls = [
+          'http://localhost:8002/PO-468219-5672/Material preparation-51092.pdf',
+        ];
+        // const pdfBytesArray = await Promise.all(pdfUrls.map(async (url) => {
+        //   const response = await fetch(url, { mode: 'no-cors' });
+        //   if (!response.ok) {
+        //     throw new Error(`Failed to fetch ${url}`);
+        //   }
+        //   return response.arrayBuffer();
+        // }));
+        const pdfBytesArray = await fetchPdfBytesArrayWithAxios(pathsData)
+    
+    
+        // Create a new PDF document
+        const mergedPdf = await PDFDocument.create();
+    
+        // Add the pages from the initial PDF
+        // const initialPdfDoc = await PDFDocument.load(initialPdfBytes);
+        // const initialPages = await mergedPdf.copyPages(initialPdfDoc, initialPdfDoc.getPageIndices());
+        // initialPages.forEach((page) => mergedPdf.addPage(page));
+    
+        // Loop through each PDF and add its pages to the merged PDF
+          for (const pdfBytes of pdfBytesArray) {
+            const pdfDoc = await PDFDocument.load(pdfBytes);
+            const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+            pages.forEach((page) => mergedPdf.addPage(page));
+          }
+      
+          // Save the merged PDF as a blob
+          const mergedPdfBytes = await mergedPdf.save();
+      
+          // Create a Blob and trigger a download
+          const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+          saveAs(blob, 'PO-'+docData[0].customerPo+'.pdf');
       }
-  
-      // Save the merged PDF as a blob
-      const mergedPdfBytes = await mergedPdf.save();
-  
-      // Create a Blob and trigger a download
-      const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
-      saveAs(blob, 'PO-'+docData[0].customerPo+'.pdf');
+      else{
+        AlertMessages.getInfoMessage("Download access disabled. ");
+        console.log('test');
+      }
     } catch (error) {
       console.error('Error merging and downloading PDFs:', error);
     }
