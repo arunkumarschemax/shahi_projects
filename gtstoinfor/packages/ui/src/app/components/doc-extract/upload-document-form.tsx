@@ -30,7 +30,7 @@ export function UploadDocumentForm() {
 
   const navigate = useNavigate();
   const service = new SharedService();
-  const [extractedData, setExtractedData] = useState<Item[]>([]);
+  const [extractedData, setExtractedData] = useState<any>([]);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -98,7 +98,8 @@ export function UploadDocumentForm() {
 
     getdata1();
   }, []);
-
+  
+   console.log(extractedData,"extracted data")
 
   const getdata1 = () => {
     servicess.getAllVendors().then(res => {
@@ -655,7 +656,8 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated,buyerCode, financialyear, JSON.parse(localStorage.getItem('currentUser')).user.userName)
+    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated,buyerCode, financialyear, JSON.parse(localStorage.getItem('currentUser')).user.userName,extractedData)
+
     console.log(req, "submit")
     service
       .postdata(req)
@@ -707,7 +709,7 @@ export function UploadDocumentForm() {
                   <Button
                     key="file"
                     style={{ color: 'black', backgroundColor: '#7ec1ff' }}
-                    icon={<UploadOutlined />}
+                    // icon={<UploadOutlined />}
 
                   >
                     Choose File
@@ -818,7 +820,8 @@ export function UploadDocumentForm() {
               background: '#fff',
               borderTop: '1px solid #e8e8e8',
             }}
-          >
+          > 
+          <Card>
             <Form.Item >
               <Row gutter={24} >
                 <Col span={8}>
@@ -974,7 +977,7 @@ export function UploadDocumentForm() {
 
               <Row gutter={16} style={{ marginTop: '20px' }}>
                 <Col span={6}>
-                  <label htmlFor="Timecreated" style={{ color: 'black', fontWeight: 'bold' }}>Timecreated</label>
+                  <label htmlFor="Timecreated" style={{ color: 'black', fontWeight: 'bold' }}>Time Created</label>
                   <Input
                     id="Timecreated"
                     name="Timecreated"
@@ -1016,13 +1019,12 @@ export function UploadDocumentForm() {
 
               </Row>
 
-              <Button type="primary" htmlType="submit" style={{ position: "relative", top: "10px" }} onClick={onSumbit}>
-                Submit
-              </Button>
+             
 
             </Form.Item>
+            </Card>
 
-          
+           <Card>
             <Form layout='vertical' >
               <Row gutter={12}>
                 <Col span={6}>
@@ -1118,9 +1120,15 @@ export function UploadDocumentForm() {
 
               </Row>
             </Form>
-            <Button style={{ position: "relative", top: "10px" }} type="primary" onClick={handleAddToTable}>{isEditing ? buttonText : "Add"}
+            </Card>
+            <Row style={{float:"right"}}>
+            <Button style={{ position: "relative", top: "10px",backgroundColor:"green" }} type="primary" onClick={handleAddToTable}>{isEditing ? buttonText : "Add"}
             </Button>
             <Button type="primary" danger style={{ position: "relative", top: "10px", marginLeft: '10px' }} onClick={handleReset}>Reset</Button>
+            <Button type="primary" htmlType="submit" style={{ position: "relative", top: "10px",left:"10PX" }} onClick={onSumbit}>
+                Submit
+              </Button>
+              </Row>
             <Table style={{ position: "relative", top: "25px", right: "25px" }} dataSource={extractedData} columns={columns} />
           </Card>
         </div>

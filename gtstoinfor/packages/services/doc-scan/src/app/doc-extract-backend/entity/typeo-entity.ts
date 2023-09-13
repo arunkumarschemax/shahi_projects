@@ -153,7 +153,7 @@ export class ScanEntity extends BaseEntity {
   versionFlag: number;
 
   @OneToMany(()=>HSNEntity,SCAN=>SCAN.data,{cascade:true})
-  scanentity:HSNEntity
+  scanentity:HSNEntity[]
 
 
 

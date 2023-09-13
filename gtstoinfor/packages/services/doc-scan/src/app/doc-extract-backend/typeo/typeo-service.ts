@@ -11,6 +11,7 @@ import { ScanAdapter } from "../adapters/scan-adapters";
 import { ScanDto } from "../dtos/typeo.dto";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {ScanResponseModel} from "../../../../../../libs/shared-models/src/shared-model/scan-response-object";
+import { HSNEntity } from "../entity/hsn-entity";
 
 
 @Injectable()
@@ -21,11 +22,13 @@ export class ScanService {
     private adapter: ScanAdapter,
     @InjectRepository(ScanEntity)
     private repository: Repository<ScanEntity>,
+    // private repository1: Repository<HSNEntity>
   ) { }
 
   async postdata(req: ScanDto): Promise<ScanResponseModel> {
     console.log(req,"88888888888")
     const adapterData = this.adapter.convertDtoToEntity(req);
+    console.log(adapterData,'*******')
     await this.repository.save(adapterData)
     const internalMessage: string = req.GST
       ? "Created Successfully"

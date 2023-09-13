@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Card, Input, Space, Table, message } from 'antd';
+import { Button, Card, Input, Space, Table, Tooltip, message } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { ColumnType } from 'antd/es/table';
 import { SearchOutlined, EyeOutlined, DownloadOutlined, CloudDownloadOutlined } from '@ant-design/icons';
@@ -29,6 +29,8 @@ export function DocView() {
   const [searchText, setSearchText] = useState('');
   const [filteredInfo, setFilteredInfo] = useState({});
   const [sortedInfo, setSortedInfo] = useState<any>({});
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(1);
 
   useEffect(() => {
     getdata();
@@ -152,6 +154,12 @@ export function DocView() {
     //   }
     // },
     {
+      title: 'S.No',
+      key: 'sno',
+      responsive: ['sm'],
+      render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+  },
+    {
       title: 'GST Number', dataIndex: 'GST', key: 'GST', ...getColumnSearchProps("GST"),
       align:"center",
       render: (text: any, record: { GST: any; }) => {
@@ -184,7 +192,9 @@ export function DocView() {
       render: (text, record) => (
         <span style={{ position: "relative", left: "20px" }}>
           {/* <CloudDownloadOutlined style={{ fontSize: '25px', color: '#000000', cursor: 'pointer' }} onClick={() => handleDownload(record.imageFileName)} /> */}
+          <Tooltip title ="Details View">
           <EyeOutlined style={{ fontSize: '25px', color: 'blue', cursor: 'pointer', position: "relative", left: "20px", }} onClick={() => handleViewClick(record)} />
+          </Tooltip>
         </span>
       ),
     },
