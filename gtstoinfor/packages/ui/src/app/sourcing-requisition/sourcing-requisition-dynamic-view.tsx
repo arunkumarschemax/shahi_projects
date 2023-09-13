@@ -596,7 +596,7 @@ export const SourcingRequisitionDynamicView = () => {
                 </Form>
         
 
-            <Collapse expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} >
+            <Collapse expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} accordion>
                       {tableData.map((item: any, index: any) => (
                         <Collapse.Panel header={<HeaderRow requestNo={item.requestNo} style={item.style} styleDescription={item.styleDescription} expectedDate={item.expectedDate} indentDate={item.indentDate}/>} key={index}>
                         <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
