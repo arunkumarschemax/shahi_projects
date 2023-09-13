@@ -1,5 +1,5 @@
 import { CaretDownOutlined, CaretRightOutlined, InfoCircleOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons"
-import { StyleService } from "@project-management-system/shared-services";
+import { RequisitionService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Collapse, Form, Row, Segmented, Select, Space, Table } from "antd"
 import style from "antd/es/alert/style";
 import { ColumnProps } from "antd/es/table";
@@ -17,184 +17,188 @@ export const SourcingRequisitionDynamicView = () => {
     const styleService = new StyleService()
     const [style,setStyle] = useState<any[]>([])
     const navigate = useNavigate()
+    const service = new RequisitionService()
 
 
     const [tableData,setTableData] = useState<any[]>([])
 
-    const [data,setData] = useState<any[]>([
-        {
-            styleId: 11,
-            style:'WV34D103',
-            styleDescription:'ROLL CUFFSHORT',
-            fabricInfo: [
-                {
-                    content:'Natural Fabrics',
-                    fabricType:'Cotton',
-                    weave:'Plain Weave',
-                    weight:'100kg',
-                    width:'100',
-                    construction:'Cotton',
-                    yarnCount:'100',
-                    finish:'shrink resistance treatment',
-                    shrinkage:'2-3 %',
-                    color:'Blue',
-                    pch:'Srinivas',
-                    moq:'100 Pieces',
-                    season:'Summer',
-                    moqPrice:'100 INR',
-                    supplier:'Rajesh',
-                    grnDate:'09-08-2023',
-                    buyer:'Naidu',
-                    xlNo:'24',
-                    quantity:'100',
-                    colorName:'Blue',
-                    weaveName:'Basket Weave',
-                    pchName: 'Sagar',
-                    supplierName:'Naidu',
-                    buyerName:'Rajesh'
-                },
-                {
-                    content:'Natural Fabrics',
-                    fabricType:'Silk',
-                    weave:'Plain Weave',
-                    weight:'200kg',
-                    width:'100',
-                    construction:'Cotton',
-                    yarnCount:'100',
-                    finish:'embossed treatment',
-                    shrinkage:'2-3 %',
-                    color:'Green',
-                    pch:'Srinivas',
-                    moq:'250 Pieces',
-                    season:'Spring',
-                    moqPrice:'100 INR',
-                    supplier:'Rajesh',
-                    grnDate:'09-08-2023',
-                    buyer:'Naidu',
-                    xlNo:'24',
-                    quantity:'100',
-                    colorName:'Green',
-                    weaveName:'Plain Weave',
-                    pchName: 'Sujith',
-                    supplierName:'Srinu',
-                    buyerName:'Rajesh'
+    // const [data,setData] = useState<any[]>([
+    //     {
+    //         styleId: 11,
+    //         style:'WV34D103',
+    //         styleDescription:'ROLL CUFFSHORT',
+    //         fabricInfo: [
+    //             {
+    //                 content:'Natural Fabrics',
+    //                 fabricType:'Cotton',
+    //                 weave:'Plain Weave',
+    //                 weight:'100kg',
+    //                 width:'100',
+    //                 construction:'Cotton',
+    //                 yarnCount:'100',
+    //                 finish:'shrink resistance treatment',
+    //                 shrinkage:'2-3 %',
+    //                 color:'Blue',
+    //                 pch:'Srinivas',
+    //                 moq:'100 Pieces',
+    //                 season:'Summer',
+    //                 moqPrice:'100 INR',
+    //                 supplier:'Rajesh',
+    //                 grnDate:'09-08-2023',
+    //                 buyer:'Naidu',
+    //                 xlNo:'24',
+    //                 quantity:'100',
+    //                 colorName:'Blue',
+    //                 weaveName:'Basket Weave',
+    //                 pchName: 'Sagar',
+    //                 supplierName:'Naidu',
+    //                 buyerName:'Rajesh'
+    //             },
+    //             {
+    //                 content:'Natural Fabrics',
+    //                 fabricType:'Silk',
+    //                 weave:'Plain Weave',
+    //                 weight:'200kg',
+    //                 width:'100',
+    //                 construction:'Cotton',
+    //                 yarnCount:'100',
+    //                 finish:'embossed treatment',
+    //                 shrinkage:'2-3 %',
+    //                 color:'Green',
+    //                 pch:'Srinivas',
+    //                 moq:'250 Pieces',
+    //                 season:'Spring',
+    //                 moqPrice:'100 INR',
+    //                 supplier:'Rajesh',
+    //                 grnDate:'09-08-2023',
+    //                 buyer:'Naidu',
+    //                 xlNo:'24',
+    //                 quantity:'100',
+    //                 colorName:'Green',
+    //                 weaveName:'Plain Weave',
+    //                 pchName: 'Sujith',
+    //                 supplierName:'Srinu',
+    //                 buyerName:'Rajesh'
           
-                },
-            ],
-            trimInfo:[
-                {
-                    trimType: "Button",
-                    trimCode: "BTN001",
-                    description: "Metallic Gold Button",
-                    size: "1cm", // Size in centimeters
-                    color: "Gold",
-                    quantity: 100,
-                    remarks: "Shiny finish",
-                    sizeName:'L',
-                    colorName:'White'
-                },
-                {
-                    trimType: "Zipper",
-                    trimCode: "ZIP002",
-                    description: "Nylon Zipper",
-                    size: "20cm", // Size in centimeters
-                    color: "Black",
-                    quantity: 50,
-                    remarks: "Water-resistant",
-                    sizeName:'L',
-                    colorName:'White'
-                  },
-            ]
-        },
-        {
-            styleId: 12,
-            style:'WV34D104',
-            styleDescription:'Bagee phant',
-            fabricInfo: [
-                {
-                    content:'Natural Fabrics',
-                    fabricType:'Wool',
-                    weave:'Basket Weave',
-                    weight:'100kg',
-                    width:'100',
-                    construction:'Cotton',
-                    yarnCount:'100',
-                    finish:'bulletproofing',
-                    shrinkage:'2-3 %',
-                    color:'Yellow',
-                    pch:'Srinivas',
-                    moq:'200 Pieces',
-                    season:'Winter',
-                    moqPrice:'100 INR',
-                    supplier:'Rajesh',
-                    grnDate:'09-08-2023',
-                    buyer:'Naidu',
-                    xlNo:'24',
-                    quantity:'100',
-                    colorName:'Blue',
-                    weaveName:'Basket Weave',
-                    pchName: 'Sagar',
-                    supplierName:'Naidu',
-                    buyerName:'Rajesh'
+    //             },
+    //         ],
+    //         trimInfo:[
+    //             {
+    //                 trimType: "Button",
+    //                 trimCode: "BTN001",
+    //                 description: "Metallic Gold Button",
+    //                 size: "1cm", // Size in centimeters
+    //                 color: "Gold",
+    //                 quantity: 100,
+    //                 remarks: "Shiny finish",
+    //                 sizeName:'L',
+    //                 colorName:'White'
+    //             },
+    //             {
+    //                 trimType: "Zipper",
+    //                 trimCode: "ZIP002",
+    //                 description: "Nylon Zipper",
+    //                 size: "20cm", // Size in centimeters
+    //                 color: "Black",
+    //                 quantity: 50,
+    //                 remarks: "Water-resistant",
+    //                 sizeName:'L',
+    //                 colorName:'White'
+    //               },
+    //         ]
+    //     },
+    //     {
+    //         styleId: 12,
+    //         style:'WV34D104',
+    //         styleDescription:'Bagee phant',
+    //         fabricInfo: [
+    //             {
+    //                 content:'Natural Fabrics',
+    //                 fabricType:'Wool',
+    //                 weave:'Basket Weave',
+    //                 weight:'100kg',
+    //                 width:'100',
+    //                 construction:'Cotton',
+    //                 yarnCount:'100',
+    //                 finish:'bulletproofing',
+    //                 shrinkage:'2-3 %',
+    //                 color:'Yellow',
+    //                 pch:'Srinivas',
+    //                 moq:'200 Pieces',
+    //                 season:'Winter',
+    //                 moqPrice:'100 INR',
+    //                 supplier:'Rajesh',
+    //                 grnDate:'09-08-2023',
+    //                 buyer:'Naidu',
+    //                 xlNo:'24',
+    //                 quantity:'100',
+    //                 colorName:'Blue',
+    //                 weaveName:'Basket Weave',
+    //                 pchName: 'Sagar',
+    //                 supplierName:'Naidu',
+    //                 buyerName:'Rajesh'
           
-                },
-                {
-                    content:'Natural Fabrics',
-                    fabricType:'Cotton',
-                    weave:'Checked Weave',
-                    weight:'250kg',
-                    width:'100',
-                    construction:'Cotton',
-                    yarnCount:'100',
-                    finish:'shrink resistance treatment',
-                    shrinkage:'2-3 %',
-                    color:'White',
-                    pch:'Srinivas',
-                    moq:'100 Pieces',
-                    season:'Summer',
-                    moqPrice:'100 INR',
-                    supplier:'Rajesh',
-                    grnDate:'09-08-2023',
-                    buyer:'Naidu',
-                    xlNo:'24',
-                    quantity:'100',
-                    colorName:'Blue',
-                    weaveName:'Basket Weave',
-                    pchName: 'Sagar',
-                    supplierName:'Naidu',
-                    buyerName:'Rajesh'
+    //             },
+    //             {
+    //                 content:'Natural Fabrics',
+    //                 fabricType:'Cotton',
+    //                 weave:'Checked Weave',
+    //                 weight:'250kg',
+    //                 width:'100',
+    //                 construction:'Cotton',
+    //                 yarnCount:'100',
+    //                 finish:'shrink resistance treatment',
+    //                 shrinkage:'2-3 %',
+    //                 color:'White',
+    //                 pch:'Srinivas',
+    //                 moq:'100 Pieces',
+    //                 season:'Summer',
+    //                 moqPrice:'100 INR',
+    //                 supplier:'Rajesh',
+    //                 grnDate:'09-08-2023',
+    //                 buyer:'Naidu',
+    //                 xlNo:'24',
+    //                 quantity:'100',
+    //                 colorName:'Blue',
+    //                 weaveName:'Basket Weave',
+    //                 pchName: 'Sagar',
+    //                 supplierName:'Naidu',
+    //                 buyerName:'Rajesh'
         
-                }
-            ],
-            trimInfo:[
-                  {
-                    trimType: "Thread",
-                    trimCode: "THR003",
-                    description: "Cotton Sewing Thread",
-                    size: "100m", // Size in meters
-                    color: "White",
-                    quantity: 200,
-                    remarks: "Strong and durable",
-                    sizeName:'L',
-                    colorName:'White'
-                  },
-                  {
-                    trimType: "Fabric",
-                    trimCode: "FAB004",
-                    description: "Cotton Blend Fabric",
-                    size: "2.5m", // Size in meters
-                    color: "Blue",
-                    quantity: 30,
-                    remarks: "Soft and breathable",
-                    sizeName:'L',
-                    colorName:'White'
-                  },
-            ]
-        }
-    ])
+    //             }
+    //         ],
+    //         trimInfo:[
+    //               {
+    //                 trimType: "Thread",
+    //                 trimCode: "THR003",
+    //                 description: "Cotton Sewing Thread",
+    //                 size: "100m", // Size in meters
+    //                 color: "White",
+    //                 quantity: 200,
+    //                 remarks: "Strong and durable",
+    //                 sizeName:'L',
+    //                 colorName:'White'
+    //               },
+    //               {
+    //                 trimType: "Fabric",
+    //                 trimCode: "FAB004",
+    //                 description: "Cotton Blend Fabric",
+    //                 size: "2.5m", // Size in meters
+    //                 color: "Blue",
+    //                 quantity: 30,
+    //                 remarks: "Soft and breathable",
+    //                 sizeName:'L',
+    //                 colorName:'White'
+    //               },
+    //         ]
+    //     }
+    // ])
+
+    const [data,setData] = useState<any[]>([])
 
     useEffect(() => {
         getStyle()
+        getAll()
     },[])
 
     useEffect(() => {
@@ -202,6 +206,14 @@ export const SourcingRequisitionDynamicView = () => {
             setTableData(data)
         }
     },[data])
+
+    const getAll = () => {
+        service.getAll().then(res => {
+            if(res.status){
+                setData(res.data)
+            }
+        })
+    }
 
     const getStyle = () => {
         styleService.getAllActiveStyle().then(res =>{
@@ -350,6 +362,25 @@ export const SourcingRequisitionDynamicView = () => {
             title:'Quantity',
             dataIndex:'quantity'
         },
+        {
+            title:'Available Quantity',
+            dataIndex:'availableQuantity'
+        },
+        {
+            title:'Status',
+            dataIndex:'status'
+        },
+        {
+            title:'To Be Procured',
+            dataIndex:'tobeProcured',
+            render:(text,record) => {
+                return(
+                    <>
+                    {record.quantity ? record.quantity - record.availableQuantity : '-'}
+                    </>
+                )
+            }
+        },
     ]
 
     const columnsSkelton: any = [
@@ -402,6 +433,25 @@ export const SourcingRequisitionDynamicView = () => {
           title: 'Remarks',
           dataIndex: 'remarks',
         },
+        {
+            title:'Available Quantity',
+            dataIndex:'availableQuantity'
+        },
+        {
+            title:'Status',
+            dataIndex:'status'
+        },
+        {
+            title:'To Be Procured',
+            dataIndex:'tobeProcured',
+            render:(text,record) => {
+                return(
+                    <>
+                    {record.quantity ? record.quantity - record.availableQuantity : '-'}
+                    </>
+                )
+            }
+        },
         
     ]
 
@@ -430,18 +480,31 @@ export const SourcingRequisitionDynamicView = () => {
     }
     
     const onSearch = () => {
-        const styleId = sourcingForm.getFieldValue('style')
-        const filterData = data.filter((e) => e.styleId === styleId)
+        let filterData = []
+        if(sourcingForm.getFieldValue('style') !== undefined){
+            const styleId = sourcingForm.getFieldValue('style')
+            filterData = data.filter((e) => e.styleId === styleId)
+        } else if(sourcingForm.getFieldValue('requestNo') !== undefined){
+            const reqno = sourcingForm.getFieldValue('requestNo')
+            filterData = data.filter((e) => e.requestNo === reqno)
+        }
         setTableData(filterData)
-
     }
 
     return(
         <Card className="card-header" title='Requisition'>
             <Form form={sourcingForm}>
                 <Row gutter={8}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+                    <Form.Item name='requestNo' label='Request Number'>
+                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Request Number'>
+                            <Option key={'REQ001'} value='REQ001'>REQ001</Option>
+                            <Option  key={'REQ002'} value='REQ002'>REQ002</Option>
+                    </Select>
+                    </Form.Item>
+                    </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-                    <Form.Item name='style' label='Style' rules={[{required:true,message:'Style is required'}]}>
+                    <Form.Item name='style' label='Style'>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style'>
                             {style.map(e => {
                                 return(
@@ -463,9 +526,9 @@ export const SourcingRequisitionDynamicView = () => {
                     </Col>
                 </Row>
                 </Form>
-         <div style={{ display: "flex", justifyContent: 'space-evenly', color: 'blue' }}>
+        
 
-            <Collapse expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} style={{ width: 1500 }}>
+            <Collapse expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} >
                       {tableData.map((item: any, index: any) => (
                         <Collapse.Panel header={<HeaderRow requestNo={item.requestNo} style={item.style} styleDescription={item.styleDescription}/>} key={index}>
                         <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
@@ -491,7 +554,7 @@ export const SourcingRequisitionDynamicView = () => {
                     />
                     <div>
                         {tabName === 'Fabric' ? (<>
-                        <Table columns={columns} dataSource={item.fabricInfo} pagination={false}/>
+                        <Table columns={columns} dataSource={item.fabricInfo} pagination={false} scroll={{x:'max-content'}}/>
                         </>) : (<></>)}
                     </div>
                     <div>
@@ -503,7 +566,7 @@ export const SourcingRequisitionDynamicView = () => {
                         </Collapse.Panel>
                       ))}
                     </Collapse>
-            </div>
+          
         </Card>
     )
 }

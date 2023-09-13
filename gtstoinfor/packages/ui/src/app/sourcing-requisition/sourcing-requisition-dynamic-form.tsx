@@ -193,6 +193,7 @@ export const SourcingRequisitionDynamicForm = () => {
                 yarnUnit: defaultFabricFormData.yarnUnit,
                 finish : defaultFabricFormData.finish,
                 shrinkage : defaultFabricFormData.shrinkage,
+                m3FabricCode: defaultFabricFormData.m3FabricCode,
                 color : defaultFabricFormData.color,
                 pch  : defaultFabricFormData.pch,
                 moq  : defaultFabricFormData.moq,
@@ -218,6 +219,7 @@ export const SourcingRequisitionDynamicForm = () => {
                 size : defaultTrimFormData.size,
                 color : defaultTrimFormData.color,
                 quantity : defaultTrimFormData.quantity,
+                m3TrimCode: defaultFabricFormData.m3TrimCode,
                 description : defaultTrimFormData.description,
                 remarks : defaultTrimFormData.remarks
             })
@@ -568,7 +570,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const onSubmit = () =>{
         sourcingForm.validateFields().then(() => {
 
-            const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),sourcingForm.getFieldValue('expectedDate'),fabricTableData,trimsTableData)
+            const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),sourcingForm.getFieldValue('expectedDate'),sourcingForm.getFieldValue('requestNo'),fabricTableData,trimsTableData)
             console.log(req)
             onReset()
         }).catch(() => {
