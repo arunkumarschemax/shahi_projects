@@ -173,24 +173,23 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
             let urls:any[] = [];
             if(result.length >0){
             for (const res of result){
-                const doctlistQuery = 'SELECT uid,u.file_name AS name, concat("'+config.download_path+'/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where u.document_list_id ='+res.documentsListId;
+                const doctlistQuery = 'SELECT d.is_download AS downloadStatus, uid,u.file_name AS name, concat("'+config.download_path+'/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where u.document_list_id ='+res.documentsListId;
                 const docres = await this.uploadFilesRepository.query(doctlistQuery)
 
                 const docReq:docRequest[] =[];
-                for(const res of docres){
-                    console.log(res);
-                    urls.push(res.url);
-                    let data = new docRequest(res.uid,res.name,res.status,res.type,res.url,res.documentName);
-                    console.log(data);
-                    console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-
+                for(const res1 of docres){
+                    console.log(res1);
+                    if(res1.downloadStatus === "Yes"){
+                        urls.push(res1.url);
+                    }
+                    let data = new docRequest(res1.uid,res1.name,res1.status,res1.type,res1.url,res1.documentName,res1.downloadStatus);
                     docReq.push(data);
                 }
                 // console.log(docReq,'docReq')
                 // console.log(res.status,'resssssssssssssssssssssssssssss')
                 docinfo.push(new UploadDocumentListDto(res.documentsListId,res.documentCategoryId,res.role_id,res.poNumber,1,res.documentName,res.dlFilePath,res.uploadStatus,res.isActive,'','','','',1,docReq,res.status,res.documentName) )
                 // result.documentsPath = docReq;
-                console.log( docinfo,' result.documentsPath')
+                // console.log( docinfo,' result.documentsPath')
             }
                 return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',docinfo,urls)
             }else{

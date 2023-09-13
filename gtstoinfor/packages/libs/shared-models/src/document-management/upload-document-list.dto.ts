@@ -1,3 +1,5 @@
+import { DocumentDownloadEnum } from "./document-download-enum";
+
 export class UploadDocumentListDto{
     documentsListId: number;
     documentCategoryId: number;
@@ -84,12 +86,14 @@ export class docRequest{
     type:string;
     url:string;
     documentName:string;
-    constructor(uid: string,name:string,status:string,type:string,url:string,documentName:string){
+    downloadStatus:DocumentDownloadEnum | string;
+    constructor(uid: string,name:string,status:string,type:string,url:string,documentName:string, downloadStatus:DocumentDownloadEnum | string){
         this.uid = uid;
         this.name = name;
         this.status = status;
         this.type = type;
         this.url = url;
         this.documentName = documentName;
+        this.downloadStatus = downloadStatus;
     }
 }
