@@ -176,7 +176,6 @@ export class DpomService {
         }
     }
 
-
     async getCRMOrderDetails1(): Promise<any> {
         const buyerPO = 'DV3934'
         const data = await AppDataSource1.query(`select * from movex.nike_co_view where byuer_po = '${buyerPO}'`)
@@ -209,9 +208,12 @@ export class DpomService {
 
     async createCOline(req: any): Promise<CommonResponseModel> {
         try {
-            req.styleNumber = 'FN389'
+            req.purchaseOrderNumber = 3504865987
+            req.poLineItemNumber = 10000
+            req.scheduleLineItemNumber = 100
+            const styleNumber = 'FN389'
             const m3Config = appConfig.m3Cred.headerRequest()
-            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.poNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${req.styleNumber}`;
+            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.purchaseOrderNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${styleNumber}`;
             const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
             console.log(response, 'response')
             console.log(response.data?.MIRecord, 'MIRecord')
@@ -223,6 +225,7 @@ export class DpomService {
             // const myObj = construnctDataFromM3Result(meToCustomObj, response.data.MIRecord)
             if (response.status !== 200)
                 return new CommonResponseModel(false, 1, `Validation failed as`)
+            await this.approveDpomLineItemStatus(req);
             return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {
             console.log(err)
@@ -292,25 +295,27 @@ export class DpomService {
                     // Calculate the difference in days
                     const daysDifference = date4.diff(date3, 'days');
 
-                    const text = "HANGING IS REQUIRED: Each garment must be hung on a GS1 black style hanger HCLR12. The carton contents should be placed in at least one GOH polybag and polybag(s) placed in a GOH shipping carton. A per unit upcharge has been added to this PO for garment on hanger. CROWN SIZER REQUIRED: A Crown Sizer must be placed on all hangers for this Purchase Order. Purchase order is to be packed by sku(one style / color / size) per carton. Total units per carton should be 012 units per carton."
+                    const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions ? orderDetail.poLine.itemVas.valueAddedServiceInstructions : ' '
                     //orderDetail.poLine.itemVas.valueAddedServiceInstructions;
                     const searchText = "HANGING IS REQUIRED";
                     let hanger: string;
                     if (text.includes(searchText)) {
-                        const hanger = 'YES'
+                        hanger = 'YES'
                     } else {
                         hanger = 'NO';
                     }
 
                     // Diverted PO's
-                    const itemText = orderDetail.poLine.itemTextDetail.textDetails;
-                    const pattern = /diverted to.*?Purchase Order (\d+ \/ \d+)/g;
+                    const itemText = orderDetail.poLine.itemTextDetail.textDetails ? orderDetail.poLine.itemTextDetail.textDetails : null;
                     const matches = [];
+                    if (itemText != null) {
+                        const pattern = /diverted to.*?Purchase Order (\d+ \/ \d+)/g;
 
-                    let match;
-                    if (itemText !== null) {
-                        while ((match = pattern.exec(itemText)) !== null) {
-                            matches.push(match[1]);
+                        let match;
+                        if (itemText !== null) {
+                            while ((match = pattern.exec(itemText)) !== null) {
+                                matches.push(match[1]);
+                            }
                         }
                     }
 
@@ -386,6 +391,92 @@ export class DpomService {
             } else {
                 await transactionManager.completeTransaction()
                 return new CommonResponseModel(true, 1, 'Data retrived successfully')
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction()
+            return new CommonResponseModel(false, 0, error)
+        }
+    }
+
+    async saveDIAPDFData(req: DiaPDFDto): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource)
+        try {
+            await transactionManager.startTransaction()
+            const orderDetails = await this.dpomRepository.find({ where: { purchaseOrderNumber: req.poNumber, poLineItemNumber: req.lineNo } })
+            if (orderDetails) {
+                for (const detail of orderDetails) {
+                    const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: detail.purchaseOrderNumber, poLineItemNumber: detail.poLineItemNumber, scheduleLineItemNumber: detail.scheduleLineItemNumber }, {
+                        shipToAddressDIA: req.shipToAddress, CABCode: req.cabCode
+                    })
+                    if (!updateOrder.affected) {
+                        await transactionManager.releaseTransaction();
+                        return new CommonResponseModel(false, 0, 'Something went wrong in order update')
+                    }
+                }
+                await transactionManager.completeTransaction()
+                return new CommonResponseModel(true, 1, 'PDF data updated successfully')
+            } else {
+                await transactionManager.releaseTransaction();
+                return new CommonResponseModel(false, 0, 'No POs data found relavent to PDF uploaded')
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction()
+            return new CommonResponseModel(false, 0, error)
+        }
+    }
+
+    async saveLegalPOPDFData(req: any): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource)
+        try {
+            await transactionManager.startTransaction()
+            const orderDetails = await this.dpomRepository.find({ where: { purchaseOrderNumber: req.poNumber } })
+            if (orderDetails) {
+                for (const item of req.poItemDetails) {
+                    console.log('BBBBBBBBB')
+                    const itemText = item.itemVasText ? item.itemVasText : null;
+                    const matches = [];
+                    let hanger = '-';
+                    if (itemText != null) {
+                        const pattern = /diverted to.*?Purchase Order (\d+ \/ \d+)/g;
+
+                        let match;
+                        if (itemText !== null) {
+                            while ((match = pattern.exec(itemText)) !== null) {
+                                matches.push(match[1]);
+                            }
+                        }
+
+                        const searchText = "HANGING IS REQUIRED";
+                        if (itemText.includes(searchText)) {
+                            hanger = 'YES'
+                        } else {
+                            hanger = 'NO';
+                        }
+                    }
+
+                    const regex = /(\d+\.\d+)/; // This regex matches a number with decimal places
+                    let price
+                    for (const size of item.poItemVariantDetails) {
+                        console.log(item.poItemVariantDetails)
+                        const match = size.unitPrice.match(regex);
+
+                        if (match && match.length > 1) {
+                            price = match[1];
+                        }
+                        const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: req.poNumber, poLineItemNumber: parseInt(item.itemNo, 10), sizeDescription: size.size }, {
+                            shipToAddressLegalPO: item.shipToAddress, quantity: Number(size.qunatity), price: price, itemVasPDF: req.itemVasText, divertedToPos: matches.join(',')
+                        })
+                        if (!updateOrder.affected) {
+                            await transactionManager.releaseTransaction();
+                            return new CommonResponseModel(false, 0, 'Something went wrong in order update')
+                        }
+                    }
+                }
+                await transactionManager.completeTransaction()
+                return new CommonResponseModel(true, 1, 'Data retrived successfully')
+            } else {
+                await transactionManager.releaseTransaction();
+                return new CommonResponseModel(false, 0, 'No POs data found relavent to PDF uploaded')
             }
         } catch (error) {
             await transactionManager.releaseTransaction()
@@ -670,6 +761,7 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'data not found')
         }
     }
+
     async getFabricTrackerReport(): Promise<CommonResponseModel> {
         const details = await this.dpomRepository.find();
         if (details.length > 0) {
@@ -767,15 +859,6 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'Data retrieved', data)
         else
             return new CommonResponseModel(false, 0, 'No data found');
-    }
-
-    async saveDiaPDFFields(data: DiaPDFDto): Promise<CommonResponseModel> {
-        const updateData = await this.dpomRepository.update({ purchaseOrderNumber: data.poNumber, poLineItemNumber: data.lineNo }, { CABCode: data.cabCode, shipToAddressDIA: data.shipToAddress })
-        if (updateData.affected) {
-            return new CommonResponseModel(true, 1111, "DIA Data updated sucessfully")
-        } else {
-            return new CommonResponseModel(false, 1010, "The  PO Number of the uploaded document not exist")
-        }
     }
 
     async getItemChangeData(): Promise<CommonResponseModel> {
@@ -916,10 +999,7 @@ export class DpomService {
 
     async getFactoryReportData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
         try {
-            const allDetails = await this.dpomRepository.getFactoryPpmData(req);
-
-            const filteredDetails = allDetails.filter(record => record.doc_type_code !== 'ZP26')
-            const details = filteredDetails.filter(record => record.dpom_item_line_status !== 'Cancelled')
+            const details = await this.dpomRepository.getFactoryPpmData(req);
             if (details.length === 0) {
                 return new CommonResponseModel(false, 0, 'data not found');
             }
@@ -987,8 +1067,7 @@ export class DpomService {
     }
 
     async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
-        const alldata = await this.dpomRepository.getMarketingPpmData(req);
-        const details = alldata.filter(record => record.doc_type_code !== 'ZP26')
+        const details = await this.dpomRepository.getMarketingPpmData(req);
         if (details.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found')
         }
@@ -997,8 +1076,10 @@ export class DpomService {
             if (!sizeDateMap.has(rec.po_and_line)) {
                 sizeDateMap.set(
                     rec.po_and_line,
+                    
                     new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.price, rec.co_price, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.gross_price_fob, rec.ne_inc_disc, rec.trading_net_inc_disc, rec.displayName, rec.actual_unit, rec.allocated_quantity, [])
                 );
+
             }
             const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
             if (rec.size_description !== null) {
@@ -1007,9 +1088,6 @@ export class DpomService {
         }
         const dataModelArray: MarketingModel[] = Array.from(sizeDateMap.values());
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
-    }
-    catch(e) {
-        return new CommonResponseModel(false, 0, 'failed', e);
     }
 
     async getPoAndQtyDashboard(req: PoAndQtyReq): Promise<CommonResponseModel> {
@@ -1145,8 +1223,6 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'failed', error);
         }
     }
-
-
 
     async getDivertReportData(): Promise<CommonResponseModel> {
         const reports = await this.dpomRepository.getDivertReport();
@@ -1296,43 +1372,42 @@ export class DpomService {
     //     }
     // }
 
-    
-      async getPriceDifferenceReport(req: FobPriceDiffRequest): Promise<CommonResponseModel> {
+
+    async getPriceDifferenceReport(req: FobPriceDiffRequest): Promise<CommonResponseModel> {
         const conditions = [];
         const queryParams: any[] = [];
-        
+
         let query = `SELECT DISTINCT d.po_number as poNumber,d.po_and_line as poAndLine,d.po_line_item_number as poLineItemNumber,d.style_number as styleNumber,d.size_description as sizeDescription,d.gross_price_fob as grossPriceFob,d.fob_currency_code as fobCurrencyCode,f.shahi_confirmed_gross_price as shahiConfirmedgrossPrice,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
         WHERE f.shahi_confirmed_gross_price IS NOT NULL `;
-      
-        if (req.poAndLine) {
-          conditions.push(`d.po_and_line = ?`);
-          queryParams.push(req.poAndLine);
+
+        if (req.poNumber) {
+            conditions.push(`d.po_number = ?`);
+            queryParams.push(req.poNumber);
         }
         if (req.styleNumber) {
-          conditions.push(`d.style_number = ?`);
-          queryParams.push(req.styleNumber);
+            conditions.push(`d.style_number = ?`);
+            queryParams.push(req.styleNumber);
         }
         if (req.sizeDescription) {
-          conditions.push(`d.size_description = ?`);
-          queryParams.push(req.sizeDescription);
+            conditions.push(`d.size_description = ?`);
+            queryParams.push(req.sizeDescription);
         }
-      
         if (conditions.length > 0) {
-          const conditionString = conditions.join(' AND ');
-          query += ` AND (${conditionString})`;
+            const conditionString = conditions.join(' AND ');
+            query += ` AND (${conditionString})`;
         }
-      
+
+        query += ` GROUP BY d.po_number, d.size_description `;
+
         const data = await this.dpomRepository.query(query, queryParams);
-      
+
         if (data.length) {
-          return new CommonResponseModel(true, 1, 'data retrieved', data);
+            return new CommonResponseModel(true, 1, 'data retrieved', data);
         } else {
-          return new CommonResponseModel(false, 0, 'error');
+            return new CommonResponseModel(false, 0, 'error');
         }
-      }
-      
-      
+    }
 
     async getPpmPlantForMarketing(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmPlantForMarketing()
@@ -1405,10 +1480,11 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getPriceDiffPoLinedd(): Promise<CommonResponseModel> {
-        const query = `SELECT DISTINCT d.id,d.po_and_line as poAndLine,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
+        const query = `SELECT DISTINCT d.id,d.po_number as poNumber,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
-        WHERE f.shahi_confirmed_gross_price IS NOT NULL  GROUP BY d.po_and_line`;
+        WHERE f.shahi_confirmed_gross_price IS NOT NULL  GROUP BY d.po_number`;
 
         const data = await this.dpomRepository.query(query)
         if (data.length) {
@@ -1417,6 +1493,7 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'error')
         }
     }
+
     async getPriceDiffStyleNumber(): Promise<CommonResponseModel> {
         const query = `SELECT DISTINCT d.id,d.style_number as styleNumber,f.shahi_confirmed_gross_price_currency_code as shahiCurrencyCode FROM dpom d
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
@@ -1429,6 +1506,7 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'error')
         }
     }
+
     async getPriceDiffSizeDescription(): Promise<CommonResponseModel> {
         const query = `SELECT DISTINCT d.id,d.size_description AS sizeDescription FROM dpom d
         LEFT JOIN fob_master f ON f.style_number = d.style_number AND f.size_description = d.size_description
@@ -1440,6 +1518,30 @@ export class DpomService {
         } else {
             return new CommonResponseModel(false, 0, 'error')
         }
+    }
+    async getPdfFileInfo(): Promise<CommonResponseModel> {
+        const manager = this.dataSource
+        const pdfInfoQry = `select * from pdf_file_data`;
+        const pdfInfo = await manager.query(pdfInfoQry)
+        if (pdfInfo.length > 0) {
+            return new CommonResponseModel(true, 1, 'data retrived', pdfInfo)
+        } else {
+            return new CommonResponseModel(false, 0, 'No data')
+        }
+    }
+    async getPpmPoNumberForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPoforfactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getPppoNumberForMarketing(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getPoNumberforMarketing()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 }
 

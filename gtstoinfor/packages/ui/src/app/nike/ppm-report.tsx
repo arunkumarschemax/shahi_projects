@@ -35,10 +35,11 @@ const PPMReport = () => {
   const [plantCode, setPlantCode] = useState<any>([]);
   const [item, setItem] = useState<any>([]);
   const [factory, setFactory] = useState<any>([]);
+  const [poNumber,setPoNumber] = useState<any>([]);
+
 
 
   useEffect(() => {
-    getData();
     getProductCode();
     getPoLine();
     getColorDesc();
@@ -47,6 +48,8 @@ const PPMReport = () => {
     getplantCode();
     getItem();
     getFactory();
+    getData();
+    getPonumber();
   }, [])
 
 
@@ -55,44 +58,53 @@ const PPMReport = () => {
       setProductCode(res.data)
     })
   }
+
   const getPoLine = () => {
     service.getPpmPoLineForMarketing().then(res => {
       setPoLine(res.data)
     })
   }
+
   const getColorDesc = () => {
     service.getPpmColorDescForMarketing().then(res => {
       setColorDesc(res.data)
     })
   }
+
   const getcategoryDesc = () => {
     service.getPpmCategoryDescForMarketing().then(res => {
       setCategoryDesc(res.data)
-
     })
   }
+
   const getcountrydestination = () => {
     service.getPpmDestinationCountryForMarketing().then(res => {
       setCountryDestination(res.data)
     })
   }
+
   const getplantCode = () => {
     service.getPpmPlantForMarketing().then(res => {
       setPlantCode(res.data)
     })
-
   }
+
   const getItem = () => {
     service.getPpmItemForMarketing().then(res => {
       setItem(res.data)
     })
   }
+
   const getFactory = () => {
     service.getPpmFactoryForMarketing().then(res => {
       setFactory(res.data)
     })
   }
-
+  const getPonumber = () => {
+    service.getPppoNumberForMarketing().then(res => {
+        setPoNumber(res.data)
+    })
+}
 
   const getData = () => {
     const req = new PpmDateFilterRequest();
@@ -113,8 +125,8 @@ const PPMReport = () => {
     if (form.getFieldValue('productCode') !== undefined) {
       req.productCode = form.getFieldValue('productCode');
     }
-    if (form.getFieldValue('poandLine') !== undefined) {
-      req.poandLine = form.getFieldValue('poandLine');
+    if (form.getFieldValue('poNumber') !== undefined) {
+      req.poNumber = form.getFieldValue('poNumber');
     }
     if (form.getFieldValue('colorDesc') !== undefined) {
       req.colorDesc = form.getFieldValue('colorDesc');
@@ -141,6 +153,7 @@ const PPMReport = () => {
       req.DPOMLineItemStatus = selectedLineItemStatus;
     }
 
+    console.log(req,"reqppm")
     service.getPPMData(req)
       .then(res => {
         if (res.status) {
@@ -373,12 +386,19 @@ const PPMReport = () => {
       {
         title: 'Last Modified Date',
         dataIndex: 'lastModifiedDate',
-        render: (text) => moment(text).format('MM/DD/YYYY')
+        render: (text) => moment(text).format('DD/MM/YYYY')
 
       },
       {
         title: 'Item',
         dataIndex: 'item',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
       },
       {
         title: 'Factory',
@@ -387,7 +407,7 @@ const PPMReport = () => {
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
-        render: (text) => moment(text).format('MM/DD/YYYY')
+        render: (text) => moment(text).format('DD/MM/YYYY')
 
       },
       {
@@ -443,24 +463,20 @@ const PPMReport = () => {
         title: "Plant Name",
         dataIndex: 'plantName'
       },
-      {
-        title: 'Total Item Qty',
-        dataIndex: 'totalItemQty',
-        align: 'center',
-        render: (text) => <strong>{text}</strong>
-      },
-      {
-        title: "GAC",
-        dataIndex: 'GAC'
-      },
+     
+      { title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
+        return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
+    },   },
       {
         title: "MRGAC",
-        dataIndex: 'MRGAC'
+        dataIndex: 'MRGAC',render: (text, record) => {
+          return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-';
       },
-      {
-        title: "OGAC",
-        dataIndex: 'OGAC'
       },
+      { title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
+        return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-';
+    }, },
+    
 
       {
         title: "UPC",
@@ -468,7 +484,13 @@ const PPMReport = () => {
       },
       {
         title: "Trading Co Po Number",
-        dataIndex: 'tradingCoPoNumber'
+        dataIndex: 'tradingCoPoNumber', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
       },
       {
         title: "Doc Type",
@@ -512,15 +534,31 @@ const PPMReport = () => {
       },
       {
         title: "Planning Priority Number",
-        dataIndex: 'planningPriorityCode'
+        dataIndex: 'planningPriorityCode',
+        align: 'center',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
       },
       {
         title: "Planning Priority Description",
-        dataIndex: 'planningPriorityDesc'
+        dataIndex: 'planningPriorityDesc', align: 'center', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
       },
       {
         title: "Mode Of Transportation",
-        dataIndex: 'modeOfTransportationCode'
+        dataIndex: 'modeOfTransportationCode', align: 'center'
+
       },
       {
         title: "In Co Terms",
@@ -539,7 +577,19 @@ const PPMReport = () => {
         dataIndex: 'displayName',
         align: 'center',
       },
+      {
+        title: 'Total Item Qty',
+        dataIndex: 'totalItemQty',
+        align: 'center',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return <strong>{text}</strong>;
+          }
+        },
 
+      },
     ]
 
     sizeHeaders?.forEach(version => {
@@ -802,20 +852,6 @@ const PPMReport = () => {
 
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-              <Form.Item name="DPOMLineItemStatus" label="PPM Status">
-                <Select
-                  showSearch
-                  placeholder="Select PPM Status"
-                  optionFilterProp="children"
-                  allowClear mode='multiple'>
-                  <Option value="Accepted">ACCEPTED</Option>
-                  <Option value="Unaccepted">UNACCEPTED</Option>
-                  <Option value="Cancelled">CANCELLED</Option>
-                  <Option value="Closed">CLOSED</Option>
-                </Select>
-              </Form.Item>
-            </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='productCode' label='Product Code' >
                 <Select
@@ -832,21 +868,21 @@ const PPMReport = () => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-              <Form.Item name='poandLine' label='Po+Line' >
+              <Form.Item name='poNumber' label='Po Number' >
                 <Select
                   showSearch
-                  placeholder="Select Po+Line"
+                  placeholder="Select Po Number"
                   optionFilterProp="children"
                   allowClear
                 >
-                  {poLine.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                  {poNumber.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                   })
                   }
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='colorDesc' label='Color Description' >
                 <Select
                   showSearch
@@ -936,6 +972,20 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span:4  }} xl={{ span: 3.5 }} >
+              <Form.Item name="DPOMLineItemStatus" label="PPM Status">
+                <Select
+                  showSearch
+                  placeholder="Select PPM Status"
+                  optionFilterProp="children"
+                  allowClear mode='multiple'>
+                  <Option value="Accepted">ACCEPTED</Option>
+                  <Option value="Unaccepted">UNACCEPTED</Option>
+                  <Option value="Cancelled">CANCELLED</Option>
+                  <Option value="Closed">CLOSED</Option>
+                </Select>
+              </Form.Item>
+            </Col>
 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
               <Form.Item>
@@ -956,10 +1006,10 @@ const PPMReport = () => {
             <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Total Shipped: ' + factory.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Total Shipped: ' + '0'} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
           <Col>
-            <Card title={'Balance to ship: ' + factory.length} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
+            <Card title={'Balance to ship: ' + '0'} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
         </Row><br></br>
         <Row gutter={80}>

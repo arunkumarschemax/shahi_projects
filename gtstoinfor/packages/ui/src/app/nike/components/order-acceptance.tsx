@@ -164,7 +164,7 @@ export function OrderAcceptance() {
         req.poLineItemNumber = record.poLineItemNumber
         req.purchaseOrderNumber = record.purchaseOrderNumber
         req.scheduleLineItemNumber = record.scheduleLineItemNumber
-        service.approveDpomLineItemStatus(req).then((res) => {
+        service.createCOline(req).then((res) => {
             if (res.status) {
                 getOrderAcceptanceData()
                 message.success(res.internalMessage)

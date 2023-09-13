@@ -340,7 +340,7 @@ const VASChangesCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('YYYY-MM-DD')
+            render: (text) => moment(text).format('DD/MM/YYYY')
         },
         {
             title: 'Item',
@@ -539,27 +539,32 @@ const VASChangesCompareGrid = () => {
             width: '60px',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
+        // {
+        //     title: 'PO Number',
+        //     dataIndex: 'po_number',
+        //     ...getColumnSearchProps('po_number')
+        // },
         {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
+            title: 'PO Line ',
+            dataIndex: 'po_and_line',
+            ...getColumnSearchProps('po_and_line')
+
         },
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
-            ...getColumnSearchProps('schedule_line_item_number')
+            ...getColumnSearchProps('schedule_line_item_number'),
+            align:'center'
         },
         {
             title: 'Previous Line Item Status',
             dataIndex: 'old_val',
+            align:'center'
         },
         {
             title: 'Revised Line Item Status',
             dataIndex: 'new_val',
+            align:'center'
         },
         {
             title: 'Order Quantity Pieces',
@@ -572,11 +577,7 @@ const VASChangesCompareGrid = () => {
             )
 
         },
-        // {
-        //     title: 'Order Status',
-        //     dataIndex: 'dpom_item_line_status',
-        //     render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
-        // }
+        
     ];
 
     const columns3: any = [
@@ -721,7 +722,7 @@ const VASChangesCompareGrid = () => {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <b>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
+            label: <b style={{ color: '#25CB2D' }}>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
@@ -731,7 +732,7 @@ const VASChangesCompareGrid = () => {
         },
         {
             key: '3',
-            label: <b >Inventory Segment Code Revised PO's : {itemChangeData?.length}</b>,
+            label: <b style={{ color: '#65A1FD' }}>Inventory Segment Code Revised PO's : {itemChangeData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns1} />,
         },
         {
@@ -741,7 +742,7 @@ const VASChangesCompareGrid = () => {
         },
         {
             key: '5',
-            label: <b>Destination Country Revised PO's : {poStatusData?.length}</b>,
+            label: <b style={{ color: '#F39292' }}>Destination Country Revised PO's : {poStatusData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns2} />,
         }
     ];
@@ -761,7 +762,7 @@ const VASChangesCompareGrid = () => {
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
-            <Form form={form} layout={"vertical"} >
+            {/* <Form form={form} layout={"vertical"} >
                 <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 4 }} >
                   <Form.Item name='poandLine' label='Po+Line' >
@@ -794,7 +795,7 @@ const VASChangesCompareGrid = () => {
                             onClick={onReset}>Reset</Button>
                     </Col>
                 </Row>
-            </Form>
+            </Form> */}
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
             </> : <></>}

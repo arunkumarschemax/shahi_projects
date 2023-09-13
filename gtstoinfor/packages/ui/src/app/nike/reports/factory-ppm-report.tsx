@@ -44,9 +44,19 @@ const FactoryPPMReport = () => {
     const [plantCode, setPlantCode] = useState<any>([]);
     const [item, setItem] = useState<any>([]);
     const [productCode, setProductCode] = useState<any>([]);
+    const [poNumber,setPoNumber] = useState<any>([]);
 
     useEffect(() => {
         getData();
+        getProductCode();
+        getPoLine();
+        getColorDesc();
+        getcategoryDesc();
+        getcountrydestination();
+        getplantCode();
+        getItem();
+        getFactory();
+        getPonumber();
     }, [])
 
 
@@ -199,17 +209,7 @@ const FactoryPPMReport = () => {
     const ClearData = () => {
         form.resetFields();
     }
-    useEffect(() => {
-        getData();
-        getProductCode();
-        getPoLine();
-        getColorDesc();
-        getcategoryDesc();
-        getcountrydestination();
-        getplantCode();
-        getItem();
-        getFactory();
-    }, [])
+    
 
     const getProductCode = () => {
         service.getPpmProductCodeForFactory().then(res => {
@@ -254,7 +254,12 @@ const FactoryPPMReport = () => {
             setFactory(res.data)
         })
     }
-
+    const getPonumber = () => {
+        service.getPpmPoNumberForFactory().then(res => {
+            setPoNumber(res.data)
+        })
+        console.log(poNumber,"test")
+    }
 
     const getData = () => {
         const req = new PpmDateFilterRequest();
@@ -275,8 +280,8 @@ const FactoryPPMReport = () => {
         if (form.getFieldValue('productCode') !== undefined) {
             req.productCode = form.getFieldValue('productCode');
         }
-        if (form.getFieldValue('poandLine') !== undefined) {
-            req.poandLine = form.getFieldValue('poandLine');
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
         }
         if (form.getFieldValue('colorDesc') !== undefined) {
             req.colorDesc = form.getFieldValue('colorDesc');
@@ -303,7 +308,8 @@ const FactoryPPMReport = () => {
             req.DPOMLineItemStatus = selectedLineItemStatus;
         }
 
-        service.getPPMData(req)
+        console.log(req,'request')
+        service.getFactoryReportData(req)
             .then(res => {
                 if (res.status) {
                     setGridData(res.data);
@@ -392,7 +398,13 @@ const FactoryPPMReport = () => {
             { title: 'Style Number', dataIndex: 'styleNumber' },
             { title: 'Product Code', dataIndex: 'productCode' },
             { title: 'Colour Description', dataIndex: 'colorDesc' },
-            { title: 'CO', dataIndex: 'customerOrder' },
+            { title: 'CO', dataIndex: 'customerOrder', render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                } 
+            }},
             {
                 title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => {
                     return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-'
@@ -444,7 +456,7 @@ const FactoryPPMReport = () => {
             { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
             { title: 'GAC Reason Description', dataIndex: ' ' },
             { title: 'Shipping Type', dataIndex: 'shippingType' },
-            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode' },
+            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
             { title: 'Launch Code', dataIndex: 'launchCode' },
             { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
@@ -473,8 +485,9 @@ const FactoryPPMReport = () => {
             {
                 title: 'Last Modified Date',
                 dataIndex: 'lastModifiedDate',
+                className: "right-column",
                 render: (text, record) => {
-                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-';
+                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('DD/MM/YYYY') : '-';
                 },
             },
             {
@@ -490,8 +503,9 @@ const FactoryPPMReport = () => {
             {
                 title: 'Document Date',
                 dataIndex: 'documentDate',
+                className: "right-column",
                 render: (text, record) => {
-                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-';
+                    return record.documentDate ? moment(record.documentDate).format('DD/MM/YYYY') : '-';
                 },
             },
             {
@@ -501,6 +515,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'PO Line Item Number',
                 dataIndex: 'poLineItemNumber',
+                className: 'centered-column',
             },
             {
                 title: 'DPOM Line Item Status',
@@ -519,14 +534,27 @@ const FactoryPPMReport = () => {
             {
                 title: 'Colour Description',
                 dataIndex: 'colorDesc',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }}
             },
             {
                 title: 'CO',
                 dataIndex: 'customerOrder',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }}
             },
             {
                 title: 'CO Final Approval Date',
                 dataIndex: 'coFinalApprovalDate',
+                className: "right-column",
                 render: (text, record) => {
                     return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
                 }
@@ -571,6 +599,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Gender Age',
                 dataIndex: 'genderAgeCode',
+                className: 'centered-column',
             },
             {
                 title: 'Gender Age Description',
@@ -596,6 +625,13 @@ const FactoryPPMReport = () => {
             {
                 title: 'Trading Co PO Number',
                 dataIndex: 'tradingCoPoNumber',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
             },
             {
                 title: 'UPC',
@@ -627,6 +663,7 @@ const FactoryPPMReport = () => {
                 title: 'Planning Season Code',
                 dataIndex: 'planningSeasonCode',
                 align: 'center',
+                className: 'centered-column',
             },
             {
                 title: 'Planning Season Year',
@@ -639,24 +676,56 @@ const FactoryPPMReport = () => {
                 align: 'center',
             },
             { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center' },
-            { title: 'MRGAC', dataIndex: 'MRGAC' },
-            { title: 'OGAC', dataIndex: 'OGAC' },
-            { title: 'GAC', dataIndex: 'GAC' },
-            { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
-            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
-            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
-            { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
+            { title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column", },
+            { title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
+                return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-';
+            }, },
+            { title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
+                return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
+            },  },
+            { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", },
+            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", },
+            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", },
+            {
+                title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
             { title: 'GAC Reason Description', dataIndex: ' ' },
             { title: 'Shipping Type', dataIndex: 'shippingType' },
-            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode' },
+            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
-            { title: 'Launch Code', dataIndex: 'launchCode' },
+            {
+                title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
             { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
             { title: 'In Co Terms', dataIndex: 'inCoTerms' },
             { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
-            { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
+            {
+                title: 'Purchase Group',
+                dataIndex: 'purchaseGroupCode',
+                className: 'centered-column',
+            },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
-            { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
+            {
+                title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
             { title: 'VAS-Size', dataIndex: 'VASSize' },
             { title: 'Item Vas Text', dataIndex: 'itemVasText' },
             { title: 'Item Text', dataIndex: 'itemText' },
@@ -664,6 +733,13 @@ const FactoryPPMReport = () => {
                 title: 'Change Register',
                 dataIndex: 'displayName',
                 align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
             },
 
             {
@@ -774,6 +850,7 @@ const FactoryPPMReport = () => {
                 title: 'Total Item Qty',
                 dataIndex: 'totalItemQty',
                 align: 'center',
+                className: 'centered-column',
                 render: (text) => <strong>{text}</strong>
             }
         ];
@@ -790,6 +867,7 @@ const FactoryPPMReport = () => {
                         title: 'Quantity',
                         dataIndex: '',
                         key: '',
+                        className: 'centered-column',
                         render: (text, record) => {
                             const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
                             if (sizeData) {
@@ -904,20 +982,7 @@ const FactoryPPMReport = () => {
 
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-                            <Form.Item name="DPOMLineItemStatus" label="Factory Status">
-                                <Select
-                                    showSearch
-                                    placeholder="Select Factory Status"
-                                    optionFilterProp="children"
-                                    allowClear mode='multiple'>
-                                    <Option value="Accepted">ACCEPTED</Option>
-                                    <Option value="Unaccepted">UNACCEPTED</Option>
-                                    {/* <Option value="Cancelled">CANCELLED</Option> */}
-                                    <Option value="Closed">CLOSED</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
+                        
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
                             <Form.Item name='productCode' label='Product Code' >
                                 <Select
@@ -934,22 +999,22 @@ const FactoryPPMReport = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-                            <Form.Item name='poandLine' label='Po+Line' >
+                            <Form.Item name='poNumber' label='Po Number' >
                                 <Select
                                     showSearch
-                                    placeholder="Select Po+Line"
+                                    placeholder="Select Po Number"
                                     optionFilterProp="children"
                                     allowClear
 
                                 >
-                                    {poLine.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                    {poNumber.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                     })
                                     }
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
                             <Form.Item name='colorDesc' label='Color Description' >
                                 <Select
                                     showSearch
@@ -1039,6 +1104,20 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
+                            <Form.Item name="DPOMLineItemStatus" label="Factory Status">
+                                <Select
+                                    showSearch
+                                    placeholder="Select Factory Status"
+                                    optionFilterProp="children"
+                                    allowClear mode='multiple'>
+                                    <Option value="Accepted">ACCEPTED</Option>
+                                    <Option value="Unaccepted">UNACCEPTED</Option>
+                                    {/* <Option value="Cancelled">CANCELLED</Option> */}
+                                    <Option value="Closed">CLOSED</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                             <Form.Item>
                                 <Button htmlType="submit"
@@ -1058,10 +1137,10 @@ const FactoryPPMReport = () => {
                         <Card title={'Total order Qty : ' + count} style={{ textAlign: 'left', width: 250, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Total Shipped : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 45 }}></Card>
+                        <Card title={'Total Shipped : ' + '0'} style={{ textAlign: 'left', width: 180, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Balance to ship : ' + factory.length} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
+                        <Card title={'Balance to ship : ' + '0'} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
                     </Col>
                 </Row><br></br>
 

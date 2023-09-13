@@ -13,5 +13,8 @@ export * from './divert-model';
 export * from './New-po-divert-report-model';
 export * from './ppm-date-filter.req';
 export * from './factory-update.request';
+export * from './legal-po-item-details';
+export * from './legal-po-item-variant-details';
+export * from './legal-po-details';
 export * from './nike-order-filter.req';
 export * from './fob-price-Diff.req';
