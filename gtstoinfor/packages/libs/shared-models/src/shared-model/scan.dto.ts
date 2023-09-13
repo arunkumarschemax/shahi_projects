@@ -13,6 +13,7 @@ export class AllScanDto {
     Routing: string;
     Comment: string;
     Timecreated: string;
+    buyerCode:string;
     Financialyear: string;
     createdUser:string;
     Hsninfo:HsnDto[]
@@ -34,6 +35,7 @@ export class AllScanDto {
         Routing: string,
         Comment: string,
         Timecreated: string,
+        buyerCode:string,
         Financialyear: string,
         createdUser:string,
         Hsninfo:HsnDto[],
@@ -56,6 +58,7 @@ export class AllScanDto {
       this.Comment=Comment;
       this.Financialyear=Financialyear;
       this.Timecreated=Timecreated;
+      this.buyerCode=buyerCode;
       this.createdUser=createdUser;
       this.Hsninfo = Hsninfo;
       this.updatedUser=updatedUser

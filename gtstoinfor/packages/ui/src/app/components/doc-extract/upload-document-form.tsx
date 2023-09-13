@@ -9,7 +9,7 @@ import Tesseract from "tesseract.js";
 // import DocumentItemForm from "./document-item-form";
 import Card from "antd/es/card/Card";
 import { CalendarOutlined, UploadOutlined } from "@ant-design/icons";
-import { SharedService, VendorService } from "@project-management-system/shared-services";
+import { BuyersService, SharedService, VendorService } from "@project-management-system/shared-services";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
 import { useNavigate } from "react-router-dom";
@@ -72,6 +72,7 @@ export function UploadDocumentForm() {
   const [Sgst, setSgst] = useState("");
   const [Innvoiceamount, setInnvoiceamount] = useState("");
   const [vendor, setVendor] = useState("");
+  const [buyerCode, setBuyer] = useState("");
   const [routing, setRouting] = useState("");
   const [comment, setComment] = useState("");
   const [financialyear, setFinancialyear] = useState("");
@@ -85,8 +86,12 @@ export function UploadDocumentForm() {
 
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
   const [data1, setData1] = useState<any[]>([]);
+  const [data2 , setData2]=useState<any[]>([]);
 
   const servicess = new VendorService();
+  
+  const buyerss=new BuyersService();
+  
 
 
   useEffect(() => {
@@ -107,6 +112,31 @@ export function UploadDocumentForm() {
       console.log(err.message)
     })
   }
+
+    useEffect(() => {
+  
+      getdata2();
+    }, []);
+  
+  
+    const getdata2 = () => {
+      buyerss.getAllBuyersInfo().then(res => {
+        if (res.status) {
+          setData2(res.data)
+        } else {
+          setData2([])
+        }
+      }).catch(err => {
+        console.log(err.message)
+      })
+     
+  
+    }
+
+
+
+
+
 
 
   const handleMouseDown = (e) => {
@@ -132,13 +162,11 @@ export function UploadDocumentForm() {
     }
   };
   const handleTimecreatedChange = (date) => {
-    // Use moment to format the selected date and time
     const formattedDate = date ? date.format('YYYY-MM-DD HH:mm:ss') : null;
     setTimecreated(formattedDate);
-    setIsDatePickerVisible(false); // Close the DatePicker when a date is selected
+    setIsDatePickerVisible(false);
   };
   const handleInputChange = (e) => {
-    // Update the state when the input field changes
     setTimecreated(e.target.value);
   };
 
@@ -146,10 +174,15 @@ export function UploadDocumentForm() {
   const extractGstNumbers = (text) => {
     const gstNumberRegex = /[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g;
     const matches = text.match(gstNumberRegex);
-    const extractedGstNumbers = matches || [];
-    setGstNumbers(extractedGstNumbers.join(', '));
-    return extractedGstNumbers;
+
+    // Return the first match if it exists, otherwise return an empty string
+    const extractedGstNumber = matches ? matches[0] : '';
+
+    setGstNumbers(extractedGstNumber); // Set the extracted GST number
+    return extractedGstNumber;
   };
+
+
 
   const extractIgst = (text) => {
     const IgstRegex = /(\d,\d{3}\.\d{2})/g;
@@ -263,8 +296,16 @@ export function UploadDocumentForm() {
   };
 
   const handleAddToTable = () => {
-    if (!HSN || !Taxtype || !Taxamount || !Taxpercentage || !Charge || !variance || !unitquantity || !quotation) {
-      message.error('Please fill all fields.');
+    if (
+      !HSN &&
+      !Taxtype &&
+      !Taxamount &&
+      !Taxpercentage &&
+      !Charge &&
+      !variance &&
+      !unitquantity &&
+      !quotation
+    ) {
       return;
     }
 
@@ -282,7 +323,7 @@ export function UploadDocumentForm() {
 
     if (isEditing) {
       const updatedTableData = extractedData.map((item) =>
-        item === editingItem ? newItem : item
+        item === editingItem ? { ...newItem } : item
       );
       setExtractedData(updatedTableData);
       setIsEditing(false);
@@ -291,6 +332,7 @@ export function UploadDocumentForm() {
     } else {
       setExtractedData([...extractedData, newItem]);
     }
+
     setHSN('');
     setDescription('');
     setTaxtype('');
@@ -302,15 +344,22 @@ export function UploadDocumentForm() {
     setQuotation('');
   };
 
-  console.log(extractedData,"extracted data");
-  
   const handleEdit = (item) => {
     setHSN(item.HSN);
     setDescription(item.description);
     setTaxtype(item.Taxtype);
     setTaxamount(item.Taxamount);
-    setTaxPercentage(item.Taxpercentage); // Set TaxPercentage
-    setCharge(item.Charge);
+    setTaxPercentage(item.Taxpercentage);
+    let editedCharge = '';
+    if (item.Taxamount !== null && item.Taxpercentage !== null) {
+      const Taxpercentage = item.Taxpercentage;
+      const Taxamount = item.Taxamount;
+      const equivalentFor100Percent = (Taxamount * 100) / Taxpercentage;
+      editedCharge = `${equivalentFor100Percent.toFixed(2)}`;
+    } else if (item.Taxamount !== null) {
+      editedCharge = `${item.Taxamount}`;
+    }
+    setCharge(editedCharge);
     setVariance(item.unitprice);
     setUnitquantity(item.unitquantity);
     setQuotation(item.quotation);
@@ -325,7 +374,6 @@ export function UploadDocumentForm() {
     setExtractedData(updatedTableData);
   };
   const handleReset = () => {
-    // Reset all input fields and editing state
     setHSN('');
     setDescription('');
     setTaxtype('');
@@ -356,7 +404,7 @@ export function UploadDocumentForm() {
       title: 'Tax Amount',
       dataIndex: 'Taxamount',
       key: 'Taxamount',
-      render: (Taxamount) => (Taxamount !== null ? `₹${Taxamount}` : ''),
+      render: (Taxamount) => (Taxamount !== null ? `${Taxamount}` : '0'),
     },
     {
       title: 'Tax Percentage',
@@ -364,13 +412,14 @@ export function UploadDocumentForm() {
       key: 'Taxpercentage',
       render: (Taxpercentage, record) => {
         if (Taxpercentage !== null) {
-          return `${Taxpercentage}%`;
+          return `${Taxpercentage}`;
         } else if (record.Taxpercentage !== null) {
-          return `${record.Taxpercentage}%`;
+          return `${record.Taxpercentage}`;
         }
-        return '';
+        return '0';
       },
     },
+    
     {
       title: 'Unit Quantity',
       dataIndex: 'unitquantity',
@@ -380,14 +429,16 @@ export function UploadDocumentForm() {
       title: 'Charge',
       dataIndex: 'Charge',
       key: 'Charge',
-      render: (Charge, record,index) => {
-        if (record.Taxamount && record.Taxamount.Taxpercentage !== undefined && record.Taxamount.Taxamount !== undefined) {
-          const Taxpercentage = record.Taxamount.Taxpercentage;
-          const Taxamount = record.Taxamount.Taxamount;
+      render: (Charge, record) => {
+        if (record.Taxamount !== null && record.Taxpercentage !== null) {
+          const Taxpercentage = record.Taxpercentage;
+          const Taxamount = record.Taxamount;
           const equivalentFor100Percent = (Taxamount * 100) / Taxpercentage;
-          // extractedData[index].Charge = String(equivalentFor100Percent)
-          return `₹${equivalentFor100Percent.toFixed(2)}`;
+          return `${equivalentFor100Percent.toFixed(2)}`;
+        } else if (record.Taxamount !== null) {
+          return `${record.Taxamount}`;
         }
+
         return `${Charge || '0'}`;
       },
     },
@@ -395,20 +446,23 @@ export function UploadDocumentForm() {
       title: 'Quotation',
       dataIndex: 'quotation',
       key: 'quotation',
-      
     },
     {
       title: 'Variance',
       dataIndex: 'variance',
       key: 'variance',
-      hidden: true,
-      visible: false
+      render: (variance, record) => {
+        const Charge = parseFloat(record.Charge) || 0;
+        const Quotation = parseFloat(record.quotation) || 0;
+        const varianceValue = Quotation - Charge;
+        return `${varianceValue.toFixed(2)}`;
+      },
     },
     {
       title: 'Status',
       dataIndex: 'variance_status',
       key: 'variance_status',
-      
+
     },
     {
       title: 'Action',
@@ -423,50 +477,6 @@ export function UploadDocumentForm() {
       ),
     },
   ];
-
-  
-
-  // const handleEdit = (item) => {
-  //   setHSN(item.HSN);
-  //   setDescription(item.description);
-  //   setTaxtype(item.Taxtype);
-
-  //   const taxAmountObj = item.Taxamount;
-
-  //   if (typeof taxAmountObj === 'object' && taxAmountObj.hasOwnProperty('Taxpercentage') && taxAmountObj.hasOwnProperty('amount')) {
-  //     setTaxamount(`${taxAmountObj.Taxpercentage}% = ₹${taxAmountObj.amount}`);
-  //   } else {
-  //     setTaxamount(item.Taxamount);
-  //   }
-
-  //   setCharge(item.Charge);
-  //   setIsEditing(true);
-  //   setEditingItem(item);
-  //   setButtonText("Update"); 
-  // };
-
-  // const handleEdit = (item) => {
-  //   setHSN(item.HSN);
-  //   setDescription(item.description);
-  //   setTaxtype(item.Taxtype);
-
-  //   const taxAmountObj = item.Taxamount;
-  //   if (typeof taxAmountObj === 'object' && 'Taxpercentage' in taxAmountObj && 'amount' in taxAmountObj) {
-  //     setTaxamount(`${taxAmountObj.Taxpercentage}% = ₹${taxAmountObj.amount}`);
-  //   } else {
-  //     setTaxamount(item.Taxamount);
-  //   }
-
-  //   setCharge(item.Charge);
-  //   setIsEditing(true);
-  //   setEditingItem(item);
-  //   setButtonText("Update");
-  // };
-
-  // const handleDelete = (item) => {
-  //   const updatedTableData = extractedData.filter((i) => i !== item);
-  //   setExtractedData(updatedTableData);
-  // };
 
   const handleZoomIn = () => {
     if (zoomFactor < 2) {
@@ -646,23 +656,7 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated, financialyear, JSON.parse(localStorage.getItem('currentUser')).user.userName,extractedData)
-
-    // const req: any = {
-    //   GST: gstNumbers,
-    //   invoiceDate: invoiceDate,
-    //   InnvoiceAmount: Innvoiceamount,
-    //   InnvoiceCurrency: Innvoicecurrency,
-    //   InnvoiceNumber: Innvoicenum,
-    //   Cgst: Cgst,
-    //   IGST: Igst,
-    //   Sgst: Sgst,
-    //   Vendor: vendor,
-    //   Routing: routing,
-    //   Comment: comment,
-    //   Financialyear: financialyear,
-    //   Timecreated: timecreated
-    // }
+    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated,buyerCode, financialyear, JSON.parse(localStorage.getItem('currentUser')).user.userName,extractedData)
 
     console.log(req, "submit")
     service
@@ -833,7 +827,7 @@ export function UploadDocumentForm() {
                   <label htmlFor="Vendor" style={{ color: 'black', fontWeight: 'bold' }}>Vendor Name</label>
                   <Select
                     id="Vendor"
-                    style={{ width: "150px" }}
+                    style={{ width: "190px" }}
                     value={vendor}
                     onChange={(value) => setVendor(value)}
                     defaultValue="option1"
@@ -868,25 +862,6 @@ export function UploadDocumentForm() {
                     onChange={(e) => setFinancialyear(e.target.value)}
                   />
                 </Col>
-
-                {/* <Col span={6}>
-                  <label htmlFor="invoiceDate" style={{ color: 'black', fontWeight: 'bold' }}>
-                    Invoice Date
-                  </label>
-                  <div style={{ position: 'relative' }}>
-                    <Input
-                      id="invoiceDate"
-                      name="invoiceDate"
-                      style={{ width: '150px', height: '30px' }}
-                      value={invoiceDate}
-                      onChange={(e) => setInvoiceDate(e.target.value)}
-                    />
-                    <DatePicker
-                      style={{ position: 'absolute', top: 0, right: 0 }}
-                      onChange={handleDateChange}
-                    />
-                  </div>
-                </Col> */}
               </Row>
 
               <Row gutter={24} style={{ marginTop: '20px' }}>
@@ -1010,7 +985,7 @@ export function UploadDocumentForm() {
                     onChange={(e) => setTimecreated(e.target.value)}
                   />
                   <CalendarOutlined
-                    style={{ position: 'absolute', top: '30px', right: '-30px', cursor: 'pointer' }}
+                    style={{ position: 'absolute', top: '30px', right: '-20px', cursor: 'pointer' }}
                     onClick={handleIconClick}
                   />
                   {isDatePickerVisible && (
@@ -1023,6 +998,24 @@ export function UploadDocumentForm() {
                     />
                   )}
                 </Col>
+
+                <Col span={6}>
+                  <label htmlFor="buyerCode" style={{ color: 'black', fontWeight: 'bold',position: "relative", left: "75px"  }}>Buyer Code</label>
+                  <Select
+                    id="buyerCode"
+                    style={{ width: "190px",position: "relative", left: "72px" }}
+                    value={buyerCode}
+                    onChange={(value) => setBuyer(value)}
+                    defaultValue="option1"
+                  >
+                    {data2.map((option) => (
+                      <option value={option.buyerCode}>
+                        {option.buyerCode}
+                      </option>
+                    ))}
+                  </Select>
+                </Col>
+
               </Row>
 
               <Button type="primary" htmlType="submit" style={{ position: "relative", top: "10px" }} onClick={onSumbit}>
@@ -1031,11 +1024,7 @@ export function UploadDocumentForm() {
 
             </Form.Item>
 
-
-            {/* <div style={{ display: 'flex', flexDirection: 'column', }}> */}
-            {/* <Card title="HSN Details"
-            headStyle={{ backgroundColor: '#77dfec', border: 0 }}
-            bordered={true} style={{ flex: 1, position: "relative", left: "733px", bottom: "812px" }} > */}
+          
             <Form layout='vertical' >
               <Row gutter={12}>
                 <Col span={6}>
@@ -1071,7 +1060,7 @@ export function UploadDocumentForm() {
                 </Col>
 
                 <Col span={6}>
-                  <label htmlFor="Taxpercentage" style={{ color: 'black', fontWeight: 'bold' }}>Taxpercentage</label>
+                  <label htmlFor="Taxpercentage" style={{ color: 'black', fontWeight: 'bold' }}>Tax Percentage</label>
                   <Input
                     id="Taxpercentage"
                     name="Taxpercentage"
@@ -1082,18 +1071,8 @@ export function UploadDocumentForm() {
                 </Col>
 
               </Row>
-              <Row gutter={12}>
+              <Row gutter={12} style={{ marginTop: "10px" }}>
 
-                <Col span={6}>
-                  <label htmlFor="Charge" style={{ color: 'black', fontWeight: 'bold' }}>Charge Amount </label>
-                  <Input
-                    id="Charge"
-                    name="Charge"
-                    style={{ width: '150px', height: '30px' }}
-                    value={Charge}
-                    onChange={(e) => setCharge(e.target.value)}
-                  />
-                </Col>
                 <Col span={6}>
                   <label htmlFor="unitquantity" style={{ color: 'black', fontWeight: 'bold' }}>Unit Quantity</label>
                   <Input
@@ -1102,6 +1081,17 @@ export function UploadDocumentForm() {
                     style={{ width: '150px', height: '30px' }}
                     value={unitquantity}
                     onChange={(e) => setUnitquantity(e.target.value)}
+                  />
+                </Col>
+
+                <Col span={6}>
+                  <label htmlFor="Charge" style={{ color: 'black', fontWeight: 'bold' }}>Charge</label>
+                  <Input
+                    id="Charge"
+                    name="Charge"
+                    style={{ width: '150px', height: '30px' }}
+                    value={Charge}
+                    onChange={(e) => setCharge(e.target.value)}
                   />
                 </Col>
 
@@ -1116,6 +1106,7 @@ export function UploadDocumentForm() {
                     onChange={(e) => setQuotation(e.target.value)}
                   />
                 </Col>
+
                 <Col span={6}>
                   <label htmlFor="variance" style={{ color: 'black', fontWeight: 'bold' }}>Variance</label>
                   <Input
@@ -1133,15 +1124,6 @@ export function UploadDocumentForm() {
             </Button>
             <Button type="primary" danger style={{ position: "relative", top: "10px", marginLeft: '10px' }} onClick={handleReset}>Reset</Button>
             <Table style={{ position: "relative", top: "25px", right: "25px" }} dataSource={extractedData} columns={columns} />
-            {/* <Button
-              style={{ position: 'relative', top: '22px' }}
-              type="primary"
-            >
-              Go to Database
-            </Button> */}
-            {/* </Card> */}
-            {/* </div> */}
-
           </Card>
         </div>
       </Form>
