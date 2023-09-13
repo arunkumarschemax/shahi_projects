@@ -463,13 +463,13 @@ const PPMReport = () => {
       },
       {
         title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
-          return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
+          return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
         },
       },
       {
         title: "MRGAC",
         dataIndex: 'MRGAC', render: (text, record) => {
-          return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-';
+          return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
         },
       },
       {
