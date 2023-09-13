@@ -21,14 +21,11 @@ const PPMReport = () => {
   const [gridData, setGridData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const service = new NikeService();
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [filterData, setFilterData] = useState<any>([])
   const [pageSize, setPageSize] = useState<number>(null);
   const [page, setPage] = React.useState(1);
   const [productCode, setProductCode] = useState<any>([]);
   const { RangePicker } = DatePicker;
-  const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
-  const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
   const { Option } = Select;
   const [poLine, setPoLine] = useState<any>([]);
   const [colorDesc, setColorDesc] = useState<any>([]);
@@ -37,7 +34,7 @@ const PPMReport = () => {
   const [plantCode, setPlantCode] = useState<any>([]);
   const [item, setItem] = useState<any>([]);
   const [factory, setFactory] = useState<any>([]);
-  const [poNumber,setPoNumber] = useState<any>([]);
+  const [poNumber, setPoNumber] = useState<any>([]);
 
 
 
@@ -104,9 +101,9 @@ const PPMReport = () => {
   }
   const getPonumber = () => {
     service.getPppoNumberForMarketing().then(res => {
-        setPoNumber(res.data)
+      setPoNumber(res.data)
     })
-}
+  }
 
   const getData = () => {
     const req = new PpmDateFilterRequest();
@@ -155,7 +152,7 @@ const PPMReport = () => {
       req.DPOMLineItemStatus = selectedLineItemStatus;
     }
 
-    console.log(req,"reqppm")
+    console.log(req, "reqppm")
     service.getPPMData(req)
       .then(res => {
         if (res.status) {
@@ -388,8 +385,7 @@ const PPMReport = () => {
       {
         title: 'Last Modified Date',
         dataIndex: 'lastModifiedDate',
-        render: (text) => moment(text).format('DD/MM/YYYY')
-
+        render: (text) => moment(text).format('MM/DD/YYYY')
       },
       {
         title: 'Item',
@@ -420,8 +416,7 @@ const PPMReport = () => {
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
-        render: (text) => moment(text).format('DD/MM/YYYY')
-
+        render: (text) => moment(text).format('MM/DD/YYYY')
       },
       {
         title: 'Purchase Order Number',
@@ -575,7 +570,6 @@ const PPMReport = () => {
         title: "Plant Code",
         dataIndex: 'plant'
       },
-    
       {
         title: "Plant Name",
         dataIndex: 'plantName'
@@ -667,19 +661,22 @@ const PPMReport = () => {
         title:'Final Destination',
         dataIndex:'',
       },
-    {
-      title: "MRGAC",
-      dataIndex: 'MRGAC',render: (text, record) => {
-        return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-';
-    },
-    },
-    { title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
-      return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-';
-  }, },
-     
-      { title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
-        return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
-    },   },
+      {
+        title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
+          return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
+        },
+      },
+      {
+        title: "MRGAC",
+        dataIndex: 'MRGAC', render: (text, record) => {
+          return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
+        },
+      },
+      {
+        title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
+          return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-';
+        },
+      },
     {
       title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
           if (!text || text.trim() === '') {
@@ -1008,7 +1005,6 @@ const PPMReport = () => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >
               <Form.Item label="Last Modified Date" name="lastModifiedDate">
                 <RangePicker />
-
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >
@@ -1137,7 +1133,7 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span:4  }} xl={{ span: 3.5 }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }} >
               <Form.Item name="DPOMLineItemStatus" label="PPM Status">
                 <Select
                   showSearch

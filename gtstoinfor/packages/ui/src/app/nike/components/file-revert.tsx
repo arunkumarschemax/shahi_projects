@@ -57,11 +57,11 @@ export function NikeFileRevert() {
             }
         },
         {
-            title: 'File Name',
-            dataIndex: 'fileName'
+            title: 'DPOM API (sync status)',
+            dataIndex: 'status'
         },
         {
-            title: 'Upload Status',
+            title: 'CRM API (sync status)',
             dataIndex: 'status'
         },
         {

@@ -99,25 +99,25 @@ const ShipmentChangesCompareGrid = () => {
 
     const exportExcel = () => {
         const excel = new Excel();
-        if (filteredQtyData.length > 0) {
+        if (filteredQtyData?.length > 0) {
             excel
                 .addSheet('Quantity changes')
                 .addColumns(data1)
                 .addDataSource(filteredQtyData, { str2num: true })
         }
-        if (unitChangeData.length > 0) {
+        if (unitChangeData?.length > 0) {
             excel
                 .addSheet('Unit changes')
                 .addColumns(data4)
                 .addDataSource(unitChangeData, { str2num: true })
         }
-        if (itemChangeData.length > 0) {
+        if (itemChangeData?.length > 0) {
             excel
                 .addSheet('Item changes')
                 .addColumns(data2)
                 .addDataSource(itemChangeData, { str2num: true })
         }
-        if (poStatusData.length > 0) {
+        if (poStatusData?.length > 0) {
             excel
                 .addSheet('PO Line Item Status Change')
                 .addColumns(data3)
@@ -337,7 +337,6 @@ const ShipmentChangesCompareGrid = () => {
                 : null
     })
 
-
     const columns: any = [
         {
             title: 'S No',
@@ -379,7 +378,6 @@ const ShipmentChangesCompareGrid = () => {
             title: 'Change from GAC',
             dataIndex: 'old_val',
             render: (text) => moment(text).format('MM/DD/YYYY')
-
         },
         {
             title: 'Change to GAC',
@@ -402,7 +400,6 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'report_generate_date',
-
         },
         {
             title: 'Item',
@@ -608,7 +605,6 @@ const ShipmentChangesCompareGrid = () => {
             title: 'PO And Line ',
             dataIndex: 'po_and_line', align: 'center',
             ...getColumnSearchProps('po_and_line')
-
         },
         {
             title: 'Schedule Line Item No',
@@ -627,6 +623,7 @@ const ShipmentChangesCompareGrid = () => {
             render: (text) => moment(text).format('MM/DD/YYYY')
         }
     ];
+
     const columns5: any = [
         {
             title: 'S No',
@@ -721,57 +718,7 @@ const ShipmentChangesCompareGrid = () => {
             title: 'Change to Plant Code',
             dataIndex: '',
             // ...getColumnSearchProps('schedule_line_item_number')
-        },
-        // {
-        //     title: ' Sum Of Qrd Qty last Week',
-        //     dataIndex: 'old_qty_value',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         <>
-        //             {Number(record.old_qty_value).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-        //         </>
-        //     )
-
-        // },
-        // {
-        //     title: 'Sum Of Qrd Qty this Week',
-        //     dataIndex: 'new_qty_value',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         <span  {...record.new_qty_value}>
-        //             <>
-        //                 {Number(record.old_qty_value) === Number(record.new_qty_value) ? <span style={{ color: '' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //                 {Number(record.old_qty_value) < Number(record.new_qty_value) ? <span style={{ color: 'green' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //                 {Number(record.old_qty_value) > Number(record.new_qty_value) ? <span style={{ color: 'red' }}>{Number(record.new_qty_value).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //             </>
-        //         </span>
-        //     )
-        // },
-        // {
-        //     title: 'Difference Ord Qty Revised',
-        //     dataIndex: 'diff',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         < >
-
-        //             {Number(record.diff) === 0 ? '-' : ''}
-        //             {Number(record.diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-        //             {Number(record.diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-
-        //         </>
-        //     )
-        // },
-
+        }
     ];
 
     const EstimatedETDDate = (value) => {
@@ -783,36 +730,10 @@ const ShipmentChangesCompareGrid = () => {
         }
     }
 
-    // const getFilterdData = () => {
-    //     let orderStatus = form.getFieldValue('orderStatus');
-    //     let startDate = selectedEstimatedFromDate;
-    //     let endDate = selectedEstimatedToDate;
-    //     let filteredItemChangeData = itemChangeData;
-    //     let filteredQtyData = qtyData
-    //     let filteredPOStatusData = poStatusData
-    //     if (orderStatus) {
-    //         filteredItemChangeData = itemChangeData.filter(record => record.order_status === orderStatus);
-    //         filteredQtyData = filteredQtyData.filter(record => record.order_status === orderStatus)
-    //         filteredPOStatusData = poStatusData.filter(record => record.order_status === orderStatus)
-    //         setItemChangeData(filteredItemChangeData);
-    //         setFilteredQtyData(filteredQtyData)
-    //         setFilteredPOStatusData(filteredPOStatusData)
-    //     }
-    //     if (startDate && endDate) {
-    //         console.log(filteredQtyData)
-    //         filteredItemChangeData = itemChangeData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
-    //         filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-    //         filteredPOStatusData = poStatusData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-    //         setItemChangeData(filteredItemChangeData);
-    //         setFilteredQtyData(filteredQtyData)
-    //         setFilteredPOStatusData(filteredPOStatusData)
-    //     }
-    // }
-
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <b  style={{ color: '#B229DE' }}>GAC Revised PO's : {filteredQtyData?.length} </b>,
+            label: <b style={{ color: '#B229DE' }}>GAC Revised PO's : {filteredQtyData?.length} </b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }}
             />,
         },
@@ -833,21 +754,13 @@ const ShipmentChangesCompareGrid = () => {
             label: <b>Plant Code Revised PO's : {poStatusData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns5} scroll={{ x: 'max-content' }}
             />,
-        },
-        // {
-        //     key: '5',
-        //     label: <b>Shipment Type Revised PO's : {poStatusData?.length}</b>,
-        //     children: <Table bordered dataSource={poStatusData} columns={columns2} />,
-        // }
+        }
     ];
 
     const onReset = () => {
         form.resetFields();
         setSelectedEstimatedFromDate(undefined);
         setSelectedEstimatedToDate(undefined);
-        // getContractDateChangeData()
-        // getQtyChangeData()
-        // getWharehouseDateChangeData()
     }
 
     return (
