@@ -55,20 +55,24 @@ export const StoreIssueDetailed = () => {
     }
 
     const handleFormSubmit = () => {
-        // Capture and log the issuing quality for both trims and fabric
-        const issuingQualityForFabric = data[0]?.fabricInfo.map((record) => ({
-          key: record.key,
-          issuingQuantity: record.issuingQuantity,
-        }));
+      // Capture and log the issuing quality for both trims and fabric
+      const issuingQualityForFabric = data[0]?.fabricInfo.map((record) => ({
+        key: record.key,
+        issuingQuantity: record.issuingQuantity,
+      }));
     
-        const issuingQualityForTrims = data[0]?.trimInfo.map((record) => ({
-          key: record.key,
-          issuingQuantity: record.issuingQuantity,
-        }));
+      const issuingQualityForTrims = data[0]?.trimInfo.map((record) => ({
+        key: record.key,
+        issuingQuantity: record.issuingQuantity,
+      }));
     
-        console.log("Issuing Quality for Fabric:", issuingQualityForFabric);
-        console.log("Issuing Quality for Trims:", issuingQualityForTrims);
-      };
+      console.log("Issuing Quality for Fabric:", issuingQualityForFabric);
+      console.log("Issuing Quality for Trims:", issuingQualityForTrims);
+    
+      // Log the entire data object with updated issuingQuantity
+      console.log("Updated Data:", data);
+    };
+    
 
     const columnsSkelton = [
         {
@@ -140,7 +144,7 @@ export const StoreIssueDetailed = () => {
       ];
 
     return(
-        <Card title='Source Issue' className="card-header" onClick={onUpdate} extra={<Button type={'primary'}>View</Button>}>
+        <Card title='Source Issue' className="card-header" extra={<Button onClick={onUpdate} type={'primary'}>View</Button>}>
              <Descriptions size='small'>
                 <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>
                 <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>
