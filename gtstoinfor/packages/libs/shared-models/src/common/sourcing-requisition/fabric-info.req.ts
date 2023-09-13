@@ -23,8 +23,9 @@ export class FabricInfoReq{
     buyer : number;
     xlNo : string;
     quantity : number;
+    quantityUnit: string;
 
-    constructor(content:string,fabricType:string,weave: number,weight: number,weightUnit : string,width : number,construction : string,yarnCount : number,yarnUnit : string,finish : string,shrinkage : string,m3FabricCode:string,color : number,pch : number,moq : string,moqUnit : string,season : string,moqPrice : number,moqPriceUnit : string,supplier : number,grnDate : Date,buyer : number,xlNo : string,quantity : number)
+    constructor(content:string,fabricType:string,weave: number,weight: number,weightUnit : string,width : number,construction : string,yarnCount : number,yarnUnit : string,finish : string,shrinkage : string,m3FabricCode:string,color : number,pch : number,moq : string,moqUnit : string,season : string,moqPrice : number,moqPriceUnit : string,supplier : number,grnDate : Date,buyer : number,xlNo : string,quantity : number,quantityUnit: string)
     {
         this.content = content;
         this.fabricType = fabricType;
@@ -50,5 +51,6 @@ export class FabricInfoReq{
         this.buyer = buyer;
         this.xlNo = xlNo;
         this.quantity = quantity;
+        this.quantityUnit = quantityUnit
     }
 }

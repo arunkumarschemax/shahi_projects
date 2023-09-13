@@ -30,8 +30,9 @@ export class FabricInfoModel{
     buyerName:string;
     availableQuantity: number;
     status: string;
+    quantityUnit: string
 
-    constructor(content:string,fabricType:string,weave: number,weight: number,weightUnit : string,width : number,construction : string,yarnCount : number,yarnUnit : string,finish : string,shrinkage : string,m3FabricCode:string,color : number,pch : number,moq : string,moqUnit : string,season : string,moqPrice : number,moqPriceUnit : string,supplier : number,grnDate : any,buyer : number,xlNo : string,quantity : number,weaveName:string,colorName:string,pchName:string,supplierName:string,buyerName:string,availableQuantity: number,status: string)
+    constructor(content:string,fabricType:string,weave: number,weight: number,weightUnit : string,width : number,construction : string,yarnCount : number,yarnUnit : string,finish : string,shrinkage : string,m3FabricCode:string,color : number,pch : number,moq : string,moqUnit : string,season : string,moqPrice : number,moqPriceUnit : string,supplier : number,grnDate : any,buyer : number,xlNo : string,quantity : number,weaveName:string,colorName:string,pchName:string,supplierName:string,buyerName:string,availableQuantity: number,status: string,quantityUnit: string)
     {
         this.content = content;
         this.fabricType = fabricType;
@@ -64,5 +65,6 @@ export class FabricInfoModel{
         this.buyerName = buyerName;
         this.availableQuantity = availableQuantity;
         this.status = status;
+        this.quantityUnit = quantityUnit
     }
 }

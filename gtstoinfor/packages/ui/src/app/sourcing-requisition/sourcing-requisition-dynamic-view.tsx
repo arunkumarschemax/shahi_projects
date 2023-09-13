@@ -262,6 +262,13 @@ export const SourcingRequisitionDynamicView = () => {
         {
             title:'Weight',
             dataIndex:'weight',
+            render: (text,record) => {
+                return(
+                    <>
+                    {record.weight ? `${record.weight} ${record.weightUnit}` : '-'}
+                    </>
+                )
+            }
         },
         {
             title:'Width',
@@ -273,7 +280,14 @@ export const SourcingRequisitionDynamicView = () => {
         },
         {
             title:'Yarn Count',
-            dataIndex:'yarnCount'
+            dataIndex:'yarnCount',
+            render: (text,record) => {
+                return(
+                    <>
+                    {record.yarnCount ? `${record.yarnCount} ${record.yarnUnit}` : '-'}
+                    </>
+                )
+            }
         },
         {
             title:'Finish',
@@ -311,7 +325,14 @@ export const SourcingRequisitionDynamicView = () => {
         },
         {
             title:'MOQ',
-            dataIndex:'moq'
+            dataIndex:'moq',
+            render: (text,record) => {
+                return(
+                    <>
+                    {record.moq ? `${record.moq} ${record.moqUnit}` : '-'}
+                    </>
+                )
+            }
         },
         {
             title:'Season',
@@ -320,7 +341,14 @@ export const SourcingRequisitionDynamicView = () => {
         },
         {
             title:'MOQ Price',
-            dataIndex:'moqPrice'
+            dataIndex:'moqPrice',
+            render: (text,record) => {
+                return(
+                    <>
+                    {record.moqPrice ? `${record.moqPrice} ${record.moqPriceUnit}` : '-'}
+                    </>
+                )
+            }
         },
         {
             title:'Supplier',
@@ -364,11 +392,25 @@ export const SourcingRequisitionDynamicView = () => {
         },
          {
             title:'Quantity',
-            dataIndex:'quantity'
+            dataIndex:'quantity',
+            render: (text,record) => {
+                return(
+                    <>
+                    {record.quantity ? `${record.quantity} ${record.quantityUnit}` : '-'}
+                    </>
+                )
+            }
         },
         {
             title:'Available Quantity',
-            dataIndex:'availableQuantity'
+            dataIndex:'availableQuantity',
+            render: (text,record) => {
+                return(
+                    <>
+                    {record.availableQuantity ? `${record.availableQuantity} ${record.quantityUnit}` : '-'}
+                    </>
+                )
+            }
         },
         {
             title:'Status',
@@ -380,7 +422,7 @@ export const SourcingRequisitionDynamicView = () => {
             render:(text,record) => {
                 return(
                     <>
-                    {record.quantity ? record.quantity - record.availableQuantity : '-'}
+                    {record.quantity-record.availableQuantity > 0 ? record.quantity - record.availableQuantity : 0}
                     </>
                 )
             }
@@ -432,6 +474,13 @@ export const SourcingRequisitionDynamicView = () => {
         {
           title: 'Quantity',
           dataIndex: 'quantity',
+          render: (text,record) => {
+            return(
+                <>
+                {record.quantity ? `${record.quantity} ${record.quantityUnit}` : '-'}
+                </>
+            )
+        }
         },
         {
           title: 'Description',
@@ -443,7 +492,14 @@ export const SourcingRequisitionDynamicView = () => {
         },
         {
             title:'Available Quantity',
-            dataIndex:'availableQuantity'
+            dataIndex:'availableQuantity',
+            render: (text,record) => {
+                return(
+                    <>
+                    {record.availableQuantity ? `${record.availableQuantity} ${record.quantityUnit}` : '-'}
+                    </>
+                )
+            }
         },
         {
             title:'Status',
@@ -455,7 +511,7 @@ export const SourcingRequisitionDynamicView = () => {
             render:(text,record) => {
                 return(
                     <>
-                    {record.quantity ? record.quantity - record.availableQuantity : '-'}
+                    {record.quantity-record.availableQuantity > 0 ? record.quantity - record.availableQuantity : 0}
                     </>
                 )
             }
@@ -566,12 +622,12 @@ export const SourcingRequisitionDynamicView = () => {
                     />
                     <div>
                         {tabName === 'Fabric' ? (<>
-                        <Table columns={columns} dataSource={item.fabricInfo} pagination={false} scroll={{x:'max-content'}}/>
+                        <Table columns={columns} dataSource={item.fabricInfo} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper" size='small'/>
                         </>) : (<></>)}
                     </div>
                     <div>
                         {tabName === 'Trim' ? (<>
-                            <Table columns={columnsSkelton} dataSource={item.trimInfo} pagination={false}/>
+                            <Table columns={columnsSkelton} dataSource={item.trimInfo} pagination={false} className="custom-table-wrapper" size='small'/>
                         </>) : (<></>)}
                     </div>
                     </Space>

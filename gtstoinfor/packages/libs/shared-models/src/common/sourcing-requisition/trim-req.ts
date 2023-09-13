@@ -7,6 +7,7 @@ export class TrimInfoReq{
     m3TrimCode:string
     description: string
     remarks : string
+    quantityUnit:string
 
     constructor(
         trimType: string,
@@ -16,7 +17,8 @@ export class TrimInfoReq{
         quantity : string,
         m3TrimCode:string,
         description: string,
-        remarks : string
+        remarks : string,
+        quantityUnit: string
     )
     {
         this.trimType = trimType
@@ -27,5 +29,6 @@ export class TrimInfoReq{
         this.m3TrimCode = m3TrimCode
         this.description = description
         this.remarks = remarks
+        this.quantityUnit = quantityUnit
     }
 }

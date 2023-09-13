@@ -47,7 +47,8 @@ export class RequisitionService extends CommonAxiosService{
                 supplierName:'Naidu',
                 buyerName:'Rajesh',
                 availableQuantity: 100,
-                status: 'Stock'
+                status: 'Stock',
+                quantityUnit: 'm'
             },
             {
                 content:'Natural Fabrics',
@@ -80,7 +81,8 @@ export class RequisitionService extends CommonAxiosService{
                 supplierName:'Srinu',
                 buyerName:'Rajesh',
                 availableQuantity: 100,
-                status: 'Stock'
+                status: 'Stock',
+                quantityUnit: 'm'
       
             },
         ],
@@ -97,7 +99,8 @@ export class RequisitionService extends CommonAxiosService{
                 sizeName:'L',
                 colorName:'White',
                 availableQuantity: 100,
-                status: 'Stock'
+                status: 'Stock',
+                quantityUnit: 'pieces'
             },
             {
                 trimType: "Zipper",
@@ -111,7 +114,8 @@ export class RequisitionService extends CommonAxiosService{
                 sizeName:'L',
                 colorName:'White',
                 availableQuantity: 100,
-                status: 'Stock'
+                status: 'Stock',
+                quantityUnit: 'pieces'
               },
         ],
         versionFlag:1
@@ -156,7 +160,8 @@ export class RequisitionService extends CommonAxiosService{
                 supplierName:'Naidu',
                 buyerName:'Rajesh',
                 availableQuantity: 100,
-                status: 'Stock'
+                status: 'Stock',
+                quantityUnit: 'm'
       
             },
             {
@@ -190,7 +195,8 @@ export class RequisitionService extends CommonAxiosService{
                 supplierName:'Naidu',
                 buyerName:'Rajesh',
                 availableQuantity: 100,
-                status: 'Stock'
+                status: 'Stock',
+                quantityUnit: 'm'
     
             }
         ],
@@ -207,7 +213,8 @@ export class RequisitionService extends CommonAxiosService{
                 sizeName:'L',
                 colorName:'White',
                 availableQuantity: 100,
-                status: 'Stock'
+                status: 'Stock',
+                quantityUnit: 'Reels'
               },
               {
                 trimType: "Fabric",
@@ -221,7 +228,8 @@ export class RequisitionService extends CommonAxiosService{
                 sizeName:'L',
                 colorName:'White',
                 availableQuantity: 100,
-                status: 'Stock'
+                status: 'Stock',
+                quantityUnit: 'm'
               },
         ],
         versionFlag:1
