@@ -52,20 +52,22 @@ export default function DocumentListupload() {
   }
 
   const getInvoiceNumber =(value)=>{
-    let po
-    form.resetFields(['invoice','challan'])
-    // if(statePoNumber){
-    //   po =statePoNumber.data
-    // }else{
-    //   po = form.getFieldValue("customerPo")
-    // }
-    service.getInvoiceByPo({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:value}).then(res=>{
-      if(res.status){
-        setInvoiceNumber(res.data)
-      }else{
-        setInvoiceNumber([])
-      }
-    })
+    setBtnDisable(false)
+
+    // let po
+    // form.resetFields(['invoice','challan'])
+    // // if(statePoNumber){
+    // //   po =statePoNumber.data
+    // // }else{
+    // //   po = form.getFieldValue("customerPo")
+    // // }
+    // service.getInvoiceByPo({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:value}).then(res=>{
+    //   if(res.status){
+    //     setInvoiceNumber(res.data)
+    //   }else{
+    //     setInvoiceNumber([])
+    //   }
+    // })
   }
 
   const getChallanNo =()=>{
@@ -85,11 +87,11 @@ export default function DocumentListupload() {
     let invoiceNo = form.getFieldValue("invoice")
     let challan = form.getFieldValue("challan")
     let po = form.getFieldValue("customerPo")
-    console.log(invoiceNo)
-    console.log(challan)
-    console.log(po)
+    // console.log(invoiceNo)
+    // console.log(challan)
+    // console.log(po)
 
-    service.getDocumentDetailsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po,invoice:invoiceNo,challan:challan,orderId:orderId}).then(res=>{
+    service.getDocumentDetailsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po}).then(res=>{
       if(res.status){
         setDocData(res.data)
         setUrls(res.dataa);
@@ -370,7 +372,7 @@ export default function DocumentListupload() {
              </Select>
            </Form.Item>
          </Col>
-         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
            <Form.Item name='invoice' label='Invoice Number'
              rules={[
                {
@@ -386,8 +388,8 @@ export default function DocumentListupload() {
                      })}
              </Select>
            </Form.Item>
-         </Col>
-         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+         </Col> */}
+         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
            <Form.Item name='challan' label='Challan Number'
              rules={[
                {
@@ -403,8 +405,8 @@ export default function DocumentListupload() {
                      })}
              </Select>
            </Form.Item>
-         </Col>
-         <Col span={5} style={{paddingTop:'30px'}}>
+         </Col> */}
+         <Col span={5} style={{paddingTop:'30px', marginRight:'10px'}}>
               <Button onClick={getDocData}
                   style={{
                     color: 'white',

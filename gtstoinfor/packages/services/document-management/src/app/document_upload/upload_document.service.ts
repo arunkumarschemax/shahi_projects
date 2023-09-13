@@ -167,8 +167,11 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
 
     async getDocumentDetailsByPO(req:PoRoleRequest):Promise<UploadDocumentListResponseModel>{
         try{
-            const sqlQuery = "Select dl.status,is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"' and order_id = "+req.orderId+" and role_name ='"+req.role+"' Group by dl.documents_list_id";
+            const sqlQuery = "Select dl.status,is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"'and role_name ='"+req.role+"' Group by dl.documents_list_id";
+            // and order_id = "+req.orderId+" 
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
+            console.log(result)
+            console.log('@@@@@@@@@@@@@@@@@@@@@@')
             let docinfo: UploadDocumentListDto[] = [];
             let urls:any[] = [];
             if(result.length >0){
@@ -178,11 +181,11 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
 
                 const docReq:docRequest[] =[];
                 for(const res of docres){
-                    console.log(res);
+                    // console.log(res);
                     urls.push(res.url);
                     let data = new docRequest(res.uid,res.name,res.status,res.type,res.url,res.documentName);
-                    console.log(data);
-                    console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                    // console.log(data);
+                    // console.log("*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
                     docReq.push(data);
                 }
@@ -190,7 +193,7 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
                 // console.log(res.status,'resssssssssssssssssssssssssssss')
                 docinfo.push(new UploadDocumentListDto(res.documentsListId,res.documentCategoryId,res.role_id,res.poNumber,1,res.documentName,res.dlFilePath,res.uploadStatus,res.isActive,'','','','',1,docReq,res.status,res.documentName) )
                 // result.documentsPath = docReq;
-                console.log( docinfo,' result.documentsPath')
+                // console.log( docinfo,' result.documentsPath')
             }
                 return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',docinfo,urls)
             }else{
