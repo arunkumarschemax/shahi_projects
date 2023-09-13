@@ -490,20 +490,7 @@ export const baseRouterList = [
     //     ]
     // },
 
-    // {
-    //     label: "Source Issues",
-    //     key: "source-issues",
-    //     path: "source-issues",
-    //     filepath: "source-issues",
-    //     children:[
-    //         {
-    //             label: "Source Issues View",
-    //             key: "source-issues-view",
-    //             path: "source-issues-view",
-    //             filepath: "source-issues-view"
-    //         }
-    //     ]
-    // },
+   
 
     {
         label: "Sample Development",
@@ -523,6 +510,20 @@ export const baseRouterList = [
                 path: "sample-requests",
                 filepath: "sample-requests"
             },
+            {
+                label: "Source Issues View",
+                key: "source-issues-view",
+                path: "source-issues-view",
+                filepath: "source-issues-view"
+            }
+        ]
+    },
+    {
+        label: "Source Issues",
+        key: "source-issues",
+        path: "source-issues",
+        filepath: "source-issues",
+        children:[
             {
                 label: "Source Issues View",
                 key: "source-issues-view",
