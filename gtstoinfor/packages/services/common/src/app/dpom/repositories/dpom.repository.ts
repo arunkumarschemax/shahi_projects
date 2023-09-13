@@ -429,7 +429,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         } else if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length === 0) {
             query.andWhere(`1=1`);
         }
-        
+
         if (req.productCode !== undefined) {
             query.andWhere(`dpom.product_code ='${req.productCode}'`)
         }
@@ -513,8 +513,10 @@ export class DpomRepository extends Repository<DpomEntity> {
         let query = this.createQueryBuilder('dpom')
             .select(`dpom.*`)
             .where(`dpom_item_line_status IN('Accepted','Unaccepted')`)
-            .groupBy(`dpom.po_and_line`)
             .orderBy(`CASE WHEN dpom.dpom_item_line_status = 'Unaccepted' THEN 0 ELSE 1 END`, 'ASC')
+            .addOrderBy('dpom.po_number', 'ASC')
+            .addOrderBy('dpom.po_line_item_number', 'ASC')
+            .addOrderBy('dpom.schedule_line_item_number', 'ASC')
         if (req.documentStartDate !== undefined) {
             query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
         }
