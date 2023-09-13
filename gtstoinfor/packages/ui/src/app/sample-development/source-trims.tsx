@@ -67,7 +67,7 @@ const columns=[
       },
      
       {
-        title: 'Issued Qty',
+        title: 'Issued Quantity',
         dataIndex: 'issuedQty',
         // render: (_, record) => (
         //   <Input
