@@ -107,7 +107,6 @@ export class FactoriesService {
             if (response.data) {
               const options:M3toCustomObj[] = [{m3Key :'FACN' , yourKey :'name'}]
               const saveData = await construnctDataFromM3Result(options,response.data.MIRecord)
-              console.log('---------',saveData)
               return saveData;
             } else {
               return 'No response Data';
@@ -116,7 +115,6 @@ export class FactoriesService {
             ('No response');
           }   
         } catch (error) {
-          console.log(error, '************');
           throw error;
         }
       }

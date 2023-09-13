@@ -272,7 +272,6 @@ export function ItemCategoriesGrid(
 
   return (
     <Card title={<span>Item Categories</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     // extra={<Link to = "/item-category-form"  >
     //   <span style={{color:'white'}} >
     //     <Button className='panel_button' >Create </Button>

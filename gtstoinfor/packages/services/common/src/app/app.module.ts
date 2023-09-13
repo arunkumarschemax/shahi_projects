@@ -56,6 +56,8 @@ import { BomModule } from './bom-trim/bom.module';
 import { SettingsModule } from './settings/settings.module';
 import { SampleTypesModule } from './sample Types/sample-types.module';
 import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module';
+import { OperationSequenceModule } from './operation-sequence/operation-sequence.module';
+import { FabricWeaveModule } from './fabric weave/fabric-weave.module';
 
 
 @Module({
@@ -111,7 +113,7 @@ import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module'
   ColourModule,
   BuyersDestinationModule,
   BomModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule],
   controllers: [AppController],
   providers: [AppService],
 })

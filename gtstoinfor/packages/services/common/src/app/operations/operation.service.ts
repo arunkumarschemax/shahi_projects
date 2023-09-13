@@ -124,14 +124,15 @@ export class OperationsService {
         try {
             const OperationDto: OperationDTO[] = [];
             //retrieves all companies
-            const OperationEntities: Operations[] = await this.OperationsRepository.find({ order: { 'operationName': 'ASC' },where:{isActive:true}
+            const OperationEntities: Operations[] = await this.OperationsRepository.find({ order: { 'operationName': 'ASC' }, relations:["operationGroupInfo"],where:{isActive:true}
            });
-         console.log(OperationEntities)
             if (OperationEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
-                OperationEntities.forEach(Entity => {
+                OperationEntities.forEach((Entity,index) => {
+                  // Entity.key = 
+                  
                     const convertedBrandsDtos: OperationDTO = this.operationsAdapter.convertEntityToDto(
-                      Entity
+                      Entity,index
                     );
                     OperationDto.push(convertedBrandsDtos);
                 });

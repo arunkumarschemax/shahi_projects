@@ -17,13 +17,11 @@ export class VendorsService extends CommonAxiosService{
     }
 
     async  activateOrDeactivateVendor(dto: VendorRequest):Promise<VendorsResponseModel> {
-        console.log(dto,'---------------')
         return this.axiosPostCall(this.URL + "/activateOrDeactivateVendor", dto)
 
     }
 
     async getAllVendors(req:VendorFilterRequest): Promise<AllVendorsResponseModel> {
-        console.log(req,'------------req')
         return this.axiosPostCall(this.URL + "/getAllVendors",req)
   
     }

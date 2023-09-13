@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+.ant-segmented-item {
+    transition: cyan 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  .ant-segmented-item-selected {
+    background-color: skyblue;
+  }
+  
+  .ant-segmented-thumb {
+    background-color: lightgreen;
+  }

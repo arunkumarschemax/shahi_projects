@@ -293,7 +293,7 @@ export const SettingsForm = () => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 form.resetFields()
-                navigate('/settings/settings/settings-view')
+                navigate('/settings/settings-view')
             } else{
                 AlertMessages.getSuccessMessage(res.internalMessage)
             }
@@ -306,7 +306,7 @@ export const SettingsForm = () => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 form.resetFields()
-                navigate('/settings/settings/settings-form')
+                navigate('/settings/settings-view')
             } else{
                 AlertMessages.getSuccessMessage(res.internalMessage)
             }
