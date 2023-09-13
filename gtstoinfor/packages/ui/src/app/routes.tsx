@@ -514,7 +514,10 @@ export const AppRoutes = () => {
                     <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
                     <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
                     <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
-                    <Route path='/m3-masters' element={<M3Masters/>}/>
+                    <Route path='/m3-masters' element={<M3Masters
+                        isUpdate={false}
+                        closeForm={() => { } }
+                        updateDetails={(undefined) => { } } m3MasterData={undefined}/>}/>
                     <Route path='/m3-masters-view' element={<M3MastersView/>}/>
 
 
