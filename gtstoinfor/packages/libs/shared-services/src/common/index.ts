@@ -1,3 +1,5 @@
+import { from } from 'rxjs';
+
 export * from './factory-service';
 export * from './orders-service';
 export * from './users-service'
@@ -73,3 +75,6 @@ export * from './operation-reporting-service'
 export * from './marketing-requisition.service'
 export * from './source-issues-service'
 export * from './source-fabrics-trims-service'
+export * from './stock.service'
+export * from './m3-masters.service'
+export * from './requisition-service'

@@ -1,4 +1,4 @@
-export class TrimInfoReq{
+export class TrimInfoModel{
     trimType: string
     trimCode : string
     size : number
@@ -7,6 +7,10 @@ export class TrimInfoReq{
     m3TrimCode:string
     description: string
     remarks : string
+    sizeName: string;
+    colorName: string
+    availableQuantity: number
+    status: string
 
     constructor(
         trimType: string,
@@ -16,7 +20,11 @@ export class TrimInfoReq{
         quantity : string,
         m3TrimCode:string,
         description: string,
-        remarks : string
+        remarks : string,
+        sizeName:string,
+        colorName:string,
+        availableQuantity: number,
+        status: string
     )
     {
         this.trimType = trimType
@@ -27,5 +35,9 @@ export class TrimInfoReq{
         this.m3TrimCode = m3TrimCode
         this.description = description
         this.remarks = remarks
+        this.sizeName = sizeName
+        this.colorName = colorName
+        this.availableQuantity = availableQuantity
+        this.status = status
     }
 }
