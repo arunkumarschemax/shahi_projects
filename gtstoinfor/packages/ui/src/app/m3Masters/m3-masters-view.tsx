@@ -176,18 +176,18 @@ export const M3MastersView = () => {
             setDrawerVisible(false);
           }
         return(
-        <Card title='M3 Master' extra={<span><Button onClick={() => navigate('/m3-masters')} type={'primary'}>New</Button></span>} className="card-header">
+        <Card title='Item Codes' extra={<span><Button onClick={() => navigate('/m3-masters')} type={'primary'}>New</Button></span>} className="card-header">
             <Table columns={columns} dataSource={data} size='small' className="custom-table-wrapper"/>
-            <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
+            <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '65%' : '65%'}
             onClose={closeDrawer} visible={drawerVisible} closable={true}>
-             <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
+             {/* <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'> */}
               <M3Masters
                             key={Date.now()}
                             updateDetails={updateUser}
                             isUpdate={true}
                             closeForm={closeDrawer} 
                             m3MasterData={m3MastersData} />
-                    </Card> 
+                    {/* </Card>  */}
           </Drawer>
         </Card>
     )
