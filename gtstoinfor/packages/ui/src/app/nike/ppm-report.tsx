@@ -297,7 +297,12 @@ const PPMReport = () => {
       { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
       { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text) => moment(text).format('MM/DD/YYYY') },
       { title: 'Item', dataIndex: 'Item' },
-      { title: 'Factory', dataIndex: 'Factory' },
+      { title: 'Factory', dataIndex: 'Factory',render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }} },
       { title: 'PCD', dataIndex: 'PCD' },
       { title: 'Document Date', dataIndex: 'documentDate', render: (text) => moment(text).format('MM/DD/YYYY') },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
@@ -401,6 +406,12 @@ const PPMReport = () => {
       {
         title: 'Factory',
         dataIndex: 'factory',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+              return '-';
+          } else {
+              return text;
+          }}
       },
       {
         title: 'PCD',
@@ -513,6 +524,12 @@ const PPMReport = () => {
     {
         title: 'Plan No',
         dataIndex: 'planNo',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+              return '-';
+          } else {
+              return text;
+          }}
     },
     {
         title: 'Lead Time',
@@ -661,11 +678,7 @@ const PPMReport = () => {
         title:'Final Destination',
         dataIndex:'',
       },
-      {
-        title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
-          return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
-        },
-      },
+      
       {
         title: "MRGAC",
         dataIndex: 'MRGAC', render: (text, record) => {
@@ -675,6 +688,11 @@ const PPMReport = () => {
       {
         title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
           return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-';
+        },
+      },
+      {
+        title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
+          return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
         },
       },
     {
@@ -687,7 +705,7 @@ const PPMReport = () => {
       },
   },
     
-    { title: 'GAC Reason Description', dataIndex: ' ' },
+    { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
     { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", },
     { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", },
     { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", },
@@ -722,22 +740,7 @@ const PPMReport = () => {
   },
   { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
   
-      {
-        title: 'Change Register',
-        dataIndex: 'displayName',
-        align: 'center',
-      },
-      {
-        title: 'Trading Co PO Number',
-        dataIndex: 'tradingCoPoNumber',
-        render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
-        },
-    },
+     
       {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty',
@@ -961,6 +964,180 @@ const PPMReport = () => {
       }
       return '';
     };
+    columns.push(
+    
+      {
+        title: 'Trading Co PO Number',
+        dataIndex: 'tradingCoPoNumber',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }
+        },
+    },
+    {
+      title: 'Gross Price/FOB',
+      dataIndex: '',
+      // render: (text, record) => {
+      //     if (!text || text.trim() === '') {
+      //         return '-';
+      //     } else {
+      //         return text;
+      //     }
+      // },
+  },
+  {
+    title: 'Gross Price/FOB currency code',
+    dataIndex: '',
+    // render: (text, record) => {
+    //     if (!text || text.trim() === '') {
+    //         return '-';
+    //     } else {
+    //         return text;
+    //     }
+    // },
+},
+{
+  title: 'Buyer Confirmed Gross Price/FOB',
+  dataIndex: '',
+  // render: (text, record) => {
+  //     if (!text || text.trim() === '') {
+  //         return '-';
+  //     } else {
+  //         return text;
+  //     }
+  // },
+},
+{
+  title: 'Buyer Confirmed Gross Price/FOB Currency Code',
+  dataIndex: '',
+ 
+},{
+  title: 'Diff of Price',
+  dataIndex: '',
+  
+},
+{
+  title: 'Diff of Price Currency',
+  dataIndex: '',
+  
+},{
+  title: 'Net including discounts',
+  dataIndex: '',
+  
+},
+{
+  title: 'Net including discounts currency code',
+  dataIndex: '',
+  
+},
+{
+  title: 'Trading Co Net including discounts',
+  dataIndex: '',
+  
+},
+{
+  title: 'Trading Co Net including discounts currency code',
+  dataIndex: '',
+  
+},
+{
+  title: 'Legal PO Price',
+  dataIndex: '',
+  
+},
+{
+  title: 'Legal PO Price currency',
+  dataIndex: '',
+  
+},
+{
+  title: 'CO Price',
+  dataIndex: '',
+  
+},{
+  title: 'CO Price currency',
+  dataIndex: '',
+  
+},
+{
+  title: 'Diff of Price',
+  dataIndex: '',
+  
+},
+{
+  title: 'Diff of Price currency',
+  dataIndex: '',
+  
+},
+{
+  title: 'CRM CO QTY',
+  dataIndex: '',
+  
+},{
+  title: 'Legal PO QTY',
+  dataIndex: '',
+  
+},
+{
+  title: 'Diff of Quantity',
+  dataIndex: '',
+  
+},
+{
+  title: 'Allowed Excess Ship Qty',
+  dataIndex: '',
+  
+},
+{
+  title: 'Actual Shipped Qty',
+  dataIndex: '',
+  
+},
+{
+  title: 'Actual Ship %',
+  dataIndex: '',
+  
+},
+{
+  title: 'VAS - Size',
+  dataIndex: '',
+  
+},
+{
+  title: 'Item Vas Text',
+  dataIndex: '',
+  
+},
+{
+  title: 'Item Vas Text in PDF PO',
+  dataIndex: '',
+  
+},
+{
+  title: 'Diff of Item Vas Text',
+  dataIndex: '',
+  
+},
+{
+  title: 'Item Text',
+  dataIndex: '',
+  
+},
+{
+  title: 'Hanger PO',
+  dataIndex: '',
+  
+},
+{
+  title: 'Change Register',
+  dataIndex: 'displayName',
+  align: 'center',
+},
+
+    )
 
     return (
       <>
