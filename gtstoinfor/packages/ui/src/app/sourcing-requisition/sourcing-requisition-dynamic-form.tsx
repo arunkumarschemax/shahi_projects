@@ -219,7 +219,7 @@ export const SourcingRequisitionDynamicForm = () => {
                 size : defaultTrimFormData.size,
                 color : defaultTrimFormData.color,
                 quantity : defaultTrimFormData.quantity,
-                m3TrimCode: defaultFabricFormData.m3TrimCode,
+                m3TrimCode: defaultTrimFormData.m3TrimCode,
                 description : defaultTrimFormData.description,
                 remarks : defaultTrimFormData.remarks
             })

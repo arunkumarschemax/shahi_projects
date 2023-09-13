@@ -55,13 +55,13 @@ export const baseRouterList = [
         // icon: <DashboardOutlined />,
         filepath: "/requisition-view",
     },
-    {
-        label: "Sourcing Requisition Report",
-        key: "sourcingRequisitionReport",
-        path: "sourcing-requisition-report",
-        // icon: <DashboardOutlined />,
-        filepath: "/sourcing-requisition-report",
-    },
+    // {
+    //     label: "Sourcing Requisition Report",
+    //     key: "sourcingRequisitionReport",
+    //     path: "sourcing-requisition-report",
+    //     // icon: <DashboardOutlined />,
+    //     filepath: "/sourcing-requisition-report",
+    // },
     {
         label: "Stock",
         key: "stockView",

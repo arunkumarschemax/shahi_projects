@@ -236,6 +236,10 @@ export const SourcingRequisitionDynamicView = () => {
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
+            title: 'M3 Fabric Code',
+            dataIndex: 'm3FabricCode',
+        },
+        {
             title:'Content',
             dataIndex:'content'
         },
@@ -390,6 +394,10 @@ export const SourcingRequisitionDynamicView = () => {
           width: '70px',
           responsive: ['sm'],
           render: (text, object, index) => (page-1) * 10 +(index+1)
+        },
+        {
+            title: 'M3 Trim Code',
+            dataIndex: 'm3TrimCode',
         },
         {
           title: 'Trim Type',
