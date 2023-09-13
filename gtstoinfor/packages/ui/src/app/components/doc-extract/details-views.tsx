@@ -221,6 +221,11 @@ function ScanDetailView() {
       dataIndex: 'Timecreated',
       key: 'Timecreated',
     },
+    {
+      title: 'Buyer Code',
+      dataIndex: 'buyerCode',
+      key: 'buyerCode',
+    },
   ];
 
   const dataSource = [rowData]; 
