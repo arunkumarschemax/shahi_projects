@@ -954,50 +954,7 @@ const FactoryPPMReport = () => {
                     return record.sizeWiseData.find(item => item.sizeDescription === version);
                 }
             });
-            columns.push(
-                
-                    {
-                        title: 'Change Register',
-                        dataIndex: 'displayName',
-                        align: 'center',
-                        render: (text, record) => {
-                            if (!text || text.trim() === '') {
-                                return '-';
-                            } else {
-                                return text;
-                            }
-                        },
-                    },
-                    {
-                        title: 'Allowed Excess Ship Qty',
-                        dataIndex: '',
-                        align: 'center',
-                        
-                    },
-                    {
-                title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                },
-            },
-            {
-                title: 'Actual Ship %',
-                dataIndex: '',
-                align: 'center',
-                
-            },
-            { title: 'VAS-Size', dataIndex: 'VASSize' },
-            { title: 'Item Vas Text', dataIndex: 'itemVasText' },
-            { title: 'Item Text', dataIndex: 'itemText' },
-            {
-                title:'Hanger Po',
-                dataIndex:'hanger'
-            }
-                   
-            )
+            
             exportingColumns.push({
                 title: version,
                 dataIndex: '',
@@ -1031,7 +988,50 @@ const FactoryPPMReport = () => {
                 }
             });
         });
-
+        columns.push(
+                
+            {
+                title: 'Change Register',
+                dataIndex: 'displayName',
+                align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
+            {
+                title: 'Allowed Excess Ship Qty',
+                dataIndex: '',
+                align: 'center',
+                
+            },
+            {
+        title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }
+        },
+    },
+    {
+        title: 'Actual Ship %',
+        dataIndex: '',
+        align: 'center',
+        
+    },
+    { title: 'VAS-Size', dataIndex: 'VASSize' },
+    { title: 'Item Vas Text', dataIndex: 'itemVasText' },
+    { title: 'Item Text', dataIndex: 'itemText' },
+    {
+        title:'Hanger Po',
+        dataIndex:'hanger'
+    }
+           
+    )
         const getRowClassName = (record) => {
             if (record.displayName) {
                 return 'colored-row';
