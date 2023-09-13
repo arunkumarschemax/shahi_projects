@@ -1,3 +1,4 @@
+import { DocumentDownloadEnum } from "./document-download-enum"
 
 export class DocumentDto{
   documentName: string
@@ -9,6 +10,8 @@ export class DocumentDto{
   updatedAt?: Date
   createdAt?: Date
   priority?: number
+  isDownload : DocumentDownloadEnum;
+
 
   constructor(
     documentName: string,
@@ -19,7 +22,9 @@ export class DocumentDto{
     updatedUser?: string | null,
     updatedAt?: Date,
     createdAt?: Date,
-    priority?: number
+    priority?: number,
+  isDownload? : DocumentDownloadEnum
+
     )
   {
     this.documentName=documentName
@@ -31,6 +36,7 @@ export class DocumentDto{
     this.versionFlag=versionFlag
     this.id=id
     this.priority=priority
+    this.isDownload=isDownload
 
   }
   }
