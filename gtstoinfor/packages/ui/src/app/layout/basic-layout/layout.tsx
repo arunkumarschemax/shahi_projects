@@ -55,13 +55,13 @@ export const baseRouterList = [
         // icon: <DashboardOutlined />,
         filepath: "/requisition-view",
     },
-    {
-        label: "Sourcing Requisition Report",
-        key: "sourcingRequisitionReport",
-        path: "sourcing-requisition-report",
-        // icon: <DashboardOutlined />,
-        filepath: "/sourcing-requisition-report",
-    },
+    // {
+    //     label: "Sourcing Requisition Report",
+    //     key: "sourcingRequisitionReport",
+    //     path: "sourcing-requisition-report",
+    //     // icon: <DashboardOutlined />,
+    //     filepath: "/sourcing-requisition-report",
+    // },
     {
         label: "Stock",
         key: "stockView",
@@ -485,9 +485,52 @@ export const baseRouterList = [
     //             key: "sample-development",
     //             path: "sample-development-view",
     //             filepath: "sample-development-view"
+    //         },
+           
+    //     ]
+    // },
+
+    // {
+    //     label: "Source Issues",
+    //     key: "source-issues",
+    //     path: "source-issues",
+    //     filepath: "source-issues",
+    //     children:[
+    //         {
+    //             label: "Source Issues View",
+    //             key: "source-issues-view",
+    //             path: "source-issues-view",
+    //             filepath: "source-issues-view"
     //         }
     //     ]
     // },
+
+    {
+        label: "Sample Development",
+        key: "sample-development",
+        path: "sample-development",
+        filepath: "sample-development",
+        children:[
+            {
+                label: "Sample Development",
+                key: "sample-development",
+                path: "sample-development-form",
+                filepath: "sample-development-form"
+            },
+            {
+                label: "Sample Requests",
+                key: "sample-requests",
+                path: "sample-requests",
+                filepath: "sample-requests"
+            },
+            {
+                label: "Source Issues View",
+                key: "source-issues-view",
+                path: "source-issues-view",
+                filepath: "source-issues-view"
+            }
+        ]
+    },
    
     // {
     //     label: "Material Creation",
