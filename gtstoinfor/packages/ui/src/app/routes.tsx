@@ -490,7 +490,7 @@ export const AppRoutes = () => {
                     <Route path="sample-development-view" element={<SampleDevView />}/>
                     <Route path="sample-development-detail" element={<SampleDevDetail />}/>
                     <Route path="sample-requests" element={<SampleRequests/>}/>
-                    <Route path="source-issue-detail" element={<StoreIssueDetailed/>}/>
+                    <Route path="store-issue-detail" element={<StoreIssueDetailed/>}/>
                 </Route>
 
                 <Route path='store-issues'>
