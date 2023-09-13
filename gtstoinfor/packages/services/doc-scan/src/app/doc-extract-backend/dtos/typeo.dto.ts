@@ -46,6 +46,9 @@ export class ScanDto {
   Timecreated: string;
 
   @ApiProperty()
+  buyerCode: string;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()

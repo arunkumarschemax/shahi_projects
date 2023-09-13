@@ -9,7 +9,7 @@ import Tesseract from "tesseract.js";
 // import DocumentItemForm from "./document-item-form";
 import Card from "antd/es/card/Card";
 import { CalendarOutlined, UploadOutlined } from "@ant-design/icons";
-import { SharedService, VendorService } from "@project-management-system/shared-services";
+import { BuyersService, SharedService, VendorService } from "@project-management-system/shared-services";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
 import { useNavigate } from "react-router-dom";
@@ -71,6 +71,7 @@ export function UploadDocumentForm() {
   const [Sgst, setSgst] = useState("");
   const [Innvoiceamount, setInnvoiceamount] = useState("");
   const [vendor, setVendor] = useState("");
+  const [buyerCode, setBuyer] = useState("");
   const [routing, setRouting] = useState("");
   const [comment, setComment] = useState("");
   const [financialyear, setFinancialyear] = useState("");
@@ -89,8 +90,12 @@ export function UploadDocumentForm() {
 
 
   const [data1 , setData1]=useState<any[]>([]);
+  const [data2 , setData2]=useState<any[]>([]);
 
   const servicess=new VendorService();
+  
+  const buyerss=new BuyersService();
+  
   
   
     useEffect(() => {
@@ -105,6 +110,27 @@ export function UploadDocumentForm() {
           setData1(res.data)
         } else {
           setData1([])
+        }
+      }).catch(err => {
+        console.log(err.message)
+      })
+     
+  
+    }
+
+
+    useEffect(() => {
+  
+      getdata2();
+    }, []);
+  
+  
+    const getdata2 = () => {
+      buyerss.getAllBuyersInfo().then(res => {
+        if (res.status) {
+          setData2(res.data)
+        } else {
+          setData2([])
         }
       }).catch(err => {
         console.log(err.message)
@@ -644,7 +670,7 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    const req = new AllScanDto(gstNumbers,vendor,invoiceDate,Cgst,Igst,Sgst,Innvoicenum,Innvoiceamount,Innvoicecurrency,routing,comment,timecreated,financialyear,JSON.parse(localStorage.getItem('currentUser')).user.userName)
+    const req = new AllScanDto(gstNumbers,vendor,invoiceDate,Cgst,Igst,Sgst,Innvoicenum,Innvoiceamount,Innvoicecurrency,routing,comment,timecreated,buyerCode,financialyear,JSON.parse(localStorage.getItem('currentUser')).user.userName)
     // const req: any = {
     //   GST: gstNumbers,
     //   invoiceDate: invoiceDate,
@@ -1020,6 +1046,24 @@ export function UploadDocumentForm() {
                     />
                   )}
                 </Col>
+
+                <Col span={6}>
+                  <label htmlFor="buyerCode" style={{ color: 'black', fontWeight: 'bold',position: "relative", left: "75px"  }}>Buyer Code</label>
+                  <Select
+                    id="buyerCode"
+                    style={{ width: "190px",position: "relative", left: "72px" }}
+                    value={buyerCode}
+                    onChange={(value) => setBuyer(value)}
+                    defaultValue="option1"
+                  >
+                    {data2.map((option) => (
+                      <option value={option.buyerCode}>
+                        {option.buyerCode}
+                      </option>
+                    ))}
+                  </Select>
+                </Col>
+
               </Row>
 
               <Button type="primary" htmlType="submit" style={{ position: "relative", top: "10px" }} onClick={onSumbit}>
