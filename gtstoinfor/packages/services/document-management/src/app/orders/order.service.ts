@@ -405,10 +405,10 @@ export class OrdersService {
     async getDynamicDataForDocList(req?:RoleReq): Promise<CommonResponseModel> {
         let query
          query = `SELECT DISTINCT document_name FROM document d LEFT JOIN documents_list dl ON d.id=dl.document_category_id where d.is_active=1`;
-         if(req.role != 'Admin'){
-            query=query+' and dl.role_name="'+req.role+'"  order by priority ASC'
-         }else{
+         if(req.role == 'Admin' || req.role =='consolidator'){
             query=query+' order by priority ASC'
+         }else{
+            query=query+' and dl.role_name="'+req.role+'"  order by priority ASC'
          }
         const documentNames = await this.dataSource.query(query)
         const dynamicSQL = `SELECT o.challan_no AS challanNo, o.invoice_no AS invoiceNo,"" AS url, dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END ELSE '-' END) AS '${name.document_name}'
