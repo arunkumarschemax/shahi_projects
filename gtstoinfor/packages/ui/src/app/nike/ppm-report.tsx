@@ -851,20 +851,6 @@ const PPMReport = () => {
 
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-              <Form.Item name="DPOMLineItemStatus" label="PPM Status">
-                <Select
-                  showSearch
-                  placeholder="Select PPM Status"
-                  optionFilterProp="children"
-                  allowClear mode='multiple'>
-                  <Option value="Accepted">ACCEPTED</Option>
-                  <Option value="Unaccepted">UNACCEPTED</Option>
-                  <Option value="Cancelled">CANCELLED</Option>
-                  <Option value="Closed">CLOSED</Option>
-                </Select>
-              </Form.Item>
-            </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='productCode' label='Product Code' >
                 <Select
@@ -895,7 +881,7 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='colorDesc' label='Color Description' >
                 <Select
                   showSearch
@@ -982,6 +968,20 @@ const PPMReport = () => {
                     return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
                   })
                   }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span:4  }} xl={{ span: 3.5 }} >
+              <Form.Item name="DPOMLineItemStatus" label="PPM Status">
+                <Select
+                  showSearch
+                  placeholder="Select PPM Status"
+                  optionFilterProp="children"
+                  allowClear mode='multiple'>
+                  <Option value="Accepted">ACCEPTED</Option>
+                  <Option value="Unaccepted">UNACCEPTED</Option>
+                  <Option value="Cancelled">CANCELLED</Option>
+                  <Option value="Closed">CLOSED</Option>
                 </Select>
               </Form.Item>
             </Col>
