@@ -29,6 +29,8 @@ export function DocView() {
   const [searchText, setSearchText] = useState('');
   const [filteredInfo, setFilteredInfo] = useState({});
   const [sortedInfo, setSortedInfo] = useState<any>({});
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(1);
 
   useEffect(() => {
     getdata();
@@ -151,6 +153,12 @@ export function DocView() {
     //     return (<> {record.typedId ? record.typedId : '-'} </>)
     //   }
     // },
+    {
+      title: 'S.No',
+      key: 'sno',
+      responsive: ['sm'],
+      render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+  },
     {
       title: 'GST Number', dataIndex: 'GST', key: 'GST', ...getColumnSearchProps("GST"),
       align:"center",

@@ -820,7 +820,8 @@ export function UploadDocumentForm() {
               background: '#fff',
               borderTop: '1px solid #e8e8e8',
             }}
-          >
+          > 
+          <Card>
             <Form.Item >
               <Row gutter={24} >
                 <Col span={8}>
@@ -1018,13 +1019,12 @@ export function UploadDocumentForm() {
 
               </Row>
 
-              <Button type="primary" htmlType="submit" style={{ position: "relative", top: "10px" }} onClick={onSumbit}>
-                Submit
-              </Button>
+             
 
             </Form.Item>
+            </Card>
 
-          
+           <Card>
             <Form layout='vertical' >
               <Row gutter={12}>
                 <Col span={6}>
@@ -1120,9 +1120,15 @@ export function UploadDocumentForm() {
 
               </Row>
             </Form>
-            <Button style={{ position: "relative", top: "10px" }} type="primary" onClick={handleAddToTable}>{isEditing ? buttonText : "Add"}
+            </Card>
+            <Row style={{float:"right"}}>
+            <Button style={{ position: "relative", top: "10px",backgroundColor:"green" }} type="primary" onClick={handleAddToTable}>{isEditing ? buttonText : "Add"}
             </Button>
             <Button type="primary" danger style={{ position: "relative", top: "10px", marginLeft: '10px' }} onClick={handleReset}>Reset</Button>
+            <Button type="primary" htmlType="submit" style={{ position: "relative", top: "10px",left:"10PX" }} onClick={onSumbit}>
+                Submit
+              </Button>
+              </Row>
             <Table style={{ position: "relative", top: "25px", right: "25px" }} dataSource={extractedData} columns={columns} />
           </Card>
         </div>
