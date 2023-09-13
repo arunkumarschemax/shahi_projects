@@ -345,9 +345,9 @@ const PPMReport = () => {
       { title: 'Diff of Ship to Address', dataIndex: '' },
       { title: 'CAB Code', dataIndex: 'CABcode' },
       { title: 'Final Destination', dataIndex: '' },
-      { title: 'MRGAC', dataIndex: 'MRGAC' },
-      { title: 'OGAC', dataIndex: 'OGAC' },
-      { title: 'GAC', dataIndex: 'GAC' },
+      { title: 'MRGAC', dataIndex: 'MRGAC', render: (text, record) => { return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-' } },
+      { title: 'OGAC', dataIndex: 'OGAC', render: (text, record) => { return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-' } },
+      { title: 'GAC', dataIndex: 'GAC', render: (text, record) => { return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-' } },
       { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
       { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
       { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
@@ -956,6 +956,8 @@ const PPMReport = () => {
         }
       });
     });
+
+    columns.push
 
 
     const getRowClassName = (record) => {
