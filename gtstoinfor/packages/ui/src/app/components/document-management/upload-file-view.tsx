@@ -291,7 +291,7 @@ const UploadFileGrid = () =>{
             return (<div style={{alignContent:'center'}}>
                <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
                  <Button type="primary" 
-                 disabled ={rowData.poStatus == 'Closed' ? false:true}
+                disabled ={rowData.poStatus == 'Closed' ? false:true}
                 onClick={() => mergeAndDownloadPDFs(rowData.url, rowData.PO)}>
               <DownloadOutlined/>
               </Button>
@@ -376,7 +376,7 @@ const UploadFileGrid = () =>{
       console.log('params', pagination, filters, sorter, extra);
     }
     return (<Form form={form}>
-        <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span>{JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" ?<Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button>:""}</span>}>
+        <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span>{JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" || JSON.parse(localStorage.getItem('currentUser')).user.roles != "consolidator" ?<Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button>:""}</span>}>
             {columns.length > 0 && itemData.length > 0 ? (
                 <Table
                     columns={columns.map((column) => ({
