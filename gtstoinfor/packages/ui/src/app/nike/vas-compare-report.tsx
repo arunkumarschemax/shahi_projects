@@ -340,7 +340,7 @@ const VASChangesCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('DD/MM/YYYY')
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item',
@@ -554,17 +554,17 @@ const VASChangesCompareGrid = () => {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
             ...getColumnSearchProps('schedule_line_item_number'),
-            align:'center'
+            align: 'center'
         },
         {
             title: 'Previous Line Item Status',
             dataIndex: 'old_val',
-            align:'center'
+            align: 'center'
         },
         {
             title: 'Revised Line Item Status',
             dataIndex: 'new_val',
-            align:'center'
+            align: 'center'
         },
         {
             title: 'Order Quantity Pieces',
@@ -577,7 +577,7 @@ const VASChangesCompareGrid = () => {
             )
 
         },
-        
+
     ];
 
     const columns3: any = [

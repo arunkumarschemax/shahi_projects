@@ -19,14 +19,11 @@ const PPMReport = () => {
   const [gridData, setGridData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const service = new NikeService();
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [filterData, setFilterData] = useState<any>([])
   const [pageSize, setPageSize] = useState<number>(null);
   const [page, setPage] = React.useState(1);
   const [productCode, setProductCode] = useState<any>([]);
   const { RangePicker } = DatePicker;
-  const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
-  const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
   const { Option } = Select;
   const [poLine, setPoLine] = useState<any>([]);
   const [colorDesc, setColorDesc] = useState<any>([]);
@@ -377,8 +374,7 @@ const PPMReport = () => {
       {
         title: 'Last Modified Date',
         dataIndex: 'lastModifiedDate',
-        render: (text) => moment(text).format('DD/MM/YYYY')
-
+        render: (text) => moment(text).format('MM/DD/YYYY')
       },
       {
         title: 'Item',
@@ -398,8 +394,7 @@ const PPMReport = () => {
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
-        render: (text) => moment(text).format('DD/MM/YYYY')
-
+        render: (text) => moment(text).format('MM/DD/YYYY')
       },
       {
         title: 'Purchase Order Number',
@@ -449,7 +444,10 @@ const PPMReport = () => {
         title: "Plant Code",
         dataIndex: 'plant'
       },
-      { title: 'Geo Code', dataIndex: '' },
+      {
+        title: 'Geo Code',
+        dataIndex: ''
+      },
       {
         title: "Plant Name",
         dataIndex: 'plantName'
@@ -465,7 +463,6 @@ const PPMReport = () => {
             return <strong>{text}</strong>;
           }
         },
-
       },
       {
         title: "GAC",
@@ -479,7 +476,6 @@ const PPMReport = () => {
         title: "OGAC",
         dataIndex: 'OGAC'
       },
-
       {
         title: "UPC",
         dataIndex: 'UPC'
@@ -497,10 +493,6 @@ const PPMReport = () => {
       {
         title: "Doc Type",
         dataIndex: 'docTypeCode'
-      },
-      {
-        title: "Doc Type Description ",
-        dataIndex: 'docTypeDesc'
       },
       {
         title: "Doc Type Description ",
@@ -833,7 +825,6 @@ const PPMReport = () => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >
               <Form.Item label="Last Modified Date" name="lastModifiedDate">
                 <RangePicker />
-
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >

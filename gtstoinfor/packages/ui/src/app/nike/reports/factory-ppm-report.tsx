@@ -493,7 +493,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'documentDate',
                 className: "right-column",
                 render: (text, record) => {
-                    return record.documentDate ? moment(record.documentDate).format('DD/MM/YYYY') : '-';
+                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-';
                 },
             },
             {
