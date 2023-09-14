@@ -378,14 +378,17 @@ export function UploadDocumentForm() {
       editedCharge = `${item.Taxamount}`;
     }
     setCharge(editedCharge);
-    setVariance(item.unitprice);
+  
+    // Set the unitquantity state
     setUnitquantity(item.unitquantity);
+  
+    setVariance(item.unitprice);
     setQuotation(item.quotation);
-
     setIsEditing(true);
     setEditingItem(item);
     setButtonText("Update");
   };
+  
 
   const handleDelete = (item) => {
     const updatedTableData = extractedData.filter((data) => data !== item);
@@ -442,7 +445,14 @@ export function UploadDocumentForm() {
       title: "Unit Quantity",
       dataIndex: "unitquantity",
       key: "unitquantity",
-    },
+      render: (unitquantity) => {
+        if (typeof unitquantity === 'undefined' || unitquantity === null || unitquantity === '') {
+          return 1; 
+        }
+    
+        return unitquantity;
+      },
+    },    
     {
       title: "Charge",
       dataIndex: "Charge",
@@ -469,7 +479,7 @@ export function UploadDocumentForm() {
     //   title: "Variance",
     //   dataIndex: "variance",
     //   key: "variance",
-    //   hide:true,
+    //   hide: true,
     //   render: (variance, record) => {
     //     const Charge = parseFloat(record.Charge) || 0;
     //     const Quotation = parseFloat(record.quotation) || 0;
@@ -978,7 +988,7 @@ export function UploadDocumentForm() {
                       htmlFor="InnvoiceNumber"
                       style={{ color: "black", fontWeight: "bold" }}
                     >
-                      Innvoice Number
+                      Invoice Number
                     </label>
                     <Input
                       id="InnvoiceNumber"
@@ -994,7 +1004,7 @@ export function UploadDocumentForm() {
                       htmlFor="InnvoiceAmount"
                       style={{ color: "black", fontWeight: "bold" }}
                     >
-                      Innvoice Amount
+                      Invoice Amount
                     </label>
                     <Input
                       id="InnvoiceAmount"
@@ -1061,7 +1071,7 @@ export function UploadDocumentForm() {
                       htmlFor="Innvoice Currency"
                       style={{ color: "black", fontWeight: "bold" }}
                     >
-                      Innvoice Currency
+                      Invoice Currency
                     </label>
                     <Input
                       id="Innvoice Currency"

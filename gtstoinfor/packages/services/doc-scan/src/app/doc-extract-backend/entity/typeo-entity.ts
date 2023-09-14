@@ -1,31 +1,29 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 import { HSNEntity } from './hsn-entity';
-@Entity('Innvoice')
+@Entity('invoice')
 export class ScanEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
     name: 'id',
   })
   typeId: number;
 
-  @Column("varchar", {
-    name: "file_name"
-  })
-  fileName: string;
+  // @Column("varchar", {
+  //   name: "file_name"
+  // })
+  // fileName: string;
 
-  @Column("varchar", {
-    name: "file_path"
-  })
-  filePath: string;
+  // @Column("varchar", {
+  //   name: "file_path"
+  // })
+  // filePath: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
-    name: 'Gst',
+    name: 'gst',
   })
   GST: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
     name: 'vendor',
   })
@@ -34,86 +32,74 @@ export class ScanEntity extends BaseEntity {
 
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
     name: 'invoice_date',
   })
   invoiceDate: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
     name: 'innvoice_number',
   })
   InnvoiceNumber: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
-    name: 'CGst',
+    name: 'cgst',
   })
   Cgst: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
-    name: 'IGst',
+    name: 'igst',
   })
   IGST: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
-    name: 'SGst',
+    name: 'sgst',
   })
   Sgst: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
     name: 'innvoice_amount',
   })
   InnvoiceAmount: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
     name: 'innvoice_currency',
   })
   InnvoiceCurrency: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
     name: 'routing',
   })
   Routing: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
     name: 'comment',
   })
   Comment: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
     name: 'financial_year',
   })
   Financialyear: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
     name: 'time_created',
   })
   Timecreated: string;
 
   @Column('varchar', {
-    nullable: false,
     length: 50,
-    name: 'buyerName',
+    name: 'buyer_name',
   })
   buyerName: string;
 
@@ -148,16 +134,11 @@ export class ScanEntity extends BaseEntity {
   @VersionColumn({
 
     name: "version_flag",
-    default:1
+    default: 1
   })
   versionFlag: number;
 
-  @OneToMany(()=>HSNEntity,SCAN=>SCAN.data,{cascade:true})
-  scanentity:HSNEntity[]
-
-
-
-
-
+  @OneToMany(() => HSNEntity, SCAN => SCAN.data, { cascade: true })
+  scanentity: HSNEntity[]
 
 }

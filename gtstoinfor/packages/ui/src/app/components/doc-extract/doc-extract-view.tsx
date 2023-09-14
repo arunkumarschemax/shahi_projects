@@ -159,13 +159,13 @@ export function DocView() {
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * pageSize + (index + 1)
   },
-    {
-      title: 'GST Number', dataIndex: 'GST', key: 'GST', ...getColumnSearchProps("GST"),
-      align:"center",
-      render: (text: any, record: { GST: any; }) => {
-        return (<> {record.GST ? record.GST : '-'} </>)
-      }
-    },
+    // {
+    //   title: 'GST Number', dataIndex: 'GST', key: 'GST', ...getColumnSearchProps("GST"),
+    //   align:"center",
+    //   render: (text: any, record: { GST: any; }) => {
+    //     return (<> {record.GST ? record.GST : '-'} </>)
+    //   }
+    // },
     {
       title: 'Vendor Name', dataIndex: 'Vendor', key: 'Vendor', ...getColumnSearchProps("Vendor"),
       align:"center",
