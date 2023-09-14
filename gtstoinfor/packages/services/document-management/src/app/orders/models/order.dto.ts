@@ -53,6 +53,10 @@ export class SaveOrderDto {
 
     @ApiProperty()
     fileId : number;
+
+    
+    @ApiProperty()
+    orderPoStatus: string;
     /**
      * 
      * @param id 
@@ -72,8 +76,11 @@ export class SaveOrderDto {
      * @param updatedAt 
      * @param version 
      * @param fileId 
+     * @param orderPoStatus
      */
-    constructor(id: number,buyer: string,challanNo: number,invoiceNo: string,style: string,poNo: string,date: any,dest: string,tcStatus: string,shipQty: number,ctns: number,createdUser: string | null,updatedUser: string | null,createdAt: string,updatedAt: string,version: number,fileId : number){
+    constructor(id: number,buyer: string,challanNo: number,invoiceNo: string,style: string,poNo: string,date: any,dest: string,tcStatus: string,shipQty: number,ctns: number,createdUser: string | null,updatedUser: string | null,createdAt: string,updatedAt: string,version: number,fileId : number,
+        orderPoStatus?:string 
+        ){
         this.id = id;
         this.buyer = buyer;
         this.challanNo = challanNo;
@@ -91,6 +98,6 @@ export class SaveOrderDto {
         this.updatedAt = updatedAt;
         this.version = version;
         this.fileId = fileId;
-
+        this.orderPoStatus=orderPoStatus
     }
 }
