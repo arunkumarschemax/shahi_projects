@@ -568,6 +568,9 @@ export const SourcingRequisitionDynamicView = () => {
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select Request Number'>
                             <Option key={'REQ001'} value='REQ001'>REQ001</Option>
                             <Option  key={'REQ002'} value='REQ002'>REQ002</Option>
+                            <Option  key={'REQ003'} value='REQ003'>REQ003</Option>
+                            <Option  key={'REQ004'} value='REQ004'>REQ004</Option>
+                            <Option  key={'REQ005'} value='REQ005'>REQ005</Option>
                     </Select>
                     </Form.Item>
                     </Col>

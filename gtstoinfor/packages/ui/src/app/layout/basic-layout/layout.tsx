@@ -17,23 +17,6 @@ const { useToken } = theme
 
 
 export const baseMRouterList = [
-    
-    {
-        label: "Marketing Requisition",
-        key: "marketing-requisition",
-        path: "marketing-requisition-view",
-        // icon: <DashboardOutlined />,
-        filepath: "marketing-requisition-view",
-    },
-    {
-        label: "Marketing Requisition Report",
-        key: "marketing-requisition",
-        path: "marketing-requisition-report",
-        filepath: "marketing-requisition-report",
-    },
-]
-
-export const baseRouterList = [
     {
         label: "M3 Items",
         key: "m3-masters",
@@ -48,6 +31,63 @@ export const baseRouterList = [
         // icon: <DashboardOutlined />,
         filepath: "/indent-form",
     },
+    {
+        label: "Stock",
+        key: "stockView",
+        path: "stock-view",
+        filepath: "/stock-view",
+    },
+    {
+        label: "Sample Development",
+        key: "sample-development",
+        path: "sample-development",
+        filepath: "sample-development",
+        children:[
+            {
+                label: "Sample Development",
+                key: "sample-development",
+                path: "sample-development-form",
+                filepath: "sample-development-form"
+            },
+            {
+                label: "Sample Requests",
+                key: "sample-requests",
+                path: "sample-requests",
+                filepath: "sample-requests"
+            }
+        ]
+    },
+    
+    // {
+    //     label: "Marketing Requisition",
+    //     key: "marketing-requisition",
+    //     path: "marketing-requisition-view",
+    //     // icon: <DashboardOutlined />,
+    //     filepath: "marketing-requisition-view",
+    // },
+    // {
+    //     label: "Marketing Requisition Report",
+    //     key: "marketing-requisition",
+    //     path: "marketing-requisition-report",
+    //     filepath: "marketing-requisition-report",
+    // },
+]
+
+export const baseRouterList = [
+    {
+        label: "M3 Items",
+        key: "m3-masters",
+        path: "m3-masters",
+        // icon: <DashboardOutlined />,
+        filepath: "/m3-masters",
+    },
+    // {
+    //     label: "Indent",
+    //     key: "indent",
+    //     path: "indent-form",
+    //     // icon: <DashboardOutlined />,
+    //     filepath: "/indent-form",
+    // },
     {
         label: "Requisition",
         key: "requisition",
@@ -492,26 +532,26 @@ export const baseRouterList = [
 
    
 
-    {
-        label: "Sample Development",
-        key: "sample-development",
-        path: "sample-development",
-        filepath: "sample-development",
-        children:[
-            {
-                label: "Sample Development",
-                key: "sample-development",
-                path: "sample-development-form",
-                filepath: "sample-development-form"
-            },
-            {
-                label: "Sample Requests",
-                key: "sample-requests",
-                path: "sample-requests",
-                filepath: "sample-requests"
-            }
-        ]
-    }, 
+    // {
+    //     label: "Sample Development",
+    //     key: "sample-development",
+    //     path: "sample-development",
+    //     filepath: "sample-development",
+    //     children:[
+    //         {
+    //             label: "Sample Development",
+    //             key: "sample-development",
+    //             path: "sample-development-form",
+    //             filepath: "sample-development-form"
+    //         },
+    //         {
+    //             label: "Sample Requests",
+    //             key: "sample-requests",
+    //             path: "sample-requests",
+    //             filepath: "sample-requests"
+    //         }
+    //     ]
+    // }, 
     {
         label: "Material Issues",
         key: "store-issues",
