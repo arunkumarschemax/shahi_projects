@@ -26,6 +26,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
   const [reqNo, setReqNo] = useState<any>([]);
   const [form] = Form.useForm();
   const { Option } = Select;
+  const logInUser = localStorage.getItem('userName')
 
 
   useEffect(() => {
@@ -256,7 +257,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
               size={30}
             />
           </Tooltip> */}
-          <Button onClick={() => DetailView(rowData.id)} type='primary'>Issue Material</Button>
+          <Button onClick={() => DetailView(rowData.id)} type='primary' disabled={logInUser == 'marketUser' ? true:false}>Issue Material</Button>
         </span>
       ),
     },
@@ -279,6 +280,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       // headStyle={{ border: 0 }}
       className="card-header"
         extra={
+          (logInUser == 'marketUser') &&
           <Link to="/sample-development/sample-development-form">
             <span style={{ color: "white" }}>
               <Button type={"primary"}>New </Button>{" "}
