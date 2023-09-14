@@ -61,6 +61,7 @@
     "rxjs": "^7.0.0",
     "static-server": "2.2.1",
     "tesseract.js": "^2.1.5",
+    "tesseract.js-core": "^4.0.4",
     "tslib": "2.3.0",
     "typeorm": "^0.3.17",
     "xlsx": "^0.18.5",
