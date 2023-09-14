@@ -36,8 +36,7 @@ import {
 import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
 import { useNavigate } from "react-router-dom";
 // const { Title, Text } = Typography;
-
-// const { Option } = Select;
+const { Option } = Select;
 
 // export interface UploadDocumentFormProps { }
 
@@ -407,8 +406,9 @@ export function UploadDocumentForm() {
   };
   const columns = [
     {
-      title: "HSN",
+      title: "HSN code",
       dataIndex: "HSN",
+      width:"30",
       key: "HSN",
       render: (HSN) => ` ${HSN}`,
     },
@@ -437,11 +437,17 @@ export function UploadDocumentForm() {
         return "0";
       },
     },
-
     {
       title: "Unit Quantity",
       dataIndex: "unitquantity",
       key: "unitquantity",
+      render: (unitquantity) => {
+        if (typeof unitquantity === 'undefined' || unitquantity === null || unitquantity === '') {
+          return 1;
+        }
+
+        return unitquantity;
+      },
     },
     {
       title: "Charge",
@@ -777,7 +783,7 @@ export function UploadDocumentForm() {
                   <Button
                     key="file"
                     style={{ color: "black", backgroundColor: "#7ec1ff" }}
-                    // icon={<UploadOutlined />}
+                  // icon={<UploadOutlined />}
                   >
                     Choose File
                   </Button>
@@ -1201,22 +1207,25 @@ export function UploadDocumentForm() {
                       onChange={(e) => setHSN(e.target.value)}
                     />
                   </Col>
-
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label
-                      htmlFor="Taxtype"
-                      style={{ color: "black", fontWeight: "bold" }}
-                    >
+                    <label htmlFor="Taxtype" style={{ color: "black", fontWeight: "bold" }}>
                       Tax Type
                     </label>
-                    <Input
+                    <Select
                       id="Taxtype"
-                      name="Taxtype"
-                      style={{ width: "150px", height: "30px" }}
+                      // name="Taxtype"
+                      style={{ width: "150px" }}
                       value={Taxtype}
-                      onChange={(e) => setTaxtype(e.target.value)}
-                    />
+                      onChange={(value) => setTaxtype(value)}
+                    >
+                      <Option value="IGST">IGST</Option>
+                      <Option value="CSGT & SGST">CSGT & SGST</Option>
+                      <Option value="No Tax">No Tax</Option>
+
+                      {/* Add more options as needed */}
+                    </Select>
                   </Col>
+
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                     <label
                       htmlFor="Taxamount"
@@ -1359,7 +1368,7 @@ export function UploadDocumentForm() {
             <br></br>
 
             <Card>
-            {extractedData && extractedData.length > 0 ? (
+              {extractedData && extractedData.length > 0 ? (
                 <Table dataSource={extractedData} columns={columns} />
               ) : (
                 ""
