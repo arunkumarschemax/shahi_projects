@@ -204,7 +204,8 @@ export default function DocumentListupload() {
         formData.append('filePath', `${data.filePath}`);
         formData.append('uploadStatus', `${data.uploadStatus}`);
         formData.append('status', `${statusval}`);
-
+        formData.append('createdUser',`${JSON.parse(localStorage.getItem('currentUser')).user.roles}`)
+        console.log(formData)
         // formData.append('uid',''\)
         const files = filesList;
         console.log(files);

@@ -126,6 +126,7 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
                 entity.fileName=data.fileName
                 entity.filePath="/dist/packages/services/document-management/"+data.filePath
                 entity.documentListId=data.documentListId  
+                entity.createdUser=req.createdUser
                 if(req.uid.length >= 20){            
                     entity.uid=req.uid;
                 }else{
