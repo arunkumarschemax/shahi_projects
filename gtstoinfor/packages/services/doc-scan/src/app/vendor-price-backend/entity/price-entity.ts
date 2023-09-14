@@ -9,21 +9,21 @@ export class PriceEntity extends BaseEntity {
     @Column("varchar", {
         nullable: true,
         length: 50,
-        name: "headOfCharges"
+        name: "head_of_charges"
     })
     headOfCharges: string;
 
     @Column("varchar", {
         nullable: true,
         length: 50,
-        name: "perUnit"
+        name: "per_unit"
     })
     perUnit: string;
 
     @Column('varchar', {
         nullable: true,
         length: 50,
-        name: 'dpLogistics',
+        name: 'dp_logistics',
     })
     dpLogistics: string;
 
@@ -54,7 +54,7 @@ export class PriceEntity extends BaseEntity {
     @Column('varchar', {
         nullable: true,
         length: 50,
-        name: 'unitprice',
+        name: 'unit_price',
     })
     unitPrice: string;
 
