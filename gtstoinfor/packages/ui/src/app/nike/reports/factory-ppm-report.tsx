@@ -761,11 +761,29 @@ const FactoryPPMReport = () => {
                 return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
             },  },
            
-            { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", },
-            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", },
-            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", },
+            { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column",render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            }, },
+            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column",render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            }, },
+            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            },},
              {
-                title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
+                title: 'GAC Reason Code', dataIndex: 'GACReasonCode',align:'right', render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -1023,15 +1041,107 @@ const FactoryPPMReport = () => {
         align: 'center',
         
     },
-    { title: 'VAS-Size', dataIndex: 'VASSize' },
-    { title: 'Item Vas Text', dataIndex: 'itemVasText' },
-    { title: 'Item Text', dataIndex: 'itemText' },
+    { title: 'VAS-Size', dataIndex: 'VASSize',render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    }, },
+    { title: 'Item Vas Text', dataIndex: 'itemVasText',render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    }, },
+    { title: 'Item Text', dataIndex: 'itemText' ,render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    },},
     {
         title:'Hanger Po',
-        dataIndex:'hanger'
+        dataIndex:'hanger',render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }
+        },
     }
            
     )
+    exportingColumns.push(
+                
+        {
+            title: 'Change Register',
+            dataIndex: 'displayName',
+            align: 'center',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            },
+        },
+        {
+            title: 'Allowed Excess Ship Qty',
+            dataIndex: '',
+            align: 'center',
+            
+        },
+        {
+    title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    },
+},
+{
+    title: 'Actual Ship %',
+    dataIndex: '',
+    align: 'center',
+    
+},
+{ title: 'VAS-Size', dataIndex: 'VASSize',render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+}, },
+{ title: 'Item Vas Text', dataIndex: 'itemVasText',render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+}, },
+{ title: 'Item Text', dataIndex: 'itemText' ,render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},},
+{
+    title:'Hanger Po',
+    dataIndex:'hanger',render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    },
+}
+       
+)
         const getRowClassName = (record) => {
             if (record.displayName) {
                 return 'colored-row';
