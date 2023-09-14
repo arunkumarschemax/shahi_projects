@@ -37,6 +37,7 @@ async getAllSampleDevelopment(req? : SampleFilterRequest): Promise<any> {
           productType: "Apparel",
           Conversion: "N/A",
           madeIn: "USA",
+          status:"Open",
           remarks: "Sample for approval",
           fabricInfo: [
             {
@@ -85,6 +86,7 @@ async getAllSampleDevelopment(req? : SampleFilterRequest): Promise<any> {
           contactNo: "444-444-4444",
           extn: "456",
           sam: "2.3",
+          status:"In Progress",
           dmm: "Sarah Johnson",
           technician: "Mark Anderson",
           productType: "Electronics",
@@ -129,6 +131,7 @@ async getAllSampleDevelopment(req? : SampleFilterRequest): Promise<any> {
             type: "Development",
             buyer: "DEF Apparel",
             styleNo: "FB16156T",
+            status:"Completed",
             fabricInfo:[
                 {
                 fabricCode :"",
@@ -167,6 +170,7 @@ async getAllSampleDevelopment(req? : SampleFilterRequest): Promise<any> {
             type: "Proto",
             buyer: "GHI Fashions",
             styleNo: "FB14923A",
+            status:"In Progress",
             fabricInfo:[
                 {
                 fabricCode :"",
@@ -226,10 +230,11 @@ async getSampleDevById(): Promise<any> {
             id:"1",
           requestNo: "REQ001",
           date: "2023-08-01",
-          location: "Vizag",
+          location: "Coimbatore",
           pch: "PCH001",
-          type: "Proto",
-          buyer: "Virat Kohil",
+          user:"Admin",
+          sampleType: "Proto Sample",
+          buyer: "Eswar",
           styleNo: "STL001",
           sampleSubType: "T-Shirt",
           style: "Casual",
@@ -242,6 +247,7 @@ async getSampleDevById(): Promise<any> {
           sam: "4.5",
           dmm: "Rajesh",
           technician: "Suresh",
+          product:"Kurtha",
           productType: "Apparel",
           Conversion: "INR",
           madeIn: "USA",
