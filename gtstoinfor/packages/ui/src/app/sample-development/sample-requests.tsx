@@ -176,6 +176,14 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       ...getColumnSearchProps("requestNo"),
     },
     {
+      title: "Style No",
+      dataIndex: "styleNo",
+      // responsive: ['lg'],
+      sorter: (a, b) => a.styleNo.localeCompare(b.styleNo),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("styleNo"),
+    },
+    {
       title: "Date",
       dataIndex: "date",
       // responsive: ['lg'],
@@ -216,14 +224,6 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       ...getColumnSearchProps("buyer"),
     },
     {
-      title: "Style No",
-      dataIndex: "styleNo",
-      // responsive: ['lg'],
-      sorter: (a, b) => a.styleNo.localeCompare(b.styleNo),
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("styleNo"),
-    },
-    {
       title: `Action`,
       dataIndex: "action",
       render: (text, rowData, index) => (
@@ -236,7 +236,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
               size={30}
             />
           </Tooltip> */}
-          <Button onClick={() => DetailView(rowData.id)}>Issue Material</Button>
+          <Button onClick={() => DetailView(rowData.id)} type='primary'>Issue Material</Button>
         </span>
       ),
     },

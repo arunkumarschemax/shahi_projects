@@ -35,7 +35,7 @@ export const baseMRouterList = [
 
 export const baseRouterList = [
     {
-        label: "M3 Masters",
+        label: "M3 Items",
         key: "m3-masters",
         path: "m3-masters",
         // icon: <DashboardOutlined />,
@@ -490,20 +490,7 @@ export const baseRouterList = [
     //     ]
     // },
 
-    {
-        label: "Store Issues",
-        key: "store-issues",
-        path: "store-issues/store-issues-view",
-        filepath: "store-issues/store-issues-view",
-        // children:[
-        //     {
-        //         label: "Source Issues View",
-        //         key: "source-issues-view",
-        //         path: "source-issues-view",
-        //         filepath: "source-issues-view"
-        //     }
-        // ]
-    },
+   
 
     {
         label: "Sample Development",
@@ -524,7 +511,21 @@ export const baseRouterList = [
                 filepath: "sample-requests"
             }
         ]
-    },   
+    }, 
+    {
+        label: "Material Issues",
+        key: "store-issues",
+        path: "store-issues/store-issues-view",
+        filepath: "store-issues/store-issues-view",
+        // children:[
+        //     {
+        //         label: "Source Issues View",
+        //         key: "source-issues-view",
+        //         path: "source-issues-view",
+        //         filepath: "source-issues-view"
+        //     }
+        // ]
+    },  
     // {
     //     label: "Material Creation",
     //     key: "materialCreation",

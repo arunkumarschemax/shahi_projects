@@ -622,12 +622,12 @@ export const SourcingRequisitionDynamicView = () => {
                     />
                     <div>
                         {tabName === 'Fabric' ? (<>
-                        <Table columns={columns} dataSource={item.fabricInfo} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper" size='small'/>
+                        <Table columns={columns} dataSource={item.fabricInfo} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper"/>
                         </>) : (<></>)}
                     </div>
                     <div>
                         {tabName === 'Trim' ? (<>
-                            <Table columns={columnsSkelton} dataSource={item.trimInfo} pagination={false} className="custom-table-wrapper" size='small'/>
+                            <Table columns={columnsSkelton} dataSource={item.trimInfo} pagination={false} className="custom-table-wrapper"/>
                         </>) : (<></>)}
                     </div>
                     </Space>

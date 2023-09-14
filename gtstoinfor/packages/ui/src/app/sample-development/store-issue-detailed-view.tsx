@@ -55,20 +55,24 @@ export const StoreIssueDetailed = () => {
     }
 
     const handleFormSubmit = () => {
-        // Capture and log the issuing quality for both trims and fabric
-        const issuingQualityForFabric = data[0]?.fabricInfo.map((record) => ({
-          key: record.key,
-          issuingQuantity: record.issuingQuantity,
-        }));
+      // Capture and log the issuing quality for both trims and fabric
+      const issuingQualityForFabric = data[0]?.fabricInfo.map((record) => ({
+        key: record.key,
+        issuingQuantity: record.issuingQuantity,
+      }));
     
-        const issuingQualityForTrims = data[0]?.trimInfo.map((record) => ({
-          key: record.key,
-          issuingQuantity: record.issuingQuantity,
-        }));
+      const issuingQualityForTrims = data[0]?.trimInfo.map((record) => ({
+        key: record.key,
+        issuingQuantity: record.issuingQuantity,
+      }));
     
-        console.log("Issuing Quality for Fabric:", issuingQualityForFabric);
-        console.log("Issuing Quality for Trims:", issuingQualityForTrims);
-      };
+      console.log("Issuing Quality for Fabric:", issuingQualityForFabric);
+      console.log("Issuing Quality for Trims:", issuingQualityForTrims);
+    
+      // Log the entire data object with updated issuingQuantity
+      console.log("Updated Data:", data);
+    };
+    
 
     const columnsSkelton = [
         {
@@ -94,7 +98,7 @@ export const StoreIssueDetailed = () => {
           dataIndex: 'consumption',
         },
         {
-          title: 'Issuing Quantity',
+          title: 'Issued Quantity',
           dataIndex: 'issuingQuantity',
           render: (_, record) => (
             <Input
@@ -124,7 +128,7 @@ export const StoreIssueDetailed = () => {
           dataIndex: 'consumption',
         },
         {
-          title: 'Issuing Quantity',
+          title: 'Issued Quantity',
           dataIndex: 'issuingQuantity',
           render: (_, record) => (
             <Input
@@ -140,7 +144,7 @@ export const StoreIssueDetailed = () => {
       ];
 
     return(
-        <Card title='Source Issue' className="card-header" onClick={onUpdate} extra={<Button type={'primary'}>View</Button>}>
+        <Card title='Material Issue' className="card-header" extra={<Button onClick={onUpdate} type={'primary'}>View</Button>}>
              <Descriptions size='small'>
                 <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>
                 <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>
@@ -166,7 +170,7 @@ export const StoreIssueDetailed = () => {
             </Descriptions>
 
             <Tabs type={'card'} tabPosition={'top'}>
-                <TabPane key="1" tab={<span><b>{`Fabric`}</b></span>}>
+                <TabPane key="1" tab={<span style={{fontSize:'15px'}}><b>{`Fabric`}</b></span>}>
                 <Table
                 size="small"
                 columns={columnsSkelton}
@@ -176,7 +180,7 @@ export const StoreIssueDetailed = () => {
                 pagination ={false}
             />
                 </TabPane>
-                <TabPane key="2" tab={<span><b>{`Trims`}</b></span>}>
+                <TabPane key="2" tab={<span style={{fontSize:'15px'}}><b>{`Trims`}</b></span>}>
                 <Table
                 size="small"
                 columns={columns}
