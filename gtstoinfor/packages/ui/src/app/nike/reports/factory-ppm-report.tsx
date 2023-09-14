@@ -694,16 +694,37 @@ const FactoryPPMReport = () => {
             {
                 title: 'Customer PO',
                 dataIndex: 'customerPO',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
             },
             {
                 title: 'Ship To Customer Number',
                 dataIndex: 'shipToCustomerNumber',
                 align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
             },
             {
                 title: 'Ship To Customer Name',
                 dataIndex: 'shipToCustomerName',
                 align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
             },
             // {
             //     title: 'Ship to Address Legal PO',

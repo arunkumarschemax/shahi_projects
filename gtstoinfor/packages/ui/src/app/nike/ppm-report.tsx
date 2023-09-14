@@ -624,16 +624,37 @@ const PPMReport = () => {
     {
         title: 'Customer PO',
         dataIndex: 'customerPO',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+              return '-';
+          } else {
+              return text;
+          }
+      },
     },
     {
         title: 'Ship To Customer Number',
         dataIndex: 'shipToCustomerNumber',
         align: 'center',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+              return '-';
+          } else {
+              return text;
+          }
+      },
     },
     {
         title: 'Ship To Customer Name',
         dataIndex: 'shipToCustomerName',
         align: 'center',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+              return '-';
+          } else {
+              return text;
+          }
+      },
     },
     {
         title: 'Ship to Address Legal PO',
@@ -691,7 +712,14 @@ const PPMReport = () => {
         },
     },
     { title:"CAB Code",
-      dataIndex:'CABCode',},
+      dataIndex:'CABCode',
+      render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    },},
       {
         title:'Final Destination',
         dataIndex:'',
@@ -723,13 +751,49 @@ const PPMReport = () => {
       },
   },
     
-    { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
-    { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", },
-    { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", },
-    { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", },
+    { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc',render: (text, record) => {
+      if (!text || text.trim() === '') {
+          return '-';
+      } else {
+          return text;
+      }
+  }, },
+    { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column",render: (text, record) => {
+      if (!text || text.trim() === '') {
+          return '-';
+      } else {
+          return text;
+      }
+  }, },
+    { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", render: (text, record) => {
+      if (!text || text.trim() === '') {
+          return '-';
+      } else {
+          return text;
+      }
+  },},
+    { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", render: (text, record) => {
+      if (!text || text.trim() === '') {
+          return '-';
+      } else {
+          return text;
+      }
+  },},
     
-    { title: 'Shipping Type', dataIndex: 'shippingType' },
-    { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', },
+    { title: 'Shipping Type', dataIndex: 'shippingType',render: (text, record) => {
+      if (!text || text.trim() === '') {
+          return '-';
+      } else {
+          return text;
+      }
+  }, },
+    { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column',render: (text, record) => {
+      if (!text || text.trim() === '') {
+          return '-';
+      } else {
+          return text;
+      }
+  }, },
     { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', render: (text, record) => {
       if (!text || text.trim() === '') {
         return '-';
@@ -1141,6 +1205,13 @@ const PPMReport = () => {
 },{
   title: 'Legal PO QTY',
   dataIndex: 'quantity',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
@@ -1156,6 +1227,13 @@ const PPMReport = () => {
 {
   title: 'Actual Shipped Qty',
   dataIndex: 'actualShippedQty',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
@@ -1378,6 +1456,13 @@ const PPMReport = () => {
 },{
   title: 'Legal PO QTY',
   dataIndex: 'quantity',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
@@ -1393,6 +1478,13 @@ const PPMReport = () => {
 {
   title: 'Actual Shipped Qty',
   dataIndex: 'actual_shipped_qty',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
@@ -1403,11 +1495,25 @@ const PPMReport = () => {
 {
   title: 'VAS - Size',
   dataIndex: 'VASSize',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
   title: 'Item Vas Text',
   dataIndex: 'itemVasText',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
@@ -1423,17 +1529,38 @@ const PPMReport = () => {
 {
   title: 'Item Text',
   dataIndex: 'itemText',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
   title: 'Hanger PO',
   dataIndex: 'hanger',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
   title: 'Change Register',
   dataIndex: 'displayName',
   align: 'center',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
 },
 
     )
