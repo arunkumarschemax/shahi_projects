@@ -46,6 +46,7 @@ export function PoQuantityWiseGraph() {
                 //console.log(res.data, 'data')
                 //AlertMessages.getSuccessMessage(res.internalMessage);
             } else {
+                setPoData(undefined);
                 //AlertMessages.getErrorMessage(res.internalMessage);
             }
         });

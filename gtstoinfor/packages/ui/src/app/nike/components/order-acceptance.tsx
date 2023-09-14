@@ -17,8 +17,6 @@ export function OrderAcceptance() {
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState('');
     const [filterData, setFilterData] = useState<any>([]);
-    const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
-    const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
     const { RangePicker } = DatePicker;
     const [productCode, setProductCode] = useState<any>([]);
     const [poLine, setPoLine] = useState<any>([]);
@@ -122,15 +120,18 @@ export function OrderAcceptance() {
             setProductCode(res.data)
         })
     }
+
     const getPoLine = () => {
         service.getPpmPoLineForOrderCreation().then(res => {
             setPoLine(res.data)
         })
     }
+
     const onReset = () => {
         form.resetFields()
         getOrderAcceptanceData()
     }
+
     const getOrderAcceptanceData = () => {
         const req = new nikeFilterRequest();
         if (form.getFieldValue('documentDate') !== undefined) {
@@ -164,7 +165,7 @@ export function OrderAcceptance() {
         req.poLineItemNumber = record.poLineItemNumber
         req.purchaseOrderNumber = record.purchaseOrderNumber
         req.scheduleLineItemNumber = record.scheduleLineItemNumber
-        service.approveDpomLineItemStatus(req).then((res) => {
+        service.createCOline(req).then((res) => {
             if (res.status) {
                 getOrderAcceptanceData()
                 message.success(res.internalMessage)
@@ -185,18 +186,26 @@ export function OrderAcceptance() {
             fixed: 'left'
         },
         {
-            title: 'PO Number + Line',
-            dataIndex: 'po_and_line',
+            title: 'PO Number',
+            dataIndex: 'po_number',
             fixed: 'left',
-            // ...getColumnSearchProps('purchaseOrderNumber')
+            ...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number',
+            fixed: 'left',
+        },
+        {
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+            fixed: 'left',
         },
         {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY'),
-
         },
-
         {
             title: 'Plant Name',
             dataIndex: 'plant_name'
@@ -214,6 +223,18 @@ export function OrderAcceptance() {
             dataIndex: 'category_desc'
         },
         {
+            title: 'Size',
+            dataIndex: 'size_description'
+        },
+        {
+            title: 'Order Quantity',
+            dataIndex: 'size_qty'
+        },
+        {
+            title: 'Total Order Quantity',
+            dataIndex: 'total_item_qty'
+        },
+        {
             title: 'Shipping Type',
             dataIndex: 'shipping_type'
         },
@@ -223,8 +244,6 @@ export function OrderAcceptance() {
             filters: [
                 { text: 'Accepted', value: 'Accepted' },
                 { text: 'Unaccepted', value: 'Unaccepted' },
-                // { text: 'Closed', value: 'Closed' },
-                // { text: 'Cancelled', value: 'Cancelled' }
             ],
             filterMultiple: false,
             onFilter: (value, record) => { return record.dpom_item_line_status === value }
@@ -260,6 +279,21 @@ export function OrderAcceptance() {
                                 <RangePicker />
                             </Form.Item>
                         </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
+                            <Form.Item name='poandLine' label='Po+Line' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Po+Line"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {poLine.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
                             <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
                                 <Select
@@ -288,21 +322,6 @@ export function OrderAcceptance() {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-                            <Form.Item name='poandLine' label='Po+Line' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Po+Line"
-                                    optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {poLine.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
-                                    })
-                                    }
-                                </Select>
-                            </Form.Item>
-                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 40, }} >
                             <Form.Item>
                                 <Button htmlType="submit"
@@ -310,9 +329,6 @@ export function OrderAcceptance() {
                                     type="primary">SEARCH</Button>
 
                                 <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
-
-
-
                             </Form.Item>
                         </Col>
                     </Row>

@@ -8,6 +8,7 @@ import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { ColumnsType } from 'antd/es/table';
 import { FactoryReportModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
+const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 
 interface ExpandedRows {
     [key: string]: boolean;
@@ -36,10 +37,6 @@ const FactoryPPMReport = () => {
     const [expandedQuantityAllocation, setExpandedQuantityAllocation] = useState({});
     const [textareaValuesActualUnit, setTextareaValuesActualUnit] = useState({});
     const [textareaValuesQuantityAllocation, setTextareaValuesQuantityAllocation] = useState({});
-    useEffect(() => {
-        getData();
-    }, [])
-
     const [factory, setFactory] = useState<any>([]);
     const [poLine, setPoLine] = useState<any>([]);
     const [colorDesc, setColorDesc] = useState<any>([]);
@@ -48,6 +45,20 @@ const FactoryPPMReport = () => {
     const [plantCode, setPlantCode] = useState<any>([]);
     const [item, setItem] = useState<any>([]);
     const [productCode, setProductCode] = useState<any>([]);
+    const [poNumber,setPoNumber] = useState<any>([]);
+
+    useEffect(() => {
+        getData();
+        getProductCode();
+        getPoLine();
+        getColorDesc();
+        getcategoryDesc();
+        getcountrydestination();
+        getplantCode();
+        getItem();
+        getFactory();
+        getPonumber();
+    }, [])
 
 
 
@@ -199,17 +210,7 @@ const FactoryPPMReport = () => {
     const ClearData = () => {
         form.resetFields();
     }
-    useEffect(() => {
-        getData();
-        getProductCode();
-        getPoLine();
-        getColorDesc();
-        getcategoryDesc();
-        getcountrydestination();
-        getplantCode();
-        getItem();
-        getFactory();
-    }, [])
+    
 
     const getProductCode = () => {
         service.getPpmProductCodeForFactory().then(res => {
@@ -254,72 +255,78 @@ const FactoryPPMReport = () => {
             setFactory(res.data)
         })
     }
+    const getPonumber = () => {
+        service.getPpmPoNumberForFactory().then(res => {
+            setPoNumber(res.data)
+        })
+        console.log(poNumber,"test")
+    }
 
-
-      const getData = () => {
+    const getData = () => {
         const req = new PpmDateFilterRequest();
         const selectedLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
-      
+
         if (form.getFieldValue('lastModifiedDate') !== undefined) {
-          req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD');
+            req.lastModifedStartDate = (form.getFieldValue('lastModifiedDate')[0]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('lastModifiedDate') !== undefined) {
-          req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD');
+            req.lastModifedEndtDate = (form.getFieldValue('lastModifiedDate')[1]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('documentDate') !== undefined) {
-          req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
+            req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('documentDate') !== undefined) {
-          req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
+            req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('productCode') !== undefined) {
-          req.productCode = form.getFieldValue('productCode');
+            req.productCode = form.getFieldValue('productCode');
         }
-        if (form.getFieldValue('poandLine') !== undefined) {
-          req.poandLine = form.getFieldValue('poandLine');
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
         }
         if (form.getFieldValue('colorDesc') !== undefined) {
-          req.colorDesc = form.getFieldValue('colorDesc');
+            req.colorDesc = form.getFieldValue('colorDesc');
         }
         if (form.getFieldValue('categoryDesc') !== undefined) {
-          req.categoryDesc = form.getFieldValue('categoryDesc');
+            req.categoryDesc = form.getFieldValue('categoryDesc');
         }
         if (form.getFieldValue('destinationCountry') !== undefined) {
-          req.destinationCountry = form.getFieldValue('destinationCountry');
+            req.destinationCountry = form.getFieldValue('destinationCountry');
         }
         if (form.getFieldValue('plant') !== undefined) {
-          req.plant = form.getFieldValue('plant');
+            req.plant = form.getFieldValue('plant');
         }
         if (form.getFieldValue('item') !== undefined) {
-          req.item = form.getFieldValue('item');
+            req.item = form.getFieldValue('item');
         }
         if (form.getFieldValue('factory') !== undefined) {
-          req.factory = form.getFieldValue('factory');
+            req.factory = form.getFieldValue('factory');
         }
         if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
-          req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
+            req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
         }
         if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
-          req.DPOMLineItemStatus = selectedLineItemStatus;
+            req.DPOMLineItemStatus = selectedLineItemStatus;
         }
-      
-        service.getPPMData(req)
-          .then(res => {
-            if (res.status) {
-              setGridData(res.data);
-              setFilterData(res.data);
-              setFilteredData(res.data);
-              Finish(res.data);
-            } else {            
-              setGridData([]); 
-              setFilterData([]); 
-              setFilteredData([]); 
-            }
-          })
-          .catch(err => {
-            console.error(err);
-          });
-      };
+
+        console.log(req,'request')
+        service.getFactoryReportData(req)
+            .then(res => {
+                if (res.status) {
+                    setGridData(res.data);
+                    setFilterData(res.data);
+                    setFilteredData(res.data);
+                    Finish(res.data);
+                } else {
+                    setGridData([]);
+                    setFilterData([]);
+                    setFilteredData([]);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    };
 
     const Finish = (data: any) => {
 
@@ -386,13 +393,19 @@ const FactoryPPMReport = () => {
                     return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
                 }
             },
-            { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber',align:'center' },
+            { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber', align: 'center' },
             { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
             { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
             { title: 'Style Number', dataIndex: 'styleNumber' },
             { title: 'Product Code', dataIndex: 'productCode' },
             { title: 'Colour Description', dataIndex: 'colorDesc' },
-            { title: 'CO', dataIndex: 'customerOrder' },
+            { title: 'CO', dataIndex: 'customerOrder', render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                } 
+            }},
             {
                 title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => {
                     return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-'
@@ -409,7 +422,7 @@ const FactoryPPMReport = () => {
             { title: 'Gender Age Description', dataIndex: ' ' },
             { title: 'Destination Country Code ', dataIndex: 'destinationCountryCode' },
             { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
-            { title: 'Plant Code', dataIndex: 'plant',align:'center' },
+            { title: 'Plant Code', dataIndex: 'plant', align: 'center' },
             { title: 'Plant Name', dataIndex: 'plantName' },
             { title: 'Geo Code', dataIndex: '' },
             { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
@@ -442,9 +455,9 @@ const FactoryPPMReport = () => {
                 }
             },
             { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
-            { title: 'GAC Reason Description', dataIndex: ' ' },
+            { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
             { title: 'Shipping Type', dataIndex: 'shippingType' },
-            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode' },
+            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
             { title: 'Launch Code', dataIndex: 'launchCode' },
             { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
@@ -473,8 +486,9 @@ const FactoryPPMReport = () => {
             {
                 title: 'Last Modified Date',
                 dataIndex: 'lastModifiedDate',
+                className: "right-column",
                 render: (text, record) => {
-                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-';
+                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('DD/MM/YYYY') : '-';
                 },
             },
             {
@@ -486,26 +500,41 @@ const FactoryPPMReport = () => {
                 title: 'Factory',
                 dataIndex: 'factory',
                 // ...getColumnSearch('factory'),
-            },
+            }, 
+            
             {
                 title: 'Document Date',
                 dataIndex: 'documentDate',
+                className: "right-column",
                 render: (text, record) => {
                     return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-';
                 },
             },
             {
                 title: 'Purchase Order Number',
-                dataIndex: 'purchaseOrderNumber',align:'center'
+                dataIndex: 'purchaseOrderNumber', align: 'center'
             },
             {
                 title: 'PO Line Item Number',
                 dataIndex: 'poLineItemNumber',
+                className: 'centered-column',align: 'center'
             },
+            // {
+            //     title: 'Trading Co PO Number',
+            //     dataIndex: 'tradingCoPoNumber',
+            //     render: (text, record) => {
+            //         if (!text || text.trim() === '') {
+            //             return '-';
+            //         } else {
+            //             return text;
+            //         }}
+                
+            // },
             {
                 title: 'DPOM Line Item Status',
                 dataIndex: 'DPOMLineItemStatus',
             },
+           
             {
                 title: 'Style Number',
                 dataIndex: 'styleNumber',
@@ -519,14 +548,29 @@ const FactoryPPMReport = () => {
             {
                 title: 'Colour Description',
                 dataIndex: 'colorDesc',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }}
             },
+           
+
             {
                 title: 'CO',
                 dataIndex: 'customerOrder',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }}
             },
             {
                 title: 'CO Final Approval Date',
                 dataIndex: 'coFinalApprovalDate',
+                className: "right-column",
                 render: (text, record) => {
                     return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
                 }
@@ -538,14 +582,14 @@ const FactoryPPMReport = () => {
             {
                 title: 'Lead Time',
                 dataIndex: 'leadTime',
-                render:(text)=>{
-                     if (!isNaN(parseFloat(text))) {
-      // If it's a valid number, render it
-      return parseFloat(text).toFixed(2); // You can format it as needed
-    } else {
-      // If it's not a valid number, render a placeholder or an empty string
-      return 'N/A'; // Or any other desired text
-    }
+                render: (text) => {
+                    if (!isNaN(parseFloat(text))) {
+                        // If it's a valid number, render it
+                        return parseFloat(text).toFixed(2); // You can format it as needed
+                    } else {
+                        // If it's not a valid number, render a placeholder or an empty string
+                        return 'N/A'; // Or any other desired text
+                    }
                 }
             },
             {
@@ -571,6 +615,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Gender Age',
                 dataIndex: 'genderAgeCode',
+                className: 'centered-column',
             },
             {
                 title: 'Gender Age Description',
@@ -581,13 +626,17 @@ const FactoryPPMReport = () => {
                 dataIndex: 'destinationCountryCode',
             },
             {
-                title: 'destination country Name',
+                title: 'Destination country Name',
                 dataIndex: 'destinationCountry',
+            },
+            {
+                title: 'Geo Code',
+                dataIndex: '',
             },
             {
                 title: 'Plant Code',
                 dataIndex: 'plant',
-                align:'center'
+                align: 'center'
             },
             {
                 title: 'Plant Name',
@@ -596,6 +645,13 @@ const FactoryPPMReport = () => {
             {
                 title: 'Trading Co PO Number',
                 dataIndex: 'tradingCoPoNumber',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
             },
             {
                 title: 'UPC',
@@ -623,10 +679,66 @@ const FactoryPPMReport = () => {
                 dataIndex: 'shipToCustomerName',
                 align: 'center',
             },
+            // {
+            //     title: 'Ship to Address Legal PO',
+            //     dataIndex: 'shipToAddressLegalPO',
+            //     align: 'center',
+            //     render: (text, record) => {
+            //         if (!text || text.trim() === '') {
+            //             return '-';
+            //         } else {
+            //             return text;
+            //         }
+            //     },
+            // },
+            // {
+            //     title: 'Ship to Address DIA',
+            //     dataIndex: 'shipToAddressDIA',
+            //     align: 'center',
+            //     render: (text, record) => {
+            //         if (!text || text.trim() === '') {
+            //             return '-';
+            //         } else {
+            //             return text;
+            //         }
+            //     },
+            // },
+            
+            // {
+            //     title: 'Diff of Ship to Address',
+            //     dataIndex: '',
+            //     align: 'center',
+            //     render: (text, record) => {
+            //         const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+            //         const text1 = lines1.join('');
+            
+            //         const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+            //         const text2 = lines2.join('');
+            
+            //         const dmp = new DiffMatchPatch();
+            //         const diff = dmp.diff_main(text1, text2);
+            //         dmp.diff_cleanupSemantic(diff);
+            
+            //         let output = '';
+            //         for (const [op, text] of diff) {
+            //             if (op === DiffMatchPatch.DIFF_INSERT) {
+            //                 if (text.trim() !== '') {
+            //                     output += `${text} `;
+            //                 }
+            //             } else if (op === DiffMatchPatch.DIFF_DELETE) {
+            //                 if (text.trim() !== '') {
+            //                     output += `${text} `;
+            //                 }
+            //             }
+            //         }
+            //         return output.trim()
+            //     },
+            // },
             {
                 title: 'Planning Season Code',
                 dataIndex: 'planningSeasonCode',
                 align: 'center',
+                className: 'centered-column',
             },
             {
                 title: 'Planning Season Year',
@@ -636,136 +748,179 @@ const FactoryPPMReport = () => {
             {
                 title: 'Doc Type',
                 dataIndex: 'docTypeCode',
-                align: 'center',
+               align: 'center',
             },
-            { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center' },
-            { title: 'MRGAC', dataIndex: 'MRGAC' },
-            { title: 'OGAC', dataIndex: 'OGAC' },
-            { title: 'GAC', dataIndex: 'GAC' },
-            { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
-            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
-            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
-            { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
-            { title: 'GAC Reason Description', dataIndex: ' ' },
+           { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center' },
+            { title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column",render: (text, record) => {
+                return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-';
+            },  },
+            { title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
+                return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-';
+            }, },
+            { title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
+                return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
+            },  },
+           
+            { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column",render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            }, },
+            { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column",render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            }, },
+            { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            },},
+             {
+                title: 'GAC Reason Code', dataIndex: 'GACReasonCode',align:'right', render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
+            { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc',render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            }, },
+            
             { title: 'Shipping Type', dataIndex: 'shippingType' },
-            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode' },
+            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
-            { title: 'Launch Code', dataIndex: 'launchCode' },
+            {
+                title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
             { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
             { title: 'In Co Terms', dataIndex: 'inCoTerms' },
             { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
-            { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
-            { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
-            { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
-            { title: 'VAS-Size', dataIndex: 'VASSize' },
-            { title: 'Item Vas Text', dataIndex: 'itemVasText' },
-            { title: 'Item Text', dataIndex: 'itemText' },
             {
-                title: 'Change Register',
-                dataIndex: 'displayName',
-                align: 'center',
-            },  
+                title: 'Purchase Group',
+                dataIndex: 'purchaseGroupCode',
+                className: 'centered-column',
+            },
+            { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
             
-                    {
-                        title: 'Edit Unit Allocation',
-                        dataIndex: '',
-                        align: "center",
-                        render: (text, rowData) => (
-                            <span>
-                                <Form.Item>
-                                    <Checkbox
-                                        onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
-                                        checked={expandedActualUnit[rowData.poAndLine] || false}
-                                    />
-                                </Form.Item>
-                            </span>
-                        ),
-                    },
-                    {
-                        align: 'center',
-                        render: (text, rowData) => (
-                            <div>
-                                {expandedActualUnit[rowData.poAndLine] && (
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Input
-                                            name='actualUnit'
-                                            allowClear
-                                            style={{ marginRight: '10px' }}
-                                            placeholder="Enter text"
-                                            value={textareaValuesActualUnit[rowData.poAndLine] || ''}
-                                            onChange={(e) =>
-                                                handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
-                                            }
-                                        />
-                                        <Button
-                                            type="primary"
-                                            onClick={() => {
-                                                updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
-                                                handleCheckboxChange('ActualUnit', rowData.poAndLine);
-                                                handleTextareaChange('ActualUnit', rowData.poAndLine, '');
-                                            }}
-                                        >
-                                            Submit
-                                        </Button>
-                                    </div>
-                                )}
+            
+
+            {
+                title: 'Edit Unit Allocation',
+                dataIndex: '',
+                align: "center",
+                render: (text, rowData) => (
+                    <span>
+                        <Form.Item>
+                            <Checkbox
+                                onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
+                                checked={expandedActualUnit[rowData.poAndLine] || false}
+                            />
+                        </Form.Item>
+                    </span>
+                ),
+            },
+            {
+                align: 'center',
+                render: (text, rowData) => (
+                    <div>
+                        {expandedActualUnit[rowData.poAndLine] && (
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Input
+                                    name='actualUnit'
+                                    allowClear
+                                    style={{ marginRight: '10px' }}
+                                    placeholder="Enter text"
+                                    value={textareaValuesActualUnit[rowData.poAndLine] || ''}
+                                    onChange={(e) =>
+                                        handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
+                                    }
+                                />
+                                <Button
+                                    type="primary"
+                                    onClick={() => {
+                                        updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
+                                        handleCheckboxChange('ActualUnit', rowData.poAndLine);
+                                        handleTextareaChange('ActualUnit', rowData.poAndLine, '');
+                                    }}
+                                >
+                                    Submit
+                                </Button>
                             </div>
-                        ),
-                   
+                        )}
+                    </div>
+                ),
+
             },
             {
                 title: 'Actual Unit',
                 dataIndex: 'actualUnit',
                 align: 'center',
             },
-            
-               
-                    {
-                        title: 'Quantity Allocation',
-                        align: 'center',
-                        render: (text, rowData) => (
-                            <span>
-                                <Form.Item>
-                                    <Checkbox
-                                        onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
-                                        checked={expandedQuantityAllocation[rowData.poAndLine] || false}
-                                    />
-                                </Form.Item>
-                            </span>
-                        ),
-                    },
-                    {
-                        dataIndex: 'id',
-                        align: 'center',
-                        render: (text, rowData) => (
-                            <div>
-                                {expandedQuantityAllocation[rowData.poAndLine] && (
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Input
-                                            name='allocatedQuantity'
-                                            allowClear
-                                            style={{ marginRight: '10px' }}
-                                            placeholder="Enter text"
-                                            value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
-                                            onChange={(e) =>
-                                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
-                                            }
-                                        />
-                                        <Button
-                                            type="primary"
-                                            onClick={() => {
-                                                updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
-                                                handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
-                                                handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
-                                            }}
-                                        >
-                                            Submit
-                                        </Button>
-                                    </div>
-                                )}
+            {
+                title: 'Quantity Allocation',
+                align: 'center',
+                render: (text, rowData) => (
+                    <span>
+                        <Form.Item>
+                            <Checkbox
+                                onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
+                                checked={expandedQuantityAllocation[rowData.poAndLine] || false}
+                            />
+                        </Form.Item>
+                    </span>
+                ),
+            },
+            {
+                dataIndex: 'id',
+                align: 'center',
+                render: (text, rowData) => (
+                    <div>
+                        {expandedQuantityAllocation[rowData.poAndLine] && (
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Input
+                                    name='allocatedQuantity'
+                                    allowClear
+                                    style={{ marginRight: '10px' }}
+                                    placeholder="Enter text"
+                                    value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
+                                    onChange={(e) =>
+                                        handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
+                                    }
+                                />
+                                <Button
+                                    type="primary"
+                                    onClick={() => {
+                                        updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
+                                        handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
+                                        handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
+                                    }}
+                                >
+                                    Submit
+                                </Button>
                             </div>
-                        ),
-                    
+                        )}
+                    </div>
+                ),
+
             },
             {
                 title: 'Reallocated Quantity',
@@ -776,6 +931,7 @@ const FactoryPPMReport = () => {
                 title: 'Total Item Qty',
                 dataIndex: 'totalItemQty',
                 align: 'center',
+                className: 'centered-column',
                 render: (text) => <strong>{text}</strong>
             }
         ];
@@ -792,6 +948,7 @@ const FactoryPPMReport = () => {
                         title: 'Quantity',
                         dataIndex: '',
                         key: '',
+                        className: 'centered-column',
                         render: (text, record) => {
                             const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
                             if (sizeData) {
@@ -815,6 +972,7 @@ const FactoryPPMReport = () => {
                     return record.sizeWiseData.find(item => item.sizeDescription === version);
                 }
             });
+            
             exportingColumns.push({
                 title: version,
                 dataIndex: '',
@@ -848,28 +1006,173 @@ const FactoryPPMReport = () => {
                 }
             });
         });
+        columns.push(
+                
+            {
+                title: 'Change Register',
+                dataIndex: 'displayName',
+                align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
+            {
+                title: 'Allowed Excess Ship Qty',
+                dataIndex: '',
+                align: 'center',
+                
+            },
+            {
+        title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }
+        },
+    },
+    {
+        title: 'Actual Ship %',
+        dataIndex: '',
+        align: 'center',
+        
+    },
+    { title: 'VAS-Size', dataIndex: 'VASSize',render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    }, },
+    { title: 'Item Vas Text', dataIndex: 'itemVasText',render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    }, },
+    { title: 'Item Text', dataIndex: 'itemText' ,render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    },},
+    {
+        title:'Hanger Po',
+        dataIndex:'hanger',render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }
+        },
+    }
+           
+    )
+    exportingColumns.push(
+                
+        {
+            title: 'Change Register',
+            dataIndex: 'displayName',
+            align: 'center',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            },
+        },
+        {
+            title: 'Allowed Excess Ship Qty',
+            dataIndex: '',
+            align: 'center',
+            
+        },
+        {
+    title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    },
+},
+{
+    title: 'Actual Ship %',
+    dataIndex: '',
+    align: 'center',
+    
+},
+{ title: 'VAS-Size', dataIndex: 'VASSize',render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+}, },
+{ title: 'Item Vas Text', dataIndex: 'itemVasText',render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+}, },
+{ title: 'Item Text', dataIndex: 'itemText' ,render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},},
+{
+    title:'Hanger Po',
+    dataIndex:'hanger',render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    },
+}
+       
+)
+        const getRowClassName = (record) => {
+            if (record.displayName) {
+                return 'colored-row';
+            }
+            return '';
+        };
 
         return (
             <>
-            
-              {filterData.length > 0 ? (
-                <Table
-                  columns={columns}
-                  dataSource={filterData}
-                  size='small'
-                  pagination={{
-                    onChange(current, pageSize) {
-                      setPage(current);
-                      setPageSize(pageSize);
-                    }
-                  }}
-                  className="custom-table-wrapper"
-                  scroll={{ x: 'max-content' }}
-                />
-              ) : ( <Table size='large' />
-              )}
+
+                {filterData.length > 0 ? (
+                    <Table
+                        columns={columns}
+                        dataSource={filterData}
+                        size='small'
+                        pagination={{
+                            onChange(current, pageSize) {
+                                setPage(current);
+                                setPageSize(pageSize);
+                            }
+                        }}
+                        className="custom-table-wrapper"
+                        scroll={{ x: 'max-content' }}
+                        rowClassName={getRowClassName}
+                        bordered
+                    />
+                ) : (<Table size='large' />
+                )}
             </>
-          );
+        );
+       
     }
 
     return (
@@ -898,20 +1201,7 @@ const FactoryPPMReport = () => {
 
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-                            <Form.Item name="DPOMLineItemStatus" label="Factory Status">
-                                <Select
-                                    showSearch
-                                    placeholder="Select Factory Status"
-                                    optionFilterProp="children"
-                                    allowClear mode='multiple'>
-                                    <Option value="Accepted">ACCEPTED</Option>
-                                    <Option value="Unaccepted">UNACCEPTED</Option>
-                                    {/* <Option value="Cancelled">CANCELLED</Option> */}
-                                    <Option value="Closed">CLOSED</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
+                        
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
                             <Form.Item name='productCode' label='Product Code' >
                                 <Select
@@ -928,22 +1218,22 @@ const FactoryPPMReport = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-                            <Form.Item name='poandLine' label='Po+Line' >
+                            <Form.Item name='poNumber' label='Po Number' >
                                 <Select
                                     showSearch
-                                    placeholder="Select Po+Line"
+                                    placeholder="Select Po Number"
                                     optionFilterProp="children"
                                     allowClear
 
                                 >
-                                    {poLine.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                    {poNumber.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                     })
                                     }
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
                             <Form.Item name='colorDesc' label='Color Description' >
                                 <Select
                                     showSearch
@@ -1033,6 +1323,20 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
+                            <Form.Item name="DPOMLineItemStatus" label="Factory Status">
+                                <Select
+                                    showSearch
+                                    placeholder="Select Factory Status"
+                                    optionFilterProp="children"
+                                    allowClear mode='multiple'>
+                                    <Option value="Accepted">ACCEPTED</Option>
+                                    <Option value="Unaccepted">UNACCEPTED</Option>
+                                    {/* <Option value="Cancelled">CANCELLED</Option> */}
+                                    <Option value="Closed">CLOSED</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                             <Form.Item>
                                 <Button htmlType="submit"
@@ -1052,10 +1356,10 @@ const FactoryPPMReport = () => {
                         <Card title={'Total order Qty : ' + count} style={{ textAlign: 'left', width: 250, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Total Shipped : ' + factory.length} style={{ textAlign: 'left', width: 180, height: 45 }}></Card>
+                        <Card title={'Total Shipped : ' + '0'} style={{ textAlign: 'left', width: 180, height: 45 }}></Card>
                     </Col>
                     <Col>
-                        <Card title={'Balance to ship : ' + factory.length} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
+                        <Card title={'Balance to ship : ' + '0'} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
                     </Col>
                 </Row><br></br>
 

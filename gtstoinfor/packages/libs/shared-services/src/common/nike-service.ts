@@ -26,6 +26,18 @@ export class NikeService extends CommonAxiosService {
     async saveDIAPDFData(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/saveDIAPDFData", req)
     }
+
+    async createCOline(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/createCOline", req)
+    }
+
+    async saveLegalPOPDFData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/saveLegalPOPDFData", req)
+    }
+
+    async saveDIAPDFData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/saveDIAPDFData", req)
+    }
     
 
     async updateFileStatus(req: any): Promise<CommonResponseModel> {
@@ -267,6 +279,24 @@ export class NikeService extends CommonAxiosService {
 
     async getPpmPoLineForNikeOrder(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmPoLineForNikeOrder")
+    }
+    async getPriceDiffSizeDescription(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPriceDiffSizeDescription")
+    }
+    async getPriceDiffStyleNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPriceDiffStyleNumber")
+    }
+    async getPriceDiffPoLinedd(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPriceDiffPoLinedd")
+    }
+    async getPdfFileInfo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPdfFileInfo")
+    }
+    async getPpmPoNumberForFactory(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmPoNumberForFactory")
+    }
+    async getPppoNumberForMarketing(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPppoNumberForMarketing")
     }
     async getPriceDiffSizeDescription(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPriceDiffSizeDescription")

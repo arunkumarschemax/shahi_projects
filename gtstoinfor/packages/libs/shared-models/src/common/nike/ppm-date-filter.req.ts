@@ -12,13 +12,14 @@ export class PpmDateFilterRequest {
     item?: string;
     factory?: string;
     DPOMLineItemStatus?:string;
+    poNumber?:string;
     styleNumber?:string;
 
     constructor(
         lastModifedStartDate?: any ,lastModifedEndtDate?: any ,documentStartDate?: any,
         documentEndtDate?: any,productCode?: string,poandLine?: string,
         colorDesc?: string,categoryDesc?: string,destinationCountry?: string,
-        plant?: string,item?: string,factory?: string,DPOMLineItemStatus?:string,styleNumber?:string,
+        plant?: string,item?: string,factory?: string,DPOMLineItemStatus?:string, poNumber?:string,styleNumber?:string,
     ) {
         this.lastModifedStartDate = lastModifedStartDate;
         this.lastModifedEndtDate = lastModifedEndtDate;
@@ -33,6 +34,7 @@ export class PpmDateFilterRequest {
         this.item = item;
         this.factory = factory;
         this.DPOMLineItemStatus = DPOMLineItemStatus;
+        this.poNumber = poNumber;
         this.styleNumber=styleNumber;
     }
 }

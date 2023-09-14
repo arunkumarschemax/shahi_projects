@@ -73,9 +73,15 @@ export class FactoryReportModel {
     displayName:string;
     actualUnit:string;
     allocatedQuantity: string;
+    pcd:string;
+    fobCurrCode:string;
+    netIncDisCurrency:string;
+    tradingNetCurrencyCode:string;
+    hanger:string;
+   
     sizeWiseData: FactoryReportSizeModel[];
     constructor(lastModifiedDate: string, item: string, factory: string, documentDate: string, purchaseOrderNumber: string, poLineItemNumber: number, poAndLine: string, DPOMLineItemStatus: string, styleNumber: string, productCode: string, colorDesc: string, customerOrder: string, coFinalApprovalDate: string, planNo: string, leadTime: string, categoryCode: string, categoryDesc: string, vendorCode: string, gccFocusCode: string, gccFocusDesc: string, genderAgeCode: string, genderAgeDesc: string, destinationCountryCode: string, destinationCountry: string, plant: string, plantName: string, tradingCoPoNumber: string, UPC: string, directShipSONumber: string, directShipSOItemNumber: string, customerPO: string, shipToCustomerNumber: string, shipToCustomerName: string, planningSeasonCode: string, planningSeasonYear: string, docTypeCode: string, docTypeDesc: string, MRGAC: string, OGAC: string, GAC: string, truckOutDate: string, originReceiptDate: string, factoryDeliveryActDate: string, GACReasonCode: string, GACReasonDesc: string, shippingType: string, planningPriorityCode: string, planningPriorityDesc: string, launchCode: string, modeOfTransportationCode: string, inCoTerms: string, inventorySegmentCode: string, purchaseGroupCode: string, purchaseGroupName: string, totalItemQty: string, actualShippedQty: string, VASSize: string, itemVasText: string, itemText: string,
-        price:number,coPrice:number,PCD: string,shipToAddressLegalPO: string, shipToAddressDIA: string,CABCode: string,grossPriceFOB: string,netIncludingDisc: string, trCoNetIncludingDisc: string,displayName:string,actualUnit:string,allocatedQuantity: string,sizeWiseData: FactoryReportSizeModel[]) {
+        price:number,coPrice:number,PCD: string,shipToAddressLegalPO: string, shipToAddressDIA: string,CABCode: string,grossPriceFOB: string,netIncludingDisc: string, trCoNetIncludingDisc: string,displayName:string,actualUnit:string,allocatedQuantity: string,pcd:string,fobCurrCode:string,netIncDisCurrency:string,tradingNetCurrencyCode:string,hanger:string,sizeWiseData: FactoryReportSizeModel[]) {
 
         this.lastModifiedDate = lastModifiedDate;
         this.item = item
@@ -150,5 +156,10 @@ export class FactoryReportModel {
         this.actualUnit = actualUnit
         this.allocatedQuantity = allocatedQuantity
         this.sizeWiseData = sizeWiseData
+        this.pcd = pcd
+        this.fobCurrCode = fobCurrCode
+        this.netIncDisCurrency = netIncDisCurrency
+        this.tradingNetCurrencyCode = tradingNetCurrencyCode
+        this.hanger = hanger
     };
 }

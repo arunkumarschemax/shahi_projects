@@ -35,12 +35,15 @@ export default function DPOMSyncManually() {
 
     return (
         <>
-            <Card title="Sync Nike DPOM Data Manually">
+            <Card title="Sync Nike DPOM & CRM Data Manually">
                 <span>
                     <Descriptions style={{ alignItems: 'right' }}>
                         <Descriptions.Item>{<b>Last Sync Details</b>}</Descriptions.Item>
                         <Descriptions.Item label={<b>Last Sync Date & Time</b>}>
                             {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).format('YYYY-MM-DD HH:mm:ss') : '-'}
+                        </Descriptions.Item>
+                        <Descriptions.Item label={<b>Last Sync Status</b>}>
+                            {'DPOM : ' + filesData[0]?.status} <br /> {'CRM : ' + filesData[0]?.status}
                         </Descriptions.Item>
                     </Descriptions>
                 </span>
@@ -49,7 +52,7 @@ export default function DPOMSyncManually() {
                     type="primary"
                     onClick={syncDpomData}
                 >
-                    Sync DPOM Data
+                    Sync DPOM & CRM Data
                 </Button>
             </Card>
         </>
