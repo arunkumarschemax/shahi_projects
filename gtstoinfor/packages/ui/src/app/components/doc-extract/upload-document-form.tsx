@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
-import { Select, Spin, message, Button, Input, Row, Form, Col, Typography, UploadProps, Upload, Radio, Table, Divider, DatePicker } from "antd";
+import { Select, Spin, message, Button, Input, Row, Form, Col, Typography, UploadProps, Upload, Radio, Table, Divider, Popconfirm, DatePicker } from "antd";
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import Tesseract from "tesseract.js";
 // import { useNavigate, useLocation } from "react-router-dom";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
@@ -86,20 +87,20 @@ export function UploadDocumentForm() {
 
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
   const [data1, setData1] = useState<any[]>([]);
-  const [data2 , setData2]=useState<any[]>([]);
+  const [data2, setData2] = useState<any[]>([]);
 
   const servicess = new VendorService();
-  
-  const buyerss=new BuyersService();
-  
+
+  const buyerss = new BuyersService();
+
 
 
   useEffect(() => {
 
     getdata1();
   }, []);
-  
-   console.log(extractedData,"extracted data")
+
+  console.log(extractedData, "extracted data")
 
   const getdata1 = () => {
     servicess.getAllVendors().then(res => {
@@ -113,25 +114,25 @@ export function UploadDocumentForm() {
     })
   }
 
-    useEffect(() => {
-  
-      getdata2();
-    }, []);
-  
-  
-    const getdata2 = () => {
-      buyerss.getAllBuyersInfo().then(res => {
-        if (res.status) {
-          setData2(res.data)
-        } else {
-          setData2([])
-        }
-      }).catch(err => {
-        console.log(err.message)
-      })
-     
-  
-    }
+  useEffect(() => {
+
+    getdata2();
+  }, []);
+
+
+  const getdata2 = () => {
+    buyerss.getAllBuyersInfo().then(res => {
+      if (res.status) {
+        setData2(res.data)
+      } else {
+        setData2([])
+      }
+    }).catch(err => {
+      console.log(err.message)
+    })
+
+
+  }
 
 
 
@@ -419,7 +420,7 @@ export function UploadDocumentForm() {
         return '0';
       },
     },
-    
+
     {
       title: 'Unit Quantity',
       dataIndex: 'unitquantity',
@@ -470,10 +471,18 @@ export function UploadDocumentForm() {
       key: 'action',
       render: (_, item) => (
         <span>
-          <Button onClick={() => handleEdit(item)}>Edit</Button>
+          <Button onClick={() => handleEdit(item)} icon={<EditOutlined />} />
           <Divider type="vertical" />
-          <Button onClick={() => handleDelete(item)}>Delete</Button>
+          <Popconfirm
+            title="Are you sure you want to delete this item?"
+            onConfirm={() => handleDelete(item)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button icon={<DeleteOutlined />} />
+          </Popconfirm>
         </span>
+
       ),
     },
   ];
@@ -656,7 +665,7 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated,buyerCode, financialyear, JSON.parse(localStorage.getItem('currentUser')).user.userName,extractedData)
+    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated, buyerCode, financialyear, JSON.parse(localStorage.getItem('currentUser')).user.userName, extractedData)
 
     console.log(req, "submit")
     service
@@ -677,7 +686,14 @@ export function UploadDocumentForm() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', }}>
-      <Card title="Upload Document" bordered={true} style={{ flex: 1, }} headStyle={{ backgroundColor: '#77dfec', border: 0 }}>
+      <Card
+  title={<div style={{ textAlign: 'center' }}>Upload Document</div>}
+  bordered={true}
+  style={{ flex: 1, width: '600px', height: '100px' }}
+  headStyle={{ backgroundColor: '#00FFFF', border: 0 }}
+>
+
+      {/* <Card title="Upload Document" bordered={true} style={{ flex: 1, width: "600px", height: "100px" }} headStyle={{ backgroundColor: '#00FFFF', border: 0 }}> */}
         <Form layout="vertical" form={uploadForm} onFinish={handleUploadDocument}>
           <Row gutter={12}>
             <Col span={6}>
@@ -709,7 +725,7 @@ export function UploadDocumentForm() {
                   <Button
                     key="file"
                     style={{ color: 'black', backgroundColor: '#7ec1ff' }}
-                    // icon={<UploadOutlined />}
+                  // icon={<UploadOutlined />}
 
                   >
                     Choose File
@@ -728,23 +744,29 @@ export function UploadDocumentForm() {
                   onClick={handleUploadDocument}
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Uploading...' : 'Upload'}
-                  {isLoading && (
+                  {isLoading ? (
                     <div
                       style={{
                         position: 'fixed',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
+                        top: '0',
+                        left: '0',
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         zIndex: 9999,
-                        background: 'rgba(255, 255, 255, 0.8)',
-                        padding: '20px',
-                        borderRadius: '5px',
+                        background: 'rgba(0, 0, 0, 0.5)',
                       }}
                     >
                       <Spin size="large" />
-                      <p>Loading...</p>
+                      <div style={{ marginTop: '10px', color: 'white' }}>
+                        Please wait...
+                      </div>
                     </div>
+                  ) : (
+                    'Upload'
                   )}
                 </Button>
               </Form.Item>
@@ -753,382 +775,380 @@ export function UploadDocumentForm() {
         </Form>
       </Card>
 
-
-      <div style={{ display: 'flex' }}>
-        <Card
-          title="Image Form"
-          bordered={true}
-          headStyle={{ backgroundColor: '#77dfec', border: 0 }}
+      <Card
+       title={<div style={{ textAlign: 'center' }}>Image Form</div>}
+        bordered={true}
+        headStyle={{ backgroundColor: '#00FFFF', border: 0 }}
+        style={{
+          flex: 1, width: "600px", position: "relative", top: "10px", boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+          background: '#fff',
+          borderTop: '1px solid #e8e8e8',
+        }}
+      >
+        <div
           style={{
-            flex: 1, position: 'relative', top: "5px", boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-            background: '#fff',
-            borderTop: '1px solid #e8e8e8',
+            position: 'relative',
+            overflow: 'hidden',
+            width: '100%',
+            height: '300px',
+            cursor: isDragging ? 'grabbing' : 'grab',
           }}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
         >
           <div
             style={{
-              position: 'relative',
-              overflow: 'hidden',
-              width: '100%',
-              height: '400px',
-              cursor: isDragging ? 'grabbing' : 'grab',
+              overflow: 'auto',
+              overflowX: 'scroll',
+              overflowY: 'scroll',
+              height: '100%',
             }}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseMove={handleMouseMove}
           >
-            <div
+            <img
+              id="imageToDrag"
+              src={selectedImage}
               style={{
-                overflow: 'auto',
-                overflowX: 'scroll',
-                overflowY: 'scroll',
-                height: '100%',
+                maxWidth: '100%',
+                transform: `scale(${zoomFactor})`,
+                transition: 'transform 0.2s',
               }}
-            >
-              <img
-                id="imageToDrag"
-                src={selectedImage}
-                style={{
-                  maxWidth: '100%',
-                  transform: `scale(${zoomFactor})`,
-                  transition: 'transform 0.2s',
-                }}
-              />
-            </div>
+            />
           </div>
-          <div style={{ textAlign: 'center', marginTop: '10px' }}>
-            <Button onClick={handleZoomIn}>Zoom In</Button>
-            <Button onClick={handleZoomOut}>Zoom Out</Button>
-          </div>
-        </Card>
-      </div>
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <Button onClick={handleZoomIn}>Zoom In</Button>
+          <Button onClick={handleZoomOut}>Zoom Out</Button>
+        </div>
+      </Card>
 
 
       <Form form={GstForm}>
-        <div style={{ display: 'flex', flexDirection: 'column', height: '-10px', }}>
+        <div style={{ display: 'flex', flexDirection: 'column', }}>
           <Card
-            title={"Document Details"}
-            headStyle={{ backgroundColor: '#77dfec', border: 0 }}
+            title={<div style={{ textAlign: 'center' }}>Document Details</div>}
+            headStyle={{ backgroundColor: '#00FFFF', border: 0 }}
             bordered={true}
             style={{
               flex: 1,
-              width: '760px',
+              width: '865px',
               position: "relative",
-              left: "735px",
-              bottom: "815px",
+              left: "601px",
+              bottom: "715px",
               boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
               background: '#fff',
               borderTop: '1px solid #e8e8e8',
             }}
-          > 
-          <Card>
-            <Form.Item >
-              <Row gutter={24} >
-                <Col span={8}>
-                  <label htmlFor="Vendor" style={{ color: 'black', fontWeight: 'bold' }}>Vendor Name</label>
-                  <Select
-                    id="Vendor"
-                    style={{ width: "190px" }}
-                    value={vendor}
-                    onChange={(value) => setVendor(value)}
-                    defaultValue="option1"
-                  >
-                    {data1.map((option) => (
-                      <option value={option.businessName}>
-                        {option.businessName}
-                      </option>
-                    ))}
-                  </Select>
-                </Col>
-                <Col span={6}>
-                  <label htmlFor="GST" style={{ color: 'black', fontWeight: 'bold', position: "relative", left: "10px" }}>
-                    GST
-                  </label>
-                  <Input
-                    title="GST"
-                    name="GST"
-                    style={{ width: '190px', height: '30px', position: "relative", left: "10px" }}
-                    value={gstNumbers}
-                    onChange={(e) => setGstNumbers(e.target.value)}
-                  />
-                </Col>
-
-                <Col span={9}>
-                  <label htmlFor="Financialyear" style={{ color: 'black', fontWeight: 'bold', position: "relative", left: "75px" }}>Financial year</label>
-                  <Input
-                    id="Financialyear"
-                    name="Financialyear"
-                    style={{ width: "180px", height: "30px", position: "relative", left: "75px" }}
-                    value={financialyear}
-                    onChange={(e) => setFinancialyear(e.target.value)}
-                  />
-                </Col>
-              </Row>
-
-              <Row gutter={24} style={{ marginTop: '20px' }}>
-                <Col span={8}>
-                  <label htmlFor="invoiceDate" style={{ color: 'black', fontWeight: 'bold' }}>
-                    Invoice Date
-                  </label>
-                  <Input
-                    id="invoiceDate"
-                    name="invoiceDate"
-                    style={{ width: '190px', height: '30px' }}
-                    value={invoiceDate}
-                    onChange={(e) => setInvoiceDate(e.target.value)}
-                  />
-                </Col>
-
-                <Col span={8}>
-                  <label htmlFor="InnvoiceNumber" style={{ color: 'black', fontWeight: 'bold', position: "relative", left: "10px" }}>Innvoice Number</label>
-                  <Input
-                    id="InnvoiceNumber"
-                    name="InnvoiceNumber"
-                    style={{ width: "190px", height: "30px", position: "relative", left: "10px" }}
-                    value={Innvoicenum}
-                    onChange={(e) => setInnvoicenum(e.target.value)}
-                  />
-                </Col>
-
-                <Col span={6}>
-                  <label htmlFor="InnvoiceAmount" style={{ color: 'black', fontWeight: 'bold', position: "relative", left: "20px" }}>Innvoice Amount</label>
-                  <Input
-                    id="InnvoiceAmount"
-                    name="InnvoiceAmount"
-                    style={{ width: "180px", height: "30px", position: "relative", left: "20px" }}
-                    value={Innvoiceamount}
-                    onChange={(e) => setInnvoiceamount(e.target.value)}
-                  />
-                </Col>
-              </Row>
-
-              <Row gutter={24} style={{ marginTop: '20px' }}>
-                <Col span={7}>
-                  <label htmlFor="IGST" style={{ color: 'black', fontWeight: 'bold' }}>IGST</label>
-                  <Input
-                    id="IGST"
-                    name="IGST"
-                    style={{ width: "190px", height: "30px" }}
-                    value={Igst}
-                    onChange={(e) => setIgst(e.target.value)}
-                  />
-                </Col>
-                <Col span={7}>
-                  <label htmlFor="Cgst" style={{ color: 'black', fontWeight: 'bold', position: "relative", left: "40px" }}>CSGT</label>
-                  <Input
-                    id="Cgst"
-                    name="Cgst"
-                    style={{ width: "190px", height: "30px", position: "relative", left: "40px" }}
-                    value={Cgst}
-                    onChange={(e) => setCgst(e.target.value)}
-                  />
-                </Col>
-
-                <Col span={6}>
-                  <label htmlFor="Sgst" style={{ color: 'black', fontWeight: 'bold', position: "relative", left: "75px" }}>SGST</label>
-                  <Input
-                    id="Sgst"
-                    name="Sgst"
-                    style={{ width: "180px", height: "30px", position: "relative", left: "75px" }}
-                    value={Sgst}
-                    onChange={(e) => setSgst(e.target.value)}
-                  />
-                </Col>
-              </Row>
-
-              <Row gutter={24} style={{ marginTop: '20px' }}>
-                <Col span={8}>
-                  <label htmlFor="Innvoice Currency" style={{ color: 'black', fontWeight: 'bold' }}>Innvoice Currency</label>
-                  <Input
-                    id="Innvoice Currency"
-                    name="Innvoice Currency"
-                    style={{ width: "190px", height: "30px" }}
-                    value={Innvoicecurrency}
-                    onChange={(e) => setInnvoicecurrency(e.target.value)}
-                  />
-                </Col>
-
-                <Col span={7}>
-                  <label htmlFor="Routing" style={{ color: 'black', fontWeight: 'bold', position: "relative", left: "15px" }}>Routing</label>
-                  <Select
-                    title="Routing"
-                    id="Routing"
-                    className="center-options"
-                    style={{ width: "190px", position: "relative", left: "10px" }}
-                    value={routing}
-                    onChange={(value) => setRouting(value)}
-                  >
-                    <Select.Option value="">Accept</Select.Option>
-                    {/* <Select.Option value="Accept">Accept</Select.Option> */}
-                  </Select>
-                </Col>
-
-                <Col span={8}>
-                  <label htmlFor="Comment" style={{ color: 'black', fontWeight: 'bold', position: "relative", left: "45px" }}>Comment</label>
-                  <Input
-                    id="Comment"
-                    name="Comment"
-                    style={{ width: "180px", height: "30px", position: "relative", left: "45px" }}
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                  />
-                </Col>
-              </Row>
-
-              <Row gutter={16} style={{ marginTop: '20px' }}>
-                <Col span={6}>
-                  <label htmlFor="Timecreated" style={{ color: 'black', fontWeight: 'bold' }}>Time Created</label>
-                  <Input
-                    id="Timecreated"
-                    name="Timecreated"
-                    style={{ width: '200px', height: '30px', paddingRight: '30px' }}
-                    value={timecreated || ''}
-                    onChange={(e) => setTimecreated(e.target.value)}
-                  />
-                  <CalendarOutlined
-                    style={{ position: 'absolute', top: '30px', right: '-20px', cursor: 'pointer' }}
-                    onClick={handleIconClick}
-                  />
-                  {isDatePickerVisible && (
-                    <DatePicker
-                      showTime
-                      format="YYYY-MM-DD HH:mm:ss"
-                      style={{ position: 'absolute', zIndex: 1, top: '21px', left: '8px', width: "200px" }}
-                      onChange={handleTimecreatedChange}
-                      onBlur={() => setIsDatePickerVisible(false)}
+          >
+            <Card style={{ position: "relative", bottom: "5px" }}>
+              <Form.Item >
+                <Row gutter={24} >
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Vendor" style={{ color: 'black', fontWeight: 'bold' }}>Vendor Name</label>
+                    <Select
+                      id="Vendor"
+                      style={{ width: "190px" }}
+                      value={vendor}
+                      onChange={(value) => setVendor(value)}
+                      defaultValue="option1"
+                    >
+                      {data1.map((option) => (
+                        <option value={option.businessName}>
+                          {option.businessName}
+                        </option>
+                      ))}
+                    </Select>
+                  </Col>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="GST" style={{ color: 'black', fontWeight: 'bold', position: "relative", left: "10px" }}>
+                      GST
+                    </label>
+                    <Input
+                      title="GST"
+                      name="GST"
+                      style={{ width: '190px', height: '30px' }}
+                      value={gstNumbers}
+                      onChange={(e) => setGstNumbers(e.target.value)}
                     />
-                  )}
-                </Col>
+                  </Col>
 
-                <Col span={6}>
-                  <label htmlFor="buyerCode" style={{ color: 'black', fontWeight: 'bold',position: "relative", left: "75px"  }}>Buyer Code</label>
-                  <Select
-                    id="buyerCode"
-                    style={{ width: "190px",position: "relative", left: "72px" }}
-                    value={buyerCode}
-                    onChange={(value) => setBuyer(value)}
-                    defaultValue="option1"
-                  >
-                    {data2.map((option) => (
-                      <option value={option.buyerCode}>
-                        {option.buyerCode}
-                      </option>
-                    ))}
-                  </Select>
-                </Col>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Financialyear" style={{ color: 'black', fontWeight: 'bold', }}>Financial year</label>
+                    <Input
+                      id="Financialyear"
+                      name="Financialyear"
+                      style={{ width: "180px", height: "30px" }}
+                      value={financialyear}
+                      onChange={(e) => setFinancialyear(e.target.value)}
+                    />
+                  </Col>
+                </Row>
 
-              </Row>
+                <Row gutter={24} style={{ marginTop: '20px' }}>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="invoiceDate" style={{ color: 'black', fontWeight: 'bold' }}>
+                      Invoice Date
+                    </label>
+                    <Input
+                      id="invoiceDate"
+                      name="invoiceDate"
+                      style={{ width: '190px', height: '30px' }}
+                      value={invoiceDate}
+                      onChange={(e) => setInvoiceDate(e.target.value)}
+                    />
+                  </Col>
 
-             
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="InnvoiceNumber" style={{ color: 'black', fontWeight: 'bold', }}>Innvoice Number</label>
+                    <Input
+                      id="InnvoiceNumber"
+                      name="InnvoiceNumber"
+                      style={{ width: "190px", height: "30px", }}
+                      value={Innvoicenum}
+                      onChange={(e) => setInnvoicenum(e.target.value)}
+                    />
+                  </Col>
 
-            </Form.Item>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="InnvoiceAmount" style={{ color: 'black', fontWeight: 'bold', }}>Innvoice Amount</label>
+                    <Input
+                      id="InnvoiceAmount"
+                      name="InnvoiceAmount"
+                      style={{ width: "180px", height: "30px" }}
+                      value={Innvoiceamount}
+                      onChange={(e) => setInnvoiceamount(e.target.value)}
+                    />
+                  </Col>
+                </Row>
+
+                <Row gutter={24} style={{ marginTop: '20px' }}>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="IGST" style={{ color: 'black', fontWeight: 'bold' }}>IGST</label>
+                    <Input
+                      id="IGST"
+                      name="IGST"
+                      style={{ width: "190px", height: "30px" }}
+                      value={Igst}
+                      onChange={(e) => setIgst(e.target.value)}
+                    />
+                  </Col>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Cgst" style={{ color: 'black', fontWeight: 'bold', }}>CSGT</label>
+                    <Input
+                      id="Cgst"
+                      name="Cgst"
+                      style={{ width: "190px", height: "30px", }}
+                      value={Cgst}
+                      onChange={(e) => setCgst(e.target.value)}
+                    />
+                  </Col>
+
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Sgst" style={{ color: 'black', fontWeight: 'bold', }}>SGST</label>
+                    <Input
+                      id="Sgst"
+                      name="Sgst"
+                      style={{ width: "180px", height: "30px", }}
+                      value={Sgst}
+                      onChange={(e) => setSgst(e.target.value)}
+                    />
+                  </Col>
+                </Row>
+
+                <Row gutter={24} style={{ marginTop: '20px' }}>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Innvoice Currency" style={{ color: 'black', fontWeight: 'bold' }}>Innvoice Currency</label>
+                    <Input
+                      id="Innvoice Currency"
+                      name="Innvoice Currency"
+                      style={{ width: "190px", height: "30px" }}
+                      value={Innvoicecurrency}
+                      onChange={(e) => setInnvoicecurrency(e.target.value)}
+                    />
+                  </Col>
+
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Routing" style={{ color: 'black', fontWeight: 'bold', }}>Routing</label>
+                    <Select
+                      title="Routing"
+                      id="Routing"
+                      className="center-options"
+                      style={{ width: "190px" }}
+                      value={routing}
+                      onChange={(value) => setRouting(value)}
+                    >
+                      <Select.Option value="">Accept</Select.Option>
+                      {/* <Select.Option value="Accept">Accept</Select.Option> */}
+                    </Select>
+                  </Col>
+
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Comment" style={{ color: 'black', fontWeight: 'bold', }}>Comment</label>
+                    <Input
+                      id="Comment"
+                      name="Comment"
+                      style={{ width: "180px", height: "30px", }}
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                  </Col>
+                </Row>
+
+                <Row gutter={16} style={{ marginTop: '20px' }}>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Timecreated" style={{ color: 'black', fontWeight: 'bold' }}>Time Created</label>
+                    <Input
+                      id="Timecreated"
+                      name="Timecreated"
+                      style={{ width: '200px', height: '30px', paddingRight: '30px' }}
+                      value={timecreated || ''}
+                      onChange={(e) => setTimecreated(e.target.value)}
+                    />
+                    <CalendarOutlined
+                      style={{ position: 'absolute', top: '30px', right: '-3px', cursor: 'pointer' }}
+                      onClick={handleIconClick}
+                    />
+                    {isDatePickerVisible && (
+                      <DatePicker
+                        showTime
+                        format="YYYY-MM-DD HH:mm:ss"
+                        style={{ position: 'absolute', zIndex: 1, top: '21px', left: '8px', width: "200px" }}
+                        onChange={handleTimecreatedChange}
+                        onBlur={() => setIsDatePickerVisible(false)}
+                      />
+                    )}
+                  </Col>
+
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="buyerCode" style={{ color: 'black', fontWeight: 'bold' }}>Buyer Code</label>
+                    <Select
+                      id="buyerCode"
+                      style={{ width: "190px", }}
+                      value={buyerCode}
+                      onChange={(value) => setBuyer(value)}
+                      defaultValue="option1"
+                    >
+                      {data2.map((option) => (
+                        <option value={option.buyerCode}>
+                          {option.buyerCode}
+                        </option>
+                      ))}
+                    </Select>
+                  </Col>
+                </Row>
+              </Form.Item>
             </Card>
 
-           <Card>
-            <Form layout='vertical' >
-              <Row gutter={12}>
-                <Col span={6}>
-                  <label htmlFor="HSN" style={{ color: 'black', fontWeight: 'bold' }}>HSN Code</label>
-                  <Input
-                    id="HSN"
-                    name="HSN"
-                    style={{ width: '150px', height: '30px' }}
-                    value={HSN}
-                    onChange={(e) => setHSN(e.target.value)}
-                  />
-                </Col>
+            <Card>
+              <Form layout='vertical' >
+                <Row gutter={12}>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="HSN" style={{ color: 'black', fontWeight: 'bold' }}>HSN Code</label>
+                    <Input
+                      id="HSN"
+                      name="HSN"
+                      style={{ width: '150px', height: '30px' }}
+                      value={HSN}
+                      onChange={(e) => setHSN(e.target.value)}
+                    />
+                  </Col>
 
-                <Col span={6}>
-                  <label htmlFor="Taxtype" style={{ color: 'black', fontWeight: 'bold' }}>Tax Type</label>
-                  <Input
-                    id="Taxtype"
-                    name="Taxtype"
-                    style={{ width: '150px', height: '30px' }}
-                    value={Taxtype}
-                    onChange={(e) => setTaxtype(e.target.value)}
-                  />
-                </Col>
-                <Col span={6}>
-                  <label htmlFor="Taxamount" style={{ color: 'black', fontWeight: 'bold' }}>Tax Amount</label>
-                  <Input
-                    id="Taxamount"
-                    name="Taxamount"
-                    style={{ width: '150px', height: '30px' }}
-                    value={Taxamount}
-                    onChange={(e) => setTaxamount(e.target.value)}
-                  />
-                </Col>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Taxtype" style={{ color: 'black', fontWeight: 'bold' }}>Tax Type</label>
+                    <Input
+                      id="Taxtype"
+                      name="Taxtype"
+                      style={{ width: '150px', height: '30px' }}
+                      value={Taxtype}
+                      onChange={(e) => setTaxtype(e.target.value)}
+                    />
+                  </Col>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Taxamount" style={{ color: 'black', fontWeight: 'bold' }}>Tax Amount</label>
+                    <Input
+                      id="Taxamount"
+                      name="Taxamount"
+                      style={{ width: '150px', height: '30px' }}
+                      value={Taxamount}
+                      onChange={(e) => setTaxamount(e.target.value)}
+                    />
+                  </Col>
+                </Row>
 
-                <Col span={6}>
-                  <label htmlFor="Taxpercentage" style={{ color: 'black', fontWeight: 'bold' }}>Tax Percentage</label>
-                  <Input
-                    id="Taxpercentage"
-                    name="Taxpercentage"
-                    style={{ width: '150px', height: '30px' }}
-                    value={Taxpercentage}
-                    onChange={(e) => setTaxPercentage(e.target.value)}
-                  />
-                </Col>
+                <Row gutter={12} style={{ marginTop: "10px" }}>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Taxpercentage" style={{ color: 'black', fontWeight: 'bold' }}>Tax Percentage</label>
+                    <Input
+                      id="Taxpercentage"
+                      name="Taxpercentage"
+                      style={{ width: '150px', height: '30px' }}
+                      value={Taxpercentage}
+                      onChange={(e) => setTaxPercentage(e.target.value)}
+                    />
+                  </Col>
 
-              </Row>
-              <Row gutter={12} style={{ marginTop: "10px" }}>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="unitquantity" style={{ color: 'black', fontWeight: 'bold' }}>Unit Quantity</label>
+                    <Input
+                      id="unitquantity"
+                      name="unitquantity"
+                      style={{ width: '150px', height: '30px' }}
+                      value={unitquantity}
+                      onChange={(e) => setUnitquantity(e.target.value)}
+                    />
+                  </Col>
 
-                <Col span={6}>
-                  <label htmlFor="unitquantity" style={{ color: 'black', fontWeight: 'bold' }}>Unit Quantity</label>
-                  <Input
-                    id="unitquantity"
-                    name="unitquantity"
-                    style={{ width: '150px', height: '30px' }}
-                    value={unitquantity}
-                    onChange={(e) => setUnitquantity(e.target.value)}
-                  />
-                </Col>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Charge" style={{ color: 'black', fontWeight: 'bold' }}>Charge</label>
+                    <Input
+                      id="Charge"
+                      name="Charge"
+                      style={{ width: '150px', height: '30px' }}
+                      value={Charge}
+                      onChange={(e) => setCharge(e.target.value)}
+                    />
+                  </Col>
+                </Row>
 
-                <Col span={6}>
-                  <label htmlFor="Charge" style={{ color: 'black', fontWeight: 'bold' }}>Charge</label>
-                  <Input
-                    id="Charge"
-                    name="Charge"
-                    style={{ width: '150px', height: '30px' }}
-                    value={Charge}
-                    onChange={(e) => setCharge(e.target.value)}
-                  />
-                </Col>
+                <Row gutter={12} style={{ marginTop: "10px" }}>
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="quotation" style={{ color: 'black', fontWeight: 'bold' }}>Quotation</label>
+                    <Input
+                      id="quotation"
+                      name="quotation"
+                      style={{ width: '150px', height: '30px' }}
+                      value={quotation}
+                      onChange={(e) => setQuotation(e.target.value)}
+                    />
+                  </Col>
+
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="variance" style={{ color: 'black', fontWeight: 'bold' }}>Variance</label>
+                    <Input
+                      id="variance"
+                      name="variance"
+                      style={{ width: '150px', height: '30px' }}
+                      value={variance}
+                      onChange={(e) => setVariance(e.target.value)}
+                    />
+                  </Col>
+                </Row>
+
+                <Row gutter={12} style={{ marginTop: "10px" }}>
 
 
-                <Col span={6}>
-                  <label htmlFor="quotation" style={{ color: 'black', fontWeight: 'bold' }}>Quotation</label>
-                  <Input
-                    id="quotation"
-                    name="quotation"
-                    style={{ width: '150px', height: '30px' }}
-                    value={quotation}
-                    onChange={(e) => setQuotation(e.target.value)}
-                  />
-                </Col>
+                </Row>
 
-                <Col span={6}>
-                  <label htmlFor="variance" style={{ color: 'black', fontWeight: 'bold' }}>Variance</label>
-                  <Input
-                    id="variance"
-                    name="variance"
-                    style={{ width: '150px', height: '30px' }}
-                    value={variance}
-                    onChange={(e) => setVariance(e.target.value)}
-                  />
-                </Col>
-
-              </Row>
-            </Form>
+              </Form>
             </Card>
-            <Row style={{float:"right"}}>
-            <Button style={{ position: "relative", top: "10px",backgroundColor:"green" }} type="primary" onClick={handleAddToTable}>{isEditing ? buttonText : "Add"}
-            </Button>
-            <Button type="primary" danger style={{ position: "relative", top: "10px", marginLeft: '10px' }} onClick={handleReset}>Reset</Button>
-            <Button type="primary" htmlType="submit" style={{ position: "relative", top: "10px",left:"10PX" }} onClick={onSumbit}>
+            <Row style={{ float: "right" }}>
+              <Button style={{ position: "relative", top: "10px", backgroundColor: "green" }} type="primary" onClick={handleAddToTable}>{isEditing ? buttonText : "Add"}
+              </Button>
+              <Button type="primary" danger style={{ position: "relative", top: "10px", marginLeft: '10px' }} onClick={handleReset}>Reset</Button>
+              <Button type="primary" htmlType="submit" style={{ position: "relative", top: "10px", left: "10PX" }} onClick={onSumbit}>
                 Submit
               </Button>
-              </Row>
+            </Row>
             <Table style={{ position: "relative", top: "25px", right: "25px" }} dataSource={extractedData} columns={columns} />
           </Card>
         </div>

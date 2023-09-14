@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Card, Input, Space, Table, Tooltip, message } from 'antd';
+import { Button, Card, Input, Row, Space, Table, Tooltip, message } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { ColumnType } from 'antd/es/table';
 import { SearchOutlined, EyeOutlined, DownloadOutlined, CloudDownloadOutlined } from '@ant-design/icons';
@@ -208,6 +208,7 @@ export function DocView() {
         </Link>
       }>
         <Table style={{ position: "relative", bottom: "20px" }} dataSource={formdata} columns={columns} />
+      
       </Card>
     </div>
   );
