@@ -162,7 +162,7 @@ export const StoreIssueDetailed = () => {
                 <DescriptionsItem label='SAM'>{data[0]?.sam}</DescriptionsItem>
                 <DescriptionsItem label='DMM'>{data[0]?.dmm}</DescriptionsItem>
                 <DescriptionsItem label='Technician'>{data[0]?.technician}</DescriptionsItem>
-                <DescriptionsItem label='Product'>{data[0]?.agentName}</DescriptionsItem>
+                <DescriptionsItem label='Product'>{data[0]?.product}</DescriptionsItem>
                 <DescriptionsItem label='Type'>{data[0]?.productType}</DescriptionsItem>
                 <DescriptionsItem label='Conversion'>{data[0]?.Conversion}</DescriptionsItem>
                 <DescriptionsItem label='Made In'>{data[0]?.madeIn}</DescriptionsItem>
