@@ -104,6 +104,10 @@ export const StockView = () => {
     clearFilters();
     setSearchText("");
   }
+  const customFilter = (value, record) => {
+    if (value === null) return true; // If filter is not active, show all rows
+    return record.itemType === value;
+  };
   const columns: ColumnProps<any>[] = [
     {
       title: "S No",
@@ -112,10 +116,15 @@ export const StockView = () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-      title: "Item Code",
+        title: "m3 Item Code",
       dataIndex: "itemCode",
       ...getColumnSearchProps("itemCode"),
     },
+    {
+        title: "Shahi Item Code",
+        dataIndex: "shahiItemCode",
+        ...getColumnSearchProps("shahiItemCode"),
+      },
     {
       title: "Item Type",
       dataIndex: "itemType",
@@ -132,12 +141,28 @@ export const StockView = () => {
       filterSearch: true,
       onFilter: (value, record) => record.itemType.startsWith(value),
     },
+    
+ 
     {
-      title: "Quantity",
-      dataIndex: "quantity",
-      // sorter: (a, b) => a.itemQuantity - b.itemQuantity,
-      // sortDirections: ['descend', 'ascend'],
-    },
+        title: "Location",
+        dataIndex: "location",
+        ...getColumnSearchProps("location"),
+
+      },
+       {
+        title: "Plant",
+        dataIndex: "plant",
+        ...getColumnSearchProps("plant"),
+        // sorter: (a, b) => a.plant - b.plant,
+        // sortDirections: ['descend', 'ascend'],
+      },
+     
+      {
+        title: "Quantity",
+        dataIndex: "quantity",
+        // sorter: (a, b) => a.itemQuantity - b.itemQuantity,
+        // sortDirections: ['descend', 'ascend'],
+      },
   ];
 
   return (
