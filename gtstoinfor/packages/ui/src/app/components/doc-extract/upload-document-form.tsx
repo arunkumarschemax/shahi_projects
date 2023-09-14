@@ -73,7 +73,7 @@ export function UploadDocumentForm() {
   const [Sgst, setSgst] = useState("");
   const [Innvoiceamount, setInnvoiceamount] = useState("");
   const [vendor, setVendor] = useState("");
-  const [buyerCode, setBuyer] = useState("");
+  const [buyerName, setBuyer] = useState("");
   const [routing, setRouting] = useState("");
   const [comment, setComment] = useState("");
   const [financialyear, setFinancialyear] = useState("");
@@ -665,7 +665,7 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated, buyerCode, financialyear, JSON.parse(localStorage.getItem('currentUser')).user.userName, extractedData)
+    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated, buyerName, financialyear, JSON.parse(localStorage.getItem('currentUser')).user.userName, extractedData)
 
     console.log(req, "submit")
     service
@@ -1020,17 +1020,17 @@ export function UploadDocumentForm() {
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="buyerCode" style={{ color: 'black', fontWeight: 'bold' }}>Buyer Code</label>
+                    <label htmlFor="buyerName" style={{ color: 'black', fontWeight: 'bold' }}>Buyer Name</label>
                     <Select
-                      id="buyerCode"
+                      id="buyerName"
                       style={{ width: "190px", }}
-                      value={buyerCode}
+                      value={buyerName}
                       onChange={(value) => setBuyer(value)}
                       defaultValue="option1"
                     >
                       {data2.map((option) => (
-                        <option value={option.buyerCode}>
-                          {option.buyerCode}
+                        <option value={option.buyerName}>
+                          {option.buyerName}
                         </option>
                       ))}
                     </Select>
