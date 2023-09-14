@@ -553,6 +553,12 @@ export const baseRouterList = [
     //     ]
     // }, 
     {
+        label: "Sample Requests",
+        key: "sample-requests",
+        path: "sample-development/sample-requests",
+        filepath: "sample-development/sample-requests"
+    },
+    {
         label: "Material Issues",
         key: "store-issues",
         path: "store-issues/store-issues-view",
