@@ -81,7 +81,7 @@ async getSourceIssueByID():Promise<any>{
             id:"1",
             requestNo: "REQ001",
             date: "2023-08-01",
-            location: "Vizag",
+            location: "A1F1",
             pch: "PCH001",
             user: "Proto",
             buyer: "Virat Kohil",
