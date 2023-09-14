@@ -11,7 +11,7 @@ import {
 import { ScanEntity } from "./typeo-entity";
 import { StatusEnum } from "../../../../../../libs/shared-models/src/common/enum/status.enum";
 
-@Entity("InVoiceItems")
+@Entity("invoice_items")
 export class HSNEntity {
   @PrimaryGeneratedColumn("increment", {
     name: "hsn_id",

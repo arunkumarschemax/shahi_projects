@@ -489,7 +489,11 @@ export function UploadDocumentForm() {
       key: "action",
       render: (_, item) => (
         <span>
-          <Button onClick={() => handleEdit(item)} icon={<EditOutlined />} />
+          <Button
+            onClick={() => handleEdit(item)}
+            icon={<EditOutlined />}
+            style={{ color: "blue" }}
+          />
           <Divider type="vertical" />
           <Popconfirm
             title="Are you sure you want to delete this item?"
@@ -497,7 +501,7 @@ export function UploadDocumentForm() {
             okText="Yes"
             cancelText="No"
           >
-            <Button icon={<DeleteOutlined />} />
+            <Button icon={<DeleteOutlined />} style={{ color: "red" }} />
           </Popconfirm>
         </span>
       ),
@@ -1338,13 +1342,13 @@ export function UploadDocumentForm() {
             <br></br>
             <br></br>
 
-            <Row style={{ width: 200 }}>
-              {extractedData && extractedData.length > 0 ? (
+            <Card>
+            {extractedData && extractedData.length > 0 ? (
                 <Table dataSource={extractedData} columns={columns} />
               ) : (
                 ""
               )}
-            </Row>
+            </Card>
           </Card>
         </div>
       </Form>
