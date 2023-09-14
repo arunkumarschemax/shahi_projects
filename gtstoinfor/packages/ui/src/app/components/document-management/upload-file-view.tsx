@@ -340,7 +340,7 @@ const UploadFileGrid = () =>{
 
                 }
             }));
-            if(JSON.parse(localStorage.getItem('currentUser')).user.roles == 'Admin' ){
+            if(JSON.parse(localStorage.getItem('currentUser')).user.roles === 'Admin' || JSON.parse(localStorage.getItem('currentUser')).user.roles === 'consolidator'){
               setColumns([...pocolumn,...headerColumns,...downloadcomun]);
             }else{
               setColumns([...pocolumn,...headerColumns]);
