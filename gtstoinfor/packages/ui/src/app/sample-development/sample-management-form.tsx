@@ -193,7 +193,7 @@ export const SampleDevForm = () => {
   }
 
   return (
-    <Card>
+    <Card title='Sample Development Request' className="card-header">
       <Form layout="vertical" form={form} onFinish={onFinish}>
         <Form.Item name="sampleRequestId" style={{ display: "none" }}>
           <Input hidden />

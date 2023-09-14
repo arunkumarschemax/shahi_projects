@@ -24,9 +24,14 @@ export const SourceIssuesDetailView=()=>{
     })
   }
     return(
-      <Card title="Request No" size="small" >
+      <Card title="Material Issue Details" className="card-header">
       <Descriptions size='small'>
+      <DescriptionsItem label='RequestNo'>{data[0]?.requestNo}</DescriptionsItem>
          <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>
+         <DescriptionsItem label='Consumption Code'>{data[0]?.consumptionCode}</DescriptionsItem>
+         <DescriptionsItem label='Issued Date'>{data[0]?.issuingdate}</DescriptionsItem>
+         <DescriptionsItem label='Sample Indent Date'>{data[0]?.sampleIndentDate}</DescriptionsItem>
+         <DescriptionsItem label='Po Number'>{data[0]?.poNumber}</DescriptionsItem>
          <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>
          <DescriptionsItem label='User'>{data[0]?.user}</DescriptionsItem>
          <DescriptionsItem label='Buyer'>{data[0]?.buyer}</DescriptionsItem>
@@ -50,10 +55,10 @@ export const SourceIssuesDetailView=()=>{
       </Descriptions>
       <Card size='small'>
         <Tabs type={'card'} tabPosition={'top'}>
-        <TabPane key="1" tab={<span><b>{`Fabric`}</b></span>}>
+        <TabPane key="1" tab={<span style={{fontSize:'15px'}}><b>{`Fabric`}</b></span>}>
             <SourceFabrics />
         </TabPane>
-        <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
+        <TabPane key="3" tab={<span style={{fontSize:'15px'}}><b>{`Trims`}</b></span>}>
             <SourceTrims/>
         </TabPane>
         </Tabs>

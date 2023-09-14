@@ -25,6 +25,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
   let navigate = useNavigate();
   const [reqNo, setReqNo] = useState<any>([]);
   const [form] = Form.useForm();
+  const { Option } = Select;
 
 
   useEffect(() => {
@@ -41,6 +42,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       if (res) {
         console.table(res)
         setBuyingHouseData(res);
+        setReqNo(res)
       }
     });
   };
@@ -176,6 +178,14 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       ...getColumnSearchProps("requestNo"),
     },
     {
+      title: "Style No",
+      dataIndex: "styleNo",
+      // responsive: ['lg'],
+      sorter: (a, b) => a.styleNo.localeCompare(b.styleNo),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("styleNo"),
+    },
+    {
       title: "Date",
       dataIndex: "date",
       // responsive: ['lg'],
@@ -216,12 +226,22 @@ export const SampleRequests = (props: BuyingHouseProps) => {
       ...getColumnSearchProps("buyer"),
     },
     {
-      title: "Style No",
-      dataIndex: "styleNo",
-      // responsive: ['lg'],
-      sorter: (a, b) => a.styleNo.localeCompare(b.styleNo),
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("styleNo"),
+      title: "Status",
+      dataIndex: "status",
+      filters: [
+        {
+          text: 'Open',
+          value: "Open",
+        },
+        {
+          text: 'In Progress',
+          value: "In Progress",
+        },
+        {
+          text: 'Completed',
+          value: "Completed",
+        },
+      ],
     },
     {
       title: `Action`,
@@ -236,7 +256,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
               size={30}
             />
           </Tooltip> */}
-          <Button onClick={() => DetailView(rowData.id)}>Issue Material</Button>
+          <Button onClick={() => DetailView(rowData.id)} type='primary'>Issue Material</Button>
         </span>
       ),
     },
@@ -277,8 +297,8 @@ export const SampleRequests = (props: BuyingHouseProps) => {
                 allowClear
               >
                 {reqNo.map((qc: any) => (
-                  <Select.Option key={qc.reqNo} value={qc.reqNo}>
-                    {qc.reqNo}
+                  <Select.Option key={qc.requestNo} value={qc.requestNo}>
+                    {qc.requestNo}
                   </Select.Option>
                 ))}
               </Select>
@@ -293,14 +313,14 @@ export const SampleRequests = (props: BuyingHouseProps) => {
                 allowClear
               >
                 {reqNo.map((qc: any) => (
-                  <Select.Option key={qc.reqNo} value={qc.reqNo}>
-                    {qc.reqNo}
+                  <Select.Option key={qc.pch} value={qc.pch}>
+                    {qc.pch}
                   </Select.Option>
                 ))}
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6} xl={4}>
+          {/* <Col xs={24} sm={12} md={8} lg={6} xl={4}>
             <Form.Item name="user" label="User">
               <Select
                 showSearch
@@ -309,13 +329,13 @@ export const SampleRequests = (props: BuyingHouseProps) => {
                 allowClear
               >
                 {reqNo.map((qc: any) => (
-                  <Select.Option key={qc.reqNo} value={qc.reqNo}>
-                    {qc.reqNo}
+                  <Select.Option key={qc.user} value={qc.user}>
+                    {qc.user}
                   </Select.Option>
                 ))}
               </Select>
             </Form.Item>
-          </Col>
+          </Col> */}
           <Col xs={24} sm={12} md={8} lg={6} xl={4}>
             <Form.Item name="status" label="Status">
               <Select
@@ -324,11 +344,9 @@ export const SampleRequests = (props: BuyingHouseProps) => {
                 optionFilterProp="children"
                 allowClear
               >
-                {reqNo.map((qc: any) => (
-                  <Select.Option key={qc.reqNo} value={qc.reqNo}>
-                    {qc.reqNo}
-                  </Select.Option>
-                ))}
+                <Option value="Open">Open</Option>
+                <Option value="In Progress">In Progress</Option>
+                <Option value="Completed">Completed</Option>
               </Select>
             </Form.Item>
           </Col>

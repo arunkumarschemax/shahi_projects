@@ -18,6 +18,7 @@ export const SourcingRequisitionDynamicView = () => {
     const [style,setStyle] = useState<any[]>([])
     const navigate = useNavigate()
     const service = new RequisitionService()
+    const logInUser = localStorage.getItem('userName')
 
 
     const [tableData,setTableData] = useState<any[]>([])
@@ -240,6 +241,10 @@ export const SourcingRequisitionDynamicView = () => {
             dataIndex: 'm3FabricCode',
         },
         {
+            title: 'Shahi Fabric Code',
+            dataIndex: 'shahiFabricCode',
+        },
+        {
             title:'Content',
             dataIndex:'content'
         },
@@ -427,6 +432,17 @@ export const SourcingRequisitionDynamicView = () => {
                 )
             }
         },
+        {
+            title:'Action',
+            dataIndex:'action',
+            render:(text,record) =>{
+                return(
+                    <span>
+                    <Button type='primary' disabled={logInUser == 'marketUser' ? true : false}>Generate PO</Button>
+                    </span>
+                )
+            }
+        },
     ]
 
     const columnsSkelton: any = [
@@ -440,6 +456,10 @@ export const SourcingRequisitionDynamicView = () => {
         {
             title: 'M3 Trim Code',
             dataIndex: 'm3TrimCode',
+        },
+        {
+            title: 'Shahi Trim Code',
+            dataIndex: 'shahiTrimCode',
         },
         {
           title: 'Trim Type',
@@ -516,6 +536,17 @@ export const SourcingRequisitionDynamicView = () => {
                 )
             }
         },
+        {
+            title:'Action',
+            dataIndex:'action',
+            render:(text,record) =>{
+                return(
+                    <span>
+                    <Button type='primary' disabled={logInUser == 'marketUser' ? true : false}>Generate PO</Button>
+                    </span>
+                )
+            }
+        },
         
     ]
 
@@ -560,7 +591,7 @@ export const SourcingRequisitionDynamicView = () => {
     }
 
     return(
-        <Card className="card-header" title='Requisition'>
+        <Card className="card-header" title='Requisition' extra={(logInUser == 'marketUser') && <span><Button onClick={() => navigate('/indent-form')}>New</Button></span>}>
             <Form form={sourcingForm}>
                 <Row gutter={8}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
@@ -568,6 +599,9 @@ export const SourcingRequisitionDynamicView = () => {
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select Request Number'>
                             <Option key={'REQ001'} value='REQ001'>REQ001</Option>
                             <Option  key={'REQ002'} value='REQ002'>REQ002</Option>
+                            <Option  key={'REQ003'} value='REQ003'>REQ003</Option>
+                            <Option  key={'REQ004'} value='REQ004'>REQ004</Option>
+                            <Option  key={'REQ005'} value='REQ005'>REQ005</Option>
                     </Select>
                     </Form.Item>
                     </Col>
@@ -622,12 +656,12 @@ export const SourcingRequisitionDynamicView = () => {
                     />
                     <div>
                         {tabName === 'Fabric' ? (<>
-                        <Table columns={columns} dataSource={item.fabricInfo} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper" size='small'/>
+                        <Table columns={columns} dataSource={item.fabricInfo} pagination={false} scroll={{x:'max-content'}} className="custom-table-wrapper"/>
                         </>) : (<></>)}
                     </div>
                     <div>
                         {tabName === 'Trim' ? (<>
-                            <Table columns={columnsSkelton} dataSource={item.trimInfo} pagination={false} className="custom-table-wrapper" size='small'/>
+                            <Table columns={columnsSkelton} dataSource={item.trimInfo} pagination={false} className="custom-table-wrapper"/>
                         </>) : (<></>)}
                     </div>
                     </Space>

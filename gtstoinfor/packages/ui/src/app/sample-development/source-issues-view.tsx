@@ -174,9 +174,9 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
             title: "Issued Date",
             dataIndex: "date",
             // responsive: ['lg'],
-            sorter: (a, b) => a.date.localeCompare(b.date),
-            sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps("date"),
+            // sorter: (a, b) => a.date.localeCompare(b.date),
+            // sortDirections: ["descend", "ascend"],
+            // ...getColumnSearchProps("date"),
           },
           {
             title: "Buyer",
@@ -198,9 +198,9 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
             title: "Sample Indent Date",
             dataIndex: "sampleIndentDate",
             // responsive: ['lg'],
-            sorter: (a, b) => a.sampleIndentDate.localeCompare(b.sampleIndentDate),
-            sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps("sampleIndentDate"),
+            // sorter: (a, b) => a.sampleIndentDate.localeCompare(b.sampleIndentDate),
+            // sortDirections: ["descend", "ascend"],
+            // ...getColumnSearchProps("sampleIndentDate"),
           },
           {
             title: "Po Number",
@@ -234,7 +234,7 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
 
       return (
         <Card 
-        title={<span>Store Issues View</span>}
+        title={<span>Material Issues</span>}
         className="card-header"
         style={{ textAlign:"center" ,color:'#00ffff'}}
         headStyle={{border:0}}

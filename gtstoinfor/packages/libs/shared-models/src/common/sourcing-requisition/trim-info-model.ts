@@ -12,6 +12,7 @@ export class TrimInfoModel{
     availableQuantity: number
     status: string
     quantityUnit: string
+    shahiTrimCode:string
 
     constructor(
         trimType: string,
@@ -26,7 +27,8 @@ export class TrimInfoModel{
         colorName:string,
         availableQuantity: number,
         status: string,
-        quantityUnit: string
+        quantityUnit: string,
+        shahiTrimCode :string
     )
     {
         this.trimType = trimType
@@ -42,5 +44,6 @@ export class TrimInfoModel{
         this.availableQuantity = availableQuantity
         this.status = status
         this.quantityUnit = quantityUnit
+        this.shahiTrimCode = shahiTrimCode
     }
 }
