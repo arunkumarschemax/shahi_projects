@@ -116,7 +116,7 @@ export const StockView = () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     {
-        title: "m3 Item Code",
+        title: "M3 Item Code",
       dataIndex: "itemCode",
       ...getColumnSearchProps("itemCode"),
     },
