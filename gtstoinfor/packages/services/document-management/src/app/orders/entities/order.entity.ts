@@ -1,4 +1,5 @@
 
+import { PoStatusEnum } from "packages/libs/shared-models/src/common/whatsapp/doc-list-enum";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('orders') //change the name
@@ -115,4 +116,13 @@ export class OrdersEntity {
         name: 'file_id',
     })
     fileId : number;
+
+    
+    @Column('enum', {
+        name: 'order_po_status',
+        nullable: false,
+        default:PoStatusEnum.Open,
+        enum: PoStatusEnum
+    })
+    orderPoStatus: string;
 }

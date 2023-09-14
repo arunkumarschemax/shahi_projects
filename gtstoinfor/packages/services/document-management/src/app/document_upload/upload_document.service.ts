@@ -8,7 +8,6 @@ import { ErrorResponse } from "../../../../../libs/shared-models/src/common/what
 import { config } from 'packages/libs/shared-services/config';
 import {UploadDocumentListResponseModel} from '../../../../../libs/shared-models/src/document-management/upload-document-list-response-model';
 import {DocumentFileUploadResponse} from '../../../../../libs/shared-models/src/document-management/document-file-upload-response'
-import {OrdersRepository} from '../../../../common/src/app/orders/repository/orders.repository';
 import { DocumentRoleMappingRepository } from "./repository/document-role-repository";
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
@@ -22,6 +21,7 @@ import { OrdersEntity } from "../orders/entities/order.entity";
 import { GenericTransactionManager } from "packages/services/common/src/typeorm-transactions/generic-transaction-manager";
 import { throwError } from "rxjs";
 import { PoStatusEnum } from "packages/libs/shared-models/src/common/whatsapp/doc-list-enum";
+import { OrdersRepository } from "../orders/repositories/order.repository";
 @Injectable()
 export class DocumentsListService {
     constructor(
@@ -31,6 +31,7 @@ export class DocumentsListService {
         private documentRoleMappingRepo:DocumentRoleMappingRepository,
         private documentRepo:DocumentRepository,
         private uploadFilesRepository:UploadFilesRepository,
+        private ordersRepository:OrdersRepository,
     
         @InjectDataSource()
         private dataSource: DataSource,
@@ -104,22 +105,22 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
     try{
         console.log(req)
         let poStatus
-        const postatusData = await this.getDataDataToUpdatePoStatus(req.poNumber)
-        console.log(postatusData.data.length)
-        console.log(req,'********************************************************88')
-        if(postatusData.data.length == 0){
-            poStatus=PoStatusEnum.Closed
-        }else{
-            poStatus=PoStatusEnum.InProgress
-        }
-
+      
         let flag :boolean = true;
         const uploadStatusUpdate = await this.documentsListRepository.update(
             {  documentsListId:req.documentsListId },
-            { isUploaded: true, status:req.status, poStatus:poStatus}
+            { isUploaded: true, status:req.status}
         );
-        console.log (uploadStatusUpdate)
+      
         if (uploadStatusUpdate.affected > 0) {
+            const postatusData = await this.getDataDataToUpdatePoStatus(req.poNumber)
+            if(postatusData.data.length == 0){
+                poStatus=PoStatusEnum.Closed
+            }else{
+                poStatus=PoStatusEnum.InProgress
+            }
+            const updateOrders = await this.ordersRepository.update({poNo:req.poNumber},{orderPoStatus:poStatus})
+            
             for(const res of file){
                 const data = new UploadFileDto(0,res.filename,res.path,req.documentsListId,res.uid)
                 const entity = new UploadFilesEntity()

@@ -11,6 +11,7 @@ import { redirect, useNavigate } from 'react-router-dom';
 import { PDFDocument } from 'pdf-lib';
 import axios from 'axios';
 import { saveAs } from 'file-saver';
+import { Header } from '@nestjs/common';
 
 
 const UploadFileGrid = () =>{
@@ -237,6 +238,15 @@ const UploadFileGrid = () =>{
               //   <a href={`#/document-management/document-file-upload?text=${encodeURIComponent(text)}`}>{text}</a>
               // ),
         },
+        {   
+          title: 'STATUS',
+          dataIndex: 'orderPoStatus',
+          width:'180px',
+          // fixed: 'left',
+          align:'center',
+            ...getColumnSearchProps('orderPoStatus'),
+
+        }
         // {
         //   title: 'INVOICE NO',
         //   dataIndex: 'invoiceNo',
@@ -291,7 +301,7 @@ const UploadFileGrid = () =>{
             return (<div style={{alignContent:'center'}}>
                <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
                  <Button type="primary" 
-                disabled ={rowData.poStatus == 'In Progress' ? true:false}
+                disabled ={rowData.orderPoStatus == 'In Progress' || rowData.orderPoStatus == 'Closed' ? false:true}
                 onClick={() => mergeAndDownloadPDFs(rowData.url, rowData.PO)}>
               <DownloadOutlined/>
               </Button>
@@ -324,7 +334,7 @@ const UploadFileGrid = () =>{
           if(res.status){
             setItemData(res.data);
             const headerColumns = Object?.keys(res?.data[0])
-            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url' && header !== 'poStatus')
+            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url' && header !== 'poStatus' && header !== 'orderPoStatus')
             .map(header => ({           
                 title: header.toUpperCase(),
                 dataIndex: header,

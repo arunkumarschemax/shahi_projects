@@ -412,7 +412,7 @@ export class OrdersService {
          }
         const documentNames = await this.dataSource.query(query)
         const dynamicSQL = `SELECT o.challan_no AS challanNo, o.invoice_no AS invoiceNo,"" AS url, dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END ELSE '-' END) AS '${name.document_name}'
-        `).join(',')},dl.documents_list_id as docListId,dl.file_path as filePath,dl.status,dl.po_status as poStatus
+        `).join(',')},dl.documents_list_id as docListId,dl.file_path as filePath,dl.status,dl.po_status as poStatus,o.order_po_status as orderPoStatus
       FROM
         documents_list dl
       LEFT JOIN
