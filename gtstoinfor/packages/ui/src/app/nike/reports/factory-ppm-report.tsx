@@ -879,6 +879,7 @@ const FactoryPPMReport = () => {
                 ),
             },
             {
+                title:'',
                 align: 'center',
                 render: (text, rowData) => (
                     <div>
@@ -914,6 +915,13 @@ const FactoryPPMReport = () => {
                 title: 'Actual Unit',
                 dataIndex: 'actualUnit',
                 align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                }
             },
             {
                 title: 'Quantity Allocation',
@@ -930,6 +938,7 @@ const FactoryPPMReport = () => {
                 ),
             },
             {
+                
                 dataIndex: 'id',
                 align: 'center',
                 render: (text, rowData) => (
@@ -966,6 +975,13 @@ const FactoryPPMReport = () => {
                 title: 'Reallocated Quantity',
                 dataIndex: 'allocatedQuantity',
                 align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                }
             },
             {
                 title: 'Total Item Qty',
