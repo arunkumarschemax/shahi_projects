@@ -143,8 +143,8 @@ export function OrderAcceptance() {
         if (form.getFieldValue('productCode') !== undefined) {
             req.productCode = form.getFieldValue('productCode');
         }
-        if (form.getFieldValue('poandLine') !== undefined) {
-            req.poandLine = form.getFieldValue('poandLine');
+        if (form.getFieldValue('purchaseOrder') !== undefined) {
+            req.poandLine = form.getFieldValue('purchaseOrder');
         }
         if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
             req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
@@ -205,6 +205,36 @@ export function OrderAcceptance() {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY'),
+        },
+        {
+            title: 'Aging',
+            dataIndex: '',
+            render: (text, record) => {
+                const documentDate = moment(record.document_date).format('MM/DD/YYYY');
+                const today = moment();
+                const aging = today.diff(documentDate, 'days');
+                return aging;
+            },
+            sorter: (a, b) => {
+                const aAging = a['document_date']; // Assuming 'document_date' is a string representing the date
+                const bAging = b['document_date']; // Assuming 'document_date' is a string representing the date
+
+                // Handle cases where one or both values are null (invalid)
+                if (aAging === null && bAging === null) {
+                    return 0;
+                } else if (aAging === null) {
+                    return 1;
+                } else if (bAging === null) {
+                    return -1;
+                }
+
+                // Convert the aging values to numbers
+                const aAgingValue = parseInt(aAging);
+                const bAgingValue = parseInt(bAging);
+
+                return aAgingValue - bAgingValue;
+            },
+            sortOrder: null
         },
         {
             title: 'Plant Name',
@@ -348,15 +378,15 @@ export function OrderAcceptance() {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-                            <Form.Item name='poandLine' label='Po+Line' >
+                            <Form.Item name='purchaseOrder' label='Purchase Order' >
                                 <Select
                                     showSearch
-                                    placeholder="Select Po+Line"
+                                    placeholder="Select PO"
                                     optionFilterProp="children"
                                     allowClear
                                 >
                                     {poLine.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                        return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                     })
                                     }
                                 </Select>

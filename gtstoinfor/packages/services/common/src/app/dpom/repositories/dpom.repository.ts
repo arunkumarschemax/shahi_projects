@@ -535,7 +535,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             query.andWhere(`d.product_code ='${req.productCode}'`)
         }
         if (req.poandLine !== undefined) {
-            query.andWhere(`d.po_and_line ='${req.poandLine}'`)
+            query.andWhere(`d.po_number ='${req.poandLine}'`)
         }
         if (req.DPOMLineItemStatus !== undefined) {
             query.andWhere(`d.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
@@ -557,9 +557,9 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getPoLineforOrderCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(` dpom.po_and_line,dpom.id`)
-            .where(`dpom.dpom_item_line_status IN('Accepted','Unaccepted')`)
-            .groupBy(`dpom.po_and_line`)
+            .select(` dpom.po_number,dpom.id`)
+            .where(`dpom.dpom_item_line_status = 'Unaccepted'`)
+            .groupBy(`dpom.po_number`)
         return await query.getRawMany();
     }
 
