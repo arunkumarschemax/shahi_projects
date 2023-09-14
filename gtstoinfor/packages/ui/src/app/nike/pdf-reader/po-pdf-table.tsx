@@ -22,7 +22,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
     useEffect(() => {
         if (state?.data) {
             const parsedData = JSON.parse(state.data)
-            console.log(parsedData)
+            // console.log(parsedData)
             setPdfData(parsedData)
             // setUpdateKey(prevState => prevState+1)
         }
