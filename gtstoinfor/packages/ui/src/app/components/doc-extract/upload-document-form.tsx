@@ -1,7 +1,24 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from "react";
-import { Select, Spin, message, Button, Input, Row, Form, Col, Typography, UploadProps, Upload, Radio, Table, Divider, Popconfirm, DatePicker } from "antd";
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import {
+  Select,
+  Spin,
+  message,
+  Button,
+  Input,
+  Row,
+  Form,
+  Col,
+  Typography,
+  UploadProps,
+  Upload,
+  Radio,
+  Table,
+  Divider,
+  Popconfirm,
+  DatePicker,
+} from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import Tesseract from "tesseract.js";
 // import { useNavigate, useLocation } from "react-router-dom";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
@@ -10,7 +27,11 @@ import Tesseract from "tesseract.js";
 // import DocumentItemForm from "./document-item-form";
 import Card from "antd/es/card/Card";
 import { CalendarOutlined, UploadOutlined } from "@ant-design/icons";
-import { BuyersService, SharedService, VendorService } from "@project-management-system/shared-services";
+import {
+  BuyersService,
+  SharedService,
+  VendorService,
+} from "@project-management-system/shared-services";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
 import { useNavigate } from "react-router-dom";
@@ -19,8 +40,6 @@ import { useNavigate } from "react-router-dom";
 // const { Option } = Select;
 
 // export interface UploadDocumentFormProps { }
-
-
 
 export function UploadDocumentForm() {
   const [GstForm] = Form.useForm();
@@ -45,7 +64,7 @@ export function UploadDocumentForm() {
   const [Taxpercentage, setTaxPercentage] = useState("");
   const [Charge, setCharge] = useState("");
   // const [unitprice, setUnitprice] = useState("");
-  const [variance, setVariance] = useState("")
+  const [variance, setVariance] = useState("");
   const [unitquantity, setUnitquantity] = useState("");
   const [quotation, setQuotation] = useState("");
 
@@ -56,11 +75,11 @@ export function UploadDocumentForm() {
   const [dragStartY, setDragStartY] = useState(0);
 
   interface Item {
-    HSN: string,
-    description: string,
-    Taxtype: string,
-    Taxamount: string,
-    Charge: string,
+    HSN: string;
+    description: string;
+    Taxtype: string;
+    Taxamount: string;
+    Charge: string;
   }
 
   const [imageURL, setImageURL] = useState<string | null>(null);
@@ -84,8 +103,7 @@ export function UploadDocumentForm() {
   const [dt, setDt] = useState("");
   const [Innvoicecurrency, setInnvoicecurrency] = useState("");
 
-
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false)
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [data1, setData1] = useState<any[]>([]);
   const [data2, setData2] = useState<any[]>([]);
 
@@ -93,52 +111,45 @@ export function UploadDocumentForm() {
 
   const buyerss = new BuyersService();
 
-
-
   useEffect(() => {
-
     getdata1();
   }, []);
 
-  console.log(extractedData, "extracted data")
+  console.log(extractedData, "extracted data");
 
   const getdata1 = () => {
-    servicess.getAllVendors().then(res => {
-      if (res.status) {
-        setData1(res.data)
-      } else {
-        setData1([])
-      }
-    }).catch(err => {
-      console.log(err.message)
-    })
-  }
+    servicess
+      .getAllVendors()
+      .then((res) => {
+        if (res.status) {
+          setData1(res.data);
+        } else {
+          setData1([]);
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
   useEffect(() => {
-
     getdata2();
   }, []);
 
-
   const getdata2 = () => {
-    buyerss.getAllBuyersInfo().then(res => {
-      if (res.status) {
-        setData2(res.data)
-      } else {
-        setData2([])
-      }
-    }).catch(err => {
-      console.log(err.message)
-    })
-
-
-  }
-
-
-
-
-
-
+    buyerss
+      .getAllBuyersInfo()
+      .then((res) => {
+        if (res.status) {
+          setData2(res.data);
+        } else {
+          setData2([]);
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -156,14 +167,14 @@ export function UploadDocumentForm() {
       const deltaY = e.clientY - dragStartY;
       const newTranslateX = deltaX;
       const newTranslateY = deltaY;
-      const image = document.getElementById('imageToDrag');
+      const image = document.getElementById("imageToDrag");
       if (image) {
         image.style.transform = `translate(${newTranslateX}px, ${newTranslateY}px) scale(${zoomFactor})`;
       }
     }
   };
   const handleTimecreatedChange = (date) => {
-    const formattedDate = date ? date.format('YYYY-MM-DD HH:mm:ss') : null;
+    const formattedDate = date ? date.format("YYYY-MM-DD HH:mm:ss") : null;
     setTimecreated(formattedDate);
     setIsDatePickerVisible(false);
   };
@@ -171,19 +182,17 @@ export function UploadDocumentForm() {
     setTimecreated(e.target.value);
   };
 
-
   const extractGstNumbers = (text) => {
-    const gstNumberRegex = /[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g;
+    const gstNumberRegex =
+      /[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g;
     const matches = text.match(gstNumberRegex);
 
     // Return the first match if it exists, otherwise return an empty string
-    const extractedGstNumber = matches ? matches[0] : '';
+    const extractedGstNumber = matches ? matches[0] : "";
 
     setGstNumbers(extractedGstNumber); // Set the extracted GST number
     return extractedGstNumber;
   };
-
-
 
   const extractIgst = (text) => {
     const IgstRegex = /(\d,\d{3}\.\d{2})/g;
@@ -243,8 +252,18 @@ export function UploadDocumentForm() {
 
   const getMonthNumber = (monthStr) => {
     const monthNames = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
     ];
     return String(monthNames.indexOf(monthStr) + 1).padStart(2, "0");
   };
@@ -261,8 +280,7 @@ export function UploadDocumentForm() {
   console.log("Formatted Date:", formattedDate);
 
   const extractInnvoicecurrency = (text) => {
-    const InvoicecuurencyRegex =
-      /(INR|DOLLARS|DINARS)/g;
+    const InvoicecuurencyRegex = /(INR|DOLLARS|DINARS)/g;
     const match = text.match(InvoicecuurencyRegex);
     const extractedInnvoicecurrency = match ? match[0] : "";
     return extractedInnvoicecurrency;
@@ -274,7 +292,6 @@ export function UploadDocumentForm() {
     const extractedInnvoicenum = match ? match[0].trim() : "";
     return extractedInnvoicenum;
   };
-
 
   const extractFinancialyear = (text) => {
     const FinancialyearRegex = /\b\d{4}-\d{4}\b/g;
@@ -329,20 +346,20 @@ export function UploadDocumentForm() {
       setExtractedData(updatedTableData);
       setIsEditing(false);
       setEditingItem(null);
-      setButtonText('Add');
+      setButtonText("Add");
     } else {
       setExtractedData([...extractedData, newItem]);
     }
 
-    setHSN('');
-    setDescription('');
-    setTaxtype('');
-    setTaxamount('');
-    setCharge('');
-    setTaxPercentage('');
-    setVariance('');
-    setUnitquantity('');
-    setQuotation('');
+    setHSN("");
+    setDescription("");
+    setTaxtype("");
+    setTaxamount("");
+    setCharge("");
+    setTaxPercentage("");
+    setVariance("");
+    setUnitquantity("");
+    setQuotation("");
   };
 
   const handleEdit = (item) => {
@@ -351,7 +368,7 @@ export function UploadDocumentForm() {
     setTaxtype(item.Taxtype);
     setTaxamount(item.Taxamount);
     setTaxPercentage(item.Taxpercentage);
-    let editedCharge = '';
+    let editedCharge = "";
     if (item.Taxamount !== null && item.Taxpercentage !== null) {
       const Taxpercentage = item.Taxpercentage;
       const Taxamount = item.Taxamount;
@@ -367,7 +384,7 @@ export function UploadDocumentForm() {
 
     setIsEditing(true);
     setEditingItem(item);
-    setButtonText('Update');
+    setButtonText("Update");
   };
 
   const handleDelete = (item) => {
@@ -375,61 +392,61 @@ export function UploadDocumentForm() {
     setExtractedData(updatedTableData);
   };
   const handleReset = () => {
-    setHSN('');
-    setDescription('');
-    setTaxtype('');
-    setTaxamount('');
-    setCharge('');
-    setTaxPercentage('');
-    setVariance('');
-    setUnitquantity('');
-    setQuotation('');
+    setHSN("");
+    setDescription("");
+    setTaxtype("");
+    setTaxamount("");
+    setCharge("");
+    setTaxPercentage("");
+    setVariance("");
+    setUnitquantity("");
+    setQuotation("");
     setIsEditing(false);
     setEditingItem(null);
-    setButtonText('Add');
+    setButtonText("Add");
   };
   const columns = [
     {
-      title: 'HSN',
-      dataIndex: 'HSN',
-      key: 'HSN',
+      title: "HSN",
+      dataIndex: "HSN",
+      key: "HSN",
       render: (HSN) => ` ${HSN}`,
     },
     {
-      title: 'Tax Type',
-      dataIndex: 'Taxtype',
-      key: 'Taxtype',
+      title: "Tax Type",
+      dataIndex: "Taxtype",
+      key: "Taxtype",
       render: (Taxtype) => ` ${Taxtype}`,
     },
     {
-      title: 'Tax Amount',
-      dataIndex: 'Taxamount',
-      key: 'Taxamount',
-      render: (Taxamount) => (Taxamount !== null ? `${Taxamount}` : '0'),
+      title: "Tax Amount",
+      dataIndex: "Taxamount",
+      key: "Taxamount",
+      render: (Taxamount) => (Taxamount !== null ? `${Taxamount}` : "0"),
     },
     {
-      title: 'Tax Percentage',
-      dataIndex: 'Taxpercentage',
-      key: 'Taxpercentage',
+      title: "Tax Percentage",
+      dataIndex: "Taxpercentage",
+      key: "Taxpercentage",
       render: (Taxpercentage, record) => {
         if (Taxpercentage !== null) {
           return `${Taxpercentage}`;
         } else if (record.Taxpercentage !== null) {
           return `${record.Taxpercentage}`;
         }
-        return '0';
+        return "0";
       },
     },
 
     {
-      title: 'Unit Quantity',
-      dataIndex: 'unitquantity',
-      key: 'unitquantity',
+      title: "Unit Quantity",
+      dataIndex: "unitquantity",
+      key: "unitquantity",
     },
     {
-      title: 'Charge',
-      dataIndex: 'Charge',
-      key: 'Charge',
+      title: "Charge",
+      dataIndex: "Charge",
+      key: "Charge",
       render: (Charge, record) => {
         if (record.Taxamount !== null && record.Taxpercentage !== null) {
           const Taxpercentage = record.Taxpercentage;
@@ -440,35 +457,35 @@ export function UploadDocumentForm() {
           return `${record.Taxamount}`;
         }
 
-        return `${Charge || '0'}`;
+        return `${Charge || "0"}`;
       },
     },
+    // {
+    //   title: "Quotation",
+    //   dataIndex: "quotation",
+    //   key: "quotation",
+    // },
+    // {
+    //   title: "Variance",
+    //   dataIndex: "variance",
+    //   key: "variance",
+    //   hide:true,
+    //   render: (variance, record) => {
+    //     const Charge = parseFloat(record.Charge) || 0;
+    //     const Quotation = parseFloat(record.quotation) || 0;
+    //     const varianceValue = Quotation - Charge;
+    //     return `${varianceValue.toFixed(2)}`;
+    //   },
+    // },
+    // {
+    //   title: "Status",
+    //   dataIndex: "variance_status",
+    //   key: "variance_status",
+    // },
     {
-      title: 'Quotation',
-      dataIndex: 'quotation',
-      key: 'quotation',
-    },
-    {
-      title: 'Variance',
-      dataIndex: 'variance',
-      key: 'variance',
-      render: (variance, record) => {
-        const Charge = parseFloat(record.Charge) || 0;
-        const Quotation = parseFloat(record.quotation) || 0;
-        const varianceValue = Quotation - Charge;
-        return `${varianceValue.toFixed(2)}`;
-      },
-    },
-    {
-      title: 'Status',
-      dataIndex: 'variance_status',
-      key: 'variance_status',
-
-    },
-    {
-      title: 'Action',
-      dataIndex: 'action',
-      key: 'action',
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
       render: (_, item) => (
         <span>
           <Button onClick={() => handleEdit(item)} icon={<EditOutlined />} />
@@ -482,7 +499,6 @@ export function UploadDocumentForm() {
             <Button icon={<DeleteOutlined />} />
           </Popconfirm>
         </span>
-
       ),
     },
   ];
@@ -497,7 +513,7 @@ export function UploadDocumentForm() {
     if (zoomFactor > 0.2) {
       setZoomFactor(zoomFactor - 0.1);
     }
-  }
+  };
 
   const handleIconClick = () => {
     setIsDatePickerVisible(!isDatePickerVisible);
@@ -514,8 +530,8 @@ export function UploadDocumentForm() {
 
       console.log("Uploading file:", file);
 
-      Tesseract.recognize(file, 'eng', { logger: (m) => console.log(m) })
-        .then(({ data: { text } }) => {
+      Tesseract.recognize(file, "eng", { logger: (m) => console.log(m) }).then(
+        ({ data: { text } }) => {
           setIsLoading(false);
           const extractedGstNumbers = extractGstNumbers(text);
           const extractedvendor = extractVendor(text);
@@ -539,7 +555,7 @@ export function UploadDocumentForm() {
           setSgst(extractedSgst);
           setFinancialyear(extractedFinancialyear);
 
-          const lines = text.split('\n');
+          const lines = text.split("\n");
 
           const allLines = lines.map((line, index) => ({
             id: index + 1,
@@ -550,32 +566,40 @@ export function UploadDocumentForm() {
           let currentHSN = null;
 
           for (const line of allLines) {
-            if (line.content.includes('HSN') || line.content.match(/^\d{6}$/)) {
+            if (line.content.includes("HSN") || line.content.match(/^\d{6}$/)) {
               if (currentHSN) {
                 structuredHSNLines.push(currentHSN);
               }
               currentHSN = {
-                HSN: line.content.includes('HSN') ? line.content.match(/\d+/)[0] : line.content.trim(),
+                HSN: line.content.includes("HSN")
+                  ? line.content.match(/\d+/)[0]
+                  : line.content.trim(),
                 Taxtype: line.content.match(/IGST|CGST|SGST|GST/),
                 Taxamount: null,
                 description: null,
                 chargeINR: null,
               };
 
-              const taxAmountMatch = line.content.match(/(\d+(\.\d{0,2})?)%=(\d+(\.\d{0,2})?)/);
+              const taxAmountMatch = line.content.match(
+                /(\d+(\.\d{0,2})?)%=(\d+(\.\d{0,2})?)/
+              );
               if (taxAmountMatch) {
                 currentHSN.Taxamount = {
                   Taxpercentage: parseFloat(taxAmountMatch[1]),
                   Taxamount: parseFloat(taxAmountMatch[3]),
                 };
               }
-            } else if (line.content.includes('IGST|CGST|GSTS|GST')) {
-              currentHSN.Taxtype = 'IGST';
+            } else if (line.content.includes("IGST|CGST|GSTS|GST")) {
+              currentHSN.Taxtype = "IGST";
             }
-            if (line.content.includes('chargeINR')) {
-              const chargeValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?$/);
+            if (line.content.includes("chargeINR")) {
+              const chargeValueMatch = line.content.match(
+                /^\d{1,3}(,\d{3})*(\.\d{2})?$/
+              );
               if (chargeValueMatch) {
-                currentHSN.chargeINR = parseFloat(chargeValueMatch[1].replace(/,/g, ''));
+                currentHSN.chargeINR = parseFloat(
+                  chargeValueMatch[1].replace(/,/g, "")
+                );
               }
             }
 
@@ -595,7 +619,10 @@ export function UploadDocumentForm() {
             }
           });
 
-          console.log("Structured HSN Lines (JSON):", JSON.stringify(structuredHSNLines, null, 2));
+          console.log(
+            "Structured HSN Lines (JSON):",
+            JSON.stringify(structuredHSNLines, null, 2)
+          );
 
           setExtractedData(structuredHSNLines);
 
@@ -611,14 +638,14 @@ export function UploadDocumentForm() {
           setTimecreated(formattedDate);
 
           console.log("Result (JSON):", JSON.stringify(result, null, 2));
-        });
+        }
+      );
     } else {
       message.error("Please select a file to upload.");
     }
   };
 
-  console.log(extractedData, "eeeee")
-
+  console.log(extractedData, "eeeee");
 
   const gstUploadFieldProps: UploadProps = {
     onRemove: () => {
@@ -630,9 +657,11 @@ export function UploadDocumentForm() {
         return false;
       }
 
-      Tesseract.recognize(file, 'eng', { logger: (m) => console.log(m) }).then(({ data: { text } }) => {
-        console.log(text);
-      });
+      Tesseract.recognize(file, "eng", { logger: (m) => console.log(m) }).then(
+        ({ data: { text } }) => {
+          console.log(text);
+        }
+      );
 
       setFile(file);
 
@@ -640,8 +669,8 @@ export function UploadDocumentForm() {
     },
     progress: {
       strokeColor: {
-        '0%': '#108ee9',
-        '100%': '#87d068',
+        "0%": "#108ee9",
+        "100%": "#87d068",
       },
       strokeWidth: 3,
       format: (percent: any) => `${parseFloat(percent.toFixed(2))}%`,
@@ -665,36 +694,55 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated, buyerCode, financialyear, JSON.parse(localStorage.getItem('currentUser')).user.userName, extractedData)
+    const req = new AllScanDto(
+      gstNumbers,
+      vendor,
+      invoiceDate,
+      Cgst,
+      Igst,
+      Sgst,
+      Innvoicenum,
+      Innvoiceamount,
+      Innvoicecurrency,
+      routing,
+      comment,
+      timecreated,
+      buyerCode,
+      financialyear,
+      JSON.parse(localStorage.getItem("currentUser")).user.userName,
+      extractedData
+    );
 
-    console.log(req, "submit")
+    console.log(req, "submit");
     service
       .postdata(req)
       .then((res) => {
         if (res.status) {
           message.success("Success");
-          navigate("/scan-document")
+          navigate("/scan-document");
         } else {
           message.error("failed");
         }
       })
       .catch((err: { message: any }) => {
-        console.log(err.message, 'err message');
-      })
-  }
-
+        console.log(err.message, "err message");
+      });
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', }}>
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <Card
-  title={<div style={{ textAlign: 'center' }}>Upload Document</div>}
-  bordered={true}
-  style={{ flex: 1, width: '600px', height: '100px' }}
-  headStyle={{ backgroundColor: '#00FFFF', border: 0 }}
->
-
-      {/* <Card title="Upload Document" bordered={true} style={{ flex: 1, width: "600px", height: "100px" }} headStyle={{ backgroundColor: '#00FFFF', border: 0 }}> */}
-        <Form layout="vertical" form={uploadForm} onFinish={handleUploadDocument}>
+        title={<div style={{ textAlign: "center" }}>Upload Document</div>}
+        bordered={true}
+        style={{ flex: 1, width: "600px", height: "100px" }}
+        headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
+      >
+        {/* <Card title="Upload Document" bordered={true} style={{ flex: 1, width: "600px", height: "100px" }} headStyle={{ backgroundColor: '#00FFFF', border: 0 }}> */}
+        <Form
+          layout="vertical"
+          form={uploadForm}
+          onFinish={handleUploadDocument}
+        >
           <Row gutter={12}>
             <Col span={6}>
               <Form.Item name={"poType"}>
@@ -709,11 +757,11 @@ export function UploadDocumentForm() {
                 rules={[
                   {
                     required: true,
-                    message: 'Document is required',
+                    message: "Document is required",
                   },
                 ]}
-                label='Upload Document'
-                name='file'
+                label="Upload Document"
+                name="file"
               >
                 <Upload
                   key="file"
@@ -724,15 +772,14 @@ export function UploadDocumentForm() {
                 >
                   <Button
                     key="file"
-                    style={{ color: 'black', backgroundColor: '#7ec1ff' }}
-                  // icon={<UploadOutlined />}
-
+                    style={{ color: "black", backgroundColor: "#7ec1ff" }}
+                    // icon={<UploadOutlined />}
                   >
                     Choose File
                   </Button>
                   <br />
                   <Typography.Text type="secondary">
-                    (Supported formats  jpeg, jpg, png)
+                    (Supported formats jpeg, jpg, png)
                   </Typography.Text>
                 </Upload>
                 <br />
@@ -740,33 +787,37 @@ export function UploadDocumentForm() {
                 <Button
                   type="primary"
                   icon={<UploadOutlined />}
-                  style={{ position: 'relative', bottom: "78px", left: "220px" }}
+                  style={{
+                    position: "relative",
+                    bottom: "78px",
+                    left: "220px",
+                  }}
                   onClick={handleUploadDocument}
                   disabled={isLoading}
                 >
                   {isLoading ? (
                     <div
                       style={{
-                        position: 'fixed',
-                        top: '0',
-                        left: '0',
-                        width: '100%',
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        position: "fixed",
+                        top: "0",
+                        left: "0",
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
                         zIndex: 9999,
-                        background: 'rgba(0, 0, 0, 0.5)',
+                        background: "rgba(0, 0, 0, 0.5)",
                       }}
                     >
                       <Spin size="large" />
-                      <div style={{ marginTop: '10px', color: 'white' }}>
+                      <div style={{ marginTop: "10px", color: "white" }}>
                         Please wait...
                       </div>
                     </div>
                   ) : (
-                    'Upload'
+                    "Upload"
                   )}
                 </Button>
               </Form.Item>
@@ -776,22 +827,26 @@ export function UploadDocumentForm() {
       </Card>
 
       <Card
-       title={<div style={{ textAlign: 'center' }}>Image Form</div>}
+        title={<div style={{ textAlign: "center" }}>Image Form</div>}
         bordered={true}
-        headStyle={{ backgroundColor: '#00FFFF', border: 0 }}
+        headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
         style={{
-          flex: 1, width: "600px", position: "relative", top: "10px", boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-          background: '#fff',
-          borderTop: '1px solid #e8e8e8',
+          flex: 1,
+          width: "600px",
+          position: "relative",
+          top: "10px",
+          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
+          background: "#fff",
+          borderTop: "1px solid #e8e8e8",
         }}
       >
         <div
           style={{
-            position: 'relative',
-            overflow: 'hidden',
-            width: '100%',
-            height: '300px',
-            cursor: isDragging ? 'grabbing' : 'grab',
+            position: "relative",
+            overflow: "hidden",
+            width: "100%",
+            height: "300px",
+            cursor: isDragging ? "grabbing" : "grab",
           }}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
@@ -799,52 +854,56 @@ export function UploadDocumentForm() {
         >
           <div
             style={{
-              overflow: 'auto',
-              overflowX: 'scroll',
-              overflowY: 'scroll',
-              height: '100%',
+              overflow: "auto",
+              overflowX: "scroll",
+              overflowY: "scroll",
+              height: "100%",
             }}
           >
             <img
               id="imageToDrag"
               src={selectedImage}
               style={{
-                maxWidth: '100%',
+                maxWidth: "100%",
                 transform: `scale(${zoomFactor})`,
-                transition: 'transform 0.2s',
+                transition: "transform 0.2s",
               }}
             />
           </div>
         </div>
-        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+        <div style={{ textAlign: "center", marginTop: "10px" }}>
           <Button onClick={handleZoomIn}>Zoom In</Button>
           <Button onClick={handleZoomOut}>Zoom Out</Button>
         </div>
       </Card>
 
-
       <Form form={GstForm}>
-        <div style={{ display: 'flex', flexDirection: 'column', }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <Card
-            title={<div style={{ textAlign: 'center' }}>Document Details</div>}
-            headStyle={{ backgroundColor: '#00FFFF', border: 0 }}
+            title={<div style={{ textAlign: "center" }}>Document Details</div>}
+            headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
             bordered={true}
             style={{
               flex: 1,
-              width: '865px',
+              width: "865px",
               position: "relative",
               left: "601px",
               bottom: "715px",
-              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-              background: '#fff',
-              borderTop: '1px solid #e8e8e8',
+              boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
+              background: "#fff",
+              borderTop: "1px solid #e8e8e8",
             }}
           >
             <Card style={{ position: "relative", bottom: "5px" }}>
-              <Form.Item >
-                <Row gutter={24} >
+              <Form.Item>
+                <Row gutter={24}>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Vendor" style={{ color: 'black', fontWeight: 'bold' }}>Vendor Name</label>
+                    <label
+                      htmlFor="Vendor"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Vendor Name
+                    </label>
                     <Select
                       id="Vendor"
                       style={{ width: "190px" }}
@@ -860,20 +919,33 @@ export function UploadDocumentForm() {
                     </Select>
                   </Col>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="GST" style={{ color: 'black', fontWeight: 'bold', position: "relative", left: "10px" }}>
+                    <label
+                      htmlFor="GST"
+                      style={{
+                        color: "black",
+                        fontWeight: "bold",
+                        position: "relative",
+                        left: "10px",
+                      }}
+                    >
                       GST
                     </label>
                     <Input
                       title="GST"
                       name="GST"
-                      style={{ width: '190px', height: '30px' }}
+                      style={{ width: "190px", height: "30px" }}
                       value={gstNumbers}
                       onChange={(e) => setGstNumbers(e.target.value)}
                     />
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Financialyear" style={{ color: 'black', fontWeight: 'bold', }}>Financial year</label>
+                    <label
+                      htmlFor="Financialyear"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Financial year
+                    </label>
                     <Input
                       id="Financialyear"
                       name="Financialyear"
@@ -884,33 +956,46 @@ export function UploadDocumentForm() {
                   </Col>
                 </Row>
 
-                <Row gutter={24} style={{ marginTop: '20px' }}>
+                <Row gutter={24} style={{ marginTop: "20px" }}>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="invoiceDate" style={{ color: 'black', fontWeight: 'bold' }}>
+                    <label
+                      htmlFor="invoiceDate"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
                       Invoice Date
                     </label>
                     <Input
                       id="invoiceDate"
                       name="invoiceDate"
-                      style={{ width: '190px', height: '30px' }}
+                      style={{ width: "190px", height: "30px" }}
                       value={invoiceDate}
                       onChange={(e) => setInvoiceDate(e.target.value)}
                     />
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="InnvoiceNumber" style={{ color: 'black', fontWeight: 'bold', }}>Innvoice Number</label>
+                    <label
+                      htmlFor="InnvoiceNumber"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Innvoice Number
+                    </label>
                     <Input
                       id="InnvoiceNumber"
                       name="InnvoiceNumber"
-                      style={{ width: "190px", height: "30px", }}
+                      style={{ width: "190px", height: "30px" }}
                       value={Innvoicenum}
                       onChange={(e) => setInnvoicenum(e.target.value)}
                     />
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="InnvoiceAmount" style={{ color: 'black', fontWeight: 'bold', }}>Innvoice Amount</label>
+                    <label
+                      htmlFor="InnvoiceAmount"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Innvoice Amount
+                    </label>
                     <Input
                       id="InnvoiceAmount"
                       name="InnvoiceAmount"
@@ -921,9 +1006,14 @@ export function UploadDocumentForm() {
                   </Col>
                 </Row>
 
-                <Row gutter={24} style={{ marginTop: '20px' }}>
+                <Row gutter={24} style={{ marginTop: "20px" }}>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="IGST" style={{ color: 'black', fontWeight: 'bold' }}>IGST</label>
+                    <label
+                      htmlFor="IGST"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      IGST
+                    </label>
                     <Input
                       id="IGST"
                       name="IGST"
@@ -933,31 +1023,46 @@ export function UploadDocumentForm() {
                     />
                   </Col>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Cgst" style={{ color: 'black', fontWeight: 'bold', }}>CSGT</label>
+                    <label
+                      htmlFor="Cgst"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      CSGT
+                    </label>
                     <Input
                       id="Cgst"
                       name="Cgst"
-                      style={{ width: "190px", height: "30px", }}
+                      style={{ width: "190px", height: "30px" }}
                       value={Cgst}
                       onChange={(e) => setCgst(e.target.value)}
                     />
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Sgst" style={{ color: 'black', fontWeight: 'bold', }}>SGST</label>
+                    <label
+                      htmlFor="Sgst"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      SGST
+                    </label>
                     <Input
                       id="Sgst"
                       name="Sgst"
-                      style={{ width: "180px", height: "30px", }}
+                      style={{ width: "180px", height: "30px" }}
                       value={Sgst}
                       onChange={(e) => setSgst(e.target.value)}
                     />
                   </Col>
                 </Row>
 
-                <Row gutter={24} style={{ marginTop: '20px' }}>
+                <Row gutter={24} style={{ marginTop: "20px" }}>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Innvoice Currency" style={{ color: 'black', fontWeight: 'bold' }}>Innvoice Currency</label>
+                    <label
+                      htmlFor="Innvoice Currency"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Innvoice Currency
+                    </label>
                     <Input
                       id="Innvoice Currency"
                       name="Innvoice Currency"
@@ -968,7 +1073,12 @@ export function UploadDocumentForm() {
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Routing" style={{ color: 'black', fontWeight: 'bold', }}>Routing</label>
+                    <label
+                      htmlFor="Routing"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Routing
+                    </label>
                     <Select
                       title="Routing"
                       id="Routing"
@@ -983,36 +1093,61 @@ export function UploadDocumentForm() {
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Comment" style={{ color: 'black', fontWeight: 'bold', }}>Comment</label>
+                    <label
+                      htmlFor="Comment"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Comment
+                    </label>
                     <Input
                       id="Comment"
                       name="Comment"
-                      style={{ width: "180px", height: "30px", }}
+                      style={{ width: "180px", height: "30px" }}
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
                     />
                   </Col>
                 </Row>
 
-                <Row gutter={16} style={{ marginTop: '20px' }}>
+                <Row gutter={16} style={{ marginTop: "20px" }}>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Timecreated" style={{ color: 'black', fontWeight: 'bold' }}>Time Created</label>
+                    <label
+                      htmlFor="Timecreated"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Time Created
+                    </label>
                     <Input
                       id="Timecreated"
                       name="Timecreated"
-                      style={{ width: '200px', height: '30px', paddingRight: '30px' }}
-                      value={timecreated || ''}
+                      style={{
+                        width: "200px",
+                        height: "30px",
+                        paddingRight: "30px",
+                      }}
+                      value={timecreated || ""}
                       onChange={(e) => setTimecreated(e.target.value)}
                     />
                     <CalendarOutlined
-                      style={{ position: 'absolute', top: '30px', right: '-3px', cursor: 'pointer' }}
+                      style={{
+                        position: "absolute",
+                        top: "30px",
+                        right: "-3px",
+                        cursor: "pointer",
+                      }}
                       onClick={handleIconClick}
                     />
                     {isDatePickerVisible && (
                       <DatePicker
                         showTime
                         format="YYYY-MM-DD HH:mm:ss"
-                        style={{ position: 'absolute', zIndex: 1, top: '21px', left: '8px', width: "200px" }}
+                        style={{
+                          position: "absolute",
+                          zIndex: 1,
+                          top: "21px",
+                          left: "8px",
+                          width: "200px",
+                        }}
                         onChange={handleTimecreatedChange}
                         onBlur={() => setIsDatePickerVisible(false)}
                       />
@@ -1020,10 +1155,15 @@ export function UploadDocumentForm() {
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="buyerCode" style={{ color: 'black', fontWeight: 'bold' }}>Buyer Code</label>
+                    <label
+                      htmlFor="buyerCode"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Buyer Code
+                    </label>
                     <Select
                       id="buyerCode"
-                      style={{ width: "190px", }}
+                      style={{ width: "190px" }}
                       value={buyerCode}
                       onChange={(value) => setBuyer(value)}
                       defaultValue="option1"
@@ -1040,35 +1180,50 @@ export function UploadDocumentForm() {
             </Card>
 
             <Card>
-              <Form layout='vertical' >
+              <Form layout="vertical">
                 <Row gutter={12}>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="HSN" style={{ color: 'black', fontWeight: 'bold' }}>HSN Code</label>
+                    <label
+                      htmlFor="HSN"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      HSN Code
+                    </label>
                     <Input
                       id="HSN"
                       name="HSN"
-                      style={{ width: '150px', height: '30px' }}
+                      style={{ width: "150px", height: "30px" }}
                       value={HSN}
                       onChange={(e) => setHSN(e.target.value)}
                     />
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Taxtype" style={{ color: 'black', fontWeight: 'bold' }}>Tax Type</label>
+                    <label
+                      htmlFor="Taxtype"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Tax Type
+                    </label>
                     <Input
                       id="Taxtype"
                       name="Taxtype"
-                      style={{ width: '150px', height: '30px' }}
+                      style={{ width: "150px", height: "30px" }}
                       value={Taxtype}
                       onChange={(e) => setTaxtype(e.target.value)}
                     />
                   </Col>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Taxamount" style={{ color: 'black', fontWeight: 'bold' }}>Tax Amount</label>
+                    <label
+                      htmlFor="Taxamount"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Tax Amount
+                    </label>
                     <Input
                       id="Taxamount"
                       name="Taxamount"
-                      style={{ width: '150px', height: '30px' }}
+                      style={{ width: "150px", height: "30px" }}
                       value={Taxamount}
                       onChange={(e) => setTaxamount(e.target.value)}
                     />
@@ -1077,33 +1232,48 @@ export function UploadDocumentForm() {
 
                 <Row gutter={12} style={{ marginTop: "10px" }}>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Taxpercentage" style={{ color: 'black', fontWeight: 'bold' }}>Tax Percentage</label>
+                    <label
+                      htmlFor="Taxpercentage"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Tax Percentage
+                    </label>
                     <Input
                       id="Taxpercentage"
                       name="Taxpercentage"
-                      style={{ width: '150px', height: '30px' }}
+                      style={{ width: "150px", height: "30px" }}
                       value={Taxpercentage}
                       onChange={(e) => setTaxPercentage(e.target.value)}
                     />
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="unitquantity" style={{ color: 'black', fontWeight: 'bold' }}>Unit Quantity</label>
+                    <label
+                      htmlFor="unitquantity"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Unit Quantity
+                    </label>
                     <Input
                       id="unitquantity"
                       name="unitquantity"
-                      style={{ width: '150px', height: '30px' }}
+                      style={{ width: "150px", height: "30px" }}
                       value={unitquantity}
                       onChange={(e) => setUnitquantity(e.target.value)}
                     />
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="Charge" style={{ color: 'black', fontWeight: 'bold' }}>Charge</label>
+                    <label
+                      htmlFor="Charge"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Charge
+                    </label>
                     <Input
                       id="Charge"
                       name="Charge"
-                      style={{ width: '150px', height: '30px' }}
+                      style={{ width: "150px", height: "30px" }}
                       value={Charge}
                       onChange={(e) => setCharge(e.target.value)}
                     />
@@ -1112,50 +1282,89 @@ export function UploadDocumentForm() {
 
                 <Row gutter={12} style={{ marginTop: "10px" }}>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="quotation" style={{ color: 'black', fontWeight: 'bold' }}>Quotation</label>
+                    <label
+                      htmlFor="quotation"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Quotation
+                    </label>
                     <Input
                       id="quotation"
                       name="quotation"
-                      style={{ width: '150px', height: '30px' }}
+                      style={{ width: "150px", height: "30px" }}
                       value={quotation}
                       onChange={(e) => setQuotation(e.target.value)}
                     />
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label htmlFor="variance" style={{ color: 'black', fontWeight: 'bold' }}>Variance</label>
+                    <label
+                      htmlFor="variance"
+                      style={{ color: "black", fontWeight: "bold" }}
+                    >
+                      Variance
+                    </label>
                     <Input
                       id="variance"
                       name="variance"
-                      style={{ width: '150px', height: '30px' }}
+                      style={{ width: "150px", height: "30px" }}
                       value={variance}
                       onChange={(e) => setVariance(e.target.value)}
                     />
                   </Col>
                 </Row>
 
-                <Row gutter={12} style={{ marginTop: "10px" }}>
-
-
-                </Row>
-
+                <Row gutter={12} style={{ marginTop: "10px" }}></Row>
               </Form>
             </Card>
-            <Row style={{ float: "right" }}>
-              <Button style={{ position: "relative", top: "10px", backgroundColor: "green" }} type="primary" onClick={handleAddToTable}>{isEditing ? buttonText : "Add"}
+            <Row justify="end">
+              <Button
+                style={{
+                  position: "relative",
+                  top: "10px",
+                  backgroundColor: "green",
+                }}
+                type="primary"
+                onClick={handleAddToTable}
+              >
+                {isEditing ? buttonText : "Add"}
               </Button>
-              <Button type="primary" danger style={{ position: "relative", top: "10px", marginLeft: '10px' }} onClick={handleReset}>Reset</Button>
-              <Button type="primary" htmlType="submit" style={{ position: "relative", top: "10px", left: "10PX" }} onClick={onSumbit}>
+              <Button
+                type="primary"
+                danger
+                style={{
+                  position: "relative",
+                  top: "10px",
+                  marginLeft: "10px",
+                }}
+                onClick={handleReset}
+              >
+                Reset
+              </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ position: "relative", top: "10px", left: "10PX" }}
+                onClick={onSumbit}
+              >
                 Submit
               </Button>
             </Row>
-            <Table style={{ position: "relative", top: "25px", right: "25px" }} dataSource={extractedData} columns={columns} />
+            <br></br>
+            <br></br>
+            <br></br>
+
+            <Row style={{ width: 200 }}>
+              {extractedData && extractedData.length > 0 ? (
+                <Table dataSource={extractedData} columns={columns} />
+              ) : (
+                ""
+              )}
+            </Row>
           </Card>
         </div>
       </Form>
-
     </div>
-
   );
 }
 
