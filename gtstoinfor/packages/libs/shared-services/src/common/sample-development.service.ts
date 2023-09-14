@@ -18,19 +18,19 @@ async getAllSampleDevelopment(req? : SampleFilterRequest): Promise<any> {
             id:"1",
           requestNo: "REQ001",
           date: "2023-08-01",
-          location: "Sample Room A",
-          pch: "PCH001",
-          type: "Proto",
-          buyer: "ABC Clothing",
-          styleNo: "STL001",
+          location: "Banglore",
+          pch: "KNT",
+          type: "Proto Sample",
+          buyer: "WALMT001",
+          styleNo: "FB16101B",
           sampleSubType: "T-Shirt",
           style: "Casual",
-          description: "Plain white cotton t-shirt",
+          description: "FB16101B - Boys SS Stripe EOE V-Neck Tee",
           brand: "ABC Clothing Co.",
-          costRef: "TC001",
+          costRef: "410",
           m3StyleNo: "12345",
-          contactNo: "555-555-5555",
-          extn: "123",
+          contactNo: "9993335555",
+          extn: "2867",
           sam: "4.5",
           dmm: "John Doe",
           technician: "Jane Smith",
@@ -71,11 +71,11 @@ async getAllSampleDevelopment(req? : SampleFilterRequest): Promise<any> {
             id:"2",
           requestNo: "REQ002",
           date: "2023-08-02",
-          location: "Sample Room B",
-          pch: "PCH002",
-          type: "Fit Sample",
-          buyer: "XYZ Fashion",
-          styleNo: "STL002",
+          location: "Coimbatore",
+          pch: "LTY",
+          type: "Concept Sample",
+          buyer: "Walmart Store INC.",
+          styleNo: "FB16123A",
           sampleSubType: "Smartphone",
           style: "High-end",
           description: "Latest model smartphone with advanced features",
@@ -128,7 +128,7 @@ async getAllSampleDevelopment(req? : SampleFilterRequest): Promise<any> {
             pch: "PCH003",
             type: "Development",
             buyer: "DEF Apparel",
-            styleNo: "STL003",
+            styleNo: "FB16156T",
             fabricInfo:[
                 {
                 fabricCode :"",
@@ -166,7 +166,7 @@ async getAllSampleDevelopment(req? : SampleFilterRequest): Promise<any> {
             pch: "PCH004",
             type: "Proto",
             buyer: "GHI Fashions",
-            styleNo: "STL004",
+            styleNo: "FB14923A",
             fabricInfo:[
                 {
                 fabricCode :"",
@@ -196,7 +196,6 @@ async getAllSampleDevelopment(req? : SampleFilterRequest): Promise<any> {
                 }
               ]
         },
-        // Add more dummy data objects as needed
       ];
       return dummyData
     // return this.axiosPostCall(this.URL + "/getAllSampleDevelopment")
