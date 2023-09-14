@@ -1027,27 +1027,306 @@ const PPMReport = () => {
   
 },{
   title: 'Net including discounts',
-  dataIndex: '',
+  dataIndex: 'netIncludingDisc',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
   title: 'Net including discounts currency code',
-  dataIndex: '',
+  dataIndex: 'netIncDisCurrency',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
   title: 'Trading Co Net including discounts',
-  dataIndex: '',
+  dataIndex: 'trCoNetIncludingDisc',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
   title: 'Trading Co Net including discounts currency code',
-  dataIndex: '',
+  dataIndex: 'tradingNetCurrencyCode',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
   title: 'Legal PO Price',
   dataIndex: 'price',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
+  
+},
+{
+  title: 'Legal PO Price currency',
+  dataIndex: '',
+  
+},
+{
+  title: 'CO Price',
+  dataIndex: 'coPrice',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
+  
+},{
+  title: 'CO Price currency',
+  dataIndex: '',
+  
+},
+{
+  title: 'Diff of Price',
+  dataIndex: '',
+  
+},
+{
+  title: 'Diff of Price currency',
+  dataIndex: '',
+  
+},
+{
+  title: 'CRM CO QTY',
+  dataIndex: '',
+  
+},{
+  title: 'Legal PO QTY',
+  dataIndex: 'quantity',
+  
+},
+{
+  title: 'Diff of Quantity',
+  dataIndex: '',
+  
+},
+{
+  title: 'Allowed Excess Ship Qty',
+  dataIndex: '',
+  
+},
+{
+  title: 'Actual Shipped Qty',
+  dataIndex: 'actual_shipped_qty',
+  
+},
+{
+  title: 'Actual Ship %',
+  dataIndex: '',
+  
+},
+{
+  title: 'VAS - Size',
+  dataIndex: 'VASSize',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
+  
+},
+{
+  title: 'Item Vas Text',
+  dataIndex: 'itemVasText',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
+  
+},
+{
+  title: 'Item Vas Text in PDF PO',
+  dataIndex: '',
+  
+},
+{
+  title: 'Diff of Item Vas Text',
+  dataIndex: '',
+  
+},
+{
+  title: 'Item Text',
+  dataIndex: 'itemText',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
+  
+},
+{
+  title: 'Hanger PO',
+  dataIndex: 'hanger',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
+  
+},
+{
+  title: 'Change Register',
+  dataIndex: 'displayName',
+  align: 'center',
+},
+
+    )
+    exportingColumns.push(
+    
+      {
+        title: 'Trading Co PO Number',
+        dataIndex: 'tradingCoPoNumber',
+        render: (text, record) => {
+            if (!text || text.trim() === '') {
+                return '-';
+            } else {
+                return text;
+            }
+        },
+    },
+    {
+      title: 'Gross Price/FOB',
+      dataIndex: 'grossPriceFOB',
+      render: (text, record) => {
+          if (!text || text.trim() === '') {
+              return '-';
+          } else {
+              return text;
+          }
+      },
+  },
+  {
+    title: 'Gross Price/FOB currency code',
+    dataIndex: 'fobCurrCode',
+    render: (text, record) => {
+        if (!text || text.trim() === '') {
+            return '-';
+        } else {
+            return text;
+        }
+    },
+},
+{
+  title: 'Buyer Confirmed Gross Price/FOB',
+  dataIndex: '',
+  // render: (text, record) => {
+  //     if (!text || text.trim() === '') {
+  //         return '-';
+  //     } else {
+  //         return text;
+  //     }
+  // },
+},
+{
+  title: 'Buyer Confirmed Gross Price/FOB Currency Code',
+  dataIndex: '',
+ 
+},{
+  title: 'Diff of Price',
+  dataIndex: '',
+  
+},
+{
+  title: 'Diff of Price Currency',
+  dataIndex: '',
+  
+},{
+  title: 'Net including discounts',
+  dataIndex: 'netIncludingDisc',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
+  
+},
+{
+  title: 'Net including discounts currency code',
+  dataIndex: 'netIncDisCurrency',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
+  
+},
+{
+  title: 'Trading Co Net including discounts',
+  dataIndex: 'trCoNetIncludingDisc',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
+  
+},
+{
+  title: 'Trading Co Net including discounts currency code',
+  dataIndex: 'tradingNetCurrencyCode',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
+  
+},
+{
+  title: 'Legal PO Price',
+  dataIndex: 'price',
+  render: (text, record) => {
+    if (!text || text.trim() === '') {
+        return '-';
+    } else {
+        return text;
+    }
+},
   
 },
 {
@@ -1080,7 +1359,7 @@ const PPMReport = () => {
   
 },{
   title: 'Legal PO QTY',
-  dataIndex: '',
+  dataIndex: 'quantity',
   
 },
 {
@@ -1095,7 +1374,7 @@ const PPMReport = () => {
 },
 {
   title: 'Actual Shipped Qty',
-  dataIndex: '',
+  dataIndex: 'actual_shipped_qty',
   
 },
 {
@@ -1105,12 +1384,12 @@ const PPMReport = () => {
 },
 {
   title: 'VAS - Size',
-  dataIndex: '',
+  dataIndex: 'VASSize',
   
 },
 {
   title: 'Item Vas Text',
-  dataIndex: '',
+  dataIndex: 'itemVasText',
   
 },
 {
@@ -1125,12 +1404,12 @@ const PPMReport = () => {
 },
 {
   title: 'Item Text',
-  dataIndex: '',
+  dataIndex: 'itemText',
   
 },
 {
   title: 'Hanger PO',
-  dataIndex: '',
+  dataIndex: 'hanger',
   
 },
 {
@@ -1140,7 +1419,6 @@ const PPMReport = () => {
 },
 
     )
-
     return (
       <>
 
