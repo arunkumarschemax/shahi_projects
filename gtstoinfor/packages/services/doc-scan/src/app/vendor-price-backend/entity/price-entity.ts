@@ -9,9 +9,9 @@ export class PriceEntity extends BaseEntity {
     @Column("varchar", {
         nullable: true,
         length: 50,
-        name: "headOfChargers"
+        name: "headOfCharges"
     })
-    headOfChargers: string;
+    headOfCharges: string;
 
     @Column("varchar", {
         nullable: true,

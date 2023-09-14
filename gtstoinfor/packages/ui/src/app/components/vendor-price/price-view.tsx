@@ -30,9 +30,9 @@ export function PriceView() {
 
   const columns = [
     {
-      title: 'Head Of Chargers',
-      dataIndex: 'headOfChargers',
-      key: 'headOfChargers',
+      title: 'Head Of Charges',
+      dataIndex: 'headOfCharges',
+      key: 'headOfCharges',
     },
     {
       title: 'Per Unit',

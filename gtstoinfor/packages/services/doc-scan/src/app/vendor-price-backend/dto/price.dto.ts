@@ -5,7 +5,7 @@ export class PriceDto {
   priceId: number;
 
   @ApiProperty()
-  headOfChargers: string;
+  headOfCharges: string;
 
   @ApiProperty()
   perUnit: string;

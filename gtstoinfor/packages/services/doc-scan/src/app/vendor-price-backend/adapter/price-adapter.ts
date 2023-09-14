@@ -6,7 +6,7 @@ import { PriceDto } from "../dto/price.dto";
 export class PriceAdapter {
     convertEntityToDto(entity: PriceEntity): PriceDto {
         const dto = new PriceDto();
-        dto.headOfChargers = entity.headOfChargers;
+        dto.headOfCharges = entity.headOfCharges;
         dto.perUnit = entity.perUnit;
         dto.vendor = entity.vendor;
         dto.nsh = entity.nsh;
@@ -23,7 +23,7 @@ export class PriceAdapter {
 
     convertDtoToEntity(dto: PriceDto): PriceEntity {
         const entity = new PriceEntity();
-        entity.headOfChargers = dto.headOfChargers;
+        entity.headOfCharges = dto.headOfCharges;
         entity.perUnit = dto.perUnit;
         entity.dpLogistics = dto.dpLogistics;
         entity.nsh = dto.nsh;
