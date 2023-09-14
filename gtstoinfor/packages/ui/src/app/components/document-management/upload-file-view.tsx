@@ -291,7 +291,7 @@ const UploadFileGrid = () =>{
             return (<div style={{alignContent:'center'}}>
                <Form.Item  name={rowData.PO} style={{alignItems: 'center'}}>
                  <Button type="primary" 
-                disabled ={rowData.poStatus == 'In Progress' ? false:true}
+                disabled ={rowData.poStatus == 'In Progress' ? true:false}
                 onClick={() => mergeAndDownloadPDFs(rowData.url, rowData.PO)}>
               <DownloadOutlined/>
               </Button>

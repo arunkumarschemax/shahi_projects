@@ -19,7 +19,11 @@ export class DocumentsListRequest{
     uid:any[]
     @ApiProperty()
     status:string;
-    constructor(documentsListId:number,documentCategoryId:number,roleId:number,poNumber:string,fileName:string,orderId:number, file:any[],uid:any[],status:string){
+    @ApiProperty()
+    createdUser:string
+    constructor(documentsListId:number,documentCategoryId:number,roleId:number,poNumber:string,fileName:string,orderId:number, file:any[],uid:any[],status:string,
+    createdUser?:string
+        ){
         this.documentsListId = documentsListId;
         this.documentCategoryId = documentCategoryId;
         this.file = file;
@@ -29,5 +33,6 @@ export class DocumentsListRequest{
         this.orderId=orderId
         this.uid=uid
         this.status=status
+        this.createdUser=createdUser
     }
 }
