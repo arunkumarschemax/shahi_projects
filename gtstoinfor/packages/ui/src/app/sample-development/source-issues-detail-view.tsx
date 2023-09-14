@@ -27,6 +27,10 @@ export const SourceIssuesDetailView=()=>{
       <Card title="Request No" size="small" >
       <Descriptions size='small'>
          <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>
+         <DescriptionsItem label='Consumption Code'>{data[0]?.consumptionCode}</DescriptionsItem>
+         <DescriptionsItem label='Issued Date'>{data[0]?.issuingdate}</DescriptionsItem>
+         <DescriptionsItem label='Sample Indent Date'>{data[0]?.sampleIndentDate}</DescriptionsItem>
+         <DescriptionsItem label='Po Number'>{data[0]?.poNumber}</DescriptionsItem>
          <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>
          <DescriptionsItem label='User'>{data[0]?.user}</DescriptionsItem>
          <DescriptionsItem label='Buyer'>{data[0]?.buyer}</DescriptionsItem>

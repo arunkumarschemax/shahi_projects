@@ -88,7 +88,10 @@ async getSourceIssueByID():Promise<any>{
             styleNo: "STL001",
             sampleType: "T-Shirt",
             sampleSubType: "T-Shirt",
-
+            consumptionCode:"CON007",
+            issuingdate:"2023-08-10",
+            sampleIndentDate:"2023-08-10",
+            poNumber:"PO007",
             style: "Casual",
             description: "Plain white cotton t-shirt",
             brand: "Nike",
