@@ -454,7 +454,7 @@ export class OrdersService {
     async getuploadeOrdersdata(req?:OrdersReq):Promise<CommonResponseModel>{
         try{
             let query
-             query='select updated_user AS uploadedUser,file_name as fileName,file_path as filePath,status,date(created_at) as createdAt,DATE_FORMAT(created_at, "%Y-%m-%d %H") AS DateAndHours from file_upload where id>0 and status="Success"'
+             query='select updated_user AS uploadedUser,file_name as fileName,file_path as filePath,status,(created_at) as createdAt,DATE_FORMAT(created_at, "%Y-%m-%d %H-%m") AS DateAndHours from file_upload where id>0 and status="Success"'
             if(req.status){
                 query=query+' and status="'+req.status+'"'    
             }
@@ -463,6 +463,7 @@ export class OrdersService {
                 // query =query+' and DATE_FORMAT(created_at, "%Y-%m-%d %H")="'+req.fromDate+'"'
 
             }
+            query = query+ ' order by date(created_at) desc'
             const result = await this.fileUploadRepo.query(query)
             if(result){
                 return new CommonResponseModel(true,1,'files retrived sucessfully...',result)
