@@ -1,7 +1,7 @@
-import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { ArrowDownOutlined, ArrowUpOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { DpomApproveRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
-import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, message } from "antd";
+import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, Tooltip, message } from "antd";
 import moment from "moment";
 import React, { useRef } from "react";
 import { useEffect, useState } from "react";
@@ -232,7 +232,75 @@ export function OrderAcceptance() {
         },
         {
             title: 'Total Order Quantity',
-            dataIndex: 'total_item_qty'
+            dataIndex: 'total_item_qty',
+            render: (text, record) => {
+                return (record.totalItemQty_OLD ?
+                    (
+                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.totalItemQty_OLD} Revised Date:  ${record.totalItemQty_NEW} Difference :  `}>
+                            {record.totalItemQty_OLD < record.totalItemQty_NEW ? <span style={{ color: 'green' }}>{record.totalItemQty_NEW}</span> : ''}
+                            {record.totalItemQty_OLD > record.totalItemQty_NEW ? <span style={{ color: 'red' }}>{record.totalItemQty_NEW}</span> : ''}
+                            &nbsp;&nbsp;
+                            <span>
+                                {record.totalItemQty_OLD < record.totalItemQty_NEW ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                            </span>
+                        </Tooltip>
+                    ) : record.total_item_qty)
+            }
+        },
+        {
+            title: 'MRGAC',
+            dataIndex: 'mrgac',
+            render: (text, record) => {
+                return (record.MRGAC_OLD ?
+                    (
+                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.MRGAC_OLD).format('MM/DD/YYYY')} Revised Date:  ${moment(record.MRGAC_NEW).format('MM/DD/YYYY')} Difference : ${Math.floor((new Date(moment(record.MRGAC_NEW).format('MM/DD/YYYY')).getTime() - new Date(moment(record.MRGAC_NEW).format('MM/DD/YYYY')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
+                            {moment(record.MRGAC_OLD).format('MM/DD/YYYY') < moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'green' }}>{moment(record.MRGAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+                            {moment(record.MRGAC_OLD).format('MM/DD/YYYY') > moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'red' }}>{moment(record.MRGAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+                            &nbsp;&nbsp;
+                            <span>
+                                {moment(record.MRGAC_OLD).format('MM/DD/YYYY') < moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                            </span>
+                        </Tooltip>
+                    ) : (record.mrgac ? record.mrgac : '-'))
+            }
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'gac',
+            render: (text, record) => {
+                return (record.GAC_OLD ?
+                    (
+                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.GAC_OLD).format('MM/DD/YYYY')} Revised Date:  ${moment(record.GAC_NEW).format('MM/DD/YYYY')}Difference : ${Math.floor((new Date(moment(record.GAC_NEW).format('MM/DD/YYYY')).getTime() - new Date(moment(record.GAC_NEW).format('MM/DD/YYYY')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
+                            {moment(record.GAC_OLD).format('MM/DD/YYYY') < moment(record.GAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'green' }}>{moment(record.GAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+                            {moment(record.GAC_OLD).format('MM/DD/YYYY') > moment(record.GAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'red' }}>{moment(record.GAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+                            &nbsp;&nbsp;
+                            <span>
+                                {moment(record.GAC_OLD).format('MM/DD/YYYY') < moment(record.GAC_NEW).format('MM/DD/YYYY') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                            </span>
+                        </Tooltip>
+                    ) : record.gac)
+            }
+        },
+        {
+            title: 'Gross Price',
+            dataIndex: 'gross_price_fob',
+            render: (text, record) => {
+                return (record.grossPriceFOB_OLD ?
+                    (
+                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '140px' }} title={`Previous Price:  ${record.grossPriceFOB_OLD} Revised Price:  ${record.grossPriceFOB_NEW} Difference : ${(parseFloat(record.grossPriceFOB_NEW) - parseFloat(record.grossPriceFOB_OLD)).toFixed(2)} `}>
+                            {record.grossPriceFOB_OLD < record.grossPriceFOB_NEW ? <span style={{ color: 'green' }}>{record.grossPriceFOB_NEW}</span> : ''}
+                            {record.grossPriceFOB_OLD > record.grossPriceFOB_NEW ? <span style={{ color: 'red' }}>{record.grossPriceFOB_NEW}</span> : ''}
+                            &nbsp;&nbsp;
+                            <span>
+                                {record.grossPriceFOB_OLD < record.grossPriceFOB_NEW ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                            </span>
+                        </Tooltip>
+                    ) : record.gross_price_fob)
+            }
+        },
+        {
+            title: 'Gross Price Currency',
+            dataIndex: 'fob_currency_code'
         },
         {
             title: 'Shipping Type',
@@ -268,7 +336,7 @@ export function OrderAcceptance() {
 
     return (
         <>
-            <Card title="Nike Orders Register" headStyle={{ fontWeight: 'bold' }}>
+            <Card title="Nike Orders Register - Unaccepted Orders" headStyle={{ fontWeight: 'bold' }}>
                 <Form
                     onFinish={getOrderAcceptanceData}
                     form={form}
@@ -291,19 +359,6 @@ export function OrderAcceptance() {
                                         return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
                                     })
                                     }
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
-                            <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
-                                <Select
-                                    showSearch
-                                    placeholder="Select Status"
-                                    optionFilterProp="children"
-                                    allowClear mode='multiple'>
-                                    <Option value="Accepted">ACCEPTED</Option>
-                                    <Option value="Unaccepted">UNACCEPTED</Option>
-                                    {/* <Option value="Closed">CLOSED</Option> */}
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -351,6 +406,7 @@ export function OrderAcceptance() {
                             setPageSize(pageSize);
                         },
                     }}
+                    scroll={{ x: 'max-content' }}
                 >
                 </Table>
             </Card>

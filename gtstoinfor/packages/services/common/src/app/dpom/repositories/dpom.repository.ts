@@ -586,26 +586,40 @@ export class DpomRepository extends Repository<DpomEntity> {
     }
 
     async getOrderAcceptanceDat(req: nikeFilterRequest): Promise<any[]> {
-        let query = this.createQueryBuilder('dpom')
-            .select(`dpom.*`)
-            .where(`dpom_item_line_status IN('Accepted','Unaccepted')`)
-            .orderBy(`CASE WHEN dpom.dpom_item_line_status = 'Unaccepted' THEN 0 ELSE 1 END`, 'ASC')
-            .addOrderBy('dpom.po_number', 'ASC')
-            .addOrderBy('dpom.po_line_item_number', 'ASC')
-            .addOrderBy('dpom.schedule_line_item_number', 'ASC')
+        let query = this.createQueryBuilder('d')
+            .select(` d.po_number, d.dpom_item_line_status, d.po_line_item_number, d.schedule_line_item_number, d.size_qty, d.size_description, d.document_date, d.plant_name, d.purchase_group_name, d.product_code, d.category_desc, d.shipping_type,
+            d.gross_price_fob, d.fob_currency_code, d.mrgac, d.gac, d.total_item_qty,
+            MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.old_val END) AS MRGAC_OLD,
+            MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.new_val END) AS MRGAC_NEW,
+            MAX(CASE WHEN df.display_name = 'totalItemQty' THEN df.new_val END) AS totalItemQty_NEW,
+            MAX(CASE WHEN df.display_name = 'totalItemQty' THEN df.old_val END) AS totalItemQty_OLD,
+            MAX(CASE WHEN df.display_name = 'FOBCurrencyCode' THEN df.new_val END) AS FOBCurrencyCode_NEW,
+            MAX(CASE WHEN df.display_name = 'FOBCurrencyCode' THEN df.old_val END) AS FOBCurrencyCode_OLD,
+            MAX(CASE WHEN df.display_name = 'grossPriceFOB' THEN df.old_val END) AS grossPriceFOB_OLD,
+            MAX(CASE WHEN df.display_name = 'grossPriceFOB' THEN df.new_val END) AS grossPriceFOB_NEW,
+            MAX(CASE WHEN df.display_name = 'GAC' THEN df.old_val END) AS GAC_OLD,
+            MAX(CASE WHEN df.display_name = 'GAC' THEN df.new_val END) AS GAC_NEW,
+            MAX(CASE WHEN df.display_name = 'trCoNetIncludingDisc' THEN df.old_val END) AS trCoNetIncludingDisc_OLD,
+            MAX(CASE WHEN df.display_name = 'trCoNetIncludingDisc' THEN df.new_val END) AS trCoNetIncludingDisc_OLD`)
+            .leftJoin(DpomDifferenceEntity, 'df', 'df.po_number = d.po_number AND df.po_line_item_number = d.po_line_item_number')
+            .where(` d.dpom_item_line_status = 'Unaccepted'`)
+        // .orderBy(`CASE WHEN dpom.dpom_item_line_status = 'Unaccepted' THEN 0 ELSE 1 END`, 'ASC')
         if (req.documentStartDate !== undefined) {
-            query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
+            query.andWhere(`Date(d.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
         }
         if (req.productCode !== undefined) {
-            query.andWhere(`dpom.product_code ='${req.productCode}'`)
+            query.andWhere(`d.product_code ='${req.productCode}'`)
         }
         if (req.poandLine !== undefined) {
-            query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
+            query.andWhere(`d.po_and_line ='${req.poandLine}'`)
         }
         if (req.DPOMLineItemStatus !== undefined) {
-            query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+            query.andWhere(`d.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
         }
-
+        query = query.orderBy(' d.po_number', 'ASC')
+            .addOrderBy(' d.po_line_item_number', 'ASC')
+            .addOrderBy(' d.schedule_line_item_number', 'ASC')
+            .groupBy(` d.po_number, d.po_line_item_number, d.schedule_line_item_number`)
         return await query.getRawMany();
     }
 
