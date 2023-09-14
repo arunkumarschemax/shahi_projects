@@ -3,6 +3,7 @@ import { Form, Input, Button, message, Row, Col, Card, Select } from 'antd';
 import { AllPriceDto } from 'packages/libs/shared-models/src/price-model';
 import { useNavigate } from 'react-router-dom';
 import { PricesService, VendorService } from '@project-management-system/shared-services';
+import { UndoOutlined } from '@ant-design/icons';
 
 const PriceForm = () => {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ const PriceForm = () => {
 
   const onFinish = (values) => {
     console.log(values, "values");
-    const req = new AllPriceDto(values.headOfChargers, values.perUnit, values.dpLogistics,values.vendor,values.nsh,values.ksr,values.unitPrice);
+    const req = new AllPriceDto(values.headOfChargers, values.perUnit, values.dpLogistics, values.vendor, values.nsh, values.ksr, values.unitPrice);
     service
       .postdata(req)
       .then((res) => {
@@ -79,17 +80,17 @@ const PriceForm = () => {
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        labelCol={{ xs: 8, sm: 8, md: 8, lg: 8, xl: 8 }} 
-        wrapperCol={{ xs: 16, sm: 16, md: 16, lg: 16, xl: 16 }} 
+        labelCol={{ xs: 8, sm: 8, md: 8, lg: 8, xl: 8 }}
+        wrapperCol={{ xs: 16, sm: 16, md: 16, lg: 16, xl: 16 }}
       >
         <Row gutter={24}>
-        <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 7}}
-              lg={{ span: 7}}
-              xl={{ span: 7}}
-            >
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 7 }}
+            lg={{ span: 7 }}
+            xl={{ span: 7 }}
+          >
             <Form.Item
               label="Vendor Name"
               name="vendor"
@@ -107,12 +108,12 @@ const PriceForm = () => {
 
 
           <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 7}}
-              lg={{ span: 7 }}
-              xl={{ span: 7 }}
-            >
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 7 }}
+            lg={{ span: 7 }}
+            xl={{ span: 7 }}
+          >
             <Form.Item
               label="Head Of Charges"
               name="headOfChargers"
@@ -123,17 +124,17 @@ const PriceForm = () => {
           </Col>
 
 
-          
+
 
 
 
           <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 7}}
-              lg={{ span: 7 }}
-              xl={{ span: 7 }}
-            >
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 7 }}
+            lg={{ span: 7 }}
+            xl={{ span: 7 }}
+          >
             <Form.Item
               label="Per Unit"
               name="perUnit"
@@ -143,12 +144,12 @@ const PriceForm = () => {
             </Form.Item>
           </Col>
           <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 7}}
-              lg={{ span: 7 }}
-              xl={{ span: 7 }}
-            >
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 7 }}
+            lg={{ span: 7 }}
+            xl={{ span: 7 }}
+          >
             <Form.Item
               label="Dp Logistics"
               name="dpLogistics"
@@ -158,12 +159,12 @@ const PriceForm = () => {
             </Form.Item>
           </Col>
           <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 7}}
-              lg={{ span: 7 }}
-              xl={{ span: 7 }}
-            >
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 7 }}
+            lg={{ span: 7 }}
+            xl={{ span: 7 }}
+          >
             <Form.Item
               label="NSH"
               name="nsh"
@@ -173,12 +174,12 @@ const PriceForm = () => {
             </Form.Item>
           </Col>
           <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 7}}
-              lg={{ span: 7 }}
-              xl={{ span: 7 }}
-            >
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 7 }}
+            lg={{ span: 7 }}
+            xl={{ span: 7 }}
+          >
             <Form.Item
               label="KSR"
               name="ksr"
@@ -188,12 +189,12 @@ const PriceForm = () => {
             </Form.Item>
           </Col>
           <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 7}}
-              lg={{ span: 7 }}
-              xl={{ span: 7 }}
-            >
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 7 }}
+            lg={{ span: 7 }}
+            xl={{ span: 7 }}
+          >
             <Form.Item
               label="Unit Price"
               name="unitPrice"
@@ -202,15 +203,26 @@ const PriceForm = () => {
               <Input type="number" />
             </Form.Item>
           </Col>
-          
+
         </Row>
 
         <Form.Item>
-          <Button type="primary" style={{ float: "right" }} danger onClick={handleReset}>
-            Reset
-          </Button>
-          <Button type="primary" style={{ float: "right", marginRight: '10px' }} htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="ant-submit-btn"
+            style={{ position: "relative", float: "left", marginLeft: 10 }}
+          >
             Submit
+          </Button>
+          <Button
+            type="default"
+            danger
+            icon={<UndoOutlined />}
+            onClick={handleReset}
+            style={{ position: "relative", float: "left", marginLeft: 10 }}
+          >
+            Reset
           </Button>
         </Form.Item>
       </Form>
