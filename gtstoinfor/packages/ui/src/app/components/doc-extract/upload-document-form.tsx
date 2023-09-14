@@ -226,6 +226,7 @@ export function UploadDocumentForm() {
     const matches = text.match(vendorregex);
     const extractedvendor = matches || [];
     setIfscCodes(extractedvendor);
+    console.log(extractedvendor)
     return extractedvendor;
   };
 
@@ -694,24 +695,7 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    const req = new AllScanDto(
-      gstNumbers,
-      vendor,
-      invoiceDate,
-      Cgst,
-      Igst,
-      Sgst,
-      Innvoicenum,
-      Innvoiceamount,
-      Innvoicecurrency,
-      routing,
-      comment,
-      timecreated,
-      buyerName,
-      financialyear,
-      JSON.parse(localStorage.getItem("currentUser")).user.userName,
-      extractedData
-    );
+    const req = new AllScanDto(gstNumbers,vendor,invoiceDate,Cgst,Igst,Sgst,Innvoicenum,Innvoiceamount,Innvoicecurrency,routing,comment,timecreated,buyerName,financialyear,JSON.parse(localStorage.getItem("currentUser")).user.userName,extractedData,"");
 
     console.log(req, "submit");
     service
