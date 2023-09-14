@@ -259,7 +259,6 @@ const FactoryPPMReport = () => {
         service.getPpmPoNumberForFactory().then(res => {
             setPoNumber(res.data)
         })
-        console.log(poNumber, "test")
     }
 
     const getData = () => {
@@ -309,7 +308,6 @@ const FactoryPPMReport = () => {
             req.DPOMLineItemStatus = selectedLineItemStatus;
         }
 
-        console.log(req, 'request')
         service.getFactoryReportData(req)
             .then(res => {
                 if (res.status) {
@@ -324,7 +322,6 @@ const FactoryPPMReport = () => {
                 }
             })
             .catch(err => {
-                console.error(err);
             });
     };
 
@@ -383,14 +380,14 @@ const FactoryPPMReport = () => {
             { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
             {
                 title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text, record) => {
-                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-'
+                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('DD/MM/YYYY') : '-'
                 }
             },
             { title: 'Item', dataIndex: 'item' },
             { title: 'Factory', dataIndex: 'factory' },
             {
                 title: 'Document Date', dataIndex: 'documentDate', render: (text, record) => {
-                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
+                    return record.documentDate ? moment(record.documentDate).format('DD/MM/YYYY') : '-'
                 }
             },
             { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber', align: 'center' },
@@ -410,7 +407,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => {
-                    return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-'
+                    return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('DD/MM/YYYY') : '-'
                 }
             },
             { title: 'Plan No', dataIndex: 'planNo' },
@@ -444,17 +441,17 @@ const FactoryPPMReport = () => {
             { title: 'GAC', dataIndex: 'GAC' },
             {
                 title: 'Truck Out Date', dataIndex: 'truckOutDate', render: (text, record) => {
-                    return record.truckOutDate ? moment(record.truckOutDate).format('MM/DD/YYYY') : '-'
+                    return record.truckOutDate ? moment(record.truckOutDate).format('DD/MM/YYYY') : '-'
                 }
             },
             {
                 title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', render: (text, record) => {
-                    return record.originReceiptDate ? moment(record.originReceiptDate).format('MM/DD/YYYY') : '-'
+                    return record.originReceiptDate ? moment(record.originReceiptDate).format('DD/MM/YYYY') : '-'
                 }
             },
             {
                 title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', render: (text, record) => {
-                    return record.factoryDeliveryActDate ? moment(record.factoryDeliveryActDate).format('MM/DD/YYYY') : '-'
+                    return record.factoryDeliveryActDate ? moment(record.factoryDeliveryActDate).format('DD/MM/YYYY') : '-'
                 }
             },
             { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
@@ -500,11 +497,25 @@ const FactoryPPMReport = () => {
             {
                 title: 'Item',
                 dataIndex: 'item',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                }
                 // ...getColumnSearch('item'),
             },
             {
                 title: 'Factory',
                 dataIndex: 'factory',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                }
                 // ...getColumnSearch('factory'),
             },
 
@@ -513,7 +524,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'documentDate',
                 className: "right-column",
                 render: (text, record) => {
-                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-';
+                    return record.documentDate ? moment(record.documentDate).format('DD/MM/YYYY') : '-';
                 },
             },
             {
@@ -580,12 +591,19 @@ const FactoryPPMReport = () => {
                 dataIndex: 'coFinalApprovalDate',
                 className: "right-column",
                 render: (text, record) => {
-                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
+                    return record.documentDate ? moment(record.documentDate).format('DD/MM/YYYY') : '-'
                 }
             },
             {
                 title: 'Plan No',
                 dataIndex: 'planNo',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                }
             },
             {
                 title: 'Lead Time',

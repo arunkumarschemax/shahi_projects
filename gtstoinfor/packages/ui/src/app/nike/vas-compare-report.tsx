@@ -373,11 +373,13 @@ const VASChangesCompareGrid = () => {
         },
         {
             title: 'OGAC',
-            dataIndex: 'OGAC'
+            dataIndex: 'OGAC',        render: (text) => moment(text).format('DD/MM/YYYY')
+
         },
         {
             title: 'GAC',
-            dataIndex: 'GAC'
+            dataIndex: 'GAC',        render: (text) => moment(text).format('DD/MM/YYYY')
+
         },
         {
             title: 'Change from Direct Ship Sales Order Number',

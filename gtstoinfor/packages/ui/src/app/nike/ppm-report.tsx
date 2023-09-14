@@ -295,7 +295,7 @@ const PPMReport = () => {
 
     exportingColumns = [
       { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text) => moment(text).format('MM/DD/YYYY') },
+      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text) => moment(text).format('DD/MM/YYYY') },
       { title: 'Item', dataIndex: 'Item' },
       { title: 'Factory', dataIndex: 'Factory',render: (text, record) => {
         if (!text || text.trim() === '') {
@@ -304,7 +304,7 @@ const PPMReport = () => {
             return text;
         }} },
       { title: 'PCD', dataIndex: 'PCD' },
-      { title: 'Document Date', dataIndex: 'documentDate', render: (text) => moment(text).format('MM/DD/YYYY') },
+      { title: 'Document Date', dataIndex: 'documentDate', render: (text) => moment(text).format('DD/MM/YYYY') },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
       { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
       { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
@@ -319,7 +319,7 @@ const PPMReport = () => {
       { title: 'Planning Season Code', dataIndex: 'planningSeasonCode' },
       { title: 'Planning Season Year', dataIndex: 'planningSeasonYear' },
       { title: 'Co', dataIndex: 'customerOrder' },
-      { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => { return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-' } },
+      { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => { return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('DD/MM/YYYY') : '-' } },
       { title: 'Plan No', dataIndex: 'planNo' },
       { title: 'Lead Time', dataIndex: 'leadTime' },
       { title: 'Category', dataIndex: 'categoryCode' },
@@ -345,9 +345,9 @@ const PPMReport = () => {
       { title: 'Diff of Ship to Address', dataIndex: '' },
       { title: 'CAB Code', dataIndex: 'CABcode' },
       { title: 'Final Destination', dataIndex: '' },
-      { title: 'MRGAC', dataIndex: 'MRGAC', render: (text, record) => { return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-' } },
-      { title: 'OGAC', dataIndex: 'OGAC', render: (text, record) => { return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-' } },
-      { title: 'GAC', dataIndex: 'GAC', render: (text, record) => { return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-' } },
+      { title: 'MRGAC', dataIndex: 'MRGAC', render: (text, record) => { return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-' } },
+      { title: 'OGAC', dataIndex: 'OGAC', render: (text, record) => { return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-' } },
+      { title: 'GAC', dataIndex: 'GAC', render: (text, record) => { return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-' } },
       { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
       { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' }, 
       { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
@@ -408,7 +408,7 @@ const PPMReport = () => {
       {
         title: 'Last Modified Date',
         dataIndex: 'lastModifiedDate',
-        render: (text) => moment(text).format('MM/DD/YYYY')
+        render: (text) => moment(text).format('DD/MM/YYYY')
       },
       {
         title: 'Item',
@@ -445,7 +445,7 @@ const PPMReport = () => {
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
-        render: (text) => moment(text).format('MM/DD/YYYY')
+        render: (text) => moment(text).format('DD/MM/YYYY')
       },
       {
         title: 'Purchase Order Number',
@@ -536,7 +536,7 @@ const PPMReport = () => {
         dataIndex: 'coFinalApprovalDate',
         className: "right-column",
         render: (text, record) => {
-            return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
+            return record.documentDate ? moment(record.documentDate).format('DD/MM/YYYY') : '-'
         }
     },
     {
@@ -700,17 +700,17 @@ const PPMReport = () => {
       {
         title: "MRGAC",
         dataIndex: 'MRGAC', render: (text, record) => {
-          return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
+          return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-';
         },
       },
       {
         title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
-          return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-';
+          return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-';
         },
       },
       {
         title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
-          return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
+          return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
         },
       },
     {

@@ -204,39 +204,36 @@ export function OrderAcceptance() {
         {
             title: 'Document Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('MM/DD/YYYY'),
+            render: (text) => moment(text).format('DD/MM/YYYY'),
         },
         {
             title: 'Aging',
             dataIndex: '',
             render: (text, record) => {
-                const documentDate = moment(record.document_date).format('MM/DD/YYYY');
+                const documentDate = moment(record.document_date);
+
                 const today = moment();
                 const aging = today.diff(documentDate, 'days');
                 return aging;
             },
             sorter: (a, b) => {
-                const aAging = a['document_date']; // Assuming 'document_date' is a string representing the date
-                const bAging = b['document_date']; // Assuming 'document_date' is a string representing the date
-
-                // Handle cases where one or both values are null (invalid)
-                if (aAging === null && bAging === null) {
+                const aAging = moment(a['document_date']);
+                const bAging = moment(b['document_date']);
+            
+                if (!aAging.isValid() && !bAging.isValid()) {
                     return 0;
-                } else if (aAging === null) {
+                } else if (!aAging.isValid()) {
                     return 1;
-                } else if (bAging === null) {
+                } else if (!bAging.isValid()) {
                     return -1;
                 }
-
-                // Convert the aging values to numbers
-                const aAgingValue = parseInt(aAging);
-                const bAgingValue = parseInt(bAging);
-
-                return aAgingValue - bAgingValue;
+            
+                return aAging.diff(bAging, 'days');
             },
-            sortOrder: null
-        },
-        {
+            
+           // sortOrder: null
+        }
+        ,{
             title: 'Plant Name',
             dataIndex: 'plant_name'
         },
@@ -254,13 +251,34 @@ export function OrderAcceptance() {
         },
         {
             title: 'Size',
-            dataIndex: 'size_description'
+            dataIndex: 'size_description',
+            render: (text, record) => {
+                if (typeof text === 'string' && text.trim() === '') {
+                    return '-';
+                } else if (typeof text === 'undefined' || text === null) {
+                    return '-'; 
+                } else {
+                    return text;
+                }
+            },
         },
         {
             title: 'Order Quantity',
-            dataIndex: 'size_qty'
-        },
-        {
+            dataIndex: 'size_qty',
+            render: (text, record) => {
+                if (typeof text === 'string' && text.trim() === '') {
+                    return '-';
+                } else if (typeof text === 'undefined' || text === null) {
+                    return '-'; 
+                } else {
+                    return text;
+                }
+            },
+        }
+        
+        
+        
+        ,{
             title: 'Total Order Quantity',
             dataIndex: 'total_item_qty',
             render: (text, record) => {
@@ -425,7 +443,7 @@ export function OrderAcceptance() {
                 >
                 </Table> */}
 
-                <Table
+                 <Table
                     columns={columns}
                     dataSource={filterData.length > 0 ? filterData : data}
                     bordered
@@ -438,7 +456,10 @@ export function OrderAcceptance() {
                     }}
                     scroll={{ x: 'max-content' }}
                 >
-                </Table>
+                </Table> 
+                
+
+
             </Card>
         </>
     )
