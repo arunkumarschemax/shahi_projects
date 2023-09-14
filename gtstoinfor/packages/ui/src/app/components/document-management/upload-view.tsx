@@ -257,7 +257,10 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     // Display a success message
     message.success(`Downloading ${file.name}`);
 };
+  const specialCharactersRegex = /[!@#$%^&*+{}\[\]:;<>,?~\\]/;
+
   const gstUploadFieldProps: UploadProps = {
+
     multiple: true,
     onRemove: (file: any) => {
         setFileList([]);
@@ -269,6 +272,11 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
             message.error("Only pdf files are allowed!");
             return true;
         }
+        if (specialCharactersRegex.test(file.name)) {
+          message.error("File name contains special characters. Please remove them.");
+          return true;
+       }
+      
         var reader = new FileReader();
         reader.readAsArrayBuffer(file);
         reader.onload = data => {  
