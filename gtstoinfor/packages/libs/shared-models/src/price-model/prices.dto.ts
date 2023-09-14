@@ -1,19 +1,14 @@
 export class AllPriceDto {
-    headOfChargers: string;
+    headOfCharges: string;
     perUnit: string;
     dpLogistics: string;
     vendor: string;
     nsh: string;
     ksr: string;
     unitPrice: string;
-    // createdAt:Date;
-    // createdUser:string;
-    // updatedAt?:Date;
-    // updatedUser?:string;
-    // versionFlag?:number
-
+   
     constructor(
-        headOfChargers: string,
+        headOfCharges: string,
         perUnit: string,
         dpLogistics: string,
         vendor: string,
@@ -22,15 +17,11 @@ export class AllPriceDto {
         unitPrice: string,
 
 
-        // createdAt:Date,
-        // createdUser:string,
-        // updatedAt?:Date,
-        // updatedUser?:string,
-        // versionFlag?:number
+       
 
     ) {
 
-        this.headOfChargers = headOfChargers;
+        this.headOfCharges = headOfCharges;
         this.perUnit = perUnit;
         this.dpLogistics = dpLogistics;
         this.vendor = vendor;
@@ -40,11 +31,7 @@ export class AllPriceDto {
         this.unitPrice = unitPrice;
 
 
-        //   this.createdAt=createdAt;
-        //   this.createdUser=createdUser;
-        //   this.updatedAt=updatedAt;
-        //   this.updatedUser=updatedUser
-        //   this.versionFlag = versionFlag
+        
 
     }
 }

@@ -92,7 +92,7 @@ export function UploadDocumentForm() {
   const [Sgst, setSgst] = useState("");
   const [Innvoiceamount, setInnvoiceamount] = useState("");
   const [vendor, setVendor] = useState("");
-  const [buyerCode, setBuyer] = useState("");
+  const [buyerName, setBuyer] = useState("");
   const [routing, setRouting] = useState("");
   const [comment, setComment] = useState("");
   const [financialyear, setFinancialyear] = useState("");
@@ -707,7 +707,7 @@ export function UploadDocumentForm() {
       routing,
       comment,
       timecreated,
-      buyerCode,
+      buyerName,
       financialyear,
       JSON.parse(localStorage.getItem("currentUser")).user.userName,
       extractedData
@@ -1156,21 +1156,21 @@ export function UploadDocumentForm() {
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                     <label
-                      htmlFor="buyerCode"
+                      htmlFor="buyerName"
                       style={{ color: "black", fontWeight: "bold" }}
                     >
-                      Buyer Code
+                      Buyer Name
                     </label>
                     <Select
-                      id="buyerCode"
+                      id="buyerName"
                       style={{ width: "190px" }}
-                      value={buyerCode}
+                      value={buyerName}
                       onChange={(value) => setBuyer(value)}
                       defaultValue="option1"
                     >
                       {data2.map((option) => (
-                        <option value={option.buyerCode}>
-                          {option.buyerCode}
+                        <option value={option.buyerName}>
+                          {option.buyerName}
                         </option>
                       ))}
                     </Select>

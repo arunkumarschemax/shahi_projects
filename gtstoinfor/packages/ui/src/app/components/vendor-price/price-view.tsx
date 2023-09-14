@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Table, Button, message, Card } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
 import { PricesService } from "../../../../../libs/shared-services/src/price/prices-services";
 
 export function PriceView() {
@@ -8,9 +8,9 @@ export function PriceView() {
   const services = new PricesService();
   const [formdata, setFormData] = useState<any>([]); 
 
-  const onNew = () => {
-    navigate('/priceform');
-  };
+  // const onNew = () => {
+  //   navigate('/priceform');
+  // };
   useEffect(() => {
     getdata();
   }, []);
@@ -30,9 +30,9 @@ export function PriceView() {
 
   const columns = [
     {
-      title: 'Head Of Chargers',
-      dataIndex: 'headOfChargers',
-      key: 'headOfChargers',
+      title: 'Head Of Charges',
+      dataIndex: 'headOfCharges',
+      key: 'headOfCharges',
     },
     {
       title: 'Per Unit',
@@ -74,10 +74,15 @@ export function PriceView() {
 
   return (
     <div>
-      <Button type="primary" onClick={onNew} style={{ float: 'right', marginBottom: 16 }}>
-        Price Form
-      </Button>
-      <Table dataSource={formdata} columns={columns} />
+      <Card title="Vendor Price List" style={{ position: "relative", bottom: "15px" }}extra={
+        <Link to="/priceform">
+          <Button type='primary'>Create</Button>
+        </Link>
+      }>
+      
+      <Table 
+      dataSource={formdata} columns={columns} />
+      </Card>
     </div>
   );
 };

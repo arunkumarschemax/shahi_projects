@@ -222,9 +222,9 @@ function ScanDetailView() {
       key: 'Timecreated',
     },
     {
-      title: 'Buyer Code',
-      dataIndex: 'buyerCode',
-      key: 'buyerCode',
+      title: 'Buyer Name',
+      dataIndex: 'buyerName',
+      key: 'buyerName',
     },
   ];
 

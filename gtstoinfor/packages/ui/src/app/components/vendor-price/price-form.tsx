@@ -55,7 +55,7 @@ const PriceForm = () => {
       >
         <Row gutter={24}>
           <Col span={8}>
-          <div style={{ color: 'black', fontWeight: 'bold', marginBottom: 8 }}>Head Of Chargers</div>
+          <div style={{ color: 'black', fontWeight: 'bold', marginBottom: 8 }}>Head Of Charges</div>
             <Form.Item
               name="headOfChargers"
             >
