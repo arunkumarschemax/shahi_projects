@@ -40,7 +40,7 @@ const PriceForm = () => {
     <Card
       title={
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: 'white' }}>Upload Document</span>
+          <span style={{ color: 'white' }}>Vendor Price List</span>
           <Button type="primary" onClick={handleViewClick}>View</Button>
         </div>
       }
@@ -118,11 +118,16 @@ const PriceForm = () => {
           </Col>
         </Row>
 
-        <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-          <Button  style={{position:"relative",left:"900px"}} type="primary" htmlType="submit">
+        <Form.Item>
+          <Col xs={{ offset: 1, span: 16 }}>
+          <Button type="primary" style={{float:"right",position:"relative",left:"410px"}}  danger onClick={handleReset}>
+            Reset
+            </Button>
+          <Button   type="primary" style={{float:"right",position:"relative",left:"400px"}} htmlType="submit">
             Submit
           </Button>
-          <Button type="primary"  style={{position:"relative",left:"910px"}} danger onClick={handleReset}>Reset</Button>
+          
+          </Col>
         </Form.Item>
       </Form>
     </Card>
@@ -131,3 +136,6 @@ const PriceForm = () => {
 
 export default PriceForm;
 
+
+
+// {{ offset: 1, span: 16 }} style={{position:"relative",left:"910px"}}
