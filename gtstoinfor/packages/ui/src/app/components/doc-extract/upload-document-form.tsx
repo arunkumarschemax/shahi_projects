@@ -447,11 +447,12 @@ export function UploadDocumentForm() {
       title: "Charge",
       dataIndex: "Charge",
       key: "Charge",
-      render: (Charge, record) => {
+      render: (Charge, record, index) => {
         if (record.Taxamount !== null && record.Taxpercentage !== null) {
           const Taxpercentage = record.Taxpercentage;
           const Taxamount = record.Taxamount;
           const equivalentFor100Percent = (Taxamount * 100) / Taxpercentage;
+          extractedData[index].charge = equivalentFor100Percent;
           return `${equivalentFor100Percent.toFixed(2)}`;
         } else if (record.Taxamount !== null) {
           return `${record.Taxamount}`;
@@ -1357,14 +1358,13 @@ export function UploadDocumentForm() {
             <br></br>
             <br></br>
             <br></br>
-
-            <Card>
             {extractedData && extractedData.length > 0 ? (
+              <Card>
                 <Table dataSource={extractedData} columns={columns} />
-              ) : (
-                ""
-              )}
-            </Card>
+              </Card>
+            ) : (
+              ""
+            )}
           </Card>
         </div>
       </Form>
