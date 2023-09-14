@@ -5,8 +5,10 @@ import { PricesService } from "../../../../../libs/shared-services/src/price/pri
 
 export function PriceView() {
   const navigate = useNavigate();
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(1)
   const services = new PricesService();
-  const [formdata, setFormData] = useState<any>([]); 
+  const [formdata, setFormData] = useState<any>([]);
 
   // const onNew = () => {
   //   navigate('/priceform');
@@ -28,7 +30,22 @@ export function PriceView() {
     })
   }
 
-  const columns = [
+  const columns: any = [
+
+
+    {
+      title: 'S.No',
+      key: 'sno',
+      responsive: ['sm'],
+      render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+    },
+
+
+    {
+      title: 'Vendor Name',
+      dataIndex: 'vendor',
+      key: 'vendor',
+    },
     {
       title: 'Head Of Charges',
       dataIndex: 'headOfCharges',
@@ -45,11 +62,7 @@ export function PriceView() {
       key: 'dpLogistics',
     },
 
-    {
-      title: 'Vendor',
-      dataIndex: 'vendor',
-      key: 'vendor',
-    },
+
 
     {
       title: 'NSH',
@@ -61,7 +74,7 @@ export function PriceView() {
       dataIndex: 'ksr',
       key: 'ksr',
     },
-    
+
 
 
 
@@ -74,14 +87,14 @@ export function PriceView() {
 
   return (
     <div>
-      <Card title="Vendor Price List" style={{ position: "relative", bottom: "15px" }}extra={
+      <Card title="Vendor Price List" style={{ position: "relative", bottom: "15px" }} extra={
         <Link to="/priceform">
           <Button type='primary'>Create</Button>
         </Link>
       }>
-      
-      <Table 
-      dataSource={formdata} columns={columns} />
+
+        <Table
+          dataSource={formdata} columns={columns} />
       </Card>
     </div>
   );
