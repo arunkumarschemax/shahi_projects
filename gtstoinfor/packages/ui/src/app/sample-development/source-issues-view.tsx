@@ -234,7 +234,7 @@ import { SourceIssuesService } from "@project-management-system/shared-services"
 
       return (
         <Card 
-        title={<span>Store Issues View</span>}
+        title={<span>Material Issues</span>}
         className="card-header"
         style={{ textAlign:"center" ,color:'#00ffff'}}
         headStyle={{border:0}}

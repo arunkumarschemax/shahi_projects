@@ -90,6 +90,7 @@ return (
       className="custom-table-wrapper"
       columns={columns} 
       bordered={true}
+      size='small'
       />
     </div>
 )

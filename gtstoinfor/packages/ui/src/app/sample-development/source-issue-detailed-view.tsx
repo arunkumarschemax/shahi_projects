@@ -94,7 +94,7 @@ export const StoreIssueDetailed = () => {
           dataIndex: 'consumption',
         },
         {
-          title: 'Issuing Quantity',
+          title: 'Issued Quantity',
           dataIndex: 'issuingQuantity',
           render: (_, record) => (
             <Input
@@ -124,7 +124,7 @@ export const StoreIssueDetailed = () => {
           dataIndex: 'consumption',
         },
         {
-          title: 'Issuing Quantity',
+          title: 'Issued Quantity',
           dataIndex: 'issuingQuantity',
           render: (_, record) => (
             <Input

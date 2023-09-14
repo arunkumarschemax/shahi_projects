@@ -208,6 +208,14 @@ export const SampleDevView = (props: BuyingHouseProps) => {
       ...getColumnSearchProps("requestNo"),
     },
     {
+      title: "Style No",
+      dataIndex: "styleNo",
+      // responsive: ['lg'],
+      sorter: (a, b) => a.styleNo.localeCompare(b.styleNo),
+      sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("styleNo"),
+    },
+    {
       title: "Date",
       dataIndex: "date",
       // responsive: ['lg'],
@@ -246,14 +254,6 @@ export const SampleDevView = (props: BuyingHouseProps) => {
       sorter: (a, b) => a.buyer.localeCompare(b.buyer),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("buyer"),
-    },
-    {
-      title: "Style No",
-      dataIndex: "styleNo",
-      // responsive: ['lg'],
-      sorter: (a, b) => a.styleNo.localeCompare(b.styleNo),
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("styleNo"),
     },
     {
       title: `Action`,

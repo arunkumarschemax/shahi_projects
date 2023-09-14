@@ -24,7 +24,7 @@ export const SourceIssuesDetailView=()=>{
     })
   }
     return(
-      <Card title="Request No" size="small" >
+      <Card title="Material Issue Details" className="card-header">
       <Descriptions size='small'>
          <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>
          <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>
@@ -50,10 +50,10 @@ export const SourceIssuesDetailView=()=>{
       </Descriptions>
       <Card size='small'>
         <Tabs type={'card'} tabPosition={'top'}>
-        <TabPane key="1" tab={<span><b>{`Fabric`}</b></span>}>
+        <TabPane key="1" tab={<span style={{fontSize:'15px'}}><b>{`Fabric`}</b></span>}>
             <SourceFabrics />
         </TabPane>
-        <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
+        <TabPane key="3" tab={<span style={{fontSize:'15px'}}><b>{`Trims`}</b></span>}>
             <SourceTrims/>
         </TabPane>
         </Tabs>
