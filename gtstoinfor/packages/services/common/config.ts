@@ -1,5 +1,6 @@
-
 import * as env from 'dotenv';
+const https = require('https');
+
 export const appConfig = {
     port: {
         port: process.env[`PORT`] ?? 3232
@@ -13,14 +14,28 @@ export const appConfig = {
         dbName: process.env[`APP_DB_DBNAME`] || 'shahi_nike',
         poolLimit: parseInt(process.env[`APP_DB_POOL_LIMIT`]) || 50
     },
-    adobeAcrobatApiCred : {
+    adobeAcrobatApiCred: {
         client_credentials: {
-         client_id: "976ac685c80d451e95bf497a3a98147c",
-         client_secret: "p8e-kipsaocMEwglTRGTOggrHtBKBgDK_sSD"
+            client_id: "976ac685c80d451e95bf497a3a98147c",
+            client_secret: "p8e-kipsaocMEwglTRGTOggrHtBKBgDK_sSD"
         },
         service_principal_credentials: {
-         organization_id: "618B1DCD64E8CE330A495C2D@AdobeOrg"
+            organization_id: "618B1DCD64E8CE330A495C2D@AdobeOrg"
         }
-       }
+    },
+    m3Cred: {
+        USER_NAME: 'query',
+        PASSWORD: 'query123',
+        headerRequest: () => {
+            const auth = 'Basic ' + Buffer.from(`${appConfig.m3Cred.USER_NAME}:${appConfig.m3Cred.PASSWORD}`).toString('base64');
+            const headersRequest = {
+                Authorization: `${auth}`,
+            };
+            const agent = new https.Agent({
+                rejectUnauthorized: false,
+            });
+            return { headersRequest, agent }
+        }
+    }
 
 }

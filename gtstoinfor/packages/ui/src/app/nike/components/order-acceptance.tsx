@@ -1,7 +1,8 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
-import { DpomApproveRequest } from "@project-management-system/shared-models";
+import { DpomApproveRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, message } from "antd";
+import moment from "moment";
 import React, { useRef } from "react";
 import { useEffect, useState } from "react";
 import Highlighter from 'react-highlight-words';
@@ -19,7 +20,8 @@ export function OrderAcceptance() {
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
     const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
     const { RangePicker } = DatePicker;
-    const pageSize = 10;
+    const [productCode, setProductCode] = useState<any>([]);
+    const [poLine, setPoLine] = useState<any>([]);
 
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -38,14 +40,14 @@ export function OrderAcceptance() {
         //     // getFactoryStatus(values)
         // }/
 
-        if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
-            setFilterData(data);
-        } else {
-            const filteredData = data.filter(item =>
-                values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
-            );
-            setFilterData(filteredData);
-        }
+        // if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
+        //     setFilterData(data);
+        // } else {
+        //     const filteredData = data.filter(item =>
+        //         values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
+        //     );
+        //     setFilterData(filteredData);
+        // }
     }
 
     const getColumnSearchProps = (dataIndex: string) => ({
@@ -109,17 +111,10 @@ export function OrderAcceptance() {
         form.resetFields();
     }
 
-    const EstimatedETDDate = (value) => {
-        if (value) {
-            const fromDate = value[0].format('YYYY-MM-DD');
-            const toDate = value[1].format('YYYY-MM-DD');
-            setSelectedEstimatedFromDate(fromDate)
-            setSelectedEstimatedToDate(toDate)
-        }
-    }
-
     useEffect(() => {
         getOrderAcceptanceData()
+        getProductCode()
+        getPoLine()
     }, [])
 
     const getProductCode = () => {
@@ -156,6 +151,7 @@ export function OrderAcceptance() {
         service.getOrderAcceptanceData1(req).then((res) => {
             if (res.data) {
                 setData(res.data)
+                Finish(data)
                 // message.success(res.internalMessage)
             } else (
                 message.error(res.internalMessage)
@@ -197,57 +193,47 @@ export function OrderAcceptance() {
         {
             title: 'Document Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('YYYY-MM-DD'),
+            render: (text) => moment(text).format('MM/DD/YYYY'),
 
         },
 
         {
             title: 'Plant Name',
-            dataIndex: 'plantName'
+            dataIndex: 'plant_name'
         },
-        {
-            title: 'PO Number',
-            dataIndex: 'purchaseOrderNumber',
-            ...getColumnSearchProps('purchaseOrderNumber')
-        },
-
         {
             title: 'Purchase Group Name',
-            dataIndex: 'purchaseGroupName'
+            dataIndex: 'purchase_group_name'
         },
         {
             title: 'Product Code',
-            dataIndex: 'productCode'
-        },
-        {
-            title: 'Product Code',
-            dataIndex: 'productCode'
+            dataIndex: 'product_code'
         },
         {
             title: 'Category',
-            dataIndex: 'categoryDesc'
+            dataIndex: 'category_desc'
         },
         {
             title: 'Shipping Type',
-            dataIndex: 'shippingType'
+            dataIndex: 'shipping_type'
         },
         {
             title: 'DPOM Line Item Status',
-            dataIndex: 'DPOMLineItemStatus',
+            dataIndex: 'dpom_item_line_status',
             filters: [
                 { text: 'Accepted', value: 'Accepted' },
                 { text: 'Unaccepted', value: 'Unaccepted' },
-                { text: 'Closed', value: 'Closed' },
-                { text: 'Cancelled', value: 'Cancelled' }
+                // { text: 'Closed', value: 'Closed' },
+                // { text: 'Cancelled', value: 'Cancelled' }
             ],
             filterMultiple: false,
-            onFilter: (value, record) => { return record.DPOMLineItemStatus === value }
+            onFilter: (value, record) => { return record.dpom_item_line_status === value }
         },
         {
             title: 'Action',
             dataIndex: 'action',
             render: (value, record) => {
-                if (record.DPOMLineItemStatus === 'Unaccepted') {
+                if (record.dpom_item_line_status === 'Unaccepted') {
                     return (
                         <Popconfirm title="Are you sure to approve" onConfirm={() => approveDpomLineItemStatus(record)}>
                             <Button>Accept</Button>
@@ -265,7 +251,7 @@ export function OrderAcceptance() {
         <>
             <Card title="Nike Orders Register" headStyle={{ fontWeight: 'bold' }}>
                 <Form
-                    onFinish={Finish}
+                    onFinish={getOrderAcceptanceData}
                     form={form}
                     layout='vertical'>
                     <Row gutter={24}>

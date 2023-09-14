@@ -6,6 +6,7 @@ import moment from 'moment';
 import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
+import { nikeFilterRequest } from '@project-management-system/shared-models';
 
 const VASChangesCompareGrid = () => {
 
@@ -27,16 +28,28 @@ const VASChangesCompareGrid = () => {
     const { Text } = Typography;
     const { RangePicker } = DatePicker
     const { Option } = Select
+    const [poLine, setPoLine] = useState<any>([]);
+
 
     useEffect(() => {
         poLineItemStatusChange()
         getQtyChangeData()
         getUnitChangeData()
         getItemChangeData()
+        getPoLine()
     }, [])
 
+    const getPoLine = () => {
+        service.getPpmPoLineForNikeOrder().then(res => {
+            setPoLine(res.data)
+        })
+    }
     const getQtyChangeData = () => {
-        service.getTotalItemQtyChangeData().then((res) => {
+        const req = new nikeFilterRequest();
+        if (form.getFieldValue('poandLine') !== undefined) {
+            req.poandLine = form.getFieldValue('poandLine');
+        }
+        service.getTotalItemQtyChangeData(req).then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
         })
@@ -326,7 +339,8 @@ const VASChangesCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'report_generate_date'
+            dataIndex: 'document_date',
+            render: (text) => moment(text).format('YYYY-MM-DD')
         },
         {
             title: 'Item',
@@ -336,10 +350,10 @@ const VASChangesCompareGrid = () => {
             title: 'Factory',
             dataIndex: 'factory'
         },
-        {
-            title: 'Document Date',
-            dataIndex: 'document_date'
-        },
+        // {
+        //     title: 'Document Date',
+        //     dataIndex: 'document_date'
+        // },
         {
             title: 'PO Number',
             dataIndex: 'po_number',
@@ -351,19 +365,19 @@ const VASChangesCompareGrid = () => {
         },
         {
             title: 'Total Item Quantity',
-            dataIndex: 'total_item_Quantity'
+            dataIndex: 'totalItemQty'
         },
         {
             title: 'Product Code',
-            dataIndex: 'product_code'
+            dataIndex: 'productCode'
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac'
+            dataIndex: 'OGAC'
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'GAC'
         },
         {
             title: 'Change from Direct Ship Sales Order Number',
@@ -395,16 +409,16 @@ const VASChangesCompareGrid = () => {
         },
         {
             title: 'DIFFERENCE IN ITEM VAS TEXT ',
-           // ( between DPOM to DPOM)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
+            // ( between DPOM to DPOM)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
             dataIndex: 'item_vas_pdf_po',
             width: '300px',
         },
-        {
-            title: 'DIFFERENCE IN ITEM VAS TEXT ',
-           // ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
-            dataIndex: 'item_vas_pdf_po',
-            width: '300px',
-        },
+        // {
+        //     title: 'DIFFERENCE IN ITEM VAS TEXT ',
+        //     // ( between DPOM to PDF PO)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
+        //     dataIndex: 'item_vas_pdf_po',
+        //     width: '300px',
+        // },
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
@@ -708,7 +722,7 @@ const VASChangesCompareGrid = () => {
         {
             key: '1',
             label: <b>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData}  columns={columns} scroll={{ x: 'max-content' }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
         },
         {
             key: '2',
@@ -748,30 +762,23 @@ const VASChangesCompareGrid = () => {
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
             <Form form={form} layout={"vertical"} >
-                <Row gutter={[24, 24]}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
-                        <Form.Item name="contractDate"
-                            label="Order Revised Date"
-                        >
-                            <RangePicker onChange={EstimatedETDDate} />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="orderStatus"
-                            label="Order Status"
-                        >
-                            <Select
-                                allowClear
-                                placeholder='select order status'
-                            >
-                                <Option key='Accepted' value="Accepted">Accepted</Option>
-                                <Option key='Unaccepted' value="Unaccepted">Unaccepted</Option>
-                                <Option key='Closed' value="Closed">Closed</Option>
-                                <Option key='Cancelled' value="Cancelled">Cancelled</Option>
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
+                <Row gutter={24}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 4 }} >
+                  <Form.Item name='poandLine' label='Po+Line' >
+                <Select
+                  showSearch
+                  placeholder="Select Po+Line"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {poLine.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                  })
+                  }
+                   </Select>
+                 </Form.Item>
+                </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4  }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
                         <Button
                             type="primary"
                             icon={<SearchOutlined />}
@@ -779,7 +786,7 @@ const VASChangesCompareGrid = () => {
                             htmlType="button"
                             onClick={getFilterdData}>Search</Button>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }} style={{ marginTop: 22 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
                         <Button
                             type="primary"
                             icon={<UndoOutlined />}

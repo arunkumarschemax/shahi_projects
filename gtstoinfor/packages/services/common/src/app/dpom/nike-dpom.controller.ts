@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
-import { CommonResponseModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, FobPriceDiffRequest, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { DpomService } from './nike-dpom.service';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -40,7 +40,7 @@ export class DpomController {
     @Post('/getCRMOrderDetails2')
     async getCRMOrderDetails2() {
         try {
-            return await this.dpomService.getCRMOrderDetails2('2000593977')
+            return await this.dpomService.getCRMOrderDetails2()
         } catch (error) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
@@ -120,16 +120,16 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
-    // @Post('/getFabricTrackerReport')
-    // @ApiBody({ type: PpmDateFilterRequest })
-    // async getFabricTrackerReport(@Body() req?: any): Promise<CommonResponseModel> {
-    //     try {
-    //         return await this.dpomService.getFabricTrackerReport(req);
-    //     } catch (err) {
-    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    @Post('/getFabricTrackerReport')
+    @ApiBody({ type: PpmDateFilterRequest })
+    async getFabricTrackerReport(@Body() req?: any): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getFabricTrackerReport(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
 
-    //     }
-    // }
+        }
+    }
 
     @Post('/getFactoryReportData')
     @ApiBody({ type: PpmDateFilterRequest })
@@ -164,14 +164,14 @@ export class DpomController {
         }
     }
 
-    @Post('/getFabricTrackerReport')
-    async getFabricTrackerReport(): Promise<CommonResponseModel> {
-        try {
-            return await this.dpomService.getFabricTrackerReport();
-        } catch (err) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/getFabricTrackerReport')
+    // async getFabricTrackerReport(): Promise<CommonResponseModel> {
+    //     try {
+    //         return await this.dpomService.getFabricTrackerReport();
+    //     } catch (err) {
+    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
 
     @Post('/getCountForDivertReport')
     async getCountForDivertReport(): Promise<CommonResponseModel> {
@@ -273,12 +273,12 @@ export class DpomController {
         }
     }
 
-    @Post('/saveDiaPDFFields')
-    async saveDiaPDFFields(@Body() req: DiaPDFDto): Promise<CommonResponseModel> {
+    @Post('/saveDIAPDFData')
+    async saveDIAPDFData(@Body() req: any) {
         try {
-            return this.dpomService.saveDiaPDFFields(req);
-        } catch (err) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+            return await this.dpomService.saveDIAPDFData(req)
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
     @Post('/getItemChangeData')
@@ -567,9 +567,10 @@ export class DpomController {
     }
 
     @Post('/getPriceDifferenceReport')
-    async getPriceDifferenceReport(): Promise<CommonResponseModel> {
+    @ApiBody({ type: FobPriceDiffRequest })
+    async getPriceDifferenceReport(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getPriceDifferenceReport();
+            return this.dpomService.getPriceDifferenceReport(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

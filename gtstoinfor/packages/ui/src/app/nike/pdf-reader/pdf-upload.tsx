@@ -200,7 +200,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
 console.log(poPdfData)
     const saveDiaPdfFields = () => {
         const formValues = diaPDfForm.getFieldsValue()
-        nikeDpomService.saveDiaPDFFields(formValues).then((res) => {
+        nikeDpomService.saveDIAPDFData(formValues).then((res) => {
             if (res.status) {
                 message.success(res.internalMessage)
             } else {

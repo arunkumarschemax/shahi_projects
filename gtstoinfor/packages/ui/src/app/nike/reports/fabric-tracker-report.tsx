@@ -21,6 +21,7 @@ export function FabricTrackerReport() {
   const [colorDesc, setColorDesc] = useState<any>([]);
   const [styleNumber,setStyleNumber]=useState<any>([]);
   const [productCode, setProductCode]=useState<any>([]);
+  const { Option } = Select;
 
 
 
@@ -62,6 +63,7 @@ export function FabricTrackerReport() {
 
   const getData = () => {
     const req = new PpmDateFilterRequest();
+
     if (form.getFieldValue('productCode') !== undefined) {
       req.productCode = form.getFieldValue('productCode');
     } 
@@ -79,7 +81,7 @@ export function FabricTrackerReport() {
     } 
 
 
-    service.getFabricTrackerReport().then(res => {
+    service.getFabricTrackerReport(req).then(res => {
       if (res.status) {
         setGridData(res.data)
         // setFilterData(res.data)
@@ -233,7 +235,7 @@ export function FabricTrackerReport() {
     },
     {
       title: 'PO Line Item Number',
-      dataIndex: 'poLineItemNumber'
+      dataIndex: 'poLine'
     },
     {
       title: 'Style Number',
@@ -250,7 +252,7 @@ export function FabricTrackerReport() {
     },
     {
       title: 'Total Item Qty',
-      dataIndex: 'totalItemQty'
+      dataIndex: 'totalIemQty'
     },
     {
       title: 'Factory',
@@ -259,14 +261,14 @@ export function FabricTrackerReport() {
     },
     {
       title: 'Document Date',
-      dataIndex: 'documentDate',
+      dataIndex: 'DocumentDate',
       // render: (text, record) => {
       //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
       // }
     },
     {
       title: 'Purchase Order Number',
-      dataIndex: 'purchaseOrderNumber',
+      dataIndex: 'poNumber',
     },
     {
 
@@ -284,22 +286,22 @@ export function FabricTrackerReport() {
     },
     {
       title: "MRGAC",
-      dataIndex: 'MRGAC'
+      dataIndex: 'mrgac'
 
     },
     {
       title: "OGAC",
-      dataIndex: 'OGAC'
+      dataIndex: 'ogac'
 
     },
     {
       title: "GAC",
-      dataIndex: 'GAC'
+      dataIndex: 'gac'
 
     },
     {
       title: "Shipping Type",
-      dataIndex: 'shippingType'
+      dataIndex: 'shipmentType'
 
     },
     {
@@ -316,7 +318,10 @@ export function FabricTrackerReport() {
           style={{ color: 'green' }}
           onClick={handleExport}
           icon={<FileExcelFilled />}>Download Excel</Button> : null}>
-        <Form>
+        <Form 
+         onFinish={getData}
+         form={form}
+         layout='vertical'>
           <Row gutter={24}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{ padding: '20px' }}>
               <Form.Item name='productCode' label='Product Code' >
@@ -326,10 +331,11 @@ export function FabricTrackerReport() {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {/* {productCode.map((inc: any) => {
+                  {productCode.map((inc: any) => {
                     return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
                   })
-                  } */}
+                  }
+                  
                 </Select>
               </Form.Item>
             </Col>
@@ -341,10 +347,10 @@ export function FabricTrackerReport() {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {/* {styleNumber.map((inc: any) => {
+                  {styleNumber.map((inc: any) => {
                     return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
                   })
-                  } */}
+                  }
                 </Select>
               </Form.Item>
             </Col>
@@ -356,10 +362,10 @@ export function FabricTrackerReport() {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {/* {colorDesc.map((inc: any) => {
+                  {colorDesc.map((inc: any) => {
                     return <Option key={inc.id} value={inc.color_desc}>{inc.color_desc}</Option>
                   })
-                  } */}
+                  }
                 </Select>
               </Form.Item>
             </Col>
@@ -371,10 +377,10 @@ export function FabricTrackerReport() {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {/* {item.map((inc: any) => {
+                  {item.map((inc: any) => {
                     return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
                   })
-                  } */}
+                  }
                 </Select>
               </Form.Item>
             </Col>
@@ -386,32 +392,23 @@ export function FabricTrackerReport() {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {/* {factory.map((inc: any) => {
+                  {factory.map((inc: any) => {
                     return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
                   })
-                  } */}
+                  }
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} sm={24} md={6} lg={6} xl={6}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }} >
               <Form.Item>
-                <Row gutter={16} justify="start">
-                  <Col>
-                    <Button htmlType="submit" icon={<SearchOutlined />} type="primary">
-                      Get Report
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Button
-                      htmlType='button'
-                      icon={<UndoOutlined />}
-                      style={{ backgroundColor: "#162A6D", color: "white" }}
-                      onClick={onReset}
-                    >
-                      RESET
-                    </Button>
-                  </Col>
-                </Row>
+                <Button htmlType="submit"
+                  icon={<SearchOutlined />}
+                  type="primary">Get Report</Button>
+                <Button
+                  htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={onReset}
+                >
+                  RESET
+                </Button>
               </Form.Item>
             </Col>
           </Row>
