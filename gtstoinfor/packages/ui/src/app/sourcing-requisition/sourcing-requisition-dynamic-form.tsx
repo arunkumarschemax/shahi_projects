@@ -583,7 +583,7 @@ export const SourcingRequisitionDynamicForm = () => {
 
 
     return(
-        <Card title='Indent' className="card-header">
+        <Card title='Indent' className="card-header" extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
             <Form form={sourcingForm}>
                 <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>

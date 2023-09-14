@@ -48,7 +48,8 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF001'
             },
             {
                 content:'Natural Fabrics',
@@ -82,7 +83,8 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF002'
       
             },
             {
@@ -117,7 +119,8 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF003'
             },
             {
                 content:'Natural Fabrics',
@@ -151,7 +154,8 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
             },
             {
                 content:'Natural Fabrics',
@@ -185,7 +189,8 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF005'
             },
             {
                 content:'Natural Fabrics',
@@ -219,7 +224,8 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF006'
             },
             {
                 content:'Natural Fabrics',
@@ -253,7 +259,8 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF007'
             },
         ],
         trimInfo:[
@@ -270,7 +277,8 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'pieces'
+                quantityUnit: 'pieces',
+                shahiTrimCode:'ST001'
             },
             {
                 trimType: "Zipper",
@@ -285,7 +293,8 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'pieces'
+                quantityUnit: 'pieces',
+                shahiTrimCode:'ST002'
               },
               {
                 trimType: "Button",
@@ -300,7 +309,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'pieces'
+                quantityUnit: 'pieces',
+                shahiTrimCode:'ST003'
+
             },
             {
                 trimType: "Button",
@@ -315,7 +326,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'pieces'
+                quantityUnit: 'pieces',
+                shahiTrimCode:'ST004'
+            
             },
             {
                 trimType: "Button",
@@ -330,7 +343,8 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'pieces'
+                quantityUnit: 'pieces',
+                shahiTrimCode:'ST005'
             },
             {
                 trimType: "Button",
@@ -345,7 +359,8 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'pieces'
+                quantityUnit: 'pieces',
+                shahiTrimCode:'ST006'
             },
             {
                 trimType: "Button",
@@ -360,7 +375,8 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'pieces'
+                quantityUnit: 'pieces',
+                shahiTrimCode:'ST007'
             },
         ],
         versionFlag:1
@@ -406,7 +422,9 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
+
       
             },
             {
@@ -441,7 +459,9 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
+
     
             },
             {
@@ -476,7 +496,9 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
+
     
             },
             {
@@ -511,7 +533,9 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
+
     
             },
             {
@@ -546,7 +570,9 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
+
     
             }
         ],
@@ -564,7 +590,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'Reels'
+                quantityUnit: 'Reels',
+                shahiTrimCode:'ST001'
+
               },
               {
                 trimType: "Fabric",
@@ -579,7 +607,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiTrimCode:'ST002'
+
               },
               {
                 trimType: "Fabric",
@@ -594,7 +624,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiTrimCode:'ST002'
+
               },
               {
                 trimType: "Fabric",
@@ -609,7 +641,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiTrimCode:'ST002'
+
               },
               {
                 trimType: "Fabric",
@@ -624,7 +658,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiTrimCode:'ST002'
+
               },
         ],
         versionFlag:1
@@ -670,7 +706,9 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF003'
+
       
             },
             {
@@ -705,7 +743,9 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
+
     
             },
             {
@@ -740,7 +780,9 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
+
     
             },
             {
@@ -775,7 +817,9 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
+
     
             },
             {
@@ -810,7 +854,9 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
+
     
             },
             {
@@ -845,7 +891,9 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
+
     
             }
         ],
@@ -863,7 +911,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'Reels'
+                quantityUnit: 'Reels',
+                shahiTrimCode:'St001'
+
               },
               {
                 trimType: "Fabric",
@@ -878,7 +928,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiTrimCode:'ST002'
+
               },
               {
                 trimType: "Thread",
@@ -893,7 +945,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'GRN',
-                quantityUnit: 'Reels'
+                quantityUnit: 'Reels',
+                shahiTrimCode:'ST001'
+
               },
               {
                 trimType: "Thread",
@@ -908,7 +962,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'Reels'
+                quantityUnit: 'Reels',
+                shahiTrimCode:'ST001'
+
               },
               {
                 trimType: "Thread",
@@ -923,7 +979,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'Reels'
+                quantityUnit: 'Reels',
+                shahiTrimCode:'ST001'
+
               },
               {
                 trimType: "Thread",
@@ -938,7 +996,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'Reels'
+                quantityUnit: 'Reels',
+                shahiTrimCode:'ST001'
+
               },
         ],
         versionFlag:1
@@ -984,7 +1044,8 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF003'
       
             },
             {
@@ -1019,7 +1080,8 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
     
             }
         ],
@@ -1037,7 +1099,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'Reels'
+                quantityUnit: 'Reels',
+                shahiTrimCode:'ST003'
+
               },
               {
                 trimType: "Fabric",
@@ -1052,7 +1116,8 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiTrimCode:'ST004'
               },
         ],
         versionFlag:1
@@ -1098,7 +1163,8 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF003'
       
             },
             {
@@ -1133,7 +1199,8 @@ export class RequisitionService extends CommonAxiosService{
                 buyerName:'Rajesh',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiFabricCode:'SF004'
     
             }
         ],
@@ -1151,7 +1218,8 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'PO',
-                quantityUnit: 'Reels'
+                quantityUnit: 'Reels',
+                shahiTrimCode:'ST003'
               },
               {
                 trimType: "Fabric",
@@ -1166,7 +1234,9 @@ export class RequisitionService extends CommonAxiosService{
                 colorName:'White',
                 availableQuantity: 100,
                 status: 'Stock',
-                quantityUnit: 'm'
+                quantityUnit: 'm',
+                shahiTrimCode:'ST004'
+
               },
         ],
         versionFlag:1
