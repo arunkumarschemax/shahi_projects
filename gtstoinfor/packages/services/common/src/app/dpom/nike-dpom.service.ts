@@ -814,7 +814,6 @@ export class DpomService {
     async getOrderAcceptanceData(req: nikeFilterRequest): Promise<CommonResponseModel> {
         try {
             const data = await this.dpomRepository.getOrderAcceptanceDat(req);
-            //   console.log(req,'request')
             if (data.length > 0) {
                 return new CommonResponseModel(true, 1, 'Data retrieved', data);
             } else {
