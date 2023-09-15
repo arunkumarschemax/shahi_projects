@@ -84,7 +84,7 @@ async getSourceIssueByID():Promise<any>{
             location: "A1F1",
             pch: "PCH001",
             user: "Proto",
-            buyer: "Virat Kohil",
+            buyer: "Suresh",
             styleNo: "STL001",
             sampleType: "T-Shirt",
             sampleSubType: "T-Shirt",
