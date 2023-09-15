@@ -47,3 +47,15 @@ export class RoleReq{
         this.role=role
     }
 }
+
+export class getFileReq{
+    poNo:string
+    document:string
+    constructor(
+        poNo:string,
+        document:string
+    ){
+        this.poNo=poNo
+        this.document=document
+    }
+}
