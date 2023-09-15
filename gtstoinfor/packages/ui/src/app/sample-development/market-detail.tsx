@@ -130,12 +130,12 @@ export const MarketIssueDetail = () => {
         {
           title: 'Issued Quantity',
           dataIndex: 'issuingQuantity',
-          render: (_, record) => (
-            <Input
-            value={record.issuingQuantity}
-            onChange={(e) => handleInputChange(e, record.key, 'issuingQuantity')}
-            />
-          ),
+          // render: (_, record) => (
+          //   <Input
+          //   value={record.issuingQuantity}
+          //   onChange={(e) => handleInputChange(e, record.key, 'issuingQuantity')}
+          //   />
+          // ),
         },
         {
           title: 'Remarks',

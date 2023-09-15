@@ -136,6 +136,7 @@ import M3Masters from "./m3Masters/m3-masters"
 import M3MastersView from "./m3Masters/m3-masters-view"
 import { StockView } from "./sourcing-requisition/stock-view"
 import SourceIssuesView from "./sample-development/source-issues-view"
+import MaterialIssueView from "./sample-development/material-issue"
 
 
 export const AppRoutes = () => {
@@ -496,6 +497,7 @@ export const AppRoutes = () => {
                 <Route path='store-issues'>
                     <Route path="store-issues-view" element={<SourceIssuesView />}/>
                     <Route path="store-issues-detail-view" element={<SourceIssuesDetailView />}/>
+                    <Route path="material-issue-view" element={<MaterialIssueView />}/>
                 </Route>
 
                 <Route path='/materialCreation'>
