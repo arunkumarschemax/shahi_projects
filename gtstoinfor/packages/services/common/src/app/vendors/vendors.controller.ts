@@ -19,7 +19,6 @@ export class VendorsController {
     @Post('/createVendor')
     async createVendor(@Body() vendorDto:any): Promise<VendorsResponseModel> {
     try {
-        console.log(vendorDto);
         return await this.vendorService.createVendor(vendorDto, false);
       } catch (error) {
         return this.applicationExceptionHandler.returnException(VendorsResponseModel, error);
@@ -28,8 +27,6 @@ export class VendorsController {
     @Post('/updateVendor')
   async updateVendor(@Body() vendorDto: any,@Req() request:Request): Promise<VendorsResponseModel> {
     try {
-      console.log('update Vendor');
-      console.log(request);
       return await this.vendorService.createVendor(vendorDto, true);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(VendorsResponseModel, error);
@@ -65,7 +62,6 @@ export class VendorsController {
   @Post('/getVendorDataById')
   async getVendorDataById(@Body() vendorRequest:VendorRequest): Promise<VendorsResponseModel> {
     try {
-      console.log(vendorRequest);
         return await this.vendorService.getVendorDataById(vendorRequest);
     } catch (error) {
        throw error;

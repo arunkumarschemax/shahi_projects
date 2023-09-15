@@ -270,13 +270,12 @@ export function GarmentsGrid(
 
   return (
     <Card title={<span >Garments</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
     // extra={<Link to = "/masters/garments/garments-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
     >
      <br></br>
       <Row gutter={40}>
       <Col>
-          <Card title={'Total Garments : ' + garmentData.length} style={{textAlign: 'left', width: 290, height: 41,backgroundColor:'#bfbfbf'}}></Card>
+          <Card title={'Total Garments : ' + garmentData.length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
           <Col>
            <Card title={'Active: ' + garmentData.filter(el => el.isActive).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#52c41a'}}></Card>

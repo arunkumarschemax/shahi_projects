@@ -285,9 +285,10 @@ export const SampleDevView = (props: BuyingHouseProps) => {
   };
   return (
     <Card
-      title={<span>Sample Request</span>}
-      style={{ textAlign: "center" }}
-      headStyle={{ border: 0 }}
+      title={<span>Sample Development</span>}
+      // style={{ textAlign: "center" }}
+      // headStyle={{ border: 0 }}
+      size='small'
         extra={
           <Link to="/sample-development/sample-development-form">
             <span style={{ color: "white" }}>

@@ -1,4 +1,5 @@
 export class OperationReportingRequest{
+    itemCode:string;
     jobNumber : string;
     skuCode: string;
     poNumber:string;
@@ -7,7 +8,8 @@ export class OperationReportingRequest{
     rejectedQuantity : number;
     wastedQuantity: number;
 
-    constructor(jobNumber : string,skuCode: string,poNumber:string,issuedQuantity: number,reportedQuantity:number,rejectedQuantity : number,wastedQuantity: number){
+    constructor(itemCode:string,jobNumber : string,skuCode: string,poNumber:string,issuedQuantity: number,reportedQuantity:number,rejectedQuantity : number,wastedQuantity: number){
+        this.itemCode = itemCode;
         this.jobNumber = jobNumber;
         this.skuCode = skuCode;
         this.poNumber = poNumber;

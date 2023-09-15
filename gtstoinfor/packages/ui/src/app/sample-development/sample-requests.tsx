@@ -61,6 +61,12 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     return navigate(`/sample-development/store-issue-detail`);
   };
 
+  const MarketIssueDetailView = (val: any) => {
+    return navigate(`/sample-development/market-issue-detailview`);
+  };
+
+  
+
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -257,6 +263,10 @@ export const SampleRequests = (props: BuyingHouseProps) => {
               size={30}
             />
           </Tooltip> */}
+          <Tooltip title='Detail View'>
+          <EyeOutlined onClick={() => MarketIssueDetailView(rowData.id)} style={{fontSize:'15px',marginLeft:'-5px'}}/>
+          </Tooltip>
+          <Divider type="vertical"/>
           <Button onClick={() => DetailView(rowData.id)} type='primary' disabled={logInUser == 'marketUser' ? true:false}>Issue Material</Button>
         </span>
       ),

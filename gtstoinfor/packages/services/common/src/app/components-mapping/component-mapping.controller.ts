@@ -16,7 +16,6 @@ export class ComponentMappingController{
 
     @Post('/createComponentMapping')
     async createComponentMapping(@Body() req:any):Promise<ComponentMappingResponseModel>{
-        console.log(req,'--------------req')
         try{
             return await this.componentMappingService.createComponentMapping(req,false)
         } catch(err){
@@ -26,7 +25,6 @@ export class ComponentMappingController{
 
     @Post('/updateComponentMapping')
     async updateComponentMapping(@Body() req:any):Promise<ComponentMappingResponseModel>{
-        console.log(req,'--------------req')
         try{
             return await this.componentMappingService.createComponentMapping(req,true)
         } catch(err){

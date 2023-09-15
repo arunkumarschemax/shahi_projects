@@ -127,16 +127,16 @@ export const MarketIssueDetail = () => {
           title: 'Consumption',
           dataIndex: 'consumption',
         },
-        {
-          title: 'Issued Quantity',
-          dataIndex: 'issuingQuantity',
-          // render: (_, record) => (
-          //   <Input
-          //   value={record.issuingQuantity}
-          //   onChange={(e) => handleInputChange(e, record.key, 'issuingQuantity')}
-          //   />
-          // ),
-        },
+        // {
+        //   title: 'Issued Quantity',
+        //   dataIndex: 'issuingQuantity',
+        //   render: (_, record) => (
+        //     <Input
+        //     value={record.issuingQuantity}
+        //     onChange={(e) => handleInputChange(e, record.key, 'issuingQuantity')}
+        //     />
+        //   ),
+        // },
         {
           title: 'Remarks',
           dataIndex: 'remarks',
@@ -144,7 +144,7 @@ export const MarketIssueDetail = () => {
       ];
 
     return(
-        <Card title='Material Issue' className="card-header" extra={<Button onClick={onUpdate} type={'primary'}>View</Button>}>
+        <Card title='Sample Request' className="card-header" extra={<Button onClick={onUpdate} type={'primary'}>View</Button>}>
              <Descriptions size='small'>
                 <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>
                 <DescriptionsItem label='PCH'>{data[0]?.pch}</DescriptionsItem>

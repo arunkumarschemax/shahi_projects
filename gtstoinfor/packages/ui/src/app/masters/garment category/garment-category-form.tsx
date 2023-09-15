@@ -64,7 +64,7 @@ export const GarmentCategoryForm=(props:GarmentCategoryProps)=>{
     form.resetFields();
   };
   return(
-    <Card title={<span >Garment Category </span>} style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+    <Card title={<span >Garment Category </span>} 
     extra={props.isUpdate==true?"":<Link to='/masters/garmentcategory/garmentcategory-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
 
 <Form 
