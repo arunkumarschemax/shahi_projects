@@ -295,16 +295,19 @@ const PPMReport = () => {
 
     exportingColumns = [
       { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
-      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text) => moment(text).format('DD/MM/YYYY') },
+      { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text) => moment(text).format('MM/DD/YYYY') },
       { title: 'Item', dataIndex: 'Item' },
-      { title: 'Factory', dataIndex: 'Factory',render: (text, record) => {
-        if (!text || text.trim() === '') {
+      {
+        title: 'Factory', dataIndex: 'Factory', render: (text, record) => {
+          if (!text || text.trim() === '') {
             return '-';
-        } else {
+          } else {
             return text;
-        }} },
+          }
+        }
+      },
       { title: 'PCD', dataIndex: 'PCD' },
-      { title: 'Document Date', dataIndex: 'documentDate', render: (text) => moment(text).format('DD/MM/YYYY') },
+      { title: 'Document Date', dataIndex: 'documentDate', render: (text) => moment(text).format('MM/DD/YYYY') },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
       { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
       { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
@@ -319,7 +322,7 @@ const PPMReport = () => {
       { title: 'Planning Season Code', dataIndex: 'planningSeasonCode' },
       { title: 'Planning Season Year', dataIndex: 'planningSeasonYear' },
       { title: 'Co', dataIndex: 'customerOrder' },
-      { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => { return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('DD/MM/YYYY') : '-' } },
+      { title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => { return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-' } },
       { title: 'Plan No', dataIndex: 'planNo' },
       { title: 'Lead Time', dataIndex: 'leadTime' },
       { title: 'Category', dataIndex: 'categoryCode' },
@@ -333,7 +336,7 @@ const PPMReport = () => {
       { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
       { title: 'Geo Code', dataIndex: '' },
       { title: 'Plant Code', dataIndex: 'plant' },
-      { title: 'plant Name', dataIndex: 'plantName' },     
+      { title: 'plant Name', dataIndex: 'plantName' },
       { title: 'UPC', dataIndex: 'UPC' },
       { title: 'Sales Order Number', dataIndex: 'directShipSONumber' },
       { title: 'Sales Order Item Number', dataIndex: 'directShipSOItemNumber' },
@@ -345,11 +348,11 @@ const PPMReport = () => {
       { title: 'Diff of Ship to Address', dataIndex: '' },
       { title: 'CAB Code', dataIndex: 'CABcode' },
       { title: 'Final Destination', dataIndex: '' },
-      { title: 'MRGAC', dataIndex: 'MRGAC', render: (text, record) => { return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-' } },
-      { title: 'OGAC', dataIndex: 'OGAC', render: (text, record) => { return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-' } },
-      { title: 'GAC', dataIndex: 'GAC', render: (text, record) => { return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-' } },
+      { title: 'MRGAC', dataIndex: 'MRGAC', render: (text, record) => { return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-' } },
+      { title: 'OGAC', dataIndex: 'OGAC', render: (text, record) => { return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-' } },
+      { title: 'GAC', dataIndex: 'GAC', render: (text, record) => { return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-' } },
       { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
-      { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' }, 
+      { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
       { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
       { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
       { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
@@ -408,7 +411,7 @@ const PPMReport = () => {
       {
         title: 'Last Modified Date',
         dataIndex: 'lastModifiedDate',
-        render: (text) => moment(text).format('DD/MM/YYYY')
+        render: (text) => moment(text).format('MM/DD/YYYY')
       },
       {
         title: 'Item',
@@ -426,26 +429,28 @@ const PPMReport = () => {
         dataIndex: 'factory',
         render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
+            return '-';
           } else {
-              return text;
-          }}
+            return text;
+          }
+        }
       },
       {
         title: 'PCD',
         dataIndex: 'pcd',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }}
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        }
         // ...getColumnSearch('factory'),
-    },
+      },
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
-        render: (text) => moment(text).format('DD/MM/YYYY')
+        render: (text) => moment(text).format('MM/DD/YYYY')
       },
       {
         title: 'Purchase Order Number',
@@ -459,13 +464,14 @@ const PPMReport = () => {
         title: 'Trading Co PO Number',
         dataIndex: 'tradingCoPoNumber',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }}
-        
-    },
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        }
+
+      },
       {
         title: 'DPOM Line Item Status',
         dataIndex: 'DPOMLineItemStatus'
@@ -473,11 +479,11 @@ const PPMReport = () => {
       {
         title: 'Doc Type',
         dataIndex: 'docTypeCode',
-    },
-    {
+      },
+      {
         title: 'Doc Type Description',
         dataIndex: 'docTypeDesc',
-    },
+      },
       {
         title: 'Style Number',
         dataIndex: 'styleNumber',
@@ -502,104 +508,108 @@ const PPMReport = () => {
         title: 'Planning Season Code',
         dataIndex: 'planningSeasonCode',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }}
-       
-    },
-    {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        }
+
+      },
+      {
         title: 'Planning Season Year',
         dataIndex: 'planningSeasonYear',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }}
-       
-    },
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        }
 
-    {
+      },
+
+      {
         title: 'CO',
         dataIndex: 'customerOrder',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }}
-    },
-    {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        }
+      },
+      {
         title: 'CO Final Approval Date',
         dataIndex: 'coFinalApprovalDate',
         className: "right-column",
         render: (text, record) => {
-            return record.documentDate ? moment(record.documentDate).format('DD/MM/YYYY') : '-'
+          return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
         }
-    },
-    {
+      },
+      {
         title: 'Plan No',
         dataIndex: 'planNo',
         render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
+            return '-';
           } else {
-              return text;
-          }}
-    },
-    {
+            return text;
+          }
+        }
+      },
+      {
         title: 'Lead Time',
         dataIndex: 'leadTime',
         render: (text) => {
-            if (!isNaN(parseFloat(text))) {
-                // If it's a valid number, render it
-                return parseFloat(text).toFixed(2); // You can format it as needed
-            } else {
-                // If it's not a valid number, render a placeholder or an empty string
-                return 'N/A'; // Or any other desired text
-            }
+          if (!isNaN(parseFloat(text))) {
+            // If it's a valid number, render it
+            return parseFloat(text).toFixed(2); // You can format it as needed
+          } else {
+            // If it's not a valid number, render a placeholder or an empty string
+            return 'N/A'; // Or any other desired text
+          }
         }
-    },
-    {
+      },
+      {
         title: 'Category',
         dataIndex: 'categoryCode',
-    },
+      },
       {
         title: 'Category Description',
         dataIndex: 'categoryDesc'
       },
-       {
+      {
         title: 'Vendor Code',
         dataIndex: 'vendorCode',
-    },
-    {
+      },
+      {
         title: 'Global Category Core Focus',
         dataIndex: 'gccFocusCode',
-    },
-    {
+      },
+      {
         title: 'Global Category Core Focus Description',
         dataIndex: 'gccFocusDesc',
-    },
-    {
+      },
+      {
         title: 'Gender Age',
         dataIndex: 'genderAgeCode',
         className: 'centered-column',
-    },
-    {
-      title: 'Gender Age Description',
-      dataIndex: 'genderAgeDesc',
-     },
-     {
-      title: "Destination Country Code",
-      dataIndex: 'destinationCountryCode'
-    },
-     {
-      title: "Destination Country Name ",
-      dataIndex: 'destinationCountry'
-    },
-      
+      },
+      {
+        title: 'Gender Age Description',
+        dataIndex: 'genderAgeDesc',
+      },
+      {
+        title: "Destination Country Code",
+        dataIndex: 'destinationCountryCode'
+      },
+      {
+        title: "Destination Country Name ",
+        dataIndex: 'destinationCountry'
+      },
+
       { title: 'Geo Code', dataIndex: '' },
       {
         title: "Plant Code",
@@ -608,221 +618,237 @@ const PPMReport = () => {
       {
         title: "Plant Name",
         dataIndex: 'plantName'
-      }, 
-    {
+      },
+      {
         title: 'UPC',
         dataIndex: 'UPC',
-    },
-    {
+      },
+      {
         title: 'Sales Order Number',
         dataIndex: '',
-    },
-    {
+      },
+      {
         title: 'Sales Order Item Number',
         dataIndex: '',
-    },
-    {
+      },
+      {
         title: 'Customer PO',
         dataIndex: 'customerPO',
         render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
+            return '-';
           } else {
-              return text;
+            return text;
           }
+        },
       },
-    },
-    {
+      {
         title: 'Ship To Customer Number',
         dataIndex: 'shipToCustomerNumber',
         align: 'center',
         render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
+            return '-';
           } else {
-              return text;
+            return text;
           }
+        },
       },
-    },
-    {
+      {
         title: 'Ship To Customer Name',
         dataIndex: 'shipToCustomerName',
         align: 'center',
         render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
+            return '-';
           } else {
-              return text;
+            return text;
           }
+        },
       },
-    },
-    {
+      {
         title: 'Ship to Address Legal PO',
         dataIndex: 'shipToAddressLegalPO',
         align: 'center',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
         },
-    },
-    {
+      },
+      {
         title: 'Ship to Address DIA',
         dataIndex: 'shipToAddressDIA',
         align: 'center',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
         },
-    },
-    
-    {
+      },
+
+      {
         title: 'Diff of Ship to Address',
         dataIndex: '',
         align: 'center',
         render: (text, record) => {
-            const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-            const text1 = lines1.join('');
-    
-            const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-            const text2 = lines2.join('');
-    
-            const dmp = new DiffMatchPatch();
-            const diff = dmp.diff_main(text1, text2);
-            dmp.diff_cleanupSemantic(diff);
-    
-            let output = '';
-            for (const [op, text] of diff) {
-                if (op === DiffMatchPatch.DIFF_INSERT) {
-                    if (text.trim() !== '') {
-                        output += `${text} `;
-                    }
-                } else if (op === DiffMatchPatch.DIFF_DELETE) {
-                    if (text.trim() !== '') {
-                        output += `${text} `;
-                    }
-                }
+          const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text1 = lines1.join('');
+
+          const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text2 = lines2.join('');
+
+          const dmp = new DiffMatchPatch();
+          const diff = dmp.diff_main(text1, text2);
+          dmp.diff_cleanupSemantic(diff);
+
+          let output = '';
+          for (const [op, text] of diff) {
+            if (op === DiffMatchPatch.DIFF_INSERT) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            } else if (op === DiffMatchPatch.DIFF_DELETE) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
             }
-            return output.trim()
+          }
+          return output.trim()
         },
-    },
-    { title:"CAB Code",
-      dataIndex:'CABCode',
-      render: (text, record) => {
-        if (!text || text.trim() === '') {
-            return '-';
-        } else {
-            return text;
-        }
-    },},
-      {
-        title:'Final Destination',
-        dataIndex:'',
       },
-      
+      {
+        title: "CAB Code",
+        dataIndex: 'CABCode',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Final Destination',
+        dataIndex: '',
+      },
+
       {
         title: "MRGAC",
         dataIndex: 'MRGAC', render: (text, record) => {
-          return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-';
+          return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
         },
       },
       {
         title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
-          return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-';
+          return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-';
         },
       },
       {
         title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
-          return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
+          return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
         },
       },
-    {
-      title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
+      {
+        title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
+            return '-';
           } else {
-              return text;
+            return text;
           }
+        },
       },
-  },
-    
-    { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc',render: (text, record) => {
-      if (!text || text.trim() === '') {
-          return '-';
-      } else {
-          return text;
-      }
-  }, },
-    { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column",render: (text, record) => {
-      if (!text || text.trim() === '') {
-          return '-';
-      } else {
-          return text;
-      }
-  }, },
-    { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", render: (text, record) => {
-      if (!text || text.trim() === '') {
-          return '-';
-      } else {
-          return text;
-      }
-  },},
-    { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", render: (text, record) => {
-      if (!text || text.trim() === '') {
-          return '-';
-      } else {
-          return text;
-      }
-  },},
-    
-    { title: 'Shipping Type', dataIndex: 'shippingType',render: (text, record) => {
-      if (!text || text.trim() === '') {
-          return '-';
-      } else {
-          return text;
-      }
-  }, },
-    { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column',render: (text, record) => {
-      if (!text || text.trim() === '') {
-          return '-';
-      } else {
-          return text;
-      }
-  }, },
-    { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', render: (text, record) => {
-      if (!text || text.trim() === '') {
-        return '-';
-      } else {
-        return text;
-      }
-    }, },
-    
-     
-    {
-      title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
+
+      {
+        title: 'GAC Reason Description', dataIndex: 'GACReasonDesc', render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
+            return '-';
           } else {
-              return text;
+            return text;
           }
+        },
       },
-  },
-  { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
-  { title: 'In Co Terms', dataIndex: 'inCoTerms' },
-  { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
-  {
-      title: 'Purchase Group',
-      dataIndex: 'purchaseGroupCode',
-      className: 'centered-column',
-  },
-  { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
-  
-     
+      {
+        title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+
+      {
+        title: 'Shipping Type', dataIndex: 'shippingType', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+
+
+      {
+        title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
+      { title: 'In Co Terms', dataIndex: 'inCoTerms' },
+      { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
+      {
+        title: 'Purchase Group',
+        dataIndex: 'purchaseGroupCode',
+        className: 'centered-column',
+      },
+      { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
+
+
       {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty',
@@ -1049,519 +1075,519 @@ const PPMReport = () => {
       return '';
     };
     columns.push(
-    
+
       {
         title: 'Trading Co PO Number',
         dataIndex: 'tradingCoPoNumber',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
-        },
-    },
-    {
-      title: 'Gross Price/FOB',
-      dataIndex: 'grossPriceFOB',
-      render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
-          } else {
-              return text;
-          }
-      },
-  },
-  {
-    title: 'Gross Price/FOB currency code',
-    dataIndex: 'fobCurrCode',
-    render: (text, record) => {
-        if (!text || text.trim() === '') {
             return '-';
-        } else {
+          } else {
             return text;
-        }
+          }
+        },
+      },
+      {
+        title: 'Gross Price/FOB',
+        dataIndex: 'grossPriceFOB',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Gross Price/FOB currency code',
+        dataIndex: 'fobCurrCode',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Buyer Confirmed Gross Price/FOB',
+        dataIndex: '',
+        // render: (text, record) => {
+        //     if (!text || text.trim() === '') {
+        //         return '-';
+        //     } else {
+        //         return text;
+        //     }
+        // },
+      },
+      {
+        title: 'Buyer Confirmed Gross Price/FOB Currency Code',
+        dataIndex: '',
+
+      }, {
+      title: 'Diff of Price',
+      dataIndex: '',
+
     },
-},
-{
-  title: 'Buyer Confirmed Gross Price/FOB',
-  dataIndex: '',
-  // render: (text, record) => {
-  //     if (!text || text.trim() === '') {
-  //         return '-';
-  //     } else {
-  //         return text;
-  //     }
-  // },
-},
-{
-  title: 'Buyer Confirmed Gross Price/FOB Currency Code',
-  dataIndex: '',
- 
-},{
-  title: 'Diff of Price',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price Currency',
-  dataIndex: '',
-  
-},{
-  title: 'Net including discounts',
-  dataIndex: 'netIncludingDisc',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Net including discounts currency code',
-  dataIndex: 'netIncDisCurrency',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Trading Co Net including discounts',
-  dataIndex: 'trCoNetIncludingDisc',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Trading Co Net including discounts currency code',
-  dataIndex: 'tradingNetCurrencyCode',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Legal PO Price',
-  dataIndex: 'price',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Legal PO Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'CO Price',
-  dataIndex: 'coPrice',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},{
-  title: 'CO Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'CRM CO QTY',
-  dataIndex: '',
-  
-},{
-  title: 'Legal PO QTY',
-  dataIndex: 'quantity',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Diff of Quantity',
-  dataIndex: '',
-  
-},
-{
-  title: 'Allowed Excess Ship Qty',
-  dataIndex: '',
-  
-},
-{
-  title: 'Actual Shipped Qty',
-  dataIndex: 'actualShippedQty',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Actual Ship %',
-  dataIndex: '',
-  
-},
-{
-  title: 'VAS - Size',
-  dataIndex: 'VASSize',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Item Vas Text',
-  dataIndex: 'itemVasText',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Item Vas Text in PDF PO',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Item Vas Text',
-  dataIndex: '',
-  
-},
-{
-  title: 'Item Text',
-  dataIndex: 'itemText',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Hanger PO',
-  dataIndex: 'hanger',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Change Register',
-  dataIndex: 'displayName',
-  align: 'center',
-},
+      {
+        title: 'Diff of Price Currency',
+        dataIndex: '',
+
+      }, {
+      title: 'Net including discounts',
+      dataIndex: 'netIncludingDisc',
+      render: (text, record) => {
+        if (!text || text.trim() === '') {
+          return '-';
+        } else {
+          return text;
+        }
+      },
+
+    },
+      {
+        title: 'Net including discounts currency code',
+        dataIndex: 'netIncDisCurrency',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Trading Co Net including discounts',
+        dataIndex: 'trCoNetIncludingDisc',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Trading Co Net including discounts currency code',
+        dataIndex: 'tradingNetCurrencyCode',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Legal PO Price',
+        dataIndex: 'price',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Legal PO Price currency',
+        dataIndex: '',
+
+      },
+      {
+        title: 'CO Price',
+        dataIndex: 'coPrice',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      }, {
+      title: 'CO Price currency',
+      dataIndex: '',
+
+    },
+      {
+        title: 'Diff of Price',
+        dataIndex: '',
+
+      },
+      {
+        title: 'Diff of Price currency',
+        dataIndex: '',
+
+      },
+      {
+        title: 'CRM CO QTY',
+        dataIndex: '',
+
+      }, {
+      title: 'Legal PO QTY',
+      dataIndex: 'quantity',
+      render: (text, record) => {
+        if (!text || text.trim() === '') {
+          return '-';
+        } else {
+          return text;
+        }
+      },
+
+    },
+      {
+        title: 'Diff of Quantity',
+        dataIndex: '',
+
+      },
+      {
+        title: 'Allowed Excess Ship Qty',
+        dataIndex: '',
+
+      },
+      {
+        title: 'Actual Shipped Qty',
+        dataIndex: 'actualShippedQty',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Actual Ship %',
+        dataIndex: '',
+
+      },
+      {
+        title: 'VAS - Size',
+        dataIndex: 'VASSize',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Item Vas Text',
+        dataIndex: 'itemVasText',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Item Vas Text in PDF PO',
+        dataIndex: '',
+
+      },
+      {
+        title: 'Diff of Item Vas Text',
+        dataIndex: '',
+
+      },
+      {
+        title: 'Item Text',
+        dataIndex: 'itemText',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Hanger PO',
+        dataIndex: 'hanger',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Change Register',
+        dataIndex: 'displayName',
+        align: 'center',
+      },
 
     )
     exportingColumns.push(
-    
+
       {
         title: 'Trading Co PO Number',
         dataIndex: 'tradingCoPoNumber',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
-        },
-    },
-    {
-      title: 'Gross Price/FOB',
-      dataIndex: 'grossPriceFOB',
-      render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
-          } else {
-              return text;
-          }
-      },
-  },
-  {
-    title: 'Gross Price/FOB currency code',
-    dataIndex: 'fobCurrCode',
-    render: (text, record) => {
-        if (!text || text.trim() === '') {
             return '-';
-        } else {
+          } else {
             return text;
-        }
+          }
+        },
+      },
+      {
+        title: 'Gross Price/FOB',
+        dataIndex: 'grossPriceFOB',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Gross Price/FOB currency code',
+        dataIndex: 'fobCurrCode',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Buyer Confirmed Gross Price/FOB',
+        dataIndex: '',
+        // render: (text, record) => {
+        //     if (!text || text.trim() === '') {
+        //         return '-';
+        //     } else {
+        //         return text;
+        //     }
+        // },
+      },
+      {
+        title: 'Buyer Confirmed Gross Price/FOB Currency Code',
+        dataIndex: '',
+
+      }, {
+      title: 'Diff of Price',
+      dataIndex: '',
+
     },
-},
-{
-  title: 'Buyer Confirmed Gross Price/FOB',
-  dataIndex: '',
-  // render: (text, record) => {
-  //     if (!text || text.trim() === '') {
-  //         return '-';
-  //     } else {
-  //         return text;
-  //     }
-  // },
-},
-{
-  title: 'Buyer Confirmed Gross Price/FOB Currency Code',
-  dataIndex: '',
- 
-},{
-  title: 'Diff of Price',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price Currency',
-  dataIndex: '',
-  
-},{
-  title: 'Net including discounts',
-  dataIndex: 'netIncludingDisc',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Net including discounts currency code',
-  dataIndex: 'netIncDisCurrency',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Trading Co Net including discounts',
-  dataIndex: 'trCoNetIncludingDisc',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Trading Co Net including discounts currency code',
-  dataIndex: 'tradingNetCurrencyCode',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Legal PO Price',
-  dataIndex: 'price',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Legal PO Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'CO Price',
-  dataIndex: '',
-  
-},{
-  title: 'CO Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'CRM CO QTY',
-  dataIndex: '',
-  
-},{
-  title: 'Legal PO QTY',
-  dataIndex: 'quantity',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Diff of Quantity',
-  dataIndex: '',
-  
-},
-{
-  title: 'Allowed Excess Ship Qty',
-  dataIndex: '',
-  
-},
-{
-  title: 'Actual Shipped Qty',
-  dataIndex: 'actual_shipped_qty',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Actual Ship %',
-  dataIndex: '',
-  
-},
-{
-  title: 'VAS - Size',
-  dataIndex: 'VASSize',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Item Vas Text',
-  dataIndex: 'itemVasText',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Item Vas Text in PDF PO',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Item Vas Text',
-  dataIndex: '',
-  
-},
-{
-  title: 'Item Text',
-  dataIndex: 'itemText',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Hanger PO',
-  dataIndex: 'hanger',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Change Register',
-  dataIndex: 'displayName',
-  align: 'center',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-},
+      {
+        title: 'Diff of Price Currency',
+        dataIndex: '',
+
+      }, {
+      title: 'Net including discounts',
+      dataIndex: 'netIncludingDisc',
+      render: (text, record) => {
+        if (!text || text.trim() === '') {
+          return '-';
+        } else {
+          return text;
+        }
+      },
+
+    },
+      {
+        title: 'Net including discounts currency code',
+        dataIndex: 'netIncDisCurrency',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Trading Co Net including discounts',
+        dataIndex: 'trCoNetIncludingDisc',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Trading Co Net including discounts currency code',
+        dataIndex: 'tradingNetCurrencyCode',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Legal PO Price',
+        dataIndex: 'price',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Legal PO Price currency',
+        dataIndex: '',
+
+      },
+      {
+        title: 'CO Price',
+        dataIndex: '',
+
+      }, {
+      title: 'CO Price currency',
+      dataIndex: '',
+
+    },
+      {
+        title: 'Diff of Price',
+        dataIndex: '',
+
+      },
+      {
+        title: 'Diff of Price currency',
+        dataIndex: '',
+
+      },
+      {
+        title: 'CRM CO QTY',
+        dataIndex: '',
+
+      }, {
+      title: 'Legal PO QTY',
+      dataIndex: 'quantity',
+      render: (text, record) => {
+        if (!text || text.trim() === '') {
+          return '-';
+        } else {
+          return text;
+        }
+      },
+
+    },
+      {
+        title: 'Diff of Quantity',
+        dataIndex: '',
+
+      },
+      {
+        title: 'Allowed Excess Ship Qty',
+        dataIndex: '',
+
+      },
+      {
+        title: 'Actual Shipped Qty',
+        dataIndex: 'actual_shipped_qty',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Actual Ship %',
+        dataIndex: '',
+
+      },
+      {
+        title: 'VAS - Size',
+        dataIndex: 'VASSize',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Item Vas Text',
+        dataIndex: 'itemVasText',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Item Vas Text in PDF PO',
+        dataIndex: '',
+
+      },
+      {
+        title: 'Diff of Item Vas Text',
+        dataIndex: '',
+
+      },
+      {
+        title: 'Item Text',
+        dataIndex: 'itemText',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Hanger PO',
+        dataIndex: 'hanger',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+
+      },
+      {
+        title: 'Change Register',
+        dataIndex: 'displayName',
+        align: 'center',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
 
     )
     return (

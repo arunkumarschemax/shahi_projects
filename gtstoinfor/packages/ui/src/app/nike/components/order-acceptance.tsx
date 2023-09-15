@@ -204,7 +204,7 @@ export function OrderAcceptance() {
         {
             title: 'Document Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('DD/MM/YYYY'),
+            render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
             title: 'Aging',
@@ -219,7 +219,7 @@ export function OrderAcceptance() {
             sorter: (a, b) => {
                 const aAging = moment(a['document_date']);
                 const bAging = moment(b['document_date']);
-            
+
                 if (!aAging.isValid() && !bAging.isValid()) {
                     return 0;
                 } else if (!aAging.isValid()) {
@@ -227,13 +227,13 @@ export function OrderAcceptance() {
                 } else if (!bAging.isValid()) {
                     return -1;
                 }
-            
+
                 return aAging.diff(bAging, 'days');
             },
-            
-           // sortOrder: null
+
+            // sortOrder: null
         }
-        ,{
+        , {
             title: 'Plant Name',
             dataIndex: 'plant_name'
         },
@@ -256,7 +256,7 @@ export function OrderAcceptance() {
                 if (typeof text === 'string' && text.trim() === '') {
                     return '-';
                 } else if (typeof text === 'undefined' || text === null) {
-                    return '-'; 
+                    return '-';
                 } else {
                     return text;
                 }
@@ -269,16 +269,16 @@ export function OrderAcceptance() {
                 if (typeof text === 'string' && text.trim() === '') {
                     return '-';
                 } else if (typeof text === 'undefined' || text === null) {
-                    return '-'; 
+                    return '-';
                 } else {
                     return text;
                 }
             },
         }
-        
-        
-        
-        ,{
+
+
+
+        , {
             title: 'Total Order Quantity',
             dataIndex: 'total_item_qty',
             render: (text, record) => {
@@ -443,7 +443,7 @@ export function OrderAcceptance() {
                 >
                 </Table> */}
 
-                 <Table
+                <Table
                     columns={columns}
                     dataSource={filterData.length > 0 ? filterData : data}
                     bordered
@@ -456,8 +456,8 @@ export function OrderAcceptance() {
                     }}
                     scroll={{ x: 'max-content' }}
                 >
-                </Table> 
-                
+                </Table>
+
 
 
             </Card>

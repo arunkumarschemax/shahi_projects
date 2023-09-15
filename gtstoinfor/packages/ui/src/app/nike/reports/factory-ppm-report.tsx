@@ -380,14 +380,14 @@ const FactoryPPMReport = () => {
             { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
             {
                 title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text, record) => {
-                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('DD/MM/YYYY') : '-'
+                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-'
                 }
             },
             { title: 'Item', dataIndex: 'item' },
             { title: 'Factory', dataIndex: 'factory' },
             {
                 title: 'Document Date', dataIndex: 'documentDate', render: (text, record) => {
-                    return record.documentDate ? moment(record.documentDate).format('DD/MM/YYYY') : '-'
+                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
                 }
             },
             { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber', align: 'center' },
@@ -407,7 +407,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'CO Final Approval Date', dataIndex: 'coFinalApprovalDate', render: (text, record) => {
-                    return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('DD/MM/YYYY') : '-'
+                    return record.coFinalApprovalDate ? moment(record.coFinalApprovalDate).format('MM/DD/YYYY') : '-'
                 }
             },
             { title: 'Plan No', dataIndex: 'planNo' },
@@ -441,17 +441,17 @@ const FactoryPPMReport = () => {
             { title: 'GAC', dataIndex: 'GAC' },
             {
                 title: 'Truck Out Date', dataIndex: 'truckOutDate', render: (text, record) => {
-                    return record.truckOutDate ? moment(record.truckOutDate).format('DD/MM/YYYY') : '-'
+                    return record.truckOutDate ? moment(record.truckOutDate).format('MM/DD/YYYY') : '-'
                 }
             },
             {
                 title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', render: (text, record) => {
-                    return record.originReceiptDate ? moment(record.originReceiptDate).format('DD/MM/YYYY') : '-'
+                    return record.originReceiptDate ? moment(record.originReceiptDate).format('MM/DD/YYYY') : '-'
                 }
             },
             {
                 title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', render: (text, record) => {
-                    return record.factoryDeliveryActDate ? moment(record.factoryDeliveryActDate).format('DD/MM/YYYY') : '-'
+                    return record.factoryDeliveryActDate ? moment(record.factoryDeliveryActDate).format('MM/DD/YYYY') : '-'
                 }
             },
             { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
@@ -491,7 +491,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'lastModifiedDate',
                 className: "right-column",
                 render: (text, record) => {
-                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('DD/MM/YYYY') : '-';
+                    return record.lastModifiedDate ? moment(record.lastModifiedDate).format('MM/DD/YYYY') : '-';
                 },
             },
             {
@@ -524,7 +524,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'documentDate',
                 className: "right-column",
                 render: (text, record) => {
-                    return record.documentDate ? moment(record.documentDate).format('DD/MM/YYYY') : '-';
+                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-';
                 },
             },
             {
@@ -591,7 +591,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'coFinalApprovalDate',
                 className: "right-column",
                 render: (text, record) => {
-                    return record.documentDate ? moment(record.documentDate).format('DD/MM/YYYY') : '-'
+                    return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
                 }
             },
             {
@@ -800,17 +800,17 @@ const FactoryPPMReport = () => {
             { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center' },
             {
                 title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column", render: (text, record) => {
-                    return record.MRGAC ? moment(record.MRGAC).format('DD/MM/YYYY') : '-';
+                    return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
                 },
             },
             {
                 title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
-                    return record.OGAC ? moment(record.OGAC).format('DD/MM/YYYY') : '-';
+                    return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-';
                 },
             },
             {
                 title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
-                    return record.GAC ? moment(record.GAC).format('DD/MM/YYYY') : '-';
+                    return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
                 },
             },
 
@@ -900,7 +900,7 @@ const FactoryPPMReport = () => {
                 ),
             },
             {
-                title:'',
+                title: '',
                 align: 'center',
                 render: (text, rowData) => (
                     <div>
@@ -959,7 +959,7 @@ const FactoryPPMReport = () => {
                 ),
             },
             {
-                
+
                 dataIndex: 'id',
                 align: 'center',
                 render: (text, rowData) => (

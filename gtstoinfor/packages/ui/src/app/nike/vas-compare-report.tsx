@@ -373,12 +373,12 @@ const VASChangesCompareGrid = () => {
         },
         {
             title: 'OGAC',
-            dataIndex: 'OGAC',        render: (text) => moment(text).format('DD/MM/YYYY')
+            dataIndex: 'OGAC', render: (text) => moment(text).format('MM/DD/YYYY')
 
         },
         {
             title: 'GAC',
-            dataIndex: 'GAC',        render: (text) => moment(text).format('DD/MM/YYYY')
+            dataIndex: 'GAC', render: (text) => moment(text).format('MM/DD/YYYY')
 
         },
         {
