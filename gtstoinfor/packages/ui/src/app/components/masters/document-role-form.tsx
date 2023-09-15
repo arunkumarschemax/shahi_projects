@@ -37,6 +37,10 @@ const roleOptions = [
     {
       value: 5,
       label: "Accounts",
+    },
+    {
+      value: 6,
+      label: "Marketing",
     }
   ];
 
