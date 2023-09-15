@@ -65,7 +65,10 @@ export function UploadDocumentForm() {
   // const [unitprice, setUnitprice] = useState("");
   const [variance, setVariance] = useState("");
   const [unitquantity, setUnitquantity] = useState("");
+  const [Unitprice, setUnitprice] = useState("");
+
   const [quotation, setQuotation] = useState("");
+  const[status,setStatus]=useState("");
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [zoomFactor, setZoomFactor] = useState(1);
@@ -79,6 +82,8 @@ export function UploadDocumentForm() {
     Taxtype: string;
     Taxamount: string;
     Charge: string;
+    variance: string;
+    Unitprice:string;
   }
 
   const [imageURL, setImageURL] = useState<string | null>(null);
@@ -313,6 +318,7 @@ export function UploadDocumentForm() {
     setInvoiceDate(date);
   };
 
+  
   const handleAddToTable = () => {
     if (
       !HSN &&
@@ -333,11 +339,16 @@ export function UploadDocumentForm() {
       Taxtype,
       Taxamount,
       Charge,
-      variance,
+      Taxpercentage,
       unitquantity,
       quotation,
-      Taxpercentage,
+      variance,
+      Unitprice,
     };
+
+    const ChargeFloat = parseFloat(Charge) || 0;
+    const QuotationFloat = parseFloat(quotation) || 0;
+    newItem.Unitprice = (QuotationFloat - ChargeFloat).toFixed(2);
 
     if (isEditing) {
       const updatedTableData = extractedData.map((item) =>
@@ -346,11 +357,10 @@ export function UploadDocumentForm() {
       setExtractedData(updatedTableData);
       setIsEditing(false);
       setEditingItem(null);
-      setButtonText("Add");
+      setButtonText('Add');
     } else {
       setExtractedData([...extractedData, newItem]);
     }
-
     setHSN("");
     setDescription("");
     setTaxtype("");
@@ -468,11 +478,11 @@ export function UploadDocumentForm() {
         return `${Charge || "0"}`;
       },
     },
-    // {
-    //   title: "Quotation",
-    //   dataIndex: "quotation",
-    //   key: "quotation",
-    // },
+    {
+      title: "Quotation",
+      dataIndex: "quotation",
+      key: "quotation",
+    },
     // {
     //   title: "Variance",
     //   dataIndex: "variance",
@@ -487,9 +497,70 @@ export function UploadDocumentForm() {
     // },
     // {
     //   title: "Status",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   render: (status, records) => {
+    //     if (!Array.isArray(records) || records.length === 0) {
+    //       return "No Variance";
+    //     }
+    
+    //     // Aggregate variance values for all records
+    //     const varianceValues = records.map((record) => {
+    //       if (!record.variance || !Array.isArray(record.variance)) {
+    //         return 0; // Consider zero for records with missing or non-array variance data
+    //       }
+    //       return record.variance.reduce((sum, v) => sum + (parseFloat(v) || 0), 0);
+    //     });
+    
+    //     const hasNonZeroVariance = varianceValues.some((value) => value !== 0);
+    //     const hasZeroVariance = varianceValues.some((value) => value === 0);
+    
+    //     if (hasNonZeroVariance && hasZeroVariance) {
+    //       return "Partially Variance";
+    //     } else if (!hasNonZeroVariance) {
+    //       return "No Variance";
+    //     } else {
+    //       return "Fully Variance";
+    //     }
+    //   },
+    // },
+    
+    {
+      title: "Variance",
+      dataIndex: "variance",
+      key: "variance",
+      hide: true,
+      render: (variance, record) => {
+        const Charge = parseFloat(record.Charge) || 0;
+        const Quotation = parseFloat(record.quotation) || 0;
+        const varianceValue = Quotation - Charge;
+        let status;
+        if (varianceValue === 0) {
+          status = "No Variance";
+        } else if (varianceValue > 0) {
+          status = "Par Variance";
+        } else {
+          status = "Negative Variance";
+        }
+        
+        return `${varianceValue.toFixed(2)}`;
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status, record) => {
+        return status;
+      },
+    },
+    
+    // {
+    //   title: "Status",
     //   dataIndex: "variance_status",
     //   key: "variance_status",
     // },
+    
     {
       title: "Action",
       dataIndex: "action",
@@ -1295,7 +1366,7 @@ export function UploadDocumentForm() {
                     />
                   </Col>
 
-                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                  {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                     <label
                       htmlFor="variance"
                       style={{ color: "black", fontWeight: "bold" }}
@@ -1309,7 +1380,7 @@ export function UploadDocumentForm() {
                       value={variance}
                       onChange={(e) => setVariance(e.target.value)}
                     />
-                  </Col>
+                  </Col> */}
                 </Row>
 
                 <Row gutter={12} style={{ marginTop: "10px" }}></Row>
