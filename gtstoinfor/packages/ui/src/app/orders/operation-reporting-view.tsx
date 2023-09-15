@@ -65,7 +65,7 @@ export const OperationReportingView = () => {
     }
 
     const onJobCompleted = (record) => {
-        const req = new OperationReportingRequest(record.jobNumner,record.skuCode,record.poNumber,record.issuedQuantity,reportedQuantity,rejectedQuantity,wastedQuantity)
+        const req = new OperationReportingRequest(form.getFieldValue('itemCode'),record.jobNumber,record.skuCode,record.poNumber,record.issuedQuantity,reportedQuantity,rejectedQuantity,wastedQuantity)
         service.createOperationReporting(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
@@ -78,7 +78,7 @@ export const OperationReportingView = () => {
     const generateSegmentedOptions = () => {
         return operations.map((operation, index) => (
             {
-          label: operation.operationName, // Change this to the appropriate property from your data
+          label: <b>{operation.operationName}</b>, // Change this to the appropriate property from your data
           value: operation.operationName,    // Change this to the appropriate property from your data
           key: index.toString(),           // Use a unique key for each option
         }
@@ -160,7 +160,6 @@ export const OperationReportingView = () => {
     ]
 
     const onSegmentChange = (view) => {
-        console.log(view)
         getData(view)
     }
 
@@ -197,7 +196,7 @@ export const OperationReportingView = () => {
                 showTable ? (<>
                 <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
             <Segmented 
-            style={{backgroundColor:'#68cc6b'}}
+            style={{backgroundColor:'#dde5b6'}}
             options={segmentedOptions} 
             onChange={onSegmentChange}
             />

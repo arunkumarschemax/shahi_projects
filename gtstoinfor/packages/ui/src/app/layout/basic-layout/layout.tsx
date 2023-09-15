@@ -625,6 +625,30 @@ export const baseRouterList = [
     //         },
     //     ]
     // },
+    {
+        label: "Operation Tracking",
+        key: "operationtracking",
+        // icon:<FontAwesomeIcon icon={faShirt} />,
+        path: "operation-tracking",
+        filepath: "operation-tracking",
+        children:[
+            
+            {
+                label: "Issuing",
+                key: "issuing",
+                path: "operation-tracking/issuing",
+                filepath: "operation-tracking/issuing",
+            },
+            {
+                label: "Reporting",
+                key: "operation-reporting",
+                path: "operation-reporting",
+                filepath: "operation-reporting",
+            },
+            
+         
+        ]
+    },
     // {
     //     label: "Orders",
     //     key: "excel-import",

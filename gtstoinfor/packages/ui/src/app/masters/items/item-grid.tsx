@@ -10,6 +10,7 @@ import AlertMessages from '../../common/common-functions/alert-messages';
 import moment from 'moment';
 import dayjs from 'dayjs';
 import ItemsForm from './items-form';
+import { maxLength } from 'class-validator';
 
 export interface ItemsGridProps { }
 
@@ -289,7 +290,8 @@ export const ItemsGrid = (props: ItemsGridProps) => {
 
 
   return (
-      <>
+      <Card title='Items' extra={<span><Button onClick={() => navigate('/masters/items/items-form')}
+      type={'primary'}>New</Button></span>} size='small'>
       <Row gutter={40}>
         <Col>
           <Card title={'Total Items: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
@@ -301,11 +303,9 @@ export const ItemsGrid = (props: ItemsGridProps) => {
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
         <Col>
-        <span><Button onClick={() => navigate('/masters/items/items-form')}
-              type={'primary'}>New</Button></span>
+        
         </Col>
       </Row><br></br>
-      <Card >
         <Table
         size='small'
           // rowKey={record => record.variantId}
@@ -316,10 +316,10 @@ export const ItemsGrid = (props: ItemsGridProps) => {
               setPage(current);
             }
           }}
-          scroll={{x:true}}
+          scroll={{ x: 'max-content' }}
           onChange={onChange}
-          bordered />
-      </Card>
+          bordered 
+          />
       <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
@@ -330,7 +330,7 @@ export const ItemsGrid = (props: ItemsGridProps) => {
             closeForm={closeDrawer} />
         </Card>
       </Drawer>
-      </>
+      </Card>
   );
 }
 

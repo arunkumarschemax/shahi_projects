@@ -82,7 +82,7 @@ export function ItemSubCategoriesForm(
   };
 
   return (
-    <Card title={<span >Item Sub Categories</span>} style={{ textAlign: 'center' }} headStyle={{ border: 0 }} extra={props.isUpdate == true ? "" : <Link to='/masters/item-sub-categories/item-sub-categories-view' ><Button type={'primary'} >View </Button></Link>}
+    <Card title={<span >Item Sub Categories</span>}  extra={props.isUpdate == true ? "" : <Link to='/masters/item-sub-categories/item-sub-categories-view' ><Button type={'primary'} >View </Button></Link>}
     >
       <Form layout="vertical" form={form} initialValues={props.subCategoryData} name="control-hooks" onFinish={saveData}>
         <Form.Item name="itemSubCategoryId" style={{ display: "none" }} >

@@ -94,7 +94,6 @@ export const SKUGeneration = () => {
     setColor([...color,colour])
     const selectedColourIndex = selectedColors.findIndex(item => {return item.colour === colour.colour})
     selectedColors.splice(selectedColourIndex,1)
-    console.log(selectedColors)
     event.preventDefault();
 
   };

@@ -13,12 +13,9 @@ import React, { useEffect, useState } from "react";
 import FabricDevelopmentTabs from "./fabric-development-tabs";
 import { BuyersService, EmployeeDetailsService, FabricTypeService, LocationsService, ProfitControlHeadService } from "@project-management-system/shared-services";
 import AlertMessages from "../common/common-functions/alert-messages";
+import FabricDevelopmentRequestQuality from "./fabric-development-quality-request";
 
-// const forms = []
-// for (let i= 0 ;i <10 ; i++ ){
-//   forms[i]= Form.useForm();
-   
-//  }
+
 
 
 export const FabricDevelopmentRequest = () => {
@@ -38,6 +35,11 @@ export const FabricDevelopmentRequest = () => {
     const fabrictypeservice = new FabricTypeService();
     const empDetailsservice = new EmployeeDetailsService();
     const locationservice = new LocationsService();
+
+
+    const itemsInfo = (data) => {
+    console.log(data)
+  }
 
    
     useEffect (()=>{
@@ -180,7 +182,7 @@ console.log(locationData,"143")
               </Form.Item>
             </Col>
 
-            <Col
+            {/* <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
@@ -190,7 +192,7 @@ console.log(locationData,"143")
               <Form.Item label="Request No" name="Requestno">
                 <Input placeholder="Request No" allowClear disabled={true} />
               </Form.Item>
-            </Col>
+            </Col> */}
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -251,7 +253,7 @@ console.log(locationData,"143")
               </Form.Item>
             </Col>
 
-            <Col
+            {/* <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
@@ -273,7 +275,34 @@ console.log(locationData,"143")
                   </Select>
                 </Space>
               </Form.Item>
-            </Col>
+            </Col> */}
+              <Col xs={24} sm={24} md={8} lg={8} xl={8}>
+              <Form.Item label="Light Source" name="lightsource">
+                <Row gutter={16}> {/* Use Row to display items side by side */}
+                  <Col span={8}>
+                    <Form.Item name="primary">
+                      <Select placeholder="primary">
+                        {/* Add dropdown options here */}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item name="secondary">
+                      <Select placeholder="secondary">
+                        {/* Add dropdown options here */}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item name="tertiary">
+                      <Select placeholder="tertiary">
+                        {/* Add dropdown options here */}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Form.Item>
+              </Col>
 
             <Col
               xs={{ span: 24 }}
@@ -366,8 +395,11 @@ console.log(locationData,"143")
               </Form.Item>
             </Col> */}
           </Row>
-          <div>
+          {/* <div>
             <FabricDevelopmentTabs key="1" />
+          </div> */}
+          <div>
+            <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo} />
           </div>
         </Card>
 

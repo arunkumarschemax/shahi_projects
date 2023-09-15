@@ -137,6 +137,7 @@ import M3MastersView from "./m3Masters/m3-masters-view"
 import { StockView } from "./sourcing-requisition/stock-view"
 import SourceIssuesView from "./sample-development/source-issues-view"
 import MarketIssueDetail from "./sample-development/market-detail"
+import IssueScreen from "./operation-tracking/issue"
 
 
 export const AppRoutes = () => {
@@ -182,7 +183,10 @@ export const AppRoutes = () => {
 
                     <Route path='/masters'>
                         <Route path='factories/factories-view' element={<FactoriesView />} />
-                        <Route path='factories/factories-form' element={<FactoriesForm />} />
+                        <Route path='factories/factories-form' element={<FactoriesForm factoryData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateFactory={(undefined) => { }}/>} />
                         <Route path='items/item-grid' element={<ItemsGrid />} />
 
                         <Route path='currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
@@ -363,7 +367,28 @@ export const AppRoutes = () => {
                 closeForm={()=>{}}
                 updateFabricWeave={(undefined)=>{}}/>}/>
                 <Route path="fabric-weave/fabric-weave-view" element={<FabricWeaveGrid/>}/>
-
+                <Route path='sampleTypes/sampleTypes-grid' element={<SampleTypesGrid/>}/>
+                <Route path='sampleTypes/sampleTypes-form' element={<SampleTypeForm sampleTypeData={undefined}
+                isUpdate={false}
+                closeForm={()=> {}}
+                updateDetails={(undefined) => { }}/>}/>
+                 <Route path='sampleSubTypes/sampleSubTypes-grid' element={<SampleSubTypesGrid/>}/>
+                <Route path='sampleSubTypes/sampleSubTypes-form' element={<SampleSubTypesForm SampleSubTypesData={undefined}
+                isUpdate={false}
+                closeForm={()=> {}}
+                updateSampleSubTypes={(undefined) => { }}/>}/> 
+                <Route path='fabric-finish-type/fabric-finish-type-grid' element={<FabricFinishTypesGrid />}/> 
+                <Route path='fabric-structure/fabric-structure-form'element={<FabricStructuresForm FabriStructuresData={undefined} updateDetails={function (fabricStructureDto: FabricStructuresDTO): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } }/>}/>
+                        <Route path='fabric-structure/fabric-structure-grid' element={<FabricStructuresGrid />}/>
+                        <Route path='fabric-finish-type/fabric-finish-type-form'element={<FabricFinishTypesForm FabriFinishTypesData={undefined} updateDetails={function (fabricFinishTypeDto: FabricFinishTypesDTO): void {
+                            throw new Error("Function not implemented.")
+                        } } isUpdate={false} closeForm={function (): void {
+                            throw new Error("Function not implemented.")
+                        } }/>}/>
             </Route>
                     <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
@@ -376,7 +401,10 @@ export const AppRoutes = () => {
                     closeForm={()=>{}}
                     updateAttribute={(undefined)=>{}}/>}/>
                     <Route path='factories/factories-view' element={<FactoriesView />} />
-                        <Route path='factories/factories-form' element={<FactoriesForm />} />
+                        <Route path='factories/factories-form' element={<FactoriesForm factoryData={undefined}
+                        isUpdate={false}
+                        closeForm={()=> {}}
+                        updateFactory={(undefined) => { }}/>} />
                         <Route path='currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
                 isUpdate={false}
                 closeForm={() => { }}
@@ -432,17 +460,7 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
-                <Route path='locations/locations-view' element={<LocationsGrid/>}/>
-                         <Route path='sampleTypes/sampleTypes-grid' element={<SampleTypesGrid/>}/>
-                        <Route path='sampleTypes/sampleTypes-form' element={<SampleTypeForm sampleTypeData={undefined}
-                        isUpdate={false}
-                        closeForm={()=> {}}
-                        updateDetails={(undefined) => { }}/>}/>
-                            <Route path='sampleSubTypes/sampleSubTypes-grid' element={<SampleSubTypesGrid/>}/>
-                        <Route path='sampleSubTypes/sampleSubTypes-form' element={<SampleSubTypesForm SampleSubTypesData={undefined}
-                        isUpdate={false}
-                        closeForm={()=> {}}
-                        updateSampleSubTypes={(undefined) => { }}/>}/>                         
+                <Route path='locations/locations-view' element={<LocationsGrid/>}/>                       
                <Route path='buyers/buyers-general-attributes-form' key='buyers/buyers-general-attributes-form' element={<BuyersGeneralAttributeForm/>} />
                         <Route path='buyers/buyers-order-attributes-form' key='buyers/buyers-order-attributes-form' element={<BuyersOrderAttributeForm/>} />
 
@@ -451,18 +469,8 @@ export const AppRoutes = () => {
                         closeForm={()=> {}}
                         updateDetails={(undefined) => { }}/>}/>
                <Route path='delivery-terms/delivery-terms-view' element={<DeliveryTermsGrid/>}/>
-                        <Route path='fabric-structure/fabric-structure-form'element={<FabricStructuresForm FabriStructuresData={undefined} updateDetails={function (fabricStructureDto: FabricStructuresDTO): void {
-                            throw new Error("Function not implemented.")
-                        } } isUpdate={false} closeForm={function (): void {
-                            throw new Error("Function not implemented.")
-                        } }/>}/>
-                        <Route path='fabric-structure/fabric-structure-grid' element={<FabricStructuresGrid />}/>
-                        <Route path='fabric-finish-type/fabric-finish-type-form'element={<FabricFinishTypesForm FabriFinishTypesData={undefined} updateDetails={function (fabricFinishTypeDto: FabricFinishTypesDTO): void {
-                            throw new Error("Function not implemented.")
-                        } } isUpdate={false} closeForm={function (): void {
-                            throw new Error("Function not implemented.")
-                        } }/>}/>
-                        <Route path='fabric-finish-type/fabric-finish-type-grid' element={<FabricFinishTypesGrid />}/>
+                       
+                        
                         <Route path='uom/uom-grid' element={<UomGrid />}/>
                                               
                  </Route>
@@ -475,16 +483,17 @@ export const AppRoutes = () => {
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
-                                               
+                        <Route path='operation-sequence' element={<OperationSequenceForm/>} />
+                   
                         </Route>
                 <Route path='fabricdevelopment'>
                 <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest/>}/>
 
                 </Route>
-                <Route path='settings'>
+                {/* <Route path='settings'> */}
                 <Route path='settings/settings-form' element={<SettingsForm/>}/>
                 <Route path='settings/settings-view' element={<SettingsView/>}/>
-                </Route>
+                {/* </Route> */}
 
                 <Route path='sample-development' >
                     <Route path="sample-development-form" element={<SampleDevForm />}/>
@@ -508,9 +517,14 @@ export const AppRoutes = () => {
                 <Route path='item-creation' element={<ItemCreation/>}/>
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
-                <Route path='operation-sequence' element={<OperationSequenceForm/>} />
+
+
+                </Route>
+                <Route path='/operation-tracking'>
+                <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
                 <Route path='operation-reporting' element={<OperationReportingView/>} />
 
+                
                 
 
 

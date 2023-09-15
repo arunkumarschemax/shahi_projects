@@ -1,5 +1,5 @@
 
-import {  Card, Col, Form, Input, Row } from 'antd'
+import {  Card, Col, Form, Input, Row, Select } from 'antd'
 
 import FabricDevelopmentDynamicForm from './fabric-development-dynamicform'
 import { useEffect, useState } from 'react';
@@ -25,7 +25,7 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
 
   const onChange = () =>{
     placementForm.validateFields().then((values) => {
-      // console.log(values, '555');
+      console.log(values, 'onchange');
       setFormData(values) 
     })
     
@@ -48,7 +48,7 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
   // const rec = new ItemInfo(itemData[0].itemsCode,itemData[0].description)
   // itemsInfo.push (rec)
   // console.log(rec,"00000")
-//  const fabic = new FabricInfo(1,1,1,1,1,1,1,1,1)
+  //  const fabic = new FabricInfo(1,1,1,1,1,1,1,1,1)
    
    
   //  let items:ItemInfo[] = itemData
@@ -62,9 +62,47 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
       style={{ fontSize: "10px" }}
       layout="vertical"
       form={placementForm}
-      onValuesChange={onChange}
+      // onValuesChange={onChange}
+      onChange={onChange}
     >
       <Row gutter={12}>
+      <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 4 }}
+              lg={{ span: 4 }}
+              xl={{ span: 4 }}
+            >
+              <Form.Item
+                label="Quality"
+                name="quality"
+                rules={[{ required: true, message: "Location" }]}
+              >
+                <Select placeholder="Select Qualities" allowClear>
+                  <option key="1" value="Quality1">Quality1</option>
+                  <option key="2" value="Quality2">Quality2</option>
+                  <option key="3" value="Quality3">Quality3</option>
+                  <option key="4" value="Quality4">Quality4</option>
+                  <option key="5" value="Quality5">Quality5</option>
+                  <option key="6" value="Quality6">Quality6</option>
+                  <option key="7" value="Quality7">Quality7</option>
+                  <option key="8" value="Quality8">Quality8</option>
+                  <option key="9" value="Quality9">Quality9</option>
+                  <option key="10" value="Quality10">Quality10</option>
+                  <option key="11" value="Quality11">Quality11</option>
+                  <option key="12" value="Quality12">Quality12</option>
+
+
+                  {/* {locationData.map((rec) => (
+                    <option key={rec.locationId} value={rec.locationId}>
+                      {rec.locationName}
+                     </option>
+                         ))}
+                          */}
+  
+                  </Select>
+              </Form.Item>
+            </Col>
         <Col
           xs={{ span: 24 }}
           sm={{ span: 24 }}

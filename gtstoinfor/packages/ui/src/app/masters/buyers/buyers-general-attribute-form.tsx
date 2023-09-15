@@ -44,7 +44,6 @@ export const BuyersGeneralAttributeForm = () => {
     }
 
     const onSelectChange = (newSelectedRowKeys: React.Key[],rowSelect) => {
-        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
         setSelectedRowKeys(newSelectedRowKeys);
         // rowSelect.foreach((e) => {
         //     e.disabled = false
@@ -65,7 +64,6 @@ export const BuyersGeneralAttributeForm = () => {
         setAttributeValue([...attributeValue,req])
     }
 
-    console.log(attributeValue,'------attributevalue')
 
     const onInputChange = (e) => {
         console.log(e,'--------e')

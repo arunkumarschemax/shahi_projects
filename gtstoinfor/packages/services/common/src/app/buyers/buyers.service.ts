@@ -240,7 +240,7 @@ export class BuyersService {
                 return new CommonResponseModel(false,1,'No buyers found',[])
             } else {
                 for(const rec of buyerInfo){
-                    if(!buyerMap.has(rec.id)){
+                    if(!buyerMap.has(rec.buyer_id)){
                         buyerMap.set(rec.buyer_id,new BuyersDto(rec.buyer_id,rec.buyer_code,rec.buyer_name,rec.gst_number,rec.contact_person,rec.phone_no,rec.email,rec.currency_name,rec.public_note,rec.private_note,rec.payment_terms,null,rec.payment_method_id,rec.is_active,null,null,rec.version_flag,rec.payment_terms_id,rec.payment_method,[]))
                     }
                     buyerMap.get(rec.buyer_id).addressInfo.push(new AddressDto(rec.address_id,rec.country_id,rec.state,rec.district,rec.city,rec.landmark,rec.lane1,rec.lane2,rec.pincode,null,null,null,null,rec.country_name))

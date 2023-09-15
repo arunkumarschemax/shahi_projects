@@ -264,13 +264,13 @@ const columnsSkelton:any=[
 ]
 return(
   <Card title={<span>Garment Category</span>}
-        style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/garmentcategory/garmentcategory-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+        extra={<Link to = "/masters/garmentcategory/garmentcategory-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
         <br></br>
 
     <>
     <Row gutter={40}>
     <Col>
-          <Card title={'Total PaymentMethods: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+          <Card title={'Total Garment Categories: ' + variantData.length} style={{ textAlign: 'left', width: 250, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
           <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
