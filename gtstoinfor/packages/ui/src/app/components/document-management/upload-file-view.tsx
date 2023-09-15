@@ -30,6 +30,7 @@ const UploadFileGrid = () =>{
     const [form] = Form.useForm()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [pageSize, setPageSize] = useState<number>(1);
+    const [filesData, setFilesData] = useState<any[]>([])
 
     const uploadDcoService = new UploadDocumentService()
     let navigate = useNavigate();
@@ -247,7 +248,7 @@ const UploadFileGrid = () =>{
             ...getColumnSearchProps('orderPoStatus'),
 
         }
-        // {
+// {
         //   title: 'INVOICE NO',
         //   dataIndex: 'invoiceNo',
         //   fixed: 'left',
@@ -344,8 +345,10 @@ const UploadFileGrid = () =>{
                 render:(data, record) =>{
                     // console.log(res.data,'header')
                     const backgroundColor = data === 'Yes' ? 'green' : 'red'
+                  const datalink =  data === 'Yes' ? <Link onClick={() => modelOpen(header, record)}>{data}</Link>:data
                     return    (
-                        <div style={{color:backgroundColor ,textAlign:'center'}} ><b>{data}</b></div>
+                     
+                        <div style={{color:backgroundColor ,textAlign:'center'}} ><b>{datalink}</b></div>
                     )
 
                 }
@@ -374,9 +377,24 @@ const UploadFileGrid = () =>{
 
     }
 
-    const modelOpen =(poNumber:string) =>{
+    const getFilepathsAginstpo =(header,record) =>{
+      console.log(record.PO)
+      console.log(header)
+      uploadDcoService.getFilesAgainstPoandDocument({poNo:record.PO,document:header}).then(res =>{
+        if(res.status){
+          setFilesData(res.data)
+        }else{
+          setFilesData([])
+        }
+      })
+    }
+
+    const modelOpen =(header, record) =>{
+      console.log(header)
+      console.log(record)
       setIsModalOpen(true)
-      getTotalDocUploadedAgainstPo(poNumber)
+      getFilepathsAginstpo(header,record)
+      // getTotalDocUploadedAgainstPo(poNumber)
     }
 
     const handleCancel =()=>{
@@ -385,6 +403,33 @@ const UploadFileGrid = () =>{
     const onChange = (pagination, filters, sorter, extra) => {
       console.log('params', pagination, filters, sorter, extra);
     }
+
+
+
+    const downloadpath = (filePath) => {
+      console.log(filePath,'filepath');      
+      if (filePath) {
+        filePath = filePath.split(",");
+        for (const res of filePath) {
+          if(res){
+            console.log(res);
+            setTimeout(() => {
+              const response = {
+                  file: 'http://165.22.220.143/document-management/gtstoinfor/'+`${res}`
+              };
+              window.open(response.file);
+    
+            }, 100);
+          }
+        }
+      }
+      else {
+        AlertMessages.getErrorMessage("Please upload file. ");
+  
+      }
+    }
+  
+
     return (<Form form={form}>
         <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span>{JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" || JSON.parse(localStorage.getItem('currentUser')).user.roles != "consolidator" ?<Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button>:""}</span>}>
             {columns.length > 0 && itemData.length > 0 ? (
@@ -416,7 +461,7 @@ const UploadFileGrid = () =>{
             )}
         </Card>
         <Modal
-        title='View Documents'
+        title='DownLoad Documents'
          width={1000}
          centered
          open={isModalOpen}
@@ -425,12 +470,13 @@ const UploadFileGrid = () =>{
         >
           <Card>
           <div>
-            <h3>Uploaded Files:</h3>
+            <h3>Uploaded Documents:</h3>
             <ul>
-                {documentdat.map(file =>
+                {filesData.map(file =>
                  (
                     <li key={file.uid}>
-                        <span>{file.fileName}</span>
+                      <Link onClick={()=>downloadpath(file.filePath)}>{file.fileName}</Link>
+                        {/* <span>{file.fileName}</span> */}
                     </li>
                 ))}
             </ul>

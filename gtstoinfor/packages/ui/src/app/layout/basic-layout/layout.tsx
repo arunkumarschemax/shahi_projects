@@ -81,7 +81,7 @@ const BasicLayout = () => {
                 <Tooltip title='Logout'><Button type="default" icon={<LogoutOutlined />} style={{ float: 'right', marginTop: '-5.4%' }} onClick={logOut}>{'Hi '+loginUser}<div style={{color:'#f3bf13',marginTop:'10px',fontStyle:'italic'}}>{loginUserRole}</div></Button></Tooltip>
                 {/* <>{userData.user.roles}</> */}
                 <Menu
-                    theme="light"
+                    theme="dark"
                     mode="horizontal"
                     // defaultSelectedKeys={['1']}
                     // style={{ marginTop: '20px' }}

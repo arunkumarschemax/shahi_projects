@@ -15,7 +15,7 @@ import { DeleteDto } from './dto/delete-dto';
 import { Entity } from 'typeorm';
 import { DocumentEntity } from './entities/documents.entity';
 import { DocumentRoleMapping } from "./models/document-role-mapping.dto";
-import { AllDocumentRoleMappingsResponseModel, CommonResponseModel, DocumentRoleMappingResponseModel, PoRoleRequest,RoleActivateDeactivateDto ,DocumentResponseModel, poReq, DocumentIdreq, InvoiceReq, ChallanReq, DocumentIdReq} from "@project-management-system/shared-models";
+import { AllDocumentRoleMappingsResponseModel, CommonResponseModel, DocumentRoleMappingResponseModel, PoRoleRequest,RoleActivateDeactivateDto ,DocumentResponseModel, poReq, DocumentIdreq, InvoiceReq, ChallanReq, DocumentIdReq, getFileReq} from "@project-management-system/shared-models";
 import { DocumentRoleMappingService } from "./document_role_mapping.service";
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import * as fs from 'fs';
@@ -264,4 +264,8 @@ export class DocumentUploadController {
       return await this.documentservice.updateDownloadStatus(req);
     }
 
+    @Post('/getFilesAgainstPoandDocument')
+    async getFilesAgainstPoandDocument(@Body() req: getFileReq ): Promise<CommonResponseModel> {
+      return await this.uploadDocservice.getFilesAgainstPoandDocument(req);
+    }
 }

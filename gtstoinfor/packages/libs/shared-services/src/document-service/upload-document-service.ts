@@ -1,11 +1,13 @@
 import {
     ChallanReq,
+    CommonResponseModel,
     DocumentIdreq,
     DocumentsListRequest,
     InvoiceReq,
     PoRoleRequest,
     UploadDocumentListDto,
     UploadDocumentListResponseModel,
+    getFileReq,
     poReq,
 } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
@@ -42,5 +44,8 @@ export class UploadDocumentService extends CommonAxiosService {
     }
     async getChallanByPOandInvoice(req: ChallanReq): Promise<UploadDocumentListResponseModel> {
         return this.axiosPostCall(this.url + "/getChallanByPOandInvoice",req)
+    }
+    async getFilesAgainstPoandDocument(req: getFileReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.url + "/getFilesAgainstPoandDocument",req)
     }
 }

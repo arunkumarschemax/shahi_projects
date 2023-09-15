@@ -11,7 +11,7 @@ import { DocumentRoleMappingRepository } from "./repository/document-role-reposi
 import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
 import { DataSource } from "typeorm";
-import { ChallanReq, CommonResponseModel, DocumentIdreq, InvoiceReq, PoRoleRequest, UploadDocumentListDto, docRequest, poReq } from "@project-management-system/shared-models";
+import { ChallanReq, CommonResponseModel, DocumentIdreq, InvoiceReq, PoRoleRequest, UploadDocumentListDto, docRequest, getFileReq, poReq } from "@project-management-system/shared-models";
 import { DocumentUploadDto } from "./requests/document-upload-dto";
 import { UploadFilesRepository } from "./repository/upload-files.repository";
 import { UploadFileDto } from "./models/upload-file.dto";
@@ -331,6 +331,22 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
     async getChallanByPOandInvoice(req: ChallanReq): Promise<CommonResponseModel>{
         try{
             const sqlQuery = "select id AS orderId , challan_no AS challan from orders where po_no = '"+req.customerPo+"' and invoice_no = '"+req.invoice+"' group by po_no order by po_no ASC";
+            const result = await this.documentRoleMappingRepo.query(sqlQuery)
+            if(result.length >0){
+                return new CommonResponseModel(true,1,'data retrived sucessfully..',result)
+            }else{
+            return new CommonResponseModel(false,0,'no data found..',[])
+
+            }
+        }catch(error){
+            throw error
+        }
+
+    }
+
+    async getFilesAgainstPoandDocument(req: getFileReq): Promise<CommonResponseModel>{
+        try{
+            const sqlQuery = 'SELECT u.id,document_list_id,dl.document_category_id,customer_po AS poNo,u.file_name AS fileName,u.file_path AS filePath  FROM `upload_files` u LEFT JOIN `documents_list` dl ON dl.documents_list_id=u.document_list_id  LEFT JOIN `document` d ON d.id=dl.document_category_id           WHERE dl.customer_po="'+req.poNo+'" AND d.document_name="'+req.document+'"';
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
             if(result.length >0){
                 return new CommonResponseModel(true,1,'data retrived sucessfully..',result)
