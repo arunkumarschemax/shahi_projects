@@ -67,36 +67,37 @@ const PriceForm = () => {
     <Card
       title={
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: 'white' }}>Vendor Price List</span>
+          <span style={{ color: 'black' }}>Vendor Price List</span>
           <Button type="primary" onClick={handleViewClick}>View</Button>
         </div>
       }
       bordered={true}
       style={{ flex: 1 }}
-      headStyle={{ backgroundColor: '#4bc5eb', color: 'white', border: 0 }}
+      headStyle={{ backgroundColor: "#00FFFF", color: 'white', border: 0 }}
     >
       <Form
         name="basic"
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        labelCol={{ xs: 8, sm: 8, md: 8, lg: 8, xl: 8 }}
-        wrapperCol={{ xs: 16, sm: 16, md: 16, lg: 16, xl: 16 }}
+        // labelCol={{ xs: 8, sm: 8, md: 8, lg: 8, xl: 8 }}
+        // wrapperCol={{ xs: 16, sm: 16, md: 16, lg: 16, xl: 16 }}
       >
         <Row gutter={24}>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 7 }}
-            lg={{ span: 7 }}
-            xl={{ span: 7 }}
+            md={{ span: 6 }}
+            lg={{ span: 6 }}
+            xl={{ span: 6 }}
           >
             <Form.Item
               label="Vendor Name"
               name="vendor"
-              rules={[{ required: true, message: "Vendor Name" }]}
+          
+              rules={[{ required: true, message: "Enter Vendor Name" }]}
             >
-              <Select>
+              <Select placeholder="Select Vendor Name">
                 {data1.map((option) => (
                   <Select.Option key={option.id} value={option.businessName}>
                     {option.businessName}
@@ -110,16 +111,16 @@ const PriceForm = () => {
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 7 }}
-            lg={{ span: 7 }}
-            xl={{ span: 7 }}
+            md={{ span: 6 }}
+            lg={{ span: 6}}
+            xl={{ span: 6 }}
           >
             <Form.Item
               label="Head Of Charges"
               name="headOfChargers"
-              rules={[{ required: true, message: "Head Of Charges" }]}
+              rules={[{ required: true, message: "Please Enter Head Of Charges" }]}
             >
-              <Input />
+              <Input placeholder='Enter Head Of Charges'/>
             </Form.Item>
           </Col>
 
@@ -131,81 +132,82 @@ const PriceForm = () => {
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 7 }}
-            lg={{ span: 7 }}
-            xl={{ span: 7 }}
+            md={{ span: 6 }}
+            lg={{ span: 6 }}
+            xl={{ span: 6 }}
           >
             <Form.Item
               label="Per Unit"
               name="perUnit"
-              rules={[{ required: true, message: "Per Unit" }]}
+              rules={[{ required: true, message: "Please Enter Per Unit" }]}
             >
-              <Input />
+              <Input placeholder='Enter Per Unit'/>
             </Form.Item>
           </Col>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 7 }}
-            lg={{ span: 7 }}
-            xl={{ span: 7 }}
+            md={{ span: 6 }}
+            lg={{ span: 6 }}
+            xl={{ span: 6 }}
           >
             <Form.Item
               label="Dp Logistics"
               name="dpLogistics"
-              rules={[{ required: true, message: "Dp Logistics" }]}
+              rules={[{ required: true, message: "Please Enter Dp Logistics" }]}
             >
-              <Input />
+              <Input placeholder='Enter Per Dp Logistics'/>
             </Form.Item>
           </Col>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 7 }}
-            lg={{ span: 7 }}
-            xl={{ span: 7 }}
+            md={{ span: 6 }}
+            lg={{ span: 6 }}
+            xl={{ span: 6 }}
           >
             <Form.Item
               label="NSH"
               name="nsh"
-              rules={[{ required: true, message: "NSH" }]}
+              rules={[{ required: true, message: "Please Enter NSH" }]}
             >
-              <Input />
+              <Input placeholder='Enter NSH'/>
             </Form.Item>
           </Col>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 7 }}
-            lg={{ span: 7 }}
-            xl={{ span: 7 }}
+            md={{ span: 6 }}
+            lg={{ span: 6 }}
+            xl={{ span: 6 }}
           >
             <Form.Item
               label="KSR"
               name="ksr"
-              rules={[{ required: true, message: "KSR" }]}
+              rules={[{ required: true, message: "Please Enter KSR" }]}
             >
-              <Input />
+              <Input placeholder='Enter KSR'/>
             </Form.Item>
           </Col>
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 7 }}
-            lg={{ span: 7 }}
-            xl={{ span: 7 }}
+            md={{ span: 6 }}
+            lg={{ span: 6 }}
+            xl={{ span: 6 }}
           >
             <Form.Item
               label="Unit Price"
               name="unitPrice"
-              rules={[{ required: true, message: "Unit Price" }]}
+              rules={[{ required: true, message: "Please Enter Unit Price" }]}
             >
-              <Input type="number" />
+              <Input type="number" placeholder='Enter Unit Price'/>
             </Form.Item>
           </Col>
 
         </Row>
 
+        <Row justify="end">
         <Form.Item>
           <Button
             type="primary"
@@ -225,9 +227,12 @@ const PriceForm = () => {
             Reset
           </Button>
         </Form.Item>
+        </Row>
       </Form>
     </Card>
   );
 };
 
 export default PriceForm;
+
+
