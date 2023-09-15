@@ -1,5 +1,6 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 import { HSNEntity } from './hsn-entity';
+import { StatusEnum } from 'packages/libs/shared-models/src/common';
 @Entity('invoice')
 export class ScanEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
@@ -102,6 +103,12 @@ export class ScanEntity extends BaseEntity {
     name: 'buyer_name',
   })
   buyerName: string;
+
+  @Column("enum", {
+    name: "variance_status",
+    enum: StatusEnum,
+  })
+  VarianceStatus: StatusEnum;
 
   @CreateDateColumn({
     name: "created_at",

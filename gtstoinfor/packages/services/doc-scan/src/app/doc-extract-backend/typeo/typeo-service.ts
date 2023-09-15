@@ -40,7 +40,9 @@ export class ScanService {
 
   async getdata(): Promise<CommonResponseModel> {
     
-    const records = await this.repository.find();
+    const records = await this.repository.find({
+      relations: ['scanentity']
+    });
     if (records.length === 0) {
       return new GlobalResponseObject(false, 65645, "Data not Found")
     }

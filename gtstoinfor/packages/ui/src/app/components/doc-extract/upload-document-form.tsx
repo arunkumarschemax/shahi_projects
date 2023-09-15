@@ -546,14 +546,14 @@ export function UploadDocumentForm() {
         return `${varianceValue.toFixed(2)}`;
       },
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status, record) => {
-        return status;
-      },
-    },
+    // {
+    //   title: "Status",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   render: (status, record) => {
+    //     return status;
+    //   },
+    // },
     
     // {
     //   title: "Status",
@@ -1422,13 +1422,13 @@ export function UploadDocumentForm() {
             <br></br>
             <br></br>
             <br></br>
-            {extractedData && extractedData.length > 0 ? (
-              <Card>
-                <Table dataSource={extractedData} columns={columns} />
+            {/* {extractedData && extractedData.length > 0 ? ( */}
+              <Card size="small">
+                <Table dataSource={extractedData} columns={columns} size ="small" />
               </Card>
-            ) : (
+            {/* ) : (
               ""
-            )}
+            )} */}
           </Card>
         </div>
       </Form>

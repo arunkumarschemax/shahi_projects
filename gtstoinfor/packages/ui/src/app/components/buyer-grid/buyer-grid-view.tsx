@@ -115,7 +115,7 @@ const BuyersView = () => {
   return (
     <div>
         <Card title="Buyer Info" style={{position:"relative",right:"10px"}}>
-      <Table dataSource={buyersData} columns={columns} />
+      <Table dataSource={buyersData} columns={columns}  size='small'/>
       </Card>
     </div>
   );

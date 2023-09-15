@@ -227,6 +227,7 @@ const VendorGrid = () => {
             columns={columns}
             className="custom-table-wrapper"
             dataSource={filteredData}
+            size = "small"
             pagination={{
               onChange(current, pageSize) {
                 setPage(current);

@@ -202,12 +202,12 @@ export function DocView() {
 
   return (
     <div>
-      <Card title="Documents Info" style={{ position: "relative", bottom: "15px" }} extra={
+      <Card title="Documents Info" size='small' extra={
         <Link to="/doc-extract-form">
           <Button className="panel_button">Upload Document </Button>
         </Link>
       }>
-        <Table style={{ position: "relative", bottom: "20px" }} dataSource={formdata} columns={columns} />
+        <Table  size='small' dataSource={formdata} columns={columns} />
       
       </Card>
     </div>

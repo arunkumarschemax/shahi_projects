@@ -94,7 +94,7 @@ export function PriceView() {
       }>
 
         <Table
-          dataSource={formdata} columns={columns} />
+          dataSource={formdata} columns={columns}  size='small'/>
       </Card>
     </div>
   );
