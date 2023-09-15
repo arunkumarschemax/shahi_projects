@@ -10,6 +10,8 @@ const BuyersView = () => {
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
   const [buyersData, setBuyersData] = useState([]);
+  const [page, setPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(1)
 
   useEffect(() => {
     fetchData();
@@ -86,6 +88,12 @@ const BuyersView = () => {
   };
 
   const columns = [
+    {
+      title: 'S.No',
+      key: 'sno',
+      responsive: ['sm'],
+      render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+  },
     {
       title: 'Buyer Code',
       dataIndex: 'buyerCode',
