@@ -14,9 +14,6 @@ export class PriceListService extends CommonAxiosService {
     }
 
     async  updatePriceList(req: PriceListDto): Promise<PriceListResponseModel> {
-        console.log('API Endpoint:', this.URL + '/updatePriceList');
-        console.log('Request Data:', req);
-
         return this.axiosPostCall(this.URL + '/updatePriceList', req)
     }
     async getAllActivePriceList(): Promise<PriceListResponseModel> {

@@ -57,26 +57,10 @@ export const PriceListGrid = (props: PriceListView) => {
     })
   }
 
-  // const updatePriceList = (req: PriceListDto) => {
-  //   req.updatedUser = JSON.parse(localStorage.getItem('username'))
-
-  //   priceService.updatePriceList(req).then(res => { 
-  //     console.log(req,"request fdrom  grid")
-  //     if (res.status) {
-  //       AlertMessages.getSuccessMessage('Updated Successfully');
-  //       setDrawerVisible(false);
-  //       getPriceList()
-  //     } else {
-  //         AlertMessages.getErrorMessage(res.internalMessage);
-  //     }
-  //   }).catch(err => {
-  //     AlertMessages.getErrorMessage(err.message);
-  //   })
-  // }
+  
 
   const updatePriceList = (req: PriceListDto) => {
     req.updatedUser = JSON.parse(localStorage.getItem('username'));
-  
     priceService.updatePriceList(req)
       .then(res => {
         if (res.status) {

@@ -1,12 +1,12 @@
 import { Body, Controller, Post, Put } from '@nestjs/common';
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
-import { AllFactoriesResponseModel, PriceListResponseModel } from '@project-management-system/shared-models';
+import { AllFactoriesResponseModel, PriceListDto, PriceListResponseModel } from '@project-management-system/shared-models';
 import { priceListService } from './pricelist.service';
 import { ApiBody } from '@nestjs/swagger';
 import { priceListDto } from './dto/pricelist.dto';
 import { PriceListEntity } from './entities/pricelist.entity';
 
-@Controller('/PriceList')
+@Controller('/priceList')
 export class PriceListController {
     constructor(
         private priceService: priceListService,
@@ -26,8 +26,8 @@ export class PriceListController {
           }
         }
       
-        @Put('/updatePriceList')
-        @ApiBody({ type: priceListDto })
+        @Post('/updatePriceList')
+        @ApiBody({ type: PriceListDto })
         async updatePriceList(@Body() Dto: any): Promise<PriceListResponseModel> {
           try {
             return await this.priceService.createPriceList(Dto, true);
