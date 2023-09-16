@@ -13,6 +13,8 @@ import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
 import { FileUploadRepository } from './repository/upload.repository';
 import { FileUploadEntity } from './entities/upload-file.entity';
+import { TrimOrdersEntity } from './entities/trim-orders.entity';
+import { TrimOrdersRepository } from './repository/trim.order.repository';
 
 @Module({
   imports: [
@@ -20,9 +22,10 @@ import { FileUploadEntity } from './entities/upload-file.entity';
       OrdersEntity,
       OrdersChildEntity,
       OrdersDifferenceEntity,
-      FileUploadEntity
+      FileUploadEntity,
+      TrimOrdersEntity,
     ])],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository]
+  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository,TrimOrdersRepository]
 })
 export class OrdersModule { }
