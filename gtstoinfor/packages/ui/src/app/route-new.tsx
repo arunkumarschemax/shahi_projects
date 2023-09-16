@@ -17,6 +17,7 @@ import PhaseWiseData from "./excel-import/phase-wise-data"
 import { ExFactoryReport } from "./common/reports/ex-factory-report"
 import TrimOrders from "./excel-import/trim-orders"
 import TrimOrderReport from "./excel-import/trim-orders"
+import TrimOrder from "./excel-import/trim-orders"
 
 
 export const AppRoutesNew = () => {
@@ -42,10 +43,11 @@ export const AppRoutesNew = () => {
                   <Route path='revert-orders' key='/revert-orders' element={<FileRevert />} />
                   <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
                   {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
+                  <Route path='trim-order' key='/trim-order' element={<TrimOrder />} />
+
               </Route>
               <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
               <Route path='/ex-factory-report' key='/ex-factory-report' element={<ExFactoryReport />} />
-              <Route path='/trim-order-report' key='/trim-order-report' element={<TrimOrderReport />} />
 
               <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
           </Route>
