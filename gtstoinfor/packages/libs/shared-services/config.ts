@@ -5,7 +5,7 @@ export const config = {
     whatsapp_broadcast_url: 'http://206.189.138.212:3232/api',
     APP_IAM_SERVER_URL: "https://ums-backend.shahiapps.in/",
     APP_IAM_CLIENT_ID: "https://ums-backend.shahiapps.in/",
-    Doc_scan_management_URL: "https://escan-backend.shahiapps.in/",
+    Doc_scan_management_URL: "https://escan-backend.shahiapps.in/api",
     // Doc_scan_management_URL: "http://localhost:8004/api",
 
 }
