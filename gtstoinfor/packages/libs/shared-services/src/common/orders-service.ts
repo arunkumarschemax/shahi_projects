@@ -89,6 +89,9 @@ export class OrdersService extends CommonAxiosService {
 
     async getMonthWiseData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getMonthWiseData")
+
+    } async getTrimOrdersData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getTrimOrdersData")
     }
     async getAll(): Promise<any> {
         const data=[
@@ -1009,4 +1012,6 @@ export class OrdersService extends CommonAxiosService {
           return data
         // return this.axiosPostCall(this.ordersController + "/getMonthWiseData")
     }
+
+
 }
