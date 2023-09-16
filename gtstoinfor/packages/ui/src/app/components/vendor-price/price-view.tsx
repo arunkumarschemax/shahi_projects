@@ -47,6 +47,11 @@ export function PriceView() {
       key: 'vendor',
     },
     {
+      title: 'Service Code',
+      dataIndex: 'serviceCode',
+      key: 'servicecode',
+    },
+    {
       title: 'Head Of Charges',
       dataIndex: 'headOfCharges',
       key: 'headOfCharges',

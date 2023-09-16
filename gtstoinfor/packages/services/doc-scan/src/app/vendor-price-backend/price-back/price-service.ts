@@ -7,6 +7,7 @@ import { PriceEntity } from "../entity/price-entity";
 import { PriceAdapter } from "../adapter/price-adapter";
 import { PriceDto } from "../dto/price.dto";
 import { PriceResponseModel } from "packages/libs/shared-models/src/price-model";
+import { ScanRepo } from "./price-repo";
 
 
 @Injectable()
@@ -17,11 +18,18 @@ export class PriceService {
     private adapter: PriceAdapter,
     @InjectRepository(PriceEntity)
     private repository: Repository<PriceEntity>,
+    
   ) { }
 
   async postdata(req: PriceDto): Promise<PriceResponseModel> {
     console.log(req,"88888888888")
-    const adapterData = this.adapter.convertDtoToEntity(req);
+    const query = `SELECT MAX(id) AS id  FROM PriceList ORDER BY created_at DESC`;
+    const result = await this.repository.query(query);
+    console.log(result,"===")
+    
+
+    
+    const adapterData = this.adapter.convertDtoToEntity(req,result[0].id);
     await this.repository.save(adapterData)
     const internalMessage: string = req.unitPrice
       ? "Created Successfully"
@@ -39,4 +47,5 @@ export class PriceService {
     }
     return new CommonResponseModel(true, 111111, "Data Retrieved Successfully", records)
   }
+
 }

@@ -13,6 +13,7 @@ export class PriceAdapter {
         dto.ksr = entity.ksr;
         dto.dpLogistics = entity.dpLogistics;
         dto.unitPrice = entity.unitPrice;
+        dto.serviceCode = entity.serviceCode;
         dto.createdAt=entity.createdAt;
         dto.createdUser=entity.createdUser;
         dto.updatedAt=entity.updatedAt;
@@ -21,7 +22,8 @@ export class PriceAdapter {
         return dto;
     }
 
-    convertDtoToEntity(dto: PriceDto): PriceEntity {
+    convertDtoToEntity(dto: PriceDto,result): PriceEntity {
+    
         const entity = new PriceEntity();
         entity.headOfCharges = dto.headOfCharges;
         entity.perUnit = dto.perUnit;
@@ -30,6 +32,7 @@ export class PriceAdapter {
         entity.ksr = dto.ksr;
         entity.vendor = dto.vendor;
         entity.unitPrice = dto.unitPrice;
+        entity.serviceCode = "VENDOR"+"/"+"SC"+ "/"+ (result +1);
         entity.createdAt=dto.createdAt;
         entity.createdUser=dto.createdUser;
         entity.updatedAt=dto.updatedAt;

@@ -58,6 +58,12 @@ export class PriceEntity extends BaseEntity {
     })
     unitPrice: string;
 
+    @Column('varchar', {
+        length: 50,
+        name: 'service_code',
+    })
+    serviceCode: string;
+
 
     @CreateDateColumn({
         name: "created_at",

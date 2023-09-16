@@ -26,6 +26,9 @@ export class PriceDto {
   @ApiProperty()
   vendor: string;
 
+  @ApiProperty()
+  serviceCode: string;
+
 
   @ApiProperty()
   createdAt: Date;
