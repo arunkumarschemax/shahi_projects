@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import {  Button, Card, Form, Input, Table, Space, InputRef, Modal } from 'antd';
+import {  Button, Card, Form, Input, Table, Space, InputRef, Modal, Tooltip } from 'antd';
 import {  DownloadOutlined, SearchOutlined,  } from '@ant-design/icons';
 import { AlertMessages, } from '@project-management-system/shared-models';
 import { ColumnType } from 'antd/lib/table';
@@ -12,6 +12,7 @@ import { PDFDocument } from 'pdf-lib';
 import axios from 'axios';
 import { saveAs } from 'file-saver';
 import { Header } from '@nestjs/common';
+import { config } from 'packages/libs/shared-services/config';
 
 
 const UploadFileGrid = () =>{
@@ -345,7 +346,7 @@ const UploadFileGrid = () =>{
                 render:(data, record) =>{
                     // console.log(res.data,'header')
                     const backgroundColor = data === 'Yes' ? 'green' : 'red'
-                  const datalink =  data === 'Yes' ? <Link onClick={() => modelOpen(header, record)}>{data}</Link>:data
+                  const datalink =  data === 'Yes' ? <Tooltip title={'Click here to download files'}><Link onClick={() => modelOpen(header, record)}>{data}</Link></Tooltip>:data
                     return    (
                      
                         <div style={{color:backgroundColor ,textAlign:'center'}} ><b>{datalink}</b></div>
@@ -406,29 +407,42 @@ const UploadFileGrid = () =>{
 
 
 
-    const downloadpath = (filePath) => {
-      console.log(filePath,'filepath');      
-      if (filePath) {
-        filePath = filePath.split(",");
-        for (const res of filePath) {
-          if(res){
-            console.log(res);
+    const downloadpath = (file) => {
+      console.log(file,'filepath');      
+      if (file) {
+          if(file.fileName){
             setTimeout(() => {
               const response = {
-                  file: 'http://165.22.220.143/document-management/gtstoinfor/'+`${res}`
+               file: config.importdownloadPath+'upload_files/'+'PO-'+`${file.poNo}/`+`${file.fileName}`
               };
               window.open(response.file);
-    
             }, 100);
           }
-        }
       }
       else {
         AlertMessages.getErrorMessage("Please upload file. ");
   
       }
     }
-  
+    // const downloadpath = (file) => {
+    //   if (file) {
+    //     if (file.fileName) {
+    //       setTimeout(() => {
+    //         const filePath = config.importdownloadPath + 'upload_files/' + 'PO-' + `${file.poNo}/` + `${file.fileName}`;
+            
+    //         const a = document.createElement('a');
+    //         a.href = filePath;
+    //         a.download = file.fileName;
+    //         a.style.display = 'none';
+    //         document.body.appendChild(a);
+    //         a.click();
+    //         document.body.removeChild(a);
+    //       }, 100);
+    //     }
+    //   } else {
+    //     AlertMessages.getErrorMessage("Please upload a file.");
+    //   }
+    // }
 
     return (<Form form={form}>
         <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span>{JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" || JSON.parse(localStorage.getItem('currentUser')).user.roles != "consolidator" ?<Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button>:""}</span>}>
@@ -475,7 +489,7 @@ const UploadFileGrid = () =>{
                 {filesData.map(file =>
                  (
                     <li key={file.uid}>
-                      <Link onClick={()=>downloadpath(file.filePath)}>{file.fileName}</Link>
+                      <Link onClick={()=>downloadpath(file)}>{file.fileName}</Link>
                         {/* <span>{file.fileName}</span> */}
                     </li>
                 ))}
