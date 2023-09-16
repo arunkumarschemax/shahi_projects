@@ -49,6 +49,7 @@ export class HSNEntity {
   Charge: string;
 
   @Column("varchar", {
+    nullable:true,
     length: 50,
     name: "unit_quantity",
   })
@@ -63,16 +64,19 @@ export class HSNEntity {
   @Column("varchar", {
     length: 50,
     name: "quotation",
+    nullable:true
   })
   quotation: string;
 
   @Column("varchar", {
     length: 50,
     name: "variance",
+    default:""
   })
   variance: string;
 
   @Column("enum", {
+    default:StatusEnum.No_Variance,
     name: "variance_status",
     enum: StatusEnum,
   })
@@ -95,10 +99,11 @@ export class HSNEntity {
   updatedAt: string;
 
   @Column("varchar", {
-    length: 40,
+    nullable: true,
     name: "updated_user",
+    length: 50
   })
-  updatedUser: string;
+  updatedUser: string | null;
 
   @VersionColumn({
     default: 1,
