@@ -410,27 +410,39 @@ const UploadFileGrid = () =>{
     const downloadpath = (file) => {
       console.log(file,'filepath');      
       if (file) {
-        // file.fileName = file.fileName.split(",");
-        for (const res of file.fileName) {
-          if(res){
-            console.log(res);
+          if(file.fileName){
             setTimeout(() => {
               const response = {
-               file: config.importdownloadPath+'upload_files/'+'PO-'+`${file.poNo}/`+`${res}`
+               file: config.importdownloadPath+'upload_files/'+'PO-'+`${file.poNo}/`+`${file.fileName}`
               };
-
               window.open(response.file);
-    
             }, 100);
           }
-        }
       }
       else {
         AlertMessages.getErrorMessage("Please upload file. ");
   
       }
     }
-  
+    // const downloadpath = (file) => {
+    //   if (file) {
+    //     if (file.fileName) {
+    //       setTimeout(() => {
+    //         const filePath = config.importdownloadPath + 'upload_files/' + 'PO-' + `${file.poNo}/` + `${file.fileName}`;
+            
+    //         const a = document.createElement('a');
+    //         a.href = filePath;
+    //         a.download = file.fileName;
+    //         a.style.display = 'none';
+    //         document.body.appendChild(a);
+    //         a.click();
+    //         document.body.removeChild(a);
+    //       }, 100);
+    //     }
+    //   } else {
+    //     AlertMessages.getErrorMessage("Please upload a file.");
+    //   }
+    // }
 
     return (<Form form={form}>
         <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span>{JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" || JSON.parse(localStorage.getItem('currentUser')).user.roles != "consolidator" ?<Button onClick={() => navigate('/document-management/document-file-upload')} type={'primary'}>Upload</Button>:""}</span>}>
