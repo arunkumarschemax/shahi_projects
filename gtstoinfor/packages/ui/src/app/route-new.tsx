@@ -14,6 +14,9 @@ import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import PhaseWiseData from "./excel-import/phase-wise-data"
+import PriceListView from "./masters/pricelist/price-list-view"
+import PriceListForm from "./masters/pricelist/price-list-form"
+import { PriceListDto } from "@project-management-system/shared-models"
 
 
 export const AppRoutesNew = () => {
@@ -31,6 +34,12 @@ export const AppRoutesNew = () => {
               <Route path='/masters'>
                   <Route path='factories/factories-view' key='/factories/factories-view' element={<FactoriesView />} />
                   <Route path='factories/factories-form' key='/factories/factories-form' element={<FactoriesForm />} />
+                  <Route path='pricelist/price-list-view' key='/pricelist/price-list-view' element={<PriceListView />} />
+                    <Route path='pricelist/price-list-form' key='/pricelist/price-list-form' element={<PriceListForm Data={undefined} updateData={function (PriceList: PriceListDto): void {
+                        throw new Error("Function not implemented.")
+                    } } isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } } />} />
               </Route>
               <Route path='/excel-import' key='/excel-import'>
                   <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />

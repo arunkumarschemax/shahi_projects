@@ -63,6 +63,12 @@ export const baseRouterList = [
                 path: "factories/factories-view",
                 filepath: "factories/factories-view",
             },
+            {
+                label: "Price List",
+                key: "pricelist",
+                path: "pricelist/price-list-view",
+                filepath: "pricelist/price-list-view",
+            },
         ],
     },
     {
