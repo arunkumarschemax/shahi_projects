@@ -9,8 +9,7 @@ export const appConfig = {
         port: parseInt(process.env[`APP_DB_PORT`]) || 3306,
         username: process.env[`APP_DB_USER`] || 'ramakrishna',
         password: process.env[`APP_DB_PASS`] || 'Schemax@23',
-        //dbName: process.env[`APP_DB_DBNAME`] || 'shahi_orders',
-        docScandbName: process.env[`APP_DB_DBNAME`] || 'shahi_docs',
+        docScandbName: process.env[`APP_DB_DBNAME`] || 'shahi_doc_scan',
         poolLimit: parseInt(process.env[`APP_DB_POOL_LIMIT`]) || 50
     },
 
