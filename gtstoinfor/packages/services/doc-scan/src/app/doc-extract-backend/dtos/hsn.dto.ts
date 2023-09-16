@@ -18,7 +18,7 @@ export class HsnDto {
   Taxpercentage: string;
 
   @ApiProperty()
-  Charge: string;
+  charge: string;
 
   @ApiProperty()
   unitquantity: string;

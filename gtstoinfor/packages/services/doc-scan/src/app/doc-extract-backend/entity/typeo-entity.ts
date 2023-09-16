@@ -131,12 +131,11 @@ export class ScanEntity extends BaseEntity {
   updatedAt: Date;
 
   @Column("varchar", {
-
+    nullable: true,
     name: "updated_user",
     length: 50
   })
-  updatedUser: string;
-
+  updatedUser: string | null;
 
   @VersionColumn({
 

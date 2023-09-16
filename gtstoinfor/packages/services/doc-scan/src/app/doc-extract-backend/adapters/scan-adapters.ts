@@ -50,14 +50,15 @@ export class ScanAdapter {
         const hsnDetails: HSNEntity[] = []
         for (const record of dto.Hsninfo  ){
                 const entity2 = new HSNEntity()
-                entity2.Charge = record.Charge
+                entity2.Charge = record.charge
                 entity2.Taxamount = record.Taxamount
                 entity2.Taxpercentage = record.Taxpercentage
                 entity2.Taxtype = record.Taxtype
                 entity2.HSN = record.HSN
                 entity2.variance = record.variance
                 entity2.quotation = record.quotation
-                entity2.unitquantity = record.unitquantity
+                entity2.unitquantity = record.unitquantity;
+                entity2.createdUser = dto.createdUser;
                 hsnDetails.push(entity2)
             }
         
