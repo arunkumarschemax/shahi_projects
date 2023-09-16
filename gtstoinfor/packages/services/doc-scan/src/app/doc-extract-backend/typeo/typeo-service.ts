@@ -12,6 +12,9 @@ import { ScanDto } from "../dtos/typeo.dto";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {ScanResponseModel} from "../../../../../../libs/shared-models/src/shared-model/scan-response-object";
 import { HSNEntity } from "../entity/hsn-entity";
+import { VendorFilterModel } from "packages/libs/shared-models/src/shared-model/vendor-filter-model";
+import { filterDto } from "../dtos/filter.dto";
+
 
 
 @Injectable()
@@ -38,9 +41,10 @@ export class ScanService {
   }
 
 
-  async getdata(): Promise<CommonResponseModel> {
+  async getdata(req:filterDto): Promise<CommonResponseModel> {
+    console.log(req,"services")
     
-    const records = await this.repository.find({
+    const records = await this.repository.find({where:{Vendor:req.vendorName},
       relations: ['scanentity']
     });
     if (records.length === 0) {

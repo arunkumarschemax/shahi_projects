@@ -10,6 +10,8 @@ import { ApplicationExceptionHandler } from "../../../../../../libs/backend-util
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {ScanResponseModel} from "../../../../../../libs/shared-models/src/shared-model/scan-response-object";
 import { ScanDto } from "../dtos/typeo.dto";
+import { VendorFilterModel } from "packages/libs/shared-models/src/shared-model/vendor-filter-model";
+import { filterDto } from "../dtos/filter.dto";
 // import { ScanDto } from "../dtos/typeo.dto";
 
 @ApiTags("docs")
@@ -37,8 +39,10 @@ export class ScanController {
 
   
   @Post("getdata")
-  async getdata(): Promise<any> {
-    return await this.Service.getdata();
+  @ApiBody({type:filterDto})
+  async getdata(@Body() req:any): Promise<any> {
+    console.log(req,"controll")
+    return await this.Service.getdata(req);
   }
 
 }

@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Button, Card, Descriptions, Input, Space, Table } from 'antd';
+import { Button, Card, Descriptions, Input, Space, Table, Tag } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Column } from 'rc-table';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
+import { StatusEnumDisplay } from 'packages/libs/shared-models/src/common';
 
 function ScanDetailView() {
   // Check if location and location.state are defined
@@ -181,6 +182,8 @@ function ScanDetailView() {
         key:"quotation",
         ...getColumnSearchProps("quotation"),
         sorter: (a, b) => a.quotation.localeCompare(b.quotation),
+        render: (_, record) =>
+        record?.quotation || "-",
        align:"center"
 
 
@@ -296,12 +299,24 @@ function ScanDetailView() {
           {rowData.state.rowData.Timecreated ? rowData.state.rowData.Timecreated : "--"}
         </Descriptions.Item>
 
-        <Descriptions.Item
+        {/* <Descriptions.Item
           label="Status"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.VarianceStatus ? rowData.state.rowData.VarianceStatus : "--"} 
-        </Descriptions.Item>
+        </Descriptions.Item> */}
+        <Descriptions.Item
+        label="Status"
+        labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          <Tag>
+       {rowData.state.rowData.VarianceStatus ? (
+       StatusEnumDisplay.find(item => item.name === rowData.state.rowData.VarianceStatus)?.displayVal
+      ) : (
+      "--"
+       )}
+       </Tag>
+</Descriptions.Item>
       </Descriptions>
       
 
