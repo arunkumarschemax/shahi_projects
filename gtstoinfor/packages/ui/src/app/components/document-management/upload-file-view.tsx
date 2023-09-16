@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import {  Button, Card, Form, Input, Table, Space, InputRef, Modal } from 'antd';
+import {  Button, Card, Form, Input, Table, Space, InputRef, Modal, Tooltip } from 'antd';
 import {  DownloadOutlined, SearchOutlined,  } from '@ant-design/icons';
 import { AlertMessages, } from '@project-management-system/shared-models';
 import { ColumnType } from 'antd/lib/table';
@@ -346,7 +346,7 @@ const UploadFileGrid = () =>{
                 render:(data, record) =>{
                     // console.log(res.data,'header')
                     const backgroundColor = data === 'Yes' ? 'green' : 'red'
-                  const datalink =  data === 'Yes' ? <Link onClick={() => modelOpen(header, record)}>{data}</Link>:data
+                  const datalink =  data === 'Yes' ? <Tooltip title={'Click here to download files'}><Link onClick={() => modelOpen(header, record)}>{data}</Link></Tooltip>:data
                     return    (
                      
                         <div style={{color:backgroundColor ,textAlign:'center'}} ><b>{datalink}</b></div>
