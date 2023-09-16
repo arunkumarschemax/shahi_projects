@@ -12,6 +12,7 @@ import { PDFDocument } from 'pdf-lib';
 import axios from 'axios';
 import { saveAs } from 'file-saver';
 import { Header } from '@nestjs/common';
+import { config } from 'packages/libs/shared-services/config';
 
 
 const UploadFileGrid = () =>{
@@ -406,17 +407,18 @@ const UploadFileGrid = () =>{
 
 
 
-    const downloadpath = (filePath) => {
-      console.log(filePath,'filepath');      
-      if (filePath) {
-        filePath = filePath.split(",");
-        for (const res of filePath) {
+    const downloadpath = (file) => {
+      console.log(file,'filepath');      
+      if (file) {
+        // file.fileName = file.fileName.split(",");
+        for (const res of file.fileName) {
           if(res){
             console.log(res);
             setTimeout(() => {
               const response = {
-                  file: 'http://165.22.220.143/document-management/gtstoinfor/'+`${res}`
+               file: config.importdownloadPath+'upload_files/'+'PO-'+`${file.poNo}/`+`${res}`
               };
+
               window.open(response.file);
     
             }, 100);
@@ -475,7 +477,7 @@ const UploadFileGrid = () =>{
                 {filesData.map(file =>
                  (
                     <li key={file.uid}>
-                      <Link onClick={()=>downloadpath(file.filePath)}>{file.fileName}</Link>
+                      <Link onClick={()=>downloadpath(file)}>{file.fileName}</Link>
                         {/* <span>{file.fileName}</span> */}
                     </li>
                 ))}
