@@ -47,18 +47,17 @@ export const PriceListGrid = (props: PriceListView) => {
     priceService.ActivateOrDeactivatePriceList(Data).then(res => {
     if(res.status){
       getPriceList();
-      AlertMessages.getSuccessMessage(res.internalMessage);
-    }else {
-      AlertMessages.getErrorMessage(res.internalMessage);
+      // message.success("Status Changed")
 
+    }else {
+      // message.error("Status Not Changed")
     }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);
     })
   }
 
-  
-
+ 
   const updatePriceList = (req: PriceListDto) => {
     req.updatedUser = JSON.parse(localStorage.getItem('username'));
     priceService.updatePriceList(req)
@@ -69,7 +68,8 @@ export const PriceListGrid = (props: PriceListView) => {
           setDrawerVisible(false);
           getPriceList();
         } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          // AlertMessages.getErrorMessage(res.internalMessage);
+          message.error("Already this Combination Exist,Please check it once")
         }
       })
       .catch(err => {
