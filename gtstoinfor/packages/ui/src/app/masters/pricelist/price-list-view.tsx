@@ -171,7 +171,7 @@ export const PriceListGrid = (props: PriceListView) => {
     {
         title: "Style",
         dataIndex: "style",
-        render: (text, record) => {
+        render: (text, _record) => {
           if (!text || text.trim() === '') {
             return '-';
           } else {

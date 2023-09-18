@@ -12,572 +12,543 @@ export class OrdersEntity {
     @Column('varchar', {
         nullable: true,
         name: "year",
-        length: '5'
     })
     year: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "planning_season",
-        length: '5'
+        name: "planning_ssn_cd",
     })
-    planningSeason: string;
+    planningSsnCd: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "season",
-        length: '5'
+        name: "planning_ssn",
     })
-    season: string;
+    planningSsn: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "item_brand",
-        length: '10'
+        name: "tgt_ssn_cd",
     })
-    itemBrand: string;
+    tgtSsnCd: string;
+   
 
     @Column('varchar', {
         nullable: true,
-        name: "business_unit",
+        name: "tgt_ssn",
+    })
+    tgtSsn: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "biz_cd",
         length: '4'
     })
-    businessUnit: string;
+    bizCd: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "item_code",
-        length: '6'
+        name: "biz",
 
     })
-    itemCode: string;
+    biz: string;
+    //h
 
     @Column('varchar', {
         nullable: true,
-        name: "itemName"
+        name: "planning_region_code"
     })
-    itemName: string;
+    planningRegionCode: string;
+    //i
+    @Column('varchar', {
+        nullable: true,
+        name: "planning_region_name"
+    })
+    planningRegionName: string;
+    //j
 
+    @Column('varchar', {
+        nullable: true,
+        name: "channel_code",
+    })
+     channelCode: string;
+    //k
+
+    @Column('varchar', {
+        nullable: true,
+        name: "channel_code"
+    })
+    channelName: string;
+    //l
+
+    @Column('varchar', {
+        nullable: true,
+        name: "department",
+    })
+    department: string;
+    //m
+    @Column('varchar', {
+        nullable: true,
+        name: "dept_cd"
+    })
+    deptCd: string;
+ //n
+    @Column('varchar', {
+        nullable: true,
+        name: "cls1_cd",
+    })
+    Cls1_cd: string;
+//o
+    @Column('varchar', {
+        nullable: true,
+        name: "cls2_cd",
+    })
+    Cls2_cd: string;
+//p
+    @Column('varchar', {
+        nullable: true,
+        name: "g_dept",
+    })
+    gDept: string;
+//q
+    @Column('varchar', {
+        nullable: true,
+        name: "sub_category1"
+    })
+    subCategory1: string;
+//r
+    @Column('varchar', {
+        nullable: true,
+        name: "core_category",
+        length: 4
+    })
+    coreCategory: string;
+//s
+    @Column('varchar', {
+        nullable: true,
+        name: "sub_category2"
+    })
+    subCategory2: string;
+//t
+    @Column('varchar', {
+        nullable: true,
+        name: "sub_category3"
+    })
+    subCategory3: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "production_category_fabric",
+
+    })
+    productionCategoryFabric: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: 'production_category_fabric_processing'
+    })
+    productionCategoryFabricProcessing: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "production_category_sewing",
+    })
+    productionCategorySewing: string;
+//x
+
+    @Column('varchar', {
+        nullable: true,
+        name: "production_category_sewing_Processing",
+        length: '12'
+    })
+    productionCategorySewingProcessing: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "planning_sum_code",
+        length: 2
+    })
+    planningSumCode: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "planning_sum"
+    })
+    planningSum: string;
+//aa
+    @Column('varchar', {
+        nullable: true,
+        name: "local_name_ghq",  // prodoction plan type name
+    })
+    localNameGhq: string;
+//ab
+    @Column('varchar', {
+        nullable: true,
+        name: "item_cd"
+    })
+    itemCd: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "item",
+        length: 10
+    })
+    item: string;
+
+    // @Column('varchar', {
+    //     nullable: true,
+    //     name: "local_name_ghq",
+    //     length: 10
+    // })
+    // localNameGhq: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "orig_price",
+    })
+    origPrice: string;
+//af
     @Column('varchar', {
         nullable: true,
         name: "main_sample_code",
-        length: '11'
+        length: 20
     })
     mainSampleCode: string;
+//ag
+    @Column('varchar', {
+        nullable: true,
+        name: "fr_fabric_code",
+        length: 3
+    })
+    frFabricCode: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "main_sample_name"
+        name: "fr_fabric",
     })
-    mainSampleName: string;
-
+    frFabric: string;
+//ai
     @Column('varchar', {
         nullable: true,
-        name: "supplier_rm_code",
+        name: "supplier_raw_material_code",
     })
-    supplierRMCode: string;
-
+    supplierRawMaterialCode: string;
+//aj
     @Column('varchar', {
         nullable: true,
-        name: "supplier_rm_name"
+        name: "supplier_raw_material",
+        length: 10
     })
-    supplierRMName: string;
-
+    supplierRawMaterial: string;
+//ak
+    @Column('varchar', {
+        nullable: true,
+        name: "raw_material_supplier_code",
+    })
+    rawMaterialSupplierCode: string;
+//al
+    @Column('varchar', {
+        nullable: true,
+        name: "raw_material_supplier",
+    })
+    rawMaterialSupplier: string;
+//am
     @Column('varchar', {
         nullable: true,
         name: "vendor_code",
-        length: 4
     })
-    vendorCode: string;
+    vendorCoode: string;
+//an -------------------------------------------------------------------------------------------------------------------------------------------------------
+    @Column('varchar', {
+        nullable: true,
+        name: "vendor"
+    })
+    vendor: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "vendor_name",
+        name: "sewing_factory_code",
     })
-    vendorName: string;
+    sewingFactoryCode: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "management_factory_code",
-        length: 5
+        name: "sewing_factory",
     })
-    managementFactoryCode: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "management_factory_name"
-    })
-    managementFactoryName: string;
-
+    sewingFactory: string;
+//aq
     @Column('varchar', {
         nullable: true,
         name: "branch_factory_code",
-        length: 4
     })
     branchFactoryCode: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "branch_factory_name"
+        name: "branchFactory",
     })
-    branchFactoryName: string;
+    branchFactory: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "rm_supplier_code"
+        name: "coeff",
     })
-    rmSupplierCode: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "rm_supplier_name",
-
-    })
-    rmSupplierName: string;
-
-    @Column('decimal', {
-        nullable: true,
-        precision: 10,
-        scale: 2,
-        name: 'sewing_difficulty'
-    })
-    sewingDifficulty: number;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "department_code",
-        length: 1
-    })
-    departmentCode: string;
-
-
-    @Column('varchar', {
-        nullable: true,
-        name: "department_name",
-        length: '12'
-    })
-    departmentName: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "class1_code",
-        length: 2
-    })
-    class1Code: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "class1_name"
-    })
-    Class1Name: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "prod_plan_type_name",  // prodoction plan type name
-        length: 20
-    })
-    productionPlanTypeName: string;
-
-    @Column('boolean', {
-        nullable: true,
-        name: "month_week_flag"
-    })
-    monthWeekFlag: boolean;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "last_update_date",
-        length: 10
-    })
-    lastUpdateDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "requested_wh_date",
-        length: 10
-    })
-    requestedWhDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "contracted_date",
-        length: 10
-    })
-    contractedDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "transport_method_name",
-        length: 20
-    })
-    transportMethodName: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "logistics_type_name",
-        length: 3
-    })
-    logisticsTypeName: string;
+    coeff: string;
 
     @Column('int', {
         nullable: true,
-        name: "order_qty_pcs",
+        name: "item_branch_number",
     })
-    orderQtyPcs: number;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "yarn_order_acceptance",
-        length: 3
-    })
-    yarnOrderAcceptance: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "yarn_order_req_date",
-        length: 10
-    })
-    yarnOrderRequestDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "yarn_order_ans_date",
-        length: 10
-    })
-    yarnOrderAnswerDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "yarn_order_actual_ate",
-        length: 10
-    })
-    yarnOrderActualDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "yarn_order_no",
-        length: 21
-    })
-    yarnOrderNO: string;
+    itemBranchNumber: number;
 
     @Column('int', {
         nullable: true,
-        name: "yarn_actual_order_qty_pcs"
+        name: "Official_plan_std_qty"
     })
-    yarnActualOrderQtyPcs: number;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "yarn_update_date",
-        length: 10
-    })
-    yarnUpdateDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "fabric_order_acceptance",
-        length: 3
-    })
-    fabricOrderAcceptance: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "fabric_order_req_date",
-        length: 10
-    })
-    fabricOrderRequestDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "fabric_order_ans_date",
-        length: 10
-    })
-    fabricOrderAnswerDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "fabric_order_actual_date",
-        length: 10
-    })
-    fabricOrderActualDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "fabric_order_no",
-        length: 21
-    })
-    fabricOrderNO: string;
+    officialPlanStdQty: number;
 
     @Column('int', {
         nullable: true,
-        name: "fabric_actual_order_qty_pcs"
+        name: "Official_plan_fab_prp_pln_qty",
     })
-    fabricActualOrderQtyPcs: number;
+    OfficialPlanFabPrpPlnQty: number;
+//aw
+    @Column('varchar', {
+        nullable: true,
+        name: "Official_plan_po_pr_sls_qty",
+    })
+    OfficialPlanPoPrSlsQty: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "fabric_update_date",
-        length: 10
+        name: "offical_plan_co_qty",
     })
-    fabricUpdateDate: string;
+    officalPlanCoQty: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "color_order_acceptance",
-        length: 3
+        name: "offical_plan_stock_qty",
     })
-    colorOrderAcceptance: string;
+    officalPlanStockQty: string;
+//BA
+    @Column('varchar', {
+        nullable: true,
+        name: "sls_start_dy",
+    })
+    slsStartDy: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "color_order_req_date",
-        length: 10
+        name: "publish_flag_for_factory",
     })
-    colorOrderRequestDate: string;
+    publishFlagForFactory: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "color_order_ans_date",
-        length: 10
+        name: "publish_date"
     })
-    colorOrderAnswerDate: string;
+    publishDate: String;
 
     @Column('varchar', {
         nullable: true,
-        name: "color_order_actual_date",
-        length: 10
+        name: "allc_end_dy",
     })
-    colorOrderActualDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "color_order_no",
-        length: 20
-    })
-    colorOrderNO: string;
-
-    @Column('int', {
-        nullable: true,
-        name: "color_actual_order_qty_pcs"
-    })
-    colorActualOrderQtyPcs: number;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "color_update_date",
-        length: 10
-    })
-    colorUpdateDate: string;
+    allcEndDy: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "trim_order_acceptance",
-        length: 3
+        name: "sls_end_dy",
     })
-    trimOrderAcceptance: string;
+    slsEndDy: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "trim_order_req_date",
-        length: 10
+        name: "gwh",
     })
-    trimOrderRequestDate: string;
+    GWH: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "trim_order_ans_date",
-        length: 10
+        name: "order_plan_number",
     })
-    trimOrderAnswerDate: string;
+    orderPlanNumber: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "trim_order_actual_date",
-        length: 10
+        name: "order_timing",
     })
-    trimOrderActualDate: string;
+    orderTiming: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "trim_order_no",
-        length: 20
+        name: "swng_prd_month",
     })
-    trimOrderNO: string;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "trim_actual_order_qty_pcs"
-    })
-    trimActualOrderQtyPcs: number;
+    swngPrdMonth: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "trim_update_date",
-        length: 10
+        name: "swng_prd_week"
     })
-    trimUpdateDate: string;
+    swngPrdWeek: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "po_order_acceptance",
-        length: 3
+        name: "order_plan_qty",
     })
-    POOrderAcceptance: string;
+    orderPlanQty: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "po_order_req_date",
-        length: 10
+        name: "order_plan_qty_coeff",
     })
-    POOrderRequestDate: string;
+    orderPlanQtyCoeff: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "po_order_ans_date",
-        length: 10
+        name: "trnsp_mthd",
     })
-    POOrderAnswerDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "po_order_actual_date",
-        length: 10
-    })
-    POOrderActualDate: string;
-
-    @Column('varchar', {
-        nullable: true,
-        name: "po_order_no",
-        length: 16
-    })
-    POOrderNO: string;
-
-    @Column('int', {
-        nullable: true,
-        name: "po_actual_order_qty_pcs"
-    })
-    POActualOrderQtyPcs: number;
+    trnspMthd: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "po_update_date",
-        length: 10
+        name: "prod_plan_type",
     })
-    POUpdateDate: string;
+    prodPlanType: string;
 
-
-    @Column('int', {
+    @Column('varchar', {
         nullable: true,
-        name: "order_qty_pcs_old"
+        name: "ph1_1st",
     })
-    orderQtyPcsOld: number;
+    ph1St: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "wh",
+    })
+    wh: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "wh_act"
+    })
+    whAct: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "transport_method_name_old"
+        name: "wh_auto",
     })
-    transportMethodNameOld: string;
+    whAuto: string;
+//br
+
+    @Column('varchar', {
+        nullable: true,
+        name: "yarn_dl_requested"
+    })
+    yarnDlRequested: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "logistics_type_name_old"
+        name: "yarn_dl_answered"
     })
-    logisticsTypeNameOld: string;
+    yarnDlAnswered: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "yarn_order_req_date_old",
-        length: 10
+        name: "yarn_dl_auto"
     })
-    yarnOrderRequestDateOld: string;
+    yarnDlAuto: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "fabric_order_req_date_old",
-        length: 10
+        name: "yarn_production_due_date_auto",
     })
-    fabricOrderRequestDateOld: string;
+    yarnProductionDueDateAuto: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "color_order_req_date_old"
+        name: "yarn_auto_reflection_date",
     })
-    colorOrderRequestDateOld: string;
+    yarnAutoReflectionDate: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "trim_order_req_date_old"
+        name: "yarn_act_dy"
     })
-    trimOrderRequestDateOld: string;
+    yarnActDy: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "po_order_req_date_old"
+        name: "yarn_act_qty"
     })
-    POOrderRequestDateOld: string;
+    yarnActQty: string;
 
-
-    @Column('int', {
-        nullable: true,
-        name: "status"
-    })
-    status: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "display_month_wk",
-        length: 15
+        name: "yarn_order_number"
     })
-    displayMonthWK: string;
+    yarnOrderNumber: string;
 
-    @Column('int', {
-        nullable: true,
-        name: "display_month_wk_column"
-    })
-    displayMonthWKColumn: number;
 
     @Column('varchar', {
         nullable: true,
-        name: "group_cd",
-        length: 7
+        name: "yarn_order_status"
     })
-    groupCd: string;
-
-    @Column('int', {
+    yarnOrderStatus: string;
+//CA
+    @Column('varchar', {
         nullable: true,
-        name: "show_color_flag"
+        name: "yarn_delivery_date",
     })
-    showColorFlag: number;
-
-    @Column('int', {
-        nullable: true,
-        name: "orderqty_coeff"
-    })
-    orderQtyCoeff: number;
+    yarnDeliveryDate: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "factory_comment"
+        name: "fbrc_dl_requested"
     })
-    factoryComment: string;
+    fbrcDlRequested: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "fbrc_dl_answered",
+    })
+    fbrcDlAnswered: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "fbrc_dl_auto"
+    })
+    fbrcDlAuto: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "fbrc_production_due_date_auto"
+    })
+    fbrcProductionDueDateAuto: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "fbrc_auto_reflection_date"
+    })
+    fbrcAutoReflectionDate: string;
 
     @Column('varchar', {
         nullable: true,
@@ -587,363 +558,349 @@ export class OrdersEntity {
 
     @Column('varchar', {
         nullable: true,
-        name: "fr_fabric_code",
-        length: 12
+        name: "fbrc_act_dy",
     })
-    FRFabricCode: string;
+    fbrcActDy: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "fr_fabric_name",
+        name: "fbrc_act_qty",
     })
-    FRFabricName: string;
+    fbrcActQty: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "ph1_first_disc_flag_old",
-        length: 3
+        name: "fbrc_order_number",
     })
-    Ph1FirstDiscriminationFlagOld: string;
+    fbrcOrderNumber: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "ph1_first_disc_flag",
-        length: 3
+        name: "fbrc_order_status",
     })
-    Ph1FirstDiscriminationFlag: string;
+    fbrcOrderStatus: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "order_timing_display_value_old",
+        name: "fbrc_delivery_date",
+    })
+    fbrcDeliveryDate: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "color_dl_requested",
+    })
+    colorDlRequested: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "color_dl_answered",
+    })
+    colorDlAnswered: string;
+//CN
+
+    @Column('varchar', {
+        nullable: true,
+        name: "color_dl_auto",
+    })
+    colorDlAuto: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "color_production_due_date_auto",
+    })
+    colorProductionDueDateAuto: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "color_auto_reflection_date",
+    })
+    colorAutoReflectionDate: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "color_act_dy",
+    })
+    colorActDy: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "color_act_qty",
         length: 6
     })
-    orderTimingDisplayValueOld: string;
+    colorActQty: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "order_timing_display_value",
-        length: 6
+        name: "color_order_number",
     })
-    orderTimingDisplayValue: string;
+    colorOrderNumber: string;
+
 
     @Column('varchar', {
         nullable: true,
-        name: "express_line_flag_old",
-        length: 3
+        name: "color_order_status",
     })
-    expressLineFlagOld: string;
+    colorOrderStatus: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "express_line_flag",
-        length: 3
+        name: "color_delivery_date"
+    })
+    colorDeliveryDate: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "trim_dl_requested"
+    })
+    trimDlRequested: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "trim_dl_answered"
+    })
+    trimDlAnswered: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "trim_dl_auto"
+    })
+    trimDlAuto: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "trim_production_due_date_auto"
+    })
+    trimProductionDueDateAuto: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "trim_auto_reflection_date"
+    })
+    trimAutoReflectionDate: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "trim_act_dy"
+    })
+    trimActDy: string;
+
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "trim_act_qty"
+    })
+    trimActQty: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "trim_order_number"
+    })
+    trimOrderNumber: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "trim_order_status"
+    })
+    trimOrderStatus: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "trim_delivery_date"
+    })
+    trimDeliveryDate: string ;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "po_dl_requested"
+    })
+    poDlRequested: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "po_dl_answered"
+    })
+    poDlAnswered: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "po_dl_auto"
+    })
+    poDlAuto: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "po_exf_total_abnormal_lt"
+    })
+    PO_EXFtotalAbnormalLT: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "po_production_due_date_auto"
+    })
+    poProductionDueDateAuto: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "po_auto_reflection_date"
+    })
+    poAutoReflectionDate: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "po_act_dy"
+    })
+    poActDy: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "po_act_qty"
+    })
+    poActQty: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "po_order_number"
+    })
+    poOrderNumber: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "po_order_status"
+    })
+    poOrderStatus: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "assort1"
+    })
+    assort1: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "assort2"
+    })
+    assort2: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "nx_assort"
+    })
+    nxAssort: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "solid"
+    })
+    solid: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "order_plan_qty_stop"
+    })
+    orderPlanQtyStop: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "fix_flag"
+    })
+    fixFlag: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "alternative_flag"
+    })
+    alternativeFlag: string;
+
+
+    @Column('varchar', {
+        nullable: true,
+        name: "express_line_flag"
     })
     expressLineFlag: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "manual_lock_flag_old",
-        length: 3
+        name: "factory_comment"
     })
-    manualLockFlagOld: string;
+    factoryComment: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "manual_lock_flag",
-        length: 3
+        name: "planned_exf"
     })
-    manualLockFlag: string;
+    plannedEXF: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "ph1_first_disc_flag_now",
-        length: 3
+        name: "exf_etd"
     })
-    Ph1FirstDiscriminationFlagNow: string;
+    exfEtd: string;
 
 
     @Column('varchar', {
         nullable: true,
-        name: "order_timing_display_value_now",
-        length: 6
+        name: "exf_wh"
     })
-    orderTimingDisplayValueNow: string;
-
+    exfWh: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "express_line_flag_now",
-        length: 2
+        name: "sweing_country_region"
     })
-    expressLineFlagNow: string;
-
+    sweingCountryRegion: string;
 
     @Column('varchar', {
         nullable: true,
-        name: "manual_lock_flag_now",
-        length: 2
+        name: "rew_material_original"
     })
-    ManualLockFlagNow: string;
-
+    rewMaterialOriginal: string;
 
     @Column('varchar', {
-        nullable: true,
-        name: "req_wh_date_old"
-    })
-    requestedWhDateOld: string;
-
-
-    @Column('varchar', {
-        nullable: true,
-        name: "exf"
-    })
-    EXF: string;
-
-
-    @Column('varchar', {
-        nullable: true,
-        name: "color_recommend"
-    })
-    colorRecommend: string;
-
-
-    @Column('varchar', {
-        nullable: true,
-        name: "trim_recommend"
-    })
-    trimRecommend: string;
-
-
-    @Column('varchar', {
-        nullable: true,
-        name: "po_recommend"
-    })
-    PORecommend: string;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "bd_exf_dlsetting_ltbefore_cal"
-    })
-    BD_EXF_DLSettingLTBeforeCal: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "po_exf_dlsetting_ltbefore_cal"
-    })
-    PO_EXF_DLSettingLTBeforeCal: number;
-
-
-
-    @Column('int', {
-        nullable: true,
-        name: "material_supl_holiday_excl"
-    })
-    materialSupplierHolidayExcluding: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "sewing_fty_holiday_excl"
-    })
-    sewingFTYHolidayExcluding: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "bd_exf_dlsetting_lt"
-    })
-    BD_EXF_DLSettingLT: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "po_exf_dlsetting_lt"
-    })
-    PO_EXF_DLSettingLT: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "bd_exf_reg_lt"
-    })
-    BD_EXFRegisteredLT: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "po_exf_reg_lt"
-    })
-    PO_EXFRegisteredLT: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "bd_exf_total_abnormal_lt"
-    })
-    BD_EXFtotalAbnormalLT: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "po_exf_total_abnormal_lt"
-    })
-    PO_EXFtotalAbnormalLT: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_reason_bd1"
-    })
-    abnormalLTReasonBD1: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_reason_bd2"
-    })
-    abnormalLTReasonBD2: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_reason_bd3"
-    })
-    abnormalLTReasonBD3: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_reason_bd4"
-    })
-    abnormalLTReasonBD4: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_reason_bd5"
-    })
-    abnormalLTReasonBD5: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_bd1"
-    })
-    abnormalLTBD1: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_bd2"
-    })
-    abnormalLTBD2: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_bd3"
-    })
-    abnormalLTBD3: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_bd4"
-    })
-    abnormalLTBD4: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_bd5"
-    })
-    abnormalLTBD5: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_reason_po1"
-    })
-    abnormalLTReasonPO1: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_reason_po2"
-    })
-    abnormalLTReasonPO2: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_reason_po3"
-    })
-    abnormalLTReasonPO3: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_reason_po4"
-    })
-    abnormalLTReasonPO4: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_reason_po5"
-    })
-    abnormalLTReasonPO5: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_po1"
-    })
-    abnormalLTPO1: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_po2"
-    })
-    abnormalLTPO2: number;
-
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_po3"
-    })
-    abnormalLTPO3: number;
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_po4"
-    })
-    abnormalLTPO4: number;
-
-    @Column('int', {
-        nullable: true,
-        name: "abnormal_lt_po5"
-    })
-    abnormalLTPO5: number;
-
-    @Column('varchar', {
-        name: 'order_status',
-        length: 15,
+        name: 'item_drop',
         nullable: true
     })
-    orderStatus: string;
+    itemDrop: string;
 
     @Column('varchar', {
         nullable: true,
-        length: 40,
         name: 'created_user'
     })
     createdUser: string | null;
@@ -965,24 +922,144 @@ export class OrdersEntity {
     })
     updatedAt: string;
 
-    @Column('int', {
+    @Column('varchar', {
         nullable: true,
         name: 'version',
     })
-    version: number;
+    version: string;
 
     @OneToMany(() => OrdersChildEntity, (ordersChild) => { ordersChild.orders }, { cascade: true })
     ordersChild: OrdersChildEntity;
 
-    @Column('int', {
+    @Column('varchar', {
         nullable:true,
         name: 'file_id',
     })
-    fileId : number;
+    fileId : string;
 
-    @Column('int', {
+    @Column('varchar', {
         nullable:true,
         name: 'month',
     })
-    month : number;
+    month : string;
+     
+    @Column('varchar', {
+        nullable:true,
+        name: 'created_user_id',
+    })
+    createdUserId : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'created_user_name',
+    })
+    createdUserName : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'create_function',
+    })
+    createFunction : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'updated_user_id',
+    })
+    updatedUserId : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'updated_user_name',
+    })
+    updatedUserName : string;
+
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'updated_user_function',
+    })
+    updatedUserFunction : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'count_y',
+    })
+    countY : string;
+
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'sample',
+    })
+    sample : string;
+
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'exf',
+    })
+    exf : string;
+
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'bddl',
+    })
+    bddl : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'bddl_past',
+    })
+    bddlPast : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'lt_bd_exf',
+    })
+    ltBdExf : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'new_bddl',
+    })
+    newBddl : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'new_lt_bd_exf',
+    })
+    newLtBdExf : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'lt_po_exf',
+    })
+    ltPoExf : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'qty_lt__bd_exf',
+    })
+    qtyLtBdExf : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'qty_lt__po_exf',
+    })
+    qtyLtPoExf : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'country2_y',
+    })
+    country2Y : string;
+
+    @Column('varchar', {
+        nullable:true,
+        name: 'phase',
+    })
+    phase : string;
+
+   
 }
