@@ -72,3 +72,4 @@ export * from './source-issues'
 
 export * from './m3-masters'
 export * from './operation-tracking'
+export * from './barcode-print'

@@ -483,7 +483,6 @@ export const AppRoutes = () => {
                         <Route path='style/style-grid' element={<StyleGrid />} />
                         <Route path='component-mapping/component-mapping-form' element={<ComponentsMappingForm />} />
                         <Route path='component-mapping/component-mapping-view' element={<ComponentMappingView/>}/>
-                        <Route path='operation-sequence' element={<OperationSequenceForm/>} />
                    
                         </Route>
                 <Route path='fabricdevelopment'>
@@ -523,6 +522,7 @@ export const AppRoutes = () => {
                 <Route path='/operation-tracking'>
                 <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
                 <Route path='operation-reporting' element={<OperationReportingView/>} />
+                <Route path='operation-sequence' element={<OperationSequenceForm/>} />
 
                 
                 

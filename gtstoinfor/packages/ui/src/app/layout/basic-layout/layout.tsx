@@ -632,6 +632,12 @@ export const baseRouterList = [
         path: "operation-tracking",
         filepath: "operation-tracking",
         children:[
+            {
+                label: "Operation Sequence",
+                key: "operation-sequence",
+                path: "operation-sequence",
+                filepath: "operation-sequence",
+            },
             
             {
                 label: "Issuing",
