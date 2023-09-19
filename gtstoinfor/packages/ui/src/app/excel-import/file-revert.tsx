@@ -1,4 +1,4 @@
-import { Button, Card, Popconfirm, Table, Tooltip, message } from 'antd'
+import { Button, Card, Popconfirm, Table, Tabs, TabsProps, Tooltip, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { UndoOutlined } from '@ant-design/icons';
 import { OrdersService } from '@project-management-system/shared-services';
@@ -11,8 +11,8 @@ export function FileRevert() {
     const [pageSize, setPageSize] = useState(1);
     const service = new OrdersService()
     const [data, setData] = useState<any[]>([])
-
-
+    const [trimData, setTrimData] = useState<any[]>([])
+    const [poData, setPoData] = useState<any[]>([])
     useEffect(() => {
         getUploadFilesData()
     }, [])
@@ -21,7 +21,8 @@ export function FileRevert() {
         service.getUploadFilesData().then((res) => {
             if (res.status) {
                 setData(res.data)
-            } else {
+                setTrimData(res.data.filter(e => e.fileType === 'Trim Order'));
+                setPoData(res.data.filter(e => e.fileType === 'Projection Order'));            } else {
                 message.error(res.internalMessage)
             }
         })
@@ -91,22 +92,45 @@ export function FileRevert() {
             },
         }];
 
-
+        const items: TabsProps['items'] = [
+            {
+              key: '1',
+              label: 'Trim Order',
+              children:  <Table
+              columns={columns}
+              dataSource={trimData}
+              scroll={{ x: 1000 }}
+              pagination={{
+                  onChange(current, pageSize) {
+                      setPage(current);
+                      setPageSize(pageSize);
+                  },
+              }}
+              bordered />,
+            },
+            {
+              key: '2',
+              label: 'Projection Order',
+              children:   <Table
+              columns={columns}
+              dataSource={poData}
+              scroll={{ x: 1000 }}
+              pagination={{
+                  onChange(current, pageSize) {
+                      setPage(current);
+                      setPageSize(pageSize);
+                  },
+              }}
+              bordered />,
+            },
+           
+          ];
     return (
         <>
             <Card
                 title="Uploaded Files List">
-                <Table
-                    columns={columns}
-                    dataSource={data}
-                    scroll={{ x: 1000 }}
-                    pagination={{
-                        onChange(current, pageSize) {
-                            setPage(current);
-                            setPageSize(pageSize);
-                        },
-                    }}
-                    bordered />
+                    <Tabs items={items}/>
+              
             </Card>
         </>
 
