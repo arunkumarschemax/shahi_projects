@@ -857,7 +857,7 @@ export function UploadDocumentForm() {
                   name="file"
                   {...gstUploadFieldProps}
                   accept=".jpeg,.png,.jpg"
-                  showUploadList={false}
+                  showUploadList={false} 
                 >
                   <Button
                     key="file"
@@ -1086,7 +1086,7 @@ export function UploadDocumentForm() {
                       htmlFor="InnvoiceNumber"
                       style={{ color: "black", fontWeight: "bold" }}
                     >
-                      Innvoice Number
+                      Invoice Number
                     </label>
                     <Input
                       id="InnvoiceNumber"
@@ -1102,7 +1102,7 @@ export function UploadDocumentForm() {
                       htmlFor="InnvoiceAmount"
                       style={{ color: "black", fontWeight: "bold" }}
                     >
-                      Innvoice Amount
+                      Invoice Amount
                     </label>
                     <Input
                       id="InnvoiceAmount"
@@ -1169,7 +1169,7 @@ export function UploadDocumentForm() {
                       htmlFor="Innvoice Currency"
                       style={{ color: "black", fontWeight: "bold" }}
                     >
-                      Innvoice Currency
+                      Invoice Currency
                     </label>
                     <Input
                       id="Innvoice Currency"

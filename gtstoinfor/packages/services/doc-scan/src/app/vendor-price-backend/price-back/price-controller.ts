@@ -38,15 +38,6 @@ export class PriceController {
 
 
 
-
-  // @Post('update')
-  // async update(@Body() PriceDto: any): Promise<PriceResponseModel> {
-  //   return await this.Service.updatePrice(PriceDto);
-  // } catch(error) {
-  //   return this.applicationExeptionhandler.returnException(PriceResponseModel, error)
-  // }
-
-
 }
 
 
