@@ -13,6 +13,7 @@ export const ITEM_TEXT_TEXT = 'ITEM TEXT'
 export const ITEM_TEXT_INDEX = ITEM_SHIP_TO_INDEX + 5 // 10
 export const ITEM_TEXT_START_INDEX = ITEM_TEXT_INDEX + 1
 export const ITEM_TEXT_END_TEXT = '______________________'
+export const ITEM_TEXT_END_TEXT2 = ""
 export const UNWANTED_TEXT_1 = 'This purchase order and '
 export const UNWANTED_TEXT_2 = 'and Seller agrees to be '
 export const UNWANTED_TEXT_3 = 'Buyer for a copy of the '
@@ -25,6 +26,9 @@ export const INCOTERMS_INDEX = [5,8]
 export const FACTORYLOCATION_INDEX = 6
 export const PO_NUMBER_TEXT = 'PO NUMBER'
 export const PO_NUMBER_INDEX = 3
+export const SELLER_ADDRESS_START_TEXT = "SELLER:"
+export const SELLER_ADDRESS_END_TEXT = "BUYER:"
+
 
 
 

@@ -1,5 +1,5 @@
 import { LegalPoDetails, PoItemDetailsDto, PoItemVariantDto } from "@project-management-system/shared-models";
-import { CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_INDEX, ITEM_SHIP_TO_INDEXES, ITEM_SHIP_TO_TEXT, ITEM_TEXT_END_TEXT, ITEM_TEXT_INDEX, ITEM_TEXT_START_INDEX, PO_DOC_DATE_INDEX, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3 } from "./popdf-regex-expressions";
+import { CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_INDEX, ITEM_SHIP_TO_INDEXES, ITEM_SHIP_TO_TEXT, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT2, ITEM_TEXT_INDEX, ITEM_TEXT_START_INDEX, PO_DOC_DATE_INDEX, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3 } from "./popdf-regex-expressions";
 
 export const extractDataFromPoPdf = async (pdf) => {
     const poData = new LegalPoDetails()
@@ -16,6 +16,15 @@ export const extractDataFromPoPdf = async (pdf) => {
             })
             let poDocDateIndex
             let poNumberTextIndex
+            let sellerStartIndex
+            let sellerEndIndex
+            let buyerAddStartIndex
+            let buyerAddEndIndex
+            let shipToAddStartIndex;
+            let shipToAddEndIndex;
+            let shipToCount = 0
+            console.log(firstPageContent, 'first page content')
+            let firstShipToFlag = false
             for (const [ind, ele] of firstPageContent.entries()) {
                 if (ele.str == PO_DOC_DATE_TXT) {
                     poDocDateIndex = ind
@@ -23,6 +32,39 @@ export const extractDataFromPoPdf = async (pdf) => {
                 if (ele.str == PO_NUMBER_TEXT) {
                     poNumberTextIndex = ind
                 }
+                if (ele.str == SELLER_ADDRESS_START_TEXT) {
+                    sellerStartIndex = ind
+                }
+                if (ele.str == SELLER_ADDRESS_END_TEXT) {
+                    sellerEndIndex = ind
+                    buyerAddStartIndex = ind
+                }
+                if (ele.str === "SHIP TO:") {
+                    if (shipToCount === 0) {
+                        // Found the first "ship to"
+                        shipToAddStartIndex = ind;
+                        buyerAddEndIndex = ind
+                        shipToCount++;
+                    } else if (shipToCount === 1) {
+                        // Found the second "ship to"
+                        shipToAddStartIndex = ind;
+                        buyerAddEndIndex = ind
+                    }
+                }
+                console.log(shipToAddStartIndex)
+                // if (firstShipToFlag) {
+                //     if (ele.str == 'SHIP TO:') {
+                //         buyerAddEndIndex = ind
+                //         shipToAddStartIndex = ind
+                //     }
+                // }
+                if (ele.str == ITEM_SHIP_TO_TEXT) {
+                    firstShipToFlag = true
+                }
+                if (ele.str.includes(UNWANTED_TEXT_1)) {
+                    shipToAddEndIndex = ind
+                }
+
             }
             poData.poDocDate = firstPageContent[poDocDateIndex + PO_DOC_DATE_INDEX].str
             poData.seasonYear = firstPageContent[poDocDateIndex + SEASONYEAR_INDEX].str
@@ -31,12 +73,24 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.incoterms = firstPageContent[poDocDateIndex + INCOTERMS_INDEX[0]].str + ' ' + firstPageContent[poDocDateIndex + INCOTERMS_INDEX[1]].str
             poData.factoryLocation = firstPageContent[poDocDateIndex + FACTORYLOCATION_INDEX].str
             poData.poNumber = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX].str
-            if(poData.poNumber.includes('/')){
+            if (poData.poNumber.includes('/')) {
                 poData.poNumber = poData.poNumber.split("/")[1]
             }
-
-
-            //  firstPageContent.findIndex((a) => a.str == PO_DOC_DATE_TXT)
+            let selleraddress = '';
+            for (let a = sellerStartIndex + 1; a < sellerEndIndex; a++) {
+                selleraddress += firstPageContent[a].str + ','
+            }
+            poData.sellerAddress = selleraddress
+            let buyerAddress = '';
+            for (let b = buyerAddStartIndex + 1; b < buyerAddEndIndex; b++) {
+                buyerAddress += firstPageContent[b].str + ','
+            }
+            poData.buyerAddress = buyerAddress;
+            let shipToAddress = ''
+            for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
+                shipToAddress += firstPageContent[c].str + ','
+            }
+            poData.shipToAddress = shipToAddress;
 
         }
         // filtering the pdf data i.e remove unnecessary data which is not required for data parsing
@@ -50,6 +104,8 @@ export const extractDataFromPoPdf = async (pdf) => {
                 endFlag = false;
             }
             if (val.str == 'AMOUNT') { endFlag = true; }
+            if (val.str == "SELLER:") { startFlag = true }
+            if (val.str.includes("__________________________________________")) { endFlag == true }
             // using NOR operation for filtering 
             return !(
                 EMP_STR_EXP.test(val.str)
@@ -62,6 +118,7 @@ export const extractDataFromPoPdf = async (pdf) => {
 
         filteredData.push(...pageContent)
     }
+    // console.log(filteredData)
     for (const [index, rec] of filteredData.entries()) {
         // chech the item No pattern and using regex and push all matched items
         if (rec.str.match(ITEM_NO_EXP) && (rec.str.length === 5)) {
@@ -107,6 +164,9 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsObj.itemVasText = itemText
         }
 
+        //check if vas text exists
+
+
         if (itemTextEndIndex) {
             itemVariantStartIndex = itemTextEndIndex + 1
         } else if (shipToEndIndex) {
@@ -114,6 +174,8 @@ export const extractDataFromPoPdf = async (pdf) => {
         } else {
             itemVariantStartIndex = itemDetailsEndIndex
         }
+
+        //check if 
         //-------------------------------------------------------------------------
         // item varinat details parsing starts here
         const itemVarinatsTextArr = []
