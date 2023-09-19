@@ -78,7 +78,7 @@ export const baseRouterList = [
         label: "Masters",
         key: "masters",
         path: "masters",
-        icon: <PicCenterOutlined />,
+        // icon: <PicCenterOutlined />,
         filepath: "masters",
         children: [
             {
@@ -136,7 +136,7 @@ export const baseRouterList = [
         label: "Style Management",
         key: "style-management",
         path: "style-management",
-        icon:<FontAwesomeIcon icon={faShirt} />,
+        // icon:<FontAwesomeIcon icon={faShirt} />,
         filepath: "style-management",
         children: [
             {

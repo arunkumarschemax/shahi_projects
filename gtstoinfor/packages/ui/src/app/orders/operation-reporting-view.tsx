@@ -173,7 +173,7 @@ export const OperationReportingView = () => {
 
     
     return(
-        <Card title='Operation Reporting' size='small'>
+        <Card title='Operation Reporting' className='card-header'>
             <Form form={form}>
                 <Row>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>

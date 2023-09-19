@@ -169,7 +169,7 @@ export const OperationSequence = () => {
   }
 
   return (
-    <Card title='Operation Sequence' size='small'>
+    <Card title='Operation Sequence' className='card-header'>
       <Form layout="horizontal" form={form}>
           <Form.Item name='itemId' style={{display:'none'}}>
                 <Input hidden/>

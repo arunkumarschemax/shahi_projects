@@ -1,6 +1,6 @@
 import { BarcodeOutlined, CaretDownOutlined, CaretRightOutlined, InfoCircleOutlined, PrinterOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons"
 import { RequisitionService, StyleService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Collapse, Divider, Form, Modal, Row, Segmented, Select, Space, Table } from "antd"
+import { Button, Card, Col, Collapse, Divider, Form, Modal, Row, Segmented, Select, Space, Table, Tag } from "antd"
 import style from "antd/es/alert/style";
 import { ColumnProps } from "antd/es/table";
 import moment from "moment";
@@ -23,7 +23,8 @@ export const SourcingRequisitionDynamicView = () => {
     const logInUser = localStorage.getItem('userName')
     const [barcode, setBarcode] = useState<string>(null);
     const [barcodeModal,setBarcodeModal] = useState<boolean>(false)
-    const [tableData,setTableData] = useState<any[]>([])
+    const [tableData,setTableData] = useState<any[]>([]);
+    const [barcodeInfo,setBarcodeInfo] = useState<string>('')
 
     const [data,setData] = useState<any[]>([])
 
@@ -54,8 +55,9 @@ export const SourcingRequisitionDynamicView = () => {
         })
     }
 
-    const generateBarcode = (m3Code) => {
+    const generateBarcode = (m3Code,info) => {
         setBarcode(m3Code);
+        setBarcodeInfo(info)
         setBarcodeModal(true)
       }
 
@@ -78,6 +80,17 @@ export const SourcingRequisitionDynamicView = () => {
         {
             title: 'Shahi Fabric Code',
             dataIndex: 'shahiFabricCode',
+            render: (text,record) => {
+                return(
+                     <span>
+                     {record.shahiFabricCode}
+                     <Divider type='vertical'/>
+                     <Tag onClick={() => generateBarcode(record.shahiFabricCode,'m3ItemCode')} style={{cursor:'pointer'}}>
+                         <BarcodeOutlined />
+                     </Tag>
+                 </span>
+                )
+            }
         },
         {
             title:'Content',
@@ -273,11 +286,10 @@ export const SourcingRequisitionDynamicView = () => {
             render:(text,record) =>{
                 return(
                     <span>
-                    <Button onClick={() => generateBarcode(record.m3FabricCode)}>
-                        {/* <PrinterOutlined /> */}
+                    {/* <Button onClick={() => generateBarcode(record.m3FabricCode)}>
                         <BarcodeOutlined/>
                     </Button>
-                    <Divider type='vertical'/>
+                    <Divider type='vertical'/> */}
                     <Button type='primary' disabled={logInUser == 'marketUser' ? true : false}>Generate PO</Button>
                     </span>
                 )
@@ -302,11 +314,13 @@ export const SourcingRequisitionDynamicView = () => {
             dataIndex: 'shahiTrimCode',
             render: (text,record) => {
                 return(
-                    <>
-                    {record.shahiTrimCode ? `${record.shahiTrimCode} ${<Button type='primary' shape='round' onClick={() => generateBarcode(record.shahiTrimCode)}>
-                            <PrinterOutlined />
-                        </Button>   }` : '-'}
-                    </>
+                     <span>
+                     {record.shahiTrimCode}
+                     <Divider type='vertical'/>
+                     <Tag onClick={() => generateBarcode(record.shahiTrimCode,'m3ItemCode')} style={{cursor:'pointer'}}>
+                         <BarcodeOutlined />
+                     </Tag>
+                 </span>
                 )
             }
         },
@@ -391,10 +405,10 @@ export const SourcingRequisitionDynamicView = () => {
             render:(text,record) =>{
                 return(
                     <span>
-                        <Button type='primary' shape='round' onClick={() => generateBarcode(record.m3TrimCode)}>
+                        {/* <Button type='primary' shape='round' onClick={() => generateBarcode(record.m3TrimCode)}>
                             <PrinterOutlined />
                         </Button>
-                        <Divider type='vertical'/>
+                        <Divider type='vertical'/> */}
                     <Button type='primary' disabled={logInUser == 'marketUser' ? true : false}>Generate PO</Button>
                     </span>
                 )
@@ -421,6 +435,10 @@ export const SourcingRequisitionDynamicView = () => {
               <span>Indent Date : {<b>{indentDate}</b>}</span>
               <span style={{width:'10px'}}></span>
               <span>Expected Date : {<b>{expectedDate}</b>}</span>
+              {/* <span style={{width:'10px'}}></span>
+              <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
+                         <BarcodeOutlined />
+                     </Tag>}</span> */}
 
             </div>
           );
@@ -496,9 +514,11 @@ export const SourcingRequisitionDynamicView = () => {
                 </Form>
         
 
-            <Collapse expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} accordion>
+            <Collapse collapsible="icon" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />} accordion>
                       {tableData.map((item: any, index: any) => (
-                        <Collapse.Panel header={<HeaderRow requestNo={item.requestNo} style={item.style} styleDescription={item.styleDescription} expectedDate={item.expectedDate} indentDate={item.indentDate}/>} key={index}>
+                        <Collapse.Panel header={<HeaderRow requestNo={item.requestNo} style={item.style} styleDescription={item.styleDescription} expectedDate={item.expectedDate} indentDate={item.indentDate}/>} key={index} extra={<Tag onClick={() => generateBarcode(item.requestNo,'requestNo')} style={{cursor:'pointer'}}>
+                        <BarcodeOutlined />
+                    </Tag>}>
                         <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
                     <Segmented onChange={onSegmentChange} style={{backgroundColor:'#68cc6b'}}
                       options={[
@@ -534,7 +554,7 @@ export const SourcingRequisitionDynamicView = () => {
                         </Collapse.Panel>
                       ))}
                     </Collapse>
-                    <Modal open={barcodeModal} onCancel={onBarcodeModalCancel} footer={[]} title='M3 Item Code'>
+                    <Modal open={barcodeModal} onCancel={onBarcodeModalCancel} footer={[]} title={barcodeInfo === 'm3ItemCode' ? 'M3 Item Code' : 'Request Number'}>
                     <div style={{textAlign:'center'}}>
                     <Barcode value={barcode} height={30} />
                     </div>
