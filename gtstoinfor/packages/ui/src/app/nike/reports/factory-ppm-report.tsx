@@ -390,6 +390,18 @@ const FactoryPPMReport = () => {
                     return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
                 }
             },
+            {
+                title: 'Actual Unit',
+                dataIndex: 'actualUnit',
+                align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                }
+            },
             { title: 'Purchase Order Number', dataIndex: 'purchaseOrderNumber', align: 'center' },
             { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
             { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
@@ -517,6 +529,66 @@ const FactoryPPMReport = () => {
                     }
                 }
                 // ...getColumnSearch('factory'),
+            },
+            {
+                title: 'Edit Unit Allocation',
+                dataIndex: '',
+                align: "center",
+                render: (text, rowData) => (
+                    <span>
+                        <Form.Item>
+                            <Checkbox
+                                onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
+                                checked={expandedActualUnit[rowData.poAndLine] || false}
+                            />
+                        </Form.Item>
+                    </span>
+                ),
+            },
+            {
+                title: '',
+                align: 'center',
+                render: (text, rowData) => (
+                    <div>
+                        {expandedActualUnit[rowData.poAndLine] && (
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Input
+                                    name='actualUnit'
+                                    allowClear
+                                    style={{ marginRight: '10px' }}
+                                    placeholder="Enter text"
+                                    value={textareaValuesActualUnit[rowData.poAndLine] || ''}
+                                    onChange={(e) =>
+                                        handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
+                                    }
+                                />
+                                <Button
+                                    type="primary"
+                                    onClick={() => {
+                                        updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
+                                        handleCheckboxChange('ActualUnit', rowData.poAndLine);
+                                        handleTextareaChange('ActualUnit', rowData.poAndLine, '');
+                                    }}
+                                >
+                                    Submit
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                ),
+
+            },
+            {
+                title: 'Actual Unit',
+                dataIndex: 'actualUnit',
+                align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                }
             },
 
             {
@@ -882,68 +954,6 @@ const FactoryPPMReport = () => {
             },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
 
-
-
-            {
-                title: 'Edit Unit Allocation',
-                dataIndex: '',
-                align: "center",
-                render: (text, rowData) => (
-                    <span>
-                        <Form.Item>
-                            <Checkbox
-                                onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
-                                checked={expandedActualUnit[rowData.poAndLine] || false}
-                            />
-                        </Form.Item>
-                    </span>
-                ),
-            },
-            {
-                title: '',
-                align: 'center',
-                render: (text, rowData) => (
-                    <div>
-                        {expandedActualUnit[rowData.poAndLine] && (
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Input
-                                    name='actualUnit'
-                                    allowClear
-                                    style={{ marginRight: '10px' }}
-                                    placeholder="Enter text"
-                                    value={textareaValuesActualUnit[rowData.poAndLine] || ''}
-                                    onChange={(e) =>
-                                        handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
-                                    }
-                                />
-                                <Button
-                                    type="primary"
-                                    onClick={() => {
-                                        updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
-                                        handleCheckboxChange('ActualUnit', rowData.poAndLine);
-                                        handleTextareaChange('ActualUnit', rowData.poAndLine, '');
-                                    }}
-                                >
-                                    Submit
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-                ),
-
-            },
-            {
-                title: 'Actual Unit',
-                dataIndex: 'actualUnit',
-                align: 'center',
-                render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                }
-            },
             {
                 title: 'Quantity Allocation',
                 align: 'center',
@@ -1233,7 +1243,7 @@ const FactoryPPMReport = () => {
         )
         const getRowClassName = (record) => {
             if (record.displayName) {
-                return 'colored-row';
+                return 'colored-factory-empty-row';
             }
             return '';
         };

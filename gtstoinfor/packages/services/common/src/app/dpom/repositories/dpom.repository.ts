@@ -529,7 +529,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getOrderAcceptanceDat(req: nikeFilterRequest): Promise<any[]> {
         let query = this.createQueryBuilder('d')
-            .select(` d.po_number, d.dpom_item_line_status, d.po_line_item_number, d.schedule_line_item_number, d.size_qty, d.size_description, d.document_date, d.plant_name, d.purchase_group_name, d.product_code, d.category_desc, d.shipping_type,
+            .select(` d.id,d.po_number, d.dpom_item_line_status, d.po_line_item_number, d.schedule_line_item_number, d.size_qty, d.size_description, d.document_date, d.plant_name, d.purchase_group_name, d.product_code, d.category_desc, d.shipping_type,
             d.gross_price_fob, d.fob_currency_code, d.mrgac, d.gac, d.total_item_qty,
             MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.old_val END) AS MRGAC_OLD,
             MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.new_val END) AS MRGAC_NEW,
