@@ -57,16 +57,22 @@ export const baseRouterList = [
 
         children:[
             {
-                label: "Factories",
-                key: "factories",
-                path: "factories/factories-view",
-                filepath: "factories/factories-view",
+                label: "Attributes",
+                key: "attributes",
+                path: "attributes/attributes-view",
+                filepath: "attributes/attributes-view",
             },
             {
-                label: "Currency",
-                key: "currencies",
-                path: "currencies/currency-view",
-                filepath: "currencies/currency-view",
+                label: "Buyers",
+                key: "buyers",
+                path: "buyers/buyers-view",
+                filepath: "buyers/buyers-view",
+            },
+            {
+                label: "Buyers Destination",
+                key: "buyers-destination",
+                path: "buyers-destination/buyers-destination-grid",
+                filepath: "buyers-destination/buyers-destination-grid",
             },
             {
                 label: "Company",
@@ -79,11 +85,25 @@ export const baseRouterList = [
                 key: "division",
                 path: "company/division-grid",
                 filepath: "company/division-grid",
-            },  {
-                label: "Warehouse",
-                key: "warehouse",
-                path: "warehouse/warehouse-grid",
-                filepath: "warehouse/warehouse-grid",
+            },
+            {
+                label: "Currency",
+                key: "currencies",
+                path: "currencies/currency-view",
+                filepath: "currencies/currency-view",
+            },
+
+            {
+                label: "Delivery Method",
+                key: "delivery-methods",
+                path: "delivery-methods/delivery-method-view",
+                filepath: "delivery-methods/delivery-method-view",
+            },
+            {
+                label: "Delivery Terms",
+                key: "delivery-terms",
+                path: "delivery-terms/delivery-terms-view",
+                filepath: "delivery-terms/delivery-terms-view",
             },
             {
                 label: "Destination",
@@ -92,25 +112,25 @@ export const baseRouterList = [
                 filepath: "destination/destination-grid",
             },
             {
-                label: "Buyers",
-                key: "buyers",
-                path: "buyers/buyers-view",
-                filepath: "buyers/buyers-view",
-            },
-            {
-                label: "Vendors",
-                key: "vendors",
-                path: "vendors/vendors-view",
-                filepath: "vendors/vendors-view",
-            },
-            {
                 label: "Employees",
                 key: "employee-details-grid",
                 path: "employee-details/employee-details-grid",
                 filepath: "employee-details/employee-details-grid",
+            }, 
+            {
+                label: "Factories",
+                key: "factories",
+                path: "factories/factories-view",
+                filepath: "factories/factories-view",
+            }, 
+            {
+                label: "Locations",
+                key: "locations",
+                path: "locations/locations-view",
+                filepath: "locations/locations-view",
             },
             {
-                label: "PaymentMethod",
+                label: "Payment Method",
                 key: "paymentmethod",
                 path: "paymentmethod/paymentmethod-view",
                 filepath: "paymentmethod/paymentmethod-view",
@@ -128,46 +148,28 @@ export const baseRouterList = [
                 filepath: "package-terms/package-terms-view",
             },
             {
-                label: "Delivery Terms",
-                key: "delivery-terms",
-                path: "delivery-terms/delivery-terms-view",
-                filepath: "delivery-terms/delivery-terms-view",
-            },
-            {
-                label: "Delivery Method",
-                key: "delivery-methods",
-                path: "delivery-methods/delivery-method-view",
-                filepath: "delivery-methods/delivery-method-view",
-            },
-            {
-                label: "Locations",
-                key: "locations",
-                path: "locations/locations-view",
-                filepath: "locations/locations-view",
-            },
-            {
                 label: "Taxes",
                 key: "taxes",
                 path: "taxes/taxes-grid",
                 filepath: "taxes/taxes-grid",
             },
             {
-                label: "Attributes",
-                key: "attributes",
-                path: "attributes/attributes-view",
-                filepath: "attributes/attributes-view",
-            },
-            {
-                label: "Buyers Destination",
-                key: "buyers-destination",
-                path: "buyers-destination/buyers-destination-grid",
-                filepath: "buyers-destination/buyers-destination-grid",
-            },
-            {
                 label: "UOM",
                 key: "uom",
                 path: "uom/uom-grid",
                 filepath: "uom/uom-grid",
+            },
+            {
+                label: "Vendors",
+                key: "vendors",
+                path: "vendors/vendors-view",
+                filepath: "vendors/vendors-view",
+            },
+            {
+                label: "Warehouse",
+                key: "warehouse",
+                path: "warehouse/warehouse-grid",
+                filepath: "warehouse/warehouse-grid",
             },
         ]
     },
@@ -179,28 +181,100 @@ export const baseRouterList = [
         filepath: "masters",
         children: [
             {
+                label: "Account Control Object",
+                key: "accountcontrolobjects",
+                path: "accountcontrolobjects/accountcontrolobjects-view",
+                filepath: "accountcontrolobjects/accountcontrolobjects-view",
+            },
+            {
                 label: "Brands",
                 key: "brands",
                 path: "brands/brand-view",
                 filepath: "brands/brand-view",
             },
             {
-                label: "Operations",
-                key: "operations",
-                path: "operations/operation-view",
-                filepath: "operations/operation-view",
+                label: "Buying House",
+                key: "buying-house",
+                path: "buying-house/buying-house-view",
+                filepath: "buying-house/buying-house-view",
             },
             {
-                label: "Operation Groups",
-                key: "operation-groups",
-                path: "operationgroups/operationgroups-view",
-                filepath: "operationgroups/operationgroups-view",
+                label: "Colors",
+                key: "colours",
+                path: "colour/colour-view",
+                filepath: "colour/colour-view",
+            }, 
+            {
+                label: "Commission",
+                key: "commission",
+                path: "commission/commission-view",
+                filepath: "commission/commission-view",
             },
             {
-                label: "Items",
-                key: "items",
-                path: "items/item-grid",
-                filepath:"items/item-grid",
+                label: "Components",
+                key: "components",
+                path: "components/components-view",
+                filepath: "components/components-view",
+            },
+            {
+                label: "Custom Groups",
+                key: "custom-groups",
+                path: "custom-groups/custom-groups-view",
+                filepath: "custom-groups/custom-groups-view",
+            },
+            {
+                label: "Department",
+                key: "department",
+                path: "department/department-view",
+                filepath: "department/department-view",
+            },
+            {
+                label: "Fabrics",
+                key: "fabrics",
+                path: "fabrics/fabrics-view",
+                filepath: "fabrics/fabrics-view",
+            },
+            {
+                label: "Fabric Type",
+                key: "fabricType",
+                path: "fabricType/fabric-type-view",
+                filepath: "fabricType/fabric-type-view",
+            },
+            {
+                label: "Fabric Sub-Type",
+                key: "fabricSubType",
+                path: "fabricSubType/fabric-sub-type-view",
+                filepath: "fabricSubType/fabric-sub-type-view",
+            },
+            {
+                label: "Fabric Finish Type",
+                key: "fabric-finish-type",
+                path: "fabric-finish-type/fabric-finish-type-grid",
+                filepath: "fabric-finish-type/fabric-finish-type-grid",
+            },
+            {
+                label: "Fabric Structure",
+                key: "fabric-structure",
+                path: "fabric-structure/fabric-structure-grid",
+                filepath: "fabric-structure/fabric-structure-grid",
+            },
+            {
+                label: "Fabric Weave",
+                key: "fabric-weave",
+                path: "fabric-weave/fabric-weave-view",
+                filepath: "fabric-weave/fabric-weave-view",
+            },
+            {
+                label: "Garment Categories",
+                key: "Garment-categories",
+                path: "/masters/garmentcategory/garmentcategory-view",
+                filepath: "/masters/garmentcategory/garmentcategory-view",
+            },
+            {
+                label: "Garments",
+                key: "garments",
+                path: "garments/garments-view",
+                filepath: "garments/garments-view",
             },
             {
                 label: "Item Categories",
@@ -215,31 +289,35 @@ export const baseRouterList = [
                 filepath: "item-sub-categories/item-sub-categories-view",
             },
             {
-                label: "Components",
-                key: "components",
-                path: "components/components-view",
-                filepath: "components/components-view",
+                label: "Items",
+                key: "items",
+                path: "items/item-grid",
+                filepath:"items/item-grid",
             },
             {
-                label: "Garments",
-                key: "garments",
-                path: "garments/garments-view",
-                filepath: "garments/garments-view",
+                label: "License Type",
+                key: "liscence-type",
+                path: "liscence-type/liscence-type-grid",
+                filepath: "liscence-type/liscence-type-grid",
             },
-            {
-                label: "Garment Categories",
-                key: "Garment-categories",
-                path: "/masters/garmentcategory/garmentcategory-view",
-                filepath: "/masters/garmentcategory/garmentcategory-view",
-            },
-            
             {
                 label: "Locations",
                 key: "locations",
                 path: "locations/locations-view",
                 filepath: "locations/locations-view",
             },
-            
+            {
+                label: "Operation Groups",
+                key: "operation-groups",
+                path: "operationgroups/operationgroups-view",
+                filepath: "operationgroups/operationgroups-view",
+            },
+            {
+                label: "Operations",
+                key: "operations",
+                path: "operations/operation-view",
+                filepath: "operations/operation-view",
+            },
             {
                 label: "Profit Control Head",
                 key: "profit-control-head",
@@ -247,10 +325,10 @@ export const baseRouterList = [
                 filepath: "profit-control-head/profit-control-head-view",
             },
             {
-                label: "Liscence Type",
-                key: "liscence-type",
-                path: "liscence-type/liscence-type-grid",
-                filepath: "liscence-type/liscence-type-grid",
+                label: "ROSL Groups",
+                key: "rosl-groups",
+                path: "rosl-groups/rosl-groups-view",
+                filepath: "rosl-groups/rosl-groups-view",
             },
             {
                 label: "Sample Types",
@@ -282,74 +360,6 @@ export const baseRouterList = [
                 path: "size/size-view",
                 filepath: "size/size-view",
             },
-            {
-                label: "Custom Groups",
-                key: "custom-groups",
-                path: "custom-groups/custom-groups-view",
-                filepath: "custom-groups/custom-groups-view",
-            },
-            {
-                label: "ROSL Groups",
-                key: "rosl-groups",
-                path: "rosl-groups/rosl-groups-view",
-                filepath: "rosl-groups/rosl-groups-view",
-            },
-            {
-                label: "Buying House",
-                key: "buying-house",
-                path: "buying-house/buying-house-view",
-                filepath: "buying-house/buying-house-view",
-            },
-            {
-                label: "Commission",
-                key: "commission",
-                path: "commission/commission-view",
-                filepath: "commission/commission-view",
-            },
-            {
-                label: "Fabric Structure",
-                key: "fabric-structure",
-                path: "fabric-structure/fabric-structure-grid",
-                filepath: "fabric-structure/fabric-structure-grid",
-            },
-            {
-                label: "Fabric Finish Type",
-                key: "fabric-finish-type",
-                path: "fabric-finish-type/fabric-finish-type-grid",
-                filepath: "fabric-finish-type/fabric-finish-type-grid",
-            },
-         
-            {
-                label: "Colours",
-                key: "colours",
-                path: "colour/colour-view",
-                filepath: "colour/colour-view",
-            },
-            {
-                label: "Department",
-                key: "department",
-                path: "department/department-view",
-                filepath: "department/department-view",
-            },
-            {
-                label: "Account Control Object",
-                key: "accountcontrolobjects",
-                path: "accountcontrolobjects/accountcontrolobjects-view",
-                filepath: "accountcontrolobjects/accountcontrolobjects-view",
-            },
-            {
-                label: "Fabrics",
-                key: "fabrics",
-                path: "fabrics/fabrics-view",
-                filepath: "fabrics/fabrics-view",
-            },
-            {
-                label: "Fabric Weave",
-                key: "fabric-weave",
-                path: "fabric-weave/fabric-weave-view",
-                filepath: "fabric-weave/fabric-weave-view",
-            }
-          
         ],
     }, 
     {
@@ -405,7 +415,7 @@ export const baseRouterList = [
         children:[
 
             {
-                label: "Fabic Development Request",
+                label: "Fabric Development Request",
                 key: "Fabricdevelopmentrequest",
                 path: "FabricDevelopmentrequest/Fabric-Development-Request",
                 filepath: "FabricDevelopmentrequest/Fabric-Development-Request",
@@ -474,19 +484,37 @@ export const baseRouterList = [
                 path: "sku-list",
                 filepath: "sku-list",
             },
+           
+        ]
+    },
+    {
+        label: "Style Management",
+        key: "style-management",
+        path: "style-management",
+        icon:<FontAwesomeIcon icon={faShirt} />,
+        filepath: "style-management",
+        children: [
+            {
+                label: "Style",
+                key: "style-view",
+                path: 'style/style-grid',
+                filepath: 'style/style-grid',
+            },
+            {
+                label: "Component Mapping",
+                key: "component-mapping",
+                path: 'component-mapping/component-mapping-form',
+                filepath: 'component-mapping/component-mapping-form',
+            },
             {
                 label: "Operation Sequence",
                 key: "operation-sequence",
                 path: "operation-sequence",
                 filepath: "operation-sequence",
             },
-            {
-                label: "Operation Reporting",
-                key: "operation-reporting",
-                path: "operation-reporting",
-                filepath: "operation-reporting",
-            },
+            
         ]
+
     },
     {
         label: "Operation Tracking",
@@ -501,7 +529,13 @@ export const baseRouterList = [
                 key: "issuing",
                 path: "operation-tracking/issuing",
                 filepath: "operation-tracking/issuing",
-            }
+            },
+            {
+                label: "Reporting",
+                key: "operation-reporting",
+                path: "operation-reporting",
+                filepath: "operation-reporting",
+            },
             
          
         ]

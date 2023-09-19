@@ -90,7 +90,7 @@ export class StyleService{
                 if (StyleDetails.isActive) {
                     console.log('activeeeee')
                     if (StyleUpdate.affected) {
-                        return new AllStyleResponseModel(true, 0, 'style de-activated successfully', [])
+                        return new AllStyleResponseModel(true, 0, 'style deactivated successfully', [])
                     } else {
                         throw new AllStyleResponseModel(false, 1, 'style already deactivated', [])
                     }

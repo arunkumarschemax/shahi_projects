@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import FabricDevelopmentTabs from "./fabric-development-tabs";
 import { BuyersService, EmployeeDetailsService, FabricTypeService, LocationsService, ProfitControlHeadService } from "@project-management-system/shared-services";
 import AlertMessages from "../common/common-functions/alert-messages";
+import { Link } from "react-router-dom";
 import FabricDevelopmentRequestQuality from "./fabric-development-quality-request";
 
 
@@ -144,9 +145,12 @@ console.log(locationData,"143")
       size="small"
       title="Fabric Development "
       extra={
+        <Link to="/fabricdevelopment/fabric-development-request/fabric-development-request-view">
+
         <span>
           <Button type={"primary"}>View </Button>
         </span>
+        </Link>
       }
     >
       <Form
