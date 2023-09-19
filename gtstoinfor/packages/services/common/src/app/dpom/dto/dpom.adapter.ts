@@ -66,8 +66,8 @@ export class DpomAdapter {
         entity.sizeQuantity = dto.sizeQuantity
         entity.sizeDescription = dto.sizeDescription
         entity.shipToAddressLegalPO = dto.shipToAddressLegalPO
-        entity.quantity = dto.quantity
-        entity.price = dto.price
+        entity.legalPoQty = dto.quantity
+        entity.legalPoPrice = dto.price
         entity.itemVasPDF = dto.itemVasPDF
         entity.shipToAddressDIA = dto.shipToAddressDIA
         entity.CABCode = dto.CABCode

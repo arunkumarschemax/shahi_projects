@@ -42,6 +42,7 @@ const PPMReport = () => {
   const [planSesCode, setPlanSesCode] = useState<any>([]);
   const [planSesYear, setPlanSesYear] = useState<any>([]);
   const [geoCode, setGeoCode] = useState<any>([]);
+  const [hideChildren, setHideChildren] = useState(false);
 
 
 
@@ -142,13 +143,13 @@ const PPMReport = () => {
   const getSesonYear = () => {
     service.getPpmPlanningSeasonYearMarketing().then(res => {
       setPlanSesYear(res.data)
-      console.log("year",planSesYear)
+      console.log("year", planSesYear)
 
     })
   }
   const getGeoCode = () => {
     service.getPpmdesGeoCodeMarketing().then(res => {
-     // setPlanSesYear(res.data)
+      // setPlanSesYear(res.data)
     })
   }
 
@@ -190,7 +191,7 @@ const PPMReport = () => {
     if (form.getFieldValue('item') !== undefined) {
       req.item = form.getFieldValue('item');
     }
-   
+
     if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
       req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
     }
@@ -218,7 +219,7 @@ const PPMReport = () => {
     if (form.getFieldValue('geoCode') !== undefined) {
       req.geoCode = form.getFieldValue('geoCode');
     }
-     if (form.getFieldValue('plant') !== undefined) {
+    if (form.getFieldValue('plant') !== undefined) {
       req.plant = form.getFieldValue('plant');
     }
 
@@ -271,7 +272,9 @@ const PPMReport = () => {
     getData()
   }
 
-
+  const toggleHideChildren = () => {
+    setHideChildren(!hideChildren);
+  };
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -345,6 +348,7 @@ const PPMReport = () => {
     }
     return {};
   };
+
   const getSizeWiseHeaders = (data: MarketingModel[]) => {
     const sizeHeaders = new Set<string>();
     data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
@@ -464,10 +468,10 @@ const PPMReport = () => {
       { title: 'Net including discounts currency code', dataIndex: 'netIncDisCurrency' },
       { title: 'Trading Co Net including discounts', dataIndex: 'trCoNetIncludingDisc' },
       { title: 'Trading Co Net including discounts currency code', dataIndex: 'tradingNetCurrencyCode' },
-      { title: 'Legal PO Price', dataIndex: 'price' },
+      { title: 'Legal PO Price', dataIndex: 'legalPoPrice' },
       { title: 'Legal PO Price currency', dataIndex: '' },
       { title: 'CO Price', dataIndex: 'coPrice' },
-      { title: 'CO Price currency', dataIndex: '' },
+      { title: 'CO Price currency', dataIndex: 'coPriceCurrencyCode' },
       { title: 'Diff of Price', dataIndex: '' },
       { title: 'Diff of Price currency', dataIndex: '' },
       { title: 'CRM CO QTY', dataIndex: '' },
@@ -500,7 +504,7 @@ const PPMReport = () => {
         dataIndex: 'lastModifiedDate',
         render: (text) => moment(text).format('MM/DD/YYYY')
       },
-      
+
       {
         title: 'Item',
         dataIndex: 'item',
@@ -513,7 +517,7 @@ const PPMReport = () => {
           }
         },
       },
-      
+
       {
         title: 'Factory',
         dataIndex: 'factory',
@@ -534,17 +538,17 @@ const PPMReport = () => {
             const year = parseInt(text.slice(0, 4), 10);
             const month = parseInt(text.slice(4, 6), 10);
             const day = parseInt(text.slice(6, 8), 10);
-      
+
             if (isNaN(year) || isNaN(month) || isNaN(day)) {
               return 'Invalid Date';
             }
-      
-            const date = new Date(year, month - 1, day); 
-            
+
+            const date = new Date(year, month - 1, day);
+
             if (isNaN(date.getTime())) {
               return 'Invalid Date';
             }
-      
+
             const mm = String(date.getMonth() + 1).padStart(2, '0');
             const dd = String(date.getDate()).padStart(2, '0');
             const yyyy = date.getFullYear();
@@ -552,9 +556,9 @@ const PPMReport = () => {
           }
         }
       }
-      
-      
-,
+
+
+      ,
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
@@ -1004,7 +1008,7 @@ const PPMReport = () => {
           },
           {
             title: 'Legal PO Price',
-            dataIndex: 'legal_po_price', 
+            dataIndex: 'legalPoPrice',
             render: (text, record) => {
               if (!text || text.trim() === '') {
                 return text;
@@ -1013,7 +1017,7 @@ const PPMReport = () => {
               }
             },
           },
-          
+
           {
             title: 'CO Price',
             dataIndex: 'coPrice',
@@ -1031,16 +1035,16 @@ const PPMReport = () => {
             key: '',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-          
+
               if (sizeData) {
-                const legalPoPrice = parseFloat(sizeData.legal_po_price); 
-                const coPrice = parseFloat(sizeData.coPrice); 
-          
+                const legalPoPrice = parseFloat(sizeData.legal_po_price);
+                const coPrice = parseFloat(sizeData.coPrice);
+
                 if (!isNaN(legalPoPrice) && !isNaN(coPrice)) {
                   const priceVariation = legalPoPrice - coPrice;
                   return priceVariation;
                 } else {
-                  
+
                   if (legalPoPrice === 0 && coPrice === 0) {
                     return 0;
                   } else {
@@ -1052,9 +1056,9 @@ const PPMReport = () => {
               }
             }
           }
-          
-          
-          
+
+
+
         ],
         render: (text, record) => {
           return record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1090,14 +1094,14 @@ const PPMReport = () => {
           },
           {
             title: 'Legal PO Price',
-            dataIndex: '',
+            dataIndex: 'legalPoPrice',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
               if (sizeData) {
                 if (sizeData.sizeQty !== null) {
                   return (
-                    sizeData.price
+                    sizeData.legalPoPrice
                   );
                 } else {
                   return (
@@ -1159,8 +1163,10 @@ const PPMReport = () => {
       });
     });
 
-    columns.push
-
+    // if (hideChildren) {
+    //   // If hideChildren is true, show only the first child column
+    //   exportingColumns[0].children = exportingColumns[0].children.slice(0, 1);
+    // }
 
     const getRowClassName = (record) => {
       let classNames = '';
@@ -1168,7 +1174,7 @@ const PPMReport = () => {
       if (record.displayName) {
         classNames += 'colored-row ';
       }
-    
+
       if (record.factory) {
         if (record.factory.includes("_")) {
           classNames += 'colored-row-withUnderscore ';
@@ -1176,7 +1182,7 @@ const PPMReport = () => {
           classNames += 'colored-factory-empty-row ';
         }
       }
-    
+
       return classNames.trim();
     };
 
@@ -1190,10 +1196,7 @@ const PPMReport = () => {
     //   }
     //   return '';
     // };
-    
- 
 
-    
     columns.push(
 
       {
@@ -1201,7 +1204,7 @@ const PPMReport = () => {
         dataIndex: 'tradingCoPoNumber',
         render: (text, record) => {
           if (!text || text.trim() === '') {
-            return '-'; 
+            return '-';
           } else {
             return text;
           }
@@ -1243,28 +1246,26 @@ const PPMReport = () => {
       {
         title: 'Buyer Confirmed Gross Price/FOB Currency Code',
         dataIndex: '',
-
-      }, {
-      title: 'Diff of Price',
-      dataIndex: '',
-
-    },
+      },
+      {
+        title: 'Diff of Price',
+        dataIndex: '',
+      },
       {
         title: 'Diff of Price Currency',
         dataIndex: '',
-
-      }, {
-      title: 'Net including discounts',
-      dataIndex: 'netIncludingDisc',
-      render: (text, record) => {
-        if (!text || text.trim() === '') {
-          return '-';
-        } else {
-          return text;
-        }
       },
-
-    },
+      {
+        title: 'Net including discounts',
+        dataIndex: 'netIncludingDisc',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
       {
         title: 'Net including discounts currency code',
         dataIndex: 'netIncDisCurrency',
@@ -1275,7 +1276,6 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Trading Co Net including discounts',
@@ -1287,7 +1287,6 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Trading Co Net including discounts currency code',
@@ -1299,11 +1298,10 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Legal PO Price',
-        dataIndex: 'price',
+        dataIndex: 'legalPoPrice',
         render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
@@ -1311,12 +1309,10 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Legal PO Price currency',
-        dataIndex: '',
-
+        dataIndex: 'legalPoCurrencyCode',
       },
       {
         title: 'CO Price',
@@ -1328,12 +1324,11 @@ const PPMReport = () => {
             return text;
           }
         },
-
-      }, {
-      title: 'CO Price currency',
-      dataIndex: '',
-
-    },
+      },
+      {
+        title: 'CO Price currency',
+        dataIndex: 'coPriceCurrencyCode',
+      },
       {
         title: 'Diff of Price',
         dataIndex: '',
@@ -1347,28 +1342,25 @@ const PPMReport = () => {
       {
         title: 'CRM CO QTY',
         dataIndex: '',
-
-      }, {
-      title: 'Legal PO QTY',
-      dataIndex: 'quantity',
-      render: (text, record) => {
-        if (!text || text.trim() === '') {
-          return '-';
-        } else {
-          return text;
-        }
       },
-
-    },
+      {
+        title: 'Legal PO QTY',
+        dataIndex: 'quantity',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
       {
         title: 'Diff of Quantity',
         dataIndex: '',
-
       },
       {
         title: 'Allowed Excess Ship Qty',
         dataIndex: '',
-
       },
       {
         title: 'Actual Shipped Qty',
@@ -1380,12 +1372,10 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Actual Ship %',
         dataIndex: '',
-
       },
       {
         title: 'VAS - Size',
@@ -1397,7 +1387,6 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Item Vas Text',
@@ -1409,17 +1398,14 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Item Vas Text in PDF PO',
         dataIndex: '',
-
       },
       {
         title: 'Diff of Item Vas Text',
         dataIndex: '',
-
       },
       {
         title: 'Item Text',
@@ -1431,7 +1417,6 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Hanger PO',
@@ -1443,17 +1428,15 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Change Register',
         dataIndex: 'displayName',
         align: 'center',
       },
-
     )
-    exportingColumns.push(
 
+    exportingColumns.push(
       {
         title: 'Trading Co PO Number',
         dataIndex: 'tradingCoPoNumber',
@@ -1502,27 +1485,28 @@ const PPMReport = () => {
         title: 'Buyer Confirmed Gross Price/FOB Currency Code',
         dataIndex: '',
 
-      }, {
-      title: 'Diff of Price',
-      dataIndex: '',
+      },
+      {
+        title: 'Diff of Price',
+        dataIndex: '',
 
-    },
+      },
       {
         title: 'Diff of Price Currency',
         dataIndex: '',
 
-      }, {
-      title: 'Net including discounts',
-      dataIndex: 'netIncludingDisc',
-      render: (text, record) => {
-        if (!text || text.trim() === '') {
-          return '-';
-        } else {
-          return text;
-        }
       },
-
-    },
+      {
+        title: 'Net including discounts',
+        dataIndex: 'netIncludingDisc',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
       {
         title: 'Net including discounts currency code',
         dataIndex: 'netIncDisCurrency',
@@ -1533,7 +1517,6 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Trading Co Net including discounts',
@@ -1545,7 +1528,6 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Trading Co Net including discounts currency code',
@@ -1557,11 +1539,10 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Legal PO Price',
-        dataIndex: 'price',
+        dataIndex: 'legalPoPrice',
         render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
@@ -1569,48 +1550,42 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Legal PO Price currency',
-        dataIndex: '',
-
+        dataIndex: 'legalPoCurrencyCode',
       },
       {
         title: 'CO Price',
-        dataIndex: '',
-
-      }, {
-      title: 'CO Price currency',
-      dataIndex: '',
-
-    },
+        dataIndex: 'coPrice',
+      },
+      {
+        title: 'CO Price currency',
+        dataIndex: 'coPriceCurrencyCode',
+      },
       {
         title: 'Diff of Price',
         dataIndex: '',
-
       },
       {
         title: 'Diff of Price currency',
         dataIndex: '',
-
       },
       {
         title: 'CRM CO QTY',
         dataIndex: '',
-
-      }, {
-      title: 'Legal PO QTY',
-      dataIndex: 'quantity',
-      render: (text, record) => {
-        if (!text || text.trim() === '') {
-          return '-';
-        } else {
-          return text;
-        }
       },
-
-    },
+      {
+        title: 'Legal PO QTY',
+        dataIndex: 'quantity',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
       {
         title: 'Diff of Quantity',
         dataIndex: '',
@@ -1631,12 +1606,10 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Actual Ship %',
         dataIndex: '',
-
       },
       {
         title: 'VAS - Size',
@@ -1648,7 +1621,6 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Item Vas Text',
@@ -1660,17 +1632,14 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Item Vas Text in PDF PO',
         dataIndex: '',
-
       },
       {
         title: 'Diff of Item Vas Text',
         dataIndex: '',
-
       },
       {
         title: 'Item Text',
@@ -1682,7 +1651,6 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Hanger PO',
@@ -1694,7 +1662,6 @@ const PPMReport = () => {
             return text;
           }
         },
-
       },
       {
         title: 'Change Register',
@@ -1708,8 +1675,8 @@ const PPMReport = () => {
           }
         },
       },
-
     )
+
     return (
       <>
 
@@ -1734,9 +1701,8 @@ const PPMReport = () => {
       </>
     );
 
-
-
   }
+
   return (
     <>
       <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
@@ -1755,7 +1721,7 @@ const PPMReport = () => {
                 <RangePicker />
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }}  style={{ padding: '20px' }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }} style={{ padding: '20px' }}>
               <Form.Item name="DPOMLineItemStatus" label="DPOM Line Item Status">
                 <Select
                   showSearch
@@ -1784,17 +1750,17 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-           
+
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='item' label='Item' >
-                    <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear>
-                      {item.map((inc: any) => {
-                        const firstFourDigits = inc.item.substring(0, 4);
-                        return <Option key={inc.id} value={inc.item}>{firstFourDigits}</Option>
-                            })}
-                      </Select>
-                     </Form.Item>
-                    </Col>
+                <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear>
+                  {item.map((inc: any) => {
+                    const firstFourDigits = inc.item.substring(0, 4);
+                    return <Option key={inc.id} value={inc.item}>{firstFourDigits}</Option>
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='factory' label='Factory' >
@@ -1937,7 +1903,7 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}  style={{ padding: '20px' }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='plant' label='Plant Code' >
                 <Select
                   showSearch
@@ -1952,8 +1918,6 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            
-         
 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
               <Form.Item>
@@ -1967,6 +1931,12 @@ const PPMReport = () => {
                 </Button>
               </Form.Item>
             </Col>
+            {/* <Col>
+              <Row>
+                <Form.Item>
+                  <Button onClick={toggleHideChildren}>Toggle Hide</Button>
+                </Form.Item>
+              </Row></Col> */}
           </Row>
         </Form>
         <Row gutter={80}>
@@ -1997,13 +1967,7 @@ const PPMReport = () => {
             <Card title={'Cancelled Po: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
         </Row><br></br>
-        <div>
-          {/* <Table columns={Columns} 
-          // dataSource={gridData}
-           dataSource={filterData}
-            bordered
-          /> */}
-        </div>
+
         {renderReport(filterData)}
       </Card>
     </>
