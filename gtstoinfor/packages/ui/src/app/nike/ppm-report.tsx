@@ -36,6 +36,14 @@ const PPMReport = () => {
   const [factory, setFactory] = useState<any>([]);
   const [poNumber, setPoNumber] = useState<any>([]);
 
+  const [docType, setDocType] = useState<any>([]);
+  const [poLineItemNumber, setPoLineItemNumber] = useState<any>([]);
+  const [styleNumber, setStyleNumber] = useState<any>([]);
+  const [planSesCode, setPlanSesCode] = useState<any>([]);
+  const [planSesYear, setPlanSesYear] = useState<any>([]);
+  const [geoCode, setGeoCode] = useState<any>([]);
+
+
 
 
   useEffect(() => {
@@ -49,6 +57,13 @@ const PPMReport = () => {
     getFactory();
     getData();
     getPonumber();
+    getDocType();
+    getPpmPoLineForMarketing();
+    getStyleNumber();
+    getSesonCode();
+    getSesonYear();
+    getGeoCode();
+
   }, [])
 
 
@@ -104,6 +119,39 @@ const PPMReport = () => {
       setPoNumber(res.data)
     })
   }
+  const getDocType = () => {
+    service.getPpmDocTypeMarketing().then(res => {
+      setDocType(res.data)
+    })
+  }
+  const getPpmPoLineForMarketing = () => {
+    service.getPpmPoLineForMarketing().then(res => {
+      setPoLineItemNumber(res.data)
+    })
+  }
+  const getStyleNumber = () => {
+    service.getPpmStyleNumberMarketing().then(res => {
+      setStyleNumber(res.data)
+    })
+  }
+  const getSesonCode = () => {
+    service.getPpmPlanningSeasonCodeMarketing().then(res => {
+      setPlanSesCode(res.data)
+    })
+  }
+  const getSesonYear = () => {
+    service.getPpmPlanningSeasonYearMarketing().then(res => {
+      setPlanSesYear(res.data)
+      console.log("year",planSesYear)
+
+    })
+  }
+  const getGeoCode = () => {
+    service.getPpmdesGeoCodeMarketing().then(res => {
+     // setPlanSesYear(res.data)
+    })
+  }
+
 
   const getData = () => {
     const req = new PpmDateFilterRequest();
@@ -127,12 +175,12 @@ const PPMReport = () => {
     if (form.getFieldValue('poNumber') !== undefined) {
       req.poNumber = form.getFieldValue('poNumber');
     }
-    if (form.getFieldValue('colorDesc') !== undefined) {
-      req.colorDesc = form.getFieldValue('colorDesc');
-    }
-    if (form.getFieldValue('categoryDesc') !== undefined) {
-      req.categoryDesc = form.getFieldValue('categoryDesc');
-    }
+    // if (form.getFieldValue('colorDesc') !== undefined) {
+    //   req.colorDesc = form.getFieldValue('colorDesc');
+    // }
+    // if (form.getFieldValue('categoryDesc') !== undefined) {
+    //   req.categoryDesc = form.getFieldValue('categoryDesc');
+    // }
     if (form.getFieldValue('destinationCountry') !== undefined) {
       req.destinationCountry = form.getFieldValue('destinationCountry');
     }
@@ -142,14 +190,36 @@ const PPMReport = () => {
     if (form.getFieldValue('item') !== undefined) {
       req.item = form.getFieldValue('item');
     }
-    if (form.getFieldValue('factory') !== undefined) {
-      req.factory = form.getFieldValue('factory');
-    }
+   
     if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
       req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
     }
     if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
       req.DPOMLineItemStatus = selectedLineItemStatus;
+    }
+    if (form.getFieldValue('docType') !== undefined) {
+      req.docTypeCode = form.getFieldValue('docType');
+    }
+    if (form.getFieldValue('poLineItemNumber') !== undefined) {
+      req.poLineItemNumber = form.getFieldValue('poLineItemNumber');
+    }
+    if (form.getFieldValue('factory') !== undefined) {
+      req.factory = form.getFieldValue('factory');
+    }
+    if (form.getFieldValue('styleNumber') !== undefined) {
+      req.styleNumber = form.getFieldValue('styleNumber');
+    }
+    if (form.getFieldValue('planningSeasonCode') !== undefined) {
+      req.planningSeasonCode = form.getFieldValue('planningSeasonCode');
+    }
+    if (form.getFieldValue('planningSeasonYear') !== undefined) {
+      req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
+    }
+    if (form.getFieldValue('geoCode') !== undefined) {
+      req.geoCode = form.getFieldValue('geoCode');
+    }
+     if (form.getFieldValue('plant') !== undefined) {
+      req.plant = form.getFieldValue('plant');
     }
 
     console.log(req, "reqppm")
@@ -269,6 +339,12 @@ const PPMReport = () => {
     setSearchText('');
   };
 
+  const getFactoryCellStyle = (text) => {
+    if (!text || text.trim() === '') {
+      return { backgroundColor: '' };
+    }
+    return {};
+  };
   const getSizeWiseHeaders = (data: MarketingModel[]) => {
     const sizeHeaders = new Set<string>();
     data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
@@ -296,7 +372,18 @@ const PPMReport = () => {
     exportingColumns = [
       { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
       { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text) => moment(text).format('MM/DD/YYYY') },
-      { title: 'Item', dataIndex: 'Item' },
+      {
+        title: 'Item',
+        dataIndex: 'item',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            const firstFourDigits = text.substring(0, 4);
+            return firstFourDigits;
+          }
+        },
+      },
       {
         title: 'Factory', dataIndex: 'Factory', render: (text, record) => {
           if (!text || text.trim() === '') {
@@ -413,6 +500,7 @@ const PPMReport = () => {
         dataIndex: 'lastModifiedDate',
         render: (text) => moment(text).format('MM/DD/YYYY')
       },
+      
       {
         title: 'Item',
         dataIndex: 'item',
@@ -420,33 +508,53 @@ const PPMReport = () => {
           if (!text || text.trim() === '') {
             return '-';
           } else {
-            return text;
+            const firstFourDigits = text.substring(0, 4);
+            return firstFourDigits;
           }
         },
       },
+      
       {
         title: 'Factory',
         dataIndex: 'factory',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
+        align: 'center',
+        render: (text, record) => (
+          <span style={getFactoryCellStyle(text)}>
+            {!text || text.trim() === '' ? '-' : text}
+          </span>
+        ),
       },
       {
         title: 'PCD',
         dataIndex: 'pcd',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
+        render: (text: string, record: any) => {
+          if (!text || text.trim() === '' || text.length !== 8) {
             return '-';
           } else {
-            return text;
+            const year = parseInt(text.slice(0, 4), 10);
+            const month = parseInt(text.slice(4, 6), 10);
+            const day = parseInt(text.slice(6, 8), 10);
+      
+            if (isNaN(year) || isNaN(month) || isNaN(day)) {
+              return 'Invalid Date';
+            }
+      
+            const date = new Date(year, month - 1, day); 
+            
+            if (isNaN(date.getTime())) {
+              return 'Invalid Date';
+            }
+      
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            const yyyy = date.getFullYear();
+            return `${mm}/${dd}/${yyyy}`;
           }
         }
-        // ...getColumnSearch('factory'),
-      },
+      }
+      
+      
+,
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
@@ -896,47 +1004,26 @@ const PPMReport = () => {
           },
           {
             title: 'Legal PO Price',
-            dataIndex: '',
-            key: '',
+            dataIndex: 'legal_po_price', 
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-
-              if (sizeData) {
-                if (sizeData.sizeQty !== null) {
-                  return (
-                    sizeData.price
-                  );
-                } else {
-                  return (
-                    '-'
-                  );
-                }
+              if (!text || text.trim() === '') {
+                return text;
               } else {
                 return '-';
               }
-            }
+            },
           },
+          
           {
             title: 'CO Price',
-            dataIndex: '',
-            key: '',
+            dataIndex: 'coPrice',
             render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-
-              if (sizeData) {
-                if (sizeData.sizeQty !== null) {
-                  return (
-                    sizeData.coPrice
-                  );
-                } else {
-                  return (
-                    '-'
-                  );
-                }
-              } else {
+              if (!text || text.trim() === '') {
                 return '-';
+              } else {
+                return text;
               }
-            }
+            },
           },
           {
             title: 'Price Variation',
@@ -944,23 +1031,30 @@ const PPMReport = () => {
             key: '',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-
+          
               if (sizeData) {
-                if (sizeData.sizeQty !== null) {
-                  const priceVariation = sizeData.price - sizeData.coPrice;
-                  return (
-                    priceVariation
-                  );
+                const legalPoPrice = parseFloat(sizeData.legal_po_price); 
+                const coPrice = parseFloat(sizeData.coPrice); 
+          
+                if (!isNaN(legalPoPrice) && !isNaN(coPrice)) {
+                  const priceVariation = legalPoPrice - coPrice;
+                  return priceVariation;
                 } else {
-                  return (
-                    '-'
-                  );
+                  
+                  if (legalPoPrice === 0 && coPrice === 0) {
+                    return 0;
+                  } else {
+                    return '-';
+                  }
                 }
               } else {
                 return '-';
               }
             }
-          },
+          }
+          
+          
+          
         ],
         render: (text, record) => {
           return record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1069,11 +1163,37 @@ const PPMReport = () => {
 
 
     const getRowClassName = (record) => {
+      let classNames = '';
+
       if (record.displayName) {
-        return 'colored-row';
+        classNames += 'colored-row ';
       }
-      return '';
+    
+      if (record.factory) {
+        if (record.factory.includes("_")) {
+          classNames += 'colored-row-withUnderscore ';
+        } else {
+          classNames += 'colored-factory-empty-row ';
+        }
+      }
+    
+      return classNames.trim();
     };
+
+    // const getRowClassName2 = (record) => {
+    //   if (record.factory) {
+    //     if (record.factory.includes("_")) {
+    //       return 'colored-row-withUnderscore';
+    //     } else {
+    //       return 'colored-factory-empty-row';
+    //     }
+    //   }
+    //   return '';
+    // };
+    
+ 
+
+    
     columns.push(
 
       {
@@ -1081,7 +1201,7 @@ const PPMReport = () => {
         dataIndex: 'tradingCoPoNumber',
         render: (text, record) => {
           if (!text || text.trim() === '') {
-            return '-';
+            return '-'; 
           } else {
             return text;
           }
@@ -1635,10 +1755,111 @@ const PPMReport = () => {
                 <RangePicker />
               </Form.Item>
             </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }}  style={{ padding: '20px' }}>
+              <Form.Item name="DPOMLineItemStatus" label="DPOM Line Item Status">
+                <Select
+                  showSearch
+                  placeholder="Select Line Status"
+                  optionFilterProp="children"
+                  allowClear mode='multiple'>
+                  <Option value="Accepted">ACCEPTED</Option>
+                  <Option value="Unaccepted">UNACCEPTED</Option>
+                  <Option value="Cancelled">CANCELLED</Option>
+                  <Option value="Closed">CLOSED</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='docType' label='Doc Type' >
+                <Select
+                  showSearch
+                  placeholder="Select Doc Type"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {docType.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.doc_type_code}>{inc.doc_type_code}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+           
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='item' label='Item' >
+                    <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear>
+                      {item.map((inc: any) => {
+                        const firstFourDigits = inc.item.substring(0, 4);
+                        return <Option key={inc.id} value={inc.item}>{firstFourDigits}</Option>
+                            })}
+                      </Select>
+                     </Form.Item>
+                    </Col>
+
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='factory' label='Factory' >
+                <Select
+                  showSearch
+                  placeholder="Select Factory"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {factory.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >
               <Form.Item label="Document Date" name="documentDate">
                 <RangePicker />
 
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
+              <Form.Item name='poNumber' label='Purchase Order Number' >
+                <Select
+                  showSearch
+                  placeholder="Select Po Number"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {poNumber.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='poLineItemNumber' label='Po Line Item Number' >
+                <Select
+                  showSearch
+                  placeholder="Select poLineItemNumber"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {poLineItemNumber.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='styleNumber' label='Style Number' >
+                <Select
+                  showSearch
+                  placeholder="Select Style Number"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {styleNumber.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
+                  })
+                  }
+                </Select>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
@@ -1656,52 +1877,37 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-              <Form.Item name='poNumber' label='Po Number' >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='planningSeasonCode' label='Planning Season Code' >
                 <Select
                   showSearch
-                  placeholder="Select Po Number"
+                  placeholder="Select Planning Season Code"
                   optionFilterProp="children"
                   allowClear
                 >
-                  {poNumber.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
+                  {planSesCode.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='planningSeasonYear' label='Planning Season Year' >
+                <Select
+                  showSearch
+                  placeholder="Select Planning Season Year"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {planSesYear.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
                   })
                   }
                 </Select>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-              <Form.Item name='colorDesc' label='Color Description' >
-                <Select
-                  showSearch
-                  placeholder="Select Color Description"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {colorDesc.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.color_desc}>{inc.color_desc}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-              <Form.Item name='categoryDesc' label='Category Description' >
-                <Select
-                  showSearch
-                  placeholder="Select Category Description"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {categoryDesc.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.category_desc}>{inc.category_desc}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
               <Form.Item name='destinationCountry' label='Destination Country' >
                 <Select
                   showSearch
@@ -1716,7 +1922,22 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='geoCode' label='Geo Code' >
+                <Select
+                  showSearch
+                  placeholder="Select Geo Code"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {geoCode.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}  style={{ padding: '20px' }}>
               <Form.Item name='plant' label='Plant Code' >
                 <Select
                   showSearch
@@ -1731,50 +1952,8 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-              <Form.Item name='item' label='Item' >
-                <Select
-                  showSearch
-                  placeholder="Select Item"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {item.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-              <Form.Item name='factory' label='Factory' >
-                <Select
-                  showSearch
-                  placeholder="Select Factory"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {factory.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }} >
-              <Form.Item name="DPOMLineItemStatus" label="PPM Status">
-                <Select
-                  showSearch
-                  placeholder="Select PPM Status"
-                  optionFilterProp="children"
-                  allowClear mode='multiple'>
-                  <Option value="Accepted">ACCEPTED</Option>
-                  <Option value="Unaccepted">UNACCEPTED</Option>
-                  <Option value="Cancelled">CANCELLED</Option>
-                  <Option value="Closed">CLOSED</Option>
-                </Select>
-              </Form.Item>
-            </Col>
+            
+         
 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
               <Form.Item>

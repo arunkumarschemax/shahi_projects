@@ -9,6 +9,11 @@
     color:"white"
   }
 
+.colored-factory-empty-row{
+  background-color:#cae4f1  ;
+  color:"white"
+  }
+
   .custom-table-wrapper .ant-table-thead > tr > th {
     background-color: lavender;
   }

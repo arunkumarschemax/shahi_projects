@@ -182,7 +182,6 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/getPoAndQtyDashboard", req)
     }
 
-    //---------------------------------------------------------------------------------------->factory
     async getPpmProductCodeForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmProductCodeForFactory")
     }
@@ -289,4 +288,24 @@ export class NikeService extends CommonAxiosService {
     async getPppoNumberForMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPppoNumberForMarketing")
     }
+    async getPpmDocTypeMarketing(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmDocTypeMarketing")
+    }
+    async getPpmPoLineItemNumberMarketing(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmPoLineItemNumberMarketing")
+    }
+    
+    async getPpmStyleNumberMarketing(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmStyleNumberMarketing")
+    }
+    async getPpmPlanningSeasonCodeMarketing(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmPlanningSeasonCodeMarketing")
+    }
+    async getPpmPlanningSeasonYearMarketing(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmPlanningSeasonYearMarketing")
+    }
+    async getPpmdesGeoCodeMarketing(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmdesGeoCodeMarketing")
+    }
+    
 }   
