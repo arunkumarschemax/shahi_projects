@@ -353,8 +353,8 @@ export function DocView() {
           <Col
             xs={{ span: 24 }}
             sm={{ span: 24 }}
-            md={{ span: 5 }}
-            lg={{ span: 5 }}
+            md={{ span: 10}}
+            lg={{ span: 10 }}
             xl={{ span: 5 }}
           >
             <Form.Item name="vendorName" label="Vendor Name">
@@ -372,30 +372,28 @@ export function DocView() {
               </Select>
             </Form.Item>
           </Col>
-          <Col
-            xs={{ span: 24 }}
-            sm={{ span: 24 }}
-            md={{ span: 5 }}
-            lg={{ span: 5 }}
-            xl={{ span: 5 }}
-            style={{ textAlign: "right" }}
-          >
-            <Button
-              style={{ color: "white", background: "forestgreen" }}
-              htmlType="submit"
-              icon={<SearchOutlined />}
-            >
-              Search{" "}
-            </Button>
-            <Button
-              style={{ margin: "0 14px" }}
-              danger
-              icon={<UndoOutlined />}
-              onClick={resetHandler}
-            >
-              Reset
-            </Button>
-          </Col>
+          <Row justify="end">
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="ant-submit-btn"
+                style={{ position: "relative", float: "left", marginLeft: 10 }}
+                icon={<SearchOutlined />}
+              >
+                Search
+              </Button>
+              <Button
+                type="default"
+                danger
+                icon={<UndoOutlined />}
+                onClick={resetHandler}
+                style={{ position: "relative", float: "left", marginLeft: 10 }}
+              >
+                Reset
+              </Button>
+            </Form.Item>
+          </Row>
         </Row>
       </Form>
       <Table size="small" dataSource={formdata} columns={columns} />

@@ -12,17 +12,9 @@ import {
   Row,
   Tooltip,
 } from "antd";
-import {
-  EyeOutlined,
-  SearchOutlined,
-  UndoOutlined,
-} from "@ant-design/icons";
+import { EyeOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { VendorService } from "@project-management-system/shared-services";
-import {
-  ColumnType,
-  ColumnsType,
-  SortOrder,
-} from "antd/es/table/interface";
+import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useNavigate, useParams } from "react-router-dom";
 import Highlighter from "react-highlight-words";
 
@@ -37,8 +29,8 @@ const VendorGrid = () => {
   const [pageSize, setPageSize] = useState(10);
   const [form] = Form.useForm();
   const searchInput = useRef(null);
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   let navigate = useNavigate();
 
@@ -57,19 +49,25 @@ const VendorGrid = () => {
         setData(vendors);
         setFilteredData(vendors);
 
-        const distinctNames = [...new Set(vendors.map((vendor) => vendor.name))];
-        const distinctLocations = [...new Set(vendors.map((vendor) => vendor.location))];
+        const distinctNames = [
+          ...new Set(vendors.map((vendor) => vendor.name)),
+        ];
+        const distinctLocations = [
+          ...new Set(vendors.map((vendor) => vendor.location)),
+        ];
 
         setNameOptions(distinctNames);
         setLocationOptions(distinctLocations);
 
-        message.success(response.internalMessage);
+        message.success("Vendors Data Retrieved Sucessfully");
       } else {
         message.error(response.internalMessage);
       }
     } catch (error) {
       console.error("Error fetching vendor data:", error);
-      message.error("An error occurred while fetching vendor data: " + error.message);
+      message.error(
+        "An error occurred while fetching vendor data: " + error.message
+      );
     }
   };
 
@@ -84,9 +82,9 @@ const VendorGrid = () => {
       setFilteredData(filtered);
 
       if (filtered.length === 0) {
-        message.error("No matching data found.");
+        message.error("No data found.");
       } else {
-        message.success("Data is found");
+        message.success("Data Retrieved Sucessfully");
       }
     });
   };
@@ -98,8 +96,11 @@ const VendorGrid = () => {
     setFilteredData(data);
   };
 
-
-  const handleSearch = (selectedKeys: any[], confirm: () => void, dataIndex: string) => {
+  const handleSearch = (
+    selectedKeys: any[],
+    confirm: () => void,
+    dataIndex: string
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -109,22 +110,33 @@ const VendorGrid = () => {
     clearFilters();
   };
 
-  
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }: any) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }: any) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-          style={{ marginBottom: 8, display: 'block' }}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+          style={{ marginBottom: 8, display: "block" }}
         />
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
@@ -133,11 +145,10 @@ const VendorGrid = () => {
           </Button>
           <Button
             onClick={() => {
-              handleReset(clearFilters)
-              setSearchedColumn(dataIndex)
-              confirm({ closeDropdown: true })
-            }
-            }
+              handleReset(clearFilters);
+              setSearchedColumn(dataIndex);
+              confirm({ closeDropdown: true });
+            }}
             size="small"
             style={{ width: 90 }}
           >
@@ -147,13 +158,15 @@ const VendorGrid = () => {
       </div>
     ),
     filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex] ? record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()) : false,
+      record[dataIndex]
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes((value as string).toLowerCase())
+        : false,
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
@@ -162,183 +175,165 @@ const VendorGrid = () => {
     render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ''}
+          textToHighlight={text ? text.toString() : ""}
         />
       ) : (
         text
       ),
   });
 
-
-  
-  
-
   const columns: ColumnsType<any> = [
     {
-      title: 'S.No',
-      key: 'sno',
+      title: "S.No",
+      key: "sno",
       render: (text, record, index) => (page - 1) * pageSize + (index + 1),
     },
     {
       title: "Name",
       dataIndex: "name",
-      defaultSortOrder: 'ascend' as SortOrder,
+      defaultSortOrder: "ascend" as SortOrder,
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Business Name",
       dataIndex: "businessName",
-      defaultSortOrder: 'ascend' as SortOrder,
+      defaultSortOrder: "ascend" as SortOrder,
       sorter: (a, b) => a.businessName.localeCompare(b.businessName),
       ...getColumnSearchProps("businessName"),
-
     },
     {
       title: "Business Contact Person",
       dataIndex: "businessContactPerson",
-      defaultSortOrder: 'ascend' as SortOrder,
+      defaultSortOrder: "ascend" as SortOrder,
       sorter: (a, b) =>
         a.businessContactPerson.localeCompare(b.businessContactPerson),
       ...getColumnSearchProps("businessContactPerson"),
-
     },
     {
-      title: 'Contact',
-      dataIndex: 'contact',
+      title: "Contact",
+      dataIndex: "contact",
       render: (text) => <a href={`tel:${text}`}>{text}</a>,
       ...getColumnSearchProps("contact"),
-
-
     },
     {
-      title: 'Location',
-      dataIndex: 'location',
-      defaultSortOrder: 'ascend' as SortOrder,
+      title: "Location",
+      dataIndex: "location",
+      defaultSortOrder: "ascend" as SortOrder,
       sorter: (a, b) => a.location.localeCompare(b.location),
     },
-    // {
-    //   title: 'Type',
-    //   dataIndex: 'type',
-    // },
-    // {
-    //   title: 'Branches Count',
-    //   dataIndex: 'branchesCount',
-    //   align: 'right',
-    //   defaultSortOrder: 'descend' as SortOrder,
-    //   sorter: (a, b) => a.branchesCount - b.branchesCount,
-    // },
+
     {
-      title: 'Actions',
-      dataIndex: 'actions',
-      align: 'center',
+      title: "Actions",
+      dataIndex: "actions",
+      align: "center",
       render: (text, rowData) => (
-        <Tooltip title='View'>
-        <EyeOutlined onClick={() => viewchange(rowData)}style={{color:'blue',fontSize:20}} size={30}/>
+        <Tooltip title="View">
+          <EyeOutlined
+            onClick={() => viewchange(rowData)}
+            style={{ color: "blue", fontSize: 20 }}
+            size={30}
+          />
         </Tooltip>
       ),
     },
   ];
 
-  const viewchange = (rowData:any) => {
-    navigate(`/VendorBranchInfoGrid`,{state :{rowData}}) ;
-   // console.log(rowData,"8888888888888888888")
+  const viewchange = (rowData: any) => {
+    navigate(`/VendorBranchInfoGrid`, { state: { rowData } });
+    // console.log(rowData,"8888888888888888888")
   };
 
   return (
     <Card className="card-header" title="Vendors" size="small">
-      <Space direction="vertical" style={{ width: "100%" }}>
-        <Form form={form} onFinish={handleSearch1}>
-          <Row gutter={24}>
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 5 }}
-            >
-              <Form.Item name="name" label="Name :">
-                <Select
-                  showSearch
-                  placeholder="Search by Name"
-                  value={selectedName}
-                  onChange={(value) => setSelectedName(value)}
-                  options={nameOptions.map((name) => ({ value: name, label: name }))}
-                />
-              </Form.Item>
-            </Col>
+      {/* <Space direction="vertical" style={{ width: "100%" }}> */}
+      <Form form={form} onFinish={handleSearch1}>
+        <Row gutter={24}>
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            lg={{ span: 8 }}
+            xl={{ span: 5 }}
+          >
+            <Form.Item name="name" label="Name">
+              <Select
+                showSearch
+                placeholder="Search by Name"
+                value={selectedName}
+                onChange={(value) => setSelectedName(value)}
+                options={nameOptions.map((name) => ({
+                  value: name,
+                  label: name,
+                }))}
+              />
+            </Form.Item>
+          </Col>
 
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 5 }}
-            >
-              <Form.Item name="location" label="Location :">
-                <Select
-                  showSearch
-                  placeholder="Search by Location"
-                  value={selectedLocation}
-                  onChange={(value) => setSelectedLocation(value)}
-                  options={locationOptions.map((location) => ({
-                    value: location,
-                    label: location,
-                  }))}
-                />
-              </Form.Item>
-            </Col>
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 5 }}
-            >
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 8 }}
+            lg={{ span: 8 }}
+            xl={{ span: 5 }}
+          >
+            <Form.Item name="location" label="Location">
+              <Select
+                showSearch
+                placeholder="Search by Location"
+                value={selectedLocation}
+                onChange={(value) => setSelectedLocation(value)}
+                options={locationOptions.map((location) => ({
+                  value: location,
+                  label: location,
+                }))}
+              />
+            </Form.Item>
+          </Col>
+          <Row justify="end">
+            <Form.Item>
               <Button
+                type="primary"
                 htmlType="submit"
-                style={{ color: "white", background: "forestgreen" }}
+                className="ant-submit-btn"
+                style={{ position: "relative", float: "left", marginLeft: 10 }}
                 icon={<SearchOutlined />}
               >
                 Search
               </Button>
-
               <Button
-                style={{ margin: '0 14px' }}
+                type="default"
                 danger
                 icon={<UndoOutlined />}
                 onClick={handleReset1}
+                style={{ position: "relative", float: "left", marginLeft: 10 }}
               >
                 Reset
               </Button>
-            </Col>
+            </Form.Item>
           </Row>
-        </Form>
-        <div style={{ overflowX: "auto" }}>
-          <Table
-            columns={columns}
-            className="custom-table-wrapper"
-            dataSource={filteredData}
-            size = "small"
-            pagination={{
-              onChange(current, pageSize) {
-                setPage(current);
-                setPageSize(pageSize);
-              },
-              current: page,
-              pageSize: pageSize,
-              total: filteredData.length,
-            }}
-          />
-        </div>
-      </Space>
+        </Row>
+      </Form>
+      <br></br>
+      <Table
+        columns={columns}
+        className="custom-table-wrapper"
+        dataSource={filteredData}
+        size="small"
+        pagination={{
+          onChange(current, pageSize) {
+            setPage(current);
+            setPageSize(pageSize);
+          },
+          current: page,
+          pageSize: pageSize,
+          total: filteredData.length,
+        }}
+      />
     </Card>
   );
 };
 
 export default VendorGrid;
-
-
-
