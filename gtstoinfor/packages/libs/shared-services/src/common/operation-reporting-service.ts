@@ -20,14 +20,28 @@ export class OperationReportingService extends CommonAxiosService{
       // {'jobNumber' : 'J006','skuCode' : 'S006','poNumber' : 'P006','issuedQuantity' : 300},
       ]})
     } 
-    else if(req.tabName == 'Sewing Body'){
+    else if(req.tabName == 'Sewing In'){
       return({status: true, errorCode: 11208, internalMessage: "success",
       data:[
       {'jobNumber' : 'J004','skuCode' : 'S004','poNumber' : 'P004','issuedQuantity' : 200},
       {'jobNumber' : 'J005','skuCode' : 'S005','poNumber' : 'P005','issuedQuantity' : 400},
       {'jobNumber' : 'J006','skuCode' : 'S006','poNumber' : 'P006','issuedQuantity' : 300},
       ]})
-    } else if(req.tabName == 'Sewing Hands'){
+    } else if(req.tabName == 'Sewing Out'){
+      return({status: true, errorCode: 11208, internalMessage: "success",
+      data:[
+      {'jobNumber' : 'J004','skuCode' : 'S004','poNumber' : 'P004','issuedQuantity' : 200},
+      {'jobNumber' : 'J007','skuCode' : 'S005','poNumber' : 'P005','issuedQuantity' : 400},
+      {'jobNumber' : 'J009','skuCode' : 'S006','poNumber' : 'P006','issuedQuantity' : 300},
+      ]})
+    } else if(req.tabName == 'Washing'){
+      return({status: true, errorCode: 11208, internalMessage: "success",
+      data:[
+      {'jobNumber' : 'J004','skuCode' : 'S004','poNumber' : 'P004','issuedQuantity' : 200},
+      {'jobNumber' : 'J007','skuCode' : 'S005','poNumber' : 'P005','issuedQuantity' : 400},
+      {'jobNumber' : 'J009','skuCode' : 'S006','poNumber' : 'P006','issuedQuantity' : 300},
+      ]})
+    }else if(req.tabName == 'Packing'){
       return({status: true, errorCode: 11208, internalMessage: "success",
       data:[
       {'jobNumber' : 'J004','skuCode' : 'S004','poNumber' : 'P004','issuedQuantity' : 200},

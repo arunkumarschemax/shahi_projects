@@ -100,8 +100,8 @@ export class Item {
   })
   versionFlag: number;
 
-  @OneToMany(type=>OperationSequence, operation=>operation.itemInfo,{cascade: true})
-  itemsequenceInfo:OperationSequence;
+  // @OneToMany(type=>OperationSequence, operation=>operation.itemInfo,{cascade: true})
+  // itemsequenceInfo:OperationSequence;
 
 
 }

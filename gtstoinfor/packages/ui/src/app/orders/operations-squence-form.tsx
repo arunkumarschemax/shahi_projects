@@ -10,8 +10,8 @@ import { CSS } from '@dnd-kit/utilities';
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Form, Select, Table,Row, Button, Input } from 'antd';
 import type { ColumnProps, ColumnsType } from 'antd/es/table';
-import { ItemsService, OperationSequenceService, OperationsService } from '@project-management-system/shared-services';
-import { ItemCodeRequest, OperationSequenceRequest } from '@project-management-system/shared-models';
+import { ItemsService, OperationSequenceService, OperationsService, StyleService } from '@project-management-system/shared-services';
+import { StyleRequest, OperationSequenceRequest } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 
 const {Option} = Select;
@@ -46,10 +46,13 @@ export const OperationSequence = () => {
   const [showSubmit,setShowSubmit] = useState<boolean>(true)
   const [itemCodes,setItemCodes] = useState<any[]>([])
   const itemService = new ItemsService()
+  const styleService = new StyleService()
+  const [style,setStyle] = useState<any[]>([])
 
   useEffect(() => {
       getOperations()
       getAllItemCodes()
+      getAllStyles()
   },[])
 
 
@@ -61,9 +64,9 @@ export const OperationSequence = () => {
       })
   }
 
-  const getInfoByItemCode = (val) => {
-    const req = new ItemCodeRequest(val)
-    operationSequenceService.getInfoByItemCode(req).then(res =>{
+  const getInfoByStyleCode = (val) => {
+    const req = new StyleRequest(val)
+    operationSequenceService.getInfoByStyleCode(req).then(res =>{
       if(res.status){
         setShowSubmit(false)
       } else{
@@ -77,6 +80,14 @@ export const OperationSequence = () => {
     itemService.getAllItems().then(res => {
       if(res.status){
         setItemCodes(res.data)
+      }
+    })
+  }
+
+  const getAllStyles = () => {
+    styleService.getAllActiveStyle().then(res => {
+      if(res.status){
+        setStyle(res.data)
       }
     })
   }
@@ -148,7 +159,7 @@ export const OperationSequence = () => {
   };
 
   const onSubmit = () => {
-    const req = new OperationSequenceRequest(form.getFieldValue('itemCode'),form.getFieldValue('itemId'),dataSource,'admin')
+    const req = new OperationSequenceRequest(form.getFieldValue('style'),form.getFieldValue('styleId'),dataSource,'admin')
     // const req = new OperationSequenceRequest('I0001',1,dataSource,'admin')
     operationSequenceService.createOperationSequence(req).then(res => {
       if(res.status){
@@ -162,28 +173,28 @@ export const OperationSequence = () => {
     })
   }
 
-  const onItemCodeChange = (val,option) => {
-    form.setFieldsValue({itemId:option?.key})
+  const onStyleChange = (val,option) => {
+    form.setFieldsValue({styleId:option?.key})
     setShowTable(true)
-    getInfoByItemCode(val)
+    getInfoByStyleCode(val)
   }
 
   return (
     <Card title='Operation Sequence' className='card-header'>
       <Form layout="horizontal" form={form}>
-          <Form.Item name='itemId' style={{display:'none'}}>
+          <Form.Item name='styleId' style={{display:'none'}}>
                 <Input hidden/>
             </Form.Item>
             <Row gutter={24}>
 
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
-            <Form.Item label='Style' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
-                <Select showSearch allowClear placeholder='Select Item' onChange={onItemCodeChange}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
+            <Form.Item label='Style' name='style' rules={[{required:true,message:'Style is required'}]}>
+                <Select showSearch allowClear placeholder='Select Style' onChange={onStyleChange}>
                     {/* <Option key='itemid' value='itemcode'>Item Codes </Option> */}
                     {
-                        itemCodes.map((e)=>{
+                        style.map((e)=>{
                             return(
-                                <Option key={e.itemId} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
+                                <Option key={e.styleId} value={e.style}>{e.style}-{e.description}</Option>
                             )
                         })
                     }
@@ -192,7 +203,7 @@ export const OperationSequence = () => {
         </Col>
         </Row>
         {showTable && !showSubmit ? (<>
-        <p style={{color:'blue',fontSize:'15px'}}>Operation Sequence is already allocated for this Item</p>
+        <p style={{color:'blue',fontSize:'15px'}}>Operation Sequence is already allocated for this Style</p>
         </>) : (<></>)}
     {
       showTable ? (<>

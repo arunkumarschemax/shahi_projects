@@ -2,14 +2,16 @@ import { OperationsInfoRequest } from "./operations-info-request";
 
 export class OperationSequenceModel{
     operationSequenceId:number;
-    itemCode:string;
-    itemId:number;
+    style:string;
+    styleId:number;
+    styleDescription:string;
     operatrionsInfo : OperationsInfoRequest[];
 
-    constructor(operationSequenceId:number,itemCode:string,itemId:number,operatrionsInfo : OperationsInfoRequest[],){
+    constructor(operationSequenceId:number,style:string,styleId:number,styleDescription:string,operatrionsInfo : OperationsInfoRequest[],){
         this.operationSequenceId = operationSequenceId;
-        this.itemCode = itemCode;
-        this.itemId = itemId;
+        this.style = style;
+        this.styleId = styleId;
+        this.styleDescription = styleDescription;
         this.operatrionsInfo = operatrionsInfo;
     
 }

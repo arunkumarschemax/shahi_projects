@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { ComponentMappingEntity } from "../../components-mapping/component-mapping.entity";
+import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
 
 @Entity('style')
 export class Style {
@@ -89,5 +90,8 @@ export class Style {
 
   @OneToMany(type => ComponentMappingEntity,commap => commap.styleInfo,{cascade:true})
   componentMappingInfo : ComponentMappingEntity;
+
+  @OneToMany(type => OperationSequence,os => os.styleInfo,{cascade:true})
+  itemsequenceInfo : OperationSequence;
 
 }

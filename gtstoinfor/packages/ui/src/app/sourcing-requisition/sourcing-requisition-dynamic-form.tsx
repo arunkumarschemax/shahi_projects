@@ -1,15 +1,16 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, Segmented, Select, Space, Table, Tag, Tooltip, message } from "antd"
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, Segmented, Select, Space, Table, Tag, Tooltip, Upload, UploadProps, message } from "antd"
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
 import { BuyersService, ColourService, FabricWeaveService, M3MastersService, ProfitControlHeadService, SizeService, StyleService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
 import { M3MastersCategoryReq, SourcingRequisitionReq } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
 import TextArea from "antd/es/input/TextArea";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 
 const {Option} = Select;
@@ -54,6 +55,11 @@ export const SourcingRequisitionDynamicForm = () => {
     const m3MasterService = new M3MastersService()
     const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
     const [trimM3Code,setTrimM3Code] = useState<any[]>([])
+    const [loading, setLoading] = useState<boolean>(false);
+    const [fabricfilelist, setFabricfilelist] = useState<any>([]);
+    const [isUpdateimg, setisUpdateImg]=useState('')
+    const [imageUrl, setImageUrl] = useState('');
+    const [trimfilelist, setTrimfilelist] = useState<any>([]);
 
 
 
@@ -568,6 +574,10 @@ export const SourcingRequisitionDynamicForm = () => {
         setFabricTableData([])
         setTrimsTableData([])
         setTrimTableVisible(false)
+        setImageUrl('');
+        setFabricfilelist([]);
+        setTrimfilelist([])
+    
     }
 
     const onSubmit = () =>{
@@ -580,6 +590,88 @@ export const SourcingRequisitionDynamicForm = () => {
             message.error('Please fill all fields')
         })
     }
+
+    const getBase64 = (img, callback) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result));
+        reader.readAsDataURL(img);
+      }
+
+    const uploadFabricProps: UploadProps = {
+        // alert();
+        multiple: false,
+        onRemove: file => {
+          setFabricfilelist([]);
+          setImageUrl('');
+        },
+        beforeUpload: (file: any) => {
+          if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+            AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+            // return true;
+          }
+          var reader = new FileReader();
+          reader.readAsArrayBuffer(file);
+          reader.onload = data => {
+            if (fabricfilelist.length == 1) {
+              AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+              return true;
+            } else {
+                setFabricfilelist([...fabricfilelist,file]);
+              getBase64(file, imageUrl =>
+                setImageUrl(imageUrl)
+              );
+              return false;
+            }
+          }
+        },
+        progress: {
+          strokeColor: {
+            '0%': '#108ee9',
+            '100%': '#87d068',
+          },
+          strokeWidth: 3,
+          format: percent => `${parseFloat(percent.toFixed(2))}%`,
+        },
+        fileList: fabricfilelist,
+      };
+
+      const uploadTrimProps: UploadProps = {
+        // alert();
+        multiple: false,
+        onRemove: file => {
+          setTrimfilelist([]);
+          setImageUrl('');
+        },
+        beforeUpload: (file: any) => {
+          if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+            AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+            // return true;
+          }
+          var reader = new FileReader();
+          reader.readAsArrayBuffer(file);
+          reader.onload = data => {
+            if (trimfilelist.length == 1) {
+              AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+              return true;
+            } else {
+                setTrimfilelist([...trimfilelist,file]);
+              getBase64(file, imageUrl =>
+                setImageUrl(imageUrl)
+              );
+              return false;
+            }
+          }
+        },
+        progress: {
+          strokeColor: {
+            '0%': '#108ee9',
+            '100%': '#87d068',
+          },
+          strokeWidth: 3,
+          format: percent => `${parseFloat(percent.toFixed(2))}%`,
+        },
+        fileList: trimfilelist,
+      };
 
 
     return(
@@ -662,7 +754,7 @@ export const SourcingRequisitionDynamicForm = () => {
                         </Form.Item>
                 <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='content' label='Content' rules={[{required:true,message:'Content is required'}]}>
+                    <Form.Item name='content' label='Content' >
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Content'>
                         <Option key='naturalFabrics' value='naturalFabrics'>Natural Fabrics</Option>
                             <Option key='manufacturedFabrics' value='manufacturedFabrics'>Manufactured Fabrics</Option>
@@ -670,12 +762,12 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='fabricType' label='Type of Fabric'>
+                    <Form.Item name='fabricType' label='Type of Fabric' rules={[{required:true,message:'Type of Fabric is required'}]}>
                         <Input placeholder="Enter Fabric Type"/>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='weave' label='Weave'  rules={[{required:true,message:'Weave is required'}]}>
+                    <Form.Item name='weave' label='Weave'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select weave' onChange={onWeaveChange}>
                         {weave.map(e => {
                                 return(
@@ -687,12 +779,12 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='weight' label='Weight'  rules={[{required:true,message:'Weight is required'}]}>
+                    <Form.Item name='weight' label='Weight'>
                         <Input placeholder="Enter Weight"/>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='weightUnit' rules={[{required:true,message:'Weight unit is required'}]}>
+                    <Form.Item name='weightUnit'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             <Option key='kg' value='kg'>
                                 Kg
@@ -706,17 +798,17 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='construction' label='Construction(EPI XPPI)'  rules={[{required:true,message:'Construction is required'}]}>
+                    <Form.Item name='construction' label='Construction(EPI XPPI)'>
                         <Input placeholder="Enter Construction"/>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='yarnCount' label='Yarn Count'  rules={[{required:true,message:'Yarn Count is required'}]}>
+                    <Form.Item name='yarnCount' label='Yarn Count'>
                         <Input placeholder="Enter Yarn Count"/>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='yarnUnit' rules={[{required:true,message:'Yarn unit is required'}]}>
+                    <Form.Item name='yarnUnit'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             <Option key='tex' value='tex'>TEX</Option>
 
@@ -724,7 +816,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='finish' label='Finish'  rules={[{required:true,message:'Finish is required'}]}>
+                    <Form.Item name='finish' label='Finish'>
                         <Input placeholder="Enter Finish"/>
                     </Form.Item>
                     </Col>
@@ -752,7 +844,7 @@ export const SourcingRequisitionDynamicForm = () => {
                 <Row gutter={8}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='color' label='Color'>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Content' onChange={onFabricColorChange}>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color' onChange={onFabricColorChange}>
                             {color.map(e => {
                                 return(
                                     <Option key={e.colourId} value={e.colourId} name={e.colour}> {e.colour}</Option>
@@ -851,12 +943,12 @@ export const SourcingRequisitionDynamicForm = () => {
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='quantity' label='Quantity' rules={[{required:true,message:'Quantity is required'}]}>
+                    <Form.Item name='quantity' label='Quantity' >
                         <Input placeholder="Enter Quantity"/>
                     </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='quantityUnit' rules={[{required:true,message:'Unit is required'}]}>
+                    <Form.Item name='quantityUnit'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'>
                             <Option key='m' value='m'>
                                 m
@@ -864,6 +956,22 @@ export const SourcingRequisitionDynamicForm = () => {
                         </Select>
                     </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
+                    <Form.Item name="fabricUpload" label='Fabric Upload'
+                            // rules={[
+                            //     {required:true,message:'Upload Fabric'}
+                            // ]}  
+                            // initialValue={props.isUpdate ? props.styleData.styleFileName:''}
+                        >
+                           <Upload  {...uploadFabricProps} style={{  width:'100%' }} listType="picture-card">
+                            
+                           <div>
+                                {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                                <div style={{ marginTop: 8 }}>Upload Fabric</div>
+                            </div>
+                            </Upload>
+                        </Form.Item>
+                </Col>
                 </Row>
                 <Row justify={'end'}>
                     <Button type='primary' htmlType="submit">Add</Button>
@@ -929,7 +1037,6 @@ export const SourcingRequisitionDynamicForm = () => {
                         <Form.Item
                         name="size"
                         label="Size"
-                        rules={[{ required: true, message: "Please Select Size" }]}
                         >
                             <Select
                             allowClear
@@ -952,7 +1059,6 @@ export const SourcingRequisitionDynamicForm = () => {
                             <Form.Item
                             name="color"
                             label="Color"
-                            rules={[{ required: true, message: "Please Select Color" }]}
                         >
                             <Select
                             allowClear
@@ -1034,7 +1140,22 @@ export const SourcingRequisitionDynamicForm = () => {
                             <TextArea rows={1} placeholder="Enter Remarks" />
                         </Form.Item>
                     </Col>
-                  
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
+                    <Form.Item name="trimUpload" label='Trim Upload'
+                            // rules={[
+                            //     {required:true,message:'Upload Trim'}
+                            // ]}  
+                            // initialValue={props.isUpdate ? props.styleData.styleFileName:''}
+                        >
+                           <Upload  {...uploadTrimProps} style={{  width:'100%' }} listType="picture-card">
+                            
+                           <div>
+                                {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                                <div style={{ marginTop: 8 }}>Upload Trim</div>
+                            </div>
+                            </Upload>
+                        </Form.Item>
+                </Col>
                     </Row>
                     <Row justify={'end'}>
                         <Button type='primary' htmlType="submit">Add</Button>

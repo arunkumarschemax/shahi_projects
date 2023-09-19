@@ -141,7 +141,7 @@ const service = new StyleService()
   
   return (
     
-    <Card title={props.isUpdate ? 'Update Stle' : 'Add Stle'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/style-management/style/style-grid')} type={'primary'}>View</Button></span>}>
+    <Card title={props.isUpdate ? 'Update Style' : 'Add Style'} extra={(props.isUpdate === false) && <span><Button onClick={() => navigate('/style-management/style/style-grid')} type={'primary'}>View</Button></span>}>
         <Form form={form}
          onFinish={saveData}
           initialValues={props.styleData} layout="vertical">

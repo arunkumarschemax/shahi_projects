@@ -1,5 +1,5 @@
-import { ItemCodeRequest, OperationReportingRequest, TabNameReq } from "@project-management-system/shared-models";
-import { ItemsService, OperationReportingService, OperationSequenceService, OperationsService } from "@project-management-system/shared-services";
+import { StyleRequest, OperationReportingRequest, TabNameReq } from "@project-management-system/shared-models";
+import { ItemsService, OperationReportingService, OperationSequenceService, OperationsService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Segmented, Select, Space, Table } from "antd"
 import { ColumnProps } from "antd/es/table"
 import { useEffect, useState } from "react";
@@ -20,9 +20,12 @@ export const OperationReportingView = () => {
     const itemService = new ItemsService()
     const [showTable,setShowTable] = useState<boolean>()
     const [form] = Form.useForm()
+    const styleService = new StyleService()
+    const [style,setStyle] = useState<any[]>([])
 
     useEffect(() => {
         getItemCodes()
+        getStyle()
     },[])
 
     const getData = (val) => {
@@ -30,14 +33,21 @@ export const OperationReportingView = () => {
         service.getOperationReportingData(req).then(res => {
             if(res.status){
                 setData(res.data)
+                setShowTable(true)
             }
         })
     }
 
+    const getStyle = () => {
+        styleService.getAllActiveStyle().then(res => {
+          setStyle(res.data)
+        })
+       }
+
 
     const getSegmentLabel = (val) => {
-        const req = new ItemCodeRequest(val)
-        operationSequenceService.getOperationSequenceInfoByItemCode(req).then(res => {
+        const req = new StyleRequest(val)
+        operationSequenceService.getOperationSequenceInfoByStyleCode(req).then(res => {
             if(res.status){
                 setOperations(res.data[0].operatrionsInfo)
             }
@@ -163,10 +173,10 @@ export const OperationReportingView = () => {
         getData(view)
     }
 
-    const onItemCodeChange = (val) => {
+    const onStyleChange = (val) => {
         if(val){
             getSegmentLabel(val)
-            setShowTable(true)
+            // setShowTable(true)
 
         }
     }
@@ -176,13 +186,13 @@ export const OperationReportingView = () => {
         <Card title='Operation Reporting' className='card-header'>
             <Form form={form}>
                 <Row>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>
                     <Form.Item label='Style' name='itemCode'>
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Item' onChange={onItemCodeChange}>
+                        <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style' onChange={onStyleChange}>
                             {
-                                itemCode.map(e => {
+                                style.map(e => {
                                     return(
-                                        <Option key={e.itemCode} value={e.itemCode}>{e.itemCode}-{e.itemName}</Option>
+                                        <Option key={e.styleId} value={e.style}>{e.style}-{e.description}</Option>
                                     )
                                 })
                             }
@@ -192,21 +202,21 @@ export const OperationReportingView = () => {
                 </Col>
                 </Row>
             </Form>
+            <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
+        <Segmented 
+        style={{backgroundColor:'#dde5b6'}}
+        options={segmentedOptions} 
+        onChange={onSegmentChange}
+        />
             {
                 showTable ? (<>
-                <Space direction="vertical" style={{fontSize:"16px",width:'100%'}}>
-            <Segmented 
-            style={{backgroundColor:'#dde5b6'}}
-            options={segmentedOptions} 
-            onChange={onSegmentChange}
-            />
             <div style={{width:'100%'}}>
 
             <Table columns={columns} dataSource={data}/>
             </div>
-            </Space>
             </>) : (<></>)
             }
+            </Space>
            
 
         </Card>
