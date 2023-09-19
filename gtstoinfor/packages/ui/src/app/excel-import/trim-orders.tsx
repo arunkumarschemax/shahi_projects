@@ -68,151 +68,10 @@ const TrimOrder= () => {
             key: 'sno',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
-        // {
-        //     title: 'Trim Order Id',
-        //     dataIndex: 'trim_order_id'
-        // },
+      
         {
             title: 'Order No',
             dataIndex: 'order_no'
-        },
-        {
-            title: 'Year',
-            dataIndex: 'year'
-        },
-        {
-            title: 'Revision No',
-            dataIndex: 'revision_no'
-        },
-        {
-            title: 'Planning ssn',
-            dataIndex: 'planning_ssn'
-        },
-        {
-            title: 'Global Business Unit',
-            dataIndex: 'global_business_unit'
-        },
-        {
-            title: 'Business Unit',
-            dataIndex: 'business_unit'
-        },
-        {
-            title: 'Item Brand',
-            dataIndex: 'item_brand'
-        },
-        {
-            title: 'Department',
-            dataIndex: 'department'
-        },
-        {
-            title: 'Revised Date',
-            dataIndex: 'revised_date',
-            // render: (text, record) => {
-            //     return record.revisedDate ? convertToYYYYMMDD(record.revisedDate) : '-'
-            // }
-        },
-        {
-            title: 'Document Status',
-            dataIndex: 'document_status',
-            // render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
-        },
-        {
-            title: 'Answered Status',
-            dataIndex: 'answered_status'
-        },
-        {
-            title: 'Vendor Person InCharge',
-            dataIndex: 'vendor_person_incharge'
-        },
-        {
-            title: 'Decision Date',
-            dataIndex: 'decision_date',
-            // render: (text, record) => {
-            //     return record.decisionDate ? convertToYYYYMMDD(record.decisionDate) : '-'
-            // }
-        },
-        {
-            title: 'Payment Terms',
-            dataIndex: 'payment_terms'
-        },
-        {
-            title: 'Contracted Etd',
-            dataIndex: 'contracted_etd'
-        },
-        {
-            title: 'Eta Wh',
-            dataIndex: 'eta_wh'
-        },
-        {
-            title: 'Approver',
-            dataIndex: 'approver'
-        },
-        {
-            title: 'Approval Date',
-            dataIndex: 'approval_date',
-            // render: (text, record) => {
-            //     return record.approvalDate ? convertToYYYYMMDD(record.approvalDate) : '-'
-            // }
-        },
-        {
-            title: 'Order Conditions',
-            dataIndex: 'order_conditions',
-            
-        },
-        {
-            title: 'Remarks',
-            dataIndex: 'remark',
-            
-        },
-        {
-            title: 'Raw Material Code',
-            dataIndex: 'raw_material_code',
-            
-        },
-        {
-            title: 'Supplier Raw Material Code',
-            dataIndex: 'supplier_raw_material_code',
-            
-        },
-        {
-            title: 'Supplier Raw Material ',
-            dataIndex: 'supplier_raw_material',
-            
-        },
-        {
-            title: 'Vendor Code ',
-            dataIndex: 'vendor_code',
-            
-        },
-        {
-            title: 'Vendor',
-            dataIndex: 'vendor',
-            
-        },
-        {
-            title: 'Management Factory Code ',
-            dataIndex: 'management_factory_code',
-            
-        },
-        {
-            title: 'Management Factory',
-            dataIndex: 'management_factory',
-            
-        },
-        {
-            title: 'Branch Factory Code ',
-            dataIndex: 'branch_factory_code',
-            
-        },
-        {
-            title: 'Branch Factory',
-            dataIndex: 'branch_factory',
-            
-        },
-        {
-            title: 'Order Plan Number ',
-            dataIndex: 'order_plan_number',
-            
         },
         {
             title: 'Item Code',
@@ -225,13 +84,22 @@ const TrimOrder= () => {
             
         },
         {
-            title: 'Representative Sample Code',
-            dataIndex: 'representative_sample_code',
+            title: 'Item Brand',
+            dataIndex: 'item_brand'
+        },
+        {
+            title: 'Vendor Code ',
+            dataIndex: 'vendor_code',
             
         },
         {
-            title: 'Representative Sample',
-            dataIndex: 'representative_Sample',
+            title: 'Vendor',
+            dataIndex: 'vendor',
+            
+        },
+        {
+            title: 'Order Plan Number ',
+            dataIndex: 'order_plan_number',
             
         },
         {
@@ -245,11 +113,6 @@ const TrimOrder= () => {
             
         },
         {
-            title: 'Pattern Dimension Code',
-            dataIndex: 'pattern_dimension_code',
-            
-        },
-        {
             title: 'Size Code',
             dataIndex: 'size_code',
             
@@ -260,30 +123,175 @@ const TrimOrder= () => {
             
         },
         {
-            title: 'Order Quantity Pcs',
-            dataIndex: 'order_qty_pcs',
-            
-        },
-        {
-            title: 'Arrangement By',
-            dataIndex: 'arrangement_by',
-            
-        },
-        {
-            title: 'Trim Description',
-            dataIndex: 'trim_description',
-            
-        },
-        {
             title: 'Trim Item No',
             dataIndex: 'trim_item_no',
             
         },
+           
         {
-            title: 'Trim Supplier',
-            dataIndex: 'trim_supplier',
+            title: 'Order Quantity Pcs',
+            dataIndex: 'order_qty_pcs',
             
         },
+        // {
+        //     title: 'Trim Order Id',
+        //     dataIndex: 'trim_order_id'
+        // },
+        // {
+        //     title: 'Year',
+        //     dataIndex: 'year'
+        // },
+        // {
+        //     title: 'Revision No',
+        //     dataIndex: 'revision_no'
+        // },
+        // {
+        //     title: 'Planning ssn',
+        //     dataIndex: 'planning_ssn'
+        // },
+        // {
+        //     title: 'Global Business Unit',
+        //     dataIndex: 'global_business_unit'
+        // },
+        // {
+        //     title: 'Business Unit',
+        //     dataIndex: 'business_unit'
+        // },
+      
+        // {
+        //     title: 'Department',
+        //     dataIndex: 'department'
+        // },
+        // {
+        //     title: 'Revised Date',
+        //     dataIndex: 'revised_date',
+            // render: (text, record) => {
+            //     return record.revisedDate ? convertToYYYYMMDD(record.revisedDate) : '-'
+            // }
+        // },
+        // {
+        //     title: 'Document Status',
+        //     dataIndex: 'document_status',
+        //     // render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
+        // },
+        // {
+        //     title: 'Answered Status',
+        //     dataIndex: 'answered_status'
+        // },
+        // {
+        //     title: 'Vendor Person InCharge',
+        //     dataIndex: 'vendor_person_incharge'
+        // },
+        // {
+        //     title: 'Decision Date',
+        //     dataIndex: 'decision_date',
+            // render: (text, record) => {
+            //     return record.decisionDate ? convertToYYYYMMDD(record.decisionDate) : '-'
+            // }
+        // },
+        // {
+        //     title: 'Payment Terms',
+        //     dataIndex: 'payment_terms'
+        // },
+        // {
+        //     title: 'Contracted Etd',
+        //     dataIndex: 'contracted_etd'
+        // },
+        // {
+        //     title: 'Eta Wh',
+        //     dataIndex: 'eta_wh'
+        // },
+        // {
+        //     title: 'Approver',
+        //     dataIndex: 'approver'
+        // },
+        // {
+        //     title: 'Approval Date',
+        //     dataIndex: 'approval_date',
+        //     // render: (text, record) => {
+        //     //     return record.approvalDate ? convertToYYYYMMDD(record.approvalDate) : '-'
+        //     // }
+        // },
+        // {
+        //     title: 'Order Conditions',
+        //     dataIndex: 'order_conditions',
+            
+        // },
+        // {
+        //     title: 'Remarks',
+        //     dataIndex: 'remark',
+            
+        // },
+        // {
+        //     title: 'Raw Material Code',
+        //     dataIndex: 'raw_material_code',
+            
+        // },
+        // {
+        //     title: 'Supplier Raw Material Code',
+        //     dataIndex: 'supplier_raw_material_code',
+            
+        // },
+        // {
+        //     title: 'Supplier Raw Material ',
+        //     dataIndex: 'supplier_raw_material',
+            
+        // },
+        
+        // {
+        //     title: 'Management Factory Code ',
+        //     dataIndex: 'management_factory_code',
+            
+        // },
+        // {
+        //     title: 'Management Factory',
+        //     dataIndex: 'management_factory',
+            
+        // },
+        // {
+        //     title: 'Branch Factory Code ',
+        //     dataIndex: 'branch_factory_code',
+            
+        // },
+        // {
+        //     title: 'Branch Factory',
+        //     dataIndex: 'branch_factory',
+            
+        // },
+      
+        // {
+        //     title: 'Representative Sample Code',
+        //     dataIndex: 'representative_sample_code',
+            
+        // },
+        // {
+        //     title: 'Representative Sample',
+        //     dataIndex: 'representative_Sample',
+            
+        // },
+        
+        // {
+        //     title: 'Pattern Dimension Code',
+        //     dataIndex: 'pattern_dimension_code',
+            
+        // },
+     
+        // {
+        //     title: 'Arrangement By',
+        //     dataIndex: 'arrangement_by',
+            
+        // },
+        // {
+        //     title: 'Trim Description',
+        //     dataIndex: 'trim_description',
+            
+        // },
+        
+        // {
+        //     title: 'Trim Supplier',
+        //     dataIndex: 'trim_supplier',
+            
+        // },
     ];
 
 
