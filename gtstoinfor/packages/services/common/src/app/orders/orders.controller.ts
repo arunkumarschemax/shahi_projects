@@ -20,7 +20,7 @@ export class OrdersController {
     @Post('/saveOrder/:id/:month')
     async saveOrder(@Param('id') id: number, @Param('month') month: number, @Body() data: any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.saveOrdersData(data, id, month);
+            // return this.ordersService.saveOrdersData(data, id, month);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -109,7 +109,7 @@ export class OrdersController {
     @Post('/revertFileData')
     async revertFileData(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.revertFileData(req);
+            // return this.ordersService.revertFileData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
