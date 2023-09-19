@@ -24,7 +24,7 @@ export const SourceIssuesDetailView=()=>{
     })
   }
     return(
-      <Card title="Material Issue Details" className="card-header">
+      <Card className="card-header">
       <Descriptions size='small'>
       <DescriptionsItem label='RequestNo'>{data[0]?.requestNo}</DescriptionsItem>
          <DescriptionsItem label='Location'>{data[0]?.location}</DescriptionsItem>

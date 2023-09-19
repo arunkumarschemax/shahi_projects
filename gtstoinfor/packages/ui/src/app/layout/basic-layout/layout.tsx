@@ -561,8 +561,8 @@ export const baseRouterList = [
     {
         label: "Material Issues",
         key: "store-issues",
-        path: "store-issues/store-issues-view",
-        filepath: "store-issues/store-issues-view",
+        path: "store-issues/material-issue-view",
+        filepath: "store-issues/material-issues-view",
         // children:[
         //     {
         //         label: "Source Issues View",
@@ -572,6 +572,7 @@ export const baseRouterList = [
         //     }
         // ]
     },  
+    
     // {
     //     label: "Material Creation",
     //     key: "materialCreation",
