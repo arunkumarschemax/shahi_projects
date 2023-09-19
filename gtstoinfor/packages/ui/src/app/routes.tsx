@@ -139,6 +139,7 @@ import SourceIssuesView from "./sample-development/source-issues-view"
 import MaterialIssueView from "./sample-development/material-issue"
 import MarketIssueDetail from "./sample-development/market-detail"
 import IssueScreen from "./operation-tracking/issue"
+import { InventoryView } from "./operation-tracking/inventory"
 
 
 export const AppRoutes = () => {
@@ -530,8 +531,7 @@ export const AppRoutes = () => {
                 <Route path='operation-tracking/issuing' element={<IssueScreen/>}/>
                 <Route path='operation-reporting' element={<OperationReportingView/>} />
                 <Route path='operation-sequence' element={<OperationSequenceForm/>} />
-
-                
+                <Route path='inventory' element={<InventoryView/>} />
                 
 
 
