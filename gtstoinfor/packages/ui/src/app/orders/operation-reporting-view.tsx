@@ -135,17 +135,17 @@ export const OperationReportingView = () => {
                 )
             }
           },
-          {
-            title:'Wasted Quantity',
-            dataIndex:'wastedQuantity',
-            render:(text,record,index) => {
-                return(
-                    <>
-                    {<Input  defaultValue={0} onChange={e=> setWastedInfo(e,index,record)}/>}
-                    </>
-                )
-            }
-          },
+        //   {
+        //     title:'Wasted Quantity',
+        //     dataIndex:'wastedQuantity',
+        //     render:(text,record,index) => {
+        //         return(
+        //             <>
+        //             {<Input  defaultValue={0} onChange={e=> setWastedInfo(e,index,record)}/>}
+        //             </>
+        //         )
+        //     }
+        //   },
           {
             title:'Job Completed',
             dataIndex:'jobCompleted',
@@ -177,7 +177,7 @@ export const OperationReportingView = () => {
             <Form form={form}>
                 <Row>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
-                    <Form.Item label='Item' name='itemCode'>
+                    <Form.Item label='Style' name='itemCode'>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Select Item' onChange={onItemCodeChange}>
                             {
                                 itemCode.map(e => {

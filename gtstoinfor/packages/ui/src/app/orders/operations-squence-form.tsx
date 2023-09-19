@@ -177,7 +177,7 @@ export const OperationSequence = () => {
             <Row gutter={24}>
 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
-            <Form.Item label='Item' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
+            <Form.Item label='Style' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
                 <Select showSearch allowClear placeholder='Select Item' onChange={onItemCodeChange}>
                     {/* <Option key='itemid' value='itemcode'>Item Codes </Option> */}
                     {

@@ -300,6 +300,15 @@ export const SourcingRequisitionDynamicView = () => {
         {
             title: 'Shahi Trim Code',
             dataIndex: 'shahiTrimCode',
+            render: (text,record) => {
+                return(
+                    <>
+                    {record.shahiTrimCode ? `${record.shahiTrimCode} ${<Button type='primary' shape='round' onClick={() => generateBarcode(record.shahiTrimCode)}>
+                            <PrinterOutlined />
+                        </Button>   }` : '-'}
+                    </>
+                )
+            }
         },
         {
           title: 'Trim Type',

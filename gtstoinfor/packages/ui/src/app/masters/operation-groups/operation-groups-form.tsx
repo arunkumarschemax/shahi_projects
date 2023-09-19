@@ -111,6 +111,24 @@ export const OperationGroupForm = (props:OperationGroupsFormProps) => {
             <Input placeholder="Enter Operation Group Name"/>
           </Form.Item>
           </Col>
+          <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}> 
+            <Form.Item
+            name="m3OperationCode"
+            label="M3 Operation Code"
+            rules={[
+              {
+                required: true,
+                message:'Operation Group Name Is Required'
+              },
+              {
+                pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                message: `Should contain only alphabets.`
+              }
+            ]}
+          >
+            <Input placeholder="Enter Operation Group Name"/>
+          </Form.Item>
+          </Col>
           </Row>
           <Row>
             <Col span={24} style={{ textAlign: 'right' }}>

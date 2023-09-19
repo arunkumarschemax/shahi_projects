@@ -166,11 +166,11 @@ const onButtonChange = (rowData) => {
           lg={{ span: 4 }}
           xl={{ span: 4 }}
         >
-          <Form.Item name="Item" label="Items" 
-            rules={[{ required: true, message: "Items is required" }]}
+          <Form.Item name="Item" label="Style" 
+            rules={[{ required: true, message: "Style is required" }]}
 
           >
-            <Select placeholder="Items" onChange={getData} 
+            <Select placeholder="Style" onChange={getData} 
              >
             {itemCodeData.map(res=>(
               <option key={res.itemsId} value={res.itemsId}>

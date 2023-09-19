@@ -183,6 +183,11 @@ export const AppRoutes = () => {
                     <Route path='/user-management/users-view' element={<UsersView />} />
 
                     <Route path='/masters'>
+                    <Route path='m3-itemcodes' element={<M3Masters
+                        isUpdate={false}
+                        closeForm={() => { } }
+                        updateDetails={(undefined) => { } } m3MasterData={undefined}/>}/>
+                    <Route path='m3-itemcodes-view' element={<M3MastersView/>}/>
                         <Route path='factories/factories-view' element={<FactoriesView />} />
                         <Route path='factories/factories-form' element={<FactoriesForm factoryData={undefined}
                         isUpdate={false}
@@ -546,11 +551,7 @@ export const AppRoutes = () => {
                     <Route path='/sourcing-requisition-report' element={<SourcingRequisitionReport/>}/>
                     <Route path='/indent-form' element={<SourcingRequisitionDynamicForm/>}/>
                     <Route path='/requisition-view' element={<SourcingRequisitionDynamicView/>}/>
-                    <Route path='/m3-masters' element={<M3Masters
-                        isUpdate={false}
-                        closeForm={() => { } }
-                        updateDetails={(undefined) => { } } m3MasterData={undefined}/>}/>
-                    <Route path='/m3-masters-view' element={<M3MastersView/>}/>
+                 
 
 
 

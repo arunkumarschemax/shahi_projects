@@ -23,7 +23,7 @@ async getAllitemsCode(): Promise<any> {
 async getAllOperation(itemsId:number): Promise<any> {
 
   const data = [
-    {itemCode:"IT001", itemsId: 1, operation:[{operationName:"Garment stitching"},{operationName:"Stitching Alteration"}],sequence:[1,2]},
+    {itemCode:"IT001", itemsId: 1, operation:[{operationName:"Sewing In"},{operationName:"Sewing Out"},{operationName:"Washing"},{operationName:"Packing"}],sequence:[1,2,3,4]},
     {itemCode:"IT002", itemsId: 2, operation:[{operationName:"Cutting1"},{operationName:"Cutting2"}],sequence:[1,2]},
     {itemCode:"IT003", itemsId: 3, operation:[{operationName:"Embroidery"},{operationName:"Embroidery1"}],sequence:[1,2]},
     {itemCode:"IT004", itemsId: 4, operation:[{operationName:"Stitching"},{operationName:"Cutting"},{operationName:"Packing"}],sequence:[1,2]},
@@ -45,8 +45,8 @@ async getAllOperation(itemsId:number): Promise<any> {
 
 async getAllOperationData(itemsId: number, operationName: string): Promise<any> {
     const data = [
-        {  itemsId: 1, operationName: "Garment stitching" ,SKUinfo: [{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "50"},{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "70"}] },
-        {  itemsId: 1, operationName: "Stitching Alteration" ,SKUinfo: [{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "50"},{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "70"}] },
+        {  itemsId: 1, operationName: "Sewing In" ,SKUinfo: [{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "50"},{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "70"}] },
+        {  itemsId: 1, operationName: "Sewing Out" ,SKUinfo: [{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "50"},{SKUcode: "SKU001",SKUId:1, color: "blue",colorId:2, size: "S",sizeId:1, destination: "USA",destinationId:1, style: "STY001",StyleId:1, quantity: "70"}] },
        
     ] 
     if (itemsId && operationName ) {
