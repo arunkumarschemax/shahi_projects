@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { UserOutlined, DashboardOutlined, PicCenterOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
+import { UserOutlined, DashboardOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { ProBreadcrumb, ProConfigProvider } from '@ant-design/pro-components';
 import logo from './logo.png'
@@ -10,7 +10,7 @@ import { treeRouter } from '../../utils/common';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faShirt} from '@fortawesome/free-solid-svg-icons';
+import { faGears, faGlobe, faHatCowboy, faLayerGroup, faPeopleRoof, faShirt, faShoppingCart} from '@fortawesome/free-solid-svg-icons';
 
 const { useToken } = theme
 
@@ -28,7 +28,8 @@ export const baseRouterList = [
         label: "User Management",
         key: "user-management",
         path: "user-management",
-        icon: <UserOutlined />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>👨‍💻</div>,
+
         filepath: "../",
         children: [
             {
@@ -52,7 +53,8 @@ export const baseRouterList = [
         key:'global',
         path:'global',
         filepath:'global',
-        icon: <PicCenterOutlined />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>🌎</div>,
+
         children:[
             {
                 label: "Attributes",
@@ -175,7 +177,7 @@ export const baseRouterList = [
         label: "Masters",
         key: "masters",
         path: "masters",
-        icon: <PicCenterOutlined />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>🎓</div>,
         filepath: "masters",
         children: [
             {
@@ -341,6 +343,18 @@ export const baseRouterList = [
                 filepath: "sampleSubTypes/sampleSubTypes-grid",
             },
             {
+                label: "Fabric Type",
+                key: "fabricType",
+                path: "fabricType/fabric-type-view",
+                filepath: "fabricType/fabric-type-view",
+            },
+            {
+                label: "Fabric Sub-Type",
+                key: "fabricSubType",
+                path: "fabric-sub-type-view/fabric-sub-type-view",
+                filepath: "fabric-sub-type-view/fabric-sub-type-view",
+            },
+            {
                 label: "Size",
                 key: "Size",
                 path: "size/size-view",
@@ -351,9 +365,9 @@ export const baseRouterList = [
     {
         label: "Settings",
         key: "settings",
-        icon:<FontAwesomeIcon icon={faCog} />,
-        path: "settings/settings-view",
-        filepath: "settings/settings-view",
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>⚙️</div>,
+        path: "settings",
+        filepath: "settings",
         // children:[
         //     {
         //         label:'Settings',
@@ -369,11 +383,33 @@ export const baseRouterList = [
         //     },
         // ]
     },
-   
+    {
+        label: "Style Management",
+        key: "style-management",
+        path: "style-management",
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>👗</div>,
+         filepath: "style-management",
+        children: [
+            {
+                label: "Style",
+                key: "style-view",
+                path: 'style/style-grid',
+                filepath: 'style/style-grid',
+            },
+            {
+                label: "Component Mapping",
+                key: "component-mapping",
+                path: 'component-mapping/component-mapping-form',
+                filepath: 'component-mapping/component-mapping-form',
+            },
+            
+        ]
+
+    },
     {
         label: "Fabric Development",
         key: "fabricdevelopment",
-        icon:<FontAwesomeIcon icon={faShirt} />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>🥻</div>,
         path: "fabricdevelopment",
         filepath: "fabricdevelopment",
         children:[
@@ -411,7 +447,7 @@ export const baseRouterList = [
     {
         label: "Material Creation",
         key: "materialCreation",
-        icon:<FontAwesomeIcon icon={faShirt} />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>🧵</div>,
         path: "materialCreation",
         filepath: "materialCreation",
         children:[
@@ -429,6 +465,7 @@ export const baseRouterList = [
                 // icon: <PicCenterOutlined />,
                 filepath: "fabric-bom-creation",
             },
+          
             {
                 label: "Trim Creation",
                 key: "bomtrimcreation",

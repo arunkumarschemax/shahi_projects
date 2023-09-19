@@ -1,161 +1,241 @@
-import { Button, Card, Checkbox, Col, DatePicker, Form, Input, Modal, Row, Select, Space } from "antd";
-import { HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { Button, Card, Checkbox, Col, DatePicker, Descriptions, Form, Input, Modal, Row, Segmented, Select, Space, Table, Tabs, Tag } from "antd";
+import { CreditCardOutlined, HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { AppstoreOutlined } from "@ant-design/icons";
+
+import { useEffect, useRef, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
 import FormItem from "antd/es/form/FormItem";
 import { SKUlistService } from "@project-management-system/shared-services";
+import { SKUlistFilterRequest } from "@project-management-system/shared-models";
+import Highlighter from "react-highlight-words";
 
 
-export const SkuList=()=>{
+   export const SkuList=()=>{
    const  [form] = Form.useForm();
    const [itemData, setItemData] = useState([]);
-   const [selectedItem, setSelectedItem] = useState(null); // State to track the selected item
-   const [isModalVisible, setIsModalVisible] = useState(false); // State to control the modal visibility
-   const [selectedItemCode, setSelectedItemCode] = useState(null); // State to track the selected item code
-    const service = new SKUlistService
-    const [sku,setSKU]=useState([]);
-    const [data,setData]=useState([]);
-    const { Option } = Select;
+   const [selectedItemNo, setSelectedItemNo] = useState(null);
+   const [selectedSIze, setSelectedSizeId] = useState(null);
+   const [selectedcolour, setSelectedColourId] = useState(null);
+   const [selecteddestination, setSelecteddestinationId] = useState(null);
+   const [selectedValue, setSelectedValue] = useState('cards');
+   const service = new SKUlistService
+   const [data,setData]=useState([]);
+   const { Option } = Select;
+   const { TabPane } = Tabs;
+   const searchInput = useRef(null);
+   const [searchText, setSearchText] = useState(''); 
+   const [searchedColumn, setSearchedColumn] = useState('');
+   const [selectView, setSelectedView]= useState<any>('cards');
+   const [options, setOptions] = useState(['Cards','View']);
+    useEffect(() => {
+    Dropdown(); 
+    }, []);
 
-   useEffect(() => {
-    // fetchItemData();
-    Dropdown();
-    Filters();
-  }, []);
-
-//   const fetchItemData = () => {
-//   const mockItemData = [
-//     {
-//       itemCode: 'I001',
-//       skus: [
-//         {
-//           skuId: 'SKU001',
-//           sizes: ['S'],
-//           destinations: ['Domestic'],
-//           colour: ['Red'],
-//         },
-//         {
-//           skuId: 'SKU002',
-//           sizes: ['L'],
-//           destinations: ['Domestic'],
-//           colour: ['Green'],
-//         },
-//       ],
-//     },
-//     {
-//         itemCode: 'I002', // Add another item code
-//         skus: [
-//           {
-//             skuId: 'SKU003',
-//             sizes: ['M'],
-//             destinations: ['Domestic'],
-//             colour: 'Blue',
-//           },
-//           {
-//             skuId: 'SKU004',
-//             sizes: ['XL'],
-//             destinations: ['International'],
-//             colour: 'Yellow',
-//           },
-//           {
-//             skuId: 'SKU005',
-//             sizes: ['XXL'],
-//             destinations: ['canada'],
-//             colour: 'Yellow',
-//           },
-//         ],
-//       },
-//     // Add more item data here
-//   ];
-
-//   setItemData(mockItemData);
-// };
-
-
-const Dropdown=()=>{
-service.getAllMapItems().then(res=>{
-    if(res){
-        console.log(res,'lllllllll')
-        setSKU(res.data);
-    }
-})
-}
- 
-// const handleSearch = () => {
-//     // Check if an item number is selected
-//     if (selectedItemNo) {
-//       // Call the SKUlistService to fetch SKUs based on the selected item number
-//       service.getAllitemsCode(selectedItemNo).then((res) => {
-//         if (res) {
-//           // Update the `itemData` state with the response data
-//           setItemData(res);
-//         }
-//       });
-//     } else {
-//       // Handle the case where no item number is selected
-//       // You can display an error message or take appropriate action.
-//       console.log("Please select an item number");
-//     }
-//   };
-const Filters =()=>{
-    service.getAllitemsCode().then(res=>{
-        if(res){
-            setData(res);
-            console.log(res,"8888888")
-        }
-    })
-}
-
-const handleCardClick = (item) => {
-    if (selectedItem === item) {
-      setSelectedItem(null);
-    } else {
-      setSelectedItem(item);
-    }
-  };
-
+               const handleSearch = () => {
+               if (selectedItemNo) {
+               const req = new SKUlistFilterRequest(selectedItemNo)
+               service.getAllMapItems(req).then((res) => {
+               if (res) {
+               setItemData(res);
+              }
+              });
+              } else {
+                      }
+             };
   
+              
+              const Sku = (val,data) => {
+              setSelectedItemNo(val);
+              };
 
-     return(
-        <>
-        <Card title="SKU List">
-            <Form form={form}
-          style={{ fontSize: "10px" }}
-          layout="vertical"
-          
-          >
-            <Row gutter={16}>
-            {/* <FormItem name="itemNoId" style={{display:'none'}}>
-    <Input hidden/>
-</FormItem> */}
- <Col
+              const Size = (val,data) => {
+                setSelectedSizeId(val);
+                };
+  
+                const colour=(val,data) => {
+                  setSelectedColourId(val);
+                  };
+
+                  const destination = (val,data) => {
+                    setSelecteddestinationId(val);
+                    };
+      
+              const Dropdown = () => {
+                service.getAllitemsCode().then((res) => {
+                  if (res) {
+                    setData(res);
+                    // console.log(res,'[[[[[[[[[res')
+                  }
+                });
+              };
+              
+              function handledSearch(selectedKeys, confirm, dataIndex) {
+                confirm();
+                setSearchText(selectedKeys[0]);
+                setSearchedColumn(dataIndex);
+              };
+              
+              function handleReset(clearFilters) {
+                clearFilters();
+                setSearchText('');
+              };
+              
+              const resetForm = () => {
+                form.resetFields();
+                setItemData([]);
+              };
+
+              const handleViewChange =(view)=>{
+                setSelectedView(view)
+              }
+              const getColumnSearchProps = (dataIndex: string) => ({
+                filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+                    <div style={{ padding: 8 }}>
+                        <Input
+                            ref={searchInput}
+                            placeholder={`Search ${dataIndex}`}
+                            value={selectedKeys[0]}
+                            onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                            onPressEnter={() => handledSearch(selectedKeys, confirm, dataIndex)}
+                            style={{ width: 188, marginBottom: 8, display: 'block' }}
+                        />
+                        <Button
+                            type="primary"
+                            onClick={() => handledSearch(selectedKeys, confirm, dataIndex)}
+                            icon={<SearchOutlined />}
+                            size="small"
+                            style={{ width: 90, marginRight: 8 }}
+                        >
+                            Search
+                        </Button>
+                        <Button size="small" style={{ width: 90 }}
+                            onClick={() => {
+                                handleReset(clearFilters)
+                                setSearchedColumn(dataIndex);
+                                confirm({ closeDropdown: true });
+                            }}>
+                            Reset
+                        </Button>
+                    </div>
+                ),
+                filterIcon: filtered => (
+                    <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+                ),
+                onFilter: (value, record) =>
+                    record[dataIndex]
+                        ? record[dataIndex]
+                            .toString()
+                            .toLowerCase()
+                            .includes(value.toLowerCase())
+                        : false,
+                onFilterDropdownVisibleChange: visible => {
+                    if (visible) { setTimeout(() => searchInput.current.select()); }
+                },
+                render: text =>
+                    text ? (
+                        searchedColumn === dataIndex ? (
+                            <Highlighter
+                                highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                                searchWords={[searchText]}
+                                autoEscape
+                                textToHighlight={text.toString()}
+                            />
+                        ) : text
+                    )
+                        : null
+            })
+              const columnsSkelton:any=[
+              
+                  {
+                    title: 'SKU Code',
+                    dataIndex: 'skuId',
+                    key: 'skuId',
+                    width:'300px'
+
+                    // render: (skus) => skus.map((sku) => sku.skuId),
+                  },
+                  {
+                    title: 'Sizes',
+                    dataIndex: 'sizes',
+                    key: 'sizes',
+                    width:'300px',
+                    sorter: (a, b) => a.sizes.localeCompare(b.sizes),
+                    sortDirections: ['descend', 'ascend'],
+                    ...getColumnSearchProps('sizes')
+                    // render: (skus) => skus.map((sku) => sku.sizes),
+                  },
+                  {
+                    title: 'Destinations',
+                    dataIndex: 'destinations',
+                    key: 'destinations',
+                    width:'300px',
+                    sorter: (a, b) => a.destinations.localeCompare(b.destinations),
+                    sortDirections: ['descend', 'ascend'],
+                    ...getColumnSearchProps('destinations')
+
+                    // render: (skus) => skus.map((sku) => sku.destinations),
+                  },
+                  {
+                    title: 'Colours',
+                    dataIndex: 'colour',
+                    key: 'colours',
+                    width:'300px',
+                    
+                    sorter: (a, b) => a.colours.localeCompare(b.colours),
+                    sortDirections: ['descend', 'ascend'],
+                    ...getColumnSearchProps('colours'),
+                    // render: (colours,rowData) => {
+                    //   console.log(rowData)
+                    //   let co;
+                    //   if(rowData.colour == 'White'){
+                    //     co = 'black'
+                    //   } else{
+                    //     co = 'white'
+                    //   }
+                    //   return(
+                    //     <Tag color={colours} style={{color:co}}>{colours}</Tag>
+                    //   )
+                    // }
+                    render: (colours,rowData) => (
+                      <Tag color={colours} style={{ color: rowData.colour == 'White' ? 'black' : 'white' }}>
+                        {colours}
+                      </Tag>
+                    ),
+                    
+                  },
+               
+        
+            ]
+               return(
+               <>
+               <Card title="SKU List">
+               <Form form={form}
+               style={{ fontSize: "10px" }}
+               layout="vertical"   
+              >
+              <Row gutter={16}>
+               <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
                     lg={{ span: 5}}
                     xl={{ span: 5 }}
-                    
                   >
                     <Form.Item
                     style={{flexDirection:'row'}}
-                      label="Item No"
-                      name="itemsNo"
-                      rules={[{ required: true, message: "Enter Item No" }]}
+                    label="Item No"
+                     name="itemsNo"
                     >
-                        <Select
+                     <Select
                         allowClear
                         showSearch
                         optionFilterProp="children"
                         placeholder="Select Item No"
+                        onChange={(val,text)=>Sku(val,text)}
                     >
-                        {data.map((e) => {
-                        return (
-                            <Option key={e.itemNoId} value={e.itemNoId}>
-                            {e.itemsNo}
-                            </Option>
-                        );
-                        })}
+                       {data.map(e=>
+                        <Option key={e.itemNoId} val={e.itemNoId} code={e.itemsNo}>{e.itemsNo}</Option>)}
                     </Select>
                     </Form.Item>
                   </Col>
@@ -170,18 +250,19 @@ const handleCardClick = (item) => {
                     style={{flexDirection:'row'}}
                       label="Size"
                       name="size"
-                      rules={[{ required: true, message: "Enter Size" }]}
+                     
                     >
                       <Select
                       placeholder="Select Size"
                       allowClear
                       showSearch
                         optionFilterProp="children"
+                        onChange={(val,text)=>Size(val,text)}
                       >
                       {data.map((e) => {
                         return (
-                            <Option key={e.sizeId} value={e.sizeId}>
-                            {e.size}
+                            <Option key={e.sizeId} value={e.sizeId} code={e.sizes}>
+                            {e.sizes}
                             </Option>
                         );
                         })}
@@ -200,13 +281,15 @@ const handleCardClick = (item) => {
                     style={{flexDirection:'row'}}
                       label="Colour"
                       name="colour"
-                      rules={[{ required: true, message: "Enter Colour" }]}
+                     
                     >
                      <Select
                       placeholder="Select Colour"
                       allowClear
                       showSearch
                         optionFilterProp="children"
+                            onChange={(val,text)=>colour(val,text)}
+
                       >
                       {data.map((e) => {
                         return (
@@ -229,91 +312,165 @@ const handleCardClick = (item) => {
                     <Form.Item
                     style={{flexDirection:'row'}}
                       label="Destination"
-                      name="destination"
-                      rules={[{ required: true, message: "Enter Destination" }]}
+                      name="destinations"
+                     
                     >
                       <Select
                       placeholder="Select Destination"
                       allowClear
                       showSearch
                         optionFilterProp="children"
+                         onChange={(val,text)=>destination(val,text)}
+
                       >
                       {data.map((e) => {
                         return (
-                            <Option key={e.destinationId} value={e.destinationId}>
-                            {e.destinations}
-                            </Option>
+                        <Option key={e.destinationsId} value={e.destinationsId}>
+                        {e.destinations}
+                        </Option>
                         );
                         })}
                       </Select>
                     </Form.Item>
-                  </Col>   
+                  </Col>
+                  <Row gutter={6}>   
                   <Col  >
-          <Button type="primary" icon={<SearchOutlined />} style={{marginLeft:'20%'}} >
-            Search
-          </Button>
-        </Col>      
-        <Col
-        >
-          <Button type="default"icon={<UndoOutlined />} style={{ color: 'red' }} >
-            Reset
-          </Button>
-        </Col>            
-            </Row>
-
-
-         
-    <div>
-      {itemData.map((item) => (
-        <Card
-          key={item.itemCode}
-          title={`Item Code: ${item.itemCode}`}
-          style={{ marginBottom: 16, cursor: 'pointer' }}
-          onClick={() => handleCardClick(item)}
-        >
-          {/* Display the item code here */}
-        </Card>
-      ))}
-
-      {/* Display SKUs for the selected item */}
-      {selectedItem && (
-        <div>
-          <h2>Selected Item: {selectedItem.itemCode}</h2>
-          {selectedItem.skus.map((sku) => (
-            <Card
-              key={sku.skuId}
-              style={{
-                marginBottom: 16,
-                backgroundColor: '#E7F8EB',
-                width: '30%',
-                marginRight: '16px',
-              }}
-            >
-              <Row gutter={16}>
-                <Col span={12}>
-                  <strong>SKU ID:</strong> {sku.skuId}
-                </Col>
-                <Col span={12}>
-                  <strong>Size:</strong> {sku.sizes}
-                </Col>
+                  <FormItem
+                  
+                 style={{flexDirection:'row'}}
+                  label=" ">
+                <Button
+                type="primary"
+                icon={<SearchOutlined />}
+                // style={{ marginTop: "50"}}
+                onClick={handleSearch} 
+                 >
+                Search
+               </Button>
+               {/* </Col>      
+               <Col
+               > */}
+               <Button
+                type="default"
+                icon={<UndoOutlined />}
+                style={{ color: "red",marginLeft: "1",}}
+                onClick={resetForm}
+              >
+                Reset
+              </Button>
+              </FormItem>
+              </Col> 
+              </Row>           
               </Row>
-              <Row gutter={16}>
-                <Col span={12}>
-                  <strong>Destinations:</strong> {sku.destinations}
-                </Col>
-                <Col span={12}>
-                  <strong>Colour:</strong> {sku.colour}
-                </Col>
-              </Row>
-            </Card>
-          ))}
-        </div>
-      )}
-    </div>
-
           </Form>
-          </Card>
+          </Card>     
+<Row  >
+  <Col>
+<div>
+<Space direction="vertical" style={{fontSize:"16px"}}>
+      <Segmented
+      style={{background:'#cce3de'}}
+       options={[
+        {
+          label: (
+            <>
+              <CreditCardOutlined  style={{ marginRight: "8px",color: "red"  }} />
+              <span style={{ fontSize: "12px",fontWeight: "bold" }}>Cards</span>
+            </>
+          ),
+          value: "cards",
+        },
+        {
+          label: (
+            <>
+              <AppstoreOutlined style={{ marginRight: "8px",color: "blue"  }} />
+              <span style={{ fontSize: "12px" ,fontWeight: "bold"}}>Grid</span>
+            </>
+          ),
+          value: "grid",
+        },
+    ]}  
+      onChange={handleViewChange} 
+      defaultValue={'cards'}  />
+      {/* {selectView === 'grid'?(
+        <SKUGrid/>
+      ):(<div> */}
+      {selectView === 'cards'?(
+        <div >
+      {itemData.map((item) => (
+             <Card
+             key={item.itemsNo}
+             title={`Item No: ${item.itemsNo}`}
+             style={{ cursor: 'pointer' }}
+             >
+             <Row gutter={[20, 16]}>
+             {item.skus.map((e) => {
+              let co;
+              if(e.color == 'white'){
+                co = 'balck'
+              } else {
+                co = 'white'
+              }
+              return(
+
+               <Col
+               xs={{ span: 24 }}
+               sm={{ span: 24 }}
+               md={{ span: 3 }}
+               lg={{ span: 6 }}
+               xl={{ span:5 }}
+               key={e.skuId}
+             >
+              
+            <div>
+           <Card style={{ width: '100%', height: '100%' , backgroundColor: '#E3F1E1 ', marginRight:"-50px"}}>
+          <Descriptions column={1} style={{ fontSize: '2px' }} title={`SKU Code: ${e.skuId}`}>
+            <Descriptions.Item label='Size'>{e.sizes}</Descriptions.Item>
+            <Descriptions.Item label='Colour'>
+  <Tag
+    color={e.colour}
+    // style={{
+    //   color: item.colour === 'white' ? 'black' : 'inherit',
+    //   borderColor: item.colour === 'white' ? 'black' : 'inherit'
+    // }}
+    style={{ color: e.colour == 'White' ? 'black' : 'white' }}
+  >
+    {e.colour}
+  </Tag>
+</Descriptions.Item>      
+             <Descriptions.Item label='Destination'>{e.destinations}</Descriptions.Item>
+          </Descriptions>
+        </Card>
+      </div>
+    </Col>
+              )
+             }
+              
+  )}
+</Row>
+    </Card>
+     
+  
+  ))}
+  </div>
+  ):(<div>
+    {itemData.map(e =>(
+      <Card 
+      style={{width:"1240px"}}
+      key={e.itemsNo}
+      title={`Item No: ${e.itemsNo}`}
+      >
+        <Table dataSource={e.skus} columns={columnsSkelton} size="small"/>
+      </Card>
+    ))}
+  </div>)}
+    </Space>
+         
+</div>
+</Col>
+</Row>
         </>
-    )
-}
+        
+    );
+};
 export  default SkuList

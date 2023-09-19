@@ -40,15 +40,12 @@ export class CompanyService {
   }
 
       async createCompany(companyDto: CompanyDTO, isUpdate: boolean): Promise<CompanyResponseModel> {
-        console.log(companyDto,'nnnnnh');
-        
         try {
           let previousValue
-          // to check whether State exists with the passed  State code or not. if isUpdate is false, a check will be done whether a record with the passed Statecode is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed State code then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
           if (!isUpdate) {
             const companyEntity = await this.getCompanyDetailsWithoutRelations(companyDto.companyName);
+            // console.log(companyEntity,'-------------------------------------------')
             if (companyEntity) {
-              //return new InformationMessageError(11104, "State already exists");
               throw new CompanyResponseModel(false,11104, 'Company already exists');
             }
           }
@@ -63,10 +60,8 @@ export class CompanyService {
             }
           }
           const convertedCompanyEntity: Company = this.companyAdapter.convertDtoToEntity(companyDto,isUpdate);
-          const savedCompanyEntity: Company = await this.companyRepository.save(
-            convertedCompanyEntity
-          );
-          const savedCompanyDto: CompanyDTO = this.companyAdapter.convertEntityToDto(convertedCompanyEntity);
+          const savedCompanyEntity: Company = await this.companyRepository.save(convertedCompanyEntity);
+          const savedCompanyDto: CompanyDTO = this.companyAdapter.convertEntityToDto(savedCompanyEntity);
             // console.log(savedStateDto);
           if (savedCompanyDto) {
             const presentValue = savedCompanyDto.companyName;
@@ -143,7 +138,7 @@ export class CompanyService {
         try {
             const companyExists = await this.getCompanyById(companyReq.companyId);
             if (companyExists) {
-                if (companyReq.versionFlag !== companyExists.versionFlag) {
+                if (!companyExists) {
                     throw new CompanyResponseModel(false,10113, 'Someone updated the current company information.Refresh and try again');
                 } else {
                     
