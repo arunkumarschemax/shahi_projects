@@ -114,6 +114,8 @@ import TrimsBomCreation from "./BOM/trims-bom-creation"
 import SkuList from "./orders/sku-list"
 import SKUGeneration from "./orders/sku-generation"
 import UomGrid from "./masters/uom/uom-grid"
+import FabricDevelopmentView from "./fabric development/fabric-development-view"
+import { QualityTabsView } from "./fabric development/quality-tabs-view"
 import SampleDevDetail from "./sample-development/sample-request-detailed-view"
 import FabricBomCreation from "./BOM/fabric-creation"
 import FabricWeaveForm from "./masters/fabric-weave/fabric-weave-form"
@@ -472,6 +474,8 @@ export const AppRoutes = () => {
                         </Route>
                 <Route path='fabricdevelopment'>
                 <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest/>}/>
+                <Route path='fabric-development-request/fabric-development-request-view' element={<FabricDevelopmentView/>}/>
+                <Route path='fabric-development-request-quality/fabric-development-request-quality-view' element={<QualityTabsView/>}/>
 
                 </Route>
                 {/* <Route path='settings'> */}
