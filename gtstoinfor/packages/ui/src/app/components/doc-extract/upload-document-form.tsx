@@ -857,7 +857,7 @@ export function UploadDocumentForm() {
                   name="file"
                   {...gstUploadFieldProps}
                   accept=".jpeg,.png,.jpg"
-                  showUploadList={false} 
+                  // showUploadList={false} 
                 >
                   <Button
                     key="file"
@@ -866,12 +866,12 @@ export function UploadDocumentForm() {
                   >
                     Choose File
                   </Button>
-                  <br />
+                  
                   <Typography.Text type="secondary">
                     (Supported formats jpeg, jpg, png)
                   </Typography.Text>
                 </Upload>
-                <br />
+              
 
                 <Row>
       {extractionCompleted ? (

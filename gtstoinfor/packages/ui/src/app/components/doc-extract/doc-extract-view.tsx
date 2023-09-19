@@ -267,7 +267,7 @@ export function DocView() {
       render: (text: any, record: { VarianceStatus: any }) => {
         // Define a mapping of status values to tag colors
         const statusTagColors = {
-          Partially_Variance: "orange",
+          Partial_Variance: "orange",
           No_Variance: "green",
           Full_Variance: "red",
           // Add more status values and corresponding colors as needed
@@ -287,8 +287,8 @@ export function DocView() {
       },
       filters: [
         {
-          text: 'Partially Variance',
-          value: 'Partially_Variance', // Change value to the actual status value
+          text: 'Partial Variance',
+          value: 'Partial_Variance', // Change value to the actual status value
         },
         {
           text: 'No Variance',

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Card,
   Table,
@@ -10,6 +10,7 @@ import {
   Form,
   Col,
   Row,
+  Tooltip,
 } from "antd";
 import {
   EyeOutlined,
@@ -18,10 +19,12 @@ import {
 } from "@ant-design/icons";
 import { VendorService } from "@project-management-system/shared-services";
 import {
+  ColumnType,
   ColumnsType,
   SortOrder,
 } from "antd/es/table/interface";
 import { useNavigate, useParams } from "react-router-dom";
+import Highlighter from "react-highlight-words";
 
 const VendorGrid = () => {
   const [data, setData] = useState([]);
@@ -33,7 +36,10 @@ const VendorGrid = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [form] = Form.useForm();
-  const { id } = useParams();
+  const searchInput = useRef(null);
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const [searchText, setSearchText] = useState('');
+
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -67,7 +73,7 @@ const VendorGrid = () => {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch1 = () => {
     form.validateFields().then((values) => {
       const filtered = data.filter(
         (vendor) =>
@@ -84,12 +90,91 @@ const VendorGrid = () => {
       }
     });
   };
-  const handleReset = () => {
+  const handleReset1 = () => {
     form.resetFields();
+    fetchVendorData();
     setSelectedName("");
     setSelectedLocation("");
     setFilteredData(data);
   };
+
+
+  const handleSearch = (selectedKeys: any[], confirm: () => void, dataIndex: string) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+  };
+
+  
+  const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }: any) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => {
+              handleReset(clearFilters)
+              setSearchedColumn(dataIndex)
+              confirm({ closeDropdown: true })
+            }
+            }
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex] ? record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()) : false,
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
+
+
+  
+  
 
   const columns: ColumnsType<any> = [
     {
@@ -108,6 +193,8 @@ const VendorGrid = () => {
       dataIndex: "businessName",
       defaultSortOrder: 'ascend' as SortOrder,
       sorter: (a, b) => a.businessName.localeCompare(b.businessName),
+      ...getColumnSearchProps("businessName"),
+
     },
     {
       title: "Business Contact Person",
@@ -115,11 +202,16 @@ const VendorGrid = () => {
       defaultSortOrder: 'ascend' as SortOrder,
       sorter: (a, b) =>
         a.businessContactPerson.localeCompare(b.businessContactPerson),
+      ...getColumnSearchProps("businessContactPerson"),
+
     },
     {
       title: 'Contact',
       dataIndex: 'contact',
       render: (text) => <a href={`tel:${text}`}>{text}</a>,
+      ...getColumnSearchProps("contact"),
+
+
     },
     {
       title: 'Location',
@@ -127,23 +219,25 @@ const VendorGrid = () => {
       defaultSortOrder: 'ascend' as SortOrder,
       sorter: (a, b) => a.location.localeCompare(b.location),
     },
-    {
-      title: 'Type',
-      dataIndex: 'type',
-    },
-    {
-      title: 'Branches Count',
-      dataIndex: 'branchesCount',
-      align: 'right',
-      defaultSortOrder: 'descend' as SortOrder,
-      sorter: (a, b) => a.branchesCount - b.branchesCount,
-    },
+    // {
+    //   title: 'Type',
+    //   dataIndex: 'type',
+    // },
+    // {
+    //   title: 'Branches Count',
+    //   dataIndex: 'branchesCount',
+    //   align: 'right',
+    //   defaultSortOrder: 'descend' as SortOrder,
+    //   sorter: (a, b) => a.branchesCount - b.branchesCount,
+    // },
     {
       title: 'Actions',
       dataIndex: 'actions',
       align: 'center',
       render: (text, rowData) => (
+        <Tooltip title='View'>
         <EyeOutlined onClick={() => viewchange(rowData)}style={{color:'blue',fontSize:20}} size={30}/>
+        </Tooltip>
       ),
     },
   ];
@@ -156,7 +250,7 @@ const VendorGrid = () => {
   return (
     <Card className="card-header" title="Vendors" size="small">
       <Space direction="vertical" style={{ width: "100%" }}>
-        <Form form={form} onFinish={handleSearch}>
+        <Form form={form} onFinish={handleSearch1}>
           <Row gutter={24}>
             <Col
               xs={{ span: 24 }}
@@ -215,7 +309,7 @@ const VendorGrid = () => {
                 style={{ margin: '0 14px' }}
                 danger
                 icon={<UndoOutlined />}
-                onClick={handleReset}
+                onClick={handleReset1}
               >
                 Reset
               </Button>
