@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, MonthAndQtyModel, MonthWiseDataModel, MonthWiseExcelDataModel, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, FileTypesEnum, MonthAndQtyModel, MonthWiseDataModel, MonthWiseExcelDataModel, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
@@ -16,6 +16,13 @@ import { FileIdReq } from './models/file-id.req';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { AppDataSource } from '../app-datasource';
+import { TrimOrderDto } from './models/trim-order.dto';
+import { TrimOrdersRepository } from './repository/trim-orders.repo';
+import { TrimOrdersEntity } from './entities/trim-orders.entity';
+import { TrimOrdersChildEntity } from './entities/trim-orders-child.entity';
+import { TrimOrdersChildAdapter } from './adapters/trim-orders-child.adapter';
+import { TrimOrdersAdapter } from './adapters/trim-orders.adapter';
+import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
 let moment = require('moment');
 moment().format();
 
@@ -24,9 +31,13 @@ export class OrdersService {
 
     constructor(
         private ordersAdapter: OrdersAdapter,
+        private trimordersAdapter: TrimOrdersAdapter,
         private ordersRepository: OrdersRepository,
+        private trimOrdersRepository: TrimOrdersRepository,
         private ordersChildRepo: OrdersChildRepository,
+        private trimordersChildRepo: TrimOrdersChildRepository,
         private ordersChildAdapter: OrdersChildAdapter,
+        private trimordersChildAdapter: TrimOrdersChildAdapter,
         private orderDiffRepo: OrderDifferenceRepository,
         private fileUploadRepo: FileUploadRepository,
         @InjectDataSource()
@@ -170,6 +181,140 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, error)
         }
     }
+    async saveTrimOrdersData(formData: any, id: number, month: number): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource)
+        try {
+            await transactionManager.startTransaction()
+            const flag = new Set()
+            const updatedArray = formData.map((obj) => {
+                const updatedObj = {};
+                for (const key in obj) {
+                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)\.]/g, '').replace(/-/g, '_');
+                    updatedObj[newKey] = obj[key];
+                }
+                return updatedObj;
+            });
+
+            const convertedData = updatedArray.map((obj) => {
+                const updatedObj = {};
+                for (const key in obj) {
+                    const value = obj[key];
+                    if (value === "") {
+                        updatedObj[key] = null;
+                    } else {
+                        // updatedObj[key] = value;
+                        var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
+                        updatedObj[key] = value.replace(regexPattern, null);
+                        updatedObj[key] = Buffer.from(value, 'utf-8').toString()
+                    }
+                }
+                return updatedObj;
+            });
+
+            for (const data of convertedData) {
+                let dtoData
+                if(data.Order_No != null){
+                    dtoData = new TrimOrderDto(null,data.Order_No,data.Year,data.Revision_No,data.Planning_Ssn,data.Global_Business_Unit,data.Business_Unit,data.Item_Brand,data.Department,data.Revised_Date,data.Document_Status,data.Answered_Status,data.Vendor_Person_in_Charge,data.Decision_Date,data.Payment_Terms,data.Contracted_ETD,data.ETA_WH,data.Approver,data.Approval_Date,data.Order_Conditions,data.Remark,data.Raw_Material_CodeFR,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Vendor_Code,data.Vendor,data.Management_Factory_Code,data.Management_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Order_Plan_Number,data.Item_Code,data.Item,data.Representative_Sample_Code,data.Sample_Code,data.Color_Code,data.Color,data.Pattern_Dimension_Code,data.Size_Code,data.Size,Number(data.Order_Qtypcs.replace(/,/g,'')),data.Arrangement_By,data.Trim_Description,data.Trim_Item_No,data.Trim_Supplier,'bidhun',null,null,null,null,id,month)
+                }else{
+                    break;
+                }
+                if (dtoData.orderNo != null) {
+                    const details = await this.trimOrdersRepository.findOne({ where: { orderNo: dtoData.orderNo,sizeCode:dtoData.sizeCode,colorCode:dtoData.colorCode } })
+                    const versionDetails = await this.trimordersChildRepo.getVersion(dtoData.orderNo,dtoData.sizeCode,dtoData.colorCode)
+                    let version = 1;
+                    if (versionDetails.length > 0) {
+                        version = Number(versionDetails.length) + 1
+                    }
+                    dtoData.version = version
+                    if (details) {
+                        // const updatedData = this.ordersAdapter.convertDtoToEntity(data);
+                        const updateOrder = await transactionManager.getRepository(TrimOrdersEntity).update({ orderNo: dtoData.orderNo,sizeCode:dtoData.sizeCode,colorCode:dtoData.colorCode }, {
+                            year : dtoData.year,revisionNo : dtoData.revisionNo,planningSsn : dtoData.planningSsn,globalBusinessUnit : dtoData.globalBusinessUnit,businessUnit : dtoData.businessUnit,itemBrand : dtoData.itemBrand,Department : dtoData.Department,revisedDate : dtoData.revisedDate,DocumentStatus : dtoData.DocumentStatus,answeredStatus : dtoData.answeredStatus,vendorPersoninCharge : dtoData.vendorPersoninCharge,decisionDate : dtoData.decisionDate,paymentTerms : dtoData.paymentTerms,contractedETD : dtoData.contractedETD,ETAWH : dtoData.ETAWH,approver : dtoData.approver,approvalDate : dtoData.approvalDate,orderConditions : dtoData.orderConditions,remark : dtoData.remark,rawMaterialCode : dtoData.rawMaterialCode,supplierRawMaterialCode : dtoData.supplierRawMaterialCode,supplierRawMaterial : dtoData.supplierRawMaterial,vendorCode : dtoData.vendorCode,vendor : dtoData.vendor,managementFactoryCode : dtoData.managementFactoryCode,managementFactory : dtoData.managementFactory,branchFactoryCode : dtoData.branchFactoryCode,branchFactory : dtoData.branchFactory,orderPlanNumber : dtoData.orderPlanNumber,itemCode : dtoData.itemCode,item : dtoData.item,representativeSampleCode : dtoData.representativeSampleCode,sampleCode : dtoData.sampleCode,colorCode : dtoData.colorCode,color : dtoData.color,patternDimensionCode : dtoData.patternDimensionCode,sizeCode : dtoData.sizeCode,size : dtoData.size,arrangementBy : dtoData.arrangementBy,trimDescription : dtoData.trimDescription,trimItemNo : dtoData.trimItemNo,trimSupplier : dtoData.trimSupplier,createdUser : dtoData.createdUser,updatedUser : dtoData.updatedUser,version : dtoData.version,fileId : dtoData.fileId,month:dtoData.month,orderQtyPcs:dtoData.orderQtyPcs
+                        })
+                        if (!updateOrder.affected) {
+                            await transactionManager.releaseTransaction();
+                            return new CommonResponseModel(false, 0, 'Something went wrong in order update')
+                        }
+                        const convertedExcelEntity: Partial<TrimOrdersChildEntity> = this.trimordersChildAdapter.convertDtoToEntity(dtoData, id, month);
+                        const saveExcelEntity: TrimOrdersChildEntity = await transactionManager.getRepository(TrimOrdersChildEntity).save(convertedExcelEntity);
+                        // if (saveExcelEntity) {
+                        //     //difference insertion to order diff table
+                        //     const existingDataKeys = Object.keys(details)
+                        //     const currentDataKeys = Object.keys(dtoData)
+                        //     for (const existingDataKey of existingDataKeys) {
+                        //         if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month') {
+                        //             const orderDiffObj = new OrdersDifferenceEntity();
+                        //             if (existingDataKey === 'lastUpdateDate' || existingDataKey === 'requestedWhDate' || existingDataKey === 'contractedDate' || existingDataKey === 'EXF') {
+                        //                 const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
+                        //                 const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
+                        //                 orderDiffObj.oldValue = details[existingDataKey]
+                        //                 orderDiffObj.newValue = dtoData[existingDataKey]
+                        //                 orderDiffObj.columnName = orderColumnValues[existingDataKey]
+                        //                 orderDiffObj.displayName = existingDataKey
+                        //                 orderDiffObj.productionPlanId = dtoData.productionPlanId
+                        //                 orderDiffObj.version = dtoData.version
+                        //                 orderDiffObj.fileId = id
+                        //                 if (oldValue != newValue) {
+                        //                     const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
+                        //                     if (!orderDiffSave) {
+                        //                         flag.add(false)
+                        //                         await transactionManager.releaseTransaction();
+                        //                         break;
+                        //                     }
+                        //                 } else {
+                        //                     continue;
+                        //                 }
+                        //             } else {
+                        //                 orderDiffObj.oldValue = details[existingDataKey]
+                        //                 orderDiffObj.newValue = dtoData[existingDataKey]
+                        //                 orderDiffObj.columnName = orderColumnValues[existingDataKey]
+                        //                 orderDiffObj.displayName = existingDataKey
+                        //                 orderDiffObj.productionPlanId = dtoData.productionPlanId
+                        //                 orderDiffObj.version = dtoData.version
+                        //                 orderDiffObj.fileId = id
+                        //                 if (orderDiffObj.oldValue != orderDiffObj.newValue) {
+                        //                     const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
+                        //                     if (!orderDiffSave) {
+                        //                         flag.add(false)
+                        //                         await transactionManager.releaseTransaction();
+                        //                         break;
+                        //                     }
+                        //                 }
+                        //             }
+                        //         }
+                        //     }
+                        // }
+                    } else {
+
+                        dtoData.version = 1
+                        const convertedExcelEntity: Partial<TrimOrdersEntity> = this.trimordersAdapter.convertDtoToEntity(dtoData, id, month);
+                        const saveExcelEntity: TrimOrdersEntity = await transactionManager.getRepository(TrimOrdersEntity).save(convertedExcelEntity);
+                        const convertedChildExcelEntity: Partial<TrimOrdersChildEntity> = this.trimordersChildAdapter.convertDtoToEntity(dtoData, id, month);
+                        const saveChildExcelEntity: TrimOrdersChildEntity = await transactionManager.getRepository(TrimOrdersChildEntity).save(convertedChildExcelEntity);
+                        // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
+                        if (!saveExcelEntity || !saveChildExcelEntity) {
+                            flag.add(false)
+                            await transactionManager.releaseTransaction();
+                            break;
+                        }
+                    }
+                }else{
+                    break;
+                }
+            }
+
+            if (!flag.has(false)) {
+                await transactionManager.completeTransaction()
+                return new CommonResponseModel(true, 1, 'Data saved sucessfully')
+            } else {
+                await transactionManager.releaseTransaction()
+                return new CommonResponseModel(false, 0, 'Something went wrong')
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction()
+            return new CommonResponseModel(false, 0, error)
+        }
+    }
 
     async getOrdersData(): Promise<CommonResponseModel> {
         const details = await this.ordersRepository.getOrdersData()
@@ -295,11 +440,12 @@ export class OrdersService {
         }
     }
 
-    async updatePath(filePath: string, filename: string, month: number): Promise<CommonResponseModel> {
+    async updatePath(filePath: string, filename: string, month: number,fileType:string): Promise<CommonResponseModel> {
         const entity = new FileUploadEntity()
         entity.fileName = filename;
         entity.filePath = filePath;
-        entity.month = month;
+        entity.month = 9;
+        entity.fileType = fileType;
         entity.status = 'uploading';
         const file = await this.fileUploadRepo.findOne({ where: { fileName: filename, isActive: true } })
         if (file) {

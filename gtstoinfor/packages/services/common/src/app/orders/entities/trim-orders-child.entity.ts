@@ -1,11 +1,11 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity('trim_orders') //change the name
-export class TrimOrdersEntity {
+@Entity('trim_orders_child') //change the name
+export class TrimOrdersChildEntity {
     @PrimaryGeneratedColumn('increment', {
-        name: 'trim_order_id',
+        name: 'id',
     })
-    trimOrderId: string
+    id: string
     @Column('varchar', {
         nullable: true,
         name: "order_no",
