@@ -14,6 +14,7 @@ import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import PhaseWiseData from "./excel-import/phase-wise-data"
+import WarehouseReport from "./common/reports/ware-house-report"
 
 
 export const AppRoutesNew = () => {
@@ -26,6 +27,8 @@ export const AppRoutesNew = () => {
                   </>
               </>
           } >
+            <Route>
+                </Route>
               <Route path='/user-management/users-from' key='/user-management/users-from' element={<UserCreationForm />} />
               <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
               <Route path='/masters'>
@@ -40,6 +43,9 @@ export const AppRoutesNew = () => {
                   <Route path='version-grid' key='/version-grid' element={<VersionChanges />} />
                   {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
               </Route>
+              <Route>
+                <Route path='/ware-house-report' key='/ware-house-report' element={<WarehouseReport />} />
+                </Route>
               <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
               <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
           </Route>

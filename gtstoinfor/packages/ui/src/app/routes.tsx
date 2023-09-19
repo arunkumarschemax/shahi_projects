@@ -14,6 +14,7 @@ import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import PhaseWiseData from "./excel-import/phase-wise-data"
+import WarehouseReport from "./common/reports/ware-house-report"
 
 
 export const AppRoutes = () => {
@@ -26,6 +27,7 @@ export const AppRoutes = () => {
                     </>
                 </ChildProtectionWrapper>
             } >
+                
                 <Route path='/user-management/users-from' key='/user-management/users-from' element={<UserCreationForm />} />
                 <Route path='/user-management/users-view' key='/user-management/users-view' element={<UsersView />} />
                 <Route path='/masters'>
@@ -45,6 +47,7 @@ export const AppRoutes = () => {
             </Route>
             <Route path="/login" key='/login' element={<Login />} />
         </Route>
+
     ))
 
     return (

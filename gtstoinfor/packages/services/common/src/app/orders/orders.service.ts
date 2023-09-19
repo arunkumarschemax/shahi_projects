@@ -358,7 +358,7 @@ export class OrdersService {
         versionDataMap.forEach(version => versionDataModelArray.push(version));
         return new CommonResponseModel(true, 1, 'Data retrived successfully', versionDataModelArray);
     }
-
+ 
     async getPhaseWiseData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData();
         let records;

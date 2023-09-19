@@ -110,6 +110,23 @@ export const baseRouterList = [
             // }
         ],
     },
+
+    {
+        label:"Reports",
+        key: "reports",
+        path: "reports",
+        icon: <FileExcelOutlined />,
+        filepath: "reports",
+        children:[
+            {
+                label: " WareHouse Report",
+                key: "ware-house-report",
+                path: "ware-house-report",
+                filepath: "ware-house-report",
+            },
+        ]
+    }
+    
 ];
 
 export default function BasicLayout() {
