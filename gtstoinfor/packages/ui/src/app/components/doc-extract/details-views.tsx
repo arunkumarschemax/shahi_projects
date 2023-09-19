@@ -165,17 +165,19 @@ function ScanDetailView() {
       align:"center"
 
   },
-    {
-        title: 'Charge',
-        dataIndex: 'Charge',
-        key:"Charge",
-        ...getColumnSearchProps("Charge"),
-        sorter: (a, b) => a.Charge.localeCompare(b.Charge),
-        render: (_, record) =>
-        record?.Charge || "-",
-       align:"center"
- 
-    }, 
+  {
+    title: 'Charge',
+    dataIndex: 'Charge',
+    key: 'Charge',
+    ...getColumnSearchProps('Charge'),
+    sorter: (a, b) => a.Charge.localeCompare(b.Charge),
+    render: (text: any, record: { Charge: any }) => {
+      // Render the "Charge" column with two decimal places if it's a number, otherwise display "-"
+      return <>{(record.Charge ? record.Charge : "-")}</>;
+    },
+  },
+  
+  
     {
         title: 'Quatation',
         dataIndex: 'quotation',
@@ -269,13 +271,6 @@ function ScanDetailView() {
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.Routing ? rowData.state.rowData.Routing : "--"}
-        </Descriptions.Item>
-
-        <Descriptions.Item
-          label="Invoice Currency"
-          labelStyle={{ color: "black", fontWeight: "bold" }}
-        >
-          {rowData.state.rowData.InnvoiceCurrency ? rowData.state.rowData.InnvoiceCurrency : "--"}
         </Descriptions.Item>
 
         <Descriptions.Item

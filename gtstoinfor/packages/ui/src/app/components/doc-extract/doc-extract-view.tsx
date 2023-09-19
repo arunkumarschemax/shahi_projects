@@ -29,6 +29,7 @@ import {
 } from "@project-management-system/shared-services";
 import { VendorFilterModel } from "packages/libs/shared-models/src/shared-model/vendor-filter-model";
 import { StatusEnumDisplay } from "packages/libs/shared-models/src/common";
+import { table } from "console";
 
 interface Item {
   GST: string;
@@ -227,7 +228,7 @@ export function DocView() {
       title: "Vendor Name",
       dataIndex: "Vendor",
       key: "Vendor",
-      ...getColumnSearchProps("Vendor"),
+      // ...getColumnSearchProps("Vendor"),
       align: "center",
       sorter: (a, b) => a.Vendor.localeCompare(b.Vendor),
       render: (text: any, record: { Vendor: any }) => {
@@ -262,7 +263,6 @@ export function DocView() {
       dataIndex: "VarianceStatus",
       key: "VarianceStatus",
       sorter: (a, b) => a.VarianceStatus.localeCompare(b.VarianceStatus),
-      ...getColumnSearchProps("VarianceStatus"),
       align: "center",
       render: (text: any, record: { VarianceStatus: any }) => {
         // Define a mapping of status values to tag colors
@@ -272,12 +272,11 @@ export function DocView() {
           Full_Variance: "red",
           // Add more status values and corresponding colors as needed
         };
-
+    
         const statusColor = statusTagColors[record.VarianceStatus] || "default";
-
+    
         return (
           <Tag color={statusColor}>
-            {/* {record.VarianceStatus ? record.VarianceStatus : "-"} */}
             {record.VarianceStatus
               ? StatusEnumDisplay.find(
                   (item) => item.name === record.VarianceStatus
@@ -285,6 +284,24 @@ export function DocView() {
               : "-"}
           </Tag>
         );
+      },
+      filters: [
+        {
+          text: 'Partially Variance',
+          value: 'Partially_Variance', // Change value to the actual status value
+        },
+        {
+          text: 'No Variance',
+          value: 'No_Variance', // Change value to the actual status value
+        },
+        {
+          text: 'Full Variance',
+          value: 'Full_Variance', // Change value to the actual status value
+        },
+      ],
+      filterMultiple: false,
+      onFilter: (value, record) => {
+        return record.VarianceStatus === value; // Use record.VarianceStatus
       },
     },
     {

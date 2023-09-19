@@ -45,7 +45,7 @@ export const LoginComponent = () => {
         <div style={{marginLeft:'20%'}}>
                 <img src={xpparellogo} width={150} height={'50%'}></img>
             </div>
-        <div style={{marginLeft:'20%'}}><b>Document Scan Management</b></div>
+        <div style={{marginLeft:'10%'}}><b>Document Scan Management</b></div>
         <br />
             <Form
                 name="login-form"
