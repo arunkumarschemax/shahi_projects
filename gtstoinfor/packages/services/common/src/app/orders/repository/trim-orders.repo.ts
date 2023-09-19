@@ -7,4 +7,9 @@ export class TrimOrdersRepository extends Repository<TrimOrdersEntity> {
     ) {
         super(trimOrderRepository.target, trimOrderRepository.manager, trimOrderRepository.queryRunner);
     }
+    async getTrimOders(): Promise<any[]> {
+        const query = this.createQueryBuilder('to')
+            .select('*')
+        return await query.getRawMany();
+    }
 }
