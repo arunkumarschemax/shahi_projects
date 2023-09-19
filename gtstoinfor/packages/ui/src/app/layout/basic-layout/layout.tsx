@@ -63,6 +63,12 @@ export const baseRouterList = [
                 path: "factories/factories-view",
                 filepath: "factories/factories-view",
             },
+            {
+                label: "Price List",
+                key: "pricelist",
+                path: "pricelist/price-list-view",
+                filepath: "pricelist/price-list-view",
+            },
         ],
     },
     {
@@ -102,6 +108,12 @@ export const baseRouterList = [
                 path: "version-grid",
                 filepath: "version-grid",
             },
+            {
+                label: "Ex-Factory Report",
+                key: "ex-factory-report",
+                path: "ex-factory-report",
+                filepath: "ex-factory-report",
+            },
             // {
             //     label: "Phase Wise Data",
             //     key: "phase-wise-grid",
@@ -110,6 +122,22 @@ export const baseRouterList = [
             // }
         ],
     },
+    // {
+    //     label: "Reports",
+    //     key: "reports",
+    //     path: "reports",
+    //     icon: <FileExcelOutlined />,
+    //     filepath: "reports",
+    //     children: [
+    //         {
+    //             label: "Ex-Factory Report",
+    //             key: "ex-factory-report",
+    //             path: "ex-factory-report",
+    //             filepath: "ex-factory-report",
+    //         },
+           
+    //     ],
+    // },
 ];
 
 export default function BasicLayout() {
@@ -125,7 +153,7 @@ export default function BasicLayout() {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
     const loginUser = userData.user.userName
     const loginUserRole = userData.user.roles
-    console.log(userData.user.userName)
+    console.log(userData)
 
     const toggle = () => {
         setCollapsed(prevCollapsed => !prevCollapsed);

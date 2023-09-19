@@ -31,6 +31,6 @@ import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
       TrimOrdersChildEntity
     ])],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository,TrimOrdersRepository,OrdersChildAdapter,TrimOrdersAdapter,TrimOrdersChildAdapter,TrimOrdersChildRepository]
+  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository,TrimOrdersRepository,TrimOrdersAdapter,TrimOrdersChildAdapter,TrimOrdersChildRepository]
 })
 export class OrdersModule { }

@@ -40,6 +40,7 @@ export class OrdersService {
         private trimordersChildAdapter: TrimOrdersChildAdapter,
         private orderDiffRepo: OrderDifferenceRepository,
         private fileUploadRepo: FileUploadRepository,
+        private trimOrderRepo: TrimOrdersRepository,
         @InjectDataSource()
         private dataSource: DataSource,
         @InjectEntityManager() private readonly entityManager: EntityManager
@@ -619,6 +620,16 @@ export class OrdersService {
             monthWiseDataModelArray.push(new MonthWiseExcelDataModel(record.item_code, record.itemName, record.prod_plan_type_name, record.old_qty_value1, record.old_qty_value2, record.old_qty_value3, record.old_qty_value4, record.old_qty_value5, record.old_qty_value6, record.old_qty_value7, record.old_qty_value8, record.old_qty_value9, record.old_qty_value10, record.old_qty_value11, record.old_qty_value12));
         }
         return new CommonResponseModel(true, 1, 'Data retrived successfully', monthWiseDataModelArray);
+    }
+    
+    async getTrimOrdersData(): Promise<CommonResponseModel> {
+        const data = await this.trimOrderRepo.getTrimOders()
+        if (data.length > 0) {
+            return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
+        }
+        else {
+            return new CommonResponseModel(false, 0, 'No data found', data);
+        }
     }
 
 }

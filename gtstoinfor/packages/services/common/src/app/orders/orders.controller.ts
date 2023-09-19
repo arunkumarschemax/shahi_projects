@@ -224,4 +224,13 @@ export class OrdersController {
         }
     }
     
+
+    @Post('/getTrimOrdersData')
+    async getTrimOrdersData(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getTrimOrdersData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
