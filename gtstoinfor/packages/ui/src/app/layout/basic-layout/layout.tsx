@@ -652,6 +652,12 @@ export const baseRouterList = [
                 path: "operation-reporting",
                 filepath: "operation-reporting",
             },
+            {
+                label: "Inventory",
+                key: "inventory",
+                path: "inventory",
+                filepath: "inventory",
+            },
             
          
         ]
