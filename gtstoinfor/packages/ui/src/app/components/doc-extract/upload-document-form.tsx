@@ -47,6 +47,8 @@ export function UploadDocumentForm() {
   const [submitVisible, setSubmitVisible] = useState<boolean>(false);
   const [file, setFile] = useState<any | null>(null);
 
+
+
   const navigate = useNavigate();
   const service = new SharedService();
   const [extractedData, setExtractedData] = useState<any>([]);
@@ -68,13 +70,19 @@ export function UploadDocumentForm() {
   const [Unitprice, setUnitprice] = useState("");
 
   const [quotation, setQuotation] = useState("");
-  const[status,setStatus]=useState("");
+  const [status, setStatus] = useState("");
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [zoomFactor, setZoomFactor] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragStartY, setDragStartY] = useState(0);
+
+
+  const [buttonClicked, setButtonClicked] = useState(false);
+
+  const [showCancelButton, setShowCancelButton] = useState(false);
+  const [extractionCompleted, setExtractionCompleted] = useState(false);
 
   interface Item {
     HSN: string;
@@ -83,7 +91,7 @@ export function UploadDocumentForm() {
     Taxamount: string;
     Charge: string;
     variance: string;
-    Unitprice:string;
+    Unitprice: string;
   }
 
   const [imageURL, setImageURL] = useState<string | null>(null);
@@ -108,6 +116,7 @@ export function UploadDocumentForm() {
   const [Innvoicecurrency, setInnvoicecurrency] = useState("");
 
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+
   const [data1, setData1] = useState<any[]>([]);
   const [data2, setData2] = useState<any[]>([]);
 
@@ -318,7 +327,7 @@ export function UploadDocumentForm() {
     setInvoiceDate(date);
   };
 
-  
+
   const handleAddToTable = () => {
     if (
       !HSN &&
@@ -419,7 +428,7 @@ export function UploadDocumentForm() {
     {
       title: "HSN code",
       dataIndex: "HSN",
-      width:"30",
+      width: "30",
       key: "HSN",
       render: (HSN) => ` ${HSN}`,
     },
@@ -503,7 +512,7 @@ export function UploadDocumentForm() {
     //     if (!Array.isArray(records) || records.length === 0) {
     //       return "No Variance";
     //     }
-    
+
     //     // Aggregate variance values for all records
     //     const varianceValues = records.map((record) => {
     //       if (!record.variance || !Array.isArray(record.variance)) {
@@ -511,10 +520,10 @@ export function UploadDocumentForm() {
     //       }
     //       return record.variance.reduce((sum, v) => sum + (parseFloat(v) || 0), 0);
     //     });
-    
+
     //     const hasNonZeroVariance = varianceValues.some((value) => value !== 0);
     //     const hasZeroVariance = varianceValues.some((value) => value === 0);
-    
+
     //     if (hasNonZeroVariance && hasZeroVariance) {
     //       return "Partially Variance";
     //     } else if (!hasNonZeroVariance) {
@@ -524,7 +533,7 @@ export function UploadDocumentForm() {
     //     }
     //   },
     // },
-    
+
     {
       title: "Variance",
       dataIndex: "variance",
@@ -542,7 +551,7 @@ export function UploadDocumentForm() {
         } else {
           status = "Negative Variance";
         }
-        
+
         return `${varianceValue.toFixed(2)}`;
       },
     },
@@ -554,13 +563,13 @@ export function UploadDocumentForm() {
     //     return status;
     //   },
     // },
-    
+
     // {
     //   title: "Status",
     //   dataIndex: "variance_status",
     //   key: "variance_status",
     // },
-    
+
     {
       title: "Action",
       dataIndex: "action",
@@ -603,7 +612,8 @@ export function UploadDocumentForm() {
   };
 
   const handleUploadDocument = () => {
-    if (file) {
+    if (file && !buttonClicked) {
+      setButtonClicked(true);
       const reader = new FileReader();
       reader.onload = (e) => {
         setSelectedImage(e.target.result);
@@ -720,6 +730,13 @@ export function UploadDocumentForm() {
           const formattedDate = currentDate.toLocaleString();
           setTimecreated(formattedDate);
 
+          // setShowCancelButton(true);//
+          setTimeout(() => {
+            setIsLoading(false);
+            setExtractionCompleted(true);
+            setShowCancelButton(true);
+          }, 2000);
+
           console.log("Result (JSON):", JSON.stringify(result, null, 2));
         }
       );
@@ -777,7 +794,7 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    const req = new AllScanDto(gstNumbers,vendor,invoiceDate,Cgst,Igst,Sgst,Innvoicenum,Innvoiceamount,Innvoicecurrency,routing,comment,timecreated,buyerName,financialyear,JSON.parse(localStorage.getItem("currentUser")).user.userName,extractedData,"");
+    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated, buyerName, financialyear, JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData, "");
 
     console.log(req, "submit");
     service
@@ -794,6 +811,12 @@ export function UploadDocumentForm() {
         console.log(err.message, "err message");
       });
   };
+
+  const handleCancel = () => {
+    setButtonClicked(true);
+    window.location.reload();
+  };
+
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -850,42 +873,59 @@ export function UploadDocumentForm() {
                 </Upload>
                 <br />
 
-                <Button
-                  type="primary"
-                  icon={<UploadOutlined />}
-                  style={{
-                    position: "relative",
-                    bottom: "78px",
-                    left: "220px",
-                  }}
-                  onClick={handleUploadDocument}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div
-                      style={{
-                        position: "fixed",
-                        top: "0",
-                        left: "0",
-                        width: "100%",
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        zIndex: 9999,
-                        background: "rgba(0, 0, 0, 0.5)",
-                      }}
-                    >
-                      <Spin size="large" />
-                      <div style={{ marginTop: "10px", color: "white" }}>
-                        Please wait...
-                      </div>
-                    </div>
-                  ) : (
-                    "Upload"
-                  )}
-                </Button>
+                <Row>
+      {extractionCompleted ? (
+        <Button
+          type="primary"
+          danger
+          style={{
+            position: 'relative',
+            bottom: '78px',
+            left: '220px',
+          }}
+          onClick={handleCancel}
+        >
+          Cancel
+        </Button>
+      ) : (
+        <Button
+          type="primary"
+          icon={<UploadOutlined />}
+          style={{
+            position: 'relative',
+            bottom: '78px',
+            left: '220px',
+          }}
+          onClick={handleUploadDocument}
+          disabled={isLoading || buttonClicked}
+        >
+          {isLoading ? (
+            <div
+              style={{
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 9999,
+                background: 'rgba(0, 0, 0, 0.5)',
+              }}
+            >
+              <Spin size="large" />
+              <div style={{ marginTop: '10px', color: 'white' }}>
+                Please wait...
+              </div>
+            </div>
+          ) : (
+            'Upload'
+          )}
+        </Button>
+      )}
+    </Row>
               </Form.Item>
             </Col>
           </Row>
@@ -942,6 +982,8 @@ export function UploadDocumentForm() {
           <Button onClick={handleZoomOut}>Zoom Out</Button>
         </div>
       </Card>
+
+      
 
       <Form form={GstForm}>
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -1423,9 +1465,9 @@ export function UploadDocumentForm() {
             <br></br>
             <br></br>
             {/* {extractedData && extractedData.length > 0 ? ( */}
-              <Card size="small">
-                <Table dataSource={extractedData} columns={columns} size ="small" />
-              </Card>
+            <Card size="small">
+              <Table dataSource={extractedData} columns={columns} size="small" />
+            </Card>
             {/* ) : (
               ""
             )} */}
