@@ -1,6 +1,12 @@
 import { LegalPoDetails, PoItemDetailsDto, PoItemVariantDto } from "@project-management-system/shared-models";
 import { CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_INDEX, ITEM_SHIP_TO_INDEXES, ITEM_SHIP_TO_TEXT, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT2, ITEM_TEXT_INDEX, ITEM_TEXT_START_INDEX, PO_DOC_DATE_INDEX, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3 } from "./popdf-regex-expressions";
 
+
+/**
+ * 
+ * @param pdf 
+ * @returns {LegalPoDetails}
+ */
 export const extractDataFromPoPdf = async (pdf) => {
     const poData = new LegalPoDetails()
     const itemsArr: { itemNo: string, itemIndex: number }[] = []
@@ -9,7 +15,10 @@ export const extractDataFromPoPdf = async (pdf) => {
     for (let i = 1; i < pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const textContent: any = await page.getTextContent();
+
+
         //parsing  po data 
+        // po details exists only in first data of pdf ,so using only first page for extracting po details
         if (i == 1) {
             const firstPageContent: any[] = textContent.items.filter((v) => {
                 return !EMP_STR_EXP.test(v.str)
@@ -23,7 +32,6 @@ export const extractDataFromPoPdf = async (pdf) => {
             let shipToAddStartIndex;
             let shipToAddEndIndex;
             let shipToCount = 0
-            console.log(firstPageContent, 'first page content')
             let firstShipToFlag = false
             for (const [ind, ele] of firstPageContent.entries()) {
                 if (ele.str == PO_DOC_DATE_TXT) {
@@ -51,13 +59,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                         buyerAddEndIndex = ind
                     }
                 }
-                console.log(shipToAddStartIndex)
-                // if (firstShipToFlag) {
-                //     if (ele.str == 'SHIP TO:') {
-                //         buyerAddEndIndex = ind
-                //         shipToAddStartIndex = ind
-                //     }
-                // }
+
                 if (ele.str == ITEM_SHIP_TO_TEXT) {
                     firstShipToFlag = true
                 }
@@ -93,6 +95,9 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.shipToAddress = shipToAddress;
 
         }
+        
+        //-------------------------------------------------------------------------------------------
+        // data filtering satrts here
         // filtering the pdf data i.e remove unnecessary data which is not required for data parsing
         let startFlag = false; // Initialize startFlag to false
         let endFlag = false;   // Initialize endFlag to false
@@ -118,6 +123,9 @@ export const extractDataFromPoPdf = async (pdf) => {
 
         filteredData.push(...pageContent)
     }
+    //------------------------------------------------------------------------------
+
+
     // console.log(filteredData)
     for (const [index, rec] of filteredData.entries()) {
         // chech the item No pattern and using regex and push all matched items
@@ -164,7 +172,15 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsObj.itemVasText = itemText
         }
 
-        //check if vas text exists
+        //    --------------------------------------------------
+        // check if vas text exists
+
+
+        //     vas text logic comes here
+
+
+
+        //    --------------------------------------------------
 
 
         if (itemTextEndIndex) {
@@ -175,7 +191,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemVariantStartIndex = itemDetailsEndIndex
         }
 
-        //check if 
+        
         //-------------------------------------------------------------------------
         // item varinat details parsing starts here
         const itemVarinatsTextArr = []
@@ -199,7 +215,6 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsArr.push(itemDetailsObj)
     }
     poData.poItemDetails = itemDetailsArr
-    console.log(poData)
     return poData
 }
 
