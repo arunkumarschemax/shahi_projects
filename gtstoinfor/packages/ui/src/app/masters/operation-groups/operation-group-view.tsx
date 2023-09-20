@@ -128,13 +128,6 @@ export const OperationGroupsGrid = (props: OperationGroupsGridProps) => {
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("operationGroupName"),
       },
-      {
-        title: "M3 Operation Code",
-        dataIndex: "m3OperationCode",
-        sorter: (a, b) => a.m3OperationCode.localeCompare(b.m3OperationCode),
-        sortDirections: ["ascend", "descend"],
-        ...getColumnSearchProps("m3OperationCode"),
-      },
     {
       title: 'Status',
       dataIndex: 'isActive',

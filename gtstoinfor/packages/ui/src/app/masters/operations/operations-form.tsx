@@ -122,7 +122,7 @@ export function OperationsForm(
                           },
                         ]}
                       >
-                      <Input/>
+                      <Input placeholder="Enter Operation Code"/>
                     </Form.Item>
         </Col>
 
@@ -143,9 +143,27 @@ export function OperationsForm(
 
               
             ]}>
-            <Input />
+            <Input placeholder="Enter Operation Name"/>
           </Form.Item>
         </Col>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}> 
+            <Form.Item
+            name="m3OperationCode"
+            label="M3 Operation Code"
+            rules={[
+              {
+                required: true,
+                message:'Operation Code Is Required'
+              },
+              {
+                pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+                message: `Should contain only alphabets.`
+              }
+            ]}
+          >
+            <Input placeholder="Enter M3 Operation Code"/>
+          </Form.Item>
+          </Col>
 
         {/* <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}} >
           <Form.Item
