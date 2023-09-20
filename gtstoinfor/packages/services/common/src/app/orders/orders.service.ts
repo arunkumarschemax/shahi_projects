@@ -441,6 +441,48 @@ export class OrdersService {
     //     }
     // }
 
+    async revertTrimFileData(req: FileIdReq): Promise<CommonResponseModel> {
+        console.log(req,'requestfff')
+        if (req) {
+            const latestFileId = await this.fileUploadRepo.update({ id: req.fileId }, { isActive: false })
+        }
+        if (req) {
+            const deleteChildData = await this.trimordersChildRepo.deleteTrimChildData(req)
+        }
+        // if (req) {
+        //     const deleteDiffData = await this.orderDiffRepo.deleteDiffData(req)
+        // }
+        if (req) {
+            const deleteOrdersData = await this.trimOrderRepo.deleteTrimOrderData(req)
+        }
+        const updatedData = await this.trimordersChildRepo.getUpdatedTrimData()
+        const data = await this.trimordersChildRepo.find({
+            where: { fileId: updatedData[0]?.fileId },
+            // relations: ['orders']
+        })
+        const flag = new Set()
+        for (const dtoData of data) {
+            // const prodPlanId = new OrdersEntity();
+            // prodPlanId.productionPlanId = dtoData.orders.productionPlanId
+            const updateOrder = await this.trimOrderRepo.update({ orderNo: dtoData.orderNo,sizeCode:dtoData.sizeCode,colorCode:dtoData.colorCode }, {
+                year : dtoData.year,revisionNo : dtoData.revisionNo,planningSsn : dtoData.planningSsn,globalBusinessUnit : dtoData.globalBusinessUnit,businessUnit : dtoData.businessUnit,itemBrand : dtoData.itemBrand,Department : dtoData.Department,revisedDate : dtoData.revisedDate,DocumentStatus : dtoData.DocumentStatus,answeredStatus : dtoData.answeredStatus,vendorPersoninCharge : dtoData.vendorPersoninCharge,decisionDate : dtoData.decisionDate,paymentTerms : dtoData.paymentTerms,contractedETD : dtoData.contractedETD,ETAWH : dtoData.ETAWH,approver : dtoData.approver,approvalDate : dtoData.approvalDate,orderConditions : dtoData.orderConditions,remark : dtoData.remark,rawMaterialCode : dtoData.rawMaterialCode,supplierRawMaterialCode : dtoData.supplierRawMaterialCode,supplierRawMaterial : dtoData.supplierRawMaterial,vendorCode : dtoData.vendorCode,vendor : dtoData.vendor,managementFactoryCode : dtoData.managementFactoryCode,managementFactory : dtoData.managementFactory,branchFactoryCode : dtoData.branchFactoryCode,branchFactory : dtoData.branchFactory,orderPlanNumber : dtoData.orderPlanNumber,itemCode : dtoData.itemCode,item : dtoData.item,representativeSampleCode : dtoData.representativeSampleCode,sampleCode : dtoData.sampleCode,colorCode : dtoData.colorCode,color : dtoData.color,patternDimensionCode : dtoData.patternDimensionCode,sizeCode : dtoData.sizeCode,size : dtoData.size,arrangementBy : dtoData.arrangementBy,trimDescription : dtoData.trimDescription,trimItemNo : dtoData.trimItemNo,trimSupplier : dtoData.trimSupplier,createdUser : dtoData.createdUser,updatedUser : dtoData.updatedUser,version : dtoData.version,fileId : dtoData.fileId,month:dtoData.month,orderQtyPcs:dtoData.orderQtyPcs
+            })
+            if (!updateOrder.affected) {
+                return new CommonResponseModel(false, 0, 'Something went wrong in Trim order update', updateOrder)
+            }
+            if (!updateOrder.affected) {
+                flag.add(false)
+            } else {
+                flag.add(true)
+            }
+        }
+        if (flag.has(true)) {
+            return new CommonResponseModel(true, 1, 'File Reverted Successfully')
+        } else {
+            return new CommonResponseModel(false, 0, 'failed to revert file data')
+        }
+    }
+
     async updatePath(filePath: string, filename: string, month: number,fileType:string): Promise<CommonResponseModel> {
         const entity = new FileUploadEntity()
         entity.fileName = filename;
