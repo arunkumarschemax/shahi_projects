@@ -16,6 +16,7 @@ export class OperationsAdapter {
     const operationgroup = new OperationGroups()
     operations.operationName = operationsDto.operationName;
     operations.operationCode = operationsDto.operationCode;
+    operations.m3OperationCode = operationsDto.m3OperationCode;
     operationgroup.operationGroupId = operationsDto.operationGroupId
     operationgroup.operationGroupName= operationsDto.operationGroupName
     operations.operationGroupInfo = operationgroup
@@ -34,6 +35,7 @@ export class OperationsAdapter {
     operationsDto.key = index+1
     operationsDto.operationId = operationsObject.operationId;
     operationsDto.operationName = operationsObject.operationName;
+    operationsDto.m3OperationCode = operationsObject.m3OperationCode;
     operationsDto.operationGroupId = (operationsObject.operationGroupInfo)?.operationGroupId;
     operationsDto.operationGroupName = (operationsObject.operationGroupInfo)?.operationGroupName;
     operationsDto.isActive = operationsObject.isActive;

@@ -22,6 +22,9 @@ export class OperationDTO {
   operationName: string;
 
   @ApiProperty()
+  m3OperationCode: string;
+
+  @ApiProperty()
   isActive: boolean;
 
   createdAt : Date;

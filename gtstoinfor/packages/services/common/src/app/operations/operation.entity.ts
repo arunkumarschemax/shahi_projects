@@ -21,6 +21,13 @@ export class Operations {
     name:"operation_name"
     })
   operationName:string;
+
+  @Column("varchar",{
+    nullable:true,
+    length:100,
+    name:"m3_operation_code"
+    })
+  m3OperationCode:string;
   
   @Column("boolean",{
     nullable:false,
