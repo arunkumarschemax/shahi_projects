@@ -454,18 +454,18 @@ export class DpomService {
                         }
                     }
 
-                    const regex = /(\d+\.\d+)/; // This regex matches a number with decimal places
                     let price
                     for (const size of item.poItemVariantDetails) {
-                        const match = size.unitPrice.match(regex);
-
-                        if (match && match.length > 1) {
-                            price = match[1];
+                        const numericValue = parseFloat(size.unitPrice)
+                        if (!isNaN(numericValue)) {
+                            price = numericValue;
+                        } else {
+                            price = 0;
                         }
                         const poDetails = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: req.poNumber, poLineItemNumber: parseInt(item.itemNo, 10), sizeDescription: size.size } })
                         if (poDetails) {
                             const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: req.poNumber, poLineItemNumber: parseInt(item.itemNo, 10), sizeDescription: size.size }, {
-                                shipToAddressLegalPO: item.shipToAddress, legalPoQty: Number(size.qunatity), legalPoPrice: price, itemVasPDF: req.itemVasText, divertedToPos: matches.join(',')
+                                shipToAddressLegalPO: item.shipToAddress, legalPoQty: Number(size.qunatity), legalPoPrice: price, legalPoCurrency: req.currency, itemVasPDF: req.itemVasText, divertedToPos: matches.join(',')
                             })
                             if (!updateOrder.affected) {
                                 await transactionManager.releaseTransaction();
@@ -1017,7 +1017,7 @@ export class DpomService {
                 }
                 const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
                 if (rec.size_description !== null) {
-                    sizeWiseData.push(new FactoryReportSizeModel(rec.size_description, rec.size_qty, rec.price, rec.co_price));
+                    sizeWiseData.push(new FactoryReportSizeModel(rec.size_description, rec.size_qty, rec.legal_po_price, rec.co_price));
                 }
             }
             const dataModelArray: FactoryReportModel[] = Array.from(sizeDateMap.values());
@@ -1076,7 +1076,7 @@ export class DpomService {
             }
             const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
             if (rec.size_description !== null) {
-                sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.buyer_gross_price, rec.buyer_gross_currency_code, rec.ne_inc_disc, rec.netIncDisCurrency, rec.trading_net_inc_disc, rec.tradingNetCurrencyCode, rec.price, rec.legal_po_currency_code, rec.co_price, rec.co_price_currency_code, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
+                sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.buyer_gross_price, rec.buyer_gross_currency_code, rec.ne_inc_disc, rec.netIncDisCurrency, rec.trading_net_inc_disc, rec.tradingNetCurrencyCode, rec.legal_po_price, rec.legal_po_currency_code, rec.co_price, rec.co_price_currency_code, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
             }
         }
         const dataModelArray: MarketingReportModel[] = Array.from(sizeDateMap.values());
@@ -1365,7 +1365,6 @@ export class DpomService {
     //     }
     // }
 
-
     async getPriceDifferenceReport(req: FobPriceDiffRequest): Promise<CommonResponseModel> {
         const conditions = [];
         const queryParams: any[] = [];
@@ -1512,6 +1511,7 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'error')
         }
     }
+
     async getPdfFileInfo(): Promise<CommonResponseModel> {
         const manager = this.dataSource
         const pdfInfoQry = `select * from pdf_file_data`;
@@ -1522,6 +1522,7 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data')
         }
     }
+
     async getPpmPoNumberForFactory(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPoforfactory()
         if (data.length > 0)
@@ -1529,6 +1530,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getPppoNumberForMarketing(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPoNumberforMarketing()
         if (data.length > 0)
@@ -1536,6 +1538,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     // ------------------------------------------------------------------------------------------------------
     async getPpmDocTypeMarketing(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmDocTypeForMarketing()
@@ -1544,6 +1547,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
     async getPpmPoLineItemNumberMarketing(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmPoLineItemNumberForMarketing()
         if (data.length > 0)
@@ -1551,7 +1555,7 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
-    
+
     async getPpmStyleNumberMarketing(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmStyleNumberForMarketing()
         if (data.length > 0)
@@ -1576,7 +1580,6 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-
     async getPpmdesGeoCodeMarketing(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmGeoCodeMarketing()
         if (data.length > 0)
@@ -1584,8 +1587,6 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
-
-     
 
 }
 
