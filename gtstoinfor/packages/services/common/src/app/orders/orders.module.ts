@@ -14,7 +14,11 @@ import { OrderDifferenceRepository } from './repository/order-difference.reposit
 import { FileUploadRepository } from './repository/upload.repository';
 import { FileUploadEntity } from './entities/upload-file.entity';
 import { TrimOrdersEntity } from './entities/trim-orders.entity';
-import { TrimOrdersRepository } from './repository/trim.order.repository';
+import { TrimOrdersRepository } from './repository/trim-orders.repo';
+import { TrimOrdersChildEntity } from './entities/trim-orders-child.entity';
+import { TrimOrdersAdapter } from './adapters/trim-orders.adapter';
+import { TrimOrdersChildAdapter } from './adapters/trim-orders-child.adapter';
+import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
 
 @Module({
   imports: [
@@ -24,8 +28,9 @@ import { TrimOrdersRepository } from './repository/trim.order.repository';
       OrdersDifferenceEntity,
       FileUploadEntity,
       TrimOrdersEntity,
+      TrimOrdersChildEntity
     ])],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository,TrimOrdersRepository]
+  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository,TrimOrdersRepository,TrimOrdersAdapter,TrimOrdersChildAdapter,TrimOrdersChildRepository]
 })
 export class OrdersModule { }

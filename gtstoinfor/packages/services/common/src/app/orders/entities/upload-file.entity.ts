@@ -1,3 +1,4 @@
+import { FileTypesEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('file_upload') //change the name
@@ -20,6 +21,11 @@ export class FileUploadEntity {
         name: "file_path",
     })
     filePath: string;
+    @Column('enum', {
+        name: 'file_type',
+        enum: FileTypesEnum
+    })
+    fileType: string;
 
     @Column('varchar', {
         nullable: true,

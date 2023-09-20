@@ -49,9 +49,9 @@ export class OrdersService extends CommonAxiosService {
     //     return await this.axiosPostCall(this.ordersController + '/fileUpload', file);
     // }
 
-    async fileUpload(file: any, month: number): Promise<CommonResponseModel> {
+    async fileUpload(file: any, month: number,fileType:string): Promise<CommonResponseModel> {
         const monthId = month;
-        const url = `/orders/fileUpload/${monthId}`;
+        const url = `/orders/fileUpload/${monthId}/${fileType}`;
         return this.axiosPostCall(url, file);
     }
 
@@ -1012,6 +1012,11 @@ export class OrdersService extends CommonAxiosService {
           return data
         // return this.axiosPostCall(this.ordersController + "/getMonthWiseData")
     }
-
-
+    async saveTrimOrder(data: any, id: number, month: any): Promise<CommonResponseModel> {
+        console.log(month)
+        const idn = id;
+        const montId = month
+        const url = `/orders/saveTrimOrder/${idn}/${montId}`;
+        return this.axiosPostCall(url, data);
+    }
 }

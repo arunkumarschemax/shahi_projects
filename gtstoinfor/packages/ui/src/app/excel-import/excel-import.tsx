@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Descriptions, Divider, Form, message, UploadProps } from 'antd';
+import { Button, Card, Col, Descriptions, Divider, Form, message, Row, Select, UploadProps } from 'antd';
 import { OrdersService } from '@project-management-system/shared-services';
 import Papa from 'papaparse'
 import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { UndoOutlined } from '@ant-design/icons';
-import { FileStatusReq } from '@project-management-system/shared-models';
+import { FileStatusReq, FileTypesEnum } from '@project-management-system/shared-models';
 
 
 export default function ExcelImport() {
@@ -19,8 +19,12 @@ export default function ExcelImport() {
   const [values, setValues] = useState([])
   const [filelist, setFilelist] = useState([]);
   let navigate = useNavigate();
+  const { Option } = Select;
+  const [form] = Form.useForm();
+
 
   useEffect(() => {
+    form.setFieldsValue({fileType:'Projection Order'})
     getUploadFilesData();
   }, [])
 
@@ -65,52 +69,88 @@ export default function ExcelImport() {
   };
   const handleUpload = async () => {
     try {
+      form.validateFields().then(values => {
+        if (selectedFile) {
+          let integerPart
+          //  console.log(selectedFile.name,'selectedFile') 
+          const inputString = selectedFile.name
+          const match = inputString.match(/(\d+)\.\d+/);
+          if (match) {
+            integerPart = parseInt(match[1]);
+            console.log(integerPart)
+          } else {
+            console.log("No integer part found in the input string.");
+          }
+          const formData = new FormData();
+          formData.append('file', selectedFile);
+          console.log(form.getFieldsValue().fileType)
+          if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
 
-      if (selectedFile) {
-        let integerPart
-        //  console.log(selectedFile.name,'selectedFile') 
-        const inputString = selectedFile.name
-        const match = inputString.match(/(\d+)\.\d+/);
-        if (match) {
-          integerPart = parseInt(match[1]);
-        } else {
-          console.log("No integer part found in the input string.");
-        }
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-        if (integerPart) {
-          ordersService.fileUpload(formData, integerPart).then((fileRes) => {
-            if (fileRes.status) {
-              ordersService.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
-                setLoading(true)
-                if (res.status) {
-                  const req = new FileStatusReq()
-                  req.fileId = fileRes?.data?.id;
-                  req.status = 'Success';
-                  req.userName = loginUser ? loginUser : null;
-                  ordersService.updateFileStatus(req)
-                  message.success(res.internalMessage)
-                  navigate("/excel-import/grid-view");
+            if (integerPart) {
+              ordersService.fileUpload(formData, integerPart,form.getFieldsValue().fileType).then((fileRes) => {
+                if (fileRes.status) {
+                  ordersService.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
+                    setLoading(true)
+                    if (res.status) {
+                      const req = new FileStatusReq()
+                      req.fileId = fileRes?.data?.id;
+                      req.status = 'Success';
+                      req.userName = loginUser ? loginUser : null;
+                      ordersService.updateFileStatus(req)
+                      message.success(res.internalMessage)
+                      navigate("/excel-import/grid-view");
+                    } else {
+                      const req = new FileStatusReq()
+                      req.fileId = fileRes?.data?.id;
+                      req.status = 'Failed';
+                      req.userName = loginUser ? loginUser : null;
+                      ordersService.updateFileStatus(req)
+                      message.error('File upload failed')
+                    }
+                  }).finally(() => {
+                    setLoading(false);
+                  })
                 } else {
-                  const req = new FileStatusReq()
-                  req.fileId = fileRes?.data?.id;
-                  req.status = 'Failed';
-                  req.userName = loginUser ? loginUser : null;
-                  ordersService.updateFileStatus(req)
-                  message.error('File upload failed')
+                  message.error(fileRes.internalMessage)
                 }
-              }).finally(() => {
-                setLoading(false);
-              })
+              });
             } else {
-              message.error(fileRes.internalMessage)
+              message.info('month not avilable')
             }
-          });
-        } else {
-          message.info('month not avilable')
+          }else{
+              ordersService.fileUpload(formData, 9,form.getFieldsValue().fileType).then((fileRes) => {
+                if (fileRes.status) {
+                  ordersService.saveTrimOrder(data, fileRes?.data?.id, 9).then((res) => {
+                    setLoading(true)
+                    if (res.status) {
+                      const req = new FileStatusReq()
+                      req.fileId = fileRes?.data?.id;
+                      req.status = 'Success';
+                      req.userName = loginUser ? loginUser : null;
+                      ordersService.updateFileStatus(req)
+                      message.success(res.internalMessage)
+                      // navigate("/excel-import/grid-view");
+                    } else {
+                      const req = new FileStatusReq()
+                      req.fileId = fileRes?.data?.id;
+                      req.status = 'Failed';
+                      req.userName = loginUser ? loginUser : null;
+                      ordersService.updateFileStatus(req)
+                      message.error('File upload failed')
+                    }
+                  }).finally(() => {
+                    setLoading(false);
+                  })
+                } else {
+                  message.error(fileRes.internalMessage)
+                }
+              });
+          }
+  
         }
+      })
+      
 
-      }
     } catch (error) {
       message.error(error.message)
     }
@@ -173,9 +213,27 @@ export default function ExcelImport() {
         </span>
         <Divider></Divider>
         <>
-          <Form.Item>
-            <input type="file" accept=".csv" onChange={handleFileChange} />
-          </Form.Item>
+        <Form form = {form}>
+        <Row gutter = {24}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
+                <Form.Item name="fileType" label="File Type" >
+                    <Select
+                        showSearch
+                        placeholder="Select File Type"
+                        optionFilterProp="children"
+                        allowClear
+                        >
+                        <Option key='trimorder' value="Trim Order">Trim Order</Option>
+                        <Option key='projectionorder' value="Projection Order">Projection Order</Option>
+                    </Select>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Form.Item label = "">
+              <input type="file" accept=".csv" onChange={handleFileChange} />
+            </Form.Item>
+            </Col>
+          </Row>
           <Button
             type="primary"
             onClick={handleUpload}
@@ -184,6 +242,7 @@ export default function ExcelImport() {
           >
             Upload
           </Button>
+          </Form>
         </>
       </Card>
     </>

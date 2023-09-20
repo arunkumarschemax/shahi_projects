@@ -20,7 +20,7 @@ export class OrdersController {
     @Post('/saveOrder/:id/:month')
     async saveOrder(@Param('id') id: number, @Param('month') month: number, @Body() data: any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.saveOrdersData(data, id, month);
+            // return this.ordersService.saveOrdersData(data, id, month);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -109,14 +109,14 @@ export class OrdersController {
     @Post('/revertFileData')
     async revertFileData(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.revertFileData(req);
+            // return this.ordersService.revertFileData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
         }
     }
 
-    @Post('/fileUpload/:month')
+    @Post('/fileUpload/:month/:fileType')
     @ApiConsumes('multipart/form-data')
     @UseInterceptors(FileInterceptor('file', {
         limits: { files: 1 },
@@ -135,9 +135,9 @@ export class OrdersController {
         },
     }))
 
-    async fileUpload(@Param('month') month: number, @UploadedFile() file): Promise<CommonResponseModel> {
+    async fileUpload(@Param('month') month: number,fileType:string, @UploadedFile() file): Promise<CommonResponseModel> {
         try {
-            return await this.ordersService.updatePath(file.path, file.filename, month)
+            return await this.ordersService.updatePath(file.path, file.filename, month,fileType)
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
         }
@@ -214,6 +214,16 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/saveTrimOrder/:id/:month')
+    async saveTrimOrder(@Param('id') id: number, @Param('month') month: number, @Body() data: any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.saveTrimOrdersData(data, id, month);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+    
 
     @Post('/getTrimOrdersData')
     async getTrimOrdersData(): Promise<CommonResponseModel> {
