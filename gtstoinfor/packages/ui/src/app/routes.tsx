@@ -7,7 +7,7 @@ import UserCreationForm from "./user-management/users/users-form"
 import UsersView from "./user-management/users/users-view"
 import FactoriesView from "./masters/factories/factories-view"
 import FactoriesForm from "./masters/factories/factories-form"
-import { FactoryDto } from "@project-management-system/shared-models"
+import { FactoryDto, Fobdto } from "@project-management-system/shared-models"
 import PdfUpload from "./nike/pdf-reader/pdf-upload"
 import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
@@ -28,6 +28,8 @@ import FabricTrackerReport1 from "./nike/reports/fabric-tracker-report1"
 import FabricTrackerReport2 from "./nike/reports/fabric-tracker-report2"
 import POPDFInfoGrid from "./nike/pdf-reader/pdf-file-info-grid"
 import PoPdfTable from "./nike/pdf-reader/po-pdf-table"
+import FobPriceListGrid from "./masters/fob-pricelist/fob-price-list-grid"
+import FobPriceListForm from "./masters/fob-pricelist/fob-price-list-form"
 
 
 export const AppRoutes = () => {
@@ -100,6 +102,12 @@ export const AppRoutes = () => {
                 <Route path='/masters'>
                     <Route path='factories/factories-view' element={<FactoriesView />} />
                     <Route path='factories/factories-form' element={<FactoriesForm Data={undefined} updateItem={function (Data: FactoryDto): void {
+                        throw new Error("Function not implemented.")
+                    }} isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    }} />} />
+                    <Route path='fob-price-list-view' element={<FobPriceListGrid />} />
+                    <Route path='fob-price-list-form' element={<FobPriceListForm Data={undefined} updateItem={function (Data: Fobdto): void {
                         throw new Error("Function not implemented.")
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")

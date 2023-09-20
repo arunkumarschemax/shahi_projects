@@ -1170,21 +1170,20 @@ const PPMReport = () => {
 
     const getRowClassName = (record) => {
       let classNames = '';
-
+    
       if (record.displayName) {
         classNames += 'colored-row ';
       }
-
-      if (record.factory) {
-        if (record.factory.includes("_")) {
-          classNames += 'colored-row-withUnderscore ';
-        } else {
-          classNames += 'colored-factory-empty-row ';
-        }
+    
+      if (!record.factory || !record.item) {
+        classNames += 'colored-factory-empty-row ';
+      } else if (record.factory.includes("_")) {
+        classNames += 'colored-row-withUnderscore ';
       }
-
+    
       return classNames.trim();
     };
+    
 
     // const getRowClassName2 = (record) => {
     //   if (record.factory) {
