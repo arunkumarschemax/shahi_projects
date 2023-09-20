@@ -3,7 +3,13 @@ import { CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX,
 
 
 /**
- * 
+ * @description this function takes @param pdf as parameter which will have all the raw text from the pdf that is extrcated by pdfjs lib
+ * pdf data should be structured into a nested format which will have Po details >> PO Item details >> Po Item variant details.
+ * step 1 : Filter all the empty strings and unwanted texts from the raw data
+ * step 2 : PO data will present in the first page.so extract text only from the first page and pick the Po details data
+ * step 3 : Find all the items in the pdf using a regex expression ,match the item no text ex: (00010 ) using .then push
+ *   all the matched texts into an array.Now this array will contains all the items of the pdf
+ * ste 4 : Find the no of item variant lines and push them into item variant details.
  * @param pdf 
  * @returns {LegalPoDetails}
  */
@@ -23,6 +29,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             const firstPageContent: any[] = textContent.items.filter((v) => {
                 return !EMP_STR_EXP.test(v.str)
             })
+            // find indexes of all the 
             let poDocDateIndex
             let poNumberTextIndex
             let sellerStartIndex
@@ -95,6 +102,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.shipToAddress = shipToAddress;
 
         }
+        // po details parsing ends here
         
         //-------------------------------------------------------------------------------------------
         // data filtering satrts here
