@@ -83,6 +83,8 @@ export class DpomSaveDto {
     @ApiProperty()
     launchCode: string;
     @ApiProperty()
+    geoCode: string;
+    @ApiProperty()
     DPOMLineItemStatus: string;
     @ApiProperty()
     modeOfTransportationCode: string;
