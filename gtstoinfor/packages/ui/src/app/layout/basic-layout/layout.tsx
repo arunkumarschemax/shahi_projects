@@ -18,11 +18,85 @@ const { useToken } = theme
 
 export const baseMRouterList = [
     {
-        label: "M3 Items",
-        key: "m3-masters",
-        path: "m3-masters",
-        // icon: <DashboardOutlined />,
-        filepath: "/m3-masters",
+        label: "Masters",
+        key: "masters",
+        path: "masters",
+        // icon: <PicCenterOutlined />,
+        filepath: "masters",
+        children: [
+            {
+                label: "M3 Items",
+                key: "m3-itemcodes-view",
+                path: "m3-itemcodes-view",
+                filepath: "/m3-itemcodes-view",
+            },
+            {
+                label: "Colours",
+                key: "colours",
+                path: "colour/colour-view",
+                filepath: "colour/colour-view",
+            },
+            {
+                label: "Components",
+                key: "components",
+                path: "components/components-view",
+                filepath: "components/components-view",
+            },
+            {
+                label: "Fabric Weave",
+                key: "fabric-weave",
+                path: "fabric-weave/fabric-weave-view",
+                filepath: "fabric-weave/fabric-weave-view",
+            },
+            {
+                label: "Operation Groups",
+                key: "operation-groups",
+                path: "operationgroups/operationgroups-view",
+                filepath: "operationgroups/operationgroups-view",
+            },
+            {
+                label: "Operations",
+                key: "operations",
+                path: "operations/operation-view",
+                filepath: "operations/operation-view",
+            },
+            {
+                label: "Profit Control Head",
+                key: "profit-control-head",
+                path: "profit-control-head/profit-control-head-view",
+                filepath: "profit-control-head/profit-control-head-view",
+            },
+            {
+                label: "Size",
+                key: "Size",
+                path: "size/size-view",
+                filepath: "size/size-view",
+            },
+          
+        ],
+    },
+    {
+        label: "Style Management",
+        key: "style-management",
+        path: "style-management",
+        // icon:<FontAwesomeIcon icon={faShirt} />,
+        filepath: "style-management",
+        children: [
+            {
+                label: "Style",
+                key: "style-view",
+                path: 'style/style-grid',
+                filepath: 'style/style-grid',
+            },
+            // {
+            //     label: "Component Mapping",
+            //     key: "component-mapping",
+            //     path: 'component-mapping/component-mapping-form',
+            //     filepath: 'component-mapping/component-mapping-form',
+            // },
+            
+        ]
+
     },
     {
         label: "Indent",

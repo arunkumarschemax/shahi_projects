@@ -155,10 +155,10 @@ export function OperationsForm(
                 required: true,
                 message:'Operation Code Is Required'
               },
-              {
-                pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-                message: `Should contain only alphabets.`
-              }
+              // {
+              //   pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+              //   message: `Should contain only alphabets.`
+              // }
             ]}
           >
             <Input placeholder="Enter M3 Operation Code"/>
