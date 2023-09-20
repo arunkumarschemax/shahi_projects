@@ -77,7 +77,7 @@ export class OrdersEntity {
 
     @Column('varchar', {
         nullable: true,
-        name: "channel_code"
+        name: "channel_Name"
     })
     channelName: string;
     //l
@@ -922,11 +922,11 @@ export class OrdersEntity {
     })
     updatedAt: string;
 
-    @Column('varchar', {
+    @Column('int', {
         nullable: true,
         name: 'version',
     })
-    version: string;
+    version: number;
 
     @OneToMany(() => OrdersChildEntity, (ordersChild) => { ordersChild.orders }, { cascade: true })
     ordersChild: OrdersChildEntity;

@@ -7,551 +7,657 @@ export class SaveOrderDto {
     @ApiProperty()
     year: string;
     @ApiProperty()
-    planningSeason: string;
+    planningSsnCd: string;
     @ApiProperty()
-    season: string;
+    planningSsn: string;
     @ApiProperty()
-    itemBrand: string;
+    tgtSsnCd: string;
     @ApiProperty()
-    businessUnit: string;
+    tgtSsn: string;
     @ApiProperty()
-    itemCode: string;
+    bizCd: string;
     @ApiProperty()
-    itemName: string;
+    biz: string;
+    @ApiProperty()
+    planningRegionCode: string;
+    @ApiProperty()
+    planningRegionName: string;
+    @ApiProperty()
+    channelCode: string;
+    @ApiProperty()
+    channelName: string;
+    @ApiProperty()
+    department: string;
+    @ApiProperty()
+    deptCd: string;
+    @ApiProperty()
+    Cls1_cd: string;
+    @ApiProperty()
+    Cls2_cd: string;
+    @ApiProperty()
+    gDept: string;
+    @ApiProperty()
+    subCategory1: string;
+    @ApiProperty()
+    coreCategory: string;
+    @ApiProperty()
+    subCategory2: string;
+    @ApiProperty()
+    subCategory3: string;
+    @ApiProperty()
+    productionCategoryFabric: string;
+    @ApiProperty()
+    productionCategoryFabricProcessing: string;
+    @ApiProperty()
+    productionCategorySewing: string;
+    @ApiProperty()
+    productionCategorySewingProcessing: string;
+    @ApiProperty()
+    planningSumCode: string;
+    @ApiProperty()
+    planningSum: string;
+    @ApiProperty()
+    localNameGhq: string;
+    @ApiProperty()
+    itemCd: string;
+    @ApiProperty()
+    item: string;
+    @ApiProperty()
+    origPrice: string;
     @ApiProperty()
     mainSampleCode: string;
     @ApiProperty()
-    mainSampleName: string;
+    frFabricCode: string;
     @ApiProperty()
-    supplierRMCode: string;
+    frFabric: string;
     @ApiProperty()
-    supplierRMName: string;
+    supplierRawMaterialCode: string;
     @ApiProperty()
-    vendorCode: string;
+    supplierRawMaterial: string;
     @ApiProperty()
-    vendorName: string;
+    rawMaterialSupplierCode: string;
     @ApiProperty()
-    managementFactoryCode: string;
+    rawMaterialSupplier: string;
     @ApiProperty()
-    managementFactoryName: string;
+    vendorCoode: string;
+    @ApiProperty()
+    vendor: string;
+    @ApiProperty()
+    sewingFactoryCode: string;
+    @ApiProperty()
+    sewingFactory: string;
     @ApiProperty()
     branchFactoryCode: string;
     @ApiProperty()
-    branchFactoryName: string;
+    branchFactory: string;
     @ApiProperty()
-    rmSupplierCode: string;
+    coeff: string;
     @ApiProperty()
-    rmSupplierName: string;
+    itemBranchNumber: number;
     @ApiProperty()
-    sewingDifficulty: number;
+    officialPlanStdQty: number;
     @ApiProperty()
-    departmentCode: string;
+    OfficialPlanFabPrpPlnQty: number;
     @ApiProperty()
-    departmentName: string;
+    OfficialPlanPoPrSlsQty: string;
     @ApiProperty()
-    class1Code: string;
+    officalPlanCoQty: string;
     @ApiProperty()
-    Class1Name: string;
+    officalPlanStockQty: string;
     @ApiProperty()
-    productionPlanTypeName: string;
+    publishFlagForFactory: string;
     @ApiProperty()
-    monthWeekFlag: boolean;
+    publishDate: string;
     @ApiProperty()
-    lastUpdateDate: string;
+    allcEndDy: string;
     @ApiProperty()
-    requestedWhDate: string;
+    slsEndDy: string;
     @ApiProperty()
-    contractedDate: string;
+    GWH: string;
     @ApiProperty()
-    transportMethodName: string;
+    orderPlanNumber: string;
     @ApiProperty()
-    logisticsTypeName: string;
+    orderTiming: string;
     @ApiProperty()
-    orderQtyPcs: number;
+    swngPrdMonth: string;
     @ApiProperty()
-    yarnOrderAcceptance: string;
+    swngPrdWeek: string;
     @ApiProperty()
-    yarnOrderRequestDate: string;
+    orderPlanQty: string;
     @ApiProperty()
-    yarnOrderAnswerDate: string;
+    orderPlanQtyCoeff: string;
     @ApiProperty()
-    yarnOrderActualDate: string;
+    trnspMthd: string;
     @ApiProperty()
-    yarnOrderNO: string;
+    prodPlanType: string;
     @ApiProperty()
-    yarnActualOrderQtyPcs: number;
+    ph1St: string;
     @ApiProperty()
-    yarnUpdateDate: string;
+    wh: string;
     @ApiProperty()
-    fabricOrderAcceptance: string;
+    whAct: string;
     @ApiProperty()
-    fabricOrderRequestDate: string;
+    whAuto: string;
     @ApiProperty()
-    fabricOrderAnswerDate: string;
+    yarnDlRequested: string;
     @ApiProperty()
-    fabricOrderActualDate: string;
+    yarnDlAnswered: string;
     @ApiProperty()
-    fabricOrderNO: string;
+    yarnDlAuto: string;
     @ApiProperty()
-    fabricActualOrderQtyPcs: number;
+    yarnProductionDueDateAuto: string;
     @ApiProperty()
-    fabricUpdateDate: string;
+    yarnAutoReflectionDate: string;
     @ApiProperty()
-    colorOrderAcceptance: string;
+    yarnActDy: string;
     @ApiProperty()
-    colorOrderRequestDate: string;
+    yarnActQty: string;
     @ApiProperty()
-    colorOrderAnswerDate: string;
+    yarnOrderNumber: string;
     @ApiProperty()
-    colorOrderActualDate: string;
+    yarnOrderStatus: string;
     @ApiProperty()
-    colorOrderNO: string;
+    yarnDeliveryDate: string;
     @ApiProperty()
-    colorActualOrderQtyPcs: number;
+    fbrcDlRequested: string;
     @ApiProperty()
-    colorUpdateDate: string;
+    fbrcDlAnswered: string;
     @ApiProperty()
-    trimOrderAcceptance: string;
+    fbrcDlAuto: string;
     @ApiProperty()
-    trimOrderRequestDate: string;
+    fbrcProductionDueDateAuto: string;
     @ApiProperty()
-    trimOrderAnswerDate: string;
-    @ApiProperty()
-    trimOrderActualDate: string;
-    @ApiProperty()
-    trimOrderNO: string;
-    @ApiProperty()
-    trimActualOrderQtyPcs: number;
-    @ApiProperty()
-    trimUpdateDate: string;
-    @ApiProperty()
-    POOrderAcceptance: string;
-    @ApiProperty()
-    POOrderRequestDate: string;
-    @ApiProperty()
-    POOrderAnswerDate: string;
-    @ApiProperty()
-    POOrderActualDate: string;
-    @ApiProperty()
-    POOrderNO: string;
-    @ApiProperty()
-    POActualOrderQtyPcs: number;
-    @ApiProperty()
-    POUpdateDate: string;
-    @ApiProperty()
-    orderQtyPcsOld: number;
-    @ApiProperty()
-    transportMethodNameOld: string;
-    @ApiProperty()
-    logisticsTypeNameOld: string;
-    @ApiProperty()
-    yarnOrderRequestDateOld: string;
-    @ApiProperty()
-    fabricOrderRequestDateOld: string;
-    @ApiProperty()
-    colorOrderRequestDateOld: string;
-    @ApiProperty()
-    trimOrderRequestDateOld: string;
-    @ApiProperty()
-    POOrderRequestDateOld: string;
-    @ApiProperty()
-    status: string;
-    @ApiProperty()
-    displayMonthWK: string;
-    @ApiProperty()
-    displayMonthWKColumn: number;
-    @ApiProperty()
-    groupCd: string;
-    @ApiProperty()
-    showColorFlag: number;
-    @ApiProperty()
-    orderQtyCoeff: number;
-    @ApiProperty()
-    factoryComment: string;
+    fbrcAutoReflectionDate: string;
     @ApiProperty()
     factoryCommentUpdateDate: string;
     @ApiProperty()
-    FRFabricCode: string;
+    fbrcActDy: string;
     @ApiProperty()
-    FRFabricName: string;
+    fbrcActQty: string;
     @ApiProperty()
-    Ph1FirstDiscriminationFlagOld: string;
+    fbrcOrderNumber: string;
     @ApiProperty()
-    Ph1FirstDiscriminationFlag: string;
+    fbrcOrderStatus: string;
     @ApiProperty()
-    orderTimingDisplayValueOld: string;
+    fbrcDeliveryDate: string;
     @ApiProperty()
-    orderTimingDisplayValue: string;
+    colorDlRequested: string;
     @ApiProperty()
-    expressLineFlagOld: string;
+    colorDlAnswered: string;
     @ApiProperty()
-    expressLineFlag: string;
+    colorDlAuto: string;
     @ApiProperty()
-    manualLockFlagOld: string;
+    colorProductionDueDateAuto: string;
     @ApiProperty()
-    manualLockFlag: string;
+    colorAutoReflectionDate: string;
     @ApiProperty()
-    Ph1FirstDiscriminationFlagNow: string;
+    colorActDy: string;
     @ApiProperty()
-    orderTimingDisplayValueNow: string;
-    @ApiProperty()
-    expressLineFlagNow: string;
+    colorActQty: string;
     @ApiProperty()
     ManualLockFlagNow: string;
     @ApiProperty()
-    requestedWhDateOld: string;
+    colorOrderNumber: string;
     @ApiProperty()
-    EXF: string;
+    colorOrderStatus: string;
     @ApiProperty()
-    colorRecommend: string;
+    colorDeliveryDate: string;
     @ApiProperty()
-    trimRecommend: string;
+    trimDlRequested: string;
     @ApiProperty()
-    PORecommend: string;
+    trimDlAnswered: string;
     @ApiProperty()
-    BD_EXF_DLSettingLTBeforeCal: number;
+    trimDlAuto: string;
     @ApiProperty()
-    PO_EXF_DLSettingLTBeforeCal: number;
+    trimProductionDueDateAuto: string;
     @ApiProperty()
-    materialSupplierHolidayExcluding: number;
+    trimAutoReflectionDate: string;
     @ApiProperty()
-    sewingFTYHolidayExcluding: number;
+    trimActDy: string;
     @ApiProperty()
-    BD_EXF_DLSettingLT: number;
+    trimActQty: string;
     @ApiProperty()
-    PO_EXF_DLSettingLT: number;
+    trimOrderNumber: string;
     @ApiProperty()
-    BD_EXFRegisteredLT: number;
+    trimOrderStatus: string;
     @ApiProperty()
-    PO_EXFRegisteredLT: number;
+    trimDeliveryDate: string;
     @ApiProperty()
-    BD_EXFtotalAbnormalLT: number;
+    poDlRequested: string;
     @ApiProperty()
-    PO_EXFtotalAbnormalLT: number;
+    poDlAnswered: string;
     @ApiProperty()
-    abnormalLTReasonBD1: number;
+    poDlAuto: string;
     @ApiProperty()
-    abnormalLTReasonBD2: number;
+    PO_EXFtotalAbnormalLT: string;
     @ApiProperty()
-    abnormalLTReasonBD3: number;
+    slsStartDy: string;
     @ApiProperty()
-    abnormalLTReasonBD4: number;
+    poProductionDueDateAuto: string;
     @ApiProperty()
-    abnormalLTReasonBD5: number;
+    poAutoReflectionDate: string;
     @ApiProperty()
-    abnormalLTBD1: number;
+    poActDy: string;
     @ApiProperty()
-    abnormalLTBD2: number;
+    poActQty: string;
     @ApiProperty()
-    abnormalLTBD3: number;
+    poOrderNumber: string;
     @ApiProperty()
-    abnormalLTBD4: number;
+    poOrderStatus: string;
     @ApiProperty()
-    abnormalLTBD5: number;
+    assort1: string;
     @ApiProperty()
-    abnormalLTReasonPO1: number;
+    assort2: string;
     @ApiProperty()
-    abnormalLTReasonPO2: number;
+    nxAssort: string;
     @ApiProperty()
-    abnormalLTReasonPO3: number;
+    solid: string;
     @ApiProperty()
-    abnormalLTReasonPO4: number;
+    orderPlanQtyStop: string;
     @ApiProperty()
-    abnormalLTReasonPO5: number;
+    fixFlag: string;
     @ApiProperty()
-    abnormalLTPO1: number;
+    alternativeFlag: string;
     @ApiProperty()
-    abnormalLTPO2: number;
+    expressLineFlag: string;
     @ApiProperty()
-    abnormalLTPO3: number;
+    factoryComment: string;
     @ApiProperty()
-    abnormalLTPO4: number;
+    plannedEXF: string;
     @ApiProperty()
-    abnormalLTPO5: number;
+    exfEtd: string;
+    @ApiProperty()
+    exfWh: string;
+    @ApiProperty()
+    sweingCountryRegion: string;
+     @ApiProperty()
+     rewMaterialOriginal: string;
+     @ApiProperty()
+     itemDrop: string;
+     @ApiProperty()
+     createdUserId?: string;
+     @ApiProperty()
+     createdUserName: string;
+     @ApiProperty()
+     createFunction: string;
+     @ApiProperty()
+     updatedUserId?: string;
+     @ApiProperty()
+     updatedUserName: string;
     @ApiProperty()
     userName: string;
     @ApiProperty()
+    updatedUserFunction: string;
+    @ApiProperty()
+    countY: string;
+    @ApiProperty()
+    sample: string;
+    @ApiProperty()
+    exf: string;
+    @ApiProperty()
+    bddl: string;
+     @ApiProperty()
+     bddlPast: string;
+    @ApiProperty()
+    ltBdExf: string;
+    @ApiProperty()
+    newBddl: string;
+    @ApiProperty()
+    newLtBdExf: string;
+    @ApiProperty()
+    qtyLtBdExf: string;
+    @ApiProperty()
+    qtyLtPoExf: string;
+    @ApiProperty()
+    ltPoExf: string;
+    @ApiProperty()
+    country2Y: string;
+    @ApiProperty()
+    phase: string;
+    @ApiProperty()
+    createdUser: string;
+    @ApiProperty()
+    createdAt: string;
+    @ApiProperty()
     version?: number;
     @ApiProperty()
-    fileId?:number;
+    fileId:string;
     @ApiProperty()
-    month?:number;
+    month:string;
+    @ApiProperty()
+    updatedAt:string;
+    @ApiProperty()
+    updatedUser:string;
 
     constructor(
         productionPlanId: string,
         year: string,
-        planningSeason: string,
-        season: string,
-        itemBrand: string,
-        businessUnit: string,
-        itemCode: string,
-        itemName: string,
+        planningSsnCd: string,
+        planningSsn: string,
+        tgtSsnCd: string,
+        tgtSsn: string,
+        bizCd: string,
+        biz: string,
+        planningRegionCode: string,
+        planningRegionName: string,
+        channelCode: string,
+        channelName: string,
+        department: string,
+        deptCd: string,
+        Cls1_cd: string,
+        Cls2_cd: string,
+        gDept: string,
+        subCategory1: string,
+        coreCategory: string,
+        subCategory2: string,
+        subCategory3: string,
+        productionCategoryFabric: string,
+        productionCategoryFabricProcessing: string,
+        productionCategorySewing: string,
+        productionCategorySewingProcessing: string,
+        planningSumCode: string,
+        planningSum: string,
+        localNameGhq: string,
+        itemCd: string,
+        item: string,
+        origPrice: string,
         mainSampleCode: string,
-        mainSampleName: string,
-        supplierRMCode: string,
-        supplierRMName: string,
-        vendorCode: string,
-        vendorName: string,
-        managementFactoryCode: string,
-        managementFactoryName: string,
+        frFabricCode: string,
+        frFabric: string,
+        supplierRawMaterialCode: string,
+        supplierRawMaterial: string,
+        rawMaterialSupplierCode: string,
+        rawMaterialSupplier: string,
+        vendorCoode: string,
+        vendor: string,
+        sewingFactoryCode: string,
+        sewingFactory: string,
         branchFactoryCode: string,
-        branchFactoryName: string,
-        rmSupplierCode: string,
-        rmSupplierName: string,
-        sewingDifficulty: number,
-        departmentCode: string,
-        departmentName: string,
-        class1Code: string,
-        Class1Name: string,
-        productionPlanTypeName: string,
-        monthWeekFlag: boolean,
-        lastUpdateDate: string,
-        requestedWhDate: string,
-        contractedDate: string,
-        transportMethodName: string,
-        logisticsTypeName: string,
-        orderQtyPcs: number,
-        yarnOrderAcceptance: string,
-        yarnOrderRequestDate: string,
-        yarnOrderAnswerDate: string,
-        yarnOrderActualDate: string,
-        yarnOrderNO: string,
-        yarnActualOrderQtyPcs: number,
-        yarnUpdateDate: string,
-        fabricOrderAcceptance: string,
-        fabricOrderRequestDate: string,
-        fabricOrderAnswerDate: string,
-        fabricOrderActualDate: string,
-        fabricOrderNO: string,
-        fabricActualOrderQtyPcs: number,
-        fabricUpdateDate: string,
-        colorOrderAcceptance: string,
-        colorOrderRequestDate: string,
-        colorOrderAnswerDate: string,
-        colorOrderActualDate: string,
-        colorOrderNO: string,
-        colorActualOrderQtyPcs: number,
-        colorUpdateDate: string,
-        trimOrderAcceptance: string,
-        trimOrderRequestDate: string,
-        trimOrderAnswerDate: string,
-        trimOrderActualDate: string,
-        trimOrderNO: string,
-        trimActualOrderQtyPcs: number,
-        trimUpdateDate: string,
-        POOrderAcceptance: string,
-        POOrderRequestDate: string,
-        POOrderAnswerDate: string,
-        POOrderActualDate: string,
-        POOrderNO: string,
-        POActualOrderQtyPcs: number,
-        POUpdateDate: string,
-        orderQtyPcsOld: number,
-        transportMethodNameOld: string,
-        logisticsTypeNameOld: string,
-        yarnOrderRequestDateOld: string,
-        fabricOrderRequestDateOld: string,
-        colorOrderRequestDateOld: string,
-        trimOrderRequestDateOld: string,
-        POOrderRequestDateOld: string,
-        status: string,
-        displayMonthWK: string,
-        displayMonthWKColumn: number,
-        groupCd: string,
-        showColorFlag: number,
-        orderQtyCoeff: number,
-        factoryComment: string,
+        branchFactory: string,
+        coeff: string,
+        itemBranchNumber: number,
+        officialPlanStdQty: number,
+        OfficialPlanFabPrpPlnQty: number,
+        OfficialPlanPoPrSlsQty: string,
+        officalPlanCoQty: string,
+        officalPlanStockQty: string,
+        slsStartDy: string,
+        publishFlagForFactory: string,
+        publishDate: string,
+        allcEndDy: string,
+        slsEndDy: string,
+        GWH: string,
+        orderPlanNumber: string,
+        orderTiming: string,
+        swngPrdMonth: string,
+        swngPrdWeek: string,
+        orderPlanQty: string,
+        orderPlanQtyCoeff: string,
+        trnspMthd: string,
+        prodPlanType: string,
+        ph1St: string,
+        wh: string,
+        whAct: string,
+        whAuto: string,
+        yarnDlRequested: string,
+        yarnDlAnswered: string,
+        yarnDlAuto: string,
+        yarnProductionDueDateAuto: string,
+        yarnAutoReflectionDate: string,
+        yarnActDy: string,
+        yarnActQty: string,
+        yarnOrderNumber: string,
+        yarnOrderStatus: string,
+        yarnDeliveryDate: string,
+        fbrcDlRequested: string,
+        fbrcDlAnswered: string,
+        fbrcDlAuto: string,
+        fbrcProductionDueDateAuto: string,
+        fbrcAutoReflectionDate: string,
         factoryCommentUpdateDate: string,
-        FRFabricCode: string,
-        FRFabricName: string,
-        Ph1FirstDiscriminationFlagOld: string,
-        Ph1FirstDiscriminationFlag: string,
-        orderTimingDisplayValueOld: string,
-        orderTimingDisplayValue: string,
-        expressLineFlagOld: string,
-        expressLineFlag: string,
-        manualLockFlagOld: string,
-        manualLockFlag: string,
-        Ph1FirstDiscriminationFlagNow: string,
-        orderTimingDisplayValueNow: string,
-        expressLineFlagNow: string,
-        ManualLockFlagNow: string,
-        requestedWhDateOld: string,
-        EXF: string,
-        colorRecommend: string,
-        trimRecommend: string,
-        PORecommend: string,
-        BD_EXF_DLSettingLTBeforeCal: number,
-        PO_EXF_DLSettingLTBeforeCal: number,
-        materialSupplierHolidayExcluding: number,
-        sewingFTYHolidayExcluding: number,
-        BD_EXF_DLSettingLT: number,
-        PO_EXF_DLSettingLT: number,
-        BD_EXFRegisteredLT: number,
-        PO_EXFRegisteredLT: number,
-        BD_EXFtotalAbnormalLT: number,
-        PO_EXFtotalAbnormalLT: number,
-        abnormalLTReasonBD1: number,
-        abnormalLTReasonBD2: number,
-        abnormalLTReasonBD3: number,
-        abnormalLTReasonBD4: number,
-        abnormalLTReasonBD5: number,
-        abnormalLTBD1: number,
-        abnormalLTBD2: number,
-        abnormalLTBD3: number,
-        abnormalLTBD4: number,
-        abnormalLTBD5: number,
-        abnormalLTReasonPO1: number,
-        abnormalLTReasonPO2: number,
-        abnormalLTReasonPO3: number,
-        abnormalLTReasonPO4: number,
-        abnormalLTReasonPO5: number,
-        abnormalLTPO1: number,
-        abnormalLTPO2: number,
-        abnormalLTPO3: number,
-        abnormalLTPO4: number,
-        abnormalLTPO5: number,
+        fbrcActDy: string,
+        fbrcActQty: string,
+        fbrcOrderNumber: string,
+        fbrcOrderStatus: string,
+        fbrcDeliveryDate: string,
+        colorDlRequested: string,
+        colorDlAnswered: string,
+        colorDlAuto: string,
+        colorProductionDueDateAuto: string,
+        colorAutoReflectionDate: string,
+        colorActDy: string,
+        colorActQty: string,
+        colorOrderNumber: string,
+        colorOrderStatus: string,
+        colorDeliveryDate: string,
+        trimDlRequested: string,
+        trimDlAnswered: string,
+        trimDlAuto: string,
+        trimProductionDueDateAuto: string,
+        trimAutoReflectionDate: string,
+        trimActDy: string,
+        trimActQty: string,
+        trimOrderNumber: string,
+        trimOrderStatus: string,
+        trimDeliveryDate: string,
+        poDlRequested: string,
+        poDlAnswered: string,
+        poDlAuto: string,
+        poProductionDueDateAuto: string,
+        poAutoReflectionDate: string,
+        poActDy: string,
+        poActQty: string,
+        poOrderNumber: string,
+        poOrderStatus: string,
+        assort1: string,
+        assort2: string,
+        nxAssort: string,
+        solid: string,
+        orderPlanQtyStop: string,
+        fixFlag: string,
+        alternativeFlag: string,
+        factoryComment: string,
+        plannedEXF: string,
+        exfEtd: string,
+        exfWh: string,
+        sweingCountryRegion: string,
+        rewMaterialOriginal: string,
+        itemDrop: string,
+        fileId:string,
+        month:string,
+        countY: string,
+        sample: string,
+        exf: string,
+        bddl: string,
+        bddlPast: string,
+        ltBdExf: string,
+        newBddl: string,
+        newLtBdExf: string,
+        ltPoExf: string,
+        qtyLtBdExf: string,
+        qtyLtPoExf: string,
+        country2Y: string,
+        phase: string,
+        createdUser: string,
+        createdAt: string,
+        updatedAt: string,
         userName: string,
         version?: number,
-        fileId?:number,
-        month?:number
+        createdUserId?: string,
+        createdUserName?: string,
+        updatedUserId?: string,
+        updatedUser?:string,
+        createFunction?: string,
+       
+
+
+
+
+
+
     ) {
         this.productionPlanId = productionPlanId
         this.year = year
-        this.planningSeason = planningSeason
-        this.season = season
-        this.itemBrand = itemBrand
-        this.businessUnit = businessUnit
-        this.itemCode = itemCode
-        this.itemName = itemName
+        this.planningSsnCd = planningSsnCd
+        this.planningSsn = planningSsn
+        this.tgtSsnCd = tgtSsnCd
+        this.tgtSsn = tgtSsn
+        this.bizCd = bizCd
+        this.biz = biz
+        this.planningRegionCode = planningRegionCode
+        this.planningRegionName = planningRegionName
+        this.channelCode = channelCode
+        this.channelName = channelName
+        this.department = department
+        this.deptCd = deptCd
+        this.Cls1_cd = Cls1_cd
+        this.Cls2_cd = Cls2_cd
+        this.gDept = gDept
+        this.subCategory1 = subCategory1
+        this.coreCategory = coreCategory
+        this.subCategory2 = subCategory2
+        this.subCategory3 = subCategory3
+        this.productionCategoryFabric = productionCategoryFabric
+        this.productionCategoryFabricProcessing = productionCategoryFabricProcessing
+        this.productionCategorySewing = productionCategorySewing
+        this.productionCategorySewingProcessing = productionCategorySewingProcessing
+        this.planningSumCode = planningSumCode
+        this.planningSum = planningSum
+        this.localNameGhq = localNameGhq
+        this.planningSum = planningSum
+        this.itemCd = itemCd
+        this.item = item
+        this.origPrice = origPrice
         this.mainSampleCode = mainSampleCode
-        this.mainSampleName = mainSampleName
-        this.supplierRMCode = supplierRMCode
-        this.supplierRMName = supplierRMName
-        this.vendorCode = vendorCode
-        this.vendorName = vendorName
-        this.managementFactoryCode = managementFactoryCode
-        this.managementFactoryName = managementFactoryName
+        this.frFabricCode = frFabricCode
+        this.frFabric = frFabric
+        this.supplierRawMaterialCode = supplierRawMaterialCode
+        this.supplierRawMaterial = supplierRawMaterial
+        this.rawMaterialSupplierCode = rawMaterialSupplierCode
+        this.rawMaterialSupplier = rawMaterialSupplier
+        this.vendorCoode = vendorCoode
+        this.vendor = vendor
+        this.sewingFactoryCode = sewingFactoryCode
+        this.sewingFactory = sewingFactory
         this.branchFactoryCode = branchFactoryCode
-        this.branchFactoryName = branchFactoryName
-        this.rmSupplierCode = rmSupplierCode
-        this.rmSupplierName = rmSupplierName
-        this.sewingDifficulty = sewingDifficulty
-        this.departmentCode = departmentCode
-        this.departmentName = departmentName
-        this.class1Code = class1Code
-        this.Class1Name = Class1Name
-        this.productionPlanTypeName = productionPlanTypeName
-        this.monthWeekFlag = monthWeekFlag
-        this.lastUpdateDate = lastUpdateDate
-        this.requestedWhDate = requestedWhDate
-        this.contractedDate = contractedDate
-        this.transportMethodName = transportMethodName
-        this.logisticsTypeName = logisticsTypeName
-        this.orderQtyPcs = orderQtyPcs
-        this.yarnOrderAcceptance = yarnOrderAcceptance
-        this.yarnOrderRequestDate = yarnOrderRequestDate
-        this.yarnOrderAnswerDate = yarnOrderAnswerDate
-        this.yarnOrderActualDate = yarnOrderActualDate
-        this.yarnOrderNO = yarnOrderNO
-        this.yarnActualOrderQtyPcs = yarnActualOrderQtyPcs
-        this.yarnUpdateDate = yarnUpdateDate
-        this.fabricOrderAcceptance = fabricOrderAcceptance
-        this.fabricOrderRequestDate = fabricOrderRequestDate
-        this.fabricOrderAnswerDate = fabricOrderAnswerDate
-        this.fabricOrderActualDate = fabricOrderActualDate
-        this.fabricOrderNO = fabricOrderNO
-        this.fabricActualOrderQtyPcs = fabricActualOrderQtyPcs
-        this.fabricUpdateDate = fabricUpdateDate
-        this.colorOrderAcceptance = colorOrderAcceptance
-        this.colorOrderRequestDate = colorOrderRequestDate
-        this.colorOrderAnswerDate = colorOrderAnswerDate
-        this.colorOrderActualDate = colorOrderActualDate
-        this.colorOrderNO = colorOrderNO
-        this.colorActualOrderQtyPcs = colorActualOrderQtyPcs
-        this.colorUpdateDate = colorUpdateDate
-        this.trimOrderAcceptance = trimOrderAcceptance
-        this.trimOrderRequestDate = trimOrderRequestDate
-        this.trimOrderAnswerDate = trimOrderAnswerDate
-        this.trimOrderActualDate = trimOrderActualDate
-        this.trimOrderNO = trimOrderNO
-        this.trimActualOrderQtyPcs = trimActualOrderQtyPcs
-        this.trimUpdateDate = trimUpdateDate
-        this.POOrderAcceptance = POOrderAcceptance
-        this.POOrderRequestDate = POOrderRequestDate
-        this.POOrderAnswerDate = POOrderAnswerDate
-        this.POOrderActualDate = POOrderActualDate
-        this.POOrderNO = POOrderNO
-        this.POActualOrderQtyPcs = POActualOrderQtyPcs
-        this.POUpdateDate = POUpdateDate
-        this.orderQtyPcsOld = orderQtyPcsOld
-        this.transportMethodNameOld = transportMethodNameOld
-        this.logisticsTypeNameOld = logisticsTypeNameOld
-        this.yarnOrderRequestDateOld = yarnOrderRequestDateOld
-        this.fabricOrderRequestDateOld = fabricOrderRequestDateOld
-        this.colorOrderRequestDateOld = colorOrderRequestDateOld
-        this.trimOrderRequestDateOld = trimOrderRequestDateOld
-        this.POOrderRequestDateOld = POOrderRequestDateOld
-        this.status = status
-        this.displayMonthWK = displayMonthWK
-        this.displayMonthWKColumn = displayMonthWKColumn
-        this.groupCd = groupCd
-        this.showColorFlag = showColorFlag
-        this.orderQtyCoeff = orderQtyCoeff
-        this.factoryComment = factoryComment
+        this.branchFactory = branchFactory
+        this.coeff = coeff
+        this.itemBranchNumber = itemBranchNumber
+        this.officialPlanStdQty = officialPlanStdQty
+        this.OfficialPlanFabPrpPlnQty = OfficialPlanFabPrpPlnQty
+        this.OfficialPlanPoPrSlsQty = OfficialPlanPoPrSlsQty
+        this.officalPlanCoQty = officalPlanCoQty
+        this.OfficialPlanFabPrpPlnQty = OfficialPlanFabPrpPlnQty
+        this.OfficialPlanPoPrSlsQty = OfficialPlanPoPrSlsQty
+        this.officalPlanStockQty = officalPlanStockQty
+        this.slsStartDy = slsStartDy
+        this.publishFlagForFactory = publishFlagForFactory
+        this.publishDate = publishDate
+        this.allcEndDy = allcEndDy
+        this.slsEndDy = slsEndDy
+        this.GWH = GWH
+        this.orderPlanNumber = orderPlanNumber
+        this.orderTiming = orderTiming
+        this.swngPrdMonth = swngPrdMonth
+        this.swngPrdWeek = swngPrdWeek
+        this.orderPlanQty = orderPlanQty
+        this.orderPlanQtyCoeff = orderPlanQtyCoeff
+        this.trnspMthd = trnspMthd
+        this.prodPlanType = prodPlanType
+        this.ph1St = ph1St
+        this.wh = wh
+        this.whAct = whAct
+        this.whAuto = whAuto
+        this.yarnDlRequested = yarnDlRequested
+        this.yarnDlAnswered = yarnDlAnswered
+        this.yarnDlAuto = yarnDlAuto
+        this.yarnProductionDueDateAuto = yarnProductionDueDateAuto
+        this.yarnAutoReflectionDate = yarnAutoReflectionDate
+        this.yarnActDy = yarnActDy
+        this.yarnActQty = yarnActQty
+        this.yarnOrderNumber = yarnOrderNumber
+        this.yarnOrderStatus = yarnOrderStatus
+        this.yarnDeliveryDate = yarnDeliveryDate
+        this.fbrcDlRequested = fbrcDlRequested
+        this.fbrcDlAnswered = fbrcDlAnswered
+        this.fbrcDlAuto = fbrcDlAuto
+        this.fbrcProductionDueDateAuto = fbrcProductionDueDateAuto
+        this.fbrcAutoReflectionDate = fbrcAutoReflectionDate
         this.factoryCommentUpdateDate = factoryCommentUpdateDate
-        this.FRFabricCode = FRFabricCode
-        this.FRFabricName = FRFabricName
-        this.Ph1FirstDiscriminationFlagOld = Ph1FirstDiscriminationFlagOld
-        this.Ph1FirstDiscriminationFlag = Ph1FirstDiscriminationFlag
-        this.orderTimingDisplayValueOld = orderTimingDisplayValueOld
-        this.orderTimingDisplayValue = orderTimingDisplayValue
-        this.expressLineFlagOld = expressLineFlagOld
-        this.expressLineFlag = expressLineFlag
-        this.manualLockFlagOld = manualLockFlagOld
-        this.manualLockFlag = manualLockFlag
-        this.Ph1FirstDiscriminationFlagNow = Ph1FirstDiscriminationFlagNow
-        this.orderTimingDisplayValueNow = orderTimingDisplayValueNow
-        this.expressLineFlagNow = expressLineFlagNow
-        this.ManualLockFlagNow = ManualLockFlagNow
-        this.requestedWhDateOld = requestedWhDateOld
-        this.EXF = EXF
-        this.colorRecommend = colorRecommend
-        this.trimRecommend = trimRecommend
-        this.PORecommend = PORecommend
-        this.BD_EXF_DLSettingLTBeforeCal = BD_EXF_DLSettingLTBeforeCal
-        this.PO_EXF_DLSettingLTBeforeCal = PO_EXF_DLSettingLTBeforeCal
-        this.materialSupplierHolidayExcluding = materialSupplierHolidayExcluding
-        this.sewingFTYHolidayExcluding = sewingFTYHolidayExcluding
-        this.BD_EXF_DLSettingLT = BD_EXF_DLSettingLT
-        this.PO_EXF_DLSettingLT = PO_EXF_DLSettingLT
-        this.BD_EXFRegisteredLT = BD_EXFRegisteredLT
-        this.PO_EXFRegisteredLT = PO_EXFRegisteredLT
-        this.BD_EXFtotalAbnormalLT = BD_EXFtotalAbnormalLT
-        this.PO_EXFtotalAbnormalLT = PO_EXFtotalAbnormalLT
-        this.abnormalLTReasonBD1 = abnormalLTReasonBD1
-        this.abnormalLTReasonBD2 = abnormalLTReasonBD2
-        this.abnormalLTReasonBD3 = abnormalLTReasonBD3
-        this.abnormalLTReasonBD4 = abnormalLTReasonBD4
-        this.abnormalLTReasonBD5 = abnormalLTReasonBD5
-        this.abnormalLTBD1 = abnormalLTBD1
-        this.abnormalLTBD2 = abnormalLTBD2
-        this.abnormalLTBD3 = abnormalLTBD3
-        this.abnormalLTBD4 = abnormalLTBD4
-        this.abnormalLTBD5 = abnormalLTBD5
-        this.abnormalLTReasonPO1 = abnormalLTReasonPO1
-        this.abnormalLTReasonPO2 = abnormalLTReasonPO2
-        this.abnormalLTReasonPO3 = abnormalLTReasonPO3
-        this.abnormalLTReasonPO4 = abnormalLTReasonPO4
-        this.abnormalLTReasonPO5 = abnormalLTReasonPO5
-        this.abnormalLTPO1 = abnormalLTPO1
-        this.abnormalLTPO2 = abnormalLTPO2
-        this.abnormalLTPO3 = abnormalLTPO3
-        this.abnormalLTPO4 = abnormalLTPO4
-        this.abnormalLTPO5 = abnormalLTPO5
+        this.fbrcActDy = fbrcActDy
+        this.fbrcActQty = fbrcActQty
+        this.fbrcOrderNumber = fbrcOrderNumber
+        this.fbrcOrderStatus = fbrcOrderStatus
+        this.fbrcDeliveryDate = fbrcDeliveryDate
+        this.colorDlRequested = colorDlRequested
+        this.colorDlAnswered = colorDlAnswered
+        this.colorDlAuto = colorDlAuto
+        this.colorProductionDueDateAuto = colorProductionDueDateAuto
+        this.colorAutoReflectionDate = colorAutoReflectionDate
+        this.colorActDy = colorActDy
+        this.colorActQty = colorActQty
+        this.colorOrderNumber = colorOrderNumber
+        this.colorOrderStatus = colorOrderStatus
+        this.colorDeliveryDate = colorDeliveryDate
+        this.trimDlRequested = trimDlRequested
+        this.trimDlAnswered = trimDlAnswered
+        this.trimDlAuto = trimDlAuto
+        this.trimProductionDueDateAuto = trimProductionDueDateAuto
+        this.trimAutoReflectionDate = trimAutoReflectionDate
+        this.trimActDy = trimActDy
+        this.trimActQty = trimActQty
+        this.trimOrderNumber = trimOrderNumber
+        this.trimOrderStatus = trimOrderStatus
+        this.trimDeliveryDate = trimDeliveryDate
+        this.poDlRequested = poDlRequested
+        this.poDlAnswered = poDlAnswered
+        this.poDlAuto = poDlAuto
+        this.poProductionDueDateAuto = poProductionDueDateAuto
+        this.poAutoReflectionDate = poAutoReflectionDate
+        this.poActDy = poActDy
+        this.poActQty = poActQty
+        this.poOrderNumber = poOrderNumber
+        this.poOrderStatus = poOrderStatus
+        this.assort1 = assort1
+        this.assort2 = assort2
+        this.nxAssort = nxAssort
+        this.solid = solid
+        this.orderPlanQtyStop = orderPlanQtyStop
+        this.fixFlag = fixFlag
+        this.alternativeFlag = alternativeFlag
+        this.factoryComment = factoryComment
+        this.plannedEXF = plannedEXF
+        this.exfEtd = exfEtd
         this.userName = userName
         this.version = version
         this.fileId = fileId;
         this.month=month
+        this.exfWh = exfWh
+        this.sweingCountryRegion = sweingCountryRegion
+        this.rewMaterialOriginal = rewMaterialOriginal
+        this.itemDrop = itemDrop;
+        this.countY=countY
+        this.sample = sample
+        this.exf = exf
+        this.bddl = bddl
+        this.bddlPast = bddlPast;
+        this.ltBdExf=ltBdExf
+        this.newBddl = newBddl
+        this.newLtBdExf = newLtBdExf
+        this.ltPoExf = ltPoExf
+        this.qtyLtBdExf = qtyLtBdExf;
+        this.qtyLtPoExf=qtyLtPoExf
+        this.country2Y = country2Y
+        this.phase = phase
+        this.createdUser = createdUser
+        this.qtyLtBdExf = qtyLtBdExf;
+        this.createdAt=createdAt
+        this.updatedAt=updatedAt
+        this.createdUserId = createdUserId
+        this.createdUserName = createdUserName
+        this.updatedUserId = updatedUserId
+        this.updatedUser=updatedUser;
+        this.createFunction = createFunction;
+        
     }
 }
