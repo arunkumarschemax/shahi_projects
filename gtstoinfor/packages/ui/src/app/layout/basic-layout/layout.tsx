@@ -366,8 +366,8 @@ export const baseRouterList = [
         label: "Settings",
         key: "settings",
         icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>⚙️</div>,
-        path: "settings",
-        filepath: "settings",
+        path: "settings/settings-view",
+        filepath: "settings/settings-view",
         // children:[
         //     {
         //         label:'Settings',
@@ -383,29 +383,29 @@ export const baseRouterList = [
         //     },
         // ]
     },
-    {
-        label: "Style Management",
-        key: "style-management",
-        path: "style-management",
-        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>👗</div>,
-         filepath: "style-management",
-        children: [
-            {
-                label: "Style",
-                key: "style-view",
-                path: 'style/style-grid',
-                filepath: 'style/style-grid',
-            },
-            {
-                label: "Component Mapping",
-                key: "component-mapping",
-                path: 'component-mapping/component-mapping-form',
-                filepath: 'component-mapping/component-mapping-form',
-            },
+    // {
+    //     label: "Style Management",
+    //     key: "style-management",
+    //     path: "style-management",
+    //     icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>👗</div>,
+    //      filepath: "style-management",
+    //     children: [
+    //         {
+    //             label: "Style",
+    //             key: "style-view",
+    //             path: 'style/style-grid',
+    //             filepath: 'style/style-grid',
+    //         },
+    //         {
+    //             label: "Component Mapping",
+    //             key: "component-mapping",
+    //             path: 'component-mapping/component-mapping-form',
+    //             filepath: 'component-mapping/component-mapping-form',
+    //         },
             
-        ]
+    //     ]
 
-    },
+    // },
     {
         label: "Fabric Development",
         key: "fabricdevelopment",
@@ -491,7 +491,7 @@ export const baseRouterList = [
         label: "Style Management",
         key: "style-management",
         path: "style-management",
-        icon:<FontAwesomeIcon icon={faShirt} />,
+        icon:<div style={{fontSize:"13px",marginLeft:"-1px",fontWeight:"bold",marginTop:"-1px"}}>👗</div>,
         filepath: "style-management",
         children: [
             {
