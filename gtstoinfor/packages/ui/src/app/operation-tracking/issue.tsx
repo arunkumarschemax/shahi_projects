@@ -179,7 +179,7 @@ const onButtonChange = (rowData) => {
 // console.log(issueQuantityData,"*********")
 
   return (
-    <Card title="Issued Quantity"  className='card-header'>
+    <Card title="Operation Issues"  className='card-header'>
       <Form  form ={form} >
          <Col
           xs={{ span: 24 }}
