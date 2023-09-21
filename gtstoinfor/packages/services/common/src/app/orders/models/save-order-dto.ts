@@ -311,6 +311,8 @@ export class SaveOrderDto {
     @ApiProperty()
     ltPoExf: string;
     @ApiProperty()
+     month:number
+    @ApiProperty()
     country2Y: string;
     @ApiProperty()
     phase: string;
@@ -373,6 +375,7 @@ export class SaveOrderDto {
         branchFactoryCode: string,
         branchFactory: string,
         coeff: string,
+        month:number,
         itemBranchNumber: number,
         officialPlanStdQty: number,
         OfficialPlanFabPrpPlnQty: number,
@@ -541,6 +544,7 @@ export class SaveOrderDto {
         this.branchFactoryCode = branchFactoryCode
         this.branchFactory = branchFactory
         this.coeff = coeff
+        this.month= month
         this.itemBranchNumber = itemBranchNumber
         this.officialPlanStdQty = officialPlanStdQty
         this.OfficialPlanFabPrpPlnQty = OfficialPlanFabPrpPlnQty

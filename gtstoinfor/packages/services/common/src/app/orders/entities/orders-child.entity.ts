@@ -1013,7 +1013,12 @@ export class OrdersChildEntity {
             length:50
         })
         rewMaterialOriginal: string;
-    
+
+        @Column('int',{
+            nullable:true,
+            name:'month',
+        })
+        month:number
         @Column('varchar', {
             name: 'item_drop',
             length:50,

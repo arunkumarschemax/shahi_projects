@@ -1281,7 +1281,6 @@ export class OrdersEntity {
 
     @CreateDateColumn({
         name: 'created_at',
-        length:50
  
 
     })
@@ -1289,7 +1288,6 @@ export class OrdersEntity {
 
     @UpdateDateColumn({
         name: 'updated_at',
-        length:50
 
     })
     updatedAt: string;
@@ -1439,6 +1437,11 @@ export class OrdersEntity {
     })
     qtyLtBdExf : string;
 
+    @Column('int',{
+        nullable:true,
+        name:'month',
+    })
+month :number
     @Column('varchar', {
         nullable:true,
         name: 'qty_lt__po_exf',
