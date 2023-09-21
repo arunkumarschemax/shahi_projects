@@ -66,6 +66,9 @@ export class OrdersService extends CommonAxiosService {
     async revertFileData(req: FileIdReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/revertFileData", req)
     }
+    async revertTrimFileData(req: FileIdReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/revertTrimFileData", req)
+    }
 
     async getVersionWiseData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getVersionWiseData")

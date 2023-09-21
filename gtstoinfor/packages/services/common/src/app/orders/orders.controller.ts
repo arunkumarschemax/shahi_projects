@@ -233,4 +233,14 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/revertTrimFileData')
+    async revertTrimFileData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.revertTrimFileData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
 }

@@ -1,6 +1,7 @@
 import { Repository } from "typeorm";
 import { TrimOrdersEntity } from "../entities/trim-orders.entity";
 import { InjectRepository } from "@nestjs/typeorm";
+import { FileIdReq } from "../models/file-id.req";
 
 export class TrimOrdersRepository extends Repository<TrimOrdersEntity> {
     constructor(@InjectRepository(TrimOrdersEntity) private trimOrderRepository: Repository<TrimOrdersEntity>
@@ -11,5 +12,11 @@ export class TrimOrdersRepository extends Repository<TrimOrdersEntity> {
         const query = this.createQueryBuilder('to')
             .select('*')
         return await query.getRawMany();
+    }
+
+    async deleteTrimOrderData( req: FileIdReq) : Promise<void>{
+        const queryBuilder = this.createQueryBuilder('orders');
+        queryBuilder.where(`file_id = '${req.fileId}' AND version = 1`);
+        await queryBuilder.delete().execute();
     }
 }
