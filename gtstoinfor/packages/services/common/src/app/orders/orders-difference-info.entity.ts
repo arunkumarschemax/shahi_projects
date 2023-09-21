@@ -13,7 +13,7 @@ export class OrdersDifferenceEntity {
         nullable: false,
         name: "prod_plan_id",
     })
-    productionPlanId: string;
+    productionPlanId:  number;
 
     @Column('varchar', {
         nullable: false,

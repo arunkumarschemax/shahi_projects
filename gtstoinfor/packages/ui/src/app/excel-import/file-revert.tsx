@@ -4,7 +4,7 @@ import { UndoOutlined } from '@ant-design/icons';
 import { OrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
 import { ColumnProps } from 'antd/es/table';
-import { FileIdReq } from '@project-management-system/shared-models';
+import { FileIdReq, FileTypesEnum } from '@project-management-system/shared-models';
 
 export function FileRevert() {
     const [page, setPage] = React.useState(1);
@@ -28,17 +28,32 @@ export function FileRevert() {
         })
     }
 
-    const revertFileData = (value) => {
+    const revertFileData = (value,fileType) => {
+        console.log(fileType)
         const req = new FileIdReq()
         req.fileId = value
-        service.revertFileData(req).then((res) => {
-            if (res.status) {
-                getUploadFilesData()
-                message.success(res.internalMessage)
-            } else {
-                message.error(res.internalMessage)
-            }
-        })
+        if(fileType == FileTypesEnum.PROJECTION_ORDERS){
+            service.revertFileData(req).then((res) => {
+                if (res.status) {
+                    getUploadFilesData()
+                    message.success(res.internalMessage)
+                } else {
+                    message.error(res.internalMessage)
+                }
+            })
+        }
+        else if(fileType == FileTypesEnum.TRIM_ORDERS){
+            service.revertTrimFileData(req).then((res) => {
+                if (res.status) {
+                    getUploadFilesData()
+                    message.success(res.internalMessage)
+                } else {
+                    message.error(res.internalMessage)
+                }
+            })
+        }else{
+            message.error('Something went wrong')
+        }
     }
 
     const columns: ColumnProps<any>[] = [
@@ -81,7 +96,7 @@ export function FileRevert() {
                                 title="Are you sure to revert this file?"
                                 okText="Yes"
                                 cancelText="No"
-                                onConfirm={() => revertFileData(record?.fileId)}
+                                onConfirm={() => revertFileData(record?.fileId,record?.fileType)}
                             >
                                 <Button icon={<UndoOutlined style={{ color: 'red' }} />}>Revert File</Button>
                             </Popconfirm>
