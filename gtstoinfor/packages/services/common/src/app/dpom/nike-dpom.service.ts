@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FobPriceDiffRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, NewDivertModel, OldDivertModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FobPriceDiffRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, NewDivertModel, OldDivertModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, TotalQuantityChangeModel, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -155,7 +155,7 @@ export class DpomService {
                         }
                     ],
                     "offset": "0",
-                    "count": 300,
+                    "count": 3,
                     "savedSearchID": "2e81ddd3-a131-4deb-9356-2528196ab342"
                 }
                 const headers = {
@@ -297,7 +297,8 @@ export class DpomService {
                     const date4 = moment(orderDetail.poHeader.documentDate, 'MM/DD/YYYY');
 
                     // Calculate the difference in days
-                    const daysDifference = date4.diff(date3, 'days');
+                    const daysDifference = date4.diff(date3);
+                    console.log(daysDifference,"daysDifference")
 
                     const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions ? orderDetail.poLine.itemVas.valueAddedServiceInstructions : ' '
                     //orderDetail.poLine.itemVas.valueAddedServiceInstructions;
@@ -846,13 +847,7 @@ export class DpomService {
         }
     }
 
-    async getTotalItemQtyChangeData(req?: nikeFilterRequest): Promise<CommonResponseModel> {
-        const data = await this.dpomRepository.getTotalItemQtyChangeData(req)
-        if (data.length > 0)
-            return new CommonResponseModel(true, 1, 'data retrived', data)
-        else
-            return new CommonResponseModel(false, 0, 'No data found');
-    }
+   
 
     async poLineItemStatusChange(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.poLineItemStatusChange()
@@ -1065,28 +1060,28 @@ export class DpomService {
 
     // }
 
-    async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
-        const details = await this.dpomRepository.getMarketingPpmData(req);
-        if (details.length === 0) {
-            return new CommonResponseModel(false, 0, 'data not found')
-        }
-        const sizeDateMap = new Map<string, MarketingReportModel>();
-        for (const rec of details) {
-            if (!sizeDateMap.has(rec.po_and_line)) {
-                sizeDateMap.set(
-                    rec.po_and_line,
+    // async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
+    //     const details = await this.dpomRepository.getMarketingPpmData(req);
+    //     if (details.length === 0) {
+    //         return new CommonResponseModel(false, 0, 'data not found')
+    //     }
+    //     const sizeDateMap = new Map<string, MarketingReportModel>();
+    //     for (const rec of details) {
+    //         if (!sizeDateMap.has(rec.po_and_line)) {
+    //             sizeDateMap.set(
+    //                 rec.po_and_line,
 
-                    new MarketingReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.hanger, [])
-                );
-            }
-            const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
-            if (rec.size_description !== null) {
-                sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.buyer_gross_price, rec.buyer_gross_currency_code, rec.ne_inc_disc, rec.netIncDisCurrency, rec.trading_net_inc_disc, rec.tradingNetCurrencyCode, rec.legal_po_price, rec.legal_po_currency_code, rec.co_price, rec.co_price_currency_code, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
-            }
-        }
-        const dataModelArray: MarketingReportModel[] = Array.from(sizeDateMap.values());
-        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
-    }
+    //                 new MarketingReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.hanger, [])
+    //             );
+    //         }
+    //         const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
+    //         if (rec.size_description !== null) {
+    //             sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.buyer_gross_price, rec.buyer_gross_currency_code, rec.ne_inc_disc, rec.netIncDisCurrency, rec.trading_net_inc_disc, rec.tradingNetCurrencyCode, rec.legal_po_price, rec.legal_po_currency_code, rec.co_price, rec.co_price_currency_code, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
+    //         }
+    //     }
+    //     const dataModelArray: MarketingReportModel[] = Array.from(sizeDateMap.values());
+    //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    // }
 
     async getPoAndQtyDashboard(req: PoAndQtyReq): Promise<CommonResponseModel> {
         try {
@@ -1593,5 +1588,56 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-}
+    async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
+        const details = await this.dpomRepository.getMarketingPpmData(req);
+        if (details.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found')
+        }
+        const sizeDateMap = new Map<string, MarketingReportModel>();
+        for (const rec of details) {
+            if (!sizeDateMap.has(rec.po_and_line)) {
+                sizeDateMap.set(
+                    rec.po_and_line,
 
+                    new MarketingReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.hanger, [])
+                );
+            }
+            const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
+            if (rec.size_description !== null) {
+                sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.buyer_gross_price, rec.buyer_gross_currency_code, rec.ne_inc_disc, rec.netIncDisCurrency, rec.trading_net_inc_disc, rec.tradingNetCurrencyCode, rec.legal_po_price, rec.legal_po_currency_code, rec.co_price, rec.co_price_currency_code, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
+            }
+        }
+        const dataModelArray: MarketingReportModel[] = Array.from(sizeDateMap.values());
+        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    }
+
+    async getTotalItemQtyChangeData(req?: nikeFilterRequest): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getTotalItemQtyChangeData(req)
+         if(data.length === 0){
+            return new CommonResponseModel(false, 0, 'data not found')
+         }
+         const sizeDateMap = new Map<string, TotalQuantityChangeModel>();
+         for (const rec of data) {
+            //  console.log(data ,"console of data step 1")
+            if(!sizeDateMap.has(rec.po_number)){
+                sizeDateMap.set(
+                    rec.po_number,
+                    new TotalQuantityChangeModel(rec.po_number,rec.po_line_item_number,rec.po_and_line,rec.schedule_line_item_number,rec.created_at,rec.item,rec.factory,rec.styleNumber,rec.productCode,rec.color_desc,rec.OGAC,rec.GAC,rec.desCtry,rec.item_text,rec.total_item_qty,[])
+                )
+            }
+
+            const sizeWiseData = sizeDateMap.get(rec.po_number).sizeWiseData;
+            if (rec.size_description !== null) {
+                sizeWiseData.push(new PoChangeSizeModel(rec.size_description,rec.old_val,rec.new_val,rec.Diff))
+    }
+
+
+}
+         const dataModelArray: TotalQuantityChangeModel[] = Array.from(sizeDateMap.values());   
+          console.log(sizeDateMap.values
+            ,"length")
+
+
+        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    }
+}
