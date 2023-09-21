@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FobPriceDiffRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, NewDivertModel, OldDivertModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FobPriceDiffRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, NewDivertModel, OldDivertModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, TotalQuantityChangeModel, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -155,7 +155,7 @@ export class DpomService {
                         }
                     ],
                     "offset": "0",
-                    "count": 5000,
+                    "count": 3,
                     "savedSearchID": "2e81ddd3-a131-4deb-9356-2528196ab342"
                 }
                 const headers = {
@@ -297,7 +297,8 @@ export class DpomService {
                     const date4 = moment(orderDetail.poHeader.documentDate, 'MM/DD/YYYY');
 
                     // Calculate the difference in days
-                    const daysDifference = date4.diff(date3, 'days');
+                    const daysDifference = date4.diff(date3);
+                    console.log(daysDifference, "daysDifference")
 
                     const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions ? orderDetail.poLine.itemVas.valueAddedServiceInstructions : ' '
                     //orderDetail.poLine.itemVas.valueAddedServiceInstructions;
@@ -846,13 +847,7 @@ export class DpomService {
         }
     }
 
-    async getTotalItemQtyChangeData(req?: nikeFilterRequest): Promise<CommonResponseModel> {
-        const data = await this.dpomRepository.getTotalItemQtyChangeData(req)
-        if (data.length > 0)
-            return new CommonResponseModel(true, 1, 'data retrived', data)
-        else
-            return new CommonResponseModel(false, 0, 'No data found');
-    }
+
 
     async poLineItemStatusChange(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.poLineItemStatusChange()
@@ -1594,5 +1589,27 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
+    async getTotalItemQtyChangeData(req?: nikeFilterRequest): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getTotalItemQtyChangeData(req)
+        if (data.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found')
+        }
+        const sizeDateMap = new Map<string, TotalQuantityChangeModel>();
+        for (const rec of data) {
+            //  console.log(data ,"console of data step 1")
+            if (!sizeDateMap.has(rec.po_number)) {
+                sizeDateMap.set(
+                    rec.po_number,
+                    new TotalQuantityChangeModel(rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.schedule_line_item_number, rec.created_at, rec.item, rec.factory, rec.styleNumber, rec.productCode, rec.color_desc, rec.OGAC, rec.GAC, rec.desCtry, rec.item_text, rec.total_item_qty, [])
+                )
+            }
+            const sizeWiseData = sizeDateMap.get(rec.po_number).sizeWiseData;
+            if (rec.size_description !== null) {
+                sizeWiseData.push(new PoChangeSizeModel(rec.size_description, rec.old_val, rec.new_val, rec.Diff))
+            }
+        }
+        const dataModelArray: TotalQuantityChangeModel[] = Array.from(sizeDateMap.values());
+        console.log(sizeDateMap.values, "length")
+        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    }
 }
-
