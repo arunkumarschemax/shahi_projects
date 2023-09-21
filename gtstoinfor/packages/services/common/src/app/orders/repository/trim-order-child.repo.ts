@@ -29,7 +29,7 @@ export class TrimOrdersChildRepository extends Repository<TrimOrdersChildEntity>
     async getUpdatedTrimData(): Promise<any[]> {
         const query = this.createQueryBuilder('oc')
             .select(`oc.file_id as fileId`)
-            .orderBy(` oc.created_at`, 'DESC')
+            .orderBy(` oc.id`, 'DESC')
             .limit(1)
         return await query.getRawMany();
     }
