@@ -155,7 +155,7 @@ export class DpomService {
                         }
                     ],
                     "offset": "0",
-                    "count": 300,
+                    "count": 5000,
                     "savedSearchID": "2e81ddd3-a131-4deb-9356-2528196ab342"
                 }
                 const headers = {
@@ -217,8 +217,8 @@ export class DpomService {
             req.scheduleLineItemNumber = 100
             const styleNumber = 'FN389'
             const m3Config = appConfig.m3Cred.headerRequest()
-            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=4857896325&ITNO=${req.itemNo}&ORQT=1000&PWNR=00010`;
-            // const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.purchaseOrderNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${styleNumber}`;
+            // const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=4857896325&ITNO=${req.itemNo}&ORQT=1000&PWNR=00010`;
+            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.purchaseOrderNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${styleNumber}`;
             const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
             console.log(response, 'response')
             console.log(response.data?.MIRecord, 'MIRecord')
@@ -1066,6 +1066,7 @@ export class DpomService {
     // }
 
     async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
+
         const details = await this.dpomRepository.getMarketingPpmData(req);
         if (details.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found')
@@ -1081,7 +1082,7 @@ export class DpomService {
             }
             const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
             if (rec.size_description !== null) {
-                sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.buyer_gross_price, rec.buyer_gross_currency_code, rec.ne_inc_disc, rec.netIncDisCurrency, rec.trading_net_inc_disc, rec.tradingNetCurrencyCode, rec.legal_po_price, rec.legal_po_currency_code, rec.co_price, rec.co_price_currency_code, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
+                sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.shahi_confirmed_gross_price, rec.shahi_confirmed_gross_price_currency_code, rec.ne_inc_disc, rec.net_inc_disc_currency_code, rec.trading_net_inc_disc, rec.trading_net_currency_code, rec.legal_po_price, rec.legal_po_currency_code, rec.co_price, rec.co_price_currency_code, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
             }
         }
         const dataModelArray: MarketingReportModel[] = Array.from(sizeDateMap.values());
