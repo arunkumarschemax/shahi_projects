@@ -70,15 +70,19 @@ export class FobService {
 
   async createFobplist(Dto: FobDto, isUpdate: boolean): Promise<FobResponseModel> {
     try {
+      if (!Dto || (Object.keys(Dto).length === 0 && Dto.constructor === Object)) {
+        throw new FobResponseModel(false, 11107, 'Fob Price List data is empty. At least one value is required.');
+      }
+  
       const convertedEntity: FobEntity = this.adaptor.convertDtoToEntity(Dto, isUpdate);
       const savedEntity: FobEntity = await this.repository.save(convertedEntity);
       const savedDto: FobDto = this.adaptor.convertEntityToDto(savedEntity);
   
       if (savedDto) {
-        const name = isUpdate ? 'updated' : 'created'
-        const displayValue = isUpdate ? 'Fob Price List Updated Successfully' : 'Fob Price List Created Successfully'
+        const name = isUpdate ? 'updated' : 'created';
+        const displayValue = isUpdate ? 'Fob Price List Updated Successfully' : 'Fob Price List Created Successfully';
         const userName = isUpdate ? savedDto.updatedUser : savedDto.createdUser;
-        const response = new FobResponseModel(true, 1, isUpdate ? 'Fob Price List Updated Successfully' : 'Fob Price List Created Successfully')
+        const response = new FobResponseModel(true, 1, displayValue);
         return response;
       } else {
         throw new FobResponseModel(false, 11106, 'Fob Price List saved but issue while transforming into DTO');
@@ -87,6 +91,7 @@ export class FobService {
       return error;
     }
   }
+  
   
 
 

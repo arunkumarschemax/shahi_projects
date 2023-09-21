@@ -81,39 +81,61 @@ export  function FobPriceListForm( props:Formprops) {
                   <Input/>
                 </Form.Item>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name='planningSeasonCode' label='Planning Season Code'>
-                  <Input />
+                <Form.Item name='planningSeasonCode' label='Planning Season Code'
+                 rules={[{ required: true, message: 'Please enter the Planning Season Code', },
+                    {
+                        
+                        message: 'Please enter a valid code ',
+                      },
+                  ]}>
+                  <Input placeholder='Planning Season Code'/>
                 </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name='planningSeasonYear' label='Planning Season Year'>
-                <Input />
-                </Form.Item>
+              <Form.Item name='planningSeasonYear' label='Planning Season Year'
+                   rules={[
+                            { required: true, message: 'Please enter the Planning Season Year', },
+                           { pattern: /^[0-9]{4}$/,  
+                            message: 'Please enter a valid 4-digit year', },
+                           ]}>
+                    <Input placeholder='Planning Season Year' /></Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name='styleNumber' label='Style Number'>
-                <Input
+                <Form.Item name='styleNumber' label='Style Number'
+                                 rules={[{ required: true, message: 'Please enter the Style Number', }]}>
+                <Input placeholder='Style Number'
                  />
                 </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name='colorCode' label='Color Code'>
-                <Input />
+                <Form.Item name='colorCode' label='Color Code'  rules={[{ required: true, message: 'Please enter the Color Code', },]}>
+                <Input placeholder='Color Code'/>
                 </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name='sizeDescription' label='Size Description'>
-                <Input />
+                <Form.Item name='sizeDescription' label='Size Description'  rules={[{ required: true, message: 'Please enter the Color Code', },]}>
+                <Input placeholder='Size Description'/>
                 </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name='shahiConfirmedGrossPrice' label='Shahi Confirmed Gross Price'>
-                <Input />
+                <Form.Item name='shahiConfirmedGrossPrice' label='Shahi Confirmed Gross Price'
+                 rules={[{ required: true, message: 'Please enter the Color Code', },
+                  { pattern: /^(?!0\d)(\d{1,5}(\.\d{2})?)?$/,  
+                  message: 'Please enter a valid price 00.00 type is required', }
+                 ]}>
+                <Input placeholder='Shahi Confirmed Gross Price' />
                 </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name='shahiConfirmedGrossPriceCurrencyCode' label='Shahi Confirmed Gross Price Currency Code'>
-                <Input />
+                <Form.Item name='shahiConfirmedGrossPriceCurrencyCode' label='Shahi Confirmed Gross Price Currency Code'
+                                 rules={[{ required: true, message: 'Please enter the Color Code' },
+                                 {
+                                    pattern: /^[A-Z]{0,5}$/,
+                                    message: 'Please enter up to 5 capital letters',
+                                  }
+                                 ]}
+                                  >
+                <Input  placeholder='Shahi Confirmed Gross Price Currency Code'/>
                 </Form.Item>
               </Col>
             </Row>
