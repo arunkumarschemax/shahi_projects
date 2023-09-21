@@ -1,13 +1,13 @@
 import { FileExcelFilled } from "@ant-design/icons";
 import { OrdersService } from "@project-management-system/shared-services";
-import { Button, Card, List, Table, Tabs, TabsProps } from "antd";
+import { Button, Card, Table, Tabs, TabsProps } from "antd";
 import { Excel } from "antd-table-saveas-excel";
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import { ColumnsType } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-export const ExFactoryReport = () => {
+export const ExFactoryReportWithComparision = () => {
   const [pageSize, setPageSize] = useState<number>(null);
   const [page, setPage] = React.useState(1);
   const [data, setData] = useState<any[]>([]);
@@ -32,16 +32,17 @@ export const ExFactoryReport = () => {
     },
     {
       title: "January",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "janPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].febPcs}</span>
             )
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "janCoeff",
           render: (text: any, record: any) => (
             <span>{record.data[0].febPcs}</span>
@@ -60,16 +61,17 @@ export const ExFactoryReport = () => {
       title: "February",
       dataIndex: "oldOrderQtyPcs2",
       key: "oldOrderQtyPcs2",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "febPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].febPcs}</span>
             ),
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "febCoeff",
           render: (text: any, record: any) => (
             <span>{record.data[1].febCoeff}</span>
@@ -88,16 +90,17 @@ export const ExFactoryReport = () => {
       title: "March",
       dataIndex: "oldOrderQtyPcs3",
       key: "oldOrderQtyPcs3",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "marPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].marPcs}</span>
             ),
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "marCoeff",
           render: (text: any, record: any) => (
             <span>{record.data[1].marCoeff}</span>
@@ -116,16 +119,17 @@ export const ExFactoryReport = () => {
       title: "April",
       dataIndex: "oldOrderQtyPcs4",
       key: "oldOrderQtyPcs4",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "aprPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].aprPcs}</span>
             ),
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "aprCoeff",
           render: (text: any, record: any) => (
             <span>{record.data[1].aprCoeff}</span>
@@ -144,16 +148,17 @@ export const ExFactoryReport = () => {
       title: "May",
       dataIndex: "oldOrderQtyPcs5",
       key: "oldOrderQtyPcs5",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "mayPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].mayPcs}</span>
             ),
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "mayCoeff",
           render: (text: any, record: any) => (
             <span>{record.data[1].mayCoeff}</span>
@@ -172,16 +177,17 @@ export const ExFactoryReport = () => {
       title: "June",
       dataIndex: "oldOrderQtyPcs6",
       key: "oldOrderQtyPcs6",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "junPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].junPcs}</span>
             ),
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "junCoeff",
           render: (text: any, record: any) => (
             <span>{record.data[1].junCoeff}</span>
@@ -200,16 +206,17 @@ export const ExFactoryReport = () => {
       title: "July",
       dataIndex: "oldOrderQtyPcs7",
       key: "oldOrderQtyPcs7",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "julPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].julPcs}</span>
             ),
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "julCoeff",
           render: (text: any, record: any) => (
             <span>{record.data[1].julCoeff}</span>
@@ -228,16 +235,17 @@ export const ExFactoryReport = () => {
       title: "August",
       dataIndex: "oldOrderQtyPcs8",
       key: "oldOrderQtyPcs8",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "augPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].augPcs}</span>
             ),
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "augCoeff",
           render: (text: any, record: any) => (
             <span>{record.data[1].augCoeff}</span>
@@ -256,16 +264,17 @@ export const ExFactoryReport = () => {
       title: "September",
       dataIndex: "oldOrderQtyPcs9",
       key: "oldOrderQtyPcs9",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "sepPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].sepPcs}</span>
             ),
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "sepCoeff",
           render: (text: any, record: any) => (
             <span>{record.data[1].sepCoeff}</span>
@@ -284,16 +293,17 @@ export const ExFactoryReport = () => {
       title: "October",
       dataIndex: "oldOrderQtyPcs10",
       key: "oldOrderQtyPcs10",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "octPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].octPcs}</span>
             ),
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "octCoeff",
           render: (text: any, record: any) => (
             <span>{record.data[1].octCoeff}</span>
@@ -312,16 +322,17 @@ export const ExFactoryReport = () => {
       title: "November",
       dataIndex: "oldOrderQtyPcs11",
       key: "oldOrderQtyPcs11",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "novPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].novPcs}</span>
             ),
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "novCoeff",
           render: (text: any, record: any) => (
             <span>{record.data[1].novCoeff}</span>
@@ -340,16 +351,17 @@ export const ExFactoryReport = () => {
       title: "December",
       dataIndex: "oldOrderQtyPcs12",
       key: "oldOrderQtyPcs12",
-            children: [
+      align: "right",
+      children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "decPcs",
           render: (text: any, record: any) => (
             <span>{record.data[0].decPcs !=0 ? record.data[0].decPcs:'-'}</span>
             ),
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "decCoeff",
           render: (text: any, record: any) => (
             <span>{ record.data[1].decCoeff != 0
@@ -366,12 +378,12 @@ export const ExFactoryReport = () => {
       },
     },
     {
-      title: "Total In PCs",
+      title: "Total Previous",
       dataIndex: "totalPcs",
      
     },
     {
-      title: "Total In Coeff",
+      title: "Total Latest",
       dataIndex: "totalCoeff",
      
     },
@@ -398,7 +410,7 @@ export const ExFactoryReport = () => {
     {
       title: "Month Wise Data",
       dataIndex: "monthWiseData",
-      align:'center',
+      align: "center",
       render: (text: any, record: any) => (
         <Table
           dataSource={record.monthWiseData}
@@ -418,12 +430,7 @@ export const ExFactoryReport = () => {
         .split("-")
         .join("/");
 
-   
-    const excel = new Excel();
-    data.forEach((yearItem) => {
-      excel.addSheet(yearItem.year.toString()); // Create a sheet for the year
-  
-      let exportingColumns: IExcelColumn[] = []
+    let exportingColumns: IExcelColumn[] = []
     exportingColumns = [
       
         {
@@ -436,34 +443,24 @@ export const ExFactoryReport = () => {
         {
           title: "Month Wise Data",
           dataIndex: "monthWiseData",
+          align: "center",
           children: [
             {
               title: "Production Plan Type Name",
-              dataIndex: "phasetype",              
-            render: (text: any, record: any) => {
-              const phaseTypes = record.monthWiseData.map((item: any) => item.phasetype || '-');
-             
-              return (
-                <>
-                  {phaseTypes.map((phaseType: string, index: number) => (
-                    <span key={index}>{phaseType}</span>
-                  ))}
-                  </>
-              )
-            }
-                
-          },
+              dataIndex: "phasetype",
+                    },
             {
               title: "January",
               dataIndex:'',
-               children: [
+              align: "right",
+              children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "janPcs",
                
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "janCoeff",
                
                 },
@@ -473,14 +470,15 @@ export const ExFactoryReport = () => {
             {
               title: "February",
               dataIndex: "",
+              align: "right",
               children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "febPcs",
                   
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "febCoeff",
                   
                 },
@@ -490,14 +488,15 @@ export const ExFactoryReport = () => {
             {
               title: "March",
               dataIndex: '',
-               children: [
+                            align: "right",
+              children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "marPcs",
                   
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "marCoeff",
                   
                 },
@@ -507,14 +506,15 @@ export const ExFactoryReport = () => {
             {
               title: "April",
               dataIndex: '',
+                            align: "right",
               children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "aprPcs",
                   
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "aprCoeff",
                   
                 },
@@ -524,14 +524,15 @@ export const ExFactoryReport = () => {
             {
               title: "May",
               dataIndex: '',
+                            align: "right",
               children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "mayPcs",
                   
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "mayCoeff",
                   
                 },
@@ -541,14 +542,15 @@ export const ExFactoryReport = () => {
             {
               title: "June",
               dataIndex: '',
+                            align: "right",
               children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "junPcs",
                   
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "junCoeff",
                   
                 },
@@ -558,14 +560,15 @@ export const ExFactoryReport = () => {
             {
               title: "July",
               dataIndex: '',
+                            align: "right",
               children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "julPcs",
                   
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "julCoeff",
                   
                 },
@@ -575,14 +578,15 @@ export const ExFactoryReport = () => {
             {
               title: "August",
               dataIndex: '',
+                            align: "right",
               children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "augPcs",
                   
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "augCoeff",
                   
                 },
@@ -592,14 +596,15 @@ export const ExFactoryReport = () => {
             {
               title: "September",
               dataIndex: '',
-                                          children: [
+                            align: "right",
+              children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "sepPcs",
                   
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "sepCoeff",
                   
                 },
@@ -609,14 +614,16 @@ export const ExFactoryReport = () => {
             {
               title: "October",
               dataIndex: "",
+              
+              align: "right",
               children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "octPcs",
                   
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "octCoeff",
                   
                 },
@@ -626,14 +633,16 @@ export const ExFactoryReport = () => {
             {
               title: "November",
               dataIndex: "",
+              
+              align: "right",
               children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "novPcs",
                   
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "novCoeff",
                   
                 },
@@ -642,14 +651,16 @@ export const ExFactoryReport = () => {
             },
             {
               title: "December",
-              dataIndex: "",
+              dataIndex: "oldOrderQtyPcs12",
+              
+              align: "right",
               children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "decPcs",
                        },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "decCoeff",
               
                 },
@@ -657,27 +668,24 @@ export const ExFactoryReport = () => {
               
             },
             {
-              title: "Total In PCs",
+              title: "Total Previous",
               dataIndex: "totalPcs",
              
             },
             {
-              title: "Total In Coeff",
+              title: "Total Latest",
               dataIndex: "totalCoeff",
              
             },
           ]
         },
       ];
-    
-   
-      excel.addRow();
-  
-      excel.addColumns(exportingColumns);
-      excel.addDataSource(yearItem.yearlyData);
-    });
-    excel.saveAs(`Ex-Factory-report-${currentDate}.xlsx`);
-
+    const excel = new Excel();
+    excel.addSheet("Sheet1");
+    excel.addRow();
+    excel.addColumns(exportingColumns);
+    excel.addDataSource(data);
+    excel.saveAs(`Ex-Factory-date-${currentDate}.xlsx`);
 };
   return (
     <Card
@@ -704,4 +712,4 @@ export const ExFactoryReport = () => {
   </Card>
   );
 };
-export default ExFactoryReport
+export default ExFactoryReportWithComparision
