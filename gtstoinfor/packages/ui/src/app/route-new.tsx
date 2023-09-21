@@ -22,7 +22,7 @@ import TrimOrder from "./excel-import/trim-orders"
 import PriceListView from "./masters/pricelist/price-list-view"
 import PriceListForm from "./masters/pricelist/price-list-form"
 import { PriceListDto } from "@project-management-system/shared-models"
-import ExcelImport from "./excel-import/excel-import"
+// import ExcelImport from "./excel-import/excel-import"
 
 
 export const AppRoutesNew = () => {

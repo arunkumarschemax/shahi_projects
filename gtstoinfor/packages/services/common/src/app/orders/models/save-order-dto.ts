@@ -3,7 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 export class SaveOrderDto {
 
     @ApiProperty()
-    productionPlanId: string
+    productionPlanId: number
     @ApiProperty()
     year: string;
     @ApiProperty()
@@ -315,22 +315,20 @@ export class SaveOrderDto {
     @ApiProperty()
     phase: string;
     @ApiProperty()
-    createdUser: string;
+    createdUser?: string;
     @ApiProperty()
-    createdAt: string;
+    createdAt?: string;
     @ApiProperty()
     version?: number;
     @ApiProperty()
     fileId:string;
     @ApiProperty()
-    month:string;
+    updatedAt?:string;
     @ApiProperty()
-    updatedAt:string;
-    @ApiProperty()
-    updatedUser:string;
+    updatedUser?:string;
 
     constructor(
-        productionPlanId: string,
+        productionPlanId: number,
         year: string,
         planningSsnCd: string,
         planningSsn: string,
@@ -443,6 +441,7 @@ export class SaveOrderDto {
         poDlRequested: string,
         poDlAnswered: string,
         poDlAuto: string,
+        PO_EXFtotalAbnormalLT:string,
         poProductionDueDateAuto: string,
         poAutoReflectionDate: string,
         poActDy: string,
@@ -456,6 +455,7 @@ export class SaveOrderDto {
         orderPlanQtyStop: string,
         fixFlag: string,
         alternativeFlag: string,
+        expressLineFlag:string,
         factoryComment: string,
         plannedEXF: string,
         exfEtd: string,
@@ -464,7 +464,6 @@ export class SaveOrderDto {
         rewMaterialOriginal: string,
         itemDrop: string,
         fileId:string,
-        month:string,
         countY: string,
         sample: string,
         exf: string,
@@ -478,10 +477,10 @@ export class SaveOrderDto {
         qtyLtPoExf: string,
         country2Y: string,
         phase: string,
-        createdUser: string,
-        createdAt: string,
-        updatedAt: string,
-        userName: string,
+        createdUser?: string,
+        createdAt?: string,
+        updatedAt?: string,
+        userName?: string,
         version?: number,
         createdUserId?: string,
         createdUserName?: string,
@@ -612,6 +611,7 @@ export class SaveOrderDto {
         this.poDlRequested = poDlRequested
         this.poDlAnswered = poDlAnswered
         this.poDlAuto = poDlAuto
+        this.PO_EXFtotalAbnormalLT=PO_EXFtotalAbnormalLT
         this.poProductionDueDateAuto = poProductionDueDateAuto
         this.poAutoReflectionDate = poAutoReflectionDate
         this.poActDy = poActDy
@@ -625,13 +625,13 @@ export class SaveOrderDto {
         this.orderPlanQtyStop = orderPlanQtyStop
         this.fixFlag = fixFlag
         this.alternativeFlag = alternativeFlag
+        this.expressLineFlag =expressLineFlag
         this.factoryComment = factoryComment
         this.plannedEXF = plannedEXF
         this.exfEtd = exfEtd
         this.userName = userName
         this.version = version
         this.fileId = fileId;
-        this.month=month
         this.exfWh = exfWh
         this.sweingCountryRegion = sweingCountryRegion
         this.rewMaterialOriginal = rewMaterialOriginal

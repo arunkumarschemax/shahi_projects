@@ -14,7 +14,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         super(orderChildRepository.target, orderChildRepository.manager, orderChildRepository.queryRunner);
     }
 
-    async getVersion(productionPlanId: string): Promise<any[]> {
+    async getVersion(productionPlanId: number): Promise<any[]> {
         const query = this.createQueryBuilder('oc')
             .select(`id,production_plan_id, version`)
             .where(` production_plan_id = ${productionPlanId}`)

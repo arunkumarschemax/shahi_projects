@@ -157,7 +157,7 @@ export class OrdersAdapter {
         entity.country2Y = dto.country2Y
         entity.phase = dto.phase
         entity.fileId = dto.fileId
-        entity.month=dto.month
+        // entity.month=dto.month
         entity.version = dto.version ? dto.version : 1
       
         return entity
