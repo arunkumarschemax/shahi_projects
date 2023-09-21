@@ -721,8 +721,7 @@ const PPMReport = () => {
         title: "Destination Country Name ",
         dataIndex: 'destinationCountry'
       },
-
-      { title: 'Geo Code', dataIndex: '' },
+      { title: 'Geo Code', dataIndex: 'geoCode' },
       {
         title: "Plant Code",
         dataIndex: 'plant'
@@ -1170,20 +1169,20 @@ const PPMReport = () => {
 
     const getRowClassName = (record) => {
       let classNames = '';
-    
+
       if (record.displayName) {
         classNames += 'colored-row ';
       }
-    
+
       if (!record.factory || !record.item) {
         classNames += 'colored-factory-empty-row ';
       } else if (record.factory.includes("_")) {
         classNames += 'colored-row-withUnderscore ';
       }
-    
+
       return classNames.trim();
     };
-    
+
 
     // const getRowClassName2 = (record) => {
     //   if (record.factory) {
