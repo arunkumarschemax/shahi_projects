@@ -21,6 +21,7 @@ import TrimOrder from "./excel-import/trim-orders"
 import PriceListView from "./masters/pricelist/price-list-view"
 import PriceListForm from "./masters/pricelist/price-list-form"
 import { PriceListDto } from "@project-management-system/shared-models"
+import SeasonWiseReport from "./common/reports/season-wise"
 
 
 export const AppRoutesNew = () => {
@@ -57,6 +58,7 @@ export const AppRoutesNew = () => {
               </Route>
               <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
               <Route path='/ex-factory-report' key='/ex-factory-report' element={<ExFactoryReport />} />
+              <Route path='/season-wise-report' key='/season-wise-report' element={<SeasonWiseReport />} />
 
               <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
           </Route>
