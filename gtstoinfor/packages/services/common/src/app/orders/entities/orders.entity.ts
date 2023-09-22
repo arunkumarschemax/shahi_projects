@@ -278,7 +278,6 @@ export class OrdersEntity {
     // @Column('varchar', {
     //     nullable: true,
     //     name: "local_name_ghq",
-    length:50
     //     length: 10
     // })
     // localNameGhq: string;

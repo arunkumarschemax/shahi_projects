@@ -79,10 +79,9 @@ export class OrdersService {
             });
 
             for (const data of convertedData) {
-console.log(data,'------------data')
 let dtoData;
 if(data.Order_Plan_Number !== null){
-    dtoData = new SaveOrderDto(null,data.Year,data.Planning_Ssn_Cd,data.Planning_Ssn,data.Tgt_Ssn_Cd,data.Tgt_Ssn,data.Biz_Cd,data.Biz,data.Planning_Region_Code,data.Planning_Region_Name,data.Channel_Code,data.Channel_Name,data.Department,data.Dept_Cd,data.Cls1_Cd,data.Cls2_Cd,data.G_Dept,data.Sub_Category1,data.Core_Category,data.Sub_Category2,data.Sub_Category3,data.Production_Category_Fabric,data.Production_Category_FabricProcessing,data.Production_Category_Sewing,data.Production_Category_SewingProcessing,data.Planning_Sum_Code,data.Planning_Sum,data.Local_NameGHQ,data.Item_Cd,data.Item,data.Orig_Price,data.Main_Sample_Code,data.FR_Fabric_Code,data.FR_Fabric,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Raw_Material_Supplier_Code,data.Raw_Material_Supplier,data.Vendor_Code,data.Vendor,data.Sewing_Factory_Code,data.Sewing_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Coeff,data.Item_Brunch_Number,data.Official_Plan_Std_Qty,data.Official_Plan_Fab_Prp_Pln_Qty,data.Official_Plan_PO_pr_Sls_Qty,data.Official_Plan_CO_Qty,data.Official_Plan_Stock_Qty,data.Sls_Start_Dy,data.Publish_Flag_for_Factory,data.Publish_Date,data.Allc_End_Dy,data.Sls_End_Dy,data.GWH,data.Order_Plan_Number,data.Order_Timing,data.Swng_Prd_Month,data.Swng_Prd_Week,data.Order_Plan_Qty,data.Order_Plan_QtyCoeff,data.Trnsp_Mthd,data.Prod_Plan_Type,data.Ph11st,data.WH,data.WH_Act,data.WHAuto,data.Yarn_DL_Requested,data.Yarn_DL_Answered,data.Yarn_DL_Auto,data.Yarn_Production_Due_Date_Auto,data.Yarn_Auto_Reflection_Date,data.Yarn_Act_Dy,data.Yarn_Act_Qty,data.Yarn_Order_Number,data.Yarn_Order_Status,data.Yarn_Delivery_Date,data.Fbrc_DL_Requested,data.Fbrc_DL_Answered,data.Fbrc_DL_Auto,data.Fbrc_Production_Due_Date_Auto,data.Fbrc_Auto_Reflection_Date,data.Fbrc_Act_Dy,data.Fbrc_Act_Qty,data.Fbrc_Order_Number,data.Fbrc_Order_Status,data.Fbrc_Delivery_Date,data.Color_DL_Requested,data.Color_DL_Answered,data.Color_DL_Auto,data.Color_Production_Due_Date_Auto,data.Color_Auto_Reflection_Date,data.Color_Act_Dy,data.Color_Act_Qty,data.Color_Order_Number,data.Color_Order_Status,data.Color_Delivery_Date,data.Trim_DL_Requested,data.Trim_DL_Answered,data.Trim_DL_Auto,data.Trim_Production_Due_Date_Auto,data.Trim_Auto_Reflection_Date,data.Trim_Act_Dy,data.Trim_Act_Qty,data.Trim_Order_Number,data.Trim_Order_Status,data.Trim_Delivery_Date,data.PO_DL_Requested,data.PO_DL_Answered,data.PO_DL_Auto,data.PO_Production_Due_Date_Auto,data.PO_Auto_Reflection_Date,data.PO_Act_Dy,data.PO_Act_Qty,data.PO_Order_Number,data.PO_Order_Status,data.Assort1,data.Assort2,data.NX_Assort,data.Solid,data.Order_Plan_QtySTOP,data.Fix_Flag,data.Alternative_Flag,data.Express_Line_Flag,data.Factory_Comment,data.Planned_EXF,data.EXF_ETD,data.ETD_WH,data.Sewing_Country_Region,data.Raw_Material_Original_Country_Region,data.Item_Drop,data.Create_Date,data.Create_User_ID,data.Create_User_Name,data.Create_Function,data.Update_Date,data.Update_User_ID,data.Update_User_Name,data.Update_Function,data.CountY,data.Sample,data.EXF,data.BDDL,data.BDDLpast_Past,data.LTBD_EXF,data.New_BDDL,data.new_LTBD_EXF,data.LTPO_EXF,data.Qty_LTBD_EXF,data.Qty_LTPO_EXF,data.County2Y,data.PHASE,null,null,'bidhun')
+    dtoData = new SaveOrderDto(null,data.Year,data.Planning_Ssn_Cd,data.Planning_Ssn,data.Tgt_Ssn_Cd,data.Tgt_Ssn,data.Biz_Cd,data.Biz,data.Planning_Region_Code,data.Planning_Region_Name,data.Channel_Code,data.Channel_Name,data.Department,data.Dept_Cd,data.Cls1_Cd,data.Cls2_Cd,data.G_Dept,data.Sub_Category1,data.Core_Category,data.Sub_Category2,data.Sub_Category3,data.Production_Category_Fabric,data.Production_Category_FabricProcessing,data.Production_Category_Sewing,data.Production_Category_SewingProcessing,data.Planning_Sum_Code,data.Planning_Sum,data.Local_NameGHQ,data.Item_Cd,data.Item,data.Orig_Price,data.Main_Sample_Code,data.FR_Fabric_Code,data.FR_Fabric,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Raw_Material_Supplier_Code,data.Raw_Material_Supplier,data.Vendor_Code,data.Vendor,data.Sewing_Factory_Code,data.Sewing_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Coeff,data.month,data.Item_Brunch_Number,data.Official_Plan_Std_Qty,data.Official_Plan_Fab_Prp_Pln_Qty,data.Official_Plan_PO_pr_Sls_Qty,data.Official_Plan_CO_Qty,data.Official_Plan_Stock_Qty,data.Sls_Start_Dy,data.Publish_Flag_for_Factory,data.Publish_Date,data.Allc_End_Dy,data.Sls_End_Dy,data.GWH,data.Order_Plan_Number,data.Order_Timing,data.Swng_Prd_Month,data.Swng_Prd_Week,data.Order_Plan_Qty,data.Order_Plan_QtyCoeff,data.Trnsp_Mthd,data.Prod_Plan_Type,data.Ph11st,data.WH,data.WH_Act,data.WHAuto,data.Yarn_DL_Requested,data.Yarn_DL_Answered,data.Yarn_DL_Auto,data.Yarn_Production_Due_Date_Auto,data.Yarn_Auto_Reflection_Date,data.Yarn_Act_Dy,data.Yarn_Act_Qty,data.Yarn_Order_Number,data.Yarn_Order_Status,data.Yarn_Delivery_Date,data.Fbrc_DL_Requested,data.Fbrc_DL_Answered,data.Fbrc_DL_Auto,data.Fbrc_Production_Due_Date_Auto,data.Fbrc_Auto_Reflection_Date,data.Fbrc_Act_Dy,data.Fbrc_Act_Qty,data.Fbrc_Order_Number,data.Fbrc_Order_Status,data.Fbrc_Delivery_Date,data.Color_DL_Requested,data.Color_DL_Answered,data.Color_DL_Auto,data.Color_Production_Due_Date_Auto,data.Color_Auto_Reflection_Date,data.Color_Act_Dy,data.Color_Act_Qty,data.Color_Order_Number,data.Color_Order_Status,data.Color_Delivery_Date,data.Trim_DL_Requested,data.Trim_DL_Answered,data.Trim_DL_Auto,data.Trim_Production_Due_Date_Auto,data.Trim_Auto_Reflection_Date,data.Trim_Act_Dy,data.Trim_Act_Qty,data.Trim_Order_Number,data.Trim_Order_Status,data.Trim_Delivery_Date,data.PO_DL_Requested,data.PO_DL_Answered,data.PO_DL_Auto,data.PO_Production_Due_Date_Auto,data.PO_Auto_Reflection_Date,data.PO_Act_Dy,data.PO_Act_Qty,data.PO_Order_Number,data.PO_Order_Status,data.Assort1,data.Assort2,data.NX_Assort,data.Solid,data.Order_Plan_QtySTOP,data.Fix_Flag,data.Alternative_Flag,data.Express_Line_Flag,data.Factory_Comment,data.Planned_EXF,data.EXF_ETD,data.ETD_WH,data.Sewing_Country_Region,data.Raw_Material_Original_Country_Region,data.Item_Drop,data.Create_Date,data.Create_User_ID,data.Create_User_Name,data.Create_Function,data.Update_Date,data.Update_User_ID,data.Update_User_Name,data.Update_Function,data.CountY,data.Sample,data.EXF,data.BDDL,data.BDDLpast_Past,data.LTBD_EXF,data.New_BDDL,data.new_LTBD_EXF,data.LTPO_EXF,data.Qty_LTBD_EXF,data.Qty_LTPO_EXF,data.County2Y,data.PHASE,id,null,'bidhun')
     } else{
         break
     }
@@ -97,28 +96,23 @@ if(data.Order_Plan_Number !== null){
             if (details) {
                 // const updatedData = this.ordersAdapter.convertDtoToEntity(data);
                 const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
-                year:dtoData.year,planningSsnCd:dtoData.planningSsnCd,planningSsn:dtoData.planningSsn,tgtSsnCd:dtoData.tgtSsnCd,tgtSsn:dtoData.tgtSsn,bizCd:dtoData.bizCd,biz:dtoData.biz,planningRegionCode:dtoData.planningRegionCode,planningRegionName:dtoData.planningRegionName,channelCode:dtoData.channelCode,channelName:dtoData.channelName,department:dtoData.department,deptCd:dtoData.deptCd,Cls1_cd:dtoData.Cls1_cd,Cls2_cd:dtoData.Cls2_cd,gDept:dtoData.gDept,subCategory1:dtoData.subCategory1,coreCategory:dtoData.coreCategory,subCategory2:dtoData.subCategory2,subCategory3:dtoData.subCategory3,productionCategoryFabric:dtoData.productionCategoryFabric,productionCategoryFabricProcessing:dtoData.productionCategoryFabricProcessing,productionCategorySewing:dtoData.productionCategorySewing,productionCategorySewingProcessing:dtoData.productionCategorySewingProcessing,planningSumCode:dtoData.planningSumCode,planningSum:dtoData.planningSum,localNameGhq:dtoData.localNameGhq,itemCd:dtoData.itemCd,item:dtoData.item,origPrice:dtoData.origPrice,mainSampleCode:dtoData.mainSampleCode,frFabricCode:dtoData.frFabricCode,frFabric:dtoData.frFabric,supplierRawMaterialCode:dtoData.supplierRawMaterialCode,supplierRawMaterial:dtoData.supplierRawMaterial,rawMaterialSupplierCode:dtoData.rawMaterialSupplierCode,rawMaterialSupplier:dtoData.rawMaterialSupplier,vendorCoode:dtoData.vendorCoode,vendor:dtoData.vendor,sewingFactoryCode:dtoData.sewingFactoryCode,sewingFactory:dtoData.sewingFactory,branchFactoryCode:dtoData.branchFactoryCode,branchFactory:dtoData.branchFactory,coeff:dtoData.coeff,itemBranchNumber:dtoData.itemBranchNumber,officialPlanStdQty:dtoData.officialPlanStdQty,OfficialPlanFabPrpPlnQty:dtoData.OfficialPlanFabPrpPlnQty,OfficialPlanPoPrSlsQty:dtoData.OfficialPlanPoPrSlsQty,officalPlanCoQty:dtoData.officalPlanCoQty,officalPlanStockQty:dtoData.officalPlanStockQty,slsStartDy:dtoData.slsStartDy,publishFlagForFactory:dtoData.publishFlagForFactory,publishDate:dtoData.publishDate,allcEndDy:dtoData.allcEndDy,slsEndDy:dtoData.slsEndDy,GWH:dtoData.GWH,orderTiming:dtoData.orderTiming,swngPrdMonth:dtoData.swngPrdMonth,swngPrdWeek:dtoData.swngPrdWeek,orderPlanQty:dtoData.orderPlanQty,orderPlanQtyCoeff:dtoData.orderPlanQtyCoeff,trnspMthd:dtoData.trnspMthd,prodPlanType:dtoData.prodPlanType,ph1St:dtoData.ph1St,wh:dtoData.wh,whAct:dtoData.whAct,whAuto:dtoData.whAuto,yarnDlRequested:dtoData.yarnDlRequested,yarnDlAnswered:dtoData.yarnDlAnswered,yarnDlAuto:dtoData.yarnDlAuto,yarnProductionDueDateAuto:dtoData.yarnProductionDueDateAuto,yarnAutoReflectionDate:dtoData.yarnAutoReflectionDate,yarnActDy:dtoData.yarnActDy,yarnActQty:dtoData.yarnActQty,yarnOrderNumber:dtoData.yarnOrderNumber,yarnOrderStatus:dtoData.yarnOrderStatus,yarnDeliveryDate:dtoData.yarnDeliveryDate,fbrcDlRequested:dtoData.fbrcDlRequested,fbrcDlAnswered:dtoData.fbrcDlAnswered,fbrcDlAuto:dtoData.fbrcDlAuto,fbrcProductionDueDateAuto:dtoData.fbrcProductionDueDateAuto,fbrcAutoReflectionDate:dtoData.fbrcAutoReflectionDate,factoryCommentUpdateDate:dtoData.factoryCommentUpdateDate,fbrcActDy:dtoData.fbrcActDy,fbrcActQty:dtoData.fbrcActQty,fbrcOrderNumber:dtoData.fbrcOrderNumber,fbrcOrderStatus:dtoData.fbrcOrderStatus,fbrcDeliveryDate:dtoData.fbrcDeliveryDate,colorDlRequested:dtoData.colorDlRequested,colorDlAnswered:dtoData.colorDlAnswered,colorDlAuto:dtoData.colorDlAuto,colorProductionDueDateAuto:dtoData.colorProductionDueDateAuto,colorAutoReflectionDate:dtoData.colorAutoReflectionDate,colorActDy:dtoData.colorActDy,colorActQty:dtoData.colorActQty,colorOrderNumber:dtoData.colorOrderNumber,colorOrderStatus:dtoData.colorOrderStatus,colorDeliveryDate:dtoData.colorDeliveryDate,trimDlRequested:dtoData.trimDlRequested,trimDlAnswered:dtoData.trimDlAnswered,trimDlAuto:dtoData.trimDlAuto,trimProductionDueDateAuto:dtoData.trimProductionDueDateAuto,trimAutoReflectionDate:dtoData.trimAutoReflectionDate,trimActDy:dtoData.trimActDy,trimActQty:dtoData.trimActQty,trimOrderNumber:dtoData.trimOrderNumber,trimOrderStatus:dtoData.trimOrderStatus,trimDeliveryDate:dtoData.trimDeliveryDate,poDlRequested:dtoData.poDlRequested,poDlAnswered:dtoData.poDlAnswered,poDlAuto:dtoData.poDlAuto,poProductionDueDateAuto:dtoData.poProductionDueDateAuto,poAutoReflectionDate:dtoData.poAutoReflectionDate,poActDy:dtoData.poActDy,poActQty:dtoData.poActQty,poOrderNumber:dtoData.poOrderNumber,poOrderStatus:dtoData.poOrderStatus,assort1:dtoData.assort1,assort2:dtoData.assort2,nxAssort:dtoData.nxAssort,solid:dtoData.solid,orderPlanQtyStop:dtoData.orderPlanQtyStop,fixFlag:dtoData.fixFlag,alternativeFlag:dtoData.alternativeFlag,expressLineFlag:dtoData.expressLineFlag,factoryComment:dtoData.factoryComment,plannedEXF:dtoData.plannedEXF,exfEtd:dtoData.exfEtd,exfWh:dtoData.exfWh,sweingCountryRegion:dtoData.sweingCountryRegion,rewMaterialOriginal:dtoData.rewMaterialOriginal,itemDrop:dtoData.itemDrop,fileId:Number(dtoData.fileId),countY:dtoData.countY,sample:dtoData.sample,exf:dtoData.exf,bddl:dtoData.bddl,bddlPast:dtoData.bddlPast,ltBdExf:dtoData.ltBdExf,newBddl:dtoData.newBddl,newLtBdExf:dtoData.newLtBdExf,ltPoExf:dtoData.ltPoExf,qtyLtBdExf:dtoData.qtyLtBdExf,qtyLtPoExf:dtoData.qtyLtPoExf,country2Y:dtoData.country2Y,phase:dtoData.phase,version:version
+                year:dtoData.year,planningSsnCd:dtoData.planningSsnCd,planningSsn:dtoData.planningSsn,tgtSsnCd:dtoData.tgtSsnCd,tgtSsn:dtoData.tgtSsn,bizCd:dtoData.bizCd,biz:dtoData.biz,planningRegionCode:dtoData.planningRegionCode,planningRegionName:dtoData.planningRegionName,channelCode:dtoData.channelCode,channelName:dtoData.channelName,department:dtoData.department,deptCd:dtoData.deptCd,Cls1_cd:dtoData.Cls1_cd,Cls2_cd:dtoData.Cls2_cd,gDept:dtoData.gDept,subCategory1:dtoData.subCategory1,coreCategory:dtoData.coreCategory,subCategory2:dtoData.subCategory2,subCategory3:dtoData.subCategory3,productionCategoryFabric:dtoData.productionCategoryFabric,productionCategoryFabricProcessing:dtoData.productionCategoryFabricProcessing,productionCategorySewing:dtoData.productionCategorySewing,productionCategorySewingProcessing:dtoData.productionCategorySewingProcessing,planningSumCode:dtoData.planningSumCode,planningSum:dtoData.planningSum,localNameGhq:dtoData.localNameGhq,itemCd:dtoData.itemCd,item:dtoData.item,origPrice:dtoData.origPrice,mainSampleCode:dtoData.mainSampleCode,frFabricCode:dtoData.frFabricCode,frFabric:dtoData.frFabric,supplierRawMaterialCode:dtoData.supplierRawMaterialCode,supplierRawMaterial:dtoData.supplierRawMaterial,rawMaterialSupplierCode:dtoData.rawMaterialSupplierCode,rawMaterialSupplier:dtoData.rawMaterialSupplier,vendorCoode:dtoData.vendorCoode,vendor:dtoData.vendor,sewingFactoryCode:dtoData.sewingFactoryCode,sewingFactory:dtoData.sewingFactory,branchFactoryCode:dtoData.branchFactoryCode,branchFactory:dtoData.branchFactory,coeff:dtoData.coeff,itemBranchNumber:dtoData.itemBranchNumber,officialPlanStdQty:dtoData.officialPlanStdQty,OfficialPlanFabPrpPlnQty:dtoData.OfficialPlanFabPrpPlnQty,OfficialPlanPoPrSlsQty:dtoData.OfficialPlanPoPrSlsQty,officalPlanCoQty:dtoData.officalPlanCoQty,officalPlanStockQty:dtoData.officalPlanStockQty,slsStartDy:dtoData.slsStartDy,publishFlagForFactory:dtoData.publishFlagForFactory,publishDate:dtoData.publishDate,allcEndDy:dtoData.allcEndDy,slsEndDy:dtoData.slsEndDy,GWH:dtoData.GWH,orderTiming:dtoData.orderTiming,swngPrdMonth:dtoData.swngPrdMonth,swngPrdWeek:dtoData.swngPrdWeek,orderPlanQty:dtoData.orderPlanQty,orderPlanQtyCoeff:dtoData.orderPlanQtyCoeff,trnspMthd:dtoData.trnspMthd,prodPlanType:dtoData.prodPlanType,ph1St:dtoData.ph1St,wh:dtoData.wh,whAct:dtoData.whAct,whAuto:dtoData.whAuto,yarnDlRequested:dtoData.yarnDlRequested,yarnDlAnswered:dtoData.yarnDlAnswered,yarnDlAuto:dtoData.yarnDlAuto,yarnProductionDueDateAuto:dtoData.yarnProductionDueDateAuto,yarnAutoReflectionDate:dtoData.yarnAutoReflectionDate,yarnActDy:dtoData.yarnActDy,yarnActQty:dtoData.yarnActQty,yarnOrderNumber:dtoData.yarnOrderNumber,yarnOrderStatus:dtoData.yarnOrderStatus,yarnDeliveryDate:dtoData.yarnDeliveryDate,fbrcDlRequested:dtoData.fbrcDlRequested,fbrcDlAnswered:dtoData.fbrcDlAnswered,fbrcDlAuto:dtoData.fbrcDlAuto,fbrcProductionDueDateAuto:dtoData.fbrcProductionDueDateAuto,fbrcAutoReflectionDate:dtoData.fbrcAutoReflectionDate,factoryCommentUpdateDate:dtoData.factoryCommentUpdateDate,fbrcActDy:dtoData.fbrcActDy,fbrcActQty:dtoData.fbrcActQty,fbrcOrderNumber:dtoData.fbrcOrderNumber,fbrcOrderStatus:dtoData.fbrcOrderStatus,fbrcDeliveryDate:dtoData.fbrcDeliveryDate,colorDlRequested:dtoData.colorDlRequested,colorDlAnswered:dtoData.colorDlAnswered,colorDlAuto:dtoData.colorDlAuto,colorProductionDueDateAuto:dtoData.colorProductionDueDateAuto,colorAutoReflectionDate:dtoData.colorAutoReflectionDate,colorActDy:dtoData.colorActDy,colorActQty:dtoData.colorActQty,colorOrderNumber:dtoData.colorOrderNumber,colorOrderStatus:dtoData.colorOrderStatus,colorDeliveryDate:dtoData.colorDeliveryDate,trimDlRequested:dtoData.trimDlRequested,trimDlAnswered:dtoData.trimDlAnswered,trimDlAuto:dtoData.trimDlAuto,trimProductionDueDateAuto:dtoData.trimProductionDueDateAuto,trimAutoReflectionDate:dtoData.trimAutoReflectionDate,trimActDy:dtoData.trimActDy,trimActQty:dtoData.trimActQty,trimOrderNumber:dtoData.trimOrderNumber,trimOrderStatus:dtoData.trimOrderStatus,trimDeliveryDate:dtoData.trimDeliveryDate,poDlRequested:dtoData.poDlRequested,poDlAnswered:dtoData.poDlAnswered,poDlAuto:dtoData.poDlAuto,poProductionDueDateAuto:dtoData.poProductionDueDateAuto,poAutoReflectionDate:dtoData.poAutoReflectionDate,poActDy:dtoData.poActDy,poActQty:dtoData.poActQty,poOrderNumber:dtoData.poOrderNumber,poOrderStatus:dtoData.poOrderStatus,assort1:dtoData.assort1,assort2:dtoData.assort2,nxAssort:dtoData.nxAssort,solid:dtoData.solid,orderPlanQtyStop:dtoData.orderPlanQtyStop,fixFlag:dtoData.fixFlag,alternativeFlag:dtoData.alternativeFlag,expressLineFlag:dtoData.expressLineFlag,factoryComment:dtoData.factoryComment,plannedEXF:dtoData.plannedEXF,exfEtd:dtoData.exfEtd,exfWh:dtoData.exfWh,sweingCountryRegion:dtoData.sweingCountryRegion,rewMaterialOriginal:dtoData.rewMaterialOriginal,itemDrop:dtoData.itemDrop,fileId:Number(dtoData.fileId),countY:dtoData.countY,sample:dtoData.sample,exf:dtoData.exf,bddl:dtoData.bddl,bddlPast:dtoData.bddlPast,ltBdExf:dtoData.ltBdExf,newBddl:dtoData.newBddl,newLtBdExf:dtoData.newLtBdExf,ltPoExf:dtoData.ltPoExf,qtyLtBdExf:dtoData.qtyLtBdExf,qtyLtPoExf:dtoData.qtyLtPoExf,country2Y:dtoData.country2Y,phase:dtoData.phase,version:version.toExponential
 
                 })
-                console.log(updateOrder,'----------updateorder')
                 if (!updateOrder.affected) {
-                    console.log('rollback')
                     await transactionManager.releaseTransaction();
                     return new CommonResponseModel(false, 0, 'Something went wrong in order update')
                 }
-                console.log('continue')
-                const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id, month,details[0].productionPlanId);
-                console.log(convertedExcelEntity)
+                const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,details.productionPlanId);
                 const saveExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedExcelEntity);
-                // console.log(saveExcelEntity,'------------saveexcelentity')
                 if (saveExcelEntity) {
                     //difference insertion to order diff table
                     const existingDataKeys = Object.keys(details)
                     const currentDataKeys = Object.keys(dtoData)
                     for (const existingDataKey of existingDataKeys) {
-                        if (details[existingDataKey] != data[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month') {
+                        if (details[existingDataKey] != dtoData[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month' && existingDataKey != 'productionPlanId') {
                             const orderDiffObj = new OrdersDifferenceEntity();
-                            if (existingDataKey === 'lastUpdateDate' || existingDataKey === 'requestedWhDate' || existingDataKey === 'contractedDate' || existingDataKey === 'EXF') {
+                            if (existingDataKey === 'publishDate' || existingDataKey === 'yarnProductionDueDateAuto' || existingDataKey === 'yarnAutoReflectionDate' || existingDataKey === 'EXF' || existingDataKey === 'yarnDeliveryDate' || existingDataKey === 'fbrcProductionDueDateAuto'|| existingDataKey === 'fbrcAutoReflectionDate'|| existingDataKey === 'fbrcDeliveryDate'|| existingDataKey === 'colorProductionDueDateAuto'|| existingDataKey === 'colorAutoReflectionDate'|| existingDataKey === 'colorDeliveryDate' || existingDataKey === 'trimProductionDueDateAuto'|| existingDataKey === 'trimAutoReflectionDate'|| existingDataKey === 'trimDeliveryDate'|| existingDataKey === 'poProductionDueDateAuto'|| existingDataKey === 'poAutoReflectionDate') {
                                 const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
                                 const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
                                 orderDiffObj.oldValue = details[existingDataKey]
@@ -143,7 +137,7 @@ if(data.Order_Plan_Number !== null){
                                 orderDiffObj.newValue = dtoData[existingDataKey]
                                 orderDiffObj.columnName = orderColumnValues[existingDataKey]
                                 orderDiffObj.displayName = existingDataKey
-                                orderDiffObj.productionPlanId = details[0].productionPlanId
+                                orderDiffObj.productionPlanId = details.productionPlanId
                                 orderDiffObj.version = dtoData.version
                                 orderDiffObj.fileId = id
                                 if (orderDiffObj.oldValue != orderDiffObj.newValue) {
@@ -159,11 +153,10 @@ if(data.Order_Plan_Number !== null){
                     }
                 }
             } else {
-                console.log('ok')
                 dtoData.version = 1
                 const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id, month);
                 const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
-                const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id, month,saveExcelEntity.productionPlanId);
+                const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,saveExcelEntity.productionPlanId);
                 const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
                 // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
                 if (!saveExcelEntity || !saveChildExcelEntity) {
@@ -174,7 +167,7 @@ if(data.Order_Plan_Number !== null){
             }
         }
     }
-    if (!flag.has(false)) {
+    if (!(flag.has(false))) {
         await transactionManager.completeTransaction()
         return new CommonResponseModel(true, 1, 'Data saved sucessfully')
     } else {
@@ -411,7 +404,8 @@ if(data.Order_Plan_Number !== null){
             if(!deleteChildData.affected){
                 await manager.releaseTransaction();
                 return new CommonResponseModel(false, 0, 'Something went wrong in Orders Delete')
-            }
+            } 
+            
         }
         if (req) {
             const getOrderDiff = await this.orderDiffRepo.find({where:{fileId:req.fileId}})
@@ -424,43 +418,42 @@ if(data.Order_Plan_Number !== null){
             }
         }
         if (req) {
-            const deleteOrdersData = await manager.getRepository(OrdersEntity).delete({fileId:req.fileId})
-            if(!deleteOrdersData.affected){
-                await manager.releaseTransaction();
-                return new CommonResponseModel(false, 0, 'Something went wrong in Orders Delete')
-            }
+            const deleteOrdersData = await manager.getRepository(OrdersEntity).delete({fileId:req.fileId,version:1})
+            // if(!deleteOrdersData.affected){
+            //     await manager.releaseTransaction();
+            //     return new CommonResponseModel(false, 0, 'Something went wrong in Orders Delete')
+            // }
         }
         const updatedData = await manager.getRepository(OrdersChildEntity).find({select:['fileId'],
-        order: { id: 'DESC' }
+        order: { id: 'DESC' },take:1
         })
+        const flag = new Set()
         let data = []
         if(updatedData.length > 0){
-            data = await this.ordersChildRepo.find({
-                where: { fileId: updatedData[0]?.fileId },
-                // relations: ['orders']
-            })
+            data = await manager.getRepository(OrdersChildEntity).find({where: { fileId: updatedData[0]?.fileId }})
+            // this.ordersChildRepo.find({
+            //     where: { fileId: updatedData[0]?.fileId },
+            //     // relations: ['orders']
+            // })
+        } else{
+            flag.add(true)
         }
-        console.log(updatedData,'----updateddata')
        
-        console.log(data,'---------------data')
-        const flag = new Set()
         if(data.length > 0){
 
             for (const dtoData of data) {
                 // const prodPlanId = new OrdersEntity();
                 // prodPlanId.productionPlanId = dtoData.orders.productionPlanId
-                console.log(dtoData,'---------dtodata')
                 const updateOrder = await manager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber },{ 
                     year: dtoData.year,planningSsnCd: dtoData.planningSsnCd,planningSsn: dtoData.planningSsn,tgtSsnCd: dtoData.tgtSsnCd,tgtSsn: dtoData.tgtSsn,bizCd: dtoData.bizCd,biz: dtoData.biz,planningRegionCode: dtoData.planningRegionCode,planningRegionName: dtoData.planningRegionName,channelCode: dtoData.channelCode,channelName: dtoData.channelName,department: dtoData.department,deptCd: dtoData.deptCd,Cls1_cd: dtoData.Cls1_cd,Cls2_cd: dtoData.Cls2_cd,gDept: dtoData.gDept,subCategory1: dtoData.subCategory1,coreCategory: dtoData.coreCategory,subCategory2: dtoData.subCategory2,subCategory3: dtoData.subCategory3,productionCategoryFabric: dtoData.productionCategoryFabric,productionCategoryFabricProcessing: dtoData.productionCategoryFabricProcessing,productionCategorySewing: dtoData.productionCategorySewing,productionCategorySewingProcessing: dtoData.productionCategorySewingProcessing,planningSumCode: dtoData.planningSumCode,planningSum: dtoData.planningSum,localNameGhq: dtoData.localNameGhq,itemCd: dtoData.itemCd,item: dtoData.item,origPrice: dtoData.origPrice,mainSampleCode: dtoData.mainSampleCode,frFabricCode: dtoData.frFabricCode,frFabric: dtoData.frFabric,supplierRawMaterialCode: dtoData.supplierRawMaterialCode,supplierRawMaterial: dtoData.supplierRawMaterial,rawMaterialSupplierCode: dtoData.rawMaterialSupplierCode,rawMaterialSupplier: dtoData.rawMaterialSupplier,vendorCoode: dtoData.vendorCoode,vendor: dtoData.vendor,sewingFactoryCode: dtoData.sewingFactoryCode,sewingFactory: dtoData.sewingFactory,branchFactoryCode: dtoData.branchFactoryCode,branchFactory: dtoData.branchFactory,coeff: dtoData.coeff,itemBranchNumber: dtoData.itemBranchNumber,officialPlanStdQty: dtoData.officialPlanStdQty,OfficialPlanFabPrpPlnQty: dtoData.OfficialPlanFabPrpPlnQty,OfficialPlanPoPrSlsQty: dtoData.OfficialPlanPoPrSlsQty,officalPlanCoQty: dtoData.officalPlanCoQty,officalPlanStockQty: dtoData.officalPlanStockQty,slsStartDy: dtoData.slsStartDy,publishFlagForFactory: dtoData.publishFlagForFactory,publishDate: dtoData.publishDate,allcEndDy: dtoData.allcEndDy,slsEndDy: dtoData.slsEndDy,GWH: dtoData.GWH,orderPlanNumber: dtoData.orderPlanNumber,orderTiming: dtoData.orderTiming,swngPrdMonth: dtoData.swngPrdMonth,swngPrdWeek: dtoData.swngPrdWeek,orderPlanQty: dtoData.orderPlanQty,orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff,trnspMthd: dtoData.trnspMthd,prodPlanType: dtoData.prodPlanType,ph1St: dtoData.ph1St,wh: dtoData.wh,whAct: dtoData.whAct,whAuto: dtoData.whAuto,yarnDlRequested: dtoData.yarnDlRequested,yarnDlAnswered: dtoData.yarnDlAnswered,yarnDlAuto: dtoData.yarnDlAuto,yarnProductionDueDateAuto: dtoData.yarnProductionDueDateAuto,yarnAutoReflectionDate: dtoData.yarnAutoReflectionDate,yarnActDy: dtoData.yarnActDy,yarnActQty: dtoData.yarnActQty,yarnOrderNumber: dtoData.yarnOrderNumber,yarnOrderStatus: dtoData.yarnOrderStatus,yarnDeliveryDate: dtoData.yarnDeliveryDate,fbrcDlRequested: dtoData.fbrcDlRequested,fbrcDlAnswered: dtoData.fbrcDlAnswered,fbrcDlAuto: dtoData.fbrcDlAuto,fbrcProductionDueDateAuto: dtoData.fbrcProductionDueDateAuto,fbrcAutoReflectionDate: dtoData.fbrcAutoReflectionDate,factoryCommentUpdateDate: dtoData.factoryCommentUpdateDate,fbrcActDy: dtoData.fbrcActDy,fbrcActQty: dtoData.fbrcActQty,fbrcOrderNumber: dtoData.fbrcOrderNumber,fbrcOrderStatus: dtoData.fbrcOrderStatus,fbrcDeliveryDate: dtoData.fbrcDeliveryDate,colorDlRequested: dtoData.colorDlRequested,colorDlAnswered: dtoData.colorDlAnswered,colorDlAuto: dtoData.colorDlAuto,colorProductionDueDateAuto: dtoData.colorProductionDueDateAuto,colorAutoReflectionDate: dtoData.colorAutoReflectionDate,colorActDy: dtoData.colorActDy,colorActQty: dtoData.colorActQty,colorOrderNumber: dtoData.colorOrderNumber,colorOrderStatus: dtoData.colorOrderStatus,colorDeliveryDate: dtoData.colorDeliveryDate,trimDlRequested: dtoData.trimDlRequested,trimDlAnswered: dtoData.trimDlAnswered,trimDlAuto: dtoData.trimDlAuto,trimProductionDueDateAuto: dtoData.trimProductionDueDateAuto,trimAutoReflectionDate: dtoData.trimAutoReflectionDate,trimActDy: dtoData.trimActDy,trimActQty: dtoData.trimActQty,trimOrderNumber: dtoData.trimOrderNumber,trimOrderStatus: dtoData.trimOrderStatus,trimDeliveryDate: dtoData.trimDeliveryDate,poDlRequested: dtoData.poDlRequested,poDlAnswered: dtoData.poDlAnswered,poDlAuto: dtoData.poDlAuto,PO_EXFtotalAbnormalLT: dtoData.PO_EXFtotalAbnormalLT,poProductionDueDateAuto: dtoData.poProductionDueDateAuto,poAutoReflectionDate: dtoData.poAutoReflectionDate,poActDy: dtoData.poActDy,poActQty: dtoData.poActQty,poOrderNumber: dtoData.poOrderNumber,poOrderStatus: dtoData.poOrderStatus,assort1: dtoData.assort1,assort2: dtoData.assort2,nxAssort: dtoData.nxAssort,solid: dtoData.solid,orderPlanQtyStop: dtoData.orderPlanQtyStop,fixFlag: dtoData.fixFlag,alternativeFlag: dtoData.alternativeFlag,expressLineFlag: dtoData.expressLineFlag,factoryComment: dtoData.factoryComment,plannedEXF: dtoData.plannedEXF,exfEtd: dtoData.exfEtd,exfWh: dtoData.exfWh,sweingCountryRegion: dtoData.sweingCountryRegion,rewMaterialOriginal: dtoData.rewMaterialOriginal,itemDrop: dtoData.itemDrop,version: Number(dtoData.version),fileId: dtoData.fileId,countY: dtoData.countY,sample: dtoData.sample,exf: dtoData.exf,bddl: dtoData.bddl,bddlPast: dtoData.bddlPast,ltBdExf: dtoData.ltBdExf,newBddl: dtoData.newBddl,newLtBdExf: dtoData.newLtBdExf,ltPoExf: dtoData.ltPoExf,qtyLtBdExf: dtoData.qtyLtBdExf,qtyLtPoExf: dtoData.qtyLtPoExf,country2Y: dtoData.country2Y,phase: dtoData.phase
                 })
-                console.log(updateOrder,'-------updateorder')
-                if (!updateOrder.affected) {
-                    console.log('rollback')
+               
+                if (updateOrder.affected) {
+                    flag.add(true)
+                }else {
                     flag.add(false)
                     await manager.releaseTransaction()
                     return new CommonResponseModel(false, 0, 'Something went wrong in order update', updateOrder)
-                }else {
-                    flag.add(true)
                 }
             }
         } else{
@@ -479,7 +472,6 @@ if(data.Order_Plan_Number !== null){
         const manager = new GenericTransactionManager(this.dataSource)
         await manager.startTransaction()
 
-        console.log(req,'requestfff')
         if (req) {
             const latestFileId = await manager.getRepository(FileUploadEntity).update({ id: req.fileId }, { isActive: false })
             if(!latestFileId.affected){
@@ -504,15 +496,20 @@ if(data.Order_Plan_Number !== null){
             //     return new CommonResponseModel(false, 0, 'Something went wrong in Orders Delete')
             // }
         }
-        const updatedData = await manager.getRepository(TrimOrdersChildEntity).findOne({select:['fileId'],
-        order: { id: 'DESC' }
-        })
-        console.log(updatedData.fileId,'fileiddddd')
-        const data = await this.trimordersChildRepo.find({
-            where: { fileId: updatedData?.fileId },
-            // relations: ['orders']
+        const updatedData = await manager.getRepository(TrimOrdersChildEntity).find({select:['fileId'],
+        order: { id: 'DESC' },take:1
         })
         const flag = new Set()
+        let data = []
+        if(updatedData.length > 0){
+
+             data = await this.trimordersChildRepo.find({
+                where: { fileId: updatedData[0]?.fileId },
+                // relations: ['orders']
+            })
+        } else{
+            flag.add(true)
+        }
         if(data.length > 0){
 
             for (const dtoData of data) {
@@ -659,7 +656,6 @@ if(data.Order_Plan_Number !== null){
             const fileId = `fileId${month}`;
             fileIdsByMonth[fileId] = id;
         }
-        console.log(fileIdsByMonth)
         let records;
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
@@ -706,7 +702,6 @@ if(data.Order_Plan_Number !== null){
             const fileId = `fileId${month}`;
             fileIdsByMonth[fileId] = id;
         }
-        console.log(fileIdsByMonth)
         let records;
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
