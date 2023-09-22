@@ -1243,7 +1243,7 @@ const FactoryPPMReport = () => {
         )
         const getRowClassName = (record) => {
             if (record.displayName) {
-                return 'colored-factory-empty-row';
+                return 'colored-row';
             }
             return '';
         };

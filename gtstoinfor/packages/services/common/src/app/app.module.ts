@@ -13,6 +13,7 @@ import { SupplierModule } from './supplier/supplier.module';
 import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.module';
 import { DataSource } from 'typeorm';
 import { AppDataSource, AppDataSource1, AppDataSource2 } from './app-datasource';
+import { FobModule } from './fob-price-list/fob.module';
 
 
 @Module({
@@ -36,7 +37,7 @@ import { AppDataSource, AppDataSource1, AppDataSource2 } from './app-datasource'
     FactoriesModule,
     SupplierModule,
     UsersModule,
-    AuthModule, JwtModule, DpomModule,AdobeAcrobatApiModule],
+    AuthModule, JwtModule, DpomModule,AdobeAcrobatApiModule,FobModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,

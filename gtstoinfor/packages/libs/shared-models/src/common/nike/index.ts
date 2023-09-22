@@ -20,3 +20,5 @@ export * from './nike-order-filter.req';
 export * from './fob-price-Diff.req';
 export * from './marketing-ppm-report.model';
 export * from './marketing-report-size.model';
+export * from './total-quantity-po-change';
+export * from './pochange-qty.model';

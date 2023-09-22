@@ -47,6 +47,7 @@ export class DpomChildAdapter {
         entity.planningPriorityCode = dto.planningPriorityCode
         entity.planningPriorityDesc = dto.planningPriorityDesc
         entity.launchCode = dto.launchCode
+        entity.geoCode = dto.geoCode
         entity.DPOMLineItemStatus = dto.DPOMLineItemStatus
         entity.modeOfTransportationCode = dto.modeOfTransportationCode
         entity.inCoTerms = dto.inCoTerms
