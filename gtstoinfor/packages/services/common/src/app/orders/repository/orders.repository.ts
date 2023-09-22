@@ -15,11 +15,12 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getOrdersData(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(`o.production_plan_id, o.prod_plan_type_name, o.item_code, o.itemName, o.order_status, o.fr_fabric_name,o.order_qty_pcs, o.contracted_date, o.requested_wh_date, o.last_update_date, o.created_at`)
-            .orderBy(` o.prod_plan_type_name`, 'ASC')
+            .select(`o.production_plan_id, o.planning_ssn_cd, o.department, o.planning_sum_code, o.planning_sum, o.item,o.vendor, o.sewing_factory, o.branchFactory, o.coeff, o.publish_date,o.order_plan_number,o.gwh,o.wh,o.raw_material_supplier,o.yarn_order_status,o.fbrc_order_status,o.color_order_status,o.trim_order_status,o.po_order_status,o.planned_exf,o.biz,o.fr_fabric,o.trnsp_mthd`)
+            .orderBy(` o.planning_ssn_cd`, 'ASC')
         return await query.getRawMany();
     }
 
+    
     async getQtyChangeData(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
             .select(`o.production_plan_id, o.item_code, o.itemName,o.prod_plan_type_name , o.order_status, o.fr_fabric_name, o.contracted_date,o.last_update_date,o.requested_wh_date, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.version`)
