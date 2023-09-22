@@ -171,58 +171,28 @@ export const PriceListGrid = (props: PriceListView) => {
     {
         title: "Style",
         dataIndex: "style",
-        render: (text, _record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+       
       },
       {
         title: "Year",
         dataIndex: "year",
         align:"center",
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+       
       },
       {
         title: "Destination",
         dataIndex: "destination",
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+        
       },
       {
         title: "Season Code",
         dataIndex: "seasonCode",
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+       
       },
       {
         title: "Currency",
         dataIndex: "currency",
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
+       
       },
       {
         title: 'Status',

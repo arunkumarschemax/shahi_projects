@@ -34,14 +34,14 @@ const ChangesGrid = () => {
     const { Option } = Select
 
     useEffect(() => {
-        getContractDateChangeData()
+        //getContractDateChangeData()
         getQtyChangeData()
-        getWharehouseDateChangeData()
+        //getWharehouseDateChangeData()
         getQtyDifChangeData()
-        getPhaseWiseData()
-        getPhaseWiseExcelData()
-        getAllLatestFileMonthWisedata()
-        getMonthlyPhaseWiseExcelData()
+        //getPhaseWiseData()
+        //getPhaseWiseExcelData()
+        // getAllLatestFileMonthWisedata()
+        // getMonthlyPhaseWiseExcelData()
     }, [])
 
     const getAllLatestFileMonthWisedata = () => {
@@ -538,17 +538,17 @@ const ChangesGrid = () => {
             ...getColumnSearchProps('production_plan_id')
         },
         {
-            title: 'Production Plan Name',
-            dataIndex: 'prod_plan_type_name'
+            title: 'Production Plan Type',
+            dataIndex: 'prod_plan_type'
         },
         {
             title: 'Item code',
-            dataIndex: 'item_code',
-            ...getColumnSearchProps('item_code')
+            dataIndex: 'item_cd',
+            ...getColumnSearchProps('item_cd')
         },
         {
             title: 'Item Name',
-            dataIndex: 'itemName'
+            dataIndex: 'item'
         },
         {
             title: 'Previous Order Quantity Pieces',
@@ -597,33 +597,33 @@ const ChangesGrid = () => {
             sorter: (a, b) => a.version - b.version,
             sortDirections: ['descend', 'ascend'],
         },
-        {
-            title: 'Contracted Date',
-            dataIndex: 'contracted_date',
-            render: (text, record) => {
-                return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
-            }
-        },
-        {
-            title: 'Order Revised Date',
-            dataIndex: 'last_update_date',
-            render: (text, record) => {
-                return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
-            }
-        },
-        {
-            title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date',
-            // width :'190px',
-            render: (text, record) => {
-                return record.requested_wh_date ? convertToYYYYMMDD(record.requested_wh_date) : '-'
-            }
-        },
-        {
-            title: 'Order Status',
-            dataIndex: 'order_status',
-            render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
-        }
+        // {
+        //     title: 'Contracted Date',
+        //     dataIndex: 'contracted_date',
+        //     render: (text, record) => {
+        //         return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
+        //     }
+        // },
+        // {
+        //     title: 'Order Revised Date',
+        //     dataIndex: 'last_update_date',
+        //     render: (text, record) => {
+        //         return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
+        //     }
+        // },
+        // {
+        //     title: 'Requested Warehouse Date',
+        //     dataIndex: 'requested_wh_date',
+        //     // width :'190px',
+        //     render: (text, record) => {
+        //         return record.requested_wh_date ? convertToYYYYMMDD(record.requested_wh_date) : '-'
+        //     }
+        // },
+        // {
+        //     title: 'Order Status',
+        //     dataIndex: 'order_status',
+        //     render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
+        // }
     ];
 
     const columns1: any = [
@@ -803,11 +803,11 @@ const ChangesGrid = () => {
         },
         {
             title: 'Item code',
-            dataIndex: 'item_code'
+            dataIndex: 'item_cd'
         },
         {
             title: 'Item Name',
-            dataIndex: 'itemName'
+            dataIndex: 'item'
         },
         {
             title: ' Sum Of Qrd Qty last Week',
@@ -1223,26 +1223,26 @@ const ChangesGrid = () => {
                 }
             />,
         },
-        {
-            key: '3',
-            label: <b >Requested Warehouse Date Revised Orders: {filteredWarehouseDateData?.length}</b>,
-            children: <Table bordered dataSource={filteredWarehouseDateData} columns={columns1} />,
-        },
-        {
-            key: '4',
-            label: <b>Contracted Date Revised Orders : {filteredContractDateData?.length}</b>,
-            children: <Table bordered dataSource={filteredContractDateData} columns={columns2} />,
-        },
-        {
-            key: '5',
-            label: <b>Phase Wise Sum of Order Quantity : {phaseData?.length}</b>,
-            children: <Table bordered dataSource={phaseData} columns={columns4} />,
-        },
-        {
-            key: '6',
-            label: <b>Monthly Phase Wise Order Quantity : {monthWisedata?.length}</b>,
-            children: <Table bordered dataSource={monthWisedata} columns={columns5} />,
-        }
+        // {
+        //     key: '3',
+        //     label: <b >Requested Warehouse Date Revised Orders: {filteredWarehouseDateData?.length}</b>,
+        //     children: <Table bordered dataSource={filteredWarehouseDateData} columns={columns1} />,
+        // },
+        // {
+        //     key: '4',
+        //     label: <b>Contracted Date Revised Orders : {filteredContractDateData?.length}</b>,
+        //     children: <Table bordered dataSource={filteredContractDateData} columns={columns2} />,
+        // },
+        // {
+        //     key: '5',
+        //     label: <b>Phase Wise Sum of Order Quantity : {phaseData?.length}</b>,
+        //     children: <Table bordered dataSource={phaseData} columns={columns4} />,
+        // },
+        // {
+        //     key: '6',
+        //     label: <b>Monthly Phase Wise Order Quantity : {monthWisedata?.length}</b>,
+        //     children: <Table bordered dataSource={monthWisedata} columns={columns5} />,
+        // }
     ];
 
     const onReset = () => {
@@ -1260,7 +1260,7 @@ const ChangesGrid = () => {
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
-            <Form form={form} layout={"vertical"} >
+            {/* <Form form={form} layout={"vertical"} >
                 <Row gutter={[24, 24]}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
                         <Form.Item name="contractDate"
@@ -1298,7 +1298,7 @@ const ChangesGrid = () => {
                             onClick={onReset}>Reset</Button>
                     </Col>
                 </Row>
-            </Form>
+            </Form> */}
             {filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData ? <>
                 {/* <Row gutter={24}>
                     <Col>

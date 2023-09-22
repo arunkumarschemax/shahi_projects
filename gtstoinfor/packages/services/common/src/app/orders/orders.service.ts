@@ -341,13 +341,15 @@ year:dtoData.year,planningSsnCd:dtoData.planningSsnCd,planningSsn:dtoData.planni
 
     async getQtyDifChangeData(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
-
+        // console.log(files.length ,"length")
         let data;
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
-        } else if (files.length == 1) {
+        } 
+        else if (files.length > 1) {
             data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId)
-        } else {
+        } 
+        else {
             data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId)
         }
         if (data)

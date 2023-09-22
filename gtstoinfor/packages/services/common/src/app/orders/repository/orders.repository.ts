@@ -22,9 +22,9 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getQtyChangeData(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(`o.production_plan_id, o.item_code, o.itemName,o.prod_plan_type_name , o.order_status, o.fr_fabric_name, o.contracted_date,o.last_update_date,o.requested_wh_date, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.version`)
+        .select(`o.production_plan_id,o.item_cd,o.item,o.prod_plan_type,o.fr_fabric,o.created_at,od.old_val,od.new_val,(od.new_val - od.old_val) AS Diff,od.version`)
             .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
-            .where(` column_name='order_qty_pcs' ORDER BY o.prod_plan_type_name ASC`)
+            .where(` column_name='order_plan_qty' ORDER BY o.prod_plan_type ASC`)
         return await query.getRawMany();
     }
 
