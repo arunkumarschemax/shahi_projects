@@ -226,6 +226,13 @@ const VendorGrid = () => {
     },
 
     {
+      title: "Branch Count",
+      dataIndex: "branchesCount",
+      defaultSortOrder: "ascend" as SortOrder,
+      sorter: (a, b) => a.location.localeCompare(b.location),
+    },
+
+    {
       title: "Actions",
       dataIndex: "actions",
       align: "center",
@@ -243,7 +250,7 @@ const VendorGrid = () => {
 
   const viewchange = (rowData: any) => {
     navigate(`/VendorBranchInfoGrid`, { state: { rowData } });
-    // console.log(rowData,"8888888888888888888")
+    console.log(rowData,"8888888888888888888")
   };
 
   return (
