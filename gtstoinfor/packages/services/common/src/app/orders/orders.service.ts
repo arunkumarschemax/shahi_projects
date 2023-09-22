@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, FileTypesEnum, MonthAndQtyModel, MonthWiseDataModel, MonthWiseExcelDataModel, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, FileTypesEnum, MonthAndQtyModel, MonthWiseDataModel, MonthWiseExcelDataModel, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, SeasonWiseQtyModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
@@ -705,4 +705,37 @@ year:dtoData.year,planningSsnCd:dtoData.planningSsnCd,planningSsn:dtoData.planni
         }
     }
 
+    async seasonWiseReport(): Promise<CommonResponseModel> {
+        try {
+            const reportData = await this.ordersRepository.seasonWiseReport();
+            let season23SSWH = [];
+            let season23SSEXF = [];
+            let season23FWWH = [];
+            let season23FWEXF = [];
+            let season24SSWH = [];
+            let season24SSEXF = [];
+            for (const data of reportData) {
+                if (data.year === "2023") {
+                    if (data.plannedSeason === "SS") {
+                        season23SSWH.push(data) && season23SSEXF.push(data);
+                    } else if (data.plannedSeason === "FW") {
+                        season23FWWH.push(data) && season23FWEXF.push(data);
+                    }
+                } else if (data.year === "2024" && data.plannedSeason === "SS") {
+                    season24SSWH.push(data) && season24SSEXF.push(data);
+                }
+            }
+            const season = [season23SSWH,season23SSEXF,season23FWWH,season23FWEXF,season24SSWH,season24SSEXF];
+            console.log(season, 'coming');
+            if (reportData.length) {
+                return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', season);
+            } else {
+                return new CommonResponseModel(false, 0, 'No Data Found', {});
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+    
+    
 }
