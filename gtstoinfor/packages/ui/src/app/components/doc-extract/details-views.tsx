@@ -171,9 +171,19 @@ function ScanDetailView() {
     key: 'Charge',
     ...getColumnSearchProps('Charge'),
     sorter: (a, b) => a.Charge.localeCompare(b.Charge),
-    render: (text: any, record: { Charge: any }) => {
-      // Render the "Charge" column with two decimal places if it's a number, otherwise display "-"
-      return <>{(record.Charge ? record.Charge : "-")}</>;
+    render: (text, record) => {
+      // Parse the "Charge" value as a number
+      const chargeValue = Number(record.Charge);
+
+      // Check if it's a valid number
+      if (!isNaN(chargeValue)) {
+        // Format the number to two decimal places
+        const formattedCharge = chargeValue.toFixed(2);
+        return <>{formattedCharge}</>;
+      } else {
+        // Display a hyphen for non-numeric values
+        return "-";
+      }
     },
   },
   
@@ -230,18 +240,20 @@ function ScanDetailView() {
           {rowData.state.rowData.InnvoiceNumber ? rowData.state.rowData.InnvoiceNumber : "--"}
         </Descriptions.Item>
 
-        <Descriptions.Item
-          label="CGST"
-          labelStyle={{ color: "black", fontWeight: "bold" }}
-        >
-          {rowData.state.rowData.Cgst ? rowData.state.rowData.Cgst : "--"}
-        </Descriptions.Item>
 
         <Descriptions.Item
           label="IGST"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.IGST ? rowData.state.rowData.IGST : "--"}
+        </Descriptions.Item>
+
+        
+        <Descriptions.Item
+          label="CGST"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.Cgst ? rowData.state.rowData.Cgst : "--"}
         </Descriptions.Item>
 
         <Descriptions.Item

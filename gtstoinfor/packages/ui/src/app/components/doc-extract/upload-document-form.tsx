@@ -128,7 +128,6 @@ export function UploadDocumentForm() {
     getdata1();
   }, []);
 
-  console.log(extractedData, "extracted data");
 
   const getdata1 = () => {
     servicess
@@ -207,12 +206,12 @@ export function UploadDocumentForm() {
     return extractedGstNumber;
   };
 
-  const extractIgst = (text) => {
-    const IgstRegex = /(\d,\d{3}\.\d{2})/g;
-    const match = text.match(IgstRegex);
-    const extractedIgst = match ? match[0] : "";
-    return extractedIgst;
-  };
+  // const extractIgst = (text) => {
+  //   const IgstRegex = /(\d,\d{3}\.\d{2})/g;
+  //   const match = text.match(IgstRegex);
+  //   const extractedIgst = match ? match[0] : "";
+  //   return extractedIgst;
+  // };
 
   const extractInnvoiceamount = (text) => {
     const InnvoiceamountRegex = /(\d{1,3}(?:,\d{3})*\.\d{2})/g;
@@ -243,55 +242,55 @@ export function UploadDocumentForm() {
     return extractedvendor;
   };
 
-  const extractInvoiceDate = (text) => {
-    const invoiceDateRegex =
-      /\b(?:\d{1,2}-[A-Za-z]{3}-\d{2}|\d{4} [A-Za-z]{3} \d{1,2})\b/g;
-    const match = text.match(invoiceDateRegex);
+  // const extractInvoiceDate = (text) => {
+  //   const invoiceDateRegex =
+  //     /\b(?:\d{1,2}-[A-Za-z]{3}-\d{2}|\d{4} [A-Za-z]{3} \d{1,2})\b/g;
+  //   const match = text.match(invoiceDateRegex);
 
-    if (match) {
-      const extractedDate = match[0];
-      const parts = extractedDate.split(/-| /);
+  //   if (match) {
+  //     const extractedDate = match[0];
+  //     const parts = extractedDate.split(/-| /);
 
-      if (parts.length === 3) {
-        const day = parts[0];
-        const month = getMonthNumber(parts[1]);
-        const year = formatYear(parts[2]);
+  //     if (parts.length === 3) {
+  //       const day = parts[0];
+  //       const month = getMonthNumber(parts[1]);
+  //       const year = formatYear(parts[2]);
 
-        return `${year}-${month}-${day}`;
-      }
-    }
+  //       return `${year}-${month}-${day}`;
+  //     }
+  //   }
 
-    return "";
-  };
+  //   return "";
+  // };
 
-  const getMonthNumber = (monthStr) => {
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    return String(monthNames.indexOf(monthStr) + 1).padStart(2, "0");
-  };
+  // const getMonthNumber = (monthStr) => {
+  //   const monthNames = [
+  //     "Jan",
+  //     "Feb",
+  //     "Mar",
+  //     "Apr",
+  //     "May",
+  //     "Jun",
+  //     "Jul",
+  //     "Aug",
+  //     "Sep",
+  //     "Oct",
+  //     "Nov",
+  //     "Dec",
+  //   ];
+  //   return String(monthNames.indexOf(monthStr) + 1).padStart(2, "0");
+  // };
 
-  const formatYear = (yearStr) => {
-    if (yearStr.length === 2) {
-      return `20${yearStr}`;
-    } else {
-      return yearStr;
-    }
-  };
-  const textWithDate = "Invoice Date: 21-Sep-08";
-  const formattedDate = extractInvoiceDate(textWithDate);
-  console.log("Formatted Date:", formattedDate);
+  // const formatYear = (yearStr) => {
+  //   if (yearStr.length === 2) {
+  //     return `20${yearStr}`;
+  //   } else {
+  //     return yearStr;
+  //   }
+  // };
+  // const textWithDate = "Invoice Date: 21-Sep-08";
+  // const formattedDate = extractInvoiceDate(textWithDate);
+  // console.log("Formatted Date:", formattedDate);
 
   const extractInnvoicecurrency = (text) => {
     const InvoicecuurencyRegex = /(INR|DOLLARS|DINARS)/g;
@@ -381,12 +380,39 @@ export function UploadDocumentForm() {
     setQuotation("");
   };
 
+  // const handleEdit = (item) => {
+  //   setHSN(item.HSN);
+  //   setDescription(item.description);
+  //   setTaxtype(item.Taxtype);
+  //   setTaxamount(item.Taxamount);
+  //   setTaxPercentage(item.Taxpercentage);
+  //   let editedCharge = "";
+  //   if (item.Taxamount !== null && item.Taxpercentage !== null) {
+  //     const Taxpercentage = item.Taxpercentage;
+  //     const Taxamount = item.Taxamount;
+  //     const equivalentFor100Percent = (Taxamount * 100) / Taxpercentage;
+  //     editedCharge = `${equivalentFor100Percent.toFixed(2)}`;
+  //   } else if (item.Taxamount !== null) {
+  //     editedCharge = `${item.Taxamount}`;
+  //   }
+  //   setCharge(editedCharge);
+  //   setVariance(item.unitprice);
+  //   setUnitquantity(item.unitquantity);
+  //   setQuotation(item.quotation);
+
+  //   setIsEditing(true);
+  //   setEditingItem(item);
+  //   setButtonText("Update");
+  // };
+
   const handleEdit = (item) => {
-    setHSN(item.HSN);
-    setDescription(item.description);
-    setTaxtype(item.Taxtype);
-    setTaxamount(item.Taxamount);
-    setTaxPercentage(item.Taxpercentage);
+    setHSN(item.HSN || "0");
+    setDescription(item.description || "");
+    setTaxtype(item.Taxtype || "0");
+    setTaxamount(item.Taxamount || "0");
+    // setCharge(item.Charge || "0");
+    // setTaxPercentage(item.Taxpercentage || "0");
+    setTaxPercentage(item.Taxpercentage || "0");
     let editedCharge = "";
     if (item.Taxamount !== null && item.Taxpercentage !== null) {
       const Taxpercentage = item.Taxpercentage;
@@ -396,11 +422,11 @@ export function UploadDocumentForm() {
     } else if (item.Taxamount !== null) {
       editedCharge = `${item.Taxamount}`;
     }
-    setCharge(editedCharge);
-    setVariance(item.unitprice);
-    setUnitquantity(item.unitquantity);
-    setQuotation(item.quotation);
-
+    setCharge(editedCharge || "0");
+    setVariance(item.unitprice || "0");
+    setUnitquantity(item.unitquantity || "0");
+    setQuotation(item.quotation || "0");
+  
     setIsEditing(true);
     setEditingItem(item);
     setButtonText("Update");
@@ -430,28 +456,28 @@ export function UploadDocumentForm() {
       dataIndex: "HSN",
       width: "30",
       key: "HSN",
-      render: (HSN) => ` ${HSN}`,
+      render: (HSN) => (HSN !== undefined && HSN !== null ? HSN : "0"),
     },
     {
       title: "Tax Type",
       dataIndex: "Taxtype",
       key: "Taxtype",
-      render: (Taxtype) => ` ${Taxtype}`,
+      render: (Taxtype) => (Taxtype !== undefined && Taxtype !== null ? Taxtype : "0"),
     },
     {
       title: "Tax Amount",
       dataIndex: "Taxamount",
       key: "Taxamount",
-      render: (Taxamount) => (Taxamount !== null ? `${Taxamount}` : "0"),
+      render: (Taxamount) => (Taxamount !== undefined && Taxamount !== null ? `${Taxamount}` : "0"),
     },
     {
       title: "Tax Percentage",
       dataIndex: "Taxpercentage",
       key: "Taxpercentage",
       render: (Taxpercentage, record) => {
-        if (Taxpercentage !== null) {
+        if (Taxpercentage !== undefined && Taxpercentage !== null) {
           return `${Taxpercentage}`;
-        } else if (record.Taxpercentage !== null) {
+        } else if (record.Taxpercentage !== undefined && record.Taxpercentage !== null) {
           return `${record.Taxpercentage}`;
         }
         return "0";
@@ -492,7 +518,55 @@ export function UploadDocumentForm() {
       dataIndex: "quotation",
       key: "quotation",
     },
-    // {
+   
+
+    {
+      title: "Variance",
+      dataIndex: "variance",
+      key: "variance",
+      hide: true,
+      render: (variance, record) => {
+        const Charge = parseFloat(record.Charge) || 0;
+        const Quotation = parseFloat(record.quotation) || 0;
+        const varianceValue = Quotation - Charge;
+        let status;
+        if (varianceValue === 0) {
+          status = "No Variance";
+        } else if (varianceValue > 0) {
+          status = "Par Variance";
+        } else {
+          status = "Negative Variance";
+        }
+
+        return `${varianceValue.toFixed(2)}`;
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      render: (_, item) => (
+        <span>
+          <Button
+            onClick={() => handleEdit(item)}
+            icon={<EditOutlined />}
+            style={{ color: "blue" }}
+          />
+          <Divider type="vertical" />
+          <Popconfirm
+            title="Are you sure to delete this item?"
+            onConfirm={() => handleDelete(item)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button icon={<DeleteOutlined />} style={{ color: "red" }} />
+          </Popconfirm>
+        </span>
+      ),
+    },
+  ];
+
+   // {
     //   title: "Variance",
     //   dataIndex: "variance",
     //   key: "variance",
@@ -534,67 +608,6 @@ export function UploadDocumentForm() {
     //   },
     // },
 
-    {
-      title: "Variance",
-      dataIndex: "variance",
-      key: "variance",
-      hide: true,
-      render: (variance, record) => {
-        const Charge = parseFloat(record.Charge) || 0;
-        const Quotation = parseFloat(record.quotation) || 0;
-        const varianceValue = Quotation - Charge;
-        let status;
-        if (varianceValue === 0) {
-          status = "No Variance";
-        } else if (varianceValue > 0) {
-          status = "Par Variance";
-        } else {
-          status = "Negative Variance";
-        }
-
-        return `${varianceValue.toFixed(2)}`;
-      },
-    },
-    // {
-    //   title: "Status",
-    //   dataIndex: "status",
-    //   key: "status",
-    //   render: (status, record) => {
-    //     return status;
-    //   },
-    // },
-
-    // {
-    //   title: "Status",
-    //   dataIndex: "variance_status",
-    //   key: "variance_status",
-    // },
-
-    {
-      title: "Action",
-      dataIndex: "action",
-      key: "action",
-      render: (_, item) => (
-        <span>
-          <Button
-            onClick={() => handleEdit(item)}
-            icon={<EditOutlined />}
-            style={{ color: "blue" }}
-          />
-          <Divider type="vertical" />
-          <Popconfirm
-            title="Are you sure you want to delete this item?"
-            onConfirm={() => handleDelete(item)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button icon={<DeleteOutlined />} style={{ color: "red" }} />
-          </Popconfirm>
-        </span>
-      ),
-    },
-  ];
-
   const handleZoomIn = () => {
     if (zoomFactor < 2) {
       setZoomFactor(zoomFactor + 0.1);
@@ -611,6 +624,192 @@ export function UploadDocumentForm() {
     setIsDatePickerVisible(!isDatePickerVisible);
   };
 
+
+  const parseExtractedText = (text) => {
+    const lines = text.split('\n');
+    const data = [];
+
+    lines.forEach((line, index) => {
+      data.push({
+        id: index + 1,
+        content: line.trim(),
+      });
+    });
+
+    return data;
+  };
+
+
+  const extractvendorname = (data) => {
+    const venodrnamekeywords = ['CNEE : ', 'Payee Name:', 'AccountName ', 'Registered Office Address ',];
+    const matchingValues = [];
+
+    for (const keyword of venodrnamekeywords) {
+      for (const item of data) {
+        if (item.content.includes(keyword)) {
+          const value = item.content.replace(keyword, '').trim();
+          matchingValues.push(value);
+        }
+      }
+    }
+
+    return matchingValues.join(', ');
+  };
+
+  const extractInvoiceNumber = (data) => {
+    const keywords = ['INVOICE NUMBER', 'Tax Invoice', 'TAX INVOICE', 'NVOICE NUMBER', 'INVOICE No'];
+    const matchingValues = [];
+
+    for (const keyword of keywords) {
+      for (const item of data) {
+        if (item.content.includes(keyword)) {
+          const value = item.content.replace(keyword, '').trim();
+          matchingValues.push(value);
+        }
+      }
+    }
+
+    return matchingValues.join(', ');
+  };
+
+
+
+  const extractInvoiceAmount = (data) => {
+    const amountKeywords = [
+      '[oueDate ] Taxable Amount {INR)',
+      '| ‘ ) Invoice Total INR|',
+      'TOTAL INR',
+      'TOTAL AMOUNT',
+      'Invoice Total Inr',
+      'Invoice Total INR',
+      'Net Value',
+      'Amount Due',
+      'Taxable Amount {INR)',
+      'OEBIT',
+      'p ',
+    ];
+    const matchingValues = [];
+
+    for (const keyword of amountKeywords) {
+      for (const item of data) {
+        if (item.content.includes(keyword)) {
+          const valueText = item.content.split(keyword)[1].trim();
+          const cleanedValue = valueText.replace(/[^0-9.]/g, '');
+          matchingValues.push(cleanedValue);
+        }
+      }
+    }
+    const filteredValues = matchingValues.filter((value) => value !== '');
+    return filteredValues.join(', ');
+  };
+
+  const extractIGST = (data) => {
+    const igstKeywords = ['AbpiesT "', 'AbbiesT', 'Integrated Tax', 'TOTAL TAXABLE AMOUNT', 'IGST 22,900.93'];
+    const matchingValues = [];
+
+    for (const keyword of igstKeywords) {
+      for (const item of data) {
+        if (item.content.includes(keyword)) {
+          const valueText = item.content.split(keyword)[1].trim();
+          const cleanedValue = valueText.replace(/[^0-9.,]/g, '');
+          matchingValues.push(cleanedValue);
+        }
+      }
+    }
+    const filteredValues = matchingValues.filter((value) => value !== '');
+    return filteredValues.join(', ');
+  }
+
+
+  // const extractCGST = (data) => {
+  //   const cgstKeywords = ['CGST', 'Central Tax', 'SUBTmowTﬁL I'];
+  //   const matchingValues = [];
+
+  //   for (const keyword of cgstKeywords) {
+  //     for (const item of data) {
+  //       if (item.content.includes(keyword)) {
+  //         const value = item.content.replace(keyword, '').trim();
+  //         matchingValues.push(value);
+  //       }
+  //     }
+  //   }
+  //   return matchingValues.join(', ');
+  // };
+
+  const extractInvoiceDate = (text) => {
+    const invoiceDateRegex =
+      /\b(?:\d{1,2}-[A-Za-z]{3}-\d{2}|\d{1,2} [A-Za-z]{3} \d{4}|\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}\/\d{4})\b/g;
+    const match = text.match(invoiceDateRegex);
+
+    if (match) {
+      const extractedDate = match[0];
+      if (/\d{1,2} [A-Za-z]{3} \d{4}/.test(extractedDate)) {
+        const parts = extractedDate.split(" ");
+        const day = parts[0];
+        const month = getMonthNumber(parts[1]);
+        const year = parts[2];
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+      }
+      if (/\d{1,2}-[A-Za-z]{3}-\d{2}/.test(extractedDate)) {
+        const parts = extractedDate.split("-");
+        const day = parts[0];
+        const month = getMonthNumber(parts[1]);
+        const year = formatYear(parts[2]);
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+      }
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(extractedDate)) {
+        const parts = extractedDate.split("/");
+        const day = parts[0];
+        const month = parts[1];
+        const year = parts[2];
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+      }
+      if (/^\d{4}-\d{2}-\d{2}$/.test(extractedDate)) {
+        return extractedDate;
+      }
+    }
+    return "";
+  };
+
+  function getMonthNumber(monthStr) {
+    const monthMap = {
+      Jan: "01",
+      Feb: "02",
+      Mar: "03",
+      Apr: "04",
+      May: "05",
+      Jun: "06",
+      Jul: "07",
+      Aug: "08",
+      Sep: "09",
+      Oct: "10",
+      Nov: "11",
+      Dec: "12",
+    };
+    return monthMap[monthStr] || monthStr;
+  }
+
+  function formatYear(yearStr) {
+    if (yearStr.length === 2) {
+      const currentYear = new Date().getFullYear();
+      const currentCentury = Math.floor(currentYear / 100);
+      const currentDecade = currentYear % 100;
+      const inputDecade = parseInt(yearStr, 10);
+      const adjustedYear = currentCentury * 100 + inputDecade;
+
+      if (adjustedYear > currentYear) {
+        return (currentCentury - 1) * 100 + inputDecade;
+      }
+
+      return adjustedYear;
+    } else if (yearStr.length === 4) {
+      return yearStr;
+    } else {
+      return "";
+    }
+  }
+
+
   const handleUploadDocument = () => {
     if (file && !buttonClicked) {
       setButtonClicked(true);
@@ -626,27 +825,47 @@ export function UploadDocumentForm() {
       Tesseract.recognize(file, "eng", { logger: (m) => console.log(m) }).then(
         ({ data: { text } }) => {
           setIsLoading(false);
+
+          const parsedData = parseExtractedText(text);
+          console.log(parsedData, 'ALL CONSOLE');
+
+          const extractedInvoiceNumber = extractInvoiceNumber(parsedData);
+          setInnvoicenum(extractedInvoiceNumber);
+
+          const extractedInvoiceAmount = extractInvoiceAmount(parsedData);
+          setInnvoiceamount(extractedInvoiceAmount);
+
+          const extractedIGST = extractIGST(parsedData);
+          setIgst(extractedIGST);
+
+          // const extractedCGST = extractCGST(parsedData);
+          // setCgst(extractedCGST);
+
+
           const extractedGstNumbers = extractGstNumbers(text);
           const extractedvendor = extractVendor(text);
           const extractedInvoiceDate = extractInvoiceDate(text);
-          const extractedInnvoicenum = extractInnvoiceNum(text);
-          const extractedInnvoiceamount = extractInnvoiceamount(text);
+          // const extractedInnvoicenum = extractInnvoiceNum(text);
+          // const extractedInnvoiceamount = extractInnvoiceamount(text);
           const extractedInnvoicecurrency = extractInnvoicecurrency(text);
-          const extractedIgst = extractIgst(text);
+          // const extractedIgst = extractIgst(text);
           const extractedFinancialyear = extractFinancialyear(text);
           const extractedCgst = extractCgst(text);
           const extractedSgst = extractSgst(text);
 
+
           setGstNumbers(extractedGstNumbers);
-          setInnvoiceamount(extractedInnvoiceamount);
+          // setInnvoiceamount(extractedInnvoiceamount);
           setInnvoicecurrency(extractedInnvoicecurrency);
           setInvoiceDate(extractedInvoiceDate);
           setVendor(extractedvendor);
-          setInnvoicenum(extractedInnvoicenum);
-          setIgst(extractedIgst);
+          // setInnvoicenum(extractedInnvoicenum);
+          // setIgst(extractedIgst);
           setCgst(extractedCgst);
           setSgst(extractedSgst);
           setFinancialyear(extractedFinancialyear);
+
+
 
           const lines = text.split("\n");
 
@@ -665,7 +884,7 @@ export function UploadDocumentForm() {
               }
               currentHSN = {
                 HSN: line.content.includes("HSN")
-                  ? line.content.match(/\d+/)[0]
+                  ? line.content.match(/\d+/)
                   : line.content.trim(),
                 Taxtype: line.content.match(/IGST|CGST|SGST|GST/),
                 Taxamount: null,
@@ -756,15 +975,12 @@ export function UploadDocumentForm() {
         message.error("Only pdf and image files are allowed!");
         return false;
       }
-
       Tesseract.recognize(file, "eng", { logger: (m) => console.log(m) }).then(
         ({ data: { text } }) => {
           console.log(text);
         }
       );
-
       setFile(file);
-
       return false;
     },
     progress: {
@@ -794,8 +1010,9 @@ export function UploadDocumentForm() {
   };
 
   const onSumbit = () => {
-    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount, Innvoicecurrency, routing, comment, timecreated, buyerName, financialyear, JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData, "");
-
+    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount,
+      Innvoicecurrency, routing, comment, timecreated, buyerName, financialyear,
+      JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData, "");
     console.log(req, "submit");
     service
       .postdata(req)
@@ -804,7 +1021,7 @@ export function UploadDocumentForm() {
           message.success("Success");
           navigate("/scan-document");
         } else {
-          message.error("failed");
+          message.error("Fill All Fields");
         }
       })
       .catch((err: { message: any }) => {
@@ -816,7 +1033,6 @@ export function UploadDocumentForm() {
     setButtonClicked(true);
     window.location.reload();
   };
-
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -857,7 +1073,8 @@ export function UploadDocumentForm() {
                   name="file"
                   {...gstUploadFieldProps}
                   accept=".jpeg,.png,.jpg"
-                  // showUploadList={false} 
+                  multiple
+                // showUploadList={false} 
                 >
                   <Button
                     key="file"
@@ -866,66 +1083,64 @@ export function UploadDocumentForm() {
                   >
                     Choose File
                   </Button>
-                  
                   <Typography.Text type="secondary">
                     (Supported formats jpeg, jpg, png)
                   </Typography.Text>
                 </Upload>
-              
 
                 <Row>
-      {extractionCompleted ? (
-        <Button
-          type="primary"
-          danger
-          style={{
-            position: 'relative',
-            bottom: '78px',
-            left: '220px',
-          }}
-          onClick={handleCancel}
-        >
-          Cancel
-        </Button>
-      ) : (
-        <Button
-          type="primary"
-          icon={<UploadOutlined />}
-          style={{
-            position: 'relative',
-            bottom: '78px',
-            left: '220px',
-          }}
-          onClick={handleUploadDocument}
-          disabled={isLoading || buttonClicked}
-        >
-          {isLoading ? (
-            <div
-              style={{
-                position: 'fixed',
-                top: '0',
-                left: '0',
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 9999,
-                background: 'rgba(0, 0, 0, 0.5)',
-              }}
-            >
-              <Spin size="large" />
-              <div style={{ marginTop: '10px', color: 'white' }}>
-                Please wait...
-              </div>
-            </div>
-          ) : (
-            'Upload'
-          )}
-        </Button>
-      )}
-    </Row>
+                  {extractionCompleted ? (
+                    <Button
+                      type="primary"
+                      danger
+                      style={{
+                        position: 'relative',
+                        bottom: '78px',
+                        left: '220px',
+                      }}
+                      onClick={handleCancel}
+                    >
+                      Cancel
+                    </Button>
+                  ) : (
+                    <Button
+                      type="primary"
+                      icon={<UploadOutlined />}
+                      style={{
+                        position: 'relative',
+                        bottom: '78px',
+                        left: '220px',
+                      }}
+                      onClick={handleUploadDocument}
+                      disabled={isLoading || buttonClicked}
+                    >
+                      {isLoading ? (
+                        <div
+                          style={{
+                            position: 'fixed',
+                            top: '0',
+                            left: '0',
+                            width: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            zIndex: 9999,
+                            background: 'rgba(0, 0, 0, 0.5)',
+                          }}
+                        >
+                          <Spin size="large" />
+                          <div style={{ marginTop: '10px', color: 'white' }}>
+                            Please wait...
+                          </div>
+                        </div>
+                      ) : (
+                        'Upload'
+                      )}
+                    </Button>
+                  )}
+                </Row>
               </Form.Item>
             </Col>
           </Row>
@@ -983,7 +1198,7 @@ export function UploadDocumentForm() {
         </div>
       </Card>
 
-      
+
 
       <Form form={GstForm}>
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -1014,7 +1229,8 @@ export function UploadDocumentForm() {
                     </label>
                     <Select
                       id="Vendor"
-                      style={{ width: "190px" }}
+                      style={{ width: "190px", borderColor: vendor ? "green" : "red", }}
+                      className={vendor ? "green" : vendor === "" ? "red" : "black"}
                       value={vendor}
                       onChange={(value) => setVendor(value)}
                       defaultValue="option1"
@@ -1041,7 +1257,8 @@ export function UploadDocumentForm() {
                     <Input
                       title="GST"
                       name="GST"
-                      style={{ width: "190px", height: "30px" }}
+                      style={{ width: "190px", height: "30px", borderColor: gstNumbers ? "green" : "red", }}
+                      className={gstNumbers ? "green" : gstNumbers === "" ? "red" : "black"}
                       value={gstNumbers}
                       onChange={(e) => setGstNumbers(e.target.value)}
                     />
@@ -1057,7 +1274,8 @@ export function UploadDocumentForm() {
                     <Input
                       id="Financialyear"
                       name="Financialyear"
-                      style={{ width: "180px", height: "30px" }}
+                      style={{ width: "180px", height: "30px", borderColor: financialyear ? "green" : "red", }}
+                      className={financialyear ? "green" : financialyear === "" ? "red" : "black"}
                       value={financialyear}
                       onChange={(e) => setFinancialyear(e.target.value)}
                     />
@@ -1075,7 +1293,8 @@ export function UploadDocumentForm() {
                     <Input
                       id="invoiceDate"
                       name="invoiceDate"
-                      style={{ width: "190px", height: "30px" }}
+                      style={{ width: "190px", height: "30px", borderColor: invoiceDate ? "green" : "red", }}
+                      className={invoiceDate ? "green" : invoiceDate === "" ? "red" : "black"}
                       value={invoiceDate}
                       onChange={(e) => setInvoiceDate(e.target.value)}
                     />
@@ -1091,7 +1310,8 @@ export function UploadDocumentForm() {
                     <Input
                       id="InnvoiceNumber"
                       name="InnvoiceNumber"
-                      style={{ width: "190px", height: "30px" }}
+                      style={{ width: "190px", height: "30px", borderColor: Innvoicenum ? "green" : "red", }}
+                      className={Innvoicenum ? "green" : Innvoicenum === "" ? "red" : "black"}
                       value={Innvoicenum}
                       onChange={(e) => setInnvoicenum(e.target.value)}
                     />
@@ -1107,7 +1327,8 @@ export function UploadDocumentForm() {
                     <Input
                       id="InnvoiceAmount"
                       name="InnvoiceAmount"
-                      style={{ width: "180px", height: "30px" }}
+                      style={{ width: "180px", height: "30px", borderColor: Innvoiceamount ? "green" : "red", }}
+                      className={Innvoiceamount ? "green" : Innvoiceamount === "" ? "red" : "black"}
                       value={Innvoiceamount}
                       onChange={(e) => setInnvoiceamount(e.target.value)}
                     />
@@ -1125,7 +1346,8 @@ export function UploadDocumentForm() {
                     <Input
                       id="IGST"
                       name="IGST"
-                      style={{ width: "190px", height: "30px" }}
+                      style={{ width: "190px", height: "30px", borderColor: Igst ? "green" : "red", }}
+                      className={Igst ? "green" : Igst === "" ? "red" : "black"}
                       value={Igst}
                       onChange={(e) => setIgst(e.target.value)}
                     />
@@ -1140,7 +1362,8 @@ export function UploadDocumentForm() {
                     <Input
                       id="Cgst"
                       name="Cgst"
-                      style={{ width: "190px", height: "30px" }}
+                      style={{ width: "190px", height: "30px", borderColor: Cgst ? "green" : "red", }}
+                      className={Cgst ? "green" : Cgst === "" ? "red" : "black"}
                       value={Cgst}
                       onChange={(e) => setCgst(e.target.value)}
                     />
@@ -1156,7 +1379,8 @@ export function UploadDocumentForm() {
                     <Input
                       id="Sgst"
                       name="Sgst"
-                      style={{ width: "180px", height: "30px" }}
+                      style={{ width: "180px", height: "30px", borderColor: Sgst ? "green" : "red", }}
+                      className={Sgst ? "green" : Sgst === "" ? "red" : "black"}
                       value={Sgst}
                       onChange={(e) => setSgst(e.target.value)}
                     />
@@ -1174,7 +1398,8 @@ export function UploadDocumentForm() {
                     <Input
                       id="Innvoice Currency"
                       name="Innvoice Currency"
-                      style={{ width: "190px", height: "30px" }}
+                      style={{ width: "190px", height: "30px", borderColor: Innvoicecurrency ? "green" : "red", }}
+                      className={Innvoicecurrency ? "green" : Innvoicecurrency === "" ? "red" : "black"}
                       value={Innvoicecurrency}
                       onChange={(e) => setInnvoicecurrency(e.target.value)}
                     />
@@ -1210,9 +1435,11 @@ export function UploadDocumentForm() {
                     <Input
                       id="Comment"
                       name="Comment"
-                      style={{ width: "180px", height: "30px" }}
+                      style={{ width: "180px", height: "30px", borderColor: comment ? "green" : "red", }}
+                      className={comment ? "green" : comment === "" ? "red" : "black"}
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
+                      required
                     />
                   </Col>
                 </Row>
@@ -1232,7 +1459,9 @@ export function UploadDocumentForm() {
                         width: "200px",
                         height: "30px",
                         paddingRight: "30px",
+                        borderColor: timecreated ? "green" : "red",
                       }}
+                      className={timecreated ? "green" : timecreated === "" ? "red" : "black"}
                       value={timecreated || ""}
                       onChange={(e) => setTimecreated(e.target.value)}
                     />
