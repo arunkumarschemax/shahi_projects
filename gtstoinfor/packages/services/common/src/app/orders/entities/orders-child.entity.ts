@@ -1050,20 +1050,18 @@ export class OrdersChildEntity {
         })
         updatedAt: string;
     
-        @Column('varchar', {
+        @Column('int', {
             nullable: true,
             name: 'version',
-            length:50
         })
-        version: string;
+        version: number;
     
        
-        @Column('varchar', {
+        @Column('int', {
             nullable:true,
             name: 'file_id',
-            length:50
         })
-        fileId : string;
+        fileId : number;
     
         // @Column('varchar', {
         //     nullable:true,
@@ -1112,7 +1110,7 @@ export class OrdersChildEntity {
             name: 'updated_user_function',
             length:50
         })
-        updatedUserFunction : string;
+        updateFunction : string;
     
         @Column('varchar', {
             nullable:true,
@@ -1206,6 +1204,17 @@ export class OrdersChildEntity {
             length:50
         })
         phase : string;
+
+        // @Column('datetime',{
+        //     name:'create_date'
+        // })
+        // createDate:Date
+    
+        // @Column('datetime',{
+        //     name:'update_date'
+        // })
+        // updateDate:Date
+
         @ManyToOne(() => OrdersEntity, orders => orders.ordersChild)
         @JoinColumn({ name: 'production_plan_id' })
         orders: OrdersEntity;

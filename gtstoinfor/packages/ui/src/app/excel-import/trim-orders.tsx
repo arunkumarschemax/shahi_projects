@@ -1,10 +1,11 @@
-import { Button, Card, Col, DatePicker, Form, Row, Select, Table, Tag, message } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, Tag, message } from 'antd';
 import { useEffect, useState, } from 'react';
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { OrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
+import { COLineRequest } from '@project-management-system/shared-models';
 
 
 const TrimOrder= () => {
@@ -34,6 +35,20 @@ const TrimOrder= () => {
             console.log(err.message)
         })
     }
+    const approveOrderStatus = (record) => {
+        console.log(record)
+    const req = new COLineRequest();
+    req.itemNumber = record.itemNumber
+    req.orderNumber = record.order_no
+    service.createCOline(req).then((res) => {
+        if (res.status) {
+            getData()
+            message.success(res.internalMessage)
+        } else (
+            message.error(res.internalMessage)
+        )
+    })
+    }
     const getFilterdData = () => {
         let orderNo = form.getFieldValue('orderNo');
         let startDate = selectedEstimatedFromDate;
@@ -61,6 +76,17 @@ const TrimOrder= () => {
         setSelectedEstimatedToDate(undefined);
         getData();
     }
+
+    const handleItemNoChange = (value, record) => {
+        console.log(value)
+        record.itemNumber = value
+        console.log(record)
+        // setItemNoValues((prevValues) => ({
+        //     ...prevValues,
+        //     [record.key]: value,
+        // }));
+    };
+
 
     const columns: any = [
         {
@@ -133,6 +159,48 @@ const TrimOrder= () => {
             dataIndex: 'order_qty_pcs',
             
         },
+        {
+            title: 'Status',
+            dataIndex: 'answered_status',
+        },
+        {
+            title: "Item No",
+            dataIndex: "itemNo",
+            render: (text, record) => {
+                return (
+                    <Form>
+                        <Form.Item>
+                            <Input
+                                placeholder="Enter Item No"
+                                onChange={(e) => handleItemNoChange(e.target.value, record)}
+                            />
+                        </Form.Item>
+                    </Form>
+                );
+            },
+        },
+        {
+            title: "Action",
+            dataIndex: "action",
+            render: (value, record) => {
+                // const isEnabled = isActionButtonEnabled(record);
+        
+                return (
+                    <Popconfirm
+                        title="Are you sure to approve"
+                        onConfirm={() => approveOrderStatus(record)}
+                        // disabled={record.answered_status == 'Accepted'}
+                    >
+                        <Button 
+                        // disabled={!isEnabled}
+                        >Accept</Button>
+                    </Popconfirm>
+                );
+            },
+            
+            
+        },
+        
         // {
         //     title: 'Trim Order Id',
         //     dataIndex: 'trim_order_id'
@@ -351,6 +419,7 @@ const TrimOrder= () => {
             { title: 'Trim Description', dataIndex: 'trim_description' },
             { title: 'Trim Item No', dataIndex: 'trim_item_no' },
             { title: 'Trim Supplier', dataIndex: 'trim_supplier' },
+            { title: 'Status', dataIndex: 'answered_status' },
 
 
             // { title: 'Currency', dataIndex: 'currency' },

@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FileUploadEntity } from "../entities/upload-file.entity";
 import { FileIdReq } from "../models/file-id.req";
+import { FileTypeDto } from "@project-management-system/shared-models";
 
 @Injectable()
 export class FileUploadRepository extends Repository<FileUploadEntity> {
@@ -11,11 +12,14 @@ export class FileUploadRepository extends Repository<FileUploadEntity> {
         super(fileUpload.target, fileUpload.manager, fileUpload.queryRunner);
     }
 
-    async getFilesData(): Promise<any[]> {
+    async getFilesData(req?:FileTypeDto): Promise<any[]> {
         const query = this.createQueryBuilder('fup')
             .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath, fup.created_at as uploadedDate, fup.created_user as createdUser, fup.status as status,fup.file_type as fileType`)
             .where(`fup.is_active = 1`)
-            .orderBy(`fup.created_at`, 'DESC')
+            if(req.fileType){
+                query.andWhere(`fup.file_type = '${req.fileType}'`)
+            }
+            query.orderBy(`fup.created_at`, 'DESC')
         return await query.getRawMany();
     }
 

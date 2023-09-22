@@ -6,7 +6,7 @@ import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { UndoOutlined } from '@ant-design/icons';
-import { FileStatusReq, FileTypesEnum } from '@project-management-system/shared-models';
+import { FileStatusReq, FileTypeDto, FileTypesEnum } from '@project-management-system/shared-models';
 
 
 export default function ExcelImport() {
@@ -32,10 +32,13 @@ export default function ExcelImport() {
   const loginUser = userData.user.userName
 
   const getUploadFilesData = () => {
-    ordersService.getUploadFilesData().then((res) => {
+    const req= new FileTypeDto(form.getFieldValue('fileType'))
+    ordersService.getUploadFilesData(req).then((res) => {
       if (res.status) {
         setFilesData(res.data)
         // message.success(res.internalMessage)
+      } else{
+        setFilesData([])
       }
     })
   }
@@ -74,8 +77,11 @@ export default function ExcelImport() {
           let integerPart
           //  console.log(selectedFile.name,'selectedFile') 
           const inputString = selectedFile.name
-          const match = inputString.match(/(\d+)\.\d+/);
-          if (match) {
+          console.log(inputString)
+          // const match = inputString.match(/(\d+)\.\d+/);
+          const match = inputString.match(/_(\d{2})/)
+          console.log(match)
+          if (match && match[1]) {
             integerPart = parseInt(match[1]);
             console.log(integerPart)
           } else {
@@ -84,9 +90,12 @@ export default function ExcelImport() {
           const formData = new FormData();
           formData.append('file', selectedFile);
           console.log(form.getFieldsValue().fileType)
+          const d = new Date();
+          // let month = d.getMonth();
+          let month = 9;
           if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
 
-            if (integerPart) {
+            if (month) {
               ordersService.fileUpload(formData, integerPart,form.getFieldsValue().fileType).then((fileRes) => {
                 if (fileRes.status) {
                   ordersService.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
@@ -118,7 +127,7 @@ export default function ExcelImport() {
               message.info('month not avilable')
             }
           }else{
-              ordersService.fileUpload(formData, 9,form.getFieldsValue().fileType).then((fileRes) => {
+              ordersService.fileUpload(formData,month,form.getFieldsValue().fileType).then((fileRes) => {
                 if (fileRes.status) {
                   ordersService.saveTrimOrder(data, fileRes?.data?.id, 9).then((res) => {
                     setLoading(true)
@@ -129,7 +138,7 @@ export default function ExcelImport() {
                       req.userName = loginUser ? loginUser : null;
                       ordersService.updateFileStatus(req)
                       message.success(res.internalMessage)
-                      // navigate("/excel-import/grid-view");
+                      navigate("/excel-import/trim-order");
                     } else {
                       const req = new FileStatusReq()
                       req.fileId = fileRes?.data?.id;
@@ -194,6 +203,10 @@ export default function ExcelImport() {
     fileList: filelist
   };
 
+  const onFileTypeChange = () => {
+    getUploadFilesData()
+  }
+
   return (
     <>
       <Card title="Excel Import">
@@ -222,6 +235,7 @@ export default function ExcelImport() {
                         placeholder="Select File Type"
                         optionFilterProp="children"
                         allowClear
+                        onChange={onFileTypeChange}
                         >
                         <Option key='trimorder' value="Trim Order">Trim Order</Option>
                         <Option key='projectionorder' value="Projection Order">Projection Order</Option>
