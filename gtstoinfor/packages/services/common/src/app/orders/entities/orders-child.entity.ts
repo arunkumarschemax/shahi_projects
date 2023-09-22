@@ -1013,7 +1013,12 @@ export class OrdersChildEntity {
             length:50
         })
         rewMaterialOriginal: string;
-    
+
+        @Column('int',{
+            nullable:true,
+            name:'month',
+        })
+        month:number
         @Column('varchar', {
             name: 'item_drop',
             length:50,
@@ -1045,20 +1050,18 @@ export class OrdersChildEntity {
         })
         updatedAt: string;
     
-        @Column('varchar', {
+        @Column('int', {
             nullable: true,
             name: 'version',
-            length:50
         })
-        version: string;
+        version: number;
     
        
-        @Column('varchar', {
+        @Column('int', {
             nullable:true,
             name: 'file_id',
-            length:50
         })
-        fileId : string;
+        fileId : number;
     
         // @Column('varchar', {
         //     nullable:true,

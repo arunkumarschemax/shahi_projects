@@ -1273,7 +1273,7 @@ export class OrdersEntity {
     @Column('varchar', {
         nullable: true,
         
-        name: 'updatlength:50ed_user',
+        name: 'updated_user',
         length:50
 
     })
@@ -1281,7 +1281,6 @@ export class OrdersEntity {
 
     @CreateDateColumn({
         name: 'created_at',
-        length:50
  
 
     })
@@ -1289,7 +1288,6 @@ export class OrdersEntity {
 
     @UpdateDateColumn({
         name: 'updated_at',
-        length:50
 
     })
     updatedAt: string;
@@ -1305,13 +1303,12 @@ export class OrdersEntity {
     @OneToMany(() => OrdersChildEntity, (ordersChild) => { ordersChild.orders }, { cascade: true })
     ordersChild: OrdersChildEntity;
 
-    @Column('varchar', {
+    @Column('int', {
         nullable:true,
         name: 'file_id',
-        length:50
 
     })
-    fileId : string;
+    fileId : number;
 
      
     @Column('varchar', {
@@ -1439,6 +1436,11 @@ export class OrdersEntity {
     })
     qtyLtBdExf : string;
 
+    @Column('int',{
+        nullable:true,
+        name:'month',
+    })
+month :number
     @Column('varchar', {
         nullable:true,
         name: 'qty_lt__po_exf',
