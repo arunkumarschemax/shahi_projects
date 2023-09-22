@@ -1045,20 +1045,18 @@ export class OrdersChildEntity {
         })
         updatedAt: string;
     
-        @Column('varchar', {
+        @Column('int', {
             nullable: true,
             name: 'version',
-            length:50
         })
-        version: string;
+        version: number;
     
        
-        @Column('varchar', {
+        @Column('int', {
             nullable:true,
             name: 'file_id',
-            length:50
         })
-        fileId : string;
+        fileId : number;
     
         // @Column('varchar', {
         //     nullable:true,

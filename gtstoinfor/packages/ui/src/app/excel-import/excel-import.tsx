@@ -74,8 +74,11 @@ export default function ExcelImport() {
           let integerPart
           //  console.log(selectedFile.name,'selectedFile') 
           const inputString = selectedFile.name
-          const match = inputString.match(/(\d+)\.\d+/);
-          if (match) {
+          console.log(inputString)
+          // const match = inputString.match(/(\d+)\.\d+/);
+          const match = inputString.match(/_(\d{2})/)
+          console.log(match)
+          if (match && match[1]) {
             integerPart = parseInt(match[1]);
             console.log(integerPart)
           } else {

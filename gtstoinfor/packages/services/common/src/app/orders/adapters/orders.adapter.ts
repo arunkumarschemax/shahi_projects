@@ -119,7 +119,7 @@ export class OrdersAdapter {
         entity.poDlRequested = dto.poDlRequested
         entity.poDlAnswered = dto.poDlAnswered
         entity.poDlAuto = dto.poDlAuto
-        entity.PO_EXFtotalAbnormalLT = dto.PO_EXFtotalAbnormalLT
+        // entity.PO_EXFtotalAbnormalLT = dto.PO_EXFtotalAbnormalLT
         entity.poProductionDueDateAuto = dto.poProductionDueDateAuto
         entity.poAutoReflectionDate = dto.poAutoReflectionDate
         entity.poActDy = dto.poActDy
@@ -156,8 +156,8 @@ export class OrdersAdapter {
         entity.qtyLtPoExf = dto.qtyLtPoExf
         entity.country2Y = dto.country2Y
         entity.phase = dto.phase
-        entity.fileId = dto.fileId
-        // entity.month=dto.month
+        entity.fileId = id
+        // entity.month= month
         entity.version = dto.version ? dto.version : 1
       
         return entity
