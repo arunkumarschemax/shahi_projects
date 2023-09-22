@@ -69,6 +69,16 @@ export class DpomService {
             const tokenResponse = await this.getOctaToken();
             if (!tokenResponse.status) throw new Error(tokenResponse.error)
             const dpomItemStatusValues = ["Accepted", "Unaccepted", "Closed", "Cancelled"];
+            const currentDate = new Date();
+
+            // Calculate 1.5 years (18 months) ago
+            currentDate.setMonth(currentDate.getMonth() - 18);
+
+            // Format the result as "YYYY-MM-DD"
+            const year = currentDate.getFullYear();
+            const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+            const day = currentDate.getDate().toString().padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
             const results = [];
             for (const status of dpomItemStatusValues) {
                 const payload = {
@@ -143,6 +153,11 @@ export class DpomService {
                             "fieldName": "poLine.dpomItemStatus",
                             "operator": "=",
                             "fieldValue": status
+                        },
+                        {
+                            "fieldName": "poHeader.documentDate",
+                            "operator": ">",
+                            "fieldValue": formattedDate
                         }
                     ],
                     "filter": [
@@ -155,7 +170,7 @@ export class DpomService {
                         }
                     ],
                     "offset": "0",
-                    "count": 3,
+                    "count": 5000,
                     "savedSearchID": "2e81ddd3-a131-4deb-9356-2528196ab342"
                 }
                 const headers = {
@@ -237,7 +252,7 @@ export class DpomService {
         }
     }
 
-    @Cron('0 8 * * *')
+    @Cron('0 11 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
@@ -289,8 +304,6 @@ export class DpomService {
                 entity.status = 'Success';
                 entity.createdUser = 'API sync'
                 const save = await transactionManager.getRepository(NikeFileUploadEntity).save(entity);
-                console.log(orderDetails.status)
-
                 for (const orderDetail of orderDetails.data) {
                     // Parse dates using moment
                     const date3 = moment(orderDetail.sizes.sizePo.goodsAtConsolidatorDate, 'MM/DD/YYYY');
@@ -298,8 +311,6 @@ export class DpomService {
 
                     // Calculate the difference in days
                     const daysDifference = date4.diff(date3);
-                    console.log(daysDifference, "daysDifference")
-
                     const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions ? orderDetail.poLine.itemVas.valueAddedServiceInstructions : ' '
                     //orderDetail.poLine.itemVas.valueAddedServiceInstructions;
                     const searchText = "HANGING IS REQUIRED";
@@ -311,7 +322,6 @@ export class DpomService {
                     }
 
                     // Diverted PO's
-                    console.log(orderDetail.poLine.itemTextDetail)
                     const itemText = orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails : null;
                     const matches = [];
                     if (itemText != null) {
@@ -329,7 +339,7 @@ export class DpomService {
                         orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null,
                         orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonDescription,
                         orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.geographyCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, orderDetail.sizes.sizePo.inventorySegmentCode, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity,
-                        orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVasDetail ? orderDetail.poLine.itemVasDetail[0]?.textDetails : null, orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails : null, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
+                        orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVasDetail ? orderDetail.poLine.itemVasDetail[0]?.textDetails : null, orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails.join(',') : null, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
                         orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, orderDetail.sizes.sizePo.sizeQuantity, orderDetail.sizes.sizePo.sizeDescription, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVasPDF, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
                         crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, hanger, orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, matches ? matches : null, 'username')
                     const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
@@ -462,7 +472,8 @@ export class DpomService {
 
                     let price
                     for (const size of item.poItemVariantDetails) {
-                        const numericValue = parseFloat(size.unitPrice)
+                        const cleanedValue = size.unitPrice.replace(/[^\d.]/g, '');
+                        const numericValue = parseFloat(cleanedValue)
                         if (!isNaN(numericValue)) {
                             price = numericValue;
                         } else {
@@ -1596,7 +1607,6 @@ export class DpomService {
         }
         const sizeDateMap = new Map<string, TotalQuantityChangeModel>();
         for (const rec of data) {
-            //  console.log(data ,"console of data step 1")
             if (!sizeDateMap.has(rec.po_number)) {
                 sizeDateMap.set(
                     rec.po_number,
@@ -1609,7 +1619,6 @@ export class DpomService {
             }
         }
         const dataModelArray: TotalQuantityChangeModel[] = Array.from(sizeDateMap.values());
-        console.log(sizeDateMap.values, "length")
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
 }
