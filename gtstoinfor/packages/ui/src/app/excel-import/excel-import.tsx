@@ -87,6 +87,8 @@ export default function ExcelImport() {
           const formData = new FormData();
           formData.append('file', selectedFile);
           console.log(form.getFieldsValue().fileType)
+          const d = new Date();
+          let month = d.getMonth();
           if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
 
             if (integerPart) {
@@ -121,7 +123,7 @@ export default function ExcelImport() {
               message.info('month not avilable')
             }
           }else{
-              ordersService.fileUpload(formData, 9,form.getFieldsValue().fileType).then((fileRes) => {
+              ordersService.fileUpload(formData,month,form.getFieldsValue().fileType).then((fileRes) => {
                 if (fileRes.status) {
                   ordersService.saveTrimOrder(data, fileRes?.data?.id, 9).then((res) => {
                     setLoading(true)
@@ -132,7 +134,7 @@ export default function ExcelImport() {
                       req.userName = loginUser ? loginUser : null;
                       ordersService.updateFileStatus(req)
                       message.success(res.internalMessage)
-                      // navigate("/excel-import/grid-view");
+                      navigate("/excel-import/trim-order");
                     } else {
                       const req = new FileStatusReq()
                       req.fileId = fileRes?.data?.id;

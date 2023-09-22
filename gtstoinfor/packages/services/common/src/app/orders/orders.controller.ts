@@ -244,4 +244,13 @@ export class OrdersController {
         }
     }
     
+    @Post('/createCOline')
+    async createCOline(@Body() req: any) {
+        try {
+            return await this.ordersService.createCOline(req)
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    
 }
