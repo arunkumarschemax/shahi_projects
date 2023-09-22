@@ -1436,6 +1436,11 @@ export class OrdersEntity {
     })
     qtyLtBdExf : string;
 
+    @Column('int',{
+        nullable:true,
+        name:'month',
+    })
+month :number
     @Column('varchar', {
         nullable:true,
         name: 'qty_lt__po_exf',
