@@ -6,7 +6,7 @@ import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { UndoOutlined } from '@ant-design/icons';
-import { FileStatusReq, FileTypesEnum } from '@project-management-system/shared-models';
+import { FileStatusReq, FileTypeDto, FileTypesEnum } from '@project-management-system/shared-models';
 
 
 export default function ExcelImport() {
@@ -32,10 +32,13 @@ export default function ExcelImport() {
   const loginUser = userData.user.userName
 
   const getUploadFilesData = () => {
-    ordersService.getUploadFilesData().then((res) => {
+    const req= new FileTypeDto(form.getFieldValue('fileType'))
+    ordersService.getUploadFilesData(req).then((res) => {
       if (res.status) {
         setFilesData(res.data)
         // message.success(res.internalMessage)
+      } else{
+        setFilesData([])
       }
     })
   }
@@ -88,10 +91,11 @@ export default function ExcelImport() {
           formData.append('file', selectedFile);
           console.log(form.getFieldsValue().fileType)
           const d = new Date();
-          let month = d.getMonth();
+          // let month = d.getMonth();
+          let month = 9;
           if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
 
-            if (integerPart) {
+            if (month) {
               ordersService.fileUpload(formData, integerPart,form.getFieldsValue().fileType).then((fileRes) => {
                 if (fileRes.status) {
                   ordersService.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
@@ -199,6 +203,10 @@ export default function ExcelImport() {
     fileList: filelist
   };
 
+  const onFileTypeChange = () => {
+    getUploadFilesData()
+  }
+
   return (
     <>
       <Card title="Excel Import">
@@ -227,6 +235,7 @@ export default function ExcelImport() {
                         placeholder="Select File Type"
                         optionFilterProp="children"
                         allowClear
+                        onChange={onFileTypeChange}
                         >
                         <Option key='trimorder' value="Trim Order">Trim Order</Option>
                         <Option key='projectionorder' value="Projection Order">Projection Order</Option>

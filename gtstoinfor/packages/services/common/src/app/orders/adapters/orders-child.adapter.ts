@@ -4,7 +4,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 
 export class OrdersChildAdapter {
 
-    public convertDtoToEntity(dto:any,id:number,productionPlanId:number): OrdersChildEntity {
+    public convertDtoToEntity(dto:any,id:number,productionPlanId:number,month:number): any {
         const entity = new OrdersChildEntity()
         entity.year = dto.year;
         entity.planningSsnCd = dto.planningSsnCd
@@ -13,7 +13,6 @@ export class OrdersChildAdapter {
         entity.tgtSsn = dto.tgtSsn
         entity.bizCd = dto.bizCd
         entity.biz = dto.biz
-        entity.mainSampleCode = dto.mainSampleCode
         entity.planningRegionCode = dto.planningRegionCode
         entity.planningRegionName = dto.planningRegionName
         entity.channelCode = dto.channelCode
@@ -21,7 +20,6 @@ export class OrdersChildAdapter {
         entity.department = dto.department
         entity.deptCd = dto.deptCd
         entity.Cls1_cd = dto.Cls1_cd
-        entity.branchFactoryCode = dto.branchFactoryCode
         entity.Cls2_cd = dto.Cls2_cd
         entity.gDept = dto.gDept
         entity.subCategory1 = dto.subCategory1
@@ -93,6 +91,7 @@ export class OrdersChildAdapter {
         entity.fbrcAutoReflectionDate = dto.fbrcAutoReflectionDate
         entity.factoryCommentUpdateDate = dto.factoryCommentUpdateDate
         entity.fbrcActDy = dto.fbrcActDy
+        entity.fbrcActQty = dto.fbrcActQty
         entity.fbrcOrderNumber = dto.fbrcOrderNumber
         entity.fbrcOrderStatus = dto.fbrcOrderStatus
         entity.fbrcDeliveryDate = dto.fbrcDeliveryDate
@@ -136,13 +135,21 @@ export class OrdersChildAdapter {
         entity.expressLineFlag = dto.expressLineFlag
         entity.factoryComment = dto.factoryComment
         entity.plannedEXF = dto.plannedEXF
+        entity.exfEtd = dto.exfEtd
+        entity.exfWh = dto.exfWh
+        entity.sweingCountryRegion = dto.sweingCountryRegion
+        entity.rewMaterialOriginal = dto.rewMaterialOriginal
+        entity.itemDrop = dto.itemDrop
+        // entity.createDate = dto.createDate
         entity.createdUser = dto.userName
         entity.createdUserId = dto.createdUserId
         entity.createdUserName = dto.createdUserName
         entity.createFunction = dto.createFunction
+        // entity.updateDate = dto.updateDate
         entity.updatedUserId = dto.updatedUserId
         entity.updatedUserName = dto.updatedUserName
-        entity.updatedUserFunction = dto.updatedUserFunction
+        // entity.updatedUserFunction = dto.updatedUserFunction
+        entity.updateFunction = dto.updateFunction
         entity.countY = dto.countY
         entity.sample = dto.sample
         entity.exf = dto.exf
@@ -157,13 +164,12 @@ export class OrdersChildAdapter {
         entity.country2Y = dto.country2Y
         entity.phase = dto.phase
         entity.fileId = id
-        // entity.month= month
+        entity.month= month
         entity.version = dto.version ? dto.version : 1
         const ordersEntity = new OrdersEntity();
         ordersEntity.productionPlanId = productionPlanId;
         entity.orders = ordersEntity;
         entity.fileId = id
-        // entity.month=month
         console.log(entity,'---entity')
         return entity
     

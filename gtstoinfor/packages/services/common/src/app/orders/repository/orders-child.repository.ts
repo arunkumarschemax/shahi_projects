@@ -17,7 +17,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     async getVersion(orderPlanNumber: number): Promise<any[]> {
         const query = this.createQueryBuilder('oc')
             .select(`id,production_plan_id as productionplanId,order_plan_number as orderPlanNumber, version`)
-            .where(` order_plan_number = ${orderPlanNumber}`)
+            .where(` order_plan_number = '${orderPlanNumber}'`)
             .orderBy(` version`, 'DESC')
         return await query.getRawMany();
     }

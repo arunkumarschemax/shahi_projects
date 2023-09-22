@@ -284,8 +284,8 @@ export class SaveOrderDto {
      updatedUserId?: string;
      @ApiProperty()
      updatedUserName: string;
-    @ApiProperty()
-    updatedUserFunction: string;
+    // @ApiProperty()
+    // updatedUserFunction: string;
     @ApiProperty()
     countY: string;
     @ApiProperty()
@@ -315,13 +315,13 @@ export class SaveOrderDto {
     @ApiProperty()
     phase: string;
     @ApiProperty()
-    createDate: string;
+    createDate: any;
     @ApiProperty()
     createUserId : string;
     @ApiProperty()
     createUserName: string;
     @ApiProperty()
-    updateDate: string;
+    updateDate: any;
     @ApiProperty()
     updateUserId : string;
     @ApiProperty()
@@ -476,11 +476,11 @@ export class SaveOrderDto {
         sweingCountryRegion: string,
         rewMaterialOriginal: string,
         itemDrop: string,
-        createDate: string,
+        createDate: any,
         createUserId : string,
         createUserName: string,
         createFunction : string,
-        updateDate: string,
+        updateDate: any,
         updateUserId : string,
         updateUserName: string,
         updateFunction : string,

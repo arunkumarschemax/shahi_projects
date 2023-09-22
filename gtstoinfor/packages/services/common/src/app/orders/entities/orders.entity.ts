@@ -1357,7 +1357,7 @@ export class OrdersEntity {
         length:50
 
     })
-    updatedUserFunction : string;
+    updateFunction : string;
 
     @Column('varchar', {
         nullable:true,
@@ -1460,6 +1460,16 @@ month :number
         length:50
     })
     phase : string;
+
+    // @Column('datetime',{
+    //     name:'create_date'
+    // })
+    // createDate:Date
+
+    // @Column('datetime',{
+    //     name:'update_date'
+    // })
+    // updateDate:Date
 
    
 }
