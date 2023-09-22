@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CommonResponseModel, FileStatusReq, FileTypesEnum, MonthAndQtyModel, MonthWiseDataModel, MonthWiseExcelDataModel, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import { COLineRequest, CommonResponseModel, FileStatusReq, FileTypesEnum, MonthAndQtyModel, MonthWiseDataModel, MonthWiseExcelDataModel, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersEntity } from './entities/orders.entity';
@@ -23,6 +24,7 @@ import { TrimOrdersChildEntity } from './entities/trim-orders-child.entity';
 import { TrimOrdersChildAdapter } from './adapters/trim-orders-child.adapter';
 import { TrimOrdersAdapter } from './adapters/trim-orders.adapter';
 import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
+import { appConfig } from 'packages/services/common/config';
 let moment = require('moment');
 moment().format();
 
@@ -187,14 +189,16 @@ export class OrdersService {
         try {
             await transactionManager.startTransaction()
             const flag = new Set()
+
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
-                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)\.]/g, '').replace(/-/g, '_');
-                    updatedObj[newKey] = obj[key];
+                        const newKey = key.replace(/\s/g, '_').replace(/[\(\)\.]/g, '').replace(/-/g, '_');
+                        updatedObj[newKey] = obj[key];
                 }
                 return updatedObj;
             });
+            // console.log(updatedArray,'updatedObj')
 
             const convertedData = updatedArray.map((obj) => {
                 const updatedObj = {};
@@ -696,6 +700,51 @@ export class OrdersService {
         }
         else {
             return new CommonResponseModel(false, 0, 'No data found', data);
+        }
+    }
+
+    async createCOline(req: any): Promise<CommonResponseModel> {
+        console.log(req)
+        try {
+            const manager = this.dataSource
+            const orderNo = req.orderNumber
+            const itemNo = req.itemNumber
+            // req.purchaseOrderNumber = 3504865987
+            // req.poLineItemNumber = 10000
+            // req.scheduleLineItemNumber = 100
+            const m3Config = appConfig.m3Cred.headerRequest()
+            const sale_price_qry = `select price from price_list where style = ${req.itemcode} and destination = ${req.destination}`
+            const salePriceData = await manager.query(sale_price_qry)
+            const salePrice = salePriceData[0].price
+            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=${orderNo}&ITNO=${itemNo}&SAPR=${salePrice}`;
+            // const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.purchaseOrderNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${styleNumber}`;
+            const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
+            console.log(response, 'response')
+            console.log(response.data?.MIRecord, 'MIRecord')
+            if (response.data['@type'])
+                return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
+            if (!response.data?.MIRecord && !response.data?.MIRecord.length)
+                return new CommonResponseModel(false, 0, "No data found for this item")
+            // const meToCustomObj = [{ m3Key: 'STAT', yourKey: 'status' }, { m3Key: 'ORNO', yourKey: 'orderNO' }, { m3Key: 'PONR', yourKey: 'poLine' }]
+            // const myObj = construnctDataFromM3Result(meToCustomObj, response.data.MIRecord)
+            if (response.status !== 200)
+                return new CommonResponseModel(false, 1, `Validation failed as`)
+            await this.updateOrderApprovalStatus(req);
+            return new CommonResponseModel(true, 1, `COline created successfully`)
+        } catch (err) {
+            throw err
+        }
+    }
+
+    async updateOrderApprovalStatus(req: COLineRequest): Promise<CommonResponseModel> {
+        const orderNo = req.orderNumber
+        const sizeCode = req.sizeCode
+        const colorCode = req.colorCode
+        const updateStatus = await this.trimOrderRepo.update({ orderNo: orderNo,sizeCode:sizeCode,colorCode:colorCode}, { answeredStatus: 'Accepted',buyerItemNumber:req.itemNumber })
+        if (updateStatus.affected) {
+            return new CommonResponseModel(true, 1, 'Status Updated')
+        } else {
+            return new CommonResponseModel(false, 0, 'Something went wrong');
         }
     }
 

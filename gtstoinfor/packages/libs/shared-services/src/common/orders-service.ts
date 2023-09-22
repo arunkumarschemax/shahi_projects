@@ -96,6 +96,9 @@ export class OrdersService extends CommonAxiosService {
     } async getTrimOrdersData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getTrimOrdersData")
     }
+    async createCOline(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/createCOline", req)
+    }
     async getAll(): Promise<any> {
         const data=[
             {
