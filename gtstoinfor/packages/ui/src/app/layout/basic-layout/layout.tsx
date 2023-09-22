@@ -114,6 +114,12 @@ export const baseRouterList = [
                 path: "ex-factory-report",
                 filepath: "ex-factory-report",
             },
+            {
+                label: "Ware-House-Comparision",
+                key: "ware-house-comparision",
+                path: "ware-house-comparision",
+                filepath: "ware-house-comparision",
+            },
             // {
             //     label: "Phase Wise Data",
             //     key: "phase-wise-grid",
@@ -122,6 +128,23 @@ export const baseRouterList = [
             // }
         ],
     },
+
+    {
+        label:"Reports",
+        key: "reports",
+        path: "reports",
+        icon: <FileExcelOutlined />,
+        filepath: "reports",
+        children:[
+            {
+                label: " WareHouse Report",
+                key: "ware-house-report",
+                path: "ware-house-report",
+                filepath: "ware-house-report",
+            },
+        ]
+    }
+    
     // {
     //     label: "Reports",
     //     key: "reports",

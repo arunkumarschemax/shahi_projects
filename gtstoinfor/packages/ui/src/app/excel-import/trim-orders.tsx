@@ -160,6 +160,10 @@ const TrimOrder= () => {
             
         },
         {
+            title: 'Status',
+            dataIndex: 'answered_status',
+        },
+        {
             title: "Item No",
             dataIndex: "itemNo",
             render: (text, record) => {
@@ -193,7 +197,10 @@ const TrimOrder= () => {
                     </Popconfirm>
                 );
             },
+            
+            
         },
+        
         // {
         //     title: 'Trim Order Id',
         //     dataIndex: 'trim_order_id'
@@ -412,6 +419,7 @@ const TrimOrder= () => {
             { title: 'Trim Description', dataIndex: 'trim_description' },
             { title: 'Trim Item No', dataIndex: 'trim_item_no' },
             { title: 'Trim Supplier', dataIndex: 'trim_supplier' },
+            { title: 'Status', dataIndex: 'answered_status' },
 
 
             // { title: 'Currency', dataIndex: 'currency' },
