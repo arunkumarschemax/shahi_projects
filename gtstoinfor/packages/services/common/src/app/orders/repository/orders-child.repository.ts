@@ -53,8 +53,9 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
 
     async getItemQtyChangeData(fileId1: number, fileId2: number): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(` item_cd, item , SUM(CASE WHEN file_id = ${fileId1} THEN order_plan_qty ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) AS new_qty_value ,  SUM(CASE WHEN file_id = ${fileId2} THEN order_qty_pcs ELSE 0 END) - SUM(CASE WHEN file_id = ${fileId1} THEN order_qty_pcs ELSE 0 END) AS diff `)
-            .groupBy(` item_code`)
+            .select(` item_cd, item , SUM(CASE WHEN file_id = ${fileId1} THEN order_plan_qty ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) AS new_qty_value ,  SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) - SUM(CASE WHEN file_id = ${fileId1} THEN order_plan_qty ELSE 0 END) AS diff `)
+            .groupBy(` item_cd`)
+            //  console.log(fileId1,"test of quary 1111111111111")
         return await query.getRawMany();
     }
 
@@ -62,7 +63,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         const query = this.createQueryBuilder('o')
             .select(` item_cd, item , 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) AS new_qty_value `)
             .groupBy(` item_cd`)
-            // console.log(fileId2,"test of quary")
+            //  console.log(query,"test of quary222222222222")
         return await query.getRawMany();
     }
 

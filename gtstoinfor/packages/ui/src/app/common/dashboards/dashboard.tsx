@@ -5,6 +5,8 @@ import { DivisionWiseOrders } from "./division-wise-orders"
 import ChangesGrid from "../../excel-import/changes-grid"
 import ItemChanges from "./item-change"
 import VersionChanges from "../../excel-import/version-wise-table"
+import { SeasonWiseOrders } from "./season-wise-orders"
+import { YearWiseOrders } from "./year-wise-data"
 const { useToken } = theme
 
 export const Dashboard = () => {
@@ -19,7 +21,7 @@ export const Dashboard = () => {
                 <Row gutter={24}>
                     <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>
                         <div >
-                            <UnitWiseOrderGraph />
+                            {/* <UnitWiseOrderGraph /> */}
                         </div>
                     </Col>
                     <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>
@@ -39,11 +41,22 @@ export const Dashboard = () => {
                 <br />
                 <Row gutter={24}>
                     <Col xs={24} sm={24} md={24} xl={10}>
-                        <ItemChanges />
+                        {/* <ItemChanges /> */}
                     </Col>
                     <Col xs={24} sm={24} md={24} xl={14}>
-                        <VersionChanges />
+                        {/* <VersionChanges /> */}
                     </Col>
+
+                    <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>
+                        <div >
+                            { <SeasonWiseOrders /> }
+                        </div>
+                    </Col> 
+                    <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>
+                        <div >
+                            { <YearWiseOrders /> }
+                        </div>
+                    </Col> 
                 </Row>
             </Card>
         </>

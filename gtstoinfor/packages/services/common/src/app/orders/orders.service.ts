@@ -730,6 +730,21 @@ if(data.Order_Plan_Number !== null){
         }
     }
 
+    async getSeasonWiseOrders(): Promise<CommonResponseModel> {
+        const data = await this.ordersRepository.getSeasonCount()
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getYearWiseOrders(): Promise<CommonResponseModel> {
+        const data = await this.ordersRepository.getYearWiseData()
+        if (data)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
     async seasonWiseReport(): Promise<CommonResponseModel> {
         const query = `SELECT planning_ssn as plannedSeason,year,item_cd as itemCode,item as itemName,SUM(january) AS january,SUM(february) AS february,SUM(march) AS march,SUM(april) AS april,SUM(may) AS may,SUM(june) AS june,SUM(july) AS july,SUM(august) AS august,SUM(september) AS september,SUM(october) AS october,SUM(november) AS november,SUM(december) AS december,SUM(exfJan) AS exfJan,SUM(exfFeb) AS exfFeb,SUM(exfMarch) AS exfMarch,SUM(exfApril) AS exfApril,SUM(exfMay) AS exfMay,SUM(exfJune) AS exfJune,SUM(exfJuly) AS exfJuly,SUM(exfAug) AS exfAug,SUM(exfSep) AS exfSep,SUM(exfOct) AS exfOct,SUM(exfNov) AS exfNov,SUM(exfDec) AS exfDec,
         SUM(january + february + march + april + may + june + july + august + september + october + november + december) AS whTotal,

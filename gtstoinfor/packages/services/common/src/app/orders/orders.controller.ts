@@ -262,4 +262,23 @@ export class OrdersController {
         }
     }
     
+    @Post('/getSeasonWiseOrders')
+    async getSeasonWiseOrders(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getSeasonWiseOrders();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+    @Post('/getYearWiseOrders')
+    async getYearWiseOrders(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getYearWiseOrders();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+    
 }
