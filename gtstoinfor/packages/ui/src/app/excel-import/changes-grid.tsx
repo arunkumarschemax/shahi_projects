@@ -285,11 +285,11 @@ const ChangesGrid = () => {
     const data4 = [
         {
             title: 'Item code',
-            dataIndex: 'item_code'
+            dataIndex: 'item_cd'
         },
         {
             title: 'Item Name',
-            dataIndex: 'itemName'
+            dataIndex: 'item'
         },
         {
             title: ' sum Of Qrd Qty last Week',

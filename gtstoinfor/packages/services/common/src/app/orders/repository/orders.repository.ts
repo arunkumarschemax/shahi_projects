@@ -63,4 +63,17 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         queryBuilder.where(`file_id = '${req.fileId}' AND version = 1`);
         await queryBuilder.delete().execute();
     }
+
+    async getSeasonCount(): Promise<any[]> {
+        const query = this.createQueryBuilder('orders')
+            .select(`planning_ssn , COUNT(planning_ssn) AS count`)
+            .groupBy(`planning_ssn`)
+        return await query.getRawMany();
+    }
+    async getYearWiseData(): Promise<any[]> {
+        const query = this.createQueryBuilder('orders')
+            .select(`year , COUNT(year) AS count`)
+            .groupBy(`year`)
+        return await query.getRawMany();
+    }
 }

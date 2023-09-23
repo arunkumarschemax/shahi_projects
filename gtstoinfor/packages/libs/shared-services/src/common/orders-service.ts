@@ -1257,4 +1257,13 @@ export class OrdersService extends CommonAxiosService {
         ]
         return data
     }
+
+    async getSeasonWiseOrders(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getSeasonWiseOrders")
+    }
+
+    async getYearWiseOrders(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getYearWiseOrders")
+    }
+
 }
