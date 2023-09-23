@@ -64,12 +64,6 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         queryBuilder.where(`file_id = '${req.fileId}' AND version = 1`);
         await queryBuilder.delete().execute();
     }
-
-    async seasonWiseReport(): Promise<any[]>{
-        const query = this.createQueryBuilder('orders')
-        .select(`planning_ssn as plannedSeason,item_cd as itemCode,item as itemName, order_plan_qty as orderQty,wh as whDate,
-        MONTH(STR_TO_DATE(wh, '%m/%d')) AS whMonth,exf as exfDate,
-        MONTH(STR_TO_DATE(exf, '%m/%d')) AS exfMonth,year`)
-        return await query.getRawMany()
-    }
+      
+      
 }
