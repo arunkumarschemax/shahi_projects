@@ -1,12 +1,13 @@
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, YearReq } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
-import { ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { extname } from 'path'; import { FileIdReq } from './models/file-id.req';
+import { type } from 'os';
 ''
 
 @Controller('orders')
@@ -242,5 +243,21 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
-    
+    @Post('/getExfactoryYear')
+    async getExfactoryYear(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryYear();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getExfactoryMonthData')
+    @ApiBody({type:YearReq})
+    async getExfactoryMonthData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryMonthData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }

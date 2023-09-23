@@ -1,4 +1,5 @@
 import { FileExcelFilled } from "@ant-design/icons";
+import { YearReq } from "@project-management-system/shared-models";
 import { OrdersService } from "@project-management-system/shared-services";
 import { Button, Card, Table, Tabs, TabsProps } from "antd";
 import { Excel } from "antd-table-saveas-excel";
@@ -18,11 +19,17 @@ export const ExFactoryReportWithComparision = () => {
   },[])
 
   const getData =()=>{
-    service.getAll().then(res =>{
-      console.log(res,'res==========');
-      
-      setData(res)
+    const req = new YearReq(2024)
+    service.getAll(req).then(res =>{     
+       console.log(res,'res==========');
+      if(res.data){
+        setData(res.data)
+      }
+      else{
+      setData([])
+      }
     })}
+    
  
   const childColumns1: any = [
     {
