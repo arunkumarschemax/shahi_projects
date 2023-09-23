@@ -53,8 +53,8 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getDivisionCount(): Promise<any[]> {
         const query = this.createQueryBuilder('orders')
-            .select(`department_name , COUNT(department_name) AS count`)
-            .groupBy(`department_name`)
+            .select(`department , COUNT(department) AS count`)
+            .groupBy(`department`)
         return await query.getRawMany();
     }
 
@@ -83,5 +83,11 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         MONTH(STR_TO_DATE(wh, '%m/%d')) AS whMonth,exf as exfDate,
         MONTH(STR_TO_DATE(exf, '%m/%d')) AS exfMonth,year`)
         return await query.getRawMany()
+    }
+    async getProdPlanCount(): Promise<any[]> {
+        const query = this.createQueryBuilder('orders')
+            .select(`prod_plan_type , COUNT(prod_plan_type) AS count`)
+            .groupBy(`prod_plan_type`)
+        return await query.getRawMany();
     }
 }
