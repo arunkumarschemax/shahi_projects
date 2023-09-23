@@ -1205,15 +1205,15 @@ export class OrdersChildEntity {
         })
         phase : string;
 
-        // @Column('datetime',{
-        //     name:'create_date'
-        // })
-        // createDate:Date
+        @Column('datetime',{
+            name:'create_date'
+        })
+        createDate:Date
     
-        // @Column('datetime',{
-        //     name:'update_date'
-        // })
-        // updateDate:Date
+        @Column('datetime',{
+            name:'update_date'
+        })
+        updateDate:Date
 
         @ManyToOne(() => OrdersEntity, orders => orders.ordersChild)
         @JoinColumn({ name: 'production_plan_id' })

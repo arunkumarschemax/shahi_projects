@@ -140,12 +140,12 @@ export class OrdersAdapter {
         entity.sweingCountryRegion = dto.sweingCountryRegion
         entity.rewMaterialOriginal = dto.rewMaterialOriginal
         entity.itemDrop = dto.itemDrop
-        // entity.createDate = dto.createDate
+        entity.createDate = dto.createDate
         entity.createdUser = dto.userName
         entity.createdUserId = dto.createdUserId
         entity.createdUserName = dto.createdUserName
         entity.createFunction = dto.createFunction
-        // entity.updateDate = dto.updateDate
+        entity.updateDate = dto.updateDate
         entity.updatedUserId = dto.updatedUserId
         entity.updatedUserName = dto.updatedUserName
         // entity.updatedUserFunction = dto.updatedUserFunction

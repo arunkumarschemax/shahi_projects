@@ -1461,15 +1461,15 @@ month :number
     })
     phase : string;
 
-    // @Column('datetime',{
-    //     name:'create_date'
-    // })
-    // createDate:Date
+    @Column('datetime',{
+        name:'create_date'
+    })
+    createDate:Date
 
-    // @Column('datetime',{
-    //     name:'update_date'
-    // })
-    // updateDate:Date
+    @Column('datetime',{
+        name:'update_date'
+    })
+    updateDate:Date
 
    
 }
