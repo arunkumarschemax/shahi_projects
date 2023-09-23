@@ -243,6 +243,15 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/seasonWiseReport')
+    async seasonWiseReport(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.seasonWiseReport();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
     
     @Post('/createCOline')
     async createCOline(@Body() req: any) {
@@ -250,6 +259,25 @@ export class OrdersController {
             return await this.ordersService.createCOline(req)
         } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    
+    @Post('/getSeasonWiseOrders')
+    async getSeasonWiseOrders(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getSeasonWiseOrders();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+    @Post('/getYearWiseOrders')
+    async getYearWiseOrders(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getYearWiseOrders();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
         }
     }
     
