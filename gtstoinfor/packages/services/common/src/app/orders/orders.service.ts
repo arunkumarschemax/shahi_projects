@@ -208,10 +208,10 @@ if(data.Order_Plan_Number !== null){
                     if (value === "") {
                         updatedObj[key] = null;
                     } else {
-                        // updatedObj[key] = value;
-                        var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
-                        updatedObj[key] = value.replace(regexPattern, null);
-                        updatedObj[key] = Buffer.from(value, 'utf-8').toString()
+                        updatedObj[key] = value;
+                        // var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
+                        // updatedObj[key] = value.replace(regexPattern, null);
+                        // updatedObj[key] = Buffer.from(value, 'utf-8').toString()
                     }
                 }
                 return updatedObj;
@@ -220,7 +220,7 @@ if(data.Order_Plan_Number !== null){
             for (const data of convertedData) {
                 let dtoData
                 if(data.Order_No != null){
-                    dtoData = new TrimOrderDto(null,data.Order_No,data.Year,data.Revision_No,data.Planning_Ssn,data.Global_Business_Unit,data.Business_Unit,data.Item_Brand,data.Department,data.Revised_Date,data.Document_Status,data.Answered_Status,data.Vendor_Person_in_Charge,data.Decision_Date,data.Payment_Terms,data.Contracted_ETD,data.ETA_WH,data.Approver,data.Approval_Date,data.Order_Conditions,data.Remark,data.Raw_Material_CodeFR,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Vendor_Code,data.Vendor,data.Management_Factory_Code,data.Management_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Order_Plan_Number,data.Item_Code,data.Item,data.Representative_Sample_Code,data.Sample_Code,data.Color_Code,data.Color,data.Pattern_Dimension_Code,data.Size_Code,data.Size,Number(data.Order_Qtypcs.replace(/,/g,'')),data.Arrangement_By,data.Trim_Description,data.Trim_Item_No,data.Trim_Supplier,'bidhun',null,null,null,null,id,month)
+                    dtoData = new TrimOrderDto(null,data.Order_No,data.Year,data.Revision_No,data.Planning_Ssn,data.Global_Business_Unit,data.Business_Unit,data.Item_Brand,data.Department,data.Revised_Date,data.Document_Status,data.Answered_Status,data.Vendor_Person_in_Charge,data.Decision_Date,data.Payment_Terms,data.Contracted_ETD,data.ETA_WH,data.Approver,data.Approval_Date,data.Order_Conditions,data.Remark,data.Raw_Material_CodeFR,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Vendor_Code,data.Vendor,data.Management_Factory_Code,data.Management_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Order_Plan_Number,data.Item_Code,data.Item,data.Representative_Sample_Code,data.Sample_Code,data.Color_Code,data.Color,data.Pattern_Dimension_Code,data.Size_Code,data.Size,(data.Order_Qtypcs).toString().replace(/,/g,''),data.Arrangement_By,data.Trim_Description,data.Trim_Item_No,data.Trim_Supplier,'bidhun',null,null,null,null,id,month)
                 }else{
                     break;
                 }
