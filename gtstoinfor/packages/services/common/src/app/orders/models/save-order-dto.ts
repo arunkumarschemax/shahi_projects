@@ -228,8 +228,8 @@ export class SaveOrderDto {
     poDlAnswered: string;
     @ApiProperty()
     poDlAuto: string;
-    @ApiProperty()
-    PO_EXFtotalAbnormalLT: string;
+    // @ApiProperty()
+    // PO_EXFtotalAbnormalLT: string;
     @ApiProperty()
     slsStartDy: string;
     @ApiProperty()
@@ -284,10 +284,8 @@ export class SaveOrderDto {
      updatedUserId?: string;
      @ApiProperty()
      updatedUserName: string;
-    @ApiProperty()
-    userName: string;
-    @ApiProperty()
-    updatedUserFunction: string;
+    // @ApiProperty()
+    // updatedUserFunction: string;
     @ApiProperty()
     countY: string;
     @ApiProperty()
@@ -311,21 +309,35 @@ export class SaveOrderDto {
     @ApiProperty()
     ltPoExf: string;
     @ApiProperty()
+     month:number
+    @ApiProperty()
     country2Y: string;
     @ApiProperty()
     phase: string;
     @ApiProperty()
+    createDate: any;
+    @ApiProperty()
+    createUserId : string;
+    @ApiProperty()
+    createUserName: string;
+    @ApiProperty()
+    updateDate: any;
+    @ApiProperty()
+    updateUserId : string;
+    @ApiProperty()
+    updateUserName: string;
+    @ApiProperty()
+    updateFunction : string;
+    @ApiProperty()
+    version: number;
+    @ApiProperty()
+    fileId:number;
+    @ApiProperty()
     createdUser?: string;
     @ApiProperty()
-    createdAt?: string;
-    @ApiProperty()
-    version?: number;
-    @ApiProperty()
-    fileId:string;
-    @ApiProperty()
-    updatedAt?:string;
-    @ApiProperty()
     updatedUser?:string;
+    @ApiProperty()
+    userName?: string;
 
     constructor(
         productionPlanId: number,
@@ -373,6 +385,7 @@ export class SaveOrderDto {
         branchFactoryCode: string,
         branchFactory: string,
         coeff: string,
+        month:number,
         itemBranchNumber: number,
         officialPlanStdQty: number,
         OfficialPlanFabPrpPlnQty: number,
@@ -412,7 +425,7 @@ export class SaveOrderDto {
         fbrcDlAuto: string,
         fbrcProductionDueDateAuto: string,
         fbrcAutoReflectionDate: string,
-        factoryCommentUpdateDate: string,
+       // factoryCommentUpdateDate: string,
         fbrcActDy: string,
         fbrcActQty: string,
         fbrcOrderNumber: string,
@@ -441,7 +454,7 @@ export class SaveOrderDto {
         poDlRequested: string,
         poDlAnswered: string,
         poDlAuto: string,
-        PO_EXFtotalAbnormalLT:string,
+        // PO_EXFtotalAbnormalLT:string,
         poProductionDueDateAuto: string,
         poAutoReflectionDate: string,
         poActDy: string,
@@ -463,7 +476,14 @@ export class SaveOrderDto {
         sweingCountryRegion: string,
         rewMaterialOriginal: string,
         itemDrop: string,
-        fileId:string,
+        createDate: any,
+        createUserId : string,
+        createUserName: string,
+        createFunction : string,
+        updateDate: any,
+        updateUserId : string,
+        updateUserName: string,
+        updateFunction : string,
         countY: string,
         sample: string,
         exf: string,
@@ -477,23 +497,12 @@ export class SaveOrderDto {
         qtyLtPoExf: string,
         country2Y: string,
         phase: string,
+        fileId:number,
+        version: number,
         createdUser?: string,
-        createdAt?: string,
-        updatedAt?: string,
         userName?: string,
-        version?: number,
-        createdUserId?: string,
-        createdUserName?: string,
-        updatedUserId?: string,
         updatedUser?:string,
-        createFunction?: string,
-       
-
-
-
-
-
-
+ 
     ) {
         this.productionPlanId = productionPlanId
         this.year = year
@@ -541,6 +550,7 @@ export class SaveOrderDto {
         this.branchFactoryCode = branchFactoryCode
         this.branchFactory = branchFactory
         this.coeff = coeff
+        this.month= month
         this.itemBranchNumber = itemBranchNumber
         this.officialPlanStdQty = officialPlanStdQty
         this.OfficialPlanFabPrpPlnQty = OfficialPlanFabPrpPlnQty
@@ -582,7 +592,7 @@ export class SaveOrderDto {
         this.fbrcDlAuto = fbrcDlAuto
         this.fbrcProductionDueDateAuto = fbrcProductionDueDateAuto
         this.fbrcAutoReflectionDate = fbrcAutoReflectionDate
-        this.factoryCommentUpdateDate = factoryCommentUpdateDate
+        // this.factoryCommentUpdateDate = factoryCommentUpdateDate
         this.fbrcActDy = fbrcActDy
         this.fbrcActQty = fbrcActQty
         this.fbrcOrderNumber = fbrcOrderNumber
@@ -611,7 +621,7 @@ export class SaveOrderDto {
         this.poDlRequested = poDlRequested
         this.poDlAnswered = poDlAnswered
         this.poDlAuto = poDlAuto
-        this.PO_EXFtotalAbnormalLT=PO_EXFtotalAbnormalLT
+        // this.PO_EXFtotalAbnormalLT=PO_EXFtotalAbnormalLT
         this.poProductionDueDateAuto = poProductionDueDateAuto
         this.poAutoReflectionDate = poAutoReflectionDate
         this.poActDy = poActDy
@@ -651,13 +661,16 @@ export class SaveOrderDto {
         this.phase = phase
         this.createdUser = createdUser
         this.qtyLtBdExf = qtyLtBdExf;
-        this.createdAt=createdAt
-        this.updatedAt=updatedAt
-        this.createdUserId = createdUserId
-        this.createdUserName = createdUserName
-        this.updatedUserId = updatedUserId
         this.updatedUser=updatedUser;
         this.createFunction = createFunction;
+        this.createDate =  createDate;
+        this.createUserId  = createUserId ;
+        this.createUserName =  createUserName,
+        this.createFunction  =  createFunction;
+        this.updateDate =  updateDate;
+        this.updateUserId  = updateUserId;
+        this.updateUserName = updateUserName;
+        this.updateFunction  =  updateFunction;
         
     }
 }

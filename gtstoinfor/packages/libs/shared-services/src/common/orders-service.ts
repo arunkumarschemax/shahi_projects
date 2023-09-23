@@ -1,4 +1,4 @@
-import { CommonResponseModel, FileIdReq, SaveOrderDto, YearReq } from "@project-management-system/shared-models"
+import { CommonResponseModel, FileIdReq, FileTypeDto, SaveOrderDto, YearReq } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
@@ -59,8 +59,8 @@ export class OrdersService extends CommonAxiosService {
         return await this.axiosPostCall(this.ordersController + '/updateFileStatus', req);
     }
 
-    async getUploadFilesData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getUploadFilesData")
+    async getUploadFilesData(req?:FileTypeDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getUploadFilesData",req)
     }
 
     async revertFileData(req: FileIdReq): Promise<CommonResponseModel> {
@@ -93,6 +93,9 @@ export class OrdersService extends CommonAxiosService {
     }
      async getTrimOrdersData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getTrimOrdersData")
+    }
+    async createCOline(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/createCOline", req)
     }
     async getAll(req:YearReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getExfactoryMonthData",req)
@@ -1026,4 +1029,17 @@ export class OrdersService extends CommonAxiosService {
         const url = `/orders/saveTrimOrder/${idn}/${montId}`;
         return this.axiosPostCall(url, data);
     }
+
+    async seasonWiseReport():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.ordersController + "/seasonWiseReport")
+    }
+
+    async getSeasonWiseOrders(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getSeasonWiseOrders")
+    }
+
+    async getYearWiseOrders(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getYearWiseOrders")
+    }
+
 }

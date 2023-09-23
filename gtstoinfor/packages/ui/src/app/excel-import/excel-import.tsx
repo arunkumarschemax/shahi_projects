@@ -6,7 +6,7 @@ import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { UndoOutlined } from '@ant-design/icons';
-import { FileStatusReq, FileTypesEnum } from '@project-management-system/shared-models';
+import { FileStatusReq, FileTypeDto, FileTypesEnum } from '@project-management-system/shared-models';
 
 
 export default function ExcelImport() {
@@ -32,19 +32,78 @@ export default function ExcelImport() {
   const loginUser = userData.user.userName
 
   const getUploadFilesData = () => {
-    ordersService.getUploadFilesData().then((res) => {
+    const req= new FileTypeDto(form.getFieldValue('fileType'))
+    ordersService.getUploadFilesData(req).then((res) => {
       if (res.status) {
         setFilesData(res.data)
         // message.success(res.internalMessage)
+      } else{
+        setFilesData([])
       }
     })
   }
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = (e) => {
+    if(form.getFieldsValue().fileType == FileTypesEnum.TRIM_ORDERS){
+
+    const file = e.target.files[0];
     if (file && file.type === 'text/csv') {
-      setSelectedFile(event.target.files[0]);
-      Papa.parse(event.target.files[0], {
+      setSelectedFile(e.target.files[0]);
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const csv = event.target.result as string;
+        
+        // Split CSV data into lines
+        const lines = csv.split('\n');
+
+        // Extract the second row as headers
+        const headers = Papa.parse(lines[1], {
+          header: true,
+        }).data[0];
+
+        // Remove the first and second row from the lines array
+        lines.shift(); // Remove the first row
+        // lines.splice(1, 1); // Remove the second row
+
+        // Join the remaining lines back into CSV format
+        const modifiedCsv = lines.join('\n');
+        console.log(modifiedCsv)
+
+        // Now parse the modified CSV data using PapaParse with custom headers
+        Papa.parse(modifiedCsv, {
+          header: true, // Use custom headers
+          dynamicTyping: true, // Optional: Convert numeric values to numbers
+          complete: (result) => {
+            const columnArray = [];
+            const valueArray = [];
+            console.log(result.data)
+
+            result.data.map((d) => {
+              columnArray.push(Object.keys(d))
+              valueArray.push(Object.values(d))
+            });
+            setData(result.data)
+            setColumns(columnArray[0])
+            setValues(valueArray)
+          },
+          // error: (err) => {
+          //   setError(err.message);
+          // },
+          skipEmptyLines: true, // Optional: Skip empty lines
+        });
+      };
+      reader.readAsText(file);
+    }else{
+      alert('Please select a valid .csv file.');
+      setSelectedFile(null);
+    }
+  }
+  if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
+      const file = e.target.files[0];
+    if (file && file.type === 'text/csv') {
+      setSelectedFile(e.target.files[0]);
+      Papa.parse(e.target.files[0], {
         header: true,
         complete: function (result) {
           {
@@ -67,6 +126,36 @@ export default function ExcelImport() {
       setSelectedFile(null);
     }
   };
+
+  };
+
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file && file.type === 'text/csv') {
+  //     setSelectedFile(event.target.files[0]);
+  //     Papa.parse(event.target.files[0], {
+  //       header: true,
+  //       complete: function (result) {
+  //         {
+  //           const columnArray = [];
+  //           const valueArray = [];
+
+  //           result.data.map((d) => {
+  //             columnArray.push(Object.keys(d))
+  //             valueArray.push(Object.values(d))
+  //           });
+  //           setData(result.data)
+  //           setColumns(columnArray[0])
+  //           setValues(valueArray)
+  //         }
+  //       }
+  //     });
+  //   } else {
+  //     // Display an error message or take appropriate action for invalid file type
+  //     alert('Please select a valid .csv file.');
+  //     setSelectedFile(null);
+  //   }
+  // };
   const handleUpload = async () => {
     try {
       form.validateFields().then(values => {
@@ -74,8 +163,11 @@ export default function ExcelImport() {
           let integerPart
           //  console.log(selectedFile.name,'selectedFile') 
           const inputString = selectedFile.name
-          const match = inputString.match(/(\d+)\.\d+/);
-          if (match) {
+          console.log(inputString)
+          // const match = inputString.match(/(\d+)\.\d+/);
+          const match = inputString.match(/_(\d{2})/)
+          console.log(match)
+          if (match && match[1]) {
             integerPart = parseInt(match[1]);
             console.log(integerPart)
           } else {
@@ -84,9 +176,12 @@ export default function ExcelImport() {
           const formData = new FormData();
           formData.append('file', selectedFile);
           console.log(form.getFieldsValue().fileType)
+          const d = new Date();
+          // let month = d.getMonth();
+          let month = 9;
           if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
 
-            if (integerPart) {
+            if (month) {
               ordersService.fileUpload(formData, integerPart,form.getFieldsValue().fileType).then((fileRes) => {
                 if (fileRes.status) {
                   ordersService.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
@@ -118,9 +213,9 @@ export default function ExcelImport() {
               message.info('month not avilable')
             }
           }else{
-              ordersService.fileUpload(formData, 9,form.getFieldsValue().fileType).then((fileRes) => {
+              ordersService.fileUpload(formData,month,form.getFieldsValue().fileType).then((fileRes) => {
                 if (fileRes.status) {
-                  ordersService.saveTrimOrder(data, fileRes?.data?.id, 9).then((res) => {
+                  ordersService.saveTrimOrder(data, fileRes?.data?.id, month).then((res) => {
                     setLoading(true)
                     if (res.status) {
                       const req = new FileStatusReq()
@@ -129,7 +224,7 @@ export default function ExcelImport() {
                       req.userName = loginUser ? loginUser : null;
                       ordersService.updateFileStatus(req)
                       message.success(res.internalMessage)
-                      // navigate("/excel-import/grid-view");
+                      navigate("/excel-import/trim-order");
                     } else {
                       const req = new FileStatusReq()
                       req.fileId = fileRes?.data?.id;
@@ -194,6 +289,10 @@ export default function ExcelImport() {
     fileList: filelist
   };
 
+  const onFileTypeChange = () => {
+    getUploadFilesData()
+  }
+
   return (
     <>
       <Card title="Excel Import">
@@ -222,6 +321,7 @@ export default function ExcelImport() {
                         placeholder="Select File Type"
                         optionFilterProp="children"
                         allowClear
+                        onChange={onFileTypeChange}
                         >
                         <Option key='trimorder' value="Trim Order">Trim Order</Option>
                         <Option key='projectionorder' value="Projection Order">Projection Order</Option>

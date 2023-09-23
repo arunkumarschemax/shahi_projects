@@ -310,5 +310,11 @@ export class TrimOrdersEntity {
         name: 'month',
     })
     month : number;
+    @Column('varchar', {
+        nullable: true,
+        name: "buyer_item_number",
+        length: 50
+    })
+    buyerItemNumber: string;
 
 }

@@ -1,12 +1,13 @@
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq, YearReq } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
-import { extname } from 'path'; import { FileIdReq } from './models/file-id.req';
+import { extname } from 'path'; 
+import { FileIdReq } from './models/file-id.req';
 import { type } from 'os';
 ''
 
@@ -21,7 +22,7 @@ export class OrdersController {
     @Post('/saveOrder/:id/:month')
     async saveOrder(@Param('id') id: number, @Param('month') month: number, @Body() data: any): Promise<CommonResponseModel> {
         try {
-            // return this.ordersService.saveOrdersData(data, id, month);
+            return this.ordersService.saveOrdersData(data, id, month);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -110,7 +111,7 @@ export class OrdersController {
     @Post('/revertFileData')
     async revertFileData(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            // return this.ordersService.revertFileData(req);
+            return this.ordersService.revertProjectionFileData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -136,7 +137,7 @@ export class OrdersController {
         },
     }))
 
-    async fileUpload(@Param('month') month: number,fileType:string, @UploadedFile() file): Promise<CommonResponseModel> {
+    async fileUpload(@Param('month') month: number,@Param('fileType') fileType:string, @UploadedFile() file): Promise<CommonResponseModel> {
         try {
             return await this.ordersService.updatePath(file.path, file.filename, month,fileType)
         } catch (error) {
@@ -145,9 +146,9 @@ export class OrdersController {
     }
 
     @Post('/getUploadFilesData')
-    async getUploadFilesData(): Promise<CommonResponseModel> {
+    async getUploadFilesData(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getUploadFilesData();
+            return this.ordersService.getUploadFilesData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
@@ -260,4 +261,42 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/seasonWiseReport')
+    async seasonWiseReport(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.seasonWiseReport();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
+    @Post('/createCOline')
+    async createCOline(@Body() req: any) {
+        try {
+            return await this.ordersService.createCOline(req)
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    
+    @Post('/getSeasonWiseOrders')
+    async getSeasonWiseOrders(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getSeasonWiseOrders();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+    @Post('/getYearWiseOrders')
+    async getYearWiseOrders(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getYearWiseOrders();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+    
 }

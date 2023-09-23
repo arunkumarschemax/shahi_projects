@@ -278,7 +278,6 @@ export class OrdersEntity {
     // @Column('varchar', {
     //     nullable: true,
     //     name: "local_name_ghq",
-    length:50
     //     length: 10
     // })
     // localNameGhq: string;
@@ -1273,7 +1272,7 @@ export class OrdersEntity {
     @Column('varchar', {
         nullable: true,
         
-        name: 'updatlength:50ed_user',
+        name: 'updated_user',
         length:50
 
     })
@@ -1281,7 +1280,6 @@ export class OrdersEntity {
 
     @CreateDateColumn({
         name: 'created_at',
-        length:50
  
 
     })
@@ -1289,7 +1287,6 @@ export class OrdersEntity {
 
     @UpdateDateColumn({
         name: 'updated_at',
-        length:50
 
     })
     updatedAt: string;
@@ -1305,13 +1302,12 @@ export class OrdersEntity {
     @OneToMany(() => OrdersChildEntity, (ordersChild) => { ordersChild.orders }, { cascade: true })
     ordersChild: OrdersChildEntity;
 
-    @Column('varchar', {
+    @Column('int', {
         nullable:true,
         name: 'file_id',
-        length:50
 
     })
-    fileId : string;
+    fileId : number;
 
      
     @Column('varchar', {
@@ -1361,7 +1357,7 @@ export class OrdersEntity {
         length:50
 
     })
-    updatedUserFunction : string;
+    updateFunction : string;
 
     @Column('varchar', {
         nullable:true,
@@ -1439,6 +1435,11 @@ export class OrdersEntity {
     })
     qtyLtBdExf : string;
 
+    @Column('int',{
+        nullable:true,
+        name:'month',
+    })
+month :number
     @Column('varchar', {
         nullable:true,
         name: 'qty_lt__po_exf',
@@ -1459,6 +1460,16 @@ export class OrdersEntity {
         length:50
     })
     phase : string;
+
+    @Column('datetime',{
+        name:'create_date'
+    })
+    createDate:Date
+
+    @Column('datetime',{
+        name:'update_date'
+    })
+    updateDate:Date
 
    
 }
