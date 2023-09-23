@@ -58,4 +58,11 @@ export class OrdersDifferenceEntity {
         name: 'version',
     })
     version: number;
+
+    @Column('varchar', {
+        name: 'order_plan_number',
+        length: 50,
+        nullable: false
+    })
+    orderPlanNumber: string;
 }
