@@ -15,8 +15,8 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getOrdersData(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(`o.production_plan_id, o.prod_plan_type_name, o.item_code, o.itemName, o.order_status, o.fr_fabric_name,o.order_qty_pcs, o.contracted_date, o.requested_wh_date, o.last_update_date, o.created_at`)
-            .orderBy(` o.prod_plan_type_name`, 'ASC')
+            .select(`o.production_plan_id, o.planning_ssn_cd, o.department, o.planning_sum_code, o.planning_sum, o.item,o.vendor, o.sewing_factory, o.branchFactory, o.coeff, o.publish_date,o.order_plan_number,o.gwh,o.wh,o.raw_material_supplier,o.yarn_order_status,o.fbrc_order_status,o.color_order_status,o.trim_order_status,o.po_order_status,o.planned_exf,o.biz,o.fr_fabric,o.trnsp_mthd`)
+            .orderBy(` o.planning_ssn_cd`, 'ASC')
         return await query.getRawMany();
     }
 
@@ -75,5 +75,13 @@ export class OrdersRepository extends Repository<OrdersEntity> {
             .select(`year , COUNT(year) AS count`)
             .groupBy(`year`)
         return await query.getRawMany();
+    }
+
+    async seasonWiseReport(): Promise<any[]>{
+        const query = this.createQueryBuilder('orders')
+        .select(`planning_ssn as plannedSeason,item_cd as itemCode,item as itemName, order_plan_qty as orderQty,wh as whDate,
+        MONTH(STR_TO_DATE(wh, '%m/%d')) AS whMonth,exf as exfDate,
+        MONTH(STR_TO_DATE(exf, '%m/%d')) AS exfMonth,year`)
+        return await query.getRawMany()
     }
 }

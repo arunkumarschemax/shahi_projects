@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, FileTypeDto } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiConsumes } from '@nestjs/swagger';
@@ -145,9 +145,9 @@ export class OrdersController {
     }
 
     @Post('/getUploadFilesData')
-    async getUploadFilesData(): Promise<CommonResponseModel> {
+    async getUploadFilesData(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getUploadFilesData();
+            return this.ordersService.getUploadFilesData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
@@ -241,6 +241,24 @@ export class OrdersController {
             return this.ordersService.revertTrimFileData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/seasonWiseReport')
+    async seasonWiseReport(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.seasonWiseReport();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
+    @Post('/createCOline')
+    async createCOline(@Body() req: any) {
+        try {
+            return await this.ordersService.createCOline(req)
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
     

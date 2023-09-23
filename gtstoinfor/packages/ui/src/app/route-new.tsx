@@ -23,6 +23,7 @@ import PriceListView from "./masters/pricelist/price-list-view"
 import PriceListForm from "./masters/pricelist/price-list-form"
 import { PriceListDto } from "@project-management-system/shared-models"
 import SeasonWiseReport from "./common/reports/season-wise"
+import WareHouseComparision from "./common/reports/warehouse-comparision"
 // import ExcelImport from "./excel-import/excel-import"
 
 
@@ -59,8 +60,10 @@ export const AppRoutesNew = () => {
                   {/* <Route path='phase-wise-grid' key='/phase-wise-grid' element={<PhaseWiseData />} /> */}
               </Route>
               <Route>
+              <Route  path='/ware-house-comparision' key='/ware-house-comparision'  element={<WareHouseComparision/>}/>
+
                 <Route path='/ware-house-report' key='/ware-house-report' element={<WarehouseReport />} />
-                    <Route path='trim-order' key='/trim-order' element={<TrimOrder />} />
+                    <Route path='/trim-order' key='/trim-order' element={<TrimOrder/>} />
 
               </Route>
               <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />

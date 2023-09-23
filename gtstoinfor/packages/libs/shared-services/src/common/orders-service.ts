@@ -1,4 +1,4 @@
-import { CommonResponseModel, FileIdReq, SaveOrderDto } from "@project-management-system/shared-models"
+import { CommonResponseModel, FileIdReq, FileTypeDto, SaveOrderDto } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
@@ -59,8 +59,8 @@ export class OrdersService extends CommonAxiosService {
         return await this.axiosPostCall(this.ordersController + '/updateFileStatus', req);
     }
 
-    async getUploadFilesData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getUploadFilesData")
+    async getUploadFilesData(req?:FileTypeDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getUploadFilesData",req)
     }
 
     async revertFileData(req: FileIdReq): Promise<CommonResponseModel> {
@@ -95,6 +95,9 @@ export class OrdersService extends CommonAxiosService {
 
     } async getTrimOrdersData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getTrimOrdersData")
+    }
+    async createCOline(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/createCOline", req)
     }
     async getAll(): Promise<any> {
         const data=[
@@ -1023,239 +1026,243 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(url, data);
     }
 
-    async getSSWHData(): Promise<any> {
-        const data =[
-            {
-                itemCode: 'IC001',
-                itemName: 'Dry pique S/S polo shirt (uniform)',
-                janQty: 10,
-                febQty: '',
-                marQty: 20,
-                aprQty: 12,
-                mayQty: 18,
-                junQty: 25,
-                julQty: 8,
-                augQty: 14,
-                sepQty: 22,
-                octQty: 17,
-                novQty: 19,
-                decQty: 11,
-                total: 191,
-              },
-              {
-                itemCode: 'IC002',
-                itemName: 'SUPIMA cotton crew neck S/S T-shirt',
-                janQty: 8,
-                febQty: 16,
-                marQty: 18,
-                aprQty: 13,
-                mayQty: 21,
-                junQty: 28,
-                julQty: 7,
-                augQty: 13,
-                sepQty: 24,
-                octQty: 19,
-                novQty: 20,
-                decQty: 9,
-                total: 196,
-              },
-        ]
-        return data
-    }
-    async getSSEXFData(): Promise<any> {
-        const data =[
-            {
-                itemCode: 'IC001',
-                itemName: 'Sweat pullover L/S hoodie',
-                janQty: '',
-                febQty: 15,
-                marQty: 20,
-                aprQty: 12,
-                mayQty: 18,
-                junQty: 25,
-                julQty: 8,
-                augQty: 14,
-                sepQty: 22,
-                octQty: 17,
-                novQty: 19,
-                decQty: 11,
-                total: 191,
-              },
-              {
-                itemCode: 'IC002',
-                itemName: 'U crew neck S/S T-shirt',
-                janQty: 8,
-                febQty: 16,
-                marQty: 18,
-                aprQty: 13,
-                mayQty: 21,
-                junQty: 28,
-                julQty: 7,
-                augQty: 13,
-                sepQty: 24,
-                octQty: 19,
-                novQty: 20,
-                decQty: 9,
-                total: 196,
-              },
-        ]
-        return data
-    }
-    async getFWWHData(): Promise<any> {
-        const data =[
-            {
-                itemCode: 'IC001',
-                itemName: 'Fluffy yarn fleece full-zip L/S jacket',
-                janQty: 10,
-                febQty: '',
-                marQty: 20,
-                aprQty: 12,
-                mayQty: 18,
-                junQty: 25,
-                julQty: 8,
-                augQty: 14,
-                sepQty: 22,
-                octQty: 17,
-                novQty: 19,
-                decQty: 11,
-                total: 191,
-              },
-              {
-                itemCode: 'IC002',
-                itemName: 'Sweat L/S shirt',
-                janQty: '',
-                febQty: 16,
-                marQty: 18,
-                aprQty: 13,
-                mayQty: 21,
-                junQty: 28,
-                julQty: 7,
-                augQty: 13,
-                sepQty: 24,
-                octQty: 19,
-                novQty: 20,
-                decQty: 9,
-                total: 196,
-              },
-        ]
-        return data
-    }
-    async getFWEXFData(): Promise<any> {
-        const data =[
-            {
-                itemCode: 'IC001',
-                itemName: 'Soft brushed crew neck L/S T-shirt',
-                janQty: 10,
-                febQty: 15,
-                marQty: 20,
-                aprQty: 12,
-                mayQty: 18,
-                junQty: 25,
-                julQty: 8,
-                augQty: 14,
-                sepQty: 22,
-                octQty: 17,
-                novQty: 19,
-                decQty: 11,
-                total: 191,
-              },
-              {
-                itemCode: 'IC002',
-                itemName: 'Waffle L/S T-shirt',
-                janQty: 8,
-                febQty: 16,
-                marQty: 18,
-                aprQty: 13,
-                mayQty: 21,
-                junQty: 28,
-                julQty: 7,
-                augQty: 13,
-                sepQty: 24,
-                octQty: 19,
-                novQty: 20,
-                decQty: 9,
-                total: 196,
-              },
-        ]
-        return data
-    }
-    async getSSWH1Data(): Promise<any> {
-        const data =[
-            {
-                itemCode: 'IC001',
-                itemName: 'Sweat Pants',
-                janQty: "40,000",
-                febQty: "1,00,000",
-                marQty: 20,
-                aprQty: 12,
-                mayQty: 18,
-                junQty: 25,
-                julQty: 8,
-                augQty: 14,
-                sepQty: 22,
-                octQty: 17,
-                novQty: 19,
-                decQty: 11,
-                total: 222223,
-              },
-              {
-                itemCode: 'IC002',
-                itemName: 'Waffle L/S T-shirt',
-                janQty: 8,
-                febQty: 16,
-                marQty: 18,
-                aprQty: 13,
-                mayQty: 21,
-                junQty: 28,
-                julQty: 7,
-                augQty: 13,
-                sepQty: 24,
-                octQty: 19,
-                novQty: 20,
-                decQty: 9,
-                total: 196,
-              },
-        ]
-        return data
-    }
-    async getSSEXF1Data(): Promise<any> {
-        const data =[
-            {
-                itemCode: 'IC001',
-                itemName: 'NY POP ART Archive S/S UT',
-                janQty: 10,
-                febQty: 15,
-                marQty: 20,
-                aprQty: 12,
-                mayQty: 18,
-                junQty: 25,
-                julQty: 8,
-                augQty: 14,
-                sepQty: 22,
-                octQty: 17,
-                novQty: 19,
-                decQty: 11,
-                total: 191,
-              },
-              {
-                itemCode: 'IC002',
-                itemName: `W's waffle crew neck L/S T-shirt`,
-                janQty: 8,
-                febQty: 16,
-                marQty: 18,
-                aprQty: 13,
-                mayQty: 21,
-                junQty: 28,
-                julQty: 7,
-                augQty: 13,
-                sepQty: 24,
-                octQty: 19,
-                novQty: 20,
-                decQty: 9,
-                total: 196,
-              },
-        ]
-        return data
+    // async getSSWHData(): Promise<any> {
+    //     const data =[
+    //         {
+    //             itemCode: 'IC001',
+    //             itemName: 'Dry pique S/S polo shirt (uniform)',
+    //             janQty: 10,
+    //             febQty: '',
+    //             marQty: 20,
+    //             aprQty: 12,
+    //             mayQty: 18,
+    //             junQty: 25,
+    //             julQty: 8,
+    //             augQty: 14,
+    //             sepQty: 22,
+    //             octQty: 17,
+    //             novQty: 19,
+    //             decQty: 11,
+    //             total: 191,
+    //           },
+    //           {
+    //             itemCode: 'IC002',
+    //             itemName: 'SUPIMA cotton crew neck S/S T-shirt',
+    //             janQty: 8,
+    //             febQty: 16,
+    //             marQty: 18,
+    //             aprQty: 13,
+    //             mayQty: 21,
+    //             junQty: 28,
+    //             julQty: 7,
+    //             augQty: 13,
+    //             sepQty: 24,
+    //             octQty: 19,
+    //             novQty: 20,
+    //             decQty: 9,
+    //             total: 196,
+    //           },
+    //     ]
+    //     return data
+    // }
+    // async getSSEXFData(): Promise<any> {
+    //     const data =[
+    //         {
+    //             itemCode: 'IC001',
+    //             itemName: 'Sweat pullover L/S hoodie',
+    //             janQty: '',
+    //             febQty: 15,
+    //             marQty: 20,
+    //             aprQty: 12,
+    //             mayQty: 18,
+    //             junQty: 25,
+    //             julQty: 8,
+    //             augQty: 14,
+    //             sepQty: 22,
+    //             octQty: 17,
+    //             novQty: 19,
+    //             decQty: 11,
+    //             total: 191,
+    //           },
+    //           {
+    //             itemCode: 'IC002',
+    //             itemName: 'U crew neck S/S T-shirt',
+    //             janQty: 8,
+    //             febQty: 16,
+    //             marQty: 18,
+    //             aprQty: 13,
+    //             mayQty: 21,
+    //             junQty: 28,
+    //             julQty: 7,
+    //             augQty: 13,
+    //             sepQty: 24,
+    //             octQty: 19,
+    //             novQty: 20,
+    //             decQty: 9,
+    //             total: 196,
+    //           },
+    //     ]
+    //     return data
+    // }
+    // async getFWWHData(): Promise<any> {
+    //     const data =[
+    //         {
+    //             itemCode: 'IC001',
+    //             itemName: 'Fluffy yarn fleece full-zip L/S jacket',
+    //             janQty: 10,
+    //             febQty: '',
+    //             marQty: 20,
+    //             aprQty: 12,
+    //             mayQty: 18,
+    //             junQty: 25,
+    //             julQty: 8,
+    //             augQty: 14,
+    //             sepQty: 22,
+    //             octQty: 17,
+    //             novQty: 19,
+    //             decQty: 11,
+    //             total: 191,
+    //           },
+    //           {
+    //             itemCode: 'IC002',
+    //             itemName: 'Sweat L/S shirt',
+    //             janQty: '',
+    //             febQty: 16,
+    //             marQty: 18,
+    //             aprQty: 13,
+    //             mayQty: 21,
+    //             junQty: 28,
+    //             julQty: 7,
+    //             augQty: 13,
+    //             sepQty: 24,
+    //             octQty: 19,
+    //             novQty: 20,
+    //             decQty: 9,
+    //             total: 196,
+    //           },
+    //     ]
+    //     return data
+    // }
+    // async getFWEXFData(): Promise<any> {
+    //     const data =[
+    //         {
+    //             itemCode: 'IC001',
+    //             itemName: 'Soft brushed crew neck L/S T-shirt',
+    //             janQty: 10,
+    //             febQty: 15,
+    //             marQty: 20,
+    //             aprQty: 12,
+    //             mayQty: 18,
+    //             junQty: 25,
+    //             julQty: 8,
+    //             augQty: 14,
+    //             sepQty: 22,
+    //             octQty: 17,
+    //             novQty: 19,
+    //             decQty: 11,
+    //             total: 191,
+    //           },
+    //           {
+    //             itemCode: 'IC002',
+    //             itemName: 'Waffle L/S T-shirt',
+    //             janQty: 8,
+    //             febQty: 16,
+    //             marQty: 18,
+    //             aprQty: 13,
+    //             mayQty: 21,
+    //             junQty: 28,
+    //             julQty: 7,
+    //             augQty: 13,
+    //             sepQty: 24,
+    //             octQty: 19,
+    //             novQty: 20,
+    //             decQty: 9,
+    //             total: 196,
+    //           },
+    //     ]
+    //     return data
+    // }
+    // async getSSWH1Data(): Promise<any> {
+    //     const data =[
+    //         {
+    //             itemCode: 'IC001',
+    //             itemName: 'Sweat Pants',
+    //             janQty: "40,000",
+    //             febQty: "1,00,000",
+    //             marQty: 20,
+    //             aprQty: 12,
+    //             mayQty: 18,
+    //             junQty: 25,
+    //             julQty: 8,
+    //             augQty: 14,
+    //             sepQty: 22,
+    //             octQty: 17,
+    //             novQty: 19,
+    //             decQty: 11,
+    //             total: 222223,
+    //           },
+    //           {
+    //             itemCode: 'IC002',
+    //             itemName: 'Waffle L/S T-shirt',
+    //             janQty: 8,
+    //             febQty: 16,
+    //             marQty: 18,
+    //             aprQty: 13,
+    //             mayQty: 21,
+    //             junQty: 28,
+    //             julQty: 7,
+    //             augQty: 13,
+    //             sepQty: 24,
+    //             octQty: 19,
+    //             novQty: 20,
+    //             decQty: 9,
+    //             total: 196,
+    //           },
+    //     ]
+    //     return data
+    // }
+    // async getSSEXF1Data(): Promise<any> {
+    //     const data =[
+    //         {
+    //             itemCode: 'IC001',
+    //             itemName: 'NY POP ART Archive S/S UT',
+    //             janQty: 10,
+    //             febQty: 15,
+    //             marQty: 20,
+    //             aprQty: 12,
+    //             mayQty: 18,
+    //             junQty: 25,
+    //             julQty: 8,
+    //             augQty: 14,
+    //             sepQty: 22,
+    //             octQty: 17,
+    //             novQty: 19,
+    //             decQty: 11,
+    //             total: 191,
+    //           },
+    //           {
+    //             itemCode: 'IC002',
+    //             itemName: `W's waffle crew neck L/S T-shirt`,
+    //             janQty: 8,
+    //             febQty: 16,
+    //             marQty: 18,
+    //             aprQty: 13,
+    //             mayQty: 21,
+    //             junQty: 28,
+    //             julQty: 7,
+    //             augQty: 13,
+    //             sepQty: 24,
+    //             octQty: 19,
+    //             novQty: 20,
+    //             decQty: 9,
+    //             total: 196,
+    //           },
+    //     ]
+    //     return data
+    // }
+
+    async seasonWiseReport():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.ordersController + "/seasonWiseReport")
     }
 
     async getSeasonWiseOrders(): Promise<CommonResponseModel> {
