@@ -375,9 +375,11 @@ export const ExFactoryReport = () => {
           columns={childColumns1}
           pagination={false} // Hide pagination for child table
           rowKey={(record) => record.itemName}
+         
         />
       ),
     },
+        
   ];
   const handleExport = (e: any) => {
     e.preventDefault();
@@ -744,12 +746,18 @@ export const ExFactoryReport = () => {
             {
               title: "Total In PCs",
               dataIndex: "totalPcs",
-             
+              render: (text: any, record: any) => {
+                const phaseTypes = record.monthWiseData.map((data: any) => data.totalPcs);
+                return phaseTypes.join(', ') || '-';
+              }
             },
             {
               title: "Total In Coeff",
               dataIndex: "totalCoeff",
-             
+              render: (text: any, record: any) => {
+                const phaseTypes = record.monthWiseData.map((data: any) => data.totalCoeff);
+                return phaseTypes.join(', ') || '-';
+              }
             },
           ]
         },
@@ -790,46 +798,9 @@ const handleTabChange = (selectedYear: string) => {
           columns={columns5} // Assuming 'columns5' is defined elsewhere
           size="small"
           scroll={{ x: "max-content" }}
-          summary={(pageData) => {
-            let totalCost = 0;
-            let currentCost = 0;
-            let totalDifference = 0;
-            let totalCarryingAmount = 0;
-            let totaldepUpto5Years = 0;
-            let totaldepAmountWholeLife = 0;
-            let totalslavagedValue = 0;
-
-            pageData.forEach((e) => {
-              if (Number(e)) {
-                totalCost += Number(e)
-              }
-            })
-
-
-           
-
-           
-           
-
-            return (
-              <>
-                <Table.Summary.Row className="tableFooter">
-                  <Table.Summary.Cell index={2} ><Text>Total</Text></Table.Summary.Cell>
-                  <Table.Summary.Cell index={2} ></Table.Summary.Cell>
-                  <Table.Summary.Cell index={1} >{Number(Number(totalCost).toFixed(0)).toLocaleString('en-IN')}</Table.Summary.Cell>
-                  <Table.Summary.Cell index={1} >{Number(Number(currentCost).toFixed(0)).toLocaleString('en-IN')}</Table.Summary.Cell>
-                  <Table.Summary.Cell index={1} >{Number(Number(totalDifference).toFixed(0)).toLocaleString('en-IN')}</Table.Summary.Cell>
-                  <Table.Summary.Cell index={1} colSpan={1}>{Number(Number(totalCarryingAmount).toFixed(0)).toLocaleString('en-IN')}</Table.Summary.Cell>
-                  <Table.Summary.Cell index={1} >{Number(Number(totaldepUpto5Years).toFixed(0)).toLocaleString('en-IN')}</Table.Summary.Cell>
-                  <Table.Summary.Cell index={1} colSpan={4}>{Number(Number(totaldepAmountWholeLife).toFixed(0)).toLocaleString('en-IN')}</Table.Summary.Cell>
-                  <Table.Summary.Cell index={1} colSpan={2}>{Number(Number(totalslavagedValue).toFixed(0)).toLocaleString('en-IN')}</Table.Summary.Cell>
-
-                </Table.Summary.Row>
-              </>
-            )
-          }}
-
+         
         />
+        
       </Tabs.TabPane>
     ))}
   </Tabs>
