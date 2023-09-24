@@ -19,7 +19,7 @@ export function UnitWiseOrderGraph() {
 
 
   const getUnitWiseOrders = () => {
-    service.getUnitWiseOrders().then(res => {
+    service.getProdPlanCount().then(res => {
       if (res.status) {
         setUnitProData(res.data);
       } else {
@@ -37,20 +37,20 @@ export function UnitWiseOrderGraph() {
 
   }
 
-  const unitName = unitData.map(i => { return i.business_unit });
+  const unitName = unitData.map(i => { return i.prod_plan_type });
   const count = unitData.map(i => { return Number(i.count) });
   
 
   const config = {
-    colors: ['#058DC7', '#50B432', '#FFC000', '#7798BF', '#aaeeee', '#ff0066',
-      '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+    colors: [ "#8333FF",'#55BF3B','#058DC7', '#50B432', '#FFC000', '#7798BF', '#aaeeee', '#ff0066',
+      '#eeaaee', '#DF5353', '#7798BF', '#aaeeee'],
     chart: {
       type: 'column',
     //   backgroundColor: '#CCCCFF'
     },
 
     title: {
-      text: 'Unit Wise Orders',
+      text: 'Product Plan Type Orders',
       style: {
         color: 'var(--text-color,black)',
         fontSize: '1.75rem',

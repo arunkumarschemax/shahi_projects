@@ -298,7 +298,15 @@ export class OrdersController {
 
         }
     }
-
+    @Post('/getProdPlanCount')
+    async getProdPlanCount(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getProdPlanCount();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
     @Post('/getWareHouseYear')
     async getWareHouseYear(): Promise<CommonResponseModel> {
         try {
@@ -316,5 +324,4 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
-    
 }

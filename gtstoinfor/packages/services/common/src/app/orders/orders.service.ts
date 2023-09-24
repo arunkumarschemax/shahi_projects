@@ -1087,6 +1087,14 @@ console.log(NewArray)
 //     catch (error){
 //         throw error
 //     }
+
+async getProdPlanCount(): Promise<CommonResponseModel> {
+    const data = await this.ordersRepository.getProdPlanCount()
+    if (data)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
       
 async getWareHouseYear(): Promise<CommonResponseModel> {
     const data = await this.ordersRepository.getWareHouseYearData()

@@ -21,7 +21,7 @@ export const Dashboard = () => {
                 <Row gutter={24}>
                     <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>
                         <div >
-                            {/* <UnitWiseOrderGraph /> */}
+                            <UnitWiseOrderGraph />
                         </div>
                     </Col>
                     <Col className="cardComp" xs={24} sm={24} md={8} xl={12}>
