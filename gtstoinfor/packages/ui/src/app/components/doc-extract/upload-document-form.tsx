@@ -60,6 +60,8 @@ export function UploadDocumentForm() {
   const [extractedData, setExtractedData] = useState<any>([]);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [hsnData, setHsnData] = useState([]);
+
 
   const [buttonText, setButtonText] = useState("Add");
   const [formed, setFormed] = useState<Item[]>([]);
@@ -73,7 +75,8 @@ export function UploadDocumentForm() {
   // const [unitprice, setUnitprice] = useState("");
   const [variance, setVariance] = useState("");
   const [unitquantity, setUnitquantity] = useState("");
-  const [Unitprice, setUnitprice] = useState("");
+  // const [Unitprice, setUnitprice] = useState("");
+
 
   const [quotation, setQuotation] = useState("");
   const [status, setStatus] = useState("");
@@ -97,7 +100,7 @@ export function UploadDocumentForm() {
     Taxamount: string;
     Charge: string;
     variance: string;
-    Unitprice: string;
+    // Unitprice: string;
   }
 
   const [imageURL, setImageURL] = useState<string | null>(null);
@@ -357,12 +360,12 @@ export function UploadDocumentForm() {
       unitquantity,
       quotation,
       variance,
-      Unitprice,
+      // Unitprice,
     };
 
     const ChargeFloat = parseFloat(Charge) || 0;
     const QuotationFloat = parseFloat(quotation) || 0;
-    newItem.Unitprice = (QuotationFloat - ChargeFloat).toFixed(2);
+    newItem.variance = (QuotationFloat - ChargeFloat).toFixed(2);
 
     if (isEditing) {
       const updatedTableData = extractedData.map((item) =>
@@ -429,7 +432,7 @@ export function UploadDocumentForm() {
       editedCharge = `${item.Taxamount}`;
     }
     setCharge(editedCharge || "0");
-    setVariance(item.unitprice || "0");
+    setVariance(item.variance || "0");
     setUnitquantity(item.unitquantity || "0");
     setQuotation(item.quotation || "0");
 
@@ -571,6 +574,30 @@ export function UploadDocumentForm() {
       ),
     },
   ];
+
+  const calculateCharge = () => {
+    const taxAmountFloat = parseFloat(Taxamount);
+    const taxPercentageFloat = parseFloat(Taxpercentage);
+  
+    if (!isNaN(taxAmountFloat) && !isNaN(taxPercentageFloat) && taxPercentageFloat !== 0) {
+      const equivalentFor100Percent = (taxAmountFloat * 100) / taxPercentageFloat;
+      setCharge(equivalentFor100Percent.toFixed(2));
+    } else {
+      setCharge("0");
+    }
+  };
+  
+  const handleTaxamountChange = (e) => {
+    setTaxamount(e.target.value);
+    calculateCharge();
+  };
+  
+  const handleTaxpercentageChange = (e) => {
+    setTaxPercentage(e.target.value);
+    calculateCharge();
+  };
+  
+  
 
   // {
   //   title: "Variance",
@@ -818,37 +845,301 @@ export function UploadDocumentForm() {
   useEffect(() => {
     extractGstFromJson();
     extractInvoiceAmountFromJson();
+    extractInvoicenumberFromJson();
+    extractigstFromJson();
+    extractcgstFromJson();
+    extractsgstFromJson();
+    extractCurrencyFromJson();
+    extractInvoiceDateFromJson();
   }, [jsonData]);
 
-  const handleGstChange = (e) => {
-    setGstNumbers(e.target.value);
-  };
+  // const extractGstFromJson = () => {
+  //   if (jsonData) {
+  //     const gstKeywords = ['GST:', 'GSTIN'];
+  //     const matchingValues = [];
 
-  const handleInvoiceAmountChange = (e) => {
-    setInnvoiceamount(e.target.value);
-  };
+  //     for (const keyword of gstKeywords) {
+  //       for (const item of jsonData) {
+  //         if (item.content.includes(keyword)) {
+  //           const value = item.content.replace(keyword, '').trim();
+  //           matchingValues.push(value);
+  //         }
+  //       }
+  //     }
+
+  //     const gstValue = matchingValues.join(', ');
+  //     setGstNumbers(gstValue);
+  //   }
+  // };
+
 
   const extractGstFromJson = () => {
     if (jsonData) {
-      const gstId = '1-117'; 
-      const gstData = jsonData.find((item) => item.id === gstId);
+      const gstKeywords = ['GSTIN No.'];
+      let gstValue = null; // Initialize as null
 
-      if (gstData) {
-        setGstNumbers(gstData.content);
+      for (const keyword of gstKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            gstValue = item.content.replace(keyword, '').trim();
+            break; // Stop searching once GST is found
+          }
+        }
+
+        if (gstValue) {
+          break; // Stop searching for GST keywords if GST value is found
+        }
       }
+
+      setGstNumbers(gstValue);
     }
+  };
+
+  const extractFinancialyearFrom = (text) => {
+    const FinancialyearRegex = /\b\d{4}-\d{4}\b/g;
+    const match = text.match(FinancialyearRegex);
+    const extractedFinancialyear = match ? match[0].trim() : "";
+    return extractedFinancialyear;
+  };
+
+  const getCurrentFinancialYearFrom = () => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const isAprilOrLater = currentDate.getMonth() >= 3;
+    const startYear = isAprilOrLater ? currentYear : currentYear - 1;
+    const endYear = startYear + 1;
+    return `${startYear}-${endYear}`;
   };
 
   const extractInvoiceAmountFromJson = () => {
     if (jsonData) {
-      const invoiceAmountId = '1-16'; 
-      const invoiceAmountData = jsonData.find((item) => item.id === invoiceAmountId);
+      const invoiceAmountKeywords = ['3540.00 540.00 3000.00 TOTAL AMOUNT', ' 193855.09 29571.12 164283.97 TOTAL AMOUNT'];
+      const matchingValues = [];
 
-      if (invoiceAmountData) {
-        setInnvoiceamount(invoiceAmountData.content);
+      for (const keyword of invoiceAmountKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            matchingValues.push(value);
+          }
+        }
       }
+
+      const invoiceAmountValue = matchingValues.join(', ');
+      setInnvoiceamount(invoiceAmountValue);
     }
   };
+
+  const extractInvoicenumberFromJson = () => {
+    if (jsonData) {
+      const tInvoicenumberKeywords = ['GT']
+      const matchingValues = [];
+
+      for (const keyword of tInvoicenumberKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            matchingValues.push(value);
+          }
+        }
+      }
+
+      const tInvoicenumberValue = matchingValues.join(', ');
+      setInnvoicenum(tInvoicenumberValue);
+    }
+  };
+
+  const extractigstFromJson = () => {
+    if (jsonData) {
+      const igsttKeywords = ['Due Date   INR Taxable Amount (INR) :'];
+      const matchingValues = [];
+
+      for (const keyword of igsttKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            matchingValues.push(value);
+          }
+        }
+      }
+
+      const igstValue = matchingValues.join(', ');
+      setIgst(igstValue);
+    }
+  };
+
+  const extractcgstFromJson = () => {
+    if (jsonData) {
+      const cgstKeywords = ['CGST:', 'CGST Amount:', 'Central Tax:']; // Add more keywords if needed
+      let cgstValue = '0.00'; // Default value
+
+      for (const keyword of cgstKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            const numericValue = parseFloat(value.replace(/,/g, '')); // Convert to a number and remove commas
+            if (!isNaN(numericValue)) {
+              cgstValue = numericValue.toFixed(2); // Format as "0.00"
+              break;
+            }
+          }
+        }
+        if (cgstValue !== '0.00') {
+          break;
+        }
+      }
+
+      setCgst(cgstValue);
+    }
+  };
+
+  const extractsgstFromJson = () => {
+    if (jsonData) {
+      const sgstKeywords = ['sgst:', 'sgst Amount:', 'Central Tax:']; // Add more keywords if needed
+      let sgstValue = '0.00'; // Default value
+
+      for (const keyword of sgstKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            const numericValue = parseFloat(value.replace(/,/g, '')); // Convert to a number and remove commas
+            if (!isNaN(numericValue)) {
+              sgstValue = numericValue.toFixed(2); // Format as "0.00"
+              break;
+            }
+          }
+        }
+        if (sgstValue !== '0.00') {
+          break;
+        }
+      }
+
+      setSgst(sgstValue);
+    }
+  };
+
+  const extractCurrencyFromJson = () => {
+    if (jsonData) {
+      const currencykeywords = [];
+      let CurrencyValue = 'INR';
+
+      for (const keyword of currencykeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            const numericValue = parseFloat(value.replace(/,/g, '')); // Convert to a number and remove commas
+            if (!isNaN(numericValue)) {
+              CurrencyValue = numericValue.toFixed(2); // Format as "0.00"
+              break;
+            }
+          }
+        }
+        if (CurrencyValue !== '0.00') {
+          break;
+        }
+      }
+
+      setInnvoicecurrency(CurrencyValue);
+    }
+  };
+
+  const extractInvoiceDateFromJson = () => {
+    if (jsonData) {
+      const datePattern = /\b\d{2}-[A-Za-z]{3}-\d{2}\b/g;
+      let invoiceDate = null;
+
+      for (const item of jsonData) {
+        const matches = item.content.match(datePattern);
+
+        if (matches) {
+          invoiceDate = matches[0];
+          break;
+        }
+      }
+
+      setInvoiceDate(invoiceDate);
+    }
+  };
+
+
+
+  // const handleDateChanges = (date) => {
+  //   setInvoiceDate(date);
+  // };
+
+  // const extractInvoiceDateJson = (text) => {
+  //   const invoiceDateRegex =
+  //     /\b(?:\d{1,2}-[A-Za-z]{3}-\d{2}|\d{1,2} [A-Za-z]{3} \d{4}|\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}\/\d{4})\b/g;
+  //   const match = text.match(invoiceDateRegex);
+
+  //   if (match) {
+  //     const extractedDate = match[0];
+  //     if (/\d{1,2} [A-Za-z]{3} \d{4}/.test(extractedDate)) {
+  //       const parts = extractedDate.split(" ");
+  //       const day = parts[0];
+  //       const month = getMonthNumbers(parts[1]);
+  //       const year = parts[2];
+  //       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  //     }
+  //     if (/\d{1,2}-[A-Za-z]{3}-\d{2}/.test(extractedDate)) {
+  //       const parts = extractedDate.split("-");
+  //       const day = parts[0];
+  //       const month = getMonthNumbers(parts[1]);
+  //       const year = formatYears(parts[2]);
+  //       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  //     }
+  //     if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(extractedDate)) {
+  //       const parts = extractedDate.split("/");
+  //       const day = parts[0];
+  //       const month = parts[1];
+  //       const year = parts[2];
+  //       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  //     }
+  //     if (/^\d{4}-\d{2}-\d{2}$/.test(extractedDate)) {
+  //       return extractedDate;
+  //     }
+  //   }
+  //   return "";
+  // };
+
+  // function getMonthNumbers(monthStr) {
+  //   const monthMap = {
+  //     Jan: "01",
+  //     Feb: "02",
+  //     Mar: "03",
+  //     Apr: "04",
+  //     May: "05",
+  //     Jun: "06",
+  //     Jul: "07",
+  //     Aug: "08",
+  //     Sep: "09",
+  //     Oct: "10",
+  //     Nov: "11",
+  //     Dec: "12",
+  //   };
+  //   return monthMap[monthStr] || monthStr;
+  // }
+
+  // function formatYears(yearStr) {
+  //   if (yearStr.length === 2) {
+  //     const currentYear = new Date().getFullYear();
+  //     const currentCentury = Math.floor(currentYear / 100);
+  //     const currentDecade = currentYear % 100;
+  //     const inputDecade = parseInt(yearStr, 10);
+  //     const adjustedYear = currentCentury * 100 + inputDecade;
+
+  //     if (adjustedYear > currentYear) {
+  //       return (currentCentury - 1) * 100 + inputDecade;
+  //     }
+
+  //     return adjustedYear;
+  //   } else if (yearStr.length === 4) {
+  //     return yearStr;
+  //   } else {
+  //     return "";
+  //   }
+  // }
+
 
   const handleFileChange = (info) => {
     if (info.file.status === 'done') {
@@ -871,30 +1162,132 @@ export function UploadDocumentForm() {
     reader.readAsDataURL(pdfBlob);
   };
 
- const extractTextFromPdf = async (pdfBuffer) => {
-  const pdf = await pdfjs.getDocument({ data: pdfBuffer }).promise;
-  const numPages = pdf.numPages;
-  const extractedData = [];
-  let idCounter = 1;
+  //  const extractTextFromPdf = async (pdfBuffer) => {
+  //   const pdf = await pdfjs.getDocument({ data: pdfBuffer }).promise;
+  //   const numPages = pdf.numPages;
+  //   const extractedData = [];
+  //   let idCounter = 1;
 
-  for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-    const page = await pdf.getPage(pageNumber);
-    const textContent:any = await page.getTextContent();
+  //   for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+  //     const page = await pdf.getPage(pageNumber);
+  //     const textContent:any = await page.getTextContent();
 
-    // Extract text from textContent.items
-    // eslint-disable-next-line no-loop-func
-    textContent.items.forEach((item) => {
-      console.log(item.dir,"item")
-      const content = item.str;
-      extractedData.push({ id: `${pageNumber}-${idCounter}`, content });
-      idCounter++;
+  //     // Extract text from textContent.items
+  //     // eslint-disable-next-line no-loop-func
+  //     textContent.items.forEach((item) => {
+  //       const content = item.str;
+  //       extractedData.push({ id: `${pageNumber}-${idCounter}`, content });
+  //       idCounter++;
+  //     });
+  //     const currentFinancialYear = getCurrentFinancialYearFrom();
+  //     setFinancialyear(currentFinancialYear);
+  //   }
+  //   return extractedData;
+  // };
+
+  useEffect(() => {
+    if (hsnData && hsnData.length > 0) {
+      setHsnData(hsnData);
+    }
+  }, [hsnData]);
+
+  const extractTextFromPdf = async (pdfBuffer) => {
+    const pdf = await pdfjs.getDocument({ data: pdfBuffer }).promise;
+    const numPages = pdf.numPages;
+    const extractedData = [];
+    let idCounter = 1;
+
+    for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+      const page = await pdf.getPage(pageNumber);
+      const textContent: any = await page.getTextContent();
+
+      let line = '';
+      let rec = null;
+
+      // eslint-disable-next-line no-loop-func
+      textContent.items.forEach((item) => {
+        if (rec !== null) {
+          rec = item.transform[5];
+        }
+
+        if (item.transform[5]) {
+          extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
+          idCounter++;
+          line = '';
+        }
+
+        line += item.str + ' ';
+      });
+
+      extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
+    }
+
+    const currentFinancialYear = getCurrentFinancialYearFrom();
+    setFinancialyear(currentFinancialYear);
+
+    const structuredHSNLines = [];
+    let currentHSN = null;
+
+    for (const line of extractedData) {
+      if (line.content.includes("HSN") || line.content.match(/^\d{6}$/)) {
+        if (currentHSN) {
+          structuredHSNLines.push(currentHSN);
+        }
+        currentHSN = {
+          HSN: line.content.includes("HSN")
+            ? line.content.match(/\d+/)
+            : line.content.trim(),
+          Taxtype: line.content.match(/IGST|CGST|SGST|GST/),
+          Taxamount: null,
+          description: null,
+          chargeINR: null,
+        };
+
+        const taxAmountMatch = line.content.match(
+          /(\d+(\.\d{0,2})?)%=(\d+(\.\d{0,2})?)/
+        );
+        if (taxAmountMatch) {
+          currentHSN.Taxamount = {
+            Taxpercentage: parseFloat(taxAmountMatch[1]),
+            Taxamount: parseFloat(taxAmountMatch[3]),
+          };
+        }
+      } else if (line.content.includes("IGST|CGST|GSTS|GST")) {
+        currentHSN.Taxtype = "IGST";
+      }
+      if (line.content.includes("chargeINR")) {
+        const chargeValueMatch = line.content.match(
+          /^\d{1,3}(,\d{3})*(\.\d{2})?$/
+        );
+        if (chargeValueMatch) {
+          currentHSN.chargeINR = parseFloat(
+            chargeValueMatch[1].replace(/,/g, "")
+          );
+        }
+      }
+
+      if (currentHSN && !currentHSN.description) {
+        currentHSN.description = line.content.trim();
+      }
+    }
+
+    if (currentHSN) {
+      structuredHSNLines.push(currentHSN);
+    }
+
+    structuredHSNLines.forEach((line) => {
+      if (line.Taxamount) {
+        line.Taxpercentage = line.Taxamount.Taxpercentage;
+        line.Taxamount = line.Taxamount.Taxamount;
+      }
     });
-  }
 
-  return extractedData;
-};
+    // The extracted HSN data is now available in the 'hsnData' array
+    console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+    setExtractedData(structuredHSNLines);
+    return extractedData;
+  };
 
-  
 
   const handlePdfToJSON = async (pdfDataUrl) => {
     if (pdfDataUrl) {
@@ -903,10 +1296,11 @@ export function UploadDocumentForm() {
       const extractedData = await extractTextFromPdf(pdfBuffer);
       setJsonData(extractedData);
       console.log('PDF data in JSON format:', extractedData);
+
+      const extractionTime = new Date().toLocaleString();
+      setTimecreated(extractionTime);
     }
   };
-
- 
 
   const handleUploadDocument = () => {
     if (file && !buttonClicked) {
@@ -1136,41 +1530,41 @@ export function UploadDocumentForm() {
 
     <span style={{ display: "flex", flexDirection: "column" }}>
       <Card>
-      <Card>
+        <Card>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-      <div style={{ width: '33%', marginRight: '10px' }}>
-        <div>
-          <Upload
-            customRequest={({ file, onSuccess }) => {
-              setTimeout(() => {
-                onSuccess('ok');
-              }, 0);
-            }}
-            showUploadList={false}
-            onChange={handleFileChange}
-            accept=".pdf"
-            beforeUpload={(file) => {
-              return true;
-            }}
-          >
-            <Button icon={<UploadOutlined />}>Choose PDF</Button>
-          </Upload>
-        </div>
+            <div style={{ width: '33%', marginRight: '10px' }}>
+              <div>
+                <Upload
+                  customRequest={({ file, onSuccess }) => {
+                    setTimeout(() => {
+                      onSuccess('ok');
+                    }, 0);
+                  }}
+                  showUploadList={false}
+                  onChange={handleFileChange}
+                  accept=".pdf"
+                  beforeUpload={(file) => {
+                    return true;
+                  }}
+                >
+                  <Button icon={<UploadOutlined />}>Choose PDF</Button>
+                </Upload>
+              </div>
 
-        <div id="pdfContainer" style={{ marginTop: '20px' }}>
-          {pdfData && (
-            <iframe
-              src={pdfData}
-              title="PDF Viewer"
-              width="600px"
-              height="600px"
-              frameBorder="0"
-            />
-          )}
-        </div>
-      </div>
+              <div id="pdfContainer" style={{ marginTop: '20px' }}>
+                {pdfData && (
+                  <iframe
+                    src={pdfData}
+                    title="PDF Viewer"
+                    width="600px"
+                    height="600px"
+                    frameBorder="0"
+                  />
+                )}
+              </div>
+            </div>
 
-      {/* <div style={{ width: '33%', marginRight: '10px' }}>
+            {/* <div style={{ width: '33%', marginRight: '10px' }}>
         <div>
           {jsonData && (
             <div
@@ -1202,8 +1596,8 @@ export function UploadDocumentForm() {
           )}
         </div>
       </div> */}
-    </div>
-          </Card>
+          </div>
+        </Card>
       </Card>
       <Card
         title={<span style={{ textAlign: "center" }}>Upload Document</span>}
@@ -1242,8 +1636,8 @@ export function UploadDocumentForm() {
                   name="file"
                   {...gstUploadFieldProps}
                   accept=".pdf,.jpeg,.png,.jpg"
-                  multiple 
-                  // showUploadList={false}
+                  multiple
+                // showUploadList={false}
                 >
                   <Button
                     key="file"
@@ -1724,36 +2118,37 @@ export function UploadDocumentForm() {
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label
-                      htmlFor="Taxamount"
-                      style={{ color: "black", fontWeight: "bold" }}
-                    >
-                      Tax Amount
-                    </label>
-                    <Input
-                      id="Taxamount"
-                      name="Taxamount"
-                      style={{ width: "150px", height: "30px" }}
-                      value={Taxamount}
-                      onChange={(e) => setTaxamount(e.target.value)}
-                    />
-                  </Col>
-                </Row>
-
-                <Row gutter={12} style={{ marginTop: "10px" }}>
-                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label
-                      htmlFor="Taxpercentage"
-                      style={{ color: "black", fontWeight: "bold" }}
-                    >
-                      Tax Percentage
-                    </label>
+                    <label htmlFor="Taxpercentage">Tax Percentage</label>
                     <Input
                       id="Taxpercentage"
                       name="Taxpercentage"
                       style={{ width: "150px", height: "30px" }}
                       value={Taxpercentage}
-                      onChange={(e) => setTaxPercentage(e.target.value)}
+                      onChange={handleTaxpercentageChange}
+                    />
+                  </Col>
+
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Taxamount" style={{ color: "black", fontWeight: "bold" }}>Tax Amount</label>
+                    <Input
+                      id="Taxamount"
+                      name="Taxamount"
+                      style={{ width: "150px", height: "30px" }}
+                      value={Taxamount}
+                      onChange={handleTaxamountChange}
+                    />
+                  </Col>
+
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Charge" style={{ color: "black", fontWeight: "bold" }}>
+                      Charge
+                    </label>
+                    <Input
+                      id="Charge"
+                      name="Charge"
+                      style={{ width: "150px", height: "30px" }}
+                      value={Charge}
+                      onChange={(e) => setCharge(e.target.value)}
                     />
                   </Col>
 
@@ -1773,7 +2168,7 @@ export function UploadDocumentForm() {
                     />
                   </Col>
 
-                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                  {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                     <label
                       htmlFor="Charge"
                       style={{ color: "black", fontWeight: "bold" }}
@@ -1787,7 +2182,7 @@ export function UploadDocumentForm() {
                       value={Charge}
                       onChange={(e) => setCharge(e.target.value)}
                     />
-                  </Col>
+                  </Col> */}
                 </Row>
 
                 <Row gutter={12} style={{ marginTop: "10px" }}>
@@ -1871,7 +2266,7 @@ export function UploadDocumentForm() {
               ""
             )} */}
           </Card>
-    
+
         </span>
       </Form>
     </span>
