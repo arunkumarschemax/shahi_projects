@@ -1,6 +1,7 @@
 import { FileExcelFilled } from "@ant-design/icons";
 import { OrdersService } from "@project-management-system/shared-services";
 import { Button, Card, Table, Tabs, TabsProps } from "antd";
+import { YearReq } from "@project-management-system/shared-models";
 import { Excel } from "antd-table-saveas-excel";
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import { ColumnsType } from "antd/es/table";
@@ -18,12 +19,16 @@ export const WareHouseComparision = () => {
   },[])
 
   const getData =()=>{
-    service.getAll().then(res =>{
-      console.log(res,'res==========');
-      
-      setData(res)
+    const req = new YearReq(2024)
+    service.getAll(req).then(res =>{     
+       console.log(res,'res==========');
+      if(res.data){
+        setData(res.data)
+      }
+      else{
+      setData([])
+      }
     })}
- 
   const childColumns1: any = [
     {
       title: "Production Plan Type Name",

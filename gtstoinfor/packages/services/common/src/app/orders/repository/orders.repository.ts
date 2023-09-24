@@ -53,8 +53,8 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getDivisionCount(): Promise<any[]> {
         const query = this.createQueryBuilder('orders')
-            .select(`department_name , COUNT(department_name) AS count`)
-            .groupBy(`department_name`)
+            .select(`department , COUNT(department) AS count`)
+            .groupBy(`department`)
         return await query.getRawMany();
     }
 
@@ -91,5 +91,31 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         return await query.getRawMany();
     }
 
-      
+    async seasonWiseReport(): Promise<any[]>{
+        const query = this.createQueryBuilder('orders')
+        .select(`planning_ssn as plannedSeason,item_cd as itemCode,item as itemName, order_plan_qty as orderQty,wh as whDate,
+        MONTH(STR_TO_DATE(wh, '%m/%d')) AS whMonth,exf as exfDate,
+        MONTH(STR_TO_DATE(exf, '%m/%d')) AS exfMonth,year`)
+        return await query.getRawMany()
+    }
+    async getProdPlanCount(): Promise<any[]> {
+        const query = this.createQueryBuilder('orders')
+            .select(`prod_plan_type , COUNT(prod_plan_type) AS count`)
+            .groupBy(`prod_plan_type`)
+        return await query.getRawMany();
+    }
+
+    async getWareHouseMonthData(year:number): Promise<any> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.item,o.item_cd,o.wh,o.month,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type`)
+            .where(`o.year ='${year}'`)
+            // .groupBy(`o.item_cd`)
+        return await query.getRawMany();
+    }
+    async getWareHouseYearData(): Promise<any> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.year as year`)
+            .groupBy(`o.year`)
+        return await query.getRawMany();
+    }
 }

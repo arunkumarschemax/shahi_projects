@@ -1022,6 +1022,13 @@ export class OrdersService extends CommonAxiosService {
     //       return data
     //     // return this.axiosPostCall(this.ordersController + "/getMonthWiseData")
     // }
+    async getAllWareHouse(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getAllWareHouse",req)
+    }
+    async getWareHouseYearData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getWareHouseYearData")
+    }
+
     async saveTrimOrder(data: any, id: number, month: any): Promise<CommonResponseModel> {
         console.log(month)
         const idn = id;
@@ -1040,6 +1047,9 @@ export class OrdersService extends CommonAxiosService {
 
     async getYearWiseOrders(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getYearWiseOrders")
+    }
+    async getProdPlanCount(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getProdPlanCount")
     }
 
 }
