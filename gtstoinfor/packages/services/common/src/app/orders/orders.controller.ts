@@ -298,5 +298,23 @@ export class OrdersController {
 
         }
     }
+
+    @Post('/getWareHouseYear')
+    async getWareHouseYear(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getWareHouseYear();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getWareHouseMonthData')
+    @ApiBody({type:YearReq})
+    async getWareHouseMonthData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryMonthData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
     
 }

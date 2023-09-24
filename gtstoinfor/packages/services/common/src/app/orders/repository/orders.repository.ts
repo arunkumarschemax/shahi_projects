@@ -91,5 +91,17 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         return await query.getRawMany();
     }
 
-      
+    async getWareHouseMonthData(year:number): Promise<any> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.item,o.item_cd,o.wh,o.month,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type`)
+            .where(`o.year ='${year}'`)
+            // .groupBy(`o.item_cd`)
+        return await query.getRawMany();
+    }
+    async getWareHouseYearData(): Promise<any> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.year as year`)
+            .groupBy(`o.year`)
+        return await query.getRawMany();
+    }
 }
