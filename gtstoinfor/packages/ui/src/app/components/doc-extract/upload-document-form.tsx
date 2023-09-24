@@ -20,6 +20,7 @@ import {
 } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import Tesseract from "tesseract.js";
+import { pdfjs } from 'react-pdf';
 // import { useNavigate, useLocation } from "react-router-dom";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 // import DocExtractForm from "./doc-extract-form";
@@ -37,6 +38,8 @@ import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dt
 import { useNavigate } from "react-router-dom";
 // const { Title, Text } = Typography;
 const { Option } = Select;
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
 
 // export interface UploadDocumentFormProps { }
 
@@ -46,6 +49,9 @@ export function UploadDocumentForm() {
   const [uploadForm] = Form.useForm();
   const [submitVisible, setSubmitVisible] = useState<boolean>(false);
   const [file, setFile] = useState<any | null>(null);
+
+  const [pdfData, setPdfData] = useState(null);
+  const [jsonData, setJsonData] = useState(null);
 
 
 
@@ -426,7 +432,7 @@ export function UploadDocumentForm() {
     setVariance(item.unitprice || "0");
     setUnitquantity(item.unitquantity || "0");
     setQuotation(item.quotation || "0");
-  
+
     setIsEditing(true);
     setEditingItem(item);
     setButtonText("Update");
@@ -518,7 +524,7 @@ export function UploadDocumentForm() {
       dataIndex: "quotation",
       key: "quotation",
     },
-   
+
 
     {
       title: "Variance",
@@ -566,47 +572,47 @@ export function UploadDocumentForm() {
     },
   ];
 
-   // {
-    //   title: "Variance",
-    //   dataIndex: "variance",
-    //   key: "variance",
-    //   hide:true,
-    //   render: (variance, record) => {
-    //     const Charge = parseFloat(record.Charge) || 0;
-    //     const Quotation = parseFloat(record.quotation) || 0;
-    //     const varianceValue = Quotation - Charge;
-    //     return `${varianceValue.toFixed(2)}`;
-    //   },
-    // },
-    // {
-    //   title: "Status",
-    //   dataIndex: "status",
-    //   key: "status",
-    //   render: (status, records) => {
-    //     if (!Array.isArray(records) || records.length === 0) {
-    //       return "No Variance";
-    //     }
+  // {
+  //   title: "Variance",
+  //   dataIndex: "variance",
+  //   key: "variance",
+  //   hide:true,
+  //   render: (variance, record) => {
+  //     const Charge = parseFloat(record.Charge) || 0;
+  //     const Quotation = parseFloat(record.quotation) || 0;
+  //     const varianceValue = Quotation - Charge;
+  //     return `${varianceValue.toFixed(2)}`;
+  //   },
+  // },
+  // {
+  //   title: "Status",
+  //   dataIndex: "status",
+  //   key: "status",
+  //   render: (status, records) => {
+  //     if (!Array.isArray(records) || records.length === 0) {
+  //       return "No Variance";
+  //     }
 
-    //     // Aggregate variance values for all records
-    //     const varianceValues = records.map((record) => {
-    //       if (!record.variance || !Array.isArray(record.variance)) {
-    //         return 0; // Consider zero for records with missing or non-array variance data
-    //       }
-    //       return record.variance.reduce((sum, v) => sum + (parseFloat(v) || 0), 0);
-    //     });
+  //     // Aggregate variance values for all records
+  //     const varianceValues = records.map((record) => {
+  //       if (!record.variance || !Array.isArray(record.variance)) {
+  //         return 0; // Consider zero for records with missing or non-array variance data
+  //       }
+  //       return record.variance.reduce((sum, v) => sum + (parseFloat(v) || 0), 0);
+  //     });
 
-    //     const hasNonZeroVariance = varianceValues.some((value) => value !== 0);
-    //     const hasZeroVariance = varianceValues.some((value) => value === 0);
+  //     const hasNonZeroVariance = varianceValues.some((value) => value !== 0);
+  //     const hasZeroVariance = varianceValues.some((value) => value === 0);
 
-    //     if (hasNonZeroVariance && hasZeroVariance) {
-    //       return "Partially Variance";
-    //     } else if (!hasNonZeroVariance) {
-    //       return "No Variance";
-    //     } else {
-    //       return "Fully Variance";
-    //     }
-    //   },
-    // },
+  //     if (hasNonZeroVariance && hasZeroVariance) {
+  //       return "Partially Variance";
+  //     } else if (!hasNonZeroVariance) {
+  //       return "No Variance";
+  //     } else {
+  //       return "Fully Variance";
+  //     }
+  //   },
+  // },
 
   const handleZoomIn = () => {
     if (zoomFactor < 2) {
@@ -809,6 +815,98 @@ export function UploadDocumentForm() {
     }
   }
 
+  useEffect(() => {
+    extractGstFromJson();
+    extractInvoiceAmountFromJson();
+  }, [jsonData]);
+
+  const handleGstChange = (e) => {
+    setGstNumbers(e.target.value);
+  };
+
+  const handleInvoiceAmountChange = (e) => {
+    setInnvoiceamount(e.target.value);
+  };
+
+  const extractGstFromJson = () => {
+    if (jsonData) {
+      const gstId = '1-117'; 
+      const gstData = jsonData.find((item) => item.id === gstId);
+
+      if (gstData) {
+        setGstNumbers(gstData.content);
+      }
+    }
+  };
+
+  const extractInvoiceAmountFromJson = () => {
+    if (jsonData) {
+      const invoiceAmountId = '1-16'; 
+      const invoiceAmountData = jsonData.find((item) => item.id === invoiceAmountId);
+
+      if (invoiceAmountData) {
+        setInnvoiceamount(invoiceAmountData.content);
+      }
+    }
+  };
+
+  const handleFileChange = (info) => {
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+      setFile(info.file);
+      displayPdf(info.file.originFileObj); // Automatically display PDF on file upload
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  };
+
+  const displayPdf = (pdfBlob) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const pdfDataUrl = reader.result;
+      setPdfData(pdfDataUrl);
+      // Automatically convert PDF to JSON when PDF data is available
+      handlePdfToJSON(pdfDataUrl);
+    };
+    reader.readAsDataURL(pdfBlob);
+  };
+
+ const extractTextFromPdf = async (pdfBuffer) => {
+  const pdf = await pdfjs.getDocument({ data: pdfBuffer }).promise;
+  const numPages = pdf.numPages;
+  const extractedData = [];
+  let idCounter = 1;
+
+  for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+    const page = await pdf.getPage(pageNumber);
+    const textContent:any = await page.getTextContent();
+
+    // Extract text from textContent.items
+    // eslint-disable-next-line no-loop-func
+    textContent.items.forEach((item) => {
+      console.log(item.dir,"item")
+      const content = item.str;
+      extractedData.push({ id: `${pageNumber}-${idCounter}`, content });
+      idCounter++;
+    });
+  }
+
+  return extractedData;
+};
+
+  
+
+  const handlePdfToJSON = async (pdfDataUrl) => {
+    if (pdfDataUrl) {
+      const response = await fetch(pdfDataUrl);
+      const pdfBuffer = await response.arrayBuffer();
+      const extractedData = await extractTextFromPdf(pdfBuffer);
+      setJsonData(extractedData);
+      console.log('PDF data in JSON format:', extractedData);
+    }
+  };
+
+ 
 
   const handleUploadDocument = () => {
     if (file && !buttonClicked) {
@@ -1035,9 +1133,80 @@ export function UploadDocumentForm() {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+
+    <span style={{ display: "flex", flexDirection: "column" }}>
+      <Card>
+      <Card>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+      <div style={{ width: '33%', marginRight: '10px' }}>
+        <div>
+          <Upload
+            customRequest={({ file, onSuccess }) => {
+              setTimeout(() => {
+                onSuccess('ok');
+              }, 0);
+            }}
+            showUploadList={false}
+            onChange={handleFileChange}
+            accept=".pdf"
+            beforeUpload={(file) => {
+              return true;
+            }}
+          >
+            <Button icon={<UploadOutlined />}>Choose PDF</Button>
+          </Upload>
+        </div>
+
+        <div id="pdfContainer" style={{ marginTop: '20px' }}>
+          {pdfData && (
+            <iframe
+              src={pdfData}
+              title="PDF Viewer"
+              width="600px"
+              height="600px"
+              frameBorder="0"
+            />
+          )}
+        </div>
+      </div>
+
+      {/* <div style={{ width: '33%', marginRight: '10px' }}>
+        <div>
+          {jsonData && (
+            <div
+              style={{
+                maxHeight: '600px',
+                overflowY: 'scroll',
+                width: '800px',
+                position: 'relative',
+                right: '300px',
+              }}
+            >
+              <Input
+                name='GST'
+                id='GST'
+                placeholder="GST"
+                value={gstNumbers}
+                onChange={handleGstChange}
+                style={{ marginTop: '20px' }}
+              />
+              <Input
+                name='InvoiceAmount'
+                id='InvoiceAmount'
+                placeholder="Invoice Amount"
+                value={Innvoiceamount}
+                onChange={handleInvoiceAmountChange}
+                style={{ marginTop: '20px' }}
+              />
+            </div>
+          )}
+        </div>
+      </div> */}
+    </div>
+          </Card>
+      </Card>
       <Card
-        title={<div style={{ textAlign: "center" }}>Upload Document</div>}
+        title={<span style={{ textAlign: "center" }}>Upload Document</span>}
         bordered={true}
         style={{ flex: 1, width: "600px", height: "100px" }}
         headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
@@ -1072,9 +1241,9 @@ export function UploadDocumentForm() {
                   key="file"
                   name="file"
                   {...gstUploadFieldProps}
-                  accept=".jpeg,.png,.jpg"
-                  multiple
-                // showUploadList={false} 
+                  accept=".pdf,.jpeg,.png,.jpg"
+                  multiple 
+                  // showUploadList={false}
                 >
                   <Button
                     key="file"
@@ -1115,7 +1284,7 @@ export function UploadDocumentForm() {
                       disabled={isLoading || buttonClicked}
                     >
                       {isLoading ? (
-                        <div
+                        <span
                           style={{
                             position: 'fixed',
                             top: '0',
@@ -1131,10 +1300,10 @@ export function UploadDocumentForm() {
                           }}
                         >
                           <Spin size="large" />
-                          <div style={{ marginTop: '10px', color: 'white' }}>
+                          <span style={{ marginTop: '10px', color: 'white' }}>
                             Please wait...
-                          </div>
-                        </div>
+                          </span>
+                        </span>
                       ) : (
                         'Upload'
                       )}
@@ -1148,7 +1317,7 @@ export function UploadDocumentForm() {
       </Card>
 
       <Card
-        title={<div style={{ textAlign: "center" }}>Image Form</div>}
+        title={<span style={{ textAlign: "center" }}>Image Form</span>}
         bordered={true}
         headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
         style={{
@@ -1192,18 +1361,16 @@ export function UploadDocumentForm() {
             />
           </div>
         </div>
-        <div style={{ textAlign: "center", marginTop: "10px" }}>
+        <span style={{ textAlign: "center", marginTop: "10px" }}>
           <Button onClick={handleZoomIn}>Zoom In</Button>
           <Button onClick={handleZoomOut}>Zoom Out</Button>
-        </div>
+        </span>
       </Card>
 
-
-
       <Form form={GstForm}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <span style={{ display: "flex", flexDirection: "column" }}>
           <Card
-            title={<div style={{ textAlign: "center" }}>Document Details</div>}
+            title={<span style={{ textAlign: "center" }}>Document Details</span>}
             headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
             bordered={true}
             style={{
@@ -1211,7 +1378,7 @@ export function UploadDocumentForm() {
               width: "865px",
               position: "relative",
               left: "601px",
-              bottom: "715px",
+              bottom: "705px",
               boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
               background: "#fff",
               borderTop: "1px solid #e8e8e8",
@@ -1297,6 +1464,7 @@ export function UploadDocumentForm() {
                       className={invoiceDate ? "green" : invoiceDate === "" ? "red" : "black"}
                       value={invoiceDate}
                       onChange={(e) => setInvoiceDate(e.target.value)}
+
                     />
                   </Col>
 
@@ -1350,6 +1518,7 @@ export function UploadDocumentForm() {
                       className={Igst ? "green" : Igst === "" ? "red" : "black"}
                       value={Igst}
                       onChange={(e) => setIgst(e.target.value)}
+
                     />
                   </Col>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
@@ -1440,6 +1609,7 @@ export function UploadDocumentForm() {
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
                       required
+
                     />
                   </Col>
                 </Row>
@@ -1701,9 +1871,10 @@ export function UploadDocumentForm() {
               ""
             )} */}
           </Card>
-        </div>
+    
+        </span>
       </Form>
-    </div>
+    </span>
   );
 }
 
