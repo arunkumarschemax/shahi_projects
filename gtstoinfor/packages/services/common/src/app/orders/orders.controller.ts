@@ -324,4 +324,13 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getExfactoryComparisionData')
+    @ApiBody({type:YearReq})
+    async getExfactoryComparisionData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryComparisionData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }

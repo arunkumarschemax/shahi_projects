@@ -5,6 +5,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
+import { YearReq } from "@project-management-system/shared-models";
 
 @Injectable()
 export class OrdersRepository extends Repository<OrdersEntity> {
@@ -66,7 +67,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getExfactoryMonthData(year:number): Promise<any> {
         const query = this.createQueryBuilder('o')
-            .select(`o.item,o.item_cd,o.planned_exf,o.month,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type`)
+            .select(`o.item,o.item_cd,o.planned_exf,o.month,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type, MONTH(planned_exf) AS Exf Month`)
             .where(`o.year ='${year}'`)
             // .groupBy(`o.item_cd`)
         return await query.getRawMany();
@@ -118,4 +119,41 @@ export class OrdersRepository extends Repository<OrdersEntity> {
             .groupBy(`o.year`)
         return await query.getRawMany();
     }
+    // async getExfactoryComparisionData(req: YearReq): Promise<any[]> {
+    //     const subqueryAlias = 'RankedVersions';
+        
+    //     const subquery = this.createQueryBuilder()
+    //       .select(`year,
+    //                  planned_exf,
+    //                  order_plan_number,
+    //                  "version",
+    //                  "phase",
+    //                  order_plan_qty,
+    //                  ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY "version" DESC) AS version_rank`)
+    //       .from('orders_child', 'oc')
+    //       .where(`year = :year`, { year: req.year }) // Replace with your desired filter condition
+    //       .orderBy(`order_plan_number ASC, "version" DESC`)
+    //       .limit(2) // Only get the latest 2 versions per order_plan_number
+    //       .getQueryAndParameters();
+      
+    //     const query = this.createQueryBuilder('o')
+    //       .select([
+    //         'year',
+    //         'planned_exf',
+    //         'order_plan_number',
+    //         '"version"',
+    //         '"phase"',
+    //         'order_plan_qty',
+    //         `CASE WHEN ${subqueryAlias}.version_rank = 1 THEN 'latest' ELSE 'previous' END AS "Exf Month"`
+    //       ])
+    //       .from(`(${subquery[0]})`, subqueryAlias)
+    //       .orderBy(`order_plan_number ASC, "version" DESC`);
+      
+    //     const result = await query.getRawMany();
+    //     return result;
+    //   }
+      
+   
+    
+      
 }
