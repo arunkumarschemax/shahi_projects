@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { StatusEnum } from "packages/libs/shared-models/src/common/enum/status.enum";
+import { StatusEnum } from "@xpparel/shared-models";
 
 export class HsnDto {
   @ApiProperty()

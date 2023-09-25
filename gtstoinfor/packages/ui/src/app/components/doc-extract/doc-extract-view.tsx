@@ -1,4 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import {
+  EyeOutlined,
+  SearchOutlined,
+  UndoOutlined
+} from "@ant-design/icons";
+import { StatusEnumDisplay, VendorFilterModel } from "@xpparel/shared-models";
+import {
+  SharedService,
+  VendorService,
+} from "@xpparel/shared-services";
 import {
   Button,
   Card,
@@ -13,23 +22,10 @@ import {
   Tooltip,
   message,
 } from "antd";
-import { Link, useNavigate } from "react-router-dom";
 import { ColumnType } from "antd/es/table";
-import {
-  SearchOutlined,
-  EyeOutlined,
-  DownloadOutlined,
-  CloudDownloadOutlined,
-  UndoOutlined,
-} from "@ant-design/icons";
+import { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import {
-  SharedService,
-  VendorService,
-} from "@project-management-system/shared-services";
-import { VendorFilterModel } from "packages/libs/shared-models/src/shared-model/vendor-filter-model";
-import { StatusEnumDisplay } from "packages/libs/shared-models/src/common";
-import { table } from "console";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Item {
   GST: string;
@@ -95,6 +91,8 @@ export function DocView() {
         setFormData([]);
         message.error("NO DATA FOUND");
       }
+    }).catch((err) => {
+      console.log(err.message);
     });
   };
   console.log(formdata,"formdata")

@@ -1,42 +1,39 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useEffect, useState } from "react";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import {
+  Button,
+  Col,
+  DatePicker,
+  Divider,
+  Form,
+  Input,
+  Popconfirm,
+  Radio,
+  Row,
   Select,
   Spin,
-  message,
-  Button,
-  Input,
-  Row,
-  Form,
-  Col,
-  Typography,
-  UploadProps,
-  Upload,
-  Radio,
   Table,
-  Divider,
-  Popconfirm,
-  DatePicker,
+  Typography,
+  Upload,
+  UploadProps,
+  message,
 } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { pdfjs } from 'react-pdf';
 import Tesseract from "tesseract.js";
-// import { useNavigate, useLocation } from "react-router-dom";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-// import DocExtractForm from "./doc-extract-form";
-// import DocumentForm from "./document-form";
-// import DocumentItemForm from "./document-item-form";
-import Card from "antd/es/card/Card";
 import { CalendarOutlined, UploadOutlined } from "@ant-design/icons";
 import {
   BuyersService,
   SharedService,
   VendorService,
-} from "@project-management-system/shared-services";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
+} from "@xpparel/shared-services";
+import Card from "antd/es/card/Card";
 import { useNavigate } from "react-router-dom";
+import { AllScanDto } from "@xpparel/shared-models";
 // const { Title, Text } = Typography;
 const { Option } = Select;
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
 
 // export interface UploadDocumentFormProps { }
 
@@ -47,6 +44,9 @@ export function UploadDocumentForm() {
   const [submitVisible, setSubmitVisible] = useState<boolean>(false);
   const [file, setFile] = useState<any | null>(null);
 
+  const [pdfData, setPdfData] = useState(null);
+  const [jsonData, setJsonData] = useState(null);
+
 
 
   const navigate = useNavigate();
@@ -54,6 +54,8 @@ export function UploadDocumentForm() {
   const [extractedData, setExtractedData] = useState<any>([]);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [hsnData, setHsnData] = useState([]);
+
 
   const [buttonText, setButtonText] = useState("Add");
   const [formed, setFormed] = useState<Item[]>([]);
@@ -67,7 +69,8 @@ export function UploadDocumentForm() {
   // const [unitprice, setUnitprice] = useState("");
   const [variance, setVariance] = useState("");
   const [unitquantity, setUnitquantity] = useState("");
-  const [Unitprice, setUnitprice] = useState("");
+  // const [Unitprice, setUnitprice] = useState("");
+
 
   const [quotation, setQuotation] = useState("");
   const [status, setStatus] = useState("");
@@ -91,7 +94,7 @@ export function UploadDocumentForm() {
     Taxamount: string;
     Charge: string;
     variance: string;
-    Unitprice: string;
+    // Unitprice: string;
   }
 
   const [imageURL, setImageURL] = useState<string | null>(null);
@@ -351,12 +354,12 @@ export function UploadDocumentForm() {
       unitquantity,
       quotation,
       variance,
-      Unitprice,
+      // Unitprice,
     };
 
     const ChargeFloat = parseFloat(Charge) || 0;
     const QuotationFloat = parseFloat(quotation) || 0;
-    newItem.Unitprice = (QuotationFloat - ChargeFloat).toFixed(2);
+    newItem.variance = (QuotationFloat - ChargeFloat).toFixed(2);
 
     if (isEditing) {
       const updatedTableData = extractedData.map((item) =>
@@ -423,10 +426,10 @@ export function UploadDocumentForm() {
       editedCharge = `${item.Taxamount}`;
     }
     setCharge(editedCharge || "0");
-    setVariance(item.unitprice || "0");
+    setVariance(item.variance || "0");
     setUnitquantity(item.unitquantity || "0");
     setQuotation(item.quotation || "0");
-  
+
     setIsEditing(true);
     setEditingItem(item);
     setButtonText("Update");
@@ -518,7 +521,7 @@ export function UploadDocumentForm() {
       dataIndex: "quotation",
       key: "quotation",
     },
-   
+
 
     {
       title: "Variance",
@@ -566,47 +569,71 @@ export function UploadDocumentForm() {
     },
   ];
 
-   // {
-    //   title: "Variance",
-    //   dataIndex: "variance",
-    //   key: "variance",
-    //   hide:true,
-    //   render: (variance, record) => {
-    //     const Charge = parseFloat(record.Charge) || 0;
-    //     const Quotation = parseFloat(record.quotation) || 0;
-    //     const varianceValue = Quotation - Charge;
-    //     return `${varianceValue.toFixed(2)}`;
-    //   },
-    // },
-    // {
-    //   title: "Status",
-    //   dataIndex: "status",
-    //   key: "status",
-    //   render: (status, records) => {
-    //     if (!Array.isArray(records) || records.length === 0) {
-    //       return "No Variance";
-    //     }
+  const calculateCharge = () => {
+    const taxAmountFloat = parseFloat(Taxamount);
+    const taxPercentageFloat = parseFloat(Taxpercentage);
+  
+    if (!isNaN(taxAmountFloat) && !isNaN(taxPercentageFloat) && taxPercentageFloat !== 0) {
+      const equivalentFor100Percent = (taxAmountFloat * 100) / taxPercentageFloat;
+      setCharge(equivalentFor100Percent.toFixed(2));
+    } else {
+      setCharge("0");
+    }
+  };
+  
+  const handleTaxamountChange = (e) => {
+    setTaxamount(e.target.value);
+    calculateCharge();
+  };
+  
+  const handleTaxpercentageChange = (e) => {
+    setTaxPercentage(e.target.value);
+    calculateCharge();
+  };
+  
+  
 
-    //     // Aggregate variance values for all records
-    //     const varianceValues = records.map((record) => {
-    //       if (!record.variance || !Array.isArray(record.variance)) {
-    //         return 0; // Consider zero for records with missing or non-array variance data
-    //       }
-    //       return record.variance.reduce((sum, v) => sum + (parseFloat(v) || 0), 0);
-    //     });
+  // {
+  //   title: "Variance",
+  //   dataIndex: "variance",
+  //   key: "variance",
+  //   hide:true,
+  //   render: (variance, record) => {
+  //     const Charge = parseFloat(record.Charge) || 0;
+  //     const Quotation = parseFloat(record.quotation) || 0;
+  //     const varianceValue = Quotation - Charge;
+  //     return `${varianceValue.toFixed(2)}`;
+  //   },
+  // },
+  // {
+  //   title: "Status",
+  //   dataIndex: "status",
+  //   key: "status",
+  //   render: (status, records) => {
+  //     if (!Array.isArray(records) || records.length === 0) {
+  //       return "No Variance";
+  //     }
 
-    //     const hasNonZeroVariance = varianceValues.some((value) => value !== 0);
-    //     const hasZeroVariance = varianceValues.some((value) => value === 0);
+  //     // Aggregate variance values for all records
+  //     const varianceValues = records.map((record) => {
+  //       if (!record.variance || !Array.isArray(record.variance)) {
+  //         return 0; // Consider zero for records with missing or non-array variance data
+  //       }
+  //       return record.variance.reduce((sum, v) => sum + (parseFloat(v) || 0), 0);
+  //     });
 
-    //     if (hasNonZeroVariance && hasZeroVariance) {
-    //       return "Partially Variance";
-    //     } else if (!hasNonZeroVariance) {
-    //       return "No Variance";
-    //     } else {
-    //       return "Fully Variance";
-    //     }
-    //   },
-    // },
+  //     const hasNonZeroVariance = varianceValues.some((value) => value !== 0);
+  //     const hasZeroVariance = varianceValues.some((value) => value === 0);
+
+  //     if (hasNonZeroVariance && hasZeroVariance) {
+  //       return "Partially Variance";
+  //     } else if (!hasNonZeroVariance) {
+  //       return "No Variance";
+  //     } else {
+  //       return "Fully Variance";
+  //     }
+  //   },
+  // },
 
   const handleZoomIn = () => {
     if (zoomFactor < 2) {
@@ -809,6 +836,465 @@ export function UploadDocumentForm() {
     }
   }
 
+  useEffect(() => {
+    extractGstFromJson();
+    extractInvoiceAmountFromJson();
+    extractInvoicenumberFromJson();
+    extractigstFromJson();
+    extractcgstFromJson();
+    extractsgstFromJson();
+    extractCurrencyFromJson();
+    extractInvoiceDateFromJson();
+  }, [jsonData]);
+
+  // const extractGstFromJson = () => {
+  //   if (jsonData) {
+  //     const gstKeywords = ['GST:', 'GSTIN'];
+  //     const matchingValues = [];
+
+  //     for (const keyword of gstKeywords) {
+  //       for (const item of jsonData) {
+  //         if (item.content.includes(keyword)) {
+  //           const value = item.content.replace(keyword, '').trim();
+  //           matchingValues.push(value);
+  //         }
+  //       }
+  //     }
+
+  //     const gstValue = matchingValues.join(', ');
+  //     setGstNumbers(gstValue);
+  //   }
+  // };
+
+
+  const extractGstFromJson = () => {
+    if (jsonData) {
+      const gstKeywords = ['GSTIN No.'];
+      let gstValue = null; // Initialize as null
+
+      for (const keyword of gstKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            gstValue = item.content.replace(keyword, '').trim();
+            break; // Stop searching once GST is found
+          }
+        }
+
+        if (gstValue) {
+          break; // Stop searching for GST keywords if GST value is found
+        }
+      }
+
+      setGstNumbers(gstValue);
+    }
+  };
+
+  const extractFinancialyearFrom = (text) => {
+    const FinancialyearRegex = /\b\d{4}-\d{4}\b/g;
+    const match = text.match(FinancialyearRegex);
+    const extractedFinancialyear = match ? match[0].trim() : "";
+    return extractedFinancialyear;
+  };
+
+  const getCurrentFinancialYearFrom = () => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const isAprilOrLater = currentDate.getMonth() >= 3;
+    const startYear = isAprilOrLater ? currentYear : currentYear - 1;
+    const endYear = startYear + 1;
+    return `${startYear}-${endYear}`;
+  };
+
+  const extractInvoiceAmountFromJson = () => {
+    if (jsonData) {
+      const invoiceAmountKeywords = ['3540.00 540.00 3000.00 TOTAL AMOUNT', ' 193855.09 29571.12 164283.97 TOTAL AMOUNT'];
+      const matchingValues = [];
+
+      for (const keyword of invoiceAmountKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            matchingValues.push(value);
+          }
+        }
+      }
+
+      const invoiceAmountValue = matchingValues.join(', ');
+      setInnvoiceamount(invoiceAmountValue);
+    }
+  };
+
+  const extractInvoicenumberFromJson = () => {
+    if (jsonData) {
+      const tInvoicenumberKeywords = ['GT']
+      const matchingValues = [];
+
+      for (const keyword of tInvoicenumberKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            matchingValues.push(value);
+          }
+        }
+      }
+
+      const tInvoicenumberValue = matchingValues.join(', ');
+      setInnvoicenum(tInvoicenumberValue);
+    }
+  };
+
+  const extractigstFromJson = () => {
+    if (jsonData) {
+      const igsttKeywords = ['Due Date   INR Taxable Amount (INR) :'];
+      const matchingValues = [];
+
+      for (const keyword of igsttKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            matchingValues.push(value);
+          }
+        }
+      }
+
+      const igstValue = matchingValues.join(', ');
+      setIgst(igstValue);
+    }
+  };
+
+  const extractcgstFromJson = () => {
+    if (jsonData) {
+      const cgstKeywords = ['CGST:', 'CGST Amount:', 'Central Tax:']; // Add more keywords if needed
+      let cgstValue = '0.00'; // Default value
+
+      for (const keyword of cgstKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            const numericValue = parseFloat(value.replace(/,/g, '')); // Convert to a number and remove commas
+            if (!isNaN(numericValue)) {
+              cgstValue = numericValue.toFixed(2); // Format as "0.00"
+              break;
+            }
+          }
+        }
+        if (cgstValue !== '0.00') {
+          break;
+        }
+      }
+
+      setCgst(cgstValue);
+    }
+  };
+
+  const extractsgstFromJson = () => {
+    if (jsonData) {
+      const sgstKeywords = ['sgst:', 'sgst Amount:', 'Central Tax:']; // Add more keywords if needed
+      let sgstValue = '0.00'; // Default value
+
+      for (const keyword of sgstKeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            const numericValue = parseFloat(value.replace(/,/g, '')); // Convert to a number and remove commas
+            if (!isNaN(numericValue)) {
+              sgstValue = numericValue.toFixed(2); // Format as "0.00"
+              break;
+            }
+          }
+        }
+        if (sgstValue !== '0.00') {
+          break;
+        }
+      }
+
+      setSgst(sgstValue);
+    }
+  };
+
+  const extractCurrencyFromJson = () => {
+    if (jsonData) {
+      const currencykeywords = [];
+      let CurrencyValue = 'INR';
+
+      for (const keyword of currencykeywords) {
+        for (const item of jsonData) {
+          if (item.content.includes(keyword)) {
+            const value = item.content.replace(keyword, '').trim();
+            const numericValue = parseFloat(value.replace(/,/g, '')); // Convert to a number and remove commas
+            if (!isNaN(numericValue)) {
+              CurrencyValue = numericValue.toFixed(2); // Format as "0.00"
+              break;
+            }
+          }
+        }
+        if (CurrencyValue !== '0.00') {
+          break;
+        }
+      }
+
+      setInnvoicecurrency(CurrencyValue);
+    }
+  };
+
+  const extractInvoiceDateFromJson = () => {
+    if (jsonData) {
+      const datePattern = /\b\d{2}-[A-Za-z]{3}-\d{2}\b/g;
+      let invoiceDate = null;
+
+      for (const item of jsonData) {
+        const matches = item.content.match(datePattern);
+
+        if (matches) {
+          invoiceDate = matches[0];
+          break;
+        }
+      }
+
+      setInvoiceDate(invoiceDate);
+    }
+  };
+
+
+
+  // const handleDateChanges = (date) => {
+  //   setInvoiceDate(date);
+  // };
+
+  // const extractInvoiceDateJson = (text) => {
+  //   const invoiceDateRegex =
+  //     /\b(?:\d{1,2}-[A-Za-z]{3}-\d{2}|\d{1,2} [A-Za-z]{3} \d{4}|\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}\/\d{4})\b/g;
+  //   const match = text.match(invoiceDateRegex);
+
+  //   if (match) {
+  //     const extractedDate = match[0];
+  //     if (/\d{1,2} [A-Za-z]{3} \d{4}/.test(extractedDate)) {
+  //       const parts = extractedDate.split(" ");
+  //       const day = parts[0];
+  //       const month = getMonthNumbers(parts[1]);
+  //       const year = parts[2];
+  //       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  //     }
+  //     if (/\d{1,2}-[A-Za-z]{3}-\d{2}/.test(extractedDate)) {
+  //       const parts = extractedDate.split("-");
+  //       const day = parts[0];
+  //       const month = getMonthNumbers(parts[1]);
+  //       const year = formatYears(parts[2]);
+  //       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  //     }
+  //     if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(extractedDate)) {
+  //       const parts = extractedDate.split("/");
+  //       const day = parts[0];
+  //       const month = parts[1];
+  //       const year = parts[2];
+  //       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  //     }
+  //     if (/^\d{4}-\d{2}-\d{2}$/.test(extractedDate)) {
+  //       return extractedDate;
+  //     }
+  //   }
+  //   return "";
+  // };
+
+  // function getMonthNumbers(monthStr) {
+  //   const monthMap = {
+  //     Jan: "01",
+  //     Feb: "02",
+  //     Mar: "03",
+  //     Apr: "04",
+  //     May: "05",
+  //     Jun: "06",
+  //     Jul: "07",
+  //     Aug: "08",
+  //     Sep: "09",
+  //     Oct: "10",
+  //     Nov: "11",
+  //     Dec: "12",
+  //   };
+  //   return monthMap[monthStr] || monthStr;
+  // }
+
+  // function formatYears(yearStr) {
+  //   if (yearStr.length === 2) {
+  //     const currentYear = new Date().getFullYear();
+  //     const currentCentury = Math.floor(currentYear / 100);
+  //     const currentDecade = currentYear % 100;
+  //     const inputDecade = parseInt(yearStr, 10);
+  //     const adjustedYear = currentCentury * 100 + inputDecade;
+
+  //     if (adjustedYear > currentYear) {
+  //       return (currentCentury - 1) * 100 + inputDecade;
+  //     }
+
+  //     return adjustedYear;
+  //   } else if (yearStr.length === 4) {
+  //     return yearStr;
+  //   } else {
+  //     return "";
+  //   }
+  // }
+
+
+  const handleFileChange = (info) => {
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+      setFile(info.file);
+      displayPdf(info.file.originFileObj); // Automatically display PDF on file upload
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  };
+
+  const displayPdf = (pdfBlob) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const pdfDataUrl = reader.result;
+      setPdfData(pdfDataUrl);
+      // Automatically convert PDF to JSON when PDF data is available
+      handlePdfToJSON(pdfDataUrl);
+    };
+    reader.readAsDataURL(pdfBlob);
+  };
+
+  //  const extractTextFromPdf = async (pdfBuffer) => {
+  //   const pdf = await pdfjs.getDocument({ data: pdfBuffer }).promise;
+  //   const numPages = pdf.numPages;
+  //   const extractedData = [];
+  //   let idCounter = 1;
+
+  //   for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+  //     const page = await pdf.getPage(pageNumber);
+  //     const textContent:any = await page.getTextContent();
+
+  //     // Extract text from textContent.items
+  //     // eslint-disable-next-line no-loop-func
+  //     textContent.items.forEach((item) => {
+  //       const content = item.str;
+  //       extractedData.push({ id: `${pageNumber}-${idCounter}`, content });
+  //       idCounter++;
+  //     });
+  //     const currentFinancialYear = getCurrentFinancialYearFrom();
+  //     setFinancialyear(currentFinancialYear);
+  //   }
+  //   return extractedData;
+  // };
+
+  useEffect(() => {
+    if (hsnData && hsnData.length > 0) {
+      setHsnData(hsnData);
+    }
+  }, [hsnData]);
+
+  const extractTextFromPdf = async (pdfBuffer) => {
+    const pdf = await pdfjs.getDocument({ data: pdfBuffer }).promise;
+    const numPages = pdf.numPages;
+    const extractedData = [];
+    let idCounter = 1;
+
+    for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+      const page = await pdf.getPage(pageNumber);
+      const textContent: any = await page.getTextContent();
+
+      let line = '';
+      let rec = null;
+
+      // eslint-disable-next-line no-loop-func
+      textContent.items.forEach((item) => {
+        if (rec !== null) {
+          rec = item.transform[5];
+        }
+
+        if (item.transform[5]) {
+          extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
+          idCounter++;
+          line = '';
+        }
+
+        line += item.str + ' ';
+      });
+
+      extractedData.push({ id: `${pageNumber}-${idCounter}`, content: line.trim() });
+    }
+
+    const currentFinancialYear = getCurrentFinancialYearFrom();
+    setFinancialyear(currentFinancialYear);
+
+    const structuredHSNLines = [];
+    let currentHSN = null;
+
+    for (const line of extractedData) {
+      if (line.content.includes("HSN") || line.content.match(/^\d{6}$/)) {
+        if (currentHSN) {
+          structuredHSNLines.push(currentHSN);
+        }
+        currentHSN = {
+          HSN: line.content.includes("HSN")
+            ? line.content.match(/\d+/)
+            : line.content.trim(),
+          Taxtype: line.content.match(/IGST|CGST|SGST|GST/),
+          Taxamount: null,
+          description: null,
+          chargeINR: null,
+        };
+
+        const taxAmountMatch = line.content.match(
+          /(\d+(\.\d{0,2})?)%=(\d+(\.\d{0,2})?)/
+        );
+        if (taxAmountMatch) {
+          currentHSN.Taxamount = {
+            Taxpercentage: parseFloat(taxAmountMatch[1]),
+            Taxamount: parseFloat(taxAmountMatch[3]),
+          };
+        }
+      } else if (line.content.includes("IGST|CGST|GSTS|GST")) {
+        currentHSN.Taxtype = "IGST";
+      }
+      if (line.content.includes("chargeINR")) {
+        const chargeValueMatch = line.content.match(
+          /^\d{1,3}(,\d{3})*(\.\d{2})?$/
+        );
+        if (chargeValueMatch) {
+          currentHSN.chargeINR = parseFloat(
+            chargeValueMatch[1].replace(/,/g, "")
+          );
+        }
+      }
+
+      if (currentHSN && !currentHSN.description) {
+        currentHSN.description = line.content.trim();
+      }
+    }
+
+    if (currentHSN) {
+      structuredHSNLines.push(currentHSN);
+    }
+
+    structuredHSNLines.forEach((line) => {
+      if (line.Taxamount) {
+        line.Taxpercentage = line.Taxamount.Taxpercentage;
+        line.Taxamount = line.Taxamount.Taxamount;
+      }
+    });
+
+    // The extracted HSN data is now available in the 'hsnData' array
+    console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+    setExtractedData(structuredHSNLines);
+    return extractedData;
+  };
+
+
+  const handlePdfToJSON = async (pdfDataUrl) => {
+    if (pdfDataUrl) {
+      const response = await fetch(pdfDataUrl);
+      const pdfBuffer = await response.arrayBuffer();
+      const extractedData = await extractTextFromPdf(pdfBuffer);
+      setJsonData(extractedData);
+      console.log('PDF data in JSON format:', extractedData);
+
+      const extractionTime = new Date().toLocaleString();
+      setTimecreated(extractionTime);
+    }
+  };
 
   const handleUploadDocument = () => {
     if (file && !buttonClicked) {
@@ -1035,9 +1521,80 @@ export function UploadDocumentForm() {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+
+    <span style={{ display: "flex", flexDirection: "column" }}>
+      <Card>
+        <Card>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+            <div style={{ width: '33%', marginRight: '10px' }}>
+              <div>
+                <Upload
+                  customRequest={({ file, onSuccess }) => {
+                    setTimeout(() => {
+                      onSuccess('ok');
+                    }, 0);
+                  }}
+                  showUploadList={false}
+                  onChange={handleFileChange}
+                  accept=".pdf"
+                  beforeUpload={(file) => {
+                    return true;
+                  }}
+                >
+                  <Button icon={<UploadOutlined />}>Choose PDF</Button>
+                </Upload>
+              </div>
+
+              <div id="pdfContainer" style={{ marginTop: '20px' }}>
+                {pdfData && (
+                  <iframe
+                    src={pdfData}
+                    title="PDF Viewer"
+                    width="600px"
+                    height="600px"
+                    frameBorder="0"
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* <div style={{ width: '33%', marginRight: '10px' }}>
+        <div>
+          {jsonData && (
+            <div
+              style={{
+                maxHeight: '600px',
+                overflowY: 'scroll',
+                width: '800px',
+                position: 'relative',
+                right: '300px',
+              }}
+            >
+              <Input
+                name='GST'
+                id='GST'
+                placeholder="GST"
+                value={gstNumbers}
+                onChange={handleGstChange}
+                style={{ marginTop: '20px' }}
+              />
+              <Input
+                name='InvoiceAmount'
+                id='InvoiceAmount'
+                placeholder="Invoice Amount"
+                value={Innvoiceamount}
+                onChange={handleInvoiceAmountChange}
+                style={{ marginTop: '20px' }}
+              />
+            </div>
+          )}
+        </div>
+      </div> */}
+          </div>
+        </Card>
+      </Card>
       <Card
-        title={<div style={{ textAlign: "center" }}>Upload Document</div>}
+        title={<span style={{ textAlign: "center" }}>Upload Document</span>}
         bordered={true}
         style={{ flex: 1, width: "600px", height: "100px" }}
         headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
@@ -1072,9 +1629,9 @@ export function UploadDocumentForm() {
                   key="file"
                   name="file"
                   {...gstUploadFieldProps}
-                  accept=".jpeg,.png,.jpg"
+                  accept=".pdf,.jpeg,.png,.jpg"
                   multiple
-                // showUploadList={false} 
+                // showUploadList={false}
                 >
                   <Button
                     key="file"
@@ -1115,7 +1672,7 @@ export function UploadDocumentForm() {
                       disabled={isLoading || buttonClicked}
                     >
                       {isLoading ? (
-                        <div
+                        <span
                           style={{
                             position: 'fixed',
                             top: '0',
@@ -1131,10 +1688,10 @@ export function UploadDocumentForm() {
                           }}
                         >
                           <Spin size="large" />
-                          <div style={{ marginTop: '10px', color: 'white' }}>
+                          <span style={{ marginTop: '10px', color: 'white' }}>
                             Please wait...
-                          </div>
-                        </div>
+                          </span>
+                        </span>
                       ) : (
                         'Upload'
                       )}
@@ -1148,7 +1705,7 @@ export function UploadDocumentForm() {
       </Card>
 
       <Card
-        title={<div style={{ textAlign: "center" }}>Image Form</div>}
+        title={<span style={{ textAlign: "center" }}>Image Form</span>}
         bordered={true}
         headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
         style={{
@@ -1192,18 +1749,16 @@ export function UploadDocumentForm() {
             />
           </div>
         </div>
-        <div style={{ textAlign: "center", marginTop: "10px" }}>
+        <span style={{ textAlign: "center", marginTop: "10px" }}>
           <Button onClick={handleZoomIn}>Zoom In</Button>
           <Button onClick={handleZoomOut}>Zoom Out</Button>
-        </div>
+        </span>
       </Card>
 
-
-
       <Form form={GstForm}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <span style={{ display: "flex", flexDirection: "column" }}>
           <Card
-            title={<div style={{ textAlign: "center" }}>Document Details</div>}
+            title={<span style={{ textAlign: "center" }}>Document Details</span>}
             headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
             bordered={true}
             style={{
@@ -1211,7 +1766,7 @@ export function UploadDocumentForm() {
               width: "865px",
               position: "relative",
               left: "601px",
-              bottom: "715px",
+              bottom: "705px",
               boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
               background: "#fff",
               borderTop: "1px solid #e8e8e8",
@@ -1297,6 +1852,7 @@ export function UploadDocumentForm() {
                       className={invoiceDate ? "green" : invoiceDate === "" ? "red" : "black"}
                       value={invoiceDate}
                       onChange={(e) => setInvoiceDate(e.target.value)}
+
                     />
                   </Col>
 
@@ -1350,6 +1906,7 @@ export function UploadDocumentForm() {
                       className={Igst ? "green" : Igst === "" ? "red" : "black"}
                       value={Igst}
                       onChange={(e) => setIgst(e.target.value)}
+
                     />
                   </Col>
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
@@ -1440,6 +1997,7 @@ export function UploadDocumentForm() {
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
                       required
+
                     />
                   </Col>
                 </Row>
@@ -1554,36 +2112,37 @@ export function UploadDocumentForm() {
                   </Col>
 
                   <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label
-                      htmlFor="Taxamount"
-                      style={{ color: "black", fontWeight: "bold" }}
-                    >
-                      Tax Amount
-                    </label>
-                    <Input
-                      id="Taxamount"
-                      name="Taxamount"
-                      style={{ width: "150px", height: "30px" }}
-                      value={Taxamount}
-                      onChange={(e) => setTaxamount(e.target.value)}
-                    />
-                  </Col>
-                </Row>
-
-                <Row gutter={12} style={{ marginTop: "10px" }}>
-                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label
-                      htmlFor="Taxpercentage"
-                      style={{ color: "black", fontWeight: "bold" }}
-                    >
-                      Tax Percentage
-                    </label>
+                    <label htmlFor="Taxpercentage">Tax Percentage</label>
                     <Input
                       id="Taxpercentage"
                       name="Taxpercentage"
                       style={{ width: "150px", height: "30px" }}
                       value={Taxpercentage}
-                      onChange={(e) => setTaxPercentage(e.target.value)}
+                      onChange={handleTaxpercentageChange}
+                    />
+                  </Col>
+
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Taxamount" style={{ color: "black", fontWeight: "bold" }}>Tax Amount</label>
+                    <Input
+                      id="Taxamount"
+                      name="Taxamount"
+                      style={{ width: "150px", height: "30px" }}
+                      value={Taxamount}
+                      onChange={handleTaxamountChange}
+                    />
+                  </Col>
+
+                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                    <label htmlFor="Charge" style={{ color: "black", fontWeight: "bold" }}>
+                      Charge
+                    </label>
+                    <Input
+                      id="Charge"
+                      name="Charge"
+                      style={{ width: "150px", height: "30px" }}
+                      value={Charge}
+                      onChange={(e) => setCharge(e.target.value)}
                     />
                   </Col>
 
@@ -1603,7 +2162,7 @@ export function UploadDocumentForm() {
                     />
                   </Col>
 
-                  <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                  {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                     <label
                       htmlFor="Charge"
                       style={{ color: "black", fontWeight: "bold" }}
@@ -1617,7 +2176,7 @@ export function UploadDocumentForm() {
                       value={Charge}
                       onChange={(e) => setCharge(e.target.value)}
                     />
-                  </Col>
+                  </Col> */}
                 </Row>
 
                 <Row gutter={12} style={{ marginTop: "10px" }}>
@@ -1701,9 +2260,10 @@ export function UploadDocumentForm() {
               ""
             )} */}
           </Card>
-        </div>
+
+        </span>
       </Form>
-    </div>
+    </span>
   );
 }
 

@@ -71,7 +71,7 @@ const BasicLayout = () => {
         token: { colorBgContainer },
     } = theme.useToken();
     return (
-        <Layout className="layout" style={{marginTop:'-8px', width:"104%", marginLeft:"-8px"}}>
+        <Layout className="layout" style={{marginTop:'-8px', width:"100%"}}>
             <Header style={{ alignItems: 'center', backgroundColor: '#001529', minHeight: "85px", }}>
                 <div style={{ float: 'left', marginTop: '2px', marginLeft:'-46px' }}>
                     <img src={schemaxlogo} width={150} height={80}></img>
@@ -90,7 +90,7 @@ const BasicLayout = () => {
                 </Menu>
        
             </Header>
-            <Content style={{ padding: '0 50px', minHeight: '490px', backgroundColor: 'white' }}>
+            <Content style={{ padding: '0 50px', minHeight: '555px', backgroundColor: 'white' }}>
                 <br />
                 {/* <IndentDashboard/> */}
                 <Outlet />

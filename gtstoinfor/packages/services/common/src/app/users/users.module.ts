@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
+import { ApplicationExceptionHandler } from '@xpparel/backend-utils';
 import { UsersAdaptor } from './adapters/users.adapter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from './users.entity';

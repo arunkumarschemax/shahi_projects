@@ -1,15 +1,6 @@
-import React, { useState } from "react";
-import { Select, Spin, message, Button, Input, Row, Form, Col } from "antd";
-import Tesseract from "tesseract.js";
-import { useNavigate,useLocation } from "react-router-dom";
-// import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
-// import { ScanService } from "@project-management-system/shared-services";
-// import DocExtractForm from "./doc-extract-form";
-// import DocumentForm from "./document-form";
-// import DocumentItemForm from "./document-item-form";
-import Card from "antd/es/card/Card";
+import { Col, Form, Select } from "antd";
+import { useState } from "react";
 import UploadDocumentForm from "./upload-document-form";
-import { MenuFoldOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 

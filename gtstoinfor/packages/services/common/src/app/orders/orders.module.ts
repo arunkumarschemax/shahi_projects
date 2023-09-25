@@ -8,7 +8,7 @@ import { OrdersAdapter } from './adapters/orders.adapter';
 import { OrdersChildAdapter } from './adapters/orders-child.adapter';
 import { OrdersRepository } from './repository/orders.repository';
 import { OrdersChildRepository } from './repository/orders-child.repository';
-import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
+import { ApplicationExceptionHandler } from '@xpparel/backend-utils';
 import { OrdersDifferenceEntity } from './orders-difference-info.entity';
 import { OrderDifferenceRepository } from './repository/order-difference.repository';
 import { FileUploadRepository } from './repository/upload.repository';

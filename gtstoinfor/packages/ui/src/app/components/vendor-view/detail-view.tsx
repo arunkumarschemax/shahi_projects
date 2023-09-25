@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Descriptions, Table } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ColumnsType } from "antd/es/table";
-import { detailView } from "@project-management-system/shared-services";
+import { detailView } from "@xpparel/shared-services";
 import { ApartmentOutlined } from "@ant-design/icons";
 
 // Separate function for fetching branch view

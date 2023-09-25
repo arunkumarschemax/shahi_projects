@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Post, Req } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
+import { ApplicationExceptionHandler } from "@xpparel/backend-utils";
 import { UsersDto } from "./dto/users.dto";
 import {
   AllUsersResponseModel,
   UsersActivateDeactivateDto,
   UsersResponseModel,
-} from "@project-management-system/shared-models";
+} from "@xpparel/shared-models";
 
 @Controller("users")
 export class UsersController {
