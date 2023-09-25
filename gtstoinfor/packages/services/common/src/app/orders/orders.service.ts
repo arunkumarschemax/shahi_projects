@@ -162,7 +162,7 @@ if(data.Order_Plan_Number !== null){
             } else {
                 dtoData.version = 1
                 const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id, Number(month));
-                console.log(convertedExcelEntity,'-----convertedExcelEntity------')
+                // console.log(convertedExcelEntity,'-----convertedExcelEntity------')
                 const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
                 const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,saveExcelEntity.productionPlanId,Number(month));
                 const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
@@ -808,19 +808,18 @@ if(data.Order_Plan_Number !== null){
                     .filter(value => value !== 0) // Filter out values equal to 0
                     .reduce((sum, value) => value, 0);
             }, 0);
-              console.log(Math.round(totalPcs),'ppppppppppp');
-              console.log(totalCoeff,'cccccccccccccccc');
+            //   console.log(Math.round(totalPcs),'ppppppppppp');
+            //   console.log(totalCoeff,'cccccccccccccccc');
               
                 const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,totalPcs,totalCoeff);
                 monthData.push(monthWiseInstance); // Store each instance
-                console.log(monthWiseInstance,"rec")
+                // console.log(monthWiseInstance,"rec")
             }
             
         }
         
         const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-        console.log(DateMap.values
-          ,"length")
+     
 
           
 
@@ -887,7 +886,6 @@ if(data.Order_Plan_Number !== null){
       const season23FW = reportData.filter(data => data.year === "2023" && data.plannedSeason === "FW");
       const season24SS = reportData.filter(data => data.year === "2024" && data.plannedSeason === "SS");
       const season = [season23SS, season23FW, season24SS];
-      console.log(season,'kkkkkkkkkkkkkkkkk')
       if (reportData.length > 0) {
         return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', season);
     } else {
@@ -900,7 +898,6 @@ if(data.Order_Plan_Number !== null){
     
     
     async createCOline(req: any): Promise<CommonResponseModel> {
-        console.log(req)
         try {
             const manager = this.dataSource
             const orderNo = req.orderNumber
@@ -915,8 +912,6 @@ if(data.Order_Plan_Number !== null){
             const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=${orderNo}&ITNO=${itemNo}&SAPR=${salePrice}`;
             // const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.purchaseOrderNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${styleNumber}`;
             const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
-            console.log(response, 'response')
-            console.log(response.data?.MIRecord, 'MIRecord')
             if (response.data['@type'])
                 return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
             if (!response.data?.MIRecord && !response.data?.MIRecord.length)
@@ -1055,7 +1050,6 @@ return acc + (currentValue || 0); // Handle potential undefined (missing) values
 // Create NewArray by spreading Arry and adding the sum
 const NewArray = [...Arry, sum];
 
-console.log(NewArray)
 
 const totalPcs = pcs.reduce((total, item) => {
     return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
@@ -1075,8 +1069,6 @@ monthData.push(new MonthWiseDto(rec.prod_plan_type, pcs, coeff, totalPcs, totalC
     }
     
     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-    console.log(DateMap.values
-      ,"length")
 
       
 
@@ -1155,20 +1147,20 @@ pcs.push(
                 .filter(value => value !== 0) // Filter out values equal to 0
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
-         console.log(totalPcs,'previous',
-         totalCoeff,'latest');
+        //  console.log(totalPcs,'previous',
+        //  totalCoeff,'latest');
          
           
             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
             monthData.push(monthWiseInstance); // Store each instance
-            console.log(monthWiseInstance,"rec")
+            // console.log(monthWiseInstance,"rec")
         }
         
     
     }
     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-    console.log(DateMap.values
-      ,"length")
+    // console.log(DateMap.values
+    //   ,"length")
 
     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
 }
