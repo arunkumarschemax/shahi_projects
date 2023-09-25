@@ -13,16 +13,14 @@ export const ExFactoryReport = () => {
   const [page, setPage] = React.useState(1);
   const [data, setData] = useState<any[]>([]);
   const [year, setYear] = useState<any[]>([]);
-  const [tab, setTab] = useState<number>(2023);
+  const [tab, setTab] = useState<number>(20232023);
   const service = new OrdersService()
   const {Text} = Typography
   useEffect(()=>{
     getData();
+    getTabs()
   },[])
-
-  const getData =()=>{
-    const req = new YearReq(tab)
-    console.log(tab,'222222222222222222');
+  const getTabs  = () =>{
     
     service.getExfactoryYearData().then(res =>{
 
@@ -30,6 +28,9 @@ export const ExFactoryReport = () => {
         setYear(res.data)
       }
     })
+  }
+  const getData =()=>{
+    const req = new YearReq(tab)
     service.getAll(req).then(res =>{
       console.log(res,'res==========');
       if(res.status){
@@ -401,9 +402,9 @@ export const ExFactoryReport = () => {
         {
           title: "Item Name",
           dataIndex: "itemName",
-        //   render: (text: any, record: any) => {
-        //     return record.itemName ? <span>{record.itemName}</span> : '-'
-        // }
+          render: (text: any, record: any) => {
+            return record.itemName ? <span>{record.itemName}</span> : '-'
+        }
         },
         {
           title: "Month Wise Data",
@@ -412,19 +413,19 @@ export const ExFactoryReport = () => {
             {
               title: "Production Plan Type Name",
               dataIndex: "phasetype",
-              render: (text: any, record: any) => {
-                const phaseTypes = record.monthWiseData.map((data: any) => data.phasetype);
-                return phaseTypes.join(', ') || '-';
+              render: (text: any, record: any,index:any) => {
+                const uniquePhaseType = new Set();
+                  if (record.monthWiseData) {
+                    record.monthWiseData.forEach((dataItem) => {
+                      uniquePhaseType.add(dataItem.phasetype);
+                      
+                    });
+                  }
+                  return uniquePhaseType
+                // const phaseTypes = record.monthWiseData.map((data: any) => data.phasetype);
+                // return phaseTypes.join(', ') || '-';
               }
-              // render: (text: any, record: any) => {
-              //   const phaseTypes = record.monthWiseData.map((data: any) => data.phasetype)
-              //   return (
-              //     <div>
-              //       <div>{phaseTypes}</div>
-              //       <br /> {/* Add a line break between each "phasetype" value */}
-              //     </div>)
-                
-              // }
+             
             },
             {
               title: "January",
@@ -575,7 +576,7 @@ export const ExFactoryReport = () => {
                 {
                   title: `In Coeff`,
                   dataIndex: "junCoeff",
-                  render: (text: any, record: any) => {
+                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.junCoeff));
                     
                     return coeff.join(', ') || '-';
@@ -780,7 +781,7 @@ const handleTabChange = (selectedYear: any) => {
 };
   return (
     <Card
-    
+    title="Ex-Factory Report"
     extra={data.length > 0 ? (<Button
         type="default"
         style={{ color: 'green' }}

@@ -343,4 +343,21 @@ export class OrdersController {
         }
     }
     
+    @Post('/getExfactoryComparisionExcelData')
+    @ApiBody({type:YearReq})
+    async getExfactoryComparisionExcelData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryComparisionExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }  @Post('/getExfactoryMonthExcelData')
+    @ApiBody({type:YearReq})
+    async getExfactoryMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryMonthExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
