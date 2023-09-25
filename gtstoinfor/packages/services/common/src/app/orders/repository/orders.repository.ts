@@ -187,5 +187,19 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         return result;
       }
     
-      
+    async getSeasonWiseItemCode():Promise<any[]>{
+        const query = await this.createQueryBuilder('orders') 
+        .select(`item_cd as itemCode`)
+        .groupBy('item_cd')
+        .orderBy(`item_cd`)
+        return await query.getRawMany()
+    }
+
+    async getSeasonWiseItemName():Promise<any[]>{
+        const query = await this.createQueryBuilder('orders') 
+        .select(`item as itemName`)
+        .groupBy('item')
+        .orderBy(`item`)
+        return await query.getRawMany()
+    }
 }
