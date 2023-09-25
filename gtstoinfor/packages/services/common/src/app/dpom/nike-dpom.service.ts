@@ -69,105 +69,118 @@ export class DpomService {
             const tokenResponse = await this.getOctaToken();
             if (!tokenResponse.status) throw new Error(tokenResponse.error)
             const dpomItemStatusValues = ["Accepted", "Unaccepted", "Closed", "Cancelled"];
+            const offsets = ["0", "5000", "10000", "20000", "25000", "30000", "35000", "40000", "45000", "50000"]
+            const currentDate = new Date();
+
+            // Calculate 1.5 years (18 months) ago
+            currentDate.setMonth(currentDate.getMonth() - 18);
+
+            // Format the result as "YYYY-MM-DD"
+            const year = currentDate.getFullYear();
+            const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+            const day = currentDate.getDate().toString().padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
             const results = [];
             for (const status of dpomItemStatusValues) {
-                const payload = {
-                    "fields": [
-                        "poHeader.documentDate",
-                        "poHeader.poNumber",
-                        "poLine.itemNumber",
-                        "sizes.scheduleLineItemNumber",
-                        "product.categoryCode",
-                        "product.categoryDescription",
-                        "poHeader.vendorCode",
-                        "product.globalCategoryCoreFocusCode",
-                        "product.globalCategoryCoreFocusDescription",
-                        "product.genderAgeCode",
-                        "product.genderAgeDescription",
-                        "product.styleNumber",
-                        "poLine.productCode",
-                        "product.colorDescription",
-                        "poLine.destinationCountryCode",
-                        "poLine.destinationCountryName",
-                        "poLine.plantCode",
-                        "poLine.plantName",
-                        "poHeader.trcoPoNumber",
-                        "sizes.sizeProduct.upc",
-                        "poLine.directshipSalesOrderNumber",
-                        "poLine.directshipSalesOrderItemNumber",
-                        "salesOrder.customerPo",
-                        "salesOrder.customerShipTo",
-                        "poLine.seasonCode",
-                        "poLine.seasonYear",
-                        "poHeader.poDocTypeCode",
-                        "poHeader.poDocTypeDescription",
-                        "planning.mrgacDate",
-                        "poLine.originalGoodsAtConsolidatorDate",
-                        "sizes.sizePo.goodsAtConsolidatorDate",
-                        "sizes.sizeLogisticsOR.originReceiptActualDate",
-                        "manufacturing.factoryDeliveryActualDate",
-                        "sizes.sizePo.goodsAtConsolidatorReasonCode",
-                        "sizes.sizePo.goodsAtConsolidatorReasonDescription",
-                        "poLine.shippingType",
-                        "planning.planningPriorityCode",
-                        "planning.planningPriorityDescription",
-                        "product.launchCode",
-                        "poLine.dpomItemStatus",
-                        "sizes.sizePo.transportationModeCode",
-                        "poHeader.incoTerms",
-                        "poHeader.purchaseGroupCode",
-                        "poHeader.purchaseGroupName",
-                        "poLine.itemQuantity",
-                        "sizes.sizeLogisticsOR.originReceiptQuantity",
-                        "sizes.sizeVas.valueAddedServiceInstructions",
-                        "poLine.itemVas.valueAddedServiceInstructions",
-                        "poLine.itemTextDetail",
-                        "poLine.itemVasDetail",
-                        "sizes.sizePo.sizePricing.fob.crpoRateUnitValue",
-                        "sizes.sizePo.sizePricing.fob.crpoCurrencyCode",
-                        "sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue",
-                        "sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode",
-                        "sizes.sizePo.sizeQuantity",
-                        "sizes.sizePo.sizeDescription",
-                        "poLine.geographyCode",
-                        "sizes.sizePo.inventorySegmentCode",
+                for (const offset of offsets) {
+                    const payload = {
+                        "fields": [
+                            "poHeader.documentDate",
+                            "poHeader.poNumber",
+                            "poLine.itemNumber",
+                            "sizes.scheduleLineItemNumber",
+                            "product.categoryCode",
+                            "product.categoryDescription",
+                            "poHeader.vendorCode",
+                            "product.globalCategoryCoreFocusCode",
+                            "product.globalCategoryCoreFocusDescription",
+                            "product.genderAgeCode",
+                            "product.genderAgeDescription",
+                            "product.styleNumber",
+                            "poLine.productCode",
+                            "product.colorDescription",
+                            "poLine.destinationCountryCode",
+                            "poLine.destinationCountryName",
+                            "poLine.plantCode",
+                            "poLine.plantName",
+                            "poHeader.trcoPoNumber",
+                            "sizes.sizeProduct.upc",
+                            "poLine.directshipSalesOrderNumber",
+                            "poLine.directshipSalesOrderItemNumber",
+                            "salesOrder.customerPo",
+                            "salesOrder.customerShipTo",
+                            "poLine.seasonCode",
+                            "poLine.seasonYear",
+                            "poHeader.poDocTypeCode",
+                            "poHeader.poDocTypeDescription",
+                            "planning.mrgacDate",
+                            "poLine.originalGoodsAtConsolidatorDate",
+                            "sizes.sizePo.goodsAtConsolidatorDate",
+                            "sizes.sizeLogisticsOR.originReceiptActualDate",
+                            "manufacturing.factoryDeliveryActualDate",
+                            "sizes.sizePo.goodsAtConsolidatorReasonCode",
+                            "sizes.sizePo.goodsAtConsolidatorReasonDescription",
+                            "poLine.shippingType",
+                            "planning.planningPriorityCode",
+                            "planning.planningPriorityDescription",
+                            "product.launchCode",
+                            "poLine.dpomItemStatus",
+                            "sizes.sizePo.transportationModeCode",
+                            "poHeader.incoTerms",
+                            "poHeader.purchaseGroupCode",
+                            "poHeader.purchaseGroupName",
+                            "poLine.itemQuantity",
+                            "sizes.sizeLogisticsOR.originReceiptQuantity",
+                            "sizes.sizeVas.valueAddedServiceInstructions",
+                            "poLine.itemVas.valueAddedServiceInstructions",
+                            "poLine.itemTextDetail",
+                            "poLine.itemVasDetail",
+                            "sizes.sizePo.sizePricing.fob.crpoRateUnitValue",
+                            "sizes.sizePo.sizePricing.fob.crpoCurrencyCode",
+                            "sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue",
+                            "sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode",
+                            "sizes.sizePo.sizeQuantity",
+                            "sizes.sizePo.sizeDescription",
+                            "poLine.geographyCode",
+                            "sizes.sizePo.inventorySegmentCode",
 
-                    ],
-                    "search": [
-                        {
-                            "fieldName": "poHeader.vendorCode",
-                            "operator": "=",
-                            "fieldValue": "SHK"
-                        },
-                        {
-                            "fieldName": "poLine.dpomItemStatus",
-                            "operator": "=",
-                            "fieldValue": status
-                        }
-                    ],
-                    "filter": [
-                        {
-                            "fieldName": "product.sizeMismatchIndicator",
-                            "operator": "=",
-                            "fieldValue": [
-                                "NO"
-                            ]
-                        }
-                    ],
-                    "offset": "0",
-                    "count": 3,
-                    "savedSearchID": "2e81ddd3-a131-4deb-9356-2528196ab342"
-                }
-                const headers = {
-                    'Cache-Control': 'no-cache', 'Content-Type': 'application/json', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br', 'Ocp-Apim-Subscription-Key': '7033b5d3725246599ab84f0946f0a2f3', 'bearer-jwt': tokenResponse.accessToken
-                }
-                const config = {
-                    headers: headers
-                }
-                const octaTokenUrl = 'https://dpomservice-prod.partner.nike-cloud.com/dpom_purchaseorder/purchaseorder/v0'
-                const response = await axios.post(octaTokenUrl, payload, config)
-                if (response.status === 200) {
-                    results.push(...response.data.objects);
+                        ],
+                        "search": [
+                            {
+                                "fieldName": "poHeader.vendorCode",
+                                "operator": "=",
+                                "fieldValue": "SHK"
+                            },
+                            {
+                                "fieldName": "poLine.dpomItemStatus",
+                                "operator": "=",
+                                "fieldValue": status
+                            },
+                            {
+                                "fieldName": "poHeader.documentDate",
+                                "operator": ">",
+                                "fieldValue": formattedDate
+                            }
+                        ],
+
+                        "offset": offset,
+                        "count": 5000,
+                        "savedSearchID": "2e81ddd3-a131-4deb-9356-2528196ab342"
+                    }
+                    const headers = {
+                        'Cache-Control': 'no-cache', 'Content-Type': 'application/json', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br', 'Ocp-Apim-Subscription-Key': '7033b5d3725246599ab84f0946f0a2f3', 'bearer-jwt': tokenResponse.accessToken
+                    }
+                    const config = {
+                        headers: headers
+                    }
+                    const octaTokenUrl = 'https://dpomservice-prod.partner.nike-cloud.com/dpom_purchaseorder/purchaseorder/v0'
+                    const response = await axios.post(octaTokenUrl, payload, config)
+                    if (response.status === 200 && response.data.objects.length > 0) {
+                        results.push(...response.data.objects);
+                        continue;
+                    } else {
+                        break;
+                    }
                 }
             }
             if (results.length > 0) {
@@ -218,7 +231,6 @@ export class DpomService {
             const styleNumber = 'FN389'
             const m3Config = appConfig.m3Cred.headerRequest()
             const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=4857896325&ITNO=${req.itemNo}&ORQT=1000&PWNR=00010`;
-            // const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.purchaseOrderNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${styleNumber}`;
             const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
             console.log(response, 'response')
             console.log(response.data?.MIRecord, 'MIRecord')
@@ -237,7 +249,7 @@ export class DpomService {
         }
     }
 
-    @Cron('0 8 * * *')
+    @Cron('0 2 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
@@ -289,8 +301,6 @@ export class DpomService {
                 entity.status = 'Success';
                 entity.createdUser = 'API sync'
                 const save = await transactionManager.getRepository(NikeFileUploadEntity).save(entity);
-                console.log(orderDetails.status)
-
                 for (const orderDetail of orderDetails.data) {
                     // Parse dates using moment
                     const date3 = moment(orderDetail.sizes.sizePo.goodsAtConsolidatorDate, 'MM/DD/YYYY');
@@ -298,8 +308,6 @@ export class DpomService {
 
                     // Calculate the difference in days
                     const daysDifference = date4.diff(date3);
-                    console.log(daysDifference,"daysDifference")
-
                     const text = orderDetail.poLine.itemVas.valueAddedServiceInstructions ? orderDetail.poLine.itemVas.valueAddedServiceInstructions : ' '
                     //orderDetail.poLine.itemVas.valueAddedServiceInstructions;
                     const searchText = "HANGING IS REQUIRED";
@@ -311,7 +319,6 @@ export class DpomService {
                     }
 
                     // Diverted PO's
-                    console.log(orderDetail.poLine.itemTextDetail)
                     const itemText = orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails : null;
                     const matches = [];
                     if (itemText != null) {
@@ -329,7 +336,7 @@ export class DpomService {
                         orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null,
                         orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonDescription,
                         orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.geographyCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, orderDetail.sizes.sizePo.inventorySegmentCode, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity,
-                        orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVasDetail ? orderDetail.poLine.itemVasDetail[0]?.textDetails : null, orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails : null, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
+                        orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVasDetail ? orderDetail.poLine.itemVasDetail[0]?.textDetails : null, orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails.join(',') : null, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
                         orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, orderDetail.sizes.sizePo.sizeQuantity, orderDetail.sizes.sizePo.sizeDescription, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVasPDF, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
                         crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, hanger, orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, matches ? matches : null, 'username')
                     const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
@@ -462,7 +469,8 @@ export class DpomService {
 
                     let price
                     for (const size of item.poItemVariantDetails) {
-                        const numericValue = parseFloat(size.unitPrice)
+                        const cleanedValue = size.unitPrice.replace(/[^\d.]/g, '');
+                        const numericValue = parseFloat(cleanedValue)
                         if (!isNaN(numericValue)) {
                             price = numericValue;
                         } else {
@@ -847,7 +855,7 @@ export class DpomService {
         }
     }
 
-   
+
 
     async poLineItemStatusChange(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.poLineItemStatusChange()
@@ -1060,28 +1068,30 @@ export class DpomService {
 
     // }
 
-    // async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
-    //     const details = await this.dpomRepository.getMarketingPpmData(req);
-    //     if (details.length === 0) {
-    //         return new CommonResponseModel(false, 0, 'data not found')
-    //     }
-    //     const sizeDateMap = new Map<string, MarketingReportModel>();
-    //     for (const rec of details) {
-    //         if (!sizeDateMap.has(rec.po_and_line)) {
-    //             sizeDateMap.set(
-    //                 rec.po_and_line,
+    async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
 
-    //                 new MarketingReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.hanger, [])
-    //             );
-    //         }
-    //         const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
-    //         if (rec.size_description !== null) {
-    //             sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.buyer_gross_price, rec.buyer_gross_currency_code, rec.ne_inc_disc, rec.netIncDisCurrency, rec.trading_net_inc_disc, rec.tradingNetCurrencyCode, rec.legal_po_price, rec.legal_po_currency_code, rec.co_price, rec.co_price_currency_code, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
-    //         }
-    //     }
-    //     const dataModelArray: MarketingReportModel[] = Array.from(sizeDateMap.values());
-    //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
-    // }
+        const details = await this.dpomRepository.getMarketingPpmData(req);
+        if (details.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found')
+        }
+        const sizeDateMap = new Map<string, MarketingReportModel>();
+        for (const rec of details) {
+            if (!sizeDateMap.has(rec.po_and_line)) {
+                sizeDateMap.set(
+                    rec.po_and_line,
+                    {
+                        lastModifiedDate: rec.last_modified_date, item: rec.item, factory: rec.factory, documentDate: rec.document_date, purchaseOrderNumber: rec.po_number, poLineItemNumber: rec.po_line_item_number, poAndLine: rec.po_and_line, DPOMLineItemStatus: rec.dpom_item_line_status, styleNumber: rec.style_number, productCode: rec.product_code, colorDesc: rec.color_desc, customerOrder: rec.customer_order, coFinalApprovalDate: rec.po_final_approval_date, planNo: rec.plan_no, leadTime: rec.lead_time, categoryCode: rec.category_code, categoryDesc: rec.category_desc, vendorCode: rec.vendor_code, gccFocusCode: rec.gcc_focus_code, gccFocusDesc: rec.gcc_focus_desc, genderAgeCode: rec.gender_age_code, genderAgeDesc: rec.gender_age_desc, destinationCountryCode: rec.destination_country_code, destinationCountry: rec.destination_country, plant: rec.plant, plantName: rec.plant_name, tradingCoPoNumber: rec.trading_co_po_no, UPC: rec.upc, directShipSONumber: rec.direct_ship_so_no, directShipSOItemNumber: rec.direct_ship_so_item_no, customerPO: rec.customer_po, shipToCustomerNumber: rec.ship_to_customer_no, shipToCustomerName: rec.ship_to_customer_name, planningSeasonCode: rec.planning_season_code, planningSeasonYear: rec.planning_season_year, docTypeCode: rec.doc_type_code, docTypeDesc: rec.doc_type_desc, MRGAC: rec.mrgac, OGAC: rec.ogac, GAC: rec.gac, truckOutDate: rec.truck_out_date, originReceiptDate: rec.origin_receipt_date, factoryDeliveryActDate: rec.factory_delivery_date, GACReasonCode: rec.gac_reason_code, GACReasonDesc: rec.gac_reason_desc, shippingType: rec.shipping_type, planningPriorityCode: rec.planning_priority_code, planningPriorityDesc: rec.planning_priority_desc, launchCode: rec.launch_code, geoCode: rec.geo_code, modeOfTransportationCode: rec.mode_of_transport_code, inCoTerms: rec.inco_terms, inventorySegmentCode: rec.inventory_segment_code, purchaseGroupCode: rec.purchase_group_code, purchaseGroupName: rec.purchase_group_name, totalItemQty: rec.total_item_qty, actualShippedQty: rec.actual_shipped_qty, VASSize: rec.vas_size, itemVasText: rec.item_vas_text, itemText: rec.item_text, PCD: rec.pcd, shipToAddressLegalPO: rec.ship_to_address_legal_po, shipToAddressDIA: rec.ship_to_address_dia, CABCode: rec.cab_code, displayName: rec.displayName, actualUnit: rec.actual_unit, allocatedQuantity: rec.allocated_quantity, hanger: rec.hanger, sizeWiseData: []
+                    });
+            }
+            if (rec.size_description !== null) {
+                const sizeWiseDataEntry: MarketingReportSizeModel = { sizeDescription: rec.size_description, sizeQty: rec.size_qty, grossFobPrice: rec.gross_price_fob, grossFobCurrencyCode: rec.fob_currency_code, buyerGrossFobPrice: rec.shahi_confirmed_gross_price, buyerGrossFobCurrencyCode: rec.shahi_confirmed_gross_price_currency_code, netIncludingDisc: rec.ne_inc_disc, netIncludingDiscCurrencyCode: rec.net_inc_disc_currency_code, trConetIncludingDisc: rec.trading_net_inc_disc, trConetIncludingDiscCurrencyCode: rec.trading_net_currency_code, legalPoPrice: rec.legal_po_price, legalPoCurrencyCode: rec.legal_po_currency_code, coPrice: rec.co_price, coPriceCurrencyCode: rec.co_price_currency_code, CRMCoQty: rec.crm_co_qty, legalPoQty: rec.legal_po_qty, actualShippedQty: rec.actual_shipped_qty }
+
+                sizeDateMap.get(rec.po_and_line).sizeWiseData.push(sizeWiseDataEntry);
+            }
+        }
+        const dataModelArray: MarketingReportModel[] = Array.from(sizeDateMap.values());
+        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    }
 
     async getPoAndQtyDashboard(req: PoAndQtyReq): Promise<CommonResponseModel> {
         try {
@@ -1588,56 +1598,25 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
-        const details = await this.dpomRepository.getMarketingPpmData(req);
-        if (details.length === 0) {
-            return new CommonResponseModel(false, 0, 'data not found')
-        }
-        const sizeDateMap = new Map<string, MarketingReportModel>();
-        for (const rec of details) {
-            if (!sizeDateMap.has(rec.po_and_line)) {
-                sizeDateMap.set(
-                    rec.po_and_line,
-
-                    new MarketingReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.hanger, [])
-                );
-            }
-            const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
-            if (rec.size_description !== null) {
-                sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.buyer_gross_price, rec.buyer_gross_currency_code, rec.ne_inc_disc, rec.netIncDisCurrency, rec.trading_net_inc_disc, rec.tradingNetCurrencyCode, rec.legal_po_price, rec.legal_po_currency_code, rec.co_price, rec.co_price_currency_code, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
-            }
-        }
-        const dataModelArray: MarketingReportModel[] = Array.from(sizeDateMap.values());
-        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
-    }
-
     async getTotalItemQtyChangeData(req?: nikeFilterRequest): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getTotalItemQtyChangeData(req)
-         if(data.length === 0){
+        if (data.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found')
-         }
-         const sizeDateMap = new Map<string, TotalQuantityChangeModel>();
-         for (const rec of data) {
-            //  console.log(data ,"console of data step 1")
-            if(!sizeDateMap.has(rec.po_number)){
+        }
+        const sizeDateMap = new Map<string, TotalQuantityChangeModel>();
+        for (const rec of data) {
+            if (!sizeDateMap.has(rec.po_number)) {
                 sizeDateMap.set(
                     rec.po_number,
-                    new TotalQuantityChangeModel(rec.po_number,rec.po_line_item_number,rec.po_and_line,rec.schedule_line_item_number,rec.created_at,rec.item,rec.factory,rec.styleNumber,rec.productCode,rec.color_desc,rec.OGAC,rec.GAC,rec.desCtry,rec.item_text,rec.total_item_qty,[])
+                    new TotalQuantityChangeModel(rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.schedule_line_item_number, rec.created_at, rec.item, rec.factory, rec.styleNumber, rec.productCode, rec.color_desc, rec.OGAC, rec.GAC, rec.desCtry, rec.item_text, rec.total_item_qty, [])
                 )
             }
-
             const sizeWiseData = sizeDateMap.get(rec.po_number).sizeWiseData;
             if (rec.size_description !== null) {
-                sizeWiseData.push(new PoChangeSizeModel(rec.size_description,rec.old_val,rec.new_val,rec.Diff))
-    }
-
-
-}
-         const dataModelArray: TotalQuantityChangeModel[] = Array.from(sizeDateMap.values());   
-          console.log(sizeDateMap.values
-            ,"length")
-
-
+                sizeWiseData.push(new PoChangeSizeModel(rec.size_description, rec.old_val, rec.new_val, rec.Diff))
+            }
+        }
+        const dataModelArray: TotalQuantityChangeModel[] = Array.from(sizeDateMap.values());
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
 }

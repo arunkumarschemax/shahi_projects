@@ -103,7 +103,7 @@ export const extractDataFromPoPdf = async (pdf) => {
 
         }
         // po details parsing ends here
-        
+
         //-------------------------------------------------------------------------------------------
         // data filtering satrts here
         // filtering the pdf data i.e remove unnecessary data which is not required for data parsing
@@ -132,7 +132,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         filteredData.push(...pageContent)
     }
     //------------------------------------------------------------------------------
-
+    console.log(filteredData)
 
     // console.log(filteredData)
     for (const [index, rec] of filteredData.entries()) {
@@ -156,20 +156,32 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsEndIndex = rec.itemIndex + ITEM_ACCEPTANCEDATE_INDEX + 1
         //-------------------------------------------------------------
         // check if ship to data exists
+        let isShipToTextExist = false
+        let isItemTextExist = false
+        let itemTextIndex
 
         if (filteredData[rec.itemIndex + ITEM_SHIP_TO_INDEX].str == ITEM_SHIP_TO_TEXT) {
             let shipToText = ''
             ITEM_SHIP_TO_INDEXES.forEach((val) => shipToText = shipToText + filteredData[rec.itemIndex + val].str + ',')
             itemDetailsObj.shipToAddress = shipToText
             shipToEndIndex = rec.itemIndex + ITEM_SHIP_TO_INDEXES[ITEM_SHIP_TO_INDEXES.length - 1]
+            isShipToTextExist= true
         }
 
         //------------------------------------------------------------------
         // check if item text exists
-
-        if (filteredData[rec.itemIndex + ITEM_TEXT_INDEX].str == 'ITEM TEXT') {
+        
+        if(isShipToTextExist){
+            itemTextIndex =rec.itemIndex + ITEM_TEXT_INDEX
+        }else{
+            itemTextIndex = rec.itemIndex + ITEM_SHIP_TO_INDEX
+        }
+        if (filteredData[itemTextIndex].str == 'ITEM TEXT') {
+            console.log('item text exists')
             let itemText = ''
-            const itemTextSatrtIndex = rec.itemIndex + ITEM_TEXT_START_INDEX
+            const itemTextSatrtIndex = itemTextIndex + 1
+            console.log(itemTextIndex,'itemTextIndex')
+            console.log(itemTextSatrtIndex,'itemTextSatrtIndex')
             // Find the index where the str is "__________________" and stop the loop there ,item text ends there
             let j = itemTextSatrtIndex;
             while (!filteredData[j].str.includes(ITEM_TEXT_END_TEXT)) {
@@ -199,7 +211,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemVariantStartIndex = itemDetailsEndIndex
         }
 
-        
+
         //-------------------------------------------------------------------------
         // item varinat details parsing starts here
         const itemVarinatsTextArr = []
@@ -223,6 +235,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsArr.push(itemDetailsObj)
     }
     poData.poItemDetails = itemDetailsArr
+    console.log(poData)
     return poData
 }
 

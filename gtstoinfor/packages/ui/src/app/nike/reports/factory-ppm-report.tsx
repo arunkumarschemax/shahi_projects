@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Table, Row, Input, Col, Form, DatePicker, Select, Button, Checkbox, message } from 'antd';
+import { Card, Table, Row, Input, Col, Form, DatePicker, Select, Button, Checkbox, message, Statistic } from 'antd';
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { NikeService } from '@project-management-system/shared-services';
@@ -9,6 +9,7 @@ import { Excel } from 'antd-table-saveas-excel';
 import { ColumnsType } from 'antd/es/table';
 import { FactoryReportModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
+import CountUp from 'react-countup';
 
 interface ExpandedRows {
     [key: string]: boolean;
@@ -46,6 +47,9 @@ const FactoryPPMReport = () => {
     const [item, setItem] = useState<any>([]);
     const [productCode, setProductCode] = useState<any>([]);
     const [poNumber, setPoNumber] = useState<any>([]);
+    const formatter = (value: number) => <CountUp end={value} separator="," />;
+    const [tableLoading,setTableLoading] = useState<boolean>(false)
+
 
     useEffect(() => {
         getData();
@@ -307,8 +311,9 @@ const FactoryPPMReport = () => {
         if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
             req.DPOMLineItemStatus = selectedLineItemStatus;
         }
-
+        setTableLoading(true)
         service.getFactoryReportData(req)
+           
             .then(res => {
                 if (res.status) {
                     setGridData(res.data);
@@ -322,6 +327,8 @@ const FactoryPPMReport = () => {
                 }
             })
             .catch(err => {
+            }).finally(() => {
+                setTableLoading(false)
             });
     };
 
@@ -1262,6 +1269,7 @@ const FactoryPPMReport = () => {
 
                 {filterData.length > 0 ? (
                     <Table
+                        loading={tableLoading}
                         columns={columns}
                         dataSource={filterData}
                         size='small'
@@ -1459,34 +1467,31 @@ const FactoryPPMReport = () => {
                         </Col>
                     </Row>
                 </Form>
-                <Row gutter={80}>
+                <Row gutter={24} justify={'space-evenly'}>
                     <Col >
-                        <Card title={'Total order Qty : ' + count} style={{ textAlign: 'left', width: 250, height: 45 }}></Card>
+                        <Statistic  loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} />
                     </Col>
                     <Col>
-                        <Card title={'Total Shipped : ' + '0'} style={{ textAlign: 'left', width: 180, height: 45 }}></Card>
+                        <Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
                     </Col>
                     <Col>
-                        <Card title={'Balance to ship : ' + '0'} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
+                        <Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
                     </Col>
-                </Row><br></br>
-
-                <Row gutter={70}>
                     <Col >
-                        <Card title={'Total PO Count : ' + gridData.length} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
+                        <Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
                     </Col>
                     <Col>
-                        <Card title={'Accepted PO Count : ' + gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} style={{ textAlign: 'left', width: 250, height: 45 }}></Card>
+                        <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
                     </Col>
                     <Col>
-                        <Card title={'Unaccepted PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
+                        <Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
                     </Col>
                     <Col>
-                        <Card title={'Closed PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} style={{ textAlign: 'left', width: 200, height: 45 }}></Card>
+                        <Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
                     </Col>
-                    <Col>
-                        {/* <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card> */}
-                    </Col>
+                    {/* <Col>
+                        <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
+                    </Col> */}
                 </Row><br></br>
                 <Card >
                     {/* <Table

@@ -1007,58 +1007,391 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Legal PO Price',
-            dataIndex: 'legalPoPrice',
-            render: (text, record) => {
-              if (!text || text.trim() === '') {
-                return text;
-              } else {
-                return '-';
-              }
-            },
-          },
-
-          {
-            title: 'CO Price',
-            dataIndex: 'coPrice',
-            render: (text, record) => {
-              if (!text || text.trim() === '') {
-                return '-';
-              } else {
-                return text;
-              }
-            },
-          },
-          {
-            title: 'Price Variation',
-            dataIndex: '',
-            key: '',
+            title: 'Gross Price/FOB',
+            dataIndex: 'grossFobPrice',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
               if (sizeData) {
-                const legalPoPrice = parseFloat(sizeData.legal_po_price);
-                const coPrice = parseFloat(sizeData.coPrice);
-
-                if (!isNaN(legalPoPrice) && !isNaN(coPrice)) {
-                  const priceVariation = legalPoPrice - coPrice;
-                  return priceVariation;
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.grossFobPrice
+                  );
                 } else {
-
-                  if (legalPoPrice === 0 && coPrice === 0) {
-                    return 0;
-                  } else {
-                    return '-';
-                  }
+                  return (
+                    '-'
+                  );
                 }
               } else {
                 return '-';
               }
             }
-          }
+          },
+          {
+            title: 'Gross Price/FOB currency code',
+            dataIndex: 'grossFobCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.grossFobCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Buyer Confirmed Gross Price/FOB',
+            dataIndex: 'buyerGrossFobPrice',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.buyerGrossFobPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Buyer Confirmed Gross Price/FOB Currency Code',
+            dataIndex: 'buyerGrossFobCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.buyerGrossFobCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Price',
+            dataIndex: '',
+          },
+          {
+            title: 'Diff of Price Currency',
+            dataIndex: '',
+          },
+          {
+            title: 'Net including discounts',
+            dataIndex: 'netIncludingDisc',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.netIncludingDisc
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Net including discounts currency code',
+            dataIndex: 'netIncludingDiscCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.netIncludingDiscCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Trading Co Net including discounts',
+            dataIndex: 'trConetIncludingDisc',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.trConetIncludingDisc
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Trading Co Net including discounts currency code',
+            dataIndex: 'trConetIncludingDiscCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.trConetIncludingDiscCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO Price',
+            dataIndex: 'legalPoPrice',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.legalPoPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO Price currency',
+            dataIndex: 'legalPoCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.legalPoCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'CO Price',
+            dataIndex: 'coPrice',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.coPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'CO Price currency',
+            dataIndex: 'coPriceCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.coPriceCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Price',
+            dataIndex: '',
+
+          },
+          {
+            title: 'Diff of Price currency',
+            dataIndex: '',
+
+          },
+          {
+            title: 'CRM CO QTY',
+            dataIndex: 'CRMCoQty',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.CRMCoQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO QTY',
+            dataIndex: 'legalPoQty',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.legalPoQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Quantity',
+            dataIndex: '',
+          },
+          {
+            title: 'Allowed Excess Ship Qty',
+            dataIndex: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  if (record.shippingType === 'DIRECT') {
+                    return (
+                      '0'
+                    );
+                  } else {
+                    const sizeQty = sizeData.sizeQty;
+                    const result = 0.03 * sizeQty;
+                    return (
+                      result.toFixed(3)
+                    );
+                  }
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Actual Shipped Qty',
+            dataIndex: 'actualShippedQty',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.actualShippedQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Actual Ship %',
+            dataIndex: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.grossFobPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
         ],
         render: (text, record) => {
           return record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1093,6 +1426,182 @@ const PPMReport = () => {
             }
           },
           {
+            title: 'Gross Price/FOB',
+            dataIndex: 'grossFobPrice',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.grossFobPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Gross Price/FOB currency code',
+            dataIndex: 'grossFobCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.grossFobCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Buyer Confirmed Gross Price/FOB',
+            dataIndex: 'buyerGrossFobPrice',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.buyerGrossFobPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Buyer Confirmed Gross Price/FOB Currency Code',
+            dataIndex: 'buyerGrossFobCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.buyerGrossFobCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Price',
+            dataIndex: '',
+          },
+          {
+            title: 'Diff of Price Currency',
+            dataIndex: '',
+          },
+          {
+            title: 'Net including discounts',
+            dataIndex: 'netIncludingDisc',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.netIncludingDisc
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Net including discounts currency code',
+            dataIndex: 'netIncludingDiscCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.netIncludingDiscCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Trading Co Net including discounts',
+            dataIndex: 'trConetIncludingDisc',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.trConetIncludingDisc
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Trading Co Net including discounts currency code',
+            dataIndex: 'trConetIncludingDiscCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.trConetIncludingDiscCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
             title: 'Legal PO Price',
             dataIndex: 'legalPoPrice',
             render: (text, record) => {
@@ -1114,8 +1623,29 @@ const PPMReport = () => {
             }
           },
           {
+            title: 'Legal PO Price currency',
+            dataIndex: 'legalPoCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.legalPoCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
             title: 'CO Price',
-            dataIndex: '',
+            dataIndex: 'coPrice',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1135,16 +1665,142 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Price Variation',
+            title: 'CO Price currency',
+            dataIndex: 'coPriceCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.coPriceCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Price',
+            dataIndex: '',
+
+          },
+          {
+            title: 'Diff of Price currency',
+            dataIndex: '',
+
+          },
+          {
+            title: 'CRM CO QTY',
+            dataIndex: 'CRMCoQty',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.CRMCoQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO QTY',
+            dataIndex: 'legalPoQty',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.legalPoQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Quantity',
+            dataIndex: '',
+          },
+          {
+            title: 'Allowed Excess Ship Qty',
             dataIndex: '',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
               if (sizeData) {
                 if (sizeData.sizeQty !== null) {
-                  const priceVariation = sizeData.price - sizeData.coPrice;
+                  if (record.shippingType === 'DIRECT') {
+                    return (
+                      '0'
+                    );
+                  } else {
+                    const sizeQty = sizeData.sizeQty;
+                    const result = 0.03 * sizeQty;
+                    return (
+                      result.toFixed(3)
+                    );
+                  }
+                } else {
                   return (
-                    priceVariation
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Actual Shipped Qty',
+            dataIndex: 'actualShippedQty',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.actualShippedQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Actual Ship %',
+            dataIndex: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.grossFobPrice
                   );
                 } else {
                   return (
@@ -1208,173 +1864,6 @@ const PPMReport = () => {
             return text;
           }
         },
-      },
-      {
-        title: 'Gross Price/FOB',
-        dataIndex: 'grossPriceFOB',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Gross Price/FOB currency code',
-        dataIndex: 'fobCurrCode',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Buyer Confirmed Gross Price/FOB',
-        dataIndex: '',
-        // render: (text, record) => {
-        //     if (!text || text.trim() === '') {
-        //         return '-';
-        //     } else {
-        //         return text;
-        //     }
-        // },
-      },
-      {
-        title: 'Buyer Confirmed Gross Price/FOB Currency Code',
-        dataIndex: '',
-      },
-      {
-        title: 'Diff of Price',
-        dataIndex: '',
-      },
-      {
-        title: 'Diff of Price Currency',
-        dataIndex: '',
-      },
-      {
-        title: 'Net including discounts',
-        dataIndex: 'netIncludingDisc',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Net including discounts currency code',
-        dataIndex: 'netIncDisCurrency',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Trading Co Net including discounts',
-        dataIndex: 'trCoNetIncludingDisc',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Trading Co Net including discounts currency code',
-        dataIndex: 'tradingNetCurrencyCode',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Legal PO Price',
-        dataIndex: 'legalPoPrice',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Legal PO Price currency',
-        dataIndex: 'legalPoCurrencyCode',
-      },
-      {
-        title: 'CO Price',
-        dataIndex: 'coPrice',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'CO Price currency',
-        dataIndex: 'coPriceCurrencyCode',
-      },
-      {
-        title: 'Diff of Price',
-        dataIndex: '',
-
-      },
-      {
-        title: 'Diff of Price currency',
-        dataIndex: '',
-
-      },
-      {
-        title: 'CRM CO QTY',
-        dataIndex: '',
-      },
-      {
-        title: 'Legal PO QTY',
-        dataIndex: 'quantity',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Diff of Quantity',
-        dataIndex: '',
-      },
-      {
-        title: 'Allowed Excess Ship Qty',
-        dataIndex: '',
-      },
-      {
-        title: 'Actual Shipped Qty',
-        dataIndex: 'actualShippedQty',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Actual Ship %',
-        dataIndex: '',
       },
       {
         title: 'VAS - Size',
@@ -1446,169 +1935,6 @@ const PPMReport = () => {
             return text;
           }
         },
-      },
-      {
-        title: 'Gross Price/FOB',
-        dataIndex: 'grossPriceFOB',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Gross Price/FOB currency code',
-        dataIndex: 'fobCurrCode',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Buyer Confirmed Gross Price/FOB',
-        dataIndex: '',
-        // render: (text, record) => {
-        //     if (!text || text.trim() === '') {
-        //         return '-';
-        //     } else {
-        //         return text;
-        //     }
-        // },
-      },
-      {
-        title: 'Buyer Confirmed Gross Price/FOB Currency Code',
-        dataIndex: '',
-
-      },
-      {
-        title: 'Diff of Price',
-        dataIndex: '',
-
-      },
-      {
-        title: 'Diff of Price Currency',
-        dataIndex: '',
-
-      },
-      {
-        title: 'Net including discounts',
-        dataIndex: 'netIncludingDisc',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Net including discounts currency code',
-        dataIndex: 'netIncDisCurrency',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Trading Co Net including discounts',
-        dataIndex: 'trCoNetIncludingDisc',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Trading Co Net including discounts currency code',
-        dataIndex: 'tradingNetCurrencyCode',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Legal PO Price',
-        dataIndex: 'legalPoPrice',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Legal PO Price currency',
-        dataIndex: 'legalPoCurrencyCode',
-      },
-      {
-        title: 'CO Price',
-        dataIndex: 'coPrice',
-      },
-      {
-        title: 'CO Price currency',
-        dataIndex: 'coPriceCurrencyCode',
-      },
-      {
-        title: 'Diff of Price',
-        dataIndex: '',
-      },
-      {
-        title: 'Diff of Price currency',
-        dataIndex: '',
-      },
-      {
-        title: 'CRM CO QTY',
-        dataIndex: '',
-      },
-      {
-        title: 'Legal PO QTY',
-        dataIndex: 'quantity',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Diff of Quantity',
-        dataIndex: '',
-
-      },
-      {
-        title: 'Allowed Excess Ship Qty',
-        dataIndex: '',
-
-      },
-      {
-        title: 'Actual Shipped Qty',
-        dataIndex: 'actual_shipped_qty',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        },
-      },
-      {
-        title: 'Actual Ship %',
-        dataIndex: '',
       },
       {
         title: 'VAS - Size',
