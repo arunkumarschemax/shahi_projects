@@ -307,7 +307,7 @@ export class OrdersController {
         }
     }
     
-    @Post('/getWareHouseYear')
+    @Post('/getWareHouseYearData')
     async getWareHouseYear(): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getWareHouseYear();
@@ -319,7 +319,7 @@ export class OrdersController {
     @ApiBody({type:YearReq})
     async getWareHouseMonthData(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getExfactoryMonthData(req);
+            return this.ordersService.getWareHouseMonthData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

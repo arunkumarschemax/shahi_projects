@@ -772,10 +772,10 @@ export const ExFactoryReport = () => {
     excel.saveAs(`Ex-Factory-report-${currentDate}.xlsx`);
 
 };
-const handleTabChange = (selectedYear: string) => {
+const handleTabChange = (selectedYear: any) => {
   setTab(Number(selectedYear)); 
   getData()
-  console.log(Number(selectedYear),'///////////');
+  console.log(selectedYear,'///////////');
   
 };
   return (
