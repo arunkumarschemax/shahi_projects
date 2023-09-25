@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Descriptions, Table } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ColumnsType } from "antd/es/table";
-import { detailView } from "@project-management-system/shared-services";
+import { detailView } from "@xpparel/shared-services";
 import { ApartmentOutlined } from "@ant-design/icons";
 
 // Separate function for fetching branch view
-const getBranchViewData = async (vendorId:number) => {
+const getBranchViewData = async (vendorId: number) => {
   try {
     const detailViews = new detailView();
-    
-    const branchViewData = await detailViews.getbranchview({vendorId:vendorId});
+
+    const branchViewData = await detailViews.getbranchview({ vendorId: vendorId });
     return branchViewData.data || [];
   } catch (error) {
     console.error("Error fetching branch view data:", error);
@@ -26,16 +26,16 @@ const VendorBranchInfoGrid = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  
 
-  useEffect(() =>{
-    if(location.state.rowData){
+
+  useEffect(() => {
+    if (location.state.rowData) {
       console.log(location.state.rowData.id)
       fetchVendorDetails(location.state.rowData.id)
     }
   }
- ,[])
-  const fetchVendorDetails = async (vendorId:number) => {
+    , [])
+  const fetchVendorDetails = async (vendorId: number) => {
     try {
       const branchData = await getBranchViewData(vendorId);
       if (branchData.length > 0) {
@@ -69,7 +69,7 @@ const VendorBranchInfoGrid = () => {
       dataIndex: 'attributeValue',
       render: (text, record) => {
         const attributeName = 'GST NO';
-        const attribute = record.vbsBranchAttributes.find((attr:any) => attr.attributeName === attributeName);
+        const attribute = record.vbsBranchAttributes.find((attr: any) => attr.attributeName === attributeName);
         if (attribute) {
           return <span key={attribute.id}>{attribute.attributeValue}</span>;
         }
@@ -136,8 +136,8 @@ const VendorBranchInfoGrid = () => {
 
   return (
     <Card title="Vendor Info" size="small" className="card-header" extra={<Button className='panel_button' onClick={handleBack}>View </Button>}>
-         <Descriptions>
-  <Descriptions.Item
+      <Descriptions>
+        <Descriptions.Item
           label="Business Name"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
@@ -159,13 +159,17 @@ const VendorBranchInfoGrid = () => {
           label="Contact"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {location.state.rowData.contact}
+          <a href={`tel:${location.state.rowData.contact}`}>
+            {location.state.rowData.contact}
+          </a>
         </Descriptions.Item>
         <Descriptions.Item
           label="Alternate Contact"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {location.state.rowData.alternateContact}
+          <a href={`tel:${location.state.rowData.alternateContact}`}>
+            {location.state.rowData.alternateContact}
+          </a>
         </Descriptions.Item>
         <Descriptions.Item
           label="Email"
@@ -218,15 +222,15 @@ const VendorBranchInfoGrid = () => {
         >
           {location.state.rowData.ifscCode}
         </Descriptions.Item>
-     </Descriptions>
+      </Descriptions>
       <br />
-      <Card style={{textAlign:"center"}} size="small"  title={<span><ApartmentOutlined />Branches</span>} >
-      <Table
-        pagination={false}
-        columns={columns}
-        dataSource={vendorDetails}
-        size="small"
-      />
+      <Card style={{ textAlign: "center" }} size="small" title={<span><ApartmentOutlined />Branches</span>} >
+        <Table
+          pagination={false}
+          columns={columns}
+          dataSource={vendorDetails}
+          size="small"
+        />
       </Card>
     </Card>
   );

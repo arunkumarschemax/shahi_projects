@@ -15,6 +15,7 @@ export const loginUser = async (dispatch: React.Dispatch<IAMClientAuthActions>, 
             username,
             password,
         });
+        console.log(response,"yyyyy")
         const res = response.data;//await service.login(loginPayload);
         if (res.status) {
             const aaa: any = res.data;
@@ -42,9 +43,10 @@ export const loginUser = async (dispatch: React.Dispatch<IAMClientAuthActions>, 
             throw Error(res.internalMessage);
         }
     } catch (error: any) {
+        console.log(error,"err")
         const errorMessage: any = { errorMessage: error.message };
         dispatch({ type: ActionTypes.LOGIN_ERROR, payload: errorMessage });
-        throw Error(error.message);
+        throw Error(error.response.data.message);
     }
 }
 

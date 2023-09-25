@@ -4,7 +4,6 @@ import { ChildProtectionWrapper } from "./common/protected-child-wrapper"
 import BasicLayout from "./layout/basic-layout/layout"
 import Login from "./layout/login/login"
 import View from "./components/doc-extract/doc-extract-view"
-// import Form, { DocExtractForm } from "./components/doc-extract/doc-extract-form"
 import VendorGrid from "./components/vendor-view/vendor-view"
 import VendorBranchInfoGrid from "./components/vendor-view/detail-view"
 import DocumentUploadForm from "./components/doc-extract/document-upload-form"
@@ -31,9 +30,8 @@ export const AppRoutes = () => {
                     <Route path="doc-extract-view" element={<View />} />
                     <Route path="doc-extract-view" key='/doc-extract-view' element={<View />} />
                 </Route>
-
-                <Route path="/scan-document" element={<View />} />
                 <Route path="scan-document" element={<View />} />
+                <Route path="/doc-extract-form" element={<DocumentUploadForm />} />
                 <Route path="/vendors" element={<VendorGrid />} />
                 <Route path="/invoices" />
                 <Route path="/pending-approvals" />
@@ -50,19 +48,8 @@ export const AppRoutes = () => {
 
                 <Route path="/priceview" element={<PriceView />} />
                 <Route path="/priceform" element={<PriceForm />} />
-                {/* <Route path="/VendorBranchInfoGrid" element={<VendorBranchInfoGrid />} /> */}
-
-
-
-
-                <Route path="/doc-extract-form" element={<DocumentUploadForm />} />
 
                 <Route path="/ScanDetailView" element={<ScanDetailView />} />
-
-
-                {/* <Route path="/doc-extract-form" element={<DocForm/>}/> */}
-
-                <Route path="/doc-extract-form" element={<DocumentUploadForm />} />
 
 
                 {/* <Route path="/doc-extract-new-form" element={<DocExtractForm invoiceData={undefined} type="" file={undefined}/>}/> */}

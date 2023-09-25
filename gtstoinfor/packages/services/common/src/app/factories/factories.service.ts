@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { FactoryAdapter } from './adapters/factory.adapter';
 import { FactoryRepository } from './repository/factory.repository';
 import { FactoryDto } from './dto/factory.dto';
-import { FactoryResponseModel } from 'packages/libs/shared-models/src/common/factory/factory-response-objects';
-import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object'
 import { FactoriesEntity } from './factories.entity';
 import { Not } from 'typeorm';
-import { AllFactoriesResponseModel, FactoryActivateDeactivateDto, FactoryDto as NewFactoriesDto } from '@project-management-system/shared-models';
+import { AllFactoriesResponseModel, FactoryActivateDeactivateDto, FactoryResponseModel, FactoryDto as NewFactoriesDto } from '@xpparel/shared-models';
+import { ErrorResponse } from '@xpparel/backend-utils';
 
 @Injectable()
 export class FactoriesService {

@@ -1,8 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { FactoriesService } from './factories.service';
-import {FactoryResponseModel} from '../../../../../libs/shared-models/src/common/factory/factory-response-objects'
-import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
-import { AllFactoriesResponseModel } from '@project-management-system/shared-models';
+import { AllFactoriesResponseModel, FactoryResponseModel } from '@xpparel/shared-models';
+import { ApplicationExceptionHandler } from '@xpparel/backend-utils';
 
 @Controller('/factories')
 export class FactoriesController {

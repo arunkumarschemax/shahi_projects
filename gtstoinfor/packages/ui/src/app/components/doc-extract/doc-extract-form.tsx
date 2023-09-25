@@ -2,11 +2,7 @@
 // import { Select, Spin, message, Button, Input, Row, Form } from "antd";
 // import Tesseract from "tesseract.js";
 // import { useNavigate, useLocation } from "react-router-dom";
-// // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-// // import axios from "axios";
-// // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-// import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
-// import { SharedService } from "@project-management-system/shared-services";
+// import { SharedService } from "@xpparel/shared-services";
 // import { text } from "stream/consumers";
 
 // const { Option } = Select;

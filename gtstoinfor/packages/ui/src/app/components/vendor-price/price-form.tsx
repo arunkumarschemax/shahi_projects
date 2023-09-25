@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, message, Row, Col, Card, Select } from 'antd';
-import { AllPriceDto } from 'packages/libs/shared-models/src/price-model';
-import { useNavigate } from 'react-router-dom';
-import { PricesService, VendorService } from '@project-management-system/shared-services';
 import { UndoOutlined } from '@ant-design/icons';
+import { AllPriceDto } from '@xpparel/shared-models';
+import { PricesService, VendorService } from '@xpparel/shared-services';
+import { Button, Card, Col, Form, Input, Row, Select, message } from 'antd';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const PriceForm = () => {
   const navigate = useNavigate();

@@ -2,8 +2,7 @@
 // import { Select, Spin, message, Button, Input, Row, Form, Col, Card } from "antd";
 // import Tesseract from "tesseract.js";
 // import { useNavigate,useLocation } from "react-router-dom";
-// import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
-// import { ScanService } from "@project-management-system/shared-services";
+// import { ScanService } from "@xpparel/shared-services";
 // import DocExtractForm from "./doc-extract-form";
 
 // const { Option } = Select;

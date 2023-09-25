@@ -1,6 +1,6 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 import { HSNEntity } from './hsn-entity';
-import { StatusEnum } from 'packages/libs/shared-models/src/common';
+import { StatusEnum } from '@xpparel/shared-models';
 @Entity('invoice')
 export class ScanEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
