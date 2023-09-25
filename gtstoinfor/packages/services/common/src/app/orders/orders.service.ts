@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -58,11 +58,14 @@ export class OrdersService {
         try {
             await transactionManager.startTransaction()
             const flag = new Set()
+            const columnArray = [];
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
-                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_');
-                    updatedObj[newKey] = obj[key];
+                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_').replace(/:/g,'_').replace(/[*]/g,'_').replace(/=/g,'_').replace(/”/g,'').replace(/~/g,'').replace(/[/]/g,'').replace(/“/g,'')
+                    const newKey1 = newKey.replace(/__/g,'_');
+                    columnArray.push(newKey1)
+                    updatedObj[newKey1] = obj[key];
                 }
                 return updatedObj;
             });
@@ -82,7 +85,11 @@ export class OrdersService {
                 }
                 return updatedObj;
             });
-
+            const difference = columnArray.filter((element) => !ProductionOrderColumns.includes(element));
+            if(difference.length > 0){
+                await transactionManager.releaseTransaction()
+                return new CommonResponseModel(false,1110,'Please Upload Correct Excel')
+            }
             for (const data of convertedData) {
 let dtoData;
 if(data.Order_Plan_Number !== null){
@@ -192,11 +199,12 @@ if(data.Order_Plan_Number !== null){
         try {
             await transactionManager.startTransaction()
             const flag = new Set()
-
+            const columnArray = [];
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
                         const newKey = key.replace(/\s/g, '_').replace(/[\(\)\.]/g, '').replace(/-/g, '_');
+                        columnArray.push(newKey)
                         updatedObj[newKey] = obj[key];
                 }
                 return updatedObj;
@@ -218,7 +226,11 @@ if(data.Order_Plan_Number !== null){
                 }
                 return updatedObj;
             });
-
+            const difference = columnArray.filter((element) => !TrimOrderColumns.includes(element));
+            if(difference.length > 0){
+                await transactionManager.releaseTransaction()
+                return new CommonResponseModel(false,1110,'Please Upload Correct Excel')
+            }
             for (const data of convertedData) {
                 let dtoData
                 if(data.Order_No != null){
