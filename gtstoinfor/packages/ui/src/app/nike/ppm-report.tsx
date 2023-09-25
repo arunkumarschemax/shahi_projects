@@ -912,12 +912,13 @@ const PPMReport = () => {
       },
 
       {
-        title: 'Shipping Type', dataIndex: 'shippingType', render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
+        title: 'Shipping Type',
+        dataIndex: 'shippingType',
+        render: (text) => {
+          // Replace underscores (_) with spaces
+          const transformedText = text ? text.replace(/_/g, ' ') : '-';
+          
+          return transformedText;
         },
       },
       {
