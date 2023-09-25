@@ -1078,7 +1078,6 @@ export function UploadDocumentForm() {
   const handleUploadDocument = () => {
     if (file && !buttonClicked) {
       if (file.name.match(/\.(pdf)$/)) {
-
       } else {
         setButtonClicked(true);
         const reader = new FileReader();
@@ -1695,7 +1694,7 @@ export function UploadDocumentForm() {
                     id="Timecreated"
                     name="Timecreated"
                     style={{
-                      width: "200px",
+                      width: "190px",
                       height: "30px",
                       paddingRight: "30px",
                       borderColor: timecreated ? "green" : "red",
@@ -1708,7 +1707,7 @@ export function UploadDocumentForm() {
                     style={{
                       position: "absolute",
                       top: "30px",
-                      right: "-3px",
+                      left: "180px",
                       cursor: "pointer",
                     }}
                     onClick={handleIconClick}
