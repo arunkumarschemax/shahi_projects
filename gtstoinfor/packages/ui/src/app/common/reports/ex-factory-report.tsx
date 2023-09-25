@@ -13,7 +13,7 @@ export const ExFactoryReport = () => {
   const [page, setPage] = React.useState(1);
   const [data, setData] = useState<any[]>([]);
   const [year, setYear] = useState<any[]>([]);
-  const [tab, setTab] = useState<number>();
+  const [tab, setTab] = useState<number>(2023);
   const service = new OrdersService()
   const {Text} = Typography
   useEffect(()=>{
@@ -21,7 +21,7 @@ export const ExFactoryReport = () => {
   },[])
 
   const getData =()=>{
-    const req = new YearReq(2023)
+    const req = new YearReq(tab)
     console.log(tab,'222222222222222222');
     
     service.getExfactoryYearData().then(res =>{
