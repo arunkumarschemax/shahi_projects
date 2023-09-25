@@ -333,4 +333,12 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    @ApiBody({type:YearReq})
+    async getWareHouseComparisionData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getWareHouseComparisionData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
