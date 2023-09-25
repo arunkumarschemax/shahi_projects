@@ -249,7 +249,7 @@ export class DpomService {
         }
     }
 
-    @Cron('0 11 15 * *')
+    @Cron('0 2 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
