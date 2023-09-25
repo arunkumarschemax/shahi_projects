@@ -10,8 +10,8 @@ import { StatusEnumDisplay } from 'packages/libs/shared-models/src/common';
 function ScanDetailView() {
   // Check if location and location.state are defined
 
-  const navigate=useNavigate();
-  const  rowData  = useLocation();
+  const navigate = useNavigate();
+  const rowData = useLocation();
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(1);
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -19,7 +19,7 @@ function ScanDetailView() {
   const searchInput = useRef(null);
 
 
-  const handleBack =() =>{
+  const handleBack = () => {
     navigate('/scan-document')
   }
 
@@ -33,9 +33,9 @@ function ScanDetailView() {
     clearFilters();
   };
 
-  
-  console.log(rowData.state.rowData,"kkkkkkkkkkk")
-  console.log(rowData.state.rowData.scanentity,"entity")
+
+  console.log(rowData.state.rowData, "kkkkkkkkkkk")
+  console.log(rowData.state.rowData.scanentity, "entity")
 
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }: any) => (
@@ -102,115 +102,112 @@ function ScanDetailView() {
 
   const columns: any = [
     {
-        title: 'S.No',
-        key: 'sno',
-        responsive: ['sm'],
-        render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-        align:"center"
+      title: 'S.No',
+      key: 'sno',
+      responsive: ['sm'],
+      render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+      align: "center"
 
 
     },
     {
-        title: "HSN Code",
-        dataIndex: "HSN",
-        key:"HSN",
-        ...getColumnSearchProps("HSN"),
-        sorter: (a, b) => a.HSN.localeCompare(b.HSN),
-        render: (_, record) =>
+      title: "HSN Code",
+      dataIndex: "HSN",
+      key: "HSN",
+      ...getColumnSearchProps("HSN"),
+      sorter: (a, b) => a.HSN.localeCompare(b.HSN),
+      render: (_, record) =>
         record?.HSN || "-",
-       align:"center"
+      align: "center"
 
     },
     {
-        title: "Tax Type",
-        dataIndex: "Taxtype",
-        key:"Taxtype",
-        ...getColumnSearchProps("Taxtype"),
-        sorter: (a, b) => a.Taxtype.localeCompare(b.Taxtype),
-        render: (_, record) =>
+      title: "Tax Type",
+      dataIndex: "Taxtype",
+      key: "Taxtype",
+      ...getColumnSearchProps("Taxtype"),
+      sorter: (a, b) => a.Taxtype.localeCompare(b.Taxtype),
+      render: (_, record) =>
         record?.Taxtype || "-",
-        align:"center"
+      align: "center"
 
     },
     {
-        title: 'Tax Amount',
-        dataIndex: 'Taxamount',
-        key:"Taxamount",
-        ...getColumnSearchProps("Taxamount"),
-        sorter: (a, b) => a.Taxamount.localeCompare(b.Taxamount),
-        render: (_, record) =>
+      title: 'Tax Amount',
+      dataIndex: 'Taxamount',
+      key: "Taxamount",
+      ...getColumnSearchProps("Taxamount"),
+      sorter: (a, b) => a.Taxamount.localeCompare(b.Taxamount),
+      render: (_, record) =>
         record?.Taxamount || "-",
-        align:"center"
-
+      align: "right",
     },
     {
-        title: 'Tax Percentage',
-        dataIndex: 'Taxpercentage',
-        key:"Taxpercentage",
-        ...getColumnSearchProps("Taxpercentage"),
-        sorter: (a, b) => a.Taxpercentage.localeCompare(b.Taxpercentage),
-        render: (_, record) =>
-        record?.Taxpercentage || "-",
-        align:"center"
-
+      title: 'Tax Percentage',
+      dataIndex: 'Taxpercentage',
+      key: 'Taxpercentage',
+      ...getColumnSearchProps('Taxpercentage'),
+      sorter: (a, b) => a.Taxpercentage.localeCompare(b.Taxpercentage),
+      render: (_, record) => (record?.Taxpercentage || "-"),
+      align: "right",
     },
     {
       title: 'Unit Quantity',
       dataIndex: 'unitquantity',
-      key:"unitquantity",
+      key: "unitquantity",
       ...getColumnSearchProps("unitquantity"),
       sorter: (a, b) => a.unitquantity.localeCompare(b.unitquantity),
       render: (_, record) =>
-      record?.unitquantity || "-",
-      align:"center"
-
-  },
-  {
-    title: 'Charge',
-    dataIndex: 'Charge',
-    key: 'Charge',
-    ...getColumnSearchProps('Charge'),
-    sorter: (a, b) => a.Charge.localeCompare(b.Charge),
-    render: (text, record) => {
-      // Parse the "Charge" value as a number
-      const chargeValue = Number(record.Charge);
-
-      // Check if it's a valid number
-      if (!isNaN(chargeValue)) {
-        // Format the number to two decimal places
-        const formattedCharge = chargeValue.toFixed(2);
-        return <>{formattedCharge}</>;
-      } else {
-        // Display a hyphen for non-numeric values
-        return "-";
-      }
+        record?.unitquantity || "-",
+        align: "right",
     },
-  },
-  
-  
     {
-        title: 'Quatation',
-        dataIndex: 'quotation',
-        key:"quotation",
-        ...getColumnSearchProps("quotation"),
-        sorter: (a, b) => a.quotation.localeCompare(b.quotation),
-        render: (_, record) =>
-        record?.quotation || "-",
-       align:"center"
+      title: 'Charge',
+      dataIndex: 'Charge',
+      key: 'Charge',
+      align: "right",
+      ...getColumnSearchProps('Charge'),
+      sorter: (a, b) => a.Charge.localeCompare(b.Charge),
+      render: (text, record) => {
+        // Parse the "Charge" value as a number
+        const chargeValue = Number(record.Charge);
 
-
-        
-       
+        // Check if it's a valid number
+        if (!isNaN(chargeValue)) {
+          // Format the number to two decimal places
+          const formattedCharge = chargeValue.toFixed(2);
+          return <>{formattedCharge}</>;
+        } else {
+          // Display a hyphen for non-numeric values
+          return "-";
+        }
+      },
     },
-   
-]
-  
+
+
+    {
+      title: 'Quatation',
+      dataIndex: 'quotation',
+      key: "quotation",
+      ...getColumnSearchProps("quotation"),
+      sorter: (a, b) => a.quotation.localeCompare(b.quotation),
+      render: (_, record) =>
+        record?.quotation || "-",
+      align: "center"
+
+
+
+
+    },
+
+  ]
+
   return (
-    
+
     <Card className="card-header" title="Document Details" size="small" extra={<Button className='panel_button' onClick={handleBack}>View </Button>}>
 
-  <Descriptions>
-         <Descriptions.Item
+      <Descriptions>
+        <Descriptions.Item
           label="Vendor Name"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
@@ -225,16 +222,16 @@ function ScanDetailView() {
           {rowData.state.rowData.GST ? rowData.state.rowData.GST : "--"}
 
         </Descriptions.Item>
-       
+
         <Descriptions.Item
-          label="InvoiceDate"
+          label="Invoice Date"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.invoiceDate ? rowData.state.rowData.invoiceDate : "--"}
         </Descriptions.Item>
 
         <Descriptions.Item
-          label="InvoiceNumber"
+          label="Invoice Number"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.InnvoiceNumber ? rowData.state.rowData.InnvoiceNumber : "--"}
@@ -248,7 +245,7 @@ function ScanDetailView() {
           {rowData.state.rowData.IGST ? rowData.state.rowData.IGST : "--"}
         </Descriptions.Item>
 
-        
+
         <Descriptions.Item
           label="CGST"
           labelStyle={{ color: "black", fontWeight: "bold" }}
@@ -264,7 +261,7 @@ function ScanDetailView() {
         </Descriptions.Item>
 
         <Descriptions.Item
-          label="InvoiceAmount"
+          label="Invoice Amount"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.InnvoiceAmount ? rowData.state.rowData.InnvoiceAmount : "--"}
@@ -276,7 +273,7 @@ function ScanDetailView() {
         >
           {rowData.state.rowData.InnvoiceCurrency ? rowData.state.rowData.InnvoiceCurrency : "--"}
 
-        </Descriptions.Item>    
+        </Descriptions.Item>
 
         <Descriptions.Item
           label="Routing"
@@ -313,25 +310,25 @@ function ScanDetailView() {
           {rowData.state.rowData.VarianceStatus ? rowData.state.rowData.VarianceStatus : "--"} 
         </Descriptions.Item> */}
         <Descriptions.Item
-        label="Status"
-        labelStyle={{ color: "black", fontWeight: "bold" }}
+          label="Status"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           <Tag>
-       {rowData.state.rowData.VarianceStatus ? (
-       StatusEnumDisplay.find(item => item.name === rowData.state.rowData.VarianceStatus)?.displayVal
-      ) : (
-      "--"
-       )}
-       </Tag>
-</Descriptions.Item>
+            {rowData.state.rowData.VarianceStatus ? (
+              StatusEnumDisplay.find(item => item.name === rowData.state.rowData.VarianceStatus)?.displayVal
+            ) : (
+              "--"
+            )}
+          </Tag>
+        </Descriptions.Item>
       </Descriptions>
-      
 
-{/* <Button type="primary"  onClick={handleBack}> Back </Button> */}
-<Card>
-  <Table columns={columns} size='small' dataSource={rowData.state.rowData.scanentity}/>
-</Card>
-</Card>
+
+      {/* <Button type="primary"  onClick={handleBack}> Back </Button> */}
+      <Card>
+        <Table columns={columns} size='small' dataSource={rowData.state.rowData.scanentity} />
+      </Card>
+    </Card>
   );
 }
 
