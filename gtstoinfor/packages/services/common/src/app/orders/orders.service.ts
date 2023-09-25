@@ -829,9 +829,6 @@ if(data.Order_Plan_Number !== null){
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
 
-
-
-
     async getSeasonWiseOrders(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getSeasonCount()
         if (data)
@@ -1261,6 +1258,25 @@ pcs.push(
 
     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
 }
+async getExfactoryMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
+    const data = await this.ordersRepository.getExfactoryMonthData(req.year);
+    
+    if (data.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+    }
+
+    return new CommonResponseModel(true, 1, 'data retrieved', data);
+}
+
+async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel> {
+    const data = await this.ordersChildRepo.getExfactoryComparisionData(req);
+    
+    if (data.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+    }
+    return new CommonResponseModel(true, 1, 'data retrieved', data);
+}
+
     }
 
   

@@ -67,7 +67,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getExfactoryMonthData(year:number): Promise<any> {
         const query = this.createQueryBuilder('o')
-            .select(`o.item,o.item_cd,o.planned_exf,o.month,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type, MONTH(planned_exf) AS ExfMonth`)
+            .select(`o.item,o.item_cd,o.planned_exf,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type, MONTH(planned_exf) AS ExfMonth`)
             .where(`o.year ='${year}'`)
             // .groupBy(`o.item_cd`)
         return await query.getRawMany();
