@@ -37,12 +37,12 @@ export function DivisionWiseOrders() {
 
   }
 
-  const data = divisionData.map(i =>  [ i.department_name, Number(i.count)]);
+  const data = divisionData.map(i =>  [ i.department, Number(i.count)]);
   const count = divisionData.map(i => { return Number(i.count) });
   
 
   const config = {
-    colors: ['#058DC7', '#50B432', '#FFC000', '#7798BF', '#aaeeee', '#ff0066',
+    colors: ['#2080E0','#058DC7', '#50B432', '#FFC000', '#7798BF', '#aaeeee', '#ff0066',
       '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
     chart: {
       type: 'pie',

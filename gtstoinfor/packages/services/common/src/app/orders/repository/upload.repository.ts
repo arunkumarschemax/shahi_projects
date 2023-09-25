@@ -13,13 +13,18 @@ export class FileUploadRepository extends Repository<FileUploadEntity> {
     }
 
     async getFilesData(req?:FileTypeDto): Promise<any[]> {
+       
         const query = this.createQueryBuilder('fup')
             .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath, fup.created_at as uploadedDate, fup.created_user as createdUser, fup.status as status,fup.file_type as fileType`)
             .where(`fup.is_active = 1`)
-            if(req.fileType){
+
+            if( req){
+
                 query.andWhere(`fup.file_type = '${req.fileType}'`)
             }
             query.orderBy(`fup.created_at`, 'DESC')
+            console.log(req,"reqest")
+
         return await query.getRawMany();
     }
 

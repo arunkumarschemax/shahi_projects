@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Button, Card, Space, TabPaneProps, Table, Tabs, TabsProps, Tag, Typography } from "antd";
-import { ColumnProps, ColumnsType } from "antd/es/table";
-import { dateFormatterMap } from "@ant-design/pro-components";
-import { OrdersService } from "@project-management-system/shared-services";
-import { YearReq } from "@project-management-system/shared-models";
 import { FileExcelFilled } from "@ant-design/icons";
-import { IExcelColumn } from "antd-table-saveas-excel/app";
+import { YearReq } from "@project-management-system/shared-models";
+import { OrdersService } from "@project-management-system/shared-services";
+import { Button, Card, List, Table, Tabs, TabsProps, Typography } from "antd";
 import { Excel } from "antd-table-saveas-excel";
+import { IExcelColumn } from "antd-table-saveas-excel/app";
+import { ColumnsType } from "antd/es/table";
+import React, { useEffect } from "react";
+import { useState } from "react";
 
-
-
-export const WarehouseReport = () => {
+export const ExFactoryReportWithComparision = () => {
   const [pageSize, setPageSize] = useState<number>(null);
   const [page, setPage] = React.useState(1);
   const [data, setData] = useState<any[]>([]);
@@ -26,13 +24,13 @@ export const WarehouseReport = () => {
     const req = new YearReq(2023)
     console.log(tab,'222222222222222222');
     
-    service.getWareHouseYearData().then(res =>{
+    service.getExfactoryWithComparision(req).then(res =>{
 
       if(res.status){
         setYear(res.data)
       }
     })
-    service.getAllWareHouse(req).then(res =>{
+    service.getAll(req).then(res =>{
       console.log(res,'res==========');
       if(res.status){
         setData(res.data)
@@ -52,7 +50,7 @@ export const WarehouseReport = () => {
       title: "January",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "janPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
@@ -60,7 +58,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "janCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.janCoeff}</span>  || '-'))
@@ -75,7 +73,7 @@ export const WarehouseReport = () => {
       dataIndex: "oldOrderQtyPcs2",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "febPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.febPcs}</span>  || '-'))
@@ -83,7 +81,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "febCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.febCoeff}</span>  || '-'))
@@ -99,7 +97,7 @@ export const WarehouseReport = () => {
       key: "oldOrderQtyPcs3",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "marPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.marPcs}</span>  || '-'))
@@ -107,7 +105,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "marCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.marCoeff}</span>  || '-'))
@@ -123,7 +121,7 @@ export const WarehouseReport = () => {
       key: "oldOrderQtyPcs4",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "aprPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.aprPcs}</span>  || '-'))
@@ -131,7 +129,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "aprCoeff",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
@@ -147,7 +145,7 @@ export const WarehouseReport = () => {
       key: "oldOrderQtyPcs5",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "mayPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
@@ -155,7 +153,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "mayCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.mayCoeff}</span>  || '-'))
@@ -172,7 +170,7 @@ export const WarehouseReport = () => {
       key: "oldOrderQtyPcs6",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "junPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.junPcs}</span>  || '-'))
@@ -180,7 +178,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "junCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.junCoeff}</span>  || '-'))
@@ -197,7 +195,7 @@ export const WarehouseReport = () => {
       key: "oldOrderQtyPcs7",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "julPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.julPcs}</span>  || '-'))
@@ -205,7 +203,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "julCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.julCoeff}</span>  || '-'))
@@ -222,7 +220,7 @@ export const WarehouseReport = () => {
       key: "oldOrderQtyPcs8",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "augPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.augPcs}</span>  || '-'))
@@ -230,7 +228,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "augCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.augCoeff}</span>  || '-'))
@@ -246,7 +244,7 @@ export const WarehouseReport = () => {
       key: "oldOrderQtyPcs9",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "sepPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.sepPcs}</span>  || '-'))
@@ -254,7 +252,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "sepCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.sepCoeff}</span>  || '-'))
@@ -270,7 +268,7 @@ export const WarehouseReport = () => {
       key: "oldOrderQtyPcs10",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "octPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.octPcs}</span>  || '-'))
@@ -278,7 +276,7 @@ export const WarehouseReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "octCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.octCoeff}</span>  || '-'))
@@ -294,7 +292,7 @@ export const WarehouseReport = () => {
       key: "oldOrderQtyPcs11",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "novPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.novPcs}</span>  || '-'))
@@ -302,7 +300,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "novCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.novCoeff}</span>  || '-'))
@@ -318,7 +316,7 @@ export const WarehouseReport = () => {
       key: "oldOrderQtyPcs12",
             children: [
         {
-          title: `In PCs`,
+          title: `Previous`,
           dataIndex: "decPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.decPcs}</span>  || '-'))
@@ -326,7 +324,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          title: `Latest`,
           dataIndex: "decCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.decCoeff}</span>  || '-'))
@@ -338,12 +336,12 @@ export const WarehouseReport = () => {
       
     },
     {
-      title: "Total In PCs",
+      title: "Total Previous",
       dataIndex: "totalPcs",
      
     },
     {
-      title: "Total In Coeff",
+      title: "Total Latest",
       dataIndex: "totalCoeff",
      
     },
@@ -361,9 +359,9 @@ export const WarehouseReport = () => {
     // },
     {
       title: "Item Name",
-      dataIndex: "item_cd",
+      dataIndex: "itemName",
       render: (text: any, record: any) => (
-      <span>{record.item_cd}</span>
+      <span>{record.itemName}</span>
       ),
       // ...getColumnSearchProps('itemName')
     },
@@ -433,7 +431,7 @@ export const WarehouseReport = () => {
               dataIndex:'',
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "janPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.janPcs));
@@ -444,7 +442,7 @@ export const WarehouseReport = () => {
                  
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "janCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.janCoeff));
@@ -460,7 +458,7 @@ export const WarehouseReport = () => {
               dataIndex: "oldOrderQtyPcs2",
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "febPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.febPcs));
@@ -470,7 +468,7 @@ export const WarehouseReport = () => {
                   }
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "febCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.febCoeff));
@@ -486,7 +484,7 @@ export const WarehouseReport = () => {
               dataIndex: "oldOrderQtyPcs3",
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "marPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.marPcs));
@@ -496,7 +494,7 @@ export const WarehouseReport = () => {
                   }
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "marCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.marCoeff));
@@ -512,7 +510,7 @@ export const WarehouseReport = () => {
               dataIndex: "oldOrderQtyPcs4",
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "aprPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.aprPcs));
@@ -522,7 +520,7 @@ export const WarehouseReport = () => {
                   }
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "aprCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.aprCoeff));
@@ -538,7 +536,7 @@ export const WarehouseReport = () => {
               dataIndex: "oldOrderQtyPcs5",
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "mayPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.mayPcs));
@@ -548,7 +546,7 @@ export const WarehouseReport = () => {
                   }
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "mayCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.mayCoeff));
@@ -565,7 +563,7 @@ export const WarehouseReport = () => {
               dataIndex: "oldOrderQtyPcs6",
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "junPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.junPcs));
@@ -575,7 +573,7 @@ export const WarehouseReport = () => {
                   }
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "junCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.junCoeff));
@@ -592,7 +590,7 @@ export const WarehouseReport = () => {
               dataIndex: "oldOrderQtyPcs7",
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "julPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.julPcs));
@@ -602,7 +600,7 @@ export const WarehouseReport = () => {
                   }
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "julCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.julCoeff));
@@ -619,7 +617,7 @@ export const WarehouseReport = () => {
               dataIndex: "oldOrderQtyPcs8",
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "augPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.augPcs));
@@ -629,7 +627,7 @@ export const WarehouseReport = () => {
                   }
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "augCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.augCoeff));
@@ -645,7 +643,7 @@ export const WarehouseReport = () => {
               dataIndex: "oldOrderQtyPcs9",
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "sepPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.sepPcs));
@@ -655,7 +653,7 @@ export const WarehouseReport = () => {
                   }
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "sepCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.sepCoeff));
@@ -671,7 +669,7 @@ export const WarehouseReport = () => {
               dataIndex: "oldOrderQtyPcs10",
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "octPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.octPcs));
@@ -681,7 +679,7 @@ export const WarehouseReport = () => {
                   },
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "octCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.octCoeff));
@@ -697,7 +695,7 @@ export const WarehouseReport = () => {
               dataIndex: "oldOrderQtyPcs11",
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "novPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.novPcs));
@@ -707,7 +705,7 @@ export const WarehouseReport = () => {
                   }
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "novCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.novCoeff));
@@ -723,7 +721,7 @@ export const WarehouseReport = () => {
               dataIndex: "oldOrderQtyPcs12",
                     children: [
                 {
-                  title: `In PCs`,
+                  title: `Previous`,
                   dataIndex: "decPcs",
                   render: (text: any, record: any) => {
                     const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.decPcs));
@@ -733,7 +731,7 @@ export const WarehouseReport = () => {
                   }
                 },
                 {
-                  title: `In Coeff`,
+                  title: `Latest`,
                   dataIndex: "decCoeff",
                   render: (text: any, record: any) => {
                     const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.decCoeff));
@@ -746,7 +744,7 @@ export const WarehouseReport = () => {
               
             },
             {
-              title: "Total In PCs",
+              title: "Total Previous",
               dataIndex: "totalPcs",
               render: (text: any, record: any) => {
                 const phaseTypes = record.monthWiseData.map((data: any) => data.totalPcs);
@@ -754,7 +752,7 @@ export const WarehouseReport = () => {
               }
             },
             {
-              title: "Total In Coeff",
+              title: "Total Latest",
               dataIndex: "totalCoeff",
               render: (text: any, record: any) => {
                 const phaseTypes = record.monthWiseData.map((data: any) => data.totalCoeff);
@@ -790,11 +788,11 @@ const handleTabChange = (selectedYear: string) => {
         icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
 
     
-{/* <Tabs type="card" onChange={handleTabChange} aria-disabled> */}
+<Tabs type="card" onChange={handleTabChange} aria-disabled>
         {year.map((item) => (
           
           
-          // <Tabs.TabPane key={item.year} tab={item.year}>
+          <Tabs.TabPane key={item.year} tab={item.year}>
         <Table
           dataSource={data} // Assuming 'data' contains data for each year
           columns={columns5} // Assuming 'columns5' is defined elsewhere
@@ -803,12 +801,10 @@ const handleTabChange = (selectedYear: string) => {
          
         />
         
-      // </Tabs.TabPane>
+      </Tabs.TabPane>
     ))}
-  {/* </Tabs> */}
+  </Tabs>
   </Card>
   );
 };
-
-// }
-export default WarehouseReport;
+export default ExFactoryReportWithComparision

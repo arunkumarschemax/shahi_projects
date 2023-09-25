@@ -43,11 +43,67 @@ export default function ExcelImport() {
     })
   }
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = (e) => {
+    if(form.getFieldsValue().fileType == FileTypesEnum.TRIM_ORDERS){
+
+    const file = e.target.files[0];
     if (file && file.type === 'text/csv') {
-      setSelectedFile(event.target.files[0]);
-      Papa.parse(event.target.files[0], {
+      setSelectedFile(e.target.files[0]);
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const csv = event.target.result as string;
+        
+        // Split CSV data into lines
+        const lines = csv.split('\n');
+
+        // Extract the second row as headers
+        const headers = Papa.parse(lines[1], {
+          header: true,
+        }).data[0];
+
+        // Remove the first and second row from the lines array
+        lines.shift(); // Remove the first row
+        // lines.splice(1, 1); // Remove the second row
+
+        // Join the remaining lines back into CSV format
+        const modifiedCsv = lines.join('\n');
+        console.log(modifiedCsv)
+
+        // Now parse the modified CSV data using PapaParse with custom headers
+        Papa.parse(modifiedCsv, {
+          header: true, // Use custom headers
+          dynamicTyping: true, // Optional: Convert numeric values to numbers
+          complete: (result) => {
+            const columnArray = [];
+            const valueArray = [];
+            console.log(result.data)
+
+            result.data.map((d) => {
+              columnArray.push(Object.keys(d))
+              valueArray.push(Object.values(d))
+            });
+            setData(result.data)
+            setColumns(columnArray[0])
+            setValues(valueArray)
+          },
+          // error: (err) => {
+          //   setError(err.message);
+          // },
+          skipEmptyLines: true, // Optional: Skip empty lines
+        });
+      };
+      reader.readAsText(file);
+    }else{
+      alert('Please select a valid .csv file.');
+      setSelectedFile(null);
+    }
+  }
+  if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
+      const file = e.target.files[0];
+    if (file && file.type === 'text/csv') {
+      setSelectedFile(e.target.files[0]);
+      Papa.parse(e.target.files[0], {
         header: true,
         complete: function (result) {
           {
@@ -70,6 +126,36 @@ export default function ExcelImport() {
       setSelectedFile(null);
     }
   };
+
+  };
+
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file && file.type === 'text/csv') {
+  //     setSelectedFile(event.target.files[0]);
+  //     Papa.parse(event.target.files[0], {
+  //       header: true,
+  //       complete: function (result) {
+  //         {
+  //           const columnArray = [];
+  //           const valueArray = [];
+
+  //           result.data.map((d) => {
+  //             columnArray.push(Object.keys(d))
+  //             valueArray.push(Object.values(d))
+  //           });
+  //           setData(result.data)
+  //           setColumns(columnArray[0])
+  //           setValues(valueArray)
+  //         }
+  //       }
+  //     });
+  //   } else {
+  //     // Display an error message or take appropriate action for invalid file type
+  //     alert('Please select a valid .csv file.');
+  //     setSelectedFile(null);
+  //   }
+  // };
   const handleUpload = async () => {
     try {
       form.validateFields().then(values => {
@@ -129,7 +215,7 @@ export default function ExcelImport() {
           }else{
               ordersService.fileUpload(formData,month,form.getFieldsValue().fileType).then((fileRes) => {
                 if (fileRes.status) {
-                  ordersService.saveTrimOrder(data, fileRes?.data?.id, 9).then((res) => {
+                  ordersService.saveTrimOrder(data, fileRes?.data?.id, month).then((res) => {
                     setLoading(true)
                     if (res.status) {
                       const req = new FileStatusReq()

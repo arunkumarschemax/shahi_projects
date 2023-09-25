@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, MonthAndQtyModel, MonthWiseDataModel, MonthWiseExcelDataModel, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, orderColumnValues } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -24,6 +24,8 @@ import { TrimOrdersChildEntity } from './entities/trim-orders-child.entity';
 import { TrimOrdersChildAdapter } from './adapters/trim-orders-child.adapter';
 import { TrimOrdersAdapter } from './adapters/trim-orders.adapter';
 import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
+import { find } from 'rxjs';
+import { log } from 'console';
 import { appConfig } from 'packages/services/common/config';
 let moment = require('moment');
 moment().format();
@@ -50,7 +52,8 @@ export class OrdersService {
     ) { }
 
     async saveOrdersData(formData: any, id: number, months: number): Promise<CommonResponseModel> {
-        const month = 9;
+        const currentDate = new Date();
+        const month = currentDate.getMonth() + 1;
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
             await transactionManager.startTransaction()
@@ -83,7 +86,7 @@ export class OrdersService {
             for (const data of convertedData) {
 let dtoData;
 if(data.Order_Plan_Number !== null){
-    dtoData = new SaveOrderDto(null,data.Year,data.Planning_Ssn_Cd,data.Planning_Ssn,data.Tgt_Ssn_Cd,data.Tgt_Ssn,data.Biz_Cd,data.Biz,data.Planning_Region_Code,data.Planning_Region_Name,data.Channel_Code,data.Channel_Name,data.Department,data.Dept_Cd,data.Cls1_Cd,data.Cls2_Cd,data.G_Dept,data.Sub_Category1,data.Core_Category,data.Sub_Category2,data.Sub_Category3,data.Production_Category_Fabric,data.Production_Category_FabricProcessing,data.Production_Category_Sewing,data.Production_Category_SewingProcessing,data.Planning_Sum_Code,data.Planning_Sum,data.Local_NameGHQ,data.Item_Cd,data.Item,data.Orig_Price,data.Main_Sample_Code,data.FR_Fabric_Code,data.FR_Fabric,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Raw_Material_Supplier_Code,data.Raw_Material_Supplier,data.Vendor_Code,data.Vendor,data.Sewing_Factory_Code,data.Sewing_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Coeff,data.month,data.Item_Brunch_Number,data.Official_Plan_Std_Qty,data.Official_Plan_Fab_Prp_Pln_Qty,data.Official_Plan_PO_pr_Sls_Qty,data.Official_Plan_CO_Qty,data.Official_Plan_Stock_Qty,data.Sls_Start_Dy,data.Publish_Flag_for_Factory,data.Publish_Date,data.Allc_End_Dy,data.Sls_End_Dy,data.GWH,data.Order_Plan_Number,data.Order_Timing,data.Swng_Prd_Month,data.Swng_Prd_Week,data.Order_Plan_Qty,data.Order_Plan_QtyCoeff,data.Trnsp_Mthd,data.Prod_Plan_Type,data.Ph11st,data.WH,data.WH_Act,data.WHAuto,data.Yarn_DL_Requested,data.Yarn_DL_Answered,data.Yarn_DL_Auto,data.Yarn_Production_Due_Date_Auto,data.Yarn_Auto_Reflection_Date,data.Yarn_Act_Dy,data.Yarn_Act_Qty,data.Yarn_Order_Number,data.Yarn_Order_Status,data.Yarn_Delivery_Date,data.Fbrc_DL_Requested,data.Fbrc_DL_Answered,data.Fbrc_DL_Auto,data.Fbrc_Production_Due_Date_Auto,data.Fbrc_Auto_Reflection_Date,data.Fbrc_Act_Dy,data.Fbrc_Act_Qty,data.Fbrc_Order_Number,data.Fbrc_Order_Status,data.Fbrc_Delivery_Date,data.Color_DL_Requested,data.Color_DL_Answered,data.Color_DL_Auto,data.Color_Production_Due_Date_Auto,data.Color_Auto_Reflection_Date,data.Color_Act_Dy,data.Color_Act_Qty,data.Color_Order_Number,data.Color_Order_Status,data.Color_Delivery_Date,data.Trim_DL_Requested,data.Trim_DL_Answered,data.Trim_DL_Auto,data.Trim_Production_Due_Date_Auto,data.Trim_Auto_Reflection_Date,data.Trim_Act_Dy,data.Trim_Act_Qty,data.Trim_Order_Number,data.Trim_Order_Status,data.Trim_Delivery_Date,data.PO_DL_Requested,data.PO_DL_Answered,data.PO_DL_Auto,data.PO_Production_Due_Date_Auto,data.PO_Auto_Reflection_Date,data.PO_Act_Dy,data.PO_Act_Qty,data.PO_Order_Number,data.PO_Order_Status,data.Assort1,data.Assort2,data.NX_Assort,data.Solid,data.Order_Plan_QtySTOP,data.Fix_Flag,data.Alternative_Flag,data.Express_Line_Flag,data.Factory_Comment,data.Planned_EXF,data.EXF_ETD,data.ETD_WH,data.Sewing_Country_Region,data.Raw_Material_Original_Country_Region,data.Item_Drop,data.Create_Date,data.Create_User_ID,data.Create_User_Name,data.Create_Function,data.Update_Date,data.Update_User_ID,data.Update_User_Name,data.Update_Function,data.CountY,data.Sample,data.EXF,data.BDDL,data.BDDLpast_Past,data.LTBD_EXF,data.New_BDDL,data.new_LTBD_EXF,data.LTPO_EXF,data.Qty_LTBD_EXF,data.Qty_LTPO_EXF,data.County2Y,data.PHASE,id,null,'bidhun')
+    dtoData = new SaveOrderDto(null,data.Year,data.Planning_Ssn_Cd,data.Planning_Ssn,data.Tgt_Ssn_Cd,data.Tgt_Ssn,data.Biz_Cd,data.Biz,data.Planning_Region_Code,data.Planning_Region_Name,data.Channel_Code,data.Channel_Name,data.Department,data.Dept_Cd,data.Cls1_Cd,data.Cls2_Cd,data.G_Dept,data.Sub_Category1,data.Core_Category,data.Sub_Category2,data.Sub_Category3,data.Production_Category_Fabric,data.Production_Category_FabricProcessing,data.Production_Category_Sewing,data.Production_Category_SewingProcessing,data.Planning_Sum_Code,data.Planning_Sum,data.Local_NameGHQ,data.Item_Cd,data.Item,data.Orig_Price,data.Main_Sample_Code,data.FR_Fabric_Code,data.FR_Fabric,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Raw_Material_Supplier_Code,data.Raw_Material_Supplier,data.Vendor_Code,data.Vendor,data.Sewing_Factory_Code,data.Sewing_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Coeff,data.month,data.Item_Brunch_Number,data.Official_Plan_Std_Qty,data.Official_Plan_Fab_Prp_Pln_Qty,data.Official_Plan_PO_pr_Sls_Qty,data.Official_Plan_CO_Qty,data.Official_Plan_Stock_Qty,data.Sls_Start_Dy,data.Publish_Flag_for_Factory,data.Publish_Date,data.Allc_End_Dy,data.Sls_End_Dy,data.GWH,data.Order_Plan_Number,data.Order_Timing,data.Swng_Prd_Month,data.Swng_Prd_Week,data.Order_Plan_Qty,data.Order_Plan_QtyCoeff,data.Trnsp_Mthd,data.Prod_Plan_Type,data.Ph11st,data.WH,data.WH_Act,data.WHAuto,data.Yarn_DL_Requested,data.Yarn_DL_Answered,data.Yarn_DL_Auto,data.Yarn_Production_Due_Date_Auto,data.Yarn_Auto_Reflection_Date,data.Yarn_Act_Dy,data.Yarn_Act_Qty,data.Yarn_Order_Number,data.Yarn_Order_Status,data.Yarn_Delivery_Date,data.Fbrc_DL_Requested,data.Fbrc_DL_Answered,data.Fbrc_DL_Auto,data.Fbrc_Production_Due_Date_Auto,data.Fbrc_Auto_Reflection_Date,data.Fbrc_Act_Dy,data.Fbrc_Act_Qty,data.Fbrc_Order_Number,data.Fbrc_Order_Status,data.Fbrc_Delivery_Date,data.Color_DL_Requested,data.Color_DL_Answered,data.Color_DL_Auto,data.Color_Production_Due_Date_Auto,data.Color_Auto_Reflection_Date,data.Color_Act_Dy,data.Color_Act_Qty,data.Color_Order_Number,data.Color_Order_Status,data.Color_Delivery_Date,data.Trim_DL_Requested,data.Trim_DL_Answered,data.Trim_DL_Auto,data.Trim_Production_Due_Date_Auto,data.Trim_Auto_Reflection_Date,data.Trim_Act_Dy,data.Trim_Act_Qty,data.Trim_Order_Number,data.Trim_Order_Status,data.Trim_Delivery_Date,data.PO_DL_Requested,data.PO_DL_Answered,data.PO_DL_Auto,data.PO_Production_Due_Date_Auto,data.PO_Auto_Reflection_Date,data.PO_Act_Dy,data.PO_Act_Qty,data.PO_Order_Number,data.PO_Order_Status,data.Assort1,data.Assort2,data.NX_Assort,data.Solid,data.Order_Plan_QtySTOP,data.Fix_Flag,data.Alternative_Flag,data.Express_Line_Flag,data.Factory_Comment,data.Planned_EXF,data.EXF_ETD,data.ETD_WH,data.Sewing_Country_Region,data.Raw_Material_Original_Country_Region,data.Item_Drop,moment(data.Create_Date).format('YYYY-MM-DD HH:mm'),data.Create_User_ID,data.Create_User_Name,data.Create_Function,moment(data.Update_Date).format('YYYY-MM-DD HH:mm'),data.Update_User_ID,data.Update_User_Name,data.Update_Function,data.CountY,data.Sample,data.EXF,data.BDDL,data.BDDLpast_Past,data.LTBD_EXF,data.New_BDDL,data.new_LTBD_EXF,data.LTPO_EXF,data.Qty_LTBD_EXF,data.Qty_LTPO_EXF,data.County2Y,data.PHASE,id,null,'bidhun')
     } else{
         break
     }
@@ -98,14 +101,14 @@ if(data.Order_Plan_Number !== null){
             if (details) {
                 // const updatedData = this.ordersAdapter.convertDtoToEntity(data);
                 const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
-                year:dtoData.year,planningSsnCd:dtoData.planningSsnCd,planningSsn:dtoData.planningSsn,tgtSsnCd:dtoData.tgtSsnCd,tgtSsn:dtoData.tgtSsn,bizCd:dtoData.bizCd,biz:dtoData.biz,planningRegionCode:dtoData.planningRegionCode,planningRegionName:dtoData.planningRegionName,channelCode:dtoData.channelCode,channelName:dtoData.channelName,department:dtoData.department,deptCd:dtoData.deptCd,Cls1_cd:dtoData.Cls1_cd,Cls2_cd:dtoData.Cls2_cd,gDept:dtoData.gDept,subCategory1:dtoData.subCategory1,coreCategory:dtoData.coreCategory,subCategory2:dtoData.subCategory2,subCategory3:dtoData.subCategory3,productionCategoryFabric:dtoData.productionCategoryFabric,productionCategoryFabricProcessing:dtoData.productionCategoryFabricProcessing,productionCategorySewing:dtoData.productionCategorySewing,productionCategorySewingProcessing:dtoData.productionCategorySewingProcessing,planningSumCode:dtoData.planningSumCode,planningSum:dtoData.planningSum,localNameGhq:dtoData.localNameGhq,itemCd:dtoData.itemCd,item:dtoData.item,origPrice:dtoData.origPrice,mainSampleCode:dtoData.mainSampleCode,frFabricCode:dtoData.frFabricCode,frFabric:dtoData.frFabric,supplierRawMaterialCode:dtoData.supplierRawMaterialCode,supplierRawMaterial:dtoData.supplierRawMaterial,rawMaterialSupplierCode:dtoData.rawMaterialSupplierCode,rawMaterialSupplier:dtoData.rawMaterialSupplier,vendorCoode:dtoData.vendorCoode,vendor:dtoData.vendor,sewingFactoryCode:dtoData.sewingFactoryCode,sewingFactory:dtoData.sewingFactory,branchFactoryCode:dtoData.branchFactoryCode,branchFactory:dtoData.branchFactory,coeff:dtoData.coeff,itemBranchNumber:dtoData.itemBranchNumber,officialPlanStdQty:dtoData.officialPlanStdQty,OfficialPlanFabPrpPlnQty:dtoData.OfficialPlanFabPrpPlnQty,OfficialPlanPoPrSlsQty:dtoData.OfficialPlanPoPrSlsQty,officalPlanCoQty:dtoData.officalPlanCoQty,officalPlanStockQty:dtoData.officalPlanStockQty,slsStartDy:dtoData.slsStartDy,publishFlagForFactory:dtoData.publishFlagForFactory,publishDate:dtoData.publishDate,allcEndDy:dtoData.allcEndDy,slsEndDy:dtoData.slsEndDy,GWH:dtoData.GWH,orderTiming:dtoData.orderTiming,swngPrdMonth:dtoData.swngPrdMonth,swngPrdWeek:dtoData.swngPrdWeek,orderPlanQty:dtoData.orderPlanQty,orderPlanQtyCoeff:dtoData.orderPlanQtyCoeff,trnspMthd:dtoData.trnspMthd,prodPlanType:dtoData.prodPlanType,ph1St:dtoData.ph1St,wh:dtoData.wh,whAct:dtoData.whAct,whAuto:dtoData.whAuto,yarnDlRequested:dtoData.yarnDlRequested,yarnDlAnswered:dtoData.yarnDlAnswered,yarnDlAuto:dtoData.yarnDlAuto,yarnProductionDueDateAuto:dtoData.yarnProductionDueDateAuto,yarnAutoReflectionDate:dtoData.yarnAutoReflectionDate,yarnActDy:dtoData.yarnActDy,yarnActQty:dtoData.yarnActQty,yarnOrderNumber:dtoData.yarnOrderNumber,yarnOrderStatus:dtoData.yarnOrderStatus,yarnDeliveryDate:dtoData.yarnDeliveryDate,fbrcDlRequested:dtoData.fbrcDlRequested,fbrcDlAnswered:dtoData.fbrcDlAnswered,fbrcDlAuto:dtoData.fbrcDlAuto,fbrcProductionDueDateAuto:dtoData.fbrcProductionDueDateAuto,fbrcAutoReflectionDate:dtoData.fbrcAutoReflectionDate,factoryCommentUpdateDate:dtoData.factoryCommentUpdateDate,fbrcActDy:dtoData.fbrcActDy,fbrcActQty:dtoData.fbrcActQty,fbrcOrderNumber:dtoData.fbrcOrderNumber,fbrcOrderStatus:dtoData.fbrcOrderStatus,fbrcDeliveryDate:dtoData.fbrcDeliveryDate,colorDlRequested:dtoData.colorDlRequested,colorDlAnswered:dtoData.colorDlAnswered,colorDlAuto:dtoData.colorDlAuto,colorProductionDueDateAuto:dtoData.colorProductionDueDateAuto,colorAutoReflectionDate:dtoData.colorAutoReflectionDate,colorActDy:dtoData.colorActDy,colorActQty:dtoData.colorActQty,colorOrderNumber:dtoData.colorOrderNumber,colorOrderStatus:dtoData.colorOrderStatus,colorDeliveryDate:dtoData.colorDeliveryDate,trimDlRequested:dtoData.trimDlRequested,trimDlAnswered:dtoData.trimDlAnswered,trimDlAuto:dtoData.trimDlAuto,trimProductionDueDateAuto:dtoData.trimProductionDueDateAuto,trimAutoReflectionDate:dtoData.trimAutoReflectionDate,trimActDy:dtoData.trimActDy,trimActQty:dtoData.trimActQty,trimOrderNumber:dtoData.trimOrderNumber,trimOrderStatus:dtoData.trimOrderStatus,trimDeliveryDate:dtoData.trimDeliveryDate,poDlRequested:dtoData.poDlRequested,poDlAnswered:dtoData.poDlAnswered,poDlAuto:dtoData.poDlAuto,poProductionDueDateAuto:dtoData.poProductionDueDateAuto,poAutoReflectionDate:dtoData.poAutoReflectionDate,poActDy:dtoData.poActDy,poActQty:dtoData.poActQty,poOrderNumber:dtoData.poOrderNumber,poOrderStatus:dtoData.poOrderStatus,assort1:dtoData.assort1,assort2:dtoData.assort2,nxAssort:dtoData.nxAssort,solid:dtoData.solid,orderPlanQtyStop:dtoData.orderPlanQtyStop,fixFlag:dtoData.fixFlag,alternativeFlag:dtoData.alternativeFlag,expressLineFlag:dtoData.expressLineFlag,factoryComment:dtoData.factoryComment,plannedEXF:dtoData.plannedEXF,exfEtd:dtoData.exfEtd,exfWh:dtoData.exfWh,sweingCountryRegion:dtoData.sweingCountryRegion,rewMaterialOriginal:dtoData.rewMaterialOriginal,itemDrop:dtoData.itemDrop,fileId:Number(dtoData.fileId),countY:dtoData.countY,sample:dtoData.sample,exf:dtoData.exf,bddl:dtoData.bddl,bddlPast:dtoData.bddlPast,ltBdExf:dtoData.ltBdExf,newBddl:dtoData.newBddl,newLtBdExf:dtoData.newLtBdExf,ltPoExf:dtoData.ltPoExf,qtyLtBdExf:dtoData.qtyLtBdExf,qtyLtPoExf:dtoData.qtyLtPoExf,country2Y:dtoData.country2Y,phase:dtoData.phase,version:dtoData.version,month:month
+                year:dtoData.year,planningSsnCd:dtoData.planningSsnCd,planningSsn:dtoData.planningSsn,tgtSsnCd:dtoData.tgtSsnCd,tgtSsn:dtoData.tgtSsn,bizCd:dtoData.bizCd,biz:dtoData.biz,planningRegionCode:dtoData.planningRegionCode,planningRegionName:dtoData.planningRegionName,channelCode:dtoData.channelCode,channelName:dtoData.channelName,department:dtoData.department,deptCd:dtoData.deptCd,Cls1_cd:dtoData.Cls1_cd,Cls2_cd:dtoData.Cls2_cd,gDept:dtoData.gDept,subCategory1:dtoData.subCategory1,coreCategory:dtoData.coreCategory,subCategory2:dtoData.subCategory2,subCategory3:dtoData.subCategory3,productionCategoryFabric:dtoData.productionCategoryFabric,productionCategoryFabricProcessing:dtoData.productionCategoryFabricProcessing,productionCategorySewing:dtoData.productionCategorySewing,productionCategorySewingProcessing:dtoData.productionCategorySewingProcessing,planningSumCode:dtoData.planningSumCode,planningSum:dtoData.planningSum,localNameGhq:dtoData.localNameGhq,itemCd:dtoData.itemCd,item:dtoData.item,origPrice:dtoData.origPrice,mainSampleCode:dtoData.mainSampleCode,frFabricCode:dtoData.frFabricCode,frFabric:dtoData.frFabric,supplierRawMaterialCode:dtoData.supplierRawMaterialCode,supplierRawMaterial:dtoData.supplierRawMaterial,rawMaterialSupplierCode:dtoData.rawMaterialSupplierCode,rawMaterialSupplier:dtoData.rawMaterialSupplier,vendorCoode:dtoData.vendorCoode,vendor:dtoData.vendor,sewingFactoryCode:dtoData.sewingFactoryCode,sewingFactory:dtoData.sewingFactory,branchFactoryCode:dtoData.branchFactoryCode,branchFactory:dtoData.branchFactory,coeff:dtoData.coeff,itemBranchNumber:dtoData.itemBranchNumber,officialPlanStdQty:dtoData.officialPlanStdQty,OfficialPlanFabPrpPlnQty:dtoData.OfficialPlanFabPrpPlnQty,OfficialPlanPoPrSlsQty:dtoData.OfficialPlanPoPrSlsQty,officalPlanCoQty:dtoData.officalPlanCoQty,officalPlanStockQty:dtoData.officalPlanStockQty,slsStartDy:dtoData.slsStartDy,publishFlagForFactory:dtoData.publishFlagForFactory,publishDate:dtoData.publishDate,allcEndDy:dtoData.allcEndDy,slsEndDy:dtoData.slsEndDy,GWH:dtoData.GWH,orderTiming:dtoData.orderTiming,swngPrdMonth:dtoData.swngPrdMonth,swngPrdWeek:dtoData.swngPrdWeek,orderPlanQty:dtoData.orderPlanQty,orderPlanQtyCoeff:dtoData.orderPlanQtyCoeff,trnspMthd:dtoData.trnspMthd,prodPlanType:dtoData.prodPlanType,ph1St:dtoData.ph1St,wh:dtoData.wh,whAct:dtoData.whAct,whAuto:dtoData.whAuto,yarnDlRequested:dtoData.yarnDlRequested,yarnDlAnswered:dtoData.yarnDlAnswered,yarnDlAuto:dtoData.yarnDlAuto,yarnProductionDueDateAuto:dtoData.yarnProductionDueDateAuto,yarnAutoReflectionDate:dtoData.yarnAutoReflectionDate,yarnActDy:dtoData.yarnActDy,yarnActQty:dtoData.yarnActQty,yarnOrderNumber:dtoData.yarnOrderNumber,yarnOrderStatus:dtoData.yarnOrderStatus,yarnDeliveryDate:dtoData.yarnDeliveryDate,fbrcDlRequested:dtoData.fbrcDlRequested,fbrcDlAnswered:dtoData.fbrcDlAnswered,fbrcDlAuto:dtoData.fbrcDlAuto,fbrcProductionDueDateAuto:dtoData.fbrcProductionDueDateAuto,fbrcAutoReflectionDate:dtoData.fbrcAutoReflectionDate,factoryCommentUpdateDate:dtoData.factoryCommentUpdateDate,fbrcActDy:dtoData.fbrcActDy,fbrcActQty:dtoData.fbrcActQty,fbrcOrderNumber:dtoData.fbrcOrderNumber,fbrcOrderStatus:dtoData.fbrcOrderStatus,fbrcDeliveryDate:dtoData.fbrcDeliveryDate,colorDlRequested:dtoData.colorDlRequested,colorDlAnswered:dtoData.colorDlAnswered,colorDlAuto:dtoData.colorDlAuto,colorProductionDueDateAuto:dtoData.colorProductionDueDateAuto,colorAutoReflectionDate:dtoData.colorAutoReflectionDate,colorActDy:dtoData.colorActDy,colorActQty:dtoData.colorActQty,colorOrderNumber:dtoData.colorOrderNumber,colorOrderStatus:dtoData.colorOrderStatus,colorDeliveryDate:dtoData.colorDeliveryDate,trimDlRequested:dtoData.trimDlRequested,trimDlAnswered:dtoData.trimDlAnswered,trimDlAuto:dtoData.trimDlAuto,trimProductionDueDateAuto:dtoData.trimProductionDueDateAuto,trimAutoReflectionDate:dtoData.trimAutoReflectionDate,trimActDy:dtoData.trimActDy,trimActQty:dtoData.trimActQty,trimOrderNumber:dtoData.trimOrderNumber,trimOrderStatus:dtoData.trimOrderStatus,trimDeliveryDate:dtoData.trimDeliveryDate,poDlRequested:dtoData.poDlRequested,poDlAnswered:dtoData.poDlAnswered,poDlAuto:dtoData.poDlAuto,poProductionDueDateAuto:dtoData.poProductionDueDateAuto,poAutoReflectionDate:dtoData.poAutoReflectionDate,poActDy:dtoData.poActDy,poActQty:dtoData.poActQty,poOrderNumber:dtoData.poOrderNumber,poOrderStatus:dtoData.poOrderStatus,assort1:dtoData.assort1,assort2:dtoData.assort2,nxAssort:dtoData.nxAssort,solid:dtoData.solid,orderPlanQtyStop:dtoData.orderPlanQtyStop,fixFlag:dtoData.fixFlag,alternativeFlag:dtoData.alternativeFlag,expressLineFlag:dtoData.expressLineFlag,factoryComment:dtoData.factoryComment,plannedEXF:dtoData.plannedEXF,exfEtd:dtoData.exfEtd,exfWh:dtoData.exfWh,sweingCountryRegion:dtoData.sweingCountryRegion,rewMaterialOriginal:dtoData.rewMaterialOriginal,itemDrop:dtoData.itemDrop,fileId:Number(dtoData.fileId),countY:dtoData.countY,sample:dtoData.sample,exf:dtoData.exf,bddl:dtoData.bddl,bddlPast:dtoData.bddlPast,ltBdExf:dtoData.ltBdExf,newBddl:dtoData.newBddl,newLtBdExf:dtoData.newLtBdExf,ltPoExf:dtoData.ltPoExf,qtyLtBdExf:dtoData.qtyLtBdExf,qtyLtPoExf:dtoData.qtyLtPoExf,country2Y:dtoData.country2Y,phase:dtoData.phase,version:dtoData.version,month:Number(month),createDate: moment(dtoData.createDate).format('YYYY-MM-DD HH:mm'),updateDate:moment(dtoData.updateDate).format('YYYY-MM-DD HH:mm')
 
                 })
                 if (!updateOrder.affected) {
                     await transactionManager.releaseTransaction();
                     return new CommonResponseModel(false, 0, 'Something went wrong in order update')
                 }
-                const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,details.productionPlanId,month);
+                const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,details.productionPlanId,Number(month));
                 const saveExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedExcelEntity);
                 if (saveExcelEntity) {
                     //difference insertion to order diff table
@@ -124,6 +127,7 @@ if(data.Order_Plan_Number !== null){
                                 orderDiffObj.productionPlanId = details[0].productionPlanId
                                 orderDiffObj.version = dtoData.version
                                 orderDiffObj.fileId = Number(id)
+                                orderDiffObj.orderPlanNumber = dtoData.orderPlanNumber
                                 if (oldValue != newValue) {
                                     const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
                                     if (!orderDiffSave) {
@@ -142,6 +146,7 @@ if(data.Order_Plan_Number !== null){
                                 orderDiffObj.productionPlanId = details.productionPlanId
                                 orderDiffObj.version = dtoData.version
                                 orderDiffObj.fileId = Number(id)
+                                orderDiffObj.orderPlanNumber = dtoData.orderPlanNumber
                                 if (orderDiffObj.oldValue != orderDiffObj.newValue) {
                                     const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
                                     if (!orderDiffSave) {
@@ -156,9 +161,10 @@ if(data.Order_Plan_Number !== null){
                 }
             } else {
                 dtoData.version = 1
-                const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id, month);
+                const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id, Number(month));
+                console.log(convertedExcelEntity,'-----convertedExcelEntity------')
                 const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
-                const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,saveExcelEntity.productionPlanId,month);
+                const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,saveExcelEntity.productionPlanId,Number(month));
                 const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
                 // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
                 if (!saveExcelEntity || !saveChildExcelEntity) {
@@ -204,10 +210,10 @@ if(data.Order_Plan_Number !== null){
                     if (value === "") {
                         updatedObj[key] = null;
                     } else {
-                        // updatedObj[key] = value;
-                        var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
-                        updatedObj[key] = value.replace(regexPattern, null);
-                        updatedObj[key] = Buffer.from(value, 'utf-8').toString()
+                        updatedObj[key] = value;
+                        // var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
+                        // updatedObj[key] = value.replace(regexPattern, null);
+                        // updatedObj[key] = Buffer.from(value, 'utf-8').toString()
                     }
                 }
                 return updatedObj;
@@ -216,7 +222,7 @@ if(data.Order_Plan_Number !== null){
             for (const data of convertedData) {
                 let dtoData
                 if(data.Order_No != null){
-                    dtoData = new TrimOrderDto(null,data.Order_No,data.Year,data.Revision_No,data.Planning_Ssn,data.Global_Business_Unit,data.Business_Unit,data.Item_Brand,data.Department,data.Revised_Date,data.Document_Status,data.Answered_Status,data.Vendor_Person_in_Charge,data.Decision_Date,data.Payment_Terms,data.Contracted_ETD,data.ETA_WH,data.Approver,data.Approval_Date,data.Order_Conditions,data.Remark,data.Raw_Material_CodeFR,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Vendor_Code,data.Vendor,data.Management_Factory_Code,data.Management_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Order_Plan_Number,data.Item_Code,data.Item,data.Representative_Sample_Code,data.Sample_Code,data.Color_Code,data.Color,data.Pattern_Dimension_Code,data.Size_Code,data.Size,Number(data.Order_Qtypcs.replace(/,/g,'')),data.Arrangement_By,data.Trim_Description,data.Trim_Item_No,data.Trim_Supplier,'bidhun',null,null,null,null,id,month)
+                    dtoData = new TrimOrderDto(null,data.Order_No,data.Year,data.Revision_No,data.Planning_Ssn,data.Global_Business_Unit,data.Business_Unit,data.Item_Brand,data.Department,data.Revised_Date,data.Document_Status,data.Answered_Status,data.Vendor_Person_in_Charge,data.Decision_Date,data.Payment_Terms,data.Contracted_ETD,data.ETA_WH,data.Approver,data.Approval_Date,data.Order_Conditions,data.Remark,data.Raw_Material_CodeFR,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Vendor_Code,data.Vendor,data.Management_Factory_Code,data.Management_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Order_Plan_Number,data.Item_Code,data.Item,data.Representative_Sample_Code,data.Sample_Code,data.Color_Code,data.Color,data.Pattern_Dimension_Code,data.Size_Code,data.Size,(data.Order_Qtypcs).toString().replace(/,/g,''),data.Arrangement_By,data.Trim_Description,data.Trim_Item_No,data.Trim_Supplier,'bidhun',null,null,null,null,id,month)
                 }else{
                     break;
                 }
@@ -729,6 +735,102 @@ if(data.Order_Plan_Number !== null){
             return new CommonResponseModel(false, 0, 'No data found', data);
         }
     }
+    async getExfactoryYear(): Promise<CommonResponseModel> {
+        const data = await this.ordersRepository.getExfactoryYearData()
+        if (data.length > 0) {
+            return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
+        }
+        else {
+            return new CommonResponseModel(false, 0, 'No data found', data);
+        }
+    }
+    async getExfactoryMonthData(req:YearReq): Promise<CommonResponseModel> {
+        const data = await this.ordersRepository.getExfactoryMonthData(req.year);
+        
+        if (data.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found');
+        }
+    
+        const DateMap = new Map<string, ItemDataDto>();
+        const monthWiseInstances: MonthWiseDto[] = []; // Use an array to store instances
+        
+        for (const rec of data) {
+            if (!DateMap.has(rec.item_cd)) {
+                DateMap.set(
+                    rec.item_cd,
+                    new ItemDataDto(rec.item, [])
+                );
+            }
+            const monthData = DateMap.get(rec.item_cd).monthWiseData;
+    
+            if (rec.prod_plan_type !== null) {
+                const pcs: PcsDataDto[] = [];
+                const coeff: CoeffDataDto[] = [];
+    
+    pcs.push(
+               { name: 'In Pcs',
+                janPcs: rec.month === 1 ? rec.order_plan_qty : 0,
+                febPcs: rec.month === 2 ? rec.order_plan_qty : 0,
+                marPcs: rec.month === 3 ? rec.order_plan_qty : 0,
+                aprPcs: rec.month === 4 ? rec.order_plan_qty : 0,
+                mayPcs: rec.month === 5 ? rec.order_plan_qty : 0,
+                junPcs: rec.month === 6 ? rec.order_plan_qty : 0,
+                julPcs: rec.month === 7 ? rec.order_plan_qty : 0,
+                augPcs: rec.month === 8 ? rec.order_plan_qty : 0,
+                sepPcs: rec.month === 9 ? rec.order_plan_qty : 0,
+                octPcs: rec.month === 10 ? rec.order_plan_qty : 0,
+                novPcs: rec.month === 11 ? rec.order_plan_qty : 0,
+                decPcs: rec.month === 12 ? rec.order_plan_qty : 0,}
+            )
+              coeff.push({
+                name: 'In Coeff',
+                janCoeff: rec.month === 1 ? rec.order_plan_qty_coeff : 0,
+                febCoeff: rec.month === 2 ? rec.order_plan_qty_coeff : 0,
+                marCoeff: rec.month === 3 ? rec.order_plan_qty_coeff : 0,
+                aprCoeff: rec.month === 4 ? rec.order_plan_qty_coeff : 0,
+                mayCoeff: rec.month === 5 ? rec.order_plan_qty_coeff : 0,
+                junCoeff: rec.month === 6 ? rec.order_plan_qty_coeff : 0,
+                julCoeff: rec.month === 7 ? rec.order_plan_qty_coeff : 0,
+                augCoeff: rec.month === 8 ? rec.order_plan_qty_coeff : 0,
+                sepCoeff: rec.month === 9 ? rec.order_plan_qty_coeff : 0,
+                octCoeff: rec.month === 10 ? rec.order_plan_qty_coeff : 0,
+                novCoeff: rec.month === 11 ? rec.order_plan_qty_coeff : 0,
+                decCoeff: rec.month === 12 ? rec.order_plan_qty_coeff : 0,
+              })
+              const totalPcs = pcs.reduce((total, item) => {
+                return  [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
+                    .filter(value => value !== 0) // Filter out values equal to 0
+                    .reduce((sum, value) =>  value, 0);
+            }, 0);
+            
+            const totalCoeff = coeff.reduce((total, item) => {
+                return  [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
+                    .filter(value => value !== 0) // Filter out values equal to 0
+                    .reduce((sum, value) => value, 0);
+            }, 0);
+              console.log(Math.round(totalPcs),'ppppppppppp');
+              console.log(totalCoeff,'cccccccccccccccc');
+              
+                const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,totalPcs,totalCoeff);
+                monthData.push(monthWiseInstance); // Store each instance
+                console.log(monthWiseInstance,"rec")
+            }
+            
+        }
+        
+        const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
+        console.log(DateMap.values
+          ,"length")
+
+          
+
+
+          
+        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    }
+
+
+
 
     async getSeasonWiseOrders(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getSeasonCount()
@@ -790,9 +892,9 @@ if(data.Order_Plan_Number !== null){
     } else {
         return new CommonResponseModel(false, 0, 'No Data Found', []);
     }
-}
-    
 
+    
+    }
     
     
     
@@ -869,6 +971,296 @@ if(data.Order_Plan_Number !== null){
 //     catch (error){
 //         throw error
 //     }
+
+async getProdPlanCount(): Promise<CommonResponseModel> {
+    const data = await this.ordersRepository.getProdPlanCount()
+    if (data)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
       
+async getWareHouseYear(): Promise<CommonResponseModel> {
+    const data = await this.ordersRepository.getWareHouseYearData()
+    if (data.length > 0) {
+        return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
     }
+    else {
+        return new CommonResponseModel(false, 0, 'No data found', data);
+    }
+}
+
+async getWareHouseMonthData(req:YearReq): Promise<CommonResponseModel> {
+    const data = await this.ordersRepository.getWareHouseMonthData(req.year);
+    
+    if (data.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+    }
+
+    const DateMap = new Map<string, ItemDataDto>();
+    const monthWiseInstances: MonthWiseDto[] = []; // Use an array to store instances
+    
+    for (const rec of data) {
+        if (!DateMap.has(rec.item_cd)) {
+            DateMap.set(
+                rec.item_cd,
+                new ItemDataDto(rec.item, [])
+            );
+        }
+        const monthData = DateMap.get(rec.item_cd).monthWiseData;
+
+        if (rec.prod_plan_type !== null) {
+            const pcs: PcsDataDto[] = [];
+            const coeff: CoeffDataDto[] = [];
+
+pcs.push(
+           { name: 'In Pcs',
+            janPcs: rec.month === 1 ? rec.order_plan_qty : 0,
+            febPcs: rec.month === 2 ? rec.order_plan_qty : 0,
+            marPcs: rec.month === 3 ? rec.order_plan_qty : 0,
+            aprPcs: rec.month === 4 ? rec.order_plan_qty : 0,
+            mayPcs: rec.month === 5 ? rec.order_plan_qty : 0,
+            junPcs: rec.month === 6 ? rec.order_plan_qty : 0,
+            julPcs: rec.month === 7 ? rec.order_plan_qty : 0,
+            augPcs: rec.month === 8 ? rec.order_plan_qty : 0,
+            sepPcs: rec.month === 9 ? rec.order_plan_qty : 0,
+            octPcs: rec.month === 10 ? rec.order_plan_qty : 0,
+            novPcs: rec.month === 11 ? rec.order_plan_qty : 0,
+            decPcs: rec.month === 12 ? rec.order_plan_qty : 0,}
+        )
+          coeff.push({
+            name: 'In Coeff',
+            janCoeff: rec.month === 1 ? rec.order_plan_qty_coeff : 0,
+            febCoeff: rec.month === 2 ? rec.order_plan_qty_coeff : 0,
+            marCoeff: rec.month === 3 ? rec.order_plan_qty_coeff : 0,
+            aprCoeff: rec.month === 4 ? rec.order_plan_qty_coeff : 0,
+            mayCoeff: rec.month === 5 ? rec.order_plan_qty_coeff : 0,
+            junCoeff: rec.month === 6 ? rec.order_plan_qty_coeff : 0,
+            julCoeff: rec.month === 7 ? rec.order_plan_qty_coeff : 0,
+            augCoeff: rec.month === 8 ? rec.order_plan_qty_coeff : 0,
+            sepCoeff: rec.month === 9 ? rec.order_plan_qty_coeff : 0,
+            octCoeff: rec.month === 10 ? rec.order_plan_qty_coeff : 0,
+            novCoeff: rec.month === 11 ? rec.order_plan_qty_coeff : 0,
+            decCoeff: rec.month === 12 ? rec.order_plan_qty_coeff : 0,
+          })
+        //   const totalPcs = +Number(rec.order_plan_qty)
+        const Arry = [1, 2, , 3, 4];
+
+// Calculate the sum of elements in Arry
+const sum = Arry.reduce((acc, currentValue) => {
+return acc + (currentValue || 0); // Handle potential undefined (missing) values with the OR operator
+}, 0);
+
+// Create NewArray by spreading Arry and adding the sum
+const NewArray = [...Arry, sum];
+
+console.log(NewArray)
+
+const totalPcs = pcs.reduce((total, item) => {
+    return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
+        .filter(value => value !== 0) // Filter out values equal to 0
+.reduce((sum, value) => sum + value, 0);
+}, 0);
+
+const totalCoeff = coeff.reduce((total, item) => {          
+    return total + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
+        .filter(value => value !== 0) // Filter out values equal to 0
+        .reduce((sum, value) => sum + value, 0);
+}, 0);
+
+monthData.push(new MonthWiseDto(rec.prod_plan_type, pcs, coeff, totalPcs, totalCoeff));
+        }
+        
+    }
+    
+    const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
+    console.log(DateMap.values
+      ,"length")
+
+      
+
+
+      
+    return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+}
+async getExfactoryComparisionData(req:YearReq): Promise<CommonResponseModel> {
+    const data = await this.ordersChildRepo.getExfactoryComparisionData(req);
+    
+    if (data.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+    }
+
+    const DateMap = new Map<string, ItemDataDto>();
+    const monthWiseInstances: MonthWiseDto[] = []; 
+    let totalPcs =0
+    let totalCoeff = 0
+    for (const rec of data) {
+        if (!DateMap.has(rec.item_cd)) {
+            DateMap.set(
+                rec.item_cd,
+                new ItemDataDto(rec.item, [])
+            );
+        }
+        const monthData = DateMap.get(rec.item_cd).monthWiseData;
+
+        if (rec.prod_plan_type !== null) {
+            const pcs: PcsDataDto[] = [];
+            const coeff: CoeffDataDto[] = [];
+            if (rec.status === "previous") {
+                // totalPcs += rec.order_plan_qty;
+pcs.push(
+           { name: 'In Pcs',
+            janPcs: rec.month === 1 ? rec.order_plan_qty : 0,
+            febPcs: rec.month === 2 ? rec.order_plan_qty : 0,
+            marPcs: rec.month === 3 ? rec.order_plan_qty : 0,
+            aprPcs: rec.month === 4 ? rec.order_plan_qty : 0,
+            mayPcs: rec.month === 5 ? rec.order_plan_qty : 0,
+            junPcs: rec.month === 6 ? rec.order_plan_qty : 0,
+            julPcs: rec.month === 7 ? rec.order_plan_qty : 0,
+            augPcs: rec.month === 8 ? rec.order_plan_qty : 0,
+            sepPcs: rec.month === 9 ? rec.order_plan_qty : 0,
+            octPcs: rec.month === 10 ? rec.order_plan_qty : 0,
+            novPcs: rec.month === 11 ? rec.order_plan_qty : 0,
+            decPcs: rec.month === 12 ? rec.order_plan_qty : 0,}
+        )
+    } 
+    if (rec.status === "latest") {
+        // totalCoeff += rec.order_plan_qty;
+
+          coeff.push({
+            name: 'In Coeff',
+            janCoeff: rec.month === 1 ? rec.order_plan_qty : 0,
+            febCoeff: rec.month === 2 ? rec.order_plan_qty : 0,
+            marCoeff: rec.month === 3 ? rec.order_plan_qty : 0,
+            aprCoeff: rec.month === 4 ? rec.order_plan_qty : 0,
+            mayCoeff: rec.month === 5 ? rec.order_plan_qty : 0,
+            junCoeff: rec.month === 6 ? rec.order_plan_qty : 0,
+            julCoeff: rec.month === 7 ? rec.order_plan_qty : 0,
+            augCoeff: rec.month === 8 ? rec.order_plan_qty : 0,
+            sepCoeff: rec.month === 9 ? rec.order_plan_qty : 0,
+            octCoeff: rec.month === 10 ? rec.order_plan_qty : 0,
+            novCoeff: rec.month === 11 ? rec.order_plan_qty : 0,
+            decCoeff: rec.month === 12 ? rec.order_plan_qty : 0,
+          })
+        }
+        const totalPcs = pcs.reduce((total, item) => {
+            return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
+                .filter(value => value !== 0) // Filter out values equal to 0
+                .reduce((sum, value) => sum + value, 0);
+        }, 0);
+        
+        const totalCoeff = coeff.reduce((total, item) => {
+            return total + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
+                .filter(value => value !== 0) // Filter out values equal to 0
+                .reduce((sum, value) => sum + value, 0);
+        }, 0);
+         console.log(totalPcs,'previous',
+         totalCoeff,'latest');
+         
+          
+            const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
+            monthData.push(monthWiseInstance); // Store each instance
+            console.log(monthWiseInstance,"rec")
+        }
+        
+    
+    }
+    const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
+    console.log(DateMap.values
+      ,"length")
+
+    return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+}
+
+
+async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
+    const data = await this.ordersChildRepo.getWareHouseComparisionData(req);
+    
+    if (data.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+    }
+
+    const DateMap = new Map<string, ItemDataDto>();
+    const monthWiseInstances: MonthWiseDto[] = []; 
+    let totalPcs =0
+    let totalCoeff = 0
+    for (const rec of data) {
+        if (!DateMap.has(rec.item_cd)) {
+            DateMap.set(
+                rec.item_cd,
+                new ItemDataDto(rec.item, [])
+            );
+        }
+        const monthData = DateMap.get(rec.item_cd).monthWiseData;
+
+        if (rec.prod_plan_type !== null) {
+            const pcs: PcsDataDto[] = [];
+            const coeff: CoeffDataDto[] = [];
+            if (rec.status === "previous") {
+                // totalPcs += rec.order_plan_qty;
+pcs.push(
+           { name: 'In Pcs',
+            janPcs: rec.month === 1 ? rec.order_plan_qty : 0,
+            febPcs: rec.month === 2 ? rec.order_plan_qty : 0,
+            marPcs: rec.month === 3 ? rec.order_plan_qty : 0,
+            aprPcs: rec.month === 4 ? rec.order_plan_qty : 0,
+            mayPcs: rec.month === 5 ? rec.order_plan_qty : 0,
+            junPcs: rec.month === 6 ? rec.order_plan_qty : 0,
+            julPcs: rec.month === 7 ? rec.order_plan_qty : 0,
+            augPcs: rec.month === 8 ? rec.order_plan_qty : 0,
+            sepPcs: rec.month === 9 ? rec.order_plan_qty : 0,
+            octPcs: rec.month === 10 ? rec.order_plan_qty : 0,
+            novPcs: rec.month === 11 ? rec.order_plan_qty : 0,
+            decPcs: rec.month === 12 ? rec.order_plan_qty : 0,}
+        )
+    } 
+    if (rec.status === "latest") {
+        // totalCoeff += rec.order_plan_qty;
+
+          coeff.push({
+            name: 'In Coeff',
+            janCoeff: rec.month === 1 ? rec.order_plan_qty : 0,
+            febCoeff: rec.month === 2 ? rec.order_plan_qty : 0,
+            marCoeff: rec.month === 3 ? rec.order_plan_qty : 0,
+            aprCoeff: rec.month === 4 ? rec.order_plan_qty : 0,
+            mayCoeff: rec.month === 5 ? rec.order_plan_qty : 0,
+            junCoeff: rec.month === 6 ? rec.order_plan_qty : 0,
+            julCoeff: rec.month === 7 ? rec.order_plan_qty : 0,
+            augCoeff: rec.month === 8 ? rec.order_plan_qty : 0,
+            sepCoeff: rec.month === 9 ? rec.order_plan_qty : 0,
+            octCoeff: rec.month === 10 ? rec.order_plan_qty : 0,
+            novCoeff: rec.month === 11 ? rec.order_plan_qty : 0,
+            decCoeff: rec.month === 12 ? rec.order_plan_qty : 0,
+          })
+        }
+        const totalPcs = pcs.reduce((total, item) => {
+            return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
+                .filter(value => value !== 0) // Filter out values equal to 0
+                .reduce((sum, value) => sum + value, 0);
+        }, 0);
+        
+        const totalCoeff = coeff.reduce((total, item) => {
+            return total + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
+                .filter(value => value !== 0) // Filter out values equal to 0
+                .reduce((sum, value) => sum + value, 0);
+        }, 0);
+         console.log(totalPcs,'previous',
+         totalCoeff,'latest');
+         
+          
+            const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
+            monthData.push(monthWiseInstance); // Store each instance
+            console.log(monthWiseInstance,"rec")
+        }
+        
+    
+    }
+    const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
+    console.log(DateMap.values
+      ,"length")
+
+    return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+}
+    }
+
   
