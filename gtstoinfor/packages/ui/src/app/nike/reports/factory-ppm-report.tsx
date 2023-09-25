@@ -931,9 +931,18 @@ const FactoryPPMReport = () => {
                     }
                 },
             },
-
-            { title: 'Shipping Type', dataIndex: 'shippingType' },
-            { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', },
+            {
+                title: 'Shipping Type',
+                dataIndex: 'shippingType',
+                render: (text) => {
+                  // Replace underscores (_) with spaces
+                  const transformedText = text ? text.replace(/_/g, ' ') : '-';
+                  
+                  return transformedText;
+                },
+              },
+                   
+              { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
             {
                 title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
