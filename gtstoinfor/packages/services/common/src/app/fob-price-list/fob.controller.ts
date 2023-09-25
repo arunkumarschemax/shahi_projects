@@ -1,10 +1,11 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import { Body, Controller, Param, Post, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
 import {FactoryResponseModel} from '../../../../../libs/shared-models/src/common/factory/factory-response-objects'
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
-import { AllFactoriesResponseModel, AllFobResponseModel, FobResponseModel } from '@project-management-system/shared-models';
+import { AllFactoriesResponseModel, AllFobResponseModel, CommonResponseModel, FobResponseModel } from '@project-management-system/shared-models';
 import { ApiBody } from '@nestjs/swagger';
 import { FobService } from './fob.service';
 import { FobDto } from './dto/fob.dto';
+
 
 @Controller('/fobPriceList')
 export class FobController {
@@ -55,6 +56,17 @@ export class FobController {
     @Post("/activateOrDeactivate")
   async activateOrDeactivate(@Body() activateDeactivateReq:any) : Promise<AllFobResponseModel>{
     return await this.fobService.ActivateOrDeactivate(activateDeactivateReq)
+    }
+
+
+    @Post('/uploadFobPrice')
+    async uploadFobPrice(@Body() data: any): Promise<CommonResponseModel> {
+        try {
+            return this.fobService.uploadFobPrice(data);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
     }
     
 }

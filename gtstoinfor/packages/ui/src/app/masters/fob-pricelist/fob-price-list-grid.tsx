@@ -16,7 +16,8 @@ const FobPriceListGrid = () => {
   const [fob, setFob] = useState<any>([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [factoryData, setFactoryData] = useState<any>(undefined);
-
+  const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = useState(1);
 
   useEffect(() => {
     getFobData()
@@ -145,12 +146,17 @@ const FobPriceListGrid = () => {
     setSearchText('');
   };
   const Columns: any = [
-    {
-      title: "SL",
-      render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
+    // {
+    //   title: "SL",
+    //   render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
 
+    // },
+    {
+      title: "S.No",
+      key: "sno",
+      responsive: ["sm"],
+      render: (text, object, index) => (page - 1) * pageSize + (index + 1),
     },
-   
     {
         title: 'Planning Season Code',
         dataIndex: 'planningSeasonCode',
@@ -261,17 +267,23 @@ const FobPriceListGrid = () => {
       <div>
 
         <Card
-          extra={<span><Button onClick={() => navigate('/masters/fob-price-list-form')} type={'primary'}>New</Button></span>}
+          extra={<span><Button onClick={() => navigate('/masters/fob-price-list-form/',{state:{name:'new'}})} type={'primary'}>New</Button></span>}
           headStyle={{ height: '50px' }}
-          bodyStyle={{ height: '300px', paddingTop: '2px', paddingBottom: '5px' }}
-          title={<h4 style={{ textAlign: 'left' }}>Fob Price List View</h4>}
+         // bodyStyle={{ height: '300px', paddingTop: '2px', paddingBottom: '5px' }}
+          // title={<h4 style={{ textAlign: 'left' }}>Fob Price List </h4>}
+          title={<><span>Fob Price List</span><span><Button onClick={() => navigate('/masters/fob-price-list-form',{state:{name:'excel'}})} style={{float:'right',marginRight:'2px'}} type='primary'>Excel Upload</Button></span></>}
         >
 
           <Table columns={Columns}
             dataSource={fob}
             className="custom-table-wrapper"
             bordered
-
+            pagination={{
+              onChange(current, pageSize) {
+                  setPage(current);
+                  setPageSize(pageSize);
+              },
+          }}
 
           />
         </Card>
