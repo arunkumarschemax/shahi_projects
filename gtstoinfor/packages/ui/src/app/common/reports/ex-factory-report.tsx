@@ -21,7 +21,7 @@ export const ExFactoryReport = () => {
   },[])
 
   const getData =()=>{
-    const req = new YearReq(tab)
+    const req = new YearReq(2023)
     console.log(tab,'222222222222222222');
     
     service.getExfactoryYearData().then(res =>{
