@@ -785,7 +785,6 @@ if(data.Order_Plan_Number !== null){
       const season23FW = reportData.filter(data => data.year === "2023" && data.plannedSeason === "FW");
       const season24SS = reportData.filter(data => data.year === "2024" && data.plannedSeason === "SS");
       const season = [season23SS, season23FW, season24SS];
-      console.log(season,'kkkkkkkkkkkkkkkkk')
       if (reportData.length > 0) {
         return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', season);
     } else {
