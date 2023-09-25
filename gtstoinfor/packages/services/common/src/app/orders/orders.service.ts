@@ -1299,7 +1299,6 @@ async getSeasonWiseItemName():Promise<CommonResponseModel>{
         throw(err)
     }
 }
-}
 
 async getExfactoryMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
     const data = await this.ordersRepository.getExfactoryMonthData(req.year);
@@ -1320,6 +1319,6 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
     return new CommonResponseModel(true, 1, 'data retrieved', data);
 }
 
-    }
+}
 
   
