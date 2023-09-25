@@ -1146,7 +1146,7 @@ pcs.push(
         
         const totalCoeff = coeff.reduce((total, item) => {
             return total + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
-                .filter(value => value !== 0) 
+                .filter(value => value !== 0) // Filter out values equal to 0
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
         //  console.log(totalPcs,'previous',totalCoeff,'latest');
