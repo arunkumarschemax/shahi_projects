@@ -1023,7 +1023,7 @@ export class OrdersService extends CommonAxiosService {
     //     // return this.axiosPostCall(this.ordersController + "/getMonthWiseData")
     // }
     async getAllWareHouse(req:YearReq): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getAllWareHouse",req)
+        return this.axiosPostCall(this.ordersController + "/getWareHouseMonthData",req)
     }
     async getWareHouseYearData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getWareHouseYearData")
@@ -1053,6 +1053,10 @@ export class OrdersService extends CommonAxiosService {
     }
     async getExfactoryWithComparision(req:YearReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getExfactoryWithComparision",req)
+    }
+
+    async revertTrimFileData(req: FileIdReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/revertTrimFileData", req)
     }
 
 }

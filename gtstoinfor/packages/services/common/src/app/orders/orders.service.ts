@@ -1057,23 +1057,19 @@ const NewArray = [...Arry, sum];
 
 console.log(NewArray)
 
-          const totalPcs = pcs.reduce((total, item) => {
-        //     return total + (item || 0)
-        //   },0)
-            return total +Number(item.janPcs)+Number(item.febPcs)+Number(item.marPcs)+Number(item.aprPcs)+Number(item.mayPcs)+Number(item.junPcs)+Number(item.julPcs)+Number(item.augPcs)+Number(item.sepPcs)+Number(item.octPcs)+Number(item.novPcs)+Number(item.decPcs)
-          }, 0);
-          const totalCoeff = coeff.reduce((total, item) => {
-            let val = 1+2
-            console.log(val)
-            return val
-            // item.janCoeff+item.febCoeff+item.marCoeff+item.aprCoeff+item.mayCoeff+item.junCoeff+item.julCoeff+item.augCoeff+item.sepCoeff+item.octCoeff+item.novCoeff+item.decCoeff
-          },0);
-          console.log(Math.round(totalPcs),'ppppppppppp');
-          console.log(totalCoeff,'cccccccccccccccc');
-          
-            const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,totalPcs,totalCoeff);
-            monthData.push(monthWiseInstance); // Store each instance
-            console.log(monthWiseInstance,"rec")
+const totalPcs = pcs.reduce((total, item) => {
+    return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
+        .filter(value => value !== 0) // Filter out values equal to 0
+.reduce((sum, value) => sum + value, 0);
+}, 0);
+
+const totalCoeff = coeff.reduce((total, item) => {          
+    return total + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
+        .filter(value => value !== 0) // Filter out values equal to 0
+        .reduce((sum, value) => sum + value, 0);
+}, 0);
+
+monthData.push(new MonthWiseDto(rec.prod_plan_type, pcs, coeff, totalPcs, totalCoeff));
         }
         
     }
