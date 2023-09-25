@@ -752,7 +752,7 @@ if(data.Order_Plan_Number !== null){
         }
     
         const DateMap = new Map<string, ItemDataDto>();
-        const monthWiseInstances: MonthWiseDto[] = []; // Use an array to store instances
+        const monthWiseInstances: MonthWiseDto[] = []; 
         
         for (const rec of data) {
             if (!DateMap.has(rec.item_cd)) {
@@ -767,7 +767,7 @@ if(data.Order_Plan_Number !== null){
                 const pcs: PcsDataDto[] = [];
                 const coeff: CoeffDataDto[] = [];
     
-    pcs.push(
+             pcs.push(
                { name: 'In Pcs',
                 janPcs: rec.month === 1 ? rec.order_plan_qty : 0,
                 febPcs: rec.month === 2 ? rec.order_plan_qty : 0,
@@ -1044,28 +1044,25 @@ pcs.push(
             novCoeff: rec.month === 11 ? rec.order_plan_qty_coeff : 0,
             decCoeff: rec.month === 12 ? rec.order_plan_qty_coeff : 0,
           })
-        //   const totalPcs = +Number(rec.order_plan_qty)
         const Arry = [1, 2, , 3, 4];
 
-// Calculate the sum of elements in Arry
 const sum = Arry.reduce((acc, currentValue) => {
-return acc + (currentValue || 0); // Handle potential undefined (missing) values with the OR operator
+return acc + (currentValue || 0); 
 }, 0);
 
-// Create NewArray by spreading Arry and adding the sum
 const NewArray = [...Arry, sum];
 
 console.log(NewArray)
 
 const totalPcs = pcs.reduce((total, item) => {
     return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
-        .filter(value => value !== 0) // Filter out values equal to 0
+        .filter(value => value !== 0) 
 .reduce((sum, value) => sum + value, 0);
 }, 0);
 
 const totalCoeff = coeff.reduce((total, item) => {          
     return total + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
-        .filter(value => value !== 0) // Filter out values equal to 0
+        .filter(value => value !== 0) 
         .reduce((sum, value) => sum + value, 0);
 }, 0);
 
@@ -1146,13 +1143,13 @@ pcs.push(
         }
         const totalPcs = pcs.reduce((total, item) => {
             return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
-                .filter(value => value !== 0) // Filter out values equal to 0
+                .filter(value => value !== 0) 
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
         
         const totalCoeff = coeff.reduce((total, item) => {
             return total + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
-                .filter(value => value !== 0) // Filter out values equal to 0
+                .filter(value => value !== 0) 
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
          console.log(totalPcs,'previous',
@@ -1160,7 +1157,7 @@ pcs.push(
          
           
             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
-            monthData.push(monthWiseInstance); // Store each instance
+            monthData.push(monthWiseInstance); 
             console.log(monthWiseInstance,"rec")
         }
         
@@ -1236,13 +1233,13 @@ pcs.push(
         }
         const totalPcs = pcs.reduce((total, item) => {
             return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
-                .filter(value => value !== 0) // Filter out values equal to 0
+                .filter(value => value !== 0) 
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
         
         const totalCoeff = coeff.reduce((total, item) => {
             return total + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
-                .filter(value => value !== 0) // Filter out values equal to 0
+                .filter(value => value !== 0) 
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
          console.log(totalPcs,'previous',
@@ -1250,7 +1247,7 @@ pcs.push(
          
           
             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
-            monthData.push(monthWiseInstance); // Store each instance
+            monthData.push(monthWiseInstance); 
             console.log(monthWiseInstance,"rec")
         }
         
