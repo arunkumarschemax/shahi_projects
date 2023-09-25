@@ -36,28 +36,28 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 // export interface UploadDocumentFormProps { }
 
+interface Item {
+  HSN: string;
+  description: string;
+  Taxtype: string;
+  Taxamount: string;
+  Charge: string;
+  variance: string;
+  // Unitprice: string;
+}
+
 export function UploadDocumentForm() {
   const [GstForm] = Form.useForm();
-  const [itemform] = Form.useForm();
   const [uploadForm] = Form.useForm();
-  const [submitVisible, setSubmitVisible] = useState<boolean>(false);
+  const navigate = useNavigate();
   const [file, setFile] = useState<any | null>(null);
-
   const [pdfData, setPdfData] = useState(null);
   const [jsonData, setJsonData] = useState(null);
-
-
-
-  const navigate = useNavigate();
-  const service = new SharedService();
   const [extractedData, setExtractedData] = useState<any>([]);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [hsnData, setHsnData] = useState([]);
-
-
   const [buttonText, setButtonText] = useState("Add");
-  const [formed, setFormed] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [HSN, setHSN] = useState("");
   const [description, setDescription] = useState("");
@@ -65,38 +65,17 @@ export function UploadDocumentForm() {
   const [Taxamount, setTaxamount] = useState("");
   const [Taxpercentage, setTaxPercentage] = useState("");
   const [Charge, setCharge] = useState("");
-  // const [unitprice, setUnitprice] = useState("");
   const [variance, setVariance] = useState("");
   const [unitquantity, setUnitquantity] = useState("");
-  // const [Unitprice, setUnitprice] = useState("");
-
-
   const [quotation, setQuotation] = useState("");
-  const [status, setStatus] = useState("");
-
   const [selectedImage, setSelectedImage] = useState(null);
   const [zoomFactor, setZoomFactor] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragStartY, setDragStartY] = useState(0);
-
-
   const [buttonClicked, setButtonClicked] = useState(false);
-
   const [showCancelButton, setShowCancelButton] = useState(false);
   const [extractionCompleted, setExtractionCompleted] = useState(false);
-
-  interface Item {
-    HSN: string;
-    description: string;
-    Taxtype: string;
-    Taxamount: string;
-    Charge: string;
-    variance: string;
-    // Unitprice: string;
-  }
-
-  const [imageURL, setImageURL] = useState<string | null>(null);
   const [gstNumbers, setGstNumbers] = useState("");
   const [ifscCodes, setIfscCodes] = useState("");
   const [invoiceDate, setInvoiceDate] = useState("");
@@ -111,28 +90,22 @@ export function UploadDocumentForm() {
   const [comment, setComment] = useState("");
   const [financialyear, setFinancialyear] = useState("");
   const [timecreated, setTimecreated] = useState("");
-  const [consoles, setConsoles] = useState("");
-  const [cartons, setCartons] = useState("");
-  const [po, setPO] = useState("");
-  const [dt, setDt] = useState("");
   const [Innvoicecurrency, setInnvoicecurrency] = useState("");
-
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
-
   const [data1, setData1] = useState<any[]>([]);
   const [data2, setData2] = useState<any[]>([]);
 
-  const servicess = new VendorService();
-
-  const buyerss = new BuyersService();
+  const services = new VendorService();
+  const buyers = new BuyersService();
+  const service = new SharedService();
 
   useEffect(() => {
-    getdata1();
+    getData1();
   }, []);
 
 
-  const getdata1 = () => {
-    servicess
+  const getData1 = () => {
+    services
       .getAllVendors()
       .then((res) => {
         if (res.status) {
@@ -147,11 +120,11 @@ export function UploadDocumentForm() {
   };
 
   useEffect(() => {
-    getdata2();
+    getData2();
   }, []);
 
-  const getdata2 = () => {
-    buyerss
+  const getData2 = () => {
+    buyers
       .getAllBuyersInfo()
       .then((res) => {
         if (res.status) {
@@ -953,7 +926,6 @@ export function UploadDocumentForm() {
   };
 
   const handleFileChange = (info) => {
-    console.log(info?.file?.type)
     if (info?.file?.type === 'application/pdf') {
       if (info?.fileList[0]) {
         setFile(info.fileList[0]);
@@ -1257,14 +1229,17 @@ export function UploadDocumentForm() {
         );
 
       }
-    } else {
-      message.error("Please select a file to upload.");
     }
   };
 
   const gstUploadFieldProps: UploadProps = {
     onRemove: () => {
       setFile(null);
+      setPdfData(null);
+      setSelectedImage(null);
+      GstForm.resetFields([]);
+      uploadForm.resetFields([]);
+      window.location.reload();
     },
     beforeUpload: async (file: any) => {
       if (!file.name.match(/\.(pdf|jpg|jpeg|png)$/)) {
