@@ -189,6 +189,7 @@ const VendorGrid = () => {
     {
       title: "S.No",
       key: "sno",
+      align: "center",
       render: (text, record, index) => (page - 1) * pageSize + (index + 1),
     },
     {
@@ -213,10 +214,13 @@ const VendorGrid = () => {
       ...getColumnSearchProps("businessContactPerson"),
     },
     {
-      title: "Contact",
-      dataIndex: "contact",
-      render: (text) => <a href={`tel:${text}`}>{text}</a>,
-      ...getColumnSearchProps("contact"),
+      title: 'Contact',
+      dataIndex: 'contact',
+      render: (text) => (
+        <a href={`tel:${text}`}>{text}</a>
+      ),
+      defaultSortOrder: 'descend',
+      sorter: (a: any, b: any) => a.contact - b.contact
     },
     {
       title: "Location",
@@ -229,6 +233,7 @@ const VendorGrid = () => {
       title: "Branch Count",
       dataIndex: "branchesCount",
       defaultSortOrder: "ascend" as SortOrder,
+      align: "right",
       sorter: (a, b) => a.location.localeCompare(b.location),
     },
 
@@ -250,7 +255,7 @@ const VendorGrid = () => {
 
   const viewchange = (rowData: any) => {
     navigate(`/VendorBranchInfoGrid`, { state: { rowData } });
-    console.log(rowData,"8888888888888888888")
+    console.log(rowData, "8888888888888888888")
   };
 
   return (
@@ -265,18 +270,22 @@ const VendorGrid = () => {
             lg={{ span: 8 }}
             xl={{ span: 5 }}
           >
-            <Form.Item name="name" label="Name">
-              <Select
-                showSearch
-                placeholder="Search by Name"
-                value={selectedName}
-                onChange={(value) => setSelectedName(value)}
-                options={nameOptions.map((name) => ({
-                  value: name,
-                  label: name,
-                }))}
-              />
-            </Form.Item>
+           <Form.Item name="name" label="Name">
+  <Select
+    showSearch
+    placeholder="Search by Name"
+    value={selectedName}
+    onChange={(value) => setSelectedName(value)}
+    options={nameOptions
+      .sort((a, b) => a.localeCompare(b)) 
+      .map((name) => ({
+        value: name,
+        label: name,
+      }))
+    }
+  />
+</Form.Item>
+
           </Col>
 
           <Col
@@ -292,12 +301,16 @@ const VendorGrid = () => {
                 placeholder="Search by Location"
                 value={selectedLocation}
                 onChange={(value) => setSelectedLocation(value)}
-                options={locationOptions.map((location) => ({
-                  value: location,
-                  label: location,
-                }))}
+                options={locationOptions
+                  .sort((a, b) => a.localeCompare(b)) 
+                  .map((location) => ({
+                    value: location,
+                    label: location,
+                  }))
+                }
               />
             </Form.Item>
+
           </Col>
           <Row justify="end">
             <Form.Item>
