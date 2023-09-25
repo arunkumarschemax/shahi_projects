@@ -126,10 +126,8 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
                 order_plan_qty,
                 item, 
                 item_cd, 
-                prod_plan_type, 
-                ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY VERSION DESC) AS version_rank
-            FROM orders_child
-        )
+                prod_plan_type, ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY VERSION DESC) AS version_rank
+            FROM orders_child )
         SELECT
             year,
             version,
@@ -150,4 +148,76 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         const result = await this.query(query);
         return result;
     }
+
+    // async getWareHouseComparisionData(req: YearReq): Promise<any[]>{
+    //     const query = `WITH RankedVersions AS (
+    //         SELECT
+    //             year,
+    //             version,   
+    //              wn,
+    //             order_plan_number,
+    //             order_plan_qty,
+    //             item, 
+    //             item_cd, 
+    //             prod_plan_type, 
+    //             ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY VERSION DESC) AS version_rank
+    //         FROM orders_child
+    //     )
+    //     SELECT
+    //         year,
+    //         version,
+    //         wn,
+    //         order_plan_number,          
+    //         order_plan_qty,
+    //         item, 
+    //         item_cd, 
+    //         prod_plan_type, 
+    //         SUBSTRING_INDEX(wh, '/', 1) AS `MONTH`,
+    //         CASE
+    //             WHEN version_rank = 1 THEN 'latest'
+    //             ELSE 'previous'
+    //         END AS status
+    //     FROM RankedVersions
+    //     WHERE version_rank <= 2 && year = '${req.year}'
+    //     ORDER BY order_plan_number, VERSION DESC`;
+    //     const result = await this.query(query);
+    //     return result;
+    // }
+
+
+    async getWareHouseComparisionData(req: YearReq): Promise<any[]>{
+        const query = `WITH RankedVersions AS (
+            SELECT
+                year,
+                version,   
+                wh,
+                order_plan_number,
+                order_plan_qty,
+                item, 
+                item_cd, 
+                prod_plan_type, 
+                ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY VERSION DESC) AS version_rank
+            FROM orders_child
+        )
+        SELECT
+            year,
+            version,
+            wh,
+            order_plan_number,          
+            order_plan_qty,
+            item, 
+            item_cd, 
+            prod_plan_type, 
+            SUBSTRING_INDEX(wh, '/', 1) AS MONTH, 
+            CASE
+                WHEN version_rank = 1 THEN 'latest'
+                ELSE 'previous'
+            END AS status
+        FROM RankedVersions
+        WHERE version_rank <= 2 && year = '${req.year}'
+        ORDER BY order_plan_number, VERSION DESC`;
+        const result = await this.query(query);
+        return result;
+    }
+    
 }

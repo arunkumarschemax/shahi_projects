@@ -1054,6 +1054,9 @@ export class OrdersService extends CommonAxiosService {
     async getExfactoryWithComparision(req:YearReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getExfactoryWithComparision",req)
     }
+    async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getWareHouseComparisionData",req)
+    }
 
     async revertTrimFileData(req: FileIdReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/revertTrimFileData", req)
