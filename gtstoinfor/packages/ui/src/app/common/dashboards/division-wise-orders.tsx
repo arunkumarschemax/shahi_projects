@@ -83,6 +83,9 @@ export function DivisionWiseOrders() {
         textAlign: 'left', // Align the subtitle text to the left
       },
     },
+    credits: {
+      enabled: false // Disable the Highcharts watermark
+    },
 
     
     // tooltip: {

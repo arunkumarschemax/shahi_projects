@@ -122,6 +122,8 @@ export function UnitWiseOrderGraph() {
           color: 'var(--text-color,black)'
         }
       }
+    },credits: {
+      enabled: false // Disable the Highcharts watermark
     },
 
     // tooltip: {

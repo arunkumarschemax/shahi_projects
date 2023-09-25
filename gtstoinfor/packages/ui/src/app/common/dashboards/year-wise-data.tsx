@@ -1,5 +1,5 @@
 import { OrdersService } from "@project-management-system/shared-services"
-import { Col, Row, message } from "antd"
+import { Col, Empty, Row, message } from "antd"
 import Form, { useForm } from "antd/lib/form/Form"
 import Highcharts from "highcharts"
 import HighchartsReact from "highcharts-react-official"
@@ -108,6 +108,9 @@ export function YearWiseOrders() {
     //     }
     //   }
     // },
+    credits: {
+      enabled: false // Disable the Highcharts watermark
+    },
     plotOptions: {
         pie: {
             dataLabels: {
@@ -139,12 +142,12 @@ export function YearWiseOrders() {
     <Form layout="vertical" name="control-hooks">
       <Row gutter={24}>
 
-        {/* {containerData.length ? */}
+        {statusData.length ?
         <Col span={24}>
           <div><HighchartsReact highcharts={Highcharts} options={config} /></div>
         </Col>
-        {/* : <Empty/> */}
-        {/* } */}
+         : <Empty/> 
+         } 
       </Row>
     </Form>
 

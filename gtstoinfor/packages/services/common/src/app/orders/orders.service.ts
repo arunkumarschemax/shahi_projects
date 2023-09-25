@@ -162,7 +162,7 @@ if(data.Order_Plan_Number !== null){
             } else {
                 dtoData.version = 1
                 const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id, Number(month));
-                console.log(convertedExcelEntity,'-----convertedExcelEntity------')
+                // console.log(convertedExcelEntity,'-----convertedExcelEntity------')
                 const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
                 const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,saveExcelEntity.productionPlanId,Number(month));
                 const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
@@ -752,7 +752,7 @@ if(data.Order_Plan_Number !== null){
         }
     
         const DateMap = new Map<string, ItemDataDto>();
-        const monthWiseInstances: MonthWiseDto[] = []; // Use an array to store instances
+        const monthWiseInstances: MonthWiseDto[] = []; 
         
         for (const rec of data) {
             if (!DateMap.has(rec.item_cd)) {
@@ -767,7 +767,7 @@ if(data.Order_Plan_Number !== null){
                 const pcs: PcsDataDto[] = [];
                 const coeff: CoeffDataDto[] = [];
     
-    pcs.push(
+             pcs.push(
                { name: 'In Pcs',
                 janPcs: rec.month === 1 ? rec.order_plan_qty : 0,
                 febPcs: rec.month === 2 ? rec.order_plan_qty : 0,
@@ -808,19 +808,18 @@ if(data.Order_Plan_Number !== null){
                     .filter(value => value !== 0) // Filter out values equal to 0
                     .reduce((sum, value) => value, 0);
             }, 0);
-              console.log(Math.round(totalPcs),'ppppppppppp');
-              console.log(totalCoeff,'cccccccccccccccc');
+            //   console.log(Math.round(totalPcs),'ppppppppppp');
+            //   console.log(totalCoeff,'cccccccccccccccc');
               
                 const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,totalPcs,totalCoeff);
                 monthData.push(monthWiseInstance); // Store each instance
-                console.log(monthWiseInstance,"rec")
+                // console.log(monthWiseInstance,"rec")
             }
             
         }
         
         const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-        console.log(DateMap.values
-          ,"length")
+     
 
           
 
@@ -896,7 +895,6 @@ if(data.Order_Plan_Number !== null){
     
     
     async createCOline(req: any): Promise<CommonResponseModel> {
-        console.log(req)
         try {
             const manager = this.dataSource
             const orderNo = req.orderNumber
@@ -911,8 +909,6 @@ if(data.Order_Plan_Number !== null){
             const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=${orderNo}&ITNO=${itemNo}&SAPR=${salePrice}`;
             // const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.purchaseOrderNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${styleNumber}`;
             const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
-            console.log(response, 'response')
-            console.log(response.data?.MIRecord, 'MIRecord')
             if (response.data['@type'])
                 return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
             if (!response.data?.MIRecord && !response.data?.MIRecord.length)
@@ -1040,28 +1036,24 @@ pcs.push(
             novCoeff: rec.month === 11 ? rec.order_plan_qty_coeff : 0,
             decCoeff: rec.month === 12 ? rec.order_plan_qty_coeff : 0,
           })
-        //   const totalPcs = +Number(rec.order_plan_qty)
         const Arry = [1, 2, , 3, 4];
 
-// Calculate the sum of elements in Arry
 const sum = Arry.reduce((acc, currentValue) => {
-return acc + (currentValue || 0); // Handle potential undefined (missing) values with the OR operator
+return acc + (currentValue || 0); 
 }, 0);
 
-// Create NewArray by spreading Arry and adding the sum
 const NewArray = [...Arry, sum];
 
-console.log(NewArray)
 
 const totalPcs = pcs.reduce((total, item) => {
     return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
-        .filter(value => value !== 0) // Filter out values equal to 0
+        .filter(value => value !== 0) 
 .reduce((sum, value) => sum + value, 0);
 }, 0);
 
 const totalCoeff = coeff.reduce((total, item) => {          
     return total + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
-        .filter(value => value !== 0) // Filter out values equal to 0
+        .filter(value => value !== 0) 
         .reduce((sum, value) => sum + value, 0);
 }, 0);
 
@@ -1071,8 +1063,6 @@ monthData.push(new MonthWiseDto(rec.prod_plan_type, pcs, coeff, totalPcs, totalC
     }
     
     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-    console.log(DateMap.values
-      ,"length")
 
       
 
@@ -1142,7 +1132,7 @@ pcs.push(
         }
         const totalPcs = pcs.reduce((total, item) => {
             return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
-                .filter(value => value !== 0) // Filter out values equal to 0
+                .filter(value => value !== 0) 
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
         
@@ -1151,20 +1141,20 @@ pcs.push(
                 .filter(value => value !== 0) // Filter out values equal to 0
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
-         console.log(totalPcs,'previous',
-         totalCoeff,'latest');
+        //  console.log(totalPcs,'previous',
+        //  totalCoeff,'latest');
          
           
             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
-            monthData.push(monthWiseInstance); // Store each instance
+            monthData.push(monthWiseInstance); 
             console.log(monthWiseInstance,"rec")
         }
         
     
     }
     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-    console.log(DateMap.values
-      ,"length")
+    // console.log(DateMap.values
+    //   ,"length")
 
     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
 }
@@ -1232,13 +1222,13 @@ pcs.push(
         }
         const totalPcs = pcs.reduce((total, item) => {
             return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
-                .filter(value => value !== 0) // Filter out values equal to 0
+                .filter(value => value !== 0) 
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
         
         const totalCoeff = coeff.reduce((total, item) => {
             return total + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
-                .filter(value => value !== 0) // Filter out values equal to 0
+                .filter(value => value !== 0) 
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
          console.log(totalPcs,'previous',
@@ -1246,7 +1236,7 @@ pcs.push(
          
           
             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
-            monthData.push(monthWiseInstance); // Store each instance
+            monthData.push(monthWiseInstance); 
             console.log(monthWiseInstance,"rec")
         }
         
