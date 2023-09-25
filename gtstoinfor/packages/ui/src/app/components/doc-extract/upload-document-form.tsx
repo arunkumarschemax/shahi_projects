@@ -369,6 +369,13 @@ export function UploadDocumentForm() {
   };
   const columns = [
     {
+      title: "Description",
+      dataIndex: "description",
+      width: "30",
+      key: "description",
+      render: (HSN) => (HSN !== undefined && HSN !== null ? HSN : "0"),
+    },
+    {
       title: "HSN code",
       dataIndex: "HSN",
       width: "30",
@@ -993,9 +1000,11 @@ export function UploadDocumentForm() {
 
     const structuredHSNLines = [];
     let currentHSN = null;
-
+    let hsnId = null;
+    let linesId = 0
     for (const line of extractedData) {
-      if (line.content.includes("HSN") || line.content.match(/^\d{6}$/)) {
+      if (line.content.match(/^\d{6}$/)) {
+        hsnId = linesId;
         if (currentHSN) {
           structuredHSNLines.push(currentHSN);
         }
@@ -1004,50 +1013,20 @@ export function UploadDocumentForm() {
             ? line.content.match(/\d+/)
             : line.content.trim(),
           Taxtype: line.content.match(/IGST|CGST|SGST|GST/),
-          Taxamount: null,
-          description: null,
-          chargeINR: null,
+          Taxamount: extractedData[hsnId - 6].content,
+          description: extractedData[hsnId + 1].content,
+          quotation: extractedData[hsnId - 10].content,
+          unitquantity: extractedData[hsnId - 1].content,
+          Taxpercentage: extractedData[hsnId - 5].content,
         };
-
-        const taxAmountMatch = line.content.match(
-          /(\d+(\.\d{0,2})?)%=(\d+(\.\d{0,2})?)/
-        );
-        if (taxAmountMatch) {
-          currentHSN.Taxamount = {
-            Taxpercentage: parseFloat(taxAmountMatch[1]),
-            Taxamount: parseFloat(taxAmountMatch[3]),
-          };
-        }
-      } else if (line.content.includes("IGST|CGST|GSTS|GST")) {
-        currentHSN.Taxtype = "IGST";
-      }
-      if (line.content.includes("chargeINR")) {
-        const chargeValueMatch = line.content.match(
-          /^\d{1,3}(,\d{3})*(\.\d{2})?$/
-        );
-        if (chargeValueMatch) {
-          currentHSN.chargeINR = parseFloat(
-            chargeValueMatch[1].replace(/,/g, "")
-          );
-        }
       }
 
-      if (currentHSN && !currentHSN.description) {
-        currentHSN.description = line.content.trim();
-      }
+      linesId += 1;
     }
 
     if (currentHSN) {
       structuredHSNLines.push(currentHSN);
     }
-
-    structuredHSNLines.forEach((line) => {
-      if (line.Taxamount) {
-        line.Taxpercentage = line.Taxamount.Taxpercentage;
-        line.Taxamount = line.Taxamount.Taxamount;
-      }
-    });
-
     // The extracted HSN data is now available in the 'hsnData' array
     console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
     setExtractedData(structuredHSNLines);
