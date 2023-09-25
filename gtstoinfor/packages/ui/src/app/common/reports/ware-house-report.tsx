@@ -15,7 +15,7 @@ export const WarehouseReport = () => {
   const [page, setPage] = React.useState(1);
   const [data, setData] = useState<any[]>([]);
   const [year, setYear] = useState<any[]>([]);
-  const [tab, setTab] = useState<number>();
+  const [tab, setTab] = useState<number>(2023);
   const service = new OrdersService()
   const {Text} = Typography
   useEffect(()=>{
@@ -23,7 +23,7 @@ export const WarehouseReport = () => {
   },[])
 
   const getData =()=>{
-    const req = new YearReq(2023)
+    const req = new YearReq(tab)
     console.log(tab,'222222222222222222');
     
     service.getWareHouseYearData().then(res =>{
@@ -782,7 +782,7 @@ const handleTabChange = (selectedYear: string) => {
 };
   return (
     <Card
-    
+    title="Montly Wise WareHouse Report"
     extra={data.length > 0 ? (<Button
         type="default"
         style={{ color: 'green' }}
@@ -790,14 +790,14 @@ const handleTabChange = (selectedYear: string) => {
         icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
 
     
-{/* <Tabs type="card" onChange={handleTabChange} aria-disabled> */}
+<Tabs type="card" onChange={handleTabChange} aria-disabled>
         {year.map((item) => (
           
           
-          // <Tabs.TabPane key={item.year} tab={item.year}>
+          <Tabs.TabPane key={item.year} tab={item.year}>
         <Table
-          dataSource={data} // Assuming 'data' contains data for each year
-          columns={columns5} // Assuming 'columns5' is defined elsewhere
+          dataSource={data} 
+          columns={columns5} 
           size="small"
           scroll={{ x: "max-content" }}
          
@@ -805,10 +805,10 @@ const handleTabChange = (selectedYear: string) => {
         
       // </Tabs.TabPane>
     ))}
-  {/* </Tabs> */}
+  </Tabs>
   </Card>
   );
 };
 
-// }
+
 export default WarehouseReport;

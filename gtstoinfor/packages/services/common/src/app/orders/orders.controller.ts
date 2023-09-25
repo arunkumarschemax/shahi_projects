@@ -335,10 +335,29 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getWareHouseComparisionData')
     @ApiBody({type:YearReq})
     async getWareHouseComparisionData(@Body() req:any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getWareHouseComparisionData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
+    @Post('/getExfactoryComparisionExcelData')
+    @ApiBody({type:YearReq})
+    async getExfactoryComparisionExcelData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryComparisionExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }  @Post('/getExfactoryMonthExcelData')
+    @ApiBody({type:YearReq})
+    async getExfactoryMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryMonthExcelData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
