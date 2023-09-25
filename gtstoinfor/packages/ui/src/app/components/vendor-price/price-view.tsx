@@ -1,114 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import { Table, Button, message, Card } from 'antd';
-// import { Link, useNavigate } from 'react-router-dom';
-// import { PricesService } from "../../../../../libs/shared-services/src/price/prices-services";
-
-// export function PriceView() {
-//   const navigate = useNavigate();
-//   const [page, setPage] = useState<number>(1);
-//   const [pageSize, setPageSize] = useState<number>(1)
-//   const services = new PricesService();
-//   const [formdata, setFormData] = useState<any>([]);
-
-//   // const onNew = () => {
-//   //   navigate('/priceform');
-//   // };
-//   useEffect(() => {
-//     getdata();
-//   }, []);
-
-
-//   const getdata = () => {
-//     services.getdata().then((res) => {
-//       if (res.status) {
-//         setFormData(res.data);
-//         message.success("Data Retrieved Successfully");
-//       } else {
-//         setFormData([]);
-//         message.error("Failed");
-//       }
-//     })
-//   }
-
-//   const columns: any = [
-
-
-//     {
-//       title: 'S.No',
-//       key: 'sno',
-//       responsive: ['sm'],
-//       render: (text, object, index) => (page - 1) * pageSize + (index + 1)
-//     },
-
-
-//     {
-//       title: 'Vendor Name',
-//       dataIndex: 'vendor',
-//       key: 'vendor',
-//     },
-//     {
-//       title: 'Service Code',
-//       dataIndex: 'serviceCode',
-//       key: 'servicecode',
-//     },
-//     {
-//       title: 'Head Of Charges',
-//       dataIndex: 'headOfCharges',
-//       key: 'headOfCharges',
-//     },
-//     {
-//       title: 'Per Unit',
-//       dataIndex: 'perUnit',
-//       key: 'perUnit',
-//     },
-//     {
-//       title: 'Dp Logistics',
-//       dataIndex: 'dpLogistics',
-//       key: 'dpLogistics',
-//     },
-
-
-
-//     {
-//       title: 'NSH',
-//       dataIndex: 'nsh',
-//       key: 'nsh',
-//     },
-//     {
-//       title: 'KSR',
-//       dataIndex: 'ksr',
-//       key: 'ksr',
-//     },
-
-
-
-
-//     {
-//       title: 'Unit Price',
-//       dataIndex: 'unitPrice',
-//       key: 'unitPrice',
-//     },
-//   ];
-
-//   return (
-//     <div>
-//       <Card title="Vendor Price List" style={{ position: "relative", bottom: "15px" }} extra={
-//         <Link to="/priceform">
-//           <Button type='primary'>Create</Button>
-//         </Link>
-//       }>
-
-//         <Table
-//           dataSource={formdata} columns={columns}  size='small'/>
-//       </Card>
-//     </div>
-//   );
-// };
-
-// export default PriceView;
-
-
-
 import React, { useEffect, useState, useRef } from 'react';
 import { Table, Button, message, Card, Space, Input } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
@@ -160,7 +49,7 @@ export function PriceView() {
 
   const handleChange = (pagination: any, filters: any, sorter: any) => {
     setFilteredInfo(filters);
-    // Add sorting logic here if needed
+    
   };
 
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
@@ -243,6 +132,7 @@ export function PriceView() {
       title: 'S.No',
       key: 'sno',
       responsive: ['sm'],
+      align:"center",
       render: (text, object, index) => (page - 1) * pageSize + (index + 1)
     },
     {
@@ -272,7 +162,7 @@ export function PriceView() {
       dataIndex: 'headOfCharges',
       key: 'headOfCharges',
       ...getColumnSearchProps('headOfCharges'),
-      align: 'center',
+      align:"right",
       sorter: (a, b) => a.headOfCharges.localeCompare(b.headOfCharges),
       render: (text: any, record: { headOfCharges: any }) => {
         return <>{record.headOfCharges ? record.headOfCharges : "-"}</>;
@@ -283,7 +173,7 @@ export function PriceView() {
       dataIndex: 'perUnit',
       key: 'perUnit',
       ...getColumnSearchProps('perUnit'),
-      align: 'center',
+      align:"right",
       sorter: (a, b) => a.perUnit.localeCompare(b.perUnit),
       render: (text: any, record: { perUnit: any }) => {
         return <>{record.perUnit ? record.perUnit : "-"}</>;
@@ -327,7 +217,7 @@ export function PriceView() {
       dataIndex: 'unitPrice',
       key: 'unitPrice',
       ...getColumnSearchProps('unitPrice'),
-      align: 'center',
+      align:"right",
       sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
       render: (text: any, record: { unitPrice: any }) => {
         return <>{record.unitPrice ? record.unitPrice : "-"}</>;
