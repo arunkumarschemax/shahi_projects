@@ -1291,6 +1291,7 @@ export function UploadDocumentForm() {
           title={<span style={{ textAlign: "center" }}>Upload Document</span>}
           bordered={true}
           headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
+          size="small"
         >
           <Form
             layout="vertical"
@@ -1400,6 +1401,7 @@ export function UploadDocumentForm() {
           title={<span style={{ textAlign: "center" }}>Image Form</span>}
           bordered={true}
           headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
+          size="small"
         >
           {selectedImage && <div>
             <div
@@ -1793,7 +1795,7 @@ export function UploadDocumentForm() {
                 </Col>
 
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                  <label htmlFor="Taxpercentage">Tax Percentage</label>
+                  <label htmlFor="Taxpercentage" style={{ color: "black", fontWeight: "bold" }}>Tax Percentage</label>
                   <Input
                     id="Taxpercentage"
                     name="Taxpercentage"
