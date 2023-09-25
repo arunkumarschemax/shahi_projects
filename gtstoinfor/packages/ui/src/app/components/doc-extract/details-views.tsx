@@ -5,7 +5,7 @@ import { Column } from 'rc-table';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
-import { StatusEnumDisplay } from 'packages/libs/shared-models/src/common';
+import { StatusEnumDisplay } from '@xpparel/shared-models';
 
 function ScanDetailView() {
   // Check if location and location.state are defined

@@ -18,22 +18,13 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@project-management-system/backend-utils": [
+      "@xpparel/backend-utils": [
         "packages/libs/backend-utils/src/index.ts"
       ],
-      "@project-management-system/shared-models": [
+      "@xpparel/shared-models": [
         "packages/libs/shared-models/src/index.ts"
       ],
-      "@project-management-system/shared-services": [
-        "packages/libs/shared-services/src/index.ts"
-      ],
-      "libs/backend-utils": [
-        "packages/libs/backend-utils/src/index.ts"
-      ],
-      "libs/shared-models": [
-        "packages/libs/shared-models/src/index.ts"
-      ],
-      "libs/shared-services": [
+      "@xpparel/shared-services": [
         "packages/libs/shared-services/src/index.ts"
       ]
     }

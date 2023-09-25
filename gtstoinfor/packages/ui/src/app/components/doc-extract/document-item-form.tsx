@@ -2,9 +2,6 @@
 // import { Select, Spin, message, Button, Input, Row, Form, Col, Card, Table } from "antd";
 // import Tesseract from "tesseract.js";
 // import { useNavigate,useLocation } from "react-router-dom";
-// // import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
-// // import { ScanService } from "@project-management-system/shared-services";
-// // import DocExtractForm from "./doc-extract-form";
 // import { ColumnProps } from "antd/es/table/Column";
 
 // const { Option } = Select;

@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq } from '@project-management-system/shared-models';
+import { ApplicationExceptionHandler } from '@xpparel/backend-utils';
+import { CommonResponseModel, FileStatusReq } from '@xpparel/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiConsumes } from '@nestjs/swagger';

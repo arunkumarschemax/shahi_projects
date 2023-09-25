@@ -1,19 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-// import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { CommonResponseModel, GlobalResponseObject } from "packages/libs/shared-models/src/common/global-response-object";
 import { Repository } from "typeorm";
-import { ScanEntity } from "../entity/typeo-entity";
 import { ScanAdapter } from "../adapters/scan-adapters";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { ScanEntity } from "../entity/typeo-entity";
 import { ScanDto } from "../dtos/typeo.dto";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {ScanResponseModel} from "../../../../../../libs/shared-models/src/shared-model/scan-response-object";
-import { HSNEntity } from "../entity/hsn-entity";
-import { VendorFilterModel } from "packages/libs/shared-models/src/shared-model/vendor-filter-model";
 import { filterDto } from "../dtos/filter.dto";
+import { CommonResponseModel, GlobalResponseObject, ScanResponseModel } from "@xpparel/shared-models";
 
 
 

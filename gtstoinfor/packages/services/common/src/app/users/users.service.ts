@@ -1,16 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { UsersAdaptor } from "./adapters/users.adapter";
-import { UsersRepository } from "./repository/users.repository";
-import { UsersDto } from "./dto/users.dto";
-import {
-  UsersResponseModel,
-  AllUsersResponseModel,
-  UsersActivateDeactivateDto,
-} from "@project-management-system/shared-models";
-import { UsersEntity } from "./users.entity";
-import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
-import { InjectRepository } from "@nestjs/typeorm";
+import { ErrorResponse } from "@xpparel/backend-utils";
+import { AllUsersResponseModel, UsersActivateDeactivateDto, UsersResponseModel } from "@xpparel/shared-models";
 import { FactoriesEntity } from "../factories/factories.entity";
+import { UsersAdaptor } from "./adapters/users.adapter";
+import { UsersDto } from "./dto/users.dto";
+import { UsersRepository } from "./repository/users.repository";
+import { UsersEntity } from "./users.entity";
 
 // This should be a real class/interface representing a user entity
 export type User = any;

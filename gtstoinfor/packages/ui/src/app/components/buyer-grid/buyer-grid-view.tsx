@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Table, Input, Button, Space, Card } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
-import { BuyersService } from '@project-management-system/shared-services';
+import { BuyersService } from '@xpparel/shared-services';
 
 const BuyersView = () => {
   const buyerService = new BuyersService();

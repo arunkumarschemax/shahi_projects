@@ -1,41 +1,35 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useEffect, useState } from "react";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import {
+  Button,
+  Col,
+  DatePicker,
+  Divider,
+  Form,
+  Input,
+  Popconfirm,
+  Radio,
+  Row,
   Select,
   Spin,
-  message,
-  Button,
-  Input,
-  Row,
-  Form,
-  Col,
-  Typography,
-  UploadProps,
-  Upload,
-  Radio,
   Table,
-  Divider,
-  Popconfirm,
-  DatePicker,
+  Typography,
+  Upload,
+  UploadProps,
+  message,
 } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import Tesseract from "tesseract.js";
+import { useEffect, useState } from "react";
 import { pdfjs } from 'react-pdf';
-// import { useNavigate, useLocation } from "react-router-dom";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-// import DocExtractForm from "./doc-extract-form";
-// import DocumentForm from "./document-form";
-// import DocumentItemForm from "./document-item-form";
-import Card from "antd/es/card/Card";
+import Tesseract from "tesseract.js";
 import { CalendarOutlined, UploadOutlined } from "@ant-design/icons";
 import {
   BuyersService,
   SharedService,
   VendorService,
-} from "@project-management-system/shared-services";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { AllScanDto } from "packages/libs/shared-models/src/shared-model/scan.dto";
+} from "@xpparel/shared-services";
+import Card from "antd/es/card/Card";
 import { useNavigate } from "react-router-dom";
+import { AllScanDto } from "@xpparel/shared-models";
 // const { Title, Text } = Typography;
 const { Option } = Select;
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;

@@ -1,13 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CommonResponseModel, GlobalResponseObject } from "packages/libs/shared-models/src/common/global-response-object";
 import { Repository } from "typeorm";
-import {ScanResponseModel} from "../../../../../../libs/shared-models/src/shared-model/scan-response-object";
-import { PriceEntity } from "../entity/price-entity";
 import { PriceAdapter } from "../adapter/price-adapter";
 import { PriceDto } from "../dto/price.dto";
-import { PriceResponseModel } from "packages/libs/shared-models/src/price-model";
-import { ScanRepo } from "./price-repo";
+import { PriceEntity } from "../entity/price-entity";
+import { PriceResponseModel, CommonResponseModel, GlobalResponseObject } from "@xpparel/shared-models";
 
 
 @Injectable()

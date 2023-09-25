@@ -13,7 +13,7 @@ import {
   Tooltip,
 } from "antd";
 import { EyeOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
-import { VendorService } from "@project-management-system/shared-services";
+import { VendorService } from "@xpparel/shared-services";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useNavigate, useParams } from "react-router-dom";
 import Highlighter from "react-highlight-words";
