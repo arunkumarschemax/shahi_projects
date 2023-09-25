@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { OrdersChildEntity } from "../entities/orders-child.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
+import { YearReq } from "@project-management-system/shared-models";
 
 @Injectable()
 export class OrdersChildRepository extends Repository<OrdersChildEntity> {
@@ -115,4 +116,38 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     //     const result = await this.query(query)
     //     return result
     // }
+    async getExfactoryComparisionData(req: YearReq): Promise<any[]>{
+        const query = `WITH RankedVersions AS (
+            SELECT
+                year,
+                version,   
+                 planned_exf,
+                order_plan_number,
+                order_plan_qty,
+                item, 
+                item_cd, 
+                prod_plan_type, 
+                ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY VERSION DESC) AS version_rank
+            FROM orders_child
+        )
+        SELECT
+            year,
+            version,
+            planned_exf,
+            order_plan_number,          
+            order_plan_qty,
+            item, 
+            item_cd, 
+            prod_plan_type, 
+            DATE_FORMAT(STR_TO_DATE(planned_exf, '%Y/%m/%d'), '%m') AS MONTH,
+            CASE
+                WHEN version_rank = 1 THEN 'latest'
+                ELSE 'previous'
+            END AS status
+        FROM RankedVersions
+        WHERE version_rank <= 2 && year = '${req.year}'
+        ORDER BY order_plan_number, VERSION DESC`;
+        const result = await this.query(query);
+        return result;
+    }
 }
