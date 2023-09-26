@@ -87,16 +87,15 @@ export const ExFactoryReportWithComparision = () => {
   const childColumns1: any = [
     {
       // title: "Production Plan Type Name",
-      // title: "Production Plan Type Name",
       dataIndex: "phasetype",
-      // key: "phasetype",
+      width:130
     },
-    // {
-    //   title: "January",
-    //         children: [
-        {
-          title: `Previous`,
-          dataIndex: "janPcs",
+    {
+          // title: `Previous`,
+          dataIndex: "janPcs",         
+           width:100,
+          align:"right",
+
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
@@ -111,16 +110,12 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.janCoeff}</span>  || '-'))
           
           }
-      //   },
-      // ],
+        
    
     },
-    // {
-    //   title: "February",
-    //   dataIndex: "oldOrderQtyPcs2",
-    //         children: [
-        {
-          title: `Previous`,
+    {
+      
+          // title: `Previous`,
           dataIndex: "febPcs",
           width:100,
           align:"right",
@@ -138,17 +133,12 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.febCoeff}</span>  || '-'))
           
           }
-      //   },
-      // ],
+       
  
     },
-    // {
-    //   title: "March",
-    //   dataIndex: "oldOrderQtyPcs3",
-    //   key: "oldOrderQtyPcs3",
-    //         children: [
-        {
-          title: `Previous`,
+    {
+     
+         // title: `Previous`,
           dataIndex: "marPcs",
           width:100,
           align:"right",
@@ -166,17 +156,12 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.marCoeff}</span>  || '-'))
           
           }
-      //   },
-      // ],
+        
       
     },
-    // {
-    //   title: "April",
-    //   dataIndex: "oldOrderQtyPcs4",
-    //   key: "oldOrderQtyPcs4",
-    //         children: [
-        {
-          title: `Previous`,
+    {
+      
+         // title: `Previous`,
           dataIndex: "aprPcs",
           width:100,
           align:"right",
@@ -194,17 +179,12 @@ export const ExFactoryReportWithComparision = () => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
           }
-      //   },
-      // ],
+        
   
     },
-    // {
-    //   title: "May",
-    //   dataIndex: "oldOrderQtyPcs5",
-    //   key: "oldOrderQtyPcs5",
-    //         children: [
-        {
-          title: `Previous`,
+    {
+     
+         // title: `Previous`,
           dataIndex: "mayPcs",
           width:100,
           align:"right",
@@ -222,18 +202,13 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.mayCoeff}</span>  || '-'))
           
           }
-        },
-    //   ],
+        
     
       
-    // },
-    // {
-    //   title: "June",
-    //   dataIndex: "oldOrderQtyPcs6",
-    //   key: "oldOrderQtyPcs6",
-    //         children: [
-        {
-          title: `Previous`,
+    },
+    {
+     
+         // title: `Previous`,
           dataIndex: "junPcs",
           width:100,
           align:"right",
@@ -251,18 +226,13 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.junCoeff}</span>  || '-'))
           
           }
-      //   },
-      // ],
+       
    
       
     },
-    // {
-    //   title: "July",
-    //   dataIndex: "oldOrderQtyPcs7",
-    //   key: "oldOrderQtyPcs7",
-    //         children: [
-        {
-          title: `Previous`,
+    {
+     
+         // title: `Previous`,
           dataIndex: "julPcs",
           width:100,
           align:"right",
@@ -280,18 +250,11 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.julCoeff}</span>  || '-'))
           
           }
-      //   },
-      // ],
-  
-      
+       
     },
-    // {
-    //   title: "August",
-    //   dataIndex: "oldOrderQtyPcs8",
-    //   key: "oldOrderQtyPcs8",
-    //         children: [
-        {
-          title: `Previous`,
+    {
+      
+         // title: `Previous`,
           dataIndex: "augPcs",
           width:100,
           align:"right",
@@ -309,17 +272,11 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.augCoeff}</span>  || '-'))
           
           }
-      //   },
-      // ],
-   
+       
     },
-    // {
-    //   title: "September",
-    //   dataIndex: "oldOrderQtyPcs9",
-    //   key: "oldOrderQtyPcs9",
-    //         children: [
-        {
-          title: `Previous`,
+    {
+   
+         // title: `Previous`,
           dataIndex: "sepPcs",
           width:100,
           align:"right",
@@ -337,17 +294,12 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.sepCoeff}</span>  || '-'))
           
           }
-      //   },
-      // ],
+       
     
     },
-    // {
-    //   title: "October",
-    //   dataIndex: "oldOrderQtyPcs10",
-    //   key: "oldOrderQtyPcs10",
-    //         children: [
-        {
-          title: `Previous`,
+    {
+    
+         // title: `Previous`,
           dataIndex: "octPcs",
           width:100,
           align:"right",
@@ -365,17 +317,11 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.octCoeff}</span>  || '-'))
           
           }
-      //   },
-      // ],
-    
+       
     },
-    // {
-    //   title: "November",
-    //   dataIndex: "oldOrderQtyPcs11",
-    //   key: "oldOrderQtyPcs11",
-    //         children: [
-        {
-          title: `Previous`,
+    {
+     
+         // title: `Previous`,
           dataIndex: "novPcs",
           width:100,
           align:"right",
@@ -393,17 +339,11 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.novCoeff}</span>  || '-'))
           
           },
-      //   },
-      // ],
-     
+       
     },
-    // {
-    //   title: "December",
-    //   dataIndex: "oldOrderQtyPcs12",
-    //   key: "oldOrderQtyPcs12",
-    //         children: [
-        {
-          title: `Previous`,
+    {
+     
+          // title: `Previous`,
           dataIndex: "decPcs",
           width:100,
           align:"right",
@@ -421,8 +361,6 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.decCoeff}</span>  || '-'))
           
           }
-      //   },
-      // ],
 
       
     },
@@ -466,7 +404,7 @@ export const ExFactoryReportWithComparision = () => {
         <Table
           dataSource={record.monthWiseData}
           columns={childColumns1}
-          pagination={false}
+          pagination={false} // Hide pagination for child table
           rowKey={(record) => record.itemName}
          
         />
@@ -702,7 +640,7 @@ const onReset = () => {
 }
   return (
     <Card
-    title="Comparision Ex-Factory Report"
+    title="Ex-Factory Comparision Report"
     extra={data.length > 0 ? (<Button
         type="default"
         style={{ color: 'green' }}
@@ -753,7 +691,7 @@ const onReset = () => {
                     </Row>
                 </Form>
         <Table
-          dataSource={data} // Assuming 'data' contains data for each year
+          dataSource={filteredData} // Assuming 'data' contains data for each year
           columns={columns5} // Assuming 'columns5' is defined elsewhere
           size="small"
           scroll={{ x: "max-content" }}
