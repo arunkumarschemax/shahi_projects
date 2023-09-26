@@ -751,9 +751,7 @@ if(data.Order_Plan_Number !== null){
             return new CommonResponseModel(false, 0, 'data not found');
         }
     
-        const DateMap = new Map<string, ItemDataDto>();
-        const monthWiseInstances: MonthWiseDto[] = []; 
-        
+        const DateMap = new Map<string, ItemDataDto>();        
         for (const rec of data) {
             if (!DateMap.has(rec.item_cd)) {
                 DateMap.set(
@@ -762,40 +760,42 @@ if(data.Order_Plan_Number !== null){
                 );
             }
             const monthData = DateMap.get(rec.item_cd).monthWiseData;
-    
-            if (rec.prod_plan_type !== null) {
+            const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
+
+    // const phase = 
+    // console.log(monthData.find(e=> e.phasetype === rec.prod_plan_type),'-------')
+            if (!phase) {
                 const pcs: PcsDataDto[] = [];
                 const coeff: CoeffDataDto[] = [];
-    
              pcs.push(
                { name: 'In Pcs',
-                janPcs: rec.month === 1 ? rec.order_plan_qty : 0,
-                febPcs: rec.month === 2 ? rec.order_plan_qty : 0,
-                marPcs: rec.month === 3 ? rec.order_plan_qty : 0,
-                aprPcs: rec.month === 4 ? rec.order_plan_qty : 0,
-                mayPcs: rec.month === 5 ? rec.order_plan_qty : 0,
-                junPcs: rec.month === 6 ? rec.order_plan_qty : 0,
-                julPcs: rec.month === 7 ? rec.order_plan_qty : 0,
-                augPcs: rec.month === 8 ? rec.order_plan_qty : 0,
-                sepPcs: rec.month === 9 ? rec.order_plan_qty : 0,
-                octPcs: rec.month === 10 ? rec.order_plan_qty : 0,
-                novPcs: rec.month === 11 ? rec.order_plan_qty : 0,
-                decPcs: rec.month === 12 ? rec.order_plan_qty : 0,}
+                janPcs: rec.ExfMonth === 1 ? rec.order_plan_qty :'-',
+                febPcs: rec.ExfMonth === 2 ? rec.order_plan_qty :'-',
+                marPcs: rec.ExfMonth === 3 ? rec.order_plan_qty :'-',
+                aprPcs: rec.ExfMonth === 4 ? rec.order_plan_qty :'-',
+                mayPcs: rec.ExfMonth === 5 ? rec.order_plan_qty :'-',
+                junPcs: rec.ExfMonth === 6 ? rec.order_plan_qty :'-',
+                julPcs: rec.ExfMonth === 7 ? rec.order_plan_qty :'-',
+                augPcs: rec.ExfMonth === 8 ? rec.order_plan_qty :'-',
+                sepPcs: rec.ExfMonth === 9 ? rec.order_plan_qty :'-',
+                octPcs: rec.ExfMonth === 10 ? rec.order_plan_qty :'-',
+                novPcs: rec.ExfMonth === 11 ? rec.order_plan_qty :'-',
+                decPcs: rec.ExfMonth === 12 ? rec.order_plan_qty :'-',}
             )
               coeff.push({
                 name: 'In Coeff',
-                janCoeff: rec.month === 1 ? rec.order_plan_qty_coeff : 0,
-                febCoeff: rec.month === 2 ? rec.order_plan_qty_coeff : 0,
-                marCoeff: rec.month === 3 ? rec.order_plan_qty_coeff : 0,
-                aprCoeff: rec.month === 4 ? rec.order_plan_qty_coeff : 0,
-                mayCoeff: rec.month === 5 ? rec.order_plan_qty_coeff : 0,
-                junCoeff: rec.month === 6 ? rec.order_plan_qty_coeff : 0,
-                julCoeff: rec.month === 7 ? rec.order_plan_qty_coeff : 0,
-                augCoeff: rec.month === 8 ? rec.order_plan_qty_coeff : 0,
-                sepCoeff: rec.month === 9 ? rec.order_plan_qty_coeff : 0,
-                octCoeff: rec.month === 10 ? rec.order_plan_qty_coeff : 0,
-                novCoeff: rec.month === 11 ? rec.order_plan_qty_coeff : 0,
-                decCoeff: rec.month === 12 ? rec.order_plan_qty_coeff : 0,
+                janCoeff: rec.ExfMonth === 1 ? rec.order_plan_qty_coeff :'-',
+                febCoeff: rec.ExfMonth === 2 ? rec.order_plan_qty_coeff :'-',
+                marCoeff: rec.ExfMonth === 3 ? rec.order_plan_qty_coeff :'-',
+                aprCoeff: rec.ExfMonth === 4 ? rec.order_plan_qty_coeff :'-',
+                mayCoeff: rec.ExfMonth === 5 ? rec.order_plan_qty_coeff :'-',
+                junCoeff: rec.ExfMonth === 6 ? rec.order_plan_qty_coeff :'-',
+                julCoeff: rec.ExfMonth === 7 ? rec.order_plan_qty_coeff :'-',
+                augCoeff: rec.ExfMonth === 8 ? rec.order_plan_qty_coeff :'-',
+                sepCoeff: rec.ExfMonth === 9 ? rec.order_plan_qty_coeff :'-',
+                octCoeff: rec.ExfMonth === 10 ? rec.order_plan_qty_coeff :'-',
+                novCoeff: rec.ExfMonth === 11 ? rec.order_plan_qty_coeff :'-',
+                decCoeff: rec.ExfMonth === 12 ? rec.order_plan_qty_coeff :'-',
               })
               const totalPcs = pcs.reduce((total, item) => {
                 return  [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
@@ -819,12 +819,6 @@ if(data.Order_Plan_Number !== null){
         }
         
         const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-     
-
-          
-
-
-          
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
 
@@ -887,12 +881,9 @@ if(data.Order_Plan_Number !== null){
         return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', season);
     } else {
         return new CommonResponseModel(false, 0, 'No Data Found', []);
+    }    
     }
-
-    
-    }
-    
-    
+   
     
     async createCOline(req: any): Promise<CommonResponseModel> {
         try {
@@ -1008,8 +999,8 @@ async getWareHouseMonthData(req:YearReq): Promise<CommonResponseModel> {
 
 pcs.push(
            { name: 'In Pcs',
-            janPcs: rec.month === 1 ? rec.order_plan_qty : 0,
-            febPcs: rec.month === 2 ? rec.order_plan_qty : 0,
+            janPcs: rec.month === 1 ? rec.order_plan_qty :'-',
+            febPcs: rec.month === 2 ? rec.order_plan_qty :'-',
             marPcs: rec.month === 3 ? rec.order_plan_qty : 0,
             aprPcs: rec.month === 4 ? rec.order_plan_qty : 0,
             mayPcs: rec.month === 5 ? rec.order_plan_qty : 0,
@@ -1059,15 +1050,8 @@ const totalCoeff = coeff.reduce((total, item) => {
 
 monthData.push(new MonthWiseDto(rec.prod_plan_type, pcs, coeff, totalPcs, totalCoeff));
         }
-        
     }
-    
     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-
-      
-
-
-      
     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
 }
 async getExfactoryComparisionData(req:YearReq): Promise<CommonResponseModel> {
@@ -1089,26 +1073,27 @@ async getExfactoryComparisionData(req:YearReq): Promise<CommonResponseModel> {
             );
         }
         const monthData = DateMap.get(rec.item_cd).monthWiseData;
+        const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
 
-        if (rec.prod_plan_type !== null) {
+        if (!phase) {
             const pcs: PcsDataDto[] = [];
             const coeff: CoeffDataDto[] = [];
             if (rec.status === "previous") {
                 // totalPcs += rec.order_plan_qty;
 pcs.push(
            { name: 'In Pcs',
-            janPcs: rec.month === 1 ? rec.order_plan_qty : 0,
-            febPcs: rec.month === 2 ? rec.order_plan_qty : 0,
-            marPcs: rec.month === 3 ? rec.order_plan_qty : 0,
-            aprPcs: rec.month === 4 ? rec.order_plan_qty : 0,
-            mayPcs: rec.month === 5 ? rec.order_plan_qty : 0,
-            junPcs: rec.month === 6 ? rec.order_plan_qty : 0,
-            julPcs: rec.month === 7 ? rec.order_plan_qty : 0,
-            augPcs: rec.month === 8 ? rec.order_plan_qty : 0,
-            sepPcs: rec.month === 9 ? rec.order_plan_qty : 0,
-            octPcs: rec.month === 10 ? rec.order_plan_qty : 0,
-            novPcs: rec.month === 11 ? rec.order_plan_qty : 0,
-            decPcs: rec.month === 12 ? rec.order_plan_qty : 0,}
+            janPcs: rec.ExfMonth === 1 ? rec.order_plan_qty :'-',
+            febPcs: rec.ExfMonth === 2 ? rec.order_plan_qty :'-',
+            marPcs: rec.ExfMonth === 3 ? rec.order_plan_qty :'-',
+            aprPcs: rec.ExfMonth === 4 ? rec.order_plan_qty :'-',
+            mayPcs: rec.ExfMonth === 5 ? rec.order_plan_qty :'-',
+            junPcs: rec.ExfMonth === 6 ? rec.order_plan_qty :'-',
+            julPcs: rec.ExfMonth === 7 ? rec.order_plan_qty :'-',
+            augPcs: rec.ExfMonth === 8 ? rec.order_plan_qty :'-',
+            sepPcs: rec.ExfMonth === 9 ? rec.order_plan_qty :'-',
+            octPcs: rec.ExfMonth === 10 ? rec.order_plan_qty :'-',
+            novPcs: rec.ExfMonth === 11 ? rec.order_plan_qty :'-',
+            decPcs: rec.ExfMonth === 12 ? rec.order_plan_qty :'-',}
         )
     } 
     if (rec.status === "latest") {
@@ -1116,18 +1101,18 @@ pcs.push(
 
           coeff.push({
             name: 'In Coeff',
-            janCoeff: rec.month === 1 ? rec.order_plan_qty : 0,
-            febCoeff: rec.month === 2 ? rec.order_plan_qty : 0,
-            marCoeff: rec.month === 3 ? rec.order_plan_qty : 0,
-            aprCoeff: rec.month === 4 ? rec.order_plan_qty : 0,
-            mayCoeff: rec.month === 5 ? rec.order_plan_qty : 0,
-            junCoeff: rec.month === 6 ? rec.order_plan_qty : 0,
-            julCoeff: rec.month === 7 ? rec.order_plan_qty : 0,
-            augCoeff: rec.month === 8 ? rec.order_plan_qty : 0,
-            sepCoeff: rec.month === 9 ? rec.order_plan_qty : 0,
-            octCoeff: rec.month === 10 ? rec.order_plan_qty : 0,
-            novCoeff: rec.month === 11 ? rec.order_plan_qty : 0,
-            decCoeff: rec.month === 12 ? rec.order_plan_qty : 0,
+            janCoeff: rec.ExfMonth === 1 ? rec.order_plan_qty :'-',
+            febCoeff: rec.ExfMonth === 2 ? rec.order_plan_qty :'-',
+            marCoeff: rec.ExfMonth === 3 ? rec.order_plan_qty :'-',
+            aprCoeff: rec.ExfMonth === 4 ? rec.order_plan_qty :'-',
+            mayCoeff: rec.ExfMonth === 5 ? rec.order_plan_qty :'-',
+            junCoeff: rec.ExfMonth === 6 ? rec.order_plan_qty :'-',
+            julCoeff: rec.ExfMonth === 7 ? rec.order_plan_qty :'-',
+            augCoeff: rec.ExfMonth === 8 ? rec.order_plan_qty :'-',
+            sepCoeff: rec.ExfMonth === 9 ? rec.order_plan_qty :'-',
+            octCoeff: rec.ExfMonth === 10 ? rec.order_plan_qty :'-',
+            novCoeff: rec.ExfMonth === 11 ? rec.order_plan_qty :'-',
+            decCoeff: rec.ExfMonth === 12 ? rec.order_plan_qty :'-',
           })
         }
         const totalPcs = pcs.reduce((total, item) => {
@@ -1141,10 +1126,7 @@ pcs.push(
                 .filter(value => value !== 0) // Filter out values equal to 0
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
-        //  console.log(totalPcs,'previous',
-        //  totalCoeff,'latest');
-         
-          
+        
             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
             monthData.push(monthWiseInstance); 
             console.log(monthWiseInstance,"rec")
@@ -1187,18 +1169,18 @@ async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
                 // totalPcs += rec.order_plan_qty;
 pcs.push(
            { name: 'In Pcs',
-            janPcs: rec.month === 1 ? rec.order_plan_qty : 0,
-            febPcs: rec.month === 2 ? rec.order_plan_qty : 0,
-            marPcs: rec.month === 3 ? rec.order_plan_qty : 0,
-            aprPcs: rec.month === 4 ? rec.order_plan_qty : 0,
-            mayPcs: rec.month === 5 ? rec.order_plan_qty : 0,
-            junPcs: rec.month === 6 ? rec.order_plan_qty : 0,
-            julPcs: rec.month === 7 ? rec.order_plan_qty : 0,
-            augPcs: rec.month === 8 ? rec.order_plan_qty : 0,
-            sepPcs: rec.month === 9 ? rec.order_plan_qty : 0,
-            octPcs: rec.month === 10 ? rec.order_plan_qty : 0,
-            novPcs: rec.month === 11 ? rec.order_plan_qty : 0,
-            decPcs: rec.month === 12 ? rec.order_plan_qty : 0,}
+            janPcs: rec.month === 1 ? rec.order_plan_qty :'-',
+            febPcs: rec.month === 2 ? rec.order_plan_qty :'-',
+            marPcs: rec.month === 3 ? rec.order_plan_qty :'-',
+            aprPcs: rec.month === 4 ? rec.order_plan_qty :'-',
+            mayPcs: rec.month === 5 ? rec.order_plan_qty :'-',
+            junPcs: rec.month === 6 ? rec.order_plan_qty :'-',
+            julPcs: rec.month === 7 ? rec.order_plan_qty :'-',
+            augPcs: rec.month === 8 ? rec.order_plan_qty :'-',
+            sepPcs: rec.month === 9 ? rec.order_plan_qty :'-',
+            octPcs: rec.month === 10 ? rec.order_plan_qty :'-',
+            novPcs: rec.month === 11 ? rec.order_plan_qty :'-',
+            decPcs: rec.month === 12 ? rec.order_plan_qty :'-',}
         )
     } 
     if (rec.status === "latest") {
@@ -1206,18 +1188,18 @@ pcs.push(
 
           coeff.push({
             name: 'In Coeff',
-            janCoeff: rec.month === 1 ? rec.order_plan_qty : 0,
-            febCoeff: rec.month === 2 ? rec.order_plan_qty : 0,
-            marCoeff: rec.month === 3 ? rec.order_plan_qty : 0,
-            aprCoeff: rec.month === 4 ? rec.order_plan_qty : 0,
-            mayCoeff: rec.month === 5 ? rec.order_plan_qty : 0,
-            junCoeff: rec.month === 6 ? rec.order_plan_qty : 0,
-            julCoeff: rec.month === 7 ? rec.order_plan_qty : 0,
-            augCoeff: rec.month === 8 ? rec.order_plan_qty : 0,
-            sepCoeff: rec.month === 9 ? rec.order_plan_qty : 0,
-            octCoeff: rec.month === 10 ? rec.order_plan_qty : 0,
-            novCoeff: rec.month === 11 ? rec.order_plan_qty : 0,
-            decCoeff: rec.month === 12 ? rec.order_plan_qty : 0,
+            janCoeff: rec.month === 1 ? rec.order_plan_qty :'-',
+            febCoeff: rec.month === 2 ? rec.order_plan_qty :'-',
+            marCoeff: rec.month === 3 ? rec.order_plan_qty :'-',
+            aprCoeff: rec.month === 4 ? rec.order_plan_qty :'-',
+            mayCoeff: rec.month === 5 ? rec.order_plan_qty :'-',
+            junCoeff: rec.month === 6 ? rec.order_plan_qty :'-',
+            julCoeff: rec.month === 7 ? rec.order_plan_qty :'-',
+            augCoeff: rec.month === 8 ? rec.order_plan_qty :'-',
+            sepCoeff: rec.month === 9 ? rec.order_plan_qty :'-',
+            octCoeff: rec.month === 10 ? rec.order_plan_qty :'-',
+            novCoeff: rec.month === 11 ? rec.order_plan_qty :'-',
+            decCoeff: rec.month === 12 ? rec.order_plan_qty :'-',
           })
         }
         const totalPcs = pcs.reduce((total, item) => {
@@ -1267,6 +1249,24 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
     return new CommonResponseModel(true, 1, 'data retrieved', data);
 }
 
+async getWareHouseMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
+    const data = await this.ordersRepository.getWareHouseMonthData(req.year);
+    
+    if (data.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+    }
+
+    return new CommonResponseModel(true, 1, 'data retrieved', data);
+}
+
+async getWareHouseComparisionExcelData(req:YearReq): Promise<CommonResponseModel> {
+    const data = await this.ordersChildRepo.getWareHouseComparisionData(req);
+    
+    if (data.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+    }
+    return new CommonResponseModel(true, 1, 'data retrieved', data);
+}
     }
 
   
