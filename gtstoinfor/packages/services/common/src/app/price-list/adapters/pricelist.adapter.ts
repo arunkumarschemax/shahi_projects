@@ -14,6 +14,8 @@ export class PriceListAdapter {
         price.destination = DTO.destination;
         price.seasonCode = DTO.seasonCode;
         price.currency = DTO.currency;
+        price.price = DTO.price;
+        price.item = DTO.item;
         price.isActive = DTO.isActive==undefined?true:DTO.isActive;
         if (isUpdate) {
             price.id=DTO.id;
@@ -32,6 +34,8 @@ export class PriceListAdapter {
         PriceListDto.destination = dtoData.destination;
         PriceListDto.seasonCode= dtoData.seasonCode;
         PriceListDto.currency = dtoData.currency;
+        PriceListDto.price = dtoData.price;
+        PriceListDto.item = dtoData.item;
         PriceListDto.isActive = dtoData.isActive;
         PriceListDto.createdUser = dtoData.createdUser;
         PriceListDto.updatedUser = dtoData.updatedUser

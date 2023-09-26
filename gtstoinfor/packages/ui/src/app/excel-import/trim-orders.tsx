@@ -308,6 +308,8 @@ const {Text}=Typography
             width:150,
 
             render: (text, record) => {
+                if(record.answered_status != 'Accepted'){
+
                 return (
                     <Form>
                         <Form.Item>
@@ -318,6 +320,9 @@ const {Text}=Typography
                         </Form.Item>
                     </Form>
                 );
+                }else{
+                    return <>{record.buyer_item_number?record.buyer_item_number:'-'}</>
+                }
             },
         },
         
@@ -326,18 +331,22 @@ const {Text}=Typography
             dataIndex: "action",
             render: (value, record) => {
                 // const isEnabled = isActionButtonEnabled(record);
-        
-                return (
-                    <Popconfirm
-                        title="Are you sure to approve"
-                        onConfirm={() => approveOrderStatus(record)}
-                        // disabled={record.answered_status == 'Accepted'}
-                    >
-                        <Button 
-                        // disabled={!isEnabled}
-                        >Accept</Button>
-                    </Popconfirm>
-                );
+                if(record.answered_status != 'Accepted'){
+
+                    return (
+                        <Popconfirm
+                            title="Are you sure to approve"
+                            onConfirm={() => approveOrderStatus(record)}
+                            // disabled={record.answered_status == 'Accepted'}
+                        >
+                            <Button 
+                            // disabled={!isEnabled}
+                            >Accept</Button>
+                        </Popconfirm>
+                    );
+                }else{
+                    return <></>
+                }
             },
             
             

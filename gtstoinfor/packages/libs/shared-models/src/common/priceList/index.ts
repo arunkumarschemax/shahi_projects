@@ -4,3 +4,4 @@ export * from './pricelist-response-object';
 export * from './pricelist.dto';
 export * from './pricelist.model';
 export * from './filter.req';
+export * from './price-list-excel-columns'
