@@ -1020,8 +1020,9 @@ async getWareHouseMonthData(req:YearReq): Promise<CommonResponseModel> {
             );
         }
         const monthData = DateMap.get(rec.item_cd).monthWiseData;
+        const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
 
-        if (rec.prod_plan_type !== null) {
+        if (!phase) {
             const pcs: PcsDataDto[] = [];
             const coeff: CoeffDataDto[] = [];
 
