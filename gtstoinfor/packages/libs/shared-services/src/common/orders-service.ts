@@ -167,4 +167,7 @@ export class OrdersService extends CommonAxiosService {
     async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getQtyDifChangeItemCode")
     }
+    async getTrimOrdersNo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getTrimOrdersNo")
+    }
 }

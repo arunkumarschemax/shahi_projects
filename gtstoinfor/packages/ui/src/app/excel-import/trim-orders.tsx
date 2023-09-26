@@ -25,6 +25,8 @@ const TrimOrder= () => {
     const [searchText, setSearchText] = useState("");
     const searchInput = useRef<InputRef>(null);
     const [searchedColumn, setSearchedColumn] = useState("");
+    const [item, setItem] = useState<any[]>([]);
+
 const {Text}=Typography
 
     useEffect(() => {
@@ -40,6 +42,14 @@ const {Text}=Typography
         }).catch(err => {
             console.log(err.message)
         })
+        service.getTrimOrdersNo().then(res => {
+            if (res.status) {
+                setItem(res.data)
+            }
+        }).catch(err => {
+            console.log(err.message)
+        })
+        
     }
     const approveOrderStatus = (record) => {
         console.log(record)
@@ -472,7 +482,7 @@ const {Text}=Typography
                                         placeholder="Select Order Number"
                                         optionFilterProp="children"
                                         allowClear>
-                                            {gridData.map(e=>(
+                                            {item.map(e=>(
                                                 <Option key={e.order_no} value={e.order_no}>{e.order_no}</Option>
                                             ))}
                                         {/* <Option key='new' value="NEW">NEW</Option>

@@ -25,13 +25,13 @@ const PriceListUpload = () => {
     const service = new PriceListService
 
     const getUploadFilesData = () => {
-        service.getUploadFilesData().then((res) => {
-          if (res.status) {
-            setFilesData(res.data)
-          } else{
-            setFilesData([])
-          }
-        })
+        // service.getUploadFilesData().then((res) => {
+        //   if (res.status) {
+        //     setFilesData(res.data)
+        //   } else{
+        //     setFilesData([])
+        //   }
+        // })
       }
   
     const handleFileChange = (e) => {
@@ -121,69 +121,69 @@ const PriceListUpload = () => {
   };
 
   const handleUpload = async () => {
-    try {
-      form.validateFields().then(values => {
-        if (selectedFile) {
-          let integerPart
-          //  console.log(selectedFile.name,'selectedFile') 
-          const inputString = selectedFile.name
-          console.log(inputString)
-          // const match = inputString.match(/(\d+)\.\d+/);
-          const match = inputString.match(/_(\d{2})/)
-          console.log(match)
-          if (match && match[1]) {
-            integerPart = parseInt(match[1]);
-            console.log(integerPart)
-          } else {
-            console.log("No integer part found in the input string.");
-          }
-          const formData = new FormData();
-          formData.append('file', selectedFile);
-          console.log(form.getFieldsValue().fileType)
-          const d = new Date();
-          // let month = d.getMonth();
-          let month = 9;
-          if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
+    // try {
+    //   form.validateFields().then(values => {
+    //     if (selectedFile) {
+    //       let integerPart
+    //       //  console.log(selectedFile.name,'selectedFile') 
+    //       const inputString = selectedFile.name
+    //       console.log(inputString)
+    //       // const match = inputString.match(/(\d+)\.\d+/);
+    //       const match = inputString.match(/_(\d{2})/)
+    //       console.log(match)
+    //       if (match && match[1]) {
+    //         integerPart = parseInt(match[1]);
+    //         console.log(integerPart)
+    //       } else {
+    //         console.log("No integer part found in the input string.");
+    //       }
+    //       const formData = new FormData();
+    //       formData.append('file', selectedFile);
+    //       console.log(form.getFieldsValue().fileType)
+    //       const d = new Date();
+    //       // let month = d.getMonth();
+    //       let month = 9;
+    //       if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
 
-            if (month) {
-              service.fileUpload(formData, integerPart,form.getFieldsValue().fileType).then((fileRes) => {
-                if (fileRes.status) {
-                  service.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
-                    setLoading(true)
-                    if (res.status) {
-                      const req = new FileStatusReq()
-                      req.fileId = fileRes?.data?.id;
-                      req.status = 'Success';
-                      req.userName = loginUser ? loginUser : null;
-                      service.updateFileStatus(req)
-                      message.success(res.internalMessage)
-                      navigate("/excel-import/grid-view");
-                    } else {
-                      const req = new FileStatusReq()
-                      req.fileId = fileRes?.data?.id;
-                      req.status = 'Failed';
-                      req.userName = loginUser ? loginUser : null;
-                      service.updateFileStatus(req)
-                      message.error('File upload failed')
-                    }
-                  }).finally(() => {
-                    setLoading(false);
-                  })
-                } else {
-                  message.error(fileRes.internalMessage)
-                }
-              });
-            } else {
-              message.info('month not avilable')
-            }
-          }
-        }
-      })
+    //         if (month) {
+    //           service.fileUpload(formData, integerPart,form.getFieldsValue().fileType).then((fileRes) => {
+    //             if (fileRes.status) {
+    //               service.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
+    //                 setLoading(true)
+    //                 if (res.status) {
+    //                   const req = new FileStatusReq()
+    //                   req.fileId = fileRes?.data?.id;
+    //                   req.status = 'Success';
+    //                   req.userName = loginUser ? loginUser : null;
+    //                   service.updateFileStatus(req)
+    //                   message.success(res.internalMessage)
+    //                   navigate("/excel-import/grid-view");
+    //                 } else {
+    //                   const req = new FileStatusReq()
+    //                   req.fileId = fileRes?.data?.id;
+    //                   req.status = 'Failed';
+    //                   req.userName = loginUser ? loginUser : null;
+    //                   service.updateFileStatus(req)
+    //                   message.error('File upload failed')
+    //                 }
+    //               }).finally(() => {
+    //                 setLoading(false);
+    //               })
+    //             } else {
+    //               message.error(fileRes.internalMessage)
+    //             }
+    //           });
+    //         } else {
+    //           message.info('month not avilable')
+    //         }
+    //       }
+    //     }
+    //   })
       
 
-    } catch (error) {
-      message.error(error.message)
-    }
+    // } catch (error) {
+    //   message.error(error.message)
+    // }
   }
 
   const onFileTypeChange = () => {
