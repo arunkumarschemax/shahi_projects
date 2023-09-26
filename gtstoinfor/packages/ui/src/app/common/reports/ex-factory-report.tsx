@@ -31,7 +31,7 @@ export const ExFactoryReport = () => {
   const [page, setPage] = React.useState(1);
   const [data, setData] = useState<any[]>([]);
   const [year, setYear] = useState<any[]>([]);
-  const [tab, setTab] = useState<number>(2023);
+  const [tab, setTab] = useState<number>(20232023);
   const service = new OrdersService();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [excelData, setExcelData] = useState<any[]>([]);

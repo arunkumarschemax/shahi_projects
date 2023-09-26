@@ -1,4 +1,4 @@
-import { CommonResponseModel, FileIdReq, FileTypeDto, SaveOrderDto, YearReq } from "@project-management-system/shared-models"
+import { CommonResponseModel, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, YearReq } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
@@ -119,8 +119,9 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(url, data);
     }
 
-    async seasonWiseReport():Promise<CommonResponseModel>{
-        return this.axiosPostCall(this.ordersController + "/seasonWiseReport")
+    async seasonWiseReport(req?:SeasonWiseRequest):Promise<CommonResponseModel>{
+        console.log(req,'hhhhhhhhhhhhh')
+        return this.axiosPostCall(this.ordersController + "/seasonWiseReport",req)
     }
 
     async getSeasonWiseOrders(): Promise<CommonResponseModel> {
@@ -155,5 +156,15 @@ export class OrdersService extends CommonAxiosService {
 
     } async getWareHouseMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getWareHouseMonthExcelData",req)
+    }
+    async getSeasonWiseItemCode(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getSeasonWiseItemCode")
+    }
+
+    async getSeasonWiseItemName(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getSeasonWiseItemName")
+    }
+    async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getQtyDifChangeItemCode")
     }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { FactoryResponseModel } from 'packages/libs/shared-models/src/common/factory/factory-response-objects';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object'
 import { Not } from 'typeorm';
-import { AllFactoriesResponseModel, FactoryActivateDeactivateDto, FactoryDto as NewFactoriesDto, PriceListDto, PriceListModel, PriceListResponseModel } from '@project-management-system/shared-models';
+import { AllFactoriesResponseModel, CommonResponseModel, FactoryActivateDeactivateDto, FactoryDto as NewFactoriesDto, NewFilterDto, PriceListDto, PriceListModel, PriceListResponseModel } from '@project-management-system/shared-models';
 import { PriceListAdapter } from './adapters/pricelist.adapter';
 import { pricListRepository } from './repository/pricelist.repositiry';
 import { PriceListEntity } from './entities/pricelist.entity';
@@ -148,13 +148,11 @@ export class priceListService {
     async createPriceList(req: priceListDto, isUpdate: boolean): Promise<PriceListResponseModel> {
         try {
             let previousValue;
-            console.log(isUpdate,"eee")
     
             if (!isUpdate) {
                 const existingRecord = await this.priceRepository.findOne({
                     where: { style: req.style, destination: req.destination }
                 });
-                console.log(existingRecord,"reseee")
                 if (existingRecord) {
                     throw new PriceListResponseModel(false, 11104, 'Price list for this style and destination already exists');
                 }
@@ -194,12 +192,12 @@ export class priceListService {
     }
     
 
-    async getAllPriceList(): Promise<PriceListResponseModel> {
-        const details = await this.priceRepository.find();
+    async getAllPriceList(req?:NewFilterDto): Promise<PriceListResponseModel> {
+        const details = await this.priceRepository.getPriceListData(req);
         let info =[];
         if (details.length > 0) {
             for(const rec of details){
-                info.push(new PriceListModel(rec.id,rec.style,rec.year,rec.destination,rec.seasonCode,rec.currency,rec.createdUser,rec.isActive,rec.versionFlag,rec.updatedUser))
+                info.push(new PriceListModel(rec.id,rec.style,rec.YEAR,rec.destination,rec.season_code,rec.currency,rec.created_user,rec.is_active,rec.version_flag,rec.updated_user))
             }
             return new PriceListResponseModel(true, 1, 'data retrived', info)
         } else {
@@ -210,7 +208,6 @@ export class priceListService {
 
     async ActivateOrDeactivatePriceList(req: priceListDto): Promise<PriceListResponseModel> {
         try {
-          console.log(req.isActive,'service-----------')
             const operationExists = await this.getPriceListById(req.id);
             if (operationExists) {
                 if (!operationExists) {
@@ -306,6 +303,58 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
             return Response;
             } else {
             return null;
+            }
+        }
+
+        async getAllPriceListStyles(): Promise<CommonResponseModel> {
+            const details = await this.priceRepository.getStyle();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
+        async getAllPriceListDestination(): Promise<CommonResponseModel> {
+            const details = await this.priceRepository.getDestination();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
+        async getAllPriceListYear(): Promise<CommonResponseModel> {
+            const details = await this.priceRepository.getYear();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
+        async getAllPriceListCurrency(): Promise<CommonResponseModel> {
+            const details = await this.priceRepository.getCurrency();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
+
+        async getAllPriceListSeasonCode(): Promise<CommonResponseModel> {
+            const details = await this.priceRepository.getAllPriceListSeasonCode();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
             }
         }
 

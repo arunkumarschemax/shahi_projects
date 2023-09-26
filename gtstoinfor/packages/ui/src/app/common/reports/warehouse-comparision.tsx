@@ -781,7 +781,8 @@ const handleTabChange = (selectedYear: string) => {
 };
   return (
     <Card
-    
+    title="Comparision WareHouse Report"
+
     extra={data.length > 0 ? (<Button
         type="default"
         style={{ color: 'green' }}

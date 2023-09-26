@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -58,11 +58,14 @@ export class OrdersService {
         try {
             await transactionManager.startTransaction()
             const flag = new Set()
+            const columnArray = [];
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
-                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_');
-                    updatedObj[newKey] = obj[key];
+                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_').replace(/:/g,'_').replace(/[*]/g,'_').replace(/=/g,'_').replace(/”/g,'').replace(/~/g,'').replace(/[/]/g,'').replace(/“/g,'')
+                    const newKey1 = newKey.replace(/__/g,'_');
+                    columnArray.push(newKey1)
+                    updatedObj[newKey1] = obj[key];
                 }
                 return updatedObj;
             });
@@ -82,7 +85,11 @@ export class OrdersService {
                 }
                 return updatedObj;
             });
-
+            const difference = columnArray.filter((element) => !ProductionOrderColumns.includes(element));
+            if(difference.length > 0){
+                await transactionManager.releaseTransaction()
+                return new CommonResponseModel(false,1110,'Please Upload Correct Excel')
+            }
             for (const data of convertedData) {
 let dtoData;
 if(data.Order_Plan_Number !== null){
@@ -192,11 +199,12 @@ if(data.Order_Plan_Number !== null){
         try {
             await transactionManager.startTransaction()
             const flag = new Set()
-
+            const columnArray = [];
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
                         const newKey = key.replace(/\s/g, '_').replace(/[\(\)\.]/g, '').replace(/-/g, '_');
+                        columnArray.push(newKey)
                         updatedObj[newKey] = obj[key];
                 }
                 return updatedObj;
@@ -218,7 +226,11 @@ if(data.Order_Plan_Number !== null){
                 }
                 return updatedObj;
             });
-
+            const difference = columnArray.filter((element) => !TrimOrderColumns.includes(element));
+            if(difference.length > 0){
+                await transactionManager.releaseTransaction()
+                return new CommonResponseModel(false,1110,'Please Upload Correct Excel')
+            }
             for (const data of convertedData) {
                 let dtoData
                 if(data.Order_No != null){
@@ -584,7 +596,13 @@ if(data.Order_Plan_Number !== null){
     }
 
     async getUploadFilesData(req:FileTypeDto): Promise<CommonResponseModel> {
-        const data = await this.fileUploadRepo.getFilesData(req)
+        let data
+        if(req.fileType !== undefined){
+
+            data = await this.fileUploadRepo.getFilesData(req)
+        } else{
+            data = await this.fileUploadRepo.getFilesData()
+        }
         if (data.length > 0) {
             return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
         }
@@ -837,40 +855,47 @@ if(data.Order_Plan_Number !== null){
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async seasonWiseReport(): Promise<CommonResponseModel> {
-        const query = `SELECT planning_ssn as plannedSeason,year,item_cd as itemCode,item as itemName,SUM(january) AS january,SUM(february) AS february,SUM(march) AS march,SUM(april) AS april,SUM(may) AS may,SUM(june) AS june,SUM(july) AS july,SUM(august) AS august,SUM(september) AS september,SUM(october) AS october,SUM(november) AS november,SUM(december) AS december,SUM(exfJan) AS exfJan,SUM(exfFeb) AS exfFeb,SUM(exfMarch) AS exfMarch,SUM(exfApril) AS exfApril,SUM(exfMay) AS exfMay,SUM(exfJune) AS exfJune,SUM(exfJuly) AS exfJuly,SUM(exfAug) AS exfAug,SUM(exfSep) AS exfSep,SUM(exfOct) AS exfOct,SUM(exfNov) AS exfNov,SUM(exfDec) AS exfDec,
+    async seasonWiseReport(req?:SeasonWiseRequest): Promise<CommonResponseModel> {
+        let query = `SELECT planning_ssn as plannedSeason,year,item_cd as itemCode,item as itemName,SUM(january) AS january,SUM(february) AS february,SUM(march) AS march,SUM(april) AS april,SUM(may) AS may,SUM(june) AS june,SUM(july) AS july,SUM(august) AS august,SUM(september) AS september,SUM(october) AS october,SUM(november) AS november,SUM(december) AS december,SUM(exfJan) AS exfJan,SUM(exfFeb) AS exfFeb,SUM(exfMarch) AS exfMarch,SUM(exfApril) AS exfApril,SUM(exfMay) AS exfMay,SUM(exfJune) AS exfJune,SUM(exfJuly) AS exfJuly,SUM(exfAug) AS exfAug,SUM(exfSep) AS exfSep,SUM(exfOct) AS exfOct,SUM(exfNov) AS exfNov,SUM(exfDec) AS exfDec,
         SUM(january + february + march + april + may + june + july + august + september + october + november + december) AS whTotal,
         SUM(exfJan + exfFeb + exfMarch + exfApril + exfMay + exfJune + exfJuly + exfAug + exfSep + exfOct + exfNov + exfDec) AS exfTotal
       FROM (
         SELECT planning_ssn, year, item_cd, item,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS january,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS february,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS march,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS april,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS may,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS june,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS july,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS august,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS september,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS october,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS november,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS december,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJan,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfFeb,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMarch,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfApril,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMay,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJune,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJuly,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfAug,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfSep,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfOct,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfNov,
-          SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m-%d')) = 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfDec
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS january,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS february,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS march,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 4 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS april,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS may,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS june,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS july,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS august,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 9 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS september,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 10 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS october,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS november,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS december,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJan,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfFeb,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMarch,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 4 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfApril,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMay,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJune,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJuly,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfAug,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 9 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfSep,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 10 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfOct,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfNov,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfDec
         FROM orders
         GROUP BY planning_ssn, item_cd, item
       ) AS subquery
-      GROUP BY planning_ssn, item_cd, item;`;
+      WHERE 1 = 1`
+    if (req.itemCode) {
+        query = query + ` AND item_cd = "${req.itemCode}"`
+        }
+    if (req.itemName) {
+        query = query + ` AND item = "${req.itemName}"`;
+    }
+    query = query + ` GROUP BY planning_ssn, item_cd, item ORDER BY item_cd`;
       const reportData = await this.dataSource.query(query);
       
       const season23SS = reportData.filter(data => data.year === "2023" && data.plannedSeason === "SS");
@@ -886,6 +911,7 @@ if(data.Order_Plan_Number !== null){
    
     
     async createCOline(req: any): Promise<CommonResponseModel> {
+        // console.log(req)
         try {
             const manager = this.dataSource
             const orderNo = req.orderNumber
@@ -900,6 +926,8 @@ if(data.Order_Plan_Number !== null){
             const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=${orderNo}&ITNO=${itemNo}&SAPR=${salePrice}`;
             // const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.purchaseOrderNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${styleNumber}`;
             const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
+            // console.log(response, 'response')
+            // console.log(response.data?.MIRecord, 'MIRecord')
             if (response.data['@type'])
                 return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
             if (!response.data?.MIRecord && !response.data?.MIRecord.length)
@@ -1035,6 +1063,7 @@ return acc + (currentValue || 0);
 
 const NewArray = [...Arry, sum];
 
+// console.log(NewArray)
 
 const totalPcs = pcs.reduce((total, item) => {
     return total + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
@@ -1054,6 +1083,7 @@ monthData.push(new MonthWiseDto(rec.prod_plan_type, pcs, coeff, totalPcs, totalC
     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
 }
+
 async getExfactoryComparisionData(req:YearReq): Promise<CommonResponseModel> {
     const data = await this.ordersChildRepo.getExfactoryComparisionData(req);
     
@@ -1078,7 +1108,8 @@ async getExfactoryComparisionData(req:YearReq): Promise<CommonResponseModel> {
         if (!phase) {
             const pcs: PcsDataDto[] = [];
             const coeff: CoeffDataDto[] = [];
-            if (rec.status === "previous") {
+            if (!phase)
+          {  if (rec.status === "previous") {
                 // totalPcs += rec.order_plan_qty;
 pcs.push(
            { name: 'In Pcs',
@@ -1098,7 +1129,6 @@ pcs.push(
     } 
     if (rec.status === "latest") {
         // totalCoeff += rec.order_plan_qty;
-
           coeff.push({
             name: 'In Coeff',
             janCoeff: rec.ExfMonth === 1 ? rec.order_plan_qty :'-',
@@ -1129,19 +1159,19 @@ pcs.push(
         
             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
             monthData.push(monthWiseInstance); 
-            console.log(monthWiseInstance,"rec")
+            // console.log(monthWiseInstance,"rec")
         }
         
     
     }
     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-    // console.log(DateMap.values
-    //   ,"length")
+    // console.log(DateMap.values ,"length")
 
     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
 }
 
 
+}
 async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
     const data = await this.ordersChildRepo.getWareHouseComparisionData(req);
     
@@ -1161,26 +1191,26 @@ async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
             );
         }
         const monthData = DateMap.get(rec.item_cd).monthWiseData;
-
-        if (rec.prod_plan_type !== null) {
+const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
+        if (!phase) {
             const pcs: PcsDataDto[] = [];
             const coeff: CoeffDataDto[] = [];
             if (rec.status === "previous") {
                 // totalPcs += rec.order_plan_qty;
 pcs.push(
            { name: 'In Pcs',
-            janPcs: rec.month === 1 ? rec.order_plan_qty :'-',
-            febPcs: rec.month === 2 ? rec.order_plan_qty :'-',
-            marPcs: rec.month === 3 ? rec.order_plan_qty :'-',
-            aprPcs: rec.month === 4 ? rec.order_plan_qty :'-',
-            mayPcs: rec.month === 5 ? rec.order_plan_qty :'-',
-            junPcs: rec.month === 6 ? rec.order_plan_qty :'-',
-            julPcs: rec.month === 7 ? rec.order_plan_qty :'-',
-            augPcs: rec.month === 8 ? rec.order_plan_qty :'-',
-            sepPcs: rec.month === 9 ? rec.order_plan_qty :'-',
-            octPcs: rec.month === 10 ? rec.order_plan_qty :'-',
-            novPcs: rec.month === 11 ? rec.order_plan_qty :'-',
-            decPcs: rec.month === 12 ? rec.order_plan_qty :'-',}
+            janPcs: rec.month === 1 ? rec.order_plan_qty : 0,
+            febPcs: rec.month === 2 ? rec.order_plan_qty : 0,
+            marPcs: rec.month === 3 ? rec.order_plan_qty : 0,
+            aprPcs: rec.month === 4 ? rec.order_plan_qty : 0,
+            mayPcs: rec.month === 5 ? rec.order_plan_qty : 0,
+            junPcs: rec.month === 6 ? rec.order_plan_qty : 0,
+            julPcs: rec.month === 7 ? rec.order_plan_qty : 0,
+            augPcs: rec.month === 8 ? rec.order_plan_qty : 0,
+            sepPcs: rec.month === 9 ? rec.order_plan_qty : 0,
+            octPcs: rec.month === 10 ? rec.order_plan_qty : 0,
+            novPcs: rec.month === 11 ? rec.order_plan_qty : 0,
+            decPcs: rec.month === 12 ? rec.order_plan_qty : 0,}
         )
     } 
     if (rec.status === "latest") {
@@ -1188,18 +1218,18 @@ pcs.push(
 
           coeff.push({
             name: 'In Coeff',
-            janCoeff: rec.month === 1 ? rec.order_plan_qty :'-',
-            febCoeff: rec.month === 2 ? rec.order_plan_qty :'-',
-            marCoeff: rec.month === 3 ? rec.order_plan_qty :'-',
-            aprCoeff: rec.month === 4 ? rec.order_plan_qty :'-',
-            mayCoeff: rec.month === 5 ? rec.order_plan_qty :'-',
-            junCoeff: rec.month === 6 ? rec.order_plan_qty :'-',
-            julCoeff: rec.month === 7 ? rec.order_plan_qty :'-',
-            augCoeff: rec.month === 8 ? rec.order_plan_qty :'-',
-            sepCoeff: rec.month === 9 ? rec.order_plan_qty :'-',
-            octCoeff: rec.month === 10 ? rec.order_plan_qty :'-',
-            novCoeff: rec.month === 11 ? rec.order_plan_qty :'-',
-            decCoeff: rec.month === 12 ? rec.order_plan_qty :'-',
+            janCoeff: rec.month === 1 ? rec.order_plan_qty : 0,
+            febCoeff: rec.month === 2 ? rec.order_plan_qty : 0,
+            marCoeff: rec.month === 3 ? rec.order_plan_qty : 0,
+            aprCoeff: rec.month === 4 ? rec.order_plan_qty : 0,
+            mayCoeff: rec.month === 5 ? rec.order_plan_qty : 0,
+            junCoeff: rec.month === 6 ? rec.order_plan_qty : 0,
+            julCoeff: rec.month === 7 ? rec.order_plan_qty : 0,
+            augCoeff: rec.month === 8 ? rec.order_plan_qty : 0,
+            sepCoeff: rec.month === 9 ? rec.order_plan_qty : 0,
+            octCoeff: rec.month === 10 ? rec.order_plan_qty : 0,
+            novCoeff: rec.month === 11 ? rec.order_plan_qty : 0,
+            decCoeff: rec.month === 12 ? rec.order_plan_qty : 0,
           })
         }
         const totalPcs = pcs.reduce((total, item) => {
@@ -1213,23 +1243,49 @@ pcs.push(
                 .filter(value => value !== 0) 
                 .reduce((sum, value) => sum + value, 0);
         }, 0);
-         console.log(totalPcs,'previous',
-         totalCoeff,'latest');
+        //  console.log(totalPcs,'previous',totalCoeff,'latest');
          
           
             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
             monthData.push(monthWiseInstance); 
-            console.log(monthWiseInstance,"rec")
+            // console.log(monthWiseInstance,"rec")
         }
         
     
     }
     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-    console.log(DateMap.values
-      ,"length")
+    // console.log(DateMap.values ,"length")
 
     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
 }
+
+
+async getSeasonWiseItemCode():Promise<CommonResponseModel>{
+    try{
+        const itemCode = await this.ordersRepository.getSeasonWiseItemCode()
+        if(itemCode.length > 0){
+            return new CommonResponseModel(true, 1, 'Data Retrieved Succesfully',itemCode)
+        }else {
+            return new CommonResponseModel(false,0,'No data found',[])
+        }
+    }catch(err){
+        throw(err)
+    }
+}
+
+async getSeasonWiseItemName():Promise<CommonResponseModel>{
+    try{
+        const itemCode = await this.ordersRepository.getSeasonWiseItemName()
+        if(itemCode.length > 0){
+            return new CommonResponseModel(true, 1, 'Data Retrieved Succesfully',itemCode)
+        }else {
+            return new CommonResponseModel(false,0,'No data found',[])
+        }
+    }catch(err){
+        throw(err)
+    }
+}
+
 async getExfactoryMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
     const data = await this.ordersRepository.getExfactoryMonthData(req.year);
     
@@ -1249,6 +1305,24 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
     return new CommonResponseModel(true, 1, 'data retrieved', data);
 }
 
+async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
+    const files = await this.fileUploadRepo.getFilesData()
+
+    let data;
+    if (files.length == 0) {
+        return new CommonResponseModel(false, 0, 'No data found');
+    } else if (files.length == 1) {
+        data = await this.ordersChildRepo.getItemQtyChangeData1ItemCode(files[0]?.fileId)
+    } else {
+        data = await this.ordersChildRepo.getItemQtyChangeDataItemCode(files[1]?.fileId, files[0]?.fileId)
+    }
+    if (data)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+
+
 async getWareHouseMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
     const data = await this.ordersRepository.getWareHouseMonthData(req.year);
     
@@ -1267,6 +1341,6 @@ async getWareHouseComparisionExcelData(req:YearReq): Promise<CommonResponseModel
     }
     return new CommonResponseModel(true, 1, 'data retrieved', data);
 }
-    }
+  }
 
   
