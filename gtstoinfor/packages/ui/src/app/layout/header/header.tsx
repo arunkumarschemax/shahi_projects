@@ -73,7 +73,7 @@ export const CommonHeader = (props: IProps) => {
       <Row justify='space-between' align='middle'>
         <Col span={4}>
           <div className="logo" >
-            <span style={{ color: colorPrimary, fontSize: 50 }}><b>{'SHAHI'}</b></span>
+            <span style={{ color: colorPrimary, fontSize: 45,paddingLeft:'10px' }}><b>{'SHAHI'}</b></span>
           </div>
         </Col>
         <Col span={1} >

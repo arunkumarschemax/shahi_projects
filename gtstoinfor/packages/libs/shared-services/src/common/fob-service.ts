@@ -1,4 +1,4 @@
-import {    AllFobResponseModel,FactoryActivateDeactivateDto, FobActivateDeactivateDto, FobResponseModel,Fobdto,
+import {    AllFobResponseModel,CommonResponseModel,FactoryActivateDeactivateDto, FobActivateDeactivateDto, FobResponseModel,Fobdto,
 } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
@@ -23,6 +23,10 @@ export class FobService extends CommonAxiosService {
 
     async activateOrDeactivate(payload: FobActivateDeactivateDto): Promise<FobResponseModel> {
         return this.axiosPostCall(this.fobController + "/activateOrDeactivate", payload)
+    }
+
+    async uploadFobPrice(payload: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.fobController + "/uploadFobPrice", payload)
     }
 
 }

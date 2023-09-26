@@ -1,12 +1,13 @@
 import { FactoryService, FobService } from '@project-management-system/shared-services';
-import { Button, Card, Col, Form, Input, Row, message } from 'antd'
+import { Button, Card, Col, Form, Input, Row, message,Select } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 // import FactoriesView from './factories-view';
 import { AlertMessages, FactoryDto, Fobdto } from '@project-management-system/shared-models';
+import Papa from 'papaparse'
 
-
+const {Option} = Select
 export interface Formprops {
   Data: Fobdto;
   updateItem: (Data:Fobdto ) => void;
@@ -21,25 +22,54 @@ export  function FobPriceListForm( props:Formprops) {
   const service = new FobService();
   const [disable,setDisable] = useState<boolean>(false)
 //   const pathToreDirect = '/masters/fob-price-list-view'
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [data, setData] = useState([])
+  const [columns, setColumns] = useState([]);
+  const [values, setValues] = useState([]);
+  const [type,setType] = useState<string>('')
+  const loc = useLocation()
+  const state = loc?.state
 
   
   const create = (data: Fobdto) =>{
     setDisable(true)
-    service.createFobplist(data).then(res => {
-      setDisable(false)
-      if(res.status){
-        AlertMessages.getSuccessMessage("Created Successfully")
-                setTimeout(() => {
-                    navigate('/masters/fob-price-list-view')
-                }, 500);
-      }else {
-        AlertMessages.getErrorMessage("Data Already Exist")
-    }
-    }).catch(err => {
-      setDisable(false)
-      AlertMessages.getErrorMessage(err.message);
-    })
+      service.createFobplist(data).then(res => {
+        setDisable(false)
+        if(res.status){
+          AlertMessages.getSuccessMessage("Created Successfully")
+                  setTimeout(() => {
+                      navigate('/masters/fob-price-list-view')
+                  }, 500);
+        }else {
+          AlertMessages.getErrorMessage("Data Already Exist")
+      }
+      }).catch(err => {
+        setDisable(false)
+        AlertMessages.getErrorMessage(err.message);
+      })
   }
+
+  const handleUpload = async () => {
+    try {
+      form.validateFields().then(values => {
+          const formData = new FormData();
+          formData.append('file', selectedFile);
+          service.uploadFobPrice(data).then(res => {
+            if(res.status){
+              AlertMessages.getSuccessMessage("Created Successfully")
+                  setTimeout(() => {
+                      navigate('/masters/fob-price-list-view')
+                  }, 500);
+            } else{
+              AlertMessages.getErrorMessage(res.internalMessage)
+            }
+          })
+        })
+  
+  }catch (error) {
+    message.error(error.message)
+  }
+}
 
 
   const saveData = (values: Fobdto) => {
@@ -48,7 +78,11 @@ export  function FobPriceListForm( props:Formprops) {
       props.updateItem(values);
     }else{
       setDisable(false)
-      create(values);
+      if(state.name === 'excel'){
+        handleUpload()
+      } else{
+        create(values);
+      }
     }
   };
 
@@ -60,12 +94,44 @@ export  function FobPriceListForm( props:Formprops) {
     } else {
         setDisable(false)
         saveData(values)
-
     }
-
  } 
+
   const onReset = () => {
     form.resetFields()
+    setSelectedFile([])
+  }
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === 'text/csv') {
+      setSelectedFile(event.target.files[0]);
+      Papa.parse(event.target.files[0], {
+        header: true,
+        complete: function (result) {
+          {
+            const columnArray = [];
+            const valueArray = [];
+
+            result.data.map((d) => {
+              columnArray.push(Object.keys(d))
+              valueArray.push(Object.values(d))
+            });
+            setData(result.data)
+            setColumns(columnArray[0])
+            setValues(valueArray)
+          }
+        }
+      });
+    } else {
+      // Display an error message or take appropriate action for invalid file type
+      alert('Please select a valid .csv file.');
+      setSelectedFile(null);
+    }
+  };
+
+  const onTypeChange = (value) => {
+    setType(value)
   }
 
   return (
@@ -80,7 +146,23 @@ export  function FobPriceListForm( props:Formprops) {
             <Form.Item name='id' hidden={true}>
                   <Input/>
                 </Form.Item>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            {
+              state?.name === 'excel' ? (<>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Form.Item label = "">
+              <input type="file" accept=".csv" onChange={handleFileChange} />
+            </Form.Item>
+            </Col>
+              </>) : (<>
+             
+              </>)
+            }
+
+            {
+              state?.name === 'new' || state == null? (<>
+               <Row gutter={24}>
+                
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name='planningSeasonCode' label='Planning Season Code'
                  rules={[{ required: true, message: 'Please enter the Planning Season Code', },
                     {
@@ -138,6 +220,11 @@ export  function FobPriceListForm( props:Formprops) {
                 <Input  placeholder='Shahi Confirmed Gross Price Currency Code'/>
                 </Form.Item>
               </Col>
+              </Row>
+              </>) : (<></>)
+            }
+              
+            
             </Row>
             <Row  gutter={24} justify={'end'}>
               <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset} style={{ backgroundColor: ' red' }}>Reset</Button></Col>
