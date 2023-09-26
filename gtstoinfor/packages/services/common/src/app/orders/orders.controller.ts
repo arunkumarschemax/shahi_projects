@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -263,9 +263,11 @@ export class OrdersController {
     }
 
     @Post('/seasonWiseReport')
-    async seasonWiseReport(): Promise<CommonResponseModel> {
+    @ApiBody({type: SeasonWiseRequest})
+    async seasonWiseReport(@Body() req?:any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.seasonWiseReport();
+            console.log(req,'lllllllllllllllll')
+            return this.ordersService.seasonWiseReport(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
@@ -356,6 +358,51 @@ export class OrdersController {
     async getExfactoryMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getExfactoryMonthExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getSeasonWiseItemCode')
+    async getSeasonWiseItemCode(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getSeasonWiseItemCode();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getSeasonWiseItemName')
+    async getSeasonWiseItemName(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getSeasonWiseItemName();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getQtyDifChangeItemCode')
+    async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getQtyDifChangeItemCode();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+    @Post('/getWareHouseComparisionExcelData')
+    @ApiBody({type:YearReq})
+    async getWareHouseComparisionExcelData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getWareHouseComparisionExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }  @Post('/getWareHouseMonthExcelData')
+    @ApiBody({type:YearReq})
+    async getWareHouseMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getWareHouseMonthExcelData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

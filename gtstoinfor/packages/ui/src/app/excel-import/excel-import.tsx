@@ -200,7 +200,8 @@ export default function ExcelImport() {
                       req.status = 'Failed';
                       req.userName = loginUser ? loginUser : null;
                       ordersService.updateFileStatus(req)
-                      message.error('File upload failed')
+                      // message.error('File upload failed')
+                      message.error(res.internalMessage)
                     }
                   }).finally(() => {
                     setLoading(false);
@@ -231,7 +232,8 @@ export default function ExcelImport() {
                       req.status = 'Failed';
                       req.userName = loginUser ? loginUser : null;
                       ordersService.updateFileStatus(req)
-                      message.error('File upload failed')
+                      // message.error('File upload failed')
+                      message.error(res.internalMessage)
                     }
                   }).finally(() => {
                     setLoading(false);
@@ -295,7 +297,7 @@ export default function ExcelImport() {
 
   return (
     <>
-      <Card title="Excel Import">
+      <Card title="Add Orders">
         <span>
           <Descriptions style={{ alignItems: 'right' }}>
             <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item>

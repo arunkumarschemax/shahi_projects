@@ -1,8 +1,8 @@
 import { CommonColumns } from "packages/services/common/common-columns.entity";
-import { Column, Entity,  PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity } from "typeorm";
 
-@Entity('price_list') 
-export class PriceListEntity extends CommonColumns  {
+@Entity('price_list-child') 
+export class PriceListChildEntity extends CommonColumns  {
 
     @Column('varchar', {
         name: "year",
@@ -44,4 +44,8 @@ export class PriceListEntity extends CommonColumns  {
     })
     currency: string;
 
+   
+
+
+   
 }
