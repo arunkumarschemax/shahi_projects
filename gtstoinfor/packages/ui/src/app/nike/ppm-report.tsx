@@ -13,7 +13,6 @@ const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 
 
 const PPMReport = () => {
-  const [ppm, setPPM] = useState([]);
   const [form] = Form.useForm();
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState('');
@@ -28,14 +27,13 @@ const PPMReport = () => {
   const { RangePicker } = DatePicker;
   const { Option } = Select;
   const [poLine, setPoLine] = useState<any>([]);
-  const [colorDesc, setColorDesc] = useState<any>([]);
-  const [categoryDesc, setCategoryDesc] = useState<any>([]);
   const [countryDestination, setCountryDestination] = useState<any>([]);
   const [plantCode, setPlantCode] = useState<any>([]);
   const [item, setItem] = useState<any>([]);
   const [factory, setFactory] = useState<any>([]);
   const [poNumber, setPoNumber] = useState<any>([]);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [docType, setDocType] = useState<any>([]);
   const [poLineItemNumber, setPoLineItemNumber] = useState<any>([]);
   const [styleNumber, setStyleNumber] = useState<any>([]);
@@ -50,8 +48,6 @@ const PPMReport = () => {
   useEffect(() => {
     getProductCode();
     getPoLine();
-    getColorDesc();
-    getcategoryDesc();
     getcountrydestination();
     getplantCode();
     getItem();
@@ -77,18 +73,6 @@ const PPMReport = () => {
   const getPoLine = () => {
     service.getPpmPoLineForMarketing().then(res => {
       setPoLine(res.data)
-    })
-  }
-
-  const getColorDesc = () => {
-    service.getPpmColorDescForMarketing().then(res => {
-      setColorDesc(res.data)
-    })
-  }
-
-  const getcategoryDesc = () => {
-    service.getPpmCategoryDescForMarketing().then(res => {
-      setCategoryDesc(res.data)
     })
   }
 
@@ -176,12 +160,6 @@ const PPMReport = () => {
     if (form.getFieldValue('poNumber') !== undefined) {
       req.poNumber = form.getFieldValue('poNumber');
     }
-    // if (form.getFieldValue('colorDesc') !== undefined) {
-    //   req.colorDesc = form.getFieldValue('colorDesc');
-    // }
-    // if (form.getFieldValue('categoryDesc') !== undefined) {
-    //   req.categoryDesc = form.getFieldValue('categoryDesc');
-    // }
     if (form.getFieldValue('destinationCountry') !== undefined) {
       req.destinationCountry = form.getFieldValue('destinationCountry');
     }
@@ -191,7 +169,6 @@ const PPMReport = () => {
     if (form.getFieldValue('item') !== undefined) {
       req.item = form.getFieldValue('item');
     }
-
     if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
       req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
     }
@@ -223,7 +200,6 @@ const PPMReport = () => {
       req.plant = form.getFieldValue('plant');
     }
 
-    console.log(req, "reqppm")
     service.getPPMData(req)
       .then(res => {
         if (res.status) {
@@ -504,7 +480,6 @@ const PPMReport = () => {
         dataIndex: 'lastModifiedDate',
         render: (text) => moment(text).format('MM/DD/YYYY')
       },
-
       {
         title: 'Item',
         dataIndex: 'item',
@@ -517,7 +492,6 @@ const PPMReport = () => {
           }
         },
       },
-
       {
         title: 'Factory',
         dataIndex: 'factory',
@@ -555,10 +529,7 @@ const PPMReport = () => {
             return `${mm}/${dd}/${yyyy}`;
           }
         }
-      }
-
-
-      ,
+      },
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
@@ -582,7 +553,6 @@ const PPMReport = () => {
             return text;
           }
         }
-
       },
       {
         title: 'DPOM Line Item Status',
@@ -801,7 +771,6 @@ const PPMReport = () => {
           }
         },
       },
-
       {
         title: 'Diff of Ship to Address',
         dataIndex: '',
