@@ -158,4 +158,7 @@ export class OrdersService extends CommonAxiosService {
     async getSeasonWiseItemName(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getSeasonWiseItemName")
     }
+    async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getQtyDifChangeItemCode")
+    }
 }

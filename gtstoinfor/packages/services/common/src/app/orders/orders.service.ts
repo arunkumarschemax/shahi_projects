@@ -1319,6 +1319,23 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
     return new CommonResponseModel(true, 1, 'data retrieved', data);
 }
 
+async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
+    const files = await this.fileUploadRepo.getFilesData()
+
+    let data;
+    if (files.length == 0) {
+        return new CommonResponseModel(false, 0, 'No data found');
+    } else if (files.length == 1) {
+        data = await this.ordersChildRepo.getItemQtyChangeData1ItemCode(files[0]?.fileId)
+    } else {
+        data = await this.ordersChildRepo.getItemQtyChangeDataItemCode(files[1]?.fileId, files[0]?.fileId)
+    }
+    if (data)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+
 }
 
   

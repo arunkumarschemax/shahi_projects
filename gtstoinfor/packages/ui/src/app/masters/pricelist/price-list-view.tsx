@@ -236,7 +236,7 @@ const getSeasonCode = () => {
         align:"center",
         sorter: (a, b) => a.style.localeCompare(b.style),
         sortDirections: ["descend", "ascend"],
-        ...getColumnSearchProps("style"),
+        // ...getColumnSearchProps("style"),
       },
       {
         title: "Year",
@@ -244,7 +244,7 @@ const getSeasonCode = () => {
         align:"right",
         sorter: (a, b) => a.year.localeCompare?.(b.year),
         sortDirections: ["descend", "ascend"],
-        ...getColumnSearchProps("year"),
+        // ...getColumnSearchProps("year"),
        
       },
       {
@@ -253,7 +253,7 @@ const getSeasonCode = () => {
         align:"center",
         sorter: (a, b) => a.destination.localeCompare(b.destination),
         sortDirections: [ "ascend","descend"],
-        ...getColumnSearchProps("destination"),
+        // ...getColumnSearchProps("destination"),
         
       },
       {
@@ -262,7 +262,7 @@ const getSeasonCode = () => {
         align:"center",
         sorter: (a, b) => a.seasonCode.localeCompare(b.seasonCode),
         sortDirections: [ "ascend","descend"],
-        ...getColumnSearchProps("seasonCode"),
+        // ...getColumnSearchProps("seasonCode"),
 
        
       },
@@ -272,7 +272,7 @@ const getSeasonCode = () => {
         align:"center",
         sorter: (a, b) => a.currency.localeCompare(b.currency),
         sortDirections: [ "ascend","descend"],
-        ...getColumnSearchProps("currency"),
+        // ...getColumnSearchProps("currency"),
 
        
        

@@ -1179,14 +1179,12 @@ const ChangesGrid = () => {
         {
             key: '1',
             label: <b>Order Qty Revised Orders : {filteredQtyData?.length} </b>,
-            children: <Table           className="custom-table-wrapper"
-            bordered dataSource={filteredQtyData} columns={columns} />,
+            children: <Table bordered dataSource={filteredQtyData} columns={columns} />,
         },
         {
             key: '2',
             label: <b>Group Of ItemCode  : {differenceQtyData?.length}</b>,
-            children: <Table           className="custom-table-wrapper"
-            dataSource={differenceQtyData} columns={columns3} pagination={false}
+            children: <Table dataSource={differenceQtyData} columns={columns3} pagination={false}
                 summary={(differenceQtyData) => {
                     let totalLastQty = 0;
                     let totalRecQty = 0;
@@ -1228,8 +1226,7 @@ const ChangesGrid = () => {
         // {
         //     key: '3',
         //     label: <b >Requested Warehouse Date Revised Orders: {filteredWarehouseDateData?.length}</b>,
-        //     children: <Table           className="custom-table-wrapper"
-// bordered dataSource={filteredWarehouseDateData} columns={columns1} />,
+        //     children: <Table bordered dataSource={filteredWarehouseDateData} columns={columns1} />,
         // },
         // {
         //     key: '4',
@@ -1258,12 +1255,12 @@ const ChangesGrid = () => {
     }
 
     return (
-        <Card title='Compare Projection Orders' extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData || phaseData ? (<Button
+        <Card title='Compare Orders' extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData || phaseData ? (<Button
             type="default"
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
-            <Form form={form} layout={"vertical"} >
+            {/* <Form form={form} layout={"vertical"} >
                 <Row gutter={[24, 24]}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
                         <Form.Item name="contractDate"
@@ -1301,7 +1298,7 @@ const ChangesGrid = () => {
                             onClick={onReset}>Reset</Button>
                     </Col>
                 </Row>
-            </Form>
+            </Form> */}
             {filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData ? <>
                 {/* <Row gutter={24}>
                     <Col>

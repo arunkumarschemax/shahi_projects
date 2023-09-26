@@ -380,4 +380,14 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getQtyDifChangeItemCode')
+    async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getQtyDifChangeItemCode();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
 }
