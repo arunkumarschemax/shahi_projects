@@ -238,15 +238,7 @@ const getSeasonCode = () => {
         sortDirections: ["descend", "ascend"],
         // ...getColumnSearchProps("style"),
       },
-      {
-        title: "Year",
-        dataIndex: "year",
-        align:"right",
-        sorter: (a, b) => a.year.localeCompare?.(b.year),
-        sortDirections: ["descend", "ascend"],
-        // ...getColumnSearchProps("year"),
-       
-      },
+      
       {
         title: "Destination",
         dataIndex: "destination",
@@ -255,6 +247,14 @@ const getSeasonCode = () => {
         sortDirections: [ "ascend","descend"],
         // ...getColumnSearchProps("destination"),
         
+      },{
+        title: "Year",
+        dataIndex: "year",
+        align:"right",
+        sorter: (a, b) => a.year - b.year,
+        sortDirections: ["descend", "ascend"],
+        // ...getColumnSearchProps("year"),
+       
       },
       {
         title: "Season Code",
@@ -267,11 +267,35 @@ const getSeasonCode = () => {
        
       },
       {
-        title: "Currency",
-        dataIndex: "currency",
+        title: "Price",
+        dataIndex: "price",
         align:"center",
-        sorter: (a, b) => a.currency.localeCompare(b.currency),
+        sorter: (a, b) => a.price.localeCompare(b.price),
         sortDirections: [ "ascend","descend"],
+         ...getColumnSearchProps("currency"),
+       
+        // filters: [
+        //   {
+        //     text: 'INR',
+        //     value: true,
+        //   },
+        //   {
+        //     text: 'InActive',
+        //     value: false,
+        //   },
+        // ],
+        // filterMultiple: false,
+        // onFilter: (value, record) => {
+        //   // === is not work
+        //   return record.isActive === value;
+        // },
+        render:(text,record) => {
+          return(
+            <>
+            {record.price ? `${record.price} ${record.currency}` : '-'}
+            </>
+          )
+        }
         // ...getColumnSearchProps("currency"),
 
        
@@ -357,7 +381,7 @@ const getSeasonCode = () => {
   return (
       <>
       <Card title={<span >Price List</span>}
-     headStyle={{ border: 0 }} 
+    //  headStyle={{ border: 0 }} 
     extra={<Link to='/masters/pricelist/price-list-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
@@ -413,7 +437,7 @@ const getSeasonCode = () => {
             </Form.Item>
           </Col>
          
-          <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
+          {/* <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
             <Form.Item name="currency" label="Currency">
               <Select placeholder="Select Currency" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
                 {currency.map((e) => {
@@ -424,7 +448,7 @@ const getSeasonCode = () => {
                 })}
               </Select>
             </Form.Item>
-          </Col>
+          </Col> */}
 
           <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 20 }}  >
                             <Form.Item>

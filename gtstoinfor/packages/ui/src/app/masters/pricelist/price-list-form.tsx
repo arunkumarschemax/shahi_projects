@@ -120,6 +120,21 @@ export const PriceListForm = (props: PriceListFormProps) => {
                   <Input />
                 </Form.Item>
               </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                <Form.Item name='price' label='Price ' 
+                 rules={[
+                 
+                  {
+                    pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][0-9_/`"-',.|\s-]*$/,
+                    message: `Invalid Price`
+                  }
+    
+                  
+                ]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
 
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                 <Form.Item name='currency' label='Currency  '>

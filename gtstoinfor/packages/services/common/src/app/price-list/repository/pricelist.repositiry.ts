@@ -24,6 +24,7 @@ export class pricListRepository extends Repository<PriceListEntity> {
     async getPriceListData(req:NewFilterDto): Promise<any[]> {
         const query = await this.createQueryBuilder('o')
             .select(`season_code,YEAR , style,price,currency,destination,item,id,version_flag,updated_user,is_active,created_user,created_at`)
+           .orderBy(`style`)
             if (req.style !== undefined) {
                 query.andWhere(`style ='${req.style}'`)
             }
@@ -39,6 +40,7 @@ export class pricListRepository extends Repository<PriceListEntity> {
             if (req.seasonCode !== undefined) {
                 query.andWhere(`season_code ='${req.seasonCode}'`)
             }
+           
             return await query.getRawMany();
 
     }

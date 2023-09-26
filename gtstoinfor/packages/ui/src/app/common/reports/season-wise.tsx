@@ -39,11 +39,10 @@ const SeasonWiseReport = () => {
         if(form.getFieldValue('itemName') !== undefined){
             req.itemName = form.getFieldValue('itemName')
         }
-        console.log(req,'oooooooo')
-        console.log(req.itemCode,req.itemName,'yoyoyoyoyooyoyoyoyo')
         service.seasonWiseReport(req).then((res)=>{
           if(res.data){
             setData(res.data)
+            console.log(data?.[1],'hi ra mawa')
           }
         })
     }
@@ -87,73 +86,73 @@ const SeasonWiseReport = () => {
                     title: `January`,
                     dataIndex: "january",
                     align:"right",
-                    // render: (text) => (record.whMonth === 1 ? text : '-'),
+                    render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
                     title: `February`,
                     dataIndex: "february",
                     align:"right",
-                    // render: (text, record) => (record.whMonth === 2 ? text : '-'),
+                    render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
                     title: `March`,
                     dataIndex: "march",
                     align:"right",
-                    // render: (text, record) => (record.whMonth === 3 ? text : '-'),
+                    render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
                     title: `April`,
                     dataIndex: "april",
                     align:"right",
-                    // render: (text, record) => (record.whMonth === 4 ? text : '-'),
+                    render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
                     title: `May`,
                     dataIndex: "may",
                     align:"right",
-                    // render: (text, record) => (record.whMonth === 5 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),              
                 },
                 {
                     title: `June`,
                     dataIndex: "june",
                     align:"right",
-                    // render: (text, record) => (record.whMonth === 6 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),               
                 },
                 {
                     title: `July`,
                     dataIndex: "july",
                     align:"right",
-                    // render: (text, record) => (record.whMonth === 7 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
                     title: `August`,
                     dataIndex: "august",
                     align:"right",
-                    // render: (text, record) => (record.whMonth === 8 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),               
                 },
                 {
                     title: `September`,
                     dataIndex: "september",
                     align:"right",
-                    // render: (text, record) => (record.whMonth === 9 ? text : '-'),
+                    render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
                     title: `October`,
                     dataIndex: "october",
                     align:"right",
-                    // render: (text, record) => (record.whMonth === 10 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),               
                 },
                 {
                     title: `November`,
                     dataIndex: "november",
                     align:"right",
-                    // render: (text, record) => (record.whMonth === 11 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),               
                 },
                 {
                     title: `December`,
                     dataIndex: "december",
                     align:"right",
-                    // render: (text, record) => (record.whMonth === 12 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),              
                 },
             ]
         },
@@ -162,7 +161,7 @@ const SeasonWiseReport = () => {
             dataIndex: 'whTotal',
             align: 'right',
             width:"100px",
-            render: (text, record) => (<strong>{text}</strong>),
+            render: (text, record) => (<strong>{text.toLocaleString()}</strong>),
         },
         
     ]
@@ -189,73 +188,73 @@ const SeasonWiseReport = () => {
                     title: `January`,
                     dataIndex: "exfJan",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 1 ? text : '-'),
+                    render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
                     title: `February`,
                     dataIndex: "exfFeb",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 2 ? text : '-'),
+                    render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
                     title: `March`,
                     dataIndex: "exfMarch",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 3 ? text : '-'),
+                    render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
                     title: `April`,
                     dataIndex: "exfApril",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 4 ? text : '-'),
+                    render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
                     title: `May`,
                     dataIndex: "exfMay",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 5 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
                     title: `June`,
                     dataIndex: "exfJune",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 6 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
                     title: `July`,
                     dataIndex: "exfJuly",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 7 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
                     title: `August`,
                     dataIndex: "exfAug",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 8 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
                     title: `September`,
                     dataIndex: "exfSep",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 9 ? text : '-'),
+                    render: (value) => (<span>{value.toLocaleString()}</span>),
                 },
                 {
                     title: `October`,
                     dataIndex: "exfOct",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 10 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
                     title: `November`,
                     dataIndex: "exfNov",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 11 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
                 {
                     title: `December`,
                     dataIndex: "exfDec",
                     align:"right",
-                    // render: (text, record) => (record.exfMonth === 12 ? text : '-'),                
+                    render: (value) => (<span>{value.toLocaleString()}</span>),                
                 },
             ]
         },
@@ -264,7 +263,7 @@ const SeasonWiseReport = () => {
             dataIndex: 'exfTotal',
             align: 'right',
             width:"100px",
-            render: (text, record) => (<strong>{text}</strong>),
+            render: (text, record) => (<strong>{text.toLocaleString()}</strong>),
         },
 ]
 
@@ -276,6 +275,7 @@ const SeasonWiseReport = () => {
                 .addSheet('23SS-WH')
                 .addColumns(excelColumnsWH)
                 .addDataSource(data?.[0], { str2num: true })
+                .addRow().Row
         }
         if (data?.[0].length > 0) {
             excel
@@ -559,7 +559,6 @@ const SeasonWiseReport = () => {
           );
       };
 
-
       const items = [
         {
           key: "1",
@@ -571,6 +570,7 @@ const SeasonWiseReport = () => {
                 dataSource={data?.[0]}
                 columns={columnsWH}
                 summary={generateSummaryWH}
+                className="custom-table-wrapper"
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
@@ -587,6 +587,7 @@ const SeasonWiseReport = () => {
                 dataSource={data?.[0]}
                 columns={columnsEXF}
                 summary={generateSummaryEXF}
+                className="custom-table-wrapper"
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
@@ -603,6 +604,7 @@ const SeasonWiseReport = () => {
                 dataSource={data?.[1]}
                 columns={columnsWH}
                 summary={generateSummaryWH}
+                className="custom-table-wrapper"
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
@@ -619,6 +621,7 @@ const SeasonWiseReport = () => {
                 dataSource={data?.[1]}
                 columns={columnsEXF}
                 summary={generateSummaryEXF}
+                className="custom-table-wrapper"
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
@@ -635,6 +638,7 @@ const SeasonWiseReport = () => {
                 dataSource={data?.[2]}
                 columns={columnsWH}
                 summary={generateSummaryWH}
+                className="custom-table-wrapper"
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
@@ -651,18 +655,19 @@ const SeasonWiseReport = () => {
                 dataSource={data?.[2]}
                 columns={columnsEXF}
                 summary={generateSummaryEXF}
+                className="custom-table-wrapper"
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
             )
           )
         }
-      ];
+      ]
       
       
 
       return (
-        <Card title="Season Wise Order Quantity" extra={data?.[0] || data?.[1] || data?.[2] ? (
+        <Card title="Season Wise Order Quantity" className="custom-table-wrapper" extra={data?.[0] || data?.[1] || data?.[2] ? (
           <Button
             type="default"
             style={{ color: 'green' }}
@@ -676,58 +681,60 @@ const SeasonWiseReport = () => {
             <Row gutter={16}>
               <Col xs={24} sm={24} md={8} lg={6} xl={4}>
                 <Form.Item label='Item Code' name='itemCode'>
-                  <Select
-                    showSearch
-                    placeholder="Select Item Code"
-                    optionFilterProp="children"
-                    allowClear
-                    value={activeTabKey === '1' ? form.getFieldValue('itemCode') : undefined}
-                  >
-                    {itemCode.filter((e) => {
-                      return (
-                        (activeTabKey === '1' || activeTabKey === '2') &&
-                        data?.[0]?.some((item) => item.itemCode === e.itemCode)
-                      ) || (
-                        (activeTabKey === '3' || activeTabKey === '4') &&
-                        data?.[1]?.some((item) => item.itemCode === e.itemCode)
-                      ) || (
-                        (activeTabKey === '5' || activeTabKey === '6') &&
-                        data?.[2]?.some((item) => item.itemCode === e.itemCode)
-                      ) || true;
-                    }).map((inc: any) => (
-                      <Option key={inc.itemCode} value={inc.itemCode}>
-                        {inc.itemCode}
-                      </Option>
-                    ))}
-                  </Select>
+                <Select
+                showSearch
+                placeholder="Select Item Name"
+                optionFilterProp="children"
+                allowClear
+                value={activeTabKey === '1' ? form.getFieldValue('itemCode') : undefined}
+              >
+                {itemCode.filter((e) => {
+                  if (activeTabKey === '1') {
+                    return data?.[0]?.some((item) => item.itemCode === e.itemCode);
+                  } else if (activeTabKey === '2') {
+                    return data?.[0]?.some((item) => item.itemCode === e.itemCode);
+                  } else if (activeTabKey === '3') {
+                    return data?.[1]?.some((item) => item.itemCode === e.itemCode);
+                  }  else if (activeTabKey === '4') {
+                    return data?.[1]?.some((item) => item.itemCode === e.itemCode);
+                  } else if (activeTabKey === '5') {
+                    return data?.[2]?.some((item) => item.itemCode === e.itemCode);
+                  } else if (activeTabKey === '6') {
+                    return data?.[2]?.some((item) => item.itemCode === e.itemCode);
+                  } return true;
+                }).map((e:any) => {
+                  return <Option key={e.itemCode} value={e.itemCode}>{e.itemCode}</Option>
+                })}
+              </Select>
                 </Form.Item>
               </Col>
               <Col xs={24} sm={24} md={8} lg={8} xl={6}>
                 <Form.Item label='Item Name' name='itemName'>
-                  <Select
-                    showSearch
-                    placeholder="Select Item Name"
-                    optionFilterProp="children"
-                    allowClear
-                    value={activeTabKey === '1' ? form.getFieldValue('itemName') : undefined}
-                  >
-                    {itemName.filter((e) => {
-                      return (
-                        (activeTabKey === '1' || activeTabKey === '2') &&
-                        data?.[0]?.some((item) => item.itemName === e.itemName)
-                      ) || (
-                        (activeTabKey === '3' || activeTabKey === '4') &&
-                        data?.[1]?.some((item) => item.itemName === e.itemName)
-                      ) || (
-                        (activeTabKey === '5' || activeTabKey === '6') &&
-                        data?.[2]?.some((item) => item.itemName === e.itemName)
-                      ) || true;
-                    }).map((e: any) => (
-                      <Option key={e.itemName} value={e.itemName}>
-                        {e.itemName}
-                      </Option>
-                    ))}
-                  </Select>
+                <Select
+                showSearch
+                placeholder="Select Item Name"
+                optionFilterProp="children"
+                allowClear
+                value={activeTabKey === '1' ? form.getFieldValue('itemName') : undefined}
+              >
+                {itemName.filter((e) => {
+                  if (activeTabKey === '1') {
+                    return data?.[0]?.some((item) => item.itemName === e.itemName);
+                  } else if (activeTabKey === '2') {
+                    return data?.[0]?.some((item) => item.itemName === e.itemName);
+                  } else if (activeTabKey === '3') {
+                    return data?.[1]?.some((item) => item.itemName === e.itemName);
+                  }  else if (activeTabKey === '4') {
+                    return data?.[1]?.some((item) => item.itemName === e.itemName);
+                  } else if (activeTabKey === '5') {
+                    return data?.[2]?.some((item) => item.itemName === e.itemName);
+                  } else if (activeTabKey === '6') {
+                    return data?.[2]?.some((item) => item.itemName === e.itemName);
+                  } return true;
+                }).map((e:any) => {
+                  return <Option key={e.itemName} value={e.itemName}>{e.itemName}</Option>
+                })}
+              </Select>
                 </Form.Item>
               </Col>
               <Col xs={24} sm={24} md={4} lg={4} xl={3} style={{ marginTop: "22px", marginRight: "-50px", marginLeft:"40px" }}>

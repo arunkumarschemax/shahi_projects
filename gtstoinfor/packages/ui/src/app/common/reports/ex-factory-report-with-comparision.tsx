@@ -1,7 +1,7 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { YearReq } from "@project-management-system/shared-models";
 import { OrdersService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, List, Row, Select, Table, Tabs, TabsProps, Typography, message } from "antd";
+import { Button, Card, Col, Form, List, Row, Select, Space, Table, Tabs, TabsProps, Typography, message } from "antd";
 import { Excel } from "antd-table-saveas-excel";
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import form from "antd/es/form";
@@ -24,8 +24,15 @@ export const ExFactoryReportWithComparision = () => {
 
   useEffect(()=>{
     getData();
+    getTabs()
   },[])
-
+  const getTabs = () => {
+    service.getExfactoryYearData().then((res) => {
+      if (res.status) {
+        setYear(res.data);
+      }
+    });
+  };
   const getData =()=>{
     const req = new YearReq(tab)    
     service.getExfactoryWithComparision(req).then(res =>{
@@ -53,9 +60,33 @@ export const ExFactoryReportWithComparision = () => {
       }
     })
   }
- 
+  const CustomTitle = () => {
+           
+    return (
+      <div>
+      <Space size={"large"}>
+       Production Plan Type Name<span>Jan(previous)</span><br/><span><span></span>Jan(latest)</span>
+       <span>Feb(previous)</span><br/><span>Feb(latest)</span>
+        <span>Mar(previous)</span><br/><span>Mar(latest)</span>
+        <span>Apr(previous)</span><span>Apr(latest)</span>
+        <span>May(previous)</span><br/><span>May(latest)</span>
+        <span>Jun(previous)</span><br/><span>Jun(latest)</span>
+        <span>Jul(previous)</span><br/><span>Jul(latest)</span>
+        <span>Aug(previous)</span><br/><span>Aug(latest)</span>
+        <span>Sep(previous)</span><br/><span>Sep(latest)</span>
+        <span>Oct(previous)</span><br/><span>Oct(latest)</span>
+        <span>Nov(previous)</span><span>Nov(latest)</span>
+        <span>Dec(previous)</span><br/><span>Dec(latest)</span>
+        <span>Total(previous)</span><br/><span>Total(latest)</span>
+        <span></span><span></span>
+</Space>
+      
+      </div>
+    );
+  };
   const childColumns1: any = [
     {
+      // title: "Production Plan Type Name",
       // title: "Production Plan Type Name",
       dataIndex: "phasetype",
       // key: "phasetype",
@@ -72,8 +103,10 @@ export const ExFactoryReportWithComparision = () => {
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "janCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.janCoeff}</span>  || '-'))
           
@@ -89,14 +122,18 @@ export const ExFactoryReportWithComparision = () => {
         {
           title: `Previous`,
           dataIndex: "febPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.febPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "febCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.febCoeff}</span>  || '-'))
           
@@ -113,14 +150,18 @@ export const ExFactoryReportWithComparision = () => {
         {
           title: `Previous`,
           dataIndex: "marPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.marPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+         // title: `Latest`,
           dataIndex: "marCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.marCoeff}</span>  || '-'))
           
@@ -137,14 +178,18 @@ export const ExFactoryReportWithComparision = () => {
         {
           title: `Previous`,
           dataIndex: "aprPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.aprPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+         // title: `Latest`,
           dataIndex: "aprCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
@@ -161,14 +206,18 @@ export const ExFactoryReportWithComparision = () => {
         {
           title: `Previous`,
           dataIndex: "mayPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+         // title: `Latest`,
           dataIndex: "mayCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.mayCoeff}</span>  || '-'))
           
@@ -186,14 +235,18 @@ export const ExFactoryReportWithComparision = () => {
         {
           title: `Previous`,
           dataIndex: "junPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.junPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+         // title: `Latest`,
           dataIndex: "junCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.junCoeff}</span>  || '-'))
           
@@ -211,14 +264,18 @@ export const ExFactoryReportWithComparision = () => {
         {
           title: `Previous`,
           dataIndex: "julPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.julPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+         // title: `Latest`,
           dataIndex: "julCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.julCoeff}</span>  || '-'))
           
@@ -236,14 +293,18 @@ export const ExFactoryReportWithComparision = () => {
         {
           title: `Previous`,
           dataIndex: "augPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.augPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+         // title: `Latest`,
           dataIndex: "augCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.augCoeff}</span>  || '-'))
           
@@ -260,14 +321,18 @@ export const ExFactoryReportWithComparision = () => {
         {
           title: `Previous`,
           dataIndex: "sepPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.sepPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+         // title: `Latest`,
           dataIndex: "sepCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.sepCoeff}</span>  || '-'))
           
@@ -284,14 +349,18 @@ export const ExFactoryReportWithComparision = () => {
         {
           title: `Previous`,
           dataIndex: "octPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.octPcs}</span>  || '-'))
           
           },
         },
         {
-          title: `Latest`,
+         // title: `Latest`,
           dataIndex: "octCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.octCoeff}</span>  || '-'))
           
@@ -308,14 +377,18 @@ export const ExFactoryReportWithComparision = () => {
         {
           title: `Previous`,
           dataIndex: "novPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.novPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+         // title: `Latest`,
           dataIndex: "novCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.novCoeff}</span>  || '-'))
           
@@ -332,14 +405,18 @@ export const ExFactoryReportWithComparision = () => {
         {
           title: `Previous`,
           dataIndex: "decPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.decPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "decCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.decCoeff}</span>  || '-'))
           
@@ -352,12 +429,14 @@ export const ExFactoryReportWithComparision = () => {
     {
       // title: "Total Previous",
       dataIndex: "totalPcs",
-     
+   align:"right",
+    //  width:100
     },
     {
       // title: "Total Latest",
       dataIndex: "totalCoeff",
-     
+      align:"right",
+      width:150
     },
   ]
   const columns5: any = [
@@ -380,7 +459,7 @@ export const ExFactoryReportWithComparision = () => {
       // ...getColumnSearchProps('itemName')
     },
     {
-      title: "Month Wise Data",
+      title: <CustomTitle/>,
       dataIndex: "monthWiseData",
       align:'center',
       render: (text: any, record: any) => (
@@ -400,7 +479,7 @@ export const ExFactoryReportWithComparision = () => {
 
     const currentDate = new Date()
         .toISOString()
-        .slice(0, 10)
+        .slice(0, 100)
         .split("-")
         .join("/");
 

@@ -24,6 +24,8 @@ export class priceListExcelDto {
     createdAt: string;
     @ApiProperty()
     updatedAt: string;
+    @ApiProperty()
+    version?: number;
 
     constructor(
         year:string, 
@@ -37,6 +39,7 @@ export class priceListExcelDto {
         updatedUser: string | null,
         createdAt: string,
         updatedAt: string,
+        version?: number
     ){
         this.year = year
         this.seasonCode = seasonCode
@@ -49,6 +52,7 @@ export class priceListExcelDto {
         this.updatedUser = updatedUser
         this.createdAt = createdAt
         this.updatedAt = updatedAt
+        this.version = version
     }
   }
   
