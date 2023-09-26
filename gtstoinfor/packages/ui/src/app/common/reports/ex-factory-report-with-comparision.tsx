@@ -56,13 +56,13 @@ export const ExFactoryReportWithComparision = () => {
  
   const childColumns1: any = [
     {
-      title: "Production Plan Type Name",
+      // title: "Production Plan Type Name",
       dataIndex: "phasetype",
-      key: "phasetype",
+      // key: "phasetype",
     },
-    {
-      title: "January",
-            children: [
+    // {
+    //   title: "January",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "janPcs",
@@ -78,14 +78,14 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.janCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
    
     },
-    {
-      title: "February",
-      dataIndex: "oldOrderQtyPcs2",
-            children: [
+    // {
+    //   title: "February",
+    //   dataIndex: "oldOrderQtyPcs2",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "febPcs",
@@ -101,15 +101,15 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.febCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
  
     },
-    {
-      title: "March",
-      dataIndex: "oldOrderQtyPcs3",
-      key: "oldOrderQtyPcs3",
-            children: [
+    // {
+    //   title: "March",
+    //   dataIndex: "oldOrderQtyPcs3",
+    //   key: "oldOrderQtyPcs3",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "marPcs",
@@ -125,15 +125,15 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.marCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
       
     },
-    {
-      title: "April",
-      dataIndex: "oldOrderQtyPcs4",
-      key: "oldOrderQtyPcs4",
-            children: [
+    // {
+    //   title: "April",
+    //   dataIndex: "oldOrderQtyPcs4",
+    //   key: "oldOrderQtyPcs4",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "aprPcs",
@@ -149,15 +149,15 @@ export const ExFactoryReportWithComparision = () => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
   
     },
-    {
-      title: "May",
-      dataIndex: "oldOrderQtyPcs5",
-      key: "oldOrderQtyPcs5",
-            children: [
+    // {
+    //   title: "May",
+    //   dataIndex: "oldOrderQtyPcs5",
+    //   key: "oldOrderQtyPcs5",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "mayPcs",
@@ -174,15 +174,15 @@ export const ExFactoryReportWithComparision = () => {
           
           }
         },
-      ],
+    //   ],
     
       
-    },
-    {
-      title: "June",
-      dataIndex: "oldOrderQtyPcs6",
-      key: "oldOrderQtyPcs6",
-            children: [
+    // },
+    // {
+    //   title: "June",
+    //   dataIndex: "oldOrderQtyPcs6",
+    //   key: "oldOrderQtyPcs6",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "junPcs",
@@ -198,16 +198,16 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.junCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
    
       
     },
-    {
-      title: "July",
-      dataIndex: "oldOrderQtyPcs7",
-      key: "oldOrderQtyPcs7",
-            children: [
+    // {
+    //   title: "July",
+    //   dataIndex: "oldOrderQtyPcs7",
+    //   key: "oldOrderQtyPcs7",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "julPcs",
@@ -223,16 +223,16 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.julCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
   
       
     },
-    {
-      title: "August",
-      dataIndex: "oldOrderQtyPcs8",
-      key: "oldOrderQtyPcs8",
-            children: [
+    // {
+    //   title: "August",
+    //   dataIndex: "oldOrderQtyPcs8",
+    //   key: "oldOrderQtyPcs8",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "augPcs",
@@ -248,15 +248,15 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.augCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
    
     },
-    {
-      title: "September",
-      dataIndex: "oldOrderQtyPcs9",
-      key: "oldOrderQtyPcs9",
-            children: [
+    // {
+    //   title: "September",
+    //   dataIndex: "oldOrderQtyPcs9",
+    //   key: "oldOrderQtyPcs9",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "sepPcs",
@@ -272,15 +272,15 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.sepCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
     
     },
-    {
-      title: "October",
-      dataIndex: "oldOrderQtyPcs10",
-      key: "oldOrderQtyPcs10",
-            children: [
+    // {
+    //   title: "October",
+    //   dataIndex: "oldOrderQtyPcs10",
+    //   key: "oldOrderQtyPcs10",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "octPcs",
@@ -296,15 +296,15 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.octCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
     
     },
-    {
-      title: "November",
-      dataIndex: "oldOrderQtyPcs11",
-      key: "oldOrderQtyPcs11",
-            children: [
+    // {
+    //   title: "November",
+    //   dataIndex: "oldOrderQtyPcs11",
+    //   key: "oldOrderQtyPcs11",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "novPcs",
@@ -320,15 +320,15 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.novCoeff}</span>  || '-'))
           
           },
-        },
-      ],
+      //   },
+      // ],
      
     },
-    {
-      title: "December",
-      dataIndex: "oldOrderQtyPcs12",
-      key: "oldOrderQtyPcs12",
-            children: [
+    // {
+    //   title: "December",
+    //   dataIndex: "oldOrderQtyPcs12",
+    //   key: "oldOrderQtyPcs12",
+    //         children: [
         {
           title: `Previous`,
           dataIndex: "decPcs",
@@ -344,18 +344,18 @@ export const ExFactoryReportWithComparision = () => {
             return (record.coeffData.map((item: any) =><span>{item.decCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
 
       
     },
     {
-      title: "Total Previous",
+      // title: "Total Previous",
       dataIndex: "totalPcs",
      
     },
     {
-      title: "Total Latest",
+      // title: "Total Latest",
       dataIndex: "totalCoeff",
      
     },
@@ -387,7 +387,7 @@ export const ExFactoryReportWithComparision = () => {
         <Table
           dataSource={record.monthWiseData}
           columns={childColumns1}
-          pagination={false} // Hide pagination for child table
+          pagination={false}
           rowKey={(record) => record.itemName}
          
         />
@@ -623,7 +623,7 @@ const onReset = () => {
 }
   return (
     <Card
-    title="Ex-Factory Comparision Report"
+    title="Comparision Ex-Factory Report"
     extra={data.length > 0 ? (<Button
         type="default"
         style={{ color: 'green' }}
@@ -674,7 +674,7 @@ const onReset = () => {
                     </Row>
                 </Form>
         <Table
-          dataSource={filteredData} // Assuming 'data' contains data for each year
+          dataSource={data} // Assuming 'data' contains data for each year
           columns={columns5} // Assuming 'columns5' is defined elsewhere
           size="small"
           scroll={{ x: "max-content" }}

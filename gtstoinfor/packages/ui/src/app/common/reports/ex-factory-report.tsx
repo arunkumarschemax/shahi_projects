@@ -649,7 +649,7 @@ export const ExFactoryReport = () => {
   };
   return (
     <Card
-      title="Ex-Factory Report"
+      title=" Montly Wise Ex-Factory Report"
       extra={
         data.length > 0 ? (
           <Button
