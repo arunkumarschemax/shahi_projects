@@ -753,6 +753,15 @@ if(data.Order_Plan_Number !== null){
             return new CommonResponseModel(false, 0, 'No data found', data);
         }
     }
+    async getTrimOrdersNo(): Promise<CommonResponseModel> {
+        const data = await this.trimOrderRepo.getTrimOdersNo()
+        if (data.length > 0) {
+            return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
+        }
+        else {
+            return new CommonResponseModel(false, 0, 'No data found', data);
+        }
+    }
     async getExfactoryYear(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getExfactoryYearData()
         if (data.length > 0) {
