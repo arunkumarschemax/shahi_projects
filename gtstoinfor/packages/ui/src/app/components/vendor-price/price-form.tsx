@@ -1,6 +1,6 @@
 import { UndoOutlined } from '@ant-design/icons';
 import { AllPriceDto } from '@xpparel/shared-models';
-import { PricesService, VendorService } from '@xpparel/shared-services';
+import { BuyersService, PricesService, VendorService } from '@xpparel/shared-services';
 import { Button, Card, Col, Form, Input, Row, Select, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +11,9 @@ const PriceForm = () => {
   const [form] = Form.useForm();
   const [vendor, setVendor] = useState("");
   const [data1, setData1] = useState<any[]>([]);
+  const [data2, setData2] = useState<any[]>([]);
   const servicess = new VendorService();
+  const buyerss = new BuyersService();
 
 
   const handleViewClick = () => {
@@ -45,9 +47,30 @@ const PriceForm = () => {
       });
   };
 
+  useEffect(() => {
+    getdata2();
+  }, []);
+
+
+
+  const getdata2 = () => {
+    buyerss
+      .getAllBuyersInfo()
+      .then((res) => {
+        if (res.status) {
+          setData2(res.data);
+        } else {
+          setData2([]);
+        }
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
   const onFinish = (values) => {
     console.log(values, "values");
-    const req = new AllPriceDto(values.headOfChargers, values.perUnit, values.dpLogistics, values.vendor, values.nsh, values.ksr, values.unitPrice);
+    const req = new AllPriceDto(values.headOfChargers, values.perUnit, values.dpLogistics, values.vendor,values.buyersName,values.hsnCode,values.serviceDescription, values.nsh, values.ksr, values.unitPrice);
     service
       .postdata(req)
       .then((res) => {
@@ -107,6 +130,60 @@ const PriceForm = () => {
             </Form.Item>
           </Col>
 
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 6 }}
+            lg={{ span: 6 }}
+            xl={{ span: 6 }}
+          >
+            <Form.Item
+              label="Buyers Name"
+              name="buyersName"
+          
+              rules={[{ required: true, message: "Enter Buyers Name" }]}
+            >
+              <Select placeholder="Select Buyers Name">
+                {data2.map((option) => (
+                  <Select.Option key={option.id} value={option.buyerName}>
+                    {option.buyerName}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 6 }}
+            lg={{ span: 6}}
+            xl={{ span: 6 }}
+          >
+            <Form.Item
+              label="HSN Code"
+              name="hsnCode"
+              rules={[{ required: true, message: "Please Enter HSN Code" }]}
+            >
+              <Input placeholder='Enter HSN Code'/>
+            </Form.Item>
+          </Col>
+
+          <Col
+            xs={{ span: 24 }}
+            sm={{ span: 24 }}
+            md={{ span: 6 }}
+            lg={{ span: 6}}
+            xl={{ span: 6 }}
+          >
+            <Form.Item
+              label="Service Description"
+              name="serviceDescription"
+              rules={[{ required: true, message: "Please Enter Service Description" }]}
+            >
+              <Input placeholder='Enter Service Description'/>
+            </Form.Item>
+          </Col>
 
           <Col
             xs={{ span: 24 }}

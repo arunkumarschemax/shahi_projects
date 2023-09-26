@@ -147,6 +147,17 @@ export function PriceView() {
       },
     },
     {
+      title: 'Buyers Name',
+      dataIndex: 'buyersName',
+      key: 'buyersName',
+      ...getColumnSearchProps('buyersName'),
+      align: 'center',
+      sorter: (a, b) => a.buyersName.localeCompare(b.buyersName),
+      render: (text: any, record: { buyersName: any }) => {
+        return <>{record.buyersName ? record.buyersName : "-"}</>;
+      },
+    },
+    {
       title: 'Service Code',
       dataIndex: 'serviceCode',
       key: 'servicecode',
@@ -157,6 +168,31 @@ export function PriceView() {
         return <>{record.serviceCode ? record.serviceCode : "-"}</>;
       },
     },
+    {
+      title: 'HSN code',
+      dataIndex: 'hsnCode',
+      key: 'hsnCode',
+      ...getColumnSearchProps('hsnCode'),
+      align:"center",
+      sorter: (a, b) => a.hsnCode.localeCompare(b.hsnCode),
+      render: (text: any, record: { hsnCode: any }) => {
+        return <>{record.hsnCode ? record.hsnCode : "-"}</>;
+      },
+    },
+    {
+      title: 'Service Description',
+      dataIndex: 'serviceDescription',
+      key: 'serviceDescription',
+      ...getColumnSearchProps('serviceDescription'),
+      align:"center",
+      sorter: (a, b) => a.serviceDescription.localeCompare(b.serviceDescription),
+      render: (text: any, record: { serviceDescription: any }) => {
+        return <>{record.serviceDescription ? record.serviceDescription : "-"}</>;
+      },
+    },
+    
+
+
     {
       title: 'Head Of Charges',
       dataIndex: 'headOfCharges',
