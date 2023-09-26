@@ -420,7 +420,7 @@ const getSeasonCode = () => {
             </Form.Item>
           </Col>
          
-          <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
+          {/* <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
             <Form.Item name="currency" label="Currency">
               <Select placeholder="Select Currency" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
                 {currency.map((e) => {
@@ -431,7 +431,7 @@ const getSeasonCode = () => {
                 })}
               </Select>
             </Form.Item>
-          </Col>
+          </Col> */}
 
           <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 20 }}  >
                             <Form.Item>

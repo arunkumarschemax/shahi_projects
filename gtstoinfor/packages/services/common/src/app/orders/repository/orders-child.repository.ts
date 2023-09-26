@@ -137,7 +137,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             item, 
             item_cd, 
             prod_plan_type, 
-            DATE_FORMAT(STR_TO_DATE(planned_exf, '%Y/%m/%d'), '%m') AS MONTH,
+            MONTH(planned_exf) AS ExfMonth,
             CASE
                 WHEN version_rank = 1 THEN 'latest'
                 ELSE 'previous'
@@ -208,7 +208,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             item, 
             item_cd, 
             prod_plan_type, 
-            SUBSTRING_INDEX(wh, '/', 1) AS MONTH, 
+            SUBSTRING_INDEX(wh, '/', 1) AS month, 
             CASE
                 WHEN version_rank = 1 THEN 'latest'
                 ELSE 'previous'

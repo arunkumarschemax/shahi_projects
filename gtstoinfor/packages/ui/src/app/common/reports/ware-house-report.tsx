@@ -803,12 +803,12 @@ const handleTabChange = (selectedYear: string) => {
          
         />
         
-      // </Tabs.TabPane>
+       </Tabs.TabPane>
     ))}
   </Tabs>
   </Card>
   );
 };
 
-
+// }
 export default WarehouseReport;
