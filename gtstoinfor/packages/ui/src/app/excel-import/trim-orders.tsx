@@ -20,10 +20,13 @@ const TrimOrder= () => {
     const service = new OrdersService();
     const [form] = Form.useForm();
     const { Option } = Select;
+    const [grandTotal, setGrandTotal] = useState<number>(0);
     const { RangePicker } = DatePicker;
     const [searchText, setSearchText] = useState("");
     const searchInput = useRef<InputRef>(null);
     const [searchedColumn, setSearchedColumn] = useState("");
+    const [item, setItem] = useState<any[]>([]);
+
 const {Text}=Typography
 
     useEffect(() => {
@@ -39,6 +42,14 @@ const {Text}=Typography
         }).catch(err => {
             console.log(err.message)
         })
+        service.getTrimOrdersNo().then(res => {
+            if (res.status) {
+                setItem(res.data)
+            }
+        }).catch(err => {
+            console.log(err.message)
+        })
+        
     }
     const approveOrderStatus = (record) => {
         console.log(record)
@@ -286,6 +297,21 @@ const {Text}=Typography
             ...getColumnSearchProps("order_qty_pcs"),
             sorter: (a, b) => a.order_qty_pcs.localeCompare(b.order_qty_pcs),
             sortDirections: ["descend", "ascend"],
+            render: (text, record) => {
+                return record.order_qty_pcs;
+            },
+            summary: (pageData) => {
+                let total = 0;
+                pageData.forEach((record) => {
+                    total += parseFloat(record.order_qty_pcs);
+                });
+                return (
+                    <Table.Summary.Row>
+                        <Table.Summary.Cell colSpan={8} index={0}>Grand Total</Table.Summary.Cell>
+                        <Table.Summary.Cell index={8}>{total}</Table.Summary.Cell>
+                    </Table.Summary.Row>
+                );
+            },
         },
         {
             title: 'Approval Date',
@@ -299,13 +325,14 @@ const {Text}=Typography
         {
             title: 'Status',
             dataIndex: 'answered_status',
+            width:150,
             sorter: (a, b) => a.answered_status.localeCompare(b.answered_status),
             sortDirections: ["descend", "ascend"],
         },
         {
             title: "Item No",
             dataIndex: "itemNo",
-            width:150,
+            width:200,
 
             render: (text, record) => {
                 if(record.answered_status != 'Accepted'){
@@ -329,7 +356,8 @@ const {Text}=Typography
         {
             title: "Action",
             dataIndex: "action",
-            render: (value, record) => {
+            width:'150'
+,            render: (value, record) => {
                 // const isEnabled = isActionButtonEnabled(record);
                 if(record.answered_status != 'Accepted'){
 
@@ -454,7 +482,7 @@ const {Text}=Typography
                                         placeholder="Select Order Number"
                                         optionFilterProp="children"
                                         allowClear>
-                                            {gridData.map(e=>(
+                                            {item.map(e=>(
                                                 <Option key={e.order_no} value={e.order_no}>{e.order_no}</Option>
                                             ))}
                                         {/* <Option key='new' value="NEW">NEW</Option>
@@ -488,23 +516,22 @@ const {Text}=Typography
                         </Col>
                     </Row>
                 </Form>
-                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1000 }} bordered
-                // summary={
-                //     (pageData)=>{
-                //         let total=0;
-                //         pageData.forEach(({index,rec})=>{
-                //             total += rec.order_qty_pcs
-                //         })
-                //         return(
-                //             <>
-                //             <Table.Summary.Row>
-                //                 <Table.Summary.Cell index={0}>Total</Table.Summary.Cell>
-                //                 <Table.Summary.Cell index={1}><Text >{total}</Text> </Table.Summary.Cell>
-                //             </Table.Summary.Row>
-                //             </>
-                //         )
-                //     }
-                // }
+                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500 }} bordered
+                summary={(pageData) => {
+                    // Calculate the grand total on each page change
+                    let total = 0;
+                    pageData.forEach((record) => {
+                        total += parseFloat(record.order_qty_pcs);
+                    });
+                    setGrandTotal(total); // Update the grand total in state
+            
+                    return (
+                        <Table.Summary.Row>
+                            <Table.Summary.Cell colSpan={10} index={0}>Grand Total</Table.Summary.Cell>
+                            <Table.Summary.Cell index={9}>{grandTotal}</Table.Summary.Cell>
+                        </Table.Summary.Row>
+                    );
+                }}
                 />
             </Card>
         </div>

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Space, TabPaneProps, Table, Tabs, TabsProps, Tag, Typography } from "antd";
+import { Button, Card, Col, Form, Row, Select, Space, TabPaneProps, Table, Tabs, TabsProps, Tag, Typography, message } from "antd";
 import { ColumnProps, ColumnsType } from "antd/es/table";
 import { dateFormatterMap } from "@ant-design/pro-components";
 import { OrdersService } from "@project-management-system/shared-services";
 import { YearReq } from "@project-management-system/shared-models";
-import { FileExcelFilled } from "@ant-design/icons";
+import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import { Excel } from "antd-table-saveas-excel";
+import form from "antd/es/form";
 
 
 
@@ -17,25 +18,40 @@ export const WarehouseReport = () => {
   const [year, setYear] = useState<any[]>([]);
   const [tab, setTab] = useState<number>(2023);
   const service = new OrdersService()
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [excelData, setExcelData] = useState<any[]>([]);
   const {Text} = Typography
+  const { Option } = Select;
+  const [form] = Form.useForm();
+
   useEffect(()=>{
     getData();
+    getTabs();
   },[])
 
+  const getTabs = () => {
+    service.getWareHouseYearData().then((res) => {
+      if (res.status) {
+        setYear(res.data);
+      }
+    });
+  };
   const getData =()=>{
     const req = new YearReq(tab)
-    console.log(tab,'222222222222222222');
-    
-    service.getWareHouseYearData().then(res =>{
-
-      if(res.status){
-        setYear(res.data)
-      }
-    })
+    // console.log(tab,'222222222222222222');
     service.getAllWareHouse(req).then(res =>{
-      console.log(res,'res==========');
       if(res.status){
         setData(res.data)
+        setFilteredData(res.data);
+
+      }else{
+        setData([]);
+      }
+    })
+    service.getWareHouseMonthExcelData(req).then(res =>{
+      // console.log(res,'res==========');
+      if(res.status){
+        setExcelData(res.data)
       }
       else{
         setData([])
@@ -398,387 +414,220 @@ export const WarehouseReport = () => {
       excel.addSheet(tab.toString()); // Create a sheet for the year
   
       let exportingColumns: IExcelColumn[] = []
-    exportingColumns = [
-      
+      exportingColumns = [
         {
           title: "Item Name",
-          dataIndex: "itemName",
-        //   render: (text: any, record: any) => {
-        //     return record.itemName ? <span>{record.itemName}</span> : '-'
-        // }
+          dataIndex: "item",
         },
         {
-          title: "Month Wise Data",
-          dataIndex: "monthWiseData",
-          children: [
-            {
-              title: "Production Plan Type Name",
-              dataIndex: "phasetype",
-              render: (text: any, record: any) => {
-                const phaseTypes = record.monthWiseData.map((data: any) => data.phasetype);
-                return phaseTypes.join(', ') || '-';
-              }
-              // render: (text: any, record: any) => {
-              //   const phaseTypes = record.monthWiseData.map((data: any) => data.phasetype)
-              //   return (
-              //     <div>
-              //       <div>{phaseTypes}</div>
-              //       <br /> {/* Add a line break between each "phasetype" value */}
-              //     </div>)
-                
-              // }
-            },
-            {
-              title: "January",
-              dataIndex:'',
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "janPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.janPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                 
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "janCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.janCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-           
-            },
-            {
-              title: "February",
-              dataIndex: "oldOrderQtyPcs2",
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "febPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.febPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "febCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.febCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-         
-            },
-            {
-              title: "March",
-              dataIndex: "oldOrderQtyPcs3",
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "marPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.marPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "marCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.marCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-              
-            },
-            {
-              title: "April",
-              dataIndex: "oldOrderQtyPcs4",
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "aprPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.aprPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "aprCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.aprCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
+          title: "Production Plan Type Name",
+          dataIndex: "prod_plan_type",
           
-            },
-            {
-              title: "May",
-              dataIndex: "oldOrderQtyPcs5",
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "mayPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.mayPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "mayCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.mayCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-            
-              
-            },
-            {
-              title: "June",
-              dataIndex: "oldOrderQtyPcs6",
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "junPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.junPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "junCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.junCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-           
-              
-            },
-            {
-              title: "July",
-              dataIndex: "oldOrderQtyPcs7",
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "julPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.julPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "julCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.julCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-          
-              
-            },
-            {
-              title: "August",
-              dataIndex: "oldOrderQtyPcs8",
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "augPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.augPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "augCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.augCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-           
-            },
-            {
-              title: "September",
-              dataIndex: "oldOrderQtyPcs9",
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "sepPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.sepPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "sepCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.sepCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-            
-            },
-            {
-              title: "October",
-              dataIndex: "oldOrderQtyPcs10",
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "octPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.octPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  },
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "octCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.octCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-            
-            },
-            {
-              title: "November",
-              dataIndex: "oldOrderQtyPcs11",
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "novPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.novPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "novCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.novCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-             
-            },
-            {
-              title: "December",
-              dataIndex: "oldOrderQtyPcs12",
-                    children: [
-                {
-                  title: `In PCs`,
-                  dataIndex: "decPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.decPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `In Coeff`,
-                  dataIndex: "decCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.decCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-        
-              
-            },
-            {
-              title: "Total In PCs",
-              dataIndex: "totalPcs",
-              render: (text: any, record: any) => {
-                const phaseTypes = record.monthWiseData.map((data: any) => data.totalPcs);
-                return phaseTypes.join(', ') || '-';
-              }
-            },
-            {
-              title: "Total In Coeff",
-              dataIndex: "totalCoeff",
-              render: (text: any, record: any) => {
-                const phaseTypes = record.monthWiseData.map((data: any) => data.totalCoeff);
-                return phaseTypes.join(', ') || '-';
-              }
-            },
-          ]
+        },   
+        {
+          title: `Jan In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+            record.month == 1 ? record.order_plan_qty : "-",
         },
+        {
+          title: `Jan In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+           return record.month == 1 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+        {
+          title: `Feb In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+            record.month == 2 ? record.order_plan_qty : "-",
+        },
+        {
+          title: `Feb In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+            return record.month == 2 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+  
+        {
+          title: `Mar In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+            record.month == 3 ? record.order_plan_qty : "-",
+        },
+        {
+          title: `Mar In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+            return record.month == 3 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+  
+        {
+          title: `Apr In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+            record.month == 4 ? record.order_plan_qty : "-",
+        },
+        {
+          title: `Apr In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+            return record.month == 4 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+  
+        {
+          title: `May In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+            record.month == 5 ? record.order_plan_qty : "-",
+        },
+        {
+          title: `May In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+            return record.month == 5 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+  
+        {
+          title: `Jun In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+          record.month == 6 ? record.order_plan_qty : "-",
+        },
+        {
+          title: `Jun In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+            return record.month == 6 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+  
+        {
+          title: `Jul In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+          record.month == 7 ? record.order_plan_qty : "-",
+        },
+        {
+          title: `Jul In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+            return record.month == 7 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+  
+        {
+          title: `Aug In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+          record.month == 8 ? record.order_plan_qty : "-",
+        },
+        {
+          title: `Aug In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+           return record.month == 8 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+  
+        {
+          title: `Sep In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+          record.month == 9 ? record.order_plan_qty : "-",
+        },
+        {
+          title: `Sep In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+            return record.month == 9 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+  
+        {
+          title: `Oct In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+            record.month == 10 ? record.order_plan_qty : "-",
+        },
+        {
+          title: `Oct In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+            return record.month == 10 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+  
+        {
+          title: `Nov In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+            record.month == 11 ? record.order_plan_qty : "-",
+          
+        },
+        {
+          title: `Nov In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+            return record.month == 11 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+  
+        {
+          title: `Dec In PCs`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+            record.month == 12 ? record.order_plan_qty : "-",
+        },
+        {
+          title: `Dec In Coeff`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) => {
+            return record.month == 12 ? record.order_plan_qty_coeff : "-";
+          },
+        },
+     
       ];
     
    
       excel.addRow();
   
       excel.addColumns(exportingColumns);
-      excel.addDataSource(data);
+      excel.addDataSource(excelData);
     // });
-    excel.saveAs(`Ex-Factory-report-${currentDate}.xlsx`);
+    excel.saveAs(`Ware-House-report-${currentDate}.xlsx`);
 
 };
 const handleTabChange = (selectedYear: string) => {
   setTab(Number(selectedYear)); 
   getData()
-  console.log(Number(selectedYear),'///////////');
+  // console.log(Number(selectedYear),'///////////');
   
+};
+
+const getFilterdData = () => {
+  let ItemName = form.getFieldValue("ItemName");
+
+  let filteredData = data;
+
+  if (ItemName) {
+    filteredData = filteredData.filter(
+      (record) => record.itemName === ItemName
+    );
+    if (filteredData.length === 0) {
+      message.error("No Data Found");
+    }
+    setFilteredData(filteredData);
+  }
+};
+const onReset = () => {
+  form.resetFields();
+  getData();
 };
   return (
     <Card
@@ -792,9 +641,64 @@ const handleTabChange = (selectedYear: string) => {
     
 <Tabs type="card" onChange={handleTabChange} aria-disabled>
         {year.map((item) => (
-          
-          
-          <Tabs.TabPane key={item.year} tab={item.year}>
+        <Tabs.TabPane key={item.year} tab={item.year}>
+          <Form form={form} layout={"vertical"}>
+           <Row>
+           <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 6 }}
+                  lg={{ span: 6 }}
+                  xl={{ span: 6 }}
+                >
+                  <div>
+                    <label>Item Name</label>
+                    <Form.Item name="itemName">
+                      <Select
+                        showSearch
+                        placeholder="Select Item Name"
+                        optionFilterProp="children"
+                        allowClear
+                      >
+                        {data.map((e) => (
+                          <Option key={e.itemName} value={e.itemName}>
+                            {e.itemName}
+                          </Option>
+                        ))}
+                        {/* <Option key='new' value="NEW">NEW</Option>
+                                        <Option key='unaccepted' value="UNACCEPTED">UNACCEPTED</Option> */}
+                      </Select>
+                    </Form.Item>
+                  </div>
+                </Col>
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 5 }}
+                  lg={{ span: 5 }}
+                  xl={{ span: 6 }}
+                  style={{ marginTop: 17 }}
+                >
+                  <Button
+                    type="primary"
+                    icon={<SearchOutlined />}
+                    style={{ marginRight: 50, width: 80 }}
+                    htmlType="button"
+                    onClick={getFilterdData}
+                  >
+                    Search
+                  </Button>
+                  <Button
+                    type="primary"
+                    icon={<UndoOutlined />}
+                    htmlType="submit"
+                    onClick={onReset}
+                  >
+                    Reset
+                  </Button>
+                </Col>
+           </Row>
+          </Form>
         <Table
           dataSource={data} 
           columns={columns5} 

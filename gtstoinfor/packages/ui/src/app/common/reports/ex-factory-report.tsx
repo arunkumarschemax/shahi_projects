@@ -13,6 +13,7 @@ import {
   List,
   Row,
   Select,
+  Space,
   Table,
   Tabs,
   TabsProps,
@@ -31,7 +32,7 @@ export const ExFactoryReport = () => {
   const [page, setPage] = React.useState(1);
   const [data, setData] = useState<any[]>([]);
   const [year, setYear] = useState<any[]>([]);
-  const [tab, setTab] = useState<number>(20232023);
+  const [tab, setTab] = useState<number>(2023);
   const service = new OrdersService();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [excelData, setExcelData] = useState<any[]>([]);
@@ -70,19 +71,72 @@ export const ExFactoryReport = () => {
       }
     });
   };
+//   const CustomTitle = () => {
+           
+//     return (
+//       <div>
+//       <Space size={"large"}>
+//        Production Plan Type Name<br/><span>Jan(Pcs)</span><br/><span><span></span>Jan(latest)</span><br/>
+//        <span>Feb(Pcs)</span><br/><br/><span>Feb(Coeff)</span><br/><br/>
+//         <span>Mar(Pcs)</span><br/><span>Mar(Coeff)</span><br/>
+//         <span>Apr(Pcs)</span><br/><span>Apr(Coeff)</span><br/>
+//         <span>May(Pcs)</span><br/><br/><span>May(Coeff)</span><br/>
+//         <span>Jun(Pcs)</span><br/><span>Jun(Coeff)</span><br/><br/>
+//         <span>Jul(Pcs)</span><br/><br/><span>Jul(Coeff)</span><br/>
+//         <span>Aug(Pcs)</span><br/><span>Aug(Coeff)</span><br/>
+//         <span>Sep(Pcs)</span><br/><span>Sep(Coeff)</span><br/>
+//         <span>Oct(Pcs)</span><br/><span>Oct(Coeff)</span><br/>
+//         <span>Nov(Pcs)</span><br/><span>Nov(Coeff)</span><br/>
+//         <span>Dec(Pcs)</span><br/><span>Dec(Coeff)</span><br/>
+//         <span>Total(Pcs)</span><br/><span>Total(Coeff)</span>
+//         <span></span><span></span><span></span><span></span>
+//         {/* <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span> */}
+// </Space>
+      
+//       </div>
+//     );
+//   };
+  
+const CustomTitle = () => {
+           
+  return (
+    <div>
+    <Space size={"large"}>
+     Production Plan Type Name<br/><span>Jan(Pcs)</span><br/><span><span></span>Jan(Coeff)</span><br/>
+     <span>Feb(Pcs)</span><br/><span>Feb(Coeff)</span><br/>
+      <span>Mar(Pcs)</span><br/><span>Mar(Coeff)</span><br/>
+      <span>Apr(Pcs)</span><br/><span>Apr(Coeff)</span><br/><br/>
+      <span>May(Pcs)</span><br/><span>May(Coeff)</span><br/><br/>
+      <span>Jun(Pcs)</span><br/><br/><span>Jun(Coeff)</span><br/><br/>
+      <span>Jul(Pcs)</span><br/><br/><span>Jul(Coeff)</span>
+      <span>Aug(Pcs)</span><br/><span>Aug(Coeff)</span>
+      <span>Sep(Pcs)</span><br/><span>Sep(Coeff)</span>
+      <span>Oct(Pcs)</span><br/>    <span>Oct(Coeff)</span>
+      <span> <span></span>Nov(Pcs)</span><br/><span>Nov(Coeff)</span><br/>
+      <span>Dec(Pcs)</span><br/><span>Dec(Coeff)</span>
+      <span style={{marginRight:1}}>Total(Pcs)</span><br/><br/><span>Total(Coeff)</span>
+      {/* <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span> */}
 
-  const childColumns1: any = [
+</Space>
+    
+    </div>
+  );
+};
+const childColumns1: any = [
     {
-      title: "Production Plan Type Name",
+      // title: "Production Plan Type Name",
       dataIndex: "phasetype",
-      key: "phasetype",
+      width:130
+
     },
     {
-      title: "January",
-      children: [
-        {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "janPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.janPcs}</span> || "-"
@@ -90,23 +144,24 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "janCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
               (item: any) => <span>{item.janCoeff}</span> || "-"
             );
           },
         },
-      ],
-    },
-    {
-      title: "February",
-      dataIndex: "oldOrderQtyPcs2",
-      children: [
+     
+    
+      
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "febPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.febPcs}</span> || "-"
@@ -114,24 +169,25 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "febCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
               (item: any) => <span>{item.febCoeff}</span> || "-"
             );
           },
         },
-      ],
-    },
+      
+  
     {
-      title: "March",
-      dataIndex: "oldOrderQtyPcs3",
-      key: "oldOrderQtyPcs3",
-      children: [
-        {
-          title: `In PCs`,
+
+        
+          // title: `In PCs`,
           dataIndex: "marPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.marPcs}</span> || "-"
@@ -139,24 +195,22 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "marCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
               (item: any) => <span>{item.marCoeff}</span> || "-"
             );
           },
         },
-      ],
-    },
-    {
-      title: "April",
-      dataIndex: "oldOrderQtyPcs4",
-      key: "oldOrderQtyPcs4",
-      children: [
+      
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "aprPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.aprPcs}</span> || "-"
@@ -164,24 +218,28 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "aprCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.janPcs}</span> || "-"
             );
           },
         },
-      ],
-    },
-    {
-      title: "May",
-      dataIndex: "oldOrderQtyPcs5",
-      key: "oldOrderQtyPcs5",
-      children: [
+    //   ],
+    // },
+    // {
+      // title: "May",
+    //   dataIndex: "oldOrderQtyPcs5",
+    //   key: "oldOrderQtyPcs5",
+    //   children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "mayPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.janPcs}</span> || "-"
@@ -189,24 +247,28 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "mayCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
               (item: any) => <span>{item.mayCoeff}</span> || "-"
             );
           },
         },
-      ],
-    },
-    {
-      title: "June",
-      dataIndex: "oldOrderQtyPcs6",
-      key: "oldOrderQtyPcs6",
-      children: [
+    //   ],
+    // },
+    // {
+      // title: "June",
+    //   dataIndex: "oldOrderQtyPcs6",
+    //   key: "oldOrderQtyPcs6",
+    //   children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "junPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.junPcs}</span> || "-"
@@ -214,24 +276,28 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "junCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
               (item: any) => <span>{item.junCoeff}</span> || "-"
             );
           },
         },
-      ],
-    },
-    {
-      title: "July",
-      dataIndex: "oldOrderQtyPcs7",
-      key: "oldOrderQtyPcs7",
-      children: [
+    //   ],
+    // },
+    // {
+      // title: "July",
+    //   dataIndex: "oldOrderQtyPcs7",
+    //   key: "oldOrderQtyPcs7",
+    //   children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "julPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.julPcs}</span> || "-"
@@ -239,24 +305,28 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "julCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
               (item: any) => <span>{item.julCoeff}</span> || "-"
             );
           },
         },
-      ],
-    },
-    {
-      title: "August",
-      dataIndex: "oldOrderQtyPcs8",
-      key: "oldOrderQtyPcs8",
-      children: [
+    //   ],
+    // },
+    // {
+      // title: "August",
+    //   dataIndex: "oldOrderQtyPcs8",
+    //   key: "oldOrderQtyPcs8",
+    //   children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "augPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.augPcs}</span> || "-"
@@ -264,24 +334,28 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "augCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
               (item: any) => <span>{item.augCoeff}</span> || "-"
             );
           },
         },
-      ],
-    },
-    {
-      title: "September",
-      dataIndex: "oldOrderQtyPcs9",
-      key: "oldOrderQtyPcs9",
-      children: [
+    //   ],
+    // },
+    // {
+      // title: "September",
+    //   dataIndex: "oldOrderQtyPcs9",
+    //   key: "oldOrderQtyPcs9",
+    //   children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "sepPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.sepPcs}</span> || "-"
@@ -289,24 +363,28 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "sepCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
               (item: any) => <span>{item.sepCoeff}</span> || "-"
             );
           },
         },
-      ],
-    },
-    {
-      title: "October",
-      dataIndex: "oldOrderQtyPcs10",
-      key: "oldOrderQtyPcs10",
-      children: [
+    //   ],
+    // },
+    // {
+      // title: "October",
+    //   dataIndex: "oldOrderQtyPcs10",
+    //   key: "oldOrderQtyPcs10",
+    //   children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "octPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.octPcs}</span> || "-"
@@ -314,24 +392,28 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "octCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
               (item: any) => <span>{item.octCoeff}</span> || "-"
             );
           },
         },
-      ],
-    },
-    {
-      title: "November",
-      dataIndex: "oldOrderQtyPcs11",
-      key: "oldOrderQtyPcs11",
-      children: [
+    //   ],
+    // },
+    // {
+      // title: "November",
+    //   dataIndex: "oldOrderQtyPcs11",
+    //   key: "oldOrderQtyPcs11",
+    //   children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "novPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.novPcs}</span> || "-"
@@ -339,24 +421,28 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "novCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
               (item: any) => <span>{item.novCoeff}</span> || "-"
             );
           },
         },
-      ],
-    },
-    {
-      title: "December",
-      dataIndex: "oldOrderQtyPcs12",
-      key: "oldOrderQtyPcs12",
-      children: [
+    //   ],
+    // },
+    // {
+      // title: "December",
+    //   dataIndex: "oldOrderQtyPcs12",
+    //   key: "oldOrderQtyPcs12",
+    //   children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "decPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => <span>{item.decPcs}</span> || "-"
@@ -364,23 +450,30 @@ export const ExFactoryReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "decCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
               (item: any) => <span>{item.decCoeff}</span> || "-"
             );
           },
         },
-      ],
-    },
+    //   ],
+    // },
     {
-      title: "Total In PCs",
+      // title: "Total In PCs",
       dataIndex: "totalPcs",
+      align:"right",
+      width:100
+
     },
     {
-      title: "Total In Coeff",
+      // title: "Total In Coeff",
       dataIndex: "totalCoeff",
+      align:"right",
+      width:100
     },
   ];
   const columns5: any = [
@@ -401,9 +494,10 @@ export const ExFactoryReport = () => {
       // ...getColumnSearchProps('itemName')
     },
     {
-      title: "Month Wise Data",
+      title: <CustomTitle/>,
       dataIndex: "monthWiseData",
-      align: "center",
+      align:'center',
+
       render: (text: any, record: any) => (
         <Table
           dataSource={record.monthWiseData}
@@ -649,7 +743,7 @@ export const ExFactoryReport = () => {
   };
   return (
     <Card
-      title="Ex-Factory Report"
+      title=" Montly Wise Ex-Factory Report"
       extra={
         data.length > 0 ? (
           <Button
