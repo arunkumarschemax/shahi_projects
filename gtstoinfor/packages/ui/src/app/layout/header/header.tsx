@@ -5,6 +5,7 @@ import './header.css';
 import { useNavigate } from 'react-router-dom';
 // import logo from '../basic-layout/logo.png';
 import shahinew from './shahinew.png'
+import xpperal from './xpparel-logo.jpeg'
 
 const { Header } = Layout;
 const { useToken } = theme
@@ -60,7 +61,8 @@ export const CommonHeader = (props: IProps) => {
       <Row justify='space-between' align='middle'>
         <Col span={4}>
           <div className="logo" >
-            <img src={shahinew} style={{ width: '90%', marginTop: '5px' }} />
+            {/* <img src={xpperal} style={{ width: '20%', marginTop: '5px',marginLeft:'20px' }} /> */}
+            <img src={xpperal} width={100} height={50} style={{marginLeft:'20px'}}></img>
           </div>
         </Col>
         <Col span={1} >
