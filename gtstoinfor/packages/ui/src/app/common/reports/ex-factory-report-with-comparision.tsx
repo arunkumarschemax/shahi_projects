@@ -6,6 +6,7 @@ import { Excel } from "antd-table-saveas-excel";
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import form from "antd/es/form";
 import { ColumnsType } from "antd/es/table";
+import { type } from "os";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
@@ -21,6 +22,11 @@ export const ExFactoryReportWithComparision = () => {
   const {Text} = Typography
   const [form] = Form.useForm();
     const { Option } = Select;
+
+    let JanPreviousTotal = 0
+    let JanLatestTotal = 0
+    let FebPreviousTotal = 0
+    let FebLatestTotal= 0
 
   useEffect(()=>{
     getData();
@@ -41,8 +47,8 @@ export const ExFactoryReportWithComparision = () => {
         setYear(res.data)
       }
     })
-    service.getAll(req).then(res =>{
-      console.log(res,'res==========');
+    service.getExfactoryWithComparision(req).then(res =>{
+      console.log(res.data,'res==========');
       if(res.status){
         setData(res.data)
         setFilteredData(res.data)
@@ -638,6 +644,161 @@ const onReset = () => {
   form.resetFields();
   getData();
 }
+
+const getTableSummary = (pageData) => {
+  console.log('okk')
+  let janPre = 0;let janLat = 0;
+  let febPre = 0;let febLat = 0;
+  let marPre = 0;let marLat = 0;
+  let aprPre = 0;let aprLat = 0;
+  let mayPre = 0;let mayLat = 0;
+  let junPre = 0;let junLat = 0;
+  let julPre = 0;let julLat = 0;
+  let augPre = 0;let augLat = 0;
+  let sepPre = 0;let sepLat = 0;
+  let octPre = 0;let octLat = 0;
+  let novPre = 0;let novLat = 0;
+  let decPre = 0;let decLat = 0;
+ 
+  pageData.forEach((e) => {
+    console.log(e,'----------');
+    
+    // e.monthWiseData.forEach((rec) => {
+    //   if(rec.pcsData[0].janPcs) {
+    //     const jan = [rec.pcsData[0].janPcs]
+    //     janPre += Number(jan)
+    //   }
+    //   if(rec.pcsData[0].febPcs) {
+    //     const feb = [rec.pcsData[0].febPcs]
+    //     febPre += Number(feb)
+    //   }
+    //   if(rec.pcsData[0].marPcs) {
+    //     const mar = [rec.pcsData[0].marPcs]
+    //     marPre += Number(mar)
+    //   }
+    //   if(rec.pcsData[0].aprPcs) {
+    //     const apr = [rec.pcsData[0].aprPcs]
+    //     aprPre += Number(apr)
+    //   } if(rec.pcsData[0].mayPcs) {
+    //     const may = [rec.pcsData[0].mayPcs]
+    //     mayPre += Number(may)
+    //   } if(rec.pcsData[0].junPcs) {
+    //     const jun = [rec.pcsData[0].junPcs]
+    //     junPre += Number(jun)
+    //   } if(rec.pcsData[0].julPcs) {
+    //     const jul = [rec.pcsData[0].julPcs]
+    //     julPre += Number(jul)
+    //   } if(rec.pcsData[0].augPcs) {
+    //     const aug = [rec.pcsData[0].augPcs]
+    //     augPre += Number(aug)
+    //   } if(rec.pcsData[0].sepPcs) {
+    //     const sep = [rec.pcsData[0].sepPcs]
+    //     sepPre += Number(sep)
+    //   } if(rec.pcsData[0].octPcs) {
+    //     const oct = [rec.pcsData[0].octPcs]
+    //     octPre += Number(oct)
+    //   } if(rec.pcsData[0].novPcs) {
+    //     const nov = [rec.pcsData[0].novPcs]
+    //     novPre += Number(nov)
+    //   } if(rec.pcsData[0].decPcs) {
+    //     const dec = [rec.pcsData[0].decPcs]
+    //     decPre += Number(dec)
+    //   }
+    //   if(rec.pcsData[0].jancoeff) {
+    //     const jan = [rec.coeffData[0].janCoeff]
+    //     janLat += Number(jan)
+    //   }
+    //   if(rec.coeffData[0].febCoeff) {
+    //     const feb = [rec.coeffData[0].febCoeff]
+    //     febLat += Number(feb)
+    //   }
+    //   if(rec.coeffData[0].marCoeff) {
+    //     const mar = [rec.coeffData[0].marCoeff]
+    //     marLat += Number(mar)
+    //   }
+    //   if(rec.coeffData[0].aprCoeff) {
+    //     const apr = [rec.coeffData[0].aprCoeff]
+    //     aprLat += Number(apr)
+    //   } if(rec.coeffData[0].mayCoeff) {
+    //     const may = [rec.coeffData[0].mayCoeff]
+    //     mayLat += Number(may)
+    //   } if(rec.coeffData[0].junCoeff) {
+    //     const jun = [rec.coeffData[0].junCoeff]
+    //     junLat += Number(jun)
+    //   } if(rec.coeffData[0].julCoeff) {
+    //     const jul = [rec.coeffData[0].julCoeff]
+    //     julLat += Number(jul)
+    //   } if(rec.coeffData[0].augCoeff) {
+    //     const aug = [rec.coeffData[0].augCoeff]
+    //     augLat += Number(aug)
+    //   } if(rec.coeffData[0].sepCoeff) {
+    //     const sep = [rec.coeffData[0].sepCoeff]
+    //     sepLat += Number(sep)
+    //   } if(rec.coeffData[0].octCoeff) {
+    //     const oct = [rec.coeffData[0].octCoeff]
+    //     octLat += Number(oct)
+    //   } if(rec.coeffData[0].novCoeff) {
+    //     const nov = [rec.coeffData[0].novCoeff]
+    //     novLat += Number(nov)
+    //   } if(rec.coeffData[0].decCoeff) {
+    //     const dec = [rec.coeffData[0].decCoeff]
+    //     decLat += Number(dec)
+    //   }
+    //   console.log(febLat,'lat');
+    //   console.log(febPre,'pre');
+      
+      
+    // })
+  })
+
+
+  return(
+    <>
+        <Table.Summary.Row>
+      <Table.Summary.Cell index={0}></Table.Summary.Cell>
+      <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
+      <Table.Summary.Cell index={3}>
+        <div>
+          <Space></Space>
+          <Space>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/>
+           {janPre}<span/><span/> <span/><span/><span/><span/><span/><span/> {janLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/> 
+           {febPre}<span/><span/> <span/><span/><span/><span/>{febLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {marPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{marLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {aprPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/> {aprLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {mayPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {mayLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{julLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {junPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{julLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {julPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {julLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {augPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{augLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>
+           {sepPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{sepLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {octPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{octLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {novPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{novLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {decPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{decLat}
+          </Space>
+        </div>
+      </Table.Summary.Cell>
+    </Table.Summary.Row>
+  </>
+  )
+}
+
+console.log(JanPreviousTotal,JanLatestTotal,FebLatestTotal,FebPreviousTotal)
   return (
     <Card
     title="Ex-Factory Comparision Report"
@@ -691,11 +852,11 @@ const onReset = () => {
                     </Row>
                 </Form>
         <Table
-          dataSource={filteredData} // Assuming 'data' contains data for each year
-          columns={columns5} // Assuming 'columns5' is defined elsewhere
+          dataSource={filteredData} 
+          columns={columns5} 
           size="small"
           scroll={{ x: "max-content" }}
-         
+          summary={getTableSummary}
         />
         
       </Tabs.TabPane>
