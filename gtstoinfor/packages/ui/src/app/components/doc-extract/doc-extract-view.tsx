@@ -268,6 +268,17 @@ export function DocView() {
       },
     },
     {
+      title: "Invoice Amount",
+      dataIndex: "InnvoiceAmount",
+      key: "InnvoiceAmount",
+      ...getColumnSearchProps("InnvoiceAmount"),
+      sorter: (a, b) => a.InnvoiceAmount.localeCompare(b.InnvoiceAmount),
+      align: "center",
+      render: (text: any, record: { InnvoiceAmount: any }) => {
+        return <> {record.InnvoiceAmount ? Math.round(record.InnvoiceAmount) : "-"} </>;
+      },
+    },
+    {
       title: "Invoice Currency",
       dataIndex: "InnvoiceCurrency",
       key: "InnvoiceCurrency",
