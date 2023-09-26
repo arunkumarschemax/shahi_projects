@@ -22,6 +22,7 @@ import TrimOrder from "./excel-import/trim-orders"
 import PriceListView from "./masters/pricelist/price-list-view"
 import PriceListForm from "./masters/pricelist/price-list-form"
 import { PriceListDto } from "@project-management-system/shared-models"
+import ExFactoryReportWithComparision from "./common/reports/ex-factory-report-with-comparision"
 import SeasonWiseReport from "./common/reports/season-wise"
 import WareHouseComparision from "./common/reports/warehouse-comparision"
 // import ExcelImport from "./excel-import/excel-import"
@@ -62,14 +63,15 @@ export const AppRoutesNew = () => {
               <Route>
               <Route  path='/ware-house-comparision' key='/ware-house-comparision'  element={<WareHouseComparision/>}/>
 
-                <Route path='/ware-house-report' key='/ware-house-report' element={<WarehouseReport />} />
-                    <Route path='/trim-order' key='/trim-order' element={<TrimOrder/>} />
+
+                <Route path='/ware-house-report' key='/ware-house-report' element={<WarehouseReport  />} />
+                    <Route path='/excel-import/trim-order' key='/excel-import/trim-order' element={<TrimOrder/>} />
 
               </Route>
               <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
               <Route path='/ex-factory-report' key='/ex-factory-report' element={<ExFactoryReport />} />
               <Route path='/season-wise-report' key='/season-wise-report' element={<SeasonWiseReport />} />
-
+              <Route path='/ex-factory-report-with-comparision' key='/ex-factory-report-with-comparision' element={<ExFactoryReportWithComparision />} />
               <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
           </Route>
           <Route path="/login" key='/login' element={<Login />} />

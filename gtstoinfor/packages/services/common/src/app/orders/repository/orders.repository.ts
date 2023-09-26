@@ -5,6 +5,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
+import { YearReq } from "@project-management-system/shared-models";
 
 @Injectable()
 export class OrdersRepository extends Repository<OrdersEntity> {
@@ -15,7 +16,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getOrdersData(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(`o.production_plan_id, o.planning_ssn_cd, o.department, o.planning_sum_code, o.planning_sum, o.item,o.vendor, o.sewing_factory, o.branchFactory, o.coeff, o.publish_date,o.order_plan_number,o.gwh,o.wh,o.raw_material_supplier,o.yarn_order_status,o.fbrc_order_status,o.color_order_status,o.trim_order_status,o.po_order_status,o.planned_exf,o.biz,o.fr_fabric,o.trnsp_mthd`)
+            .select(`o.production_plan_id, o.planning_ssn_cd, o.department, o.planning_sum_code, o.planning_sum, o.item,o.vendor, o.sewing_factory, o.branchFactory, o.coeff, o.publish_date,o.order_plan_number,o.gwh,o.wh,o.raw_material_supplier,o.yarn_order_status,o.fbrc_order_status,o.color_order_status,o.trim_order_status,o.po_order_status,o.planned_exf,o.biz,o.fr_fabric,o.trnsp_mthd,prod_plan_type`)
             .orderBy(` o.planning_ssn_cd`, 'ASC')
         return await query.getRawMany();
     }
@@ -53,8 +54,8 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getDivisionCount(): Promise<any[]> {
         const query = this.createQueryBuilder('orders')
-            .select(`department_name , COUNT(department_name) AS count`)
-            .groupBy(`department_name`)
+            .select(`department , COUNT(department) AS count`)
+            .groupBy(`department`)
         return await query.getRawMany();
     }
 
@@ -62,6 +63,20 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         const queryBuilder = this.createQueryBuilder('orders');
         queryBuilder.where(`file_id = '${req.fileId}' AND version = 1`);
         await queryBuilder.delete().execute();
+    }
+
+    async getExfactoryMonthData(year:number): Promise<any> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.item,o.item_cd,o.planned_exf,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type, MONTH(planned_exf) AS ExfMonth`)
+            .where(`o.year ='${year}'`)
+            // .groupBy(`o.item_cd`)
+        return await query.getRawMany();
+    }
+    async getExfactoryYearData(): Promise<any> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.year as year`)
+            .groupBy(`o.year`)
+        return await query.getRawMany();
     }
       
     async getSeasonCount(): Promise<any[]> {
@@ -77,5 +92,114 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         return await query.getRawMany();
     }
 
+    async seasonWiseReport(): Promise<any[]>{
+        const query = this.createQueryBuilder('orders')
+        .select(`planning_ssn as plannedSeason,item_cd as itemCode,item as itemName, order_plan_qty as orderQty,wh as whDate,
+        MONTH(STR_TO_DATE(wh, '%m/%d')) AS whMonth,exf as exfDate,
+        MONTH(STR_TO_DATE(exf, '%m/%d')) AS exfMonth,year`)
+        return await query.getRawMany()
+    }
+    async getProdPlanCount(): Promise<any[]> {
+        const query = this.createQueryBuilder('orders')
+            .select(`prod_plan_type , COUNT(prod_plan_type) AS count`)
+            .groupBy(`prod_plan_type`)
+        return await query.getRawMany();
+    }
+
+    async getWareHouseMonthData(year:number): Promise<any> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.item,o.item_cd,o.wh,o.month,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type`)
+            .where(`o.year ='${year}'`)
+            // .groupBy(`o.item_cd`)
+        return await query.getRawMany();
+    }
+    async getWareHouseYearData(): Promise<any> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.year as year`)
+            .groupBy(`o.year`)
+        return await query.getRawMany();
+    }
+    // async getExfactoryComparisionData(req: YearReq): Promise<any[]> {
+    //     const subqueryAlias = 'RankedVersions';
+        
+    //     const subquery = this.createQueryBuilder()
+    //       .select(`year,
+    //                  planned_exf,
+    //                  order_plan_number,
+    //                  "version",
+    //                  "phase",
+    //                  order_plan_qty,
+    //                  ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY "version" DESC) AS version_rank`)
+    //       .from('orders_child', 'oc')
+    //       .where(`year = :year`, { year: req.year }) // Replace with your desired filter condition
+    //       .orderBy(`order_plan_number ASC, "version" DESC`)
+    //       .limit(2) // Only get the latest 2 versions per order_plan_number
+    //       .getQueryAndParameters();
       
+    //     const query = this.createQueryBuilder('o')
+    //       .select([
+    //         'year',
+    //         'planned_exf',
+    //         'order_plan_number',
+    //         '"version"',
+    //         '"phase"',
+    //         'order_plan_qty',
+    //         `CASE WHEN ${subqueryAlias}.version_rank = 1 THEN 'latest' ELSE 'previous' END AS "ExfMonth"`
+    //       ])
+    //       .from(`(${subquery[0]})`, subqueryAlias)
+    //       .orderBy(`order_plan_number ASC, "version" DESC`);
+      
+    //     const result = await query.getRawMany();
+    //     return result;
+    //   }
+      
+    // async getWareHouseComparisionData(req: YearReq): Promise<any[]> {
+    //     const subqueryAlias = 'RankedVersions';
+        
+    //     const subquery = this.createQueryBuilder()
+    //       .select(`year,
+    //                  wn,
+    //                  order_plan_number,
+    //                  "version",
+    //                  "phase",
+    //                  order_plan_qty,
+    //                  ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY "version" DESC) AS version_rank`)
+    //       .from('orders_child', 'oc')
+    //       .where(`year = :year`, { year: req.year }) 
+    //       .orderBy(`order_plan_number ASC, "version" DESC`)
+    //       .limit(2) 
+    //       .getQueryAndParameters();
+      
+    //     const query = this.createQueryBuilder('o')
+    //       .select([
+    //         'year',
+    //         'wn',
+    //         'order_plan_number',
+    //         '"version"',
+    //         '"phase"',
+    //         'order_plan_qty',
+    //         `CASE WHEN ${subqueryAlias}.version_rank = 1 THEN 'latest' ELSE 'previous' END AS "Exf Month"`
+    //       ])
+    //       .from(`(${subquery[0]})`, subqueryAlias)
+    //       .orderBy(`order_plan_number ASC, "version" DESC`);
+      
+    //     const result = await query.getRawMany();
+    //     return result;
+    //   }
+    
+    async getSeasonWiseItemCode():Promise<any[]>{
+        const query = await this.createQueryBuilder('orders') 
+        .select(`item_cd as itemCode`)
+        .groupBy('item_cd')
+        .orderBy(`item_cd`)
+        return await query.getRawMany()
+    }
+
+    async getSeasonWiseItemName():Promise<any[]>{
+        const query = await this.createQueryBuilder('orders') 
+        .select(`item as itemName`)
+        .groupBy('item')
+        .orderBy(`item`)
+        return await query.getRawMany()
+    }
 }

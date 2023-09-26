@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { OrdersChildEntity } from "../entities/orders-child.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
+import { YearReq } from "@project-management-system/shared-models";
 
 @Injectable()
 export class OrdersChildRepository extends Repository<OrdersChildEntity> {
@@ -115,4 +116,122 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     //     const result = await this.query(query)
     //     return result
     // }
+    async getExfactoryComparisionData(req: YearReq): Promise<any[]>{
+        const query = `WITH RankedVersions AS (
+            SELECT
+                year,
+                version,   
+                 planned_exf,
+                order_plan_number,
+                order_plan_qty,
+                item, 
+                item_cd, 
+                prod_plan_type, ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY VERSION DESC) AS version_rank
+            FROM orders_child )
+        SELECT
+            year,
+            version,
+            planned_exf,
+            order_plan_number,          
+            order_plan_qty,
+            item, 
+            item_cd, 
+            prod_plan_type, 
+            MONTH(planned_exf) AS ExfMonth,
+            CASE
+                WHEN version_rank = 1 THEN 'latest'
+                ELSE 'previous'
+            END AS status
+        FROM RankedVersions
+        WHERE version_rank <= 2 && year = '${req.year}'
+        ORDER BY order_plan_number, VERSION DESC`;
+        const result = await this.query(query);
+        return result;
+    }
+
+    // async getWareHouseComparisionData(req: YearReq): Promise<any[]>{
+    //     const query = `WITH RankedVersions AS (
+    //         SELECT
+    //             year,
+    //             version,   
+    //              wn,
+    //             order_plan_number,
+    //             order_plan_qty,
+    //             item, 
+    //             item_cd, 
+    //             prod_plan_type, 
+    //             ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY VERSION DESC) AS version_rank
+    //         FROM orders_child
+    //     )
+    //     SELECT
+    //         year,
+    //         version,
+    //         wn,
+    //         order_plan_number,          
+    //         order_plan_qty,
+    //         item, 
+    //         item_cd, 
+    //         prod_plan_type, 
+    //         SUBSTRING_INDEX(wh, '/', 1) AS `MONTH`,
+    //         CASE
+    //             WHEN version_rank = 1 THEN 'latest'
+    //             ELSE 'previous'
+    //         END AS status
+    //     FROM RankedVersions
+    //     WHERE version_rank <= 2 && year = '${req.year}'
+    //     ORDER BY order_plan_number, VERSION DESC`;
+    //     const result = await this.query(query);
+    //     return result;
+    // }
+
+
+    async getWareHouseComparisionData(req: YearReq): Promise<any[]>{
+        const query = `WITH RankedVersions AS (
+            SELECT
+                year,
+                version,   
+                wh,
+                order_plan_number,
+                order_plan_qty,
+                item, 
+                item_cd, 
+                prod_plan_type, 
+                ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY VERSION DESC) AS version_rank
+            FROM orders_child
+        )
+        SELECT
+            year,
+            version,
+            wh,
+            order_plan_number,          
+            order_plan_qty,
+            item, 
+            item_cd, 
+            prod_plan_type, 
+            SUBSTRING_INDEX(wh, '/', 1) AS month, 
+            CASE
+                WHEN version_rank = 1 THEN 'latest'
+                ELSE 'previous'
+            END AS status
+        FROM RankedVersions
+        WHERE version_rank <= 2 && year = '${req.year}'
+        ORDER BY order_plan_number, VERSION DESC`;
+        const result = await this.query(query);
+        return result;
+    }
+    async getItemQtyChangeDataItemCode(fileId1: number, fileId2: number): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(` id,item_cd, item , SUM(CASE WHEN file_id = ${fileId1} THEN order_plan_qty ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) AS new_qty_value ,  SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) - SUM(CASE WHEN file_id = ${fileId1} THEN order_plan_qty ELSE 0 END) AS diff `)
+            .groupBy(` item_cd`)
+            //  console.log(fileId1,"test of quary 1111111111111")
+        return await query.getRawMany();
+    }
+
+    async getItemQtyChangeData1ItemCode(fileId2: number): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(` id,item_cd, item , 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) AS new_qty_value `)
+            .groupBy(` item_cd`)
+            //  console.log(query,"test of quary222222222222")
+        return await query.getRawMany();
+    }
 }

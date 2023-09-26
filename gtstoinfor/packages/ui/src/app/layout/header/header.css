@@ -48,4 +48,7 @@
     overflow: visible;
     /* animation: shine 1s linear infinite; */
   }
+  .custom-table-wrapper .ant-table-thead > tr > th {
+    background-color: lavender;
+  }
   

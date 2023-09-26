@@ -1,6 +1,7 @@
-import { FileExcelFilled } from '@ant-design/icons';
+import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { SeasonWiseRequest } from '@project-management-system/shared-models';
 import { OrdersService } from '@project-management-system/shared-services';
-import { Button, Card, Table, Tabs, TabsProps, Typography } from 'antd'
+import { Alert, Button, Card, Col, Form, Row, Select, Table, Tabs, TabsProps, Typography } from 'antd'
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
@@ -13,16 +14,56 @@ const SeasonWiseReport = () => {
     const [page, setPage] = React.useState(1);
     const service = new OrdersService()
     const [data, setData] = useState<any>([]);
+    const [itemCode, setItemCode] = useState<any>([]);
+    const [itemName, setItemName] = useState<any>([])
+    const [activeTabKey, setActiveTabKey] = useState<string>('1');
+    const [form] = Form.useForm()
+    const { Option } = Select;
 
     useEffect(()=>{
         reportSS()
+        getItemCode()
+        getItemName()
     },[])  
 
+    const handleTabChange = (newTabKey) => {
+      form.resetFields();
+      setActiveTabKey(newTabKey)
+  };
+
     const reportSS = () =>{
-        service.seasonWiseReport().then((res)=>{
+      const req = new SeasonWiseRequest()
+        if(form.getFieldValue('itemCode') !== undefined){
+            req.itemCode = form.getFieldValue('itemCode')
+        }
+        if(form.getFieldValue('itemName') !== undefined){
+            req.itemName = form.getFieldValue('itemName')
+        }
+        console.log(req,'oooooooo')
+        console.log(req.itemCode,req.itemName,'yoyoyoyoyooyoyoyoyo')
+        service.seasonWiseReport(req).then((res)=>{
+          if(res.data){
             setData(res.data)
+          }
         })
     }
+
+    const getItemCode = ()=>{
+      service.getSeasonWiseItemCode().then((res)=>{
+        setItemCode(res.data)
+      })
+    }
+
+    const getItemName = ()=>{
+      service.getSeasonWiseItemName().then((res)=>{
+        setItemName(res.data)
+      })
+    }
+
+    const OnReset = () => {
+      form.resetFields()
+      reportSS()
+  }
     
 
     const columnsWH: ColumnsType<any> = [
@@ -519,51 +560,200 @@ const SeasonWiseReport = () => {
       };
 
 
-    const items: TabsProps['items'] = [
+      const items = [
         {
-            key:"1",
-            label:<b>23SS-WH </b>,
-            children: <Table bordered dataSource={data?.[0]} columns={columnsWH} summary={generateSummaryWH}/>,
+          key: "1",
+          label: <b>23SS-WH </b>,
+          children: (
+            data?.[0]?.length > 0 ? (
+              <Table
+                bordered
+                dataSource={data?.[0]}
+                columns={columnsWH}
+                summary={generateSummaryWH}
+              />
+            ) : (
+              <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
+            )
+          )
         },
         {
-            key:"2",
-            label:<b>23SS-EXF </b>,
-            children: <Table bordered dataSource={data?.[0]} columns={columnsEXF} summary={generateSummaryEXF}/>,
+          key: "2",
+          label: <b>23SS-EXF </b>,
+          children: (
+            data?.[0]?.length > 0 ? (
+              <Table
+                bordered
+                dataSource={data?.[0]}
+                columns={columnsEXF}
+                summary={generateSummaryEXF}
+              />
+            ) : (
+              <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
+            )
+          )
         },
         {
-            key:"3",
-            label:<b>23FW-WH </b>,
-            children: <Table bordered dataSource={data?.[1]} columns={columnsWH} summary={generateSummaryWH}/>,
+          key: "3",
+          label: <b>23FW-WH </b>,
+          children: (
+            data?.[1]?.length > 0 ? (
+              <Table
+                bordered
+                dataSource={data?.[1]}
+                columns={columnsWH}
+                summary={generateSummaryWH}
+              />
+            ) : (
+              <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
+            )
+          )
         },
         {
-            key:"4",
-            label:<b>23FW-EXF </b>,
-            children: <Table bordered dataSource={data?.[1]} columns={columnsEXF} summary={generateSummaryEXF}/>,
+          key: "4",
+          label: <b>23FW-EXF </b>,
+          children: (
+            data?.[1]?.length > 0 ? (
+              <Table
+                bordered
+                dataSource={data?.[1]}
+                columns={columnsEXF}
+                summary={generateSummaryEXF}
+              />
+            ) : (
+              <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
+            )
+          )
         },
         {
-            key:"5",
-            label:<b>24SS-WH</b>,
-            children: <Table bordered dataSource={data?.[2]} columns={columnsWH} summary={generateSummaryWH}/>,
+          key: "5",
+          label: <b>24SS-WH</b>,
+          children: (
+            data?.[2]?.length > 0 ? (
+              <Table
+                bordered
+                dataSource={data?.[2]}
+                columns={columnsWH}
+                summary={generateSummaryWH}
+              />
+            ) : (
+              <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
+            )
+          )
         },
         {
-            key:"6",
-            label:<b>24SS-EXF </b>,
-            children: <Table bordered dataSource={data?.[2]} columns={columnsEXF} summary={generateSummaryEXF}/>,
-        },
-    ]
+          key: "6",
+          label: <b>24SS-EXF </b>,
+          children: (
+            data?.[2]?.length > 0 ? (
+              <Table
+                bordered
+                dataSource={data?.[2]}
+                columns={columnsEXF}
+                summary={generateSummaryEXF}
+              />
+            ) : (
+              <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
+            )
+          )
+        }
+      ];
+      
       
 
-  return (
-    <>
-    <Card title="Season Wise Order Quantity" extra ={data?.[0] || data?.[1] || data?.[2] ? (<Button
-        type="default"
-        style={{ color: 'green' }}
-        onClick={exportExcel}
-        icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
-            <Tabs type={'card'} items={items}/>
-    </Card>
-    </>
-  )
+      return (
+        <Card title="Season Wise Order Quantity" extra={data?.[0] || data?.[1] || data?.[2] ? (
+          <Button
+            type="default"
+            style={{ color: 'green' }}
+            onClick={exportExcel}
+            icon={<FileExcelFilled />}
+          >
+            Download Excel
+          </Button>
+        ) : null}>
+          <Form layout="vertical" form={form} onFinish={reportSS}>
+            <Row gutter={16}>
+              <Col xs={24} sm={24} md={8} lg={6} xl={4}>
+                <Form.Item label='Item Code' name='itemCode'>
+                  <Select
+                    showSearch
+                    placeholder="Select Item Code"
+                    optionFilterProp="children"
+                    allowClear
+                    value={activeTabKey === '1' ? form.getFieldValue('itemCode') : undefined}
+                  >
+                    {itemCode.filter((e) => {
+                      return (
+                        (activeTabKey === '1' || activeTabKey === '2') &&
+                        data?.[0]?.some((item) => item.itemCode === e.itemCode)
+                      ) || (
+                        (activeTabKey === '3' || activeTabKey === '4') &&
+                        data?.[1]?.some((item) => item.itemCode === e.itemCode)
+                      ) || (
+                        (activeTabKey === '5' || activeTabKey === '6') &&
+                        data?.[2]?.some((item) => item.itemCode === e.itemCode)
+                      ) || true;
+                    }).map((inc: any) => (
+                      <Option key={inc.itemCode} value={inc.itemCode}>
+                        {inc.itemCode}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={8} lg={8} xl={6}>
+                <Form.Item label='Item Name' name='itemName'>
+                  <Select
+                    showSearch
+                    placeholder="Select Item Name"
+                    optionFilterProp="children"
+                    allowClear
+                    value={activeTabKey === '1' ? form.getFieldValue('itemName') : undefined}
+                  >
+                    {itemName.filter((e) => {
+                      return (
+                        (activeTabKey === '1' || activeTabKey === '2') &&
+                        data?.[0]?.some((item) => item.itemName === e.itemName)
+                      ) || (
+                        (activeTabKey === '3' || activeTabKey === '4') &&
+                        data?.[1]?.some((item) => item.itemName === e.itemName)
+                      ) || (
+                        (activeTabKey === '5' || activeTabKey === '6') &&
+                        data?.[2]?.some((item) => item.itemName === e.itemName)
+                      ) || true;
+                    }).map((e: any) => (
+                      <Option key={e.itemName} value={e.itemName}>
+                        {e.itemName}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={4} lg={4} xl={3} style={{ marginTop: "22px", marginRight: "-50px", marginLeft:"40px" }}>
+                <Form.Item>
+                  <Button icon={<SearchOutlined />} htmlType="submit" type='primary'>
+                    Search
+                  </Button>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={4} lg={4} xl={2} style={{ marginTop: "22px" }}>
+                <Form.Item>
+                  <Button danger icon={<UndoOutlined />} onClick={OnReset}>
+                    Reset
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+          <Tabs
+            type={'card'}
+            items={items}
+            activeKey={activeTabKey}
+            onChange={(newTabKey) => handleTabChange(newTabKey)}
+          />
+        </Card>
+      );
 }
 
 export default SeasonWiseReport

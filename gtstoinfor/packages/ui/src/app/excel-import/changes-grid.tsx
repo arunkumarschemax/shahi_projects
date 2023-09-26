@@ -539,7 +539,9 @@ const ChangesGrid = () => {
         },
         {
             title: 'Production Plan Type',
-            dataIndex: 'prod_plan_type'
+            dataIndex: 'prod_plan_type',
+            ...getColumnSearchProps('prod_plan_type')
+
         },
         {
             title: 'Item code',
@@ -548,7 +550,9 @@ const ChangesGrid = () => {
         },
         {
             title: 'Item Name',
-            dataIndex: 'item'
+            dataIndex: 'item',
+            ...getColumnSearchProps('item')
+
         },
         {
             title: 'Previous Order Quantity Pieces',
@@ -591,12 +595,7 @@ const ChangesGrid = () => {
                 </>
             )
         },
-        {
-            title: 'Version',
-            dataIndex: 'version',
-            sorter: (a, b) => a.version - b.version,
-            sortDirections: ['descend', 'ascend'],
-        },
+       
         // {
         //     title: 'Contracted Date',
         //     dataIndex: 'contracted_date',
@@ -639,11 +638,16 @@ const ChangesGrid = () => {
         },
         {
             title: 'Item code',
-            dataIndex: 'item_code'
+            dataIndex: 'item_cd',
+            ...getColumnSearchProps('item_cd')
+
+
         },
         {
             title: 'Item Name',
-            dataIndex: 'itemName'
+            dataIndex: 'itemName',
+            ...getColumnSearchProps('item_cd')
+
         },
         {
             title: 'Previous Requested Warehouse Date',
@@ -724,7 +728,9 @@ const ChangesGrid = () => {
         },
         {
             title: 'Item code',
-            dataIndex: 'item_code'
+            dataIndex: 'item_code',
+            ...getColumnSearchProps('item_cd')
+
         },
         {
             title: 'Item Name',
@@ -803,11 +809,15 @@ const ChangesGrid = () => {
         },
         {
             title: 'Item code',
-            dataIndex: 'item_cd'
+            dataIndex: 'item_cd',
+            ...getColumnSearchProps('item_cd')
+
         },
         {
             title: 'Item Name',
-            dataIndex: 'item'
+            dataIndex: 'item',
+            ...getColumnSearchProps('item')
+
         },
         {
             title: ' Sum Of Qrd Qty last Week',
@@ -1255,7 +1265,7 @@ const ChangesGrid = () => {
     }
 
     return (
-        <Card title='Compare Orders' extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData || phaseData ? (<Button
+        <Card title='Compare Projection Orders' extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData || phaseData ? (<Button
             type="default"
             style={{ color: 'green' }}
             onClick={exportExcel}

@@ -1,13 +1,14 @@
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq, FileTypeDto } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
-import { ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { extname } from 'path'; 
 import { FileIdReq } from './models/file-id.req';
+import { type } from 'os';
 ''
 
 @Controller('orders')
@@ -243,11 +244,30 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getExfactoryYear')
+    async getExfactoryYear(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryYear();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getExfactoryMonthData')
+    @ApiBody({type:YearReq})
+    async getExfactoryMonthData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryMonthData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 
     @Post('/seasonWiseReport')
-    async seasonWiseReport(): Promise<CommonResponseModel> {
+    @ApiBody({type: SeasonWiseRequest})
+    async seasonWiseReport(@Body() req?:any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.seasonWiseReport();
+            console.log(req,'lllllllllllllllll')
+            return this.ordersService.seasonWiseReport(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
@@ -280,5 +300,111 @@ export class OrdersController {
 
         }
     }
+    @Post('/getProdPlanCount')
+    async getProdPlanCount(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getProdPlanCount();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
     
+    @Post('/getWareHouseYearData')
+    async getWareHouseYear(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getWareHouseYear();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getWareHouseMonthData')
+    @ApiBody({type:YearReq})
+    async getWareHouseMonthData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getWareHouseMonthData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getExfactoryComparisionData')
+    @ApiBody({type:YearReq})
+    async getExfactoryComparisionData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryComparisionData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getWareHouseComparisionData')
+    @ApiBody({type:YearReq})
+    async getWareHouseComparisionData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getWareHouseComparisionData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
+    @Post('/getExfactoryComparisionExcelData')
+    @ApiBody({type:YearReq})
+    async getExfactoryComparisionExcelData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryComparisionExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }  @Post('/getExfactoryMonthExcelData')
+    @ApiBody({type:YearReq})
+    async getExfactoryMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getExfactoryMonthExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getSeasonWiseItemCode')
+    async getSeasonWiseItemCode(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getSeasonWiseItemCode();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getSeasonWiseItemName')
+    async getSeasonWiseItemName(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getSeasonWiseItemName();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getQtyDifChangeItemCode')
+    async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getQtyDifChangeItemCode();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+
+        }
+    }
+    @Post('/getWareHouseComparisionExcelData')
+    @ApiBody({type:YearReq})
+    async getWareHouseComparisionExcelData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getWareHouseComparisionExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }  @Post('/getWareHouseMonthExcelData')
+    @ApiBody({type:YearReq})
+    async getWareHouseMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getWareHouseMonthExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }

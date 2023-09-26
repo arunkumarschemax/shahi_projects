@@ -132,6 +132,9 @@ export function SeasonWiseOrders() {
 
     //   }
     // },
+    credits: {
+      enabled: false // Disable the Highcharts watermark
+    },
 
     plotOptions: {
       bar: {
