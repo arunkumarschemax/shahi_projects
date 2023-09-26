@@ -440,6 +440,7 @@ export class DpomService {
     async saveLegalPOPDFData(req: any): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
+            req.poNumber = req.poNumber.replace(/\s+/g, "");
             await transactionManager.startTransaction()
             const orderDetails = await this.dpomRepository.find({ where: { purchaseOrderNumber: req.poNumber } })
             if (orderDetails) {

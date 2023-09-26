@@ -646,6 +646,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.planning_season_code`)
         return await query.getRawMany();
     }
+
     async getPpmdesCountryNameMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.destination_country,dpom.id`)
@@ -653,13 +654,12 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.destination_country`)
         return await query.getRawMany();
     }
+
     async getPpmGeoCodeMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(` dpom.destination_country,dpom.id`)
-            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
-            .groupBy(`dpom.destination_country`)
+            .select(` dpom.geo_code, dpom.id`)
+            .groupBy(`dpom.geo_code`)
         return await query.getRawMany();
     }
-
 
 }

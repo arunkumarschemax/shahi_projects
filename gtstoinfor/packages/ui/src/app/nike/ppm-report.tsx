@@ -133,7 +133,7 @@ const PPMReport = () => {
   }
   const getGeoCode = () => {
     service.getPpmdesGeoCodeMarketing().then(res => {
-      // setPlanSesYear(res.data)
+      setGeoCode(res.data)
     })
   }
 
@@ -401,7 +401,7 @@ const PPMReport = () => {
       { title: 'Gender Age Description', dataIndex: 'genderAgeDesc' },
       { title: 'Destination Country Code', dataIndex: 'destinationCountryCode' },
       { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
-      { title: 'Geo Code', dataIndex: '' },
+      { title: 'Geo Code', dataIndex: 'geoCode' },
       { title: 'Plant Code', dataIndex: 'plant' },
       { title: 'plant Name', dataIndex: 'plantName' },
       { title: 'UPC', dataIndex: 'UPC' },
@@ -886,7 +886,7 @@ const PPMReport = () => {
         render: (text) => {
           // Replace underscores (_) with spaces
           const transformedText = text ? text.replace(/_/g, ' ') : '-';
-          
+
           return transformedText;
         },
       },
@@ -2191,7 +2191,7 @@ const PPMReport = () => {
                   allowClear
                 >
                   {geoCode.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                    return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
                   })
                   }
                 </Select>
