@@ -137,7 +137,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             item, 
             item_cd, 
             prod_plan_type, 
-            DATE_FORMAT(STR_TO_DATE(planned_exf, '%Y/%m/%d'), '%m') AS MONTH,
+            MONTH(planned_exf) AS ExfMonth,
             CASE
                 WHEN version_rank = 1 THEN 'latest'
                 ELSE 'previous'
@@ -208,7 +208,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             item, 
             item_cd, 
             prod_plan_type, 
-            SUBSTRING_INDEX(wh, '/', 1) AS MONTH, 
+            SUBSTRING_INDEX(wh, '/', 1) AS month, 
             CASE
                 WHEN version_rank = 1 THEN 'latest'
                 ELSE 'previous'
@@ -219,5 +219,19 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         const result = await this.query(query);
         return result;
     }
-    
+    async getItemQtyChangeDataItemCode(fileId1: number, fileId2: number): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(` id,item_cd, item , SUM(CASE WHEN file_id = ${fileId1} THEN order_plan_qty ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) AS new_qty_value ,  SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) - SUM(CASE WHEN file_id = ${fileId1} THEN order_plan_qty ELSE 0 END) AS diff `)
+            .groupBy(` item_cd`)
+            //  console.log(fileId1,"test of quary 1111111111111")
+        return await query.getRawMany();
+    }
+
+    async getItemQtyChangeData1ItemCode(fileId2: number): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(` id,item_cd, item , 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) AS new_qty_value `)
+            .groupBy(` item_cd`)
+            //  console.log(query,"test of quary222222222222")
+        return await query.getRawMany();
+    }
 }

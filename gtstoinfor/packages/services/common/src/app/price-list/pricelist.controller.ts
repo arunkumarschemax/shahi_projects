@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Put } from '@nestjs/common';
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
-import { AllFactoriesResponseModel, PriceListDto, PriceListResponseModel } from '@project-management-system/shared-models';
+import { AllFactoriesResponseModel, CommonResponseModel, NewFilterDto, PriceListDto, PriceListResponseModel } from '@project-management-system/shared-models';
 import { priceListService } from './pricelist.service';
 import { ApiBody } from '@nestjs/swagger';
 import { priceListDto } from './dto/pricelist.dto';
@@ -41,9 +41,10 @@ export class PriceListController {
     
 
     @Post('/getAllPriceList')
-    async getAllPriceList(): Promise<PriceListResponseModel> {
+    @ApiBody({ type: NewFilterDto })
+    async getAllPriceList(@Body ()req:any): Promise<PriceListResponseModel> {
         try {
-            return await this.priceService.getAllPriceList();
+            return await this.priceService.getAllPriceList(req);
         } catch (error) {
             return this.applicationExceptionhandler.returnException(PriceListResponseModel, error);
         }
@@ -69,6 +70,47 @@ export class PriceListController {
     }
   }
 
+  @Post('/getAllPriceListStyles')
+    async getAllPriceListStyles(): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getAllPriceListStyles();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+
+    @Post('/getAllPriceListDestination')
+    async getAllPriceListDestination(): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getAllPriceListDestination();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+    @Post('/getAllPriceListYear')
+    async getAllPriceListYear(): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getAllPriceListYear();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+    @Post('/getAllPriceListCurrency')
+    async getAllPriceListCurrency(): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getAllPriceListCurrency();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+    @Post('/getAllPriceListSeasonCode')
+    async getAllPriceListSeasonCode(): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getAllPriceListSeasonCode();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
 
 
 

@@ -13,6 +13,8 @@ export class priceListDto {
     @ApiProperty()
     year:string;
     @ApiProperty()
+    price:number;
+    @ApiProperty()
     currency:string;
     @ApiProperty()
     createdUser?: any;
