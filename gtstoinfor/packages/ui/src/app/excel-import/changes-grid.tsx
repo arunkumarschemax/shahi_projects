@@ -1265,7 +1265,7 @@ const ChangesGrid = () => {
     }
 
     return (
-        <Card title='Compare Orders' extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData || phaseData ? (<Button
+        <Card title='Compare Projection Orders' extra={filteredQtyData || filteredContractDateData || filteredWarehouseDateData || differenceQtyData || phaseData ? (<Button
             type="default"
             style={{ color: 'green' }}
             onClick={exportExcel}
