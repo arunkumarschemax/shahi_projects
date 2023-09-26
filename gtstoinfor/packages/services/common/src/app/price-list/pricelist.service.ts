@@ -197,7 +197,7 @@ export class priceListService {
         let info =[];
         if (details.length > 0) {
             for(const rec of details){
-                info.push(new PriceListModel(rec.id,rec.style,rec.YEAR,rec.destination,rec.season_code,rec.currency,rec.created_user,rec.is_active,rec.version_flag,rec.updated_user))
+                info.push(new PriceListModel(rec.id,rec.style,rec.YEAR,rec.destination,rec.season_code,rec.price,rec.currency,rec.created_user,rec.is_active,rec.version_flag,rec.updated_user))
             }
             return new PriceListResponseModel(true, 1, 'data retrived', info)
         } else {
