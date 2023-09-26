@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { PriceListService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
-import { ColumnProps, ColumnsType } from 'antd/es/table';
+import {  ColumnProps, ColumnsType } from 'antd/es/table';
 import PriceListForm from './price-list-form';
-import { PriceListDto } from '@project-management-system/shared-models';
+import { NewFilterDto, PriceListDto } from '@project-management-system/shared-models';
 
 
 export interface PriceListView { }
@@ -21,14 +21,72 @@ export const PriceListGrid = (props: PriceListView) => {
   const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
   const [selectedPriceListData, setSelectedPriceListeData] = useState<any>(undefined);
-  const priceService = new PriceListService()
+  const priceService = new PriceListService();
+  const [form] = Form.useForm();
+  const { Option } = Select;
+  const [style,setStyle] = useState<any[]>([])
+  const [destination,setDestination] = useState<any[]>([]);
+  const [year,setYear] = useState<any[]>([]); 
+  const [currency,setCurrency] = useState<any[]>([]);
+  const [seasonCode,setSeasonCode] = useState<any[]>([]);
+
+
 
   useEffect(()=>{
-    getPriceList()
+    getPriceList();
+    getStyle();
+    getDestination();
+    getYear();
+    getCurrency();
+    getSeasonCode();
   },[])
 
+  
+  const getStyle = () => {
+    priceService.getAllPriceListStyles().then(res => {
+      setStyle(res.data)
+    })
+
+}
+
+const getDestination = () => {
+  priceService.getAllPriceListDestination().then(res => {
+    setDestination(res.data)
+  })
+
+}
+const getYear = () => {
+  priceService.getAllPriceListYear().then(res => {
+    setYear(res.data)
+  })
+
+}
+const getCurrency = () => {
+  priceService.getAllPriceListCurrency().then(res => {
+    setCurrency(res.data)
+  })
+
+}
+const getSeasonCode = () => {
+  priceService.getAllPriceListSeasonCode().then(res => {
+    setSeasonCode(res.data)
+  })
+
+}
+
   const getPriceList= () => {
-    priceService.getAllPriceList().then(res => {
+    const req = new NewFilterDto();
+     if (form.getFieldValue("style") !== undefined) {
+     req.style = form.getFieldValue("style");}
+            if (form.getFieldValue("destination") !== undefined) {
+         req.destination = form.getFieldValue("destination"); }
+         if (form.getFieldValue("currency") !== undefined) {
+          req.currency = form.getFieldValue("currency"); }
+          if (form.getFieldValue("year") !== undefined) {
+            req.year = form.getFieldValue("year"); }
+            if (form.getFieldValue("seasonCode") !== undefined) {
+              req.seasonCode = form.getFieldValue("seasonCode"); }
+    priceService.getAllPriceList(req).then(res => {
       if (res.status) {
         setPriceList(res.data);
       } else
@@ -149,17 +207,21 @@ export const PriceListGrid = (props: PriceListView) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
+    window.location.reload();
+
   };
 
   function handleReset(clearFilters) {
     clearFilters();
     setSearchText('');
   };
+  const onReset = () => {
+    form.resetFields();
+    getPriceList();
+  };
 
 
-
-
-  const columns : ColumnProps<any> [] = [
+  const columns : any [] = [
     {
       title: 'S No',
       key: 'sno',
@@ -171,32 +233,54 @@ export const PriceListGrid = (props: PriceListView) => {
     {
         title: "Style",
         dataIndex: "style",
-       
+        align:"center",
+        sorter: (a, b) => a.style.localeCompare(b.style),
+        sortDirections: ["descend", "ascend"],
+        ...getColumnSearchProps("style"),
       },
       {
         title: "Year",
         dataIndex: "year",
-        align:"center",
+        align:"right",
+        sorter: (a, b) => a.year.localeCompare?.(b.year),
+        sortDirections: ["descend", "ascend"],
+        ...getColumnSearchProps("year"),
        
       },
       {
         title: "Destination",
         dataIndex: "destination",
+        align:"center",
+        sorter: (a, b) => a.destination.localeCompare(b.destination),
+        sortDirections: [ "ascend","descend"],
+        ...getColumnSearchProps("destination"),
         
       },
       {
         title: "Season Code",
         dataIndex: "seasonCode",
+        align:"center",
+        sorter: (a, b) => a.seasonCode.localeCompare(b.seasonCode),
+        sortDirections: [ "ascend","descend"],
+        ...getColumnSearchProps("seasonCode"),
+
        
       },
       {
         title: "Currency",
         dataIndex: "currency",
+        align:"center",
+        sorter: (a, b) => a.currency.localeCompare(b.currency),
+        sortDirections: [ "ascend","descend"],
+        ...getColumnSearchProps("currency"),
+
+       
        
       },
       {
         title: 'Status',
         dataIndex: 'isActive',
+        align:"center",
          // width:'80px',
         render: (isActive, rowData) => (
           <>
@@ -224,6 +308,7 @@ export const PriceListGrid = (props: PriceListView) => {
       {
         title:`Action`,
         dataIndex: 'action',
+        align:"center",
         render: (text, rowData) => (
           <span>         
               <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
@@ -272,16 +357,93 @@ export const PriceListGrid = (props: PriceListView) => {
   return (
       <>
       <Card title={<span >Price List</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} 
+     headStyle={{ border: 0 }} 
     extra={<Link to='/masters/pricelist/price-list-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
+     
+        <Form form={form} style={{textAlign:'center'}}  layout='vertical' onFinish={getPriceList}>
+        <Row gutter={24}>
+          <Col xs={24} sm={12} md={8} lg={6} xl={4}  style={{ padding: '8px' }}>
+            <Form.Item name="style" label="Style">
+              <Select placeholder="Select Style" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
+                {style.map((e) => {
+                  return (
+                    <Option key={e.id} value={e.style}>{e.style}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
+            <Form.Item name="year" label="Year">
+              <Select placeholder="Select Year" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
+                {year.map((e) => {
+                  return (
+                    <Option key={e.id} value={e.YEAR}>{e.YEAR}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
+            <Form.Item name="destination" label="Destination">
+              <Select placeholder="Select Destination" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
+                {destination.map((e) => {
+                  return (
+                    <Option key={e.id} value={e.destination}>{e.destination}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
+            <Form.Item name="seasonCode" label="Season Code">
+              <Select placeholder="Select Destination" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
+                {seasonCode.map((e) => {
+                  return (
+                    <Option key={e.id} value={e.season_code}>{e.season_code}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+         
+          <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
+            <Form.Item name="currency" label="Currency">
+              <Select placeholder="Select Currency" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
+                {currency.map((e) => {
+                  return (
+                    <Option key={e.id} value={e.currency}>{e.currency}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+
+          <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 20 }}  >
+                            <Form.Item>
+                                <Button htmlType="submit" icon={<SearchOutlined />}style={{backgroundColor:'green'}}type="primary">SEARCH</Button>
+                                    <Button danger
+                                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, position: "relative" }} onClick={onReset}>RESET
+                                </Button>
+                            </Form.Item>
+                        </Col>
+        </Row>
+      </Form>
+     
       
-      <Card >
         <Table
         rowKey={record => record}
           columns={columns}
           dataSource={priceList}
+          className="custom-table-wrapper"
+
           pagination={{
             onChange(current) {
               setPage(current);
@@ -291,7 +453,7 @@ export const PriceListGrid = (props: PriceListView) => {
           onChange={onChange}
           bordered />
           
-      </Card>
+    
       <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
