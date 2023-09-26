@@ -212,7 +212,7 @@ const VersionChanges = () => {
 
     return (
         <>
-            <Card title="Vesrion Wise Order Quantity Pieces" extra={versionData ? (<Button
+            <Card title="Version Wise Order Quantity Pieces" extra={versionData ? (<Button
                 type="default"
                 style={{ color: 'green' }}
                 onClick={downloadExcel}

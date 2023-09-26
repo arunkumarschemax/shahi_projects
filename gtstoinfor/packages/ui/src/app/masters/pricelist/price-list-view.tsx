@@ -238,15 +238,7 @@ const getSeasonCode = () => {
         sortDirections: ["descend", "ascend"],
         // ...getColumnSearchProps("style"),
       },
-      {
-        title: "Year",
-        dataIndex: "year",
-        align:"right",
-        sorter: (a, b) => a.year.localeCompare?.(b.year),
-        sortDirections: ["descend", "ascend"],
-        // ...getColumnSearchProps("year"),
-       
-      },
+      
       {
         title: "Destination",
         dataIndex: "destination",
@@ -255,6 +247,14 @@ const getSeasonCode = () => {
         sortDirections: [ "ascend","descend"],
         // ...getColumnSearchProps("destination"),
         
+      },{
+        title: "Year",
+        dataIndex: "year",
+        align:"right",
+        sorter: (a, b) => a.year - b.year,
+        sortDirections: ["descend", "ascend"],
+        // ...getColumnSearchProps("year"),
+       
       },
       {
         title: "Season Code",
@@ -267,11 +267,18 @@ const getSeasonCode = () => {
        
       },
       {
-        title: "Currency",
-        dataIndex: "currency",
+        title: "Price",
+        dataIndex: "price",
         align:"center",
-        sorter: (a, b) => a.currency.localeCompare(b.currency),
+        sorter: (a, b) => a.price.localeCompare(b.price),
         sortDirections: [ "ascend","descend"],
+        render:(text,record) => {
+          return(
+            <>
+            {record.price ? `${record.price} ${record.currency}` : '-'}
+            </>
+          )
+        }
         // ...getColumnSearchProps("currency"),
 
        
@@ -357,7 +364,7 @@ const getSeasonCode = () => {
   return (
       <>
       <Card title={<span >Price List</span>}
-     headStyle={{ border: 0 }} 
+    //  headStyle={{ border: 0 }} 
     extra={<Link to='/masters/pricelist/price-list-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
