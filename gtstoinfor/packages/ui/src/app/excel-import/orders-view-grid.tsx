@@ -607,7 +607,8 @@ const AllOrdersGridView = () => {
                         </Col>
                     </Row>
                 </Form>
-                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500,y:500 }}
+                <Table columns={columns} dataSource={filteredData} 
+                scroll={{ x: 1500,y:500 }}
                  pagination={{
                     onChange(current) {
                         setPage(current);

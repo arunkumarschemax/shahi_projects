@@ -58,17 +58,41 @@ export const WarehouseReport = () => {
       }
     })}
  
+    const CustomTitle = () => {
+           
+      return (
+        <div>
+        <Space size={"large"}>
+         Production Plan Type Name<span>Jan(previous)</span><br/><span>Jan(latest)</span>
+         <span>Feb(previous)</span><br/><span>Feb(latest)</span>
+          <span>Mar(previous)</span><br/><span>Mar(latest)</span>
+          <span>Apr(previous)</span><span>Apr(latest)</span>
+          <span>May(previous)</span><br/><span>May(latest)</span>
+          <span>Jun(previous)</span><br/><span>Jun(latest)</span>
+          <span>Jul(previous)</span><br/><span>Jul(latest)</span>
+          <span>Aug(previous)</span><br/><span>Aug(latest)</span>
+          <span>Sep(previous)</span><br/><span>Sep(latest)</span>
+          <span>Oct(previous)</span><br/><span>Oct(latest)</span>
+          <span>Nov(previous)</span><span>Nov(latest)</span>
+          <span>Dec(previous)</span><br/><span>Dec(latest)</span>
+          <span>Total(previous)</span><br/><span>Total(latest)</span>
+          <span></span><span></span>
+  </Space>
+        
+        </div>
+      );
+    };
   const childColumns1: any = [
     {
-      title: "Production Plan Type Name",
+      // title: "Production Plan Type Name",
       dataIndex: "phasetype",
-      key: "phasetype",
+      // key: "phasetype",
     },
-    {
-      title: "January",
-            children: [
+    // {
+    //   title: "January",
+    //         children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "janPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
@@ -76,22 +100,22 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "janCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.janCoeff}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
    
-    },
+    // },
     {
-      title: "February",
+      // title: "February",
       dataIndex: "oldOrderQtyPcs2",
             children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "febPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.febPcs}</span>  || '-'))
@@ -99,23 +123,23 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "febCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.febCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
  
     },
-    {
-      title: "March",
-      dataIndex: "oldOrderQtyPcs3",
-      key: "oldOrderQtyPcs3",
-            children: [
+    // {
+    //   title: "March",
+    //   dataIndex: "oldOrderQtyPcs3",
+    //   key: "oldOrderQtyPcs3",
+    //         children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "marPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.marPcs}</span>  || '-'))
@@ -123,7 +147,7 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "marCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.marCoeff}</span>  || '-'))
@@ -133,13 +157,13 @@ export const WarehouseReport = () => {
       ],
       
     },
-    {
-      title: "April",
-      dataIndex: "oldOrderQtyPcs4",
-      key: "oldOrderQtyPcs4",
-            children: [
+    // {
+    //   title: "April",
+    //   dataIndex: "oldOrderQtyPcs4",
+    //   key: "oldOrderQtyPcs4",
+    //         children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "aprPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.aprPcs}</span>  || '-'))
@@ -147,23 +171,23 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "aprCoeff",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
   
     },
-    {
-      title: "May",
-      dataIndex: "oldOrderQtyPcs5",
-      key: "oldOrderQtyPcs5",
-            children: [
+    // {
+    //   title: "May",
+    //   dataIndex: "oldOrderQtyPcs5",
+    //   key: "oldOrderQtyPcs5",
+    //         children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "mayPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
@@ -171,24 +195,24 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "mayCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.mayCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
     
       
     },
-    {
-      title: "June",
-      dataIndex: "oldOrderQtyPcs6",
-      key: "oldOrderQtyPcs6",
-            children: [
+    // {
+    //   title: "June",
+    //   dataIndex: "oldOrderQtyPcs6",
+    //   key: "oldOrderQtyPcs6",
+    //         children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "junPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.junPcs}</span>  || '-'))
@@ -196,24 +220,24 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "junCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.junCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
    
       
     },
-    {
-      title: "July",
-      dataIndex: "oldOrderQtyPcs7",
-      key: "oldOrderQtyPcs7",
-            children: [
+    // {
+    //   title: "July",
+    //   dataIndex: "oldOrderQtyPcs7",
+    //   key: "oldOrderQtyPcs7",
+    //         children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "julPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.julPcs}</span>  || '-'))
@@ -221,24 +245,24 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "julCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.julCoeff}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
   
       
-    },
-    {
-      title: "August",
-      dataIndex: "oldOrderQtyPcs8",
-      key: "oldOrderQtyPcs8",
-            children: [
+    // },
+    // {
+    //   title: "August",
+    //   dataIndex: "oldOrderQtyPcs8",
+    //   key: "oldOrderQtyPcs8",
+    //         children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "augPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.augPcs}</span>  || '-'))
@@ -246,23 +270,23 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "augCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.augCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
    
     },
-    {
-      title: "September",
-      dataIndex: "oldOrderQtyPcs9",
-      key: "oldOrderQtyPcs9",
-            children: [
+    // {
+    //   title: "September",
+    //   dataIndex: "oldOrderQtyPcs9",
+    //   key: "oldOrderQtyPcs9",
+    //         children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "sepPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.sepPcs}</span>  || '-'))
@@ -270,23 +294,23 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "sepCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.sepCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
     
     },
-    {
-      title: "October",
-      dataIndex: "oldOrderQtyPcs10",
-      key: "oldOrderQtyPcs10",
-            children: [
+    // {
+    //   title: "October",
+    //   dataIndex: "oldOrderQtyPcs10",
+    //   key: "oldOrderQtyPcs10",
+    //         children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "octPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.octPcs}</span>  || '-'))
@@ -294,23 +318,23 @@ export const WarehouseReport = () => {
           },
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "octCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.octCoeff}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
     
-    },
-    {
-      title: "November",
-      dataIndex: "oldOrderQtyPcs11",
-      key: "oldOrderQtyPcs11",
-            children: [
+    // },
+    // {
+    //   title: "November",
+    //   dataIndex: "oldOrderQtyPcs11",
+    //   key: "oldOrderQtyPcs11",
+    //         children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "novPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.novPcs}</span>  || '-'))
@@ -318,23 +342,23 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "novCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.novCoeff}</span>  || '-'))
           
           },
         },
-      ],
+    //   ],
      
-    },
-    {
-      title: "December",
-      dataIndex: "oldOrderQtyPcs12",
-      key: "oldOrderQtyPcs12",
-            children: [
+    // },
+    // {
+    //   title: "December",
+    //   dataIndex: "oldOrderQtyPcs12",
+    //   key: "oldOrderQtyPcs12",
+    //         children: [
         {
-          title: `In PCs`,
+          // title: `In PCs`,
           dataIndex: "decPcs",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.decPcs}</span>  || '-'))
@@ -342,24 +366,24 @@ export const WarehouseReport = () => {
           }
         },
         {
-          title: `In Coeff`,
+          // title: `In Coeff`,
           dataIndex: "decCoeff",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.decCoeff}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
 
       
-    },
+    // },
     {
-      title: "Total In PCs",
+      // title: "Total In PCs",
       dataIndex: "totalPcs",
      
     },
     {
-      title: "Total In Coeff",
+      // title: "Total In Coeff",
       dataIndex: "totalCoeff",
      
     },
@@ -384,7 +408,7 @@ export const WarehouseReport = () => {
       // ...getColumnSearchProps('itemName')
     },
     {
-      title: "Month Wise Data",
+      title: <CustomTitle/>,
       dataIndex: "monthWiseData",
       align:'center',
       render: (text: any, record: any) => (
@@ -402,6 +426,7 @@ export const WarehouseReport = () => {
   const handleExport = (e: any) => {
     e.preventDefault();
 
+  
     const currentDate = new Date()
         .toISOString()
         .slice(0, 10)
