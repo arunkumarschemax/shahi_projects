@@ -19,6 +19,8 @@ export const PriceListGrid = (props: PriceListView) => {
   const [priceList, setPriceList] = useState<any[]>([]);
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+
   const navigate = useNavigate();
   const [selectedPriceListData, setSelectedPriceListeData] = useState<any>(undefined);
   const priceService = new PriceListService();
@@ -41,7 +43,21 @@ export const PriceListGrid = (props: PriceListView) => {
     getSeasonCode();
   },[])
 
-  
+  const pagination = {
+    current: page,
+    pageSize: pageSize,
+    total: priceList.length,
+    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+    onChange: (current, pageSize) => {
+      setPage(current);
+      setPageSize(pageSize);
+    },
+    showSizeChanger: true,
+    onShowSizeChange: (current, size) => {
+      setPage(1); // Reset the page to 1 when changing page size
+      setPageSize(size);
+    },
+  };
   const getStyle = () => {
     priceService.getAllPriceListStyles().then(res => {
       setStyle(res.data)
@@ -220,15 +236,14 @@ const getSeasonCode = () => {
     getPriceList();
   };
 
+  const getStartIndex = () => (page - 1) * pageSize + 1;
 
   const columns : any [] = [
     {
-      title: 'S No',
-      key: 'sno',
-      // width: '70px',
-      
-      responsive: ['sm'],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1)
+      title: "S.No",
+      key: "sno",
+      responsive: ["sm"],
+      render: (text, record, index) => getStartIndex() + index,
     },
     {
         title: "Style",
@@ -468,11 +483,7 @@ const getSeasonCode = () => {
           dataSource={priceList}
           className="custom-table-wrapper"
 
-          pagination={{
-            onChange(current) {
-              setPage(current);
-            }
-          }}
+          pagination={pagination}
           scroll={{x:true}}
           onChange={onChange}
           bordered />
