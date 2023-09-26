@@ -282,12 +282,12 @@ function ScanDetailView() {
           {rowData.state.rowData.Routing ? rowData.state.rowData.Routing : "--"}
         </Descriptions.Item>
 
-        <Descriptions.Item
+        {/* <Descriptions.Item
           label="Comment"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.Comment ? rowData.state.rowData.Comment : "--"}
-        </Descriptions.Item>
+        </Descriptions.Item> */}
 
         <Descriptions.Item
           label="Financial year"
@@ -326,7 +326,7 @@ function ScanDetailView() {
 
       {/* <Button type="primary"  onClick={handleBack}> Back </Button> */}
       <Card>
-        <Table columns={columns} size='small' dataSource={rowData.state.rowData.scanentity} />
+        <Table columns={columns} size='small' dataSource={rowData.state.rowData.scanentity} pagination={false} />
       </Card>
     </Card>
   );
