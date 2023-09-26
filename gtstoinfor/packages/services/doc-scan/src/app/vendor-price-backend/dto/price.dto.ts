@@ -8,6 +8,16 @@ export class PriceDto {
   headOfCharges: string;
 
   @ApiProperty()
+  hsnCode: string;
+
+  @ApiProperty()
+  serviceDescription: string;
+
+  @ApiProperty()
+  buyersName: string;
+
+
+  @ApiProperty()
   perUnit: string;
 
   @ApiProperty()

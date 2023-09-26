@@ -12,6 +12,18 @@ export class PriceEntity extends BaseEntity {
         name: "head_of_charges"
     })
     headOfCharges: string;
+    @Column("varchar", {
+        nullable: true,
+        length: 50,
+        name: "hsn_code"
+    })
+    hsnCode: string;
+    @Column("varchar", {
+        nullable: true,
+        length: 50,
+        name: "service_description"
+    })
+    serviceDescription: string;
 
     @Column("varchar", {
         nullable: true,
@@ -26,6 +38,13 @@ export class PriceEntity extends BaseEntity {
         name: 'dp_logistics',
     })
     dpLogistics: string;
+
+    @Column('varchar', {
+        nullable: true,
+        length: 50,
+        name: 'buyers_name',
+    })
+    buyersName: string;
 
 
 

@@ -7,8 +7,11 @@ export class PriceAdapter {
     convertEntityToDto(entity: PriceEntity): PriceDto {
         const dto = new PriceDto();
         dto.headOfCharges = entity.headOfCharges;
+        dto.hsnCode = entity.hsnCode;
+        dto.serviceCode = entity.serviceCode;
         dto.perUnit = entity.perUnit;
         dto.vendor = entity.vendor;
+        dto.buyersName = entity.buyersName;
         dto.nsh = entity.nsh;
         dto.ksr = entity.ksr;
         dto.dpLogistics = entity.dpLogistics;
@@ -26,11 +29,14 @@ export class PriceAdapter {
     
         const entity = new PriceEntity();
         entity.headOfCharges = dto.headOfCharges;
+        entity.hsnCode = dto.hsnCode;
+        entity.serviceDescription = dto.serviceDescription;
         entity.perUnit = dto.perUnit;
         entity.dpLogistics = dto.dpLogistics;
         entity.nsh = dto.nsh;
         entity.ksr = dto.ksr;
         entity.vendor = dto.vendor;
+        entity.buyersName = dto.buyersName;
         entity.unitPrice = dto.unitPrice;
         entity.serviceCode = "VENDOR"+"/"+"SC"+ "/"+ (result +1);
         entity.createdAt=dto.createdAt;
