@@ -13,7 +13,9 @@ export class priceListDto {
     @ApiProperty()
     year:string;
     @ApiProperty()
-    price:number;
+    price:string;
+    @ApiProperty()
+    item:string;
     @ApiProperty()
     currency:string;
     @ApiProperty()

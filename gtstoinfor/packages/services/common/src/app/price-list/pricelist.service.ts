@@ -95,65 +95,18 @@ export class priceListService {
     //     }
     // }
 
-    // async createPriceList(req: priceListDto, isUpdate: boolean): Promise<PriceListResponseModel> {
-    //     try {
-    //         let previousValue;
-    //         console.log(isUpdate,"eee")
-
-    
-    //         if (!isUpdate) {
-    //             const data = await this.priceRepository.findOne({
-    //                 where: { style: req.style, destination: req.destination }
-    //             });
-    //             console.log(data,"reseee")
-    //             if (data) {
-    //                 throw new PriceListResponseModel(false, 11104, 'Price list for this style and destination already exists');
-    //             }
-    //         } else {
-    //             const existingRecord = await this.priceRepository.findOne({ where: { id: req.id } });
-    
-    //             if (!existingRecord) {
-    //                 throw new ErrorResponse(0, 'Given data does not exist');
-    //             }
-    
-    //             existingRecord.destination = req.destination;
-    //             existingRecord.year = req.year;
-    //             existingRecord.seasonCode = req.seasonCode;
-    //             existingRecord.currency = req.currency;
-    
-    //             await this.priceRepository.save(existingRecord);
-    //         }
-    
-    
-    //         const converteddata: PriceListEntity = this.adaptor.convertDtoToEntity(req, isUpdate);
-    //         const saveStyle: PriceListEntity = await this.priceRepository.save(converteddata);
-    //         const savepricedto: priceListDto = this.adaptor.convertEntityToDto(converteddata);
-    
-    //         if (savepricedto) {
-    //             const presentvalue = savepricedto.style;
-    //             const response = new PriceListResponseModel(true, 1, isUpdate ? 'Price List Updated Successfully' : 'Price List Created Successfully');
-    //             const name = isUpdate ? 'updated' : 'created';
-    //             const displayValue = isUpdate ? 'Price List Updated Successfully' : 'Price List Created Successfully';
-    //             const userName = isUpdate ? savepricedto.updatedUser : savepricedto.createdUser;
-    //             return response;
-    //         } else {
-    //             throw new PriceListResponseModel(false, 11106, 'Price List saved but there was an issue while transforming it into DTO');
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //         throw new ErrorResponse(500, 'An error occurred');
-    //     }
-    // } this is the new code working for preventing create for the new record 
-
     async createPriceList(req: priceListDto, isUpdate: boolean): Promise<PriceListResponseModel> {
         try {
             let previousValue;
+            console.log(isUpdate,"eee")
+
     
             if (!isUpdate) {
-                const existingRecord = await this.priceRepository.findOne({
+                const data = await this.priceRepository.findOne({
                     where: { style: req.style, destination: req.destination }
                 });
-                if (existingRecord) {
+                // console.log(data,"reseee")
+                if (data) {
                     throw new PriceListResponseModel(false, 11104, 'Price list for this style and destination already exists');
                 }
             } else {
@@ -162,7 +115,6 @@ export class priceListService {
                 if (!existingRecord) {
                     throw new ErrorResponse(0, 'Given data does not exist');
                 }
-    
                 const duplicateRecord = await this.priceRepository.findOne({
                     where: {
                         id: Not(req.id), 
@@ -173,23 +125,94 @@ export class priceListService {
     
                 if (duplicateRecord) {
                     throw new PriceListResponseModel(false, 11104, 'Price list for this style and destination already exists');
-                }
+                }
     
                 existingRecord.destination = req.destination;
                 existingRecord.year = req.year;
                 existingRecord.seasonCode = req.seasonCode;
                 existingRecord.currency = req.currency;
+                existingRecord.price = req.price;
+                existingRecord.item = req.item;
+
     
                 await this.priceRepository.save(existingRecord);
             }
     
-            return new PriceListResponseModel(true, 1, isUpdate ? 'Price List Updated Successfully' : 'Price List Created Successfully');
     
+            const converteddata: PriceListEntity = this.adaptor.convertDtoToEntity(req, isUpdate);
+            const saveStyle: PriceListEntity = await this.priceRepository.save(converteddata);
+            const savepricedto: priceListDto = this.adaptor.convertEntityToDto(converteddata);
+    
+            if (savepricedto) {
+                const presentvalue = savepricedto.style;
+                const response = new PriceListResponseModel(true, 1, isUpdate ? 'Price List Updated Successfully' : 'Price List Created Successfully');
+                const name = isUpdate ? 'updated' : 'created';
+                const displayValue = isUpdate ? 'Price List Updated Successfully' : 'Price List Created Successfully';
+                const userName = isUpdate ? savepricedto.updatedUser : savepricedto.createdUser;
+                return response;
+            } else {
+                throw new PriceListResponseModel(false, 11106, 'Price List saved but there was an issue while transforming it into DTO');
+            }
         } catch (error) {
             console.error(error);
             throw new ErrorResponse(500, 'An error occurred');
         }
-    }
+    } 
+    //this is the new code working for preventing create for the new record  but updating already existed data
+
+    // async createPriceList(req: priceListDto, isUpdate: boolean): Promise<PriceListResponseModel> {
+    //     try {
+    //         let previousValue;
+    //         if (!isUpdate) {
+    //             const existingRecord = await this.priceRepository.findOne({
+    //                 where: { style: req.style, destination: req.destination }
+    //             });
+    //             if (existingRecord) {
+    //                 throw new PriceListResponseModel(false, 11104, 'Price list for this style and destination already exists');
+    //             }
+    //         } else {
+    //             const existingRecord = await this.priceRepository.findOne({ where: { id: req.id } });
+    
+    //             if (!existingRecord) {
+    //                 throw new ErrorResponse(0, 'Given data does not exist');
+    //             }
+    
+    //             const duplicateRecord = await this.priceRepository.findOne({
+    //                 where: {
+    //                     id: Not(req.id), 
+    //                     style: req.style,
+    //                     destination: req.destination
+    //                 }
+    //             });
+    
+    //             if (duplicateRecord) {
+    //                 throw new PriceListResponseModel(false, 11104, 'Price list for this style and destination already exists');
+    //             }
+    
+    //             existingRecord.destination = req.destination;
+    //             existingRecord.year = req.year;
+    //             existingRecord.seasonCode = req.seasonCode;
+    //             existingRecord.currency = req.currency;
+    //            existingRecord.price = req.price;
+    //            existingRecord.item = req.item;
+    //            console.log(existingRecord,'--existingRecord')
+    
+    //             await this.priceRepository.save(existingRecord);
+    //             if(existingRecord){
+    //                 return new PriceListResponseModel(true, 1, isUpdate ? 'Price List Updated Successfully' : 'Price List Created Successfully');
+
+    //             } else{
+    //                 return new PriceListResponseModel(false, 1, 'Something went wrong');
+
+    //             }
+    //         }
+    
+    
+    //     } catch (error) {
+    //         console.error(error);
+    //         throw new ErrorResponse(500, 'An error occurred');
+    //     }
+    // }
     
 
     async getAllPriceList(req?:NewFilterDto): Promise<PriceListResponseModel> {

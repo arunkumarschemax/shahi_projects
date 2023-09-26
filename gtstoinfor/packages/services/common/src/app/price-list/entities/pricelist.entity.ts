@@ -44,4 +44,6 @@ export class PriceListEntity extends CommonColumns  {
     })
     currency: string;
 
+
+
 }
