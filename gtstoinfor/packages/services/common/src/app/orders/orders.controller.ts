@@ -236,6 +236,14 @@ export class OrdersController {
         }
     }
 
+    @Post('/getTrimOrdersNo')
+    async getTrimOrdersItems(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getTrimOrdersNo();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
     @Post('/revertTrimFileData')
     async revertTrimFileData(@Body() req: any): Promise<CommonResponseModel> {
         try {

@@ -1,8 +1,8 @@
 
-import { FileExcelFilled } from "@ant-design/icons";
+import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { YearReq } from "@project-management-system/shared-models";
 import { OrdersService } from "@project-management-system/shared-services";
-import { Button, Card, List, Table, Tabs, TabsProps, Typography } from "antd";
+import { Button, Card, Col, Form, List, Row, Select, Space, Table, Tabs, TabsProps, Typography, message } from "antd";
 import { Excel } from "antd-table-saveas-excel";
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import { ColumnsType } from "antd/es/table";
@@ -14,337 +14,451 @@ export const WareHouseComparision = () => {
   const [page, setPage] = React.useState(1);
   const [data, setData] = useState<any[]>([]);
   const [year, setYear] = useState<any[]>([]);
-  const [tab, setTab] = useState<number>();
+  const [tab, setTab] = useState<number>(2023);
+  const [excelData, setExcelData] = useState<any[]>([]);
+  const [filteredData, setFilteredData] = useState<any[]>([])
   const service = new OrdersService()
+  const [form] = Form.useForm();
+  const { Option } = Select;
   const {Text} = Typography
   useEffect(()=>{
     getData();
+    getTabs()
   },[])
 
+  const getTabs = () => {
+    service.getWareHouseYearData().then((res) => {
+      if (res.status) {
+        setYear(res.data);
+        console.log(res.data,'hhhhhhh')
+      }
+    });
+  };
   const getData =()=>{
-    const req = new YearReq(2023 )
-    console.log(tab,'222222222222222222');
-    
+    const req = new YearReq(tab)    
     service.getWareHouseComparisionData(req).then(res =>{
 
       if(res.status){
         setYear(res.data)
       }
     })
-    service.getAll(req).then(res =>{
+    service.getAllWareHouse(req).then(res =>{
       console.log(res,'res==========');
       if(res.status){
         setData(res.data)
+        setFilteredData(res.data)
       }
       else{
         setData([])
       }
-    })}
- 
+    })
+    service.getExfactoryWithComparisionExcel(req).then((res) => {
+      console.log(res, "res==========");
+      if (res.status) {
+        setExcelData(res.data);
+      } else {
+        setData([]);
+      }
+    })
+  }
+  const CustomTitle = () => {
+           
+    return (
+      <div>
+      <Space size={"large"}>
+       Production Plan Type Name<span>Jan(previous)</span><br/><span></span> <span>Jan(latest)</span>
+       <span>Feb(previous)</span><br/><span>Feb(latest)</span>
+        <span>Mar(previous)</span><br/><span>Mar(latest)</span>
+        <span>Apr(previous)</span><br/><span>Apr(latest)</span>
+        <span>May(previous)</span><br/><span>May(latest)</span>
+        <span>Jun(previous)</span><br/><span>Jun(latest)</span>
+        <span>Jul(previous)</span><br/><span>Jul(latest)</span>
+        <span>Aug(previous)</span><br/><span>Aug(latest)</span>
+        <span>Sep(previous)</span><br/><span>Sep(latest)</span>
+        <span>Oct(previous)</span><br/><span>Oct(latest)</span>
+        <span>Nov(previous)</span><span>Nov(latest)</span>
+        <span>Dec(previous)</span><br/><span>Dec(latest)</span>
+        <span>Total(previous)</span><br/><span>Total(latest)</span>
+        <span></span><span></span>
+</Space>
+      
+      </div>
+    );
+  };
+  const getFilterdData = () => {
+    let ItemName = form.getFieldValue('ItemName');
+  
+    let filteredData = data;
+    console.log(filteredData,'--------');
+    
+    if (ItemName) {
+        filteredData = filteredData.filter(record => record.itemName === ItemName);
+        if (filteredData.length === 0) {
+            message.error("No Data Found")
+        }
+        setFilteredData(filteredData);
+    }
+   
+  }
+  const onReset = () => {
+    form.resetFields();
+    getData();
+  }
   const childColumns1: any = [
     {
-      title: "Production Plan Type Name",
+      // title: "Production Plan Type Name",
       dataIndex: "phasetype",
-      key: "phasetype",
+      // key: "phasetype",
     },
-    {
-      title: "January",
-            children: [
+    // {
+    //   title: "January",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "janPcs",
+          align:"right",
+          width:135,
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "janCoeff",
+          align:"right",
+          width:170,
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.janCoeff}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
    
-    },
-    {
-      title: "February",
-      dataIndex: "oldOrderQtyPcs2",
-            children: [
+    // },
+    // {
+    //   title: "February",
+    //   dataIndex: "oldOrderQtyPcs2",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "febPcs",
+          width:100,
+          align:'right',
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.febPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "febCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.febCoeff}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
  
-    },
-    {
-      title: "March",
-      dataIndex: "oldOrderQtyPcs3",
-      key: "oldOrderQtyPcs3",
-            children: [
+    // },
+    // {
+    //   title: "March",
+    //   dataIndex: "oldOrderQtyPcs3",
+    //   key: "oldOrderQtyPcs3",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "marPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.marPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "marCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.marCoeff}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
       
-    },
-    {
-      title: "April",
-      dataIndex: "oldOrderQtyPcs4",
-      key: "oldOrderQtyPcs4",
-            children: [
+    // },
+    // {
+    //   title: "April",
+    //   dataIndex: "oldOrderQtyPcs4",
+    //   key: "oldOrderQtyPcs4",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "aprPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.aprPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
+
           dataIndex: "aprCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
   
-    },
-    {
-      title: "May",
-      dataIndex: "oldOrderQtyPcs5",
-      key: "oldOrderQtyPcs5",
-            children: [
+    // },
+    // {
+    //   title: "May",
+    //   dataIndex: "oldOrderQtyPcs5",
+    //   key: "oldOrderQtyPcs5",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "mayPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "mayCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.mayCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
     
       
     },
-    {
-      title: "June",
-      dataIndex: "oldOrderQtyPcs6",
-      key: "oldOrderQtyPcs6",
-            children: [
+    // {
+    //   title: "June",
+    //   dataIndex: "oldOrderQtyPcs6",
+    //   key: "oldOrderQtyPcs6",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "junPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.junPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "junCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.junCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
    
       
     },
-    {
-      title: "July",
-      dataIndex: "oldOrderQtyPcs7",
-      key: "oldOrderQtyPcs7",
-            children: [
+    // // {
+    // //   title: "July",
+    // //   dataIndex: "oldOrderQtyPcs7",
+    // //   key: "oldOrderQtyPcs7",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "julPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.julPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "julCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.julCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
   
       
     },
-    {
-      title: "August",
-      dataIndex: "oldOrderQtyPcs8",
-      key: "oldOrderQtyPcs8",
-            children: [
+    // {
+    //   title: "August",
+    //   dataIndex: "oldOrderQtyPcs8",
+    //   key: "oldOrderQtyPcs8",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "augPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.augPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "augCoeff",
+          width:150,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.augCoeff}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
    
-    },
-    {
-      title: "September",
-      dataIndex: "oldOrderQtyPcs9",
-      key: "oldOrderQtyPcs9",
-            children: [
+    // },
+    // {
+    //   title: "September",
+    //   dataIndex: "oldOrderQtyPcs9",
+    //   key: "oldOrderQtyPcs9",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "sepPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.sepPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "sepCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.sepCoeff}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
     
-    },
-    {
-      title: "October",
-      dataIndex: "oldOrderQtyPcs10",
-      key: "oldOrderQtyPcs10",
-            children: [
+    // },
+    // {
+    //   title: "October",
+    //   dataIndex: "oldOrderQtyPcs10",
+    //   key: "oldOrderQtyPcs10",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "octPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.octPcs}</span>  || '-'))
           
           },
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "octCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.octCoeff}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
     
-    },
-    {
-      title: "November",
-      dataIndex: "oldOrderQtyPcs11",
-      key: "oldOrderQtyPcs11",
-            children: [
+    // },
+    // {
+    //   title: "November",
+    //   dataIndex: "oldOrderQtyPcs11",
+    //   key: "oldOrderQtyPcs11",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "novPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.novPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "novCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.novCoeff}</span>  || '-'))
           
           },
-        },
-      ],
+      //   },
+      // ],
      
     },
-    {
-      title: "December",
-      dataIndex: "oldOrderQtyPcs12",
-      key: "oldOrderQtyPcs12",
-            children: [
+    // {
+    //   title: "December",
+    //   dataIndex: "oldOrderQtyPcs12",
+    //   key: "oldOrderQtyPcs12",
+    //         children: [
         {
-          title: `Previous`,
+          // title: `Previous`,
           dataIndex: "decPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.decPcs}</span>  || '-'))
           
           }
         },
         {
-          title: `Latest`,
+          // title: `Latest`,
           dataIndex: "decCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.decCoeff}</span>  || '-'))
           
           }
-        },
-      ],
+      //   },
+      // ],
 
       
     },
     {
-      title: "Total Previous",
+      // title: "Total Previous",
       dataIndex: "totalPcs",
+      align:"right",
      
     },
     {
-      title: "Total Latest",
+      // title: "Total Latest",
       dataIndex: "totalCoeff",
-     
+      align:"right",
+      width:100
     },
   ]
   const columns5: any = [
@@ -367,7 +481,7 @@ export const WareHouseComparision = () => {
       // ...getColumnSearchProps('itemName')
     },
     {
-      title: "Month Wise Data",
+      title: <CustomTitle/>,
       dataIndex: "monthWiseData",
       align:'center',
       render: (text: any, record: any) => (
@@ -394,381 +508,191 @@ export const WareHouseComparision = () => {
    
     const excel = new Excel();
     // year.forEach((yearItem) => {
-      excel.addSheet(tab.toString()); // Create a sheet for the year
+      excel.addSheet(tab.toString()); 
   
       let exportingColumns: IExcelColumn[] = []
-    exportingColumns = [
-      
+      exportingColumns = [
         {
           title: "Item Name",
-          dataIndex: "itemName",
-        //   render: (text: any, record: any) => {
-        //     return record.itemName ? <span>{record.itemName}</span> : '-'
-        // }
+          dataIndex: "item",
         },
         {
-          title: "Month Wise Data",
-          dataIndex: "monthWiseData",
-          children: [
-            {
-              title: "Production Plan Type Name",
-              dataIndex: "phasetype",
-              render: (text: any, record: any) => {
-                const phaseTypes = record.monthWiseData.map((data: any) => data.phasetype);
-                return phaseTypes.join(', ') || '-';
-              }
-              // render: (text: any, record: any) => {
-              //   const phaseTypes = record.monthWiseData.map((data: any) => data.phasetype)
-              //   return (
-              //     <div>
-              //       <div>{phaseTypes}</div>
-              //       <br /> {/* Add a line break between each "phasetype" value */}
-              //     </div>)
-                
-              // }
-            },
-            {
-              title: "January",
-              dataIndex:'',
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "janPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.janPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                 
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "janCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.janCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-           
-            },
-            {
-              title: "February",
-              dataIndex: "oldOrderQtyPcs2",
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "febPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.febPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "febCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.febCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-         
-            },
-            {
-              title: "March",
-              dataIndex: "oldOrderQtyPcs3",
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "marPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.marPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "marCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.marCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-              
-            },
-            {
-              title: "April",
-              dataIndex: "oldOrderQtyPcs4",
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "aprPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.aprPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "aprCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.aprCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
+          title: "Production Plan Type Name",
+          dataIndex: "prod_plan_type",
           
-            },
-            {
-              title: "May",
-              dataIndex: "oldOrderQtyPcs5",
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "mayPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.mayPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "mayCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.mayCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-            
-              
-            },
-            {
-              title: "June",
-              dataIndex: "oldOrderQtyPcs6",
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "junPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.junPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "junCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.junCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-           
-              
-            },
-            {
-              title: "July",
-              dataIndex: "oldOrderQtyPcs7",
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "julPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.julPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "julCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.julCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-          
-              
-            },
-            {
-              title: "August",
-              dataIndex: "oldOrderQtyPcs8",
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "augPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.augPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "augCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.augCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-           
-            },
-            {
-              title: "September",
-              dataIndex: "oldOrderQtyPcs9",
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "sepPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.sepPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "sepCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.sepCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-            
-            },
-            {
-              title: "October",
-              dataIndex: "oldOrderQtyPcs10",
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "octPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.octPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  },
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "octCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.octCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-            
-            },
-            {
-              title: "November",
-              dataIndex: "oldOrderQtyPcs11",
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "novPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.novPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "novCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.novCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-             
-            },
-            {
-              title: "December",
-              dataIndex: "oldOrderQtyPcs12",
-                    children: [
-                {
-                  title: `Previous`,
-                  dataIndex: "decPcs",
-                  render: (text: any, record: any) => {
-                    const pcs = record.monthWiseData.map((data: any) => data.pcsData.map(e => e.decPcs));
-                    console.log(pcs,'jan');
-                    
-                    return pcs.join(', ') || '-';
-                  }
-                },
-                {
-                  title: `Latest`,
-                  dataIndex: "decCoeff",
-                  render: (text: any, record: any) => {
-                    const coeff = record.monthWiseData.map((data: any) => data.coeffData.map(e => e.decCoeff));
-                    
-                    return coeff.join(', ') || '-';
-                  }
-                },
-              ],
-        
-              
-            },
-            {
-              title: "Total Previous",
-              dataIndex: "totalPcs",
-              render: (text: any, record: any) => {
-                const phaseTypes = record.monthWiseData.map((data: any) => data.totalPcs);
-                return phaseTypes.join(', ') || '-';
-              }
-            },
-            {
-              title: "Total Latest",
-              dataIndex: "totalCoeff",
-              render: (text: any, record: any) => {
-                const phaseTypes = record.monthWiseData.map((data: any) => data.totalCoeff);
-                return phaseTypes.join(', ') || '-';
-              }
-            },
-          ]
+        },   
+        {
+          title: `Jan Previous`,
+          dataIndex: "order_plan_qty",
+          render: (text, record) =>
+            record.ExfMonth == 1 && record.status == 'previous'? record.order_plan_qty : "-",
         },
+        {
+          title: `Jan Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 1 && record.status == 'latest'? record.order_plan_qty : "-",
+      },
+        {
+          title: `Feb Previous`,
+          dataIndex: "order_plan_qty",
+         render: (text, record) =>
+            record.ExfMonth == 2 && record.status == 'previous'? record.order_plan_qty : "-"
+          },
+        {
+          title: `Feb Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 2 && record.status == 'latest'? record.order_plan_qty : "-",
+        },
+  
+        {
+          title: `Mar Previous`,
+          dataIndex: "order_plan_qty",
+         render: (text, record) =>
+            record.ExfMonth == 3 && record.status == 'previous'? record.order_plan_qty : "-"
+          },
+        {
+          title: `Mar Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 3 && record.status == 'latest'? record.order_plan_qty : "-",
+        },
+  
+        {
+          title: `Apr Previous`,
+          dataIndex: "order_plan_qty",
+         render: (text, record) =>
+            record.ExfMonth == 4 && record.status == 'previous'? record.order_plan_qty : "-"
+          },
+        {
+          title: `Apr Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 4 && record.status == 'latest'? record.order_plan_qty : "-",
+        },
+  
+        {
+          title: `May Previous`,
+          dataIndex: "order_plan_qty",
+         render: (text, record) =>
+            record.ExfMonth == 5 && record.status == 'previous'? record.order_plan_qty : "-"
+          },
+        {
+          title: `May Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 5 && record.status == 'latest'? record.order_plan_qty : "-",
+        },
+  
+        {
+          title: `Jun Previous`,
+          dataIndex: "order_plan_qty",
+         render: (text, record) =>
+            record.ExfMonth == 6 && record.status == 'previous'? record.order_plan_qty : "-"
+          },
+        {
+          title: `Jun Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 6 && record.status == 'latest'? record.order_plan_qty : "-",
+        },
+  
+        {
+          title: `Jul Previous`,
+          dataIndex: "order_plan_qty",
+         render: (text, record) =>
+            record.ExfMonth == 7 && record.status == 'previous'? record.order_plan_qty : "-"
+          },
+        {
+          title: `Jul Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 7 && record.status == 'latest'? record.order_plan_qty : "-",
+        },
+  
+        {
+          title: `Aug Previous`,
+          dataIndex: "order_plan_qty",
+         render: (text, record) =>
+            record.ExfMonth == 8 && record.status == 'previous'? record.order_plan_qty : "-"
+          },
+        {
+          title: `Aug Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 8 && record.status == 'latest'? record.order_plan_qty : "-",
+        },
+  
+        {
+          title: `Sep Previous`,
+          dataIndex: "order_plan_qty",
+         render: (text, record) =>
+            record.ExfMonth == 9 && record.status == 'previous'? record.order_plan_qty : "-"
+          },
+        {
+          title: `Sep Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 9 && record.status == 'latest'? record.order_plan_qty : "-",
+        },
+  
+        {
+          title: `Oct Previous`,
+          dataIndex: "order_plan_qty",
+         render: (text, record) =>
+            record.ExfMonth == 10 && record.status == 'previous'? record.order_plan_qty : "-"
+          },
+        {
+          title: `Oct Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 10 && record.status == 'latest'? record.order_plan_qty : "-",
+        },
+  
+        {
+          title: `Nov Previous`,
+          dataIndex: "order_plan_qty",
+         render: (text, record) =>
+            record.ExfMonth == 11 && record.status == 'previous'? record.order_plan_qty : "-"
+
+        },
+        {
+          title: `Nov Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 11 && record.status == 'latest'? record.order_plan_qty : "-",
+        },
+  
+        {
+          title: `Dec Previous`,
+          dataIndex: "order_plan_qty",
+         render: (text, record) =>
+            record.ExfMonth == 12 && record.status == 'previous'? record.order_plan_qty : "-"
+          },
+        {
+          title: `Dec Latest`,
+          dataIndex: "order_plan_qty_coeff",
+          render: (text, record) =>
+          record.ExfMonth == 12 && record.status == 'latest'? record.order_plan_qty : "-",
+        },
+        // {
+        //   title: "Total In PCs",
+        //   dataIndex: "totalPcs",
+          
+        // },
+        // {
+        //   title: "Total In Coeff",
+        //   dataIndex: "totalCoeff",
+          
+        // },
       ];
     
    
       excel.addRow();
   
       excel.addColumns(exportingColumns);
-      excel.addDataSource(data);
+      excel.addDataSource(excelData);
     // });
     excel.saveAs(`Ex-Factory-report-${currentDate}.xlsx`);
 
@@ -788,24 +712,58 @@ const handleTabChange = (selectedYear: string) => {
         style={{ color: 'green' }}
         onClick={handleExport}
         icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
+ <Form form={form} layout={'vertical'}>
+              <Row gutter={24}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
+                            <div>
+                                <label>Item Name</label>
+                                <Form.Item name="ItemName">
+                                    <Select
+                                        showSearch
+                                        placeholder="Select Item Name"
+                                        optionFilterProp="children"
+                                        allowClear>
+                                            {data.map(e=>(
+                                                <Option key={e.itemName} value={e.itemName}>{e.itemName}</Option>
+                                            ))}
+                                        {/* <Option key='new' value="NEW">NEW</Option>
+                                        <Option key='unaccepted' value="UNACCEPTED">UNACCEPTED</Option> */}
+                                    </Select>
+                                </Form.Item>
+                            </div>
+                        </Col>
 
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 17 }} >
+                            <Button
+                                type="primary"
+                                icon={<SearchOutlined />}
+                                style={{ marginRight: 50, width: 80 }}
+                                htmlType="button"
+                                onClick={getFilterdData}>Search</Button>
+                            <Button
+                                type="primary"
+                                icon={<UndoOutlined />}
+                                htmlType="submit"
+                                onClick={onReset}>Reset</Button>
+                        </Col>
+              </Row>
+              
+            </Form>
     
-{/* <Tabs type="card" onChange={handleTabChange} aria-disabled> */}
+<Tabs type="card" onChange={handleTabChange} aria-disabled>
         {year.map((item) => (
-          
-          
-          // <Tabs.TabPane key={item.year} tab={item.year}>
-        <Table
-          dataSource={data} // Assuming 'data' contains data for each year
-          columns={columns5} // Assuming 'columns5' is defined elsewhere
-          size="small"
-          scroll={{ x: "max-content" }}
-         
-        />
+          <Tabs.TabPane key={item.year} tab={item.year}>
+           
+           <Table
+              dataSource={filteredData} 
+              columns={columns5}
+              size="small"
+              scroll={{ x: "max-content" }}
+            />
         
-      // </Tabs.TabPane>
+      </Tabs.TabPane>
     ))}
-  {/* </Tabs> */}
+  </Tabs>
   </Card>
   );
 };

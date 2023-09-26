@@ -114,6 +114,7 @@ export function FileRevert() {
               children:  <Table
               columns={columns}
               dataSource={trimData}
+              className="custom-table-wrapper"
               scroll={{ x: 1000 }}
               pagination={{
                   onChange(current, pageSize) {
@@ -129,6 +130,7 @@ export function FileRevert() {
               children:   <Table
               columns={columns}
               dataSource={poData}
+              className="custom-table-wrapper"
               scroll={{ x: 1000 }}
               pagination={{
                   onChange(current, pageSize) {
