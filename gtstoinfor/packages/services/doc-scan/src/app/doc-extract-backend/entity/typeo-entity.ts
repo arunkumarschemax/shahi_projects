@@ -74,17 +74,6 @@ export class ScanEntity extends BaseEntity {
   })
   InnvoiceCurrency: string;
 
-  @Column('varchar', {
-    length: 50,
-    name: 'routing',
-  })
-  Routing: string;
-
-  @Column('varchar', {
-    length: 50,
-    name: 'comment',
-  })
-  Comment: string;
 
   @Column('varchar', {
     length: 50,
@@ -92,18 +81,9 @@ export class ScanEntity extends BaseEntity {
   })
   Financialyear: string;
 
-  @Column('varchar', {
-    length: 50,
-    name: 'time_created',
-  })
-  Timecreated: string;
+  
 
-  @Column('varchar', {
-    length: 50,
-    name: 'buyer_name',
-  })
-  buyerName: string;
-
+  
   @Column("enum", {
     name: "variance_status",
     enum: StatusEnum,
