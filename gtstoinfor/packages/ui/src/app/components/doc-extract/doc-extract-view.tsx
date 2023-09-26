@@ -274,8 +274,9 @@ export function DocView() {
       ...getColumnSearchProps("InnvoiceAmount"),
       sorter: (a, b) => a.InnvoiceAmount.localeCompare(b.InnvoiceAmount),
       align: "center",
-      render: (text: any, record: { InnvoiceAmount: any }) => {
-        return <> {record.InnvoiceAmount ? Math.round(record.InnvoiceAmount) : "-"} </>;
+      render: (text, record) => {
+        const formattedAmount = record.InnvoiceAmount ? parseFloat(record.InnvoiceAmount).toFixed(2) : "-";
+        return <>{formattedAmount}</>;
       },
     },
     {

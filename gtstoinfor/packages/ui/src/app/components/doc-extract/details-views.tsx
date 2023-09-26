@@ -233,7 +233,7 @@ function ScanDetailView() {
       render : (text,record,index) => {
         return (
             <span>
-              {record.Variance ? Math.round(Number(record.Variance*record.Variance)+Number(record.Variance)) : '-'}
+              {record.Variance ? (Number(record.Variance*record.Variance)+Number(record.Variance)) : '-'}
 
             </span>
         )
@@ -247,7 +247,7 @@ function ScanDetailView() {
       render : (text,record,index) => {
         return (
             <span>
-              {record.Variance ? Math.round(Number(record.Variance*record.Variance)+Number(record.Variance)) : '-'}
+              {record.Variance ? (Number(record.Variance*record.Variance)+Number(record.Variance)) : '-'}
 
             </span>
         )
@@ -276,7 +276,7 @@ function ScanDetailView() {
       render : (text,record) => {
         return (
             <span>
-                {record.Taxpercentage ? Math.round(record.Taxpercentage) : '-'}
+                {record.Taxpercentage ? (record.Taxpercentage) : '-'}
             </span>
         )
     }
@@ -292,7 +292,7 @@ function ScanDetailView() {
       render : (text,record) => {
         return (
             <span>
-                {record.quotation ? Math.round(record.quotation) : '-'}
+                {record.quotation ? (record.quotation) : '-'}
             </span>
         )
     }
@@ -310,7 +310,7 @@ function ScanDetailView() {
       render : (text,record) => {
         return (
             <span>
-                {record.unitquantity ? Math.round(record.unitquantity) : '-'}
+                {record.unitquantity ? (record.unitquantity) : '-'}
             </span>
         )
     }
@@ -325,7 +325,7 @@ function ScanDetailView() {
       render : (text,record) => {
         return (
             <span>
-                {record.quotation ? Math.round(record.quotation*record.unitquantity) : '-'}
+                {record.quotation ? (record.quotation*record.unitquantity).toFixed(2) : '-'}
             </span>
         )
     }
@@ -341,7 +341,7 @@ function ScanDetailView() {
         render : (text,record) => {
           return (
               <span>
-                  {record.Taxamount ? Math.round(record.Taxamount) : '-'}
+                  {record.Taxamount ? parseFloat(record.Taxamount).toFixed(2) : '-'}
               </span>
           )
       }
@@ -358,7 +358,7 @@ function ScanDetailView() {
       render : (text,record,index) => {
         return (
             <span>
-              {record.quotation ? Math.round(Number(record.quotation*record.unitquantity)+Number(record.Taxamount)) : '-'}
+              {record.quotation ? (Number(record.quotation*record.unitquantity)+Number(record.Taxamount)).toFixed(2) : '-'}
 
             </span>
         )
@@ -372,7 +372,7 @@ function ScanDetailView() {
       render : (text,record,index) => {
         return (
             <span>
-              {record.Variance ? Math.round(Number(record.Variance*record.Variance)+Number(record.Variance)) : '-'}
+              {record.Variance ? (Number(record.Variance*record.Variance)+Number(record.Variance)) : '-'}
 
             </span>
         )
@@ -446,8 +446,7 @@ function ScanDetailView() {
           label="Invoice Amount"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.InnvoiceAmount ? Math.round(rowData.state.rowData.InnvoiceAmount) : "--"}
-          {/* {totalAmount? Math.round(totalAmount):"--"} */}
+          {rowData.state.rowData.InnvoiceAmount ? parseFloat(rowData.state.rowData.InnvoiceAmount).toFixed(2) : "--"}
         </Descriptions.Item>
 
         <Descriptions.Item
@@ -479,12 +478,12 @@ function ScanDetailView() {
           {rowData.state.rowData.Financialyear ? rowData.state.rowData.Financialyear : "--"}
         </Descriptions.Item>
 
-        <Descriptions.Item
+        {/* <Descriptions.Item
           label="Time Created"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.Timecreated ? rowData.state.rowData.Timecreated : "--"}
-        </Descriptions.Item>
+        </Descriptions.Item> */}
 
         {/* <Descriptions.Item
           label="Status"
@@ -536,7 +535,7 @@ function ScanDetailView() {
               <Table.Summary.Cell index={1} colSpan={4}><span></span></Table.Summary.Cell>
               <Table.Summary.Cell index={1} colSpan={6}><span><b>Total</b></span><b><span style={{marginRight:10}}> ({rowData.state.rowData.InnvoiceCurrency}) :</span></b></Table.Summary.Cell>
 
-              <Table.Summary.Cell index={1} colSpan={14}><span style={{textAlign:'end'}}><b>{(Math.round(Number(totalCost)).toLocaleString('en-IN'))}</b></span></Table.Summary.Cell>
+              <Table.Summary.Cell index={1} colSpan={14}><span style={{textAlign:'end'}}><b>{(Number(totalCost)).toLocaleString('en-IN')}</b></span></Table.Summary.Cell>
               
             </Table.Summary.Row>
             </>
