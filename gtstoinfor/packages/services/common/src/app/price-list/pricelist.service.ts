@@ -1,18 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { FactoryResponseModel } from 'packages/libs/shared-models/src/common/factory/factory-response-objects';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object'
-import { Not } from 'typeorm';
-import { AllFactoriesResponseModel, FactoryActivateDeactivateDto, FactoryDto as NewFactoriesDto, PriceListDto, PriceListModel, PriceListResponseModel } from '@project-management-system/shared-models';
+import { DataSource, EntityManager, Not } from 'typeorm';
+import { AllFactoriesResponseModel, CommonResponseModel, FactoryActivateDeactivateDto, FactoryDto as NewFactoriesDto, PriceListColumns, PriceListDto, PriceListModel, PriceListResponseModel, TrimOrderColumns } from '@project-management-system/shared-models';
 import { PriceListAdapter } from './adapters/pricelist.adapter';
 import { pricListRepository } from './repository/pricelist.repositiry';
 import { PriceListEntity } from './entities/pricelist.entity';
 import { priceListDto } from './dto/pricelist.dto';
+import { GenericTransactionManager } from '../../typeorm-transactions';
+import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
+import { priceListExcelDto } from './dto/price-list-excel-dto';
 
 @Injectable()
 export class priceListService {
     constructor(
         private adaptor: PriceListAdapter,
         private priceRepository: pricListRepository,
+        @InjectDataSource()
+        private dataSource: DataSource,
+        @InjectEntityManager() private readonly entityManager: EntityManager
     ) { }
 
     // async createPriceList(req: priceListDto,isUpdate: boolean): Promise<PriceListResponseModel> {
@@ -308,5 +314,95 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
             return null;
             }
         }
+
+        // async savePriceListData(formData: any, id: number, month: number): Promise<CommonResponseModel> {
+        //     const transactionManager = new GenericTransactionManager(this.dataSource)
+        //     try {
+        //         await transactionManager.startTransaction()
+        //         const flag = new Set()
+        //         const columnArray = [];
+        //         const updatedArray = formData.map((obj) => {
+        //             const updatedObj = {};
+        //             for (const key in obj) {
+        //                     const newKey = key.replace(/\s/g, '_').replace(/[\(\)\.]/g, '').replace(/-/g, '_');
+        //                     columnArray.push(newKey)
+        //                     updatedObj[newKey] = obj[key];
+        //             }
+        //             return updatedObj;
+        //         });
+    
+        //         const convertedData = updatedArray.map((obj) => {
+        //             const updatedObj = {};
+        //             for (const key in obj) {
+        //                 const value = obj[key];
+        //                 if (value === "") {
+        //                     updatedObj[key] = null;
+        //                 } else {
+        //                     updatedObj[key] = value;
+        //                 }
+        //             }
+        //             return updatedObj;
+        //         });
+        //         const difference = columnArray.filter((element) => !PriceListColumns.includes(element));
+        //         if(difference.length > 0){
+        //             await transactionManager.releaseTransaction()
+        //             return new CommonResponseModel(false,1110,'Please Upload Correct Excel')
+        //         }
+        //         for (const data of convertedData) {
+        //             let dtoData
+        //             if(data.style != null){
+        //                 dtoData = new priceListExcelDto(data.year,data.seasonCode,data.item,data.style,data.destination,data.price,data.currency,'Bidhun',null,null,null,null)
+        //             }else{
+        //                 break;
+        //             }
+        //             if (dtoData.style != null) {
+        //                 const details = await this.priceRepository.findOne({ where: { style: dtoData.style,seasonCode:dtoData.seasonCode,year:dtoData.year } })
+        //                 const versionDetails = await this.priceRepository.getVersion(dtoData.orderNo,dtoData.sizeCode,dtoData.colorCode)
+        //                 let version = 1;
+        //                 if (versionDetails.length > 0) {
+        //                     version = Number(versionDetails.length) + 1
+        //                 }
+        //                 dtoData.version = version
+        //                 if (details) {
+        //                     const updateOrder = await transactionManager.getRepository(TrimOrdersEntity).update({ orderNo: dtoData.orderNo,sizeCode:dtoData.sizeCode,colorCode:dtoData.colorCode }, {
+        //                         year : dtoData.year,revisionNo : dtoData.revisionNo,planningSsn : dtoData.planningSsn,globalBusinessUnit : dtoData.globalBusinessUnit,businessUnit : dtoData.businessUnit,itemBrand : dtoData.itemBrand,Department : dtoData.Department,revisedDate : dtoData.revisedDate,DocumentStatus : dtoData.DocumentStatus,answeredStatus : dtoData.answeredStatus,vendorPersoninCharge : dtoData.vendorPersoninCharge,decisionDate : dtoData.decisionDate,paymentTerms : dtoData.paymentTerms,contractedETD : dtoData.contractedETD,ETAWH : dtoData.ETAWH,approver : dtoData.approver,approvalDate : dtoData.approvalDate,orderConditions : dtoData.orderConditions,remark : dtoData.remark,rawMaterialCode : dtoData.rawMaterialCode,supplierRawMaterialCode : dtoData.supplierRawMaterialCode,supplierRawMaterial : dtoData.supplierRawMaterial,vendorCode : dtoData.vendorCode,vendor : dtoData.vendor,managementFactoryCode : dtoData.managementFactoryCode,managementFactory : dtoData.managementFactory,branchFactoryCode : dtoData.branchFactoryCode,branchFactory : dtoData.branchFactory,orderPlanNumber : dtoData.orderPlanNumber,itemCode : dtoData.itemCode,item : dtoData.item,representativeSampleCode : dtoData.representativeSampleCode,sampleCode : dtoData.sampleCode,colorCode : dtoData.colorCode,color : dtoData.color,patternDimensionCode : dtoData.patternDimensionCode,sizeCode : dtoData.sizeCode,size : dtoData.size,arrangementBy : dtoData.arrangementBy,trimDescription : dtoData.trimDescription,trimItemNo : dtoData.trimItemNo,trimSupplier : dtoData.trimSupplier,createdUser : dtoData.createdUser,updatedUser : dtoData.updatedUser,version : dtoData.version,fileId : dtoData.fileId,month:dtoData.month,orderQtyPcs:dtoData.orderQtyPcs
+        //                     })
+        //                     if (!updateOrder.affected) {
+        //                         await transactionManager.releaseTransaction();
+        //                         return new CommonResponseModel(false, 0, 'Something went wrong in order update')
+        //                     }
+        //                     const convertedExcelEntity: Partial<TrimOrdersChildEntity> = this.trimordersChildAdapter.convertDtoToEntity(dtoData, id, month);
+        //                     const saveExcelEntity: TrimOrdersChildEntity = await transactionManager.getRepository(TrimOrdersChildEntity).save(convertedExcelEntity);
+        //                 } else {
+    
+        //                     dtoData.version = 1
+        //                     const convertedExcelEntity: Partial<TrimOrdersEntity> = this.trimordersAdapter.convertDtoToEntity(dtoData, id, month);
+        //                     const saveExcelEntity: TrimOrdersEntity = await transactionManager.getRepository(TrimOrdersEntity).save(convertedExcelEntity);
+        //                     const convertedChildExcelEntity: Partial<TrimOrdersChildEntity> = this.trimordersChildAdapter.convertDtoToEntity(dtoData, id, month);
+        //                     const saveChildExcelEntity: TrimOrdersChildEntity = await transactionManager.getRepository(TrimOrdersChildEntity).save(convertedChildExcelEntity);
+        //                     // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
+        //                     if (!saveExcelEntity || !saveChildExcelEntity) {
+        //                         flag.add(false)
+        //                         await transactionManager.releaseTransaction();
+        //                         break;
+        //                     }
+        //                 }
+        //             }else{
+        //                 break;
+        //             }
+        //         }
+    
+        //         if (!flag.has(false)) {
+        //             await transactionManager.completeTransaction()
+        //             return new CommonResponseModel(true, 1, 'Data saved sucessfully')
+        //         } else {
+        //             await transactionManager.releaseTransaction()
+        //             return new CommonResponseModel(false, 0, 'Something went wrong')
+        //         }
+        //     } catch (error) {
+        //         await transactionManager.releaseTransaction()
+        //         return new CommonResponseModel(false, 0, error)
+        //     }
+        // }
 
 }
