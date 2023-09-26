@@ -34,6 +34,8 @@ const ChangesGrid = () => {
     const { Option } = Select
     const [itemCode, setItemCode] = useState([])
     const [filteredItemCode, setFilteredItemCode] = useState([])
+    const [quantitydata, setQuantitydata] = useState([])
+    const [diffquantitydata, setDiffquantitydata] = useState([])
 
 
 
@@ -74,6 +76,7 @@ const ChangesGrid = () => {
             if (res.status) {
                 setDifferenceQtyData(res.data)
                 setFilteredItemCode(res.data)
+                setDiffquantitydata(res.data)
             }
         }).catch(err => {
             console.log(err.message)
@@ -85,6 +88,7 @@ const ChangesGrid = () => {
             if (res.status) {
                 setQtyData(res.data)
                 setFilteredQtyData(res.data)
+                    setQuantitydata(res.data)
             }
         }).catch(err => {
             console.log(err.message)
@@ -1179,15 +1183,15 @@ const ChangesGrid = () => {
         // let filteredReqWhData = warehouseDateData;
         // let itemCode = itemCode;
         if (itemcode) {
-            const filterdata = filteredQtyData.filter((record) => record.item_cd === itemcode);
+            const filterdata = quantitydata.filter((record) => record.item_cd === itemcode);
             setFilteredQtyData(filterdata)
-            const data = differenceQtyData.filter((record) => record.item_cd === itemcode)
+            const data = diffquantitydata.filter((record) => record.item_cd === itemcode)
             setDifferenceQtyData(data)
           }
           if (item) {
-            const filterdata = filteredQtyData.filter((record) => record.item === item);
+            const filterdata = quantitydata.filter((record) => record.item === item);
             setFilteredQtyData(filterdata)
-            const data = differenceQtyData.filter((record) => record.item === item)
+            const data = diffquantitydata.filter((record) => record.item === item)
             setDifferenceQtyData(data)
           }
     }

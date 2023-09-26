@@ -272,7 +272,23 @@ const getSeasonCode = () => {
         align:"center",
         sorter: (a, b) => a.currency.localeCompare(b.currency),
         sortDirections: [ "ascend","descend"],
-        // ...getColumnSearchProps("currency"),
+         ...getColumnSearchProps("currency"),
+       
+        // filters: [
+        //   {
+        //     text: 'INR',
+        //     value: true,
+        //   },
+        //   {
+        //     text: 'InActive',
+        //     value: false,
+        //   },
+        // ],
+        // filterMultiple: false,
+        // onFilter: (value, record) => {
+        //   // === is not work
+        //   return record.isActive === value;
+        // },
 
        
        
