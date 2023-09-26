@@ -63,7 +63,8 @@ export const AppRoutesNew = () => {
               <Route>
               <Route  path='/ware-house-comparision' key='/ware-house-comparision'  element={<WareHouseComparision/>}/>
 
-                <Route path='/ware-house-report' key='/ware-house-report' element={<WarehouseReport />} />
+
+                <Route path='/ware-house-report' key='/ware-house-report' element={<WarehouseReport  />} />
                     <Route path='/excel-import/trim-order' key='/excel-import/trim-order' element={<TrimOrder/>} />
 
               </Route>
