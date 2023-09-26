@@ -24,8 +24,15 @@ export const ExFactoryReportWithComparision = () => {
 
   useEffect(()=>{
     getData();
+    getTabs()
   },[])
-
+  const getTabs = () => {
+    service.getExfactoryYearData().then((res) => {
+      if (res.status) {
+        setYear(res.data);
+      }
+    });
+  };
   const getData =()=>{
     const req = new YearReq(tab)    
     service.getExfactoryWithComparision(req).then(res =>{
