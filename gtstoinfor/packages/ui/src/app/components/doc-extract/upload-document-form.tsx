@@ -50,12 +50,14 @@ export function UploadDocumentForm() {
   const [GstForm] = Form.useForm();
   const [uploadForm] = Form.useForm();
   const navigate = useNavigate();
+
   const [file, setFile] = useState<any | null>(null);
   const [pdfData, setPdfData] = useState(null);
   const [jsonData, setJsonData] = useState(null);
   const [extractedData, setExtractedData] = useState<any>([]);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+
   const [hsnData, setHsnData] = useState([]);
   const [buttonText, setButtonText] = useState("Add");
   const [isLoading, setIsLoading] = useState(false);
@@ -68,6 +70,7 @@ export function UploadDocumentForm() {
   const [variance, setVariance] = useState("");
   const [unitquantity, setUnitquantity] = useState("");
   const [quotation, setQuotation] = useState("");
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [zoomFactor, setZoomFactor] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
@@ -76,6 +79,7 @@ export function UploadDocumentForm() {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [showCancelButton, setShowCancelButton] = useState(false);
   const [extractionCompleted, setExtractionCompleted] = useState(false);
+
   const [gstNumbers, setGstNumbers] = useState("");
   const [ifscCodes, setIfscCodes] = useState("");
   const [invoiceDate, setInvoiceDate] = useState("");
@@ -91,6 +95,7 @@ export function UploadDocumentForm() {
   const [financialyear, setFinancialyear] = useState("");
   const [timecreated, setTimecreated] = useState("");
   const [Innvoicecurrency, setInnvoicecurrency] = useState("");
+
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [data1, setData1] = useState<any[]>([]);
   const [data2, setData2] = useState<any[]>([]);
@@ -98,6 +103,15 @@ export function UploadDocumentForm() {
   const services = new VendorService();
   const buyers = new BuyersService();
   const service = new SharedService();
+
+  useEffect(() => {
+    let invoiceAmount = 0;
+    extractedData?.forEach(element => {
+      invoiceAmount += Number(element.quotation);
+    });
+    setInnvoiceamount(invoiceAmount.toString());
+  }, [extractedData])
+
 
   useEffect(() => {
     getData1();
@@ -442,8 +456,6 @@ export function UploadDocumentForm() {
       dataIndex: "quotation",
       key: "quotation",
     },
-
-
     {
       title: "Variance",
       dataIndex: "variance",
@@ -544,11 +556,11 @@ export function UploadDocumentForm() {
   };
 
 
-  const extractvendorname = (data) => {
-    const venodrnamekeywords = ['CNEE : ', 'Payee Name:', 'AccountName ', 'Registered Office Address ',];
+  const extractInvoiceNumber = (data) => {
+    const keywords = ['INVOICE NUMBER', 'Tax Invoice', 'TAX INVOICE', 'NVOICE NUMBER', 'INVOICE No'];
     const matchingValues = [];
 
-    for (const keyword of venodrnamekeywords) {
+    for (const keyword of keywords) {
       for (const item of data) {
         if (item.content.includes(keyword)) {
           const value = item.content.replace(keyword, '').trim();
@@ -560,11 +572,11 @@ export function UploadDocumentForm() {
     return matchingValues.join(', ');
   };
 
-  const extractInvoiceNumber = (data) => {
-    const keywords = ['INVOICE NUMBER', 'Tax Invoice', 'TAX INVOICE', 'NVOICE NUMBER', 'INVOICE No'];
+  const extractVendorname = (data) => {
+    const venodrnamekeywords = ['CNEE : ', 'Payee Name:', 'AccountName ', 'Registered Office Address ',];
     const matchingValues = [];
 
-    for (const keyword of keywords) {
+    for (const keyword of venodrnamekeywords) {
       for (const item of data) {
         if (item.content.includes(keyword)) {
           const value = item.content.replace(keyword, '').trim();
@@ -715,13 +727,13 @@ export function UploadDocumentForm() {
 
   useEffect(() => {
     extractGstFromJson();
-    extractInvoiceAmountFromJson();
     extractInvoicenumberFromJson();
     extractigstFromJson();
     extractcgstFromJson();
     extractsgstFromJson();
     extractCurrencyFromJson();
     extractInvoiceDateFromJson();
+    extractVendornameFromJson();
   }, [jsonData]);
 
   // const extractGstFromJson = () => {
@@ -743,29 +755,6 @@ export function UploadDocumentForm() {
   //   }
   // };
 
-
-  const extractGstFromJson = () => {
-    if (jsonData) {
-      const gstKeywords = ['GSTIN No.'];
-      let gstValue = null; // Initialize as null
-
-      for (const keyword of gstKeywords) {
-        for (const item of jsonData) {
-          if (item.content.includes(keyword)) {
-            gstValue = item.content.replace(keyword, '').trim();
-            break; // Stop searching once GST is found
-          }
-        }
-
-        if (gstValue) {
-          break; // Stop searching for GST keywords if GST value is found
-        }
-      }
-
-      setGstNumbers(gstValue);
-    }
-  };
-
   const extractFinancialyearFrom = (text) => {
     const FinancialyearRegex = /\b\d{4}-\d{4}\b/g;
     const match = text.match(FinancialyearRegex);
@@ -782,47 +771,93 @@ export function UploadDocumentForm() {
     return `${startYear}-${endYear}`;
   };
 
-  const extractInvoiceAmountFromJson = () => {
-    if (jsonData) {
-      const invoiceAmountKeywords = ['3540.00 540.00 3000.00 TOTAL AMOUNT', ' 193855.09 29571.12 164283.97 TOTAL AMOUNT'];
-      const matchingValues = [];
+  // const extractInvoiceAmountFromJson = () => {
+  //   if (jsonData) {
+  //     const invoiceAmountKeywords = ['3540.00 540.00 3000.00 TOTAL AMOUNT', ' 193855.09 29571.12 164283.97 TOTAL AMOUNT'];
+  //     const matchingValues = [];
 
-      for (const keyword of invoiceAmountKeywords) {
+  //     for (const keyword of invoiceAmountKeywords) {
+  //       for (const item of jsonData) {
+  //         if (item.content.includes(keyword)) {
+  //           const value = item.content.replace(keyword, '').trim();
+  //           matchingValues.push(value);
+  //         }
+  //       }
+  //     }
+
+  //     const invoiceAmountValue = matchingValues.join(', ');
+  //     setInnvoiceamount(invoiceAmountValue);
+  //   }
+  // };
+
+
+  const extractGstFromJson = () => {
+    if (jsonData) {
+      const gstKeywords = ['GSTIN No.'];
+      let gstValue = null;
+
+      for (const keyword of gstKeywords) {
         for (const item of jsonData) {
           if (item.content.includes(keyword)) {
-            const value = item.content.replace(keyword, '').trim();
-            matchingValues.push(value);
+            gstValue = item.content.replace(keyword, '').trim();
+            break;
           }
+        }
+
+        if (gstValue) {
+          break;
         }
       }
 
-      const invoiceAmountValue = matchingValues.join(', ');
-      setInnvoiceamount(invoiceAmountValue);
+      setGstNumbers(gstValue);
+    }
+  };
+
+  const extractInvoiceDateFromJson = () => {
+    if (extractedData) {
+      const invoiceAmountId = '1-64';
+
+      if (Array.isArray(jsonData)) {
+        const invoiceAmountData = jsonData.find((item) => item.id === invoiceAmountId);
+
+        if (invoiceAmountData) {
+          setInvoiceDate(invoiceAmountData.content);
+        }
+      }
     }
   };
 
   const extractInvoicenumberFromJson = () => {
-    if (jsonData) {
-      const tInvoicenumberKeywords = ['GT']
-      const matchingValues = [];
+    if (extractedData) {
+      const invoiceNumberId = '1-86';
 
-      for (const keyword of tInvoicenumberKeywords) {
-        for (const item of jsonData) {
-          if (item.content.includes(keyword)) {
-            const value = item.content.replace(keyword, '').trim();
-            matchingValues.push(value);
-          }
+      if (Array.isArray(jsonData)) {
+        const invoiceNumberData = jsonData.find((item) => item.id === invoiceNumberId);
+
+        if (invoiceNumberData) {
+          setInnvoicenum(invoiceNumberData.content);
         }
       }
+    }
+  };
 
-      const tInvoicenumberValue = matchingValues.join(', ');
-      setInnvoicenum(tInvoicenumberValue);
+  const extractVendornameFromJson = () => {
+    if (extractedData) {
+      const vendorId = '1-2';
+
+      if (Array.isArray(jsonData)) {
+        const vendorData = jsonData.find((item) => item.id === vendorId);
+
+        if (vendorData) {
+          setVendor(vendorData.content);
+        }
+      }
     }
   };
 
   const extractigstFromJson = () => {
     if (jsonData) {
-      const igsttKeywords = ['Due Date   INR Taxable Amount (INR) :'];
+      const igsttKeywords = ['Due Date   INR Taxable Amount (INR) :', 'Taxable Amount (INR) :'];
       const matchingValues = [];
 
       for (const keyword of igsttKeywords) {
@@ -841,16 +876,16 @@ export function UploadDocumentForm() {
 
   const extractcgstFromJson = () => {
     if (jsonData) {
-      const cgstKeywords = ['CGST:', 'CGST Amount:', 'Central Tax:']; // Add more keywords if needed
-      let cgstValue = '0.00'; // Default value
+      const cgstKeywords = ['CGST:', 'CGST Amount:', 'Central Tax:'];
+      let cgstValue = '0.00';
 
       for (const keyword of cgstKeywords) {
         for (const item of jsonData) {
           if (item.content.includes(keyword)) {
             const value = item.content.replace(keyword, '').trim();
-            const numericValue = parseFloat(value.replace(/,/g, '')); // Convert to a number and remove commas
+            const numericValue = parseFloat(value.replace(/,/g, ''));
             if (!isNaN(numericValue)) {
-              cgstValue = numericValue.toFixed(2); // Format as "0.00"
+              cgstValue = numericValue.toFixed(2);
               break;
             }
           }
@@ -866,16 +901,16 @@ export function UploadDocumentForm() {
 
   const extractsgstFromJson = () => {
     if (jsonData) {
-      const sgstKeywords = ['sgst:', 'sgst Amount:', 'Central Tax:']; // Add more keywords if needed
-      let sgstValue = '0.00'; // Default value
+      const sgstKeywords = ['sgst:', 'sgst Amount:', 'Central Tax:'];
+      let sgstValue = '0.00';
 
       for (const keyword of sgstKeywords) {
         for (const item of jsonData) {
           if (item.content.includes(keyword)) {
             const value = item.content.replace(keyword, '').trim();
-            const numericValue = parseFloat(value.replace(/,/g, '')); // Convert to a number and remove commas
+            const numericValue = parseFloat(value.replace(/,/g, ''));
             if (!isNaN(numericValue)) {
-              sgstValue = numericValue.toFixed(2); // Format as "0.00"
+              sgstValue = numericValue.toFixed(2);
               break;
             }
           }
@@ -898,9 +933,9 @@ export function UploadDocumentForm() {
         for (const item of jsonData) {
           if (item.content.includes(keyword)) {
             const value = item.content.replace(keyword, '').trim();
-            const numericValue = parseFloat(value.replace(/,/g, '')); // Convert to a number and remove commas
+            const numericValue = parseFloat(value.replace(/,/g, ''));
             if (!isNaN(numericValue)) {
-              CurrencyValue = numericValue.toFixed(2); // Format as "0.00"
+              CurrencyValue = numericValue.toFixed(2);
               break;
             }
           }
@@ -914,29 +949,11 @@ export function UploadDocumentForm() {
     }
   };
 
-  const extractInvoiceDateFromJson = () => {
-    if (jsonData) {
-      const datePattern = /\b\d{2}-[A-Za-z]{3}-\d{2}\b/g;
-      let invoiceDate = null;
-
-      for (const item of jsonData) {
-        const matches = item.content.match(datePattern);
-
-        if (matches) {
-          invoiceDate = matches[0];
-          break;
-        }
-      }
-
-      setInvoiceDate(invoiceDate);
-    }
-  };
-
   const handleFileChange = (info) => {
     if (info?.file?.type === 'application/pdf') {
       if (info?.fileList[0]) {
         setFile(info.fileList[0]);
-        displayPdf(info.fileList[0].originFileObj); // Automatically display PDF on file upload
+        displayPdf(info.fileList[0].originFileObj);
         message.success(`${info.file.name} file uploaded successfully`);
       } else {
         setFile(null);
@@ -952,7 +969,6 @@ export function UploadDocumentForm() {
     reader.onload = () => {
       const pdfDataUrl = reader.result;
       setPdfData(pdfDataUrl);
-      // Automatically convert PDF to JSON when PDF data is available
       handlePdfToJSON(pdfDataUrl);
     };
     reader.readAsDataURL(pdfBlob);
@@ -1027,8 +1043,7 @@ export function UploadDocumentForm() {
     if (currentHSN) {
       structuredHSNLines.push(currentHSN);
     }
-    // The extracted HSN data is now available in the 'hsnData' array
-    console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
+        console.log("PDF HSN DATA", JSON.stringify(structuredHSNLines, null, 2));
     setExtractedData(structuredHSNLines);
     return extractedData;
   };
@@ -1078,6 +1093,9 @@ export function UploadDocumentForm() {
             const extractedInvoiceNumber = extractInvoiceNumber(parsedData);
             setInnvoicenum(extractedInvoiceNumber);
 
+            const extractedvendorname = extractVendorname(parsedData);
+            setVendor(extractedvendorname);
+
             const extractedInvoiceAmount = extractInvoiceAmount(parsedData);
             setInnvoiceamount(extractedInvoiceAmount);
 
@@ -1098,6 +1116,7 @@ export function UploadDocumentForm() {
             const extractedFinancialyear = extractFinancialyear(text);
             const extractedCgst = extractCgst(text);
             const extractedSgst = extractSgst(text);
+            const extractvendorname = extractVendor(text);
 
 
             setGstNumbers(extractedGstNumbers);
@@ -1110,6 +1129,7 @@ export function UploadDocumentForm() {
             setCgst(extractedCgst);
             setSgst(extractedSgst);
             setFinancialyear(extractedFinancialyear);
+            setVendor(extractedvendorname);
 
 
 
@@ -1126,6 +1146,8 @@ export function UploadDocumentForm() {
             for (const line of allLines) {
               if (line.content.includes("HSN") || line.content.match(/^\d{6}$/)) {
                 if (currentHSN) {
+                  // Calculate variance and add it to currentHSN
+                  currentHSN.variance = currentHSN.chargeINR - currentHSN.quotation;
                   structuredHSNLines.push(currentHSN);
                 }
                 currentHSN = {
@@ -1136,6 +1158,7 @@ export function UploadDocumentForm() {
                   Taxamount: null,
                   description: null,
                   chargeINR: null,
+                  quotation: null, // Add quotation field
                 };
 
                 const taxAmountMatch = line.content.match(
@@ -1151,12 +1174,19 @@ export function UploadDocumentForm() {
                 currentHSN.Taxtype = "IGST";
               }
               if (line.content.includes("chargeINR")) {
-                const chargeValueMatch = line.content.match(
-                  /^\d{1,3}(,\d{3})*(\.\d{2})?$/
-                );
+                const chargeValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?$/);
                 if (chargeValueMatch) {
                   currentHSN.chargeINR = parseFloat(
                     chargeValueMatch[1].replace(/,/g, "")
+                  );
+                }
+              }
+
+              if (line.content.includes("quotation")) {
+                const quotationValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?$/);
+                if (quotationValueMatch) {
+                  currentHSN.quotation = parseFloat(
+                    quotationValueMatch[1].replace(/,/g, "")
                   );
                 }
               }
@@ -1165,18 +1195,12 @@ export function UploadDocumentForm() {
                 currentHSN.description = line.content.trim();
               }
             }
-
-            if (currentHSN) {
-              structuredHSNLines.push(currentHSN);
-            }
-
             structuredHSNLines.forEach((line) => {
               if (line.Taxamount) {
                 line.Taxpercentage = line.Taxamount.Taxpercentage;
                 line.Taxamount = line.Taxamount.Taxamount;
               }
             });
-
             console.log(
               "Structured HSN Lines (JSON):",
               JSON.stringify(structuredHSNLines, null, 2)
@@ -1187,6 +1211,7 @@ export function UploadDocumentForm() {
             const result = {
               "Entire Data": allLines,
             };
+
 
             const currentFinancialYear = getCurrentFinancialYear();
             setFinancialyear(currentFinancialYear);
@@ -1260,6 +1285,25 @@ export function UploadDocumentForm() {
   const handleCancel = () => {
     setButtonClicked(true);
     window.location.reload();
+  };
+
+  const handleInvoiceAmountChange = (e) => {
+    setInnvoiceamount(e.target.value);
+  };
+
+  const handleSgstChange = (e) => {
+    const filteredValue = e.target.value.replace(/[^0-9,.]/g, "");
+    setSgst(filteredValue);
+  };
+
+  const handleCgstChange = (e) => {
+    const filteredValue = e.target.value.replace(/[^0-9,.]/g, "");
+    setCgst(filteredValue);
+  };
+
+  const handleIgstChange = (e) => {
+    const filteredValue = e.target.value.replace(/[^0-9,.]/g, "");
+    setIgst(filteredValue);
   };
 
   return (
@@ -1436,7 +1480,7 @@ export function UploadDocumentForm() {
           <Card>
             <Form.Item>
               <Row gutter={24}>
-                <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
                     htmlFor="Vendor"
                     style={{ color: "black", fontWeight: "bold" }}
@@ -1457,6 +1501,28 @@ export function UploadDocumentForm() {
                       </option>
                     ))}
                   </Select>
+                </Col> */}
+
+                <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                  <label
+                    htmlFor="Vendor"
+                    style={{
+                      color: "black",
+                      fontWeight: "bold",
+                      position: "relative",
+                      left: "10px",
+                    }}
+                  >
+                    Vendor Name
+                  </label>
+                  <Input
+                    title="Vendor"
+                    name="Vendor"
+                    style={{ width: "190px", height: "30px", borderColor: vendor ? "green" : "red", }}
+                    className={vendor ? "green" : vendor === "" ? "red" : "black"}
+                    value={vendor}
+                    onChange={(e) => setVendor(e.target.value)}
+                  />
                 </Col>
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
@@ -1547,7 +1613,7 @@ export function UploadDocumentForm() {
                     style={{ width: "180px", height: "30px", borderColor: Innvoiceamount ? "green" : "red", }}
                     className={Innvoiceamount ? "green" : Innvoiceamount === "" ? "red" : "black"}
                     value={Innvoiceamount}
-                    onChange={(e) => setInnvoiceamount(e.target.value)}
+                    onChange={handleInvoiceAmountChange}
                   />
                 </Col>
               </Row>
@@ -1566,7 +1632,7 @@ export function UploadDocumentForm() {
                     style={{ width: "190px", height: "30px", borderColor: Igst ? "green" : "red", }}
                     className={Igst ? "green" : Igst === "" ? "red" : "black"}
                     value={Igst}
-                    onChange={(e) => setIgst(e.target.value)}
+                    onChange={handleIgstChange}
 
                   />
                 </Col>
@@ -1583,7 +1649,7 @@ export function UploadDocumentForm() {
                     style={{ width: "190px", height: "30px", borderColor: Cgst ? "green" : "red", }}
                     className={Cgst ? "green" : Cgst === "" ? "red" : "black"}
                     value={Cgst}
-                    onChange={(e) => setCgst(e.target.value)}
+                    onChange={handleCgstChange}
                   />
                 </Col>
 
@@ -1600,7 +1666,7 @@ export function UploadDocumentForm() {
                     style={{ width: "180px", height: "30px", borderColor: Sgst ? "green" : "red", }}
                     className={Sgst ? "green" : Sgst === "" ? "red" : "black"}
                     value={Sgst}
-                    onChange={(e) => setSgst(e.target.value)}
+                    onChange={handleSgstChange}
                   />
                 </Col>
               </Row>
@@ -1783,6 +1849,7 @@ export function UploadDocumentForm() {
                   />
                 </Col>
 
+
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label htmlFor="Taxamount" style={{ color: "black", fontWeight: "bold" }}>Tax Amount</label>
                   <Input
@@ -1841,7 +1908,7 @@ export function UploadDocumentForm() {
               </Row>
 
               <Row gutter={12} style={{ marginTop: "10px" }}>
-                <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
                     htmlFor="quotation"
                     style={{ color: "black", fontWeight: "bold" }}
@@ -1855,8 +1922,24 @@ export function UploadDocumentForm() {
                     value={quotation}
                     onChange={(e) => setQuotation(e.target.value)}
                   />
-                </Col>
+                </Col> */}
 
+
+                <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                  <label
+                    htmlFor="description"
+                    style={{ color: "black", fontWeight: "bold" }}
+                  >
+                    Descripition
+                  </label>
+                  <Input
+                    id="description"
+                    name="description"
+                    style={{ width: "150px", height: "30px" }}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </Col>
                 {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                     <label
                       htmlFor="variance"
