@@ -21,20 +21,20 @@ export class MarketingReportSizeModel {
     ) {
         this.sizeQty = sizeQty
         this.sizeDescription = sizeDescription
-        this.grossFobPrice = grossFobPrice,
-            this.grossFobCurrencyCode = grossFobCurrencyCode,
-            this.buyerGrossFobPrice = buyerGrossFobPrice,
-            this.buyerGrossFobCurrencyCode = buyerGrossFobCurrencyCode,
-            this.netIncludingDisc = netIncludingDisc,
-            this.netIncludingDiscCurrencyCode = netIncludingDiscCurrencyCode,
-            this.trConetIncludingDisc = trConetIncludingDisc,
-            this.trConetIncludingDiscCurrencyCode = trConetIncludingDiscCurrencyCode,
-            this.legalPoPrice = legalPoPrice,
-            this.legalPoCurrencyCode = legalPoCurrencyCode,
-            this.coPrice = coPrice,
-            this.coPriceCurrencyCode = coPriceCurrencyCode,
-            this.CRMCoQty = CRMCoQty,
-            this.legalPoQty = legalPoQty,
-            this.actualShippedQty = actualShippedQty
-    }
+        this.grossFobPrice = grossFobPrice
+        this.grossFobCurrencyCode = grossFobCurrencyCode
+        this.buyerGrossFobPrice = buyerGrossFobPrice
+        this.buyerGrossFobCurrencyCode = buyerGrossFobCurrencyCode
+        this.netIncludingDisc = netIncludingDisc
+        this.netIncludingDiscCurrencyCode = netIncludingDiscCurrencyCode
+        this.trConetIncludingDisc = trConetIncludingDisc
+        this.trConetIncludingDiscCurrencyCode = trConetIncludingDiscCurrencyCode
+        this.legalPoPrice = legalPoPrice
+        this.legalPoCurrencyCode = legalPoCurrencyCode
+        this.coPrice = coPrice
+        this.coPriceCurrencyCode = coPriceCurrencyCode
+        this.CRMCoQty = CRMCoQty
+        this.legalPoQty = legalPoQty
+        this.actualShippedQty = actualShippedQty
+    };
 }

@@ -433,36 +433,6 @@ const PPMReport = () => {
       { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
       { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
       { title: 'Total Item Quantity', dataIndex: 'totalItemQty' },
-      { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
-      { title: 'Gross Price/FOB ', dataIndex: 'grossPriceFOB' },
-      { title: 'Gross Price/FOB currency code', dataIndex: 'fobCurrCode' },
-      { title: 'Buyer Confirmed Gross Price/FOB', dataIndex: '' },
-      { title: 'Buyer Confirmed Gross Price/FOB Currency Code', dataIndex: '' },
-      { title: 'Diff of Price', dataIndex: '' },
-      { title: 'Diff of Price Currency', dataIndex: '' },
-      { title: 'Net including discounts', dataIndex: 'netIncludingDisc' },
-      { title: 'Net including discounts currency code', dataIndex: 'netIncDisCurrency' },
-      { title: 'Trading Co Net including discounts', dataIndex: 'trCoNetIncludingDisc' },
-      { title: 'Trading Co Net including discounts currency code', dataIndex: 'tradingNetCurrencyCode' },
-      { title: 'Legal PO Price', dataIndex: 'legalPoPrice' },
-      { title: 'Legal PO Price currency', dataIndex: '' },
-      { title: 'CO Price', dataIndex: 'coPrice' },
-      { title: 'CO Price currency', dataIndex: 'coPriceCurrencyCode' },
-      { title: 'Diff of Price', dataIndex: '' },
-      { title: 'Diff of Price currency', dataIndex: '' },
-      { title: 'CRM CO QTY', dataIndex: '' },
-      { title: 'Legal PO QTY', dataIndex: 'quantity' },
-      { title: 'Diff of Quantity', dataIndex: '' },
-      { title: 'Allowed Excess Ship Qty', dataIndex: '' },
-      { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
-      { title: 'Actual Ship %', dataIndex: '' },
-      { title: 'VAS - Size', dataIndex: 'VASSize' },
-      { title: 'Item Vas Text', dataIndex: 'itemVasText' },
-      { title: 'Item Vas Text in PDF PO', dataIndex: '' },
-      { title: 'Diff of Item Vas Text', dataIndex: '' },
-      { title: 'Item Text', dataIndex: 'itemText' },
-      { title: 'Hanger PO', dataIndex: 'hanger' },
-      { title: 'Change Register', dataIndex: 'displayName', align: 'center', },
     ]
 
     const columns: ColumnsType<any> = [
@@ -596,7 +566,6 @@ const PPMReport = () => {
             return text;
           }
         }
-
       },
       {
         title: 'Planning Season Year',
@@ -610,7 +579,6 @@ const PPMReport = () => {
         }
 
       },
-
       {
         title: 'CO',
         dataIndex: 'customerOrder',
@@ -908,8 +876,6 @@ const PPMReport = () => {
           }
         },
       },
-
-
       {
         title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
           if (!text || text.trim() === '') {
@@ -922,14 +888,8 @@ const PPMReport = () => {
       { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
       { title: 'In Co Terms', dataIndex: 'inCoTerms' },
       { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
-      {
-        title: 'Purchase Group',
-        dataIndex: 'purchaseGroupCode',
-        className: 'centered-column',
-      },
+      { title: 'Purchase Group', dataIndex: 'purchaseGroupCode', className: 'centered-column', },
       { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
-
-
       {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty',
@@ -941,7 +901,6 @@ const PPMReport = () => {
             return <strong>{text}</strong>;
           }
         },
-
       },
     ]
 
