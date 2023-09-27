@@ -185,10 +185,13 @@ export class FobService {
         }
         return updatedObj;
       });
-      const deleteExistingData  = await transactionManager.getRepository(FobEntity).delete({})
-      if(!deleteExistingData.affected){
-        await transactionManager.releaseTransaction()
-        return new CommonResponseModel(false, 0, 'Something went wrong in deleting existing data')
+      const checkData = await this.repository.find({take:1})
+      if(checkData.length > 0){
+        const deleteExistingData  = await transactionManager.getRepository(FobEntity).delete({})
+        if(!deleteExistingData.affected){
+          await transactionManager.releaseTransaction()
+          return new CommonResponseModel(false, 0, 'Something went wrong in deleting existing data')
+        }
       }
       for(const data of convertedData){
         // let dtoData = new FobPriceExcelDto(data.Planning_Season_Code,data.Planning_Season_Year,data.Style_Number,data.Color_Code__Last_3_Degits_from_Product_Code,data.Size_Description,data.Shahi_Confirmed_Gross_Price,data.Shahi_Confirmed_Gross_Price_currency_code)
