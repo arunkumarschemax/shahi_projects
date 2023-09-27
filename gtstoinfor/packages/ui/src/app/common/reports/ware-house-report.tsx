@@ -917,7 +917,7 @@ const getTableSummary = (pageData) => {
                 >
                   <div>
                     <label>Item Name</label>
-                    <Form.Item name="itemName">
+                    <Form.Item name="ItemName">
                       <Select
                         showSearch
                         placeholder="Select Item Name"
