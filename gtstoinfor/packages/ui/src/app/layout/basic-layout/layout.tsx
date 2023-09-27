@@ -17,38 +17,38 @@ const BasicLayout = () => {
     const loginUser = userData.user.userName
     const loginUserRole = userData.user.roles
     // console.log(userData.user.userName)
-    
+
     function renderIcon(iconType, iconName) {
         // if (iconType === "antd") { 
-            // const SpecificIcon = antdIcons["SolutionOutlined"]; 
-            // return <SpecificIcon /> 
+        // const SpecificIcon = antdIcons["SolutionOutlined"]; 
+        // return <SpecificIcon /> 
         // }
         // else {
         //     const SpecificIcon = icons[iconName];
         //     return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
         const SpecificIcon = antdIcons[iconName];
         console.log(SpecificIcon)
-            return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
+        return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
         // }
     }
     const getSubMenu = (route) => {
-       
+
         if (route && route.subMenuData && route.subMenuData.length) {
             return (
                 <SubMenu key={route.menuId} title={<span> {renderIcon(route.iconType, route.iconName)} <span>{route.menuName}</span> </span>}  >
-                    <div style={{backgroundColor:'white',color:'white'}}>
+                    <div style={{ backgroundColor: 'white', color: 'white' }}>
 
-                    {route.subMenuData.map(item => getSubMenu(item))}
+                        {route.subMenuData.map(item => getSubMenu(item))}
                     </div>
                 </SubMenu>
             )
         } else {
-                return(
-                    <div style={{backgroundColor:'white',color:'white'}}>
-                        {route.subMenuName !== 'Vehicle Inspection Track' ? (<Menu.Item key={route.subMenuId} ><Link to={route.path}><span><span> {route.icon} <span>{route.subMenuName}</span> </span></span></Link> </Menu.Item>) : (<></>)}
-                    </div>
-    
-                ) 
+            return (
+                <div style={{ backgroundColor: 'white', color: 'white' }}>
+                    {route.subMenuName !== 'Vehicle Inspection Track' ? (<Menu.Item key={route.subMenuId} ><Link to={route.path}><span><span> {route.icon} <span>{route.subMenuName}</span> </span></span></Link> </Menu.Item>) : (<></>)}
+                </div>
+
+            )
         }
     }
 
@@ -71,24 +71,24 @@ const BasicLayout = () => {
         token: { colorBgContainer },
     } = theme.useToken();
     return (
-        <Layout className="layout" style={{marginTop:'-8px', width:"100%"}}>
+        <Layout className="layout" style={{ marginTop: '-8px', width: "100%" }}>
             <Header style={{ alignItems: 'center', backgroundColor: '#001529', minHeight: "85px", }}>
-                <div style={{ float: 'left', marginTop: '2px', marginLeft:'-46px' }}>
+                <div style={{ float: 'left', marginTop: '2px', marginLeft: '-46px' }}>
                     <img src={schemaxlogo} width={150} height={80}></img>
                 </div>
-                <h1 style={{color: '#f3bf13',textAlign: 'center',marginTop:'0.2px'}}>Scan Document Management</h1>
-                <Tooltip title='Logout'><Button type="default" icon={<LogoutOutlined />} style={{ float: 'right', marginTop: '-5.4%' }} onClick={logOut}>{'Hi '+loginUser}<div style={{color:'#f3bf13',marginTop:'10px',fontStyle:'italic'}}>{loginUserRole}</div></Button></Tooltip>
+                <h1 style={{ color: '#f3bf13', textAlign: 'center', marginTop: '0.2px' }}>Schemax-AI-DocX</h1>
+                <Tooltip title='Logout'><Button type="default" icon={<LogoutOutlined />} style={{ float: 'right', marginTop: '-5.4%' }} onClick={logOut}>{'Hi ' + loginUser}<div style={{ color: '#f3bf13', marginTop: '10px', fontStyle: 'italic' }}>{loginUserRole}</div></Button></Tooltip>
                 {/* <>{userData.user.roles}</> */}
                 <Menu
                     theme="light"
                     mode="horizontal"
                     selectedKeys={[]}
-                    style={{ backgroundColor: '#001529', width: '75%', height: '61%', marginLeft: '110px', marginTop: '-3.8%',color:'white' }}
+                    style={{ backgroundColor: '#001529', width: '75%', height: '61%', marginLeft: '110px', marginTop: '-3.8%', color: 'white' }}
                 >
-                    
+
                     {getAllSubMenus()}
                 </Menu>
-       
+
             </Header>
             <Content style={{ padding: '0 50px', minHeight: '555px', backgroundColor: 'white' }}>
                 <br />
