@@ -54,16 +54,21 @@ export  function FobPriceListForm( props:Formprops) {
       form.validateFields().then(values => {
           const formData = new FormData();
           formData.append('file', selectedFile);
-          service.uploadFobPrice(data).then(res => {
-            if(res.status){
-              AlertMessages.getSuccessMessage("Created Successfully")
-                  setTimeout(() => {
-                      navigate('/masters/fob-price-list-view')
-                  }, 500);
-            } else{
-              AlertMessages.getErrorMessage(res.internalMessage)
-            }
-          })
+          if(data.length > 0){
+
+            service.uploadFobPrice(data).then(res => {
+              if(res.status){
+                AlertMessages.getSuccessMessage("Created Successfully")
+                    setTimeout(() => {
+                        navigate('/masters/fob-price-list-view')
+                    }, 500);
+              } else{
+                AlertMessages.getErrorMessage(res.internalMessage)
+              }
+            })
+          } else{
+            AlertMessages.getErrorMessage('Please Upload File')
+          }
         })
   
   }catch (error) {
@@ -149,7 +154,7 @@ export  function FobPriceListForm( props:Formprops) {
             {
               state?.name === 'excel' ? (<>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-            <Form.Item label = "">
+            <Form.Item label = "" name='excel'>
               <input type="file" accept=".csv" onChange={handleFileChange} />
             </Form.Item>
             </Col>
