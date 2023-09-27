@@ -7,8 +7,8 @@ export const appConfig = {
         type: process.env[`APP_DB_TYPE`] || 'mysql',
         host: process.env[`APP_DB_HOST`] || '165.22.220.143',
         port: parseInt(process.env[`APP_DB_PORT`]) || 3306,
-        username: process.env[`APP_DB_USER`] || 'ramakrishna',
-        password: process.env[`APP_DB_PASS`] || 'Schemax@23',
+        username: process.env[`APP_DB_USER`] || 'doc_scan',
+        password: process.env[`APP_DB_PASS`] || 'Schemax@docscan',
         docScandbName: process.env[`APP_DB_DBNAME`] || 'shahi_doc_scan',
         poolLimit: parseInt(process.env[`APP_DB_POOL_LIMIT`]) || 50
     },
