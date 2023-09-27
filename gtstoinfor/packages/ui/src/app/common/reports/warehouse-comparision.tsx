@@ -30,7 +30,7 @@ export const WareHouseComparision = () => {
     service.getWareHouseYearData().then((res) => {
       if (res.status) {
         setYear(res.data);
-        console.log(res.data,'hhhhhhh')
+        // console.log(res.data,'hhhhhhh')
       }
     });
   };
@@ -42,7 +42,7 @@ export const WareHouseComparision = () => {
         setYear(res.data)
       }
     })
-    service.getAllWareHouse(req).then(res =>{
+    service.getWareHouseComparisionData(req).then(res =>{
       console.log(res,'res==========');
       if(res.status){
         setData(res.data)
@@ -52,7 +52,7 @@ export const WareHouseComparision = () => {
         setData([])
       }
     })
-    service.getExfactoryWithComparisionExcel(req).then((res) => {
+    service.getWareHouseComparisionExcelData(req).then((res) => {
       console.log(res, "res==========");
       if (res.status) {
         setExcelData(res.data);
@@ -61,30 +61,7 @@ export const WareHouseComparision = () => {
       }
     })
   }
-  const CustomTitle = () => {
-           
-    return (
-      <div>
-      <Space size={"large"}>
-       Production Plan Type Name<span>Jan(previous)</span><br/><span></span> <span>Jan(latest)</span>
-       <span>Feb(previous)</span><br/><span>Feb(latest)</span>
-        <span>Mar(previous)</span><br/><span>Mar(latest)</span>
-        <span>Apr(previous)</span><br/><span>Apr(latest)</span>
-        <span>May(previous)</span><br/><span>May(latest)</span>
-        <span>Jun(previous)</span><br/><span>Jun(latest)</span>
-        <span>Jul(previous)</span><br/><span>Jul(latest)</span>
-        <span>Aug(previous)</span><br/><span>Aug(latest)</span>
-        <span>Sep(previous)</span><br/><span>Sep(latest)</span>
-        <span>Oct(previous)</span><br/><span>Oct(latest)</span>
-        <span>Nov(previous)</span><span>Nov(latest)</span>
-        <span>Dec(previous)</span><br/><span>Dec(latest)</span>
-        <span>Total(previous)</span><br/><span>Total(latest)</span>
-        <span></span><span></span>
-</Space>
-      
-      </div>
-    );
-  };
+  
   const getFilterdData = () => {
     let ItemName = form.getFieldValue('ItemName');
   
@@ -104,10 +81,39 @@ export const WareHouseComparision = () => {
     form.resetFields();
     getData();
   }
+  const CustomTitle = () => {
+           
+    return (
+      <div>
+      <Space size={"large"}>
+       <span>Production Plan Type Name</span><span>Jan(previous)</span><br/><span></span>Jan(latest)
+       <span>Feb(previous)</span><br/><span>Feb(latest)</span>
+        <span>Mar(previous)</span><br/><span>Mar(latest)</span>
+        <span>Apr(previous)</span><br/><span>Apr(latest)</span>
+        <span>May(previous)</span><br/><span>May(latest)</span>
+        <span>Jun(previous)</span><br/><span>Jun(latest)</span>
+        <span>Jul(previous)</span><br/><span>Jul(latest)</span>
+        <span>Aug(previous)</span><br/><span>Aug(latest)</span>
+        <span>Sep(previous)</span><br/><span>Sep(latest)</span>
+        <span>Oct(previous)</span><br/><span>Oct(latest)</span>
+        <span>Nov(previous)</span><span>Nov(latest)</span>
+        <span>Dec(previous)</span><br/><span>Dec(latest)</span>
+        <span>Total(previous)</span><br/><span>Total(latest)</span>
+        <span></span><span></span>
+</Space>
+      
+      </div>
+    );
+  };
+
+
+
   const childColumns1: any = [
     {
       // title: "Production Plan Type Name",
       dataIndex: "phasetype",
+      align: "left",
+    width: 130,
       // key: "phasetype",
     },
     // {
@@ -117,7 +123,7 @@ export const WareHouseComparision = () => {
           // title: `Previous`,
           dataIndex: "janPcs",
           align:"right",
-          width:135,
+          width:100,
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
@@ -127,7 +133,7 @@ export const WareHouseComparision = () => {
           // title: `Latest`,
           dataIndex: "janCoeff",
           align:"right",
-          width:170,
+          width:100,
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.janCoeff}</span>  || '-'))
           
@@ -452,7 +458,7 @@ export const WareHouseComparision = () => {
       // title: "Total Previous",
       dataIndex: "totalPcs",
       align:"right",
-     
+     width:100
     },
     {
       // title: "Total Latest",
@@ -703,6 +709,158 @@ const handleTabChange = (selectedYear: string) => {
   console.log(Number(selectedYear),'///////////');
   
 };
+const getTableSummary = (pageData) => {
+  console.log('okk')
+  let janPre = 0;let janLat = 0;
+  let febPre = 0;let febLat = 0;
+  let marPre = 0;let marLat = 0;
+  let aprPre = 0;let aprLat = 0;
+  let mayPre = 0;let mayLat = 0;
+  let junPre = 0;let junLat = 0;
+  let julPre = 0;let julLat = 0;
+  let augPre = 0;let augLat = 0;
+  let sepPre = 0;let sepLat = 0;
+  let octPre = 0;let octLat = 0;
+  let novPre = 0;let novLat = 0;
+  let decPre = 0;let decLat = 0;
+ 
+  pageData.forEach((e) => {
+    console.log(e,'----------');
+    
+    // e.monthWiseData.forEach((rec) => {
+    //   if(rec.pcsData[0].janPcs) {
+    //     const jan = [rec.pcsData[0].janPcs]
+    //     janPre += Number(jan)
+    //   }
+    //   if(rec.pcsData[0].febPcs) {
+    //     const feb = [rec.pcsData[0].febPcs]
+    //     febPre += Number(feb)
+    //   }
+    //   if(rec.pcsData[0].marPcs) {
+    //     const mar = [rec.pcsData[0].marPcs]
+    //     marPre += Number(mar)
+    //   }
+    //   if(rec.pcsData[0].aprPcs) {
+    //     const apr = [rec.pcsData[0].aprPcs]
+    //     aprPre += Number(apr)
+    //   } if(rec.pcsData[0].mayPcs) {
+    //     const may = [rec.pcsData[0].mayPcs]
+    //     mayPre += Number(may)
+    //   } if(rec.pcsData[0].junPcs) {
+    //     const jun = [rec.pcsData[0].junPcs]
+    //     junPre += Number(jun)
+    //   } if(rec.pcsData[0].julPcs) {
+    //     const jul = [rec.pcsData[0].julPcs]
+    //     julPre += Number(jul)
+    //   } if(rec.pcsData[0].augPcs) {
+    //     const aug = [rec.pcsData[0].augPcs]
+    //     augPre += Number(aug)
+    //   } if(rec.pcsData[0].sepPcs) {
+    //     const sep = [rec.pcsData[0].sepPcs]
+    //     sepPre += Number(sep)
+    //   } if(rec.pcsData[0].octPcs) {
+    //     const oct = [rec.pcsData[0].octPcs]
+    //     octPre += Number(oct)
+    //   } if(rec.pcsData[0].novPcs) {
+    //     const nov = [rec.pcsData[0].novPcs]
+    //     novPre += Number(nov)
+    //   } if(rec.pcsData[0].decPcs) {
+    //     const dec = [rec.pcsData[0].decPcs]
+    //     decPre += Number(dec)
+    //   }
+    //   if(rec.pcsData[0].jancoeff) {
+    //     const jan = [rec.coeffData[0].janCoeff]
+    //     janLat += Number(jan)
+    //   }
+    //   if(rec.coeffData[0].febCoeff) {
+    //     const feb = [rec.coeffData[0].febCoeff]
+    //     febLat += Number(feb)
+    //   }
+    //   if(rec.coeffData[0].marCoeff) {
+    //     const mar = [rec.coeffData[0].marCoeff]
+    //     marLat += Number(mar)
+    //   }
+    //   if(rec.coeffData[0].aprCoeff) {
+    //     const apr = [rec.coeffData[0].aprCoeff]
+    //     aprLat += Number(apr)
+    //   } if(rec.coeffData[0].mayCoeff) {
+    //     const may = [rec.coeffData[0].mayCoeff]
+    //     mayLat += Number(may)
+    //   } if(rec.coeffData[0].junCoeff) {
+    //     const jun = [rec.coeffData[0].junCoeff]
+    //     junLat += Number(jun)
+    //   } if(rec.coeffData[0].julCoeff) {
+    //     const jul = [rec.coeffData[0].julCoeff]
+    //     julLat += Number(jul)
+    //   } if(rec.coeffData[0].augCoeff) {
+    //     const aug = [rec.coeffData[0].augCoeff]
+    //     augLat += Number(aug)
+    //   } if(rec.coeffData[0].sepCoeff) {
+    //     const sep = [rec.coeffData[0].sepCoeff]
+    //     sepLat += Number(sep)
+    //   } if(rec.coeffData[0].octCoeff) {
+    //     const oct = [rec.coeffData[0].octCoeff]
+    //     octLat += Number(oct)
+    //   } if(rec.coeffData[0].novCoeff) {
+    //     const nov = [rec.coeffData[0].novCoeff]
+    //     novLat += Number(nov)
+    //   } if(rec.coeffData[0].decCoeff) {
+    //     const dec = [rec.coeffData[0].decCoeff]
+    //     decLat += Number(dec)
+    //   }
+    //   console.log(febLat,'lat');
+    //   console.log(febPre,'pre');
+      
+      
+    // })
+  })
+
+
+  return(
+    <>
+        <Table.Summary.Row>
+      <Table.Summary.Cell index={0}></Table.Summary.Cell>
+      <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
+      <Table.Summary.Cell index={3}>
+        <div>
+          <Space></Space>
+          <Space>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/>
+           {janPre}<span/><span/> <span/><span/><span/><span/><span/><span/> {janLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/> 
+           {febPre}<span/><span/> <span/><span/><span/><span/>{febLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {marPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{marLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {aprPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/> {aprLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {mayPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {mayLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{julLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {junPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{julLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {julPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {julLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {augPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{augLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>
+           {sepPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{sepLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {octPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{octLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {novPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{novLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {decPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{decLat}
+          </Space>
+        </div>
+      </Table.Summary.Cell>
+    </Table.Summary.Row>
+  </>
+  )
+}
   return (
     <Card
     title="Comparision WareHouse Report"
