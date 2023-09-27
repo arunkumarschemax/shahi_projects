@@ -89,6 +89,14 @@ export class HSNEntity {
   })
   variance: string;
 
+
+  @Column("varchar", {
+    length: 50,
+    name: "status",
+    default:""
+  })
+  status: string;
+
   @Column("enum", {
     default:StatusEnum.No_Variance,
     name: "variance_status",

@@ -50,6 +50,7 @@ export class ScanAdapter {
                 entity2.variance = record.variance
                 entity2.unitPrice = record.unitPrice
                 entity2.quotation = record.quotation
+                entity2.status = record.status;
                 entity2.unitquantity = record.unitquantity;
                 entity2.description = record.description;
                 entity2.createdUser = dto.createdUser;
