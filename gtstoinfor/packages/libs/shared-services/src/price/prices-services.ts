@@ -2,8 +2,7 @@ import { CommonAxiosService } from "../common-axios-service-prs";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 
-import {AllPriceDto} from '../../../shared-models/src/price-model/prices.dto';
-import {AllPriceResponseModel} from  '../../../shared-models/src/price-model';
+import { AllPriceDto, AllPriceResponseModel, PriceListRequestModel } from '@xpparel/shared-models';
 
 
 export class PricesService extends CommonAxiosService {
@@ -18,6 +17,10 @@ export class PricesService extends CommonAxiosService {
 
   async getdata(): Promise<any> {
     return this.axiosPostCall(this.PriceController + "getdata");
+  }
+
+  async getPriceListByVendor(req: PriceListRequestModel): Promise<any> {
+    return this.axiosPostCall(this.PriceController + "getPriceListByVendor", req);
   }
 
 }

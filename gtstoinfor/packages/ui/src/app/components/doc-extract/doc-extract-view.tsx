@@ -233,17 +233,17 @@ export function DocView() {
         return <> {record.Vendor ? record.Vendor : "-"} </>;
       },
     },
-    {
-      title: "Buyer Name",
-      dataIndex: "buyerName",
-      key: "buyerName",
-      ...getColumnSearchProps("buyerName"),
-      align: "center",
-      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
-      render: (text: any, record: { buyerName: any }) => {
-        return <> {record.buyerName ? record.buyerName : "-"} </>;
-      },
-    },
+    // {
+    //   title: "Buyer Name",
+    //   dataIndex: "buyerName",
+    //   key: "buyerName",
+    //   ...getColumnSearchProps("buyerName"),
+    //   align: "center",
+    //   sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
+    //   render: (text: any, record: { buyerName: any }) => {
+    //     return <> {record.buyerName ? record.buyerName : "-"} </>;
+    //   },
+    // },
     {
       title: "GST",
       dataIndex: "GST",
@@ -265,6 +265,18 @@ export function DocView() {
       align: "center",
       render: (text: any, record: { InnvoiceNumber: any }) => {
         return <> {record.InnvoiceNumber ? record.InnvoiceNumber : "-"} </>;
+      },
+    },
+    {
+      title: "Invoice Amount",
+      dataIndex: "InnvoiceAmount",
+      key: "InnvoiceAmount",
+      ...getColumnSearchProps("InnvoiceAmount"),
+      sorter: (a, b) => a.InnvoiceAmount.localeCompare(b.InnvoiceAmount),
+      align: "center",
+      render: (text, record) => {
+        const formattedAmount = record.InnvoiceAmount ? parseFloat(record.InnvoiceAmount).toFixed(2) : "-";
+        return <>{formattedAmount}</>;
       },
     },
     {

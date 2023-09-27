@@ -16,6 +16,8 @@ function ScanDetailView() {
   const [pageSize, setPageSize] = useState<number>(1);
   const [searchedColumn, setSearchedColumn] = useState('');
   const [searchText, setSearchText] = useState('');
+  const [totalAmount, setTotalAmount] = useState<number>();
+
   const searchInput = useRef(null);
 
 
@@ -100,13 +102,116 @@ function ScanDetailView() {
   });
 
 
+  // const columns: any = [
+  //   {
+  //     title: 'S.No',
+  //     key: 'sno',
+  //     responsive: ['sm'],
+  //     render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+  //     align: "center"
+
+
+  //   },
+  //   {
+  //     title: "HSN Code",
+  //     dataIndex: "HSN",
+  //     key: "HSN",
+  //     ...getColumnSearchProps("HSN"),
+  //     sorter: (a, b) => a.HSN.localeCompare(b.HSN),
+  //     render: (_, record) =>
+  //       record?.HSN || "-",
+  //     align: "center"
+
+  //   },
+  //   {
+  //     title: "Tax Type",
+  //     dataIndex: "Taxtype",
+  //     key: "Taxtype",
+  //     ...getColumnSearchProps("Taxtype"),
+  //     sorter: (a, b) => a.Taxtype.localeCompare(b.Taxtype),
+  //     render: (_, record) =>
+  //       record?.Taxtype || "-",
+  //     align: "center"
+
+  //   },
+  //   {
+  //     title: 'Tax Amount',
+  //     dataIndex: 'Taxamount',
+  //     key: "Taxamount",
+  //     ...getColumnSearchProps("Taxamount"),
+  //     sorter: (a, b) => a.Taxamount.localeCompare(b.Taxamount),
+  //     render: (_, record) =>
+  //       record?.Taxamount || "-",
+  //     align: "right",
+  //   },
+  //   {
+  //     title: 'Tax Percentage',
+  //     dataIndex: 'Taxpercentage',
+  //     key: 'Taxpercentage',
+  //     ...getColumnSearchProps('Taxpercentage'),
+  //     sorter: (a, b) => a.Taxpercentage.localeCompare(b.Taxpercentage),
+  //     render: (_, record) => (record?.Taxpercentage || "-"),
+  //     align: "right",
+  //   },
+  //   {
+  //     title: 'Unit Quantity',
+  //     dataIndex: 'unitquantity',
+  //     key: "unitquantity",
+  //     ...getColumnSearchProps("unitquantity"),
+  //     sorter: (a, b) => a.unitquantity.localeCompare(b.unitquantity),
+  //     render: (_, record) =>
+  //       record?.unitquantity || "-",
+  //       align: "right",
+  //   },
+  //   {
+  //     title: 'Charge',
+  //     dataIndex: 'Charge',
+  //     key: 'Charge',
+  //     align: "right",
+  //     ...getColumnSearchProps('Charge'),
+  //     sorter: (a, b) => a.Charge.localeCompare(b.Charge),
+  //     render: (text, record) => {
+  //       // Parse the "Charge" value as a number
+  //       const chargeValue = Number(record.Charge);
+
+  //       // Check if it's a valid number
+  //       if (!isNaN(chargeValue)) {
+  //         // Format the number to two decimal places
+  //         const formattedCharge = chargeValue.toFixed(2);
+  //         return <>{formattedCharge}</>;
+  //       } else {
+  //         // Display a hyphen for non-numeric values
+  //         return "-";
+  //       }
+  //     },
+  //   },
+
+
+  //   {
+  //     title: 'Quatation',
+  //     dataIndex: 'quotation',
+  //     key: "quotation",
+  //     ...getColumnSearchProps("quotation"),
+  //     sorter: (a, b) => a.quotation.localeCompare(b.quotation),
+  //     render: (_, record) =>
+  //       record?.quotation || "-",
+  //     align: "center"
+
+
+
+
+  //   },
+
+  // ]
+
+  
   const columns: any = [
     {
       title: 'S.No',
       key: 'sno',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-      align: "center"
+     
 
 
     },
@@ -118,7 +223,35 @@ function ScanDetailView() {
       sorter: (a, b) => a.HSN.localeCompare(b.HSN),
       render: (_, record) =>
         record?.HSN || "-",
-      align: "center"
+      
+
+    },
+    {
+      title: "Service Code",
+      dataIndex: 'seviceCode',
+      key: "seviceCode",
+      render : (text,record,index) => {
+        return (
+            <span>
+              {record.seviceCode ? record.seviceCode   : '-'}
+
+            </span>
+        )
+    }
+
+    },
+    {
+      title: "Service Description",
+      dataIndex: 'description',
+      key: "description",
+      render : (text,record,index) => {
+        return (
+            <span>
+              {record.description ? record.description : '-'}
+
+            </span>
+        )
+    }
 
     },
     {
@@ -129,8 +262,73 @@ function ScanDetailView() {
       sorter: (a, b) => a.Taxtype.localeCompare(b.Taxtype),
       render: (_, record) =>
         record?.Taxtype || "-",
-      align: "center"
+      
 
+    },
+    
+    {
+      title: 'Tax Percentage',
+      dataIndex: 'Taxpercentage',
+      key: 'Taxpercentage',
+      ...getColumnSearchProps('Taxpercentage'),
+      sorter: (a, b) => a.Taxpercentage.localeCompare(b.Taxpercentage),
+      // render: (_, record) => (record?.Taxpercentage || "-"),
+      render : (text,record) => {
+        return (
+            <span>
+                {record.Taxpercentage ? (record.Taxpercentage) : '-'}
+            </span>
+        )
+    }
+    
+    },
+    
+    {
+      title: 'Unit Price',
+      dataIndex: 'unitPrice',
+      key: "unitPrice",
+      ...getColumnSearchProps("unitPrice"),
+      sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
+      render : (text,record) => {
+        return (
+            <span>
+                {record.unitPrice ? (record.unitPrice) : '-'}
+            </span>
+        )
+    }
+    },
+
+   
+    {
+      title: 'Unit Quantity',
+      dataIndex: 'unitquantity',
+      key: "unitquantity",
+      ...getColumnSearchProps("unitquantity"),
+      sorter: (a, b) => a.unitquantity.localeCompare(b.unitquantity),
+      // render: (_, record) =>
+      //   record?.unitquantity || "-",
+      render : (text,record) => {
+        return (
+            <span>
+                {record.unitquantity ? (record.unitquantity) : '-'}
+            </span>
+        )
+    }
+       
+    },
+    {
+      title: 'Subject Amount',
+      dataIndex: 'unitPrice',
+      key: "unitPrice",
+      // ...getColumnSearchProps("SubjectAmount"),
+      // sorter: (a, b) => a.SubjectAmount.localeCompare(b.SubjectAmount),
+      render : (text,record) => {
+        return (
+            <span>
+                {record.unitPrice ? (record.unitPrice*record.unitquantity).toFixed(2) : '-'}
+            </span>
+        )
+    }
     },
     {
       title: 'Tax Amount',
@@ -138,64 +336,48 @@ function ScanDetailView() {
       key: "Taxamount",
       ...getColumnSearchProps("Taxamount"),
       sorter: (a, b) => a.Taxamount.localeCompare(b.Taxamount),
-      render: (_, record) =>
-        record?.Taxamount || "-",
-      align: "right",
+      // render: (_, record) =>
+      //   record?.Taxamount || "-",
+        render : (text,record) => {
+          return (
+              <span>
+                  {record.Taxamount ? parseFloat(record.Taxamount).toFixed(2) : '-'}
+              </span>
+          )
+      }
     },
+   
     {
-      title: 'Tax Percentage',
-      dataIndex: 'Taxpercentage',
-      key: 'Taxpercentage',
-      ...getColumnSearchProps('Taxpercentage'),
-      sorter: (a, b) => a.Taxpercentage.localeCompare(b.Taxpercentage),
-      render: (_, record) => (record?.Taxpercentage || "-"),
-      align: "right",
-    },
-    {
-      title: 'Unit Quantity',
-      dataIndex: 'unitquantity',
+      title: 'Total Amount',
+      dataIndex: 'unitPrice',
       key: "unitquantity",
-      ...getColumnSearchProps("unitquantity"),
-      sorter: (a, b) => a.unitquantity.localeCompare(b.unitquantity),
-      render: (_, record) =>
-        record?.unitquantity || "-",
-        align: "right",
-    },
-    {
-      title: 'Charge',
-      dataIndex: 'Charge',
-      key: 'Charge',
-      align: "right",
-      ...getColumnSearchProps('Charge'),
-      sorter: (a, b) => a.Charge.localeCompare(b.Charge),
-      render: (text, record) => {
-        // Parse the "Charge" value as a number
-        const chargeValue = Number(record.Charge);
+      // ...getColumnSearchProps("unitquantity"),
+      // sorter: (a, b) => a.unitquantity.localeCompare(b.unitquantity),
+      // render: (_, record) =>
+      //   record?.unitquantity || "-",
+      render : (text,record,index) => {
+        return (
+            <span>
+              {record.unitPrice ? (Number(record.unitPrice*record.unitquantity)+Number(record.Taxamount)).toFixed(2) : '-'}
 
-        // Check if it's a valid number
-        if (!isNaN(chargeValue)) {
-          // Format the number to two decimal places
-          const formattedCharge = chargeValue.toFixed(2);
-          return <>{formattedCharge}</>;
-        } else {
-          // Display a hyphen for non-numeric values
-          return "-";
-        }
-      },
+            </span>
+        )
+    }
     },
 
-
     {
-      title: 'Quatation',
-      dataIndex: 'quotation',
-      key: "quotation",
-      ...getColumnSearchProps("quotation"),
-      sorter: (a, b) => a.quotation.localeCompare(b.quotation),
-      render: (_, record) =>
-        record?.quotation || "-",
-      align: "center"
+      title: 'Variance',
+      dataIndex: 'Variance',
+      key: "Variance",
+      render : (text,record,index) => {
+        return (
+            <span>
+              {record.Variance ? (Number(record.Variance*record.Variance)+Number(record.Variance)) : '-'}
 
-
+            </span>
+        )
+    }
+      
 
 
     },
@@ -264,7 +446,7 @@ function ScanDetailView() {
           label="Invoice Amount"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.InnvoiceAmount ? rowData.state.rowData.InnvoiceAmount : "--"}
+          {rowData.state.rowData.InnvoiceAmount ? parseFloat(rowData.state.rowData.InnvoiceAmount).toFixed(2) : "--"}
         </Descriptions.Item>
 
         <Descriptions.Item
@@ -275,12 +457,12 @@ function ScanDetailView() {
 
         </Descriptions.Item>
 
-        <Descriptions.Item
+        {/* <Descriptions.Item
           label="Routing"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.Routing ? rowData.state.rowData.Routing : "--"}
-        </Descriptions.Item>
+        </Descriptions.Item> */}
 
         {/* <Descriptions.Item
           label="Comment"
@@ -296,12 +478,12 @@ function ScanDetailView() {
           {rowData.state.rowData.Financialyear ? rowData.state.rowData.Financialyear : "--"}
         </Descriptions.Item>
 
-        <Descriptions.Item
+        {/* <Descriptions.Item
           label="Time Created"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.Timecreated ? rowData.state.rowData.Timecreated : "--"}
-        </Descriptions.Item>
+        </Descriptions.Item> */}
 
         {/* <Descriptions.Item
           label="Status"
@@ -326,7 +508,41 @@ function ScanDetailView() {
 
       {/* <Button type="primary"  onClick={handleBack}> Back </Button> */}
       <Card>
-        <Table columns={columns} size='small' dataSource={rowData.state.rowData.scanentity} pagination={false} />
+        <>
+        <Table columns={columns} size='small' dataSource={rowData.state.rowData.scanentity} pagination={false}
+        summary={(pageData) => {
+          let totalCost:number = 0;
+          
+
+          // pageData.forEach(({unitquantity}) => {
+          //   if(Number(unitquantity)) {
+          //     totalCost += Number(unitquantity)
+          //   }
+          // })
+          pageData.forEach((record) => {
+            if (Number(record.unitPrice) && Number(record.unitquantity) && Number(record.Taxamount)) {
+              totalCost += Number(record.unitPrice * record.unitquantity) + Number(record.Taxamount);
+              setTotalAmount(totalCost)
+            }
+          });
+      
+
+          
+
+          return(
+            <>
+            <Table.Summary.Row className="tableFooter">
+              <Table.Summary.Cell index={1} colSpan={4}><span></span></Table.Summary.Cell>
+              <Table.Summary.Cell index={1} colSpan={6}><span><b>Total</b></span><b><span style={{marginRight:10}}> ({rowData.state.rowData.InnvoiceCurrency}) :</span></b></Table.Summary.Cell>
+
+              <Table.Summary.Cell index={1} colSpan={14}><span style={{textAlign:'end'}}><b>{(Number(totalCost)).toLocaleString('en-IN')}</b></span></Table.Summary.Cell>
+              
+            </Table.Summary.Row>
+            </>
+          )
+        }}
+         />
+         </>
       </Card>
     </Card>
   );

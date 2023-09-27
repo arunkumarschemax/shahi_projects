@@ -9,6 +9,7 @@ import {
   JoinColumn,
 } from "typeorm";
 import { ScanEntity } from "./typeo-entity";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { StatusEnum } from "../../../../../../libs/shared-models/src/common/enum/status.enum";
 
 @Entity("invoice_items")
@@ -44,9 +45,22 @@ export class HSNEntity {
 
   @Column("varchar", {
     length: 50,
+    name: "description",
+  })
+  description: string;
+
+  @Column("varchar", {
+    length: 50,
     name: "charge",
   })
   Charge: string;
+
+  @Column("varchar", {
+    length: 50,
+    name: "unit_price",
+  })
+  unitPrice:string;
+
 
   @Column("varchar", {
     nullable:true,
