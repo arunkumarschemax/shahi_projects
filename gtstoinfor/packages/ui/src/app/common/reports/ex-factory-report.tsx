@@ -736,6 +736,8 @@ const childColumns1: any = [
     let octPre = 0;let octLat = 0;
     let novPre = 0;let novLat = 0;
     let decPre = 0;let decLat = 0;
+    let totalPre = 0;let totalLat =0;
+
     pageData.forEach((e) => {
       console.log(e)
       e.monthWiseData.forEach((rec) => {
@@ -829,9 +831,14 @@ const childColumns1: any = [
           const dec = [rec.coeffData[0].decCoeff]
           decLat += Number(dec)
         }
-        console.log(febLat,'lat');
-        console.log(febPre,'pre');
-        
+        if(rec.totalPcs) {
+          const pcs = [rec.totalPcs]
+          totalPre += Number(pcs)
+        }
+        if(rec.totalCoeff) {
+          const coeff = [rec.totalCoeff]
+          totalLat += Number(coeff)
+        }
         
       })
     })
@@ -874,6 +881,9 @@ const childColumns1: any = [
              {novPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{novLat}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
              {decPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{decLat}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+             {totalPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{totalLat}
+            
             </Space>
           </div>
         </Table.Summary.Cell>

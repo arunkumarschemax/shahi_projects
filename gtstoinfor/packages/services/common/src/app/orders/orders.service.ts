@@ -1274,6 +1274,7 @@ async getExfactoryComparisionData(req:YearReq): Promise<CommonResponseModel> {
     const DateMap = new Map<string, ItemDataDto>();
  
     for (const rec of data) {
+        const orderQty = rec.order_plan_qty.replace(/,/g, '')
         if (!DateMap.has(rec.item_cd)) {
             DateMap.set(
                 rec.item_cd,
@@ -1289,35 +1290,35 @@ if(!phase){
             
 pcs.push(
            { name: 'In Pcs',
-            janPcs: rec.ExfMonth === 1 ? rec.order_plan_qty :0,
-            febPcs: rec.ExfMonth === 2 ? rec.order_plan_qty :0,
-            marPcs: rec.ExfMonth === 3 ? rec.order_plan_qty :0,
-            aprPcs: rec.ExfMonth === 4 ? rec.order_plan_qty :0,
-            mayPcs: rec.ExfMonth === 5 ? rec.order_plan_qty :0,
-            junPcs: rec.ExfMonth === 6 ? rec.order_plan_qty :0,
-            julPcs: rec.ExfMonth === 7 ? rec.order_plan_qty :0,
-            augPcs: rec.ExfMonth === 8 ? rec.order_plan_qty :0,
-            sepPcs: rec.ExfMonth === 9 ? rec.order_plan_qty :0,
-            octPcs: rec.ExfMonth === 10 ? rec.order_plan_qty :0,
-            novPcs: rec.ExfMonth === 11 ? rec.order_plan_qty :0,
-            decPcs: rec.ExfMonth === 12 ? rec.order_plan_qty :0,}
+            janPcs: rec.ExfMonth === 1 ? Number(orderQty) :Number(0),
+            febPcs: rec.ExfMonth === 2 ? Number(orderQty) :Number(0),
+            marPcs: rec.ExfMonth === 3 ? Number(orderQty) :Number(0),
+            aprPcs: rec.ExfMonth === 4 ? Number(orderQty) :Number(0),
+            mayPcs: rec.ExfMonth === 5 ? Number(orderQty) :Number(0),
+            junPcs: rec.ExfMonth === 6 ? Number(orderQty) :Number(0),
+            julPcs: rec.ExfMonth === 7 ? Number(orderQty) :Number(0),
+            augPcs: rec.ExfMonth === 8 ? Number(orderQty) :Number(0),
+            sepPcs: rec.ExfMonth === 9 ? Number(orderQty) :Number(0),
+            octPcs: rec.ExfMonth === 10 ? Number(orderQty) :Number(0),
+            novPcs: rec.ExfMonth === 11 ? Number(orderQty) :Number(0),
+            decPcs: rec.ExfMonth === 12 ? Number(orderQty) :Number(0),}
         )
     if (rec.status === "latest") {
-        // totalCoeff += rec.order_plan_qty;
-          coeff.push({
+        // totalCoeff += Number(orderQty);
+        coeff.push({
             name: 'In Coeff',
-            janCoeff: rec.ExfMonth === 1 ? rec.order_plan_qty :0,
-            febCoeff: rec.ExfMonth === 2 ? rec.order_plan_qty :0,
-            marCoeff: rec.ExfMonth === 3 ? rec.order_plan_qty :0,
-            aprCoeff: rec.ExfMonth === 4 ? rec.order_plan_qty :0,
-            mayCoeff: rec.ExfMonth === 5 ? rec.order_plan_qty :0,
-            junCoeff: rec.ExfMonth === 6 ? rec.order_plan_qty :0,
-            julCoeff: rec.ExfMonth === 7 ? rec.order_plan_qty :0,
-            augCoeff: rec.ExfMonth === 8 ? rec.order_plan_qty :0,
-            sepCoeff: rec.ExfMonth === 9 ? rec.order_plan_qty :0,
-            octCoeff: rec.ExfMonth === 10 ? rec.order_plan_qty :0,
-            novCoeff: rec.ExfMonth === 11 ? rec.order_plan_qty :0,
-            decCoeff: rec.ExfMonth === 12 ? rec.order_plan_qty :0,
+            janCoeff: rec.ExfMonth === 1 ? Number(orderQty) :Number(0),
+            febCoeff: rec.ExfMonth === 2 ? Number(orderQty) :Number(0),
+            marCoeff: rec.ExfMonth === 3 ? Number(orderQty) :Number(0),
+            aprCoeff: rec.ExfMonth === 4 ? Number(orderQty) :Number(0),
+            mayCoeff: rec.ExfMonth === 5 ? Number(orderQty) :Number(0),
+            junCoeff: rec.ExfMonth === 6 ? Number(orderQty) :Number(0),
+            julCoeff: rec.ExfMonth === 7 ? Number(orderQty) :Number(0),
+            augCoeff: rec.ExfMonth === 8 ? Number(orderQty) :Number(0),
+            sepCoeff: rec.ExfMonth === 9 ? Number(orderQty) :Number(0),
+            octCoeff: rec.ExfMonth === 10 ? Number(orderQty) :Number(0),
+            novCoeff: rec.ExfMonth === 11 ? Number(orderQty) :Number(0),
+            decCoeff: rec.ExfMonth === 12 ? Number(orderQty) :Number(0),
           })
         }
         const totalPcs = pcs.reduce((total, item) => {
