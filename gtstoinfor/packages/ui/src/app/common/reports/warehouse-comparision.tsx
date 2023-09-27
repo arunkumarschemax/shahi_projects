@@ -91,7 +91,7 @@ export const WareHouseComparision = () => {
     return (
       <div>
       <Space size={"large"}>
-       <span>Production Plan Type Name</span><span>Jan(previous)</span><br/><span></span>Jan(latest)
+      Production Plan Type Name<span>Jan(previous)</span><br/><span><span></span>Jan(latest)</span>
        <span>Feb(previous)</span><br/><span>Feb(latest)</span>
         <span>Mar(previous)</span><br/><span>Mar(latest)</span>
         <span>Apr(previous)</span><br/><span>Apr(latest)</span>

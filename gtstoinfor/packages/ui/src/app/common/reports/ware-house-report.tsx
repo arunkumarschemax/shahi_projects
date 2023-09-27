@@ -66,22 +66,23 @@ export const WarehouseReport = () => {
            
       return (
         <div>
-        <Space size={"large"}>
-         Production Plan Type Name<span>Jan(previous)</span><br/><span>Jan(latest)</span>
-         <span>Feb(previous)</span><br/><span>Feb(latest)</span>
-          <span>Mar(previous)</span><br/><span>Mar(latest)</span>
-          <span>Apr(previous)</span><span>Apr(latest)</span>
-          <span>May(previous)</span><br/><span>May(latest)</span>
-          <span>Jun(previous)</span><br/><span>Jun(latest)</span>
-          <span>Jul(previous)</span><br/><span>Jul(latest)</span>
-          <span>Aug(previous)</span><br/><span>Aug(latest)</span>
-          <span>Sep(previous)</span><br/><span>Sep(latest)</span>
-          <span>Oct(previous)</span><br/><span>Oct(latest)</span>
-          <span>Nov(previous)</span><span>Nov(latest)</span>
-          <span>Dec(previous)</span><br/><span>Dec(latest)</span>
-          <span>Total(previous)</span><br/><span>Total(latest)</span>
-          <span></span><span></span>
-  </Space>
+           <Space size={"large"}>
+     Production Plan Type Name<br/><span>Jan(Pcs)</span><br/><span><span></span>Jan(Coeff)</span><br/>
+     <span>Feb(Pcs)</span><br/><span>Feb(Coeff)</span><br/>
+      <span>Mar(Pcs)</span><br/><span>Mar(Coeff)</span><br/>
+      <span>Apr(Pcs)</span><br/><span>Apr(Coeff)</span><br/><br/>
+      <span>May(Pcs)</span><br/><span>May(Coeff)</span><br/><br/>
+      <span>Jun(Pcs)</span><br/><span>Jun(Coeff)</span><br/>
+      <span>Jul(Pcs)</span><br/><span>Jul(Coeff)</span><br/>
+      <span>Aug(Pcs)</span><br/><br/><span>Aug(Coeff)</span><br/>
+      <span>Sep(Pcs)</span><br/><span>Sep(Coeff)</span><br/>
+      <span>Oct(Pcs)</span><br/><span>Oct(Coeff)</span><br/>
+      <span> <span></span>Nov(Pcs)</span><br/><span>Nov(Coeff)</span><br/>
+      <span>Dec(Pcs)<br/></span><br/><span>Dec(Coeff)</span><br/>
+      <span>Total(Pcs)</span><br/><br/><span>Total(Coeff)</span>
+      
+
+</Space>
         
         </div>
       );
@@ -102,7 +103,8 @@ export const WarehouseReport = () => {
           dataIndex: "janPcs",
           width:115,
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
+            return (record.pcsData.map(
+              (item: any) =><span>{item.janPcs}</span>  || '-'))
           
           }
         },
@@ -455,9 +457,9 @@ export const WarehouseReport = () => {
     // },
     {
       title: "Item Name",
-      dataIndex: "item_cd",
+      dataIndex: "itemName",
       render: (text: any, record: any) => (
-      <span>{record.item_cd}</span>
+      <span>{record.itemName}</span>
       ),
       // ...getColumnSearchProps('itemName')
     },
