@@ -61,30 +61,67 @@ export const WareHouseComparision = () => {
       }
     })
   }
-  const CustomTitle = () => {
+//   const CustomTitle = () => {
            
-    return (
-      <div>
-      <Space size={"large"}>
-       Production Plan Type Name<span>Jan(previous)</span><br/><span></span> <span>Jan(latest)</span>
-       <span>Feb(previous)</span><br/><span>Feb(latest)</span>
-        <span>Mar(previous)</span><br/><span>Mar(latest)</span>
-        <span>Apr(previous)</span><br/><span>Apr(latest)</span>
-        <span>May(previous)</span><br/><span>May(latest)</span>
-        <span>Jun(previous)</span><br/><span>Jun(latest)</span>
-        <span>Jul(previous)</span><br/><span>Jul(latest)</span>
-        <span>Aug(previous)</span><br/><span>Aug(latest)</span>
-        <span>Sep(previous)</span><br/><span>Sep(latest)</span>
-        <span>Oct(previous)</span><br/><span>Oct(latest)</span>
-        <span>Nov(previous)</span><span>Nov(latest)</span>
-        <span>Dec(previous)</span><br/><span>Dec(latest)</span>
-        <span>Total(previous)</span><br/><span>Total(latest)</span>
-        <span></span><span></span>
-</Space>
+//     return (
+//       <div>
+//       <Space size={"large"}>
+//        <span>Production Plan Type Name</span><span>Jan(previous)</span><br/><span></span>Jan(latest)
+//        <span>Feb(previous)</span><br/><span>Feb(latest)</span>
+//         <span>Mar(previous)</span><br/><span>Mar(latest)</span>
+//         <span>Apr(previous)</span><br/><span>Apr(latest)</span>
+//         <span>May(previous)</span><br/><span>May(latest)</span>
+//         <span>Jun(previous)</span><br/><span>Jun(latest)</span>
+//         <span>Jul(previous)</span><br/><span>Jul(latest)</span>
+//         <span>Aug(previous)</span><br/><span>Aug(latest)</span>
+//         <span>Sep(previous)</span><br/><span>Sep(latest)</span>
+//         <span>Oct(previous)</span><br/><span>Oct(latest)</span>
+//         <span>Nov(previous)</span><span>Nov(latest)</span>
+//         <span>Dec(previous)</span><br/><span>Dec(latest)</span>
+//         <span>Total(previous)</span><br/><span>Total(latest)</span>
+//         <span></span><span></span>
+// </Space>
       
-      </div>
-    );
-  };
+//       </div>
+//     );
+//   };
+
+const CustomTitle = () => {
+  return (
+    <div>
+      <Space size={"large"}>
+        <span>Production Plan Type Name</span>
+        <span>Jan(previous)</span>
+        <span>Jan(latest)</span>
+        <span>Feb(previous)</span>
+        <span>Feb(latest)</span>
+        <span>Mar(previous)</span>
+        <span>Mar(latest)</span>
+        <span>Apr(previous)</span>
+        <span>Apr(latest)</span>
+        <span>May(previous)</span>
+        <span>May(latest)</span>
+        <span>Jun(previous)</span>
+        <span>Jun(latest)</span>
+        <span>Jul(previous)</span>
+        <span>Jul(latest)</span>
+        <span>Aug(previous)</span>
+        <span>Aug(latest)</span>
+        <span>Sep(previous)</span>
+        <span>Sep(latest)</span>
+        <span>Oct(previous)</span>
+        <span>Oct(latest)</span>
+        <span>Nov(previous)</span>
+        <span>Nov(latest)</span>
+        <span>Dec(previous)</span>
+        <span>Dec(latest)</span>
+        <span>Total(previous)</span>
+        <span>Total(latest)</span>
+      </Space>
+    </div>
+  );
+};
+
   const getFilterdData = () => {
     let ItemName = form.getFieldValue('ItemName');
   
@@ -108,6 +145,8 @@ export const WareHouseComparision = () => {
     {
       // title: "Production Plan Type Name",
       dataIndex: "phasetype",
+      align: "left",
+    width: 200,
       // key: "phasetype",
     },
     // {
@@ -117,7 +156,7 @@ export const WareHouseComparision = () => {
           // title: `Previous`,
           dataIndex: "janPcs",
           align:"right",
-          width:135,
+          width:115,
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
@@ -452,7 +491,7 @@ export const WareHouseComparision = () => {
       // title: "Total Previous",
       dataIndex: "totalPcs",
       align:"right",
-     
+     width:100
     },
     {
       // title: "Total Latest",

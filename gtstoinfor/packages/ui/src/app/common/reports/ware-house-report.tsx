@@ -86,6 +86,8 @@ export const WarehouseReport = () => {
     {
       // title: "Production Plan Type Name",
       dataIndex: "phasetype",
+      align: "left",
+      width: 200,
       // key: "phasetype",
     },
     // {
@@ -94,6 +96,7 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "janPcs",
+          width:115,
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
@@ -102,6 +105,7 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "janCoeff",
+          width:170,
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.janCoeff}</span>  || '-'))
           
@@ -117,6 +121,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "febPcs",
+          width:100,
+          align:'right',
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.febPcs}</span>  || '-'))
           
@@ -125,6 +131,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "febCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.febCoeff}</span>  || '-'))
           
@@ -132,7 +140,7 @@ export const WarehouseReport = () => {
       //   },
       // ],
  
-    },
+        },
     // {
     //   title: "March",
     //   dataIndex: "oldOrderQtyPcs3",
@@ -141,6 +149,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "marPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.marPcs}</span>  || '-'))
           
@@ -149,6 +159,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "marCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.marCoeff}</span>  || '-'))
           
@@ -165,6 +177,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "aprPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.aprPcs}</span>  || '-'))
           
@@ -173,6 +187,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "aprCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
@@ -189,6 +205,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "mayPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
           
@@ -197,6 +215,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "mayCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.mayCoeff}</span>  || '-'))
           
@@ -214,6 +234,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "junPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.junPcs}</span>  || '-'))
           
@@ -222,6 +244,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "junCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.junCoeff}</span>  || '-'))
           
@@ -239,6 +263,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "julPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.julPcs}</span>  || '-'))
           
@@ -247,6 +273,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "julCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.julCoeff}</span>  || '-'))
           
@@ -264,6 +292,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "augPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.augPcs}</span>  || '-'))
           
@@ -272,6 +302,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "augCoeff",
+          width:150,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.augCoeff}</span>  || '-'))
           
@@ -288,6 +320,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "sepPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.sepPcs}</span>  || '-'))
           
@@ -296,6 +330,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "sepCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.sepCoeff}</span>  || '-'))
           
@@ -312,6 +348,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "octPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.octPcs}</span>  || '-'))
           
@@ -320,6 +358,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "octCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.octCoeff}</span>  || '-'))
           
@@ -336,6 +376,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "novPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.novPcs}</span>  || '-'))
           
@@ -344,6 +386,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "novCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.novCoeff}</span>  || '-'))
           
@@ -360,6 +404,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "decPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.decPcs}</span>  || '-'))
           
@@ -368,6 +414,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "decCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.decCoeff}</span>  || '-'))
           
@@ -380,12 +428,14 @@ export const WarehouseReport = () => {
     {
       // title: "Total In PCs",
       dataIndex: "totalPcs",
-     
+      width:100,
+      align:"right",
     },
     {
       // title: "Total In Coeff",
       dataIndex: "totalCoeff",
-     
+      width:100,
+      align:"right",
     },
   ]
   const columns5: any = [
