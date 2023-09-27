@@ -559,31 +559,31 @@ export function DocumentUploadForm() {
     //   ),
     // },
 
-    {
-      title: "Quotation",
-      dataIndex: "quotation",
-      key: "quotation",
-      render: (price) =>
-        <div style={{ textAlign: "right" }}>
-          {price !== undefined && price !== null ? `${price}` : "0"}
-        </div>
-    },
-    {
-      title: "Variance",
-      dataIndex: "variance",
-      key: "variance",
-      render: (text, record) => {
-        const unitPrice = record.unitPrice || 0;
-        const quotation = record.quotation || 0;
-        const variance = unitPrice - quotation;
+    // {
+    //   title: "Quotation",
+    //   dataIndex: "quotation",
+    //   key: "quotation",
+    //   render: (price) =>
+    //     <div style={{ textAlign: "right" }}>
+    //       {price !== undefined && price !== null ? `${price}` : "0"}
+    //     </div>
+    // },
+    // {
+    //   title: "Variance",
+    //   dataIndex: "variance",
+    //   key: "variance",
+    //   render: (text, record) => {
+    //     const unitPrice = record.unitPrice || 0;
+    //     const quotation = record.quotation || 0;
+    //     const variance = unitPrice - quotation;
 
-        return (
-          <div style={{ textAlign: variance === 0 ? "center" : "right" }}>
-            {variance !== undefined && variance !== null ? `${variance}` : "-"}
-          </div>
-        );
-      }
-    },
+    //     return (
+    //       <div style={{ textAlign: variance === 0 ? "center" : "right" }}>
+    //         {variance !== undefined && variance !== null ? `${variance}` : "-"}
+    //       </div>
+    //     );
+    //   }
+    // },
     // render: (variance, record) => (
     //   <div style={{ textAlign: "right" }}>
     //     {
@@ -2097,7 +2097,7 @@ export function DocumentUploadForm() {
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </Col>
-                <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
                     htmlFor="variance"
                     style={{ color: "black", fontWeight: "bold" }}
@@ -2111,7 +2111,7 @@ export function DocumentUploadForm() {
                     value={variance}
                     onChange={(e) => setVariance(e.target.value)}
                   />
-                </Col>
+                </Col> */}
               </Row>
 
               <Row gutter={12} style={{ marginTop: "10px" }}></Row>
