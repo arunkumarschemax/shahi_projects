@@ -117,7 +117,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.janPcs}</span> || "-"
+              (item: any) => <span>{item.janPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -128,7 +128,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.janCoeff}</span> || "-"
+              (item: any) => <span>{item.janCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -143,7 +143,7 @@ const childColumns1: any = [
           render: (text: any, record: any) => {
             return record.pcsData.map(
               (item: any) => 
-              <span>{item.febPcs}</span> || "-"
+              <span>{item.febPcs.toLocaleString()}</span> || "-"
 
             );
           },
@@ -155,7 +155,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.febCoeff}</span> || "-"
+              (item: any) => <span>{item.febCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -170,7 +170,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.marPcs}</span> || "-"
+              (item: any) => <span>{item.marPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -181,7 +181,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.marCoeff}</span> || "-"
+              (item: any) => <span>{item.marCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -193,7 +193,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.aprPcs}</span> || "-"
+              (item: any) => <span>{item.aprPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -204,7 +204,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.janPcs}</span> || "-"
+              (item: any) => <span>{item.aprPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -222,7 +222,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.janPcs}</span> || "-"
+              (item: any) => <span>{item.mayPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -233,7 +233,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.mayCoeff}</span> || "-"
+              (item: any) => <span>{item.mayCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -251,7 +251,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.junPcs}</span> || "-"
+              (item: any) => <span>{item.junPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -262,7 +262,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.junCoeff}</span> || "-"
+              (item: any) => <span>{item.junCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -280,7 +280,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.julPcs}</span> || "-"
+              (item: any) => <span>{item.julPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -291,7 +291,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.julCoeff}</span> || "-"
+              (item: any) => <span>{item.julCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -309,7 +309,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.augPcs}</span> || "-"
+              (item: any) => <span>{item.augPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -320,7 +320,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.augCoeff}</span> || "-"
+              (item: any) => <span>{item.augCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -338,7 +338,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.sepPcs}</span> || "-"
+              (item: any) => <span>{item.sepPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -349,7 +349,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.sepCoeff}</span> || "-"
+              (item: any) => <span>{item.sepCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -367,7 +367,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.octPcs}</span> || "-"
+              (item: any) => <span>{item.octPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -378,7 +378,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.octCoeff}</span> || "-"
+              (item: any) => <span>{item.octCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -396,7 +396,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.novPcs}</span> || "-"
+              (item: any) => <span>{item.novPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -407,7 +407,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.novCoeff}</span> || "-"
+              (item: any) => <span>{item.novCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -425,7 +425,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.decPcs}</span> || "-"
+              (item: any) => <span>{item.decPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -436,7 +436,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.decCoeff}</span> || "-"
+              (item: any) => <span>{item.decCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -446,14 +446,19 @@ const childColumns1: any = [
       // title: "Total In PCs",
       dataIndex: "totalPcs",
       align:"right",
-      width:100
-
+      width:100,
+      render: (text: any, record: any) => {
+        return record.totalPcs ? record.totalPcs.toLocaleString() :0
+      },
     },
     {
       // title: "Total In Coeff",
       dataIndex: "totalCoeff",
       align:"right",
-      width:100
+      width:100,
+      render: (text: any, record: any) => {
+        return record.totalCoeff?record.totalCoeff.toLocaleString() :0
+      },
     },
   ];
   const columns5: any = [
@@ -858,31 +863,31 @@ const childColumns1: any = [
               <span/> <span/><span/><span/><span/><span/>
               <span/> <span/><span/><span/><span/><span/>
               <span/> <span/><span/><span/>
-             {janPre}<span/><span/> <span/><span/><span/><span/><span/><span/> {janLat}
+             {janPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/> {janLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/> 
-             {febPre}<span/><span/> <span/><span/><span/><span/>{febLat}
+             {febPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/>{febLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-             {marPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{marLat}
+             {marPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{marLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-             {aprPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/> {aprLat}
+             {aprPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/> {aprLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-             {mayPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {mayLat}
+             {mayPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {mayLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-             {junPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{julLat}
+             {junPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{julLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-             {julPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {julLat}
+             {julPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {julLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-             {augPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{aprLat}
+             {augPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{aprLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>
-             {sepPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{sepLat}
+             {sepPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{sepLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-             {octPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{octLat}
+             {octPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{octLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-             {novPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{novLat}
+             {novPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{novLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-             {decPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{decLat}
+             {decPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{decLat.toLocaleString()}
              <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-             {totalPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{totalLat}
+             {totalPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{totalLat.toLocaleString()}
             
             </Space>
           </div>
@@ -933,9 +938,7 @@ const childColumns1: any = [
                             {e.itemName}
                           </Option>
                         ))}
-                        {/* <Option key='new' value="NEW">NEW</Option>
-                                        <Option key='unaccepted' value="UNACCEPTED">UNACCEPTED</Option> */}
-                      </Select>
+                        </Select>
                     </Form.Item>
                   </div>
                 </Col>

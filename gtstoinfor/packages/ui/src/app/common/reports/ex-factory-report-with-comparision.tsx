@@ -105,7 +105,7 @@ export const ExFactoryReportWithComparision = () => {
           align:"right",
 
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.janPcs.toLocaleString()}</span>  || '-'))
           
           }
         },
@@ -115,7 +115,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.janCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.janCoeff.toLocaleString()}</span>  || '-'))
           
           }
         
@@ -128,7 +128,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.febPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.febPcs.toLocaleString()}</span>  || '-'))
           
           }
         },
@@ -138,7 +138,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.febCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.febCoeff.toLocaleString()}</span>  || '-'))
           
           }
        
@@ -151,7 +151,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.marPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.marPcs.toLocaleString()}</span>  || '-'))
           
           }
         },
@@ -161,7 +161,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.marCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.marCoeff.toLocaleString()}</span>  || '-'))
           
           }
         
@@ -174,7 +174,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.aprPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.aprPcs.toLocaleString()}</span>  || '-'))
           
           }
         },
@@ -184,7 +184,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.aprCoeff.toLocaleString()}</span>  || '-'))
           
           }
         
@@ -197,7 +197,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.mayPcs.toLocaleString()}</span>  || '-'))
           
           }
         },
@@ -207,7 +207,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.mayCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.mayCoeff.toLocaleString()}</span>  || '-'))
           
           }
         
@@ -221,7 +221,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.junPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.junPcs.toLocaleString()}</span>  || '-'))
           
           }
         },
@@ -231,7 +231,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.junCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.junCoeff.toLocaleString()}</span>  || '-'))
           
           }
        
@@ -245,7 +245,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.julPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.julPcs.toLocaleString()}</span>  || '-'))
           
           }
         },
@@ -255,7 +255,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.julCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.julCoeff.toLocaleString()}</span>  || '-'))
           
           }
        
@@ -267,7 +267,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.augPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.augPcs.toLocaleString()}</span>  || '-'))
           
           }
         },
@@ -277,7 +277,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.augCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.augCoeff.toLocaleString()}</span>  || '-'))
           
           }
        
@@ -289,7 +289,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.sepPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.sepPcs.toLocaleString()}</span>  || '-'))
           
           }
         },
@@ -299,7 +299,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.sepCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.sepCoeff.toLocaleString()}</span>  || '-'))
           
           }
        
@@ -312,7 +312,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.octPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.octPcs.toLocaleString()}</span>  || '-'))
           
           },
         },
@@ -322,7 +322,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.octCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.octCoeff.toLocaleString()}</span>  || '-'))
           
           }
        
@@ -334,7 +334,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.novPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.novPcs.toLocaleString()}</span>  || '-'))
           
           }
         },
@@ -344,7 +344,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.novCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.novCoeff.toLocaleString()}</span>  || '-'))
           
           },
        
@@ -356,7 +356,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.decPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =><span>{item.decPcs.toLocaleString()}</span>  || '-'))
           
           }
         },
@@ -366,7 +366,7 @@ export const ExFactoryReportWithComparision = () => {
           width:100,
           align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.decCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =><span>{item.decCoeff.toLocaleString()}</span>  || '-'))
           
           }
 
@@ -376,13 +376,17 @@ export const ExFactoryReportWithComparision = () => {
       // title: "Total Previous",
       dataIndex: "totalPcs",
    align:"right",
-    //  width:100
-    },
+   render: (text: any, record: any) => {
+    return record.totalPcs ? record.totalPcs.toLocaleString() :0
+  },    },
     {
       // title: "Total Latest",
       dataIndex: "totalCoeff",
       align:"right",
-      width:150
+      width:150,
+      render: (text: any, record: any) => {
+        return record.totalCoeff ? record.totalCoeff.toLocaleString() :0
+      },
     },
   ]
   const columns5: any = [
@@ -772,32 +776,32 @@ const getTableSummary = (pageData) => {
             <span/> <span/><span/><span/><span/><span/>
             <span/> <span/><span/><span/><span/><span/>
             <span/> <span/><span/><span/><span/><span/>
-           {janPre}<span/><span/> <span/><span/><span/><span/><span/><span/> {janLat}
+           {janPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/> {janLat.toLocaleString()}
            <span/><span/> <span/><span/><span/><span/><span/><span/> 
-           {febPre}<span/><span/> <span/><span/><span/><span/>{febLat}
+           {febPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/>{febLat.toLocaleString()}
            <span/><span/> <span/><span/><span/><span/><span/><span/><span/>
-           {marPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{marLat}
+           {marPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{marLat.toLocaleString()}
            <span/><span/> <span/><span/><span/><span/><span/><span/><span/>
-           {aprPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/> {aprLat}
+           {aprPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/> {aprLat.toLocaleString()}
            <span/><span/> <span/><span/><span/><span/><span/><span/><span/>
-           {mayPre}<span/><span/> <span/><span/><span/><span/><span/><span/> {mayLat}
+           {mayPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/> {mayLat.toLocaleString()}
            <span/><span/> <span/><span/><span/><span/><span/><span/><span/>
-           {junPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{julLat}
+           {junPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{julLat.toLocaleString()}
            <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-           {julPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {julLat}
+           {julPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {julLat.toLocaleString()}
            <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-           {augPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/>{augLat}
+           {augPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/>{augLat.toLocaleString()}
            <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>
-           {sepPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{sepLat}
+           {sepPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{sepLat.toLocaleString()}
            <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-           {octPre}<span/><span/><span/><span/><span/><span/><span/>{octLat}
+           {octPre.toLocaleString()}<span/><span/><span/><span/><span/><span/><span/>{octLat.toLocaleString()}
            <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-           {novPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{novLat}
+           {novPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{novLat.toLocaleString()}
            <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
-           {decPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{decLat}
+           {decPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{decLat.toLocaleString()}
            <span/><span/><span/>
            <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>
-            {totalPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{totalLat}
+            {totalPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{totalLat.toLocaleString()}
 
           </Space>
         </div>
