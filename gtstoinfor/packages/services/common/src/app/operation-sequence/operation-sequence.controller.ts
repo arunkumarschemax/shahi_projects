@@ -21,10 +21,10 @@ export class OperationSequenceController{
       }
     }
 
-    @Post('/getInfoByItemCode')
-    async getInfoByItemCode(@Body() req:any): Promise<CommonResponseModel> {
+    @Post('/getInfoByStyleCode')
+    async getInfoByStyleCode(@Body() req:any): Promise<CommonResponseModel> {
     try {
-        return await this.operationGroupsService.getInfoByItemCode(req);
+        return await this.operationGroupsService.getInfoByStyleCode(req);
       } catch (error) {
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
@@ -39,10 +39,10 @@ export class OperationSequenceController{
       }
     }
 
-    @Post('/getOperationSequenceInfoByItemCode')
-    async getOperationSequenceInfoByItemCode(@Body() req:any): Promise<CommonResponseModel> {
+    @Post('/getOperationSequenceInfoByStyleCode')
+    async getOperationSequenceInfoByStyleCode(@Body() req:any): Promise<CommonResponseModel> {
     try {
-        return await this.operationGroupsService.getOperationSequenceInfoByItemCode(req);
+        return await this.operationGroupsService.getOperationSequenceInfoByStyleCode(req);
       } catch (error) {
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }

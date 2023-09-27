@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
 import { Item } from "../items/item-entity";
+import { Style } from "../style/dto/style-entity";
 
 @Entity('operation_sequence')
 export class OperationSequence{
@@ -12,9 +13,9 @@ export class OperationSequence{
 
     @Column('varchar',{
         nullable:false,
-        name:'item_code'
+        name:'style'
     })
-    itemCode: string;
+    style: string;
 
     @Column('varchar',{
         nullable:false,
@@ -83,9 +84,13 @@ export class OperationSequence{
     @JoinColumn({ name:"operation_id"})
     operationsInfo: Operations;
 
-    @ManyToOne(type=>Item, item=>item.itemsequenceInfo,{  nullable:false, })
-    @JoinColumn({ name:"item_id"})
-    itemInfo: Item;
+    // @ManyToOne(type=>Item, item=>item.itemsequenceInfo,{  nullable:false, })
+    // @JoinColumn({ name:"item_id"})
+    // itemInfo: Item;
+
+    @ManyToOne(type=>Style, st=>st.itemsequenceInfo,{  nullable:false, })
+    @JoinColumn({ name:"style_id"})
+    styleInfo: Style;
 
 
 }

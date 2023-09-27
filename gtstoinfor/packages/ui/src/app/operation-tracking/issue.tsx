@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Segmented, Button, Space, Card, Form, Col, Select, Table, Input, Divider } from 'antd';
-import { OperationTrackingService } from '@project-management-system/shared-services';
+import { OperationTrackingService, StyleService } from '@project-management-system/shared-services';
 
 
 const IssueScreen = () => {
@@ -12,19 +12,26 @@ const IssueScreen = () => {
     // const [issueQuantityData,setIssueQuantityData] = useState<any[]>([])
     const [issueQtyData,setIssueQtyData] = useState<any[]>([])
     const [operData,setOperData] = useState<any>([])
-
+    const styleService = new StyleService()
+    const [style,setStyle] = useState<any[]>([])
 
 
      const services = new OperationTrackingService ()
      useEffect(()=>{
      getItemsCode()
-     
+     getStyle()
      },[])
   
 
      const getItemsCode = () =>{
       services.getAllitemsCode().then(res=>{
         setItemsCodeData(res)
+      })
+     }
+
+     const getStyle = () => {
+      styleService.getAllActiveStyle().then(res => {
+        setStyle(res.data)
       })
      }
 
@@ -47,6 +54,21 @@ const IssueScreen = () => {
         operations.push(operation.operationName);
       }
   }
+
+  const generateSegmentedOptions = () => {
+    for (const item of operationName) {
+      return item.operation.map((operation, index) => (
+          {
+        label: <b>{operation.operationName}</b>, // Change this to the appropriate property from your data
+        value: operation.operationName,    // Change this to the appropriate property from your data
+        key: index.toString(),           // Use a unique key for each option
+      }
+      ));
+    }
+  };
+
+  const segmentedOptions = generateSegmentedOptions();
+
 
 console.log(operations,"////")
 
@@ -157,24 +179,24 @@ const onButtonChange = (rowData) => {
 // console.log(issueQuantityData,"*********")
 
   return (
-    <Card title="Issued Quantity"  >
+    <Card title="Operation Issues"  className='card-header'>
       <Form  form ={form} >
          <Col
           xs={{ span: 24 }}
           sm={{ span: 24 }}
           md={{ span: 4 }}
           lg={{ span: 4 }}
-          xl={{ span: 4 }}
+          xl={{ span: 6 }}
         >
-          <Form.Item name="Item" label="Items" 
-            rules={[{ required: true, message: "Items is required" }]}
+          <Form.Item name="Item" label="Style" 
+            // rules={[{ required: true, message: "Style is required" }]}
 
           >
-            <Select placeholder="Items" onChange={getData} 
+            <Select placeholder="Style" onChange={getData} 
              >
-            {itemCodeData.map(res=>(
-              <option key={res.itemsId} value={res.itemsId}>
-               {res.itemsCode}
+            {style.map(res=>(
+              <option key={res.styleId} value={res.styleId}>
+               {res.style}-{res.description}
               </option>
             ))}
              
@@ -182,7 +204,8 @@ const onButtonChange = (rowData) => {
           </Form.Item>
         </Col>
        </Form>
-      <Segmented options={operations}  onChange={onChange}  className="ant-segmented-item-selected" 
+      <Segmented options={segmentedOptions}  onChange={onChange}  style={{backgroundColor:'#dde5b6'}}
+      // className="ant-segmented-item-selected" 
        />
        {operationData && operationData.length > 0 ?  (
       <Table columns={column} dataSource={operationData} pagination={false}/>
