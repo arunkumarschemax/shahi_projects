@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { CalendarOutlined, DeleteOutlined, EditOutlined, UploadOutlined } from "@ant-design/icons";
-import { AllScanDto } from "@xpparel/shared-models";
+import { AllScanDto, PriceListRequestModel } from "@xpparel/shared-models";
 import {
   BuyersService,
+  PricesService,
   SharedService,
   VendorService,
 } from "@xpparel/shared-services";
@@ -44,6 +45,7 @@ interface Item {
   Charge: string;
   variance: string;
   unitPrice: string;
+  totalvalue: string;
   // unitPrice: string;
 }
 
@@ -58,6 +60,7 @@ export function UploadDocumentForm() {
   const [extractedData, setExtractedData] = useState<any>([]);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isQuotationDataSet, setIsQuotationDataSet] = useState(false);
 
   const [hsnData, setHsnData] = useState([]);
   const [buttonText, setButtonText] = useState("Add");
@@ -70,9 +73,12 @@ export function UploadDocumentForm() {
   const [Charge, setCharge] = useState("");
   const [variance, setVariance] = useState("");
   const [unitquantity, setUnitquantity] = useState("");
+  const [amount, setAmount] = useState("");
   const [quotation, setQuotation] = useState("");
   const [unitPrice, setunitPrice] = useState("");
   const [originalUnitPrice, setOriginalUnitPrice] = useState("");
+  const [originalQuotation, setOriginalQuotation] = useState("");
+
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [zoomFactor, setZoomFactor] = useState(1);
@@ -102,15 +108,17 @@ export function UploadDocumentForm() {
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [data1, setData1] = useState<any[]>([]);
   const [data2, setData2] = useState<any[]>([]);
+  const [price, setPrice] = useState<any[]>([]);
 
   const services = new VendorService();
   const buyers = new BuyersService();
   const service = new SharedService();
+  const venService = new PricesService();
 
   useEffect(() => {
     let invoiceAmount = 0;
     extractedData?.forEach(element => {
-      invoiceAmount += Number(element.Charge);
+      invoiceAmount += Number(element.amount);
     });
     setInnvoiceamount(invoiceAmount.toFixed(2));
   }, [extractedData])
@@ -128,7 +136,6 @@ export function UploadDocumentForm() {
     getData1();
   }, []);
 
-
   const getData1 = () => {
     services
       .getAllVendors()
@@ -143,6 +150,44 @@ export function UploadDocumentForm() {
         console.log(err.message);
       });
   };
+
+  useEffect(() => {
+    if (vendor)
+      getVendorPrice(vendor);
+  }, [vendor]);
+
+  const getVendorPrice = (vendorName: string) => {
+    const req = new PriceListRequestModel(vendorName);
+    venService.getPriceListByVendor(req).then((res) => {
+      if (res.status) {
+        setPrice(res.data);
+      } else {
+        setPrice([]);
+      }
+    })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+  useEffect(() => {
+    if (extractedData.length && price.length && extractionCompleted){
+      const extractedDataClone=[];
+      extractedData.forEach(element => {
+     const obj=   price.find(pr=>pr.hsnCode==element.HSN && pr.serviceDescription==element.description)
+     element.quotation=obj?.unitPrice
+     extractedDataClone.push(element)
+      });
+      if(!isQuotationDataSet){
+        setIsQuotationDataSet(true);
+        setExtractedData(extractedDataClone);
+      }
+    }
+}, [price, extractedData,extractionCompleted])
+
+
+
+
 
   useEffect(() => {
     getData2();
@@ -172,6 +217,18 @@ export function UploadDocumentForm() {
   const handleMouseUp = () => {
     setIsDragging(false);
   };
+
+  // useEffect(() => {
+  //   if (extractedData.length && price.length && extractionCompleted) {
+  //     const extractedDataClone = [];
+      
+  //     extractedData.forEach(element => {
+  //       const vendor = element.vendor; 
+  //       const Quotation = element.Quotation;  
+  //       extractedDataClone.push({ vendor, Quotation });
+  //     });
+  //   }
+  // }, [price, extractedData, extractionCompleted]);
 
   const handleMouseMove = (e) => {
     if (isDragging) {
@@ -304,7 +361,7 @@ export function UploadDocumentForm() {
       !variance &&
       !unitquantity &&
       !unitPrice &&
-      !quotation
+      !amount 
     ) {
       return;
     }
@@ -315,9 +372,11 @@ export function UploadDocumentForm() {
       Taxtype,
       Taxamount,
       Charge,
+      amount,
+      quotation:isEditing ? originalQuotation:quotation,
       Taxpercentage: Taxpercentage,
       unitquantity,
-      unitPrice: isEditing ? originalUnitPrice : unitPrice, 
+      unitPrice: isEditing ? originalUnitPrice : unitPrice,
       variance,
     };
 
@@ -344,10 +403,10 @@ export function UploadDocumentForm() {
     setTaxamount("");
     setCharge("");
     setTaxPercentage("");
-    // setVariance("");
+    setAmount("");
+    setVariance("");
     setUnitquantity("");
     setunitPrice("");
-    setQuotation("");
   };
 
   const handleEdit = (item) => {
@@ -368,9 +427,10 @@ export function UploadDocumentForm() {
     setCharge(editedCharge || "0");
     setTaxPercentage(item.Taxpercentage || "0");
     setVariance(item.variance || "-");
+    setAmount(item.amount || "0");
     setUnitquantity(item.unitquantity || "0");
-    setQuotation(item.quotation || "0");
     setOriginalUnitPrice(item.unitPrice || "0");
+    setOriginalQuotation(item.quotation || "0");
     setIsEditing(true);
     setEditingItem(item);
     setButtonText("Update");
@@ -390,7 +450,7 @@ export function UploadDocumentForm() {
     setTaxPercentage("");
     setVariance("");
     setUnitquantity("");
-    setQuotation("");
+    setAmount("");
     setunitPrice("");
     setIsEditing(false);
     setEditingItem(null);
@@ -413,22 +473,45 @@ export function UploadDocumentForm() {
       render: (HSN) => (HSN !== undefined && HSN !== null ? HSN : "0"),
     },
     {
+      title: "Unit Quantity",
+      dataIndex: "unitquantity",
+      key: "unitquantity",
+      render: (unitquantity) => (
+        <div style={{ textAlign: "right" }}>
+          {typeof unitquantity === 'undefined' || unitquantity === null || unitquantity === ''
+            ? "1"
+            : unitquantity}
+        </div>
+      ),
+    },
+    {
+      title: "Unit Price",
+      dataIndex: "unitPrice",
+      key: "unitPrice",
+      render: (unitPrice) =>
+        <div style={{ textAlign: "right" }}>
+          {unitPrice !== undefined && unitPrice !== null ? unitPrice : "0"}
+        </div>
+    },
+    {
       title: "Tax Type",
       dataIndex: "Taxtype",
       key: "Taxtype",
       render: (Taxtype) => <div style={{ textAlign: "center" }}>
-          {Taxtype !== undefined && Taxtype !== null ? Taxtype : "—"}
+        {Taxtype !== undefined && Taxtype !== null ? Taxtype : "—"}
       </div>
     },
     {
-      title: "Tax Amount",
-      dataIndex: "Taxamount",
-      key: "Taxamount",
-      render: (Taxamount) => (
+      title: "Charge",
+      dataIndex: "Charge",
+      key: "Charge",
+      render: (Charge, record, index) => (
         <div style={{ textAlign: "right" }}>
-          {Taxamount !== undefined && Taxamount !== null
-            ? parseFloat(Taxamount).toFixed(2)
-            : "0"}
+          {record.Taxamount !== null && record.Taxpercentage !== null
+            ? `${(record.Taxamount * 100 / record.Taxpercentage).toFixed(2)}`
+            : record.Taxamount !== null
+              ? `${record.Taxamount}`
+              : `${Charge || "0"}`}
         </div>
       ),
     },
@@ -447,59 +530,58 @@ export function UploadDocumentForm() {
       ),
     },
     {
-      title: "Unit Quantity",
-      dataIndex: "unitquantity",
-      key: "unitquantity",
-      render: (unitquantity) => (
+      title: "Tax Amount",
+      dataIndex: "Taxamount",
+      key: "Taxamount",
+      render: (Taxamount) => (
         <div style={{ textAlign: "right" }}>
-          {typeof unitquantity === 'undefined' || unitquantity === null || unitquantity === ''
-            ? "1"
-            : unitquantity}
+          {Taxamount !== undefined && Taxamount !== null
+            ? parseFloat(Taxamount).toFixed(2)
+            : "0"}
         </div>
       ),
     },
-    {
-      title: "Charge",
-      dataIndex: "Charge",
-      key: "Charge",
-      render: (Charge, record, index) => (
-        <div style={{ textAlign: "right" }}>
-          {record.Taxamount !== null && record.Taxpercentage !== null
-            ? `${(record.Taxamount * 100 / record.Taxpercentage).toFixed(2)}`
-            : record.Taxamount !== null
-              ? `${record.Taxamount}`
-              : `${Charge || "0"}`}
-        </div>
-      ),
-    },
+  
+   
+  
+  
+  
+    // {
+    //   title: "Amount",
+    //   dataIndex: "amount",
+    //   key: "amount",
+    //   render: (amount) => (
+    //     <div style={{ textAlign: "right" }}>
+    //       {amount !== undefined && amount !== null ? `${amount}` : "0"}
+    //     </div>
+    //   ),
+    // },
+   
     {
       title: "Quotation",
       dataIndex: "quotation",
       key: "quotation",
-      render: (quotation) => (
+      render: (price) =>
         <div style={{ textAlign: "right" }}>
-          {quotation !== undefined && quotation !== null ? `${quotation}` : "0"}
-        </div>
-      ),
-    },
-    {
-      title: "Unit Price",
-      dataIndex: "unitPrice",
-      key: "unitPrice",
-      render: (unitPrice) =>
-        <div style={{ textAlign: "right" }}>
-          {unitPrice !== undefined && unitPrice !== null ? unitPrice : "0"}
+          {price !== undefined && price !== null ? `${price}` : "0"}
         </div>
     },
     {
       title: "Variance",
       dataIndex: "variance",
       key: "variance",
-      render: (variance) => (
-        <div style={{ textAlign: variance === '-' ? "center" : "right" }}>
-          {variance !== undefined && variance !== null ? `${variance}` : "-"}
-        </div>
-      )
+      render: (text, record) => {
+        const unitPrice = record.unitPrice || 0;
+        const quotation = record.quotation || 0;
+        const variance = unitPrice - quotation;
+    
+        return (
+          <div style={{ textAlign: variance === 0 ? "center" : "right" }}>
+            {variance !== undefined && variance !== null ? `${variance}` : "-"}
+          </div>
+        );
+      }
+    },
       // render: (variance, record) => (
       //   <div style={{ textAlign: "right" }}>
       //     {
@@ -520,7 +602,7 @@ export function UploadDocumentForm() {
       //     }
       //   </div>
       // ),
-    },
+ 
     {
       title: "Action",
       dataIndex: "action",
@@ -1078,6 +1160,7 @@ export function UploadDocumentForm() {
           description: extractedData[hsnId + 1].content,
           Charge: extractedData[hsnId - 10].content,
           unitPrice: extractedData[hsnId - 2].content,
+          amount: extractedData[hsnId - 10].content,
           unitquantity: extractedData[hsnId - 1].content,
           Taxpercentage: extractedData[hsnId - 5].content,
         };
