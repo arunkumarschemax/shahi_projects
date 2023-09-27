@@ -567,7 +567,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPpmProductCodeForOrderCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.productCode,dpom.id`)
-            .where(`dpom.dpom_item_line_status IN('Accepted','Unaccepted')`)
+            .where(`dpom.dpom_item_line_status IN('Unaccepted')`)
             .groupBy(`dpom.productCode`)
         return await query.getRawMany();
     }
