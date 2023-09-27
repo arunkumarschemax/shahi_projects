@@ -49,7 +49,7 @@ interface Item {
   // unitPrice: string;
 }
 
-export function UploadDocumentForm() {
+export function DocumentUploadForm() {
   const [GstForm] = Form.useForm();
   const [uploadForm] = Form.useForm();
   const navigate = useNavigate();
@@ -2165,4 +2165,4 @@ export function UploadDocumentForm() {
   );
 }
 
-export default UploadDocumentForm;
+export default DocumentUploadForm;

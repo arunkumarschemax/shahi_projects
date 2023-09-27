@@ -6,11 +6,11 @@ import Login from "./layout/login/login"
 import View from "./components/doc-extract/doc-extract-view"
 import VendorGrid from "./components/vendor-view/vendor-view"
 import VendorBranchInfoGrid from "./components/vendor-view/detail-view"
-import DocumentUploadForm from "./components/doc-extract/document-upload-form"
 import ScanDetailView from "./components/doc-extract/details-views"
 import PriceView from "./components/vendor-price/price-view"
 import PriceForm from "./components/vendor-price/price-form"
 import BuyersView from "./components/buyer-grid/buyer-grid-view"
+import { DocumentUploadForm } from "./components"
 
 
 export const AppRoutes = () => {

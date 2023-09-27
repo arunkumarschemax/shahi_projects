@@ -228,12 +228,12 @@ function ScanDetailView() {
     },
     {
       title: "Service Code",
-      dataIndex: 'Variance',
-      key: "Variance",
+      dataIndex: 'seviceCode',
+      key: "seviceCode",
       render : (text,record,index) => {
         return (
             <span>
-              {record.Variance ? (Number(record.Variance*record.Variance)+Number(record.Variance)) : '-'}
+              {record.seviceCode ? record.seviceCode   : '-'}
 
             </span>
         )
@@ -242,12 +242,12 @@ function ScanDetailView() {
     },
     {
       title: "Service Description",
-      dataIndex: 'Variance',
-      key: "Variance",
+      dataIndex: 'description',
+      key: "description",
       render : (text,record,index) => {
         return (
             <span>
-              {record.Variance ? (Number(record.Variance*record.Variance)+Number(record.Variance)) : '-'}
+              {record.description ? record.description : '-'}
 
             </span>
         )
@@ -285,14 +285,14 @@ function ScanDetailView() {
     
     {
       title: 'Unit Price',
-      dataIndex: 'quotation',
-      key: "quotation",
-      ...getColumnSearchProps("quotation"),
-      sorter: (a, b) => a.quotation.localeCompare(b.quotation),
+      dataIndex: 'unitPrice',
+      key: "unitPrice",
+      ...getColumnSearchProps("unitPrice"),
+      sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
       render : (text,record) => {
         return (
             <span>
-                {record.quotation ? (record.quotation) : '-'}
+                {record.unitPrice ? (record.unitPrice) : '-'}
             </span>
         )
     }
@@ -318,14 +318,14 @@ function ScanDetailView() {
     },
     {
       title: 'Subject Amount',
-      dataIndex: 'quotation',
-      key: "quotation",
+      dataIndex: 'unitPrice',
+      key: "unitPrice",
       // ...getColumnSearchProps("SubjectAmount"),
       // sorter: (a, b) => a.SubjectAmount.localeCompare(b.SubjectAmount),
       render : (text,record) => {
         return (
             <span>
-                {record.quotation ? (record.quotation*record.unitquantity).toFixed(2) : '-'}
+                {record.unitPrice ? (record.unitPrice*record.unitquantity).toFixed(2) : '-'}
             </span>
         )
     }
@@ -349,7 +349,7 @@ function ScanDetailView() {
    
     {
       title: 'Total Amount',
-      dataIndex: 'quotation',
+      dataIndex: 'unitPrice',
       key: "unitquantity",
       // ...getColumnSearchProps("unitquantity"),
       // sorter: (a, b) => a.unitquantity.localeCompare(b.unitquantity),
@@ -358,7 +358,7 @@ function ScanDetailView() {
       render : (text,record,index) => {
         return (
             <span>
-              {record.quotation ? (Number(record.quotation*record.unitquantity)+Number(record.Taxamount)).toFixed(2) : '-'}
+              {record.unitPrice ? (Number(record.unitPrice*record.unitquantity)+Number(record.Taxamount)).toFixed(2) : '-'}
 
             </span>
         )
@@ -520,8 +520,8 @@ function ScanDetailView() {
           //   }
           // })
           pageData.forEach((record) => {
-            if (Number(record.quotation) && Number(record.unitquantity) && Number(record.Taxamount)) {
-              totalCost += Number(record.quotation * record.unitquantity) + Number(record.Taxamount);
+            if (Number(record.unitPrice) && Number(record.unitquantity) && Number(record.Taxamount)) {
+              totalCost += Number(record.unitPrice * record.unitquantity) + Number(record.Taxamount);
               setTotalAmount(totalCost)
             }
           });
