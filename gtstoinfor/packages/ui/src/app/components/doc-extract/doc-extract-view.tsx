@@ -233,17 +233,17 @@ export function DocView() {
         return <> {record.Vendor ? record.Vendor : "-"} </>;
       },
     },
-    {
-      title: "Buyer Name",
-      dataIndex: "buyerName",
-      key: "buyerName",
-      ...getColumnSearchProps("buyerName"),
-      align: "center",
-      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
-      render: (text: any, record: { buyerName: any }) => {
-        return <> {record.buyerName ? record.buyerName : "-"} </>;
-      },
-    },
+    // {
+    //   title: "Buyer Name",
+    //   dataIndex: "buyerName",
+    //   key: "buyerName",
+    //   ...getColumnSearchProps("buyerName"),
+    //   align: "center",
+    //   sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
+    //   render: (text: any, record: { buyerName: any }) => {
+    //     return <> {record.buyerName ? record.buyerName : "-"} </>;
+    //   },
+    // },
     {
       title: "GST",
       dataIndex: "GST",
