@@ -427,7 +427,7 @@ export function DocView() {
           </Row>
         </Row>
       </Form>
-      <Table size="small" dataSource={formdata} columns={columns} />
+      <Table size="small" dataSource={formdata} columns={columns} pagination={false}/>
     </Card>
   );
 }
