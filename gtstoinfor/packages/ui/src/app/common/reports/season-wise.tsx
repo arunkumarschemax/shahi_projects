@@ -28,6 +28,7 @@ const SeasonWiseReport = () => {
 
     const handleTabChange = (newTabKey) => {
       form.resetFields();
+      reportSS()
       setActiveTabKey(newTabKey)
   };
 
