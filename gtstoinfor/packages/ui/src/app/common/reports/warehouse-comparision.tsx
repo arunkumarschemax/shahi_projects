@@ -41,12 +41,12 @@ export const WareHouseComparision = () => {
   };
   const getData =()=>{
     const req = new YearReq(tab)    
-    service.getWareHouseComparisionData(req).then(res =>{
+    // service.getWareHouseComparisionData(req).then(res =>{
 
-      if(res.status){
-        setYear(res.data)
-      }
-    })
+    //   if(res.status){
+    //     setYear(res.data)
+    //   }
+    // })
     service.getWareHouseComparisionData(req).then(res =>{
       console.log(res,'res==========');
       if(res.status){
