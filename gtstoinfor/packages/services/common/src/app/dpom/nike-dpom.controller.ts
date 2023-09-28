@@ -65,6 +65,7 @@ export class DpomController {
     }
 
     @Post('/saveDIAPDFData')
+    @ApiBody({ type: DiaPDFDto })
     async saveDIAPDFData(@Body() req: any) {
         try {
             return await this.dpomService.saveDIAPDFData(req)

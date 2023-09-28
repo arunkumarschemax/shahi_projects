@@ -1440,7 +1440,7 @@ const FactoryPPMReport = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
-                            <Form.Item name="DPOMLineItemStatus" label="Factory Status">
+                            <Form.Item name="DPOMLineItemStatus" label="DPOM Line Item Status">
                                 <Select
                                     showSearch
                                     placeholder="Select Factory Status"

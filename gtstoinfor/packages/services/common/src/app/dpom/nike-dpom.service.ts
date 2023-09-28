@@ -434,6 +434,8 @@ export class DpomService {
             }
         } catch (error) {
             await transactionManager.releaseTransaction()
+            // console.log(transactionManager.releaseTransaction,"ew request")
+
             return new CommonResponseModel(false, 0, error)
         }
     }
