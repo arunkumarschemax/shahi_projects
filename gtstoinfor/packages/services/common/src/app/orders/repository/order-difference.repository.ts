@@ -16,4 +16,13 @@ export class OrderDifferenceRepository extends Repository<OrdersDifferenceEntity
         queryBuilder.where(`file_id = '${req.fileId}'`);
         await queryBuilder.delete().execute();
     }
+
+    async getOrderNumbers():Promise<any[]>{
+        const query = this.createQueryBuilder('o')
+            .select(`o.order_plan_number`)
+            .where(`o.column_name = 'order_plan_qty'`)
+            .groupBy(`o.order_plan_number`)
+            .orderBy(`o.order_plan_number`)
+        return await query.getRawMany()
+    }
 }

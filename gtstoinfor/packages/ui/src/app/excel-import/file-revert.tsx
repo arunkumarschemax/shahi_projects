@@ -108,24 +108,9 @@ export function FileRevert() {
         }];
 
         const items: TabsProps['items'] = [
+           
             {
               key: '1',
-              label: 'Trim Order',
-              children:  <Table
-              columns={columns}
-              dataSource={trimData}
-              className="custom-table-wrapper"
-              scroll={{ x: 1000 }}
-              pagination={{
-                  onChange(current, pageSize) {
-                      setPage(current);
-                      setPageSize(pageSize);
-                  },
-              }}
-              bordered />,
-            },
-            {
-              key: '2',
               label: 'Projection Order',
               children:   <Table
               columns={columns}
@@ -140,6 +125,22 @@ export function FileRevert() {
               }}
               bordered />,
             },
+            {
+                key: '2',
+                label: 'Trim Order',
+                children:  <Table
+                columns={columns}
+                dataSource={trimData}
+                className="custom-table-wrapper"
+                scroll={{ x: 1000 }}
+                pagination={{
+                    onChange(current, pageSize) {
+                        setPage(current);
+                        setPageSize(pageSize);
+                    },
+                }}
+                bordered />,
+              },
            
           ];
     return (

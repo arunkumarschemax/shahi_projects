@@ -18,3 +18,4 @@ export * from './item-data.dto';
 export * from './month-wise.dto';
 export * from './request'
 export * from './season-wise-report-req'
+export * from './compare-orders-filter-req'
