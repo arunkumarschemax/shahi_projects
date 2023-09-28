@@ -1,22 +1,22 @@
 export class PriceListDto {
     id: number;
-    style: string;
+    sampleCode: string;
     year: string;
-    destination:string;
+    business:string;
     seasonCode:string;
     currency:string;
-    price:string;
+    fobLocalCurrency:string;
     item?:string;
     createdUser?: string;
     isActive?:boolean
     versionFlag?: number;
     updatedUser?:string;
-    constructor( id:number,style: string, year: string,destination:string,
-        seasonCode:string,currency:string,    price:string, item?:string,       createdUser?:string,isActive?:boolean,versionFlag?: number,updatedUser?:string) {
+    constructor( id:number,sampleCode: string, year: string,business:string,
+        seasonCode:string,currency:string,    fobLocalCurrency:string, item?:string,       createdUser?:string,isActive?:boolean,versionFlag?: number,updatedUser?:string) {
       this.id = id;
-      this.style = style;
+      this.sampleCode = sampleCode;
       this.year = year;
-      this.destination = destination;
+      this.business = business;
       this.seasonCode = seasonCode;
       this.currency = currency;
       this.item = item;
@@ -24,7 +24,7 @@ export class PriceListDto {
       this.isActive = isActive;
       this.versionFlag = versionFlag;
       this.updatedUser = updatedUser;
-      this.price = price;
+      this.fobLocalCurrency = fobLocalCurrency;
     }
   }
   

@@ -1286,7 +1286,6 @@ async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
         }
         const monthData = DateMap.get(rec.item_cd).monthWiseData;
         const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
-if(!phase){
             const pcs: PcsDataDto[] = [];
             const coeff: CoeffDataDto[] = [];
            
@@ -1322,7 +1321,6 @@ pcs.push(
             novCoeff: rec.whMonth === 11 ? Number(orderQty) :Number(0),
             decCoeff: rec.whMonth === 12 ? Number(orderQty) :Number(0),
           })
-        }
         const totalPcs = pcs.reduce((total, item) => {
             return  + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
                 .filter(value => value !== 0) 

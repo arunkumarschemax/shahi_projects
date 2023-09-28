@@ -43,12 +43,6 @@ export const ExFactoryReportWithComparision = () => {
   const getData =()=>{
     const req = new YearReq(tab)    
     service.getExfactoryWithComparision(req).then(res =>{
-
-      if(res.status){
-        setYear(res.data)
-      }
-    })
-    service.getExfactoryWithComparision(req).then(res =>{
       console.log(res.data,'res==========');
       if(res.status){
         setData(res.data)
@@ -71,9 +65,69 @@ export const ExFactoryReportWithComparision = () => {
            
     return (
       <div>
-      <Space size={"large"}>
+      
+
+<table>
+  <tr >
+  {/* <th style={{position: 'relative',paddingRight: '1200px'}}>Production Plan Type Name</th> */}
+  <th colSpan={2} style={{ position: 'relative', right: '-110px' , }}>January</th>
+    <th colSpan={2} style={{ position: 'relative', right: '-30px', borderLeft: '1px solid black',borderRight: '1px solid black', }}>Febuary</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '50px' ,borderRight: '1px solid black', }}>March</th><br/>
+    <th colSpan={2} style={{ position: 'relative', right: '150px', borderRight: '1px solid black', }}>April</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '230px', borderRight: '1px solid black', }}>May</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '320px', borderRight: '1px solid black', }}>June</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '390px' ,borderRight: '1px solid black', }}>July</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '500px' ,borderRight: '1px solid black', }}>August</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '580px' ,borderRight: '1px solid black'}}>September</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '680px', borderRight: '1px solid black' }}>October</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '620px',borderRight: '1px solid black', }}>November</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '500px', }}>December</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
+
+  </tr>
+  <tr>
+  <td colSpan={26} style={{ borderBottom: '1px solid black' }}></td>
+</tr>
+  <tr>
+<td style={{paddingLeft:'10px',position:'relative',}}>Production Plan Type Name</td>
+    <td style={{right: '70px',position: 'relative', }}>(previous)</td>
+    <td style={{position: 'relative',right: '60px' }} >(latest)</td>
+    <td  style={{position: 'relative',right: '60px', }} >(previous)</td>
+    <td  style={{position: 'relative',right: '50px',}} >(latest)</td>
+    <td  style={{position: 'relative',right: '30px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '40px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '20px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '20px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '10px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '20px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '5px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '20px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-10px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-10px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '5px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '10px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-50px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-50px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-200px'}} >Total(previous)</td>
+    <td  style={{position: 'relative',right: '-300px'}} >Total(latest)</td>
+    
+  </tr>
+
+  <tr>
+    
+</tr>
+</table>
+
+      {/* <Space size={"large"}>
         <span/>
-       Production Plan Type Name<span>Jan(previous)</span><br/><span><span></span>Jan(latest)</span>
+       <span>Jan(previous)</span><br/><span><span></span>Jan(latest)</span>
        <span>Feb(previous)</span><br/><span>Feb(latest)</span>
         <span>Mar(previous)</span><br/><span>Mar(latest)</span>
         <span>Apr(previous)</span><span>Apr(latest)</span>
@@ -87,11 +141,12 @@ export const ExFactoryReportWithComparision = () => {
         <span>Dec(previous)</span><br/><span>Dec(latest)</span>
         <span>Total(previous)</span><br/><span>Total(latest)</span>
         <span></span><span></span>
-</Space>
+</Space> */}
       
       </div>
     );
   };
+
   const childColumns1: any = [
     {
       // title: "Production Plan Type Name",
@@ -101,7 +156,7 @@ export const ExFactoryReportWithComparision = () => {
     {
           // title: `Previous`,
           dataIndex: "janPcs",         
-           width:100,
+           width:60,
           align:"right",
 
           render: (text: any, record: any) => {
@@ -112,7 +167,7 @@ export const ExFactoryReportWithComparision = () => {
         {
           // title: `Latest`,
           dataIndex: "janCoeff",
-          width:100,
+          width:60,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.janCoeff.toLocaleString()}</span>  || '-'))
@@ -125,7 +180,7 @@ export const ExFactoryReportWithComparision = () => {
       
           // title: `Previous`,
           dataIndex: "febPcs",
-          width:100,
+          width:60,
           align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.febPcs.toLocaleString()}</span>  || '-'))
@@ -135,7 +190,7 @@ export const ExFactoryReportWithComparision = () => {
         {
           // title: `Latest`,
           dataIndex: "febCoeff",
-          width:100,
+          width:60,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.febCoeff.toLocaleString()}</span>  || '-'))
@@ -148,7 +203,7 @@ export const ExFactoryReportWithComparision = () => {
      
          // title: `Previous`,
           dataIndex: "marPcs",
-          width:100,
+          width:70,
           align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.marPcs.toLocaleString()}</span>  || '-'))
@@ -158,7 +213,7 @@ export const ExFactoryReportWithComparision = () => {
         {
          // title: `Latest`,
           dataIndex: "marCoeff",
-          width:100,
+          width:60,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.marCoeff.toLocaleString()}</span>  || '-'))
@@ -171,7 +226,7 @@ export const ExFactoryReportWithComparision = () => {
       
          // title: `Previous`,
           dataIndex: "aprPcs",
-          width:100,
+          width:80,
           align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.aprPcs.toLocaleString()}</span>  || '-'))
@@ -181,7 +236,7 @@ export const ExFactoryReportWithComparision = () => {
         {
          // title: `Latest`,
           dataIndex: "aprCoeff",
-          width:100,
+          width:60,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.aprCoeff.toLocaleString()}</span>  || '-'))
@@ -194,7 +249,7 @@ export const ExFactoryReportWithComparision = () => {
      
          // title: `Previous`,
           dataIndex: "mayPcs",
-          width:100,
+          width:50,
           align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.mayPcs.toLocaleString()}</span>  || '-'))
@@ -204,7 +259,7 @@ export const ExFactoryReportWithComparision = () => {
         {
          // title: `Latest`,
           dataIndex: "mayCoeff",
-          width:100,
+          width:70,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.mayCoeff.toLocaleString()}</span>  || '-'))
@@ -218,7 +273,7 @@ export const ExFactoryReportWithComparision = () => {
      
          // title: `Previous`,
           dataIndex: "junPcs",
-          width:100,
+          width:70,
           align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.junPcs.toLocaleString()}</span>  || '-'))
@@ -228,7 +283,7 @@ export const ExFactoryReportWithComparision = () => {
         {
          // title: `Latest`,
           dataIndex: "junCoeff",
-          width:100,
+          width:70,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.junCoeff.toLocaleString()}</span>  || '-'))
@@ -242,7 +297,7 @@ export const ExFactoryReportWithComparision = () => {
      
          // title: `Previous`,
           dataIndex: "julPcs",
-          width:100,
+          width:70,
           align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.julPcs.toLocaleString()}</span>  || '-'))
@@ -252,7 +307,7 @@ export const ExFactoryReportWithComparision = () => {
         {
          // title: `Latest`,
           dataIndex: "julCoeff",
-          width:100,
+          width:60,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.julCoeff.toLocaleString()}</span>  || '-'))
@@ -264,7 +319,7 @@ export const ExFactoryReportWithComparision = () => {
       
          // title: `Previous`,
           dataIndex: "augPcs",
-          width:100,
+          width:60,
           align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.augPcs.toLocaleString()}</span>  || '-'))
@@ -274,7 +329,7 @@ export const ExFactoryReportWithComparision = () => {
         {
          // title: `Latest`,
           dataIndex: "augCoeff",
-          width:100,
+          width:60,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.augCoeff.toLocaleString()}</span>  || '-'))
@@ -286,7 +341,7 @@ export const ExFactoryReportWithComparision = () => {
    
          // title: `Previous`,
           dataIndex: "sepPcs",
-          width:100,
+          width:60,
           align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.sepPcs.toLocaleString()}</span>  || '-'))
@@ -296,7 +351,7 @@ export const ExFactoryReportWithComparision = () => {
         {
          // title: `Latest`,
           dataIndex: "sepCoeff",
-          width:100,
+          width:60,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.sepCoeff.toLocaleString()}</span>  || '-'))
@@ -309,7 +364,7 @@ export const ExFactoryReportWithComparision = () => {
     
          // title: `Previous`,
           dataIndex: "octPcs",
-          width:100,
+          width:70,
           align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.octPcs.toLocaleString()}</span>  || '-'))
@@ -319,7 +374,7 @@ export const ExFactoryReportWithComparision = () => {
         {
          // title: `Latest`,
           dataIndex: "octCoeff",
-          width:100,
+          width:70,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.octCoeff.toLocaleString()}</span>  || '-'))
@@ -331,7 +386,7 @@ export const ExFactoryReportWithComparision = () => {
      
          // title: `Previous`,
           dataIndex: "novPcs",
-          width:100,
+          width:70,
           align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.novPcs.toLocaleString()}</span>  || '-'))
@@ -341,7 +396,7 @@ export const ExFactoryReportWithComparision = () => {
         {
          // title: `Latest`,
           dataIndex: "novCoeff",
-          width:100,
+          width:50,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.novCoeff.toLocaleString()}</span>  || '-'))
@@ -353,7 +408,7 @@ export const ExFactoryReportWithComparision = () => {
      
           // title: `Previous`,
           dataIndex: "decPcs",
-          width:100,
+          width:80,
           align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.decPcs.toLocaleString()}</span>  || '-'))
@@ -363,7 +418,7 @@ export const ExFactoryReportWithComparision = () => {
         {
           // title: `Latest`,
           dataIndex: "decCoeff",
-          width:100,
+          width:75,
           align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.decCoeff.toLocaleString()}</span>  || '-'))
@@ -376,6 +431,7 @@ export const ExFactoryReportWithComparision = () => {
       // title: "Total Previous",
       dataIndex: "totalPcs",
    align:"right",
+   width:150,
    render: (text: any, record: any) => {
     return record.totalPcs ? record.totalPcs.toLocaleString() :0
   },    },
@@ -413,7 +469,10 @@ export const ExFactoryReportWithComparision = () => {
       dataIndex: "monthWiseData",
       align:'center',
       render: (text: any, record: any) => (
+        
         <Table
+        showHeader={false}
+        bordered={false}
           dataSource={record.monthWiseData}
           columns={childColumns1}
           pagination={false} // Hide pagination for child table
@@ -814,17 +873,42 @@ const getTableSummary = (pageData) => {
 console.log(JanPreviousTotal,JanLatestTotal,FebLatestTotal,FebPreviousTotal)
   return (
     <Card
-    title="Ex-Factory Comparision Report"
-    extra={data.length > 0 ? (<Button
-        type="default"
-        style={{ color: 'green' }}
-        onClick={handleExport}
-        icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
+      // title="Ex-Factory Report"
+      extra={
+        data.length > 0 ? (
+          <Button
+            type="default"
+            style={{ color: "green" }}
+            onClick={handleExport}
+            icon={<FileExcelFilled />}
+          >
+            Download Excel
+          </Button>
+        ) : null
+      }
+    >
 
-    
+
+     {/* <Row>
+     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }}  >
+<Card title={'Total Items : ' + data.length} 
+style={{textAlign: 'center', width:150,height:35, borderRadius:8}}  
+size="small"></Card>
+</Col>
+     <Col xs={{ span: 30 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
+     <Button
+        type="default"
+        style={{ color: 'green',marginRight:5}}
+        onClick={handleExport}
+        icon={<FileExcelFilled />}>Download Excel</Button> 
+      </Col>
+  
+</Row> */}
+
 <Tabs type="card" onChange={handleTabChange} aria-disabled>
+
           {year.map((e)=>(
-            <Tabs.TabPane tab={e.year} tabKey={e.year}>
+            <Tabs.TabPane tab={`${e.year}`} key={e.year}>
           
            <Form form={form} layout={'vertical'}>
                     <Row gutter={24}>
@@ -863,6 +947,8 @@ console.log(JanPreviousTotal,JanLatestTotal,FebLatestTotal,FebPreviousTotal)
                     </Row>
                 </Form>
         <Table
+        bordered={false}
+        showHeader={false}
           dataSource={filteredData} 
           columns={columns5} 
           size="small"

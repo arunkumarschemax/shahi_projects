@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { FactoryResponseModel } from 'packages/libs/shared-models/src/common/factory/factory-response-objects';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object'
 import { DataSource, EntityManager, Not } from 'typeorm';
-import { AllFactoriesResponseModel, CommonResponseModel, FactoryActivateDeactivateDto, FactoryDto as NewFactoriesDto, NewFilterDto, PriceListColumns, PriceListDto, PriceListModel, PriceListResponseModel, TrimOrderColumns } from '@project-management-system/shared-models';
+import { AllFactoriesResponseModel, CommonResponseModel, FactoryActivateDeactivateDto, FileStatusReq, FileTypeDto, FactoryDto as NewFactoriesDto, NewFilterDto, PriceListColumns, PriceListDto, PriceListModel, PriceListResponseModel, TrimOrderColumns } from '@project-management-system/shared-models';
 import { PriceListAdapter } from './adapters/pricelist.adapter';
 import { pricListRepository } from './repository/pricelist.repositiry';
 import { PriceListEntity } from './entities/pricelist.entity';
@@ -10,12 +10,24 @@ import { priceListDto } from './dto/pricelist.dto';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource, InjectEntityManager } from '@nestjs/typeorm';
 import { priceListExcelDto } from './dto/price-list-excel-dto';
+import { FileUploadRepository } from '../orders/repository/upload.repository';
+import { FileUploadEntity } from '../orders/entities/upload-file.entity';
+import { UploadPriceListEntity } from './entities/upload-price-list-entity';
+import { UploadPriceListRepository } from './repository/upload-price-list-repository';
+import { PriceListExcelAdapter } from './adapters/excel-price-list.adapter';
+import { PriceListChildRepository } from './repository/price-list-child-repo';
+import { PriceListChildEntity } from './entities/price-list-child-entity';
+import { PriceListChildExcelAdapter } from './adapters/excel-price-list-child.adapter';
 
 @Injectable()
 export class priceListService {
     constructor(
         private adaptor: PriceListAdapter,
+        private priceListAdapter : PriceListExcelAdapter,
         private priceRepository: pricListRepository,
+        private uploadPriceRepo: UploadPriceListRepository,
+        private priceListChildRepo : PriceListChildRepository,
+        private priceListChildAdapter : PriceListChildExcelAdapter,
         @InjectDataSource()
         private dataSource: DataSource,
         @InjectEntityManager() private readonly entityManager: EntityManager
@@ -104,14 +116,12 @@ export class priceListService {
     async createPriceList(req: priceListDto, isUpdate: boolean): Promise<PriceListResponseModel> {
         try {
             let previousValue;
-            console.log(isUpdate,"eee")
 
     
             if (!isUpdate) {
                 const data = await this.priceRepository.findOne({
-                    where: { style: req.style, destination: req.destination }
+                    where: { sampleCode: req.sampleCode, business: req.business }
                 });
-                // console.log(data,"reseee")
                 if (data) {
                     throw new PriceListResponseModel(false, 11104, 'Price list for this style and destination already exists');
                 }
@@ -124,8 +134,8 @@ export class priceListService {
                 const duplicateRecord = await this.priceRepository.findOne({
                     where: {
                         id: Not(req.id), 
-                        style: req.style,
-                        destination: req.destination
+                        sampleCode: req.sampleCode,
+                        business: req.business
                     }
                 });
     
@@ -133,11 +143,11 @@ export class priceListService {
                     throw new PriceListResponseModel(false, 11104, 'Price list for this style and destination already exists');
                 }
     
-                existingRecord.destination = req.destination;
+                existingRecord.business = req.business;
                 existingRecord.year = req.year;
                 existingRecord.seasonCode = req.seasonCode;
                 existingRecord.currency = req.currency;
-                existingRecord.price = req.price;
+                existingRecord.fobLocalCurrency = req.fobLocalCurrency;
                 existingRecord.item = req.item;
 
     
@@ -150,7 +160,7 @@ export class priceListService {
             const savepricedto: priceListDto = this.adaptor.convertEntityToDto(converteddata);
     
             if (savepricedto) {
-                const presentvalue = savepricedto.style;
+                const presentvalue = savepricedto.sampleCode;
                 const response = new PriceListResponseModel(true, 1, isUpdate ? 'Price List Updated Successfully' : 'Price List Created Successfully');
                 const name = isUpdate ? 'updated' : 'created';
                 const displayValue = isUpdate ? 'Price List Updated Successfully' : 'Price List Created Successfully';
@@ -160,7 +170,6 @@ export class priceListService {
                 throw new PriceListResponseModel(false, 11106, 'Price List saved but there was an issue while transforming it into DTO');
             }
         } catch (error) {
-            console.error(error);
             throw new ErrorResponse(500, 'An error occurred');
         }
     } 
@@ -226,9 +235,9 @@ export class priceListService {
         let info =[];
         if (details.length > 0) {
             for(const rec of details){
-                info.push(new PriceListModel(rec.id,rec.style,rec.YEAR,rec.destination,rec.season_code,rec.price,rec.currency,rec.created_user,rec.is_active,rec.version_flag,rec.updated_user))
+                info.push(new PriceListModel(rec.id,rec.sampleCode,rec.year,rec.business,rec.seasonCode,rec.fobLocalCurrency,rec.currency,rec.item,rec.created_user,rec.is_active,rec.version_flag,rec.updated_user))
             }
-            return new PriceListResponseModel(true, 1, 'data retrived', info)
+            return new PriceListResponseModel(true, 1, 'data retrieved', info)
         } else {
             return new PriceListResponseModel(false, 0, 'data not found')
         }
@@ -301,7 +310,7 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
    
     try {
         const PriceListDto: PriceListModel[] = [];
-        const PriceEntities: PriceListEntity[] = await this.priceRepository.find({ order: { 'style': 'ASC' },where:{isActive:true}
+        const PriceEntities: PriceListEntity[] = await this.priceRepository.find({ order: { 'sampleCode': 'ASC' },where:{isActive:true}
        });
         if (PriceEntities) {
           
@@ -336,7 +345,7 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
         }
 
         async getAllPriceListStyles(): Promise<CommonResponseModel> {
-            const details = await this.priceRepository.getStyle();
+            const details = await this.priceRepository.getSampleCode();
            
             if (details.length > 0) {
                 
@@ -346,7 +355,7 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
             }
         }
         async getAllPriceListDestination(): Promise<CommonResponseModel> {
-            const details = await this.priceRepository.getDestination();
+            const details = await this.priceRepository.getBusiness();
            
             if (details.length > 0) {
                 
@@ -387,94 +396,153 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
             }
         }
 
-        // async savePriceListData(formData: any, id: number, month: number): Promise<CommonResponseModel> {
-        //     const transactionManager = new GenericTransactionManager(this.dataSource)
-        //     try {
-        //         await transactionManager.startTransaction()
-        //         const flag = new Set()
-        //         const columnArray = [];
-        //         const updatedArray = formData.map((obj) => {
-        //             const updatedObj = {};
-        //             for (const key in obj) {
-        //                     const newKey = key.replace(/\s/g, '_').replace(/[\(\)\.]/g, '').replace(/-/g, '_');
-        //                     columnArray.push(newKey)
-        //                     updatedObj[newKey] = obj[key];
-        //             }
-        //             return updatedObj;
-        //         });
+        async savePriceListData(formData: any,id: number): Promise<CommonResponseModel> {
+            const transactionManager = new GenericTransactionManager(this.dataSource);
+            try {
+                await transactionManager.startTransaction();
+                const flag = new Set();
+                const columnArray = [];
+                const updatedArray = formData.map((obj) => {
+                    const updatedObj = {};
+                    for (const key in obj) {
+                        const newKey = key.replace(/\s/g, '_').replace(/[\(\)\.]/g, '').replace(/-/g, '_');
+                        columnArray.push(newKey);
+                        updatedObj[newKey] = obj[key];
+                    }
+                    return updatedObj;
+                });
+                const difference = columnArray.filter((element) => !PriceListColumns.includes(element));
+                if (difference.length > 0) {
+                    await transactionManager.releaseTransaction();
+                    return new CommonResponseModel(false, 1110, `Excel columns doesn't match. Please attach the correct file.`);
+                }
+                const convertedData = updatedArray.map((obj) => {
+                    const updatedObj = {};
+                    for (const key in obj) {
+                        const value = obj[key];
+                        if (value === "") {
+                            updatedObj[key] = null;
+                        } else {
+                            updatedObj[key] = value;
+                        }
+                    }
+                    return updatedObj;
+                });
+                for (const data of convertedData) {
+                    let dtoData;
+                    if (data.Sample_Code != null) {
+                        dtoData = new priceListExcelDto(null,data.Year, data.Season, data.Item, data.Sample_Code, data.Business, data.FOBLocal_Currency, data.Currency, 'Bidhun', null, null,id);
+                    } else {
+                        break;
+                    }
+                    if (dtoData.sampleCode != null) {
+                        const details = await this.priceRepository.findOne({
+                            where: { sampleCode: dtoData.sampleCode, seasonCode: dtoData.seasonCode, year: dtoData.year }
+                        });
+                        const versionDetails = await this.priceListChildRepo.getVersion(dtoData.sampleCode, dtoData.seasonCode,dtoData.year);
+                        let version = 1;
+                        if (versionDetails.length > 0) {
+                            version = Number(versionDetails.length) + 1;
+                        }
+                        dtoData.version = version;
+                        if (details) {
+                            const updatePriceList = await transactionManager.getRepository(PriceListEntity).update({sampleCode: dtoData.sampleCode,seasonCode: dtoData.seasonCode,year: dtoData.year}, 
+                                {
+                                year: dtoData.year,
+                                seasonCode: dtoData.seasonCode,
+                                item: dtoData.item,
+                                business: dtoData.business,
+                                fobLocalCurrency: dtoData.fobLocalCurrency,
+                                currency: dtoData.currency,
+                                createdUser: dtoData.createdUser,
+                                updatedUser: dtoData.updatedUser,
+                                version: dtoData.version, fileId: dtoData.fileId
+                            });
+                            if (!updatePriceList.affected) {
+                                await transactionManager.releaseTransaction();
+                                return new CommonResponseModel(false, 0, 'Something went wrong in Price List update');
+                            }
+                            const convertedExcelEntity: Partial<PriceListChildEntity> = this.priceListChildAdapter.convertDtoToEntity(dtoData, id);
+                        const saveExcelEntity: PriceListChildEntity = await transactionManager.getRepository(PriceListChildEntity).save(convertedExcelEntity);
+                        } else {
+                            dtoData.version = 1;
+                            const convertedExcelEntity: Partial<PriceListEntity> = this.priceListAdapter.convertDtoToEntity(dtoData,id);
+                            const saveExcelEntity: PriceListEntity = await transactionManager.getRepository(PriceListEntity).save(convertedExcelEntity);
+                            const convertedChildExcelEntity: Partial<PriceListChildEntity> = this.priceListChildAdapter.convertDtoToEntity(dtoData, id);
+                        const saveChildExcelEntity: PriceListChildEntity = await transactionManager.getRepository(PriceListChildEntity).save(convertedChildExcelEntity);
+                            if (!saveExcelEntity || !saveChildExcelEntity) {
+                                flag.add(false);
+                                await transactionManager.releaseTransaction();
+                                break;
+                            }
+                        }
+                    } else {
+                        break;
+                    }
+                }
+        
+                if (!flag.has(false)) {
+                    await transactionManager.completeTransaction();
+                    return new CommonResponseModel(true, 1, 'Data saved successfully');
+                } else {
+                    await transactionManager.releaseTransaction();
+                    return new CommonResponseModel(false, 0, 'Something went wrong');
+                }
+            } catch (error) {
+                await transactionManager.releaseTransaction();
+                return new CommonResponseModel(false, 0, error);
+            }
+        }
+
+
+        async updatePath(filePath: string, filename: string): Promise<CommonResponseModel> {
+            const entity = new UploadPriceListEntity()
+            entity.fileName = filename;
+            entity.filePath = filePath;
+            entity.status = 'uploading';
+            const file = await this.uploadPriceRepo.findOne({ where: { fileName: filename, isActive: true } })
+            if (file) {
+                return new CommonResponseModel(false, 0, 'File with same name already uploaded');
+            } else {
+                const save = await this.uploadPriceRepo.save(entity)
+                if (save) {
+                    return new CommonResponseModel(true, 1, 'uploaded successfully', save);
+                }
+                else {
+                    return new CommonResponseModel(false, 0, 'uploaded failed', save);
+                }
+            }
+        }
+
+        async updateFileStatus(req: FileStatusReq): Promise<CommonResponseModel> {
+            let update
+            if (req.status === 'Failed') {
+                update = await this.uploadPriceRepo.update({ id: req.fileId }, { status: req.status, isActive: false, createdUser: req.userName });
+            } else {
+                update = await this.uploadPriceRepo.update({ id: req.fileId }, { status: req.status, createdUser: req.userName })
+            }
+            if (update.affected) {
+                return new CommonResponseModel(true, 1, 'updated successfully');
+            } else {
+                return new CommonResponseModel(false, 0, 'update failed');
     
-        //         const convertedData = updatedArray.map((obj) => {
-        //             const updatedObj = {};
-        //             for (const key in obj) {
-        //                 const value = obj[key];
-        //                 if (value === "") {
-        //                     updatedObj[key] = null;
-        //                 } else {
-        //                     updatedObj[key] = value;
-        //                 }
-        //             }
-        //             return updatedObj;
-        //         });
-        //         const difference = columnArray.filter((element) => !PriceListColumns.includes(element));
-        //         if(difference.length > 0){
-        //             await transactionManager.releaseTransaction()
-        //             return new CommonResponseModel(false,1110,'Please Upload Correct Excel')
-        //         }
-        //         for (const data of convertedData) {
-        //             let dtoData
-        //             if(data.style != null){
-        //                 dtoData = new priceListExcelDto(data.year,data.seasonCode,data.item,data.style,data.destination,data.price,data.currency,'Bidhun',null,null,null,null)
-        //             }else{
-        //                 break;
-        //             }
-        //             if (dtoData.style != null) {
-        //                 const details = await this.priceRepository.findOne({ where: { style: dtoData.style,seasonCode:dtoData.seasonCode,year:dtoData.year } })
-        //                 const versionDetails = await this.priceRepository.getVersion(dtoData.orderNo,dtoData.sizeCode,dtoData.colorCode)
-        //                 let version = 1;
-        //                 if (versionDetails.length > 0) {
-        //                     version = Number(versionDetails.length) + 1
-        //                 }
-        //                 dtoData.version = version
-        //                 if (details) {
-        //                     const updateOrder = await transactionManager.getRepository(TrimOrdersEntity).update({ orderNo: dtoData.orderNo,sizeCode:dtoData.sizeCode,colorCode:dtoData.colorCode }, {
-        //                         year : dtoData.year,revisionNo : dtoData.revisionNo,planningSsn : dtoData.planningSsn,globalBusinessUnit : dtoData.globalBusinessUnit,businessUnit : dtoData.businessUnit,itemBrand : dtoData.itemBrand,Department : dtoData.Department,revisedDate : dtoData.revisedDate,DocumentStatus : dtoData.DocumentStatus,answeredStatus : dtoData.answeredStatus,vendorPersoninCharge : dtoData.vendorPersoninCharge,decisionDate : dtoData.decisionDate,paymentTerms : dtoData.paymentTerms,contractedETD : dtoData.contractedETD,ETAWH : dtoData.ETAWH,approver : dtoData.approver,approvalDate : dtoData.approvalDate,orderConditions : dtoData.orderConditions,remark : dtoData.remark,rawMaterialCode : dtoData.rawMaterialCode,supplierRawMaterialCode : dtoData.supplierRawMaterialCode,supplierRawMaterial : dtoData.supplierRawMaterial,vendorCode : dtoData.vendorCode,vendor : dtoData.vendor,managementFactoryCode : dtoData.managementFactoryCode,managementFactory : dtoData.managementFactory,branchFactoryCode : dtoData.branchFactoryCode,branchFactory : dtoData.branchFactory,orderPlanNumber : dtoData.orderPlanNumber,itemCode : dtoData.itemCode,item : dtoData.item,representativeSampleCode : dtoData.representativeSampleCode,sampleCode : dtoData.sampleCode,colorCode : dtoData.colorCode,color : dtoData.color,patternDimensionCode : dtoData.patternDimensionCode,sizeCode : dtoData.sizeCode,size : dtoData.size,arrangementBy : dtoData.arrangementBy,trimDescription : dtoData.trimDescription,trimItemNo : dtoData.trimItemNo,trimSupplier : dtoData.trimSupplier,createdUser : dtoData.createdUser,updatedUser : dtoData.updatedUser,version : dtoData.version,fileId : dtoData.fileId,month:dtoData.month,orderQtyPcs:dtoData.orderQtyPcs
-        //                     })
-        //                     if (!updateOrder.affected) {
-        //                         await transactionManager.releaseTransaction();
-        //                         return new CommonResponseModel(false, 0, 'Something went wrong in order update')
-        //                     }
-        //                     const convertedExcelEntity: Partial<TrimOrdersChildEntity> = this.trimordersChildAdapter.convertDtoToEntity(dtoData, id, month);
-        //                     const saveExcelEntity: TrimOrdersChildEntity = await transactionManager.getRepository(TrimOrdersChildEntity).save(convertedExcelEntity);
-        //                 } else {
-    
-        //                     dtoData.version = 1
-        //                     const convertedExcelEntity: Partial<TrimOrdersEntity> = this.trimordersAdapter.convertDtoToEntity(dtoData, id, month);
-        //                     const saveExcelEntity: TrimOrdersEntity = await transactionManager.getRepository(TrimOrdersEntity).save(convertedExcelEntity);
-        //                     const convertedChildExcelEntity: Partial<TrimOrdersChildEntity> = this.trimordersChildAdapter.convertDtoToEntity(dtoData, id, month);
-        //                     const saveChildExcelEntity: TrimOrdersChildEntity = await transactionManager.getRepository(TrimOrdersChildEntity).save(convertedChildExcelEntity);
-        //                     // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
-        //                     if (!saveExcelEntity || !saveChildExcelEntity) {
-        //                         flag.add(false)
-        //                         await transactionManager.releaseTransaction();
-        //                         break;
-        //                     }
-        //                 }
-        //             }else{
-        //                 break;
-        //             }
-        //         }
-    
-        //         if (!flag.has(false)) {
-        //             await transactionManager.completeTransaction()
-        //             return new CommonResponseModel(true, 1, 'Data saved sucessfully')
-        //         } else {
-        //             await transactionManager.releaseTransaction()
-        //             return new CommonResponseModel(false, 0, 'Something went wrong')
-        //         }
-        //     } catch (error) {
-        //         await transactionManager.releaseTransaction()
-        //         return new CommonResponseModel(false, 0, error)
-        //     }
-        // }
+            }
+        }
+
+
+        async getUploadFilesData(): Promise<CommonResponseModel> {
+            try {
+                const data = await this.uploadPriceRepo.getFilesData();
+                if (data.length > 0) {
+                    return new CommonResponseModel(true, 1, 'Uploaded files data retrieved successfully', data);
+                } else {
+                    return new CommonResponseModel(false, 0, 'No data found', data);
+                }
+            } catch (error) {
+                return new CommonResponseModel(false, 0, 'An error occurred while retrieving data', null);
+            }
+        }
+        
+        
 
 }

@@ -1,8 +1,13 @@
 import { CommonColumns } from "packages/services/common/common-columns.entity";
-import { Column, Entity } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
-@Entity('price_list-child') 
-export class PriceListChildEntity extends CommonColumns  {
+@Entity('price_list_child') 
+export class PriceListChildEntity{
+
+    @PrimaryGeneratedColumn('increment', {
+        name: 'id',
+    })
+    id: number
 
     @Column('varchar', {
         name: "year",
@@ -10,7 +15,7 @@ export class PriceListChildEntity extends CommonColumns  {
     year: string;
 
     @Column('varchar', {
-        name: "season_code",
+        name: "season",
         
     })
     seasonCode: string;
@@ -22,30 +27,74 @@ export class PriceListChildEntity extends CommonColumns  {
     item: string;
 
     @Column('varchar', {
-        name: "style",
+        name: "sample_code",
        
     })
-    style: string;
+    sampleCode: string;
 
     @Column('varchar', {
-        name: "destination",
+        name: "business",
        
     })
-    destination: string;
+    business: string;
 
     @Column('varchar', {
-        name: "price",
+        name: "fob_local_currency",
        
     })
-    price: string;
+    fobLocalCurrency: string;
 
     @Column('varchar', {
         name: "currency",  
     })
     currency: string;
 
-   
+    @Column('varchar', {
+        nullable: true,
+        length: 20,
+        name: 'created_user'
+    })
+    createdUser: string | null;
 
+    @Column('varchar', {
+        nullable: true,
+        length: 20,
+        name: 'updated_user'
+    })
+    updatedUser: string | null;
 
-   
+    @CreateDateColumn({
+        name: 'created_at'
+    })
+    createdAt: string;
+
+    @UpdateDateColumn({
+        name: 'updated_at'
+    })
+    updatedAt: string;
+
+    @VersionColumn({
+        default: 1,
+        name: "version_flag",
+      })
+      versionFlag: number;
+
+    @Column({
+        nullable: false,
+        name: "is_active",
+        default:1
+      })
+      isActive: boolean;
+
+    @Column('int', {
+        nullable: true,
+        name: 'version',
+    })
+    version: number;
+    
+    @Column('int', {
+        nullable:true,
+        name: 'file_id',
+    })
+    fileId : number;
 }

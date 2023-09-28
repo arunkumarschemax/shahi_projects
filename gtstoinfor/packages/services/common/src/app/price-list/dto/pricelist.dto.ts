@@ -5,15 +5,15 @@ export class priceListDto {
   @ApiProperty()
     id: number;
     @ApiProperty()
-    style:string;
+    sampleCode:string;
     @ApiProperty()
-    destination :string;
+    business :string;
     @ApiProperty()
     seasonCode: string;
     @ApiProperty()
     year:string;
     @ApiProperty()
-    price:string;
+    fobLocalCurrency:string;
     @ApiProperty()
     item:string;
     @ApiProperty()
