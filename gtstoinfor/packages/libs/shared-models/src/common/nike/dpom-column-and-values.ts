@@ -58,5 +58,7 @@ export const dpomOrderColumnsName = {
     trCoNetIncludingDiscCurrencyCode: 'trading_net_currency_code',
     sizeQuantity: 'size_qty',
     sizeDescription: 'size_description',
+    geoCode: 'geo_code',
+
 
 }

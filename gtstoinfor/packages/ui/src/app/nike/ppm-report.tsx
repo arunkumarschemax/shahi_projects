@@ -412,8 +412,35 @@ const PPMReport = () => {
       { title: 'Ship To Customer Name', dataIndex: 'shipToCustomerName' },
       { title: 'Ship to Address Legal PO', dataIndex: 'shipToAddressLegalPO' },
       { title: 'Ship to Address DIA', dataIndex: 'shipToAddressDIA' },
-      { title: 'Diff of Ship to Address', dataIndex: '' },
-      { title: 'CAB Code', dataIndex: 'CABcode' },
+      {
+        title: 'Diff of Ship to Address', dataIndex: '',
+        render: (text, record) => {
+          const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text1 = lines1.join('');
+
+          const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text2 = lines2.join('');
+
+          const dmp = new DiffMatchPatch();
+          const diff = dmp.diff_main(text1, text2);
+          dmp.diff_cleanupSemantic(diff);
+
+          let output = '';
+          for (const [op, text] of diff) {
+            if (op === DiffMatchPatch.DIFF_INSERT) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            } else if (op === DiffMatchPatch.DIFF_DELETE) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            }
+          }
+          return output.trim()
+        },
+      },
+      { title: 'CAB Code', dataIndex: 'CABCode' },
       { title: 'Final Destination', dataIndex: '' },
       { title: 'MRGAC', dataIndex: 'MRGAC', render: (text, record) => { return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-' } },
       { title: 'OGAC', dataIndex: 'OGAC', render: (text, record) => { return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-' } },
@@ -847,7 +874,6 @@ const PPMReport = () => {
           }
         },
       },
-
       {
         title: 'Shipping Type',
         dataIndex: 'shippingType',
@@ -898,7 +924,7 @@ const PPMReport = () => {
           if (!text || text.trim() === '') {
             return '-';
           } else {
-            return <strong>{text}</strong>;
+            return <strong>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong>;
           }
         },
       },
@@ -1817,11 +1843,43 @@ const PPMReport = () => {
       },
       {
         title: 'Item Vas Text in PDF PO',
-        dataIndex: '',
+        dataIndex: 'itemVasTextPDF',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
       },
       {
         title: 'Diff of Item Vas Text',
         dataIndex: '',
+        render: (text, record) => {
+          const lines1 = (record.itemVasText).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text1 = lines1.join('');
+
+          const lines2 = (record.itemVasTextPDF).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text2 = lines2.join('');
+
+          const dmp = new DiffMatchPatch();
+          const diff = dmp.diff_main(text1, text2);
+          dmp.diff_cleanupSemantic(diff);
+
+          let output = '';
+          for (const [op, text] of diff) {
+            if (op === DiffMatchPatch.DIFF_INSERT) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            } else if (op === DiffMatchPatch.DIFF_DELETE) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            }
+          }
+          return output.trim()
+        },
       },
       {
         title: 'Item Text',
@@ -1888,11 +1946,43 @@ const PPMReport = () => {
       },
       {
         title: 'Item Vas Text in PDF PO',
-        dataIndex: '',
+        dataIndex: 'itemVasTextPDF',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
       },
       {
         title: 'Diff of Item Vas Text',
         dataIndex: '',
+        render: (text, record) => {
+          const lines1 = (record.itemVasText).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text1 = lines1.join('');
+
+          const lines2 = (record.itemVasTextPDF).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text2 = lines2.join('');
+
+          const dmp = new DiffMatchPatch();
+          const diff = dmp.diff_main(text1, text2);
+          dmp.diff_cleanupSemantic(diff);
+
+          let output = '';
+          for (const [op, text] of diff) {
+            if (op === DiffMatchPatch.DIFF_INSERT) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            } else if (op === DiffMatchPatch.DIFF_DELETE) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            }
+          }
+          return output.trim()
+        },
       },
       {
         title: 'Item Text',
