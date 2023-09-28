@@ -414,7 +414,7 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
                 const difference = columnArray.filter((element) => !PriceListColumns.includes(element));
                 if (difference.length > 0) {
                     await transactionManager.releaseTransaction();
-                    return new CommonResponseModel(false, 1110, 'Please Upload Correct Excel');
+                    return new CommonResponseModel(false, 1110, `Excel columns doesn't match. Please attach the correct file.`);
                 }
                 const convertedData = updatedArray.map((obj) => {
                     const updatedObj = {};

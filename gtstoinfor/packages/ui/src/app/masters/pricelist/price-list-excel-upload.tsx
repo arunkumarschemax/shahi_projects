@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import correctFormat from './Correct Format.jpg'
 import wrongFormat from './Wrong Format.jpg'
-import { FileStatusReq } from '@project-management-system/shared-models';
+import { FileStatusReq } from '@project-management-system/shared-models'; 
 
 const PriceListUpload = () => {
 
@@ -77,25 +77,25 @@ const PriceListUpload = () => {
           const fileRes = await service.fileUpload(formData);
   
           if (fileRes.status) {
-            const req = new FileStatusReq();
+            const req = new FileStatusReq()
             req.fileId = fileRes?.data?.id;
             req.status = 'Success';
             req.userName = loginUser ? loginUser : null;
   
-            const res = await service.savePriceListData(data, fileRes?.data?.id);
-            
-  
-            setLoading(true);
-  
-            if (res.status) {
-              service.updateFileStatus(req);
-              message.success(res.internalMessage);
-              navigate("/masters/pricelist/price-list-view");
-            } else {
-              req.status = 'Failed';
-              service.updateFileStatus(req);
-              message.error('File upload failed');
-            }
+            const res = await service.savePriceListData(data, fileRes?.data?.id).then((res) => {
+              setLoading(true);
+              if (res.status) {
+                service.updateFileStatus(req);
+                message.success(res.internalMessage);
+                navigate("/masters/pricelist/price-list-view");
+              } else {
+                req.status = 'Failed';
+                service.updateFileStatus(req);
+                message.error(res.internalMessage)
+              }
+            }).finally(() => {
+              setLoading(false);
+            })
           } else {
             message.error(fileRes.internalMessage);
           }
@@ -106,7 +106,6 @@ const PriceListUpload = () => {
     }
   };
   
-
   const onFileTypeChange = () => {
     getUploadFilesData()
   }
@@ -152,8 +151,8 @@ const PriceListUpload = () => {
             <div style={{ display: 'flex', alignItems: 'center'}}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <img src={correctFormat} alt="Do's" style={{ width: '500px', height: '250px', border: '2px solid green',margin:"10px 75px" }} />
-                <span style={{ marginTop: '5px', fontWeight: 'bold' }}>
-                  ✅
+                <span style={{ marginTop: '5px', fontWeight: 'bold',color: 'green' }}>
+                  ✔️
                 </span>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

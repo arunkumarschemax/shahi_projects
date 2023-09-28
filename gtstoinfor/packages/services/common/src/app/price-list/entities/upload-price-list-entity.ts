@@ -1,7 +1,7 @@
 import { FileTypesEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity('upload_price_list') //change the name
+@Entity('price_list_file')
 export class UploadPriceListEntity {
 
     @PrimaryGeneratedColumn('increment', {
