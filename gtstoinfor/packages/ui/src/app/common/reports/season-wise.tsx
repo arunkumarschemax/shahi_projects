@@ -273,6 +273,7 @@ const SeasonWiseReport = () => {
 
         const whMonthTotals = (data) => {
           const monthTotals = {
+            itemName:0,
             january: 0,
             february: 0,
             march: 0,
@@ -295,11 +296,12 @@ const SeasonWiseReport = () => {
             }
           });
       
-          return monthTotals;
+          return {...monthTotals, itemName:"Grand Total", __style: { bold: true, fill: { type: 'pattern', patternType: 'solid', backgroundColor: 'd9e1f2' } } };
         };
 
         const exfMonthTotals = (data) => {
           const monthTotals = {
+            itemName:0,
             exfJan: 0,
             exfFeb: 0,
             exfMarch: 0,
@@ -321,7 +323,7 @@ const SeasonWiseReport = () => {
               }
             }
           });
-          return monthTotals;
+          return {...monthTotals, itemName:"Grand Total"};
         };
 
         
@@ -331,7 +333,7 @@ const SeasonWiseReport = () => {
             .addColumns(excelColumnsWH)
             .addDataSource(data?.[0], { str2num: true });
             const monthTotals = whMonthTotals(data?.[0]);
-            excel.addDataSource([{ Name: 'Grand Total', ...monthTotals }], { str2num: true });
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[0].length > 0) {
             excel
@@ -339,7 +341,7 @@ const SeasonWiseReport = () => {
             .addColumns(excelColumnsEXf)
             .addDataSource(data?.[0], { str2num: true })
             const monthTotals = exfMonthTotals(data?.[0]);
-            excel.addDataSource([{ Name: 'Grand Total', ...monthTotals }], { str2num: true });
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[1].length > 0) {
             excel
@@ -347,7 +349,7 @@ const SeasonWiseReport = () => {
             .addColumns(excelColumnsWH)
             .addDataSource(data?.[1], { str2num: true })
             const monthTotals = whMonthTotals(data?.[1]);
-            excel.addDataSource([{ Name: 'Grand Total', ...monthTotals }], { str2num: true });
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[1].length > 0) {
             excel
@@ -355,7 +357,7 @@ const SeasonWiseReport = () => {
             .addColumns(excelColumnsEXf)
             .addDataSource(data?.[1], { str2num: true })
             const monthTotals = exfMonthTotals(data?.[1]);
-            excel.addDataSource([{ Name: 'Grand Total', ...monthTotals }], { str2num: true });
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[2].length > 0) {
             excel
@@ -363,7 +365,7 @@ const SeasonWiseReport = () => {
             .addColumns(excelColumnsWH)
             .addDataSource(data?.[2], { str2num: true })
             const monthTotals = whMonthTotals(data?.[2]);
-            excel.addDataSource([{ Name: 'Grand Total', ...monthTotals }], { str2num: true });
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[2].length > 0) {
             excel
@@ -371,7 +373,7 @@ const SeasonWiseReport = () => {
             .addColumns(excelColumnsEXf)
             .addDataSource(data?.[2], { str2num: true })
             const monthTotals = exfMonthTotals(data?.[2]);
-            excel.addDataSource([{ Name: 'Grand Total', ...monthTotals }], { str2num: true });
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         excel.saveAs('SeasonWise.xlsx');
     }

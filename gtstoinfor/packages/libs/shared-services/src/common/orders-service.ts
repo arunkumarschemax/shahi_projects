@@ -120,7 +120,6 @@ export class OrdersService extends CommonAxiosService {
     }
 
     async seasonWiseReport(req?:SeasonWiseRequest):Promise<CommonResponseModel>{
-        console.log(req,'hhhhhhhhhhhhh')
         return this.axiosPostCall(this.ordersController + "/seasonWiseReport",req)
     }
 
