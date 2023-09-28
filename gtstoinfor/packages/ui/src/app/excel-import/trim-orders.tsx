@@ -204,6 +204,15 @@ const {Text}=Typography
             key: 'sno',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
+        {
+            title: 'Order Plan Number ',
+            dataIndex: 'order_plan_number',
+            align:'right',
+           
+            ...getColumnSearchProps("order_plan_number"),
+            sorter: (a, b) => a.item_code.localeCompare(b.order_plan_number),
+            sortDirections: ["descend", "ascend"],
+        },
       
         {
             title: 'Order No',
@@ -243,15 +252,7 @@ dataIndex: 'order_no',
             
         // },
         
-        {
-            title: 'Order Plan Number ',
-            dataIndex: 'order_plan_number',
-            align:'right',
-           
-            ...getColumnSearchProps("order_plan_number"),
-            sorter: (a, b) => a.item_code.localeCompare(b.order_plan_number),
-            sortDirections: ["descend", "ascend"],
-        },
+  
         {
             title: 'Color Code',
             dataIndex: 'color_code',
@@ -302,7 +303,7 @@ dataIndex: 'order_no',
         },
            
         {
-            title: 'Order Quantity Pcs',
+            title: 'Order Quantity(pcs)',
             dataIndex: 'order_qty_pcs',
             align:'right',
             // ...getColumnSearchProps("order_qty_pcs"),
@@ -376,7 +377,7 @@ dataIndex: 'order_no',
             dataIndex: "itemNo",
             align:'left',
 
-width:200,
+          width:200,
             render: (text, record) => {
                 if(record.answered_status != 'Accepted'){
 
@@ -451,7 +452,7 @@ width:200,
             { title: 'Department', dataIndex: 'department' },
             { title: 'Revised Date', dataIndex: 'revised_date' },
             { title: 'Document Status', dataIndex: 'document_status' },
-            { title: 'Answered Status', dataIndex: 'answered_status' },
+            { title: 'Status', dataIndex: 'answered_status' },
             { title: 'Vendor Person InCharge', dataIndex: 'vendor_person_incharge' },
             { title: 'Decision Date', dataIndex: 'decision_date' },
             { title: 'Payment Terms', dataIndex: 'payment_terms' },
@@ -562,16 +563,15 @@ width:200,
                 <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500 }} bordered
                 size='small'
                 summary={(pageData) => {
-                    // Calculate the grand total on each page change
+                    
                     let total = 0;
                     pageData.forEach((record) => {
                         total += parseFloat(record.order_qty_pcs);
                     });
-                    setGrandTotal(total); // Update the grand total in state
-            
+                    setGrandTotal(total);
                     return (
                         <Table.Summary.Row>
-                            <Table.Summary.Cell colSpan={10} index={0} >Grand Total</Table.Summary.Cell>
+                            <Table.Summary.Cell colSpan={10} index={8} >Grand Total</Table.Summary.Cell>
                             <Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>
                         </Table.Summary.Row>
                     );
