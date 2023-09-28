@@ -1,4 +1,5 @@
 import { CommonAxiosService } from "../common-axios-service-prs";
+import { VendorNamereq } from "./buyers/vendor-name";
 
 
 export class VendorService extends CommonAxiosService {
@@ -12,5 +13,7 @@ export class VendorService extends CommonAxiosService {
   }
   
 
-  
+  async getVendorCodeByVendorName(req:VendorNamereq): Promise<any> {
+     return this.getvendorpostcall("https://tms-backend.shahiapps.in/api//vendor-master-data/getVendorCodeByVendorName",req);
+   }
 }

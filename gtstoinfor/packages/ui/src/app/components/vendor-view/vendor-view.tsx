@@ -13,7 +13,7 @@ import {
   Tooltip,
 } from "antd";
 import { EyeOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
-import { VendorService } from "@xpparel/shared-services";
+import { VendorNamereq, VendorService } from "@xpparel/shared-services";
 import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useNavigate, useParams } from "react-router-dom";
 import Highlighter from "react-highlight-words";
@@ -31,16 +31,34 @@ const VendorGrid = () => {
   const searchInput = useRef(null);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [searchText, setSearchText] = useState("");
+  const [vendorCodeData, setVendorCodeData] = useState([])
+  const vendorService = new VendorService();
+
 
   let navigate = useNavigate();
 
   useEffect(() => {
     fetchVendorData();
+    vendorcode();
   }, []);
+
+  const vendorcode = () =>{
+    const req = new VendorNamereq("DHL logistics")
+    vendorService.getVendorCodeByVendorName(req).then(res=>{
+       if (res.status){
+        setVendorCodeData(res.data)
+       } else {
+        setVendorCodeData([])
+       }
+
+    })
+   }
+
+   
 
   const fetchVendorData = async () => {
     try {
-      const vendorService = new VendorService();
+      const vendorService = new VendorService()
       const response = await vendorService.getAllVendors();
 
       if (response.status) {
