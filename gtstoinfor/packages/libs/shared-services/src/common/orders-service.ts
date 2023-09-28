@@ -1,4 +1,4 @@
-import { CommonResponseModel, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, YearReq } from "@project-management-system/shared-models"
+import { CommonResponseModel, CompareOrdersFilterReq, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, YearReq } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
@@ -17,12 +17,12 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getOrdersData")
     }
 
-    async getQtyChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getQtyChangeData")
+    async getQtyChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getQtyChangeData",req)
     }
 
-    async getQtyDifChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getQtyDifChangeData")
+    async getQtyDifChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getQtyDifChangeData",req)
     }
 
     async getContractDateChangeData(): Promise<CommonResponseModel> {
@@ -169,5 +169,9 @@ export class OrdersService extends CommonAxiosService {
     }
     async getTrimOrdersNo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getTrimOrdersNo")
+    }
+
+    async getOrderNumberDropDownInCompare(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getOrderNumberDropDownInCompare")
     }
 }

@@ -5,7 +5,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
-import { YearReq } from "@project-management-system/shared-models";
+import { CompareOrdersFilterReq, YearReq } from "@project-management-system/shared-models";
 
 @Injectable()
 export class OrdersRepository extends Repository<OrdersEntity> {
@@ -21,11 +21,22 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         return await query.getRawMany();
     }
 
-    async getQtyChangeData(): Promise<any[]> {
+    async getQtyChangeData(req:CompareOrdersFilterReq): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-        .select(`o.production_plan_id,o.item_cd,o.item,o.prod_plan_type,o.fr_fabric,o.created_at,od.old_val,od.new_val,(od.new_val - od.old_val) AS Diff,od.version`)
+        .select(`o.production_plan_id,o.item_cd,o.item,o.prod_plan_type,o.fr_fabric,o.created_at,REPLACE(od.old_val,',','') as old_val,REPLACE(od.new_val,',','') as new_val,(REPLACE(od.new_val,',','') - REPLACE(od.old_val,',','')) AS Diff,od.version,o.order_plan_number,o.wh,o.planned_exf,o.year`)
             .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
-            .where(` column_name='order_plan_qty' ORDER BY o.prod_plan_type ASC`)
+            .where(`column_name = 'order_plan_qty'`)
+        
+            if(req.orderNumber){
+                query.andWhere(`o.order_plan_number = '${req.orderNumber}'`)
+            }
+            if(req.itemCode){
+                query.andWhere(`o.item_cd = '${req.itemCode}'`)
+            }
+            if(req.itemName){
+                query.andWhere(`o.item = '${req.itemName}'`)
+            }
+            query.orderBy(`o.order_plan_number`)
         return await query.getRawMany();
     }
 
