@@ -187,18 +187,19 @@ const AllOrdersGridView = () => {
             width: 150,
 
         },
-        
+        // {
+        //     title: ' Planning Ssn Cd',
+        //     dataIndex: 'planning_ssn_cd',
+        //     render: (text) => (text ? text : '-'),
+        //     // width: '9%',
+        // },
         {
             title: 'Biz',
             dataIndex: 'biz',
             render: (text) => (text ? text : '-'),
             // width: '9%',
             width: 150,
-            sorter: (a, b) => {
-                const aValue = a.biz || ''; 
-                const bValue = b.biz || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
             sortDirections: ["descend", "ascend"],
         },
         {
@@ -209,12 +210,8 @@ const AllOrdersGridView = () => {
             width: 200,
 
       ...getColumnSearchProps("department"),
-      sorter: (a, b) => {
-        const aValue = a.department || ''; 
-        const bValue = b.department || ''; 
-        return aValue.localeCompare(bValue);
-    },
-    sortDirections: ["descend", "ascend"],
+      sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
+      sortDirections: ["descend", "ascend"],
         },
 
         {
@@ -224,13 +221,9 @@ const AllOrdersGridView = () => {
         width: 200,
 
         ...getColumnSearchProps("planning_sum_code"),
-        sorter: (a, b) => {
-            const aValue = a.planning_sum_code || ''; 
-            const bValue = b.planning_sum_code || ''; 
-            return aValue.localeCompare(bValue);
-        },
+        sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
         sortDirections: ["descend", "ascend"],
-    },
+        },
         
         {
             title: 'Planning Sum',
@@ -240,11 +233,7 @@ const AllOrdersGridView = () => {
             width: 200,
 
             ...getColumnSearchProps("planning_sum"),
-            sorter: (a, b) => {
-                const aValue = a.planning_sum || ''; 
-                const bValue = b.planning_sum || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
             sortDirections: ["descend", "ascend"],
         },
         {
@@ -255,11 +244,7 @@ const AllOrdersGridView = () => {
             width: 250,
 
             ...getColumnSearchProps("item"),
-            sorter: (a, b) => {
-                const aValue = a.item || ''; 
-                const bValue = b.item || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
             sortDirections: ["descend", "ascend"],
         },
         // {
@@ -269,18 +254,14 @@ const AllOrdersGridView = () => {
 
         // },
         {
-            title: 'Fr Fabric',
+            title: 'FR Fabric',
             dataIndex: 'fr_fabric',
             render: (text) => (text ? text : '-'),
             // width: '9%',
             width: 250,
 
             ...getColumnSearchProps("fr_fabric"),
-            sorter: (a, b) => {
-                const aValue = a.fr_fabric || ''; 
-                const bValue = b.fr_fabric || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
             sortDirections: ["descend", "ascend"],
         },
 
@@ -298,12 +279,8 @@ const AllOrdersGridView = () => {
             // width: '9%',
             width: 100,
 
-            sorter: (a, b) => {
-                const aValue = a.coeff || ''; 
-                const bValue = b.coeff || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
+      sortDirections: ["descend", "ascend"],
         },
        
         {
@@ -325,11 +302,7 @@ const AllOrdersGridView = () => {
 
             render: (text) => (text ? text : '-'),
             ...getColumnSearchProps("order_plan_number"),
-            sorter: (a, b) => {
-                const aValue = a.order_plan_number || ''; 
-                const bValue = b.order_plan_number || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
             sortDirections: ["descend", "ascend"],
          },
         {
@@ -341,12 +314,7 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             ...getColumnSearchProps("gwh"),
 
-            sorter: (a, b) => {
-                const aValue = a.gwh || ''; 
-                const bValue = b.gwh || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+           
         },
         {
             title: 'WH',
@@ -355,17 +323,12 @@ const AllOrdersGridView = () => {
             width: 100,
 
             render: (text) => (text ? text : '-'),
-            
-            sorter: (a, b) => {
-                const aValue = a.wh || ''; 
-                const bValue = b.wh || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
             sortDirections: ["descend", "ascend"],
            
         },
         {
-            title: 'Transport Mthd',
+            title: 'Transport Method',
             dataIndex: 'trnsp_mthd',
             // width: '9%',
             width: 150,
@@ -383,13 +346,8 @@ const AllOrdersGridView = () => {
 
             width: 250,
 
-            sorter: (a, b) => {
-                const aValue = a.raw_material_supplier || ''; 
-                const bValue = b.raw_material_supplier || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.raw_material_supplier.localeCompare(b.raw_material_supplier),
             sortDirections: ["descend", "ascend"],
-           
         },
         {
             title: 'Yarn Order Status',
@@ -398,16 +356,12 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             width: 250,
             ...getColumnSearchProps("yarn_order_status"),
-            sorter: (a, b) => {
-                const aValue = a.yarn_order_status || ''; 
-                const bValue = b.yarn_order_status || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.yarn_order_status.localeCompare(b.yarn_order_status),
             sortDirections: ["descend", "ascend"],
            
         },
         {
-            title: 'Fabric Order Status',
+            title: 'Fbrc Order Status',
             dataIndex: 'fbrc_order_status',
             // width: '9%',
             render: (text) => (text ? text : '-'),
@@ -422,11 +376,7 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             width: 250,
             ...getColumnSearchProps("color_order_status"),
-            sorter: (a, b) => {
-                const aValue = a.color_order_status || ''; 
-                const bValue = b.color_order_status || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.color_order_status.localeCompare(b.color_order_status),
             sortDirections: ["descend", "ascend"],
         },
         {
@@ -436,11 +386,7 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             width: 250,
             ...getColumnSearchProps("trim_order_status"),
-            sorter: (a, b) => {
-                const aValue = a.trim_order_status || ''; 
-                const bValue = b.trim_order_status || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.trim_order_status.localeCompare(b.trim_order_status),
             sortDirections: ["descend", "ascend"],
         },
         {
@@ -450,11 +396,7 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             width: 150,
             ...getColumnSearchProps("po_order_status"),
-            sorter: (a, b) => {
-                const aValue = a.po_order_status || ''; 
-                const bValue = b.po_order_status || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.po_order_status.localeCompare(b.po_order_status),
             sortDirections: ["descend", "ascend"],
         },
         {
@@ -464,11 +406,7 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             ...getColumnSearchProps("prod_plan_type"),
             width: 150,
-            sorter: (a, b) => {
-                const aValue = a.prod_plan_type || ''; 
-                const bValue = b.prod_plan_type || ''; 
-                return aValue.localeCompare(bValue);
-            },
+            sorter: (a, b) => a.prod_plan_type.localeCompare(b.prod_plan_type),
             sortDirections: ["descend", "ascend"],
         },
         {
@@ -477,6 +415,8 @@ const AllOrdersGridView = () => {
             // width: '9%',
             render: (text) => (text ? text : '-'),
             width: 150,
+            sorter: (a, b) => a.planned_exf.localeCompare(b.planned_exf),
+            sortDirections: ["descend", "ascend"],
            
         },
         
@@ -607,8 +547,7 @@ const AllOrdersGridView = () => {
                         </Col>
                     </Row>
                 </Form>
-                <Table columns={columns} dataSource={filteredData} 
-                scroll={{ x: 1500,y:500 }}
+                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500,y:500 }}
                  pagination={{
                     onChange(current) {
                         setPage(current);
