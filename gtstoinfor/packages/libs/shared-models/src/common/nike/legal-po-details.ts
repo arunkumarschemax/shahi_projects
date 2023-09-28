@@ -10,5 +10,6 @@ export class LegalPoDetails{
     currency : string;
     incoterms : string;
     factoryLocation : string;
+    shipToAddress:string
     poItemDetails : PoItemDetailsDto[]
 }

@@ -1,7 +1,7 @@
-import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { ArrowDownOutlined, ArrowUpOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { DpomApproveRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
-import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, message } from "antd";
+import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, Tooltip, message } from "antd";
 import moment from "moment";
 import React, { useRef } from "react";
 import { useEffect, useState } from "react";
@@ -17,11 +17,10 @@ export function OrderAcceptance() {
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState('');
     const [filterData, setFilterData] = useState<any>([]);
-    const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
-    const [selectedEstimatedToDate, setSelectedEstimatedToDate] = useState(undefined);
     const { RangePicker } = DatePicker;
     const [productCode, setProductCode] = useState<any>([]);
     const [poLine, setPoLine] = useState<any>([]);
+    const [itemNoValues, setItemNoValues] = useState({});
 
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -107,6 +106,17 @@ export function OrderAcceptance() {
                 : null
     })
 
+    const handleItemNoChange = (value, record) => {
+        setItemNoValues((prevValues) => ({
+            ...prevValues,
+            [record.key]: value,
+        }));
+    };
+
+    const isActionButtonEnabled = (record) => {
+        return itemNoValues[record.key] && itemNoValues[record.key].trim() !== "";
+    };
+
     const ClearData = () => {
         form.resetFields();
     }
@@ -122,15 +132,18 @@ export function OrderAcceptance() {
             setProductCode(res.data)
         })
     }
+
     const getPoLine = () => {
         service.getPpmPoLineForOrderCreation().then(res => {
             setPoLine(res.data)
         })
     }
+
     const onReset = () => {
         form.resetFields()
         getOrderAcceptanceData()
     }
+
     const getOrderAcceptanceData = () => {
         const req = new nikeFilterRequest();
         if (form.getFieldValue('documentDate') !== undefined) {
@@ -142,8 +155,8 @@ export function OrderAcceptance() {
         if (form.getFieldValue('productCode') !== undefined) {
             req.productCode = form.getFieldValue('productCode');
         }
-        if (form.getFieldValue('poandLine') !== undefined) {
-            req.poandLine = form.getFieldValue('poandLine');
+        if (form.getFieldValue('purchaseOrder') !== undefined) {
+            req.poandLine = form.getFieldValue('purchaseOrder');
         }
         if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
             req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
@@ -185,19 +198,54 @@ export function OrderAcceptance() {
             fixed: 'left'
         },
         {
-            title: 'PO Number + Line',
-            dataIndex: 'po_and_line',
+            title: 'PO Number',
+            dataIndex: 'po_number',
             fixed: 'left',
-            // ...getColumnSearchProps('purchaseOrderNumber')
+            ...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number',
+            fixed: 'left',
+        },
+        {
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+            fixed: 'left',
         },
         {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY'),
-
         },
-
         {
+            title: 'Aging',
+            dataIndex: '',
+            render: (text, record) => {
+                const documentDate = moment(record.document_date);
+
+                const today = moment();
+                const aging = today.diff(documentDate, 'days');
+                return aging;
+            },
+            sorter: (a, b) => {
+                const aAging = moment(a['document_date']);
+                const bAging = moment(b['document_date']);
+
+                if (!aAging.isValid() && !bAging.isValid()) {
+                    return 0;
+                } else if (!aAging.isValid()) {
+                    return 1;
+                } else if (!bAging.isValid()) {
+                    return -1;
+                }
+
+                return aAging.diff(bAging, 'days');
+            },
+
+            // sortOrder: null
+        }
+        , {
             title: 'Plant Name',
             dataIndex: 'plant_name'
         },
@@ -214,6 +262,107 @@ export function OrderAcceptance() {
             dataIndex: 'category_desc'
         },
         {
+            title: 'Size',
+            dataIndex: 'size_description',
+            render: (text, record) => {
+                if (typeof text === 'string' && text.trim() === '') {
+                    return '-';
+                } else if (typeof text === 'undefined' || text === null) {
+                    return '-';
+                } else {
+                    return text;
+                }
+            },
+        },
+        {
+            title: 'Order Quantity',
+            dataIndex: 'size_qty',
+            render: (text, record) => {
+                if (typeof text === 'string' && text.trim() === '') {
+                    return '-';
+                } else if (typeof text === 'undefined' || text === null) {
+                    return '-';
+                } else {
+                    return text;
+                }
+            },
+        }
+
+
+
+        , {
+            title: 'Total Order Quantity',
+            dataIndex: 'total_item_qty',
+            render: (text, record) => {
+                return (record.totalItemQty_OLD ?
+                    (
+                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.totalItemQty_OLD} Revised Date:  ${record.totalItemQty_NEW} Difference :  `}>
+                            {record.totalItemQty_OLD < record.totalItemQty_NEW ? <span style={{ color: 'green' }}>{record.totalItemQty_NEW}</span> : ''}
+                            {record.totalItemQty_OLD > record.totalItemQty_NEW ? <span style={{ color: 'red' }}>{record.totalItemQty_NEW}</span> : ''}
+                            &nbsp;&nbsp;
+                            <span>
+                                {record.totalItemQty_OLD < record.totalItemQty_NEW ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                            </span>
+                        </Tooltip>
+                    ) : record.total_item_qty)
+            }
+        },
+        {
+            title: 'MRGAC',
+            dataIndex: 'mrgac',
+            render: (text, record) => {
+                return (record.MRGAC_OLD ?
+                    (
+                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.MRGAC_OLD).format('MM/DD/YYYY')} Revised Date:  ${moment(record.MRGAC_NEW).format('MM/DD/YYYY')} Difference : ${Math.floor((new Date(moment(record.MRGAC_NEW).format('MM/DD/YYYY')).getTime() - new Date(moment(record.MRGAC_NEW).format('MM/DD/YYYY')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
+                            {moment(record.MRGAC_OLD).format('MM/DD/YYYY') < moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'green' }}>{moment(record.MRGAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+                            {moment(record.MRGAC_OLD).format('MM/DD/YYYY') > moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'red' }}>{moment(record.MRGAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+                            &nbsp;&nbsp;
+                            <span>
+                                {moment(record.MRGAC_OLD).format('MM/DD/YYYY') < moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                            </span>
+                        </Tooltip>
+                    ) : (record.mrgac ? record.mrgac : '-'))
+            }
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'gac',
+            render: (text, record) => {
+                return (record.GAC_OLD ?
+                    (
+                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.GAC_OLD).format('MM/DD/YYYY')} Revised Date:  ${moment(record.GAC_NEW).format('MM/DD/YYYY')}Difference : ${Math.floor((new Date(moment(record.GAC_NEW).format('MM/DD/YYYY')).getTime() - new Date(moment(record.GAC_NEW).format('MM/DD/YYYY')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
+                            {moment(record.GAC_OLD).format('MM/DD/YYYY') < moment(record.GAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'green' }}>{moment(record.GAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+                            {moment(record.GAC_OLD).format('MM/DD/YYYY') > moment(record.GAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'red' }}>{moment(record.GAC_NEW).format('MM/DD/YYYY')}</span> : ''}
+                            &nbsp;&nbsp;
+                            <span>
+                                {moment(record.GAC_OLD).format('MM/DD/YYYY') < moment(record.GAC_NEW).format('MM/DD/YYYY') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                            </span>
+                        </Tooltip>
+                    ) : record.gac)
+            }
+        },
+        {
+            title: 'Gross Price',
+            dataIndex: 'gross_price_fob',
+            render: (text, record) => {
+                return (record.grossPriceFOB_OLD ?
+                    (
+                        <Tooltip overlayStyle={{ font: 'bold', maxWidth: '140px' }} title={`Previous Price:  ${record.grossPriceFOB_OLD} Revised Price:  ${record.grossPriceFOB_NEW} Difference : ${(parseFloat(record.grossPriceFOB_NEW) - parseFloat(record.grossPriceFOB_OLD)).toFixed(2)} `}>
+                            {record.grossPriceFOB_OLD < record.grossPriceFOB_NEW ? <span style={{ color: 'green' }}>{record.grossPriceFOB_NEW}</span> : ''}
+                            {record.grossPriceFOB_OLD > record.grossPriceFOB_NEW ? <span style={{ color: 'red' }}>{record.grossPriceFOB_NEW}</span> : ''}
+                            &nbsp;&nbsp;
+                            <span>
+                                {record.grossPriceFOB_OLD < record.grossPriceFOB_NEW ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
+                            </span>
+                        </Tooltip>
+                    ) : record.gross_price_fob)
+            }
+        },
+        {
+            title: 'Gross Price Currency',
+            dataIndex: 'fob_currency_code'
+        },
+        {
             title: 'Shipping Type',
             dataIndex: 'shipping_type'
         },
@@ -223,33 +372,68 @@ export function OrderAcceptance() {
             filters: [
                 { text: 'Accepted', value: 'Accepted' },
                 { text: 'Unaccepted', value: 'Unaccepted' },
-                // { text: 'Closed', value: 'Closed' },
-                // { text: 'Cancelled', value: 'Cancelled' }
             ],
             filterMultiple: false,
             onFilter: (value, record) => { return record.dpom_item_line_status === value }
         },
-        {
-            title: 'Action',
-            dataIndex: 'action',
-            render: (value, record) => {
-                if (record.dpom_item_line_status === 'Unaccepted') {
-                    return (
-                        <Popconfirm title="Are you sure to approve" onConfirm={() => approveDpomLineItemStatus(record)}>
-                            <Button>Accept</Button>
-                        </Popconfirm>
-                    );
-                } else {
-                    return null;
-                }
-            }
+        // {
+        //     title: 'Item No',
+        //     dataIndex: '',
+        // },
+        // {
+        //     title: 'Action',
+        //     dataIndex: 'action',
+        //     render: (value, record) => {
+        //         if (record.dpom_item_line_status === 'Unaccepted') {
+        //             return (
+        //                 <Popconfirm title="Are you sure to approve" onConfirm={() => approveDpomLineItemStatus(record)}>
+        //                     <Button>Accept</Button>
+        //                 </Popconfirm>
+        //             );
+        //         } else {
+        //             return null;
+        //         }
+        //     }
 
-        }
+        // }
+        {
+            title: "Item No",
+            dataIndex: "itemNo",
+            render: (text, record) => {
+                return (
+                    <Form>
+                        <Form.Item>
+                            <Input
+                                placeholder="Enter Item No"
+                                onChange={(e) => handleItemNoChange(e.target.value, record)}
+                            />
+                        </Form.Item>
+                    </Form>
+                );
+            },
+        },
+        {
+            title: "Action",
+            dataIndex: "action",
+            render: (value, record) => {
+                const isEnabled = isActionButtonEnabled(record);
+
+                return (
+                    <Popconfirm
+                        title="Are you sure to approve"
+                        onConfirm={() => approveDpomLineItemStatus(record)}
+                        disabled={!isEnabled}
+                    >
+                        <Button disabled={!isEnabled}>Accept</Button>
+                    </Popconfirm>
+                );
+            },
+        },
     ]
 
     return (
         <>
-            <Card title="Nike Orders Register" headStyle={{ fontWeight: 'bold' }}>
+            <Card title="Nike Orders Register - Unaccepted Orders" headStyle={{ fontWeight: 'bold' }}>
                 <Form
                     onFinish={getOrderAcceptanceData}
                     form={form}
@@ -260,16 +444,18 @@ export function OrderAcceptance() {
                                 <RangePicker />
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }}>
-                            <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
+                            <Form.Item name='purchaseOrder' label='Purchase Order' >
                                 <Select
                                     showSearch
-                                    placeholder="Select Status"
+                                    placeholder="Select PO"
                                     optionFilterProp="children"
-                                    allowClear mode='multiple'>
-                                    <Option value="Accepted">ACCEPTED</Option>
-                                    <Option value="Unaccepted">UNACCEPTED</Option>
-                                    {/* <Option value="Closed">CLOSED</Option> */}
+                                    allowClear
+                                >
+                                    {poLine.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
+                                    })
+                                    }
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -288,21 +474,6 @@ export function OrderAcceptance() {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-                            <Form.Item name='poandLine' label='Po+Line' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Po+Line"
-                                    optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {poLine.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
-                                    })
-                                    }
-                                </Select>
-                            </Form.Item>
-                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 40, }} >
                             <Form.Item>
                                 <Button htmlType="submit"
@@ -310,21 +481,19 @@ export function OrderAcceptance() {
                                     type="primary">SEARCH</Button>
 
                                 <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
-
-
-
                             </Form.Item>
                         </Col>
                     </Row>
                 </Form>
                 {/* <Table
-                    columns={columns}
-                    dataSource={data}
-                    bordered
-                >
-                </Table> */}
+                        columns={columns}
+                        dataSource={data}
+                        bordered
+                    >
+                    </Table> */}
 
                 <Table
+                    rowKey={record => record.id}
                     columns={columns}
                     dataSource={filterData.length > 0 ? filterData : data}
                     bordered
@@ -335,8 +504,12 @@ export function OrderAcceptance() {
                             setPageSize(pageSize);
                         },
                     }}
+                    scroll={{ x: 'max-content' }}
                 >
                 </Table>
+
+
+
             </Card>
         </>
     )

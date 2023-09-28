@@ -65,6 +65,7 @@ export class DpomController {
     }
 
     @Post('/saveDIAPDFData')
+    @ApiBody({ type: DiaPDFDto })
     async saveDIAPDFData(@Body() req: any) {
         try {
             return await this.dpomService.saveDIAPDFData(req)
@@ -443,14 +444,14 @@ export class DpomController {
         }
     }
 
-    @Post('/getDifferentialData')
-    async getDifferentialData(): Promise<CommonResponseModel> {
-        try {
-            return this.dpomService.getDifferentialData();
-        } catch (err) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/getDifferentialData')
+    // async getDifferentialData(): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.dpomService.getDifferentialData();
+    //     } catch (err) {
+    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
     @Post('/getPoAndQtyDashboard')
     @ApiBody({ type: PoAndQtyReq })
     async getPoAndQtyDashboard(@Body() req: any): Promise<CommonResponseModel> {
@@ -710,6 +711,65 @@ export class DpomController {
     async getPppoNumberForMarketing(): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getPppoNumberForMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmDocTypeMarketing')
+    async getPpmDocTypeMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmDocTypeMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmPoLineItemNumberMarketing')
+    async getPpmPoLineItemNumberMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmPoLineItemNumberMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmStyleNumberMarketing')
+    async getPpmStyleNumberMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmStyleNumberMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPpmPlanningSeasonCodeMarketing')
+    async getPpmPlanningSeasonCodeMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmPlanningSeasonCodeMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getPpmPlanningSeasonYearMarketing')
+    async getPpmPlanningSeasonYearMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmPlanningSeasonYearMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getPpmdesGeoCodeMarketing')
+    async getPpmdesGeoCodeMarketing(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getPpmdesGeoCodeMarketing();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getDpomSyncDetails')
+    async getDpomSyncDetails(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getDpomSyncDetails();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

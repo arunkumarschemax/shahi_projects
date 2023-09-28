@@ -6,12 +6,11 @@ import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
 import { PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
+import { FobEntity } from "../../fob-price-list/fob.entity";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
-    getFactoryReportData() {
-        throw new Error('Method not implemented.');
-    }
+
     constructor(@InjectRepository(DpomEntity) private dpomRepository: Repository<DpomEntity>
     ) {
         super(dpomRepository.target, dpomRepository.manager, dpomRepository.queryRunner);
@@ -77,7 +76,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getTotalItemQtyChangeData(req: nikeFilterRequest): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(`dpom.po_number,dpom.item,dpom.factory,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.style_number AS styleNumber,dpom.destination_country AS desCtry,dpom.color_desc,dpom.size_description,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty ,dpom.po_line_item_number, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
+            .select(`dpom.po_number,dpom.created_at,dpom.item,dpom.factory,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.style_number AS styleNumber,dpom.destination_country AS desCtry,dpom.color_desc,dpom.size_description,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty,dpom.item_text,dpom.po_and_line ,dpom.po_line_item_number, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
             .where(` od.column_name='total_item_qty' `)
         if (req && req.poandLine !== undefined) {
@@ -415,7 +414,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     ///-------------------------------------------------------------------->factory
     async getFactoryPpmData(req: PpmDateFilterRequest): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(`dpom.po_and_line,dpom.last_modified_date,dpom.item,dpom.factory,dpom.document_date,dpom.po_number,dpom.po_line_item_number,dpom.dpom_item_line_status,dpom.style_number,dpom.product_code,dpom.color_desc,dpom.customer_order,dpom.po_final_approval_date,dpom.plan_no,dpom.lead_time,dpom.category_code,dpom.category_desc,dpom.vendor_code,dpom.gcc_focus_code,dpom.gcc_focus_desc,dpom.gender_age_code,dpom.gender_age_desc,dpom.destination_country_code,dpom.destination_country,dpom.plant,dpom.plant_name,dpom.trading_co_po_no,dpom.upc,dpom.direct_ship_so_no,dpom.direct_ship_so_item_no,dpom.customer_po,dpom.ship_to_customer_no,dpom.ship_to_customer_name,dpom.planning_season_code,dpom.planning_season_year , dpom.doc_type_code, dpom.doc_type_desc,dpom.mrgac,dpom.ogac,dpom.gac,dpom.truck_out_date,dpom.origin_receipt_date,dpom.factory_delivery_date,dpom.gac_reason_code,dpom.gac_reason_desc,dpom.shipping_type,dpom.planning_priority_code,dpom.planning_priority_desc,dpom.launch_code,dpom.mode_of_transport_code,dpom.inco_terms,dpom.inventory_segment_code,dpom.purchase_group_code,dpom.purchase_group_name,dpom.total_item_qty,dpom.actual_shipped_qty,dpom.vas_size,dpom.item_vas_text,dpom.item_text,dpom.price,dpom.co_price,dpom.pcd,dpom.ship_to_address_legal_po,dpom.ship_to_address_dia,dpom.cab_code,dpom.gross_price_fob,dpom.ne_inc_disc,dpom.trading_net_inc_disc,dpom.actual_unit,dpom.allocated_quantity,dpom.size_description,dpom.size_qty, od.display_name AS displayName `)
+            .select(`dpom.po_and_line,dpom.last_modified_date,dpom.item,dpom.factory,dpom.document_date,dpom.po_number,dpom.po_line_item_number,dpom.dpom_item_line_status,dpom.style_number,dpom.product_code,dpom.color_desc,dpom.customer_order,dpom.po_final_approval_date,dpom.plan_no,dpom.lead_time,dpom.category_code,dpom.category_desc,dpom.vendor_code,dpom.gcc_focus_code,dpom.gcc_focus_desc,dpom.gender_age_code,dpom.gender_age_desc,dpom.destination_country_code,dpom.destination_country,dpom.plant,dpom.plant_name,dpom.trading_co_po_no,dpom.upc,dpom.direct_ship_so_no,dpom.direct_ship_so_item_no,dpom.customer_po,dpom.ship_to_customer_no,dpom.ship_to_customer_name,dpom.planning_season_code,dpom.planning_season_year , dpom.pcd,dpom.doc_type_code, dpom.doc_type_desc,dpom.mrgac,dpom.ogac,dpom.gac,dpom.truck_out_date,dpom.origin_receipt_date,dpom.factory_delivery_date,dpom.gac_reason_code,dpom.gac_reason_desc,dpom.shipping_type,dpom.planning_priority_code,dpom.planning_priority_desc,dpom.launch_code,dpom.mode_of_transport_code,dpom.inco_terms,dpom.inventory_segment_code,dpom.purchase_group_code,dpom.purchase_group_name,dpom.total_item_qty,dpom.actual_shipped_qty,dpom.vas_size,dpom.item_vas_text,dpom.item_text,dpom.legal_po_price,dpom.co_price,dpom.pcd,dpom.ship_to_address_legal_po,dpom.ship_to_address_dia,dpom.cab_code,dpom.gross_price_fob,dpom.ne_inc_disc,dpom.trading_net_inc_disc,dpom.actual_unit,dpom.allocated_quantity,dpom.size_description,dpom.size_qty,dpom.trading_co_po_no, od.display_name AS displayName,dpom.hanger,dpom.legal_po_qty `)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
             .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled'`)
         if (req.lastModifedStartDate !== undefined) {
@@ -429,7 +428,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         } else if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length === 0) {
             query.andWhere(`1=1`);
         }
-        
+
         if (req.productCode !== undefined) {
             query.andWhere(`dpom.product_code ='${req.productCode}'`)
         }
@@ -457,13 +456,13 @@ export class DpomRepository extends Repository<DpomEntity> {
 
         return await query.getRawMany();
     }
-    ///-------------------------------------------------------------------------------------------------------------->ppm marketing
 
+    ///-------------------------------------------------------------------------------------------------------------->ppm marketing
     async getMarketingPpmData(req: PpmDateFilterRequest): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(`dpom.po_and_line,dpom.last_modified_date,dpom.item,dpom.factory,dpom.document_date,dpom.po_number,dpom.po_line_item_number,dpom.dpom_item_line_status,dpom.style_number,dpom.product_code,dpom.color_desc,dpom.customer_order,dpom.po_final_approval_date,dpom.plan_no,dpom.lead_time,dpom.category_code,dpom.category_desc,dpom.vendor_code,dpom.gcc_focus_code,dpom.gcc_focus_desc,dpom.gender_age_code,dpom.gender_age_desc,dpom.destination_country_code,dpom.destination_country,dpom.plant,dpom.plant_name,dpom.trading_co_po_no,dpom.upc,dpom.direct_ship_so_no,dpom.direct_ship_so_item_no,dpom.customer_po,dpom.ship_to_customer_no,dpom.ship_to_customer_name,dpom.planning_season_code,dpom.planning_season_year , dpom.doc_type_code, dpom.doc_type_desc,dpom.mrgac,dpom.ogac,dpom.gac,dpom.truck_out_date,dpom.origin_receipt_date,dpom.factory_delivery_date,dpom.gac_reason_code,dpom.gac_reason_desc,dpom.shipping_type,dpom.planning_priority_code,dpom.planning_priority_desc,dpom.launch_code,dpom.mode_of_transport_code,dpom.inco_terms,dpom.inventory_segment_code,dpom.purchase_group_code,dpom.purchase_group_name,dpom.total_item_qty,dpom.actual_shipped_qty,dpom.vas_size,dpom.item_vas_text,dpom.item_text,dpom.price,dpom.co_price,dpom.pcd,dpom.ship_to_address_legal_po,dpom.ship_to_address_dia,dpom.cab_code,dpom.gross_price_fob,dpom.ne_inc_disc,dpom.trading_net_inc_disc,dpom.actual_unit,dpom.allocated_quantity,dpom.size_description,dpom.size_qty, od.display_name AS displayName`)
+            .select(`dpom.po_and_line,dpom.last_modified_date,dpom.item,dpom.factory,dpom.document_date,dpom.po_number,dpom.po_line_item_number,dpom.dpom_item_line_status,dpom.style_number,dpom.product_code,dpom.color_desc,dpom.customer_order,dpom.po_final_approval_date,dpom.plan_no,dpom.lead_time,dpom.category_code,dpom.category_desc,dpom.vendor_code,dpom.gcc_focus_code,dpom.gcc_focus_desc,dpom.gender_age_code,dpom.gender_age_desc,dpom.destination_country_code,dpom.destination_country,dpom.plant,dpom.plant_name,dpom.trading_co_po_no,dpom.upc,dpom.direct_ship_so_no,dpom.direct_ship_so_item_no,dpom.customer_po,dpom.ship_to_customer_no,dpom.ship_to_customer_name,dpom.planning_season_code,dpom.planning_season_year , dpom.pcd,dpom.doc_type_code, dpom.doc_type_desc,dpom.mrgac,dpom.ogac,dpom.gac,dpom.truck_out_date,dpom.origin_receipt_date,dpom.factory_delivery_date,dpom.gac_reason_code,dpom.gac_reason_desc,dpom.shipping_type,dpom.planning_priority_code,dpom.planning_priority_desc,dpom.launch_code,dpom.mode_of_transport_code,dpom.inco_terms,dpom.inventory_segment_code,dpom.purchase_group_code,dpom.purchase_group_name,dpom.total_item_qty,dpom.actual_shipped_qty,dpom.vas_size,dpom.item_vas_text, dpom.item_vas_pdf, dpom.item_text, dpom.legal_po_price, dpom.legal_po_currency, dpom.co_price, dpom.co_price_currency, dpom.ship_to_address_legal_po,dpom.ship_to_address_dia,dpom.cab_code,dpom.gross_price_fob,dpom.ne_inc_disc,dpom.trading_net_inc_disc,dpom.actual_unit,dpom.allocated_quantity,dpom.size_description,dpom.size_qty,dpom.trading_co_po_no,dpom.net_inc_disc_currency_code, dpom.crm_co_qty, dpom.trading_net_currency_code, od.display_name AS displayName,dpom.fob_currency_code,dpom.hanger,dpom.legal_po_qty, dpom.geo_code, fob.shahi_confirmed_gross_price, fob.shahi_confirmed_gross_price_currency_code`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
-            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .leftJoin(FobEntity, 'fob', `fob.color_code = SUBSTRING_INDEX(dpom.product_code, '-', -1) AND fob.style_number = dpom.style_number AND fob.size_description = dpom.size_description`)
         // .groupBy(`od.po_number AND od.po_line_item_number`)
         if (req.lastModifedStartDate !== undefined) {
             query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
@@ -494,6 +493,24 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.factory !== undefined) {
             query.andWhere(`dpom.factory ='${req.factory}'`)
         }
+        if (req.docTypeCode !== undefined) {
+            query.andWhere(`dpom.doc_type_code ='${req.docTypeCode}'`)
+        }
+        if (req.poLineItemNumber !== undefined) {
+            query.andWhere(`dpom.po_line_item_number ='${req.poLineItemNumber}'`)
+        }
+        if (req.styleNumber !== undefined) {
+            query.andWhere(`dpom.style_number ='${req.styleNumber}'`)
+        }
+        if (req.planningSeasonCode !== undefined) {
+            query.andWhere(`dpom.planning_season_code ='${req.planningSeasonCode}'`)
+        }
+        if (req.planningSeasonYear !== undefined) {
+            query.andWhere(`dpom.planning_season_year ='${req.planningSeasonYear}'`)
+        }
+        if (req.planningSeasonYear !== undefined) {
+            query.andWhere(`dpom.planning_season_year ='${req.planningSeasonYear}'`)
+        }
         if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length > 0) {
             query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
         } else if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length === 0) {
@@ -510,40 +527,56 @@ export class DpomRepository extends Repository<DpomEntity> {
     }
 
     async getOrderAcceptanceDat(req: nikeFilterRequest): Promise<any[]> {
-        let query = this.createQueryBuilder('dpom')
-            .select(`dpom.*`)
-            .where(`dpom_item_line_status IN('Accepted','Unaccepted')`)
-            .groupBy(`dpom.po_and_line`)
-            .orderBy(`CASE WHEN dpom.dpom_item_line_status = 'Unaccepted' THEN 0 ELSE 1 END`, 'ASC')
+        let query = this.createQueryBuilder('d')
+            .select(` d.id,d.po_number, d.dpom_item_line_status, d.po_line_item_number, d.schedule_line_item_number, d.size_qty, d.size_description, d.document_date, d.plant_name, d.purchase_group_name, d.product_code, d.category_desc, d.shipping_type,
+            d.gross_price_fob, d.fob_currency_code, d.mrgac, d.gac, d.total_item_qty,
+            MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.old_val END) AS MRGAC_OLD,
+            MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.new_val END) AS MRGAC_NEW,
+            MAX(CASE WHEN df.display_name = 'totalItemQty' THEN df.new_val END) AS totalItemQty_NEW,
+            MAX(CASE WHEN df.display_name = 'totalItemQty' THEN df.old_val END) AS totalItemQty_OLD,
+            MAX(CASE WHEN df.display_name = 'FOBCurrencyCode' THEN df.new_val END) AS FOBCurrencyCode_NEW,
+            MAX(CASE WHEN df.display_name = 'FOBCurrencyCode' THEN df.old_val END) AS FOBCurrencyCode_OLD,
+            MAX(CASE WHEN df.display_name = 'grossPriceFOB' THEN df.old_val END) AS grossPriceFOB_OLD,
+            MAX(CASE WHEN df.display_name = 'grossPriceFOB' THEN df.new_val END) AS grossPriceFOB_NEW,
+            MAX(CASE WHEN df.display_name = 'GAC' THEN df.old_val END) AS GAC_OLD,
+            MAX(CASE WHEN df.display_name = 'GAC' THEN df.new_val END) AS GAC_NEW,
+            MAX(CASE WHEN df.display_name = 'trCoNetIncludingDisc' THEN df.old_val END) AS trCoNetIncludingDisc_OLD,
+            MAX(CASE WHEN df.display_name = 'trCoNetIncludingDisc' THEN df.new_val END) AS trCoNetIncludingDisc_OLD`)
+            .leftJoin(DpomDifferenceEntity, 'df', 'df.po_number = d.po_number AND df.po_line_item_number = d.po_line_item_number')
+            .where(` d.dpom_item_line_status = 'Unaccepted'`)
+        // .orderBy(`CASE WHEN dpom.dpom_item_line_status = 'Unaccepted' THEN 0 ELSE 1 END`, 'ASC')
         if (req.documentStartDate !== undefined) {
-            query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
+            query.andWhere(`Date(d.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
         }
         if (req.productCode !== undefined) {
-            query.andWhere(`dpom.product_code ='${req.productCode}'`)
+            query.andWhere(`d.product_code ='${req.productCode}'`)
         }
         if (req.poandLine !== undefined) {
-            query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
+            query.andWhere(`d.po_number ='${req.poandLine}'`)
         }
         if (req.DPOMLineItemStatus !== undefined) {
-            query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+            query.andWhere(`d.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
         }
-
+        query = query.orderBy(' d.po_number', 'ASC')
+            .addOrderBy(' d.po_line_item_number', 'ASC')
+            .addOrderBy(' d.schedule_line_item_number', 'ASC')
+            .groupBy(` d.po_number, d.po_line_item_number, d.schedule_line_item_number`)
         return await query.getRawMany();
     }
 
     async getPpmProductCodeForOrderCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.productCode,dpom.id`)
-            .where(`dpom.dpom_item_line_status IN('Accepted','Unaccepted')`)
+            .where(`dpom.dpom_item_line_status IN('Unaccepted')`)
             .groupBy(`dpom.productCode`)
         return await query.getRawMany();
     }
 
     async getPoLineforOrderCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(` dpom.po_and_line,dpom.id`)
-            .where(`dpom.dpom_item_line_status IN('Accepted','Unaccepted')`)
-            .groupBy(`dpom.po_and_line`)
+            .select(` dpom.po_number,dpom.id`)
+            .where(`dpom.dpom_item_line_status = 'Unaccepted'`)
+            .groupBy(`dpom.po_number`)
         return await query.getRawMany();
     }
 
@@ -575,4 +608,58 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.po_number`)
         return await query.getRawMany();
     }
+    async getPpmDocTypeForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.doc_type_code,dpom.id`)
+            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .groupBy(`dpom.doc_type_code`)
+        return await query.getRawMany();
+    }
+    async getPpmPoLineItemNumberForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.po_line_item_number,dpom.id`)
+            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .groupBy(`dpom.po_line_item_number`)
+        return await query.getRawMany();
+    }
+
+    async getPpmStyleNumberForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.style_number,dpom.id`)
+            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .groupBy(`dpom.style_number`)
+        return await query.getRawMany();
+    }
+
+    async getPpmplanningSeasonYearForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.planning_season_year,dpom.id`)
+            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .groupBy(`dpom.planning_season_year`)
+        return await query.getRawMany();
+    }
+
+    async getPpmplanningSeasonCodeForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.planning_season_code,dpom.id`)
+            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .groupBy(`dpom.planning_season_code`)
+        return await query.getRawMany();
+    }
+
+    async getPpmdesCountryNameMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.destination_country,dpom.id`)
+            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .groupBy(`dpom.destination_country`)
+        return await query.getRawMany();
+    }
+
+    async getPpmGeoCodeMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.geo_code, dpom.id`)
+            .groupBy(`dpom.geo_code`)
+        return await query.getRawMany();
+    }
+
 }

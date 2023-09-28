@@ -1,7 +1,7 @@
-import { FactoryReportSizeModel } from "./factory-repoort-factory-size-model";
+import { MarketingReportSizeModel } from "./marketing-report-size.model";
 
 
-export class FactoryReportModel {
+export class MarketingReportModel {
     lastModifiedDate: string;
     item: string;
     factory: string;
@@ -51,6 +51,7 @@ export class FactoryReportModel {
     planningPriorityCode: string;
     planningPriorityDesc: string;
     launchCode: string;
+    geoCode: string;
     modeOfTransportationCode: string;
     inCoTerms: string;
     inventorySegmentCode: string;
@@ -60,28 +61,21 @@ export class FactoryReportModel {
     actualShippedQty: string;
     VASSize: string;
     itemVasText: string;
+    itemVasTextPDF: string;
     itemText: string;
-    price:number;
-    coPrice:number;
     PCD: string;
     shipToAddressLegalPO: string;
     shipToAddressDIA: string;
     CABCode: string;
-    grossPriceFOB: string;
-    netIncludingDisc: string;
-    trCoNetIncludingDisc: string;
-    displayName:string;
-    actualUnit:string;
+    displayName: string;
+    actualUnit: string;
     allocatedQuantity: string;
-    pcd:string;
-    fobCurrCode:string;
-    netIncDisCurrency:string;
-    tradingNetCurrencyCode:string;
-    hanger:string;
-   quantity:string;
-    sizeWiseData: FactoryReportSizeModel[];
-    constructor(lastModifiedDate: string, item: string, factory: string, documentDate: string, purchaseOrderNumber: string, poLineItemNumber: number, poAndLine: string, DPOMLineItemStatus: string, styleNumber: string, productCode: string, colorDesc: string, customerOrder: string, coFinalApprovalDate: string, planNo: string, leadTime: string, categoryCode: string, categoryDesc: string, vendorCode: string, gccFocusCode: string, gccFocusDesc: string, genderAgeCode: string, genderAgeDesc: string, destinationCountryCode: string, destinationCountry: string, plant: string, plantName: string, tradingCoPoNumber: string, UPC: string, directShipSONumber: string, directShipSOItemNumber: string, customerPO: string, shipToCustomerNumber: string, shipToCustomerName: string, planningSeasonCode: string, planningSeasonYear: string, docTypeCode: string, docTypeDesc: string, MRGAC: string, OGAC: string, GAC: string, truckOutDate: string, originReceiptDate: string, factoryDeliveryActDate: string, GACReasonCode: string, GACReasonDesc: string, shippingType: string, planningPriorityCode: string, planningPriorityDesc: string, launchCode: string, modeOfTransportationCode: string, inCoTerms: string, inventorySegmentCode: string, purchaseGroupCode: string, purchaseGroupName: string, totalItemQty: string, actualShippedQty: string, VASSize: string, itemVasText: string, itemText: string,
-        price:number,coPrice:number,PCD: string,shipToAddressLegalPO: string, shipToAddressDIA: string,CABCode: string,grossPriceFOB: string,netIncludingDisc: string, trCoNetIncludingDisc: string,displayName:string,actualUnit:string,allocatedQuantity: string,pcd:string,fobCurrCode:string,netIncDisCurrency:string,tradingNetCurrencyCode:string,hanger:string,quantity:string,sizeWiseData: FactoryReportSizeModel[]) {
+    hanger: string;
+    sizeWiseData: MarketingReportSizeModel[];
+
+    constructor(lastModifiedDate: string, item: string, factory: string, documentDate: string, purchaseOrderNumber: string, poLineItemNumber: number, poAndLine: string, DPOMLineItemStatus: string, styleNumber: string, productCode: string, colorDesc: string, customerOrder: string, coFinalApprovalDate: string, planNo: string, leadTime: string, categoryCode: string, categoryDesc: string, vendorCode: string, gccFocusCode: string, gccFocusDesc: string, genderAgeCode: string, genderAgeDesc: string, destinationCountryCode: string, destinationCountry: string, plant: string, plantName: string, tradingCoPoNumber: string, UPC: string, directShipSONumber: string, directShipSOItemNumber: string, customerPO: string, shipToCustomerNumber: string, shipToCustomerName: string, planningSeasonCode: string, planningSeasonYear: string, docTypeCode: string, docTypeDesc: string, MRGAC: string, OGAC: string, GAC: string, truckOutDate: string, originReceiptDate: string, factoryDeliveryActDate: string, GACReasonCode: string, GACReasonDesc: string, shippingType: string, planningPriorityCode: string, planningPriorityDesc: string, launchCode: string, geoCode: string, modeOfTransportationCode: string, inCoTerms: string, inventorySegmentCode: string, purchaseGroupCode: string, purchaseGroupName: string, totalItemQty: string, actualShippedQty: string, VASSize: string, itemVasText: string, itemVasTextPDF: string, itemText: string,
+        PCD: string, shipToAddressLegalPO: string, shipToAddressDIA: string, CABCode: string, displayName: string, actualUnit: string, allocatedQuantity: string, hanger: string, sizeWiseData: MarketingReportSizeModel[]
+    ) {
 
         this.lastModifiedDate = lastModifiedDate;
         this.item = item
@@ -132,6 +126,7 @@ export class FactoryReportModel {
         this.planningPriorityCode = planningPriorityCode
         this.planningPriorityDesc = planningPriorityDesc
         this.launchCode = launchCode
+        this.geoCode = geoCode
         this.modeOfTransportationCode = modeOfTransportationCode
         this.inCoTerms = inCoTerms
         this.inventorySegmentCode = inventorySegmentCode
@@ -141,26 +136,16 @@ export class FactoryReportModel {
         this.actualShippedQty = actualShippedQty
         this.VASSize = VASSize
         this.itemVasText = itemVasText
+        this.itemVasTextPDF = itemVasTextPDF
         this.itemText = itemText
-        this.price = price
-        this.coPrice = coPrice
         this.PCD = PCD
         this.shipToAddressLegalPO = shipToAddressLegalPO
-       this.shipToAddressDIA=  shipToAddressDIA
-       this.CABCode= CABCode
-       this.grossPriceFOB = grossPriceFOB
-       this.netIncludingDisc = netIncludingDisc
-       this.trCoNetIncludingDisc=trCoNetIncludingDisc
-       this.displayName = displayName
-      
+        this.shipToAddressDIA = shipToAddressDIA
+        this.CABCode = CABCode
+        this.displayName = displayName
         this.actualUnit = actualUnit
         this.allocatedQuantity = allocatedQuantity
         this.sizeWiseData = sizeWiseData
-        this.pcd = pcd
-        this.fobCurrCode = fobCurrCode
-        this.netIncDisCurrency = netIncDisCurrency
-        this.tradingNetCurrencyCode = tradingNetCurrencyCode
         this.hanger = hanger
-        this.quantity = quantity
     };
 }

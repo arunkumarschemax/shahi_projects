@@ -5,12 +5,12 @@ import React, { useEffect, useState } from 'react'
 
 const { Dragger } = Upload;
 import { Document, pdfjs } from 'react-pdf';
-import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-models';
 import { AdobeAcrobatApiService, NikeService } from '@project-management-system/shared-services';
 import PoPdfTable from './po-pdf-table';
 import { extractDataFromPoPdf } from './po-pdf-extraction-helper'
+import { DiaPdfDataExtractor } from './dia-pdf-extraction-helper';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 interface IPdfUploadProps {
 
@@ -74,41 +74,9 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
     }
 
     async function extractDiaDocumentData(pdf: any, pdfText: any) {
-        const diaPDF: DiaPDFModel = new DiaPDFModel()
-        const targetStrForPo = 'Delivery Instructions';
-        const deliveryInstrunctionStr = pdfText.items.find(item => item.str.includes(targetStrForPo)).str.split(":")[1];
-
-        diaPDF.poNumber = deliveryInstrunctionStr.split("-")[0].replace(/ /g, '')
-        diaPDF.lineNo = deliveryInstrunctionStr.split("-")[1].replace(/ /g, '')
-        const extractedShipToAddressStr = [];
-        const page = await pdf.getPage(2);
-        const textContent: any = await page.getTextContent();
-
-        const startStrShipToAdd = 'Ship To Address:';
-        const endStrShipToAdd = 'Notify Parties:';
-        let shipToAddresFound = false;
-
-        for (const rec of textContent.items) {
-            if (rec.str === startStrShipToAdd) {
-                shipToAddresFound = true;
-                continue;
-            }
-            if (rec.str === endStrShipToAdd) {
-                shipToAddresFound = false;
-                break;
-            }
-
-            if (shipToAddresFound) {
-                if (rec.str.length) {
-                    extractedShipToAddressStr.push(rec.str);
-                }
-            }
-        }
-        const cabCodeIndex = textContent.items.findIndex((val: any) => val.str === "CAB Code:")
-        diaPDF.shipToAddress = extractedShipToAddressStr.join(",")
-        diaPDF.cabCode = textContent.items[cabCodeIndex + 2].str;
-        setDiaPDFValues(diaPDF)
-        diaPDfForm.setFieldsValue(diaPDF)
+        const data: DiaPDFModel = await DiaPdfDataExtractor(pdf)
+        setDiaPDFValues(data)
+        diaPDfForm.setFieldsValue(data)
 
     }
 
@@ -185,6 +153,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
                 }
             })
         } else {
+            console.log(poPdfData)
             nikeDpomService.saveLegalPOPDFData(poPdfData).then((res) => {
                 if (res.status) {
                     onReset()
