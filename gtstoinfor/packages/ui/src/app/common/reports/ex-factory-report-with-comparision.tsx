@@ -80,54 +80,89 @@ export const ExFactoryReportWithComparision = () => {
   };
   const CustomTitle = () => {
     return (
-      <div style={{ flexDirection: "row" }}>
-        <Space size={"large"}>
-          <span />
-          Production Plan Type Name<span>Jan(previous)</span>
-          <br />
-          <span>
-            <span></span>Jan(latest)
-          </span>
-          <span>Feb(previous)</span>
-          <br />
-          <span>Feb(latest)</span>
-          <span>Mar(previous)</span>
-          <br />
-          <span>Mar(latest)</span>
-          <span>Apr(previous)</span>
-          <span>Apr(latest)</span>
-          <span>May(previous)</span>
-          <br />
-          <span>May(latest)</span>
-          <span>Jun(previous)</span>
-          <br />
-          <span>Jun(latest)</span>
-          <span>Jul(previous)</span>
-          <br />
-          <span>Jul(latest)</span>
-          <span>Aug(previous)</span>
-          <br />
-          <span>Aug(latest)</span>
-          <span>Sep(previous)</span>
-          <br />
-          <span>Sep(latest)</span>
-          <span>Oct(previous)</span>
-          <br />
-          <span>Oct(latest)</span>
-          <span>Nov(previous)</span>
-          <span>Nov(latest)</span>
-          <span>Dec(previous)</span>
-          <br />
-          <span>Dec(latest)</span>
-          <span>Total(previous)</span>
-          <br />
-          <span>Total(latest)</span>
-          <span></span>
-          <span></span>
-        </Space>
+      <div>
+      
+
+<table>
+  <tr >
+  {/* <th style={{position: 'relative',paddingRight: '1200px'}}>Production Plan Type Name</th> */}
+  <th colSpan={2} style={{ position: 'relative', right: '-110px' , }}>January</th>
+    <th colSpan={2} style={{ position: 'relative', right: '-30px', borderLeft: '1px solid black',borderRight: '1px solid black', }}>Febuary</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '50px' ,borderRight: '1px solid black', }}>March</th><br/>
+    <th colSpan={2} style={{ position: 'relative', right: '150px', borderRight: '1px solid black', }}>April</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '230px', borderRight: '1px solid black', }}>May</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '320px', borderRight: '1px solid black', }}>June</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '390px' ,borderRight: '1px solid black', }}>July</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '500px' ,borderRight: '1px solid black', }}>August</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '580px' ,borderRight: '1px solid black'}}>September</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '680px', borderRight: '1px solid black' }}>October</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '620px',borderRight: '1px solid black', }}>November</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '500px', }}>December</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
+
+  </tr>
+  <tr>
+  <td colSpan={26} style={{ borderBottom: '1px solid black' }}></td>
+</tr>
+  <tr>
+<td style={{paddingLeft:'10px',position:'relative',}}>Production Plan Type Name</td>
+    <td style={{right: '70px',position: 'relative', }}>(previous)</td>
+    <td style={{position: 'relative',right: '60px' }} >(latest)</td>
+    <td  style={{position: 'relative',right: '60px', }} >(previous)</td>
+    <td  style={{position: 'relative',right: '50px',}} >(latest)</td>
+    <td  style={{position: 'relative',right: '30px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '40px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '20px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '20px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '10px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '20px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '5px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '20px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-10px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-10px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '5px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '10px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-50px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-50px'}} >(latest)</td>
+    <td  style={{position: 'relative',right: '-200px'}} >Total(previous)</td>
+    <td  style={{position: 'relative',right: '-300px'}} >Total(latest)</td>
+    
+  </tr>
+
+  <tr>
+    
+</tr>
+</table>
+
+      {/* <Space size={"large"}>
+        <span/>
+       <span>Jan(previous)</span><br/><span><span></span>Jan(latest)</span>
+       <span>Feb(previous)</span><br/><span>Feb(latest)</span>
+        <span>Mar(previous)</span><br/><span>Mar(latest)</span>
+        <span>Apr(previous)</span><span>Apr(latest)</span>
+        <span>May(previous)</span><br/><span>May(latest)</span>
+        <span>Jun(previous)</span><br/><span>Jun(latest)</span>
+        <span>Jul(previous)</span><br/><span>Jul(latest)</span>
+        <span>Aug(previous)</span><br/><span>Aug(latest)</span>
+        <span>Sep(previous)</span><br/><span>Sep(latest)</span>
+        <span>Oct(previous)</span><br/><span>Oct(latest)</span>
+        <span>Nov(previous)</span><span>Nov(latest)</span>
+        <span>Dec(previous)</span><br/><span>Dec(latest)</span>
+        <span>Total(previous)</span><br/><span>Total(latest)</span>
+        <span></span><span></span>
+</Space> */}
+      
       </div>
     );
   };
+
   const childColumns1: any = [
     {
       // title: "Production Plan Type Name",
@@ -135,278 +170,287 @@ export const ExFactoryReportWithComparision = () => {
       width: 130,
     },
     {
-      // title: `Previous`,
-      dataIndex: "janPcs",
-      width: 100,
-      align: "right",
+          // title: `Previous`,
+          dataIndex: "janPcs",         
+           width:60,
+          align:"right",
 
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.janPcs.toLocaleString()}</span> || "-"
-        );
-      },
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.janPcs.toLocaleString()}</span>  || '-'))
+          
+          }
+        },
+        {
+          // title: `Latest`,
+          dataIndex: "janCoeff",
+          width:60,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.janCoeff.toLocaleString()}</span>  || '-'))
+          
+          }
+        
+   
     },
     {
-      // title: `Latest`,
-      dataIndex: "janCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.janCoeff.toLocaleString()}</span> || "-"
-        );
-      },
+      
+          // title: `Previous`,
+          dataIndex: "febPcs",
+          width:60,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.febPcs.toLocaleString()}</span>  || '-'))
+          
+          }
+        },
+        {
+          // title: `Latest`,
+          dataIndex: "febCoeff",
+          width:60,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.febCoeff.toLocaleString()}</span>  || '-'))
+          
+          }
+       
+ 
     },
     {
-      // title: `Previous`,
-      dataIndex: "febPcs",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.febPcs.toLocaleString()}</span> || "-"
-        );
-      },
+     
+         // title: `Previous`,
+          dataIndex: "marPcs",
+          width:70,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.marPcs.toLocaleString()}</span>  || '-'))
+          
+          }
+        },
+        {
+         // title: `Latest`,
+          dataIndex: "marCoeff",
+          width:60,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.marCoeff.toLocaleString()}</span>  || '-'))
+          
+          }
+        
+      
     },
     {
-      // title: `Latest`,
-      dataIndex: "febCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.febCoeff.toLocaleString()}</span> || "-"
-        );
-      },
+      
+         // title: `Previous`,
+          dataIndex: "aprPcs",
+          width:80,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.aprPcs.toLocaleString()}</span>  || '-'))
+          
+          }
+        },
+        {
+         // title: `Latest`,
+          dataIndex: "aprCoeff",
+          width:60,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.aprCoeff.toLocaleString()}</span>  || '-'))
+          
+          }
+        
+  
     },
     {
-      // title: `Previous`,
-      dataIndex: "marPcs",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.marPcs.toLocaleString()}</span> || "-"
-        );
-      },
+     
+         // title: `Previous`,
+          dataIndex: "mayPcs",
+          width:50,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.mayPcs.toLocaleString()}</span>  || '-'))
+          
+          }
+        },
+        {
+         // title: `Latest`,
+          dataIndex: "mayCoeff",
+          width:70,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.mayCoeff.toLocaleString()}</span>  || '-'))
+          
+          }
+        
+    
+      
     },
     {
-      // title: `Latest`,
-      dataIndex: "marCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.marCoeff.toLocaleString()}</span> || "-"
-        );
-      },
+     
+         // title: `Previous`,
+          dataIndex: "junPcs",
+          width:70,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.junPcs.toLocaleString()}</span>  || '-'))
+          
+          }
+        },
+        {
+         // title: `Latest`,
+          dataIndex: "junCoeff",
+          width:70,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.junCoeff.toLocaleString()}</span>  || '-'))
+          
+          }
+       
+   
+      
     },
     {
-      // title: `Previous`,
-      dataIndex: "aprPcs",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.aprPcs.toLocaleString()}</span> || "-"
-        );
-      },
+     
+         // title: `Previous`,
+          dataIndex: "julPcs",
+          width:70,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.julPcs.toLocaleString()}</span>  || '-'))
+          
+          }
+        },
+        {
+         // title: `Latest`,
+          dataIndex: "julCoeff",
+          width:60,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.julCoeff.toLocaleString()}</span>  || '-'))
+          
+          }
+       
     },
     {
-      // title: `Latest`,
-      dataIndex: "aprCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.aprCoeff.toLocaleString()}</span> || "-"
-        );
-      },
+      
+         // title: `Previous`,
+          dataIndex: "augPcs",
+          width:60,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.augPcs.toLocaleString()}</span>  || '-'))
+          
+          }
+        },
+        {
+         // title: `Latest`,
+          dataIndex: "augCoeff",
+          width:60,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.augCoeff.toLocaleString()}</span>  || '-'))
+          
+          }
+       
     },
     {
-      // title: `Previous`,
-      dataIndex: "mayPcs",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.mayPcs.toLocaleString()}</span> || "-"
-        );
-      },
+   
+         // title: `Previous`,
+          dataIndex: "sepPcs",
+          width:60,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.sepPcs.toLocaleString()}</span>  || '-'))
+          
+          }
+        },
+        {
+         // title: `Latest`,
+          dataIndex: "sepCoeff",
+          width:60,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.sepCoeff.toLocaleString()}</span>  || '-'))
+          
+          }
+       
+    
     },
     {
-      // title: `Latest`,
-      dataIndex: "mayCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.mayCoeff.toLocaleString()}</span> || "-"
-        );
-      },
+    
+         // title: `Previous`,
+          dataIndex: "octPcs",
+          width:70,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.octPcs.toLocaleString()}</span>  || '-'))
+          
+          },
+        },
+        {
+         // title: `Latest`,
+          dataIndex: "octCoeff",
+          width:70,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.octCoeff.toLocaleString()}</span>  || '-'))
+          
+          }
+       
     },
     {
-      // title: `Previous`,
-      dataIndex: "junPcs",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.junPcs.toLocaleString()}</span> || "-"
-        );
-      },
+     
+         // title: `Previous`,
+          dataIndex: "novPcs",
+          width:70,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.novPcs.toLocaleString()}</span>  || '-'))
+          
+          }
+        },
+        {
+         // title: `Latest`,
+          dataIndex: "novCoeff",
+          width:50,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.novCoeff.toLocaleString()}</span>  || '-'))
+          
+          },
+       
     },
     {
-      // title: `Latest`,
-      dataIndex: "junCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.junCoeff.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Previous`,
-      dataIndex: "julPcs",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.julPcs.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Latest`,
-      dataIndex: "julCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.julCoeff.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Previous`,
-      dataIndex: "augPcs",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.augPcs.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Latest`,
-      dataIndex: "augCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.augCoeff.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Previous`,
-      dataIndex: "sepPcs",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.sepPcs.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Latest`,
-      dataIndex: "sepCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.sepCoeff.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Previous`,
-      dataIndex: "octPcs",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.octPcs.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Latest`,
-      dataIndex: "octCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.octCoeff.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Previous`,
-      dataIndex: "novPcs",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.novPcs.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Latest`,
-      dataIndex: "novCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.novCoeff.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Previous`,
-      dataIndex: "decPcs",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.pcsData.map(
-          (item: any) => <span>{item.decPcs.toLocaleString()}</span> || "-"
-        );
-      },
-    },
-    {
-      // title: `Latest`,
-      dataIndex: "decCoeff",
-      width: 100,
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.coeffData.map(
-          (item: any) => <span>{item.decCoeff.toLocaleString()}</span> || "-"
-        );
-      },
+     
+          // title: `Previous`,
+          dataIndex: "decPcs",
+          width:80,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.pcsData.map((item: any) =><span>{item.decPcs.toLocaleString()}</span>  || '-'))
+          
+          }
+        },
+        {
+          // title: `Latest`,
+          dataIndex: "decCoeff",
+          width:75,
+          align:"right",
+          render: (text: any, record: any) => {
+            return (record.coeffData.map((item: any) =><span>{item.decCoeff.toLocaleString()}</span>  || '-'))
+          
+          }
+
+      
     },
     {
       // title: "Total Previous",
       dataIndex: "totalPcs",
-      align: "right",
-      render: (text: any, record: any) => {
-        return record.totalPcs ? record.totalPcs.toLocaleString() : 0;
-      },
-    },
+   align:"right",
+   width:150,
+   render: (text: any, record: any) => {
+    return record.totalPcs ? record.totalPcs.toLocaleString() :0
+  },    },
     {
       // title: "Total Latest",
       dataIndex: "totalCoeff",
@@ -439,13 +483,14 @@ export const ExFactoryReportWithComparision = () => {
       dataIndex: "monthWiseData",
       align: "center",
       render: (text: any, record: any) => (
+        
         <Table
-          showHeader={false}
+        showHeader={false}
+        bordered={false}
           dataSource={record.monthWiseData}
           columns={childColumns1}
-          pagination={false} // Hide pagination for child table
+          pagination={false} 
           rowKey={(record) => record.itemName}
-          bordered={false}
         />
       ),
     },
@@ -460,9 +505,8 @@ export const ExFactoryReportWithComparision = () => {
       .join("/");
 
     const excel = new Excel();
-    // year.forEach((yearItem) => {
-    excel.addSheet(tab.toString()); // Create a sheet for the year
-
+    
+    excel.addSheet(tab.toString()); 
     let exportingColumns: IExcelColumn[] = [];
     exportingColumns = [
       {
