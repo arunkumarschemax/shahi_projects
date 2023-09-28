@@ -24,6 +24,10 @@ export const WarehouseReport = () => {
   const { Option } = Select;
   const [form] = Form.useForm();
 
+  let JanPreviousTotal = 0
+    let JanLatestTotal = 0
+    let FebPreviousTotal = 0
+    let FebLatestTotal= 0
   useEffect(()=>{
     getData();
     getTabs();
@@ -62,22 +66,22 @@ export const WarehouseReport = () => {
            
       return (
         <div>
-        <Space size={"large"}>
-         Production Plan Type Name<span>Jan(previous)</span><br/><span>Jan(latest)</span>
-         <span>Feb(previous)</span><br/><span>Feb(latest)</span>
-          <span>Mar(previous)</span><br/><span>Mar(latest)</span>
-          <span>Apr(previous)</span><span>Apr(latest)</span>
-          <span>May(previous)</span><br/><span>May(latest)</span>
-          <span>Jun(previous)</span><br/><span>Jun(latest)</span>
-          <span>Jul(previous)</span><br/><span>Jul(latest)</span>
-          <span>Aug(previous)</span><br/><span>Aug(latest)</span>
-          <span>Sep(previous)</span><br/><span>Sep(latest)</span>
-          <span>Oct(previous)</span><br/><span>Oct(latest)</span>
-          <span>Nov(previous)</span><span>Nov(latest)</span>
-          <span>Dec(previous)</span><br/><span>Dec(latest)</span>
-          <span>Total(previous)</span><br/><span>Total(latest)</span>
-          <span></span><span></span>
-  </Space>
+           <Space size={"large"}>
+     Production Plan Type Name<br/><span>Jan(Pcs)</span><br/><span><span></span>Jan(Coeff)</span><br/>
+     <span>Feb(Pcs)</span><br/><span>Feb(Coeff)</span><br/>
+      <span>Mar(Pcs)</span><br/><span>Mar(Coeff)</span><br/>
+      <span>Apr(Pcs)</span><br/><span>Apr(Coeff)</span><br/><br/>
+      <span>May(Pcs)</span><br/><span>May(Coeff)</span><br/><br/>
+      <span>Jun(Pcs)</span><br/><span>Jun(Coeff)</span><br/>
+      <span>Jul(Pcs)</span><br/><span>Jul(Coeff)</span><br/>
+      <span>Aug(Pcs)</span><br/><br/><span>Aug(Coeff)</span><br/>
+      <span>Sep(Pcs)</span><br/><span>Sep(Coeff)</span><br/>
+      <span>Oct(Pcs)</span><br/><span>Oct(Coeff)</span><br/>
+      <span> <span></span>Nov(Pcs)</span><br/><span>Nov(Coeff)</span><br/>
+      <span>Dec(Pcs)<br/></span><br/><span>Dec(Coeff)</span><br/>
+      <span>Total(Pcs)</span><br/><br/><span>Total(Coeff)</span>
+
+</Space>
         
         </div>
       );
@@ -86,6 +90,8 @@ export const WarehouseReport = () => {
     {
       // title: "Production Plan Type Name",
       dataIndex: "phasetype",
+      align: "left",
+      width: 130,
       // key: "phasetype",
     },
     // {
@@ -94,16 +100,23 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "janPcs",
+          align:'right',
+          width:100,
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
+            return (record.pcsData.map(
+              (item: any) =><span>{item.janPcs}</span>  || '-'))
           
           }
         },
         {
           // title: `In Coeff`,
           dataIndex: "janCoeff",
+          align:'right',
+
+          width:100,
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.janCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =>
+            <span>{item.janCoeff}</span>  || '-'))
           
           }
         },
@@ -112,51 +125,63 @@ export const WarehouseReport = () => {
     // },
     {
       // title: "February",
-      dataIndex: "oldOrderQtyPcs2",
-            children: [
-        {
+      // dataIndex: "oldOrderQtyPcs2",
+      //       children: [
+      //   {
           // title: `In PCs`,
           dataIndex: "febPcs",
+          width:100,
+          align:'right',
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.febPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =>
+            <span>{item.febPcs}</span>  || '-'))
           
           }
         },
         {
           // title: `In Coeff`,
           dataIndex: "febCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.febCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =>
+            <span>{item.febCoeff}</span>  || '-'))
           
           }
       //   },
       // ],
  
-    },
-    // {
-    //   title: "March",
-    //   dataIndex: "oldOrderQtyPcs3",
-    //   key: "oldOrderQtyPcs3",
-    //         children: [
+        },
+      // {
+      //   title: "March",
+      //   dataIndex: "oldOrderQtyPcs3",
+      //   key: "oldOrderQtyPcs3",
+      //         children: [
         {
           // title: `In PCs`,
           dataIndex: "marPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.marPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =>
+            <span>{item.marPcs}</span>  || '-'))
           
           }
         },
         {
           // title: `In Coeff`,
           dataIndex: "marCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.marCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =>
+            <span>{item.marCoeff}</span>  || '-'))
           
           }
         },
-      ],
+    //   ],
       
-    },
+    // },
     // {
     //   title: "April",
     //   dataIndex: "oldOrderQtyPcs4",
@@ -165,16 +190,22 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "aprPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.aprPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =>
+            <span>{item.aprPcs}</span>  || '-'))
           
           }
         },
         {
           // title: `In Coeff`,
           dataIndex: "aprCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =>
+            <span>{item.janPcs}</span>  || '-'))
           
           }
       //   },
@@ -189,16 +220,22 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "mayPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.janPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =>
+            <span>{item.mayPcs}</span>  || '-'))
           
           }
         },
         {
           // title: `In Coeff`,
           dataIndex: "mayCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
-            return (record.coeffData.map((item: any) =><span>{item.mayCoeff}</span>  || '-'))
+            return (record.coeffData.map((item: any) =>
+            <span>{item.mayCoeff}</span>  || '-'))
           
           }
       //   },
@@ -214,14 +251,20 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "junPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
-            return (record.pcsData.map((item: any) =><span>{item.junPcs}</span>  || '-'))
+            return (record.pcsData.map((item: any) =>
+              
+            <span>{item.junPcs}</span>  || '-'))
           
           }
         },
         {
           // title: `In Coeff`,
           dataIndex: "junCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.junCoeff}</span>  || '-'))
           
@@ -239,6 +282,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "julPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.julPcs}</span>  || '-'))
           
@@ -247,6 +292,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "julCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.julCoeff}</span>  || '-'))
           
@@ -264,6 +311,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "augPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.augPcs}</span>  || '-'))
           
@@ -272,6 +321,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "augCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.augCoeff}</span>  || '-'))
           
@@ -288,6 +339,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "sepPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.sepPcs}</span>  || '-'))
           
@@ -296,6 +349,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "sepCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.sepCoeff}</span>  || '-'))
           
@@ -312,6 +367,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "octPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.octPcs}</span>  || '-'))
           
@@ -320,6 +377,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "octCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.octCoeff}</span>  || '-'))
           
@@ -336,6 +395,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "novPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.novPcs}</span>  || '-'))
           
@@ -344,6 +405,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "novCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.novCoeff}</span>  || '-'))
           
@@ -360,6 +423,8 @@ export const WarehouseReport = () => {
         {
           // title: `In PCs`,
           dataIndex: "decPcs",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.pcsData.map((item: any) =><span>{item.decPcs}</span>  || '-'))
           
@@ -368,6 +433,8 @@ export const WarehouseReport = () => {
         {
           // title: `In Coeff`,
           dataIndex: "decCoeff",
+          width:100,
+          align:"right",
           render: (text: any, record: any) => {
             return (record.coeffData.map((item: any) =><span>{item.decCoeff}</span>  || '-'))
           
@@ -380,12 +447,14 @@ export const WarehouseReport = () => {
     {
       // title: "Total In PCs",
       dataIndex: "totalPcs",
-     
+      width:100,
+      align:"right",
     },
     {
       // title: "Total In Coeff",
       dataIndex: "totalCoeff",
-     
+      width:100,
+      align:"right",
     },
   ]
   const columns5: any = [
@@ -401,9 +470,9 @@ export const WarehouseReport = () => {
     // },
     {
       title: "Item Name",
-      dataIndex: "item_cd",
+      dataIndex: "itemName",
       render: (text: any, record: any) => (
-      <span>{record.item_cd}</span>
+      <span>{record.itemName}</span>
       ),
       // ...getColumnSearchProps('itemName')
     },
@@ -453,26 +522,26 @@ export const WarehouseReport = () => {
           title: `Jan In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-            record.month == 1 ? record.order_plan_qty : "-",
+            record.whMonth == 1 ? record.order_plan_qty : "-",
         },
         {
           title: `Jan In Coeff`,
           dataIndex: "order_plan_qty_coeff",
           render: (text, record) => {
-           return record.month == 1 ? record.order_plan_qty_coeff : "-";
+           return record.whMonth == 1 ? record.order_plan_qty_coeff : "-";
           },
         },
         {
           title: `Feb In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-            record.month == 2 ? record.order_plan_qty : "-",
+            record.whMonth == 2 ? record.order_plan_qty : "-",
         },
         {
           title: `Feb In Coeff`,
           dataIndex: "order_plan_qty_coeff",
           render: (text, record) => {
-            return record.month == 2 ? record.order_plan_qty_coeff : "-";
+            return record.whMonth == 2 ? record.order_plan_qty_coeff : "-";
           },
         },
   
@@ -480,13 +549,13 @@ export const WarehouseReport = () => {
           title: `Mar In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-            record.month == 3 ? record.order_plan_qty : "-",
+            record.whMonth == 3 ? record.order_plan_qty : "-",
         },
         {
           title: `Mar In Coeff`,
           dataIndex: "order_plan_qty_coeff",
           render: (text, record) => {
-            return record.month == 3 ? record.order_plan_qty_coeff : "-";
+            return record.whMonth == 3 ? record.order_plan_qty_coeff : "-";
           },
         },
   
@@ -494,13 +563,13 @@ export const WarehouseReport = () => {
           title: `Apr In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-            record.month == 4 ? record.order_plan_qty : "-",
+            record.whMonth == 4 ? record.order_plan_qty : "-",
         },
         {
           title: `Apr In Coeff`,
           dataIndex: "order_plan_qty_coeff",
           render: (text, record) => {
-            return record.month == 4 ? record.order_plan_qty_coeff : "-";
+            return record.whMonth == 4 ? record.order_plan_qty_coeff : "-";
           },
         },
   
@@ -508,13 +577,13 @@ export const WarehouseReport = () => {
           title: `May In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-            record.month == 5 ? record.order_plan_qty : "-",
+            record.whMonth == 5 ? record.order_plan_qty : "-",
         },
         {
           title: `May In Coeff`,
           dataIndex: "order_plan_qty_coeff",
           render: (text, record) => {
-            return record.month == 5 ? record.order_plan_qty_coeff : "-";
+            return record.whMonth == 5 ? record.order_plan_qty_coeff : "-";
           },
         },
   
@@ -522,13 +591,13 @@ export const WarehouseReport = () => {
           title: `Jun In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-          record.month == 6 ? record.order_plan_qty : "-",
+          record.whMonth == 6 ? record.order_plan_qty : "-",
         },
         {
           title: `Jun In Coeff`,
           dataIndex: "order_plan_qty_coeff",
           render: (text, record) => {
-            return record.month == 6 ? record.order_plan_qty_coeff : "-";
+            return record.whMonth == 6 ? record.order_plan_qty_coeff : "-";
           },
         },
   
@@ -536,13 +605,13 @@ export const WarehouseReport = () => {
           title: `Jul In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-          record.month == 7 ? record.order_plan_qty : "-",
+          record.whMonth == 7 ? record.order_plan_qty : "-",
         },
         {
           title: `Jul In Coeff`,
           dataIndex: "order_plan_qty_coeff",
           render: (text, record) => {
-            return record.month == 7 ? record.order_plan_qty_coeff : "-";
+            return record.whMonth == 7 ? record.order_plan_qty_coeff : "-";
           },
         },
   
@@ -550,13 +619,13 @@ export const WarehouseReport = () => {
           title: `Aug In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-          record.month == 8 ? record.order_plan_qty : "-",
+          record.whMonth == 8 ? record.order_plan_qty : "-",
         },
         {
           title: `Aug In Coeff`,
           dataIndex: "order_plan_qty_coeff",
           render: (text, record) => {
-           return record.month == 8 ? record.order_plan_qty_coeff : "-";
+           return record.whMonth == 8 ? record.order_plan_qty_coeff : "-";
           },
         },
   
@@ -564,13 +633,13 @@ export const WarehouseReport = () => {
           title: `Sep In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-          record.month == 9 ? record.order_plan_qty : "-",
+          record.whMonth == 9 ? record.order_plan_qty : "-",
         },
         {
           title: `Sep In Coeff`,
           dataIndex: "order_plan_qty_coeff",
           render: (text, record) => {
-            return record.month == 9 ? record.order_plan_qty_coeff : "-";
+            return record.whMonth == 9 ? record.order_plan_qty_coeff : "-";
           },
         },
   
@@ -578,13 +647,13 @@ export const WarehouseReport = () => {
           title: `Oct In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-            record.month == 10 ? record.order_plan_qty : "-",
+            record.whMonth == 10 ? record.order_plan_qty : "-",
         },
         {
           title: `Oct In Coeff`,
           dataIndex: "order_plan_qty_coeff",
           render: (text, record) => {
-            return record.month == 10 ? record.order_plan_qty_coeff : "-";
+            return record.whMonth == 10 ? record.order_plan_qty_coeff : "-";
           },
         },
   
@@ -592,14 +661,14 @@ export const WarehouseReport = () => {
           title: `Nov In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-            record.month == 11 ? record.order_plan_qty : "-",
+            record.whMonth == 11 ? record.order_plan_qty : "-",
           
         },
         {
           title: `Nov In Coeff`,
           dataIndex: "order_plan_qty_coeff",
           render: (text, record) => {
-            return record.month == 11 ? record.order_plan_qty_coeff : "-";
+            return record.whMonth == 11 ? record.order_plan_qty_coeff : "-";
           },
         },
   
@@ -607,7 +676,7 @@ export const WarehouseReport = () => {
           title: `Dec In PCs`,
           dataIndex: "order_plan_qty",
           render: (text, record) =>
-            record.month == 12 ? record.order_plan_qty : "-",
+            record.whMonth == 12 ? record.order_plan_qty : "-",
         },
         {
           title: `Dec In Coeff`,
@@ -654,9 +723,179 @@ const onReset = () => {
   form.resetFields();
   getData();
 };
+
+const getTableSummary = (pageData) => {
+  console.log('okk')
+  let janPre = 0;let janLat = 0;
+  let febPre = 0;let febLat = 0;
+  let marPre = 0;let marLat = 0;
+  let aprPre = 0;let aprLat = 0;
+  let mayPre = 0;let mayLat = 0;
+  let junPre = 0;let junLat = 0;
+  let julPre = 0;let julLat = 0;
+  let augPre = 0;let augLat = 0;
+  let sepPre = 0;let sepLat = 0;
+  let octPre = 0;let octLat = 0;
+  let novPre = 0;let novLat = 0;
+  let decPre = 0;let decLat = 0;
+  let totalPre = 0;let totalLat =0;
+
+  pageData.forEach((e) => {
+    console.log(e)
+    e.monthWiseData.forEach((rec) => {
+      console.log(rec)
+   if(Number(rec.pcsData[0].janPcs)) {
+    console.log(rec.pcsData[0].janPcs)
+    janPre += Number(rec.pcsData[0].janPcs)
+  }
+})
+  })
+  JanPreviousTotal += janPre
+  pageData.forEach((e) => {
+    e.monthWiseData.forEach((rec) => {
+      if(rec.pcsData[0].janPcs) {
+        const jan = [rec.pcsData[0].janPcs]
+        janPre += Number(jan)
+      }
+      if(rec.pcsData[0].febPcs) {
+        const feb = [rec.pcsData[0].febPcs]
+        febPre += Number(feb)
+      }
+      if(rec.pcsData[0].marPcs) {
+        const mar = [rec.pcsData[0].marPcs]
+        marPre += Number(mar)
+      }
+      if(rec.pcsData[0].aprPcs) {
+        const apr = [rec.pcsData[0].aprPcs]
+        aprPre += Number(apr)
+      } if(rec.pcsData[0].mayPcs) {
+        const may = [rec.pcsData[0].mayPcs]
+        mayPre += Number(may)
+      } if(rec.pcsData[0].junPcs) {
+        const jun = [rec.pcsData[0].junPcs]
+        junPre += Number(jun)
+      } if(rec.pcsData[0].julPcs) {
+        const jul = [rec.pcsData[0].julPcs]
+        julPre += Number(jul)
+      } if(rec.pcsData[0].augPcs) {
+        const aug = [rec.pcsData[0].augPcs]
+        augPre += Number(aug)
+      } if(rec.pcsData[0].sepPcs) {
+        const sep = [rec.pcsData[0].sepPcs]
+        sepPre += Number(sep)
+      } if(rec.pcsData[0].octPcs) {
+        const oct = [rec.pcsData[0].octPcs]
+        octPre += Number(oct)
+      } if(rec.pcsData[0].novPcs) {
+        const nov = [rec.pcsData[0].novPcs]
+        novPre += Number(nov)
+      } if(rec.pcsData[0].decPcs) {
+        const dec = [rec.pcsData[0].decPcs]
+        decPre += Number(dec)
+      }
+      if(rec.pcsData[0].jancoeff) {
+        const jan = [rec.coeffData[0].janCoeff]
+        janLat += Number(jan)
+      }
+      if(rec.coeffData[0].febCoeff) {
+        const feb = [rec.coeffData[0].febCoeff]
+        febLat += Number(feb)
+      }
+      if(rec.coeffData[0].marCoeff) {
+        const mar = [rec.coeffData[0].marCoeff]
+        marLat += Number(mar)
+      }
+      if(rec.coeffData[0].aprCoeff) {
+        const apr = [rec.coeffData[0].aprCoeff]
+        aprLat += Number(apr)
+      } if(rec.coeffData[0].mayCoeff) {
+        const may = [rec.coeffData[0].mayCoeff]
+        mayLat += Number(may)
+      } if(rec.coeffData[0].junCoeff) {
+        const jun = [rec.coeffData[0].junCoeff]
+        junLat += Number(jun)
+      } if(rec.coeffData[0].julCoeff) {
+        const jul = [rec.coeffData[0].julCoeff]
+        julLat += Number(jul)
+      } if(rec.coeffData[0].augCoeff) {
+        const aug = [rec.coeffData[0].augCoeff]
+        augLat += Number(aug)
+      } if(rec.coeffData[0].sepCoeff) {
+        const sep = [rec.coeffData[0].sepCoeff]
+        sepLat += Number(sep)
+      } if(rec.coeffData[0].octCoeff) {
+        const oct = [rec.coeffData[0].octCoeff]
+        octLat += Number(oct)
+      } if(rec.coeffData[0].novCoeff) {
+        const nov = [rec.coeffData[0].novCoeff]
+        novLat += Number(nov)
+      } if(rec.coeffData[0].decCoeff) {
+        const dec = [rec.coeffData[0].decCoeff]
+        decLat += Number(dec)
+      }
+      if(rec.totalPcs) {
+        const pcs = [rec.totalPcs]
+        totalPre += Number(pcs)
+      }
+      if(rec.totalCoeff) {
+        const coeff = [rec.totalCoeff]
+        totalLat += Number(coeff)
+      }
+      
+    })
+  })
+
+
+  return(
+    <>
+        <Table.Summary.Row>
+      <Table.Summary.Cell index={0}></Table.Summary.Cell>
+      <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
+      <Table.Summary.Cell index={3}>
+        <div>
+          <Space></Space>
+          <Space>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/><span/><span/>
+            <span/> <span/><span/><span/>
+           {janPre}<span/><span/> <span/><span/><span/><span/><span/><span/> {janLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/> 
+           {febPre}<span/><span/> <span/><span/><span/><span/>{febLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {marPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{marLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {aprPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/> {aprLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {mayPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {mayLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {junPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{julLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {julPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {julLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {augPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{aprLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>
+           {sepPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{sepLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {octPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{octLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {novPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{novLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {decPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{decLat}
+           <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+           {totalPre}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{totalLat}
+          
+          </Space>
+        </div>
+      </Table.Summary.Cell>
+    </Table.Summary.Row>
+  </>
+  )
+}
   return (
     <Card
-    title="Montly Wise WareHouse Report"
+    // title="Montly Wise WareHouse Report"
     extra={data.length > 0 ? (<Button
         type="default"
         style={{ color: 'green' }}
@@ -678,7 +917,7 @@ const onReset = () => {
                 >
                   <div>
                     <label>Item Name</label>
-                    <Form.Item name="itemName">
+                    <Form.Item name="ItemName">
                       <Select
                         showSearch
                         placeholder="Select Item Name"
@@ -729,7 +968,7 @@ const onReset = () => {
           columns={columns5} 
           size="small"
           scroll={{ x: "max-content" }}
-         
+         summary={getTableSummary}
         />
         
        </Tabs.TabPane>

@@ -196,8 +196,9 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
                 item, 
                 item_cd, 
                 prod_plan_type, 
-                ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY VERSION DESC) AS version_rank
+                ROW_NUMBER() OVER (PARTITION BY order_plan_number ORDER BY version DESC) AS version_rank
             FROM orders_child
+            WHERE year = '${req.year}'
         )
         SELECT
             year,
@@ -208,14 +209,15 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             item, 
             item_cd, 
             prod_plan_type, 
-            SUBSTRING_INDEX(wh, '/', 1) AS month, 
+            MONTH(STR_TO_DATE(wh, '%m/%d')) AS whMonth,
             CASE
                 WHEN version_rank = 1 THEN 'latest'
                 ELSE 'previous'
             END AS status
         FROM RankedVersions
-        WHERE version_rank <= 2 && year = '${req.year}'
-        ORDER BY order_plan_number, VERSION DESC`;
+        WHERE version_rank <= 2
+        ORDER BY order_plan_number, version DESC`;
+        
         const result = await this.query(query);
         return result;
     }

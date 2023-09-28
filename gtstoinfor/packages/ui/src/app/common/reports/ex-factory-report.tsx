@@ -39,6 +39,11 @@ export const ExFactoryReport = () => {
   const [form] = Form.useForm();
   const { Option } = Select;
 
+  let JanPreviousTotal = 0
+    let JanLatestTotal = 0
+    let FebPreviousTotal = 0
+    let FebLatestTotal= 0
+
   const { Text } = Typography;
   useEffect(() => {
     getData();
@@ -71,31 +76,7 @@ export const ExFactoryReport = () => {
       }
     });
   };
-//   const CustomTitle = () => {
-           
-//     return (
-//       <div>
-//       <Space size={"large"}>
-//        Production Plan Type Name<br/><span>Jan(Pcs)</span><br/><span><span></span>Jan(latest)</span><br/>
-//        <span>Feb(Pcs)</span><br/><br/><span>Feb(Coeff)</span><br/><br/>
-//         <span>Mar(Pcs)</span><br/><span>Mar(Coeff)</span><br/>
-//         <span>Apr(Pcs)</span><br/><span>Apr(Coeff)</span><br/>
-//         <span>May(Pcs)</span><br/><br/><span>May(Coeff)</span><br/>
-//         <span>Jun(Pcs)</span><br/><span>Jun(Coeff)</span><br/><br/>
-//         <span>Jul(Pcs)</span><br/><br/><span>Jul(Coeff)</span><br/>
-//         <span>Aug(Pcs)</span><br/><span>Aug(Coeff)</span><br/>
-//         <span>Sep(Pcs)</span><br/><span>Sep(Coeff)</span><br/>
-//         <span>Oct(Pcs)</span><br/><span>Oct(Coeff)</span><br/>
-//         <span>Nov(Pcs)</span><br/><span>Nov(Coeff)</span><br/>
-//         <span>Dec(Pcs)</span><br/><span>Dec(Coeff)</span><br/>
-//         <span>Total(Pcs)</span><br/><span>Total(Coeff)</span>
-//         <span></span><span></span><span></span><span></span>
-//         {/* <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span> */}
-// </Space>
-      
-//       </div>
-//     );
-//   };
+
   
 const CustomTitle = () => {
            
@@ -107,18 +88,15 @@ const CustomTitle = () => {
       <span>Mar(Pcs)</span><br/><span>Mar(Coeff)</span><br/>
       <span>Apr(Pcs)</span><br/><span>Apr(Coeff)</span><br/><br/>
       <span>May(Pcs)</span><br/><span>May(Coeff)</span><br/><br/>
-      <span>Jun(Pcs)</span><br/><br/><span>Jun(Coeff)</span><br/><br/>
-      <span>Jul(Pcs)</span><br/><br/><span>Jul(Coeff)</span>
-      <span>Aug(Pcs)</span><br/><span>Aug(Coeff)</span>
-      <span>Sep(Pcs)</span><br/><span>Sep(Coeff)</span>
-      <span>Oct(Pcs)</span><br/>    <span>Oct(Coeff)</span>
+      <span>Jun(Pcs)</span><br/><span>Jun(Coeff)</span><br/>
+      <span>Jul(Pcs)</span><br/><span>Jul(Coeff)</span><br/>
+      <span>Aug(Pcs)</span><br/><br/><span>Aug(Coeff)</span><br/>
+      <span>Sep(Pcs)</span><br/><span>Sep(Coeff)</span><br/>
+      <span>Oct(Pcs)</span><br/><span>Oct(Coeff)</span><br/>
       <span> <span></span>Nov(Pcs)</span><br/><span>Nov(Coeff)</span><br/>
-      <span>Dec(Pcs)</span><br/><span>Dec(Coeff)</span>
-      <span style={{marginRight:1}}>Total(Pcs)</span><br/><br/><span>Total(Coeff)</span>
-      {/* <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span> */}
+      <span>Dec(Pcs)<br/></span><br/><span>Dec(Coeff)</span><br/>
+      <span>Total(Pcs)</span><br/><br/><span>Total(Coeff)</span>
+      
 
 </Space>
     
@@ -139,7 +117,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.janPcs}</span> || "-"
+              (item: any) => <span>{item.janPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -150,7 +128,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.janCoeff}</span> || "-"
+              (item: any) => <span>{item.janCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -164,7 +142,9 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.febPcs}</span> || "-"
+              (item: any) => 
+              <span>{item.febPcs.toLocaleString()}</span> || "-"
+
             );
           },
         },
@@ -175,7 +155,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.febCoeff}</span> || "-"
+              (item: any) => <span>{item.febCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -190,7 +170,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.marPcs}</span> || "-"
+              (item: any) => <span>{item.marPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -201,7 +181,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.marCoeff}</span> || "-"
+              (item: any) => <span>{item.marCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -213,7 +193,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.aprPcs}</span> || "-"
+              (item: any) => <span>{item.aprPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -224,7 +204,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.janPcs}</span> || "-"
+              (item: any) => <span>{item.aprPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -242,7 +222,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.janPcs}</span> || "-"
+              (item: any) => <span>{item.mayPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -253,7 +233,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.mayCoeff}</span> || "-"
+              (item: any) => <span>{item.mayCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -271,7 +251,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.junPcs}</span> || "-"
+              (item: any) => <span>{item.junPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -282,7 +262,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.junCoeff}</span> || "-"
+              (item: any) => <span>{item.junCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -300,7 +280,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.julPcs}</span> || "-"
+              (item: any) => <span>{item.julPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -311,7 +291,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.julCoeff}</span> || "-"
+              (item: any) => <span>{item.julCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -329,7 +309,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.augPcs}</span> || "-"
+              (item: any) => <span>{item.augPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -340,7 +320,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.augCoeff}</span> || "-"
+              (item: any) => <span>{item.augCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -358,7 +338,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.sepPcs}</span> || "-"
+              (item: any) => <span>{item.sepPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -369,7 +349,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.sepCoeff}</span> || "-"
+              (item: any) => <span>{item.sepCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -387,7 +367,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.octPcs}</span> || "-"
+              (item: any) => <span>{item.octPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -398,7 +378,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.octCoeff}</span> || "-"
+              (item: any) => <span>{item.octCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -416,7 +396,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.novPcs}</span> || "-"
+              (item: any) => <span>{item.novPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -427,7 +407,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.novCoeff}</span> || "-"
+              (item: any) => <span>{item.novCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -445,7 +425,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
-              (item: any) => <span>{item.decPcs}</span> || "-"
+              (item: any) => <span>{item.decPcs.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -456,7 +436,7 @@ const childColumns1: any = [
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
-              (item: any) => <span>{item.decCoeff}</span> || "-"
+              (item: any) => <span>{item.decCoeff.toLocaleString()}</span> || "-"
             );
           },
         },
@@ -466,14 +446,19 @@ const childColumns1: any = [
       // title: "Total In PCs",
       dataIndex: "totalPcs",
       align:"right",
-      width:100
-
+      width:100,
+      render: (text: any, record: any) => {
+        return record.totalPcs ? record.totalPcs.toLocaleString() :0
+      },
     },
     {
       // title: "Total In Coeff",
       dataIndex: "totalCoeff",
       align:"right",
-      width:100
+      width:100,
+      render: (text: any, record: any) => {
+        return record.totalCoeff?record.totalCoeff.toLocaleString() :0
+      },
     },
   ];
   const columns5: any = [
@@ -741,9 +726,169 @@ const childColumns1: any = [
     form.resetFields();
     getData();
   };
+
+  const getTableSummary = (pageData) => {
+    console.log('okk')
+    let janPre = 0;let janLat = 0;
+    let febPre = 0;let febLat = 0;
+    let marPre = 0;let marLat = 0;
+    let aprPre = 0;let aprLat = 0;
+    let mayPre = 0;let mayLat = 0;
+    let junPre = 0;let junLat = 0;
+    let julPre = 0;let julLat = 0;
+    let augPre = 0;let augLat = 0;
+    let sepPre = 0;let sepLat = 0;
+    let octPre = 0;let octLat = 0;
+    let novPre = 0;let novLat = 0;
+    let decPre = 0;let decLat = 0;
+    let totalPre = 0;let totalLat =0;
+
+    
+    pageData.forEach((e) => {
+      e.monthWiseData.forEach((rec) => {
+        if(rec.pcsData[0].janPcs) {
+          const jan = [rec.pcsData[0].janPcs]
+          janPre += Number(jan)
+        }
+        if(rec.pcsData[0].febPcs) {
+          const feb = [rec.pcsData[0].febPcs]
+          febPre += Number(feb)
+        }
+        if(rec.pcsData[0].marPcs) {
+          const mar = [rec.pcsData[0].marPcs]
+          marPre += Number(mar)
+        }
+        if(rec.pcsData[0].aprPcs) {
+          const apr = [rec.pcsData[0].aprPcs]
+          aprPre += Number(apr)
+        } if(rec.pcsData[0].mayPcs) {
+          const may = [rec.pcsData[0].mayPcs]
+          mayPre += Number(may)
+        } if(rec.pcsData[0].junPcs) {
+          const jun = [rec.pcsData[0].junPcs]
+          junPre += Number(jun)
+        } if(rec.pcsData[0].julPcs) {
+          const jul = [rec.pcsData[0].julPcs]
+          julPre += Number(jul)
+        } if(rec.pcsData[0].augPcs) {
+          const aug = [rec.pcsData[0].augPcs]
+          augPre += Number(aug)
+        } if(rec.pcsData[0].sepPcs) {
+          const sep = [rec.pcsData[0].sepPcs]
+          sepPre += Number(sep)
+        } if(rec.pcsData[0].octPcs) {
+          const oct = [rec.pcsData[0].octPcs]
+          octPre += Number(oct)
+        } if(rec.pcsData[0].novPcs) {
+          const nov = [rec.pcsData[0].novPcs]
+          novPre += Number(nov)
+        } if(rec.pcsData[0].decPcs) {
+          const dec = [rec.pcsData[0].decPcs]
+          decPre += Number(dec)
+        }
+        if(rec.pcsData[0].jancoeff) {
+          const jan = [rec.coeffData[0].janCoeff]
+          janLat += Number(jan)
+        }
+        if(rec.coeffData[0].febCoeff) {
+          const feb = [rec.coeffData[0].febCoeff]
+          febLat += Number(feb)
+        }
+        if(rec.coeffData[0].marCoeff) {
+          const mar = [rec.coeffData[0].marCoeff]
+          marLat += Number(mar)
+        }
+        if(rec.coeffData[0].aprCoeff) {
+          const apr = [rec.coeffData[0].aprCoeff]
+          aprLat += Number(apr)
+        } if(rec.coeffData[0].mayCoeff) {
+          const may = [rec.coeffData[0].mayCoeff]
+          mayLat += Number(may)
+        } if(rec.coeffData[0].junCoeff) {
+          const jun = [rec.coeffData[0].junCoeff]
+          junLat += Number(jun)
+        } if(rec.coeffData[0].julCoeff) {
+          const jul = [rec.coeffData[0].julCoeff]
+          julLat += Number(jul)
+        } if(rec.coeffData[0].augCoeff) {
+          const aug = [rec.coeffData[0].augCoeff]
+          augLat += Number(aug)
+        } if(rec.coeffData[0].sepCoeff) {
+          const sep = [rec.coeffData[0].sepCoeff]
+          sepLat += Number(sep)
+        } if(rec.coeffData[0].octCoeff) {
+          const oct = [rec.coeffData[0].octCoeff]
+          octLat += Number(oct)
+        } if(rec.coeffData[0].novCoeff) {
+          const nov = [rec.coeffData[0].novCoeff]
+          novLat += Number(nov)
+        } if(rec.coeffData[0].decCoeff) {
+          const dec = [rec.coeffData[0].decCoeff]
+          decLat += Number(dec)
+        }
+        if(rec.totalPcs) {
+          const pcs = [rec.totalPcs]
+          totalPre += Number(pcs)
+        }
+        if(rec.totalCoeff) {
+          const coeff = [rec.totalCoeff]
+          totalLat += Number(coeff)
+        }
+        
+      })
+    })
+  
+  
+    return(
+      <>
+          <Table.Summary.Row>
+        <Table.Summary.Cell index={0}></Table.Summary.Cell>
+        <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
+        <Table.Summary.Cell index={3}>
+          <div>
+            <Space></Space>
+            <Space>
+              <span/> <span/><span/><span/><span/><span/>
+              <span/> <span/><span/><span/><span/><span/>
+              <span/> <span/><span/><span/><span/><span/>
+              <span/> <span/><span/><span/><span/><span/>
+              <span/> <span/><span/><span/>
+             {janPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/> {janLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/> 
+             {febPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/>{febLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+             {marPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{marLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+             {aprPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/> {aprLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+             {mayPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {mayLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+             {junPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{julLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+             {julPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/> {julLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+             {augPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{aprLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>
+             {sepPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{sepLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+             {octPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{octLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+             {novPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>{novLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+             {decPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{decLat.toLocaleString()}
+             <span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/>
+             {totalPre.toLocaleString()}<span/><span/> <span/><span/><span/><span/><span/><span/><span/><span/><span/>{totalLat.toLocaleString()}
+            
+            </Space>
+          </div>
+        </Table.Summary.Cell>
+      </Table.Summary.Row>
+    </>
+    )
+  }
   return (
     <Card
-      title=" Montly Wise Ex-Factory Report"
+      // title="Ex-Factory Report"
       extra={
         data.length > 0 ? (
           <Button
@@ -757,6 +902,7 @@ const childColumns1: any = [
         ) : null
       }
     >
+      
       <Tabs type="card" onChange={handleTabChange} aria-disabled>
         {year.map((item) => (
           <Tabs.TabPane key={item.year} tab={item.year}>
@@ -783,9 +929,7 @@ const childColumns1: any = [
                             {e.itemName}
                           </Option>
                         ))}
-                        {/* <Option key='new' value="NEW">NEW</Option>
-                                        <Option key='unaccepted' value="UNACCEPTED">UNACCEPTED</Option> */}
-                      </Select>
+                        </Select>
                     </Form.Item>
                   </div>
                 </Col>
@@ -823,6 +967,8 @@ const childColumns1: any = [
               columns={columns5} // Assuming 'columns5' is defined elsewhere
               size="small"
               scroll={{ x: "max-content" }}
+          summary={getTableSummary}
+
             />
           </Tabs.TabPane>
         ))}
