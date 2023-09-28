@@ -46,7 +46,7 @@ interface Item {
   variance: string;
   unitPrice: string;
   totalvalue: string;
-  status: string;
+  // status: string;
   // unitPrice: string;
 }
 
@@ -80,7 +80,6 @@ export function DocumentUploadForm() {
   const [unitPrice, setunitPrice] = useState("");
   const [originalUnitPrice, setOriginalUnitPrice] = useState("");
   const [originalQuotation, setOriginalQuotation] = useState("");
-  const [originalStatus, setOriginalStatus] = useState("");
 
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -216,17 +215,6 @@ export function DocumentUploadForm() {
     setIsDragging(false);
   };
 
-  // useEffect(() => {
-  //   if (extractedData.length && price.length && extractionCompleted) {
-  //     const extractedDataClone = [];
-
-  //     extractedData.forEach(element => {
-  //       const vendor = element.vendor; 
-  //       const Quotation = element.Quotation;  
-  //       extractedDataClone.push({ vendor, Quotation });
-  //     });
-  //   }
-  // }, [price, extractedData, extractionCompleted]);
 
   const handleMouseMove = (e) => {
     if (isDragging) {
@@ -256,7 +244,7 @@ export function DocumentUploadForm() {
 
     const extractedGstNumber = matches ? matches[0] : "";
 
-    setGstNumbers(extractedGstNumber); 
+    setGstNumbers(extractedGstNumber);
     return extractedGstNumber;
   };
 
@@ -358,7 +346,7 @@ export function DocumentUploadForm() {
       !variance &&
       !unitquantity &&
       !unitPrice &&
-      !status &&
+      // !status &&
       !amount
     ) {
       return;
@@ -376,7 +364,6 @@ export function DocumentUploadForm() {
       unitquantity,
       unitPrice: isEditing ? originalUnitPrice : unitPrice,
       variance,
-      status: isEditing ? originalStatus : status,
     };
     if (isEditing) {
       const updatedTableData = extractedData.map((item) =>
@@ -400,7 +387,7 @@ export function DocumentUploadForm() {
     setVariance("");
     setUnitquantity("");
     setunitPrice("");
-    setStatus("");
+    // setStatus("");
   };
 
   const handleEdit = (item) => {
@@ -425,8 +412,6 @@ export function DocumentUploadForm() {
     setVariance((unitPrice - quotation).toFixed(2));
     setAmount(item.amount || "0");
 
-    const variance = unitPrice - quotation;
-    setOriginalStatus(variance === 0 ? "No Variance" : "Fully Variance");
 
     setUnitquantity(item.unitquantity || "0");
     setOriginalUnitPrice(item.unitPrice || "0");
@@ -449,7 +434,7 @@ export function DocumentUploadForm() {
     setCharge("");
     setTaxPercentage("");
     setVariance("");
-    setStatus("");
+    // setStatus("");
     setUnitquantity("");
     setAmount("");
     setunitPrice("");
@@ -552,47 +537,34 @@ export function DocumentUploadForm() {
     //     </div>
     //   ),
     // },
-    // {
-    //   title: "Quotation",
-    //   dataIndex: "quotation",
-    //   key: "quotation",
-    //   render: (price) =>
-    //     <div style={{ textAlign: "right" }}>
-    //       {price !== undefined && price !== null ? `${price}` : "0"}
-    //     </div>
-    // },
-    // {
-    //   title: "Variance",
-    //   dataIndex: "variance",
-    //   key: "variance",
-    //   render: (text, record) => {
-    //     const unitPrice = record.unitPrice || 0;
-    //     const quotation = record.quotation || 0;
-    //     const variance = unitPrice - quotation;
+    {
+      title: "Quotation",
+      dataIndex: "quotation",
+      key: "quotation",
+      render: (price) =>
+        <div style={{ textAlign: "right" }}>
+          {price !== undefined && price !== null ? `${price}` : "0"}
+        </div>
+    },
+    {
+      title: "Variance",
+      dataIndex: "variance",
+      key: "variance",
+      render: (text, record) => {
+        const unitPrice = record.unitPrice || 0;
+        const quotation = record.quotation || 0;
+        const variance = unitPrice - quotation;
 
-    //     return (
-    //       <div style={{ textAlign: variance === 0 ? "center" : "right" }}>
-    //         {variance !== undefined && variance !== null ? `${variance}` : "-"}
-    //       </div>
-    //     );
-    //   }
-    // },
-    // {
-    //   title: "Status",
-    //   dataIndex: "status",
-    //   key: "status",
-    //   render: (text, record) => {
-    //     const unitPrice = record.unitPrice || 0;
-    //     const quotation = record.quotation || 0;
-    //     const variance = unitPrice - quotation;
+        const overallVariance = calculateOverallVariance(variance);
+        setStatus(overallVariance);
 
-    //     if (variance === 0) {
-    //       return "No Variance";
-    //     } else {
-    //       return "Fully Variance";
-    //     }
-    //   }
-    // },
+        return (
+          <div style={{ textAlign: variance === 0 ? "center" : "right" }}>
+            {variance !== undefined && variance !== null ? `${variance}` : "-"}
+          </div>
+        );
+      },
+    },
     {
       title: "Action",
       dataIndex: "action",
@@ -617,6 +589,20 @@ export function DocumentUploadForm() {
       ),
     },
   ];
+
+
+  const calculateOverallVariance = (variance) => {
+    if (variance === 0) {
+      return "No Variance";
+    } else if (variance > 0) {
+      return "Fully Variance";
+    } else if (variance <= 0 || variance >= 0) { 
+      return "Partially Variance";
+    }
+    return "Unknown Variance";
+  };
+  
+
 
   const calculateCharge = () => {
     const taxAmountFloat = parseFloat(Taxamount);
@@ -1265,7 +1251,6 @@ export function DocumentUploadForm() {
             for (const line of allLines) {
               if (line.content.includes("HSN") || line.content.match(/^\d{6}$/)) {
                 if (currentHSN) {
-                  // Calculate variance and add it to currentHSN
                   currentHSN.variance = currentHSN.chargeINR - currentHSN.quotation;
                   structuredHSNLines.push(currentHSN);
                 }
@@ -1340,7 +1325,6 @@ export function DocumentUploadForm() {
             const formattedDate = currentDate.toLocaleString();
             setTimecreated(formattedDate);
 
-            // setShowCancelButton(true);//
             setTimeout(() => {
               setIsLoading(false);
               setExtractionCompleted(true);
@@ -1384,7 +1368,7 @@ export function DocumentUploadForm() {
 
   const onSumbit = () => {
     const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount,
-      Innvoicecurrency, financialyear,
+      Innvoicecurrency, financialyear, status,
       JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData, "");
     console.log(req, "submit");
     service
@@ -1425,6 +1409,7 @@ export function DocumentUploadForm() {
     const filteredValue = e.target.value.replace(/[^0-9,.]/g, "");
     setIgst(filteredValue);
   };
+
 
   return (
     <Row>
@@ -1540,60 +1525,60 @@ export function DocumentUploadForm() {
         </Card>
 
         <Card
-        title={<span style={{ textAlign: "center" }}>Image Viewer</span>}
-        bordered={true}
-        headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
-        size="small"
-      >
-        {selectedImage && (
-          <div>
-            <div
-              style={{
-                position: "relative",
-                overflow: "hidden",
-                width: "100%",
-                height: "300px",
-                cursor: "grab",
-              }}
-            >
+          title={<span style={{ textAlign: "center" }}>Image Viewer</span>}
+          bordered={true}
+          headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
+          size="small"
+        >
+          {selectedImage && (
+            <div>
               <div
                 style={{
-                  overflow: "auto",
+                  position: "relative",
+                  overflow: "hidden",
                   width: "100%",
-                  height: "100%",
+                  height: "300px",
+                  cursor: "grab",
                 }}
               >
-                <img
-                  id="imageToDrag"
-                  src={selectedImage}
+                <div
                   style={{
+                    overflow: "auto",
                     width: "100%",
-                    transform: `scale(${zoomFactor})`,
-                    transformOrigin: "top left", // Set the transform origin to the top-left corner
-                    transition: "transform 0.2s",
+                    height: "100%",
                   }}
-                />
+                >
+                  <img
+                    id="imageToDrag"
+                    src={selectedImage}
+                    style={{
+                      width: "100%",
+                      transform: `scale(${zoomFactor})`,
+                      transformOrigin: "top left",
+                      transition: "transform 0.2s",
+                    }}
+                  />
+                </div>
               </div>
+              <span style={{ textAlign: "center", marginTop: "10px" }}>
+                <Button onClick={handleZoomIn}>Zoom In</Button>
+                <Button onClick={handleZoomOut}>Zoom Out</Button>
+              </span>
             </div>
-            <span style={{ textAlign: "center", marginTop: "10px" }}>
-              <Button onClick={handleZoomIn}>Zoom In</Button>
-              <Button onClick={handleZoomOut}>Zoom Out</Button>
-            </span>
-          </div>
-        )}
-        {pdfData && (
-          <div id="pdfContainer" style={{ marginTop: '20px' }}>
-            <iframe
-              src={pdfData}
-              title="PDF Viewer"
-              width="600px"
-              height="600px"
-              frameBorder="0"
-            />
-          </div>
-        )}
-      </Card>
-    </Col>
+          )}
+          {pdfData && (
+            <div id="pdfContainer" style={{ marginTop: '20px' }}>
+              <iframe
+                src={pdfData}
+                title="PDF Viewer"
+                width="600px"
+                height="600px"
+                frameBorder="0"
+              />
+            </div>
+          )}
+        </Card>
+      </Col>
       <Col span={12}>
         <Form form={GstForm}>
           <Card>
@@ -1835,6 +1820,24 @@ export function DocumentUploadForm() {
                   />
                 </Col>
 
+                <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                  <label htmlFor="status" style={{ color: "black", fontWeight: "bold" }}>
+                    Status
+                  </label>
+                  <Input
+                    id="status"
+                    name="status"
+                    style={{
+                      width: "190px",
+                      height: "30px",
+                      borderColor: status  ? "blue" : "red",
+                    }}
+                    className={status === "No Variance" ? "blue" : status === "Fully Variance" ? "red" : "black"}
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                  />
+                </Col>
+
                 {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
                     htmlFor="buyerName"
@@ -1982,7 +1985,6 @@ export function DocumentUploadForm() {
                     <Option value="CSGT & SGST">CSGT & SGST</Option>
                     <Option value="No Tax">No Tax</Option>
 
-                    {/* Add more options as needed */}
                   </Select>
                 </Col>
 

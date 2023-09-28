@@ -10,7 +10,7 @@ export class HsnDto {
   unitquantity: string;
   description: string;
   quotation: string;
-  status:string;
+  // status:string;
   unitPrice:string;
   variance: string;
   VarianceStatus?: StatusEnum;
@@ -27,7 +27,7 @@ export class HsnDto {
     unitquantity: string,
     description: string,
     quotation: string,
-    status:string,
+    // status:string,
     unitPrice:string,
     variance: string,
     VarianceStatus: StatusEnum,
@@ -44,7 +44,7 @@ export class HsnDto {
     this.unitquantity = unitquantity
     this.unitPrice = unitPrice
     this.quotation = quotation
-    this.status=status
+    // this.status=status
     this.variance = variance
     this.VarianceStatus = VarianceStatus
     this.HsnId = HsnId

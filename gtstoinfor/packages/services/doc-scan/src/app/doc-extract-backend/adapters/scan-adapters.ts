@@ -18,6 +18,7 @@ export class ScanAdapter {
         dto.InnvoiceAmount = entity.InnvoiceAmount;
         dto.InnvoiceCurrency = entity.InnvoiceCurrency;
         dto. Financialyear=entity.Financialyear;
+        dto. status=entity.status;
         dto.createdUser=entity.createdUser;
 
         
@@ -38,6 +39,7 @@ export class ScanAdapter {
         entity.InnvoiceAmount = dto.InnvoiceAmount;
         entity.InnvoiceCurrency = dto.InnvoiceCurrency;
         entity. Financialyear=dto.Financialyear;
+        entity. status=dto.status;
         entity.createdUser=dto.createdUser;
         const hsnDetails: HSNEntity[] = []
         for (const record of dto.Hsninfo  ){
@@ -50,7 +52,7 @@ export class ScanAdapter {
                 entity2.variance = record.variance
                 entity2.unitPrice = record.unitPrice
                 entity2.quotation = record.quotation
-                entity2.status = record.status;
+                // entity2.status = record.status;
                 entity2.unitquantity = record.unitquantity;
                 entity2.description = record.description;
                 entity2.createdUser = dto.createdUser;

@@ -12,6 +12,7 @@ export class AllScanDto {
     InnvoiceCurrency: string;
     unitPrice: string;
     Financialyear: string;
+    status: string;
     createdUser: string;
     Hsninfo: HsnDto[]
     updatedUser?: string;
@@ -28,6 +29,7 @@ export class AllScanDto {
         InnvoiceAmount: string,
         InnvoiceCurrency: string,
         Financialyear: string,
+        status: string,
         createdUser: string,
         Hsninfo: HsnDto[],
         updatedUser?: string,
@@ -45,6 +47,7 @@ export class AllScanDto {
         this.InnvoiceAmount = InnvoiceAmount;
         this.InnvoiceCurrency = InnvoiceCurrency;
         this.Financialyear = Financialyear;
+        this.status = status;
         this.createdUser = createdUser;
         this.Hsninfo = Hsninfo;
         this.updatedUser = updatedUser

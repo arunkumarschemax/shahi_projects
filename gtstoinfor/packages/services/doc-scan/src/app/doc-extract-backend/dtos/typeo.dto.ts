@@ -36,6 +36,9 @@ export class ScanDto {
   Financialyear: string;
 
   @ApiProperty()
+  status: string;
+
+  @ApiProperty()
   createdUser: string;
 
   @ApiProperty()

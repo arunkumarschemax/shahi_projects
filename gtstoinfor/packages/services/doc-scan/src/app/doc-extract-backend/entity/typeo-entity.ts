@@ -82,7 +82,11 @@ export class ScanEntity extends BaseEntity {
   Financialyear: string;
 
   
-
+  @Column('varchar', {
+    length: 50,
+    name: 'status',
+  })
+  status: string;
   
   @Column("enum", {
     name: "variance_status",
