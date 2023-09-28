@@ -414,7 +414,7 @@ const getSeasonCode = () => {
           <Col xs={24} sm={12} md={8} lg={6} xl={4}  style={{ padding: '8px' }}>
             <Form.Item name="sampleCode" label="Style">
               <Select placeholder="Select Style" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {style.map((e) => {
+                {style?.map((e) => {
                   return (
                     <Option key={e.id} value={e.sample_code}>{e.sample_code}
                     </Option>
@@ -426,7 +426,7 @@ const getSeasonCode = () => {
           <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
             <Form.Item name="year" label="Year">
               <Select placeholder="Select Year" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {year.map((e) => {
+                {year?.map((e) => {
                   return (
                     <Option key={e.id} value={e.YEAR}>{e.YEAR}
                     </Option>
@@ -438,7 +438,7 @@ const getSeasonCode = () => {
           <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
             <Form.Item name="business" label="Destination">
               <Select placeholder="Select Destination" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {destination.map((e) => {
+                {destination?.map((e) => {
                   return (
                     <Option key={e.id} value={e.business}>{e.business}
                     </Option>
@@ -450,7 +450,7 @@ const getSeasonCode = () => {
           <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
             <Form.Item name="seasonCode" label="Season Code">
               <Select placeholder="Select Destination" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {seasonCode.map((e) => {
+                {seasonCode?.map((e) => {
                   return (
                     <Option key={e.id} value={e.season}>{e.season}
                     </Option>
