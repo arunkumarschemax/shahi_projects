@@ -187,9 +187,6 @@ export function DocumentUploadForm() {
   }, [price, extractedData, extractionCompleted])
 
 
-
-
-
   useEffect(() => {
     getData2();
   }, []);
@@ -257,10 +254,9 @@ export function DocumentUploadForm() {
       /[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[A-Z]{1}[A-Z0-9]{1}/g;
     const matches = text.match(gstNumberRegex);
 
-    // Return the first match if it exists, otherwise return an empty string
     const extractedGstNumber = matches ? matches[0] : "";
 
-    setGstNumbers(extractedGstNumber); // Set the extracted GST number
+    setGstNumbers(extractedGstNumber); 
     return extractedGstNumber;
   };
 
@@ -382,11 +378,6 @@ export function DocumentUploadForm() {
       variance,
       status: isEditing ? originalStatus : status,
     };
-
-    // const ChargeFloat = parseFloat(Charge) || 0;
-    // const QuotationFloat = parseFloat(quotation) || 0;
-    // newItem.variance = (QuotationFloat - ChargeFloat).toFixed(2);
-
     if (isEditing) {
       const updatedTableData = extractedData.map((item) =>
         item === editingItem ? { ...newItem } : item
@@ -399,7 +390,6 @@ export function DocumentUploadForm() {
       setExtractedData([...extractedData, newItem]);
     }
 
-    // Reset all the input fields
     setHSN("");
     setDescription("");
     setTaxtype("");
@@ -552,11 +542,6 @@ export function DocumentUploadForm() {
         </div>
       ),
     },
-
-
-
-
-
     // {
     //   title: "Amount",
     //   dataIndex: "amount",
@@ -567,16 +552,6 @@ export function DocumentUploadForm() {
     //     </div>
     //   ),
     // },
-
-    {
-      title: "Unit Price",
-      dataIndex: "unitPrice",
-      key: "unitPrice",
-      render: (unitPrice) =>
-        <div style={{ textAlign: "right" }}>
-          {unitPrice !== undefined && unitPrice !== null ? unitPrice : "0"}
-        </div>
-    },
     // {
     //   title: "Quotation",
     //   dataIndex: "quotation",
@@ -585,22 +560,6 @@ export function DocumentUploadForm() {
     //     <div style={{ textAlign: "right" }}>
     //       {price !== undefined && price !== null ? `${price}` : "0"}
     //     </div>
-    // },
-    // {
-    //   title: "Variance",
-    //   dataIndex: "variance",
-    //   key: "variance",
-    //   render: (text, record) => {
-    //     const unitPrice = record.unitPrice || 0;
-    //     const quotation = record.quotation || 0;
-    //     const variance = unitPrice - quotation;
-
-    //     return (
-    //       <div style={{ textAlign: variance === 0 ? "center" : "right" }}>
-    //         {variance !== undefined && variance !== null ? `${variance}` : "-"}
-    //       </div>
-    //     );
-    //   }
     // },
     // {
     //   title: "Variance",
@@ -634,28 +593,6 @@ export function DocumentUploadForm() {
     //     }
     //   }
     // },
-
-    // render: (variance, record) => (
-    //   <div style={{ textAlign: "right" }}>
-    //     {
-    //       (() => {
-    //         const Charge = parseFloat(record.Charge) || 0;
-    //         const Quotation = parseFloat(record.quotation) || 0;
-    //         const varianceValue = Quotation - Charge;
-    //         let status;
-    //         if (varianceValue === 0) {
-    //           status = "No Variance";
-    //         } else if (varianceValue > 0) {
-    //           status = "Par Variance";
-    //         } else {
-    //           status = "Negative Variance";
-    //         }
-    //         return `${varianceValue.toFixed(2)}`;
-    //       })()
-    //     }
-    //   </div>
-    // ),
-
     {
       title: "Action",
       dataIndex: "action",
