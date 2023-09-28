@@ -14,6 +14,7 @@ import { DpomDifferenceRepository } from './repositories/dpom-difference.reposit
 import { NikeFileUploadEntity } from './entites/upload-file.entity';
 import { NikeFileUploadRepository } from './repositories/upload.repository';
 import { ScheduleModule } from '@nestjs/schedule';
+import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
 
 
 @Module({
@@ -23,7 +24,8 @@ import { ScheduleModule } from '@nestjs/schedule';
       DpomEntity,
       DpomChildEntity,
       DpomDifferenceEntity,
-      NikeFileUploadEntity
+      NikeFileUploadEntity,
+      PDFFileInfoEntity
     ])],
   controllers: [DpomController],
   providers: [DpomService, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter, DpomDifferenceRepository, NikeFileUploadRepository]

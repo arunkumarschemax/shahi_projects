@@ -127,8 +127,6 @@ const PPMReport = () => {
   const getSesonYear = () => {
     service.getPpmPlanningSeasonYearMarketing().then(res => {
       setPlanSesYear(res.data)
-      console.log("year", planSesYear)
-
     })
   }
   const getGeoCode = () => {
