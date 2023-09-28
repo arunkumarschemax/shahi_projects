@@ -36,16 +36,17 @@ export default function DPOMSyncManually() {
         })
     }
 
-    const getDpomSyncDetails = () =>{
-        nikeService.getDpomSyncDetails().then((res) =>{
-            if(res.status){
+    const getDpomSyncDetails = () => {
+        nikeService.getDpomSyncDetails().then((res) => {
+            if (res.status) {
                 setsyncdata(res.data)
-            }else{
+            } else {
                 setsyncdata([])
 
             }
         })
-    } 
+    }
+
     return (
         <>
             <Card title="Sync Nike DPOM & CRM Data Manually">
@@ -59,8 +60,8 @@ export default function DPOMSyncManually() {
                             {'DPOM : ' + filesData[0]?.status} <br /> {'CRM : ' + filesData[0]?.status}
                         </Descriptions.Item>
                         <Descriptions.Item label={<b>Last Sync data</b>}>
-                            {'Total Records : '+(syncdata[0].totalRecords == '0' ?'0': syncdata[0].totalRecords)} <br />
-                         {'New Reocrds : '+(syncdata[0].todayrecords == '0'?'0': syncdata[0].todayrecords)}
+                            {'Total Records : ' + (syncdata[0]?.totalRecords == '0' ? '0' : syncdata[0]?.totalRecords)} <br />
+                            {'New Reocrds : ' + (syncdata[0]?.todayrecords == '0' ? '0' : syncdata[0]?.todayrecords)}
                         </Descriptions.Item>
                     </Descriptions>
                 </span>

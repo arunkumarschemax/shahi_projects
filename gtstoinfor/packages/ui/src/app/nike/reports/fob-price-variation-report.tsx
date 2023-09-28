@@ -4,7 +4,6 @@ import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Row, Select, Table } from "antd"
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
-import { receiveMessageOnPort } from "worker_threads";
 
 export const FOBPriceVariationReport = () => {
     const [page, setPage] = useState<number>(1);
@@ -14,10 +13,8 @@ export const FOBPriceVariationReport = () => {
     const [poNumber, setPoNumber] = useState<any>([]);
     const [styleNumber, setStyleNumber] = useState<any>([]);
     const [size, setSize] = useState<any>([]);
-
     const [form] = Form.useForm();
     const { Option } = Select;
-
 
 
     useEffect(() => {
@@ -28,7 +25,6 @@ export const FOBPriceVariationReport = () => {
     }, [])
 
 
-
     const PoandLine = () => {
         service.getPriceDiffPoLinedd().then(res => {
             if (res.status) {
@@ -36,6 +32,7 @@ export const FOBPriceVariationReport = () => {
             }
         })
     }
+
     const getSize = () => {
         service.getPriceDiffSizeDescription().then(res => {
             if (res.status) {
@@ -43,6 +40,7 @@ export const FOBPriceVariationReport = () => {
             }
         })
     }
+
     const StyleNumber = () => {
         service.getPriceDiffStyleNumber().then(res => {
             if (res.status) {
@@ -50,6 +48,7 @@ export const FOBPriceVariationReport = () => {
             }
         })
     }
+
     const getData = () => {
         const req = new FobPriceDiffRequest();
 
@@ -71,10 +70,10 @@ export const FOBPriceVariationReport = () => {
             }
         })
     }
+
     const resetHandler = () => {
         form.resetFields();
         getData();
-
     }
 
     const columns: ColumnProps<any>[] = [
@@ -83,7 +82,6 @@ export const FOBPriceVariationReport = () => {
             key: 'sno',
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-
         },
         {
             title: 'PO Number',
@@ -171,16 +169,15 @@ export const FOBPriceVariationReport = () => {
                                 placeholder="Select Po Number"
                                 optionFilterProp="children"
                                 allowClear
-
                             >
-                                {poNumber.map((inc: any) => {
-                                    return <Option key={inc.id} value={inc.poNumber}>{inc.poNumber}</Option>
-                                })
+                                {
+                                    poNumber.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.poNumber}>{inc.poNumber}</Option>
+                                    })
                                 }
                             </Select>
                         </Form.Item>
                     </Col>
-
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
@@ -188,11 +185,11 @@ export const FOBPriceVariationReport = () => {
                                 placeholder="Select Style Number"
                                 optionFilterProp="children"
                                 allowClear
-
                             >
-                                {styleNumber.map((inc: any) => {
-                                    return <Option key={inc.id} value={inc.styleNumber}>{inc.styleNumber}</Option>
-                                })
+                                {
+                                    styleNumber.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.styleNumber}>{inc.styleNumber}</Option>
+                                    })
                                 }
                             </Select>
                         </Form.Item>
@@ -204,11 +201,11 @@ export const FOBPriceVariationReport = () => {
                                 placeholder="Select Size Description"
                                 optionFilterProp="children"
                                 allowClear
-
                             >
-                                {size.map((inc: any) => {
-                                    return <Option key={inc.id} value={inc.sizeDescription}>{inc.sizeDescription}</Option>
-                                })
+                                {
+                                    size.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.sizeDescription}>{inc.sizeDescription}</Option>
+                                    })
                                 }
                             </Select>
                         </Form.Item>
@@ -235,15 +232,11 @@ export const FOBPriceVariationReport = () => {
                                 setPage(current);
                                 setPageSize(pageSize)
                             }
-
                         }} />) : (<Table size='large' />
                 )}
             </>
-
-
         </Card>
     )
-
 }
 
 export default FOBPriceVariationReport
