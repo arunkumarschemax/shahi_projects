@@ -359,7 +359,8 @@ export class DpomService {
                             const existingDataKeys = Object.keys(details)
                             const currentDataKeys = Object.keys(dtoData)
                             for (const existingDataKey of existingDataKeys) {
-                                if (details[existingDataKey] != orderDetail[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'odVersion' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'versionFlag' && existingDataKey != 'isActive' && existingDataKey != 'recordDate' && existingDataKey != 'lastModifiedDate' && existingDataKey != 'id') {
+                                if (details[existingDataKey] != orderDetail[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'odVersion' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'versionFlag' && existingDataKey != 'isActive' && existingDataKey != 'recordDate' && existingDataKey != 'lastModifiedDate' && existingDataKey != 'id' && existingDataKey != 'divertedToPos'
+                                ) {
                                     const dpomDiffObj = new DpomDifferenceEntity();
                                     dpomDiffObj.oldValue = details[existingDataKey]
                                     dpomDiffObj.newValue = dtoData[existingDataKey]
@@ -1617,14 +1618,13 @@ export class DpomService {
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
 
-    async getDpomSyncDetails():Promise<CommonResponseModel>{
-        const query='SELECT COUNT(*) AS totalRecords,(SELECT COUNT(*) FROM dpom WHERE DATE(created_at)=DATE(NOW())) AS todayrecords ,COUNT(*)-(SELECT COUNT(*) FROM `dpom` WHERE DATE(created_at)=DATE(NOW())) AS oldRecords FROM dpom '
+    async getDpomSyncDetails(): Promise<CommonResponseModel> {
+        const query = 'SELECT COUNT(*) AS totalRecords,(SELECT COUNT(*) FROM dpom WHERE DATE(created_at)=DATE(NOW())) AS todayrecords ,COUNT(*)-(SELECT COUNT(*) FROM `dpom` WHERE DATE(created_at)=DATE(NOW())) AS oldRecords FROM dpom '
         const result = await this.dpomRepository.query(query)
-        if(result){
-            return new CommonResponseModel(true,1,'data retrived Sucessfully',result)
-        }else{
-            return new CommonResponseModel(false,0,'no data found ',[])
-
+        if (result) {
+            return new CommonResponseModel(true, 1, 'data retrived Sucessfully', result)
+        } else {
+            return new CommonResponseModel(false, 0, 'no data found ', [])
         }
     }
 }
