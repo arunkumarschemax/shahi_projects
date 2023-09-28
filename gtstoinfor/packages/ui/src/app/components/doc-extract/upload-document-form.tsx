@@ -1205,17 +1205,17 @@ export function DocumentUploadForm() {
           structuredHSNLines.push(currentHSN);
         }
         currentHSN = {
+          description: extractedData[hsnId + 1].content,
           HSN: line.content.includes("HSN")
             ? line.content.match(/\d+/)
             : line.content.trim(),
-          Taxtype: line.content.match(/IGST|CGST|SGST|GST/),
-          Taxamount: extractedData[hsnId - 6].content,
-          description: extractedData[hsnId + 1].content,
-          Charge: extractedData[hsnId - 10].content,
-          unitPrice: extractedData[hsnId - 2].content,
-          amount: extractedData[hsnId - 10].content,
           unitquantity: extractedData[hsnId - 1].content,
+          unitPrice: extractedData[hsnId - 2].content,
+          Taxtype: line.content.match(/IGST|CGST|SGST|GST/),
+          Charge: extractedData[hsnId - 10].content,
           Taxpercentage: extractedData[hsnId - 5].content,
+          Taxamount: extractedData[hsnId - 6].content,
+          amount: extractedData[hsnId - 10].content,
         };
       }
 
@@ -1603,29 +1603,26 @@ export function DocumentUploadForm() {
         </Card>
 
         <Card
-          title={<span style={{ textAlign: "center" }}>Image Viewer</span>}
-          bordered={true}
-          headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
-          size="small"
-        >
-          {selectedImage && <div>
+        title={<span style={{ textAlign: "center" }}>Image Viewer</span>}
+        bordered={true}
+        headStyle={{ backgroundColor: "#00FFFF", border: 0 }}
+        size="small"
+      >
+        {selectedImage && (
+          <div>
             <div
               style={{
                 position: "relative",
                 overflow: "hidden",
                 width: "100%",
                 height: "300px",
-                cursor: isDragging ? "grabbing" : "grab",
+                cursor: "grab",
               }}
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-              onMouseMove={handleMouseMove}
             >
               <div
                 style={{
                   overflow: "auto",
-                  overflowX: "scroll",
-                  overflowY: "scroll",
+                  width: "100%",
                   height: "100%",
                 }}
               >
@@ -1633,8 +1630,9 @@ export function DocumentUploadForm() {
                   id="imageToDrag"
                   src={selectedImage}
                   style={{
-                    maxWidth: "100%",
+                    width: "100%",
                     transform: `scale(${zoomFactor})`,
+                    transformOrigin: "top left", // Set the transform origin to the top-left corner
                     transition: "transform 0.2s",
                   }}
                 />
@@ -1644,9 +1642,10 @@ export function DocumentUploadForm() {
               <Button onClick={handleZoomIn}>Zoom In</Button>
               <Button onClick={handleZoomOut}>Zoom Out</Button>
             </span>
-          </div>}
-          {pdfData && (<div id="pdfContainer" style={{ marginTop: '20px' }}>
-
+          </div>
+        )}
+        {pdfData && (
+          <div id="pdfContainer" style={{ marginTop: '20px' }}>
             <iframe
               src={pdfData}
               title="PDF Viewer"
@@ -1655,9 +1654,9 @@ export function DocumentUploadForm() {
               frameBorder="0"
             />
           </div>
-          )}
-        </Card>
-      </Col>
+        )}
+      </Card>
+    </Col>
       <Col span={12}>
         <Form form={GstForm}>
           <Card>
