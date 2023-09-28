@@ -307,5 +307,7 @@ export class NikeService extends CommonAxiosService {
     async getPpmdesGeoCodeMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmdesGeoCodeMarketing")
     }
-    
+    async getDpomSyncDetails(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getDpomSyncDetails")
+    }
 }   
