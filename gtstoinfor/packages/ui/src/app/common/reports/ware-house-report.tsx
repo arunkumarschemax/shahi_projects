@@ -719,6 +719,7 @@ const getFilterdData = () => {
     setFilteredData(filteredData);
   }
 };
+
 const onReset = () => {
   form.resetFields();
   getData();
