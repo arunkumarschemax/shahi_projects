@@ -46,6 +46,7 @@ interface Item {
   variance: string;
   unitPrice: string;
   totalvalue: string;
+  status: string;
   // unitPrice: string;
 }
 
@@ -75,9 +76,11 @@ export function DocumentUploadForm() {
   const [unitquantity, setUnitquantity] = useState("");
   const [amount, setAmount] = useState("");
   const [quotation, setQuotation] = useState("");
+  const [status, setStatus] = useState("");
   const [unitPrice, setunitPrice] = useState("");
   const [originalUnitPrice, setOriginalUnitPrice] = useState("");
   const [originalQuotation, setOriginalQuotation] = useState("");
+  const [originalStatus, setOriginalStatus] = useState("");
 
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -102,8 +105,6 @@ export function DocumentUploadForm() {
   const [financialyear, setFinancialyear] = useState("");
   const [timecreated, setTimecreated] = useState("");
   const [Innvoicecurrency, setInnvoicecurrency] = useState("");
-
-
 
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [data1, setData1] = useState<any[]>([]);
@@ -171,19 +172,19 @@ export function DocumentUploadForm() {
   };
 
   useEffect(() => {
-    if (extractedData.length && price.length && extractionCompleted){
-      const extractedDataClone=[];
+    if (extractedData.length && price.length && extractionCompleted) {
+      const extractedDataClone = [];
       extractedData.forEach(element => {
-     const obj=   price.find(pr=>pr.hsnCode==element.HSN && pr.serviceDescription==element.description)
-     element.quotation=obj?.unitPrice
-     extractedDataClone.push(element)
+        const obj = price.find(pr => pr.hsnCode == element.HSN && pr.serviceDescription == element.description)
+        element.quotation = obj?.unitPrice
+        extractedDataClone.push(element)
       });
-      if(!isQuotationDataSet){
+      if (!isQuotationDataSet) {
         setIsQuotationDataSet(true);
         setExtractedData(extractedDataClone);
       }
     }
-}, [price, extractedData,extractionCompleted])
+  }, [price, extractedData, extractionCompleted])
 
 
 
@@ -221,7 +222,7 @@ export function DocumentUploadForm() {
   // useEffect(() => {
   //   if (extractedData.length && price.length && extractionCompleted) {
   //     const extractedDataClone = [];
-      
+
   //     extractedData.forEach(element => {
   //       const vendor = element.vendor; 
   //       const Quotation = element.Quotation;  
@@ -361,7 +362,8 @@ export function DocumentUploadForm() {
       !variance &&
       !unitquantity &&
       !unitPrice &&
-      !amount 
+      !status &&
+      !amount
     ) {
       return;
     }
@@ -373,11 +375,12 @@ export function DocumentUploadForm() {
       Taxamount,
       Charge,
       amount,
-      quotation:isEditing ? originalQuotation:quotation,
+      quotation: isEditing ? originalQuotation : quotation,
       Taxpercentage: Taxpercentage,
       unitquantity,
       unitPrice: isEditing ? originalUnitPrice : unitPrice,
       variance,
+      status: isEditing ? originalStatus : status,
     };
 
     // const ChargeFloat = parseFloat(Charge) || 0;
@@ -407,6 +410,7 @@ export function DocumentUploadForm() {
     setVariance("");
     setUnitquantity("");
     setunitPrice("");
+    setStatus("");
   };
 
   const handleEdit = (item) => {
@@ -426,8 +430,14 @@ export function DocumentUploadForm() {
     }
     setCharge(editedCharge || "0");
     setTaxPercentage(item.Taxpercentage || "0");
-    setVariance(item.variance || "-");
+    const unitPrice = parseFloat(item.unitPrice) || 0;
+    const quotation = parseFloat(item.quotation) || 0;
+    setVariance((unitPrice - quotation).toFixed(2));
     setAmount(item.amount || "0");
+
+    const variance = unitPrice - quotation;
+    setOriginalStatus(variance === 0 ? "No Variance" : "Fully Variance");
+
     setUnitquantity(item.unitquantity || "0");
     setOriginalUnitPrice(item.unitPrice || "0");
     setOriginalQuotation(item.quotation || "0");
@@ -449,6 +459,7 @@ export function DocumentUploadForm() {
     setCharge("");
     setTaxPercentage("");
     setVariance("");
+    setStatus("");
     setUnitquantity("");
     setAmount("");
     setunitPrice("");
@@ -541,11 +552,11 @@ export function DocumentUploadForm() {
         </div>
       ),
     },
-  
-   
-  
-  
-  
+
+
+
+
+
     // {
     //   title: "Amount",
     //   dataIndex: "amount",
@@ -556,53 +567,95 @@ export function DocumentUploadForm() {
     //     </div>
     //   ),
     // },
-   
+
     {
-      title: "Quotation",
-      dataIndex: "quotation",
-      key: "quotation",
-      render: (price) =>
+      title: "Unit Price",
+      dataIndex: "unitPrice",
+      key: "unitPrice",
+      render: (unitPrice) =>
         <div style={{ textAlign: "right" }}>
-          {price !== undefined && price !== null ? `${price}` : "0"}
+          {unitPrice !== undefined && unitPrice !== null ? unitPrice : "0"}
         </div>
     },
-    {
-      title: "Variance",
-      dataIndex: "variance",
-      key: "variance",
-      render: (text, record) => {
-        const unitPrice = record.unitPrice || 0;
-        const quotation = record.quotation || 0;
-        const variance = unitPrice - quotation;
-    
-        return (
-          <div style={{ textAlign: variance === 0 ? "center" : "right" }}>
-            {variance !== undefined && variance !== null ? `${variance}` : "-"}
-          </div>
-        );
-      }
-    },
-      // render: (variance, record) => (
-      //   <div style={{ textAlign: "right" }}>
-      //     {
-      //       (() => {
-      //         const Charge = parseFloat(record.Charge) || 0;
-      //         const Quotation = parseFloat(record.quotation) || 0;
-      //         const varianceValue = Quotation - Charge;
-      //         let status;
-      //         if (varianceValue === 0) {
-      //           status = "No Variance";
-      //         } else if (varianceValue > 0) {
-      //           status = "Par Variance";
-      //         } else {
-      //           status = "Negative Variance";
-      //         }
-      //         return `${varianceValue.toFixed(2)}`;
-      //       })()
-      //     }
-      //   </div>
-      // ),
- 
+    // {
+    //   title: "Quotation",
+    //   dataIndex: "quotation",
+    //   key: "quotation",
+    //   render: (price) =>
+    //     <div style={{ textAlign: "right" }}>
+    //       {price !== undefined && price !== null ? `${price}` : "0"}
+    //     </div>
+    // },
+    // {
+    //   title: "Variance",
+    //   dataIndex: "variance",
+    //   key: "variance",
+    //   render: (text, record) => {
+    //     const unitPrice = record.unitPrice || 0;
+    //     const quotation = record.quotation || 0;
+    //     const variance = unitPrice - quotation;
+
+    //     return (
+    //       <div style={{ textAlign: variance === 0 ? "center" : "right" }}>
+    //         {variance !== undefined && variance !== null ? `${variance}` : "-"}
+    //       </div>
+    //     );
+    //   }
+    // },
+    // {
+    //   title: "Variance",
+    //   dataIndex: "variance",
+    //   key: "variance",
+    //   render: (text, record) => {
+    //     const unitPrice = record.unitPrice || 0;
+    //     const quotation = record.quotation || 0;
+    //     const variance = unitPrice - quotation;
+
+    //     return (
+    //       <div style={{ textAlign: variance === 0 ? "center" : "right" }}>
+    //         {variance !== undefined && variance !== null ? `${variance}` : "-"}
+    //       </div>
+    //     );
+    //   }
+    // },
+    // {
+    //   title: "Status",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   render: (text, record) => {
+    //     const unitPrice = record.unitPrice || 0;
+    //     const quotation = record.quotation || 0;
+    //     const variance = unitPrice - quotation;
+
+    //     if (variance === 0) {
+    //       return "No Variance";
+    //     } else {
+    //       return "Fully Variance";
+    //     }
+    //   }
+    // },
+
+    // render: (variance, record) => (
+    //   <div style={{ textAlign: "right" }}>
+    //     {
+    //       (() => {
+    //         const Charge = parseFloat(record.Charge) || 0;
+    //         const Quotation = parseFloat(record.quotation) || 0;
+    //         const varianceValue = Quotation - Charge;
+    //         let status;
+    //         if (varianceValue === 0) {
+    //           status = "No Variance";
+    //         } else if (varianceValue > 0) {
+    //           status = "Par Variance";
+    //         } else {
+    //           status = "Negative Variance";
+    //         }
+    //         return `${varianceValue.toFixed(2)}`;
+    //       })()
+    //     }
+    //   </div>
+    // ),
+
     {
       title: "Action",
       dataIndex: "action",
@@ -1648,8 +1701,8 @@ export function DocumentUploadForm() {
                   <Input
                     title="Vendor"
                     name="Vendor"
-                    style={{ width: "190px", height: "30px", borderColor: vendor ? "green" : "red", }}
-                    className={vendor ? "green" : vendor === "" ? "red" : "black"}
+                    style={{ width: "190px", height: "30px", borderColor: vendor ? "blue" : "red", }}
+                    className={vendor ? "blue" : vendor === "" ? "red" : "black"}
                     value={vendor}
                     onChange={(e) => setVendor(e.target.value)}
                   />
@@ -1757,53 +1810,57 @@ export function DocumentUploadForm() {
 
               <Row gutter={24} style={{ marginTop: "20px" }}>
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                  <label
-                    htmlFor="IGST"
-                    style={{ color: "black", fontWeight: "bold" }}
-                  >
+                  <label htmlFor="IGST" style={{ color: "black", fontWeight: "bold" }}>
                     IGST
                   </label>
                   <Input
                     id="IGST"
                     name="IGST"
-                    style={{ width: "190px", height: "30px", borderColor: Igst ? "green" : "red", }}
+                    style={{
+                      width: "190px",
+                      height: "30px",
+                      borderColor: Igst ? "green" : "red",
+                    }}
                     className={Igst ? "green" : Igst === "" ? "red" : "black"}
                     value={Igst}
                     onChange={handleIgstChange}
-
+                    disabled={parseInt(Igst, 10) === 0}
                   />
                 </Col>
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                  <label
-                    htmlFor="Cgst"
-                    style={{ color: "black", fontWeight: "bold" }}
-                  >
+                  <label htmlFor="Cgst" style={{ color: "black", fontWeight: "bold" }}>
                     CSGT
                   </label>
                   <Input
                     id="Cgst"
                     name="Cgst"
-                    style={{ width: "190px", height: "30px", borderColor: Cgst ? "green" : "red", }}
+                    style={{
+                      width: "190px",
+                      height: "30px",
+                      borderColor: Cgst ? "green" : "red",
+                    }}
                     className={Cgst ? "green" : Cgst === "" ? "red" : "black"}
                     value={Cgst}
                     onChange={handleCgstChange}
+                    disabled={parseInt(Cgst, 10) === 0}
                   />
                 </Col>
-
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                  <label
-                    htmlFor="Sgst"
-                    style={{ color: "black", fontWeight: "bold" }}
-                  >
+                  <label htmlFor="Sgst" style={{ color: "black", fontWeight: "bold" }}>
                     SGST
                   </label>
                   <Input
                     id="Sgst"
                     name="Sgst"
-                    style={{ width: "180px", height: "30px", borderColor: Sgst ? "green" : "red", }}
+                    style={{
+                      width: "180px",
+                      height: "30px",
+                      borderColor: Sgst ? "green" : "red",
+                    }}
                     className={Sgst ? "green" : Sgst === "" ? "red" : "black"}
                     value={Sgst}
                     onChange={handleSgstChange}
+                    disabled={parseInt(Sgst, 10) === 0}
                   />
                 </Col>
               </Row>
@@ -2095,22 +2152,34 @@ export function DocumentUploadForm() {
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </Col>
+                {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
+                  <label
+                    htmlFor="variance"
+                    style={{ color: "black", fontWeight: "bold" }}
+                  >
+                    Variance
+                  </label>
+                  <Input
+                    id="variance"
+                    name="variance"
+                    style={{ width: "150px", height: "30px" }}
+                    value={variance}
+                    onChange={(e) => setVariance(e.target.value)}
+                  />
+                </Col> */}
+
 
                 {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
-                    <label
-                      htmlFor="variance"
-                      style={{ color: "black", fontWeight: "bold" }}
-                    >
-                      Variance
-                    </label>
-                    <Input
-                      id="variance"
-                      name="variance"
-                      style={{ width: "150px", height: "30px" }}
-                      value={variance}
-                      onChange={(e) => setVariance(e.target.value)}
-                    />
-                  </Col> */}
+                  <label htmlFor="status" style={{ color: "black", fontWeight: "bold" }}>Status</label>
+                  <Input
+                    id="status"
+                    name="status"
+                    style={{ width: "150px", height: "30px" }}
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+
+                  />
+                </Col> */}
               </Row>
 
               <Row gutter={12} style={{ marginTop: "10px" }}></Row>

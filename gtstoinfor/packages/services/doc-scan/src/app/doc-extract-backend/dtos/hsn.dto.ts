@@ -36,6 +36,9 @@ export class HsnDto {
   variance: string;
 
   @ApiProperty()
+  status: string;
+
+  @ApiProperty()
   VarianceStatus: StatusEnum;
 
   @ApiProperty()
