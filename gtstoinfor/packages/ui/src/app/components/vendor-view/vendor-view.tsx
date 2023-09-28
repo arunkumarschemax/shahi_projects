@@ -221,6 +221,7 @@ const VendorGrid = () => {
       dataIndex:"vendorCode",
       defaultSortOrder: "ascend" as SortOrder,
       sorter: (a, b) => a.vendorCode.localeCompare(b.vendorCode),
+      ...getColumnSearchProps("vendorCode"),
       render:(text,record,index)=>{
         return(
           <span>

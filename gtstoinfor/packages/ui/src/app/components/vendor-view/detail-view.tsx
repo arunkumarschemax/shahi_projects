@@ -233,7 +233,8 @@ const VendorBranchInfoGrid = () => {
         </Descriptions.Item>
       </Descriptions>
       <br />
-      <Card style={{ textAlign: "center" }} size="small" title={<span><ApartmentOutlined />Branches</span>} >
+      { vendorDetails.length > 0 ? (
+        <Card style={{ textAlign: "center" }} size="small" title={<span><ApartmentOutlined />Branches</span>} >
         <Table
           pagination={false}
           columns={columns}
@@ -241,6 +242,7 @@ const VendorBranchInfoGrid = () => {
           size="small"
         />
       </Card>
+     ):"" }
     </Card>
   );
 };
