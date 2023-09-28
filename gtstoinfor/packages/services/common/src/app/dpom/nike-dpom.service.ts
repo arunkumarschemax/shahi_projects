@@ -1616,4 +1616,15 @@ export class DpomService {
         const dataModelArray: TotalQuantityChangeModel[] = Array.from(sizeDateMap.values());
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
+
+    async getDpomSyncDetails():Promise<CommonResponseModel>{
+        const query='SELECT COUNT(*) AS totalRecords,(SELECT COUNT(*) FROM dpom WHERE DATE(created_at)=DATE(NOW())) AS todayrecords ,COUNT(*)-(SELECT COUNT(*) FROM `dpom` WHERE DATE(created_at)=DATE(NOW())) AS oldRecords FROM dpom '
+        const result = await this.dpomRepository.query(query)
+        if(result){
+            return new CommonResponseModel(true,1,'data retrived Sucessfully',result)
+        }else{
+            return new CommonResponseModel(false,0,'no data found ',[])
+
+        }
+    }
 }

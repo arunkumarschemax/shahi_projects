@@ -764,5 +764,14 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getDpomSyncDetails')
+    async getDpomSyncDetails(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getDpomSyncDetails();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
 
