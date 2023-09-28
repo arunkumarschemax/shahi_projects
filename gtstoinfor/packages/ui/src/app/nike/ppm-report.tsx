@@ -1856,29 +1856,33 @@ const PPMReport = () => {
         title: 'Diff of Item Vas Text',
         dataIndex: '',
         render: (text, record) => {
-          const lines1 = (record.itemVasText).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-          const text1 = lines1.join('');
+          if (record.itemVasText == null || record.itemVasTextPDF == null) {
+            return '-';
+          } else {
+            const lines1 = (record.itemVasText).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+            const text1 = lines1.join('');
 
-          const lines2 = (record.itemVasTextPDF).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-          const text2 = lines2.join('');
+            const lines2 = (record.itemVasTextPDF).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+            const text2 = lines2.join('');
 
-          const dmp = new DiffMatchPatch();
-          const diff = dmp.diff_main(text1, text2);
-          dmp.diff_cleanupSemantic(diff);
+            const dmp = new DiffMatchPatch();
+            const diff = dmp.diff_main(text1, text2);
+            dmp.diff_cleanupSemantic(diff);
 
-          let output = '';
-          for (const [op, text] of diff) {
-            if (op === DiffMatchPatch.DIFF_INSERT) {
-              if (text.trim() !== '') {
-                output += `${text} `;
-              }
-            } else if (op === DiffMatchPatch.DIFF_DELETE) {
-              if (text.trim() !== '') {
-                output += `${text} `;
+            let output = '';
+            for (const [op, text] of diff) {
+              if (op === DiffMatchPatch.DIFF_INSERT) {
+                if (text.trim() !== '') {
+                  output += `${text} `;
+                }
+              } else if (op === DiffMatchPatch.DIFF_DELETE) {
+                if (text.trim() !== '') {
+                  output += `${text} `;
+                }
               }
             }
+            return output.trim()
           }
-          return output.trim()
         },
       },
       {
