@@ -5,7 +5,7 @@ import { PriceAdapter } from "../adapter/price-adapter";
 import { PriceDto } from "../dto/price.dto";
 import { PriceEntity } from "../entity/price-entity";
 import { PriceResponseModel, CommonResponseModel, GlobalResponseObject, PriceListRequestModel } from "@xpparel/shared-models";
-
+import { FilterDto } from "../dto/filter.dto";
 
 @Injectable()
 export class PriceService {
@@ -53,4 +53,16 @@ export class PriceService {
     }
     return new CommonResponseModel(true, 111111, "Data Retrieved Successfully", records)
   }
+  
+
+  async getServiceCode(req:FilterDto): Promise<CommonResponseModel> {
+    console.log(req,"jjj")
+    const records = await this.repository.find({where:{hsnCode:req.hsnCode,vendor:req.vendorName,serviceDescription:req.serviceDescription}})
+    
+    if (records.length === 0) {
+      return new GlobalResponseObject(false, 65645, "Data not Found")
+    }
+    return new CommonResponseModel(true, 111111, "Data Retrieved Successfully", records)
+  }
+
 }
