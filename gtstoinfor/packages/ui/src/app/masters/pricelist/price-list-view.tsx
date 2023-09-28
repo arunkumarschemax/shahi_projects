@@ -92,10 +92,10 @@ const getSeasonCode = () => {
 
   const getPriceList= () => {
     const req = new NewFilterDto();
-     if (form.getFieldValue("style") !== undefined) {
-     req.style = form.getFieldValue("style");}
-            if (form.getFieldValue("destination") !== undefined) {
-         req.destination = form.getFieldValue("destination"); }
+     if (form.getFieldValue("sampleCode") !== undefined) {
+     req.sampleCode = form.getFieldValue("sampleCode");}
+            if (form.getFieldValue("business") !== undefined) {
+         req.business = form.getFieldValue("business"); }
          if (form.getFieldValue("currency") !== undefined) {
           req.currency = form.getFieldValue("currency"); }
           if (form.getFieldValue("year") !== undefined) {
@@ -247,18 +247,26 @@ const getSeasonCode = () => {
     },
     {
         title: "Style",
-        dataIndex: "style",
+        dataIndex: "sampleCode",
         align:"center",
-        sorter: (a, b) => a.style.localeCompare(b.style),
+        sorter: (a, b) => a.sampleCode.localeCompare(b.sampleCode),
         sortDirections: ["descend", "ascend"],
         // ...getColumnSearchProps("style"),
       },
+      {
+          title: "Item",
+          dataIndex: "item",
+          align:"center",
+          sorter: (a, b) => a.item.localeCompare(b.item),
+          sortDirections: ["descend", "ascend"],
+          // ...getColumnSearchProps("style"),
+        },
       
       {
         title: "Destination",
-        dataIndex: "destination",
+        dataIndex: "business",
         align:"center",
-        sorter: (a, b) => a.destination.localeCompare(b.destination),
+        sorter: (a, b) => a.business.localeCompare(b.business),
         sortDirections: [ "ascend","descend"],
         // ...getColumnSearchProps("destination"),
         
@@ -283,9 +291,9 @@ const getSeasonCode = () => {
       },
       {
         title: "Price",
-        dataIndex: "price",
+        dataIndex: "fobLocalCurrency",
         align:"center",
-        sorter: (a, b) => a.price.localeCompare(b.price),
+        sorter: (a, b) => a.fobLocalCurrency.localeCompare(b.fobLocalCurrency),
         sortDirections: [ "ascend","descend"],
          ...getColumnSearchProps("currency"),
        
@@ -307,7 +315,7 @@ const getSeasonCode = () => {
         render:(text,record) => {
           return(
             <>
-            {record.price ? `${record.price} ${record.currency}` : '-'}
+            {record.fobLocalCurrency ? `${record.fobLocalCurrency} - ${record.currency}` : '-'}
             </>
           )
         }
@@ -404,11 +412,11 @@ const getSeasonCode = () => {
         <Form form={form} style={{textAlign:'center'}}  layout='vertical' onFinish={getPriceList}>
         <Row gutter={24}>
           <Col xs={24} sm={12} md={8} lg={6} xl={4}  style={{ padding: '8px' }}>
-            <Form.Item name="style" label="Style">
+            <Form.Item name="sampleCode" label="Style">
               <Select placeholder="Select Style" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
                 {style.map((e) => {
                   return (
-                    <Option key={e.id} value={e.style}>{e.style}
+                    <Option key={e.id} value={e.sample_code}>{e.sample_code}
                     </Option>
                   );
                 })}
@@ -428,11 +436,11 @@ const getSeasonCode = () => {
             </Form.Item>
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
-            <Form.Item name="destination" label="Destination">
+            <Form.Item name="business" label="Destination">
               <Select placeholder="Select Destination" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
                 {destination.map((e) => {
                   return (
-                    <Option key={e.id} value={e.destination}>{e.destination}
+                    <Option key={e.id} value={e.business}>{e.business}
                     </Option>
                   );
                 })}
@@ -444,7 +452,7 @@ const getSeasonCode = () => {
               <Select placeholder="Select Destination" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
                 {seasonCode.map((e) => {
                   return (
-                    <Option key={e.id} value={e.season_code}>{e.season_code}
+                    <Option key={e.id} value={e.season}>{e.season}
                     </Option>
                   );
                 })}

@@ -1,18 +1,21 @@
 export class NewFilterDto {
-    style?: string;
+    sampleCode?: string;
+    item?: string
     year?: string;
-    destination?:string;
+    business?:string;
     seasonCode?:string;
     currency?:string;
+    fobLocalCurrency? : number;
     
-    constructor( style?: string, year?: string,destination?:string,
-        seasonCode?:string,currency?:string) {
-      this.style = style;
+    constructor( sampleCode?: string, item?: string,year?: string,business?:string,
+        seasonCode?:string,currency?:string, fobLocalCurrency?:number) {
+      this.sampleCode = sampleCode;
+      this.item = item
       this.year = year;
-      this.destination = destination;
+      this.business = business;
       this.seasonCode = seasonCode;
       this.currency = currency;
-      
+      this.fobLocalCurrency = fobLocalCurrency
     }
   }
   
