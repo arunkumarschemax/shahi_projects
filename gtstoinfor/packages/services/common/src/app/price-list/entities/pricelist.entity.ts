@@ -14,7 +14,7 @@ export class PriceListEntity {
     year: string;
 
     @Column('varchar', {
-        name: "season_code",
+        name: "season",
         
     })
     seasonCode: string;
@@ -26,22 +26,22 @@ export class PriceListEntity {
     item: string;
 
     @Column('varchar', {
-        name: "style",
+        name: "sample_code",
        
     })
-    style: string;
+    sampleCode: string;
 
     @Column('varchar', {
-        name: "destination",
+        name: "business",
        
     })
-    destination: string;
+    business: string;
 
     @Column('varchar', {
-        name: "price",
+        name: "fob_local_currency",
        
     })
-    price: string;
+    fobLocalCurrency: string;
 
     @Column('varchar', {
         name: "currency",  
@@ -72,12 +72,6 @@ export class PriceListEntity {
     })
     updatedAt: string;
 
-    @Column('int', {
-        nullable: true,
-        name: 'version',
-    })
-    version: number;
-
     @VersionColumn({
         default: 1,
         name: "version_flag",
@@ -90,5 +84,17 @@ export class PriceListEntity {
         default:1
       })
       isActive: boolean;
+
+    @Column('int', {
+        nullable: true,
+        name: 'version',
+    })
+    version: number;
+    
+    @Column('int', {
+        nullable:true,
+        name: 'file_id',
+    })
+    fileId : number;
 
 }

@@ -2,8 +2,8 @@ export const PriceListColumns =[
     "Year",
     "Season",
     "Item",
-    "Style",
-    "Destination",
-    "FOB_Local_Currency",
+    "Sample_Code",
+    "Business",
+    "FOBLocal_Currency",
     "Currency"
 ]

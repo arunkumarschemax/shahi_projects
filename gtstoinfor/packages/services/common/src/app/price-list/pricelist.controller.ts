@@ -1,10 +1,12 @@
-import { Body, Controller, Post, Put } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
 import { AllFactoriesResponseModel, CommonResponseModel, NewFilterDto, PriceListDto, PriceListResponseModel } from '@project-management-system/shared-models';
 import { priceListService } from './pricelist.service';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { priceListDto } from './dto/pricelist.dto';
 import { PriceListEntity } from './entities/pricelist.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Controller('/priceList')
 export class PriceListController {
@@ -42,7 +44,7 @@ export class PriceListController {
 
     @Post('/getAllPriceList')
     @ApiBody({ type: NewFilterDto })
-    async getAllPriceList(@Body ()req:any): Promise<PriceListResponseModel> {
+    async getAllPriceList(@Body() req:any): Promise<PriceListResponseModel> {
         try {
             return await this.priceService.getAllPriceList(req);
         } catch (error) {
@@ -113,6 +115,60 @@ export class PriceListController {
     }
 
 
+    @Post('/fileUpload')
+    @ApiConsumes('multipart/form-data')
+    @UseInterceptors(FileInterceptor('file', {
+        limits: { files: 1 },
+        storage: diskStorage({
+            destination: './upload-files',
+            filename: (req, file, callback) => {
+                const name = file.originalname;
+                callback(null, `${name}`);
+            },
+        }),
+        fileFilter: (req, file, callback) => {
+            if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|xls|xlsx|csv)$/)) {
+                return callback(new Error('Only png,jpeg,PNG,jpg,JPG,xls,xlsx and csv files are allowed!'), false);
+            }
+            callback(null, true);
+        },
+    }))
+
+    async fileUpload( @UploadedFile() file): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.updatePath(file.path, file.filename)
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+
+    @Post('/updateFileStatus')
+    async updateFileStatus(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.priceService.updateFileStatus(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getUploadFilesData')
+    async getUploadFilesData(): Promise<CommonResponseModel> {
+        try {
+            return this.priceService.getUploadFilesData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/savePriceListData/:id')
+    async savePriceListData(@Param('id') id: number, @Body() data: any): Promise<CommonResponseModel> {
+        try {
+            return this.priceService.savePriceListData(data,id);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+
+        }
+    }
 
     
 }
