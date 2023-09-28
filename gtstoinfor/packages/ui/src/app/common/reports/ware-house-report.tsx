@@ -707,17 +707,17 @@ const handleTabChange = (selectedYear: string) => {
 const getFilterdData = () => {
   let ItemName = form.getFieldValue("ItemName");
 
-  let filteredData = data;
+    let filteredData = data;
 
-  if (ItemName) {
-    filteredData = filteredData.filter(
-      (record) => record.itemName === ItemName
-    );
-    if (filteredData.length === 0) {
-      message.error("No Data Found");
-    }
-    setFilteredData(filteredData);
-  }
+    if (ItemName) {
+      filteredData = filteredData.filter(
+        (record) => record.itemName === ItemName
+      );
+      if (filteredData.length === 0) {
+        message.error("No Data Found");
+      }
+      setFilteredData(filteredData);
+}
 };
 const onReset = () => {
   form.resetFields();
@@ -896,19 +896,20 @@ const getTableSummary = (pageData) => {
   return (
     <Card
     // title="Montly Wise WareHouse Report"
-    extra={data.length > 0 ? (<Button
-        type="default"
-        style={{ color: 'green' }}
-        onClick={handleExport}
-        icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
+    // extra={data.length > 0 ? (<Button
+    //     type="default"
+    //     style={{ color: 'green' }}
+    //     onClick={handleExport}
+    //     icon={<FileExcelFilled />}>Download Excel</Button>) : null}
+        >
 
     
 <Tabs type="card" onChange={handleTabChange} aria-disabled>
         {year.map((item) => (
         <Tabs.TabPane key={item.year} tab={item.year}>
-          <Form form={form} layout={"vertical"}>
-           <Row>
-           <Col
+        <Form form={form} layout={"vertical"}>
+              <Row gutter={24}>
+                <Col
                   xs={{ span: 24 }}
                   sm={{ span: 24 }}
                   md={{ span: 6 }}
@@ -929,12 +930,11 @@ const getTableSummary = (pageData) => {
                             {e.itemName}
                           </Option>
                         ))}
-                        {/* <Option key='new' value="NEW">NEW</Option>
-                                        <Option key='unaccepted' value="UNACCEPTED">UNACCEPTED</Option> */}
                       </Select>
                     </Form.Item>
                   </div>
                 </Col>
+
                 <Col
                   xs={{ span: 24 }}
                   sm={{ span: 24 }}
@@ -961,10 +961,47 @@ const getTableSummary = (pageData) => {
                     Reset
                   </Button>
                 </Col>
-           </Row>
-          </Form>
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 5 }}
+                  lg={{ span: 5 }}
+                  xl={{ span: 6 }}
+                  style={{ marginTop: 17 }}
+                >
+                  <Button
+                    type="default"
+                    style={{ color: "green" }}
+                    onClick={handleExport}
+                    icon={<FileExcelFilled />}
+                  >
+                    Download Excel
+                  </Button>
+                </Col>
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 5 }}
+                  lg={{ span: 5 }}
+                  xl={{ span: 6 }}
+                  style={{ marginTop: 17 }}
+                >
+                  <Card
+                    title={"Total Items : " + data.length}
+                    style={{
+                      textAlign: "center",
+                      width: 150,
+                      height: 35,
+                      borderRadius: 8,
+                      backgroundColor: "#EBEBF1",
+                    }}
+                    size="small"
+                  ></Card>
+                </Col>
+              </Row>
+            </Form>
         <Table
-          dataSource={data} 
+          dataSource={filteredData} 
           columns={columns5} 
           size="small"
           scroll={{ x: "max-content" }}
