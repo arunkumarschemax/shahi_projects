@@ -524,12 +524,28 @@ function ScanDetailView() {
             pagination={false}
             summary={(pageData) => {
               let totalCost: number = 0;
+              let taxamount: number = 0
+              let Subjectamount: number = 0
 
-              // pageData.forEach(({unitquantity}) => {
-              //   if(Number(unitquantity)) {
-              //     totalCost += Number(unitquantity)
-              //   }
-              // })
+              pageData.forEach(({Taxamount}) => {
+                if(Number(Taxamount)) {
+                  taxamount += Number(Taxamount)
+                }
+              })
+
+              pageData.forEach((record) => {
+                if (
+                  Number(record.unitPrice) &&
+                  Number(record.unitquantity) 
+                ) {
+                  Subjectamount +=
+                    Number(record.unitPrice * record.unitquantity)
+                  
+                }
+              });
+
+
+
               pageData.forEach((record) => {
                 if (
                   Number(record.unitPrice) &&
@@ -546,11 +562,11 @@ function ScanDetailView() {
               return (
                 <>
                   <Table.Summary.Row className="tableFooter">
-                    <Table.Summary.Cell index={1} colSpan={4}>
+                    <Table.Summary.Cell index={1} colSpan={3}>
                       <span></span>
                     </Table.Summary.Cell>
-                    <Table.Summary.Cell index={1} colSpan={6}>
-                      <span>
+                    <Table.Summary.Cell index={1} colSpan={5}>
+                      <span style={{marginLeft:350}}>
                         <b>Total</b>
                       </span>
                       <b>
@@ -560,10 +576,20 @@ function ScanDetailView() {
                         </span>
                       </b>
                     </Table.Summary.Cell>
+                    <Table.Summary.Cell index={1} colSpan={1}>
+                      <span>
+                      <b>{Number(Subjectamount).toFixed(2)}</b>
+                      </span>
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={1} colSpan={1}>
+                      <span>
+                      <b>{Number(taxamount).toFixed(2)}</b>
+                      </span>
+                    </Table.Summary.Cell>
 
-                    <Table.Summary.Cell index={1} colSpan={14}>
+                    <Table.Summary.Cell index={1} colSpan={1}>
                       <span style={{ textAlign: "end" }}>
-                        <b>{Number(totalCost).toLocaleString("en-IN")}</b>
+                        <b>{Number(totalCost).toFixed(2)}</b>
                       </span>
                     </Table.Summary.Cell>
                   </Table.Summary.Row>

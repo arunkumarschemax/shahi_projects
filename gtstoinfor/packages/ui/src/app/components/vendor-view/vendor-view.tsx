@@ -193,10 +193,23 @@ const VendorGrid = () => {
       render: (text, record, index) => (page - 1) * pageSize + (index + 1),
     },
     {
-      title: "Name",
+      title: "Vendor Name",
       dataIndex: "name",
       defaultSortOrder: "ascend" as SortOrder,
       sorter: (a, b) => a.name.localeCompare(b.name),
+    },
+    {
+      title: "Vendor code",
+      dataIndex:"vendorCode",
+      defaultSortOrder: "ascend" as SortOrder,
+      sorter: (a, b) => a.vendorCode.localeCompare(b.vendorCode),
+      render:(text,record,index)=>{
+        return(
+          <span>
+            {record.vendorCode? record.vendorCode:"--"}
+          </span>
+        )
+      }
     },
     {
       title: "Business Name",
