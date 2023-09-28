@@ -9,6 +9,7 @@ import moment from 'moment';
 import RangePicker from 'rc-picker/lib/RangePicker';
 import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
+import { Link, useNavigate } from 'react-router-dom';
 const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 
 
@@ -41,9 +42,8 @@ const PPMReport = () => {
   const [planSesYear, setPlanSesYear] = useState<any>([]);
   const [geoCode, setGeoCode] = useState<any>([]);
   const [hideChildren, setHideChildren] = useState(false);
-
-
-
+  let navigate = useNavigate()
+  let  poFilterData
 
   useEffect(() => {
     getProductCode();
@@ -470,7 +470,12 @@ const PPMReport = () => {
       {
         title: "Po+Line",
         dataIndex: 'Po+Line', fixed: 'left',
-        render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`,
+        // render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`,
+
+        render :(text, record) =>{return <>
+        <Button type='link' onClick={e =>{DetailedView(record.poAndLine)}}>{record.purchaseOrderNumber} - {record.poLineItemNumber}</Button>
+        </>}
+
       },
       {
         title: 'Last Modified Date',
@@ -2049,6 +2054,12 @@ const PPMReport = () => {
     );
 
   }
+
+  const DetailedView=(record:any)=>{
+       poFilterData = filterData.filter(item =>item.poAndLine == record)
+      console.log(poFilterData)
+        navigate('/Reports/po-detailed-view', { state: { data:poFilterData}})
+      }
 
   return (
     <>
