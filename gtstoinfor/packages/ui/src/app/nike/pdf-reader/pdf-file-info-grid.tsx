@@ -6,6 +6,7 @@ import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
 import PoPdfTable from "./po-pdf-table";
+import moment from "moment";
 
 
 export function POPDFInfoGrid() {
@@ -137,13 +138,25 @@ export function POPDFInfoGrid() {
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
+            title: 'Uploaded Date',
+            dataIndex: 'created_at',
+            align: 'center',
+            render: (text, record) => {
+                return record.created_at ? moment(record.created_at).format('MM/DD/YYYY') : '-'
+            }
+            // ...getColumnSearchProps('purchaseOrderNumber')
+        },
+        {
             title: 'Action',
             dataIndex: 'action',
             render: (value, record) => {
                 return (
                         <Button onClick={e=>setMoreData(record)}>More Info</Button>
+                        
                 );
-            }
+                
+            },
+            
 
         }
     ]
