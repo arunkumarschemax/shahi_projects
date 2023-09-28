@@ -896,7 +896,7 @@ const getTableSummary = (pageData) => {
 }
   return (
     <Card
-    title="Montly Wise WareHouse Report"
+    // title="Montly Wise WareHouse Report"
     extra={data.length > 0 ? (<Button
         type="default"
         style={{ color: 'green' }}

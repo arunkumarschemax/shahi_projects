@@ -743,17 +743,7 @@ const childColumns1: any = [
     let decPre = 0;let decLat = 0;
     let totalPre = 0;let totalLat =0;
 
-    pageData.forEach((e) => {
-      console.log(e)
-      e.monthWiseData.forEach((rec) => {
-        console.log(rec)
-     if(Number(rec.pcsData[0].janPcs)) {
-      console.log(rec.pcsData[0].janPcs)
-      janPre += Number(rec.pcsData[0].janPcs)
-    }
-  })
-    })
-    JanPreviousTotal += janPre
+    
     pageData.forEach((e) => {
       e.monthWiseData.forEach((rec) => {
         if(rec.pcsData[0].janPcs) {
@@ -898,7 +888,7 @@ const childColumns1: any = [
   }
   return (
     <Card
-      title="Ex-Factory Report"
+      // title="Ex-Factory Report"
       extra={
         data.length > 0 ? (
           <Button
@@ -912,6 +902,7 @@ const childColumns1: any = [
         ) : null
       }
     >
+      
       <Tabs type="card" onChange={handleTabChange} aria-disabled>
         {year.map((item) => (
           <Tabs.TabPane key={item.year} tab={item.year}>

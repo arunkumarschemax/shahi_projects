@@ -2,6 +2,7 @@
 import { CommonResponseModel, PriceListDto, PriceListResponseModel } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
+
 export class PriceListService extends CommonAxiosService {
     private URL = "/pricelist";
 
@@ -39,5 +40,24 @@ export class PriceListService extends CommonAxiosService {
     }
     async getAllPriceListSeasonCode(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllPriceListSeasonCode")
+    }
+
+    async fileUpload(file: any): Promise<CommonResponseModel> {
+        const url = `/priceList/fileUpload`;
+        return this.axiosPostCall(url, file);
+    }
+
+    async savePriceListData(data: any, id: number): Promise<CommonResponseModel> {
+        const idn = id;
+        const url = `/priceList/savePriceListData/${idn}`;
+        return this.axiosPostCall(url, data);
+    }
+
+    async updateFileStatus(req: any): Promise<CommonResponseModel> {
+        return await this.axiosPostCall(this.URL + '/updateFileStatus', req);
+    }
+
+    async getUploadFilesData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getUploadFilesData")
     }
 }

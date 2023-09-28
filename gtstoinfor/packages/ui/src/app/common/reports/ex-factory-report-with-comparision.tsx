@@ -43,12 +43,6 @@ export const ExFactoryReportWithComparision = () => {
   const getData =()=>{
     const req = new YearReq(tab)    
     service.getExfactoryWithComparision(req).then(res =>{
-
-      if(res.status){
-        setYear(res.data)
-      }
-    })
-    service.getExfactoryWithComparision(req).then(res =>{
       console.log(res.data,'res==========');
       if(res.status){
         setData(res.data)
@@ -879,17 +873,42 @@ const getTableSummary = (pageData) => {
 console.log(JanPreviousTotal,JanLatestTotal,FebLatestTotal,FebPreviousTotal)
   return (
     <Card
-    title="Ex-Factory Comparision Report"
-    extra={data.length > 0 ? (<Button
-        type="default"
-        style={{ color: 'green' }}
-        onClick={handleExport}
-        icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
+      // title="Ex-Factory Report"
+      extra={
+        data.length > 0 ? (
+          <Button
+            type="default"
+            style={{ color: "green" }}
+            onClick={handleExport}
+            icon={<FileExcelFilled />}
+          >
+            Download Excel
+          </Button>
+        ) : null
+      }
+    >
 
-    
+
+     {/* <Row>
+     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }}  >
+<Card title={'Total Items : ' + data.length} 
+style={{textAlign: 'center', width:150,height:35, borderRadius:8}}  
+size="small"></Card>
+</Col>
+     <Col xs={{ span: 30 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
+     <Button
+        type="default"
+        style={{ color: 'green',marginRight:5}}
+        onClick={handleExport}
+        icon={<FileExcelFilled />}>Download Excel</Button> 
+      </Col>
+  
+</Row> */}
+
 <Tabs type="card" onChange={handleTabChange} aria-disabled>
+
           {year.map((e)=>(
-            <Tabs.TabPane tab={e.year} tabKey={e.year}>
+            <Tabs.TabPane tab={`${e.year}`} key={e.year}>
           
            <Form form={form} layout={'vertical'}>
                     <Row gutter={24}>
