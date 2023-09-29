@@ -5,7 +5,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
-import { CompareOrdersFilterReq, YearReq } from "@project-management-system/shared-models";
+import { CompareOrdersFilterReq, YearReq, orders } from "@project-management-system/shared-models";
 
 @Injectable()
 export class OrdersRepository extends Repository<OrdersEntity> {
@@ -14,10 +14,19 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         super(orderRepository.target, orderRepository.manager, orderRepository.queryRunner);
     }
 
-    async getOrdersData(): Promise<any[]> {
+    async getOrdersData(req: orders): Promise<any[]> {
         const query = this.createQueryBuilder('o')
             .select(`o.production_plan_id, o.planning_ssn_cd, o.department, o.planning_sum_code, o.planning_sum, o.item,o.vendor, o.sewing_factory, o.branchFactory, o.coeff, o.publish_date,o.order_plan_number,o.gwh,o.wh,o.raw_material_supplier,o.yarn_order_status,o.fbrc_order_status,o.color_order_status,o.trim_order_status,o.po_order_status,o.planned_exf,o.biz,o.fr_fabric,o.trnsp_mthd,prod_plan_type`)
-            .orderBy(` o.planning_ssn_cd`, 'ASC')
+            if (req.plannedFromDate !== undefined) {
+                query.andWhere(`Date(o.planned_exf) BETWEEN '${req.plannedFromDate}' AND '${req.plannedToDate}'`)
+            }
+            if(req.OrderPlanNumber){
+                query.andWhere(`o.order_plan_number = '${req.OrderPlanNumber}'`)
+            }
+            if(req?.PoOrderStatus){
+                query.andWhere(`o.po_order_status = '${req.PoOrderStatus}'`)
+            }
+            query.orderBy(` o.planning_ssn_cd`, 'ASC')
         return await query.getRawMany();
     }
 
@@ -225,6 +234,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
     async getOrdersStatus():Promise<any[]>{
         const query = await this. createQueryBuilder('orders')
         .select(`po_order_status`)
+        .where(`po_order_status is not null`)
         .groupBy('po_order_status')
         return await query.getRawMany();
     }
