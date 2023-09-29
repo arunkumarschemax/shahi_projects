@@ -129,7 +129,7 @@ export const ExFactoryReportWithComparision = () => {
     <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
     <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
-    <td  style={{position: 'relative',right: '-50px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-70px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-50px'}} >(latest)</td>
     <td  style={{position: 'relative',right: '-200px'}} >Total(previous)</td>
     <td  style={{position: 'relative',right: '-300px'}} >Total(latest)</td>
@@ -1217,82 +1217,35 @@ export const ExFactoryReportWithComparision = () => {
                   </div>
                 </Col>
 
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 5 }}
-                  lg={{ span: 5 }}
-                  xl={{ span: 6 }}
-                  style={{ marginTop: 17 }}
-                >
-                  <Button
-                    type="primary"
-                    icon={<SearchOutlined />}
-                    style={{ marginRight: 50, width: 80 }}
-                    htmlType="button"
-                    onClick={getFilterdData}
-                  >
-                    Search
-                  </Button>
-                  <Button
-                    type="primary"
-                    icon={<UndoOutlined />}
-                    htmlType="submit"
-                    onClick={onReset}
-                  >
-                    Reset
-                  </Button>
-                </Col>
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 5 }}
-                  lg={{ span: 5 }}
-                  xl={{ span: 6 }}
-                  style={{ marginTop: 17 }}
-                >
-                  <Button
-                    type="default"
-                    style={{ color: "green" }}
-                    onClick={handleExport}
-                    icon={<FileExcelFilled />}
-                  >
-                    Download Excel
-                  </Button>
-                </Col>
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 5 }}
-                  lg={{ span: 5 }}
-                  xl={{ span: 6 }}
-                  style={{ marginTop: 17 }}
-                >
-                  <Card
-                    title={"Total Items : " + data.length}
-                    style={{
-                      textAlign: "center",
-                      width: 150,
-                      height: 35,
-                      borderRadius: 8,
-                      backgroundColor: "#EBEBF1",
-                    }}
-                    size="small"
-                  ></Card>
-                </Col>
-              </Row>
-            </Form>
-            <Table
-              dataSource={filteredData}
-              columns={columns5}
-              size="small"
-              scroll={{ x: "max-content" }}
-              summary={getTableSummary}
-            />
-          </Tabs.TabPane>
-        ))}
-      </Tabs>
-    </Card>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 17 }} >
+                            <Button
+                                type="primary"
+                                icon={<SearchOutlined />}
+                                style={{ marginRight: 50, width: 80 }}
+                                htmlType="button"
+                                onClick={getFilterdData}>Search</Button>
+                            <Button
+                                type="primary"
+                                icon={<UndoOutlined />}
+                                htmlType="submit"
+                                onClick={onReset}>Reset</Button>
+                        </Col>
+                    </Row>
+                </Form>
+        <Table
+        bordered={false}
+        // showHeader={false}
+          dataSource={filteredData} 
+          columns={columns5} 
+          size="small"
+          scroll={{ x: "max-content" }}
+          summary={getTableSummary}
+        />
+        
+      </Tabs.TabPane>
+    ))}
+  </Tabs>
+  </Card>
   );
 };
 export default ExFactoryReportWithComparision;

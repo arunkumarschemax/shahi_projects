@@ -107,7 +107,7 @@ export const WareHouseComparision = () => {
     <th colSpan={2}style={{ position: 'relative', right: '600px' ,borderRight: '1px solid black'}}>September</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '720px', borderRight: '1px solid black' }}>October</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '620px',borderRight: '1px solid black', }}>November</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '500px', }}>December</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '550px', }}>December</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
 
@@ -140,13 +140,16 @@ export const WareHouseComparision = () => {
 
     <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-10px'}} >(latest)</td>
-    
+
     <td  style={{position: 'relative',right: '-15px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-10px'}} >(latest)</td>
+
     <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
-    <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
-    <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
+
+    <td  style={{position: 'relative',right: '-60px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-60px'}} >(latest)</td>
+
     <td  style={{position: 'relative',right: '-50px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-50px'}} >(latest)</td>
     <td  style={{position: 'relative',right: '-200px'}} >Total(previous)</td>
