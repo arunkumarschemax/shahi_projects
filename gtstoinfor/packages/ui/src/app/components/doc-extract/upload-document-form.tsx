@@ -5,6 +5,7 @@ import {
   BuyersService,
   PricesService,
   SharedService,
+  VendorNamereq,
   VendorService,
 } from "@xpparel/shared-services";
 import {
@@ -62,6 +63,9 @@ export function DocumentUploadForm() {
   const [editingItem, setEditingItem] = useState<Item | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isQuotationDataSet, setIsQuotationDataSet] = useState(false);
+  const [isVendorCodeDataSet, setIsVendorCodeDataSet] = useState(false);
+
+
 
   const [hsnData, setHsnData] = useState([]);
   const [buttonText, setButtonText] = useState("Add");
@@ -80,6 +84,7 @@ export function DocumentUploadForm() {
   const [unitPrice, setunitPrice] = useState("");
   const [originalUnitPrice, setOriginalUnitPrice] = useState("");
   const [originalQuotation, setOriginalQuotation] = useState("");
+  
 
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -100,7 +105,7 @@ export function DocumentUploadForm() {
   const [Sgst, setSgst] = useState("");
   const [Innvoiceamount, setInnvoiceamount] = useState("");
   const [vendor, setVendor] = useState("");
-  const [vendorCode, setvendorCode] = useState("");
+  const [venCode, setVenCode] = useState("");
   const [financialyear, setFinancialyear] = useState("");
   const [timecreated, setTimecreated] = useState("");
   const [Innvoicecurrency, setInnvoicecurrency] = useState("");
@@ -109,11 +114,13 @@ export function DocumentUploadForm() {
   const [data1, setData1] = useState<any[]>([]);
   const [data2, setData2] = useState<any[]>([]);
   const [price, setPrice] = useState<any[]>([]);
+  const [vendorCod, setVendorCod] = useState<any[]>([]);
 
   const services = new VendorService();
   const buyers = new BuyersService();
   const service = new SharedService();
   const venService = new PricesService();
+
 
   useEffect(() => {
     let invoiceAmount = 0;
@@ -150,6 +157,42 @@ export function DocumentUploadForm() {
         console.log(err.message);
       });
   };
+
+  useEffect(() => {
+    if (vendor)
+      getVendorCode(vendor); 
+  }, [vendor]);
+
+  const getVendorCode = (businessName: string) => {
+    const req = new VendorNamereq(businessName);
+    services.getVendorCodeByVendorName(req).then((res) => {
+      if (res.status) {
+        setVendorCod(res.data?.vendorCode);
+      } else {
+        setVendorCod([]);
+      }
+    })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+
+  useEffect(() => {
+    if (extractedData.length && vendorCod && extractionCompleted) {
+      const extractedDataCode = [];
+      extractedData.forEach(element => {
+        element.venCode = vendorCod;
+        extractedDataCode.push(element);
+      });
+      if (!isVendorCodeDataSet) {
+        setIsVendorCodeDataSet(true);
+        setExtractedData(extractedDataCode);
+      }
+    }
+  }, [vendorCod, extractedData, extractionCompleted])
+
+
 
   useEffect(() => {
     if (vendor)
@@ -596,12 +639,12 @@ export function DocumentUploadForm() {
       return "No Variance";
     } else if (variance > 0) {
       return "Fully Variance";
-    } else if (variance <= 0 || variance >= 0) { 
+    } else if (variance <= 0 || variance >= 0) {
       return "Partially Variance";
     }
     return "Unknown Variance";
   };
-  
+
 
 
   const calculateCharge = () => {
@@ -1628,10 +1671,9 @@ export function DocumentUploadForm() {
                     onChange={(e) => setVendor(e.target.value)}
                   />
                 </Col>
-
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
-                    htmlFor="vendorCode"
+                    htmlFor="venCode"
                     style={{
                       color: "black",
                       fontWeight: "bold",
@@ -1642,14 +1684,20 @@ export function DocumentUploadForm() {
                     Vendor Code
                   </label>
                   <Input
-                    title="vendorCode"
-                    name="vendorCode"
-                    style={{ width: "190px", height: "30px", borderColor: vendorCode ? "green" : "red", }}
-                    className={vendorCode ? "green" : vendorCode === "" ? "red" : "black"}
-                    value={vendorCode}
-                    onChange={(e) => setvendorCode(e.target.value)}
+                    title="venCode"
+                    name="venCode"
+                    style={{
+                      width: "190px",
+                      height: "30px",
+                      borderColor: venCode ? "green" : "red",
+                    }}
+                    className={venCode ? "green" : venCode === "" ? "red" : "black"}
+                    value={vendorCod !== undefined && vendorCod !== null ? `${vendorCod}` : "0"}
+                    onChange={(e) => setVenCode(e.target.value)}
                   />
                 </Col>
+
+
 
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
@@ -1830,7 +1878,7 @@ export function DocumentUploadForm() {
                     style={{
                       width: "190px",
                       height: "30px",
-                      borderColor: status  ? "blue" : "red",
+                      borderColor: status ? "blue" : "red",
                     }}
                     className={status === "No Variance" ? "blue" : status === "Fully Variance" ? "red" : "black"}
                     value={status}
