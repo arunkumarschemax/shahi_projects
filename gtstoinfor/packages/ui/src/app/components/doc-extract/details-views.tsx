@@ -36,6 +36,7 @@ function ScanDetailView() {
       rowData.state.rowData.scanentity[0].HSN,
       rowData.state.rowData.scanentity[0].description
     );
+
     console.log(req, "4545");
     service
       .getServiceCode(req)
@@ -53,6 +54,7 @@ function ScanDetailView() {
   };
 
   console.log(serviceCodeData, "1111122333");
+  
   
 
   const handleBack = () => {
@@ -505,12 +507,10 @@ function ScanDetailView() {
           label="Status"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
+          
           <Tag>
-            {rowData.state.rowData.VarianceStatus
-              ? StatusEnumDisplay.find(
-                  (item) => item.name === rowData.state.rowData.VarianceStatus
-                )?.displayVal
-              : "--"}
+            {rowData.state.rowData.status? rowData.state.rowData.status:"--"}
+            
           </Tag>
         </Descriptions.Item>
       </Descriptions>
