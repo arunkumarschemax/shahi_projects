@@ -294,44 +294,70 @@ export function DocView() {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      ...getColumnSearchProps("status"),
       sorter: (a, b) => a.status.localeCompare(b.status),
       align: "center",
       render: (text: any, record: { status: any }) => {
-        // // Define a mapping of status values to tag colors
-        // const statusTagColors = {
-        //   Partial_Variance: "orange",
-        //   No_Variance: "green",
-        //   Full_Variance: "red",
-        //   // Add more status values and corresponding colors as needed
-        // };
+        let statusColor = "black";
     
-        // const statusColor = statusTagColors[record.VarianceStatus] || "default";
-    
+        if (record.status === "No Variance") {
+          statusColor = "green";
+        } else if (record.status === "Fully Variance") {
+          statusColor = "red";
+        }
+        else if(record.status === "Partially Variance")  {
+          statusColor ="blue"
+        }
         return (
-          <Tag>
-           {record.status ? record.status:"--"}
+          <Tag style={{ color: statusColor }}>
+            {record.status ? record.status : "-"}
           </Tag>
         );
       },
-      // filters: [
-      //   {
-      //     text: 'Partial Variance',
-      //     value: 'Partial_Variance', // Change value to the actual status value
-      //   },
-      //   {
-      //     text: 'No Variance',
-      //     value: 'No_Variance', // Change value to the actual status value
-      //   },
-      //   {
-      //     text: 'Full Variance',
-      //     value: 'Full_Variance', // Change value to the actual status value
-      //   },
-      // ],
-      // filterMultiple: false,
-      // onFilter: (value, record) => {
-      //   return record.VarianceStatus === value; // Use record.VarianceStatus
-      // },
     },
+    
+    // {
+    //   title: "Status",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   sorter: (a, b) => a.status.localeCompare(b.status),
+    //   align: "center",
+    //   render: (text: any, record: { status: any }) => {
+    //     // // Define a mapping of status values to tag colors
+    //     // const statusTagColors = {
+    //     //   Partial_Variance: "orange",
+    //     //   No_Variance: "green",
+    //     //   Full_Variance: "red",
+    //     //   // Add more status values and corresponding colors as needed
+    //     // };
+    
+    //     // const statusColor = statusTagColors[record.VarianceStatus] || "default";
+    
+    //     return (
+    //       <Tag>
+    //        {record.status ? record.status:"--"}
+    //       </Tag>
+    //     );
+    //   },
+    //   // filters: [
+    //   //   {
+    //   //     text: 'Partial Variance',
+    //   //     value: 'Partial_Variance', // Change value to the actual status value
+    //   //   },
+    //   //   {
+    //   //     text: 'No Variance',
+    //   //     value: 'No_Variance', // Change value to the actual status value
+    //   //   },
+    //   //   {
+    //   //     text: 'Full Variance',
+    //   //     value: 'Full_Variance', // Change value to the actual status value
+    //   //   },
+    //   // ],
+    //   // filterMultiple: false,
+    //   // onFilter: (value, record) => {
+    //   //   return record.VarianceStatus === value; // Use record.VarianceStatus
+    //   // },
+    // },
     {
       title: "Actions",
       key: "actions",

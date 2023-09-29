@@ -23,11 +23,10 @@ function ScanDetailView() {
 
   const service = new PricesService();
   useEffect(() => {
-    if(rowData.state.rowData){
+    if (rowData.state.rowData) {
       getServiceCode();
     }
 
-    
   }, []);
 
   const getServiceCode = () => {
@@ -54,8 +53,8 @@ function ScanDetailView() {
   };
 
   console.log(serviceCodeData, "1111122333");
-  
-  
+
+
 
   const handleBack = () => {
     navigate("/scan-document");
@@ -133,9 +132,9 @@ function ScanDetailView() {
     onFilter: (value, record) =>
       record[dataIndex]
         ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes((value as string).toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes((value as string).toLowerCase())
         : false,
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
@@ -276,7 +275,7 @@ function ScanDetailView() {
         return (
           <span>
             {serviceCodeData ? serviceCodeData[0]?.serviceCode : "-"}
-            </span>
+          </span>
         );
       },
     },
@@ -378,9 +377,9 @@ function ScanDetailView() {
           <span>
             {record.unitPrice
               ? (
-                  Number(record.unitPrice * record.unitquantity) +
-                  Number(record.Taxamount)
-                ).toFixed(2)
+                Number(record.unitPrice * record.unitquantity) +
+                Number(record.Taxamount)
+              ).toFixed(2)
               : "-"}
           </span>
         );
@@ -410,9 +409,9 @@ function ScanDetailView() {
       },
     },
   ];
-  
-   
-  
+
+
+
   return (
     <Card
       className="card-header"
@@ -507,12 +506,15 @@ function ScanDetailView() {
           label="Status"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          
-          <Tag>
-            {rowData.state.rowData.status? rowData.state.rowData.status:"--"}
-            
+          <Tag
+           color={rowData.state.rowData.status === "No Variance" ? "green"
+                  : rowData.state.rowData.status === "Fully Variance"  ? "red"
+                  : rowData.state.rowData.status === "Partially Variance"  ? "blue"
+                  : "default" }>
+            {rowData.state.rowData.status ? rowData.state.rowData.status : "--"}
           </Tag>
         </Descriptions.Item>
+        
       </Descriptions>
 
       <Card>
@@ -527,8 +529,8 @@ function ScanDetailView() {
               let taxamount: number = 0
               let Subjectamount: number = 0
 
-              pageData.forEach(({Taxamount}) => {
-                if(Number(Taxamount)) {
+              pageData.forEach(({ Taxamount }) => {
+                if (Number(Taxamount)) {
                   taxamount += Number(Taxamount)
                 }
               })
@@ -536,11 +538,11 @@ function ScanDetailView() {
               pageData.forEach((record) => {
                 if (
                   Number(record.unitPrice) &&
-                  Number(record.unitquantity) 
+                  Number(record.unitquantity)
                 ) {
                   Subjectamount +=
                     Number(record.unitPrice * record.unitquantity)
-                  
+
                 }
               });
 
@@ -566,7 +568,7 @@ function ScanDetailView() {
                       <span></span>
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={1} colSpan={5}>
-                      <span style={{marginLeft:350}}>
+                      <span style={{ marginLeft: 350 }}>
                         <b>Total</b>
                       </span>
                       <b>
@@ -578,12 +580,12 @@ function ScanDetailView() {
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={1} colSpan={1}>
                       <span>
-                      <b>{Number(Subjectamount).toFixed(2)}</b>
+                        <b>{Number(Subjectamount).toFixed(2)}</b>
                       </span>
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={1} colSpan={1}>
                       <span>
-                      <b>{Number(taxamount).toFixed(2)}</b>
+                        <b>{Number(taxamount).toFixed(2)}</b>
                       </span>
                     </Table.Summary.Cell>
 
