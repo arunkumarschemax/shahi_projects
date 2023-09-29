@@ -430,7 +430,7 @@ export class DpomService {
                 }
                 const entity = new PDFFileInfoEntity();
                 entity.fileType = FileTypeEnum.DIA;
-                entity.fileData = '';
+                entity.fileData = JSON.stringify(req);
                 entity.pdfFileName = req.poNumber + '.pdf';
                 entity.poNumber = req.poNumber;
                 const fileDetails = await transactionManager.getRepository(PDFFileInfoEntity).save(entity);

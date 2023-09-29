@@ -31,6 +31,7 @@ import PoPdfTable from "./nike/pdf-reader/po-pdf-table"
 import FobPriceListGrid from "./masters/fob-pricelist/fob-price-list-grid"
 import FobPriceListForm from "./masters/fob-pricelist/fob-price-list-form"
 import ChangeComparision from "./nike/pdf-reader/change-detail-view"
+import PoDetailedview from "./nike/reports/po-detailed-view"
 
 
 export const AppRoutes = () => {
@@ -149,6 +150,8 @@ export const AppRoutes = () => {
                     <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
                     <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
+                    <Route path='po-detailed-view' element={<PoDetailedview />} />
+                    
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
