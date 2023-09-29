@@ -327,9 +327,9 @@ const data = [
     return (
       <div>
       <Space size={"large"}>
-       <span style={{margin:10}}>sizeDescription</span><br/><span><span></span><span></span> legal po qty</span><br/>
-       <span>grossPriceFOB</span><br/><span>FOBCurrencyCode</span><br/>
-        <span>legalPoPrice</span><br/><span>legalPoCurrency</span><br/>
+       <span style={{margin:10}}>Size Description</span><br/><span><span></span> Legal Po Qty</span><br/>
+       <span>Gross Price FOB</span><br/><span>FOB Currency Code</span><br/>
+        <span>Legal Po Price</span><br/><span>Legal Po Currency</span><br/>
  
   </Space>
       
@@ -342,7 +342,7 @@ const data = [
     {
         // title: 'Size Description ',
         dataIndex: 'sizeDescription',
-        align :'right'
+        align :'center'
       },
    { 
      dataIndex: 'sizeQuantity',
@@ -412,12 +412,9 @@ const data = [
             dataSource={data}
             bordered
             className="custom-table-wrapper"
-            pagination={{
-                onChange(current, pageSize) {
-                    setPage(current);
-                    setPageSize(pageSize);
-                },
-            }}
+            pagination={false}
+            scroll={{ x: 'max-content',y:400 }}
+
         >
         </Table>
        
