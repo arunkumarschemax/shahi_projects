@@ -325,7 +325,7 @@ const {Text}=Typography
                 return (
                     <Table.Summary.Row>
                         <Table.Summary.Cell colSpan={8} index={0}>Grand Total</Table.Summary.Cell>
-                        <Table.Summary.Cell index={8}>{total}</Table.Summary.Cell>
+                        <Table.Summary.Cell index={9}>{total}</Table.Summary.Cell>
                     </Table.Summary.Row>
                 );
             },
@@ -578,11 +578,10 @@ const {Text}=Typography
                         <Table.Summary.Row>
 <Table.Summary.Cell colSpan={10} index={8} >
 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-<span>{grandTotal}</span>
 <span style={{ color: 'Red' }}>Grand Total:</span>
 </div>
 </Table.Summary.Cell>
-<Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>                            <Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>
+<Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>     
                         </Table.Summary.Row>
                     );
                 }}
