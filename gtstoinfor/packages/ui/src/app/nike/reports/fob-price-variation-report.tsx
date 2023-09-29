@@ -1,9 +1,11 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { FobPriceDiffRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Row, Select, Table } from "antd"
+import { Button, Card, Col, Form, Row, Select, Table, Typography } from "antd"
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
+import { receiveMessageOnPort } from "worker_threads";
+const { Text } = Typography
 
 export const FOBPriceVariationReport = () => {
     const [page, setPage] = useState<number>(1);
@@ -13,8 +15,10 @@ export const FOBPriceVariationReport = () => {
     const [poNumber, setPoNumber] = useState<any>([]);
     const [styleNumber, setStyleNumber] = useState<any>([]);
     const [size, setSize] = useState<any>([]);
+
     const [form] = Form.useForm();
     const { Option } = Select;
+
 
 
     useEffect(() => {
@@ -25,6 +29,7 @@ export const FOBPriceVariationReport = () => {
     }, [])
 
 
+
     const PoandLine = () => {
         service.getPriceDiffPoLinedd().then(res => {
             if (res.status) {
@@ -32,7 +37,6 @@ export const FOBPriceVariationReport = () => {
             }
         })
     }
-
     const getSize = () => {
         service.getPriceDiffSizeDescription().then(res => {
             if (res.status) {
@@ -40,7 +44,6 @@ export const FOBPriceVariationReport = () => {
             }
         })
     }
-
     const StyleNumber = () => {
         service.getPriceDiffStyleNumber().then(res => {
             if (res.status) {
@@ -48,7 +51,6 @@ export const FOBPriceVariationReport = () => {
             }
         })
     }
-
     const getData = () => {
         const req = new FobPriceDiffRequest();
 
@@ -70,10 +72,10 @@ export const FOBPriceVariationReport = () => {
             }
         })
     }
-
     const resetHandler = () => {
         form.resetFields();
         getData();
+
     }
 
     const columns: ColumnProps<any>[] = [
@@ -231,9 +233,30 @@ export const FOBPriceVariationReport = () => {
                             onChange(current, pageSize) {
                                 setPage(current);
                                 setPageSize(pageSize)
-                            }
-                        }} />) : (<Table size='large' />
-                )}
+
+                            },
+                        }}
+                        summary={(pageData) => {
+                            let totalDifference = 0;
+
+                            pageData.forEach(({ difference }) => {
+                                if (Number(difference)) {
+                                    totalDifference += Number(difference)
+                                }
+                            })
+
+                            return (
+                                <>
+                                    <Table.Summary.Row className="tableFooter">
+                                        <Table.Summary.Cell index={14} colSpan={6}><Text>Total</Text></Table.Summary.Cell>
+                                        <Table.Summary.Cell index={15} colSpan={1}></Table.Summary.Cell>
+                                        <Table.Summary.Cell index={15} colSpan={1}>{totalDifference}</Table.Summary.Cell>
+                                    </Table.Summary.Row>
+                                </>
+                            )
+                        }}
+                    />)
+                    : (<Table size='large' />)}
             </>
         </Card>
     )
