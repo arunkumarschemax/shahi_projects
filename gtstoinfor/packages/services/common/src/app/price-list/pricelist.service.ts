@@ -257,6 +257,8 @@ export class priceListService {
                         { isActive: req.isActive, updatedUser: req.updatedUser });
                     if (operationExists.isActive) {
                         if (operationStatus.affected) {
+                            console.log(operationStatus.affected,"effected")
+
                             const operationResponse: PriceListResponseModel = new PriceListResponseModel(true, 10115, 'PriceList is de-activated successfully');
                             return operationResponse;
                         } else {

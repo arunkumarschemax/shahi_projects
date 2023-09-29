@@ -7,7 +7,7 @@ import { PriceListService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import {  ColumnProps, ColumnsType } from 'antd/es/table';
 import PriceListForm from './price-list-form';
-import { NewFilterDto, PriceListDto } from '@project-management-system/shared-models';
+import { NewFilterDto, PriceListActivateDeactivateDto, PriceListDto } from '@project-management-system/shared-models';
 
 
 export interface PriceListView { }
@@ -41,6 +41,7 @@ export const PriceListGrid = (props: PriceListView) => {
     getYear();
     getCurrency();
     getSeasonCode();
+
   },[])
 
   const pagination = {
@@ -116,12 +117,16 @@ const getSeasonCode = () => {
     })
   }
  
-  const deletePriceList = (Data: PriceListDto) => {
-    Data.isActive = Data.isActive? false : true;
-    priceService.ActivateOrDeactivatePriceList(Data).then(res => {
+  const deletePriceList = (values: PriceListDto) => {
+    values.isActive = values.isActive? false : true;
+    const req = new PriceListActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
+    priceService.ActivateOrDeactivatePriceList(req).then(res => {
+      getPriceList()
     if(res.status){
+      message.success(res.internalMessage)
+      console.log(res.internalMessage,'yoyoyoyooyoyoyooyoyoy')
       getPriceList();
-      // message.success("Status Changed")
+      AlertMessages.getErrorMessage(res.internalMessage);
 
     }else {
       // message.error("Status Not Changed")
@@ -130,6 +135,7 @@ const getSeasonCode = () => {
       AlertMessages.getErrorMessage(err.message);
     })
   }
+
 
  
   const updatePriceList = (req: PriceListDto) => {
@@ -315,7 +321,7 @@ const getSeasonCode = () => {
         render:(text,record) => {
           return(
             <>
-            {record.fobLocalCurrency ? `${record.fobLocalCurrency} - ${record.currency}` : '-'}
+            {record.fobLocalCurrency ? `${record.currency}- ${record.fobLocalCurrency} ` : '-'}
             </>
           )
         }
@@ -337,11 +343,11 @@ const getSeasonCode = () => {
         filters: [
           {
             text: 'Active',
-            value: true,
+            value: 1,
           },
           {
             text: 'InActive',
-            value: false,
+            value: 0,
           },
         ],
         filterMultiple: false,

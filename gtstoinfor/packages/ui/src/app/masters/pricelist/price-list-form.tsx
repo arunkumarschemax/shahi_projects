@@ -76,7 +76,7 @@ export const PriceListForm = (props: PriceListFormProps) => {
         </Col>
       </Row>
       {dataEntryType === 'manual' ? (
-        <Form form={form} title='Factories' layout='vertical' onFinish={saveData} initialValues={props.Data} >
+        <Form form={form}  layout='vertical' onFinish={saveData} initialValues={props.Data} >
         <Form.Item name="id"  style={{display:"none"}} >
                   <Input hidden/>
                 </Form.Item>
@@ -164,7 +164,17 @@ export const PriceListForm = (props: PriceListFormProps) => {
               </Col>
 
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-                <Form.Item name='currency' label='Currency  '>
+                <Form.Item name='currency' label='Currency 
+                 '
+                 rules={[
+                  
+                  {
+                    pattern: /^[A-Z]{1,5}$/, 
+                    message: 'Invalid Currency A;; letters must be captial'
+                  }
+    
+                  
+                ]}>
                   <Input placeholder='Enter Currency'/>
                 </Form.Item>
               </Col>
