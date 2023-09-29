@@ -1867,7 +1867,7 @@ export function DocumentUploadForm() {
                     onChange={(e) => setFinancialyear(e.target.value)}
                   />
                 </Col>
-
+{/* 
                 <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label htmlFor="status" style={{ color: "black", fontWeight: "bold" }}>
                     Status
@@ -1884,7 +1884,7 @@ export function DocumentUploadForm() {
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
                   />
-                </Col>
+                </Col> */}
 
                 {/* <Col xs={{ span: 24 }} lg={{ span: 6 }} offset={1}>
                   <label
