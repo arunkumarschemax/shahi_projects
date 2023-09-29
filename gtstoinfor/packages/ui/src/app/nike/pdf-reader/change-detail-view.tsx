@@ -38,84 +38,288 @@ const ChangeComparision = (props: Props) => {
         })
     }
 
-   const data = [
+//    const data = [
+//     {
+//       "purchaseOrderNumber": "3503450800",
+//       "poAndLine": "3503450800-10",
+//       "sizeWiseData": [
+//         {
+//           "purchaseOrderNumber": "3503450800",
+//           "poAndLine": "3503450800-10",
+//           "id": 16,
+//           "sizeDescription": " M",
+//           "sizeQuantity": 652,
+//           "grossPriceFOB": "5.01",
+//           "FOBCurrencyCode": "USD",
+//           "legalPoPrice": 5.16,
+//           "legalPoCurrency": "USD"
+//         },
+//         {
+//             "purchaseOrderNumber": "3503450800",
+//             "poAndLine": "3503450800-10",
+//             "id": 16,
+//             "sizeDescription": "XL",
+//             "sizeQuantity": 3,
+//             "grossPriceFOB": "5.01",
+//             "FOBCurrencyCode": "USD",
+//             "legalPoPrice": 5.16,
+//             "legalPoCurrency": "USD"
+//           },
+//           {
+//             "purchaseOrderNumber": "3503450800",
+//             "poAndLine": "3503450800-10",
+//             "id": 16,
+//             "sizeDescription": "2XL",
+//             "sizeQuantity": 494,
+//             "grossPriceFOB": "5.01",
+//             "FOBCurrencyCode": "USD",
+//             "legalPoPrice": 5.16,
+//             "legalPoCurrency": "USD"
+//           }
+//       ]},
+//        {"purchaseOrderNumber": "3503450800",
+//       "poAndLine": "3503450800-20",
+//       "sizeWiseData": [
+//         {
+//           "purchaseOrderNumber": "3503450800",
+//           "poAndLine": "3503450800-20",
+//           "id": 16,
+//           "sizeDescription": " M",
+//           "sizeQuantity": 652,
+//           "grossPriceFOB": "5.01",
+//           "FOBCurrencyCode": "USD",
+//           "legalPoPrice": 5.16,
+//           "legalPoCurrency": "USD"
+//         },
+//         {
+//             "purchaseOrderNumber": "3503450800",
+//             "poAndLine": "3503450800-20",
+//             "id": 16,
+//             "sizeDescription": "XL",
+//             "sizeQuantity": 3,
+//             "grossPriceFOB": "5.01",
+//             "FOBCurrencyCode": "USD",
+//             "legalPoPrice": 5.16,
+//             "legalPoCurrency": "USD"
+//           },
+//           {
+//             "purchaseOrderNumber": "3503450800",
+//             "poAndLine": "3503450800-20",
+//             "id": 16,
+//             "sizeDescription": "2XL",
+//             "sizeQuantity": 494,
+//             "grossPriceFOB": "5.01",
+//             "FOBCurrencyCode": "USD",
+//             "legalPoPrice": 5.16,
+//             "legalPoCurrency": "USD"
+//           }
+//       ]
+//     }
+     
+//   ]
+const data = [
     {
-      "purchaseOrderNumber": "3503450800",
-      "poAndLine": "3503450800-10",
+      "poAndLine": "3503355416-10",
       "sizeWiseData": [
         {
-          "purchaseOrderNumber": "3503450800",
-          "poAndLine": "3503450800-10",
-          "id": 16,
-          "sizeDescription": " M",
-          "sizeQuantity": 652,
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-10",
+          "id": 1,
+          "sizeDescription": "2XL",
+          "sizeQuantity": 494,
+          "legalPoQty": 494,
           "grossPriceFOB": "5.01",
           "FOBCurrencyCode": "USD",
           "legalPoPrice": 5.16,
           "legalPoCurrency": "USD"
         },
         {
-            "purchaseOrderNumber": "3503450800",
-            "poAndLine": "3503450800-10",
-            "id": 16,
-            "sizeDescription": "XL",
-            "sizeQuantity": 3,
-            "grossPriceFOB": "5.01",
-            "FOBCurrencyCode": "USD",
-            "legalPoPrice": 5.16,
-            "legalPoCurrency": "USD"
-          },
-          {
-            "purchaseOrderNumber": "3503450800",
-            "poAndLine": "3503450800-10",
-            "id": 16,
-            "sizeDescription": "2XL",
-            "sizeQuantity": 494,
-            "grossPriceFOB": "5.01",
-            "FOBCurrencyCode": "USD",
-            "legalPoPrice": 5.16,
-            "legalPoCurrency": "USD"
-          }
-      ]},
-       {"purchaseOrderNumber": "3503450800",
-      "poAndLine": "3503450800-20",
-      "sizeWiseData": [
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-10",
+          "id": 2,
+          "sizeDescription": "3XL",
+          "sizeQuantity": 6,
+          "legalPoQty": 6,
+          "grossPriceFOB": "5.51",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.66,
+          "legalPoCurrency": "USD"
+        },
         {
-          "purchaseOrderNumber": "3503450800",
-          "poAndLine": "3503450800-20",
-          "id": 16,
-          "sizeDescription": " M",
-          "sizeQuantity": 652,
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-10",
+          "id": 3,
+          "sizeDescription": "4XL",
+          "sizeQuantity": 3,
+          "legalPoQty": 3,
+          "grossPriceFOB": "5.51",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.66,
+          "legalPoCurrency": "USD"
+        },
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-10",
+          "id": 4,
+          "sizeDescription": "L",
+          "sizeQuantity": 828,
+          "legalPoQty": 828,
           "grossPriceFOB": "5.01",
           "FOBCurrencyCode": "USD",
           "legalPoPrice": 5.16,
           "legalPoCurrency": "USD"
         },
         {
-            "purchaseOrderNumber": "3503450800",
-            "poAndLine": "3503450800-20",
-            "id": 16,
-            "sizeDescription": "XL",
-            "sizeQuantity": 3,
-            "grossPriceFOB": "5.01",
-            "FOBCurrencyCode": "USD",
-            "legalPoPrice": 5.16,
-            "legalPoCurrency": "USD"
-          },
-          {
-            "purchaseOrderNumber": "3503450800",
-            "poAndLine": "3503450800-20",
-            "id": 16,
-            "sizeDescription": "2XL",
-            "sizeQuantity": 494,
-            "grossPriceFOB": "5.01",
-            "FOBCurrencyCode": "USD",
-            "legalPoPrice": 5.16,
-            "legalPoCurrency": "USD"
-          }
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-10",
+          "id": 5,
+          "sizeDescription": "M",
+          "sizeQuantity": 652,
+          "legalPoQty": 652,
+          "grossPriceFOB": "5.01",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.16,
+          "legalPoCurrency": "USD"
+        },
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-10",
+          "id": 6,
+          "sizeDescription": "S",
+          "sizeQuantity": 256,
+          "legalPoQty": 256,
+          "grossPriceFOB": "5.01",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.16,
+          "legalPoCurrency": "USD"
+        },
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-10",
+          "id": 7,
+          "sizeDescription": "XL",
+          "sizeQuantity": 736,
+          "legalPoQty": 736,
+          "grossPriceFOB": "5.01",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.16,
+          "legalPoCurrency": "USD"
+        },
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-10",
+          "id": 8,
+          "sizeDescription": "XS",
+          "sizeQuantity": 3,
+          "legalPoQty": 3,
+          "grossPriceFOB": "5.01",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.16,
+          "legalPoCurrency": "USD"
+        }
+      ]
+    },
+    {
+      "poAndLine": "3503355416-20",
+      "sizeWiseData": [
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-20",
+          "id": 9,
+          "sizeDescription": "2XL",
+          "sizeQuantity": 499,
+          "legalPoQty": 499,
+          "grossPriceFOB": "5.01",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.16,
+          "legalPoCurrency": "USD"
+        },
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-20",
+          "id": 10,
+          "sizeDescription": "3XL",
+          "sizeQuantity": 6,
+          "legalPoQty": 6,
+          "grossPriceFOB": "5.51",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.66,
+          "legalPoCurrency": "USD"
+        },
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-20",
+          "id": 11,
+          "sizeDescription": "4XL",
+          "sizeQuantity": 3,
+          "legalPoQty": 3,
+          "grossPriceFOB": "5.51",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.66,
+          "legalPoCurrency": "USD"
+        },
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-20",
+          "id": 12,
+          "sizeDescription": "L",
+          "sizeQuantity": 836,
+          "legalPoQty": 836,
+          "grossPriceFOB": "5.01",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.16,
+          "legalPoCurrency": "USD"
+        },
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-20",
+          "id": 13,
+          "sizeDescription": "M",
+          "sizeQuantity": 658,
+          "legalPoQty": 658,
+          "grossPriceFOB": "5.01",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.16,
+          "legalPoCurrency": "USD"
+        },
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-20",
+          "id": 14,
+          "sizeDescription": "S",
+          "sizeQuantity": 258,
+          "legalPoQty": 258,
+          "grossPriceFOB": "5.01",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.16,
+          "legalPoCurrency": "USD"
+        },
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-20",
+          "id": 15,
+          "sizeDescription": "XL",
+          "sizeQuantity": 742,
+          "legalPoQty": 742,
+          "grossPriceFOB": "5.01",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.16,
+          "legalPoCurrency": "USD"
+        },
+        {
+          "purchaseOrderNumber": "3503355416",
+          "poAndLine": "3503355416-20",
+          "id": 16,
+          "sizeDescription": "XS",
+          "sizeQuantity": 3,
+          "legalPoQty": 3,
+          "grossPriceFOB": "5.01",
+          "FOBCurrencyCode": "USD",
+          "legalPoPrice": 5.16,
+          "legalPoCurrency": "USD"
+        }
       ]
     }
-     
   ]
 
   const CustomTitle = () => {
