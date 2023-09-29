@@ -13,8 +13,8 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(url, data);
     }
 
-    async getOrdersData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getOrdersData")
+    async getOrdersData(req:orders): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getOrdersData",req)
     }
 
     async getQtyChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {

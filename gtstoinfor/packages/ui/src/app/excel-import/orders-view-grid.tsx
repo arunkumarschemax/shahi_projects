@@ -15,6 +15,7 @@ import { orders } from '@project-management-system/shared-models';
 const AllOrdersGridView = () => {
     const [page, setPage] = useState<number>(1)
     const [datas, setDatas] = useState<any>([]);
+    const [ordersStatus, setOrdersStatus] = useState<any[]>([])
     const [pageSize, setPageSize] = useState<number>(10)
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
@@ -33,13 +34,26 @@ const AllOrdersGridView = () => {
 
     useEffect(() => {
         getData();
-        filter();
-        order();
+        orderStatus();
         Number();
     }, [])
 
     const getData = () => {
-        service.getOrdersData().then(res => {
+        const req = new orders()
+        if (form.getFieldValue('planned_exf') !== undefined) {
+            req.plannedFromDate = (form.getFieldValue('planned_exf')[0]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('planned_exf') !== undefined) {
+        req.plannedToDate = (form.getFieldValue('planned_exf')[1]).format('YYYY-MM-DD')
+        }
+        if(form.getFieldValue('PoOrderStatus') ! == undefined){
+        req.PoOrderStatus=form.getFieldValue('PoOrderStatus')
+    }
+    if(form.getFieldValue('OrderPlanNumber') ! == undefined){
+        req.OrderPlanNumber=form.getFieldValue('OrderPlanNumber')
+    }
+        service.getOrdersData(req).then(res => {
+            console.log(req,'oooooooooooooooooo')
             if (res.status) {
                 setGridData(res.data)
                 setFilteredData(res.data)
@@ -48,17 +62,28 @@ const AllOrdersGridView = () => {
             console.log(err.message)
         })
     }
-const order=()=>{
+// const order=()=>{
+//     service.getOrdersStatus().then((res)=>{
+//         if(res.status){
+//             setDatas(res?.data === undefined? []:res.data);
+
+//         }else{
+//             setDatas([]);
+//             message.info(res.internalMessage)
+//         }
+//     })
+// }
+
+const orderStatus=()=>{
     service.getOrdersStatus().then((res)=>{
         if(res.status){
-            setDatas(res?.data === undefined? []:res.data);
-
-        }else{
-            setDatas([]);
-            message.info(res.internalMessage)
+            setOrdersStatus(res?.data);
+            console.log()
         }
     })
 }
+
+
 const Number=()=>{
     service.getOrderPlanNo().then((res)=>{
         if(res.status){
@@ -80,20 +105,13 @@ const Number=()=>{
     }
 
 
-    const filter=()=>{
-        const req = new orders()
-        if(form.getFieldValue('po_order_status') ! == undefined){
-        req.PoOrderStatus=form.getFieldValue('po_order_status')
-    }
-    if(form.getFieldValue('order_plan_number') ! == undefined){
-        req.OrderPlanNumber=form.getFieldValue('order_plan_number')
-    }
-service.getOrdersStatus(req).then((res)=>{
-    if(res.data){
-        setDatas(res.data)
-    }
-})
-    }
+//     const filter=()=>{
+// service.getOrdersStatus(req).then((res)=>{
+//     if(res.data){
+//         setDatas(res.data)
+//     }
+// })
+//     }
 
     // const getFilterdData = () => {
     //     let poOrderStatus = form.getFieldValue('poOrderStatus');
@@ -604,7 +622,7 @@ service.getOrdersStatus(req).then((res)=>{
                     style={{ color: 'green' }}
                     onClick={handleExport}
                     icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
-                <Form form={form} layout={'vertical'}>
+                <Form form={form} layout={'vertical'} onFinish={getData}>
 
                     <Row gutter={24}>
                         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
@@ -612,26 +630,8 @@ service.getOrdersStatus(req).then((res)=>{
                                 <RangePicker onChange={EstimatedETDDate} />
                             </Form.Item>
                         </Col> */}
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
-                            <Form.Item label="PO Order Status" name="po_order_status">
-                                <Select
-                                 showSearch
-                                 placeholder="Select Po Order Status"
-                                 optionFilterProp="children"
-                                 allowClear>          
-                         {datas.map((res:any)=>{
-                          return(
-              <Option key={res.po_order_status} value={res.po_order_status}>
-                     {res.po_order_status}
-                   </Option>
-                          )
-                         })}
-                                </Select>
-
-                            </Form.Item>
-                       </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
-                            <Form.Item label="Plan Order Number" name='order_plan_number'>
+                            <Form.Item label="Plan Order Number" name='OrderPlanNumber'>
                                 <Select 
                                  showSearch
                                  placeholder="Select Plan Order Number"
@@ -640,24 +640,36 @@ service.getOrdersStatus(req).then((res)=>{
                                 {datas.map((res:any)=>{
                                     return(
                                         <Option key={res.order_plan_number} value={res.order_plan_number}>
-{res.order_plan_number}
+                                            {res.order_plan_number}
                                         </Option>
                                     )
                                 })}
                                 </Select>
                             </Form.Item>
                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
+                            <Form.Item label="PO Order Status" name="PoOrderStatus">
+                                <Select
+                                 showSearch
+                                 placeholder="Select Po Order Status"
+                                 optionFilterProp="children"
+                                 allowClear>          
+                         {ordersStatus.map((res:any)=>{
+                          return(
+                        <Option key={res.po_order_status} value={res.po_order_status}>
+                                {res.PoOrderStatus}
+                            </Option>
+                          )
+                         })}
+                                </Select>
+
+                            </Form.Item>
+                       </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
                         <Form.Item name='planned_exf' label='Planned EXF'>
-                        <DatePicker.RangePicker
-                 format="YYYY/MM/DD"
-               onChange={(dates) => {
-                setDateRange(dates);
-                }}
-                
-/>
+                        <RangePicker/>
                         </Form.Item>
-</Col>
+                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
                             <div>
                                 {/* <label>Order Status</label>
@@ -679,8 +691,8 @@ service.getOrdersStatus(req).then((res)=>{
                                 type="primary"
                                 icon={<SearchOutlined />}
                                 style={{ marginRight: 50, width: 80 }}
-                                htmlType="button"
-                                onClick={filter}>Search</Button>
+                                htmlType="submit"
+                                >Search</Button>
                             <Button
                                 type="primary"
                                 icon={<UndoOutlined />}
