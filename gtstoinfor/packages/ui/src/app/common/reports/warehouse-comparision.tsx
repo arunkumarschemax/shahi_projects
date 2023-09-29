@@ -107,7 +107,7 @@ export const WareHouseComparision = () => {
     <th colSpan={2}style={{ position: 'relative', right: '600px' ,borderRight: '1px solid black'}}>September</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '720px', borderRight: '1px solid black' }}>October</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '620px',borderRight: '1px solid black', }}>November</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '500px', }}>December</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '550px', }}>December</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
 
@@ -140,13 +140,16 @@ export const WareHouseComparision = () => {
 
     <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-10px'}} >(latest)</td>
-    
+
     <td  style={{position: 'relative',right: '-15px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-10px'}} >(latest)</td>
+
     <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
-    <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
-    <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
+
+    <td  style={{position: 'relative',right: '-60px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-60px'}} >(latest)</td>
+
     <td  style={{position: 'relative',right: '-50px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-50px'}} >(latest)</td>
     <td  style={{position: 'relative',right: '-200px'}} >Total(previous)</td>
@@ -884,14 +887,20 @@ const getTableSummary = (pageData) => {
 }
   return (
     <Card
-    title="Comparision WareHouse Report"
+    // title="Comparision WareHouse Report"
 
-    extra={data.length > 0 ? (<Button
-        type="default"
-        style={{ color: 'green' }}
-        onClick={handleExport}
-        icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
- <Form form={form} layout={'vertical'}>
+    // extra={data.length > 0 ? (<Button
+    //     type="default"
+    //     style={{ color: 'green' }}
+    //     onClick={handleExport}
+    //     icon={<FileExcelFilled />}>Download Excel</Button>) : null}
+        >
+
+    
+<Tabs type="card" onChange={handleTabChange} aria-disabled>
+        {year.map((item) => (
+          <Tabs.TabPane key={item.year} tab={item.year}>
+            <Form form={form} layout={'vertical'}>
               <Row gutter={24}>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
                             <div>
@@ -925,14 +934,23 @@ const getTableSummary = (pageData) => {
                                 htmlType="submit"
                                 onClick={onReset}>Reset</Button>
                         </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 17}} >
+                        <Button
+            type="default"
+            style={{ color: "green" }}
+            onClick={handleExport}
+            icon={<FileExcelFilled />}
+          >
+            Download Excel
+          </Button>
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5}} lg={{ span: 5 }} xl={{ span: 6 }}  style={{ marginTop: 17}} >
+<Card title={'Total Items : ' + data.length} style={{textAlign: 'center', width:150,height:35, borderRadius:8, backgroundColor:'#EBEBF1'}}  
+size="small"></Card>
+</Col>
               </Row>
               
             </Form>
-    
-<Tabs type="card" onChange={handleTabChange} aria-disabled>
-        {year.map((item) => (
-          <Tabs.TabPane key={item.year} tab={item.year}>
-           
            <Table
               dataSource={filteredData} 
               columns={columns5}
