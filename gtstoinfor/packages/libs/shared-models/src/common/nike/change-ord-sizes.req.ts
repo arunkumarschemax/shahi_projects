@@ -11,8 +11,8 @@ export class OrderChangePoModel {
     legalPoPrice: number;
     legalPoCurrency: string;
     poAndLine: string;
-    totalQuantity?:string;
-
+    quantityDifference:number;
+    priceDifferance:number;
     constructor(purchaseOrderNumber: string,
         id:number,
         sizeDescription: string,
@@ -21,11 +21,10 @@ export class OrderChangePoModel {
         grossPriceFOB: string,
         FOBCurrencyCode: string,
         legalPoPrice: number,
-        legalPoCurrency: string,poAndLine: string,totalQuantity?:string) {
+        legalPoCurrency: string,poAndLine: string,quantityDifference:number,    priceDifferance:number        ) {
 
         this.purchaseOrderNumber = purchaseOrderNumber
         this.poAndLine = poAndLine
-        this.totalQuantity =totalQuantity
         this.id = id;
         this.sizeDescription = sizeDescription
         this.sizeQuantity = sizeQuantity
@@ -34,6 +33,8 @@ export class OrderChangePoModel {
         this.FOBCurrencyCode = FOBCurrencyCode
         this.legalPoPrice = legalPoPrice
         this.legalPoCurrency = legalPoCurrency
+        this.quantityDifference = quantityDifference
+        this.priceDifferance = priceDifferance
         
     };
 }

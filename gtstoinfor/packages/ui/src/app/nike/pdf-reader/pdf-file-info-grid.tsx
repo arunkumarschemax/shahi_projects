@@ -236,7 +236,7 @@ export function POPDFInfoGrid() {
                 <Modal
                     className='print-docket-modal'
                     key={'modal1' + Date.now()}
-                    width={'70%'}
+                    width={'80%'}
                     style={{ top: 30, alignContent: 'center' }}
                     visible={isModalOpen1}
                     title={<React.Fragment>

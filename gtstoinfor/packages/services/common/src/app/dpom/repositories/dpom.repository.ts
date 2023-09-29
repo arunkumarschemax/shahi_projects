@@ -661,7 +661,8 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getChangeSData(poNumber: number): Promise<any[]> {
 
         const query = this.createQueryBuilder('o')
-            .select(` o.id,o.size_description,o.size_qty,o.po_number,o.legal_po_qty AS legalPoQty,o.gross_price_fob,o.fob_currency_code,o.legal_po_price,o.legal_po_currency,o.po_number,o.po_and_line`)
+            .select(` o.id,o.size_description,o.size_qty,o.po_number,o.legal_po_qty AS legalPoQty,o.gross_price_fob,o.fob_currency_code,o.legal_po_price,o.legal_po_currency,o.po_number,o.po_and_line, (o.legal_po_qty- o.size_qty) AS qty_difference,(o.legal_po_price-o.gross_price_fob) AS price_change
+            `)
             .where(`o.po_number = ${poNumber}`)
         //  .andWhere(`o.dpom_item_line_status = 'Unaccepted'`)     
         return await query.getRawMany();

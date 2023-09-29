@@ -1681,7 +1681,8 @@ export class DpomService {
                 rec.legal_po_price,
                 rec.legal_po_currency,
                 poAndLine,
-                rec.totalQuantity
+                rec.qty_difference,
+                rec.price_change,
             ));
         }
 
@@ -1689,12 +1690,5 @@ export class DpomService {
         const dataModelArray: ChangePoandLineModel[] = Array.from(poAndLineMap.values());
         return new CommonResponseModel(true, dataModelArray.length, 'Data retrieved', dataModelArray);
     }
-
-
-
-
-
-
-
 
 }

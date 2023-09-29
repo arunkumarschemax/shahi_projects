@@ -47,9 +47,10 @@ const ChangeComparision = (props: Props) => {
     return (
       <div>
         <Space size={"large"}>
-          <span style={{ margin: 10 }}>Size Description</span><br /><span><span></span> Legal Po Qty</span><br />
+          <span style={{ margin: 5 }}>Size Description</span><br /><span> Size Quantity</span><br /><span>Legal Po Qty</span><br />
           <span>Gross Price FOB</span><br /><span>FOB Currency Code</span><br />
-          <span>Legal Po Price</span><br /><span>Legal Po Currency</span><br />
+          <span>Legal Po Price</span><br /><span>Legal Po Currency</span><br /><span>Difference in Quantity</span><br />
+          <span>Difference in Price</span><br />
         </Space>
       </div>
     );
@@ -67,6 +68,11 @@ const ChangeComparision = (props: Props) => {
 
     },
     {
+        dataIndex: 'legalPoQty',
+        align: 'center'
+  
+      },
+    {
       dataIndex: 'grossPriceFOB',
       align: 'center'
 
@@ -74,7 +80,6 @@ const ChangeComparision = (props: Props) => {
     {
       dataIndex: 'FOBCurrencyCode',
       align: 'center'
-
     },
     {
       dataIndex: 'legalPoPrice',
@@ -82,6 +87,55 @@ const ChangeComparision = (props: Props) => {
     {
       dataIndex: 'legalPoCurrency',
     },
+    {
+        dataIndex: 'quantityDifference',
+        align:'right',
+        render: (text, record) => {
+            const formattedAmount = record.priceDifferance ? parseFloat(record.quantityDifference).toFixed(2) : "-";
+
+            if (Number(formattedAmount) > 0) {
+                return  <> <span style={{color:'green'}}>{formattedAmount}</span></>;
+
+            }
+            else if  (Number(formattedAmount) < 0){
+                return  <> <span style={{color:'red'}}>{formattedAmount}</span></>;
+
+            }
+            else(Number(formattedAmount) == 0)
+            {
+                return  <> <span style={{color:'black'}}>{formattedAmount}</span></>;
+
+            }
+          }
+
+
+      },
+      {
+        dataIndex: 'priceDifferance',
+        align:'right',
+        render: (text, record) => {
+            const formattedAmount = record.priceDifferance ? parseFloat(record.priceDifferance).toFixed(2) : "-";
+
+            if (Number(formattedAmount) > 0) {
+                return  <> <span style={{color:'green'}}>{formattedAmount}</span></>;
+
+            }
+            else if  (Number(formattedAmount) < 0){
+                return  <> <span style={{color:'red'}}>{formattedAmount}</span></>;
+
+            }
+            else(Number(formattedAmount) == 0)
+            {
+                return  <> <span style={{color:'black'}}>{formattedAmount}</span></>;
+
+            }
+          }
+      
+      },
+    
+      
+      
+    
 
 
   ]
