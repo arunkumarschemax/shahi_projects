@@ -90,6 +90,23 @@ const ChangeComparision = (props: Props) => {
     {
         dataIndex: 'quantityDifference',
         align:'right',
+        render: (text, record) => {
+            const formattedAmount = record.priceDifferance ? parseFloat(record.quantityDifference).toFixed(2) : "-";
+
+            if (Number(formattedAmount) > 0) {
+                return  <> <span style={{color:'green'}}>{formattedAmount}</span></>;
+
+            }
+            else if  (Number(formattedAmount) < 0){
+                return  <> <span style={{color:'red'}}>{formattedAmount}</span></>;
+
+            }
+            else(Number(formattedAmount) == 0)
+            {
+                return  <> <span style={{color:'black'}}>{formattedAmount}</span></>;
+
+            }
+          }
 
 
       },
@@ -97,7 +114,7 @@ const ChangeComparision = (props: Props) => {
         dataIndex: 'priceDifferance',
         align:'right',
         render: (text, record) => {
-            const formattedAmount = record.priceDifferance ? parseFloat(record.priceDifferance).toFixed(3) : "-";
+            const formattedAmount = record.priceDifferance ? parseFloat(record.priceDifferance).toFixed(2) : "-";
 
             if (Number(formattedAmount) > 0) {
                 return  <> <span style={{color:'green'}}>{formattedAmount}</span></>;
