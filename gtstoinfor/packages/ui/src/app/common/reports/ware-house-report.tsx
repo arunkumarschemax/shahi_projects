@@ -504,6 +504,62 @@ export const WarehouseReport = () => {
 
    
     const excel = new Excel();
+    const Calculate=(data)=>{
+      const pcsfulltotal={
+        janPcs:0,
+        febPcs:0,
+        marPcs:0,
+        aprPcs:0,
+        mayPcs:0,
+        junPcs:0,
+        julPcs:0,
+        augPcs:0,
+        sepPcs:0,
+        octPcs:0,
+        novPcs:0,
+        decPcs:0,
+
+      };
+      data.forEach((item)=>{
+        for(const month in pcsfulltotal){
+          if(item[month]){
+           
+            pcsfulltotal[month]+= Number(item[month]);
+            
+          }
+        }
+      })
+      return pcsfulltotal;
+    };
+      const CalculateTotal=(data)=>{
+        const coeffsFullTotsl={
+          janCoeff:0,
+          Coeff:0,
+          marCoeff:0,
+          aprCoeff:0,
+          mayCoeff:0,
+          junCoeff:0,
+          julCoeff:0,
+          augCoeff:0,
+          sepCoeff:0,
+          octCoeff:0,
+          novCoeff:0,
+          decCoeff:0,
+  
+        };
+  
+        data.forEach((item)=>{
+          for(const month in coeffsFullTotsl){
+            if(item[month]){
+             
+              coeffsFullTotsl[month]+= Number(item[month]);
+              
+            }
+          }
+        })
+        return coeffsFullTotsl;
+      };
+     
     // year.forEach((yearItem) => {
       excel.addSheet(tab.toString()); // Create a sheet for the year
   
@@ -687,12 +743,16 @@ export const WarehouseReport = () => {
         },
      
       ];
-    
    
+     
+    
       excel.addRow();
-  
       excel.addColumns(exportingColumns);
-      excel.addDataSource(excelData);
+      excel.addDataSource(excelData)
+      const pcstotal = Calculate(excelData)
+      const coefftotal = CalculateTotal(excelData)
+      const combined = {...pcstotal , ...coefftotal }
+      excel.addDataSource([combined]);
     // });
     excel.saveAs(`Ware-House-report-${currentDate}.xlsx`);
 

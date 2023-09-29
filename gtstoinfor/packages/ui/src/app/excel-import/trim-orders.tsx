@@ -17,6 +17,8 @@ const TrimOrder= () => {
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
+    const [selectedEstimatedStartDate, setSelectedEstimatedStartDate] = useState(undefined);
+
     const service = new OrdersService();
     const [form] = Form.useForm();
     const { Option } = Select;
@@ -26,7 +28,7 @@ const TrimOrder= () => {
     const searchInput = useRef<InputRef>(null);
     const [searchedColumn, setSearchedColumn] = useState("");
     const [item, setItem] = useState<any[]>([]);
-
+const [data,setData] =useState<any[]>([]);
 const {Text}=Typography
 
     useEffect(() => {
@@ -79,8 +81,8 @@ const {Text}=Typography
     }
     const getFilterdData = () => {
         let orderNo = form.getFieldValue('orderNo');
-        // let startDate = selectedEstimatedFromDate;
-        // let endDate = selectedEstimatedToDate;
+        let startDate = selectedEstimatedFromDate;
+        let endDate = selectedEstimatedStartDate;
         let selectedDate = selectedEstimatedFromDate;
 
         let filteredData = gridData;
@@ -91,12 +93,12 @@ const {Text}=Typography
             }
             setFilteredData(filteredData);
         }
-        if (selectedDate) {
-            selectedDate = moment(selectedDate).format('YYYY/MM/DD');
-
+        if (startDate && endDate) {
+            const startDateFormatted = moment(startDate).format('YYYY/MM/DD');
+            const endDateFormatted = moment(endDate).format('YYYY/MM/DD');
             filteredData = filteredData.filter(record => {
                 const dateInData = moment(record.approval_date).format('YYYY/MM/DD');
-                return dateInData === selectedDate;
+                return dateInData >=startDateFormatted && dateInData <= endDateFormatted;
             });
     
           }
@@ -208,11 +210,14 @@ const {Text}=Typography
         {
             title: 'Order No',
             // fixed:'left',
-dataIndex: 'order_no',
-           
-            sorter: (a, b) => a.item_code.localeCompare(b.item_code),
-            sortDirections: ["descend", "ascend"],
+          dataIndex: 'order_no',         
+          sorter: (a, b) => {
+            const aKey = a.order_no || "";
+            const bKey = b.order_no || "";
+            return aKey.localeCompare(bKey);
+          },
         },
+          
         {
             title: 'Item Code',
             dataIndex: 'item_code',
@@ -536,12 +541,23 @@ width:200,
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
                         <Form.Item name='approval_date' label=' Approval Date'>
-                        <DatePicker
+                        {/* <DatePicker
   format="YYYY/MM/DD"
   onChange={(date, dateString) => {
     setSelectedEstimatedFromDate(dateString); // dateString will be in "YYYY/MM/DD" format
   }}
-/>
+/> */}
+<Select
+showSearch
+placeholder="Select Approval Date"
+optionFilterProp="children"
+allowClear>{data.map(e=>(
+<Option key={e.approval_date} value={e.approval_date}>{e.approval_date}
+
+</Option>
+))}
+
+</Select>
                         </Form.Item>
 </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 17 }} >
@@ -571,7 +587,12 @@ width:200,
             
                     return (
                         <Table.Summary.Row>
-                            <Table.Summary.Cell colSpan={10} index={0} >Grand Total</Table.Summary.Cell>
+                            <Table.Summary.Cell colSpan={10} index={0} >
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <span>{grandTotal}</span>
+      <span style={{ color: 'red' }}>Grand Total:</span>
+    </div>
+                            </Table.Summary.Cell>
                             <Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>
                         </Table.Summary.Row>
                     );
