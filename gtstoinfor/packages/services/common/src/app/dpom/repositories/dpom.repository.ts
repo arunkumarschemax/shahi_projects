@@ -258,10 +258,10 @@ export class DpomRepository extends Repository<DpomEntity> {
         const query = this.createQueryBuilder('dpm')
             .select(`DISTINCT id,item,plant AS Plant,dpom_item_line_status AS LineStatus,
             plant_name AS PlantName,document_date AS DocumentDate,
-            po_number AS poNumber,po_line_item_number AS poLine ,destination_country AS destination,
+            po_number AS poNumber, po_line_item_number AS poLine ,destination_country AS destination,
             shipping_type AS shipmentType,inventory_segment_code AS inventorySegmentCode,
             ogac AS ogac ,gac AS gac ,product_code AS productCode,
-            item_vas_text AS itemVasText,quantity AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos`)
+            item_vas_text AS itemVasText,total_item_qty AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos`)
             .where(`diverted_to_pos IS NOT null`)
         return await query.getRawMany()
     }
@@ -274,7 +274,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             po_number AS npoNumber, po_line_item_number AS npoLine, destination_country AS ndestination,
             shipping_type AS nshipmentType, inventory_segment_code AS ninventorySegmentCode,
             ogac AS nogac, gac AS ngac, product_code AS nproductCode, dpom_item_line_status AS nDPOMLineItemStatus,
-            item_vas_text AS nitemVasText, quantity AS nQuantity, created_at AS ndpomCreatedDates, diverted_to_pos`)
+            item_vas_text AS nitemVasText, total_item_qty AS nQuantity, created_at AS ndpomCreatedDates, diverted_to_pos`)
             .where(`diverted_to_pos IS NOT null`)
             .andWhere(`po_number = :po AND po_line_item_number = :line`, { po, line });
 
@@ -658,12 +658,12 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.geo_code`)
         return await query.getRawMany();
     }
-    async getChangeSData(poNumber:number): Promise<any[]> {
-        
+    async getChangeSData(poNumber: number): Promise<any[]> {
+
         const query = this.createQueryBuilder('o')
             .select(` o.id,o.size_description,o.size_qty,o.po_number,o.legal_po_qty AS legalPoQty,o.gross_price_fob,o.fob_currency_code,o.legal_po_price,o.legal_po_currency,o.po_number,o.po_and_line`)
-            .where(`o.po_number = ${poNumber}`)      
-          //  .andWhere(`o.dpom_item_line_status = 'Unaccepted'`)     
+            .where(`o.po_number = ${poNumber}`)
+        //  .andWhere(`o.dpom_item_line_status = 'Unaccepted'`)     
         return await query.getRawMany();
     }
 
