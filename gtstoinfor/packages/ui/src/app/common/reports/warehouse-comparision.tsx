@@ -103,9 +103,9 @@ export const WareHouseComparision = () => {
     <th colSpan={2}style={{ position: 'relative', right: '230px', borderRight: '1px solid black', }}>May</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '320px', borderRight: '1px solid black', }}>June</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '390px' ,borderRight: '1px solid black', }}>July</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '500px' ,borderRight: '1px solid black', }}>August</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '580px' ,borderRight: '1px solid black'}}>September</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '680px', borderRight: '1px solid black' }}>October</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '520px' ,borderRight: '1px solid black', }}>August</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '600px' ,borderRight: '1px solid black'}}>September</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '720px', borderRight: '1px solid black' }}>October</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '620px',borderRight: '1px solid black', }}>November</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '500px', }}>December</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
@@ -119,22 +119,30 @@ export const WareHouseComparision = () => {
 <td style={{paddingLeft:'10px',position:'relative',}}>Production Plan Type Name</td>
     <td style={{right: '70px',position: 'relative', }}>(previous)</td>
     <td style={{position: 'relative',right: '60px' }} >(latest)</td>
+
     <td  style={{position: 'relative',right: '60px', }} >(previous)</td>
     <td  style={{position: 'relative',right: '50px',}} >(latest)</td>
+
     <td  style={{position: 'relative',right: '30px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '40px'}} >(latest)</td>
+
     <td  style={{position: 'relative',right: '20px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '20px'}} >(latest)</td>
+
     <td  style={{position: 'relative',right: '10px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '20px'}} >(latest)</td>
+
     <td  style={{position: 'relative',right: '5px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '20px'}} >(latest)</td>
+
     <td  style={{position: 'relative',right: '-10px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-px'}} >(latest)</td>
-    <td  style={{position: 'relative',right: '-10px'}} >(previous)</td>
-    <td  style={{position: 'relative',right: '-px'}} >(latest)</td>
-    <td  style={{position: 'relative',right: '5px'}} >(previous)</td>
-    <td  style={{position: 'relative',right: '10px'}} >(latest)</td>
+
+    <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-10px'}} >(latest)</td>
+    
+    <td  style={{position: 'relative',right: '-15px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-10px'}} >(latest)</td>
     <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
     <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>

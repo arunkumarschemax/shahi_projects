@@ -17,7 +17,7 @@ const TrimOrder= () => {
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
-    const [selectedEstimatedStartDate, setSelectedEstimatedStartDate] = useState(undefined);
+    const [selectedEstimatedStartDate, setSelectedEstimatedDate] = useState(undefined);
 
     const service = new OrdersService();
     const [form] = Form.useForm();
@@ -28,7 +28,7 @@ const TrimOrder= () => {
     const searchInput = useRef<InputRef>(null);
     const [searchedColumn, setSearchedColumn] = useState("");
     const [item, setItem] = useState<any[]>([]);
-const [data,setData] =useState<any[]>([]);
+
 const {Text}=Typography
 
     useEffect(() => {
@@ -93,12 +93,12 @@ const {Text}=Typography
             }
             setFilteredData(filteredData);
         }
-        if (startDate && endDate) {
-            const startDateFormatted = moment(startDate).format('YYYY/MM/DD');
-            const endDateFormatted = moment(endDate).format('YYYY/MM/DD');
+        if (selectedDate) {
+            selectedDate = moment(selectedDate).format('YYYY/MM/DD');
+
             filteredData = filteredData.filter(record => {
                 const dateInData = moment(record.approval_date).format('YYYY/MM/DD');
-                return dateInData >=startDateFormatted && dateInData <= endDateFormatted;
+                return dateInData === selectedDate;
             });
     
           }
@@ -541,23 +541,12 @@ width:200,
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
                         <Form.Item name='approval_date' label=' Approval Date'>
-                        {/* <DatePicker
+                        <DatePicker
   format="YYYY/MM/DD"
   onChange={(date, dateString) => {
     setSelectedEstimatedFromDate(dateString); // dateString will be in "YYYY/MM/DD" format
   }}
-/> */}
-<Select
-showSearch
-placeholder="Select Approval Date"
-optionFilterProp="children"
-allowClear>{data.map(e=>(
-<Option key={e.approval_date} value={e.approval_date}>{e.approval_date}
-
-</Option>
-))}
-
-</Select>
+/>
                         </Form.Item>
 </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 17 }} >
@@ -587,13 +576,13 @@ allowClear>{data.map(e=>(
             
                     return (
                         <Table.Summary.Row>
-                            <Table.Summary.Cell colSpan={10} index={0} >
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <span>{grandTotal}</span>
-      <span style={{ color: 'red' }}>Grand Total:</span>
-    </div>
-                            </Table.Summary.Cell>
-                            <Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>
+<Table.Summary.Cell colSpan={10} index={0} >
+<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+<span>{grandTotal}</span>
+<span style={{ color: 'Red' }}>Grand Total:</span>
+</div>
+</Table.Summary.Cell>
+<Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>                            <Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>
                         </Table.Summary.Row>
                     );
                 }}

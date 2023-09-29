@@ -103,17 +103,17 @@ const CustomTitle = () => {
 <table>
   <tr >
   {/* <th style={{position: 'relative',paddingRight: '1200px'}}>Production Plan Type Name</th> */}
-  <th colSpan={2} style={{ position: 'relative', right: '-110px' , }}>January</th>
+  <th colSpan={2} style={{ position: 'relative', right: '-100px' , }}>January</th>
     <th colSpan={2} style={{ position: 'relative', right: '-30px', borderLeft: '1px solid black',borderRight: '1px solid black', }}>Febuary</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '50px' ,borderRight: '1px solid black', }}>March</th><br/>
     <th colSpan={2} style={{ position: 'relative', right: '130px', borderRight: '1px solid black', }}>April</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '230px', borderRight: '1px solid black', }}>May</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '280px', borderRight: '1px solid black', }}>June</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '240px' ,borderRight: '1px solid black', }}>July</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '430px' ,borderRight: '1px solid black', }}>August</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '580px' ,borderRight: '1px solid black'}}>September</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '690px', borderRight: '1px solid black' }}>October</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '640px',borderRight: '1px solid black', }}>November</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '290px', borderRight: '1px solid black', }}>June</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '350px' ,borderRight: '1px solid black', }}>July</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '390px' ,borderRight: '1px solid black', }}>August</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '480px' ,borderRight: '1px solid black'}}>September</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '590px', borderRight: '1px solid black' }}>October</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '580px',borderRight: '1px solid black', }}>November</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '500px', }}>December</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
@@ -124,32 +124,40 @@ const CustomTitle = () => {
 </tr>
   <tr>
 <td style={{paddingLeft:'10px',position:'relative',}}>Production Plan Type Name</td>
-    <td style={{right: '40px',position: 'relative', }}>(Pcs)</td>
-    <td style={{position: 'relative',right: '60px' }} >(Coeff)</td>
+    <td style={{right: '100px',position: 'relative', }}>(Pcs)</td>
+    <td style={{position: 'relative',right: '100px' }} >(Coeff)</td>
+
     <td  style={{position: 'relative',right: '40px', }} >(Pcs)</td>
     <td  style={{position: 'relative',right: '30px',}} >(Coeff)</td>
+
     <td  style={{position: 'relative',right: '20px'}} >(Pcs)</td>
     <td  style={{position: 'relative',right: '20px'}} >(Coeff)</td>
+
     <td  style={{position: 'relative',right: '10px'}} >(Pcs)</td>
     <td  style={{position: 'relative',right: '20px'}} >(Coeff)</td>
+
     <td  style={{position: 'relative',right: '10px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '20px'}} >(Coeff)</td>
-    <td  style={{position: 'relative',right: '30px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '20px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '-10px'}} >(Coeff)</td>
+
     <td  style={{position: 'relative',right: '-10px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '-px'}} >(Coeff)</td>
-    <td  style={{position: 'relative',right: '-10px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '-px'}} >(Coeff)</td>
-    <td  style={{position: 'relative',right: '5px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '10px'}} >(Coeff)</td>
-    <td  style={{position: 'relative',right: '20px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '20px'}} >(Coeff)</td>
-    <td  style={{position: 'relative',right: '-20px'}} >(Pcs)</td>
     <td  style={{position: 'relative',right: '-20px'}} >(Coeff)</td>
+
+    <td  style={{position: 'relative',right: '-10px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-30px'}} >(Coeff)</td>
+
     <td  style={{position: 'relative',right: '-50px'}} >(Pcs)</td>
     <td  style={{position: 'relative',right: '-50px'}} >(Coeff)</td>
-    <td  style={{position: 'relative',right: '-200px'}} >Total(Pcs)</td>
-    <td  style={{position: 'relative',right: '-300px'}} >Total(Coeff)</td>
+
+    <td  style={{position: 'relative',right: '-55px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-50px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '-60px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-80px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '-100px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-100px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '-160px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-200px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '-310px'}} >Total(Pcs)</td>
+    <td  style={{position: 'relative',right: '-410px'}} >Total(Coeff)</td>
     
   </tr>
 
@@ -165,7 +173,7 @@ const childColumns1: any = [
     {
       // title: "Production Plan Type Name",
       dataIndex: "phasetype",
-      width:130
+      width:100
 
     },
     {
@@ -374,7 +382,7 @@ const childColumns1: any = [
         {
           // title: `In Coeff`,
           dataIndex: "augCoeff",
-          width:40,
+          width:30,
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -461,7 +469,7 @@ const childColumns1: any = [
         {
           // title: `In Coeff`,
           dataIndex: "novCoeff",
-          width:60,
+          width:40,
           align:"right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
