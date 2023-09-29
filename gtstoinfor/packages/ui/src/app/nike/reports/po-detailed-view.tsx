@@ -18,80 +18,100 @@ export function PoDetailedview() {
       title: "S.No",
       key: "sno",
       responsive: ["sm"],
-      width:130,
       render: (text,object,index) => (page - 1) * 10 + (index + 1)
     },
     {
       title: 'size Description',
       dataIndex: 'sizeDescription',
-      width:180,
     },
     {
       title: 'size Quantity',
       dataIndex: 'sizeQty',
-      width:180,
     },
     {
-        title: 'Legal Po Quantity',
-        dataIndex: 'legalPoQty',
-        width:180,
-        // sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
-        // sortDirections: ["ascend", "descend"],
-      },
+      title: 'Trading Co Net including discounts',
+      dataIndex: 'trConetIncludingDiscCurrencyCode',
+      // sorter: (a, b) => a.description.localeCompare(b.description),
+      // sortDirections: ["ascend", "descend"],
+    },
     {
-        title: 'Legal Po Price',
-        dataIndex: 'legalPoPrice',
-        width:180,
-        // sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
-        // sortDirections: ["ascend", "descend"],
-      },
-      {
-        title: 'Legal Po Currency',
-        dataIndex: 'legalPoCurrencyCode',
-        width:180,
-        // sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
-        // sortDirections: ["ascend", "descend"],
-      },
+      title: 'Trading CoNet Including Disc CurrencyCode',
+      dataIndex: 'trConetIncludingDiscCurrencyCode',
+      // sorter: (a, b) => a.description.localeCompare(b.description),
+      // sortDirections: ["ascend", "descend"],
+    },
     {
-      title: 'Actual ShippedQty',
+      title: 'Legal Po Price',
+      dataIndex: 'legalPoPrice',
+      // sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
+      // sortDirections: ["ascend", "descend"],
+    },
+    {
+      title: 'Legal Po Price Currency',
+      dataIndex: 'legalPoCurrencyCode',
+      // sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
+      // sortDirections: ["ascend", "descend"],
+    },
+    {
+      title: 'Co Price',
+      dataIndex: 'coPrice',
+    
+    },
+    {
+      title: 'Co Price Currency',
+      dataIndex: 'coPriceCurrencyCode',
+    },
+    {
+      title: 'Diff of Price',
+      dataIndex: '',
+    
+    },
+    {
+      title: 'Diff of Price Currency',
+      dataIndex: '',
+    
+    },
+    {
+      title: 'CRm Co Quantity',
+      dataIndex: 'CRMCoQty',
+   
+    
+    },
+    {
+      title: 'Legal Po Quantity',
+       dataIndex: 'legalPoQty',
+        // sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
+        // sortDirections: ["ascend", "descend"],
+    },
+    {
+      title: 'Diff Of Quantity',
+      dataIndex: '',
+      
+    },
+    {
+      title: 'Allowed Excess ship Quantity',
+       dataIndex: '',
+      
+    },
+    {
+      title: 'Actual Shipped quantity',
       dataIndex: 'actualShippedQty',
-      width:180,
     //   sorter: (a, b) => a.actualShippedQty.localeCompare(b.actualShippedQty),
     //   sortDirections: ["ascend", "descend"],
     },
     {
-      title:'Co Price',
-      dataIndex:'coPrice',
-      width:20,
-    },
-    {
-      title:'Crm Co Quantity',
-      dataIndex:'CRMCoQty',
-      width:20,
+      title: 'Actual Ship %',
+      dataIndex: 'actualShippedQty',
     },
     {
         title: 'Net Including Disc Currency Code',
         dataIndex: 'netIncludingDiscCurrencyCode',
-        width:200,
-        // sorter: (a, b) => a.description.localeCompare(b.description),
-        // sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('description'),
-      },
-  
+     },
     {
       title: 'Net Including Discount ',
       dataIndex: 'netIncludingDisc',
-      width:200,
-    //   sorter: (a, b) => a.description.localeCompare(b.description),
-    //   sortDirections: ["ascend", "descend"],
     },
-    {
-        title: 'Trading CoNet Including Disc CurrencyCode',
-        dataIndex: 'trConetIncludingDiscCurrencyCode',
-        width:200,
-        // sorter: (a, b) => a.description.localeCompare(b.description),
-        // sortDirections: ["ascend", "descend"],
-      },
+  
     ];
     return(
         <Card title={<span style={{ color: 'black' }}> Detailed View - <span style={{color:'black'}}>{stateData?.data[0]?.purchaseOrderNumber?stateData?.data[0]?.purchaseOrderNumber:''
@@ -146,6 +166,7 @@ export function PoDetailedview() {
           setPage(current);
         }
       }}
+      scroll={{ x: 'max-content' }}
        />
             </Card>
 
