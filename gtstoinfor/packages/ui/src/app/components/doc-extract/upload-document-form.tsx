@@ -535,17 +535,17 @@ export function DocumentUploadForm() {
     //     <div style={{ textAlign: "right" }}>
     //       {amount !== undefined && amount !== null ? `${amount}` : "0"}
     //     </div>
-    //   ),
+    //   ),                                       
     // },
-    {
-      title: "Quotation",
-      dataIndex: "quotation",
-      key: "quotation",
-      render: (price) =>
-        <div style={{ textAlign: "right" }}>
-          {price !== undefined && price !== null ? `${price}` : "0"}
-        </div>
-    },
+    // {
+    //   title: "Quotation",
+    //   dataIndex: "quotation",
+    //   key: "quotation",
+    //   render: (price) =>
+    //     <div style={{ textAlign: "right" }}>
+    //       {price !== undefined && price !== null ? `${price}` : "0"}
+    //     </div>
+    // },
     {
       title: "Variance",
       dataIndex: "variance",
@@ -596,12 +596,12 @@ export function DocumentUploadForm() {
       return "No Variance";
     } else if (variance > 0) {
       return "Fully Variance";
-    } else if (variance <= 0 || variance >= 0) { 
+    } else if (variance <= 0 || variance >= 0) {
       return "Partially Variance";
     }
     return "Unknown Variance";
   };
-  
+
 
 
   const calculateCharge = () => {
@@ -1661,7 +1661,7 @@ export function DocumentUploadForm() {
                       left: "10px",
                     }}
                   >
-                    GST
+                    GST NUMBER
                   </label>
                   <Input
                     title="GST"
@@ -1830,7 +1830,7 @@ export function DocumentUploadForm() {
                     style={{
                       width: "190px",
                       height: "30px",
-                      borderColor: status  ? "blue" : "red",
+                      borderColor: status ? "blue" : "red",
                     }}
                     className={status === "No Variance" ? "blue" : status === "Fully Variance" ? "red" : "black"}
                     value={status}

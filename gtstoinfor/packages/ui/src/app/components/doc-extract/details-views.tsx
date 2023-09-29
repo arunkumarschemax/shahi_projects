@@ -430,7 +430,7 @@ function ScanDetailView() {
           {rowData.state.rowData.Vendor ? rowData.state.rowData.Vendor : "--"}
         </Descriptions.Item>
         <Descriptions.Item
-          label="GST"
+          label="GST NUMBER"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.GST ? rowData.state.rowData.GST : "--"}

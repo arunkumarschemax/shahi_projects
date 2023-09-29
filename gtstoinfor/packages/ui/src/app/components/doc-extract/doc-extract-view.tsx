@@ -245,7 +245,7 @@ export function DocView() {
     //   },
     // },
     {
-      title: "GST",
+      title: "GST NUMBER",
       dataIndex: "GST",
       key: "GST",
       ...getColumnSearchProps("GST"),
