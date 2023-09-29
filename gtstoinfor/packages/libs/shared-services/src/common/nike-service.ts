@@ -310,4 +310,88 @@ export class NikeService extends CommonAxiosService {
     async getDpomSyncDetails(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getDpomSyncDetails")
     }
+
+    async getChangeComparision(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getChangeComparision",req)
+    //     const data = [
+    //         {
+    //           "purchaseOrderNumber": "3503450800",
+    //           "poAndLine": "3503450800-10",
+    //           "sizeWiseData": [
+    //             {
+    //               "purchaseOrderNumber": "3503450800",
+    //               "poAndLine": "3503450800-10",
+    //               "id": 16,
+    //               "sizeDescription": " M",
+    //               "sizeQuantity": 652,
+    //               "grossPriceFOB": "5.01",
+    //               "FOBCurrencyCode": "USD",
+    //               "legalPoPrice": 5.16,
+    //               "legalPoCurrency": "USD"
+    //             },
+    //             {
+    //                 "purchaseOrderNumber": "3503450800",
+    //                 "poAndLine": "3503450800-10",
+    //                 "id": 16,
+    //                 "sizeDescription": "XL",
+    //                 "sizeQuantity": 3,
+    //                 "grossPriceFOB": "5.01",
+    //                 "FOBCurrencyCode": "USD",
+    //                 "legalPoPrice": 5.16,
+    //                 "legalPoCurrency": "USD"
+    //               },
+    //               {
+    //                 "purchaseOrderNumber": "3503450800",
+    //                 "poAndLine": "3503450800-10",
+    //                 "id": 16,
+    //                 "sizeDescription": "2XL",
+    //                 "sizeQuantity": 494,
+    //                 "grossPriceFOB": "5.01",
+    //                 "FOBCurrencyCode": "USD",
+    //                 "legalPoPrice": 5.16,
+    //                 "legalPoCurrency": "USD"
+    //               }
+    //           ]},
+    //            {"purchaseOrderNumber": "3503450800",
+    //           "poAndLine": "3503450800-20",
+    //           "sizeWiseData": [
+    //             {
+    //               "purchaseOrderNumber": "3503450800",
+    //               "poAndLine": "3503450800-20",
+    //               "id": 16,
+    //               "sizeDescription": " M",
+    //               "sizeQuantity": 652,
+    //               "grossPriceFOB": "5.01",
+    //               "FOBCurrencyCode": "USD",
+    //               "legalPoPrice": 5.16,
+    //               "legalPoCurrency": "USD"
+    //             },
+    //             {
+    //                 "purchaseOrderNumber": "3503450800",
+    //                 "poAndLine": "3503450800-20",
+    //                 "id": 16,
+    //                 "sizeDescription": "XL",
+    //                 "sizeQuantity": 3,
+    //                 "grossPriceFOB": "5.01",
+    //                 "FOBCurrencyCode": "USD",
+    //                 "legalPoPrice": 5.16,
+    //                 "legalPoCurrency": "USD"
+    //               },
+    //               {
+    //                 "purchaseOrderNumber": "3503450800",
+    //                 "poAndLine": "3503450800-20",
+    //                 "id": 16,
+    //                 "sizeDescription": "2XL",
+    //                 "sizeQuantity": 494,
+    //                 "grossPriceFOB": "5.01",
+    //                 "FOBCurrencyCode": "USD",
+    //                 "legalPoPrice": 5.16,
+    //                 "legalPoCurrency": "USD"
+    //               }
+    //           ]
+    //         }
+             
+    //       ]
+    //  return data 
 }   
+}

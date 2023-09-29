@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, Input, Row, Select, Table } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { NikeService } from "@project-management-system/shared-services";
 import React from "react";
@@ -7,6 +7,7 @@ import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
 import PoPdfTable from "./po-pdf-table";
 import moment from "moment";
+import ChangeComparision from "./change-detail-view";
 
 
 export function POPDFInfoGrid() {
@@ -21,6 +22,8 @@ export function POPDFInfoGrid() {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [form] = Form.useForm();
     const { Option } = Select;
+    const [isModalOpen1, setIsModalOpen1] = useState(false);
+
 
     useEffect(()=> {
         getPdfFileInfo()
@@ -49,6 +52,18 @@ export function POPDFInfoGrid() {
     const handleReset = (clearFilters) => {
         clearFilters();
         setSearchText('');
+    };
+
+
+    const showModal1 = (record) => {
+    
+        setIsModalOpen1(true);
+    };
+    
+    
+    const cancelHandle = () => {
+        setIsModalOpen1(false);
+
     };
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -111,6 +126,8 @@ export function POPDFInfoGrid() {
         navigate('/nike/po-pdf-table',{ state: { data: record.file_data} })
 
     }
+
+   
     const columns: any = [
         {
             title: "S.No",
@@ -149,16 +166,19 @@ export function POPDFInfoGrid() {
         {
             title: 'Action',
             dataIndex: 'action',
-            render: (value, record) => {
-                return (
-                        <Button onClick={e=>setMoreData(record)}>More Info</Button>
-                        
-                );
-                
-            },
-            
+            align:'center',
+            render: (value, record) => (
+              <>
+                <Button onClick={() => setMoreData(record)}>More Info</Button>
+                  <Button onClick={() => showModal1(record.po_number)} style={{ margin: 5 }}>Changes Comparision</Button>
 
-        }
+                
+              </>
+                           
+
+            ),
+          }
+          
     ]
     
     return (
@@ -211,6 +231,23 @@ export function POPDFInfoGrid() {
             }}
         >
         </Table>
+        <Modal
+                className='print-docket-modal'
+                key={'modal1' + Date.now()}
+                  width={'70%'}
+                style={{ top: 30, alignContent: 'center' }}
+                visible={isModalOpen1}
+                title={<React.Fragment>
+                </React.Fragment>}
+                onCancel={cancelHandle}
+                footer={[
+
+                ]}
+                
+            >
+                {isModalOpen1 &&<ChangeComparision data={undefined}   />} 
+                <Button onClick={cancelHandle}  style={{color:"red", flexDirection:'column-reverse'}} > Close</Button>
+            </Modal>
         </Card>
         </>
     )

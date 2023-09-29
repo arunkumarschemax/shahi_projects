@@ -11,6 +11,7 @@ import { PoAndQtyReq } from './dto/po-qty.req';
 import { log } from 'console';
 import { type } from 'os';
 import { FactoryUpdate } from './dto/factory-update.req';
+import { ChangeComparision } from './dto/change-comparision.req';
 
 @Controller('/nike-dpom')
 export class DpomController {
@@ -770,6 +771,16 @@ export class DpomController {
     async getDpomSyncDetails(): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getDpomSyncDetails();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
+    @Post('/getChangeComparision')
+    @ApiBody({ type: ChangeComparision })
+    async getChangeComparision(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getChangeComparision(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

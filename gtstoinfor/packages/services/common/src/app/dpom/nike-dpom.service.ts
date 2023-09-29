@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, NewDivertModel, OldDivertModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, TotalQuantityChangeModel, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
+import { ChangePoandLineModel, CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, NewDivertModel, OldDivertModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, TotalQuantityChangeModel, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -27,6 +27,7 @@ import { AppDataSource1, AppDataSource2 } from '../app-datasource';
 import { appConfig } from 'packages/services/common/config';
 import { construnctDataFromM3Result } from '@project-management-system/backend-utils';
 import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
+import { ChangeComparision } from './dto/change-comparision.req';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -1619,6 +1620,17 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
+  
+
+    async getDpomSyncDetails(): Promise<CommonResponseModel> {
+        const query = 'SELECT COUNT(*) AS totalRecords,(SELECT COUNT(*) FROM dpom WHERE DATE(created_at)=DATE(NOW())) AS todayrecords ,COUNT(*)-(SELECT COUNT(*) FROM `dpom` WHERE DATE(created_at)=DATE(NOW())) AS oldRecords FROM dpom '
+        const result = await this.dpomRepository.query(query)
+        if (result) {
+            return new CommonResponseModel(true, 1, 'data retrived Sucessfully', result)
+        } else {
+            return new CommonResponseModel(false, 0, 'no data found ', [])
+        }
+    }
     async getTotalItemQtyChangeData(req?: nikeFilterRequest): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getTotalItemQtyChangeData(req)
         if (data.length === 0) {
@@ -1641,13 +1653,68 @@ export class DpomService {
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
 
-    async getDpomSyncDetails(): Promise<CommonResponseModel> {
-        const query = 'SELECT COUNT(*) AS totalRecords,(SELECT COUNT(*) FROM dpom WHERE DATE(created_at)=DATE(NOW())) AS todayrecords ,COUNT(*)-(SELECT COUNT(*) FROM `dpom` WHERE DATE(created_at)=DATE(NOW())) AS oldRecords FROM dpom '
-        const result = await this.dpomRepository.query(query)
-        if (result) {
-            return new CommonResponseModel(true, 1, 'data retrived Sucessfully', result)
-        } else {
-            return new CommonResponseModel(false, 0, 'no data found ', [])
+    async getChangeComparision(req:ChangeComparision): Promise<CommonResponseModel> {
+        const poNumber = req.poNumber;
+        const data = await this.dpomRepository.getChangeSData(poNumber)
+        if (data.length === 0){
+            return new CommonResponseModel(false, 0, 'No data found');
         }
+        const sizeDateMap = new Map<string, ChangePoandLineModel>();
+
+        for (const rec of data) {
+            if (!sizeDateMap.has(rec.po_and_line)) {
+                sizeDateMap.set(
+                    rec.po_number,
+                    new ChangePoandLineModel(rec.po_number,rec.po_and_line, [])
+                )
+            }
+            const sizeData = sizeDateMap.get(rec.po_number).sizeWiseData;
+           console.log(sizeData,"sizeDateMap")
+
+            if (rec.size_description !== null) {
+                sizeData.push(new OrderChangePoModel(rec.po_number,rec.id,rec.size_description,rec.size_qty,rec.legal_po_qty,rec.gross_price_fob,rec.fob_currency_code,rec.legal_po_price,rec.legal_po_currency,rec.po_and_line,rec.total_item_qty))
+            }
+        }
+        const dataModelArray: ChangePoandLineModel[] = Array.from(sizeDateMap.values());
+        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+
     }
+    // async getChangeComparison(req: ChangeComparision): Promise<CommonResponseModel> {
+    //     const poNumber = req.poNumber;
+    //     const data = await this.dpomRepository.getChangeSData(poNumber);
+    
+    //     if (data.length === 0) {
+    //         return new CommonResponseModel(false, 0, 'No data found');
+    //     }
+    
+    //     const sizeDateMap = new Map<string, ChangePoandLineModel>();
+    
+    //     for (const rec of data) {
+    //         if (!sizeDateMap.has(rec.po_and_line)) {
+    //             // Create a new ChangePoandLineModel for each unique po_and_line
+    //             sizeDateMap.set(
+    //                 rec.po_and_line,
+    //                 new ChangePoandLineModel(rec.po_number, rec.po_and_line, [])
+    //             );
+    //         }
+            
+    //         // Get the sizeData for the current po_and_line
+    //         const sizeData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
+    
+    //         // Add size data for the current record
+    //         if (rec.size_description !== null) {
+    //             sizeData.push(new OrderChangePoModel(
+    //                 rec.po_number, rec.id, rec.size_description,
+    //                 rec.size_qty, rec.legal_po_qty,
+    //                 rec.gross_price_fob, rec.fob_currency_code,
+    //                 rec.legal_po_price, rec.legal_po_currency,
+    //                 rec.po_and_line, rec.total_item_qty
+    //             ));
+    //         }
+    //     }
+    
+    //     const dataModelArray: ChangePoandLineModel[] = Array.from(sizeDateMap.values());
+    //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    // }
+    
 }

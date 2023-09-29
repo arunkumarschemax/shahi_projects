@@ -30,6 +30,7 @@ import POPDFInfoGrid from "./nike/pdf-reader/pdf-file-info-grid"
 import PoPdfTable from "./nike/pdf-reader/po-pdf-table"
 import FobPriceListGrid from "./masters/fob-pricelist/fob-price-list-grid"
 import FobPriceListForm from "./masters/fob-pricelist/fob-price-list-form"
+import ChangeComparision from "./nike/pdf-reader/change-detail-view"
 
 
 export const AppRoutes = () => {
@@ -63,6 +64,7 @@ export const AppRoutes = () => {
                     <Route path='dpom-sync' element={<DPOMSyncManually />} />
                     <Route path='file-revert' element={<NikeFileRevert />} />
                     <Route path='pdf-upload' element={<PdfUpload />} />
+                    <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
                 </Route>
                 <Route path='/reports'>
                     <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
@@ -129,6 +131,8 @@ export const AppRoutes = () => {
                     <Route path='pdf-upload' element={<PdfUpload />} />
                     <Route path='pdf-file-info-grid' element={<POPDFInfoGrid />} />
                     <Route path='po-pdf-table' element={<PoPdfTable data={undefined}/>} />
+                    <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
+
 
                 </Route>
                 <Route path='/reports'>
