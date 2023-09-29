@@ -258,10 +258,10 @@ export class DpomRepository extends Repository<DpomEntity> {
         const query = this.createQueryBuilder('dpm')
             .select(`DISTINCT id,item,plant AS Plant,dpom_item_line_status AS LineStatus,
             plant_name AS PlantName,document_date AS DocumentDate,
-            po_number AS poNumber,po_line_item_number AS poLine ,destination_country AS destination,
+            po_number AS poNumber, po_line_item_number AS poLine ,destination_country AS destination,
             shipping_type AS shipmentType,inventory_segment_code AS inventorySegmentCode,
             ogac AS ogac ,gac AS gac ,product_code AS productCode,
-            item_vas_text AS itemVasText,quantity AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos`)
+            item_vas_text AS itemVasText,total_item_qty AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos`)
             .where(`diverted_to_pos IS NOT null`)
         return await query.getRawMany()
     }
@@ -274,7 +274,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             po_number AS npoNumber, po_line_item_number AS npoLine, destination_country AS ndestination,
             shipping_type AS nshipmentType, inventory_segment_code AS ninventorySegmentCode,
             ogac AS nogac, gac AS ngac, product_code AS nproductCode, dpom_item_line_status AS nDPOMLineItemStatus,
-            item_vas_text AS nitemVasText, quantity AS nQuantity, created_at AS ndpomCreatedDates, diverted_to_pos`)
+            item_vas_text AS nitemVasText, total_item_qty AS nQuantity, created_at AS ndpomCreatedDates, diverted_to_pos`)
             .where(`diverted_to_pos IS NOT null`)
             .andWhere(`po_number = :po AND po_line_item_number = :line`, { po, line });
 
@@ -463,7 +463,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .select(`dpom.po_and_line,dpom.last_modified_date,dpom.item,dpom.factory,dpom.document_date,dpom.po_number,dpom.po_line_item_number,dpom.dpom_item_line_status,dpom.style_number,dpom.product_code,dpom.color_desc,dpom.customer_order,dpom.po_final_approval_date,dpom.plan_no,dpom.lead_time,dpom.category_code,dpom.category_desc,dpom.vendor_code,dpom.gcc_focus_code,dpom.gcc_focus_desc,dpom.gender_age_code,dpom.gender_age_desc,dpom.destination_country_code,dpom.destination_country,dpom.plant,dpom.plant_name,dpom.trading_co_po_no,dpom.upc,dpom.direct_ship_so_no,dpom.direct_ship_so_item_no,dpom.customer_po,dpom.ship_to_customer_no,dpom.ship_to_customer_name,dpom.planning_season_code,dpom.planning_season_year , dpom.pcd,dpom.doc_type_code, dpom.doc_type_desc,dpom.mrgac,dpom.ogac,dpom.gac,dpom.truck_out_date,dpom.origin_receipt_date,dpom.factory_delivery_date,dpom.gac_reason_code,dpom.gac_reason_desc,dpom.shipping_type,dpom.planning_priority_code,dpom.planning_priority_desc,dpom.launch_code,dpom.mode_of_transport_code,dpom.inco_terms,dpom.inventory_segment_code,dpom.purchase_group_code,dpom.purchase_group_name,dpom.total_item_qty,dpom.actual_shipped_qty,dpom.vas_size,dpom.item_vas_text, dpom.item_vas_pdf, dpom.item_text, dpom.legal_po_price, dpom.legal_po_currency, dpom.co_price, dpom.co_price_currency, dpom.ship_to_address_legal_po,dpom.ship_to_address_dia,dpom.cab_code,dpom.gross_price_fob,dpom.ne_inc_disc,dpom.trading_net_inc_disc,dpom.actual_unit,dpom.allocated_quantity,dpom.size_description,dpom.size_qty,dpom.trading_co_po_no,dpom.net_inc_disc_currency_code, dpom.crm_co_qty, dpom.trading_net_currency_code, od.display_name AS displayName,dpom.fob_currency_code,dpom.hanger,dpom.legal_po_qty, dpom.geo_code, fob.shahi_confirmed_gross_price, fob.shahi_confirmed_gross_price_currency_code`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
             .leftJoin(FobEntity, 'fob', `fob.color_code = SUBSTRING_INDEX(dpom.product_code, '-', -1) AND fob.style_number = dpom.style_number AND fob.size_description = dpom.size_description`)
-        // .groupBy(`od.po_number AND od.po_line_item_number`)
+        // .groupBy(`dpom.po_number AND dpom.po_line_item_number AND dpom.size_description`)
         if (req.lastModifedStartDate !== undefined) {
             query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
         }
@@ -504,9 +504,6 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
         if (req.planningSeasonCode !== undefined) {
             query.andWhere(`dpom.planning_season_code ='${req.planningSeasonCode}'`)
-        }
-        if (req.planningSeasonYear !== undefined) {
-            query.andWhere(`dpom.planning_season_year ='${req.planningSeasonYear}'`)
         }
         if (req.planningSeasonYear !== undefined) {
             query.andWhere(`dpom.planning_season_year ='${req.planningSeasonYear}'`)
@@ -659,6 +656,15 @@ export class DpomRepository extends Repository<DpomEntity> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.geo_code, dpom.id`)
             .groupBy(`dpom.geo_code`)
+        return await query.getRawMany();
+    }
+    async getChangeSData(poNumber: number): Promise<any[]> {
+
+        const query = this.createQueryBuilder('o')
+            .select(` o.id,o.size_description,o.size_qty,o.po_number,o.legal_po_qty AS legalPoQty,o.gross_price_fob,o.fob_currency_code,o.legal_po_price,o.legal_po_currency,o.po_number,o.po_and_line, (o.legal_po_qty- o.size_qty) AS qty_difference,(o.legal_po_price-o.gross_price_fob) AS price_change
+            `)
+            .where(`o.po_number = ${poNumber}`)
+        //  .andWhere(`o.dpom_item_line_status = 'Unaccepted'`)     
         return await query.getRawMany();
     }
 

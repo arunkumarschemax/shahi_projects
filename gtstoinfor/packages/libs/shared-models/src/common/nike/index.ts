@@ -22,3 +22,6 @@ export * from './marketing-ppm-report.model';
 export * from './marketing-report-size.model';
 export * from './total-quantity-po-change';
 export * from './pochange-qty.model';
+export * from './change.rreq';
+export * from './change-ord-sizes.req'
+export * from './changeponumber.req'

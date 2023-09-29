@@ -43,7 +43,7 @@ const PPMReport = () => {
   const [geoCode, setGeoCode] = useState<any>([]);
   const [hideChildren, setHideChildren] = useState(false);
   let navigate = useNavigate()
-  let  poFilterData
+  let poFilterData
 
   useEffect(() => {
     getProductCode();
@@ -470,9 +470,11 @@ const PPMReport = () => {
         dataIndex: 'Po+Line', fixed: 'left',
         // render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`,
 
-        render :(text, record) =>{return <>
-        <Button type='link' onClick={e =>{DetailedView(record.poAndLine)}}>{record.purchaseOrderNumber} - {record.poLineItemNumber}</Button>
-        </>}
+        render: (text, record) => {
+          return <>
+            <Button type='link' onClick={e => { DetailedView(record.poAndLine) }}>{record.purchaseOrderNumber} - {record.poLineItemNumber}</Button>
+          </>
+        }
 
       },
       {
@@ -2053,11 +2055,11 @@ const PPMReport = () => {
 
   }
 
-  const DetailedView=(record:any)=>{
-       poFilterData = filterData.filter(item =>item.poAndLine == record)
-      console.log(poFilterData)
-        navigate('/Reports/po-detailed-view', { state: { data:poFilterData}})
-      }
+  const DetailedView = (record: any) => {
+    poFilterData = filterData.filter(item => item.poAndLine == record)
+    console.log(poFilterData)
+    navigate('/Reports/po-detailed-view', { state: { data: poFilterData } })
+  }
 
   return (
     <>
