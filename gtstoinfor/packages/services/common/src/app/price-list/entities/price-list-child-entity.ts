@@ -1,7 +1,7 @@
 import { CommonColumns } from "packages/services/common/common-columns.entity";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
-@Entity('price_list-child') 
+@Entity('price_list_child') 
 export class PriceListChildEntity{
 
     @PrimaryGeneratedColumn('increment', {

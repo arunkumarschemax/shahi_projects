@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -62,7 +62,7 @@ export class OrdersService {
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
-                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_').replace(/:/g,'_').replace(/[*]/g,'_').replace(/=/g,'_').replace(/”/g,'').replace(/~/g,'').replace(/[/]/g,'').replace(/“/g,'')
+                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_').replace(/:/g,'_').replace(/[*]/g,'_').replace(/=/g,'_').replace(/”/g,'').replace(/~/g,'').replace(/[/]/g,'').replace(/“/g,'').replace(/�/g,'')
                     const newKey1 = newKey.replace(/__/g,'_');
                     columnArray.push(newKey1)
                     updatedObj[newKey1] = obj[key];
@@ -88,7 +88,7 @@ export class OrdersService {
             const difference = columnArray.filter((element) => !ProductionOrderColumns.includes(element));
             if(difference.length > 0){
                 await transactionManager.releaseTransaction()
-                return new CommonResponseModel(false,1110,'Please Upload Correct Excel')
+                return new CommonResponseModel(false,1110,'Columns does not match!')
             }
             for (const data of convertedData) {
 let dtoData;
@@ -124,14 +124,16 @@ if(data.Order_Plan_Number !== null){
                     for (const existingDataKey of existingDataKeys) {
                         if (details[existingDataKey] != dtoData[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month' && existingDataKey != 'productionPlanId') {
                             const orderDiffObj = new OrdersDifferenceEntity();
-                            if (existingDataKey === 'publishDate' || existingDataKey === 'yarnProductionDueDateAuto' || existingDataKey === 'yarnAutoReflectionDate' || existingDataKey === 'EXF' || existingDataKey === 'yarnDeliveryDate' || existingDataKey === 'fbrcProductionDueDateAuto'|| existingDataKey === 'fbrcAutoReflectionDate'|| existingDataKey === 'fbrcDeliveryDate'|| existingDataKey === 'colorProductionDueDateAuto'|| existingDataKey === 'colorAutoReflectionDate'|| existingDataKey === 'colorDeliveryDate' || existingDataKey === 'trimProductionDueDateAuto'|| existingDataKey === 'trimAutoReflectionDate'|| existingDataKey === 'trimDeliveryDate'|| existingDataKey === 'poProductionDueDateAuto'|| existingDataKey === 'poAutoReflectionDate') {
-                                const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
-                                const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY']).format('YYYY-MM-DD');
-                                orderDiffObj.oldValue = details[existingDataKey]
-                                orderDiffObj.newValue = dtoData[existingDataKey]
+                            // if (existingDataKey === 'publishDate' || existingDataKey === 'yarnProductionDueDateAuto' || existingDataKey === 'yarnAutoReflectionDate' || existingDataKey === 'EXF' || existingDataKey === 'yarnDeliveryDate' || existingDataKey === 'fbrcProductionDueDateAuto'|| existingDataKey === 'fbrcAutoReflectionDate'|| existingDataKey === 'fbrcDeliveryDate'|| existingDataKey === 'colorProductionDueDateAuto'|| existingDataKey === 'colorAutoReflectionDate'|| existingDataKey === 'colorDeliveryDate' || existingDataKey === 'trimProductionDueDateAuto'|| existingDataKey === 'trimAutoReflectionDate'|| existingDataKey === 'trimDeliveryDate'|| existingDataKey === 'poProductionDueDateAuto'|| existingDataKey === 'poAutoReflectionDate') {
+                                if (existingDataKey === 'createDate' || existingDataKey === 'updateDate' || existingDataKey === 'publishDate' || existingDataKey === 'fbrcDlAnswered' || existingDataKey === 'plannedEXF' || existingDataKey === 'ltPoExf') {
+
+                                const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY','YYYY/MM/DD','YYYY-MM-DD HH:mm:ss']).format('YYYY-MM-DD');
+                                const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY','YYYY/MM/DD','YYYY-MM-DD']).format('YYYY-MM-DD');
+                                orderDiffObj.oldValue = oldValue
+                                orderDiffObj.newValue = newValue
                                 orderDiffObj.columnName = orderColumnValues[existingDataKey]
                                 orderDiffObj.displayName = existingDataKey
-                                orderDiffObj.productionPlanId = details[0].productionPlanId
+                                orderDiffObj.productionPlanId = details.productionPlanId
                                 orderDiffObj.version = dtoData.version
                                 orderDiffObj.fileId = Number(id)
                                 orderDiffObj.orderPlanNumber = dtoData.orderPlanNumber
@@ -168,16 +170,19 @@ if(data.Order_Plan_Number !== null){
                 }
             } else {
                 dtoData.version = 1
-                const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id, Number(month));
-                // console.log(convertedExcelEntity,'-----convertedExcelEntity------')
-                const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
-                const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,saveExcelEntity.productionPlanId,Number(month));
-                const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
-                // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
-                if (!saveExcelEntity || !saveChildExcelEntity) {
-                    flag.add(false)
-                    await transactionManager.releaseTransaction();
-                    break;
+                if(dtoData.publishFlagForFactory !== 'NotPub'){
+
+                    const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id, Number(month));
+                    // console.log(convertedExcelEntity,'-----convertedExcelEntity------')
+                    const saveExcelEntity: OrdersEntity = await transactionManager.getRepository(OrdersEntity).save(convertedExcelEntity);
+                    const convertedChildExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData,id,saveExcelEntity.productionPlanId,Number(month));
+                    const saveChildExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedChildExcelEntity);
+                    // const saveChildExcelDto = this.ordersChildAdapter.convertEntityToDto(saveChildExcelEntity);
+                    if (!saveExcelEntity || !saveChildExcelEntity) {
+                        flag.add(false)
+                        await transactionManager.releaseTransaction();
+                        break;
+                    }
                 }
             }
         }
@@ -344,24 +349,24 @@ if(data.Order_Plan_Number !== null){
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getQtyChangeData(): Promise<CommonResponseModel> {
-        const data = await this.ordersRepository.getQtyChangeData()
+    async getQtyChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
+        const data = await this.ordersRepository.getQtyChangeData(req)
         if (data)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getQtyDifChangeData(): Promise<CommonResponseModel> {
+    async getQtyDifChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
-
+        
         let data;
         if (files.length == 0) {
             return new CommonResponseModel(false, 0, 'No data found');
         } else if (files.length == 1) {
-            data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId)
+            data = await this.ordersChildRepo.getItemQtyChangeData1(files[0]?.fileId,req)
         } else {
-            data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId)
+            data = await this.ordersChildRepo.getItemQtyChangeData(files[1]?.fileId, files[0]?.fileId,req)
         }
         if (data)
             return new CommonResponseModel(true, 1, 'data retrived', data)
@@ -1355,7 +1360,20 @@ async getOrderPlanNo(): Promise<CommonResponseModel> {
     else
         return new CommonResponseModel(false, 0, 'No data found');
 }
+async getOrderNumberDropDownInCompare():Promise<CommonResponseModel>{
+    try{
+        const data = await this.orderDiffRepo.getOrderNumbers()
+        if(data){
+            return new CommonResponseModel(true,1,'Data retrieved',data)
+        } else{
+            return new CommonResponseModel(false,1,'No data found')
+        }
+
+    } catch(err){
+        throw err
+    }
+}
 
   }
-  
+
   

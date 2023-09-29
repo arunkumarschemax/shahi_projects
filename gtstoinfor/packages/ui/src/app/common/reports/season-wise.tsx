@@ -43,7 +43,6 @@ const SeasonWiseReport = () => {
         service.seasonWiseReport(req).then((res)=>{
           if(res.data){
             setData(res.data)
-            console.log(data?.[1],'hi ra mawa')
           }
         })
     }
@@ -271,42 +270,110 @@ const SeasonWiseReport = () => {
 
     const exportExcel = () => {
         const excel = new Excel();
+
+        const whMonthTotals = (data) => {
+          const monthTotals = {
+            itemName:0,
+            january: 0,
+            february: 0,
+            march: 0,
+            april: 0,
+            may: 0,
+            june: 0,
+            july: 0,
+            august: 0,
+            september: 0,
+            october: 0,
+            november: 0,
+            december: 0,
+            whTotal:0,
+          };
+          data.forEach((item) => {
+            for (const month in monthTotals) {
+              if (item[month]) {
+                monthTotals[month] += Number(item[month]);
+              }
+            }
+          });
+      
+          return {...monthTotals, itemName:"Grand Total", __style: { bold: true, fill: { type: 'pattern', patternType: 'solid', backgroundColor: 'd9e1f2' } } };
+        };
+
+        const exfMonthTotals = (data) => {
+          const monthTotals = {
+            itemName:0,
+            exfJan: 0,
+            exfFeb: 0,
+            exfMarch: 0,
+            exfApril: 0,
+            exfMay: 0,
+            exfJune: 0,
+            exfJuly: 0,
+            exfAug: 0,
+            exfSep: 0,
+            exfOct: 0,
+            exfNov: 0,
+            exfDec: 0,
+            exfTotal:0,
+          };
+          data.forEach((item) => {
+            for (const month in monthTotals) {
+              if (item[month]) {
+                monthTotals[month] += Number(item[month]);
+              }
+            }
+          });
+          return {...monthTotals, itemName:"Grand Total"};
+        };
+
+        
         if (data?.[0].length > 0) {
-            excel
-                .addSheet('23SS-WH')
-                .addColumns(excelColumnsWH)
-                .addDataSource(data?.[0], { str2num: true })
-                .addRow().Row
+          excel
+            .addSheet('23SS-WH')
+            .addColumns(excelColumnsWH)
+            .addDataSource(data?.[0], { str2num: true });
+            const monthTotals = whMonthTotals(data?.[0]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[0].length > 0) {
             excel
-                .addSheet('23SS-EXF')
-                .addColumns(excelColumnsEXf)
-                .addDataSource(data?.[0], { str2num: true })
+            .addSheet('23SS-EXF')
+            .addColumns(excelColumnsEXf)
+            .addDataSource(data?.[0], { str2num: true })
+            const monthTotals = exfMonthTotals(data?.[0]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[1].length > 0) {
             excel
-                .addSheet('23FW-WH')
-                .addColumns(excelColumnsWH)
-                .addDataSource(data?.[1], { str2num: true })
+            .addSheet('23FW-WH')
+            .addColumns(excelColumnsWH)
+            .addDataSource(data?.[1], { str2num: true })
+            const monthTotals = whMonthTotals(data?.[1]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[1].length > 0) {
             excel
-                .addSheet('23FW-EXF')
-                .addColumns(excelColumnsEXf)
-                .addDataSource(data?.[1], { str2num: true })
+            .addSheet('23FW-EXF')
+            .addColumns(excelColumnsEXf)
+            .addDataSource(data?.[1], { str2num: true })
+            const monthTotals = exfMonthTotals(data?.[1]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[2].length > 0) {
             excel
-                .addSheet('24SS-WH')
-                .addColumns(excelColumnsWH)
-                .addDataSource(data?.[2], { str2num: true })
+            .addSheet('24SS-WH')
+            .addColumns(excelColumnsWH)
+            .addDataSource(data?.[2], { str2num: true })
+            const monthTotals = whMonthTotals(data?.[2]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[2].length > 0) {
             excel
-                .addSheet('24SS-EXF')
-                .addColumns(excelColumnsEXf)
-                .addDataSource(data?.[2], { str2num: true })
+            .addSheet('24SS-EXF')
+            .addColumns(excelColumnsEXf)
+            .addDataSource(data?.[2], { str2num: true })
+            const monthTotals = exfMonthTotals(data?.[2]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         excel.saveAs('SeasonWise.xlsx');
     }
@@ -454,6 +521,7 @@ const SeasonWiseReport = () => {
             </>
           );
       };
+    
 
       const generateSummaryEXF = (pageData) => {
         let jan = 0;
