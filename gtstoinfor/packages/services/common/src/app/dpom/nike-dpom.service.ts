@@ -1653,68 +1653,65 @@ export class DpomService {
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
 
-    async getChangeComparision(req:ChangeComparision): Promise<CommonResponseModel> {
-        const poNumber = req.poNumber;
-        const data = await this.dpomRepository.getChangeSData(poNumber)
-        if (data.length === 0){
-            return new CommonResponseModel(false, 0, 'No data found');
-        }
-        const sizeDateMap = new Map<string, ChangePoandLineModel>();
-
-        for (const rec of data) {
-            if (!sizeDateMap.has(rec.po_and_line)) {
-                sizeDateMap.set(
-                    rec.po_number,
-                    new ChangePoandLineModel(rec.po_number,rec.po_and_line, [])
-                )
-            }
-            const sizeData = sizeDateMap.get(rec.po_number).sizeWiseData;
-           console.log(sizeData,"sizeDateMap")
-
-            if (rec.size_description !== null) {
-                sizeData.push(new OrderChangePoModel(rec.po_number,rec.id,rec.size_description,rec.size_qty,rec.legal_po_qty,rec.gross_price_fob,rec.fob_currency_code,rec.legal_po_price,rec.legal_po_currency,rec.po_and_line,rec.total_item_qty))
-            }
-        }
-        const dataModelArray: ChangePoandLineModel[] = Array.from(sizeDateMap.values());
-        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
-
-    }
-    // async getChangeComparison(req: ChangeComparision): Promise<CommonResponseModel> {
+    // async getChangeComparision(req:ChangeComparision): Promise<CommonResponseModel> {
     //     const poNumber = req.poNumber;
-    //     const data = await this.dpomRepository.getChangeSData(poNumber);
-    
-    //     if (data.length === 0) {
+    //     const data = await this.dpomRepository.getChangeSData(poNumber)
+    //     if (data.length === 0){
     //         return new CommonResponseModel(false, 0, 'No data found');
     //     }
-    
     //     const sizeDateMap = new Map<string, ChangePoandLineModel>();
-    
+
     //     for (const rec of data) {
     //         if (!sizeDateMap.has(rec.po_and_line)) {
-    //             // Create a new ChangePoandLineModel for each unique po_and_line
     //             sizeDateMap.set(
-    //                 rec.po_and_line,
-    //                 new ChangePoandLineModel(rec.po_number, rec.po_and_line, [])
-    //             );
+    //                 rec.po_number,
+    //                 new ChangePoandLineModel(rec.po_number,rec.po_and_line, [])
+    //             )
     //         }
-            
-    //         // Get the sizeData for the current po_and_line
-    //         const sizeData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
-    
-    //         // Add size data for the current record
+    //         const sizeData = sizeDateMap.get(rec.po_number).sizeWiseData;
+    //        console.log(sizeData,"sizeDateMap")
+
     //         if (rec.size_description !== null) {
-    //             sizeData.push(new OrderChangePoModel(
-    //                 rec.po_number, rec.id, rec.size_description,
-    //                 rec.size_qty, rec.legal_po_qty,
-    //                 rec.gross_price_fob, rec.fob_currency_code,
-    //                 rec.legal_po_price, rec.legal_po_currency,
-    //                 rec.po_and_line, rec.total_item_qty
-    //             ));
+    //             sizeData.push(new OrderChangePoModel(rec.po_number,rec.id,rec.size_description,rec.size_qty,rec.legal_po_qty,rec.gross_price_fob,rec.fob_currency_code,rec.legal_po_price,rec.legal_po_currency,rec.po_and_line,rec.total_item_qty))
     //         }
     //     }
-    
     //     const dataModelArray: ChangePoandLineModel[] = Array.from(sizeDateMap.values());
     //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
-    // }
+
+    // } this is working perfectly 
+    async getChangeComparision(req: ChangeComparision): Promise<CommonResponseModel> {
+        const poNumber = req.poNumber;
+    
+        const data = await this.dpomRepository.getChangeSData(poNumber);
+    
+        if (data.length === 0) {
+            return new CommonResponseModel(false, 0, 'No data found');
+        }
+    
+        const sizeDateMap = new Map<string, ChangePoandLineModel>();
+    
+        for (const rec of data) {
+            const poNumber = rec.po_number;
+            const poAndLine = rec.po_and_line;
+    
+            if (!sizeDateMap.has(poNumber)) {
+                sizeDateMap.set(poNumber, new ChangePoandLineModel(poNumber, poAndLine, []));
+            }
+    
+            const sizeData = sizeDateMap.get(poNumber).sizeWiseData;
+    
+            sizeData.push(new OrderChangePoModel(
+                poNumber,
+                rec.id,rec.size_description,rec.size_qty,rec.legal_po_qty,
+                rec.gross_price_fob,rec.fob_currency_code,rec.legal_po_price,
+                rec.legal_po_currency,poAndLine,rec.total_item_qty
+            ));
+        }
+    
+        const dataModelArray: ChangePoandLineModel[] = Array.from(sizeDateMap.values());
+    
+        return new CommonResponseModel(true, dataModelArray.length, 'Data retrieved', dataModelArray);
+    }
+   
     
 }
