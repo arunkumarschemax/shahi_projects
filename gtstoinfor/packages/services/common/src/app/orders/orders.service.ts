@@ -1346,22 +1346,34 @@ pcs.push(
 
 
 }
-
-        async getOrderNumberDropDownInCompare():Promise<CommonResponseModel>{
-            try{
-                const data = await this.orderDiffRepo.getOrderNumbers()
-                if(data){
-                    return new CommonResponseModel(true,1,'Data retrieved',data)
-                } else{
-                    return new CommonResponseModel(false,1,'No data found')
-                }
-
-            } catch(err){
-                throw err
-            }
+async getOrdersStatus(): Promise<CommonResponseModel> {
+    const details = await this.ordersRepository.getOrdersStatus()
+    if (details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+async getOrderPlanNo(): Promise<CommonResponseModel> {
+    const details = await this.ordersRepository.getOrderPlanNO()
+    if (details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+async getOrderNumberDropDownInCompare():Promise<CommonResponseModel>{
+    try{
+        const data = await this.orderDiffRepo.getOrderNumbers()
+        if(data){
+            return new CommonResponseModel(true,1,'Data retrieved',data)
+        } else{
+            return new CommonResponseModel(false,1,'No data found')
         }
 
-
+    } catch(err){
+        throw err
+    }
 }
+
+  }
 
   

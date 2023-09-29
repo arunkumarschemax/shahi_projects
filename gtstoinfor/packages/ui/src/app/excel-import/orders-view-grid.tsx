@@ -9,10 +9,12 @@ import FormItem from 'antd/es/form/FormItem';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
+import { orders } from '@project-management-system/shared-models';
 
 
 const AllOrdersGridView = () => {
     const [page, setPage] = useState<number>(1)
+    const [datas, setDatas] = useState<any>([]);
     const [pageSize, setPageSize] = useState<number>(10)
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
@@ -23,12 +25,17 @@ const AllOrdersGridView = () => {
     const searchInput = useRef<InputRef>(null);
     const [searchedColumn, setSearchedColumn] = useState("");
     const [searchText, setSearchText] = useState("");
-
+    const [dateRange, setDateRange] = useState([null, null]);
+    const [selectedFromDate, setSelectedFromDate] =useState<null | moment.Moment>(null);
+    const [selectedToDate, setSelectedToDate] = useState<null | moment.Moment>(null);
     const { RangePicker } = DatePicker;
 
 
     useEffect(() => {
         getData();
+        filter();
+        order();
+        Number();
     }, [])
 
     const getData = () => {
@@ -41,7 +48,28 @@ const AllOrdersGridView = () => {
             console.log(err.message)
         })
     }
+const order=()=>{
+    service.getOrdersStatus().then((res)=>{
+        if(res.status){
+            setDatas(res?.data === undefined? []:res.data);
 
+        }else{
+            setDatas([]);
+            message.info(res.internalMessage)
+        }
+    })
+}
+const Number=()=>{
+    service.getOrderPlanNo().then((res)=>{
+        if(res.status){
+            setDatas(res?.data === undefined? []:res.data);
+
+        }else{
+            setDatas([]);
+            message.info(res.internalMessage)
+        }
+    })
+}
     const EstimatedETDDate = (value) => {
         if (value) {
             console.log(value)
@@ -51,31 +79,69 @@ const AllOrdersGridView = () => {
         }
     }
 
-    const getFilterdData = () => {
-        let poOrderStatus = form.getFieldValue('poOrderStatus');
-        let selectedDate = selectedEstimatedFromDate;
-                let filteredData = gridData;
-        if (poOrderStatus) {
-            filteredData = filteredData.filter(record => record.po_order_status === poOrderStatus);
-            if (filteredData.length === 0) {
-                message.error("No Data Found")
-            }
-            setFilteredData(filteredData);
-        }
-        if (selectedDate) {
-            selectedDate = moment(selectedDate).format('YYYY/MM/DD');
-            setFilteredData(filteredData);
-            filteredData = filteredData.filter(record => {
-                const dateInData = moment(record.planned_exf).format('YYYY/MM/DD');
-                return dateInData === selectedDate;
-            });
-    
-          }
-          setFilteredData(filteredData);
-          if (filteredData.length === 0) {
-            message.error("No Data Found");
-        }
+
+    const filter=()=>{
+        const req = new orders()
+        if(form.getFieldValue('po_order_status') ! == undefined){
+        req.PoOrderStatus=form.getFieldValue('po_order_status')
     }
+    if(form.getFieldValue('order_plan_number') ! == undefined){
+        req.OrderPlanNumber=form.getFieldValue('order_plan_number')
+    }
+service.getOrdersStatus(req).then((res)=>{
+    if(res.data){
+        setDatas(res.data)
+    }
+})
+    }
+
+    // const getFilterdData = () => {
+    //     let poOrderStatus = form.getFieldValue('poOrderStatus');
+    //     let selectedDate = selectedEstimatedFromDate;
+    //     let orderNo = form.getFieldValue('orderNo')
+    //     const [startDate, endDate] = dateRange;
+
+    //      let filteredData = gridData;
+    //     if (poOrderStatus) {
+    //         filteredData = filteredData.filter(record => record.po_order_status === poOrderStatus);
+    //         if (filteredData.length === 0) {
+    //             message.error("No Data Found")
+    //         }
+    //         setFilteredData(filteredData);
+    //     }
+    //     if(orderNo){
+    //         filteredData=filteredData.filter(record=>record.order_plan_number === orderNo);
+    //         if(filteredData.length === 0){
+    //             message.error("No Data Found")
+    //         }
+    //         setFilteredData(filteredData)
+    //     }
+    //     // if (selectedDate) {
+    //     //     selectedDate = moment(selectedDate).format('YYYY/MM/DD');
+    //     //     setFilteredData(filteredData);
+    //     //     filteredData = filteredData.filter(record => {
+    //     //         const dateInData = moment(record.planned_exf).format('YYYY/MM/DD');
+    //     //         return dateInData === selectedDate;
+    //     //     });
+    
+    //     //   }
+    //     // 
+    //     if (startDate && endDate) {
+    //         const startDateFormatted = moment(startDate).format('YYYY/MM/DD');
+    //         const endDateFormatted = moment(endDate).format('YYYY/MM/DD');
+      
+    //         filteredData = filteredData.filter(record => {
+    //           const dateInData = moment(record.planned_exf).format('YYYY/MM/DD');
+    //           return dateInData >= startDateFormatted && dateInData <= endDateFormatted;
+    //         });
+    //       }
+    //       setFilteredData(filteredData);
+
+    // if (filteredData.length === 0) {
+    //   message.error("No Data Found");
+    // }
+    // };
+
     const handleReset = (clearFilters: () => void) => {
         clearFilters();
         setSearchText("");
@@ -194,13 +260,32 @@ const AllOrdersGridView = () => {
         //     // width: '9%',
         // },
         {
+            title:'Order Plan Number',
+            dataIndex:'order_plan_number',
+            // width: '9%',
+            width: 150,
+
+            render: (text) => (text ? text : '-'),
+            ...getColumnSearchProps("order_plan_number"),
+            sorter: (a, b) => {
+                const aKey = a.order_plan_number || "";
+                const bKey = b.order_plan_number || "";
+                return aKey.localeCompare(bKey);
+              },
+         },
+        {
             title: 'Biz',
             dataIndex: 'biz',
+         ...getColumnSearchProps("biz"),
+
             render: (text) => (text ? text : '-'),
             // width: '9%',
             width: 150,
-            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
-            sortDirections: ["descend", "ascend"],
+            sorter: (a, b) => {
+                const aKey = a.biz || "";
+                const bKey = b.biz || "";
+                return aKey.localeCompare(bKey);
+              },
         },
         {
             title: 'Department',
@@ -210,8 +295,11 @@ const AllOrdersGridView = () => {
             width: 200,
 
       ...getColumnSearchProps("department"),
-      sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
-      sortDirections: ["descend", "ascend"],
+      sorter: (a, b) => {
+        const aKey = a.department || "";
+        const bKey = b.department || "";
+        return aKey.localeCompare(bKey);
+      },
         },
 
         {
@@ -221,8 +309,11 @@ const AllOrdersGridView = () => {
         width: 200,
 
         ...getColumnSearchProps("planning_sum_code"),
-        sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
-        sortDirections: ["descend", "ascend"],
+        sorter: (a, b) => {
+            const aKey = a.planning_sum_code || "";
+            const bKey = b.planning_sum_code || "";
+            return aKey.localeCompare(bKey);
+          },
         },
         
         {
@@ -233,8 +324,11 @@ const AllOrdersGridView = () => {
             width: 200,
 
             ...getColumnSearchProps("planning_sum"),
-            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
-            sortDirections: ["descend", "ascend"],
+            sorter: (a, b) => {
+            const aKey = a.planning_sum || "";
+            const bKey = b.planning_sum || "";
+            return aKey.localeCompare(bKey);
+          },
         },
         {
             title: 'Item ',
@@ -244,8 +338,11 @@ const AllOrdersGridView = () => {
             width: 250,
 
             ...getColumnSearchProps("item"),
-            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
-            sortDirections: ["descend", "ascend"],
+            sorter: (a, b) => {
+                const aKey = a.item || "";
+                const bKey = b.item || "";
+                return aKey.localeCompare(bKey);
+              },
         },
         // {
         //     title: 'Vendor ',
@@ -261,8 +358,11 @@ const AllOrdersGridView = () => {
             width: 250,
 
             ...getColumnSearchProps("fr_fabric"),
-            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
-            sortDirections: ["descend", "ascend"],
+            sorter: (a, b) => {
+                const aKey = a.fr_fabric || "";
+                const bKey = b.fr_fabric || "";
+                return aKey.localeCompare(bKey);
+              },
         },
 
         // {
@@ -279,8 +379,11 @@ const AllOrdersGridView = () => {
             // width: '9%',
             width: 100,
 
-            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
-      sortDirections: ["descend", "ascend"],
+            sorter: (a, b) => {
+                const aKey = a.coeff || "";
+                const bKey = b.coeff || "";
+                return aKey.localeCompare(bKey);
+              },
         },
        
         {
@@ -294,17 +397,7 @@ const AllOrdersGridView = () => {
             }
         },
 
-        {
-            title:'Order Plan Number',
-            dataIndex:'order_plan_number',
-            // width: '9%',
-            width: 150,
-
-            render: (text) => (text ? text : '-'),
-            ...getColumnSearchProps("order_plan_number"),
-            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
-            sortDirections: ["descend", "ascend"],
-         },
+       
         {
             title: 'GWH',
             dataIndex: 'gwh',
@@ -323,9 +416,11 @@ const AllOrdersGridView = () => {
             width: 100,
 
             render: (text) => (text ? text : '-'),
-            sorter: (a, b) => a.qhKey.localeCompare(b.qhKey),
-            sortDirections: ["descend", "ascend"],
-           
+            sorter: (a, b) => {
+                const aKey = a.wh || "";
+                const bKey = b.wh || "";
+                return aKey.localeCompare(bKey);
+              },
         },
         {
             title: 'Transport Method',
@@ -346,18 +441,26 @@ const AllOrdersGridView = () => {
 
             width: 250,
 
-            sorter: (a, b) => a.raw_material_supplier.localeCompare(b.raw_material_supplier),
-            sortDirections: ["descend", "ascend"],
+            sorter: (a, b) => {
+                const aKey = a.raw_material_supplier || "";
+                const bKey = b.raw_material_supplier || "";
+                return aKey.localeCompare(bKey);
+              },
         },
         {
             title: 'Yarn Order Status',
             dataIndex: 'yarn_order_status',
             // width: '9%',
-            render: (text) => (text ? text : '-'),
-            width: 250,
+            render: (text) => {
+                return text !== undefined && text !== "" ? text : "-";
+              },            width: 250,
             ...getColumnSearchProps("yarn_order_status"),
-            sorter: (a, b) => a.yarn_order_status.localeCompare(b.yarn_order_status),
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => {
+            //     const aKey = a.yarn_order_status || "";
+            //     const bKey = b.yarn_order_status || "";
+            //     return aKey.localeCompare(bKey);
+            //   },
+           
            
         },
         {
@@ -376,8 +479,11 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             width: 250,
             ...getColumnSearchProps("color_order_status"),
-            sorter: (a, b) => a.color_order_status.localeCompare(b.color_order_status),
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => {
+            //     const aKey = a.color_order_status || "";
+            //     const bKey = b.color_order_status || "";
+            //     return aKey.localeCompare(bKey);
+            //   },
         },
         {
             title: 'Trim Order Status',
@@ -386,8 +492,11 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             width: 250,
             ...getColumnSearchProps("trim_order_status"),
-            sorter: (a, b) => a.trim_order_status.localeCompare(b.trim_order_status),
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => {
+            //     const aKey = a.trim_order_status || "";
+            //     const bKey = b.trim_order_status || "";
+            //     return aKey.localeCompare(bKey);
+            //   },
         },
         {
             title: 'PO Order Status',
@@ -396,18 +505,24 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             width: 150,
             ...getColumnSearchProps("po_order_status"),
-            sorter: (a, b) => a.po_order_status.localeCompare(b.po_order_status),
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => {
+            //     const aKey = a.color_order_status || "";
+            //     const bKey = b.color_order_status || "";
+            //     return aKey.localeCompare(bKey);
+            //   },
         },
         {
             title: 'Prod Plan Type',
-            dataIndex: ' prod_plan_type',
+            dataIndex: 'prod_plan_type',
             // width: '9%',
             render: (text) => (text ? text : '-'),
             ...getColumnSearchProps("prod_plan_type"),
             width: 150,
-            sorter: (a, b) => a.prod_plan_type.localeCompare(b.prod_plan_type),
-            sortDirections: ["descend", "ascend"],
+            sorter: (a, b) => {
+                const aKey = a.prod_plan_type || "";
+                const bKey = b.prod_plan_type || "";
+                return aKey.localeCompare(bKey);
+              },
         },
         {
             title: 'Planned EXF',
@@ -415,15 +530,18 @@ const AllOrdersGridView = () => {
             // width: '9%',
             render: (text) => (text ? text : '-'),
             width: 150,
-            sorter: (a, b) => a.planned_exf.localeCompare(b.planned_exf),
-            sortDirections: ["descend", "ascend"],
+            sorter: (a, b) => {
+                const aKey = a.planned_exf || "";
+                const bKey = b.planned_exf || "";
+                return aKey.localeCompare(bKey);
+              },
            
         },
         
       
     ];
     const filteredGridData = gridData.filter(e => e.po_order_status !== null);
-
+    const data= gridData.filter(e => e.order_plan_number !== null)
     const handleExport = (e: any) => {
         e.preventDefault();
 
@@ -437,6 +555,9 @@ const AllOrdersGridView = () => {
         exportingColumns = [
             // { title: 'Production Plan Id', dataIndex: 'production_plan_id' },
             // { title: ' Planning Ssn Cd', dataIndex: 'planning_ssn_cd' },
+           
+            { title: 'S.No', dataIndex: 'sno' },
+            { title: 'Order Plan Number', dataIndex: 'order_plan_number' },
             { title: 'Biz', dataIndex: 'biz' },
             { title: 'Department', dataIndex: 'department' },
             { title: 'Planning Sum Code', dataIndex: 'planning_sum_code' },
@@ -447,7 +568,6 @@ const AllOrdersGridView = () => {
             // { title: 'Branch Factory', dataIndex: 'branchFactory' },
             { title: 'Coeff', dataIndex: 'coeff' },
             { title: 'Publish Date', dataIndex: 'publish_date' },
-            { title: 'Order Plan Number', dataIndex: 'order_plan_number' },
             { title: 'Planning Sum', dataIndex: 'planning_sum' },
             { title: 'GWH', dataIndex: 'gwh' },
             { title: 'WH', dataIndex: 'wh' },
@@ -459,7 +579,6 @@ const AllOrdersGridView = () => {
             { title: 'Trim Order Status', dataIndex: 'trim_order_status' },
             { title: 'PO Order Status', dataIndex: 'po_order_status' },
             { title: 'Prod Plan Type', dataIndex: 'prod_plan_type' },
-
             { title: 'Planned EXF', dataIndex: 'planned_exf' },
             // { title: 'Currency', dataIndex: 'currency' },
             // { title: 'Cost', dataIndex: 'cost' },
@@ -494,25 +613,48 @@ const AllOrdersGridView = () => {
                             </Form.Item>
                         </Col> */}
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
-                            <Form.Item label="PO Order Status" name='poOrderStatus'>
-                                <Select 
+                            <Form.Item label="PO Order Status" name="po_order_status">
+                                <Select
                                  showSearch
                                  placeholder="Select Po Order Status"
                                  optionFilterProp="children"
+                                 allowClear>          
+                         {datas.map((res:any)=>{
+                          return(
+              <Option key={res.po_order_status} value={res.po_order_status}>
+                     {res.po_order_status}
+                   </Option>
+                          )
+                         })}
+                                </Select>
+
+                            </Form.Item>
+                       </Col>
+                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
+                            <Form.Item label="Plan Order Number" name='order_plan_number'>
+                                <Select 
+                                 showSearch
+                                 placeholder="Select Plan Order Number"
+                                 optionFilterProp="children"
                                  allowClear>
-                                  {filteredGridData.map(e => (
-                   <Option key={e.po_order_status} value={e.po_order_status}>{e.po_order_status}</Option>
-                            ))}
+                                {datas.map((res:any)=>{
+                                    return(
+                                        <Option key={res.order_plan_number} value={res.order_plan_number}>
+{res.order_plan_number}
+                                        </Option>
+                                    )
+                                })}
                                 </Select>
                             </Form.Item>
                        </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
                         <Form.Item name='planned_exf' label='Planned EXF'>
-                        <DatePicker
+                        <DatePicker.RangePicker
                  format="YYYY/MM/DD"
-               onChange={(date, dateString) => {
-              setSelectedEstimatedFromDate(dateString);
+               onChange={(dates) => {
+                setDateRange(dates);
                 }}
+                
 />
                         </Form.Item>
 </Col>
@@ -538,7 +680,7 @@ const AllOrdersGridView = () => {
                                 icon={<SearchOutlined />}
                                 style={{ marginRight: 50, width: 80 }}
                                 htmlType="button"
-                                onClick={getFilterdData}>Search</Button>
+                                onClick={filter}>Search</Button>
                             <Button
                                 type="primary"
                                 icon={<UndoOutlined />}

@@ -221,4 +221,17 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         .orderBy(`item`)
         return await query.getRawMany()
     }
-}
+
+    async getOrdersStatus():Promise<any[]>{
+        const query = await this. createQueryBuilder('orders')
+        .select(`po_order_status`)
+        .groupBy('po_order_status')
+        return await query.getRawMany();
+    }
+    async getOrderPlanNO():Promise<any[]>{
+        const query = await this. createQueryBuilder('orders')
+        .select(`order_plan_number`)
+        .groupBy('order_plan_number')
+        return await query.getRawMany();
+    }
+} 
