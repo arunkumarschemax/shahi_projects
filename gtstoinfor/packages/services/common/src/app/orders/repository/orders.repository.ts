@@ -45,6 +45,12 @@ export class OrdersRepository extends Repository<OrdersEntity> {
             if(req.itemName){
                 query.andWhere(`o.item = '${req.itemName}'`)
             }
+            if(req.warehouseFromDate){
+                query.andWhere(`o.wh BETWEEN ${req.warehouseFromDate} AND ${req.warehouseToDate}`)
+            }
+            if(req.exFactoryFromDate){
+                query.andWhere(`o.planned_exf BETWEEN '${req.exFactoryFromDate}' AND '${req.exFactoryToDate}'`)
+            }
             query.orderBy(`o.order_plan_number`)
         return await query.getRawMany();
     }

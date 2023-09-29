@@ -4,6 +4,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FileUploadEntity } from "../entities/upload-file.entity";
 import { FileIdReq } from "../models/file-id.req";
 import { FileTypeDto } from "@project-management-system/shared-models";
+import { OrdersChildEntity } from "../entities/orders-child.entity";
+import { TrimOrdersChildEntity } from "../entities/trim-orders-child.entity";
 
 @Injectable()
 export class FileUploadRepository extends Repository<FileUploadEntity> {
@@ -15,15 +17,16 @@ export class FileUploadRepository extends Repository<FileUploadEntity> {
     async getFilesData(req?:FileTypeDto): Promise<any[]> {
        
         const query = this.createQueryBuilder('fup')
-            .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath, fup.created_at as uploadedDate, fup.created_user as createdUser, fup.status as status,fup.file_type as fileType`)
+            .select(`fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath, fup.created_at as uploadedDate, fup.created_user as createdUser, fup.status as status,fup.file_type as fileType,COUNT(oc.order_plan_number) AS projectionRecords, COUNT(tc.order_no) as trimRecords`)
+            .leftJoin(OrdersChildEntity,`oc`,`oc.file_id = fup.id`)
+            .leftJoin(TrimOrdersChildEntity,'tc',`tc.file_id = fup.id`)
             .where(`fup.is_active = 1`)
-
             if( req){
 
                 query.andWhere(`fup.file_type = '${req.fileType}'`)
             }
+            query.groupBy(`fup.id`)
             query.orderBy(`fup.created_at`, 'DESC')
-            console.log(req,"reqest")
 
         return await query.getRawMany();
     }

@@ -244,7 +244,7 @@ export default function BasicLayout() {
                             position: 'fixed',
                             left: 0,
                             background: '#fff',
-                            marginTop: '83px' ,
+                            marginTop: '56px' ,
                             borderRadius:'5px'
                         }}
                     >           
@@ -309,7 +309,7 @@ export default function BasicLayout() {
                     <Content
                         className="site-layout-background"
                         style={{
-                            marginTop: '70px',
+                            marginTop: '40px',
                             padding: 14,
                             height: '100%',
                             marginLeft: 198
