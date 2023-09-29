@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest, CompareOrdersFilterReq, orders } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -30,9 +30,9 @@ export class OrdersController {
     }
 
     @Post('/getOrdersData')
-    async getOrdersData(): Promise<CommonResponseModel> {
+    async getOrdersData(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getOrdersData();
+            return this.ordersService.getOrdersData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -40,9 +40,9 @@ export class OrdersController {
     }
 
     @Post('/getQtyChangeData')
-    async getQtyChangeData(): Promise<CommonResponseModel> {
+    async getQtyChangeData(@Body() req :any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getQtyChangeData();
+            return this.ordersService.getQtyChangeData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -50,9 +50,9 @@ export class OrdersController {
     }
 
     @Post('/getQtyDifChangeData')
-    async getQtyDifChangeData(): Promise<CommonResponseModel> {
+    async getQtyDifChangeData(@Body() req :any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getQtyDifChangeData();
+            return this.ordersService.getQtyDifChangeData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -406,11 +406,38 @@ export class OrdersController {
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
-    }  @Post('/getWareHouseMonthExcelData')
+    }  
+    
+    @Post('/getWareHouseMonthExcelData')
     @ApiBody({type:YearReq})
     async getWareHouseMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getWareHouseMonthExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getOrdersStatus')
+    async getOrdersStatus(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getOrdersStatus();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getOrderPlanNo')
+    async getOrderPlanNo(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getOrderPlanNo();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getOrderNumberDropDownInCompare')
+    async getOrderNumberDropDownInCompare(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getOrderNumberDropDownInCompare();
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

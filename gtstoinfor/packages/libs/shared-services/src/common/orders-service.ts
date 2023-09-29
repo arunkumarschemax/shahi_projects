@@ -1,4 +1,4 @@
-import { CommonResponseModel, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, YearReq } from "@project-management-system/shared-models"
+import { CommonResponseModel, CompareOrdersFilterReq, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, YearReq, orders } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
@@ -13,16 +13,16 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(url, data);
     }
 
-    async getOrdersData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getOrdersData")
+    async getOrdersData(req:orders): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getOrdersData",req)
     }
 
-    async getQtyChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getQtyChangeData")
+    async getQtyChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getQtyChangeData",req)
     }
 
-    async getQtyDifChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getQtyDifChangeData")
+    async getQtyDifChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getQtyDifChangeData",req)
     }
 
     async getContractDateChangeData(): Promise<CommonResponseModel> {
@@ -120,7 +120,6 @@ export class OrdersService extends CommonAxiosService {
     }
 
     async seasonWiseReport(req?:SeasonWiseRequest):Promise<CommonResponseModel>{
-        console.log(req,'hhhhhhhhhhhhh')
         return this.axiosPostCall(this.ordersController + "/seasonWiseReport",req)
     }
 
@@ -169,5 +168,17 @@ export class OrdersService extends CommonAxiosService {
     }
     async getTrimOrdersNo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getTrimOrdersNo")
+    }
+    async getOrdersStatus(req?:orders):Promise<CommonResponseModel>{
+        console.log(req,'okkkkkkk')
+        return this.axiosPostCall(this.ordersController + "/getOrdersStatus",req)
+    }
+    async getOrderPlanNo(req?:orders):Promise<CommonResponseModel>{
+        console.log(req,'okkkkkkk')
+        return this.axiosPostCall(this.ordersController + "/getOrderPlanNo",req)
+    }
+
+    async getOrderNumberDropDownInCompare(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getOrderNumberDropDownInCompare")
     }
 }

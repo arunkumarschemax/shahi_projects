@@ -5,7 +5,7 @@ import { OrdersEntity } from "../entities/orders.entity";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
-import { YearReq } from "@project-management-system/shared-models";
+import { CompareOrdersFilterReq, YearReq, orders } from "@project-management-system/shared-models";
 
 @Injectable()
 export class OrdersRepository extends Repository<OrdersEntity> {
@@ -14,18 +14,44 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         super(orderRepository.target, orderRepository.manager, orderRepository.queryRunner);
     }
 
-    async getOrdersData(): Promise<any[]> {
+    async getOrdersData(req: orders): Promise<any[]> {
         const query = this.createQueryBuilder('o')
             .select(`o.production_plan_id, o.planning_ssn_cd, o.department, o.planning_sum_code, o.planning_sum, o.item,o.vendor, o.sewing_factory, o.branchFactory, o.coeff, o.publish_date,o.order_plan_number,o.gwh,o.wh,o.raw_material_supplier,o.yarn_order_status,o.fbrc_order_status,o.color_order_status,o.trim_order_status,o.po_order_status,o.planned_exf,o.biz,o.fr_fabric,o.trnsp_mthd,prod_plan_type`)
-            .orderBy(` o.planning_ssn_cd`, 'ASC')
+            if (req.plannedFromDate !== undefined) {
+                query.andWhere(`Date(o.planned_exf) BETWEEN '${req.plannedFromDate}' AND '${req.plannedToDate}'`)
+            }
+            if(req.OrderPlanNumber){
+                query.andWhere(`o.order_plan_number = '${req.OrderPlanNumber}'`)
+            }
+            if(req?.PoOrderStatus){
+                query.andWhere(`o.po_order_status = '${req.PoOrderStatus}'`)
+            }
+            query.orderBy(` o.planning_ssn_cd`, 'ASC')
         return await query.getRawMany();
     }
 
-    async getQtyChangeData(): Promise<any[]> {
+    async getQtyChangeData(req:CompareOrdersFilterReq): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-        .select(`o.production_plan_id,o.item_cd,o.item,o.prod_plan_type,o.fr_fabric,o.created_at,od.old_val,od.new_val,(od.new_val - od.old_val) AS Diff,od.version`)
+        .select(`o.production_plan_id,o.item_cd,o.item,o.prod_plan_type,o.fr_fabric,o.created_at,REPLACE(od.old_val,',','') as old_val,REPLACE(od.new_val,',','') as new_val,(REPLACE(od.new_val,',','') - REPLACE(od.old_val,',','')) AS Diff,od.version,o.order_plan_number,o.wh,o.planned_exf,o.year`)
             .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
-            .where(` column_name='order_plan_qty' ORDER BY o.prod_plan_type ASC`)
+            .where(`column_name = 'order_plan_qty'`)
+        
+            if(req.orderNumber){
+                query.andWhere(`o.order_plan_number = '${req.orderNumber}'`)
+            }
+            if(req.itemCode){
+                query.andWhere(`o.item_cd = '${req.itemCode}'`)
+            }
+            if(req.itemName){
+                query.andWhere(`o.item = '${req.itemName}'`)
+            }
+            if(req.warehouseFromDate){
+                query.andWhere(`o.wh BETWEEN ${req.warehouseFromDate} AND ${req.warehouseToDate}`)
+            }
+            if(req.exFactoryFromDate){
+                query.andWhere(`o.planned_exf BETWEEN '${req.exFactoryFromDate}' AND '${req.exFactoryToDate}'`)
+            }
+            query.orderBy(`o.order_plan_number`)
         return await query.getRawMany();
     }
 
@@ -204,4 +230,18 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         .orderBy(`item`)
         return await query.getRawMany()
     }
-}
+
+    async getOrdersStatus():Promise<any[]>{
+        const query = await this. createQueryBuilder('orders')
+        .select(`po_order_status`)
+        .where(`po_order_status is not null`)
+        .groupBy('po_order_status')
+        return await query.getRawMany();
+    }
+    async getOrderPlanNO():Promise<any[]>{
+        const query = await this. createQueryBuilder('orders')
+        .select(`order_plan_number`)
+        .groupBy('order_plan_number')
+        return await query.getRawMany();
+    }
+} 

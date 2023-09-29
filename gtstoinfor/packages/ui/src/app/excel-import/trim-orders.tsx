@@ -17,6 +17,8 @@ const TrimOrder= () => {
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
+    const [selectedEstimatedStartDate, setSelectedEstimatedDate] = useState(undefined);
+
     const service = new OrdersService();
     const [form] = Form.useForm();
     const { Option } = Select;
@@ -79,8 +81,8 @@ const {Text}=Typography
     }
     const getFilterdData = () => {
         let orderNo = form.getFieldValue('orderNo');
-        // let startDate = selectedEstimatedFromDate;
-        // let endDate = selectedEstimatedToDate;
+        let startDate = selectedEstimatedFromDate;
+        let endDate = selectedEstimatedStartDate;
         let selectedDate = selectedEstimatedFromDate;
 
         let filteredData = gridData;
@@ -217,11 +219,14 @@ const {Text}=Typography
         {
             title: 'Order No',
             // fixed:'left',
-dataIndex: 'order_no',
-           
-            sorter: (a, b) => a.item_code.localeCompare(b.item_code),
-            sortDirections: ["descend", "ascend"],
+          dataIndex: 'order_no',         
+          sorter: (a, b) => {
+            const aKey = a.order_no || "";
+            const bKey = b.order_no || "";
+            return aKey.localeCompare(bKey);
+          },
         },
+          
         {
             title: 'Item Code',
             dataIndex: 'item_code',
@@ -571,8 +576,13 @@ dataIndex: 'order_no',
                     setGrandTotal(total);
                     return (
                         <Table.Summary.Row>
-                            <Table.Summary.Cell colSpan={10} index={8} >Grand Total</Table.Summary.Cell>
-                            <Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>
+<Table.Summary.Cell colSpan={10} index={8} >
+<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+<span>{grandTotal}</span>
+<span style={{ color: 'Red' }}>Grand Total:</span>
+</div>
+</Table.Summary.Cell>
+<Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>                            <Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>
                         </Table.Summary.Row>
                     );
                 }}

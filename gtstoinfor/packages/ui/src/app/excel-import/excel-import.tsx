@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { UndoOutlined } from '@ant-design/icons';
 import { FileStatusReq, FileTypeDto, FileTypesEnum } from '@project-management-system/shared-models';
-
+import * as XLSX from 'xlsx';
 
 export default function ExcelImport() {
   const [loading, setLoading] = useState(false);
@@ -101,25 +101,40 @@ export default function ExcelImport() {
   }
   if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
       const file = e.target.files[0];
-    if (file && file.type === 'text/csv') {
-      setSelectedFile(e.target.files[0]);
+      console.log(file.type)
+    if (file && file.type === 'text/csv' || 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      console.log(file)
+      // let csvData
+      // var reader = new FileReader()
+      // reader.readAsArrayBuffer(file)
+      // reader.onload = async data => {
+      //   let csvData1: any = reader.result;
+      //   csvData = importExcel(csvData1);
+      //   // let headersRow = getHeaderArray(csvData[0][3]);
+      //   console.log(csvData)
+      //   const obj1 = Object.assign({}, csvData);
+      //   console.log(obj1)
+      // }
+        setSelectedFile(e.target.files[0]);
       Papa.parse(e.target.files[0], {
         header: true,
         complete: function (result) {
           {
             const columnArray = [];
             const valueArray = [];
-
+            console.log(result)
             result.data.map((d) => {
               columnArray.push(Object.keys(d))
               valueArray.push(Object.values(d))
             });
+            console.log(result.data)
             setData(result.data)
             setColumns(columnArray[0])
             setValues(valueArray)
           }
         }
       });
+     
     } else {
       // Display an error message or take appropriate action for invalid file type
       alert('Please select a valid .csv file.');
@@ -128,6 +143,33 @@ export default function ExcelImport() {
   };
 
   };
+
+  const getHeaderArray = (csvRecordsArr: any) => {
+    let headerArray: string[] = [];
+    for (let eachRecord of csvRecordsArr) {
+        if (typeof eachRecord === "string") {
+            headerArray.push(eachRecord.trim().toLowerCase());
+        } else if (typeof eachRecord === "undefined") {
+
+        } else {
+            headerArray.push(eachRecord)
+        }
+
+    }
+    return headerArray;
+}
+
+  const importExcel = (file: any[]) => {
+    var data = new Uint8Array(file);
+    var wb = XLSX.read(data, { type: 'array', cellDates: true });
+    let sheet: any[] = [];
+    for (const Sheet in wb.Sheets) {
+        if (wb.Sheets.hasOwnProperty(Sheet)) {
+            sheet.push(XLSX.utils.sheet_to_json(wb.Sheets[Sheet], { raw: true, header: 1 }));
+        }
+    }
+    return sheet;
+}
 
   // const handleFileChange = (event) => {
   //   const file = event.target.files[0];
@@ -192,8 +234,8 @@ export default function ExcelImport() {
                       req.status = 'Success';
                       req.userName = loginUser ? loginUser : null;
                       ordersService.updateFileStatus(req)
-                      message.success(res.internalMessage)
                       navigate("/excel-import/grid-view");
+                      message.success(res.internalMessage)
                     } else {
                       const req = new FileStatusReq()
                       req.fileId = fileRes?.data?.id;
@@ -202,12 +244,14 @@ export default function ExcelImport() {
                       ordersService.updateFileStatus(req)
                       // message.error('File upload failed')
                       message.error(res.internalMessage)
+                      AlertMessages.getErrorMessage(res.internalMessage)
                     }
                   }).finally(() => {
                     setLoading(false);
                   })
                 } else {
                   message.error(fileRes.internalMessage)
+                  AlertMessages.getErrorMessage(fileRes.internalMessage)
                 }
               });
             } else {
@@ -224,8 +268,8 @@ export default function ExcelImport() {
                       req.status = 'Success';
                       req.userName = loginUser ? loginUser : null;
                       ordersService.updateFileStatus(req)
-                      message.success(res.internalMessage)
                       navigate("/excel-import/trim-order");
+                      message.success(res.internalMessage)
                     } else {
                       const req = new FileStatusReq()
                       req.fileId = fileRes?.data?.id;
@@ -310,6 +354,9 @@ export default function ExcelImport() {
             <Descriptions.Item label={<b>Uploaded User</b>}>
               {filesData[0]?.createdUser}
             </Descriptions.Item>
+            <Descriptions.Item label={<b>No of Records</b>}>
+              {form.getFieldValue('fileType') === FileTypesEnum.PROJECTION_ORDERS ?  filesData[0]?.projectionRecords : filesData[0]?.trimRecords}
+            </Descriptions.Item>
           </Descriptions>
         </span>
         <Divider></Divider>
@@ -325,14 +372,14 @@ export default function ExcelImport() {
                         allowClear
                         onChange={onFileTypeChange}
                         >
-                        <Option key='trimorder' value="Trim Order">Trim Order</Option>
                         <Option key='projectionorder' value="Projection Order">Projection Order</Option>
+                        <Option key='trimorder' value="Trim Order">Trim Order</Option>
                     </Select>
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item label = "">
-              <input type="file" accept=".csv" onChange={handleFileChange} />
+              <input type="file" accept=".csv, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleFileChange} />
             </Form.Item>
             </Col>
           </Row>

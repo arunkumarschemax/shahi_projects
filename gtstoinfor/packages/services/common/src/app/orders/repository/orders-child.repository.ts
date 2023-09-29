@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { OrdersChildEntity } from "../entities/orders-child.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
-import { YearReq } from "@project-management-system/shared-models";
+import { CompareOrdersFilterReq, YearReq } from "@project-management-system/shared-models";
 
 @Injectable()
 export class OrdersChildRepository extends Repository<OrdersChildEntity> {
@@ -52,18 +52,44 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return await query.getRawMany();
     }
 
-    async getItemQtyChangeData(fileId1: number, fileId2: number): Promise<any[]> {
+    async getItemQtyChangeData(fileId1: number, fileId2: number,req:CompareOrdersFilterReq): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(` item_cd, item , SUM(CASE WHEN file_id = ${fileId1} THEN order_plan_qty ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) AS new_qty_value ,  SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) - SUM(CASE WHEN file_id = ${fileId1} THEN order_plan_qty ELSE 0 END) AS diff `)
-            .groupBy(` item_cd`)
+            .select(` item_cd, item , SUM(CASE WHEN file_id = ${fileId1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS new_qty_value ,  SUM(CASE WHEN file_id = ${fileId2} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) - SUM(CASE WHEN file_id = ${fileId1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS diff,o.order_plan_number,o.wh,o.planned_exf,o.year,o.version`)
+            .where(`o.id > 0`)
+            if(req.orderNumber){
+                query.andWhere(`o.order_plan_number = '${req.orderNumber}'`)
+            }
+            if(req.itemCode){
+                query.andWhere(`o.item_cd = '${req.itemCode}'`)
+            }
+            if(req.itemName){
+                query.andWhere(`o.item = '${req.itemName}'`)
+            }
+            if(req.exFactoryFromDate){
+                query.andWhere(`o.planned_exf BETWEEN '${req.exFactoryFromDate}' AND '${req.exFactoryToDate}'`)
+            }
+            query.groupBy(` item_cd`)
             //  console.log(fileId1,"test of quary 1111111111111")
         return await query.getRawMany();
     }
 
-    async getItemQtyChangeData1(fileId2: number): Promise<any[]> {
+    async getItemQtyChangeData1(fileId2: number,req:CompareOrdersFilterReq): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(` item_cd, item , 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) AS new_qty_value `)
-            .groupBy(` item_cd`)
+            .select(` item_cd, item , 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS new_qty_value,o.order_plan_number,o.wh,o.planned_exf,o.year,o.version`)
+            .where(`o.id > 0`)
+            if(req.orderNumber){
+                query.andWhere(`o.order_plan_number = '${req.orderNumber}'`)
+            }
+            if(req.itemCode){
+                query.andWhere(`o.item_cd = '${req.itemCode}'`)
+            }
+            if(req.itemName){
+                query.andWhere(`o.item = '${req.itemName}'`)
+            }
+            if(req.exFactoryFromDate){
+                query.andWhere(`o.planned_exf BETWEEN '${req.exFactoryFromDate}' AND '${req.exFactoryToDate}'`)
+            }
+            query.groupBy(` item_cd`)
             //  console.log(query,"test of quary222222222222")
         return await query.getRawMany();
     }
@@ -223,7 +249,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     }
     async getItemQtyChangeDataItemCode(fileId1: number, fileId2: number): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(` id,item_cd, item , SUM(CASE WHEN file_id = ${fileId1} THEN order_plan_qty ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) AS new_qty_value ,  SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) - SUM(CASE WHEN file_id = ${fileId1} THEN order_plan_qty ELSE 0 END) AS diff `)
+            .select(` id,item_cd, item , SUM(CASE WHEN file_id = ${fileId1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS new_qty_value ,  SUM(CASE WHEN file_id = ${fileId2} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) - SUM(CASE WHEN file_id = ${fileId1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS diff `)
             .groupBy(` item_cd`)
             //  console.log(fileId1,"test of quary 1111111111111")
         return await query.getRawMany();
@@ -231,7 +257,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
 
     async getItemQtyChangeData1ItemCode(fileId2: number): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(` id,item_cd, item , 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN order_plan_qty ELSE 0 END) AS new_qty_value `)
+            .select(` id,item_cd, item , 0 AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS new_qty_value `)
             .groupBy(` item_cd`)
             //  console.log(query,"test of quary222222222222")
         return await query.getRawMany();

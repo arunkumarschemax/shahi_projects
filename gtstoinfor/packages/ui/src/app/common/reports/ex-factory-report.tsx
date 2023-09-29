@@ -80,7 +80,7 @@ export const ExFactoryReport = () => {
   const CustomTitle = () => {
     return (
       <div>
-        <Space size={"large"}>
+        {/* <Space size={"large"}>
           Production Plan Type Name
           <br />
           <span>Jan(Pcs)</span>
@@ -146,7 +146,73 @@ export const ExFactoryReport = () => {
           <br />
           <br />
           <span>Total(Coeff)</span>
-        </Space>
+        </Space> */}
+
+<table>
+  <tr >
+  {/* <th style={{position: 'relative',paddingRight: '1200px'}}>Production Plan Type Name</th> */}
+  <th colSpan={2} style={{ position: 'relative', right: '-100px' , }}>January</th>
+    <th colSpan={2} style={{ position: 'relative', right: '-30px', borderLeft: '1px solid black',borderRight: '1px solid black', }}>Febuary</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '50px' ,borderRight: '1px solid black', }}>March</th><br/>
+    <th colSpan={2} style={{ position: 'relative', right: '130px', borderRight: '1px solid black', }}>April</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '230px', borderRight: '1px solid black', }}>May</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '290px', borderRight: '1px solid black', }}>June</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '350px' ,borderRight: '1px solid black', }}>July</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '390px' ,borderRight: '1px solid black', }}>August</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '480px' ,borderRight: '1px solid black'}}>September</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '590px', borderRight: '1px solid black' }}>October</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '580px',borderRight: '1px solid black', }}>November</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '500px', }}>December</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
+
+  </tr>
+  <tr>
+  <td colSpan={26} style={{ borderBottom: '1px solid black' }}></td>
+</tr>
+  <tr>
+<td style={{paddingLeft:'10px',position:'relative',}}>Production Plan Type Name</td>
+    <td style={{right: '100px',position: 'relative', }}>(Pcs)</td>
+    <td style={{position: 'relative',right: '100px' }} >(Coeff)</td>
+
+    <td  style={{position: 'relative',right: '40px', }} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '30px',}} >(Coeff)</td>
+
+    <td  style={{position: 'relative',right: '20px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '20px'}} >(Coeff)</td>
+
+    <td  style={{position: 'relative',right: '10px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '20px'}} >(Coeff)</td>
+
+    <td  style={{position: 'relative',right: '10px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-10px'}} >(Coeff)</td>
+
+    <td  style={{position: 'relative',right: '-10px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-20px'}} >(Coeff)</td>
+
+    <td  style={{position: 'relative',right: '-10px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-30px'}} >(Coeff)</td>
+
+    <td  style={{position: 'relative',right: '-50px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-50px'}} >(Coeff)</td>
+
+    <td  style={{position: 'relative',right: '-55px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-50px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '-60px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-80px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '-100px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-100px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '-160px'}} >(Pcs)</td>
+    <td  style={{position: 'relative',right: '-200px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '-310px'}} >Total(Pcs)</td>
+    <td  style={{position: 'relative',right: '-410px'}} >Total(Coeff)</td>
+    
+  </tr>
+
+  <tr>
+    
+</tr>
+</table>
       </div>
     );
   };
@@ -154,12 +220,12 @@ export const ExFactoryReport = () => {
     {
       // title: "Production Plan Type Name",
       dataIndex: "phasetype",
-      width: 130,
+      width: 100,
     },
     {
       // title: `In PCs`,
       dataIndex: "janPcs",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -170,7 +236,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "janCoeff",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -182,7 +248,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "febPcs",
-      width: 100,
+      width: 50,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -193,7 +259,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "febCoeff",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -205,7 +271,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "marPcs",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -216,7 +282,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "marCoeff",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -228,7 +294,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "aprPcs",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -239,7 +305,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "aprCoeff",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -257,7 +323,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "mayPcs",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -268,7 +334,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "mayCoeff",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -286,7 +352,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "junPcs",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -297,7 +363,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "junCoeff",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -315,18 +381,18 @@ export const ExFactoryReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "julPcs",
-      width: 100,
+      width: 50,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
           (item: any) => <span>{item.julPcs.toLocaleString()}</span> || "-"
-        );
+        )
       },
     },
     {
       // title: `In Coeff`,
       dataIndex: "julCoeff",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -344,7 +410,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "augPcs",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -355,7 +421,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "augCoeff",
-      width: 100,
+      width: 30,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -373,7 +439,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "sepPcs",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -384,7 +450,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "sepCoeff",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -402,7 +468,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "octPcs",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -413,7 +479,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "octCoeff",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -431,7 +497,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "novPcs",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -442,7 +508,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "novCoeff",
-      width: 100,
+      width: 40,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
@@ -460,7 +526,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In PCs`,
       dataIndex: "decPcs",
-      width: 100,
+      width: 60,
       align: "right",
       render: (text: any, record: any) => {
         return record.pcsData.map(
@@ -471,7 +537,7 @@ export const ExFactoryReport = () => {
     {
       // title: `In Coeff`,
       dataIndex: "decCoeff",
-      width: 100,
+      width: 60,
       align: "right",
       render: (text: any, record: any) => {
         return record.coeffData.map(
