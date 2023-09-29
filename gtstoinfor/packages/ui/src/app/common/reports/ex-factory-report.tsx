@@ -106,10 +106,10 @@ const CustomTitle = () => {
   <th colSpan={2} style={{ position: 'relative', right: '-110px' , }}>January</th>
     <th colSpan={2} style={{ position: 'relative', right: '-30px', borderLeft: '1px solid black',borderRight: '1px solid black', }}>Febuary</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '50px' ,borderRight: '1px solid black', }}>March</th><br/>
-    <th colSpan={2} style={{ position: 'relative', right: '150px', borderRight: '1px solid black', }}>April</th><br/>
+    <th colSpan={2} style={{ position: 'relative', right: '130px', borderRight: '1px solid black', }}>April</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '230px', borderRight: '1px solid black', }}>May</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '320px', borderRight: '1px solid black', }}>June</th><br/>
-    <th colSpan={2}style={{ position: 'relative', right: '390px' ,borderRight: '1px solid black', }}>July</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '280px', borderRight: '1px solid black', }}>June</th><br/>
+    <th colSpan={2}style={{ position: 'relative', right: '240px' ,borderRight: '1px solid black', }}>July</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '430px' ,borderRight: '1px solid black', }}>August</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '580px' ,borderRight: '1px solid black'}}>September</th><br/>
     <th colSpan={2}style={{ position: 'relative', right: '690px', borderRight: '1px solid black' }}>October</th><br/>
@@ -124,7 +124,7 @@ const CustomTitle = () => {
 </tr>
   <tr>
 <td style={{paddingLeft:'10px',position:'relative',}}>Production Plan Type Name</td>
-    <td style={{right: '120px',position: 'relative', }}>(Pcs)</td>
+    <td style={{right: '40px',position: 'relative', }}>(Pcs)</td>
     <td style={{position: 'relative',right: '60px' }} >(Coeff)</td>
     <td  style={{position: 'relative',right: '40px', }} >(Pcs)</td>
     <td  style={{position: 'relative',right: '30px',}} >(Coeff)</td>
@@ -224,7 +224,7 @@ const childColumns1: any = [
         
           // title: `In PCs`,
           dataIndex: "marPcs",
-          width:60,
+          width:40,
           align:"right",
           render: (text: any, record: any) => {
             return record.pcsData.map(

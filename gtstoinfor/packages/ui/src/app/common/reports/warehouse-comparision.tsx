@@ -93,7 +93,7 @@ export const WareHouseComparision = () => {
       <div>
       
 
-<table>
+      <table>
   <tr >
   {/* <th style={{position: 'relative',paddingRight: '1200px'}}>Production Plan Type Name</th> */}
   <th colSpan={2} style={{ position: 'relative', right: '-110px' , }}>January</th>
