@@ -36,6 +36,7 @@ function ScanDetailView() {
       rowData.state.rowData.scanentity[0].HSN,
       rowData.state.rowData.scanentity[0].description
     );
+
     console.log(req, "4545");
     service
       .getServiceCode(req)
@@ -53,6 +54,7 @@ function ScanDetailView() {
   };
 
   console.log(serviceCodeData, "1111122333");
+  
   
 
   const handleBack = () => {
@@ -430,7 +432,7 @@ function ScanDetailView() {
           {rowData.state.rowData.Vendor ? rowData.state.rowData.Vendor : "--"}
         </Descriptions.Item>
         <Descriptions.Item
-          label="GST"
+          label="GST NUMBER"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.GST ? rowData.state.rowData.GST : "--"}
@@ -505,12 +507,10 @@ function ScanDetailView() {
           label="Status"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
+          
           <Tag>
-            {rowData.state.rowData.VarianceStatus
-              ? StatusEnumDisplay.find(
-                  (item) => item.name === rowData.state.rowData.VarianceStatus
-                )?.displayVal
-              : "--"}
+            {rowData.state.rowData.status? rowData.state.rowData.status:"--"}
+            
           </Tag>
         </Descriptions.Item>
       </Descriptions>

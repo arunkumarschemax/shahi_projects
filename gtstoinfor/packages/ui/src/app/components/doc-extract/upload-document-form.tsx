@@ -578,17 +578,17 @@ export function DocumentUploadForm() {
     //     <div style={{ textAlign: "right" }}>
     //       {amount !== undefined && amount !== null ? `${amount}` : "0"}
     //     </div>
-    //   ),
+    //   ),                                       
     // },
-    {
-      title: "Quotation",
-      dataIndex: "quotation",
-      key: "quotation",
-      render: (price) =>
-        <div style={{ textAlign: "right" }}>
-          {price !== undefined && price !== null ? `${price}` : "0"}
-        </div>
-    },
+    // {
+    //   title: "Quotation",
+    //   dataIndex: "quotation",
+    //   key: "quotation",
+    //   render: (price) =>
+    //     <div style={{ textAlign: "right" }}>
+    //       {price !== undefined && price !== null ? `${price}` : "0"}
+    //     </div>
+    // },
     {
       title: "Variance",
       dataIndex: "variance",
@@ -1709,7 +1709,7 @@ export function DocumentUploadForm() {
                       left: "10px",
                     }}
                   >
-                    GST
+                    GST NUMBER
                   </label>
                   <Input
                     title="GST"

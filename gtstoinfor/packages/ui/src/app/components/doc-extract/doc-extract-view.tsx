@@ -245,7 +245,7 @@ export function DocView() {
     //   },
     // },
     {
-      title: "GST",
+      title: "GST NUMBER",
       dataIndex: "GST",
       key: "GST",
       ...getColumnSearchProps("GST"),
@@ -290,62 +290,47 @@ export function DocView() {
         return <> {record.InnvoiceCurrency ? record.InnvoiceCurrency : "-"} </>;
       },
     },
-    // {
-    //   title: "Status",
-    //   dataIndex: "VarianceStatus",
-    //   key: "VarianceStatus",
-    //   sorter: (a, b) => a.VarianceStatus.localeCompare(b.VarianceStatus),
-    //   ...getColumnSearchProps("VarianceStatus"),
-    //   align: "center",
-    //   // render: (text: any, record: { InnvoiceNumber: any; }) => {
-    //   //   return (<> {record.InnvoiceNumber ? record.InnvoiceNumber : '-'} </>)
-    //   // }
-    // },
     {
       title: "Status",
-      dataIndex: "VarianceStatus",
-      key: "VarianceStatus",
-      sorter: (a, b) => a.VarianceStatus.localeCompare(b.VarianceStatus),
+      dataIndex: "status",
+      key: "status",
+      sorter: (a, b) => a.status.localeCompare(b.status),
       align: "center",
-      render: (text: any, record: { VarianceStatus: any }) => {
-        // Define a mapping of status values to tag colors
-        const statusTagColors = {
-          Partial_Variance: "orange",
-          No_Variance: "green",
-          Full_Variance: "red",
-          // Add more status values and corresponding colors as needed
-        };
+      render: (text: any, record: { status: any }) => {
+        // // Define a mapping of status values to tag colors
+        // const statusTagColors = {
+        //   Partial_Variance: "orange",
+        //   No_Variance: "green",
+        //   Full_Variance: "red",
+        //   // Add more status values and corresponding colors as needed
+        // };
     
-        const statusColor = statusTagColors[record.VarianceStatus] || "default";
+        // const statusColor = statusTagColors[record.VarianceStatus] || "default";
     
         return (
-          <Tag color={statusColor}>
-            {record.VarianceStatus
-              ? StatusEnumDisplay.find(
-                  (item) => item.name === record.VarianceStatus
-                )?.displayVal
-              : "-"}
+          <Tag>
+           {record.status ? record.status:"--"}
           </Tag>
         );
       },
-      filters: [
-        {
-          text: 'Partial Variance',
-          value: 'Partial_Variance', // Change value to the actual status value
-        },
-        {
-          text: 'No Variance',
-          value: 'No_Variance', // Change value to the actual status value
-        },
-        {
-          text: 'Full Variance',
-          value: 'Full_Variance', // Change value to the actual status value
-        },
-      ],
-      filterMultiple: false,
-      onFilter: (value, record) => {
-        return record.VarianceStatus === value; // Use record.VarianceStatus
-      },
+      // filters: [
+      //   {
+      //     text: 'Partial Variance',
+      //     value: 'Partial_Variance', // Change value to the actual status value
+      //   },
+      //   {
+      //     text: 'No Variance',
+      //     value: 'No_Variance', // Change value to the actual status value
+      //   },
+      //   {
+      //     text: 'Full Variance',
+      //     value: 'Full_Variance', // Change value to the actual status value
+      //   },
+      // ],
+      // filterMultiple: false,
+      // onFilter: (value, record) => {
+      //   return record.VarianceStatus === value; // Use record.VarianceStatus
+      // },
     },
     {
       title: "Actions",
@@ -379,15 +364,15 @@ export function DocView() {
       }
 
     >
-       <Row>  <Col ><Card title={'Fully Variance : ' + formdata.filter(el => el.VarianceStatus === "Full_Variance").length} style={{textAlign: 'center',marginBottom:10,marginRight:60, width:180,height:35,backgroundColor:'red', borderRadius:3}}  size="small"></Card>
+       <Row>  <Col ><Card title={'Fully Variance : ' + formdata.filter(el => el.status === "Fully Variance").length} style={{textAlign: 'center',marginBottom:10,marginRight:60, width:180,height:35,backgroundColor:'red', borderRadius:3}}  size="small"></Card>
                    </Col>
                    
                    <Col >
-                   <Card title={'Partial Variance : ' + formdata.filter(el => el.VarianceStatus === "Partial_Variance").length} style={{textAlign: 'center',marginBottom:10,marginRight:60, width:180,height:35,backgroundColor:'orange', borderRadius:3}} size="small"></Card>
+                   <Card title={'Partial Variance : ' + formdata.filter(el => el.status === "Partially Variance").length} style={{textAlign: 'center',marginBottom:10,marginRight:60, width:180,height:35,backgroundColor:'orange', borderRadius:3}} size="small"></Card>
                    </Col>
                    
                    <Col >
-                   <Card title={'No Variance : ' + formdata.filter(el => el.VarianceStatus === "No_Variance").length } style={{textAlign: 'center',marginBottom:10,marginRight:60, width:180,height:35,backgroundColor:'lightgreen', borderRadius:3}} size="small"></Card>
+                   <Card title={'No Variance : ' + formdata.filter(el => el.status === "No Variance").length } style={{textAlign: 'center',marginBottom:10,marginRight:60, width:180,height:35,backgroundColor:'lightgreen', borderRadius:3}} size="small"></Card>
                    </Col>
                    </Row>
                    <br></br>
