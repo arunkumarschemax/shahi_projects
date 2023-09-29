@@ -45,6 +45,13 @@ export function PoDetailedview() {
         // sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
         // sortDirections: ["ascend", "descend"],
       },
+      {
+        title: 'Legal Po Currency',
+        dataIndex: 'legalPoCurrencyCode',
+        width:180,
+        // sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
+        // sortDirections: ["ascend", "descend"],
+      },
     {
       title: 'Actual ShippedQty',
       dataIndex: 'actualShippedQty',
