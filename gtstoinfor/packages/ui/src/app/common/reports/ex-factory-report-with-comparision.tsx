@@ -113,7 +113,7 @@ export const ExFactoryReportWithComparision = () => {
     <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
     <td  style={{position: 'relative',right: '-20px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-20px'}} >(latest)</td>
-    <td  style={{position: 'relative',right: '-50px'}} >(previous)</td>
+    <td  style={{position: 'relative',right: '-70px'}} >(previous)</td>
     <td  style={{position: 'relative',right: '-50px'}} >(latest)</td>
     <td  style={{position: 'relative',right: '-200px'}} >Total(previous)</td>
     <td  style={{position: 'relative',right: '-300px'}} >Total(latest)</td>
