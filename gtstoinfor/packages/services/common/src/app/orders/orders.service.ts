@@ -1341,6 +1341,21 @@ pcs.push(
 
 
 }
-  }
+async getOrdersStatus(): Promise<CommonResponseModel> {
+    const details = await this.ordersRepository.getOrdersStatus()
+    if (details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
+async getOrderPlanNo(): Promise<CommonResponseModel> {
+    const details = await this.ordersRepository.getOrderPlanNO()
+    if (details)
+        return new CommonResponseModel(true, 1, 'data retrived', details)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
 
+  }
+  
   

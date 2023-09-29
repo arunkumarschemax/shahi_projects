@@ -415,4 +415,20 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getOrdersStatus')
+    async getOrdersStatus(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getOrdersStatus();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getOrderPlanNo')
+    async getOrderPlanNo(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getOrderPlanNo();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
