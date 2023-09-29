@@ -20,15 +20,17 @@ export function POPDFInfoGrid() {
     const [pageSize, setPageSize] = useState(1);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
+    const [poNumber, setPoNumber] = useState('');
     const [form] = Form.useForm();
     const { Option } = Select;
     const [isModalOpen1, setIsModalOpen1] = useState(false);
 
 
-    useEffect(()=> {
+    useEffect(() => {
         getPdfFileInfo()
         getPoLine()
-    },[])
+    }, [])
+
     const getPdfFileInfo = () => {
         service.getPdfFileInfo().then(res => {
             setPdfData(res.data)
@@ -38,7 +40,7 @@ export function POPDFInfoGrid() {
         form.resetFields()
         getPdfFileInfo()
     }
-    
+
     const getPoLine = () => {
         service.getPpmPoLineForOrderCreation().then(res => {
             setPoLine(res.data)
@@ -56,11 +58,11 @@ export function POPDFInfoGrid() {
 
 
     const showModal1 = (record) => {
-    
+        setPoNumber(record)
         setIsModalOpen1(true);
     };
-    
-    
+
+
     const cancelHandle = () => {
         setIsModalOpen1(false);
 
@@ -123,11 +125,11 @@ export function POPDFInfoGrid() {
     })
     const setMoreData = (record) => {
         console.log(record.file_data)
-        navigate('/nike/po-pdf-table',{ state: { data: record.file_data} })
+        navigate('/nike/po-pdf-table', { state: { data: record.file_data } })
 
     }
 
-   
+
     const columns: any = [
         {
             title: "S.No",
@@ -166,25 +168,25 @@ export function POPDFInfoGrid() {
         {
             title: 'Action',
             dataIndex: 'action',
-            align:'center',
+            align: 'center',
             render: (value, record) => (
-              <>
-                <Button onClick={() => setMoreData(record)}>More Info</Button>
-                  <Button onClick={() => showModal1(record.po_number)} style={{ margin: 5 }}>Changes Comparision</Button>
+                <>
+                    <Button onClick={() => setMoreData(record)}>More Info</Button>
+                    <Button onClick={() => showModal1(record.po_number)} style={{ margin: 5 }}>Changes Comparision</Button>
 
-                
-              </>
-                           
+
+                </>
+
 
             ),
-          }
-          
+        }
+
     ]
-    
+
     return (
         <>
-        <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>
-        {/* <Form
+            <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>
+                {/* <Form
             // onFinish={getOrderAcceptanceData}
             form={form}
             layout='vertical'>
@@ -218,37 +220,37 @@ export function POPDFInfoGrid() {
                 </Col>
             </Row>
         </Form> */}
-        <Table
-            columns={columns}
-            dataSource={pdfData}
-            bordered
-            className="custom-table-wrapper"
-            pagination={{
-                onChange(current, pageSize) {
-                    setPage(current);
-                    setPageSize(pageSize);
-                },
-            }}
-        >
-        </Table>
-        <Modal
-                className='print-docket-modal'
-                key={'modal1' + Date.now()}
-                  width={'70%'}
-                style={{ top: 30, alignContent: 'center' }}
-                visible={isModalOpen1}
-                title={<React.Fragment>
-                </React.Fragment>}
-                onCancel={cancelHandle}
-                footer={[
+                <Table
+                    columns={columns}
+                    dataSource={pdfData}
+                    bordered
+                    className="custom-table-wrapper"
+                    pagination={{
+                        onChange(current, pageSize) {
+                            setPage(current);
+                            setPageSize(pageSize);
+                        },
+                    }}
+                >
+                </Table>
+                <Modal
+                    className='print-docket-modal'
+                    key={'modal1' + Date.now()}
+                    width={'70%'}
+                    style={{ top: 30, alignContent: 'center' }}
+                    visible={isModalOpen1}
+                    title={<React.Fragment>
+                    </React.Fragment>}
+                    onCancel={cancelHandle}
+                    footer={[
 
-                ]}
-                
-            >
-                {isModalOpen1 &&<ChangeComparision data={undefined}   />} 
-                <Button onClick={cancelHandle}  style={{color:"red", flexDirection:'column-reverse'}} > Close</Button>
-            </Modal>
-        </Card>
+                    ]}
+
+                >
+                    {isModalOpen1 && <ChangeComparision data={{ poNumber }} />}
+                    <Button onClick={cancelHandle} style={{ color: "red", flexDirection: 'column-reverse' }} > Close</Button>
+                </Modal>
+            </Card>
         </>
     )
 }

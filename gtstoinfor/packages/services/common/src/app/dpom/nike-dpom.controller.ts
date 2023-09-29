@@ -775,10 +775,9 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
-    
+
     @Post('/getChangeComparision')
-    @ApiBody({ type: ChangeComparision })
-    async getChangeComparision(@Body() req:any): Promise<CommonResponseModel> {
+    async getChangeComparision(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getChangeComparision(req);
         } catch (err) {

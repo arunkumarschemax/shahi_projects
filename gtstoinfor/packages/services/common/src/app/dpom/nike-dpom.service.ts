@@ -1615,8 +1615,6 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-  
-
     async getDpomSyncDetails(): Promise<CommonResponseModel> {
         const query = 'SELECT COUNT(*) AS totalRecords,(SELECT COUNT(*) FROM dpom WHERE DATE(created_at)=DATE(NOW())) AS todayrecords ,COUNT(*)-(SELECT COUNT(*) FROM `dpom` WHERE DATE(created_at)=DATE(NOW())) AS oldRecords FROM dpom '
         const result = await this.dpomRepository.query(query)
@@ -1626,6 +1624,7 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'no data found ', [])
         }
     }
+
     async getTotalItemQtyChangeData(req?: nikeFilterRequest): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getTotalItemQtyChangeData(req)
         if (data.length === 0) {
@@ -1648,55 +1647,19 @@ export class DpomService {
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
 
-    // this is working perfectly 
-    // async getChangeComparision(req: ChangeComparision): Promise<CommonResponseModel> {
-    //     const poNumber = req.poNumber;
-    
-    //     const data = await this.dpomRepository.getChangeSData(poNumber);
-    
-    //     if (data.length === 0) {
-    //         return new CommonResponseModel(false, 0, 'No data found');
-    //     }
-    
-    //     const sizeDateMap = new Map<string, ChangePoandLineModel>();
-    
-    //     for (const rec of data) {
-    //         const poNumber = rec.po_number;
-    //         const poAndLine = rec.po_and_line;
-    
-    //         if (!sizeDateMap.has(poNumber)) {
-    //             sizeDateMap.set(poNumber, new ChangePoandLineModel(poNumber, poAndLine, []));
-    //         }
-    
-    //         const sizeData = sizeDateMap.get(poNumber).sizeWiseData;
-    
-    //         sizeData.push(new OrderChangePoModel(
-    //             poNumber,
-    //             rec.id,rec.size_description,rec.size_qty,rec.legal_po_qty,
-    //             rec.gross_price_fob,rec.fob_currency_code,rec.legal_po_price,
-    //             rec.legal_po_currency,poAndLine,rec.total_item_qty
-    //         ));
-    //     }
-    
-    //     const dataModelArray: ChangePoandLineModel[] = Array.from(sizeDateMap.values());
-    
-    //     return new CommonResponseModel(true, dataModelArray.length, 'Data retrieved', dataModelArray);
-    // }
-
-    async getChangeComparision(req: ChangeComparision): Promise<CommonResponseModel> {
+    async getChangeComparision(req: any): Promise<CommonResponseModel> {
         const poNumber = req.poNumber;
-    
         const data = await this.dpomRepository.getChangeSData(poNumber);
-    
+
         if (data.length === 0) {
             return new CommonResponseModel(false, 0, 'No data found');
         }
-    
+
         const poAndLineMap = new Map<string, ChangePoandLineModel>();
-    
+
         for (const rec of data) {
             const poAndLine = rec.po_and_line;
-    
+
             if (!poAndLineMap.has(poAndLine)) {
                 poAndLineMap.set(poAndLine, new ChangePoandLineModel(
                     rec.purchaseOrderNumber,
@@ -1704,34 +1667,34 @@ export class DpomService {
                     [],
                 ));
             }
-  
+
             const sizeData = poAndLineMap.get(poAndLine).sizeWiseData;
-    
+
             sizeData.push(new OrderChangePoModel(
-                rec. po_number,
+                rec.po_number,
                 rec.id,
                 rec.size_description,
                 rec.size_qty,
-                rec.legalPoQty, 
+                rec.legalPoQty,
                 rec.gross_price_fob,
                 rec.fob_currency_code,
                 rec.legal_po_price,
                 rec.legal_po_currency,
                 poAndLine,
-                rec.totalQuantity 
+                rec.totalQuantity
             ));
-        }      
+        }
 
-    
+
         const dataModelArray: ChangePoandLineModel[] = Array.from(poAndLineMap.values());
         return new CommonResponseModel(true, dataModelArray.length, 'Data retrieved', dataModelArray);
     }
 
-  
-    
-    
-    
-    
-   
-    
+
+
+
+
+
+
+
 }
