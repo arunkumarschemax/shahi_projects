@@ -354,6 +354,9 @@ export default function ExcelImport() {
             <Descriptions.Item label={<b>Uploaded User</b>}>
               {filesData[0]?.createdUser}
             </Descriptions.Item>
+            <Descriptions.Item label={<b>No of Records</b>}>
+              {form.getFieldValue('fileType') === FileTypesEnum.PROJECTION_ORDERS ?  filesData[0]?.projectionRecords : filesData[0]?.trimRecords}
+            </Descriptions.Item>
           </Descriptions>
         </span>
         <Divider></Divider>

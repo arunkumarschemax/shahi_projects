@@ -60,6 +60,16 @@ const ChangesGrid = () => {
         if(form.getFieldValue('item') !== undefined){
             req.itemName = form.getFieldValue('item')
         } 
+        if(form.getFieldValue('warehouse') !== undefined){
+            req.warehouseFromDate = (form.getFieldValue('warehouse')[0]).format('MM-DD')
+            req.warehouseFromYear = (form.getFieldValue('warehouse')[0]).format('YYYY')
+            req.warehouseToDate = (form.getFieldValue('warehouse')[1]).format('MM-DD')
+            req.warehouseToYear = (form.getFieldValue('warehouse')[1]).format('YYYY')
+        } 
+        if(form.getFieldValue('exFactory') !== undefined){
+            req.exFactoryFromDate = (form.getFieldValue('exFactory')[0]).format('YYYY-MM-DD')
+            req.exFactoryToDate = (form.getFieldValue('exFactory')[1]).format('YYYY-MM-DD')
+        } 
         service.getQtyDifChangeData(req).then((res) => {
             if (res.status) {
                 setDifferenceQtyData(res.data)
@@ -81,6 +91,16 @@ const ChangesGrid = () => {
         if(form.getFieldValue('item') !== undefined){
             req.itemName = form.getFieldValue('item')
         } 
+        if(form.getFieldValue('warehouse') !== undefined){
+            req.warehouseFromDate = (form.getFieldValue('warehouse')[0]).format('MM-DD')
+            req.warehouseFromYear = (form.getFieldValue('warehouse')[0]).format('YYYY')
+            req.warehouseToDate = (form.getFieldValue('warehouse')[1]).format('MM-DD')
+            req.warehouseToYear = (form.getFieldValue('warehouse')[1]).format('YYYY')
+        } 
+        if(form.getFieldValue('exFactory') !== undefined){
+            req.exFactoryFromDate = (form.getFieldValue('exFactory')[0]).format('YYYY-MM-DD')
+            req.exFactoryToDate = (form.getFieldValue('exFactory')[1]).format('YYYY-MM-DD')
+        } 
         service.getQtyChangeData(req).then((res) => {
             if (res.status) {
                 setQtyData(res.data)
@@ -96,34 +116,31 @@ const ChangesGrid = () => {
         const excel = new Excel();
 
         const preOrdQtyTotal = (data) => {
-            console.log(data)
-            let totalprevord = 0;
-            let totallatord = 0;
-            let totaldiff = 0;
+            let old_val = 0;
+            let new_val = 0;
+            let Diff = 0;
             data.forEach((item) => {
-                totalprevord += Number(item.old_val)
-                totallatord += Number(item.new_val)
-                totaldiff += Number(item.Diff)
+                old_val += Number(item.old_val)
+                new_val += Number(item.new_val)
+                Diff += Number(item.Diff)
                 
             })
-            console.log(totalprevord,totallatord,totaldiff)
-            const orderWiseTotals = {totalprevord,totallatord,totaldiff}
+            console.log(old_val,new_val,Diff)
+            const orderWiseTotals = {old_val,new_val,Diff,year:'Total'}
             return orderWiseTotals
         }
 
         const itemOrdQtyTotal = (data) => {
-            console.log(data)
-            let totalprevord = 0;
-            let totallatord = 0;
-            let totaldiff = 0;
+            let old_qty_value = 0;
+            let new_qty_value = 0;
+            let diff = 0;
             data.forEach((item) => {
-                totalprevord += Number(item.old_qty_value)
-                totallatord += Number(item.new_qty_value)
-                totaldiff += Number(item.diff)
+                old_qty_value += Number(item.old_qty_value)
+                new_qty_value += Number(item.new_qty_value)
+                diff += Number(item.diff)
                 
             })
-            console.log(totalprevord,totallatord,totaldiff)
-            const itemWiseTotals = {totalprevord,totallatord,totaldiff}
+            const itemWiseTotals = {old_qty_value,new_qty_value,diff,year:'Total'}
             return itemWiseTotals
         }
 
@@ -134,7 +151,7 @@ const ChangesGrid = () => {
                 .addDataSource(qtyData, { str2num: true })
                 const orderWiseTotals = preOrdQtyTotal(qtyData)
                 console.log(orderWiseTotals)
-                excel.addDataSource([{Name: 'Summary', ...orderWiseTotals}], { str2num: true })
+                excel.addDataSource([orderWiseTotals], { str2num: true })
         }
         if (differenceQtyData?.length > 0) {
             excel
@@ -142,7 +159,7 @@ const ChangesGrid = () => {
                 .addColumns(data4)
                 .addDataSource(differenceQtyData, { str2num: true })
                 const itemWiseTotals = itemOrdQtyTotal(differenceQtyData)
-                excel.addDataSource([{Name: 'Summary', ...itemWiseTotals}], { str2num: true })
+                excel.addDataSource([itemWiseTotals], { str2num: true })
 
         }
         
@@ -175,14 +192,14 @@ const ChangesGrid = () => {
             dataIndex: 'year'
         },
         {
-            title: 'WH',
+            title: 'Warehouse',
             dataIndex: 'wh',
             render: (text, record) => {
                 return record.wh ? moment(record.wh).format('MM-DD') : '-'
             }
         },
         {
-            title: 'Planned EXF',
+            title: 'Ex Factory',
             dataIndex: 'planned_exf',
             render: (text, record) => {
                 return record.planned_exf ? moment(record.planned_exf).format('YYYY-MM-DD') : '-'
@@ -242,14 +259,14 @@ const ChangesGrid = () => {
             dataIndex: 'year'
         },
         {
-            title: 'WH',
+            title: 'Warehouse',
             dataIndex: 'wh',
             render: (text, record) => {
                 return record.wh ? moment(record.wh).format('MM-DD') : '-'
             }
         },
         {
-            title: 'Planned EXF',
+            title: 'Ex Factory',
             dataIndex: 'planned_exf',
             render: (text, record) => {
                 return record.planned_exf ? moment(record.planned_exf).format('YYYY-MM-DD') : '-'
@@ -365,34 +382,40 @@ const ChangesGrid = () => {
         {
             title: 'Order Plan Number',
             dataIndex: 'order_plan_number',
-            ...getColumnSearchProps('order_plan_number')
+            // ...getColumnSearchProps('order_plan_number')
         },
         {
             title: 'Production Plan Type',
-            dataIndex: 'prod_plan_type'
+            dataIndex: 'prod_plan_type',
+            sorter: (a, b) => a.prod_plan_type?.localeCompare(b.prod_plan_type),
+            sortDirections: [ "ascend","descend"],
         },
         {
             title: 'Item code',
             dataIndex: 'item_cd',
-            ...getColumnSearchProps('item_cd')
+            // ...getColumnSearchProps('item_cd')
         },
         {
             title: 'Item Name',
-            dataIndex: 'item'
+            dataIndex: 'item',
+            sorter: (a, b) => a.item?.localeCompare(b.item),
+            sortDirections: [ "ascend","descend"],
         },
         {
             title: 'Year',
-            dataIndex: 'year'
+            dataIndex: 'year',
+            sorter: (a, b) => a.year?.localeCompare(b.year),
+            sortDirections: [ "ascend","descend"],
         },
         {
-            title: 'WH',
+            title: 'Warehouse',
             dataIndex: 'wh',
             render: (text, record) => {
                 return record.wh ? moment(record.wh).format('MM-DD') : '-'
             }
         },
         {
-            title: 'Planned EXF',
+            title: 'Ex Factory',
             dataIndex: 'planned_exf',
             render: (text, record) => {
                 return record.planned_exf ? moment(record.planned_exf).format('YYYY-MM-DD') : '-'
@@ -402,6 +425,8 @@ const ChangesGrid = () => {
             title: 'Previous Order Quantity',
             dataIndex: 'old_val',
             align: 'right',
+            sorter: (a, b) => Number(a.old_val) - Number(b.old_val),
+            sortDirections: [ "ascend","descend"],
             render: (text, record) => {
                 // const oldVal = record.old_val.replace(/,/g,'')
                 return(
@@ -416,6 +441,8 @@ const ChangesGrid = () => {
             title: 'Revised Order Quantity',
             dataIndex: 'new_val',
             align: 'right',
+            sorter: (a, b) => Number(a.new_val) - Number(b.new_val),
+            sortDirections: [ "ascend","descend"],
             render: (text, record) => {
                 // const newVal = record.new_val.replace(/,/g,'')
                 // const oldVal = record.old_val.replace(/,/g,'')
@@ -441,6 +468,8 @@ const ChangesGrid = () => {
             title: 'Difference',
             dataIndex: 'Diff',
             align: 'right',
+            sorter: (a, b) => Number(a.Diff) - Number(b.Diff),
+            sortDirections: [ "ascend","descend"],
             render: (text, record) => {
                 // const newVal = record.new_val.replace(/,/g,'')
                 // const oldVal = record.old_val.replace(/,/g,'')
@@ -475,21 +504,25 @@ const ChangesGrid = () => {
         },
         {
             title: 'Item Name',
-            dataIndex: 'item'
+            dataIndex: 'item',
+            sorter: (a, b) => a.item?.localeCompare(b.item),
+            sortDirections: [ "ascend","descend"],
         },
         {
             title: 'Year',
-            dataIndex: 'year'
+            dataIndex: 'year',
+            sorter: (a, b) => a.year?.localeCompare(b.year),
+            sortDirections: [ "ascend","descend"],
         },
         {
-            title: 'WH',
+            title: 'Warehouse',
             dataIndex: 'wh',
             render: (text, record) => {
                 return record.wh ? moment(record.wh).format('MM-DD') : '-'
             }
         },
         {
-            title: 'Planned EXF',
+            title: 'Ex Factory',
             dataIndex: 'planned_exf',
             render: (text, record) => {
                 return record.planned_exf ? moment(record.planned_exf).format('YYYY-MM-DD') : '-'
@@ -499,6 +532,8 @@ const ChangesGrid = () => {
             title: 'Previous Total Order Quantity',
             dataIndex: 'old_qty_value',
             align: 'right',
+            sorter: (a, b) => Number(a.old_qty_value) - Number(b.old_qty_value),
+            sortDirections: [ "ascend","descend"],
             render: (text, record) => (
                 <>
                     {Number(record.old_qty_value).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
@@ -509,6 +544,8 @@ const ChangesGrid = () => {
             title: 'Revised Total Order Quantity',
             dataIndex: 'new_qty_value',
             align: 'right',
+            sorter: (a, b) => Number(a.new_qty_value) - Number(b.new_qty_value),
+            sortDirections: [ "ascend","descend"],
             render: (text, record) => (
                 <span  {...record.new_qty_value}>
                     <>
@@ -529,6 +566,8 @@ const ChangesGrid = () => {
             title: 'Difference',
             dataIndex: 'diff',
             align: 'right',
+            sorter: (a, b) => Number(a.diff) - Number(b.diff),
+            sortDirections: [ "ascend","descend"],
             render: (text, record) => (
                 < >
                     {Number(record.diff) === 0 ? '-' : ''}
@@ -579,7 +618,7 @@ const ChangesGrid = () => {
                             <Table.Summary.Cell index={4} ><Text ></Text></Table.Summary.Cell>
                             <Table.Summary.Cell index={5} ><Text ></Text></Table.Summary.Cell>
                             <Table.Summary.Cell index={6} ><Text ></Text></Table.Summary.Cell>
-                            <Table.Summary.Cell index={7}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Summary</div></Table.Summary.Cell>
+                            <Table.Summary.Cell index={7}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Total</div></Table.Summary.Cell>
                             <Table.Summary.Cell index={8} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalLastQty).toLocaleString('en-IN', {
                                 maximumFractionDigits: 0
                             })}</div></Table.Summary.Cell>
@@ -626,7 +665,7 @@ const ChangesGrid = () => {
                                 <Table.Summary.Cell index={2} ><Text ></Text></Table.Summary.Cell>
                                 <Table.Summary.Cell index={3} ><Text ></Text></Table.Summary.Cell>
                                 <Table.Summary.Cell index={5} ><Text ></Text></Table.Summary.Cell>
-                                <Table.Summary.Cell index={6}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Summary</div></Table.Summary.Cell>
+                                <Table.Summary.Cell index={6}  ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>Total</div></Table.Summary.Cell>
                                 <Table.Summary.Cell index={7} ><div style={{ textAlign: 'right', fontWeight: 'bold' }}>{Number(totalLastQty).toLocaleString('en-IN', {
                                     maximumFractionDigits: 0
                                 })}</div></Table.Summary.Cell>
@@ -652,14 +691,14 @@ const ChangesGrid = () => {
     }
 
     return (
-        <Card title='Compare Projection Orders' extra={qtyData || differenceQtyData ? (<Button
+        <Card title='Orders Comparision' extra={qtyData || differenceQtyData ? (<Button
             type="default"
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
             <Form form={form} layout={"vertical"}  onFinish={getFilterdData}>
                 <Row gutter={[24, 24]}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 4 }}>
                         <Form.Item name="orderNumber" label="Order Plan Number">
                     <Select placeholder="Select order Number" showSearch allowClear optionFilterProp="children">
                         {orderNumbers.map((e) => {
@@ -671,7 +710,7 @@ const ChangesGrid = () => {
                     </Select>
                     </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 4 }}>
                     <Form.Item name="itemCode" label="Item Code">
               <Select placeholder="Select Item Code" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
                 {itemCode.map((e) => {
@@ -695,7 +734,19 @@ const ChangesGrid = () => {
               </Select>
             </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 15 }}  >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+                        <Form.Item name='warehouse' label='Warehouse'>
+                            <RangePicker style={{width:'100'}}/>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
+                        <Form.Item name='exFactory' label='Ex Factory'>
+                            <RangePicker style={{width:'100'}}/>
+                        </Form.Item>
+                    </Col>
+                    </Row>
+                    <Row gutter={8} justify={'end'}>
+                    <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
                             <Form.Item>
                                 <Button htmlType="submit" icon={<SearchOutlined />}style={{backgroundColor:'green'}}type="primary">SEARCH</Button>
                                     <Button danger
