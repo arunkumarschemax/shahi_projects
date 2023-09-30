@@ -31,6 +31,9 @@ export const PriceListGrid = (props: PriceListView) => {
   const [year,setYear] = useState<any[]>([]); 
   const [currency,setCurrency] = useState<any[]>([]);
   const [seasonCode,setSeasonCode] = useState<any[]>([]);
+  const [item,setItem] = useState<any[]>([]);
+  const[des,setDes] = useState<any[]>([]);
+  const[styCount,setStyCount] = useState<any[]>([]);
 
 
 
@@ -41,7 +44,7 @@ export const PriceListGrid = (props: PriceListView) => {
     getYear();
     getCurrency();
     getSeasonCode();
-
+    getAllItems();
   },[])
 
   const pagination = {
@@ -62,6 +65,7 @@ export const PriceListGrid = (props: PriceListView) => {
   const getStyle = () => {
     priceService.getAllPriceListStyles().then(res => {
       setStyle(res.data)
+      setStyCount(res.data.length)
     })
 
 }
@@ -69,6 +73,9 @@ export const PriceListGrid = (props: PriceListView) => {
 const getDestination = () => {
   priceService.getAllPriceListDestination().then(res => {
     setDestination(res.data)
+    setDes(res.data.length)
+    console.log(des, "all items");
+
   })
 
 }
@@ -90,6 +97,14 @@ const getSeasonCode = () => {
   })
 
 }
+
+const getAllItems = () => {
+  priceService.getAllPriceListItem().then(res => {
+    setItem(res.data.length)
+    console.log()
+  });
+};
+
 
   const getPriceList= () => {
     const req = new NewFilterDto();
@@ -149,7 +164,7 @@ const getSeasonCode = () => {
           getPriceList();
         } else {
           // AlertMessages.getErrorMessage(res.internalMessage);
-          message.error("Already this Combination Exist,Please check it once")
+          message.error("Already this Style & Destination Combination Exist,Please check it once")
         }
       })
       .catch(err => {
@@ -414,7 +429,20 @@ const getSeasonCode = () => {
     extra={<Link to='/masters/pricelist/price-list-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
-     
+      <Row gutter={40}>
+        {/* <Col>
+          <Card title={'Total Liscenc Types: ' + style.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+        </Col> */}
+        <Col>
+          <Card title={'Created Style: ' + styCount} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#B1D5F8' }}></Card>
+        </Col>
+        <Col>
+          <Card title={'Created Destination: ' + Number(des)} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#B1F8E2' }}></Card>
+        </Col>
+        <Col>
+          <Card title={'Created Item: ' + item} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#CBB1F8  ' }}></Card>
+        </Col>
+      </Row><br></br>
         <Form form={form} style={{textAlign:'center'}}  layout='vertical' onFinish={getPriceList}>
         <Row gutter={24}>
           <Col xs={24} sm={12} md={8} lg={6} xl={4}  style={{ padding: '8px' }}>

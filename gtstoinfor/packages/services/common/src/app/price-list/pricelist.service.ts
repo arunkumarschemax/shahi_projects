@@ -545,6 +545,15 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
             }
         }
         
-        
+        async getAllPriceListItem(): Promise<CommonResponseModel> {
+            const details = await this.priceRepository.getItem();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
 
 }

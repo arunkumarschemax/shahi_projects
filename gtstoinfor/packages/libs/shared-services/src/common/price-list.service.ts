@@ -60,4 +60,8 @@ export class PriceListService extends CommonAxiosService {
     async getUploadFilesData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getUploadFilesData")
     }
+    
+    async getAllPriceListItem(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllPriceListItem")
+    }
 }

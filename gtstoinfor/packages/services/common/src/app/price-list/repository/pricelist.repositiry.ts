@@ -89,4 +89,13 @@ export class pricListRepository extends Repository<PriceListEntity> {
             .orderBy(` version`, 'DESC')
         return await query.getRawMany();
     }
+    async getItem(): Promise<any[]> {
+        const query = await this.createQueryBuilder('o')
+            .select(`id,item`)
+             .where(`item is not null`)
+             .groupBy(`item`)
+            .getRawMany();
+        return query
+
+    }
 }
