@@ -36,9 +36,10 @@ export class FabricRequestQualitiesDto {
     @ApiProperty()
     FabricCode: string;
 
+    @ApiProperty({type:[FabricRequestQualitiesInfoDto]})
+    qualitiesInfo:FabricRequestQualitiesInfoDto[];
 
-    @ApiProperty({type:[FabricRequestItemsDto]})
-    qualities:FabricRequestItemsDto[];
+  
 
     @ApiProperty()
     fabricRequestQualityId?: number;

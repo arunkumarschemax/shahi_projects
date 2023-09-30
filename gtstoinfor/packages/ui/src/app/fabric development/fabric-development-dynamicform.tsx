@@ -4,7 +4,6 @@ import M3Items from './m3-model'
 import { DeleteOutlined, EditOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons'
 import { ColourService, UomService } from '@project-management-system/shared-services'
 import AlertMessages from '../common/common-functions/alert-messages'
-import { FabricInfo } from '@project-management-system/shared-models'
 
 export interface FabricDevelopmentDynamicFormProps {
   

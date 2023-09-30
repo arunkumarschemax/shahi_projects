@@ -1,4 +1,5 @@
 import { StatusEnum } from "../../enum";
+import { FabricRequestQualitiesRequest } from "./fabric-request-qualities.request";
 
 export class FabricDevelopmentRequest{
     locationId: number;
@@ -15,7 +16,7 @@ export class FabricDevelopmentRequest{
     lightSourceTertiary: string;
     FileName: string;
     FilePath: string;
-    qualities:string;
+    qualities:FabricRequestQualitiesRequest[]
     status?: StatusEnum;
     requestNo?: number;    
     fabricRequestId?: number;
@@ -36,7 +37,7 @@ export class FabricDevelopmentRequest{
         lightSourceTertiary: string,
         FileName: string,
         FilePath: string,
-        qualities:string,
+        qualities:FabricRequestQualitiesRequest[],
         status?: StatusEnum,
         requestNo?: number,    
         fabricRequestId?: number){

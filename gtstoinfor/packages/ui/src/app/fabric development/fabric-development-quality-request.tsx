@@ -3,7 +3,7 @@ import {  Card, Col, Form, Input, Row, Select } from 'antd'
 
 import FabricDevelopmentDynamicForm from './fabric-development-dynamicform'
 import { useEffect, useState } from 'react';
-import { FabricInfo, ItemInfo } from '@project-management-system/shared-models';
+// import { FabricInfo, ItemInfo } from '@project-management-system/shared-models';
 
 export interface ReqProps {
   

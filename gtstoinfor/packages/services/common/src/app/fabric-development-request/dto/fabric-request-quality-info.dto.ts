@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { StatusEnum } from "@project-management-system/shared-models";
+import { FabricRequestItemsDto } from "./fabric-request-items.dto";
 
 export class FabricRequestQualitiesInfoDto {
     
@@ -49,9 +50,9 @@ export class FabricRequestQualitiesInfoDto {
     @ApiProperty()
     remarks: string;
     
-    @ApiProperty({type:[FabricRequestQualitiesInfoDto]})
-    qualities:FabricRequestQualitiesInfoDto[];
-
+    @ApiProperty({type:[FabricRequestItemsDto]})
+    itemsinfo:FabricRequestItemsDto[]; 
+   
     @ApiProperty()
     fabricRequestQualityInfoId?: number;
      
