@@ -1,3 +1,5 @@
 export * from './fabric-filter-request'
 export * from './fabric-info'
 export * from './items-info'
+export* from './fabric-development-request.response'
+export * from './fabric-development-request'
