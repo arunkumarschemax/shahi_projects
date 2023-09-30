@@ -123,12 +123,12 @@ export function POPDFInfoGrid() {
             )
                 : null
     })
+
     const setMoreData = (record) => {
         console.log(record.file_data)
         navigate('/nike/po-pdf-table', { state: { data: record.file_data } })
 
     }
-
 
     const columns: any = [
         {
@@ -173,11 +173,7 @@ export function POPDFInfoGrid() {
                 <>
                     <Button onClick={() => setMoreData(record)}>More Info</Button>
                     <Button onClick={() => showModal1(record.po_number)} style={{ margin: 5 }}>Changes Comparision</Button>
-
-
                 </>
-
-
             ),
         }
 
@@ -236,7 +232,7 @@ export function POPDFInfoGrid() {
                 <Modal
                     className='print-docket-modal'
                     key={'modal1' + Date.now()}
-                    width={'80%'}
+                    width={'900%'}
                     style={{ top: 30, alignContent: 'center' }}
                     visible={isModalOpen1}
                     title={<React.Fragment>
@@ -245,7 +241,6 @@ export function POPDFInfoGrid() {
                     footer={[
 
                     ]}
-
                 >
                     {isModalOpen1 && <ChangeComparision data={{ poNumber }} />}
                     <Button onClick={cancelHandle} style={{ color: "red", flexDirection: 'column-reverse' }} > Close</Button>
