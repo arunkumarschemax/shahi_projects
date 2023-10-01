@@ -7,6 +7,9 @@ import moment from 'moment';
 import correctFormat from './Correct Format.jpg'
 import wrongFormat from './Wrong Format.jpg'
 import { FileStatusReq } from '@project-management-system/shared-models'; 
+import { IExcelColumn } from 'antd-table-saveas-excel/app';
+import { Excel } from 'antd-table-saveas-excel';
+import { FileExcelFilled } from '@ant-design/icons';
 
 const PriceListUpload = () => {
 
@@ -109,62 +112,63 @@ const PriceListUpload = () => {
   const onFileTypeChange = () => {
     getUploadFilesData()
   }
+
+  let template: IExcelColumn[] = []
+  template = [
+        { title: 'Year', dataIndex: '' },
+        { title: 'Season', dataIndex: '' },
+        { title: 'Item', dataIndex: ''},
+        { title: 'Sample Code', dataIndex: ""},
+        { title: 'Business', dataIndex: ""},
+        { title: 'FOB(Local Currency)', dataIndex: ""},
+        { title: 'Currency', dataIndex: ""},
+    ]
+
+    const exportExcel = () => {
+      const excel = new Excel();
+      excel
+        .addSheet('Price List')
+        .addColumns(template)
+        .addDataSource([])
+        .saveAs('Price List Template.xlsx');
+    }
   
     return (
-        <>
-              <Descriptions style={{ alignItems: 'right' }}>
-                <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item>
-                <br/>
-                <br/>
-                <Descriptions.Item label={<b>File Name</b>}>
-                  {filesData[0]?.fileName}
-                </Descriptions.Item>
-                <Descriptions.Item label={<b>Uploaded Date</b>}>
-                  {filesData[0]?.uploadedDate}
-                </Descriptions.Item>
-                <Descriptions.Item label={<b>Uploaded User</b>}>
-                  {filesData[0]?.createdUser}
-                </Descriptions.Item>
-              </Descriptions>
-            {/* </span> */}
-            <Divider></Divider>
-            <>
-            <Form form = {form}>
-            <Row gutter = {24}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item label = "">
-                  <input type="file" accept=".csv" onChange={handleFileChange} />
-                </Form.Item>
-                </Col>
-              </Row>
-              <Button
-                type="primary"
-                onClick={handleUpload}
-                loading={loading}
-                disabled={!selectedFile}
-              >
-                Upload
-              </Button>
-              </Form>
-            </>
-            <Divider></Divider>
-            <div style={{ display: 'flex', alignItems: 'center'}}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <img src={correctFormat} alt="Do's" style={{ width: '500px', height: '250px', border: '2px solid green',margin:"10px 75px" }} />
-                <span style={{ marginTop: '5px', fontWeight: 'bold',color: 'green' }}>
-                  ✔️
-                </span>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <img src={wrongFormat} alt="Don'ts" style={{ width: '500px', height: '250px', border: '2px solid red',margin:"10px" }} />
-                <span style={{ marginTop: '5px', fontWeight: 'bold' }}>
-                  ❌
-                </span>
-              </div>
-            </div>
-            <Divider></Divider>
-        </>
-      );
+    <div style={{display:"flex",justifyContent:"space-between"}}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'left' }}>
+      {filesData && filesData[0] ? (
+        <Descriptions style={{ alignItems: 'right' }}>
+          <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item>
+          <br/>
+          <br/>
+          <Descriptions.Item label={<b>File Name</b>}>{filesData[0]?.fileName}</Descriptions.Item>
+          <Descriptions.Item label={<b>Uploaded Date</b>}>{filesData[0]?.uploadedDate}</Descriptions.Item>
+          <Descriptions.Item label={<b>Uploaded User</b>}>{filesData[0]?.createdUser}</Descriptions.Item>
+        </Descriptions>
+        ) : ([])}
+        <Divider></Divider>
+        <Form form = {form}>
+          <Row gutter = {24}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+              <Form.Item label = "">
+                <input type="file" accept=".csv" onChange={handleFileChange} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Button
+          type="primary"
+          onClick={handleUpload}
+          loading={loading}
+          disabled={!selectedFile}>
+            Upload
+          </Button>
+        </Form>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'right', marginTop:"-45px" }}>
+        <Button className='panel_button' icon={<FileExcelFilled />} style={{ color: 'green' }} onClick={() => exportExcel()}>Template Excel</Button>
+      </div>
+  </div>
+  );
 }
 
 export default PriceListUpload

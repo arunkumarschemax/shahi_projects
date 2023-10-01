@@ -41,7 +41,7 @@ export const WareHouseComparision = () => {
     });
   };
   const getData =()=>{
-    const req = new YearReq(tab)    
+    const req = new YearReq(tab,'')    
     // service.getWareHouseComparisionData(req).then(res =>{
 
     //   if(res.status){

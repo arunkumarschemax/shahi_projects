@@ -57,8 +57,8 @@ export const ExFactoryReport = () => {
     });
   };
   const getData = () => {
-    const req = new YearReq(tab);
-    service.getAll(req).then((res) => {
+    const req = new YearReq(tab,'');
+    service.getMonthWiseReportData(req).then((res) => {
       console.log(res, "res==========");
       if (res.status) {
         setData(res.data);
@@ -1093,168 +1093,168 @@ export const ExFactoryReport = () => {
       },
       {
         title: `Jan In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 1 ? record.order_plan_qty : "-",
+          record.ExfMonth == 1 ? record.OrderQty : "-",
       },
       {
         title: `Jan In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 1 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 1 ? record.OrderCoeffQty : "-";
         },
       },
       {
         title: `Feb In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 2 ? record.order_plan_qty : "-",
+          record.ExfMonth == 2 ? record.OrderQty : "-",
       },
       {
         title: `Feb In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 2 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 2 ? record.OrderCoeffQty : "-";
         },
       },
 
       {
         title: `Mar In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 3 ? record.order_plan_qty : "-",
+          record.ExfMonth == 3 ? record.OrderQty : "-",
       },
       {
         title: `Mar In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 3 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 3 ? record.OrderCoeffQty : "-";
         },
       },
 
       {
         title: `Apr In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 4 ? record.order_plan_qty : "-",
+          record.ExfMonth == 4 ? record.OrderQty : "-",
       },
       {
         title: `Apr In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 4 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 4 ? record.OrderCoeffQty : "-";
         },
       },
 
       {
         title: `May In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 5 ? record.order_plan_qty : "-",
+          record.ExfMonth == 5 ? record.OrderQty : "-",
       },
       {
         title: `May In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 5 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 5 ? record.OrderCoeffQty : "-";
         },
       },
 
       {
         title: `Jun In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 6 ? record.order_plan_qty : "-",
+          record.ExfMonth == 6 ? record.OrderQty : "-",
       },
       {
         title: `Jun In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 6 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 6 ? record.OrderCoeffQty : "-";
         },
       },
 
       {
         title: `Jul In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 7 ? record.order_plan_qty : "-",
+          record.ExfMonth == 7 ? record.OrderQty : "-",
       },
       {
         title: `Jul In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 7 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 7 ? record.OrderCoeffQty : "-";
         },
       },
 
       {
         title: `Aug In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 8 ? record.order_plan_qty : "-",
+          record.ExfMonth == 8 ? record.OrderQty : "-",
       },
       {
         title: `Aug In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 8 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 8 ? record.OrderCoeffQty : "-";
         },
       },
 
       {
         title: `Sep In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 9 ? record.order_plan_qty : "-",
+          record.ExfMonth == 9 ? record.OrderQty : "-",
       },
       {
         title: `Sep In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 9 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 9 ? record.OrderCoeffQty : "-";
         },
       },
 
       {
         title: `Oct In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 10 ? record.order_plan_qty : "-",
+          record.ExfMonth == 10 ? record.OrderQty : "-",
       },
       {
         title: `Oct In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 10 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 10 ? record.OrderCoeffQty : "-";
         },
       },
 
       {
         title: `Nov In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 11 ? record.order_plan_qty : "-",
+          record.ExfMonth == 11 ? record.OrderQty : "-",
       },
       {
         title: `Nov In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 11 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 11 ? record.OrderCoeffQty : "-";
         },
       },
 
       {
         title: `Dec In PCs`,
-        dataIndex: "order_plan_qty",
+        dataIndex: "OrderQty",
         render: (text, record) =>
-          record.ExfMonth == 12 ? record.order_plan_qty : "-",
+          record.ExfMonth == 12 ? record.OrderQty : "-",
       },
       {
         title: `Dec In Coeff`,
-        dataIndex: "order_plan_qty_coeff",
+        dataIndex: "OrderCoeffQty",
         render: (text, record) => {
-          return record.ExfMonth == 12 ? record.order_plan_qty_coeff : "-";
+          return record.ExfMonth == 12 ? record.OrderCoeffQty : "-";
         },
       },
       // {
@@ -1269,11 +1269,141 @@ export const ExFactoryReport = () => {
       // },
     ];
 
-    // excel.addRow();
+    const totals = (data) =>{     
+     let janPre = 0;
+    let janLat = 0;
+   let febPre = 0;
+    let febLat = 0;
+   let marPre = 0;
+    let marLat = 0;
+   let aprPre = 0;
+    let aprLat = 0;
+   let mayPre = 0;
+    let mayLat = 0;
+   let junPre = 0;
+    let junLat = 0;
+   let julPre = 0;
+    let julLat = 0;
+   let augPre = 0;
+    let augLat = 0;
+   let sepPre = 0;
+    let sepLat = 0;
+   let octPre = 0;
+    let octLat = 0;
+   let novPre = 0;
+    let novLat = 0;
+   let decPre = 0;
+    let decLat = 0;
+  
+    data.forEach((e) => {
+        if (e.ExfMonth === 1) {
+          // const jan = +Number(OrderQty);
+          janPre  +Number(e.OrderQty);
+          
+        }
+
+        if (e.ExfMonth === 2) {
+          febPre  +Number(e.OrderQty);
+        }
+       
+        if(e.ExfMonth ===3) {
+        
+          marPre += Number(e.OrderQty);
+        }
+        if(e.ExfMonth ===4) {
+        
+          aprPre += Number(e.OrderQty);
+        }
+        if(e.ExfMonth ===5) {
+        
+          mayPre += Number(e.OrderQty);
+        }
+        if(e.ExfMonth ===6) {
+        
+          junPre += Number(e.OrderQty);
+        }
+        if(e.ExfMonth ===7) {
+        
+          julPre += Number(e.OrderQty);
+        }
+        if(e.ExfMonth ===8) {
+        
+          augPre += Number(e.OrderQty);
+        }
+        if(e.ExfMonth ===9) {
+        
+          sepPre += Number(e.OrderQty);
+        }
+        if(e.ExfMonth ===10) {
+        
+          octPre += Number(e.OrderQty);
+        }
+        if(e.ExfMonth ===11) {
+        
+          novPre += Number(e.OrderQty);
+        }
+        if(e.ExfMonth === 12) {
+        
+          decPre += Number(e.OrderQty);
+        }
+        if(e.ExfMonth ===1) {
+          janLat += Number(e.OrderCoeffQty);
+        }
+        if(e.ExfMonth === 2) {
+          
+          febLat += Number(e.OrderCoeffQty);
+        }
+        if(e.ExfMonth === 3) {
+          
+          marLat += Number(e.OrderCoeffQty);
+        }
+        if(e.ExfMonth === 4) {
+          
+          aprLat += Number(e.OrderCoeffQty);
+        }
+        if(e.ExfMonth === 5) {
+          
+          mayLat += Number(e.OrderCoeffQty);
+        }
+        if(e.ExfMonth === 6) {
+          
+          junLat += Number(e.OrderCoeffQty);
+        }
+        if(e.ExfMonth === 7) {
+          
+          julLat += Number(e.OrderCoeffQty);
+        }
+        if(e.ExfMonth === 8) {
+          
+          augLat += Number(e.OrderCoeffQty);
+        }
+        if(e.ExfMonth === 9) {
+          
+          sepLat += Number(e.OrderCoeffQty);
+        }
+        if(e.ExfMonth === 10) {
+          
+          octLat += Number(e.OrderCoeffQty);
+        }
+        if(e.ExfMonth === 11) {
+          
+          novLat += Number(e.OrderCoeffQty);
+        }
+        if(e.ExfMonth === 12) {
+          
+          decLat += Number(e.OrderCoeffQty);
+        }
+      
+      });
+      const fullTotals =[janLat,febLat,marLat,aprLat,mayLat,junLat,julLat,augLat,sepLat,octLat,novLat,decLat,janPre,febPre,marPre,aprPre,mayPre,junPre,julPre,augPre,sepPre,octPre,novPre,decPre]
+      return totals(fullTotals)
+    }
 
     excel.addColumns(exportingColumns);
     excel.addDataSource(excelData);
-    // });
+    // const total = totals(excelData)
+    // excel.addDataSource([total])
+   
     excel.saveAs(`Ex-Factory-report-${currentDate}.xlsx`);
   };
   const handleTabChange = (selectedYear: any) => {

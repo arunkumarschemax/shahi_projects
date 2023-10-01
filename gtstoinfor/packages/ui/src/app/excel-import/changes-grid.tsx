@@ -723,7 +723,7 @@ const ChangesGrid = () => {
             </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 5 }} xl={{ span: 5 }}>
-                    <Form.Item name="item" label="Item">
+                    <Form.Item name="item" label="Item Name">
               <Select placeholder="Select Item" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
                 {itemCode.map((e) => {
                   return (

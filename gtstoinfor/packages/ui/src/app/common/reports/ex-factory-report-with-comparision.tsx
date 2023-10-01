@@ -59,8 +59,11 @@ export const ExFactoryReportWithComparision = () => {
     });
   };
   const getData = () => {
-    const req = new YearReq(tab);
-    service.getExfactoryWithComparision(req).then((res) => {
+    const name ='ExFactory'
+    const req = new YearReq(tab,name);
+    console.log(name);
+    
+    service.getMonthlyComparisionData(req).then((res) => {
       console.log(res.data, "res==========");
       if (res.status) {
         setData(res.data);
@@ -1235,6 +1238,8 @@ export const ExFactoryReportWithComparision = () => {
   };
 
   const getTableSummary = (pageData) => {
+    console.log(pageData,'pageeeeeeeeee');
+    
     let janPre = 0;
     let janLat = 0;
     let febPre = 0;
@@ -1264,9 +1269,15 @@ export const ExFactoryReportWithComparision = () => {
 
     pageData.forEach((e) => {
       e.monthWiseData.forEach((rec) => {
+        console.log(Number(rec.coeffData[0].janCoeff),'----------');
+        
         if (rec.pcsData[0].janPcs) {
+          console.log(rec.pcsData[0].janPcs,'jannnnnnnnnnn');
+          
           const jan = [rec.pcsData[0].janPcs];
           janPre += Number(jan);
+          console.log(janPre,'------');
+          
         }
         if (rec.pcsData[0].febPcs) {
           const feb = [rec.pcsData[0].febPcs];
@@ -1645,23 +1656,8 @@ export const ExFactoryReportWithComparision = () => {
 
   return (
     <Card
-    // title="Ex-Factory Report"
     >
-      {/* <Row>
-     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }}  >
-<Card title={'Total Items : ' + data.length} 
-style={{textAlign: 'center', width:150,height:35, borderRadius:8}}  
-size="small"></Card>
-</Col>
-     <Col xs={{ span: 30 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
-     <Button
-        type="default"
-        style={{ color: 'green',marginRight:5}}
-        onClick={handleExport}
-        icon={<FileExcelFilled />}>Download Excel</Button> 
-      </Col>
   
-</Row> */}
 
       <Tabs type="card" onChange={handleTabChange} aria-disabled>
         {year.map((e) => (

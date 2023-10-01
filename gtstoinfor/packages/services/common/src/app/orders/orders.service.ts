@@ -776,10 +776,88 @@ if(data.Order_Plan_Number !== null){
             return new CommonResponseModel(false, 0, 'No data found', data);
         }
     }
-    async getExfactoryMonthData(req:YearReq): Promise<CommonResponseModel> {
-        console.log('okkkkkkkkk')
+    // async getExfactoryMonthData(req:YearReq): Promise<CommonResponseModel> {
+    //     console.log('okkkkkkkkk')
 
-        const data = await this.ordersRepository.getExfactoryMonthData(req.year);
+    //     const data = await this.ordersRepository.getExfactoryMonthData(req.year);
+        
+    //     if (data.length === 0) {
+    //         return new CommonResponseModel(false, 0, 'data not found');
+    //     }
+    
+    //     const DateMap = new Map<string, ItemDataDto>();  
+    //     const monthWiseInstances: MonthWiseDto[] = [];      
+    //     for (const rec of data) {
+    //         const orderQty = rec.order_plan_qty.replace(/,/g, '')
+    //         const coeffQty = rec.order_plan_qty_coeff.replace(/,/g,'')
+    //         if (!DateMap.has(rec.item_cd)) {
+    //             DateMap.set(
+    //                 rec.item_cd,
+    //                 new ItemDataDto(rec.item, [])
+    //             );
+    //         }
+    //         const monthData = DateMap.get(rec.item_cd).monthWiseData;
+    //         const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
+
+    // // const phase = 
+    // // console.log(monthData.find(e=> e.phasetype === rec.prod_plan_type),'-------')
+    //         if (!phase) {
+    //             const pcs: PcsDataDto[] = [];
+    //             const coeff: CoeffDataDto[] = [];
+    //          pcs.push(
+    //            { name: 'In Pcs',
+    //             janPcs: rec.ExfMonth === 1 ? Number(orderQty) :Number(0),
+    //             febPcs: rec.ExfMonth === 2 ? Number(orderQty) :Number(0),
+    //             marPcs: rec.ExfMonth === 3 ? Number(orderQty) :Number(0),
+    //             aprPcs: rec.ExfMonth === 4 ? Number(orderQty) :Number(0),
+    //             mayPcs: rec.ExfMonth === 5 ? Number(orderQty) :Number(0),
+    //             junPcs: rec.ExfMonth === 6 ? Number(orderQty) :Number(0),
+    //             julPcs: rec.ExfMonth === 7 ? Number(orderQty) :Number(0),
+    //             augPcs: rec.ExfMonth === 8 ? Number(orderQty) :Number(0),
+    //             sepPcs: rec.ExfMonth === 9 ? Number(orderQty) :Number(0),
+    //             octPcs: rec.ExfMonth === 10 ? Number(orderQty) :Number(0),
+    //             novPcs: rec.ExfMonth === 11 ? Number(orderQty) :Number(0),
+    //             decPcs: rec.ExfMonth === 12 ? Number(orderQty) :Number(0),}
+    //         )
+    //           coeff.push({
+    //             name: 'In Coeff',
+    //             janCoeff: rec.ExfMonth === 1 ? Number(coeffQty) :Number(0),
+    //             febCoeff: rec.ExfMonth === 2 ? Number(coeffQty) :Number(0),
+    //             marCoeff: rec.ExfMonth === 3 ? Number(coeffQty) :Number(0),
+    //             aprCoeff: rec.ExfMonth === 4 ? Number(coeffQty) :Number(0),
+    //             mayCoeff: rec.ExfMonth === 5 ? Number(coeffQty) :Number(0),
+    //             junCoeff: rec.ExfMonth === 6 ? Number(coeffQty) :Number(0),
+    //             julCoeff: rec.ExfMonth === 7 ? Number(coeffQty) :Number(0),
+    //             augCoeff: rec.ExfMonth === 8 ? Number(coeffQty) :Number(0),
+    //             sepCoeff: rec.ExfMonth === 9 ? Number(coeffQty) :Number(0),
+    //             octCoeff: rec.ExfMonth === 10 ? Number(coeffQty) :Number(0),
+    //             novCoeff: rec.ExfMonth === 11 ? Number(coeffQty) :Number(0),
+    //             decCoeff: rec.ExfMonth === 12 ? Number(coeffQty) :Number(0),
+    //           })
+    //           const totalPcs = pcs.reduce((total, item) => {
+    //             return  [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
+    //                 .filter(value => value !== 0) 
+    //                 .reduce((sum, value) =>  value, 0);
+    //         }, 0);
+            
+    //         const totalCoeff = coeff.reduce((total, item) => {
+    //             return  [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
+    //                 .filter(value => value !== 0)
+    //                 .reduce((sum, value) => value, 0);
+    //         }, 0);
+           
+    //             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,totalPcs,totalCoeff);
+    //             monthData.push(monthWiseInstance); 
+    //         }
+            
+    //     }
+        
+    //     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
+    //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    // }
+    async getMonthWiseReportData(req:YearReq): Promise<CommonResponseModel> {
+
+        const data = await this.ordersRepository.getMonthWiseReportData(req);
         
         if (data.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found');
@@ -788,67 +866,93 @@ if(data.Order_Plan_Number !== null){
         const DateMap = new Map<string, ItemDataDto>();  
         const monthWiseInstances: MonthWiseDto[] = [];      
         for (const rec of data) {
-            const orderQty = rec.order_plan_qty.replace(/,/g, '')
-            const coeffQty = rec.order_plan_qty_coeff.replace(/,/g,'')
-            if (!DateMap.has(rec.item_cd)) {
-                DateMap.set(
-                    rec.item_cd,
-                    new ItemDataDto(rec.item, [])
-                );
-            }
-            const monthData = DateMap.get(rec.item_cd).monthWiseData;
-            const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
-
-    // const phase = 
-    // console.log(monthData.find(e=> e.phasetype === rec.prod_plan_type),'-------')
-            if (!phase) {
-                const pcs: PcsDataDto[] = [];
-                const coeff: CoeffDataDto[] = [];
+            
+                if(req.tabName === 'ExFactory'){
+                    if (!DateMap.has(rec.item_cd)) {
+                        DateMap.set(
+                            rec.item_cd,
+                            new ItemDataDto(rec.item, [])
+                        );
+                    }
+                    const monthData = DateMap.get(rec.item_cd).monthWiseData;
+                        const pcs: PcsDataDto[] = [];
+                        const coeff: CoeffDataDto[] = [];
              pcs.push(
                { name: 'In Pcs',
-                janPcs: rec.ExfMonth === 1 ? Number(orderQty) :Number(0),
-                febPcs: rec.ExfMonth === 2 ? Number(orderQty) :Number(0),
-                marPcs: rec.ExfMonth === 3 ? Number(orderQty) :Number(0),
-                aprPcs: rec.ExfMonth === 4 ? Number(orderQty) :Number(0),
-                mayPcs: rec.ExfMonth === 5 ? Number(orderQty) :Number(0),
-                junPcs: rec.ExfMonth === 6 ? Number(orderQty) :Number(0),
-                julPcs: rec.ExfMonth === 7 ? Number(orderQty) :Number(0),
-                augPcs: rec.ExfMonth === 8 ? Number(orderQty) :Number(0),
-                sepPcs: rec.ExfMonth === 9 ? Number(orderQty) :Number(0),
-                octPcs: rec.ExfMonth === 10 ? Number(orderQty) :Number(0),
-                novPcs: rec.ExfMonth === 11 ? Number(orderQty) :Number(0),
-                decPcs: rec.ExfMonth === 12 ? Number(orderQty) :Number(0),}
+                janPcs: rec.janPcsExf,
+                febPcs: rec.febPcsExf,
+                marPcs: rec.marPcsExf,
+                aprPcs: rec.aprPcsExf,
+                mayPcs: rec.mayPcsExf,
+                junPcs: rec.julPcsExf,
+                julPcs: rec.julPcsExf,
+                augPcs: rec.augPcsExf,
+                sepPcs: rec.sepPcsExf,
+                octPcs: rec.octPcsExf,
+                novPcs: rec.novPcsExf,
+                decPcs: rec.decPcsExf,}
             )
               coeff.push({
                 name: 'In Coeff',
-                janCoeff: rec.ExfMonth === 1 ? Number(coeffQty) :Number(0),
-                febCoeff: rec.ExfMonth === 2 ? Number(coeffQty) :Number(0),
-                marCoeff: rec.ExfMonth === 3 ? Number(coeffQty) :Number(0),
-                aprCoeff: rec.ExfMonth === 4 ? Number(coeffQty) :Number(0),
-                mayCoeff: rec.ExfMonth === 5 ? Number(coeffQty) :Number(0),
-                junCoeff: rec.ExfMonth === 6 ? Number(coeffQty) :Number(0),
-                julCoeff: rec.ExfMonth === 7 ? Number(coeffQty) :Number(0),
-                augCoeff: rec.ExfMonth === 8 ? Number(coeffQty) :Number(0),
-                sepCoeff: rec.ExfMonth === 9 ? Number(coeffQty) :Number(0),
-                octCoeff: rec.ExfMonth === 10 ? Number(coeffQty) :Number(0),
-                novCoeff: rec.ExfMonth === 11 ? Number(coeffQty) :Number(0),
-                decCoeff: rec.ExfMonth === 12 ? Number(coeffQty) :Number(0),
+                janCoeff: rec.janCoeffExf,
+                febCoeff: rec.febCoeffExf,
+                marCoeff: rec.marCoeffExf,
+                aprCoeff: rec.aprCoeffExf,
+                mayCoeff: rec.mayCoeffExf,
+                junCoeff: rec.julCoeffExf,
+                julCoeff: rec.julCoeffExf,
+                augCoeff: rec.augCoeffExf,
+                sepCoeff: rec.sepCoeffExf,
+                octCoeff: rec.octCoeffExf,
+                novCoeff: rec.novCoeffExf,
+                decCoeff: rec.decCoeffExf,
               })
-              const totalPcs = pcs.reduce((total, item) => {
-                return  [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
-                    .filter(value => value !== 0) 
-                    .reduce((sum, value) =>  value, 0);
-            }, 0);
-            
-            const totalCoeff = coeff.reduce((total, item) => {
-                return  [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
-                    .filter(value => value !== 0)
-                    .reduce((sum, value) => value, 0);
-            }, 0);
-           
-                const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,totalPcs,totalCoeff);
+        const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,rec.ExfPcsTotal,rec.ExfCoeffTotal);
                 monthData.push(monthWiseInstance); 
             }
+            if(req.tabName === 'WareHouse'){
+                if (!DateMap.has(rec.item_cd)) {
+                    DateMap.set(
+                        rec.item_cd,
+                        new ItemDataDto(rec.item, [])
+                    );
+                }
+                const monthData = DateMap.get(rec.item_cd).monthWiseData;
+                    const pcs: PcsDataDto[] = [];
+                    const coeff: CoeffDataDto[] = [];
+                pcs.push(
+                  { name: 'In Pcs',
+                   janPcs: rec.janPcsWh,
+                   febPcs: rec.febPcsWh,
+                   marPcs: rec.marPcsWh,
+                   aprPcs: rec.aprPcsWh,
+                   mayPcs: rec.mayPcsWh,
+                   junPcs: rec.julPcsWh,
+                   julPcs: rec.julPcsWh,
+                   augPcs: rec.augPcsWh,
+                   sepPcs: rec.sepPcsWh,
+                   octPcs: rec.octPcsWh,
+                   novPcs: rec.novPcsWh,
+                   decPcs: rec.decPcsWh,}
+               )
+                 coeff.push({
+                   name: 'In Coeff',
+                   janCoeff: rec.janCoeffWh,
+                   febCoeff: rec.febCoeffWh,
+                   marCoeff: rec.marCoeffWh,
+                   aprCoeff: rec.aprCoeffWh,
+                   mayCoeff: rec.mayCoeffWh,
+                   junCoeff: rec.julCoeffWh,
+                   julCoeff: rec.julCoeffWh,
+                   augCoeff: rec.augCoeffWh,
+                   sepCoeff: rec.sepCoeffWh,
+                   octCoeff: rec.octCoeffWh,
+                   novCoeff: rec.novCoeffWh,
+                   decCoeff: rec.decCoeffWh,
+                 })
+                  const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,rec.WhPcsTotal,rec.WhCoeffTotal);
+                   monthData.push(monthWiseInstance); 
+               }
             
         }
         
@@ -889,18 +993,18 @@ if(data.Order_Plan_Number !== null){
         SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 10 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS october,
         SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS november,
         SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS december,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJan,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfFeb,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMarch,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 4 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfApril,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMay,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJune,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJuly,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfAug,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 9 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfSep,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 10 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfOct,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfNov,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfDec
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJan,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfFeb,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMarch,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 4 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfApril,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMay,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJune,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJuly,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfAug,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 9 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfSep,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 10 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfOct,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfNov,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfDec
         FROM orders
         GROUP BY planning_ssn, item_cd, item
       ) AS subquery
@@ -1127,7 +1231,7 @@ async getSeasonWiseItemName():Promise<CommonResponseModel>{
 }
 
 async getExfactoryMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
-    const data = await this.ordersRepository.getExfactoryMonthData(req.year);
+    const data = await this.ordersRepository.getMonthWiseReportData(req);
     
     if (data.length === 0) {
         return new CommonResponseModel(false, 0, 'data not found');
@@ -1137,7 +1241,7 @@ async getExfactoryMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
 }
 
 async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel> {
-    const data = await this.ordersChildRepo.getExfactoryComparisionData(req);
+    const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
     
     if (data.length === 0) {
         return new CommonResponseModel(false, 0, 'data not found');
@@ -1182,170 +1286,189 @@ async getWareHouseComparisionExcelData(req:YearReq): Promise<CommonResponseModel
     return new CommonResponseModel(true, 1, 'data retrieved', data);
 }
 
-async getExfactoryComparisionData(req:YearReq): Promise<CommonResponseModel> {
-    const data = await this.ordersChildRepo.getExfactoryComparisionData(req);
+async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
+    const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
     
     if (data.length === 0) {
         return new CommonResponseModel(false, 0, 'data not found');
     }
 
-    const DateMap = new Map<string, ItemDataDto>();
- 
+    const DateMap = new Map<string, ItemDataDto>();  
     for (const rec of data) {
-        const orderQty = rec.order_plan_qty.replace(/,/g, '')
-        if (!DateMap.has(rec.item_cd)) {
-            DateMap.set(
-                rec.item_cd,
-                new ItemDataDto(rec.item, [])
-            );
+        
+            if(req.tabName === 'ExFactory'){
+                if (!DateMap.has(rec.item_cd)) {
+                    DateMap.set(
+                        rec.item_cd,
+                        new ItemDataDto(rec.item, [])
+                    );
+                }
+                const monthData = DateMap.get(rec.item_cd).monthWiseData;
+                    const pcs: PcsDataDto[] = [];
+                    const coeff: CoeffDataDto[] = [];
+         pcs.push(
+           { name: 'In Previous',
+            janPcs: rec.janExfPre,
+            febPcs: rec.febExfPre,
+            marPcs: rec.marExfPre,
+            aprPcs: rec.aprExfPre,
+            mayPcs: rec.mayExfPre,
+            junPcs: rec.julExfPre,
+            julPcs: rec.julExfPre,
+            augPcs: rec.augExfPre,
+            sepPcs: rec.sepExfPre,
+            octPcs: rec.octExfPre,
+            novPcs: rec.novExfPre,
+            decPcs: rec.decExfPre,}
+        )
+          coeff.push({
+            name: 'In Latest',
+            janCoeff: rec.janExfLat,
+            febCoeff: rec.febExfLat,
+            marCoeff: rec.marExfLat,
+            aprCoeff: rec.aprExfLat,
+            mayCoeff: rec.mayExfLat,
+            junCoeff: rec.julExfLat,
+            julCoeff: rec.julExfLat,
+            augCoeff: rec.augExfLat,
+            sepCoeff: rec.sepExfLat,
+            octCoeff: rec.octExfLat,
+            novCoeff: rec.novExfLat,
+            decCoeff: rec.decExfLat,
+          })
+    const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,rec.totalExfPre,rec.totalExfLat,rec.order_plan_number);
+            monthData.push(monthWiseInstance); 
         }
-        const monthData = DateMap.get(rec.item_cd).monthWiseData;
-        const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
-if(!phase){
-            const pcs: PcsDataDto[] = [];
-            const coeff: CoeffDataDto[] = [];
+        if(req.tabName === 'WareHouse'){
+            if (!DateMap.has(rec.item_cd)) {
+                DateMap.set(
+                    rec.item_cd,
+                    new ItemDataDto(rec.item, [])
+                );
+            }
+            const monthData = DateMap.get(rec.item_cd).monthWiseData;
+                const pcs: PcsDataDto[] = [];
+                const coeff: CoeffDataDto[] = [];
+            pcs.push(
+              { name: 'In Previous',
+               janPcs: rec.janWhPre,
+               febPcs: rec.febWhPre,
+               marPcs: rec.marWhPre,
+               aprPcs: rec.aprWhPre,
+               mayPcs: rec.mayWhPre,
+               junPcs: rec.julWhPre,
+               julPcs: rec.julWhPre,
+               augPcs: rec.augWhPre,
+               sepPcs: rec.sepWhPre,
+               octPcs: rec.octWhPre,
+               novPcs: rec.novWhPre,
+               decPcs: rec.decWhPre,}
+           )
+             coeff.push({
+               name: 'In Latest',
+               janCoeff: rec.janWhLat,
+               febCoeff: rec.febWhLat,
+               marCoeff: rec.marWhLat,
+               aprCoeff: rec.aprWhLat,
+               mayCoeff: rec.mayWhLat,
+               junCoeff: rec.julWhLat,
+               julCoeff: rec.julWhLat,
+               augCoeff: rec.augWhLat,
+               sepCoeff: rec.sepWhLat,
+               octCoeff: rec.octWhLat,
+               novCoeff: rec.novWhLat,
+               decCoeff: rec.decWhLat,
+             })
+              const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,rec.totalWhPre,rec.totalWhLat,rec.order_plan_number);
+               monthData.push(monthWiseInstance); 
+           }
+        }
+        
+        const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
+        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    }
+
+// async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
+//     const data = await this.ordersChildRepo.getWareHouseComparisionData(req);
+    
+//     if (data.length === 0) {
+//         console.log(data.length,"00000000")
+//         return new CommonResponseModel(false, 0, 'data not found');
+//     }
+
+//     const DateMap = new Map<string, ItemDataDto>();
+ 
+//     for (const rec of data) {
+//         const orderQty = rec.order_plan_qty.replace(/,/g, '')
+
+//         if (!DateMap.has(rec.item_cd)) {
+//             DateMap.set(
+//                 rec.item_cd,
+//                 new ItemDataDto(rec.item, [])
+//             );
+//         }
+//         const monthData = DateMap.get(rec.item_cd).monthWiseData;
+//         const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
+//             const pcs: PcsDataDto[] = [];
+//             const coeff: CoeffDataDto[] = [];
            
             
-pcs.push(
-           { name: 'In Pcs',
-            janPcs: rec.ExfMonth === 1 ? Number(orderQty) :Number(0),
-            febPcs: rec.ExfMonth === 2 ? Number(orderQty) :Number(0),
-            marPcs: rec.ExfMonth === 3 ? Number(orderQty) :Number(0),
-            aprPcs: rec.ExfMonth === 4 ? Number(orderQty) :Number(0),
-            mayPcs: rec.ExfMonth === 5 ? Number(orderQty) :Number(0),
-            junPcs: rec.ExfMonth === 6 ? Number(orderQty) :Number(0),
-            julPcs: rec.ExfMonth === 7 ? Number(orderQty) :Number(0),
-            augPcs: rec.ExfMonth === 8 ? Number(orderQty) :Number(0),
-            sepPcs: rec.ExfMonth === 9 ? Number(orderQty) :Number(0),
-            octPcs: rec.ExfMonth === 10 ? Number(orderQty) :Number(0),
-            novPcs: rec.ExfMonth === 11 ? Number(orderQty) :Number(0),
-            decPcs: rec.ExfMonth === 12 ? Number(orderQty) :Number(0),}
-        )
-    if (rec.status === "latest") {
-        // totalCoeff += Number(orderQty);
-        coeff.push({
-            name: 'In Coeff',
-            janCoeff: rec.ExfMonth === 1 ? Number(orderQty) :Number(0),
-            febCoeff: rec.ExfMonth === 2 ? Number(orderQty) :Number(0),
-            marCoeff: rec.ExfMonth === 3 ? Number(orderQty) :Number(0),
-            aprCoeff: rec.ExfMonth === 4 ? Number(orderQty) :Number(0),
-            mayCoeff: rec.ExfMonth === 5 ? Number(orderQty) :Number(0),
-            junCoeff: rec.ExfMonth === 6 ? Number(orderQty) :Number(0),
-            julCoeff: rec.ExfMonth === 7 ? Number(orderQty) :Number(0),
-            augCoeff: rec.ExfMonth === 8 ? Number(orderQty) :Number(0),
-            sepCoeff: rec.ExfMonth === 9 ? Number(orderQty) :Number(0),
-            octCoeff: rec.ExfMonth === 10 ? Number(orderQty) :Number(0),
-            novCoeff: rec.ExfMonth === 11 ? Number(orderQty) :Number(0),
-            decCoeff: rec.ExfMonth === 12 ? Number(orderQty) :Number(0),
-          })
-        }
-        const totalPcs = pcs.reduce((total, item) => {
-            return  + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
-                .filter(value => value !== 0) 
-                .reduce((sum, value) => + value, 0);
-        }, 0);
+// pcs.push(
+//     { name: 'In Pcs',
+//     janPcs: rec.whMonth === 1 ? Number(orderQty) :Number(0),
+//     febPcs: rec.whMonth === 2 ? Number(orderQty) :Number(0),
+//     marPcs: rec.whMonth === 3 ? Number(orderQty) :Number(0),
+//     aprPcs: rec.whMonth === 4 ? Number(orderQty) :Number(0),
+//     mayPcs: rec.whMonth === 5 ? Number(orderQty) :Number(0),
+//     junPcs: rec.whMonth === 6 ? Number(orderQty) :Number(0),
+//     julPcs: rec.whMonth === 7 ? Number(orderQty) :Number(0),
+//     augPcs: rec.whMonth === 8 ? Number(orderQty) :Number(0),
+//     sepPcs: rec.whMonth === 9 ? Number(orderQty) :Number(0),
+//     octPcs: rec.whMonth === 10 ? Number(orderQty) :Number(0),
+//     novPcs: rec.whMonth === 11 ? Number(orderQty) :Number(0),
+//     decPcs: rec.whMonth === 12 ? Number(orderQty) :Number(0),}
+//         )
+//     if (rec.status === "latest") {
+//         coeff.push({
+//             name: 'In Coeff',
+//             janCoeff: rec.whMonth === 1 ? Number(orderQty) :Number(0),
+//             febCoeff: rec.whMonth === 2 ? Number(orderQty) :Number(0),
+//             marCoeff: rec.whMonth === 3 ? Number(orderQty) :Number(0),
+//             aprCoeff: rec.whMonth === 4 ? Number(orderQty) :Number(0),
+//             mayCoeff: rec.whMonth === 5 ? Number(orderQty) :Number(0),
+//             junCoeff: rec.whMonth === 6 ? Number(orderQty) :Number(0),
+//             julCoeff: rec.whMonth === 7 ? Number(orderQty) :Number(0),
+//             augCoeff: rec.whMonth === 8 ? Number(orderQty) :Number(0),
+//             sepCoeff: rec.whMonth === 9 ? Number(orderQty) :Number(0),
+//             octCoeff: rec.whMonth === 10 ? Number(orderQty) :Number(0),
+//             novCoeff: rec.whMonth === 11 ? Number(orderQty) :Number(0),
+//             decCoeff: rec.whMonth === 12 ? Number(orderQty) :Number(0),
+//           })
+//         const totalPcs = pcs.reduce((total, item) => {
+//             return  + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
+//                 .filter(value => value !== 0) 
+//                 .reduce((sum, value) => + value, 0);
+//         }, 0);
         
-        const totalCoeff = coeff.reduce((total, item) => {
-            return + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
-                .filter(value => value !== 0) 
-                .reduce((sum, value) =>  + value, 0);
-        }, 0);
+//         const totalCoeff = coeff.reduce((total, item) => {
+//             return + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
+//                 .filter(value => value !== 0) 
+//                 .reduce((sum, value) =>  + value, 0);
+//         }, 0);
         
-            const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
-            monthData.push(monthWiseInstance); 
+//             const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
+//             monthData.push(monthWiseInstance); 
         
-    }
+//     }
     
-}
-    const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
+// }
+//     const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
 
-    return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
-
-
-
-}
-
-async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
-    const data = await this.ordersChildRepo.getWareHouseComparisionData(req);
-    
-    if (data.length === 0) {
-        console.log(data.length,"00000000")
-        return new CommonResponseModel(false, 0, 'data not found');
-    }
-
-    const DateMap = new Map<string, ItemDataDto>();
- 
-    for (const rec of data) {
-        const orderQty = rec.order_plan_qty.replace(/,/g, '')
-
-        if (!DateMap.has(rec.item_cd)) {
-            DateMap.set(
-                rec.item_cd,
-                new ItemDataDto(rec.item, [])
-            );
-        }
-        const monthData = DateMap.get(rec.item_cd).monthWiseData;
-        const phase = monthData.find(e => e.phasetype === rec.prod_plan_type)
-            const pcs: PcsDataDto[] = [];
-            const coeff: CoeffDataDto[] = [];
-           
-            
-pcs.push(
-    { name: 'In Pcs',
-    janPcs: rec.whMonth === 1 ? Number(orderQty) :Number(0),
-    febPcs: rec.whMonth === 2 ? Number(orderQty) :Number(0),
-    marPcs: rec.whMonth === 3 ? Number(orderQty) :Number(0),
-    aprPcs: rec.whMonth === 4 ? Number(orderQty) :Number(0),
-    mayPcs: rec.whMonth === 5 ? Number(orderQty) :Number(0),
-    junPcs: rec.whMonth === 6 ? Number(orderQty) :Number(0),
-    julPcs: rec.whMonth === 7 ? Number(orderQty) :Number(0),
-    augPcs: rec.whMonth === 8 ? Number(orderQty) :Number(0),
-    sepPcs: rec.whMonth === 9 ? Number(orderQty) :Number(0),
-    octPcs: rec.whMonth === 10 ? Number(orderQty) :Number(0),
-    novPcs: rec.whMonth === 11 ? Number(orderQty) :Number(0),
-    decPcs: rec.whMonth === 12 ? Number(orderQty) :Number(0),}
-        )
-    if (rec.status === "latest") {
-        coeff.push({
-            name: 'In Coeff',
-            janCoeff: rec.whMonth === 1 ? Number(orderQty) :Number(0),
-            febCoeff: rec.whMonth === 2 ? Number(orderQty) :Number(0),
-            marCoeff: rec.whMonth === 3 ? Number(orderQty) :Number(0),
-            aprCoeff: rec.whMonth === 4 ? Number(orderQty) :Number(0),
-            mayCoeff: rec.whMonth === 5 ? Number(orderQty) :Number(0),
-            junCoeff: rec.whMonth === 6 ? Number(orderQty) :Number(0),
-            julCoeff: rec.whMonth === 7 ? Number(orderQty) :Number(0),
-            augCoeff: rec.whMonth === 8 ? Number(orderQty) :Number(0),
-            sepCoeff: rec.whMonth === 9 ? Number(orderQty) :Number(0),
-            octCoeff: rec.whMonth === 10 ? Number(orderQty) :Number(0),
-            novCoeff: rec.whMonth === 11 ? Number(orderQty) :Number(0),
-            decCoeff: rec.whMonth === 12 ? Number(orderQty) :Number(0),
-          })
-        const totalPcs = pcs.reduce((total, item) => {
-            return  + [item.janPcs, item.febPcs, item.marPcs, item.aprPcs, item.mayPcs, item.junPcs, item.julPcs, item.augPcs, item.sepPcs, item.octPcs, item.novPcs, item.decPcs]
-                .filter(value => value !== 0) 
-                .reduce((sum, value) => + value, 0);
-        }, 0);
-        
-        const totalCoeff = coeff.reduce((total, item) => {
-            return + [item.janCoeff, item.febCoeff, item.marCoeff, item.aprCoeff, item.mayCoeff, item.junCoeff, item.julCoeff, item.augCoeff, item.sepCoeff, item.octCoeff, item.novCoeff, item.decCoeff]
-                .filter(value => value !== 0) 
-                .reduce((sum, value) =>  + value, 0);
-        }, 0);
-        
-            const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs,coeff,totalPcs,totalCoeff);
-            monthData.push(monthWiseInstance); 
-        
-    }
-    
-}
-    const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());   
-
-    return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+//     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
 
 
 
-}
+// }
 async getOrdersStatus(): Promise<CommonResponseModel> {
     const details = await this.ordersRepository.getOrdersStatus()
     if (details)
@@ -1363,6 +1486,19 @@ async getOrderPlanNo(): Promise<CommonResponseModel> {
 async getOrderNumberDropDownInCompare():Promise<CommonResponseModel>{
     try{
         const data = await this.orderDiffRepo.getOrderNumbers()
+        if(data){
+            return new CommonResponseModel(true,1,'Data retrieved',data)
+        } else{
+            return new CommonResponseModel(false,1,'No data found')
+        }
+
+    } catch(err){
+        throw err
+    }
+}
+async getMonthlyComparisionDate(req:YearReq):Promise<CommonResponseModel>{
+    try{
+        const data = await this.ordersChildRepo.getMonthlyComparisionDate(req)
         if(data){
             return new CommonResponseModel(true,1,'Data retrieved',data)
         } else{
