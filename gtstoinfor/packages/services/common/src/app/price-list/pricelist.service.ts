@@ -257,6 +257,8 @@ export class priceListService {
                         { isActive: req.isActive, updatedUser: req.updatedUser });
                     if (operationExists.isActive) {
                         if (operationStatus.affected) {
+                            console.log(operationStatus.affected,"effected")
+
                             const operationResponse: PriceListResponseModel = new PriceListResponseModel(true, 10115, 'PriceList is de-activated successfully');
                             return operationResponse;
                         } else {
@@ -543,6 +545,15 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
             }
         }
         
-        
+        async getAllPriceListItem(): Promise<CommonResponseModel> {
+            const details = await this.priceRepository.getItem();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
 
 }
