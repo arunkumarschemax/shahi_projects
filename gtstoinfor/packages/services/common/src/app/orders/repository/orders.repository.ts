@@ -6,6 +6,7 @@ import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
 import { CompareOrdersFilterReq, YearReq, orders } from "@project-management-system/shared-models";
+import { groupBy } from "rxjs";
 
 @Injectable()
 export class OrdersRepository extends Repository<OrdersEntity> {
@@ -140,6 +141,16 @@ export class OrdersRepository extends Repository<OrdersEntity> {
             .where(`o.year ='${year}'`)
             // .groupBy(`o.item_cd`)
         return await query.getRawMany();
+    }
+
+    async getPhaseMonthData(year:number):Promise<any>{
+        const query =this.createQueryBuilder(`order`)
+        .select(`o.item,o.item_cd,o.wh,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type,
+        MONTH(STR_TO_DATE(wh, '%m/%d')) AS whMonth`)
+        .where(`o.year ='${year}'`)
+       .groupBy(`order.prod_plan_type`)
+       return await query.getRawMany
+
     }
     async getWareHouseYearData(): Promise<any> {
         const query = this.createQueryBuilder('o')

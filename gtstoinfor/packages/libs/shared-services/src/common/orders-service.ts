@@ -181,4 +181,7 @@ export class OrdersService extends CommonAxiosService {
     async getOrderNumberDropDownInCompare(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getOrderNumberDropDownInCompare")
     }
+    async getPhaseMonthData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getPhaseMonthData")
+    }
 }
