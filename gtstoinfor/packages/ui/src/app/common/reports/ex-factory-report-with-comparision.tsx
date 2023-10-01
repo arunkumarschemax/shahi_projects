@@ -59,8 +59,11 @@ export const ExFactoryReportWithComparision = () => {
     });
   };
   const getData = () => {
-    const req = new YearReq(tab);
-    service.getExfactoryWithComparision(req).then((res) => {
+    const name ='ExFactory'
+    const req = new YearReq(tab,name);
+    console.log(name);
+    
+    service.getMonthlyComparisionData(req).then((res) => {
       console.log(res.data, "res==========");
       if (res.status) {
         setData(res.data);

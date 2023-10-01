@@ -41,7 +41,7 @@ export const WarehouseReport = () => {
     });
   };
   const getData =()=>{
-    const req = new YearReq(tab)
+    const req = new YearReq(tab,'')
     // console.log(tab,'222222222222222222');
     service.getAllWareHouse(req).then(res =>{
       if(res.status){
