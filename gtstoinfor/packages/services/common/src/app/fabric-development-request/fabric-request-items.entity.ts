@@ -55,7 +55,7 @@ export class FabricRequestItemsEntity {
     versionFlag: number;
 
 
-    @ManyToOne((type) => FabricRequestQualitiesInfoEntity, (FabricInfoEntity) => FabricInfoEntity.FabricItemsEntity, { nullable: false })
+    @ManyToOne((type) => FabricRequestQualitiesInfoEntity, (FabricInfoEntity) => FabricInfoEntity.fabricItemsEntity, { nullable: false })
     @JoinColumn({ name: "fabric_req_quality_info_id" })
     data:FabricRequestQualitiesInfoEntity;
 

@@ -1,6 +1,7 @@
 import { QualitiesEnum } from "@project-management-system/shared-models";
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { FabricRequestQualitiesInfoEntity } from "./fabric-request-quality-info.entity";
+import { FabricRequestEntity } from "./fabric-request.entity";
 
 
 @Entity('fabric_req_qualities')
@@ -88,8 +89,12 @@ export class FabricRequestQualitiesEntity {
 
 
     @OneToMany(() => FabricRequestQualitiesInfoEntity, FabricQualitiesEntity => FabricQualitiesEntity.data, { cascade: true })
-    FabricEntity:FabricRequestQualitiesInfoEntity[]
+    fabricEntity:FabricRequestQualitiesInfoEntity[]
   
+    @ManyToOne((type) => FabricRequestEntity, (Fabric) => Fabric.fabricQuantityEntity, { nullable: false })
+    @JoinColumn({ name: "fabric_request_id" })
+    data:FabricRequestEntity;
+    
 
 
 

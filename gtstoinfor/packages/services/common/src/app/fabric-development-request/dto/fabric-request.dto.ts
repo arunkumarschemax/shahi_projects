@@ -61,16 +61,14 @@ export class FabricRequestDto{
     status: StatusEnum;
 
     @ApiProperty()
-    FileName: string;
+    fileName: string;
 
     @ApiProperty() 
-    FilePath: string;
+    filePath: string;
 
     @ApiProperty({type:[FabricRequestQualitiesDto]})
     qualities:FabricRequestQualitiesDto[];
 
-    @ApiProperty()
-    fabricRequestId?: number;
 
    
 

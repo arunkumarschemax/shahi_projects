@@ -63,13 +63,13 @@ export class FabricRequestQualitiesInfoEntity {
         name: 'file_name',
         nullable: true
     })
-    FileName: string;
+    fileName: string;
 
     @Column('varchar', {
         name: 'file_path',
         nullable: true
     })
-    FilePath: string;
+    filePath: string;
 
 
     @Column('enum', {
@@ -117,13 +117,13 @@ export class FabricRequestQualitiesInfoEntity {
       })
     versionFlag: number;
 
-    @ManyToOne((type) => FabricRequestQualitiesEntity, (FabricInfoEntity) => FabricInfoEntity.FabricEntity, { nullable: false })
+    @ManyToOne((type) => FabricRequestQualitiesEntity, (FabricInfoEntity) => FabricInfoEntity.fabricEntity, { nullable: false })
     @JoinColumn({ name: "fabric_req_quality_id" })
     data:FabricRequestQualitiesEntity;
     
 
     @OneToMany(() => FabricRequestItemsEntity, FabricItemEntity => FabricItemEntity.data, { cascade: true })
-    FabricItemsEntity:FabricRequestItemsEntity[]
+    fabricItemsEntity:FabricRequestItemsEntity[]
   
 
 

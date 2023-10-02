@@ -1,5 +1,6 @@
 import { StatusEnum } from "@project-management-system/shared-models";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { FabricRequestQualitiesEntity } from "./fabric-request-qualities.entity";
 
 @Entity('fabric_request')
 export class FabricRequestEntity {
@@ -96,13 +97,13 @@ export class FabricRequestEntity {
         name: 'file_name',
         nullable: true
     })
-    FileName: string;
+    fileName: string;
 
     @Column('varchar', {
         name: 'file_path',
         nullable: true
     })
-    FilePath: string;
+    filePath: string;
 
     @CreateDateColumn({
       name: "created_at",
@@ -135,6 +136,9 @@ export class FabricRequestEntity {
       name: "version_flag"
     })
     versionFlag: number;
+
+    @OneToMany(() => FabricRequestQualitiesEntity, Entity => Entity.data, { cascade: true })
+    fabricQuantityEntity:FabricRequestQualitiesEntity[]
 
   
   }

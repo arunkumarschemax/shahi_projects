@@ -9,7 +9,12 @@ export class FabricRequestItemsDto {
     description: string;
 
     @ApiProperty()
-    fabricRequestItemsId?: number;
+    fabricRequestQualityInfoId: number;
+
+
+
+    // @ApiProperty()
+    // fabricRequestItemsId?: number;
     
     // createdAt : Date;
 

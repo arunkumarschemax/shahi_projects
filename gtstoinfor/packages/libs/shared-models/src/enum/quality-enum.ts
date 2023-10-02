@@ -1,17 +1,17 @@
 export enum QualitiesEnum {
 
-    Quality1 = 'Quality1',
-    Quality2 = 'Quality2',
-    Quality3 = 'Quality3',
-    Quality4 = 'Quality4',
-    Quality5 = 'Quality5',
-    Quality6 = 'Quality6',
-    Quality7 = 'Quality7',
-    Quality8 = 'Quality8',
-    Quality9 = 'Quality9',
-    Quality10 = 'Quality10',
-    Quality11 = 'Quality11',
-    Quality12 = 'Quality12',
+    quality1 = 'quality1',
+    quality2 = 'quality2',
+    quality3 = 'quality3',
+    quality4 = 'quality4',
+    quality5 = 'quality5',
+    quality6 = 'quality6',
+    quality7 = 'quality7',
+    quality8 = 'quality8',
+    quality9 = 'quality9',
+    quality10 = 'quality10',
+    quality11 = 'quality11',
+    quality12 = 'quality12',
 
 
   }

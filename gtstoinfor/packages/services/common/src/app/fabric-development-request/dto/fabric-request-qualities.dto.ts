@@ -19,7 +19,7 @@ export class FabricRequestQualitiesDto {
     // versionFlag : number;
     
     @ApiProperty()
-    Quality: QualitiesEnum;
+    quality: QualitiesEnum;
 
     @ApiProperty()
     placement: string;
@@ -28,21 +28,26 @@ export class FabricRequestQualitiesDto {
     width: number;
 
     @ApiProperty()
-    FabricDescription: string;
+    fabricDescription: string;
 
     @ApiProperty()
     description: string;
 
     @ApiProperty()
-    FabricCode: string;
+    fabricCode: string;
 
     @ApiProperty({type:[FabricRequestQualitiesInfoDto]})
     qualitiesInfo:FabricRequestQualitiesInfoDto[];
 
+    @ApiProperty()
+    fabricRequestId: number;
+
+
+
   
 
-    @ApiProperty()
-    fabricRequestQualityId?: number;
+    // @ApiProperty()
+    // fabricRequestQualityId?: number;
 
 
 }

@@ -39,10 +39,10 @@ export class FabricRequestQualitiesInfoDto {
     uomId:number;
 
     @ApiProperty()
-    FileName: string;
+    fileName: string;
 
     @ApiProperty()
-    FilePath: string;
+    filePath: string;
 
     @ApiProperty()
     status: StatusEnum;
@@ -52,9 +52,14 @@ export class FabricRequestQualitiesInfoDto {
     
     @ApiProperty({type:[FabricRequestItemsDto]})
     itemsinfo:FabricRequestItemsDto[]; 
-   
+     
     @ApiProperty()
-    fabricRequestQualityInfoId?: number;
+    fabricRequestQualityId: number;
+    
+
+   
+    // @ApiProperty()
+    // fabricRequestQualityInfoId?: number;
      
     
     
