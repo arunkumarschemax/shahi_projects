@@ -260,11 +260,11 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
-    @Post('/getExfactoryMonthData')
+    @Post('/getMonthWiseReportData')
     @ApiBody({type:YearReq})
-    async getExfactoryMonthData(@Body() req:any): Promise<CommonResponseModel> {
+    async getMonthWiseReportData(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getExfactoryMonthData(req);
+            return this.ordersService.getMonthWiseReportData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
@@ -334,24 +334,24 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
-    @Post('/getExfactoryComparisionData')
+    @Post('/getMonthlyComparisionData')
     @ApiBody({type:YearReq})
-    async getExfactoryComparisionData(@Body() req:any): Promise<CommonResponseModel> {
+    async getMonthlyComparisionData(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getExfactoryComparisionData(req);
+            return this.ordersService.getMonthlyComparisionData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
-    @Post('/getWareHouseComparisionData')
-    @ApiBody({type:YearReq})
-    async getWareHouseComparisionData(@Body() req:any): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.getWareHouseComparisionData(req);
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/getWareHouseComparisionData')
+    // @ApiBody({type:YearReq})
+    // async getWareHouseComparisionData(@Body() req:any): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.getWareHouseComparisionData(req);
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
     
     @Post('/getExfactoryComparisionExcelData')
     @ApiBody({type:YearReq})
@@ -456,6 +456,15 @@ export class OrdersController {
     async updateStatusAfterCoLineCreationInM3(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.updateStatusAfterCoLineCreationInM3(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getMonthlyComparisionDate')
+    @ApiBody({type:YearReq})
+    async getMonthlyComparisionDate(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getMonthlyComparisionDate(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

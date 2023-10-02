@@ -220,15 +220,6 @@ const {Text}=Typography
             key: 'sno',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
-        {
-            title: 'Order Plan Number ',
-            dataIndex: 'order_plan_number',
-            align:'right',
-           
-            ...getColumnSearchProps("order_plan_number"),
-            sorter: (a, b) => a.item_code.localeCompare(b.order_plan_number),
-            sortDirections: ["descend", "ascend"],
-        },
       
         {
             title: 'Order No',
@@ -271,7 +262,15 @@ const {Text}=Typography
             
         // },
         
-  
+        {
+            title: 'Order Plan Number ',
+            dataIndex: 'order_plan_number',
+            align:'right',
+           
+            ...getColumnSearchProps("order_plan_number"),
+            sorter: (a, b) => a.item_code.localeCompare(b.order_plan_number),
+            sortDirections: ["descend", "ascend"],
+        },
         {
             title: 'Color Code',
             dataIndex: 'color_code',
@@ -322,7 +321,7 @@ const {Text}=Typography
         },
            
         {
-            title: 'Order Quantity(pcs)',
+            title: 'Order Quantity Pcs',
             dataIndex: 'order_qty_pcs',
             align:'right',
             // ...getColumnSearchProps("order_qty_pcs"),
@@ -339,7 +338,7 @@ const {Text}=Typography
                 return (
                     <Table.Summary.Row>
                         <Table.Summary.Cell colSpan={8} index={0}>Grand Total</Table.Summary.Cell>
-                        <Table.Summary.Cell index={8}>{total}</Table.Summary.Cell>
+                        <Table.Summary.Cell index={9}>{total}</Table.Summary.Cell>
                     </Table.Summary.Row>
                 );
             },
@@ -396,7 +395,7 @@ const {Text}=Typography
             dataIndex: "itemNo",
             align:'left',
 
-          width:200,
+width:200,
             render: (text, record) => {
                 if(record.answered_status != 'Accepted'){
 
@@ -471,7 +470,7 @@ const {Text}=Typography
             { title: 'Department', dataIndex: 'department' },
             { title: 'Revised Date', dataIndex: 'revised_date' },
             { title: 'Document Status', dataIndex: 'document_status' },
-            { title: 'Status', dataIndex: 'answered_status' },
+            { title: 'Answered Status', dataIndex: 'answered_status' },
             { title: 'Vendor Person InCharge', dataIndex: 'vendor_person_incharge' },
             { title: 'Decision Date', dataIndex: 'decision_date' },
             { title: 'Payment Terms', dataIndex: 'payment_terms' },
@@ -582,21 +581,21 @@ const {Text}=Typography
                 <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500 }} bordered
                 size='small'
                 summary={(pageData) => {
-                    
+                    // Calculate the grand total on each page change
                     let total = 0;
                     pageData.forEach((record) => {
                         total += parseFloat(record.order_qty_pcs);
                     });
-                    setGrandTotal(total);
+                    setGrandTotal(total); // Update the grand total in state
+            
                     return (
                         <Table.Summary.Row>
 <Table.Summary.Cell colSpan={10} index={8} >
 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-<span>{grandTotal}</span>
 <span style={{ color: 'Red' }}>Grand Total:</span>
 </div>
 </Table.Summary.Cell>
-<Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>                            <Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>
+<Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>     
                         </Table.Summary.Row>
                     );
                 }}
@@ -605,5 +604,6 @@ const {Text}=Typography
         </div>
     )
 }
+
 
 export default TrimOrder;

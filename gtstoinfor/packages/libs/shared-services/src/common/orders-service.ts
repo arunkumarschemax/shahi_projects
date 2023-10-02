@@ -97,8 +97,8 @@ export class OrdersService extends CommonAxiosService {
     async createCOline(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/createCOline", req)
     }
-    async getAll(req:YearReq): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getExfactoryMonthData",req)
+    async getMonthWiseReportData(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getMonthWiseReportData",req)
     }
     async getExfactoryYearData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getExfactoryYear")
@@ -133,8 +133,8 @@ export class OrdersService extends CommonAxiosService {
     async getProdPlanCount(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getProdPlanCount")
     }
-    async getExfactoryWithComparision(req:YearReq): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getExfactoryComparisionData",req)
+    async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getMonthlyComparisionData",req)
     }
     async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getWareHouseComparisionData",req)
@@ -188,5 +188,9 @@ export class OrdersService extends CommonAxiosService {
 
     async updateStatusAfterCoLineCreationInM3(req:CoLineStatusReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/updateStatusAfterCoLineCreationInM3",req)
+    }
+ 
+    async getMonthlyComparisionDate(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getMonthlyComparisionDate",req)
     }
 }
