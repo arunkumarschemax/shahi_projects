@@ -170,7 +170,6 @@ export class OrdersChildAdapter {
         ordersEntity.productionPlanId = productionPlanId;
         entity.orders = ordersEntity;
         entity.fileId = id
-        console.log(entity,'---entity')
         return entity
     
     }

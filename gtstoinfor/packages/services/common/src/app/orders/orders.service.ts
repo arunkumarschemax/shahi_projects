@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -27,6 +27,8 @@ import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
 import { find } from 'rxjs';
 import { log } from 'console';
 import { appConfig } from 'packages/services/common/config';
+import { CoLine } from './entities/co-line.entity';
+import { CoLineRepository } from './repository/co-line-repo';
 let moment = require('moment');
 moment().format();
 
@@ -45,6 +47,7 @@ export class OrdersService {
         private orderDiffRepo: OrderDifferenceRepository,
         private fileUploadRepo: FileUploadRepository,
         private trimOrderRepo: TrimOrdersRepository,
+        private colineRepo: CoLineRepository,
         @InjectDataSource()
         private dataSource: DataSource,
         @InjectEntityManager() private readonly entityManager: EntityManager
@@ -64,11 +67,14 @@ export class OrdersService {
                 for (const key in obj) {
                     const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_').replace(/:/g,'_').replace(/[*]/g,'_').replace(/=/g,'_').replace(/”/g,'').replace(/~/g,'').replace(/[/]/g,'').replace(/“/g,'').replace(/�/g,'')
                     const newKey1 = newKey.replace(/__/g,'_');
+                    // console.log(newKey1,'---------newkey1')
                     columnArray.push(newKey1)
                     updatedObj[newKey1] = obj[key];
                 }
                 return updatedObj;
+
             });
+            // console.log(updatedArray,'updatedarray')
 
             const convertedData = updatedArray.map((obj) => {
                 const updatedObj = {};
@@ -1362,7 +1368,7 @@ async getOrderPlanNo(): Promise<CommonResponseModel> {
 }
 async getOrderNumberDropDownInCompare():Promise<CommonResponseModel>{
     try{
-        const data = await this.orderDiffRepo.getOrderNumbers()
+        const data = await this.ordersChildRepo.getOrderNumbers()
         if(data){
             return new CommonResponseModel(true,1,'Data retrieved',data)
         } else{
@@ -1374,6 +1380,100 @@ async getOrderNumberDropDownInCompare():Promise<CommonResponseModel>{
     }
 }
 
-  }
+async createCOLineInternal(req:COLineRequest):Promise<CommonResponseModel>{
+    try{
+        const entity = new CoLine()
+        entity.itemNumber = req.itemNumber;
+        entity.orderNumber = req.orderNumber;
+        entity.colorCode = req.colorCode;
+        entity.color = req.color;
+        entity.sizeCode = req.sizeCode;
+        entity.size = req.size;
+        entity.itemCode = req.itemCode;
+        entity.item = req.item;
+        entity.destination = req.destination;
+        entity.company_CONO = req.company_CONO;
+        entity.temporaryOrderNumber_ORNO = req.temporaryOrderNumber_ORNO;
+        entity.itemNumber_ITNO = req.itemNumber_ITNO;
+        entity.orderedQuantity_ORQT = req.orderedQuantity_ORQT;
+        entity.warehouse_WHLO = req.warehouse_WHLO;
+        entity.requestedDeliveryDate_DWDT = req.requestedDeliveryDate_DWDT;
+        entity.jointDeliveryDate_JDCD = req.jointDeliveryDate_JDCD;
+        entity.customersOrderNumber_CUPO = req.customersOrderNumber_CUPO;
+        entity.salesPrice_SAPR = req.salesPrice_SAPR;
+        entity.discountAmount1_DIA1 = req.discountAmount1_DIA1;
+        entity.discountAmount2_DIA2 = req.discountAmount2_DIA2;
+        entity.discountAmount3_DIA3 = req.discountAmount3_DIA3;
+        entity.discountAmount4_DIA4 = req.discountAmount4_DIA4;
+        entity.discountAmount5_DIA5 = req.discountAmount5_DIA5;
+        entity.discountAmount6_DIA6 = req.discountAmount6_DIA6;
+        entity.deliverySpecification_DLSP = req.deliverySpecification_DLSP;
+        entity.deliverySpecificationText_DLSX = req.deliverySpecificationText_DLSX;
+        entity.oldCFIN_CFXX = req.oldCFIN_CFXX;
+        entity.simulationsNumber_ECVS = req.simulationsNumber_ECVS;
+        entity.alternateUM_ALUN = req.alternateUM_ALUN;
+        entity.confirmedDateOfDelivery_CODT = req.confirmedDateOfDelivery_CODT;
+        entity.itemDescription_ITDS = req.itemDescription_ITDS;
+        entity.discountPercent1_DIP1 = req.discountPercent1_DIP1;
+        entity.discountPercent2_DIP2 = req.discountPercent2_DIP2;
+        entity.discountPercent3_DIP3 = req.discountPercent3_DIP3;
+        entity.discountPercent4_DIP4 = req.discountPercent4_DIP4;
+        entity.discountPercent5_DIP5 = req.discountPercent5_DIP5;
+        entity.discountPercent6_DIP6 = req.discountPercent6_DIP6;
+        entity.aliasQualifier_ALWT = req.aliasQualifier_ALWT;
+        entity.blanketAgreementNumber_AGNO = req.blanketAgreementNumber_AGNO;
+        entity.container_CAMU = req.container_CAMU;
+        entity.projectNumber_PROJ = req.projectNumber_PROJ;
+        entity.projectElement_ELON = req.projectElement_ELON;
+        entity.customerOrderNumber_CUOR = req.customerOrderNumber_CUOR;
+        entity.customersPackagingIdentity_CUPA = req.customersPackagingIdentity_CUPA;
+        entity.requestedDeliveryTime_DWHM = req.requestedDeliveryTime_DWHM;
+        entity.standardQuantity_D1QT = req.standardQuantity_D1QT;
+        entity.packaging_PACT = req.packaging_PACT;
+        entity.aliasNumber_POPN = req.aliasNumber_POPN;
+        entity.salesPriceQuantity_SACD = req.salesPriceQuantity_SACD;
+        entity.saledPriceUOM_SPUN = req.saledPriceUOM_SPUN;
+        entity.packagingTerms_TEPA = req.packagingTerms_TEPA;
+        entity.EDIFACTPrice_EDFP = req.EDIFACTPrice_EDFP;
+        entity.requestedDeliveryDate_DWDZ = req.requestedDeliveryDate_DWDZ;
+        entity.requestedDeliveryTime_DWHZ = req.requestedDeliveryTime_DWHZ;
+        entity.confirmedDeliveryTime_COHM = req.confirmedDeliveryTime_COHM;
+        entity.confirmedDeliveryDate_CODZ = req.confirmedDeliveryDate_CODZ;
+        entity.confirmedDeliveryTime_COHZ = req.confirmedDeliveryTime_COHZ;
+        entity.mainProduct_HDPR = req.mainProduct_HDPR;
+        entity.addressNumber_ADID = req.addressNumber_ADID;
+        entity.lineSuffix_CUSX = req.lineSuffix_CUSX;
+        entity.statusDiscount_DICI = req.statusDiscount_DICI;
+        entity.trimOrderId = req.trimOrderId;
+        const save = await this.colineRepo.save(entity)
+        if(save){
+            return new CommonResponseModel(true,1,'Created Successfully',save)
+        } else{
+            return new CommonResponseModel(false,0,'Something went wrong')
+        }
+
+    } catch(err){
+        throw err
+    }
+}
+
+async updateStatusAfterCoLineCreationInM3(req:CoLineStatusReq):Promise<CommonResponseModel>{
+    try{
+        const statusUpdate = await this.colineRepo.update({coLineId : req.coLineId},{status:req.status})
+        if(statusUpdate.affected){
+            return new CommonResponseModel(true,1,'Status Updated')
+        } else{
+            return new CommonResponseModel(false,0,'Something went erong in status update')
+        }
+
+    } catch(err){
+        throw(err)
+    }
+}
+
+
+
+
+}
 
   

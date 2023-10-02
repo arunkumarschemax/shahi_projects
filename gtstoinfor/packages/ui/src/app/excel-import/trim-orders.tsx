@@ -5,7 +5,7 @@ import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { OrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
-import { COLineRequest } from '@project-management-system/shared-models';
+import { COLineRequest, CoLineStatusReq } from '@project-management-system/shared-models';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
@@ -55,16 +55,30 @@ const {Text}=Typography
     }
     const approveOrderStatus = (record) => {
         console.log(record)
-    const req = new COLineRequest();
-    req.itemNumber = record.itemNumber
-    req.orderNumber = record.order_no
-    service.createCOline(req).then((res) => {
-        if (res.status) {
-            getData()
-            message.success(res.internalMessage)
-        } else (
-            message.error(res.internalMessage)
-        )
+    const req = new COLineRequest(record.itemNumber,record.order_no,record.color_code,record.color,record.size_code,record.size,record.item_code,record.item,null,null,record.order_no,record.itemNumber,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,record.trim_order_id);
+    // req.itemNumber = record.itemNumber
+    // req.orderNumber = record.order_no
+    service.createCOLineInternal(req).then(coLineRes => {
+        if(coLineRes.status){
+            service.createCOline(req).then((res) => {
+                if (res.status) {
+                    const statusReq = new CoLineStatusReq()
+                    statusReq.coLineId = coLineRes?.data?.coLineId
+                    statusReq.status = 'Success'
+                    service.updateStatusAfterCoLineCreationInM3(statusReq)
+                    getData()
+                    message.success(res.internalMessage)
+                } else {
+                    const statusReq = new CoLineStatusReq()
+                    statusReq.coLineId = coLineRes?.data?.coLineId
+                    statusReq.status = 'Failed'
+                    service.updateStatusAfterCoLineCreationInM3(statusReq)
+                    message.error(res.internalMessage)
+                }
+            })
+        } else{
+            message.error(coLineRes.internalMessage)
+        }
     })
     }
     function convertToYYYYMMDD(inputDate) {

@@ -1,4 +1,4 @@
-import { CommonResponseModel, CompareOrdersFilterReq, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, YearReq, orders } from "@project-management-system/shared-models"
+import { COLineRequest, CoLineStatusReq, CommonResponseModel, CompareOrdersFilterReq, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, YearReq, orders } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
@@ -180,5 +180,13 @@ export class OrdersService extends CommonAxiosService {
 
     async getOrderNumberDropDownInCompare(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getOrderNumberDropDownInCompare")
+    }
+
+    async createCOLineInternal(req:COLineRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/createCOLineInternal",req)
+    }
+
+    async updateStatusAfterCoLineCreationInM3(req:CoLineStatusReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/updateStatusAfterCoLineCreationInM3",req)
     }
 }

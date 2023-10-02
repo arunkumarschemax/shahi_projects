@@ -1,7 +1,7 @@
 import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest, CompareOrdersFilterReq, orders } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest, CompareOrdersFilterReq, orders, COLineRequest } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -438,6 +438,24 @@ export class OrdersController {
     async getOrderNumberDropDownInCompare(): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getOrderNumberDropDownInCompare();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/createCOLineInternal')
+    async createCOLineInternal(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.createCOLineInternal(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/updateStatusAfterCoLineCreationInM3')
+    async updateStatusAfterCoLineCreationInM3(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.updateStatusAfterCoLineCreationInM3(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

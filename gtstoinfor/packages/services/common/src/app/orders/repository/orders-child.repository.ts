@@ -262,4 +262,13 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             //  console.log(query,"test of quary222222222222")
         return await query.getRawMany();
     }
+
+    async getOrderNumbers():Promise<any[]>{
+        const query = this.createQueryBuilder('o')
+            .select(`o.order_plan_number`)
+            // .where(`o.column_name = 'order_plan_qty'`)
+            .groupBy(`o.order_plan_number`)
+            .orderBy(`o.order_plan_number`)
+        return await query.getRawMany()
+    }
 }
