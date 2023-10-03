@@ -174,9 +174,15 @@ export function OrderAcceptance() {
 
     const approveDpomLineItemStatus = (record) => {
         const req = new DpomApproveRequest();
-        req.poLineItemNumber = record.poLineItemNumber
-        req.purchaseOrderNumber = record.purchaseOrderNumber
-        req.scheduleLineItemNumber = record.scheduleLineItemNumber
+        req.poLineItemNumber = record.po_line_item_number
+        req.purchaseOrderNumber = record.po_number
+        req.scheduleLineItemNumber = record.schedule_line_item_number
+        req.itemNo = itemNoValues[record.key]
+        req.itemDesc = ''
+        req.orderQty = record.size_qty
+        req.size = record.size_description
+        req.price = record.gross_price_fob
+        req.currency = record.fob_currency_code
         service.createCOline(req).then((res) => {
             if (res.status) {
                 getOrderAcceptanceData()
@@ -186,8 +192,6 @@ export function OrderAcceptance() {
             )
         })
     }
-
-
 
     const columns: any = [
         {
@@ -286,11 +290,8 @@ export function OrderAcceptance() {
                     return text;
                 }
             },
-        }
-
-
-
-        , {
+        },
+        {
             title: 'Total Order Quantity',
             dataIndex: 'total_item_qty',
             render: (text, record) => {

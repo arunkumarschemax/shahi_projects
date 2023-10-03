@@ -30,6 +30,7 @@ import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
 import { ChangeComparision } from './dto/change-comparision.req';
 import { COLineEntity } from './entites/co-line.entity';
 import { COLineRepository } from './repositories/co-line.repository';
+
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -42,7 +43,7 @@ export class DpomService {
         private dpomAdapter: DpomAdapter,
         private dpomChildAdapter: DpomChildAdapter,
         private fileUploadRepo: NikeFileUploadRepository,
-        private coLineRepo : COLineRepository,
+        private coLineRepository: COLineRepository,
         @InjectDataSource()
         private dataSource: DataSource,
     ) { }
@@ -254,8 +255,9 @@ export class DpomService {
     async createCOline(req: any): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
+            await transactionManager.startTransaction()
             const coLineEntity = new COLineEntity()
-            coLineEntity.buyerPo = req.poNumber
+            coLineEntity.buyerPo = req.purchaseOrderNumber
             coLineEntity.division = 100
             coLineEntity.PCH = 'KNT'
             coLineEntity.facility = 100
@@ -263,11 +265,11 @@ export class DpomService {
             coLineEntity.customerCode = 'NIK00001'
             coLineEntity.itemNo = req.itemNo
             coLineEntity.itemDesc = req.itemDesc
-            coLineEntity.orderQty = req.sizeQty
+            coLineEntity.orderQty = req.orderQty
             coLineEntity.UOM = 'Pcs'
-            coLineEntity.size = req.sizeDesc
-            coLineEntity.price = req.FOBGrossPrice
-            coLineEntity.currency = req.FOBCurrencyCode
+            coLineEntity.size = req.size
+            coLineEntity.price = req.price
+            coLineEntity.currency = req.currency
             coLineEntity.coFinalAppDate = ''
             coLineEntity.PCD = ''
             coLineEntity.commision = ''
@@ -276,9 +278,10 @@ export class DpomService {
             coLineEntity.payTerms = ''
             coLineEntity.payTermsDesc = ''
             coLineEntity.createdUser = 'nike'
-
-            const saveExcelEntity: DpomChildEntity = await transactionManager.getRepository(DpomChildEntity).save(coLineEntity);
-            if (!saveExcelEntity) {
+            const saveEntity: COLineEntity = await transactionManager.getRepository(COLineEntity).save(coLineEntity);
+            const data = await this.coLineRepository.find()
+            console.log(data)
+            if (!saveEntity) {
                 await transactionManager.releaseTransaction()
                 return new CommonResponseModel(false, 0, 'something went wrong')
             }
@@ -287,7 +290,8 @@ export class DpomService {
                 await transactionManager.releaseTransaction()
                 return new CommonResponseModel(false, 0, 'something went wrong')
             }
-            return new CommonResponseModel(true, 1, `COline created successfully`)
+            await transactionManager.completeTransaction();
+            return new CommonResponseModel(true, 1, 'CO-line created successfully')
         } catch (err) {
             throw err
         }
@@ -1735,34 +1739,6 @@ export class DpomService {
         const dataModelArray: ChangePoandLineModel[] = Array.from(poAndLineMap.values());
         return new CommonResponseModel(true, dataModelArray.length, 'Data retrieved', dataModelArray);
     }
-    
 
-    async getCoLine(req?:coLineRequest): Promise<CommonResponseModel> {
-        const data = await this.coLineRepo.getCoLineData(req)
-        if (data.length > 0)
-            return new CommonResponseModel(true, 1, 'data retrived', data)
-        else
-            return new CommonResponseModel(false, 0, 'No data found');
-    }
-    async getBuyerPo(): Promise<CommonResponseModel> {
-        const data = await this.coLineRepo.getBuyerPo()
-        if (data.length > 0)
-            return new CommonResponseModel(true, 1, 'data retrived', data)
-        else
-            return new CommonResponseModel(false, 0, 'No data found');
-    }
-    async getColineItem(): Promise<CommonResponseModel> {
-        const data = await this.coLineRepo.getItem()
-        if (data.length > 0)
-            return new CommonResponseModel(true, 1, 'data retrived', data)
-        else
-            return new CommonResponseModel(false, 0, 'No data found');
-    }
-    async getColineOrderNo(): Promise<CommonResponseModel> {
-        const data = await this.coLineRepo.getOrderNumber()
-        if (data.length > 0)
-            return new CommonResponseModel(true, 1, 'data retrived', data)
-        else
-            return new CommonResponseModel(false, 0, 'No data found');
-    }
+    
 }

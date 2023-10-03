@@ -31,6 +31,6 @@ import { COLineRepository } from './repositories/co-line.repository';
       COLineEntity
     ])],
   controllers: [DpomController],
-  providers: [DpomService, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter, DpomDifferenceRepository, NikeFileUploadRepository,COLineRepository]
+  providers: [DpomService, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter, DpomDifferenceRepository, NikeFileUploadRepository, COLineRepository]
 })
 export class DpomModule { }
