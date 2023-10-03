@@ -1,4 +1,4 @@
-import { COLineRequest, CoLineStatusReq, CommonResponseModel, CompareOrdersFilterReq, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, YearReq, orders } from "@project-management-system/shared-models"
+import { COLineRequest, CoLineStatusReq, CommonResponseModel, CompareOrdersFilterReq, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, TrimOrdersReq, YearReq, orders } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
@@ -91,8 +91,8 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getMonthWiseData")
 
     }
-     async getTrimOrdersData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getTrimOrdersData")
+     async getTrimOrdersData(req:TrimOrdersReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getTrimOrdersData",req)
     }
     async createCOline(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/createCOline", req)
@@ -192,5 +192,11 @@ export class OrdersService extends CommonAxiosService {
  
     async getMonthlyComparisionDate(req:YearReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getMonthlyComparisionDate",req)
+    }
+    async getPhaseMonthData(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getPhaseMonthData",req)
+    }
+    async getComparisionPhaseData(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getComparisionPhaseData",req)
     }
 }

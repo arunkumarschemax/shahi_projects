@@ -5,7 +5,7 @@ import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { OrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
-import { COLineRequest, CoLineStatusReq } from '@project-management-system/shared-models';
+import { COLineRequest, CoLineStatusReq, TrimOrdersReq } from '@project-management-system/shared-models';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
@@ -36,10 +36,26 @@ const {Text}=Typography
     }, [])
 
     const getData = () => {
-        service.getTrimOrdersData().then(res => {
+        const req = new TrimOrdersReq()
+        if (form.getFieldValue('approvalDate') !== undefined) {
+            req.approvalFromDate = (form.getFieldValue('approvalDate')[0]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('approvalDate') !== undefined) {
+        req.approvalToDate = (form.getFieldValue('approvalDate')[1]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('orderNo') !== undefined) {
+            req.OrderNumber = (form.getFieldValue('orderNo'))
+            }
+        service.getTrimOrdersData(req).then(res => {
+            console.log(req,'req');
+            
             if (res.status) {
                 setGridData(res.data)
                 setFilteredData(res.data)
+            }
+            else{
+                setFilteredData([])
+                setGridData([])
             }
         }).catch(err => {
             console.log(err.message)
@@ -81,46 +97,35 @@ const {Text}=Typography
         }
     })
     }
-    function convertToYYYYMMDD(inputDate) {
-        const formatsToTry = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY', 'YYYY-MM-DD'];
-        let formattedDate = null;
-        for (const format of formatsToTry) {
-            const parsedDate = moment(inputDate, format);
-            if (parsedDate.isValid()) {
-                formattedDate = parsedDate.format('YYYY-MM-DD');
-                break;
-            }
-        }
-        return formattedDate;
-    }
-    const getFilterdData = () => {
-        let orderNo = form.getFieldValue('orderNo');
-        let startDate = selectedEstimatedFromDate;
-        let endDate = selectedEstimatedStartDate;
-        let selectedDate = selectedEstimatedFromDate;
+   
+    // const getFilterdData = () => {
+    //     let orderNo = form.getFieldValue('orderNo');
+    //     let startDate = selectedEstimatedFromDate;
+    //     let endDate = selectedEstimatedStartDate;
+    //     let selectedDate = selectedEstimatedFromDate;
 
-        let filteredData = gridData;
-        if (orderNo) {
-            filteredData = filteredData.filter(record => record.order_no === orderNo);
-            if (filteredData.length === 0) {
-                message.error("No Data Found")
-            }
-            setFilteredData(filteredData);
-        }
-        if (selectedDate) {
-            selectedDate = moment(selectedDate).format('YYYY/MM/DD');
+    //     let filteredData = gridData;
+    //     if (orderNo) {
+    //         filteredData = filteredData.filter(record => record.order_no === orderNo);
+    //         if (filteredData.length === 0) {
+    //             message.error("No Data Found")
+    //         }
+    //         setFilteredData(filteredData);
+    //     }
+    //     if (selectedDate) {
+    //         selectedDate = moment(selectedDate).format('YYYY/MM/DD');
 
-            filteredData = filteredData.filter(record => {
-                const dateInData = moment(record.approval_date).format('YYYY/MM/DD');
-                return dateInData === selectedDate;
-            });
+    //         filteredData = filteredData.filter(record => {
+    //             const dateInData = moment(record.approval_date).format('YYYY/MM/DD');
+    //             return dateInData === selectedDate;
+    //         });
     
-          }
-          setFilteredData(filteredData);
-          if (filteredData.length === 0) {
-            message.error("No Data Found");
-          }
-    }
+    //       }
+    //       setFilteredData(filteredData);
+    //       if (filteredData.length === 0) {
+    //         message.error("No Data Found");
+    //       }
+    // }
 
     const onReset = () => {
         form.resetFields();
@@ -337,6 +342,7 @@ const {Text}=Typography
                 });
                 return (
                     <Table.Summary.Row>
+                        <Table.Summary.Cell colSpan={7} index={0}>  </Table.Summary.Cell>
                         <Table.Summary.Cell colSpan={8} index={0}>Grand Total</Table.Summary.Cell>
                         <Table.Summary.Cell index={9}>{total}</Table.Summary.Cell>
                     </Table.Summary.Row>
@@ -349,7 +355,7 @@ const {Text}=Typography
             sorter: (a, b) => a.approval_date.localeCompare(b.approval_date),
             sortDirections: ["descend", "ascend"],
             render: (text, record) => {
-                return record.approval_date? convertToYYYYMMDD(record.approval_date): "-"
+                return record.approval_date? moment(record.approval_date).format("YYYY-MM-DD"): "-"
               },
             },
             {
@@ -359,7 +365,7 @@ const {Text}=Typography
                 sorter: (a, b) => a.revised_date.localeCompare(b.revised_date),
                 sortDirections: ["descend", "ascend"],
                 render: (text, record) => {
-                    return record.revised_date? moment(record.revised_date).format("YYYY/MM/DD"): "-"
+                    return record.revised_date? moment(record.revised_date).format("YYYY-MM-DD"): "-"
                   },
                 },
                 {
@@ -394,8 +400,8 @@ const {Text}=Typography
             title: "Item No",
             dataIndex: "itemNo",
             align:'left',
-
-width:200,
+            fixed:'right',
+            width:150,
             render: (text, record) => {
                 if(record.answered_status != 'Accepted'){
 
@@ -418,25 +424,29 @@ width:200,
         {
             title: "Action",
             dataIndex: "action",
-            width:150,
+            width:100,
+            fixed:'right',
             render: (value, record) => {
                 // const isEnabled = isActionButtonEnabled(record);
-                if(record.answered_status != 'Accepted'){
+                // if(record.answered_status != 'Accepted'){
 
                     return (
                         <Popconfirm
                             title="Are you sure to approve"
                             onConfirm={() => approveOrderStatus(record)}
                             // disabled={record.answered_status == 'Accepted'}
+                            disabled= {record.answered_status !== 'Accepted' ? false : true}
+
                         >
                             <Button 
                             // disabled={!isEnabled}
+                            disabled= {record.answered_status !== 'Accepted' ? false : true}
                             >Accept</Button>
                         </Popconfirm>
                     );
-                }else{
-                    return <></>
-                }
+                // }else{
+                //     return <></>
+                // }
             },
             
             
@@ -532,7 +542,7 @@ width:200,
                     icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
 
                 
-                 <Form form={form} layout={'vertical'}>
+                 <Form form={form} layout={'vertical'}onFinish={getData}>
                     <Row gutter={24}>
                        
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
@@ -554,22 +564,24 @@ width:200,
                             </div>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
-                        <Form.Item name='approval_date' label=' Approval Date'>
-                        <DatePicker
+                        <Form.Item name='approvalDate' label=' Approval Date'>
+                        {/* <DatePicker
   format="YYYY/MM/DD"
   onChange={(date, dateString) => {
     setSelectedEstimatedFromDate(dateString);
   }}
-/>
+/> */}
+                        <RangePicker/>
+
                         </Form.Item>
 </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 17 }} >
-                            <Button
+                        <Button
                                 type="primary"
                                 icon={<SearchOutlined />}
                                 style={{ marginRight: 50, width: 80 }}
-                                htmlType="button"
-                                onClick={getFilterdData}>Search</Button>
+                                htmlType="submit"
+                                >Search</Button>
                             <Button
                                 type="primary"
                                 icon={<UndoOutlined />}
