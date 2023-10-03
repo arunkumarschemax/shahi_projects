@@ -49,7 +49,7 @@ export default function DPOMSyncManually() {
 
     return (
         <>
-            <Card title="Sync Nike DPOM & CRM Data Manually">
+            <Card title="Nike PPM Data Preparation">
                 <span>
                     <Descriptions style={{ alignItems: 'right' }} column={4}>
                         <Descriptions.Item>{<b>Last Sync Details</b>}</Descriptions.Item>
