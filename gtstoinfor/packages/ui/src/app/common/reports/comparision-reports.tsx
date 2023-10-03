@@ -14,21 +14,38 @@ export const MonthWiseComparisionReport = () =>{
     const [form] = Form.useForm();
     const { Option } = Select;
     const [selected, setSelected] = useState('ExFactory')
-    const [pageSize, setPageSize] = useState<number>();
-    const [page, setPage] = useState<number>(1);
     const [data, setData] = useState<any[]>([]);
+    const [phase, setPhase] = useState<any[]>([]);
     const [year, setYear] = useState<any[]>([]);
     const [tab, setTab] = useState<number>(2023);
     const service = new OrdersService();
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [excelsData, setExcelData] = useState<any[]>([]);
     const [dates, setDates] = useState<any[]>([]);
-
     const { Text } = Typography;
+    const [page, setPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(10);
+
     useEffect(() => {
         getData(selected);
         getTabs();
       }, []);
+     
+      const pagination = {
+        current: page,
+        pageSize: pageSize,
+        total: filteredData.length,
+        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+        onChange: (current, pageSize) => {
+          setPage(current);
+          setPageSize(pageSize);
+        },
+        showSizeChanger: true,
+        onShowSizeChange: (current, size) => {
+          setPage(1); // Reset the page to 1 when changing page size
+          setPageSize(size);
+        },
+      };
       const getTabs = () => {
         service.getExfactoryYearData().then((res) => {
           if (res.status) {
@@ -36,6 +53,7 @@ export const MonthWiseComparisionReport = () =>{
           }
         });
       };
+      
     const handleChange = (val) =>{
         setSelected(val)
         getData(val)
@@ -66,6 +84,13 @@ export const MonthWiseComparisionReport = () =>{
               } else {
                 setDates([]);
               }
+        })
+        service.getComparisionPhaseData(req).then((res)=>{
+          if(res.status){
+            setPhase(res.data)
+          }else{
+            setPhase([]);
+          }
         })
       };
       const CustomTitle = () => {
@@ -152,7 +177,352 @@ export const MonthWiseComparisionReport = () =>{
           </div>
         );
       };
+      const columns10: any = [
+        {
+          title: "S No",
+          key: "sno",
+          render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+        },
+        // {
+        //   title: "Item code",
+        //   dataIndex: "itemCode",
+        //   // ...getColumnSearchProps('itemCode')
+        // },
+        // {
+        //   title: "Item Name",
+        //   dataIndex: "itemName",
+        //   width:200,
+        //   render: (text: any, record: any) => (
+        //   <span>{record.itemName}</span>
+        //   ),
+        //   // ...getColumnSearchProps('itemName')
+        // },
+        {title:'Production Plan Type',
+        dataIndex: "phasetype",
+        render: (text: any, record: any) => <span>{record.phasetype}</span>,
+      },
+      {title:'January',
+        dataIndex: "phasetype",
+        children:[
+          {
+            title:'Previous',
+        dataIndex: "janPcs",
+        render: (text: any, record: any) => <span>{record.pcsData[0].janPcs}</span>,
     
+          },
+          {
+            title:'Latest',
+        dataIndex: "janCoeff",
+        render: (text: any, record: any) => <span>{record.coeffData[0].janCoeff}</span>,
+    
+          }
+        ],
+        style: { backgroundColor: "lightblue" },
+      },
+      {
+        title: "", 
+        width: 20, 
+        },
+      {title:'February',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "febPcs",
+      render: (text: any, record: any) => <span >{record.pcsData[0].febPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "febCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].febCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'March',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "marPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].marPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "marCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].marCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'April',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "aprPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].aprPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "aprCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].aprCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'May',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "mayPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].mayPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "mayCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].mayCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'June',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "junPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].junPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "junCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].junCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'July',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "julPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].julPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "julCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].julCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'August',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "augPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].augPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "augCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].augCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'September',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "sepPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].sepPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "sepCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].sepCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'October',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "octPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].octPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "octCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].octCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'November',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "novPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].novPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "novCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].novCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'December',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "decPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].decPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "decCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].decCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:"Total Pcs",
+    dataIndex:"total_order_plan_qty",
+    render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty}</span>,
+    },
+    
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:"Total Coeff",
+    dataIndex:"total_order_plan_qty_coeff",
+    render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty_coeff}</span>,
+    },
+    
+    
+        // // {
+        // //   title: <Header/>,
+        // //   dataIndex: "monthWiseData",
+        // //   align:'center',
+        // //   render: (text: any, record: any) => (
+        // //     <Table
+        // //       dataSource={record.monthWiseData}
+        // //       columns={childColumns2}
+        // //       pagination={false} // Hide pagination for child table
+        // //       rowKey={(record) => record.itemName}
+             
+        // //     />
+        //   ),
+        // },
+            
+      ];
+      const getColumnBackgroundColor = (title) => {
+        if (title === "January") {
+          return "lightblue"; 
+        } else if (title === "February") {
+          return "lightgreen";
+        } else if  (title === "March"){
+          return "lightblue"; 
+        }else if (title === "April") {
+          return "lightgreen";
+        }else if  (title === "May"){
+          return "lightblue"; 
+        }else if (title === "June") {
+          return "lightgreen";
+        }else if  (title === "July"){
+          return "lightblue"; 
+        }else if (title === "August") {
+          return "lightgreen";
+        }else if  (title === "September"){
+          return "lightblue"; 
+        }else if (title === "October") {
+          return "lightgreen";
+        }else if  (title === "November"){
+          return "lightblue";
+        }else if (title === "December") {
+          return "lightgreen";
+         }else{
+          return undefined; 
+        }
+      };
+    
+      const columnsWithBackground = columns10.map((column) => ({
+        ...column,
+        title: (
+          <div style={{ backgroundColor: getColumnBackgroundColor(column.title) }}>
+            {column.title}
+          </div>
+        ),
+      }));
       const childColumns1: any = [
         {
           // title: "Production Plan Type Name",
@@ -1347,7 +1717,14 @@ export const MonthWiseComparisionReport = () =>{
             size="small"
             scroll={{ x: "max-content" }}
             summary={getTableSummary}
+            pagination={pagination}
+
           />
+          <Table
+         columns={columnsWithBackground} 
+         dataSource={phase}
+            size="small"
+        scroll={{ x: "max-content" }}/>
           
         </Tabs.TabPane>
       ))}
