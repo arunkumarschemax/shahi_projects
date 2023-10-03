@@ -206,39 +206,39 @@ const pagination2 = {
   <td colSpan={26} style={{ borderBottom: '1px solid black' }}></td>
 </tr>
   <tr>
-<td style={{paddingLeft:'10px',position:'relative',}}>Production Plan Type Name</td>
-    <td style={{right: '70px',position: 'relative', }}>(Pcs)</td>
-    <td style={{position: 'relative',right: '30px' }} >(Coeff)</td>
+<td style={{paddingLeft:'30px',position:'relative',}}>Production Plan Type Name</td>
+    <td style={{right: '70px',position: 'relative', }}>In Pcs</td>
+    <td style={{position: 'relative',right: '30px' }} >In Coeff</td>
 
-    <td  style={{position: 'relative',right: '20px', }} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '25px',}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '20px', }} >In Pcs</td>
+    <td  style={{position: 'relative',right: '25px',}} >In Coeff</td>
 
-    <td  style={{position: 'relative',right: '20px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '20px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '20px'}} >In Pcs</td>
+    <td  style={{position: 'relative',right: '20px'}} >In Coeff</td>
 
-    <td  style={{position: 'relative',right: '10px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '20px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
+    <td  style={{position: 'relative',right: '20px'}} >In Coeff</td>
 
-    <td  style={{position: 'relative',right: '10px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '10px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
+    <td  style={{position: 'relative',right: '10px'}} >In Coeff</td>
 
-    <td  style={{position: 'relative',right: '10px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '-10px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
+    <td  style={{position: 'relative',right: '-10px'}} >In Coeff</td>
 
-    <td  style={{position: 'relative',right: '15px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '-10px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '15px'}} >In Pcs</td>
+    <td  style={{position: 'relative',right: '-10px'}} >In Coeff</td>
 
-    <td  style={{position: 'relative',right: '10px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '-10px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
+    <td  style={{position: 'relative',right: '-10px'}} >In Coeff</td>
 
-    <td  style={{position: 'relative',right: '10px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '-20px'}} >(Coeff)</td>
-    <td  style={{position: 'relative',right: '10px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '-10px'}} >(Coeff)</td>
-    <td  style={{position: 'relative',right: '-10px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '-20px'}} >(Coeff)</td>
-    <td  style={{position: 'relative',right: '-5px'}} >(Pcs)</td>
-    <td  style={{position: 'relative',right: '-20px'}} >(Coeff)</td>
+    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
+    <td  style={{position: 'relative',right: '-20px'}} >In Coeff</td>
+    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
+    <td  style={{position: 'relative',right: '-10px'}} >In Coeff</td>
+    <td  style={{position: 'relative',right: '-10px'}} >In Pcs</td>
+    <td  style={{position: 'relative',right: '-20px'}} >In Coeff</td>
+    <td  style={{position: 'relative',right: '-5px'}} >In Pcs</td>
+    <td  style={{position: 'relative',right: '-20px'}} >In Coeff</td>
     <td  style={{position: 'relative',right: '-310px'}} ><span></span></td>
     <td  style={{position: 'relative',right: '-410px'}} ><span></span></td>
     
@@ -984,6 +984,8 @@ const pagination2 = {
 
       render: (text: any, record: any) => (
         <Table
+        showHeader={false}
+        bordered={false}
           dataSource={record.monthWiseData}
           columns={childColumns1}
           pagination={false} // Hide pagination for child table
@@ -2014,7 +2016,6 @@ let totalJanExfPre = 0;
                 <span />
                 <span />
                 <span />
-                <span />
                 {marLat.toLocaleString()}
                 <span />
                 <span /> <span />
@@ -2032,15 +2033,16 @@ let totalJanExfPre = 0;
                 <span />
                 <span />
                 <span />
-                <span />
-                <span /> {aprLat.toLocaleString()}
+               
+                {aprLat.toLocaleString()}
                 <span />
                 <span /> <span />
                 <span />
                 <span />
                 <span />
                 
-                
+                <span />
+
                 {mayPre.toLocaleString()}
                 <span />
                 <span /> <span />
@@ -2049,10 +2051,9 @@ let totalJanExfPre = 0;
                 <span />
                 <span />
                 <span />
-                <span /> {mayLat.toLocaleString()}
+                 {mayLat.toLocaleString()}
                 <span />
                 <span /> <span />
-                <span />
                 <span />
                 <span />
                 <span />
@@ -2193,16 +2194,17 @@ let totalJanExfPre = 0;
                 <span />
                 <span /> <span />
                 <span />
-                
-                
+                <span /> 
+                <span />
+                <span /> 
+                <span />  <span /> 
+                <span />
                 
                 {totalPre.toLocaleString()}
                 <span />
-                <span /><span />
+                
                 <span />
-                <span />
-                <span /> 
-                <span />
+              
                 <span />
                 <span />
                 <span /> <span />
@@ -2213,8 +2215,7 @@ let totalJanExfPre = 0;
                 <span />
                 <span />
                 <span />
-                <span/>
-                <span />
+                
                 {totalLat.toLocaleString()}
                 
               </Space>
