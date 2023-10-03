@@ -81,7 +81,8 @@ export class OrdersService {
             await transactionManager.startTransaction()
             const flag = new Set()
             const columnArray = [];
-            // console.log(formData,'formdaaaa')
+            console.log(formData,'formdaaaahh')
+            console.log(id,'fileiddd')
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
@@ -106,13 +107,13 @@ export class OrdersService {
                         updatedObj[key] = null;
                     } else {
                         // console.log(value,'nekkvalue')
-                        // updatedObj[key] = value;
-                        var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
+                        updatedObj[key] = value;
+                        // var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
                         
-                        updatedObj[key] = value.replace(regexPattern, null);
+                        // updatedObj[key] = value.replace(regexPattern, null);
                         // console.log(value,'nekkvaluejjj')
                         // console.log(updatedObj[key],'nekkvaluejjjiyuuu')
-                        updatedObj[key] = Buffer.from(value, 'utf-8').toString()
+                        // updatedObj[key] = Buffer.from(value, 'utf-8').toString()
                         
                     }
                 }
@@ -1521,6 +1522,7 @@ async processEmails() {
 //       });
 //     });
 //   });
+// filename = 'pro_order_sep3.xlsx';
     console.log(filename.split('.').pop(),'extension')
     console.log(filename,'filename')
     const promise = () => new Promise((resolve, reject) => {
@@ -1548,21 +1550,22 @@ async processEmails() {
                 rows.map((row) => { // Map the rest of the rows into objects
                   const obj = {}; // Create object literal for current row
                   row.forEach((cell, i) => {
-                    if(cell == null){
-                        obj[columnNames[i]] = "";
-                    }
-                    if(typeof cell == 'number'){
-                        obj[columnNames[i]] = cell.toString(); // Use index from current cell to get column name, add current cell to new object
-                    }else{
+                    // if(cell == null){
+                    //     obj[columnNames[i]] = "";
+                    // }
+                    // if(typeof cell == 'number'){
+                    //     obj[columnNames[i]] = cell.toString(); // Use index from current cell to get column name, add current cell to new object
+                    // }else{
                         obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
 
-                    }
+                    // }
                     // console.log(columnNames[i],'4444444')
-                    if(FormatDates.includes(columnNames[i]) &&  cell != null){
-                        obj[columnNames[i]] = moment(cell).format('YYYY-MM-DD').toString()
-                        // console.log(obj[columnNames[i]],'99999999999')
+                    
+                    // if(FormatDates.includes(columnNames[i].replace(/\s/g, '')) &&  cell != null){
+                    //     obj[columnNames[i]] = moment(cell).format('YYYY-MM-DD').toString()
+                    //     // console.log(obj[columnNames[i]],'99999999999')
 
-                    }
+                    // }
                         // obj[columnNames[i]] = ""; // Use index from current cell to get column name, add current cell to new object
                         // obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
 
@@ -1625,7 +1628,7 @@ async processEmails() {
         // console.log('dataArraymmmm',dataArray)
         
         const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS)
-        console.log(saveFilePath)
+        console.log(saveFilePath,'jjjjj')
         // console.log('saveFilePathhhhh')
         if(saveFilePath.status){
             const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
@@ -1993,7 +1996,199 @@ async updateStatusAfterCoLineCreationInM3(req:CoLineStatusReq):Promise<CommonRes
     }
 }
 
+async getComparisionphaseData(req:YearReq):Promise<CommonResponseModel>{
+    const data = await this.ordersChildRepo.getComparisionphaseData(req);
+    const DateMap = new Map<string, MonthWiseDto>();
 
+    for (const rec of data) {
+        if (!DateMap.has(rec.prod_plan_type)) {
+            DateMap.set(
+              rec.prod_plan_type,
+              new MonthWiseDto(rec.prod_plan_type, [], [], 0, 0)
+            );
+          }
+          const monthWiseInstance = DateMap.get(rec.prod_plan_type);
+        
+if(req.tabName === 'ExFactory'){
+   
+      monthWiseInstance.pcsData.push({
+        name: 'In Previous',
+        janPcs: rec.janExfPre,
+        febPcs: rec.febExfPre,
+        marPcs: rec.marExfPre,
+        aprPcs: rec.aprExfPre,
+        mayPcs: rec.mayExfPre,
+        junPcs: rec.junExfPre,
+        julPcs: rec.julExfPre,
+        augPcs: rec.augExfPre,
+        sepPcs: rec.sepExfPre,
+        octPcs: rec.octExfPre,
+        novPcs: rec.novExfPre,
+        decPcs: rec.decExfPre,
+      });
+
+      monthWiseInstance.coeffData.push({
+        name: 'In Latest',
+        janCoeff: rec.janExfLat,
+        febCoeff: rec.febExfLat,
+        marCoeff: rec.marExfLat,
+        aprCoeff: rec.aprExfLat,
+        mayCoeff: rec.mayExfLat,
+        junCoeff: rec.julExfLat,
+        julCoeff: rec.julExfLat,
+        augCoeff: rec.augExfLat,
+        sepCoeff: rec.sepExfLat,
+        octCoeff: rec.octExfLat,
+        novCoeff: rec.novExfLat,
+        decCoeff: rec.decExfLat,
+      });
+      monthWiseInstance.totalPcs = rec.totalExfPre;
+      monthWiseInstance.totalCoeff = rec.totalExfLat;
+}
+if(req.tabName ==='WareHouse'){
+   
+  monthWiseInstance.pcsData.push({
+    name: 'In Previous',
+    janPcs: rec.janWhPre,
+    febPcs: rec.febWhPre,
+    marPcs: rec.marWhPre,
+    aprPcs: rec.aprWhPre,
+    mayPcs: rec.mayWhPre,
+    junPcs: rec.junWhPre,
+    julPcs: rec.julWhPre,
+    augPcs: rec.augWhPre,
+    sepPcs: rec.sepWhPre,
+    octPcs: rec.octWhPre,
+    novPcs: rec.novWhPre,
+    decPcs: rec.decWhPre,
+  });
+
+  monthWiseInstance.coeffData.push({
+    name: 'In Latest',
+    janCoeff: rec.janWhLat,
+    febCoeff: rec.febWhLat,
+    marCoeff: rec.marWhLat,
+    aprCoeff: rec.aprWhLat,
+    mayCoeff: rec.mayWhLat,
+    junCoeff: rec.junWhLat,
+    julCoeff: rec.julWhLat,
+    augCoeff: rec.augWhLat,
+    sepCoeff: rec.sepWhLat,
+    octCoeff: rec.octWhLat,
+    novCoeff: rec.novWhLat,
+    decCoeff: rec.decWhLat,
+  });
+
+  monthWiseInstance.totalPcs = rec.totalWhPre;
+  monthWiseInstance.totalCoeff = rec.totalWhLat;
+}
+ }
+    const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());   
+    return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
+
+} catch(error){
+    console.error(error);
+    return new CommonResponseModel(false, 0, 'error occurred', null);
+
+}
+
+
+async getPhaseMonthData(req): Promise<CommonResponseModel> {
+try {
+const data = await this.ordersRepository.getdata(req);
+const DateMap = new Map<string, MonthWiseDto>();
+
+for (const rec of data) {
+if (!DateMap.has(rec.prod_plan_type)) {
+    DateMap.set(
+      rec.prod_plan_type,
+      new MonthWiseDto(rec.prod_plan_type, [], [], 0, 0)
+    );
+  }
+  const monthWiseInstance = DateMap.get(rec.prod_plan_type);
+
+if(req.tabName === 'ExFactory'){
+
+monthWiseInstance.pcsData.push({
+name: 'In Pcs',
+janPcs: rec.janPcsExf,
+febPcs: rec.febPcsExf,
+marPcs: rec.marPcsExf,
+aprPcs: rec.aprPcsExf,
+mayPcs: rec.mayPcsExf,
+junPcs: rec.junPcsExf,
+julPcs: rec.julPcsExf,
+augPcs: rec.augPcsExf,
+sepPcs: rec.sepPcsExf,
+octPcs: rec.octPcsExf,
+novPcs: rec.novPcsExf,
+decPcs: rec.decPcsExf,
+});
+
+monthWiseInstance.coeffData.push({
+name: 'In Coeff',
+janCoeff: rec.janExfCoeff,
+febCoeff: rec.febExfCoeff,
+marCoeff: rec.marExfCoeff,
+aprCoeff: rec.aprExfCoeff,
+mayCoeff: rec.mayExfCoeff,
+junCoeff: rec.julExfCoeff,
+julCoeff: rec.julExfCoeff,
+augCoeff: rec.augExfCoeff,
+sepCoeff: rec.sepExfCoeff,
+octCoeff: rec.octExfCoeff,
+novCoeff: rec.novExfCoeff,
+decCoeff: rec.decExfCoeff,
+});
+monthWiseInstance.totalPcs = rec.totalExfPre;
+monthWiseInstance.totalCoeff = rec.totalExfLat;
+}
+if(req.tabName ==='WareHouse'){
+
+monthWiseInstance.pcsData.push({
+name: 'In Pcs',
+janPcs: rec.janWhPre,
+febPcs: rec.febWhPre,
+marPcs: rec.marWhPre,
+aprPcs: rec.aprWhPre,
+mayPcs: rec.mayWhPre,
+junPcs: rec.junWhPre,
+julPcs: rec.julWhPre,
+augPcs: rec.augWhPre,
+sepPcs: rec.sepWhPre,
+octPcs: rec.octWhPre,
+novPcs: rec.novWhPre,
+decPcs: rec.decWhPre,
+});
+
+monthWiseInstance.coeffData.push({
+name: 'In Coeff',
+janCoeff: rec.janWhLat,
+febCoeff: rec.febWhLat,
+marCoeff: rec.marWhLat,
+aprCoeff: rec.aprWhLat,
+mayCoeff: rec.mayWhLat,
+junCoeff: rec.junWhLat,
+julCoeff: rec.julWhLat,
+augCoeff: rec.augWhLat,
+sepCoeff: rec.sepWhLat,
+octCoeff: rec.octWhLat,
+novCoeff: rec.novWhLat,
+decCoeff: rec.decWhLat,
+});
+
+monthWiseInstance.totalPcs = rec.totalWhPre;
+monthWiseInstance.totalCoeff = rec.totalWhLat;
+}
+}
+const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());   
+return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
+} catch (error) {
+// Handle errors appropriately
+console.error(error);
+return new CommonResponseModel(false, 0, 'error occurred', null);
+}
+}
 
 
 }

@@ -27,6 +27,8 @@ import SeasonWiseReport from "./common/reports/season-wise"
 import WareHouseComparision from "./common/reports/warehouse-comparision"
 import CombinedReport, { MonthWiseReport } from "./common/reports/month-wise-report"
 import MonthWiseComparisionReport from "./common/reports/comparision-reports"
+import TrimOrderDetailView from "./excel-import/trim-orders-detail-view"
+import PriceListHistory from "./masters/pricelist/price-list-history"
 // import ExcelImport from "./excel-import/excel-import"
 
 
@@ -53,6 +55,7 @@ export const AppRoutesNew = () => {
                     } } isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
                     } } />} />
+                    <Route path='pricelist/price-list-history' key='/pricelist/price-list-view' element={<PriceListHistory />} />
               </Route>
               <Route path='/excel-import' key='/excel-import'>
                   <Route path='excel-import' key='/excel-import' element={<ExcelImport />} />
@@ -69,7 +72,7 @@ export const AppRoutesNew = () => {
 
                 <Route path='/ware-house-report' key='/ware-house-report' element={<WarehouseReport  />} />
                     <Route path='/excel-import/trim-order' key='/excel-import/trim-order' element={<TrimOrder/>} />
-
+                    <Route path='/excel-import/trim-order-detail-view' key='/excel-import/trim-order-detail/view' element={<TrimOrderDetailView/>} />
               </Route>
               <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
               <Route path='/ex-factory-report' key='/ex-factory-report' element={<ExFactoryReport />} />
