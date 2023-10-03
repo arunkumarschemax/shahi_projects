@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -27,6 +27,18 @@ import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
 import { find } from 'rxjs';
 import { log } from 'console';
 import { appConfig } from 'packages/services/common/config';
+import * as fs from 'fs';
+import * as Imap from 'imap';
+import * as base64 from 'base64-stream';
+import * as winston from 'winston';
+import { resolve } from 'path';
+import { isNumberObject } from 'util/types';
+import { FormatDates } from '../../../../../libs/shared-models/src/enum';
+const xlsxFile = require('read-excel-file/node');
+const csv = require('csv-parser');
+const Excel = require('exceljs');
+import { CoLine } from './entities/co-line.entity';
+import { CoLineRepository } from './repository/co-line-repo';
 let moment = require('moment');
 moment().format();
 
@@ -45,12 +57,22 @@ export class OrdersService {
         private orderDiffRepo: OrderDifferenceRepository,
         private fileUploadRepo: FileUploadRepository,
         private trimOrderRepo: TrimOrdersRepository,
+        private colineRepo: CoLineRepository,
         @InjectDataSource()
         private dataSource: DataSource,
-        @InjectEntityManager() private readonly entityManager: EntityManager
+        @InjectEntityManager() private readonly entityManager: EntityManager,
+        
 
     ) { }
-
+    //for email integration
+    private logger = winston.createLogger({
+        level: 'info',
+        format: winston.format.json(),
+        transports: [
+            new winston.transports.Console(),
+            new winston.transports.File({ filename: 'email-service.log' }),
+        ],
+        });
     async saveOrdersData(formData: any, id: number, months: number): Promise<CommonResponseModel> {
         const currentDate = new Date();
         const month = currentDate.getMonth() + 1;
@@ -59,32 +81,44 @@ export class OrdersService {
             await transactionManager.startTransaction()
             const flag = new Set()
             const columnArray = [];
+            // console.log(formData,'formdaaaa')
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
-                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_').replace(/:/g,'_').replace(/[*]/g,'_').replace(/=/g,'_').replace(/”/g,'').replace(/~/g,'').replace(/[/]/g,'').replace(/“/g,'').replace(/�/g,'')
+                    const newKey = key.replace(/\s/g, '_').replace(/[\(\)]/g, '').replace(/-/g, '_').replace(/:/g,'_').replace(/[*]/g,'_').replace(/=/g,'_').replace(/”/g,'').replace(/~/g,'').replace(/[/]/g,'').replace(/“/g,'').replace(/�/g,'').replace(/'/g,'')
                     const newKey1 = newKey.replace(/__/g,'_');
+                    // console.log(newKey1,'---------newkey1')
                     columnArray.push(newKey1)
                     updatedObj[newKey1] = obj[key];
                 }
                 return updatedObj;
+
             });
+            // console.log(updatedArray,'updatedarray')
 
             const convertedData = updatedArray.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
+                    // console.log(key,'keyvalues')
                     const value = obj[key];
+                    // console.log(value,'nevalue')
                     if (value === "") {
                         updatedObj[key] = null;
                     } else {
+                        // console.log(value,'nekkvalue')
                         // updatedObj[key] = value;
                         var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
+                        
                         updatedObj[key] = value.replace(regexPattern, null);
+                        // console.log(value,'nekkvaluejjj')
+                        // console.log(updatedObj[key],'nekkvaluejjjiyuuu')
                         updatedObj[key] = Buffer.from(value, 'utf-8').toString()
+                        
                     }
                 }
                 return updatedObj;
             });
+            // console.log(convertedData,'updatedObjmm')
             const difference = columnArray.filter((element) => !ProductionOrderColumns.includes(element));
             if(difference.length > 0){
                 await transactionManager.releaseTransaction()
@@ -1287,6 +1321,364 @@ async getWareHouseComparisionExcelData(req:YearReq): Promise<CommonResponseModel
     }
     return new CommonResponseModel(true, 1, 'data retrieved', data);
 }
+async processEmails() {
+    // Set the environment variable to allow TLS
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+    // Define your email configuration
+    const imap = new Imap({
+      user: 'naveenmaddula86@gmail.com',
+      password: 'bshk euvb tulv cghr',
+      host: 'imap.gmail.com',
+      port: 993,
+      tls: true,
+    });
+
+    const allowedExtensions = ['.xlsx', '.xls', '.csv'];
+    const savePath = './upload-files/'
+    function toUpper(thing) {
+      return thing && thing.toUpperCase ? thing.toUpperCase() : thing;
+    }
+
+    const buildAttMessageFunction = (attachment) => {
+      if (!attachment || !attachment.params || !attachment.params.name) {
+        const logMessage = 'No valid attachment found.';
+        this.logger.warn(logMessage);
+        console.log(logMessage);
+        return;
+      }
+
+      const filename = attachment.params.name;
+      const encoding = attachment.encoding;
+
+      return (msg, seqno) => {
+        const prefix = `(Message #${seqno}) `;
+        msg.on('body', (stream, info) => {
+          const logMessage = `${prefix}Streaming attachment to file: ${filename}, ${info}`;
+          this.logger.info(logMessage);
+          console.log(logMessage);
+
+          const writeStream = fs.createWriteStream(savePath + filename);
+          console.log(writeStream,'www')
+          console.log(savePath + filename+'iiiiii')
+          writeStream.on('finish', () => {
+            const finishLogMessage = `${prefix}Done writing to file: ${filename}`;
+            this.logger.info(finishLogMessage);
+            console.log(finishLogMessage);
+            console.log(finishLogMessage);
+            // './upload-files/007Q2_Shahi_0807.csv
+            this.readCell(savePath + filename,filename)
+          });
+
+          if (toUpper(encoding) === 'BASE64') {
+            stream.pipe(new base64.Base64Decode()).pipe(writeStream);
+          } else {
+            stream.pipe(writeStream); 
+          }
+        });
+      };
+    };
+
+    imap.once('ready', () => {
+      imap.openBox('INBOX', true, (err, box) => {
+        if (err) {
+          const logMessage = `Error opening mailbox: ${err}`;
+          this.logger.error(logMessage);
+          console.error(logMessage);
+          throw err;
+        }
+
+        const searchCriteria = [['FROM', 'jaswanthpappala3@gmail.com']];
+
+        imap.search(searchCriteria, (err, results) => {
+          if (err) {
+            const logMessage = `Error searching emails: ${err}`;
+            this.logger.error(logMessage);
+            console.error(logMessage);
+            throw err;
+          }
+
+          const fetch = imap.fetch(results, {
+            bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)', 'TEXT'],
+            struct: true,
+          });
+
+          fetch.on('message', (msg, seqno) => {
+            const prefix = `(Message #${seqno}) `;
+            msg.once('attributes', (attrs) => {
+              const attachments = findAttachmentParts(attrs.struct);
+              const logMessage = `${prefix}Has attachments: ${attachments.length}`;
+              this.logger.info(logMessage);
+              console.log(logMessage);
+
+              attachments.forEach((attachment) => {
+                if (attachment.params && attachment.params.name) {
+                  const logMessage = `${prefix}Fetching attachment: ${attachment.params.name}`;
+                  this.logger.info(logMessage);
+                  console.log(logMessage);
+                  const f = imap.fetch(attrs.uid, {
+                    bodies: [attachment.partID],
+                  });
+                  f.on('message', buildAttMessageFunction(attachment));
+                }
+              });
+            });
+            msg.once('end', () => {
+              const logMessage = `${prefix}Finished email`;
+              this.logger.info(logMessage);
+              console.log(logMessage);
+            });
+          });
+
+          fetch.once('error', (err) => {
+            const logMessage = `Fetch error: ${err}`;
+            this.logger.error(logMessage);
+            console.error(logMessage);
+          });
+
+          fetch.once('end', () => {
+            const logMessage = 'Done fetching all messages!';
+            this.logger.info(logMessage);
+            console.log(logMessage);
+            imap.end();
+          });
+        });
+      });
+    });
+
+    imap.once('error', (err) => {
+      const logMessage = `IMAP error: ${err}`;
+      this.logger.error(logMessage);
+      console.error(logMessage);
+    });
+
+    imap.once('end', () => {
+      const logMessage = 'IMAP Connection ended';
+      this.logger.info(logMessage);
+      console.log(logMessage);
+    });
+
+    imap.connect();
+
+    const findAttachmentParts = (struct, attachments = []) => {
+      for (let i = 0; i < struct.length; ++i) {
+        if (Array.isArray(struct[i])) {
+          findAttachmentParts(struct[i], attachments);
+        } else {
+          if (
+            struct[i].disposition &&
+            ['INLINE', 'ATTACHMENT'].indexOf(
+              toUpper(struct[i].disposition.type)
+            ) > -1 &&
+            struct[i].params &&
+            struct[i].params.name &&
+            struct[i].params.name.startsWith('')
+          ) {
+            const filename = struct[i].params.name;
+            const fileExtension = filename.split('.').pop().toLowerCase();
+            if (allowedExtensions.includes('.' + fileExtension)) {
+              attachments.push(struct[i]);
+            }
+          }
+        }
+      }
+      return attachments;
+    };
+  }
+  async readCell(filepath,filename):Promise<CommonResponseModel> {
+    // console.log(filepath,'filepathhh')
+    // console.log(filename,'filenamehh')
+    // // return new Promise((resolve, reject) => {
+    //     let workBook = new Excel.Workbook();
+    //     workBook.xlsx.readFile(filename).then(() => {
+            
+    //         let sheet = workBook.getWorkSheet('Sheet1');
+    //         console.log('sheetllll',sheet)
+    //         let cellValue = sheet.getRow(2).getCell(1).value;
+    //         // resolve(cellValue);
+    //         console.log(cellValue,'cellvallll')
+    //     }).catch(err => /* Do some error handling here if you want to */ console.log(err));
+    // // });
+    // working-----------
+//     var workbook = new Excel.Workbook(); 
+// workbook.xlsx.readFile('./upload-files/007Q_Shahi_0807_latest.xlsx')
+//     .then(function() {
+//         var worksheet = workbook.getWorksheet('Production Plan Rawdata Export');
+// //         const c2 = worksheet.getRow(1);
+// //    c2.eachCell(c => {
+// //       console.log(c.value,'iiii');
+// //    });
+//         console.log(worksheet,'woooo')
+//         worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) {
+
+//           console.log("Row " + rowNumber + " = " + JSON.stringify(row.values));
+//         });
+//     });
+
+// xlsxFile('./upload-files/007Q_Shahi_0807_latest.xlsx')
+//   .then((rows) => {
+//     rows.forEach((row) => {
+//       row.forEach((cell) => {
+//         console.log(cell);
+//       });
+//     });
+//   });
+    console.log(filename.split('.').pop(),'extension')
+    console.log(filename,'filename')
+    const promise = () => new Promise((resolve, reject) => {
+        if(filename.split('.').pop() == 'csv'){
+            const dataArray = []
+            fs.createReadStream(filepath)
+                .on('error', () => {
+                    // handle error
+                })
+
+                .pipe(csv())
+                .on('data', (row) => {
+                    dataArray.push(Object(row))
+                })
+
+                .on('end', () => {
+                    resolve(dataArray)
+                })
+        }else if(filename.split('.').pop() == 'xlsx'){
+            console.log('uuuuooo')
+            xlsxFile(filepath)
+              .then((rows) => {
+                const dataArray = []
+                const columnNames = rows.shift(); // Separate first row with column names
+                rows.map((row) => { // Map the rest of the rows into objects
+                  const obj = {}; // Create object literal for current row
+                  row.forEach((cell, i) => {
+                    if(cell == null){
+                        obj[columnNames[i]] = "";
+                    }
+                    if(typeof cell == 'number'){
+                        obj[columnNames[i]] = cell.toString(); // Use index from current cell to get column name, add current cell to new object
+                    }else{
+                        obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
+
+                    }
+                    // console.log(columnNames[i],'4444444')
+                    if(FormatDates.includes(columnNames[i]) &&  cell != null){
+                        obj[columnNames[i]] = moment(cell).format('YYYY-MM-DD').toString()
+                        // console.log(obj[columnNames[i]],'99999999999')
+
+                    }
+                        // obj[columnNames[i]] = ""; // Use index from current cell to get column name, add current cell to new object
+                        // obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
+
+
+                    // }
+                  });
+                //   console.log(obj)
+                  dataArray.push(Object(obj));
+                  resolve(dataArray)
+                //   console.log(objs); // Display the array of objects on the console
+                //   return obj;
+                });
+              });
+        }else{
+            
+        }
+    })
+    const dataArray = await promise();
+
+//   console.log(dataArray,'datajjjj')
+
+// -----------
+// filepath = './upload-files/007Q2_Shahi_0807.csv'
+// filename = '007Q2_Shahi_0807.csv'
+// const promise = () => new Promise((resolve, reject) => {
+//     const dataArray = []
+// fs.createReadStream(filepath)
+//     .on('error', () => {
+//         // handle error
+//     })
+
+     
+
+//     .pipe(csv())
+//     .on('data', (row) => {
+//         // const nwrow = JSON.stringify(row)
+//         // row = JSON.parse(nwrow)
+//         // const keysval = Object.keys(row)
+//         // const updatedObj = {};
+
+//         // for(const eachkey of keysval){
+//         //     const updatedKey = eachkey.replace(/'/g,'')
+//         // console.log(updatedKey,'updatedKey')
+
+//         //     updatedObj[updatedKey] = row[eachkey]
+//         // }
+//         // console.log(updatedObj,'updatedObj')
+//         dataArray.push(Object(row))
+//     })
+
+//     .on('end', () => {
+//             resolve(dataArray)
+//     })
+// })
+// const dataArray = await promise();
+
+// console.log(dataArray)
+// console.log('newdataaaafileenlllttt')
+    if(dataArray){
+        // console.log('dataArraymmmm',dataArray)
+        
+        const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS)
+        console.log(saveFilePath)
+        // console.log('saveFilePathhhhh')
+        if(saveFilePath.status){
+            const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
+            let req = new FileStatusReq();
+            req.fileId = saveFilePath.data.id;
+            req.userName = 'Bidhun'
+            if(saveProjOrders.status){
+                req.status = 'Success';
+            }else{
+                req.status = 'Failed';
+            }
+            const updateFileStatus = await this.updateFileStatus(req)
+        }
+        // return dataArray
+    }else{
+        // return dataArray
+    }
+    return 
+    
+    }
+
+//   async readCell(filename) {
+//     // // return new Promise((resolve, reject) => {
+//     //     let workBook = new Excel.Workbook();
+//     //     workBook.xlsx.readFile(filename).then(() => {
+            
+//     //         let sheet = workBook.getWorkSheet('Sheet1');
+//     //         console.log('sheetllll',sheet)
+//     //         let cellValue = sheet.getRow(2).getCell(1).value;
+//     //         // resolve(cellValue);
+//     //         console.log(cellValue,'cellvallll')
+//     //     }).catch(err => /* Do some error handling here if you want to */ console.log(err));
+//     // // });
+//     // working-----------
+// //     var workbook = new Excel.Workbook(); 
+// // workbook.xlsx.readFile(filename)
+// //     .then(function() {
+// //         var worksheet = workbook.getWorksheet('Sheet1');
+// //         worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) {
+// //           console.log("Row " + rowNumber + " = " + JSON.stringify(row.values));
+// //         });
+// //     });
+
+// // -----------
+// const filepath = './upload-files/projection-orders/007Q_Shahi_0807.csv'
+// fs.createReadStream(filepath)
+//   .pipe(csv())
+//   .on('headers', (headers) => {
+//     console.log(headers)
+//   })
+//     }
 
 async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
     const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
@@ -1487,7 +1879,7 @@ async getOrderPlanNo(): Promise<CommonResponseModel> {
 }
 async getOrderNumberDropDownInCompare():Promise<CommonResponseModel>{
     try{
-        const data = await this.orderDiffRepo.getOrderNumbers()
+        const data = await this.ordersChildRepo.getOrderNumbers()
         if(data){
             return new CommonResponseModel(true,1,'Data retrieved',data)
         } else{
@@ -1511,6 +1903,100 @@ async getMonthlyComparisionDate(req:YearReq):Promise<CommonResponseModel>{
         throw err
     }
 }
+async createCOLineInternal(req:COLineRequest):Promise<CommonResponseModel>{
+    try{
+        const entity = new CoLine()
+        entity.itemNumber = req.itemNumber;
+        entity.orderNumber = req.orderNumber;
+        entity.colorCode = req.colorCode;
+        entity.color = req.color;
+        entity.sizeCode = req.sizeCode;
+        entity.size = req.size;
+        entity.itemCode = req.itemCode;
+        entity.item = req.item;
+        entity.destination = req.destination;
+        entity.company_CONO = req.company_CONO;
+        entity.temporaryOrderNumber_ORNO = req.temporaryOrderNumber_ORNO;
+        entity.itemNumber_ITNO = req.itemNumber_ITNO;
+        entity.orderedQuantity_ORQT = req.orderedQuantity_ORQT;
+        entity.warehouse_WHLO = req.warehouse_WHLO;
+        entity.requestedDeliveryDate_DWDT = req.requestedDeliveryDate_DWDT;
+        entity.jointDeliveryDate_JDCD = req.jointDeliveryDate_JDCD;
+        entity.customersOrderNumber_CUPO = req.customersOrderNumber_CUPO;
+        entity.salesPrice_SAPR = req.salesPrice_SAPR;
+        entity.discountAmount1_DIA1 = req.discountAmount1_DIA1;
+        entity.discountAmount2_DIA2 = req.discountAmount2_DIA2;
+        entity.discountAmount3_DIA3 = req.discountAmount3_DIA3;
+        entity.discountAmount4_DIA4 = req.discountAmount4_DIA4;
+        entity.discountAmount5_DIA5 = req.discountAmount5_DIA5;
+        entity.discountAmount6_DIA6 = req.discountAmount6_DIA6;
+        entity.deliverySpecification_DLSP = req.deliverySpecification_DLSP;
+        entity.deliverySpecificationText_DLSX = req.deliverySpecificationText_DLSX;
+        entity.oldCFIN_CFXX = req.oldCFIN_CFXX;
+        entity.simulationsNumber_ECVS = req.simulationsNumber_ECVS;
+        entity.alternateUM_ALUN = req.alternateUM_ALUN;
+        entity.confirmedDateOfDelivery_CODT = req.confirmedDateOfDelivery_CODT;
+        entity.itemDescription_ITDS = req.itemDescription_ITDS;
+        entity.discountPercent1_DIP1 = req.discountPercent1_DIP1;
+        entity.discountPercent2_DIP2 = req.discountPercent2_DIP2;
+        entity.discountPercent3_DIP3 = req.discountPercent3_DIP3;
+        entity.discountPercent4_DIP4 = req.discountPercent4_DIP4;
+        entity.discountPercent5_DIP5 = req.discountPercent5_DIP5;
+        entity.discountPercent6_DIP6 = req.discountPercent6_DIP6;
+        entity.aliasQualifier_ALWT = req.aliasQualifier_ALWT;
+        entity.blanketAgreementNumber_AGNO = req.blanketAgreementNumber_AGNO;
+        entity.container_CAMU = req.container_CAMU;
+        entity.projectNumber_PROJ = req.projectNumber_PROJ;
+        entity.projectElement_ELON = req.projectElement_ELON;
+        entity.customerOrderNumber_CUOR = req.customerOrderNumber_CUOR;
+        entity.customersPackagingIdentity_CUPA = req.customersPackagingIdentity_CUPA;
+        entity.requestedDeliveryTime_DWHM = req.requestedDeliveryTime_DWHM;
+        entity.standardQuantity_D1QT = req.standardQuantity_D1QT;
+        entity.packaging_PACT = req.packaging_PACT;
+        entity.aliasNumber_POPN = req.aliasNumber_POPN;
+        entity.salesPriceQuantity_SACD = req.salesPriceQuantity_SACD;
+        entity.saledPriceUOM_SPUN = req.saledPriceUOM_SPUN;
+        entity.packagingTerms_TEPA = req.packagingTerms_TEPA;
+        entity.EDIFACTPrice_EDFP = req.EDIFACTPrice_EDFP;
+        entity.requestedDeliveryDate_DWDZ = req.requestedDeliveryDate_DWDZ;
+        entity.requestedDeliveryTime_DWHZ = req.requestedDeliveryTime_DWHZ;
+        entity.confirmedDeliveryTime_COHM = req.confirmedDeliveryTime_COHM;
+        entity.confirmedDeliveryDate_CODZ = req.confirmedDeliveryDate_CODZ;
+        entity.confirmedDeliveryTime_COHZ = req.confirmedDeliveryTime_COHZ;
+        entity.mainProduct_HDPR = req.mainProduct_HDPR;
+        entity.addressNumber_ADID = req.addressNumber_ADID;
+        entity.lineSuffix_CUSX = req.lineSuffix_CUSX;
+        entity.statusDiscount_DICI = req.statusDiscount_DICI;
+        entity.trimOrderId = req.trimOrderId;
+        const save = await this.colineRepo.save(entity)
+        if(save){
+            return new CommonResponseModel(true,1,'Created Successfully',save)
+        } else{
+            return new CommonResponseModel(false,0,'Something went wrong')
+        }
+
+    } catch(err){
+        throw err
+    }
+}
+
+async updateStatusAfterCoLineCreationInM3(req:CoLineStatusReq):Promise<CommonResponseModel>{
+    try{
+        const statusUpdate = await this.colineRepo.update({coLineId : req.coLineId},{status:req.status})
+        if(statusUpdate.affected){
+            return new CommonResponseModel(true,1,'Status Updated')
+        } else{
+            return new CommonResponseModel(false,0,'Something went erong in status update')
+        }
+
+    } catch(err){
+        throw(err)
+    }
+}
+
+
+
+
 async getPhaseMonthData(req): Promise<CommonResponseModel> {
     try {
       const data = await this.ordersRepository.getdata(req);
@@ -1704,5 +2190,6 @@ if(req.tabName ==='WareHouse'){
 
         }
         }
-    
+  
+
   

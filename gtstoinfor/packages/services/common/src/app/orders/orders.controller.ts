@@ -1,7 +1,7 @@
-import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest, CompareOrdersFilterReq, orders } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest, CompareOrdersFilterReq, orders, COLineRequest } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -406,7 +406,7 @@ export class OrdersController {
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
-    }  
+    } 
     
     @Post('/getWareHouseMonthExcelData')
     @ApiBody({type:YearReq})
@@ -416,6 +416,33 @@ export class OrdersController {
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
+    }
+    @Get('/processEmails')
+    async processEmails() {
+        try {
+            return this.ordersService.processEmails();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+        // try {
+        
+        // await this.ordersService.processEmails();
+        // return { message: 'Email processing completed.' };
+        // } catch (error) {
+        // throw new HttpException(
+        //     'An error occurred during email processing.',
+        //     HttpStatus.INTERNAL_SERVER_ERROR,
+        // );
+        // }
+    }
+    @Post('/readCell')
+    async readCell(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            const pathval = './upload-files/pro_orders.xlsx'
+             this.ordersService.readCell(pathval,pathval);
+            } catch (err) {
+                return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+            }
     }
     @Post('/getOrdersStatus')
     async getOrdersStatus(): Promise<CommonResponseModel> {
@@ -438,6 +465,24 @@ export class OrdersController {
     async getOrderNumberDropDownInCompare(): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getOrderNumberDropDownInCompare();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/createCOLineInternal')
+    async createCOLineInternal(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.createCOLineInternal(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/updateStatusAfterCoLineCreationInM3')
+    async updateStatusAfterCoLineCreationInM3(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.updateStatusAfterCoLineCreationInM3(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
@@ -469,4 +514,5 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    
 }

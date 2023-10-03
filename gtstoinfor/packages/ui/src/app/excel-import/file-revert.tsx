@@ -77,6 +77,18 @@ export function FileRevert() {
             dataIndex: 'fileName'
         },
         {
+            title: 'No of Records',
+            dataIndex: 'noofRecords',
+            align:'right',
+            render:(text,record) => {
+                return(
+                    <>
+                    {record.fileType === FileTypesEnum.PROJECTION_ORDERS ? record.projectionRecords : record.trimRecords}
+                    </>
+                )
+            }
+        },
+        {
             title: 'Upload Status',
             dataIndex: 'status'
         },
@@ -111,7 +123,7 @@ export function FileRevert() {
            
             {
               key: '1',
-              label: 'Projection Order',
+              label: `Projection Order :${poData.length}`,
               children:   <Table
               columns={columns}
               dataSource={poData}
@@ -127,7 +139,7 @@ export function FileRevert() {
             },
             {
                 key: '2',
-                label: 'Trim Order',
+                label: `Trim Order :${trimData.length}`,
                 children:  <Table
                 columns={columns}
                 dataSource={trimData}

@@ -102,19 +102,7 @@ export default function ExcelImport() {
   if(form.getFieldsValue().fileType == FileTypesEnum.PROJECTION_ORDERS){
       const file = e.target.files[0];
       console.log(file.type)
-    if (file && file.type === 'text/csv' || 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-      console.log(file)
-      // let csvData
-      // var reader = new FileReader()
-      // reader.readAsArrayBuffer(file)
-      // reader.onload = async data => {
-      //   let csvData1: any = reader.result;
-      //   csvData = importExcel(csvData1);
-      //   // let headersRow = getHeaderArray(csvData[0][3]);
-      //   console.log(csvData)
-      //   const obj1 = Object.assign({}, csvData);
-      //   console.log(obj1)
-      // }
+    if (file && file.type === 'text/csv') {
         setSelectedFile(e.target.files[0]);
       Papa.parse(e.target.files[0], {
         header: true,
@@ -135,7 +123,35 @@ export default function ExcelImport() {
         }
       });
      
-    } else {
+    } else if(file && file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+      setSelectedFile(e.target.files[0]);
+      let csvData
+      var reader = new FileReader()
+      reader.readAsArrayBuffer(file)
+      reader.onload = async data => {
+        let csvData1: any = reader.result;
+        csvData = importExcel(csvData1);
+        // let headersRow = getHeaderArray(csvData[0][3]);
+        console.log(csvData)
+        const filteredNestedData = csvData.filter(innerData => innerData.some(row => row.length > 0));
+
+        const output = filteredNestedData.map(innerData => {
+          const header = innerData[0];
+          return innerData.slice(1).map(row => {
+            if (row.every(value => value === '')) {
+              return null; // Skip rows with all empty values
+            }
+            return row.reduce((acc, value, index) => {
+              acc[header[index]] = value;
+              return acc;
+            }, {});
+          }).filter(row => row !== null); // Remove rows with all empty values
+        });  
+        console.log(output,'---------------')
+           setData(output)   
+      }
+    }
+    else {
       // Display an error message or take appropriate action for invalid file type
       alert('Please select a valid .csv file.');
       setSelectedFile(null);
@@ -143,21 +159,6 @@ export default function ExcelImport() {
   };
 
   };
-
-  const getHeaderArray = (csvRecordsArr: any) => {
-    let headerArray: string[] = [];
-    for (let eachRecord of csvRecordsArr) {
-        if (typeof eachRecord === "string") {
-            headerArray.push(eachRecord.trim().toLowerCase());
-        } else if (typeof eachRecord === "undefined") {
-
-        } else {
-            headerArray.push(eachRecord)
-        }
-
-    }
-    return headerArray;
-}
 
   const importExcel = (file: any[]) => {
     var data = new Uint8Array(file);
