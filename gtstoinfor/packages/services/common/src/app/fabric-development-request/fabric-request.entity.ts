@@ -21,7 +21,7 @@ export class FabricRequestEntity {
     requestNo: number;       //  Auto Generate
 
     @Column("int", {
-        nullable: false,
+        nullable: true,
         name: "style_id"
       })
     styleId: number;
@@ -38,14 +38,14 @@ export class FabricRequestEntity {
       })
     buyerId: number;
 
-    @Column("int", {
+    @Column("varchar", {
         nullable: false,
-        name: "fabric_type_id"
+        name: "type"
       })
-    fabricTypeId: number;
+    type: string;
 
     @Column("int", {
-        nullable: false,
+        nullable: true,
         name: "sample_type_id"
       })
     sampleTypeId: number;

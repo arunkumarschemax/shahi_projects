@@ -8,6 +8,9 @@ import {
   Row,
   Select,
   Space,
+  Upload,
+  UploadProps,
+  message,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import FabricDevelopmentTabs from "./fabric-development-tabs";
@@ -26,6 +29,8 @@ export const FabricDevelopmentRequest = () => {
   const [fabricTypeData,setFabricTypeData] = useState<any>([])
   const [empData,setEmpData] = useState<any>([])
   const [locationData,setLocationData] = useState<any>([])
+  const [pollutionFilelist,setPollutionFilelist] = useState<any[]>([]);
+
 
 
    
@@ -39,7 +44,7 @@ export const FabricDevelopmentRequest = () => {
 
 
     const itemsInfo = (data) => {
-    console.log(data)
+    console.log(data,"items")
   }
 
    
@@ -131,6 +136,46 @@ console.log(locationData,"143")
   
     
  console.log(fabricTypeData,"55")
+
+
+ const fileuploadFieldProps: UploadProps = {
+  multiple: false,
+  onRemove: (file:any) => {
+      setPollutionFilelist([]);
+    // uploadFileList([]);
+  },
+  beforeUpload: (file: any) => {
+    if (!file.name.match(/\.(jpg|jpeg|png)$/)) {
+      message.error("Only pdf and image files are allowed!");
+      return true;
+    }
+    var reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onload = data => {
+      if (pollutionFilelist.length === 1) {
+        message.error("You Cannot Upload More Than One File At A Time");
+        return true;
+      } else {
+          setPollutionFilelist([...pollutionFilelist, file]);
+        // uploadFileList([...filelist, file]);
+
+        return false;
+      }
+    };
+
+    // Add a default return value for cases where none of the conditions are met
+    return false;
+  },
+  progress: {
+    strokeColor: {
+      '0%': '#108ee9',
+      '100%': '#87d068',
+    },
+    strokeWidth: 3,
+    format: (percent:any) => `${parseFloat(percent.toFixed(2))}%`,
+  },
+  fileList: pollutionFilelist
+};
   const onReset = () => {
     form.resetFields();
   };
@@ -170,7 +215,7 @@ console.log(locationData,"143")
             >
               <Form.Item
                 label="Location"
-                name="location"
+                name="locationId"
                 rules={[{ required: true, message: "Location" }]}
               >
                 <Select placeholder="Location" allowClear>
@@ -217,7 +262,7 @@ console.log(locationData,"143")
             >
               <Form.Item
                 label="PCH"
-                name="pch"
+                name="pchId"
                 rules={[{ required: true, message: "PCH" }]}
               >
                 <Select placeholder="PCH" allowClear>
@@ -242,7 +287,7 @@ console.log(locationData,"143")
             >
               <Form.Item
                 label="Buyer"
-                name="buyer"
+                name="buyerId"
                 rules={[{ required: true, message: "Buyer" }]}
               >
                 <Select placeholder="Buyer" allowClear>
@@ -256,58 +301,74 @@ console.log(locationData,"143")
                 </Select>
               </Form.Item>
             </Col>
-
-            {/* <Col
+            <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 4 }}
+              md={{ span: 2}}
+              lg={{ span: 2}}
+              xl={{ span: 2 }}
             >
-              <Form.Item label="Light Source " name="lightsource">
-                <Space direction="horizontal">
-                  <Select placeholder="primary" style={{ width: 60 }} allowClear >
-                  <option key="1" value="type1">PRIM</option>
-                  </Select>
-                  <Select placeholder="secondary" style={{ width: 60 }} allowClear >
-                  <option key="1" value="type1">ESC</option>
-                   
-                  </Select>
-                  <Select placeholder="tertiary" style={{ width: 60 }}  allowClear>
-                  <option key="1" value="type1">TET</option>
+              <Form.Item
+                label="Primary"
+                name="lightSourcePrimary"
+              >
+                <Select placeholder="lightSource" allowClear>
+                {BuyerData.map((rec) => (
+                  <option key={rec.buyerId} value={rec.buyerId}>
+                    {rec.buyerName}
+                   </option>
+                       ))}
+                       
 
-                  </Select>
-                </Space>
+                </Select>
               </Form.Item>
-            </Col> */}
-              <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-              <Form.Item label="Light Source" name="lightsource">
-                <Row gutter={16}> {/* Use Row to display items side by side */}
-                  <Col span={8}>
-                    <Form.Item name="primary">
-                      <Select placeholder="primary">
-                        {/* Add dropdown options here */}
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item name="secondary">
-                      <Select placeholder="secondary">
-                        {/* Add dropdown options here */}
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item name="tertiary">
-                      <Select placeholder="tertiary">
-                        {/* Add dropdown options here */}
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Form.Item>
-              </Col>
+            </Col>
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 2}}
+              lg={{ span: 2}}
+              xl={{ span: 2 }}
+            >
+              <Form.Item
+                label="Secondary"
+                name="lightSourceSecondary"
+              >
+                <Select placeholder="lightSource" allowClear>
+                {BuyerData.map((rec) => (
+                  <option key={rec.buyerId} value={rec.buyerId}>
+                    {rec.buyerName}
+                   </option>
+                       ))}
+                       
 
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 2}}
+              lg={{ span: 2}}
+              xl={{ span: 2 }}
+            >
+              <Form.Item
+                label="Teritiary"
+                name="lightSourceTertiary"
+              >
+                <Select placeholder="lightSource" allowClear>
+                {BuyerData.map((rec) => (
+                  <option key={rec.buyerId} value={rec.buyerId}>
+                    {rec.buyerName}
+                   </option>
+                       ))}
+                       
+
+                </Select>
+              </Form.Item>
+            </Col>
+
+             
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -316,17 +377,12 @@ console.log(locationData,"143")
               xl={{ span: 4 }}
             >
               <Form.Item
-                label="Fabric Type"
-                name="Fabrictype"
+                label="Type"
+                name="type"
                 rules={[{ required: true, message: "Type" }]}
               >
-                <Select placeholder="Fabric Type" allowClear>
-                {fabricTypeData.map((rec) => (
-                  <option key={rec.fabricTypeId} value={rec.fabricTypeId}>
-                    {rec.fabricTypeName}
-                   </option>
-                       ))} 
-                </Select>
+                
+                <Input  placeholder="type"/>
               </Form.Item>
             </Col>
 
@@ -339,7 +395,7 @@ console.log(locationData,"143")
             >
               <Form.Item
                 label="Fabric Responsible"
-                name="fabricresponsible"
+                name="fabricResponsible"
                 rules={[{ required: true, message: "Fabric Responsible" }]}
               >
                 <Select placeholder="Fabric Responsible" allowClear>
@@ -361,6 +417,27 @@ console.log(locationData,"143")
             >
               <Form.Item label="Remarks" name="remarks">
                 <Input.TextArea placeholder="Remarks" rows={1} />
+              </Form.Item>
+            </Col>
+
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 4 }}
+              lg={{ span: 4}}
+              xl={{ span: 4 }}
+            
+            >
+              <Form.Item
+                label="Attached File"
+                name="file"
+              >
+                
+              <Upload {...fileuploadFieldProps}  accept='.jpeg,.png,.jpg'>
+             <Button icon={<UploadOutlined />}>
+              Choose File
+             </Button>
+             </Upload>
               </Form.Item>
             </Col>
           </Row>
@@ -402,9 +479,11 @@ console.log(locationData,"143")
           {/* <div>
             <FabricDevelopmentTabs key="1" />
           </div> */}
+          <Card>
           <div>
             <FabricDevelopmentRequestQuality itemsInfo = {itemsInfo} />
           </div>
+          </Card>
         </Card>
 
         <Row justify="end">

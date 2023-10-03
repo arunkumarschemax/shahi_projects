@@ -10,10 +10,10 @@ URL = '/fabric-development';
         
 async getAllitemsCode(): Promise<any> {
     const dummyMapItemsData = [
-        { itemsCode: 'IT001', description: 'Red color ',itemsId: 1 },
-        { itemsCode: 'IT002', description: 'combination of green and black color',itemsId: 2 },
-        { itemsCode: 'IT003', description: 'black color garment',itemsId: 3 },
-        { itemsCode: 'IT004', description: 'others ',itemsId: 4 },
+        { itemCode: 'IT001', description: 'Red color ',itemsId: 1 },
+        { itemCode: 'IT002', description: 'combination of green and black color',itemsId: 2 },
+        { itemCode: 'IT003', description: 'black color garment',itemsId: 3 },
+        { itemCode: 'IT004', description: 'others ',itemsId: 4 },
 
     
       ];
@@ -24,10 +24,10 @@ async getAllitemsCode(): Promise<any> {
 async getAllMapItems(req?: FabricFilterRequest): Promise<any> {
   console.log(req,"989898")
   const dummyMapItemsData = [
-      { itemsCode: 'IT001', description: 'Red color ', itemsId: 1 },
-      { itemsCode: 'IT002', description: 'combination of green and black color', itemsId: 2 },
-      { itemsCode: 'IT003', description: 'black color garment', itemsId: 3 },
-      { itemsCode: 'IT004', description: 'others ', itemsId: 4 },
+      { itemCode: 'IT001', description: 'Red color ', itemsId: 1 },
+      { itemCode: 'IT002', description: 'combination of green and black color', itemsId: 2 },
+      { itemCode: 'IT003', description: 'black color garment', itemsId: 3 },
+      { itemCode: 'IT004', description: 'others ', itemsId: 4 },
   ]
 
   if (req) {

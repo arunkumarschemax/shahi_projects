@@ -142,7 +142,7 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
         >
           <Form.Item
             label="Fabric Description"
-            name="fabricdescription"
+            name="fabricDescription"
           >
             <Input placeholder="Fabric Description" allowClear />
           </Form.Item>

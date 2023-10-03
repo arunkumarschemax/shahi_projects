@@ -26,7 +26,7 @@ export class FabricDevelopmentService {
         Entity.styleId = req.styleId
         Entity.buyerId = req.buyerId
         Entity.pchId = req.pchId
-        Entity.fabricTypeId = req.fabricTypeId
+        Entity.type = req.type
         Entity.sampleTypeId = req.sampleTypeId
         Entity.remarks = req.remarks
         Entity.fabricResponsible = req.fabricResponsible

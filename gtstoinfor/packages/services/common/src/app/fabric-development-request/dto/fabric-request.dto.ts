@@ -34,7 +34,7 @@ export class FabricRequestDto{
     buyerId: number;
 
     @ApiProperty()
-    fabricTypeId: number;
+    type: string;
 
     @ApiProperty()
     sampleTypeId: number;

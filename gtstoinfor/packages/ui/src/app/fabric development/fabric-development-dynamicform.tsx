@@ -111,7 +111,7 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
   useEffect(() => {
     if (garmentQuantity && consumptionData && wastageData) {
       const cal:any = ((garmentQuantity*consumptionData)+( (garmentQuantity*consumptionData/100)))
-      props.form.setFieldsValue({FabricQuantity:cal})
+      props.form.setFieldsValue({fabricQuantity:cal})
      
     }
   }, [garmentQuantity, consumptionData, wastageData]);
@@ -220,13 +220,14 @@ const getAllUoms = () => {
       };
 
       const col:any = [
-        { title: 'Style No', dataIndex: 'StyleNo', key: 'StyleNo' },
-        { title: 'Color', dataIndex: 'color', key: 'color' }, 
+        { title: 'Style No', dataIndex: 'styleId', key: 'StyleNo' },
+        { title: 'Color', dataIndex: 'colorId', key: 'color' }, 
         { title: 'Garment Quantity', dataIndex: 'garmentQuantity', key: 'garmentQuantity' },
         { title: 'Consumption', dataIndex: 'consumption', key: 'consumption' },
         { title: 'Wastage', dataIndex: 'wastage', key: 'wastage' },
-        { title: 'Fabric Quantity', dataIndex: 'FabricQuantity', key: 'FabricQuantity' },
-        { title: 'UOM', dataIndex: 'uom', key: 'uom' },
+        { title: 'Fabric Quantity', dataIndex: 'fabricQuantity', key: 'FabricQuantity' },
+        { title: 'UOM', dataIndex: 'uomId', key: 'uom' },
+        { title: 'Remarks', dataIndex: 'remarks', key: 'remarks' },
         { title: 'File', dataIndex: 'file', key: 'file' },
         {
           title: 'Action',
@@ -278,7 +279,7 @@ const getAllUoms = () => {
             >
               <Form.Item
                 label="Style No"
-                name ="StyleNo"
+                name ="styleId"
                 rules={[{ required: true, message: "Style No" }]}
               >
                 <Input placeholder="Style No" allowClear/>
@@ -294,11 +295,11 @@ const getAllUoms = () => {
             >
               <Form.Item
                 label="Color"
-                name ="color"
+                name ="colorId"
               >
                 <Select placeholder="Color" allowClear>
                 {colorData.map((rec) => (
-                  <option key={rec.colourId} value={rec.colour}>
+                  <option key={rec.colourId} value={rec.colourId}>
                     {rec.colour}
                    </option>
                        ))} 
@@ -361,7 +362,7 @@ const getAllUoms = () => {
             >
               <Form.Item
                 label="Fabric Quantity"
-                name="FabricQuantity"
+                name="fabricQuantity"
                 
                 
               >
@@ -381,7 +382,7 @@ const getAllUoms = () => {
             >
               <Form.Item
                 label="UOM"
-                name="uom"
+                name="uomId"
               >
             <Select  placeholder="UOM" allowClear>
             {uomData.map((rec) => (
@@ -392,6 +393,24 @@ const getAllUoms = () => {
               
 
             </Select>
+
+              </Form.Item>
+            </Col>
+
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 6 }}
+              lg={{ span: 4}}
+              xl={{ span: 4 }}
+              style={{marginTop:30}}
+
+            >
+              <Form.Item
+                label="Remarks"
+                name="remarks"
+              >
+           <Input placeholder='remarks' />
 
               </Form.Item>
             </Col>
