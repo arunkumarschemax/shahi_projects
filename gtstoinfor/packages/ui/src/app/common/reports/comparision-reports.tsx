@@ -14,21 +14,38 @@ export const MonthWiseComparisionReport = () =>{
     const [form] = Form.useForm();
     const { Option } = Select;
     const [selected, setSelected] = useState('ExFactory')
-    const [pageSize, setPageSize] = useState<number>(null);
-    const [page, setPage] = React.useState(1);
     const [data, setData] = useState<any[]>([]);
+    const [phase, setPhase] = useState<any[]>([]);
     const [year, setYear] = useState<any[]>([]);
     const [tab, setTab] = useState<number>(2023);
     const service = new OrdersService();
     const [filteredData, setFilteredData] = useState<any[]>([]);
-    const [excelData, setExcelData] = useState<any[]>([]);
+    const [excelsData, setExcelData] = useState<any[]>([]);
     const [dates, setDates] = useState<any[]>([]);
-
     const { Text } = Typography;
+    const [page, setPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(10);
+
     useEffect(() => {
         getData(selected);
         getTabs();
       }, []);
+     
+      const pagination = {
+        current: page,
+        pageSize: pageSize,
+        total: filteredData.length,
+        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+        onChange: (current, pageSize) => {
+          setPage(current);
+          setPageSize(pageSize);
+        },
+        showSizeChanger: true,
+        onShowSizeChange: (current, size) => {
+          setPage(1); // Reset the page to 1 when changing page size
+          setPageSize(size);
+        },
+      };
       const getTabs = () => {
         service.getExfactoryYearData().then((res) => {
           if (res.status) {
@@ -36,6 +53,7 @@ export const MonthWiseComparisionReport = () =>{
           }
         });
       };
+      
     const handleChange = (val) =>{
         setSelected(val)
         getData(val)
@@ -66,6 +84,13 @@ export const MonthWiseComparisionReport = () =>{
               } else {
                 setDates([]);
               }
+        })
+        service.getComparisionPhaseData(req).then((res)=>{
+          if(res.status){
+            setPhase(res.data)
+          }else{
+            setPhase([]);
+          }
         })
       };
       const CustomTitle = () => {
@@ -152,7 +177,352 @@ export const MonthWiseComparisionReport = () =>{
           </div>
         );
       };
+      const columns10: any = [
+        {
+          title: "S No",
+          key: "sno",
+          render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+        },
+        // {
+        //   title: "Item code",
+        //   dataIndex: "itemCode",
+        //   // ...getColumnSearchProps('itemCode')
+        // },
+        // {
+        //   title: "Item Name",
+        //   dataIndex: "itemName",
+        //   width:200,
+        //   render: (text: any, record: any) => (
+        //   <span>{record.itemName}</span>
+        //   ),
+        //   // ...getColumnSearchProps('itemName')
+        // },
+        {title:'Production Plan Type',
+        dataIndex: "phasetype",
+        render: (text: any, record: any) => <span>{record.phasetype}</span>,
+      },
+      {title:'January',
+        dataIndex: "phasetype",
+        children:[
+          {
+            title:'Previous',
+        dataIndex: "janPcs",
+        render: (text: any, record: any) => <span>{record.pcsData[0].janPcs}</span>,
     
+          },
+          {
+            title:'Latest',
+        dataIndex: "janCoeff",
+        render: (text: any, record: any) => <span>{record.coeffData[0].janCoeff}</span>,
+    
+          }
+        ],
+        style: { backgroundColor: "lightblue" },
+      },
+      {
+        title: "", 
+        width: 20, 
+        },
+      {title:'February',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "febPcs",
+      render: (text: any, record: any) => <span >{record.pcsData[0].febPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "febCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].febCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'March',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "marPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].marPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "marCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].marCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'April',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "aprPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].aprPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "aprCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].aprCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'May',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "mayPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].mayPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "mayCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].mayCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'June',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "junPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].junPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "junCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].junCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'July',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "julPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].julPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "julCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].julCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'August',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "augPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].augPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "augCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].augCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'September',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "sepPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].sepPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "sepCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].sepCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'October',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "octPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].octPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "octCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].octCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'November',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "novPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].novPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "novCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].novCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:'December',
+      dataIndex: "phasetype",
+      children:[
+        {
+          title:'Previous',
+      dataIndex: "decPcs",
+      render: (text: any, record: any) => <span>{record.pcsData[0].decPcs}</span>,
+    
+        },
+        {
+          title:'Latest',
+      dataIndex: "decCoeff",
+      render: (text: any, record: any) => <span>{record.coeffData[0].decCoeff}</span>,
+    
+        }
+      ]
+    },
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:"Total Pcs",
+    dataIndex:"total_order_plan_qty",
+    render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty}</span>,
+    },
+    
+    {
+      title: "", 
+      width: 20, 
+    },
+    {title:"Total Coeff",
+    dataIndex:"total_order_plan_qty_coeff",
+    render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty_coeff}</span>,
+    },
+    
+    
+        // // {
+        // //   title: <Header/>,
+        // //   dataIndex: "monthWiseData",
+        // //   align:'center',
+        // //   render: (text: any, record: any) => (
+        // //     <Table
+        // //       dataSource={record.monthWiseData}
+        // //       columns={childColumns2}
+        // //       pagination={false} // Hide pagination for child table
+        // //       rowKey={(record) => record.itemName}
+             
+        // //     />
+        //   ),
+        // },
+            
+      ];
+      const getColumnBackgroundColor = (title) => {
+        if (title === "January") {
+          return "lightblue"; 
+        } else if (title === "February") {
+          return "lightgreen";
+        } else if  (title === "March"){
+          return "lightblue"; 
+        }else if (title === "April") {
+          return "lightgreen";
+        }else if  (title === "May"){
+          return "lightblue"; 
+        }else if (title === "June") {
+          return "lightgreen";
+        }else if  (title === "July"){
+          return "lightblue"; 
+        }else if (title === "August") {
+          return "lightgreen";
+        }else if  (title === "September"){
+          return "lightblue"; 
+        }else if (title === "October") {
+          return "lightgreen";
+        }else if  (title === "November"){
+          return "lightblue";
+        }else if (title === "December") {
+          return "lightgreen";
+         }else{
+          return undefined; 
+        }
+      };
+    
+      const columnsWithBackground = columns10.map((column) => ({
+        ...column,
+        title: (
+          <div style={{ backgroundColor: getColumnBackgroundColor(column.title) }}>
+            {column.title}
+          </div>
+        ),
+      }));
       const childColumns1: any = [
         {
           // title: "Production Plan Type Name",
@@ -453,10 +823,12 @@ export const MonthWiseComparisionReport = () =>{
       ];
       const columns5: any = [
         {
-          title: "S No",
-          key: "sno",
-          render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-        },
+          title: 'S.No',
+          key: 'sno',
+          responsive: ['sm'],
+          render: (text, object, index) => (page - 1) + (index + 1)
+
+      },
         // {
         //   title: "Item code",
         //   dataIndex: "itemCode",
@@ -526,7 +898,8 @@ export const MonthWiseComparisionReport = () =>{
             {title: `Nov Lat`,dataIndex: "novExfLat",},
             {title: `Dec Pre`,dataIndex: "decExfPre",},
             {title: `Dec Lat`,dataIndex: "decExfLat",},
-    
+            {title: `Total Pre`,dataIndex: "totalExfPre",},
+            {title: `Total Lat`,dataIndex: "totalExfLat",}
           
         )
     }
@@ -558,12 +931,187 @@ export const MonthWiseComparisionReport = () =>{
           {title: `Nov Lat`,dataIndex: "novWhLat",},
           {title: `Dec Pre`,dataIndex: "decWhPre",},
           {title: `Dec Lat`,dataIndex: "decWhLat",},
-    
+          {title: `Total Pre`,dataIndex: "totalWhPre",},
+          {title: `Total Lat`,dataIndex: "totalWhLat",}
           
         )
     }
+    let totalJanExfPre = 0;
+    let totalJanExfLat = 0;
+    let totalFebExfPre = 0;
+    let totalFebExfLat = 0; 
+    let totalMarExfPre = 0;
+    let totalMarExfLat = 0;
+    let totalAprExfPre = 0;
+    let totalAprExfLat = 0;
+    let totalMayExfPre = 0;
+    let totalMayExfLat = 0;
+    let totalJunExfPre = 0;
+    let totalJunExfLat = 0;
+    let totalJulExfPre = 0;
+    let totalJulExfLat = 0;
+    let totalAugExfPre = 0;
+    let totalAugExfLat = 0;
+    let totalSepExfPre = 0;
+    let totalSepExfLat = 0;
+    let totalOctExfPre = 0;
+    let totalOctExfLat = 0;
+    let totalNovExfPre = 0;
+    let totalNovExfLat = 0;
+    let totalDecExfPre = 0;
+    let totalDecExfLat = 0;
+    let totalExfPre = 0;
+    let totalExfLat = 0;
+    let totalJanWhPre = 0;
+    let totalJanWhLat = 0;
+    let totalFebWhPre = 0;
+    let totalFebWhLat = 0; 
+    let totalMarWhPre = 0;
+    let totalMarWhLat = 0;
+    let totalAprWhPre = 0;
+    let totalAprWhLat = 0;
+    let totalMayWhPre = 0;
+    let totalMayWhLat = 0;
+    let totalJunWhPre = 0;
+    let totalJunWhLat = 0;
+    let totalJulWhPre = 0;
+    let totalJulWhLat = 0;
+    let totalAugWhPre = 0;
+    let totalAugWhLat = 0;
+    let totalSepWhPre = 0;
+    let totalSepWhLat = 0;
+    let totalOctWhPre = 0;
+    let totalOctWhLat = 0;
+    let totalNovWhPre = 0;
+    let totalNovWhLat = 0;
+    let totalDecWhPre = 0;
+    let totalDecWhLat = 0;
+    let totalWhPre = 0;
+    let totalWhLat = 0;
+      excelsData.forEach((row) => {
+        totalJanExfPre += Number(row.janExfPre) || 0;
+        totalJanExfLat += Number(row.janExfLat) || 0;
+        totalFebExfPre += Number(row.febExfPre) || 0;
+        totalFebExfLat += Number(row.febExfLat) || 0;
+        totalMarExfPre += Number(row.marExfPre) || 0;
+        totalMarExfLat += Number(row.marExfLat) || 0;
+        totalAprExfPre += Number(row.aprExfPre) || 0;
+        totalAprExfLat += Number(row.aprExfLat) || 0;
+        totalMayExfPre += Number(row.mayExfPre) || 0;
+        totalMayExfLat += Number(row.mayExfLat) || 0;
+        totalJunExfPre += Number(row.junExfPre) || 0;
+        totalJunExfLat += Number(row.junExfLat) || 0;
+        totalJulExfPre += Number(row.julExfPre) || 0;
+        totalJulExfLat += Number(row.julExfLat) || 0;
+        totalAugExfPre += Number(row.augExfPre) || 0;
+        totalAugExfLat += Number(row.augExfLat) || 0;
+        totalSepExfPre += Number(row.sepExfPre) || 0;
+        totalSepExfLat += Number(row.sepExfLat) || 0;  
+        totalOctExfPre += Number(row.octExfPre) || 0;
+        totalOctExfLat += Number(row.octExfLat) || 0;
+        totalNovExfPre += Number(row.novExfPre) || 0;
+        totalNovExfLat += Number(row.novExfLat) || 0;
+        totalDecExfPre += Number(row.decExfPre) || 0;
+        totalDecExfLat += Number(row.decExfLat) || 0;
+        totalExfPre += Number(row.totalExfPre) || 0;
+        totalExfLat += Number(row.totalExfLat) || 0;
+        totalJanWhPre += Number(row.janWhPre) || 0;
+        totalJanWhLat += Number(row.janWhLat) || 0;
+        totalFebWhPre += Number(row.febWhPre) || 0;
+        totalFebWhLat += Number(row.febWhLat) || 0;
+        totalMarWhPre += Number(row.marWhPre) || 0;
+        totalMarWhLat += Number(row.marWhLat) || 0;
+        totalAprWhPre += Number(row.aprWhPre) || 0;
+        totalAprWhLat += Number(row.aprWhLat) || 0;
+        totalMayWhPre += Number(row.mayWhPre) || 0;
+        totalMayWhLat += Number(row.mayWhLat) || 0;
+        totalJunWhPre += Number(row.junWhPre) || 0;
+        totalJunWhLat += Number(row.junWhLat) || 0;
+        totalJulWhPre += Number(row.julWhPre) || 0;
+        totalJulWhLat += Number(row.julWhLat) || 0;
+        totalAugWhPre += Number(row.augWhPre) || 0;
+        totalAugWhLat += Number(row.augWhLat) || 0;
+        totalSepWhPre += Number(row.sepWhPre) || 0;
+        totalSepWhLat += Number(row.sepWhLat) || 0;  
+        totalOctWhPre += Number(row.octWhPre) || 0;
+        totalOctWhLat += Number(row.octWhLat) || 0;
+        totalNovWhPre += Number(row.novWhPre) || 0;
+        totalNovWhLat += Number(row.novWhLat) || 0;
+        totalDecWhPre += Number(row.decWhPre) || 0;
+        totalDecWhLat += Number(row.decWhLat) || 0;
+        totalWhPre += Number(row.totalWhPre) || 0;
+        totalWhLat += Number(row.totalWhLat) || 0;
+    });
+
+   const totalsPcsRow = {
+        item: "Total",
+        prod_plan_type: "", 
+        janExfPre: totalJanExfPre,
+        janExfLat: totalJanExfLat,
+        febExfPre: totalFebExfPre,
+        febExfLat: totalFebExfLat,
+        marExfPre: totalMarExfPre,
+        marExfLat: totalMarExfLat, 
+        aprExfPre: totalAprExfPre,
+        aprExfLat: totalAprExfLat,
+         mayFxfPre: totalMayExfPre,
+        mayFxfLat: totalMayExfLat, 
+        junExfPre: totalJunExfPre,
+        junExfLat: totalJunExfLat, 
+        julExfPre: totalJulExfPre,
+        julExfLat: totalJulExfLat, 
+        augExfPre: totalAugExfPre,
+        augExfLat: totalAugExfLat,
+         sepExfPre: totalSepExfPre,
+        sepExfLat: totalSepExfLat, 
+        octExfPre: totalOctExfPre,
+        octExfLat: totalOctExfLat, 
+        novExfPre: totalNovExfPre,
+        novExfLat: totalNovExfLat, 
+        decExfPre: totalDecExfPre,
+        decExfLat: totalDecExfLat,
+        totalExfPre: totalExfPre,
+        totalExfLat: totalExfLat,
+    }
+    const totalsCoeffRow = {
+      item: "Total",
+      prod_plan_type: "", 
+      janWhPre: totalJanWhPre,
+      janWhLat: totalJanWhLat,
+      febWhPre: totalFebWhPre,
+      febWhLat: totalFebWhLat,
+      marWhPre: totalMarWhPre,
+      marWhLat: totalMarWhLat, 
+      aprWhPre: totalAprWhPre,
+      aprWhLat: totalAprWhLat,
+       mayWhPre: totalMayWhPre,
+      mayWhLat: totalMayWhLat, 
+      junWhPre: totalJunWhPre,
+      junWhLat: totalJunWhLat, 
+      julWhPre: totalJulWhPre,
+      julWhLat: totalJulWhLat, 
+      augWhPre: totalAugWhPre,
+      augWhLat: totalAugWhLat,
+       sepWhPre: totalSepWhPre,
+      sepWhLat: totalSepWhLat, 
+      octWhPre: totalOctWhPre,
+      octWhLat: totalOctWhLat, 
+      novWhPre: totalNovWhPre,
+      novWhLat: totalNovWhLat, 
+      decWhPre: totalDecWhPre,
+      decWhLat: totalDecWhLat,
+      totalWhPre: totalWhPre,
+      totalWhLat: totalWhLat,
+  }
+  if(selected =='ExFactory'){   
+     excelsData.push(totalsPcsRow);
+  }
+  if(selected == 'WareHouse'){
+    excelsData.push(totalsCoeffRow)
+  }
+
         excel.addColumns(exportingColumns);
-        excel.addDataSource(excelData);
+        excel.addDataSource(excelsData);
         excel.saveAs(`Ex-Factory-report-${currentDate}.xlsx`);
        
       };
@@ -1016,7 +1564,9 @@ export const MonthWiseComparisionReport = () =>{
             xl={{ span: 6 }}
           >
             <div>
-              <label>label</label>
+              <label>
+               Comparision Parameters
+              </label>
               <Form.Item name="Label" initialValue={'ExFactory'}>
                 <Select
                   showSearch
@@ -1032,7 +1582,46 @@ export const MonthWiseComparisionReport = () =>{
               </Form.Item>
             </div>
           </Col>
-
+          <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 5 }}
+                  lg={{ span: 5 }}
+                  xl={{ span: 6 }}
+                  style={{ marginTop: 17 }}
+                >
+                  <Card
+                    
+                    style={{
+                      textAlign: "center",
+                    //   width: 150,
+                    //   height: 35,
+                      borderRadius: 8,
+                      backgroundColor: "#EBEBF1",
+                    }}
+                    size="small"
+                  ><span>Latest File uploaded Date: {dates?.[0]?.Date? moment(dates?.[0]?.Date).format("DD/MM"): "-"}</span></Card>
+                </Col>
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 5 }}
+                  lg={{ span: 5 }}
+                  xl={{ span: 6 }}
+                  style={{ marginTop: 17 }}
+                >
+                  <Card
+                    
+                    style={{
+                      textAlign: "center",
+                    //   width: 150,
+                    //   height: 35,
+                      borderRadius: 8,
+                      backgroundColor: "#EBEBF1",
+                    }}
+                    size="small"
+                  ><span>Previous File uploaded Date: {dates?.[1]?.Date? moment(dates?.[0]?.Date).format("DD/MM"): "-"}</span></Card>
+                </Col>
               </Row>
           </Form>
           {selected && data.length > 0 ?(
@@ -1117,46 +1706,7 @@ export const MonthWiseComparisionReport = () =>{
                     size="small"
                   ></Card>
                 </Col>
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 5 }}
-                  lg={{ span: 5 }}
-                  xl={{ span: 6 }}
-                  style={{ marginTop: 17 }}
-                >
-                  <Card
-                    
-                    style={{
-                      textAlign: "center",
-                    //   width: 150,
-                    //   height: 35,
-                      borderRadius: 8,
-                      backgroundColor: "#EBEBF1",
-                    }}
-                    size="small"
-                  ><span>Latest File uploaded Date: {dates?.[0]?.Date? moment(dates?.[0]?.Date).format("DD/MM"): "-"}</span></Card>
-                </Col>
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 5 }}
-                  lg={{ span: 5 }}
-                  xl={{ span: 6 }}
-                  style={{ marginTop: 17 }}
-                >
-                  <Card
-                    
-                    style={{
-                      textAlign: "center",
-                    //   width: 150,
-                    //   height: 35,
-                      borderRadius: 8,
-                      backgroundColor: "#EBEBF1",
-                    }}
-                    size="small"
-                  ><span>Previous File uploaded Date: {dates?.[1]?.Date? moment(dates?.[0]?.Date).format("DD/MM"): "-"}</span></Card>
-                </Col>
+              
                       </Row>
                   </Form>
           <Table
@@ -1167,7 +1717,14 @@ export const MonthWiseComparisionReport = () =>{
             size="small"
             scroll={{ x: "max-content" }}
             summary={getTableSummary}
+            pagination={pagination}
+
           />
+          <Table
+         columns={columnsWithBackground} 
+         dataSource={phase}
+            size="small"
+        scroll={{ x: "max-content" }}/>
           
         </Tabs.TabPane>
       ))}

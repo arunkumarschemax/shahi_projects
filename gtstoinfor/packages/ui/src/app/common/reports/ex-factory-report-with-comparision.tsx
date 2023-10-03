@@ -982,10 +982,10 @@ export const ExFactoryReportWithComparision = () => {
     excel.addSheet(tab.toString()); 
     let exportingColumns: IExcelColumn[] = [];
     exportingColumns = [
-      {
-        title: "Item Name",
-        dataIndex: "item",
-      },
+      // {
+      //   title: "Item Name",
+      //   dataIndex: "item",
+      // },
       {
         title: "Production Plan Type Name",
         dataIndex: "prod_plan_type",

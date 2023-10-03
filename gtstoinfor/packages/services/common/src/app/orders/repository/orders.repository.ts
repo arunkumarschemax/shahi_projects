@@ -58,7 +58,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getWharehouseDateChangeData(): Promise<any> {
         const query = this.createQueryBuilder('o')
-            .select(`o.production_plan_id, o.item_code, o.itemName, o.order_status, o.fr_fabric_name, o.order_qty_pcs, o.contracted_date, od.created_at,o.last_update_date ,od.old_val, od.new_val, od.version`)
+            .select(`o.production_plan_id, o.item_cd, o.itemName, o.order_status, o.fr_fabric_name, o.order_qty_pcs, o.contracted_date, od.created_at,o.last_update_date ,od.old_val, od.new_val, od.version`)
             .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
             .where(` column_name='requested_wh_date' ORDER BY od.created_at DESC`)
         return await query.getRawMany();
@@ -66,7 +66,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getContractDateChangeData(): Promise<any> {
         const query = this.createQueryBuilder('o')
-            .select(`o.production_plan_id, o.item_code, o.itemName, o.order_status, o.fr_fabric_name, o.order_qty_pcs, o.requested_wh_date, od.created_at ,o.last_update_date, od.old_val, od.new_val, od.version`)
+            .select(`o.production_plan_id, o.item_cd, o.itemName, o.order_status, o.fr_fabric_name, o.order_qty_pcs, o.requested_wh_date, od.created_at ,o.last_update_date, od.old_val, od.new_val, od.version`)
             .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
             .where(` column_name='contracted_date' ORDER BY od.created_at DESC`)
         return await query.getRawMany();
@@ -161,6 +161,85 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         const result = await this.query(query);
         return result;
     }
+
+    async getdata(req: YearReq): Promise<any[]> {
+        const query = 
+        `SELECT 
+       
+    CASE
+    WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
+     WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
+     WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
+     ELSE prod_plan_type
+ END AS prod_plan_type,
+  
+         
+        ROUND(SUM(CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2))), 0) AS total_order_plan_qty_coeff,
+        ROUND(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) AS total_order_plan_qty,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 1 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS janWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 2 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS febWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 3 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS marWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 4 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS aprWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 5 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS mayWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 6 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS junWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 7 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS julWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 8 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS augWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 9 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS sepWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 10 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS octWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 11 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS novWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 THEN CAST(REPLACE(order_plan_qty_coeff, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS decWhCoeff,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 1 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS janExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 2 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS febExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 3 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS marExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 4 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS aprExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 5 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS mayExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 6 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS junExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 7 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS julExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 8 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS augExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 9 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS sepExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 10 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS octExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 11 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS novExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 12 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS decExfCoeff, 
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS janPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 2 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS febPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 3 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS marPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 4 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS aprPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 5 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS mayPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 6 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS junPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 7 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS julPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 8 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS augPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 9 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS sepPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 10 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS octPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 11 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS novPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END), 0) AS decPcsWh,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 1 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS janPcsExf,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 2 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS febPcsExf,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 3 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS marPcsExf,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 4 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS aprPcsExf,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 5 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS mayPcsExf,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 6 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS junPcsExf,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 7 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS julPcsExf,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 8 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS augPcsExf,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 9 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS sepPcsExf,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 10 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS octPcsExf,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 11 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS novPcsExf,
+        ROUND(SUM(CASE WHEN MONTH(planned_exf) = 12 THEN REPLACE(order_plan_qty_coeff, ',', '') ELSE 0 END), 0) AS decPcsExf
+    FROM orders
+    WHERE prod_plan_type != 'STOP' 
+    GROUP BY
+     CASE
+            WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
+            WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
+            WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
+            ELSE prod_plan_type
+        END
+    ORDER BY
+        prod_plan_type`;
+      
+        const result = await this.query(query);
+        return result;
+      }
+      
     async getExfactoryYearData(): Promise<any> {
         const query = this.createQueryBuilder('o')
             .select(`o.year as year`)
