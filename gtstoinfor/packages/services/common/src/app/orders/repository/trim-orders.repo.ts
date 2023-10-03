@@ -15,6 +15,10 @@ export class TrimOrdersRepository extends Repository<TrimOrdersEntity> {
             if(req.OrderNumber){
                 query.andWhere(`to.order_no = '${req.OrderNumber}'`)
             }
+            if (req.approvalFromDate !== undefined) {
+                query.andWhere(`Date(to.approval_date) BETWEEN '${req.approvalFromDate}' AND '${req.approvalToDate}'`)
+            }
+            query.orderBy(`to.order_no`, 'ASC')
         return await query.getRawMany();
     }
 

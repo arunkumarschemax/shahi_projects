@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest, CompareOrdersFilterReq, orders, COLineRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest, CompareOrdersFilterReq, orders, COLineRequest, TrimOrdersReq } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -228,9 +228,10 @@ export class OrdersController {
     
 
     @Post('/getTrimOrdersData')
-    async getTrimOrdersData(): Promise<CommonResponseModel> {
+    @ApiBody({type:TrimOrdersReq})
+    async getTrimOrdersData(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.getTrimOrdersData();
+            return this.ordersService.getTrimOrdersData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
@@ -496,23 +497,23 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
-    @Post('/getPhaseMonthData')
-    @ApiBody({type:YearReq})
-    async getPhaseMonthData(@Body() req:any): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.getPhaseMonthData(req);
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-        }
-    }
-    @Post('/getComparisionphaseData')
-    @ApiBody({type:YearReq})
-    async getComparisionphaseData(@Body() req:any): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.getComparisionphaseData(req);
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/getPhaseMonthData')
+    // @ApiBody({type:YearReq})
+    // async getPhaseMonthData(@Body() req:any): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.getPhaseMonthData(req);
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
+    // @Post('/getComparisionphaseData')
+    // @ApiBody({type:YearReq})
+    // async getComparisionphaseData(@Body() req:any): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.getComparisionphaseData(req);
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
     
 }
