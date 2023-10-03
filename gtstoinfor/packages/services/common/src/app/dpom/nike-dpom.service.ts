@@ -1739,6 +1739,35 @@ export class DpomService {
         const dataModelArray: ChangePoandLineModel[] = Array.from(poAndLineMap.values());
         return new CommonResponseModel(true, dataModelArray.length, 'Data retrieved', dataModelArray);
     }
+    async getCoLine(req?:coLineRequest): Promise<CommonResponseModel> {
+        const data = await this.coLineRepository.getCoLineData(req)
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getBuyerPo(): Promise<CommonResponseModel> {
+        const data = await this.coLineRepository.getBuyerPo()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getColineItem(): Promise<CommonResponseModel> {
+        const data = await this.coLineRepository.getItem()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getColineOrderNo(): Promise<CommonResponseModel> {
+        const data = await this.coLineRepository.getOrderNumber()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+}
 
     
-}
+
