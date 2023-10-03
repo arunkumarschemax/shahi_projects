@@ -47,6 +47,7 @@ export default function ExcelImport() {
     if(form.getFieldsValue().fileType == FileTypesEnum.TRIM_ORDERS){
 
     const file = e.target.files[0];
+    console.log(file.type)
     if (file && file.type === 'text/csv') {
       setSelectedFile(e.target.files[0]);
 
@@ -94,6 +95,36 @@ export default function ExcelImport() {
         });
       };
       reader.readAsText(file);
+    } else if(file && file.type === 'application/vnd.ms-excel'){
+      console.log(file.type)
+      setSelectedFile(e.target.files[0]);
+      let csvData
+      var reader = new FileReader()
+      reader.readAsArrayBuffer(file)
+      reader.onload = async data => {
+        let csvData1: any = reader.result;
+        csvData = importExcel(csvData1);
+        // let headersRow = getHeaderArray(csvData[0][3]);
+        console.log(csvData)
+        csvData[0].shift()
+        const filteredNestedData = csvData.filter(innerData => innerData.some(row => row.length > 0));
+
+        const output = filteredNestedData.map(innerData => {
+          const header = innerData[0];
+          return innerData.slice(1).map(row => {
+            if (row.every(value => value === '')) {
+              return null; // Skip rows with all empty values
+            }
+            return row.reduce((acc, value, index) => {
+              acc[header[index]] = value;
+              return acc;
+            }, {});
+          }).filter(row => row !== null); // Remove rows with all empty values
+        });  
+        console.log(output,'------')
+           setData(output[0]) 
+
+      }
     }else{
       alert('Please select a valid .csv file.');
       setSelectedFile(null);
@@ -379,7 +410,7 @@ export default function ExcelImport() {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item label = "">
               <input type="file" accept=".csv, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleFileChange} />
-              <label style={{color:'red'}} >Only csv files are accepted</label>
+              <label style={{color:'blue'}} >Only csv files are accepted</label>
             </Form.Item>
             </Col>
           </Row>
