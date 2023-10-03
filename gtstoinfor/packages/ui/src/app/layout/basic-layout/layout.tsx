@@ -229,6 +229,14 @@ export default function BasicLayout() {
     const {
         token: { colorBgContainer },
     } = theme.useToken();
+
+    const [key, setKey] = useState("");
+
+    const handleClick = (e) => {
+
+        setKey(e.keyPath[0])
+    }
+
     return (
         <Layout style={{ minHeight: '100vh' }}>
             {/* <Router> */}
@@ -254,7 +262,8 @@ export default function BasicLayout() {
                     // defaultSelectedKeys={['1']}
                     // style={{ marginTop: '20px' }}
                     // 230
-                    selectedKeys={[]}
+                    onClick={handleClick}
+                    selectedKeys={[key]}
                     // style={{ backgroundColor: '#000', width: '75%', height: '61%', marginLeft: '160px', marginTop: '-3.8%',color:'white' }}
                 >
                     

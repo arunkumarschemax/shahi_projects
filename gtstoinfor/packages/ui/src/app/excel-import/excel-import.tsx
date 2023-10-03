@@ -147,8 +147,7 @@ export default function ExcelImport() {
             }, {});
           }).filter(row => row !== null); // Remove rows with all empty values
         });  
-        console.log(output,'---------------')
-           setData(output)   
+           setData(output[0])   
       }
     }
     else {
@@ -277,7 +276,6 @@ export default function ExcelImport() {
                       req.status = 'Failed';
                       req.userName = loginUser ? loginUser : null;
                       ordersService.updateFileStatus(req)
-                      // message.error('File upload failed')
                       message.error(res.internalMessage)
                     }
                   }).finally(() => {
@@ -381,6 +379,7 @@ export default function ExcelImport() {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item label = "">
               <input type="file" accept=".csv, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleFileChange} />
+              <label style={{color:'red'}} >Only csv files are accepted</label>
             </Form.Item>
             </Col>
           </Row>

@@ -1920,7 +1920,9 @@ export const MonthWiseComparisionReport = () =>{
             xl={{ span: 6 }}
           >
             <div>
-              <label>label</label>
+              <label>
+               Comparision Parameters
+              </label>
               <Form.Item name="Label" initialValue={'ExFactory'}>
                 <Select
                   showSearch
