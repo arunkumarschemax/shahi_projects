@@ -5,7 +5,7 @@ import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { OrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
-import { COLineRequest } from '@project-management-system/shared-models';
+import { COLineRequest, CoLineStatusReq, TrimOrdersReq } from '@project-management-system/shared-models';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
@@ -38,10 +38,26 @@ const {Text}=Typography
     }, [])
 
     const getData = () => {
-        service.getTrimOrdersData().then(res => {
+        const req = new TrimOrdersReq()
+        if (form.getFieldValue('approvalDate') !== undefined) {
+            req.approvalFromDate = (form.getFieldValue('approvalDate')[0]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('approvalDate') !== undefined) {
+        req.approvalToDate = (form.getFieldValue('approvalDate')[1]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('orderNo') !== undefined) {
+            req.OrderNumber = (form.getFieldValue('orderNo'))
+            }
+        service.getTrimOrdersData(req).then(res => {
+            console.log(req,'req');
+            
             if (res.status) {
                 setGridData(res.data)
                 setFilteredData(res.data)
+            }
+            else{
+                setFilteredData([])
+                setGridData([])
             }
         }).catch(err => {
             console.log(err.message)
@@ -65,58 +81,61 @@ const {Text}=Typography
 
     const approveOrderStatus = (record) => {
         console.log(record)
-    const req = new COLineRequest();
-    req.itemNumber = record.itemNumber
-    req.orderNumber = record.order_no
-    service.createCOline(req).then((res) => {
-        if (res.status) {
-            getData()
-            message.success(res.internalMessage)
-        } else (
-            message.error(res.internalMessage)
-        )
+    const req = new COLineRequest(record.itemNumber,record.order_no,record.color_code,record.color,record.size_code,record.size,record.item_code,record.item,null,null,record.order_no,record.itemNumber,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,record.trim_order_id);
+    // req.itemNumber = record.itemNumber
+    // req.orderNumber = record.order_no
+    service.createCOLineInternal(req).then(coLineRes => {
+        if(coLineRes.status){
+            service.createCOline(req).then((res) => {
+                if (res.status) {
+                    const statusReq = new CoLineStatusReq()
+                    statusReq.coLineId = coLineRes?.data?.coLineId
+                    statusReq.status = 'Success'
+                    service.updateStatusAfterCoLineCreationInM3(statusReq)
+                    getData()
+                    message.success(res.internalMessage)
+                } else {
+                    const statusReq = new CoLineStatusReq()
+                    statusReq.coLineId = coLineRes?.data?.coLineId
+                    statusReq.status = 'Failed'
+                    service.updateStatusAfterCoLineCreationInM3(statusReq)
+                    message.error(res.internalMessage)
+                }
+            })
+        } else{
+            message.error(coLineRes.internalMessage)
+        }
     })
     }
-    function convertToYYYYMMDD(inputDate) {
-        const formatsToTry = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY', 'YYYY-MM-DD'];
-        let formattedDate = null;
-        for (const format of formatsToTry) {
-            const parsedDate = moment(inputDate, format);
-            if (parsedDate.isValid()) {
-                formattedDate = parsedDate.format('YYYY-MM-DD');
-                break;
-            }
-        }
-        return formattedDate;
-    }
-    const getFilterdData = () => {
-        let orderNo = form.getFieldValue('orderNo');
-        let startDate = selectedEstimatedFromDate;
-        let endDate = selectedEstimatedStartDate;
-        let selectedDate = selectedEstimatedFromDate;
+   
+    // const getFilterdData = () => {
+    //     let orderNo = form.getFieldValue('orderNo');
+    //     let startDate = selectedEstimatedFromDate;
+    //     let endDate = selectedEstimatedStartDate;
+    //     let selectedDate = selectedEstimatedFromDate;
 
-        let filteredData = gridData;
-        if (orderNo) {
-            filteredData = filteredData.filter(record => record.order_no === orderNo);
-            if (filteredData.length === 0) {
-                message.error("No Data Found")
-            }
-            setFilteredData(filteredData);
-        }
-        if (selectedDate) {
-            selectedDate = moment(selectedDate).format('YYYY/MM/DD');
+    //     let filteredData = gridData;
+    //     if (orderNo) {
+    //         filteredData = filteredData.filter(record => record.order_no === orderNo);
+    //         if (filteredData.length === 0) {
+    //             message.error("No Data Found")
+    //         }
+    //         setFilteredData(filteredData);
+    //     }
+    //     if (selectedDate) {
+    //         selectedDate = moment(selectedDate).format('YYYY/MM/DD');
 
-            filteredData = filteredData.filter(record => {
-                const dateInData = moment(record.approval_date).format('YYYY/MM/DD');
-                return dateInData === selectedDate;
-            });
+    //         filteredData = filteredData.filter(record => {
+    //             const dateInData = moment(record.approval_date).format('YYYY/MM/DD');
+    //             return dateInData === selectedDate;
+    //         });
     
-          }
-          setFilteredData(filteredData);
-          if (filteredData.length === 0) {
-            message.error("No Data Found");
-          }
-    }
+    //       }
+    //       setFilteredData(filteredData);
+    //       if (filteredData.length === 0) {
+    //         message.error("No Data Found");
+    //       }
+    // }
 
     const onReset = () => {
         form.resetFields();
@@ -216,15 +235,6 @@ const {Text}=Typography
             key: 'sno',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
-        {
-            title: 'Order Plan Number ',
-            dataIndex: 'order_plan_number',
-            align:'right',
-           
-            ...getColumnSearchProps("order_plan_number"),
-            sorter: (a, b) => a.item_code.localeCompare(b.order_plan_number),
-            sortDirections: ["descend", "ascend"],
-        },
       
         {
             title: 'Order No',
@@ -272,7 +282,15 @@ const {Text}=Typography
             
         // },
         
-  
+        {
+            title: 'Order Plan Number ',
+            dataIndex: 'order_plan_number',
+            align:'right',
+           
+            ...getColumnSearchProps("order_plan_number"),
+            sorter: (a, b) => a.item_code.localeCompare(b.order_plan_number),
+            sortDirections: ["descend", "ascend"],
+        },
         {
             title: 'Color Code',
             dataIndex: 'color_code',
@@ -323,7 +341,7 @@ const {Text}=Typography
         },
            
         {
-            title: 'Order Quantity(pcs)',
+            title: 'Order Quantity Pcs',
             dataIndex: 'order_qty_pcs',
             align:'right',
             // ...getColumnSearchProps("order_qty_pcs"),
@@ -339,6 +357,7 @@ const {Text}=Typography
                 });
                 return (
                     <Table.Summary.Row>
+                        <Table.Summary.Cell colSpan={7} index={0}>  </Table.Summary.Cell>
                         <Table.Summary.Cell colSpan={8} index={0}>Grand Total</Table.Summary.Cell>
                         <Table.Summary.Cell index={9}>{total}</Table.Summary.Cell>
                     </Table.Summary.Row>
@@ -351,7 +370,7 @@ const {Text}=Typography
             sorter: (a, b) => a.approval_date.localeCompare(b.approval_date),
             sortDirections: ["descend", "ascend"],
             render: (text, record) => {
-                return record.approval_date? convertToYYYYMMDD(record.approval_date): "-"
+                return record.approval_date? moment(record.approval_date).format("YYYY-MM-DD"): "-"
               },
             },
             {
@@ -361,7 +380,7 @@ const {Text}=Typography
                 sorter: (a, b) => a.revised_date.localeCompare(b.revised_date),
                 sortDirections: ["descend", "ascend"],
                 render: (text, record) => {
-                    return record.revised_date? convertToYYYYMMDD(record.revised_date): "-"
+                    return record.revised_date? moment(record.revised_date).format("YYYY-MM-DD"): "-"
                   },
                 },
                 {
@@ -396,8 +415,8 @@ const {Text}=Typography
             title: "Item No",
             dataIndex: "itemNo",
             align:'left',
-
-          width:200,
+            fixed:'right',
+            width:150,
             render: (text, record) => {
                 if(record.answered_status != 'Accepted'){
 
@@ -420,25 +439,29 @@ const {Text}=Typography
         {
             title: "Action",
             dataIndex: "action",
-            width:150,
+            width:100,
+            fixed:'right',
             render: (value, record) => {
                 // const isEnabled = isActionButtonEnabled(record);
-                if(record.answered_status != 'Accepted'){
+                // if(record.answered_status != 'Accepted'){
 
                     return (
                         <Popconfirm
                             title="Are you sure to approve"
                             onConfirm={() => approveOrderStatus(record)}
                             // disabled={record.answered_status == 'Accepted'}
+                            disabled= {record.answered_status !== 'Accepted' ? false : true}
+
                         >
                             <Button 
                             // disabled={!isEnabled}
+                            disabled= {record.answered_status !== 'Accepted' ? false : true}
                             >Accept</Button>
                         </Popconfirm>
                     );
-                }else{
-                    return <></>
-                }
+                // }else{
+                //     return <></>
+                // }
             },
             
             
@@ -534,7 +557,7 @@ const {Text}=Typography
                     icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
 
                 
-                 <Form form={form} layout={'vertical'}>
+                 <Form form={form} layout={'vertical'}onFinish={getData}>
                     <Row gutter={24}>
                        
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
@@ -556,22 +579,24 @@ const {Text}=Typography
                             </div>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
-                        <Form.Item name='approval_date' label=' Approval Date'>
-                        <DatePicker
+                        <Form.Item name='approvalDate' label=' Approval Date'>
+                        {/* <DatePicker
   format="YYYY/MM/DD"
   onChange={(date, dateString) => {
-    setSelectedEstimatedFromDate(dateString); // dateString will be in "YYYY/MM/DD" format
+    setSelectedEstimatedFromDate(dateString);
   }}
-/>
+/> */}
+                        <RangePicker/>
+
                         </Form.Item>
 </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 17 }} >
-                            <Button
+                        <Button
                                 type="primary"
                                 icon={<SearchOutlined />}
                                 style={{ marginRight: 50, width: 80 }}
-                                htmlType="button"
-                                onClick={getFilterdData}>Search</Button>
+                                htmlType="submit"
+                                >Search</Button>
                             <Button
                                 type="primary"
                                 icon={<UndoOutlined />}
@@ -583,12 +608,13 @@ const {Text}=Typography
                 <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500 }} bordered
                 size='small'
                 summary={(pageData) => {
-                    
+                    // Calculate the grand total on each page change
                     let total = 0;
                     pageData.forEach((record) => {
                         total += parseFloat(record.order_qty_pcs);
                     });
-                    setGrandTotal(total);
+                    setGrandTotal(total); // Update the grand total in state
+            
                     return (
                         <Table.Summary.Row>
 <Table.Summary.Cell colSpan={10} index={8} >
@@ -605,5 +631,6 @@ const {Text}=Typography
         </div>
     )
 }
+
 
 export default TrimOrder;

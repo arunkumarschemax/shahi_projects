@@ -169,6 +169,15 @@ export class PriceListController {
 
         }
     }
+    
+    @Post('/getAllPriceListItem')
+    async getAllPriceListItem(): Promise<CommonResponseModel> {
+        try {
+            return this.priceService.getAllPriceListItem();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 
     @Post('/getPriceHistory')
     async getPriceHistory(): Promise<CommonResponseModel> {

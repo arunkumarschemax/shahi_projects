@@ -2,15 +2,23 @@ import { Repository } from "typeorm";
 import { TrimOrdersEntity } from "../entities/trim-orders.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FileIdReq } from "../models/file-id.req";
+import { TrimOrdersReq } from "@project-management-system/shared-models";
 
 export class TrimOrdersRepository extends Repository<TrimOrdersEntity> {
     constructor(@InjectRepository(TrimOrdersEntity) private trimOrderRepository: Repository<TrimOrdersEntity>
     ) {
         super(trimOrderRepository.target, trimOrderRepository.manager, trimOrderRepository.queryRunner);
     }
-    async getTrimOders(): Promise<any[]> {
+    async getTrimOders(req:TrimOrdersReq): Promise<any[]> {
         const query = this.createQueryBuilder('to')
             .select('*')
+            if(req.OrderNumber){
+                query.andWhere(`to.order_no = '${req.OrderNumber}'`)
+            }
+            if (req.approvalFromDate !== undefined) {
+                query.andWhere(`Date(to.approval_date) BETWEEN '${req.approvalFromDate}' AND '${req.approvalToDate}'`)
+            }
+            query.orderBy(`to.order_no`, 'ASC')
         return await query.getRawMany();
     }
 
