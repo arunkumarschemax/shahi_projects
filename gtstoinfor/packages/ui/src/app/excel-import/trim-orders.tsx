@@ -43,12 +43,19 @@ const {Text}=Typography
         if (form.getFieldValue('approvalDate') !== undefined) {
         req.approvalToDate = (form.getFieldValue('approvalDate')[1]).format('YYYY-MM-DD')
         }
+        if (form.getFieldValue('orderNo') !== undefined) {
+            req.OrderNumber = (form.getFieldValue('orderNo'))
+            }
         service.getTrimOrdersData(req).then(res => {
             console.log(req,'req');
             
             if (res.status) {
                 setGridData(res.data)
                 setFilteredData(res.data)
+            }
+            else{
+                setFilteredData([])
+                setGridData([])
             }
         }).catch(err => {
             console.log(err.message)
@@ -90,18 +97,7 @@ const {Text}=Typography
         }
     })
     }
-    function convertToYYYYMMDD(inputDate) {
-        const formatsToTry = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY', 'YYYY-MM-DD'];
-        let formattedDate = null;
-        for (const format of formatsToTry) {
-            const parsedDate = moment(inputDate, format);
-            if (parsedDate.isValid()) {
-                formattedDate = parsedDate.format('YYYY-MM-DD');
-                break;
-            }
-        }
-        return formattedDate;
-    }
+   
     // const getFilterdData = () => {
     //     let orderNo = form.getFieldValue('orderNo');
     //     let startDate = selectedEstimatedFromDate;
@@ -346,6 +342,7 @@ const {Text}=Typography
                 });
                 return (
                     <Table.Summary.Row>
+                        <Table.Summary.Cell colSpan={7} index={0}>  </Table.Summary.Cell>
                         <Table.Summary.Cell colSpan={8} index={0}>Grand Total</Table.Summary.Cell>
                         <Table.Summary.Cell index={9}>{total}</Table.Summary.Cell>
                     </Table.Summary.Row>
@@ -358,7 +355,7 @@ const {Text}=Typography
             sorter: (a, b) => a.approval_date.localeCompare(b.approval_date),
             sortDirections: ["descend", "ascend"],
             render: (text, record) => {
-                return record.approval_date? moment(record.approval_date).format("YYYY/MM/DD"): "-"
+                return record.approval_date? moment(record.approval_date).format("YYYY-MM-DD"): "-"
               },
             },
             {
@@ -368,7 +365,7 @@ const {Text}=Typography
                 sorter: (a, b) => a.revised_date.localeCompare(b.revised_date),
                 sortDirections: ["descend", "ascend"],
                 render: (text, record) => {
-                    return record.revised_date? moment(record.revised_date).format("YYYY/MM/DD"): "-"
+                    return record.revised_date? moment(record.revised_date).format("YYYY-MM-DD"): "-"
                   },
                 },
                 {
