@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { ChangePoandLineModel, CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, NewDivertModel, OldDivertModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, TotalQuantityChangeModel, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
+import { ChangePoandLineModel, CommonResponseModel, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, NewDivertModel, OldDivertModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, TotalQuantityChangeModel, coLineRequest, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -29,6 +29,7 @@ import { construnctDataFromM3Result } from '@project-management-system/backend-u
 import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
 import { ChangeComparision } from './dto/change-comparision.req';
 import { COLineEntity } from './entites/co-line.entity';
+import { COLineRepository } from './repositories/co-line.repository';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -41,6 +42,7 @@ export class DpomService {
         private dpomAdapter: DpomAdapter,
         private dpomChildAdapter: DpomChildAdapter,
         private fileUploadRepo: NikeFileUploadRepository,
+        private coLineRepo : COLineRepository,
         @InjectDataSource()
         private dataSource: DataSource,
     ) { }
@@ -1733,5 +1735,34 @@ export class DpomService {
         const dataModelArray: ChangePoandLineModel[] = Array.from(poAndLineMap.values());
         return new CommonResponseModel(true, dataModelArray.length, 'Data retrieved', dataModelArray);
     }
+    
 
+    async getCoLine(req?:coLineRequest): Promise<CommonResponseModel> {
+        const data = await this.coLineRepo.getCoLineData(req)
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getBuyerPo(): Promise<CommonResponseModel> {
+        const data = await this.coLineRepo.getBuyerPo()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getColineItem(): Promise<CommonResponseModel> {
+        const data = await this.coLineRepo.getItem()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getColineOrderNo(): Promise<CommonResponseModel> {
+        const data = await this.coLineRepo.getOrderNumber()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 }

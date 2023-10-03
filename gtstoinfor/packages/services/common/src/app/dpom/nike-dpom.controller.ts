@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
-import { CommonResponseModel, FobPriceDiffRequest, PpmDateFilterRequest, nikeFilterRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, FobPriceDiffRequest, PpmDateFilterRequest, coLineRequest, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomService } from './nike-dpom.service';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -780,6 +780,41 @@ export class DpomController {
     async getChangeComparision(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getChangeComparision(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getCoLine')
+    @ApiBody({ type: coLineRequest })
+    async getCoLine(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getCoLine(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getBuyerPo')
+    async getBuyerPo(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getBuyerPo();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getColineItem')
+    async getColineItem(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getColineItem();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getColineOrderNo')
+    async getColineOrderNo(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getColineOrderNo();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

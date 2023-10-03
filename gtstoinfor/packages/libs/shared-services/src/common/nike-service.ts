@@ -314,4 +314,17 @@ export class NikeService extends CommonAxiosService {
     async getChangeComparision(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getChangeComparision", req)
     }
+    async getCoLine(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getCoLine", req)
+    }
+
+    async getBuyerPo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getBuyerPo")
+    }
+    async getColineItem(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getColineItem")
+    }
+    async getColineOrderNo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getColineOrderNo")
+    }
 }
