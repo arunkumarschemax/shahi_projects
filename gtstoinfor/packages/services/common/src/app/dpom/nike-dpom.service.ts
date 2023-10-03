@@ -28,6 +28,7 @@ import { appConfig } from 'packages/services/common/config';
 import { construnctDataFromM3Result } from '@project-management-system/backend-utils';
 import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
 import { ChangeComparision } from './dto/change-comparision.req';
+import { COLineEntity } from './entites/co-line.entity';
 const moment = require('moment');
 const qs = require('querystring');
 
@@ -249,9 +250,41 @@ export class DpomService {
     // }
 
     async createCOline(req: any): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
+            const coLineEntity = new COLineEntity()
+            coLineEntity.buyerPo = req.poNumber
+            coLineEntity.division = 100
+            coLineEntity.PCH = 'KNT'
+            coLineEntity.facility = 100
+            coLineEntity.orderNo = ''
+            coLineEntity.customerCode = 'NIK00001'
+            coLineEntity.itemNo = req.itemNo
+            coLineEntity.itemDesc = req.itemDesc
+            coLineEntity.orderQty = req.sizeQty
+            coLineEntity.UOM = 'Pcs'
+            coLineEntity.size = req.sizeDesc
+            coLineEntity.price = req.FOBGrossPrice
+            coLineEntity.currency = req.FOBCurrencyCode
+            coLineEntity.coFinalAppDate = ''
+            coLineEntity.PCD = ''
+            coLineEntity.commision = ''
+            coLineEntity.planNo = ''
+            coLineEntity.planUnit = ''
+            coLineEntity.payTerms = ''
+            coLineEntity.payTermsDesc = ''
+            coLineEntity.createdUser = 'nike'
 
-            await this.approveDpomLineItemStatus(req);
+            const saveExcelEntity: DpomChildEntity = await transactionManager.getRepository(DpomChildEntity).save(coLineEntity);
+            if (!saveExcelEntity) {
+                await transactionManager.releaseTransaction()
+                return new CommonResponseModel(false, 0, 'something went wrong')
+            }
+            const statusUpdate = await this.approveDpomLineItemStatus(req);
+            if (!statusUpdate.status) {
+                await transactionManager.releaseTransaction()
+                return new CommonResponseModel(false, 0, 'something went wrong')
+            }
             return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {
             throw err
