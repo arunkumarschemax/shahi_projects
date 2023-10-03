@@ -544,6 +544,19 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
                 return new CommonResponseModel(false, 0, 'An error occurred while retrieving data', null);
             }
         }
+
+        async getPriceHistory(): Promise<CommonResponseModel> {
+            try {
+                const data = await this.priceListChildRepo.getPriceHistory();
+                if (data.length > 0) {
+                    return new CommonResponseModel(true, 1, 'Data retrieved successfully', data);
+                } else {
+                    return new CommonResponseModel(false, 0, 'No data found', data);
+                }
+            } catch (error) {
+                return new CommonResponseModel(false, 0, 'An error occurred while retrieving data', null);
+            }
+        }
         
         
 

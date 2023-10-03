@@ -12,7 +12,7 @@ import { NewFilterDto, PriceListActivateDeactivateDto, PriceListDto } from '@pro
 
 export interface PriceListView { }
 
-export const PriceListGrid = (props: PriceListView) => {
+export const PriceListHistory = (props: PriceListView) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -103,7 +103,7 @@ const getSeasonCode = () => {
             req.year = form.getFieldValue("year"); }
             if (form.getFieldValue("seasonCode") !== undefined) {
               req.seasonCode = form.getFieldValue("seasonCode"); }
-    priceService.getAllPriceList(req).then(res => {
+    priceService.getPriceHistory().then(res => {
       if (res.status) {
         setPriceList(res.data);
       } else
@@ -115,45 +115,6 @@ const getSeasonCode = () => {
       AlertMessages.getErrorMessage(err.message);
       setPriceList([]);
     })
-  }
- 
-  const deletePriceList = (values: PriceListDto) => {
-    values.isActive = values.isActive? false : true;
-    const req = new PriceListActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
-    priceService.ActivateOrDeactivatePriceList(req).then(res => {
-      getPriceList()
-    if(res.status){
-      message.success(res.internalMessage)
-      getPriceList();
-      AlertMessages.getErrorMessage(res.internalMessage);
-
-    }else {
-      // message.error("Status Not Changed")
-    }
-    }).catch(err => {
-      AlertMessages.getErrorMessage(err.message);
-    })
-  }
-
-
- 
-  const updatePriceList = (req: PriceListDto) => {
-    req.updatedUser = JSON.parse(localStorage.getItem('username'));
-    priceService.updatePriceList(req)
-      .then(res => {
-        if (res.status) {
-          // console.log(res,' after sucessesfully updateed daata')
-          AlertMessages.getSuccessMessage('Updated Successfully');
-          setDrawerVisible(false);
-          getPriceList();
-        } else {
-          // AlertMessages.getErrorMessage(res.internalMessage);
-          message.error("Already this Combination Exist,Please check it once")
-        }
-      })
-      .catch(err => {
-        AlertMessages.getErrorMessage(err.message);
-      });
   }
   
   //drawer related
@@ -260,9 +221,9 @@ const getSeasonCode = () => {
         },
         {
             title: "Style",
-            dataIndex: "sampleCode",
+            dataIndex: "sample_code",
             align:"center",
-            sorter: (a, b) => a.sampleCode.localeCompare(b.sampleCode),
+            sorter: (a, b) => a.sample_code.localeCompare(b.sample_code),
             sortDirections: ["descend", "ascend"],
             // ...getColumnSearchProps("style"),
           },
@@ -286,9 +247,9 @@ const getSeasonCode = () => {
       },
       {
         title: "Season Code",
-        dataIndex: "seasonCode",
+        dataIndex: "season",
         align:"center",
-        sorter: (a, b) => a.seasonCode.localeCompare(b.seasonCode),
+        sorter: (a, b) => a.season.localeCompare(b.season),
         sortDirections: [ "ascend","descend"],
         // ...getColumnSearchProps("seasonCode"),
 
@@ -296,103 +257,48 @@ const getSeasonCode = () => {
       },
       {
         title: "Price",
-        dataIndex: "fobLocalCurrency",
-        align:"center",
-        sorter: (a, b) => a.fobLocalCurrency.localeCompare(b.fobLocalCurrency),
-        sortDirections: [ "ascend","descend"],
-         ...getColumnSearchProps("currency"),
-       
-        // filters: [
-        //   {
-        //     text: 'INR',
-        //     value: true,
-        //   },
-        //   {
-        //     text: 'InActive',
-        //     value: false,
-        //   },
-        // ],
-        // filterMultiple: false,
-        // onFilter: (value, record) => {
-        //   // === is not work
-        //   return record.isActive === value;
-        // },
-        render:(text,record) => {
-          return(
-            <>
-            {record.fobLocalCurrency ? `${record.currency}- ${record.fobLocalCurrency} ` : '-'}
-            </>
-          )
-        }
-        // ...getColumnSearchProps("currency"),
-
-       
-       
-      },
-      {
-        title: 'Status',
-        dataIndex: 'isActive',
-        align:"center",
-         // width:'80px',
-        render: (isActive, rowData) => (
-          <>
-            {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-          </>
-        ),
-        filters: [
-          {
-            text: 'Active',
-            value: 1,
-          },
-          {
-            text: 'InActive',
-            value: 0,
-          },
-        ],
-        filterMultiple: false,
-        onFilter: (value, record) => {
-          // === is not work
-          return record.isActive === value;
-        },
-  
-      },
-      
-      {
-        title:`Action`,
-        dataIndex: 'action',
-        align:"center",
-        render: (text, rowData) => (
-          <span>         
-              <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
-                onClick={() => {
-                  if (rowData.isActive) {
-                    openFormWithData(rowData);
-                    console.log(rowData,"rowdata")
-                  } else {
-                    AlertMessages.getErrorMessage('You Cannot Edit Deactivated PriceList');
+        children:[
+            {
+                title:"Previous",
+                dataIndex:"previous_price",
+                align:"right",
+                render:(text,record) => {
+                  return(
+                    <>
+                    {record.previous_price ? `${record.currency}- ${record.previous_price} ` : '-'}
+                    </>
+                  )
+                }
+            },
+            {
+                title:"Latest",
+                dataIndex:"current_price",
+                align:"right",
+                render:(text,record) => {
+                    return(
+                      <>
+                      {record.current_price ? `${record.currency}- ${record.current_price} ` : '-'}
+                      </>
+                    )
                   }
-                }}
-                style={{ color: '#1890ff', fontSize: '14px' }}
-              />
-            
-            <Divider type="vertical" />
-              <Popconfirm onConfirm={e =>{deletePriceList(rowData);}}
-              title={
-                rowData.isActive
-                  ? 'Are you sure to Deactivate PriceList ?'
-                  :  'Are you sure to Activate PriceList ?'
-              }
-            >
-              <Switch  size="default"
-                  className={ rowData.isActive ? 'toggle-activated' : 'toggle-deactivated' }
-                  checkedChildren={<RightSquareOutlined type="check" />}
-                  unCheckedChildren={<RightSquareOutlined type="close" />}
-                  checked={rowData.isActive}
-                />
-              
-            </Popconfirm>
-          </span>
-        )
+            },
+        ],
+      },
+      {
+        title: "Variance",
+        dataIndex: "price_variance",
+        align: "right",
+        render: (text) => {
+          if (text === undefined || text === null) {
+            return "-";
+          } else if (text > 0) {
+            return <span style={{ color: "green" }}>{text}</span>;
+          } else if (text < 0) {
+            return <span style={{ color: "orange" }}>{text}</span>;
+          } else {
+            return text;
+          }
+        },
       }
      
    
@@ -464,25 +370,12 @@ const getSeasonCode = () => {
               </Select>
             </Form.Item>
           </Col>
-         
-          {/* <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
-            <Form.Item name="currency" label="Currency">
-              <Select placeholder="Select Currency" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {currency.map((e) => {
-                  return (
-                    <Option key={e.id} value={e.currency}>{e.currency}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col> */}
 
           <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 20 }}  >
                             <Form.Item>
-                                <Button htmlType="submit" icon={<SearchOutlined />}style={{backgroundColor:'green'}}type="primary">SEARCH</Button>
+                                <Button htmlType="submit" icon={<SearchOutlined />}style={{backgroundColor:'green'}}type="primary">Search</Button>
                                     <Button danger
-                                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, position: "relative" }} onClick={onReset}>RESET
+                                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, position: "relative" }} onClick={onReset}>Reset
                                 </Button>
                             </Form.Item>
                         </Col>
@@ -500,18 +393,6 @@ const getSeasonCode = () => {
           scroll={{x:true}}
           onChange={onChange}
           bordered />
-          
-    
-      <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
-        onClose={closeDrawer} visible={drawerVisible} closable={true}>
-        <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
-          <PriceListForm key={Date.now()}
-            updateData={updatePriceList}
-            isUpdate={true}
-            Data={selectedPriceListData}
-            closeForm={closeDrawer} />
-        </Card>
-      </Drawer>
      
       </Card> </>
       
@@ -519,5 +400,5 @@ const getSeasonCode = () => {
 }
 
 
-export default PriceListGrid
+export default PriceListHistory
 

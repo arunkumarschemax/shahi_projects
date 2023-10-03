@@ -9,6 +9,7 @@ import { COLineRequest } from '@project-management-system/shared-models';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
+import { useNavigate } from 'react-router-dom';
 
 
 const TrimOrder= () => {
@@ -28,6 +29,7 @@ const TrimOrder= () => {
     const searchInput = useRef<InputRef>(null);
     const [searchedColumn, setSearchedColumn] = useState("");
     const [item, setItem] = useState<any[]>([]);
+    let navigate = useNavigate()
 
 const {Text}=Typography
 
@@ -53,6 +55,14 @@ const {Text}=Typography
         })
         
     }
+
+    const DetailedView = (record: any) => {
+        const poFilterData = filteredData.filter(item => item.order_no == record)
+        navigate('/excel-import/trim-order-detail-view', { state: { data: poFilterData } })
+        console.log(poFilterData,'kkkkkkkkkkkkkkkkkkkkkkkkk')
+      }
+
+
     const approveOrderStatus = (record) => {
         console.log(record)
     const req = new COLineRequest();
@@ -225,6 +235,11 @@ const {Text}=Typography
             const bKey = b.order_no || "";
             return aKey.localeCompare(bKey);
           },
+          render: (text, record) => {
+            return <>
+              <Button type='link' onClick={e => { DetailedView(record.order_no) }}>{record.order_no}</Button>
+            </>
+          }
         },
           
         {
