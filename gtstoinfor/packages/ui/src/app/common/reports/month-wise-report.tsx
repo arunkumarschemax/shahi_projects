@@ -1390,7 +1390,7 @@ let totalJanExfPre = 0;
             xl={{ span: 6 }}
           >
             <div>
-              <label>label</label>
+              <label>Month Wise Parameters</label>
               <Form.Item name="Label" initialValue={'ExFactory'}>
                 <Select
                   showSearch
