@@ -1592,6 +1592,7 @@ async processEmails() {
                     resolve(dataArray)
                 })
         }else if(filename.split('.').pop() == 'xlsx'){
+            console.log('uuuuooo')
             xlsxFile(filepath)
               .then((rows) => {
                 const dataArray = []
@@ -1608,10 +1609,10 @@ async processEmails() {
                         obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
 
                     }
-                    console.log(columnNames[i],'4444444')
+                    // console.log(columnNames[i],'4444444')
                     if(FormatDates.includes(columnNames[i]) &&  cell != null){
                         obj[columnNames[i]] = moment(cell).format('YYYY-MM-DD').toString()
-                        console.log(obj[columnNames[i]],'99999999999')
+                        // console.log(obj[columnNames[i]],'99999999999')
 
                     }
                         // obj[columnNames[i]] = ""; // Use index from current cell to get column name, add current cell to new object
@@ -1675,21 +1676,21 @@ async processEmails() {
     if(dataArray){
         // console.log('dataArraymmmm',dataArray)
         
-        const saveFilePath = await this.updatePath(filepath,"pro_orders.xlxs",null,FileTypesEnum.PROJECTION_ORDERS)
+        const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS)
         console.log(saveFilePath)
-        console.log('saveFilePathhhhh')
-        // if(saveFilePath.status){
-        //     const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
-        //     let req = new FileStatusReq();
-        //     req.fileId = saveFilePath.data.id;
-        //     req.userName = 'Bidhun'
-        //     if(saveProjOrders.status){
-        //         req.status = 'Success';
-        //     }else{
-        //         req.status = 'Failed';
-        //     }
-        //     const updateFileStatus = await this.updateFileStatus(req)
-        // }
+        // console.log('saveFilePathhhhh')
+        if(saveFilePath.status){
+            const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
+            let req = new FileStatusReq();
+            req.fileId = saveFilePath.data.id;
+            req.userName = 'Bidhun'
+            if(saveProjOrders.status){
+                req.status = 'Success';
+            }else{
+                req.status = 'Failed';
+            }
+            const updateFileStatus = await this.updateFileStatus(req)
+        }
         // return dataArray
     }else{
         // return dataArray
