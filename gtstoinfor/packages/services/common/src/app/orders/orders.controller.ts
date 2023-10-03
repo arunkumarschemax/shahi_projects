@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest } from '@project-management-system/shared-models';
@@ -398,7 +398,8 @@ export class OrdersController {
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
-    }  @Post('/getWareHouseMonthExcelData')
+    } 
+     @Post('/getWareHouseMonthExcelData')
     @ApiBody({type:YearReq})
     async getWareHouseMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
         try {
@@ -407,4 +408,32 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    @Get('/processEmails')
+    async processEmails() {
+        try {
+            return this.ordersService.processEmails();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+        // try {
+        
+        // await this.ordersService.processEmails();
+        // return { message: 'Email processing completed.' };
+        // } catch (error) {
+        // throw new HttpException(
+        //     'An error occurred during email processing.',
+        //     HttpStatus.INTERNAL_SERVER_ERROR,
+        // );
+        // }
+    }
+    @Post('/readCell')
+    async readCell(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            const pathval = './upload-files/pro_orders.xlsx'
+             this.ordersService.readCell(pathval,pathval);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    
 }
