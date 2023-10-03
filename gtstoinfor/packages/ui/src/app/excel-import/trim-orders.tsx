@@ -359,7 +359,7 @@ const {Text}=Typography
                 sorter: (a, b) => a.revised_date.localeCompare(b.revised_date),
                 sortDirections: ["descend", "ascend"],
                 render: (text, record) => {
-                    return record.revised_date? convertToYYYYMMDD(record.revised_date): "-"
+                    return record.revised_date? moment(record.revised_date).format("YYYY/MM/DD"): "-"
                   },
                 },
                 {
@@ -470,7 +470,7 @@ width:200,
             { title: 'Department', dataIndex: 'department' },
             { title: 'Revised Date', dataIndex: 'revised_date' },
             { title: 'Document Status', dataIndex: 'document_status' },
-            { title: 'Answered Status', dataIndex: 'answered_status' },
+            { title: 'Status', dataIndex: 'answered_status' },
             { title: 'Vendor Person InCharge', dataIndex: 'vendor_person_incharge' },
             { title: 'Decision Date', dataIndex: 'decision_date' },
             { title: 'Payment Terms', dataIndex: 'payment_terms' },
@@ -558,7 +558,7 @@ width:200,
                         <DatePicker
   format="YYYY/MM/DD"
   onChange={(date, dateString) => {
-    setSelectedEstimatedFromDate(dateString); // dateString will be in "YYYY/MM/DD" format
+    setSelectedEstimatedFromDate(dateString);
   }}
 />
                         </Form.Item>
