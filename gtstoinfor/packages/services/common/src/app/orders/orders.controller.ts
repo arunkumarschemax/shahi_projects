@@ -451,4 +451,22 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getPhaseMonthData')
+    @ApiBody({type:YearReq})
+    async getPhaseMonthData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getPhaseMonthData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getComparisionphaseData')
+    @ApiBody({type:YearReq})
+    async getComparisionphaseData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getComparisionphaseData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
