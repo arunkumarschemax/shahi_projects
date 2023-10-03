@@ -222,25 +222,35 @@ export class DpomService {
         }
     }
 
+    // async createCOline(req: any): Promise<CommonResponseModel> {
+    //     try {
+    //         req.purchaseOrderNumber = 3504865987
+    //         req.poLineItemNumber = 10000
+    //         req.scheduleLineItemNumber = 100
+    //         const styleNumber = 'FN389'
+    //         const m3Config = appConfig.m3Cred.headerRequest()
+    //         const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=4857896325&ITNO=${req.itemNo}&ORQT=1000&PWNR=00010`;
+    //         const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
+    //         console.log(response, 'response')
+    //         console.log(response.data?.MIRecord, 'MIRecord')
+    //         if (response.data['@type'])
+    //             return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
+    //         if (!response.data?.MIRecord && !response.data?.MIRecord.length)
+    //             return new CommonResponseModel(false, 0, "No data found for this item")
+    //         // const meToCustomObj = [{ m3Key: 'STAT', yourKey: 'status' }, { m3Key: 'ORNO', yourKey: 'orderNO' }, { m3Key: 'PONR', yourKey: 'poLine' }]
+    //         // const myObj = construnctDataFromM3Result(meToCustomObj, response.data.MIRecord)
+    //         if (response.status !== 200)
+    //             return new CommonResponseModel(false, 1, `Validation failed as`)
+    //         await this.approveDpomLineItemStatus(req);
+    //         return new CommonResponseModel(true, 1, `COline created successfully`)
+    //     } catch (err) {
+    //         throw err
+    //     }
+    // }
+
     async createCOline(req: any): Promise<CommonResponseModel> {
         try {
-            req.purchaseOrderNumber = 3504865987
-            req.poLineItemNumber = 10000
-            req.scheduleLineItemNumber = 100
-            const styleNumber = 'FN389'
-            const m3Config = appConfig.m3Cred.headerRequest()
-            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=4857896325&ITNO=${req.itemNo}&ORQT=1000&PWNR=00010`;
-            const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
-            console.log(response, 'response')
-            console.log(response.data?.MIRecord, 'MIRecord')
-            if (response.data['@type'])
-                return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
-            if (!response.data?.MIRecord && !response.data?.MIRecord.length)
-                return new CommonResponseModel(false, 0, "No data found for this item")
-            // const meToCustomObj = [{ m3Key: 'STAT', yourKey: 'status' }, { m3Key: 'ORNO', yourKey: 'orderNO' }, { m3Key: 'PONR', yourKey: 'poLine' }]
-            // const myObj = construnctDataFromM3Result(meToCustomObj, response.data.MIRecord)
-            if (response.status !== 200)
-                return new CommonResponseModel(false, 1, `Validation failed as`)
+
             await this.approveDpomLineItemStatus(req);
             return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {
