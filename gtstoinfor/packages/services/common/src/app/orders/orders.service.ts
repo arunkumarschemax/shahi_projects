@@ -81,7 +81,8 @@ export class OrdersService {
             await transactionManager.startTransaction()
             const flag = new Set()
             const columnArray = [];
-            // console.log(formData,'formdaaaa')
+            console.log(formData,'formdaaaahh')
+            console.log(id,'fileiddd')
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
@@ -106,13 +107,13 @@ export class OrdersService {
                         updatedObj[key] = null;
                     } else {
                         // console.log(value,'nekkvalue')
-                        // updatedObj[key] = value;
-                        var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
+                        updatedObj[key] = value;
+                        // var regexPattern = /[^A-Za-z0-9 -;:/.,()[]&_']/g;
                         
-                        updatedObj[key] = value.replace(regexPattern, null);
+                        // updatedObj[key] = value.replace(regexPattern, null);
                         // console.log(value,'nekkvaluejjj')
                         // console.log(updatedObj[key],'nekkvaluejjjiyuuu')
-                        updatedObj[key] = Buffer.from(value, 'utf-8').toString()
+                        // updatedObj[key] = Buffer.from(value, 'utf-8').toString()
                         
                     }
                 }
@@ -1521,6 +1522,7 @@ async processEmails() {
 //       });
 //     });
 //   });
+// filename = 'pro_order_sep3.xlsx';
     console.log(filename.split('.').pop(),'extension')
     console.log(filename,'filename')
     const promise = () => new Promise((resolve, reject) => {
@@ -1548,21 +1550,22 @@ async processEmails() {
                 rows.map((row) => { // Map the rest of the rows into objects
                   const obj = {}; // Create object literal for current row
                   row.forEach((cell, i) => {
-                    if(cell == null){
-                        obj[columnNames[i]] = "";
-                    }
-                    if(typeof cell == 'number'){
-                        obj[columnNames[i]] = cell.toString(); // Use index from current cell to get column name, add current cell to new object
-                    }else{
+                    // if(cell == null){
+                    //     obj[columnNames[i]] = "";
+                    // }
+                    // if(typeof cell == 'number'){
+                    //     obj[columnNames[i]] = cell.toString(); // Use index from current cell to get column name, add current cell to new object
+                    // }else{
                         obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
 
-                    }
+                    // }
                     // console.log(columnNames[i],'4444444')
-                    if(FormatDates.includes(columnNames[i]) &&  cell != null){
-                        obj[columnNames[i]] = moment(cell).format('YYYY-MM-DD').toString()
-                        // console.log(obj[columnNames[i]],'99999999999')
+                    
+                    // if(FormatDates.includes(columnNames[i].replace(/\s/g, '')) &&  cell != null){
+                    //     obj[columnNames[i]] = moment(cell).format('YYYY-MM-DD').toString()
+                    //     // console.log(obj[columnNames[i]],'99999999999')
 
-                    }
+                    // }
                         // obj[columnNames[i]] = ""; // Use index from current cell to get column name, add current cell to new object
                         // obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
 
@@ -1625,7 +1628,7 @@ async processEmails() {
         // console.log('dataArraymmmm',dataArray)
         
         const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS)
-        console.log(saveFilePath)
+        console.log(saveFilePath,'jjjjj')
         // console.log('saveFilePathhhhh')
         if(saveFilePath.status){
             const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
