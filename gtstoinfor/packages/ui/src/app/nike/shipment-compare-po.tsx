@@ -810,7 +810,8 @@ const ShipmentChangesCompareGrid = () => {
             </Form> */}
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
-            </> : <></>}
+            </> : <><Table className="custom-table-wrapper" bordered  scroll={{ x: 'max-content' }}
+            /> </>}
 
         </Card>
     );

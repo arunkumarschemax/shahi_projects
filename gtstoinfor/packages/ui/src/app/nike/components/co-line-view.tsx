@@ -138,16 +138,22 @@ const ColineView = () => {
             },
             {
                 title: 'Item Desc',
-                dataIndex: 'item_desc'
+                dataIndex: 'item_desc',
+                render: (text, record) => {
+                    return (record.item_desc ? (record.item_desc ): '-')}
             },
             {
                 title: 'Order Qty',
                 dataIndex: 'order_qty',
+                render: (text, record) => {
+                    return (record.order_qty ? (record.order_qty ): '-')},
                 align:"right",
             },
             {
                 title: 'UOM',
-                dataIndex: 'UOM'
+                dataIndex: 'UOM',
+                render: (text, record) => {
+                    return (record.UOM ? (record.UOM ): '-')}
             },
             {
                 title: 'Size',
@@ -281,16 +287,22 @@ const ColineView = () => {
         },
         {
             title: 'Item Desc',
-            dataIndex: 'item_desc'
+            dataIndex: 'item_desc',
+            render: (text, record) => {
+                return (record.item_desc ? (record.item_desc ): '-')}
         },
         {
             title: 'Order Qty',
             dataIndex: 'order_qty',
             align:"right",
+            render: (text, record) => {
+                return (record.order_qty ? (record.order_qty ): '-')}
         },
         {
             title: 'UOM',
-            dataIndex: 'UOM'
+            dataIndex: 'UOM',
+            render: (text, record) => {
+                return (record.UOM ? (record.UOM ): '-')}
         },
         {
             title: 'Size',
@@ -414,7 +426,7 @@ const ColineView = () => {
                             >
                                 {
                                     orderNumber.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.sizeDescription}>{inc.sizeDescription}</Option>
+                                        return <Option key={inc.id} value={inc.order_no}>{inc.order_no}</Option>
                                     })
                                 }
                             </Select>

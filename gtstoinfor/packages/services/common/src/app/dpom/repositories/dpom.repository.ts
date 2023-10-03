@@ -7,6 +7,7 @@ import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
 import { PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 import { FobEntity } from "../../fob-price-list/fob.entity";
+import { groupBy } from "rxjs";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
@@ -256,13 +257,14 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getDivertReport(): Promise<any[]> {
         const query = this.createQueryBuilder('dpm')
-            .select(`DISTINCT id,item,plant AS Plant,dpom_item_line_status AS LineStatus,
+            .select(`DISTINCT po_and_line,id,item,plant AS Plant,dpom_item_line_status AS LineStatus,
             plant_name AS PlantName,document_date AS DocumentDate,
             po_number AS poNumber, po_line_item_number AS poLine ,destination_country AS destination,
             shipping_type AS shipmentType,inventory_segment_code AS inventorySegmentCode,
             ogac AS ogac ,gac AS gac ,product_code AS productCode,
             item_vas_text AS itemVasText,total_item_qty AS Quantity,created_at AS dpomCreatedDates,diverted_to_pos`)
             .where(`diverted_to_pos IS NOT null`)
+            // .groupBy(`po_number AND diverted_to_pos `)
         return await query.getRawMany()
     }
 
@@ -276,7 +278,9 @@ export class DpomRepository extends Repository<DpomEntity> {
             ogac AS nogac, gac AS ngac, product_code AS nproductCode, dpom_item_line_status AS nDPOMLineItemStatus,
             item_vas_text AS nitemVasText, total_item_qty AS nQuantity, created_at AS ndpomCreatedDates, diverted_to_pos`)
             .where(`diverted_to_pos IS NOT null`)
+            .groupBy(`dpm.po_number AND item`)
             .andWhere(`po_number = :po AND po_line_item_number = :line`, { po, line });
+
 
         return await query.getRawMany();
     }
