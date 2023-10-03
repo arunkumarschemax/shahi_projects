@@ -9,10 +9,13 @@ import FormItem from 'antd/es/form/FormItem';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
+import { orders } from '@project-management-system/shared-models';
 
 
 const AllOrdersGridView = () => {
     const [page, setPage] = useState<number>(1)
+    const [datas, setDatas] = useState<any>([]);
+    const [ordersStatus, setOrdersStatus] = useState<any[]>([])
     const [pageSize, setPageSize] = useState<number>(10)
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
@@ -23,16 +26,34 @@ const AllOrdersGridView = () => {
     const searchInput = useRef<InputRef>(null);
     const [searchedColumn, setSearchedColumn] = useState("");
     const [searchText, setSearchText] = useState("");
-
+    const [dateRange, setDateRange] = useState([null, null]);
+    const [selectedFromDate, setSelectedFromDate] =useState<null | moment.Moment>(null);
+    const [selectedToDate, setSelectedToDate] = useState<null | moment.Moment>(null);
     const { RangePicker } = DatePicker;
 
 
     useEffect(() => {
         getData();
+        orderStatus();
+        Number();
     }, [])
 
     const getData = () => {
-        service.getOrdersData().then(res => {
+        const req = new orders()
+        if (form.getFieldValue('planned_exf') !== undefined) {
+            req.plannedFromDate = (form.getFieldValue('planned_exf')[0]).format('YYYY-MM-DD')
+        }
+        if (form.getFieldValue('planned_exf') !== undefined) {
+        req.plannedToDate = (form.getFieldValue('planned_exf')[1]).format('YYYY-MM-DD')
+        }
+        if(form.getFieldValue('PoOrderStatus') ! == undefined){
+        req.PoOrderStatus=form.getFieldValue('PoOrderStatus')
+    }
+    if(form.getFieldValue('OrderPlanNumber') ! == undefined){
+        req.OrderPlanNumber=form.getFieldValue('OrderPlanNumber')
+    }
+        service.getOrdersData(req).then(res => {
+            console.log(req,'oooooooooooooooooo')
             if (res.status) {
                 setGridData(res.data)
                 setFilteredData(res.data)
@@ -41,7 +62,39 @@ const AllOrdersGridView = () => {
             console.log(err.message)
         })
     }
+// const order=()=>{
+//     service.getOrdersStatus().then((res)=>{
+//         if(res.status){
+//             setDatas(res?.data === undefined? []:res.data);
 
+//         }else{
+//             setDatas([]);
+//             message.info(res.internalMessage)
+//         }
+//     })
+// }
+
+const orderStatus=()=>{
+    service.getOrdersStatus().then((res)=>{
+        if(res.status){
+            setOrdersStatus(res?.data);
+            console.log()
+        }
+    })
+}
+
+
+const Number=()=>{
+    service.getOrderPlanNo().then((res)=>{
+        if(res.status){
+            setDatas(res?.data === undefined? []:res.data);
+
+        }else{
+            setDatas([]);
+            message.info(res.internalMessage)
+        }
+    })
+}
     const EstimatedETDDate = (value) => {
         if (value) {
             console.log(value)
@@ -51,31 +104,62 @@ const AllOrdersGridView = () => {
         }
     }
 
-    const getFilterdData = () => {
-        let poOrderStatus = form.getFieldValue('poOrderStatus');
-        let selectedDate = selectedEstimatedFromDate;
-                let filteredData = gridData;
-        if (poOrderStatus) {
-            filteredData = filteredData.filter(record => record.po_order_status === poOrderStatus);
-            if (filteredData.length === 0) {
-                message.error("No Data Found")
-            }
-            setFilteredData(filteredData);
-        }
-        if (selectedDate) {
-            selectedDate = moment(selectedDate).format('YYYY/MM/DD');
-            setFilteredData(filteredData);
-            filteredData = filteredData.filter(record => {
-                const dateInData = moment(record.planned_exf).format('YYYY/MM/DD');
-                return dateInData === selectedDate;
-            });
+
+//     const filter=()=>{
+// service.getOrdersStatus(req).then((res)=>{
+//     if(res.data){
+//         setDatas(res.data)
+//     }
+// })
+//     }
+
+    // const getFilterdData = () => {
+    //     let poOrderStatus = form.getFieldValue('poOrderStatus');
+    //     let selectedDate = selectedEstimatedFromDate;
+    //     let orderNo = form.getFieldValue('orderNo')
+    //     const [startDate, endDate] = dateRange;
+
+    //      let filteredData = gridData;
+    //     if (poOrderStatus) {
+    //         filteredData = filteredData.filter(record => record.po_order_status === poOrderStatus);
+    //         if (filteredData.length === 0) {
+    //             message.error("No Data Found")
+    //         }
+    //         setFilteredData(filteredData);
+    //     }
+    //     if(orderNo){
+    //         filteredData=filteredData.filter(record=>record.order_plan_number === orderNo);
+    //         if(filteredData.length === 0){
+    //             message.error("No Data Found")
+    //         }
+    //         setFilteredData(filteredData)
+    //     }
+    //     // if (selectedDate) {
+    //     //     selectedDate = moment(selectedDate).format('YYYY/MM/DD');
+    //     //     setFilteredData(filteredData);
+    //     //     filteredData = filteredData.filter(record => {
+    //     //         const dateInData = moment(record.planned_exf).format('YYYY/MM/DD');
+    //     //         return dateInData === selectedDate;
+    //     //     });
     
-          }
-          setFilteredData(filteredData);
-          if (filteredData.length === 0) {
-            message.error("No Data Found");
-        }
-    }
+    //     //   }
+    //     // 
+    //     if (startDate && endDate) {
+    //         const startDateFormatted = moment(startDate).format('YYYY/MM/DD');
+    //         const endDateFormatted = moment(endDate).format('YYYY/MM/DD');
+      
+    //         filteredData = filteredData.filter(record => {
+    //           const dateInData = moment(record.planned_exf).format('YYYY/MM/DD');
+    //           return dateInData >= startDateFormatted && dateInData <= endDateFormatted;
+    //         });
+    //       }
+    //       setFilteredData(filteredData);
+
+    // if (filteredData.length === 0) {
+    //   message.error("No Data Found");
+    // }
+    // };
+
     const handleReset = (clearFilters: () => void) => {
         clearFilters();
         setSearchText("");
@@ -187,19 +271,39 @@ const AllOrdersGridView = () => {
             width: 150,
 
         },
-        
+        // {
+        //     title: ' Planning Ssn Cd',
+        //     dataIndex: 'planning_ssn_cd',
+        //     render: (text) => (text ? text : '-'),
+        //     // width: '9%',
+        // },
+        {
+            title:'Order Plan Number',
+            dataIndex:'order_plan_number',
+            // width: '9%',
+            width: 150,
+
+            render: (text) => (text ? text : '-'),
+            ...getColumnSearchProps("order_plan_number"),
+            sorter: (a, b) => {
+                const aKey = a.order_plan_number || "";
+                const bKey = b.order_plan_number || "";
+                return aKey.localeCompare(bKey);
+              },
+         },
         {
             title: 'Biz',
             dataIndex: 'biz',
+         ...getColumnSearchProps("biz"),
+
             render: (text) => (text ? text : '-'),
             // width: '9%',
             width: 150,
             sorter: (a, b) => {
-                const aValue = a.biz || ''; 
-                const bValue = b.biz || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+                const aKey = a.biz || "";
+                const bKey = b.biz || "";
+                return aKey.localeCompare(bKey);
+              },
         },
         {
             title: 'Department',
@@ -210,11 +314,10 @@ const AllOrdersGridView = () => {
 
       ...getColumnSearchProps("department"),
       sorter: (a, b) => {
-        const aValue = a.department || ''; 
-        const bValue = b.department || ''; 
-        return aValue.localeCompare(bValue);
-    },
-    sortDirections: ["descend", "ascend"],
+        const aKey = a.department || "";
+        const bKey = b.department || "";
+        return aKey.localeCompare(bKey);
+      },
         },
 
         {
@@ -225,12 +328,11 @@ const AllOrdersGridView = () => {
 
         ...getColumnSearchProps("planning_sum_code"),
         sorter: (a, b) => {
-            const aValue = a.planning_sum_code || ''; 
-            const bValue = b.planning_sum_code || ''; 
-            return aValue.localeCompare(bValue);
+            const aKey = a.planning_sum_code || "";
+            const bKey = b.planning_sum_code || "";
+            return aKey.localeCompare(bKey);
+          },
         },
-        sortDirections: ["descend", "ascend"],
-    },
         
         {
             title: 'Planning Sum',
@@ -241,11 +343,10 @@ const AllOrdersGridView = () => {
 
             ...getColumnSearchProps("planning_sum"),
             sorter: (a, b) => {
-                const aValue = a.planning_sum || ''; 
-                const bValue = b.planning_sum || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+            const aKey = a.planning_sum || "";
+            const bKey = b.planning_sum || "";
+            return aKey.localeCompare(bKey);
+          },
         },
         {
             title: 'Item ',
@@ -256,11 +357,10 @@ const AllOrdersGridView = () => {
 
             ...getColumnSearchProps("item"),
             sorter: (a, b) => {
-                const aValue = a.item || ''; 
-                const bValue = b.item || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+                const aKey = a.item || "";
+                const bKey = b.item || "";
+                return aKey.localeCompare(bKey);
+              },
         },
         // {
         //     title: 'Vendor ',
@@ -269,7 +369,7 @@ const AllOrdersGridView = () => {
 
         // },
         {
-            title: 'Fr Fabric',
+            title: 'FR Fabric',
             dataIndex: 'fr_fabric',
             render: (text) => (text ? text : '-'),
             // width: '9%',
@@ -277,11 +377,10 @@ const AllOrdersGridView = () => {
 
             ...getColumnSearchProps("fr_fabric"),
             sorter: (a, b) => {
-                const aValue = a.fr_fabric || ''; 
-                const bValue = b.fr_fabric || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+                const aKey = a.fr_fabric || "";
+                const bKey = b.fr_fabric || "";
+                return aKey.localeCompare(bKey);
+              },
         },
 
         // {
@@ -299,11 +398,10 @@ const AllOrdersGridView = () => {
             width: 100,
 
             sorter: (a, b) => {
-                const aValue = a.coeff || ''; 
-                const bValue = b.coeff || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+                const aKey = a.coeff || "";
+                const bKey = b.coeff || "";
+                return aKey.localeCompare(bKey);
+              },
         },
        
         {
@@ -317,21 +415,7 @@ const AllOrdersGridView = () => {
             }
         },
 
-        {
-            title:'Order Plan Number',
-            dataIndex:'order_plan_number',
-            // width: '9%',
-            width: 150,
-
-            render: (text) => (text ? text : '-'),
-            ...getColumnSearchProps("order_plan_number"),
-            sorter: (a, b) => {
-                const aValue = a.order_plan_number || ''; 
-                const bValue = b.order_plan_number || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
-         },
+       
         {
             title: 'GWH',
             dataIndex: 'gwh',
@@ -341,12 +425,7 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             ...getColumnSearchProps("gwh"),
 
-            sorter: (a, b) => {
-                const aValue = a.gwh || ''; 
-                const bValue = b.gwh || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+           
         },
         {
             title: 'WH',
@@ -355,17 +434,14 @@ const AllOrdersGridView = () => {
             width: 100,
 
             render: (text) => (text ? text : '-'),
-            
             sorter: (a, b) => {
-                const aValue = a.wh || ''; 
-                const bValue = b.wh || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
-           
+                const aKey = a.wh || "";
+                const bKey = b.wh || "";
+                return aKey.localeCompare(bKey);
+              },
         },
         {
-            title: 'Transport Mthd',
+            title: 'Transport Method',
             dataIndex: 'trnsp_mthd',
             // width: '9%',
             width: 150,
@@ -384,30 +460,29 @@ const AllOrdersGridView = () => {
             width: 250,
 
             sorter: (a, b) => {
-                const aValue = a.raw_material_supplier || ''; 
-                const bValue = b.raw_material_supplier || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
-           
+                const aKey = a.raw_material_supplier || "";
+                const bKey = b.raw_material_supplier || "";
+                return aKey.localeCompare(bKey);
+              },
         },
         {
             title: 'Yarn Order Status',
             dataIndex: 'yarn_order_status',
             // width: '9%',
-            render: (text) => (text ? text : '-'),
-            width: 250,
+            render: (text) => {
+                return text !== undefined && text !== "" ? text : "-";
+              },            width: 250,
             ...getColumnSearchProps("yarn_order_status"),
-            sorter: (a, b) => {
-                const aValue = a.yarn_order_status || ''; 
-                const bValue = b.yarn_order_status || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => {
+            //     const aKey = a.yarn_order_status || "";
+            //     const bKey = b.yarn_order_status || "";
+            //     return aKey.localeCompare(bKey);
+            //   },
+           
            
         },
         {
-            title: 'Fabric Order Status',
+            title: 'Fbrc Order Status',
             dataIndex: 'fbrc_order_status',
             // width: '9%',
             render: (text) => (text ? text : '-'),
@@ -422,12 +497,11 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             width: 250,
             ...getColumnSearchProps("color_order_status"),
-            sorter: (a, b) => {
-                const aValue = a.color_order_status || ''; 
-                const bValue = b.color_order_status || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => {
+            //     const aKey = a.color_order_status || "";
+            //     const bKey = b.color_order_status || "";
+            //     return aKey.localeCompare(bKey);
+            //   },
         },
         {
             title: 'Trim Order Status',
@@ -436,12 +510,11 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             width: 250,
             ...getColumnSearchProps("trim_order_status"),
-            sorter: (a, b) => {
-                const aValue = a.trim_order_status || ''; 
-                const bValue = b.trim_order_status || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => {
+            //     const aKey = a.trim_order_status || "";
+            //     const bKey = b.trim_order_status || "";
+            //     return aKey.localeCompare(bKey);
+            //   },
         },
         {
             title: 'PO Order Status',
@@ -450,26 +523,24 @@ const AllOrdersGridView = () => {
             render: (text) => (text ? text : '-'),
             width: 150,
             ...getColumnSearchProps("po_order_status"),
-            sorter: (a, b) => {
-                const aValue = a.po_order_status || ''; 
-                const bValue = b.po_order_status || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => {
+            //     const aKey = a.color_order_status || "";
+            //     const bKey = b.color_order_status || "";
+            //     return aKey.localeCompare(bKey);
+            //   },
         },
         {
             title: 'Prod Plan Type',
-            dataIndex: ' prod_plan_type',
+            dataIndex: 'prod_plan_type',
             // width: '9%',
             render: (text) => (text ? text : '-'),
             ...getColumnSearchProps("prod_plan_type"),
             width: 150,
             sorter: (a, b) => {
-                const aValue = a.prod_plan_type || ''; 
-                const bValue = b.prod_plan_type || ''; 
-                return aValue.localeCompare(bValue);
-            },
-            sortDirections: ["descend", "ascend"],
+                const aKey = a.prod_plan_type || "";
+                const bKey = b.prod_plan_type || "";
+                return aKey.localeCompare(bKey);
+              },
         },
         {
             title: 'Planned EXF',
@@ -477,13 +548,18 @@ const AllOrdersGridView = () => {
             // width: '9%',
             render: (text) => (text ? text : '-'),
             width: 150,
+            sorter: (a, b) => {
+                const aKey = a.planned_exf || "";
+                const bKey = b.planned_exf || "";
+                return aKey.localeCompare(bKey);
+              },
            
         },
         
       
     ];
     const filteredGridData = gridData.filter(e => e.po_order_status !== null);
-
+    const data= gridData.filter(e => e.order_plan_number !== null)
     const handleExport = (e: any) => {
         e.preventDefault();
 
@@ -497,6 +573,9 @@ const AllOrdersGridView = () => {
         exportingColumns = [
             // { title: 'Production Plan Id', dataIndex: 'production_plan_id' },
             // { title: ' Planning Ssn Cd', dataIndex: 'planning_ssn_cd' },
+           
+            { title: 'S.No', dataIndex: 'sno' },
+            { title: 'Order Plan Number', dataIndex: 'order_plan_number' },
             { title: 'Biz', dataIndex: 'biz' },
             { title: 'Department', dataIndex: 'department' },
             { title: 'Planning Sum Code', dataIndex: 'planning_sum_code' },
@@ -507,7 +586,6 @@ const AllOrdersGridView = () => {
             // { title: 'Branch Factory', dataIndex: 'branchFactory' },
             { title: 'Coeff', dataIndex: 'coeff' },
             { title: 'Publish Date', dataIndex: 'publish_date' },
-            { title: 'Order Plan Number', dataIndex: 'order_plan_number' },
             { title: 'Planning Sum', dataIndex: 'planning_sum' },
             { title: 'GWH', dataIndex: 'gwh' },
             { title: 'WH', dataIndex: 'wh' },
@@ -519,7 +597,6 @@ const AllOrdersGridView = () => {
             { title: 'Trim Order Status', dataIndex: 'trim_order_status' },
             { title: 'PO Order Status', dataIndex: 'po_order_status' },
             { title: 'Prod Plan Type', dataIndex: 'prod_plan_type' },
-
             { title: 'Planned EXF', dataIndex: 'planned_exf' },
             // { title: 'Currency', dataIndex: 'currency' },
             // { title: 'Cost', dataIndex: 'cost' },
@@ -545,7 +622,7 @@ const AllOrdersGridView = () => {
                     style={{ color: 'green' }}
                     onClick={handleExport}
                     icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
-                <Form form={form} layout={'vertical'}>
+                <Form form={form} layout={'vertical'} onFinish={getData}>
 
                     <Row gutter={24}>
                         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
@@ -553,29 +630,46 @@ const AllOrdersGridView = () => {
                                 <RangePicker onChange={EstimatedETDDate} />
                             </Form.Item>
                         </Col> */}
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
-                            <Form.Item label="PO Order Status" name='poOrderStatus'>
+                       <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
+                            <Form.Item label="Plan Order Number" name='OrderPlanNumber'>
                                 <Select 
+                                 showSearch
+                                 placeholder="Select Plan Order Number"
+                                 optionFilterProp="children"
+                                 allowClear>
+                                {datas.map((res:any)=>{
+                                    return(
+                                        <Option key={res.order_plan_number} value={res.order_plan_number}>
+                                            {res.order_plan_number}
+                                        </Option>
+                                    )
+                                })}
+                                </Select>
+                            </Form.Item>
+                       </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
+                            <Form.Item label="PO Order Status" name="PoOrderStatus">
+                                <Select
                                  showSearch
                                  placeholder="Select Po Order Status"
                                  optionFilterProp="children"
-                                 allowClear>
-                                  {filteredGridData.map(e => (
-                   <Option key={e.po_order_status} value={e.po_order_status}>{e.po_order_status}</Option>
-                            ))}
+                                 allowClear>          
+                         {ordersStatus.map((res:any)=>{
+                          return(
+                        <Option key={res.po_order_status} value={res.po_order_status}>
+                                {res.PoOrderStatus}
+                            </Option>
+                          )
+                         })}
                                 </Select>
+
                             </Form.Item>
                        </Col>
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
                         <Form.Item name='planned_exf' label='Planned EXF'>
-                        <DatePicker
-                 format="YYYY/MM/DD"
-               onChange={(date, dateString) => {
-              setSelectedEstimatedFromDate(dateString);
-                }}
-/>
+                        <RangePicker/>
                         </Form.Item>
-</Col>
+                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
                             <div>
                                 {/* <label>Order Status</label>
@@ -597,8 +691,8 @@ const AllOrdersGridView = () => {
                                 type="primary"
                                 icon={<SearchOutlined />}
                                 style={{ marginRight: 50, width: 80 }}
-                                htmlType="button"
-                                onClick={getFilterdData}>Search</Button>
+                                htmlType="submit"
+                                >Search</Button>
                             <Button
                                 type="primary"
                                 icon={<UndoOutlined />}

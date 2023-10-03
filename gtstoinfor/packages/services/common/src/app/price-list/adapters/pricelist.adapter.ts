@@ -9,12 +9,12 @@ export class PriceListAdapter {
 
     public convertDtoToEntity(  DTO: priceListDto,  isUpdate: boolean = false ): PriceListEntity {
         const price = new PriceListEntity();
-        price.style= DTO.style;
+        price.sampleCode= DTO.sampleCode;
         price.year = DTO.year;
-        price.destination = DTO.destination;
+        price.business = DTO.business;
         price.seasonCode = DTO.seasonCode;
         price.currency = DTO.currency;
-        price.price = DTO.price;
+        price.fobLocalCurrency = DTO.fobLocalCurrency;
         price.item = DTO.item;
         price.isActive = DTO.isActive==undefined?true:DTO.isActive;
         if (isUpdate) {
@@ -29,12 +29,12 @@ export class PriceListAdapter {
       
       public convertEntityToDto(dtoData: PriceListEntity): priceListDto {
         const PriceListDto = new priceListDto;
-        PriceListDto.style=dtoData.style;
+        PriceListDto.sampleCode=dtoData.sampleCode;
         PriceListDto.year=dtoData.year;
-        PriceListDto.destination = dtoData.destination;
+        PriceListDto.business = dtoData.business;
         PriceListDto.seasonCode= dtoData.seasonCode;
         PriceListDto.currency = dtoData.currency;
-        PriceListDto.price = dtoData.price;
+        PriceListDto.fobLocalCurrency = dtoData.fobLocalCurrency;
         PriceListDto.item = dtoData.item;
         PriceListDto.isActive = dtoData.isActive;
         PriceListDto.createdUser = dtoData.createdUser;

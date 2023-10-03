@@ -7,7 +7,7 @@ import { PriceListService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import {  ColumnProps, ColumnsType } from 'antd/es/table';
 import PriceListForm from './price-list-form';
-import { NewFilterDto, PriceListDto } from '@project-management-system/shared-models';
+import { NewFilterDto, PriceListActivateDeactivateDto, PriceListDto } from '@project-management-system/shared-models';
 
 
 export interface PriceListView { }
@@ -19,6 +19,8 @@ export const PriceListGrid = (props: PriceListView) => {
   const [priceList, setPriceList] = useState<any[]>([]);
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+
   const navigate = useNavigate();
   const [selectedPriceListData, setSelectedPriceListeData] = useState<any>(undefined);
   const priceService = new PriceListService();
@@ -29,6 +31,9 @@ export const PriceListGrid = (props: PriceListView) => {
   const [year,setYear] = useState<any[]>([]); 
   const [currency,setCurrency] = useState<any[]>([]);
   const [seasonCode,setSeasonCode] = useState<any[]>([]);
+  const [item,setItem] = useState<any[]>([]);
+  const[des,setDes] = useState<any[]>([]);
+  const[styCount,setStyCount] = useState<any[]>([]);
 
 
 
@@ -39,12 +44,28 @@ export const PriceListGrid = (props: PriceListView) => {
     getYear();
     getCurrency();
     getSeasonCode();
+    getAllItems();
   },[])
 
-  
+  const pagination = {
+    current: page,
+    pageSize: pageSize,
+    total: priceList.length,
+    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+    onChange: (current, pageSize) => {
+      setPage(current);
+      setPageSize(pageSize);
+    },
+    showSizeChanger: true,
+    onShowSizeChange: (current, size) => {
+      setPage(1); // Reset the page to 1 when changing page size
+      setPageSize(size);
+    },
+  };
   const getStyle = () => {
     priceService.getAllPriceListStyles().then(res => {
       setStyle(res.data)
+      setStyCount(res.data.length)
     })
 
 }
@@ -52,6 +73,9 @@ export const PriceListGrid = (props: PriceListView) => {
 const getDestination = () => {
   priceService.getAllPriceListDestination().then(res => {
     setDestination(res.data)
+    setDes(res.data.length)
+    console.log(des, "all items");
+
   })
 
 }
@@ -74,12 +98,20 @@ const getSeasonCode = () => {
 
 }
 
+const getAllItems = () => {
+  priceService.getAllPriceListItem().then(res => {
+    setItem(res.data.length)
+    console.log()
+  });
+};
+
+
   const getPriceList= () => {
     const req = new NewFilterDto();
-     if (form.getFieldValue("style") !== undefined) {
-     req.style = form.getFieldValue("style");}
-            if (form.getFieldValue("destination") !== undefined) {
-         req.destination = form.getFieldValue("destination"); }
+     if (form.getFieldValue("sampleCode") !== undefined) {
+     req.sampleCode = form.getFieldValue("sampleCode");}
+            if (form.getFieldValue("business") !== undefined) {
+         req.business = form.getFieldValue("business"); }
          if (form.getFieldValue("currency") !== undefined) {
           req.currency = form.getFieldValue("currency"); }
           if (form.getFieldValue("year") !== undefined) {
@@ -100,12 +132,16 @@ const getSeasonCode = () => {
     })
   }
  
-  const deletePriceList = (Data: PriceListDto) => {
-    Data.isActive = Data.isActive? false : true;
-    priceService.ActivateOrDeactivatePriceList(Data).then(res => {
+  const deletePriceList = (values: PriceListDto) => {
+    values.isActive = values.isActive? false : true;
+    const req = new PriceListActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
+    priceService.ActivateOrDeactivatePriceList(req).then(res => {
+      getPriceList()
     if(res.status){
+      message.success(res.internalMessage)
+      console.log(res.internalMessage,'yoyoyoyooyoyoyooyoyoy')
       getPriceList();
-      // message.success("Status Changed")
+      AlertMessages.getErrorMessage(res.internalMessage);
 
     }else {
       // message.error("Status Not Changed")
@@ -114,6 +150,7 @@ const getSeasonCode = () => {
       AlertMessages.getErrorMessage(err.message);
     })
   }
+
 
  
   const updatePriceList = (req: PriceListDto) => {
@@ -127,7 +164,7 @@ const getSeasonCode = () => {
           getPriceList();
         } else {
           // AlertMessages.getErrorMessage(res.internalMessage);
-          message.error("Already this Combination Exist,Please check it once")
+          message.error("Already this Style & Destination Combination Exist,Please check it once")
         }
       })
       .catch(err => {
@@ -220,30 +257,37 @@ const getSeasonCode = () => {
     getPriceList();
   };
 
+  const getStartIndex = () => (page - 1) * pageSize + 1;
 
   const columns : any [] = [
     {
-      title: 'S No',
-      key: 'sno',
-      // width: '70px',
-      
-      responsive: ['sm'],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1)
+      title: "S.No",
+      key: "sno",
+      responsive: ["sm"],
+      render: (text, record, index) => getStartIndex() + index,
     },
     {
         title: "Style",
-        dataIndex: "style",
+        dataIndex: "sampleCode",
         align:"center",
-        sorter: (a, b) => a.style.localeCompare(b.style),
+        sorter: (a, b) => a.sampleCode.localeCompare(b.sampleCode),
         sortDirections: ["descend", "ascend"],
         // ...getColumnSearchProps("style"),
       },
+      {
+          title: "Item",
+          dataIndex: "item",
+          align:"center",
+          sorter: (a, b) => a.item.localeCompare(b.item),
+          sortDirections: ["descend", "ascend"],
+          // ...getColumnSearchProps("style"),
+        },
       
       {
         title: "Destination",
-        dataIndex: "destination",
+        dataIndex: "business",
         align:"center",
-        sorter: (a, b) => a.destination.localeCompare(b.destination),
+        sorter: (a, b) => a.business.localeCompare(b.business),
         sortDirections: [ "ascend","descend"],
         // ...getColumnSearchProps("destination"),
         
@@ -268,9 +312,9 @@ const getSeasonCode = () => {
       },
       {
         title: "Price",
-        dataIndex: "price",
+        dataIndex: "fobLocalCurrency",
         align:"center",
-        sorter: (a, b) => a.price.localeCompare(b.price),
+        sorter: (a, b) => a.fobLocalCurrency.localeCompare(b.fobLocalCurrency),
         sortDirections: [ "ascend","descend"],
          ...getColumnSearchProps("currency"),
        
@@ -292,7 +336,7 @@ const getSeasonCode = () => {
         render:(text,record) => {
           return(
             <>
-            {record.price ? `${record.price} ${record.currency}` : '-'}
+            {record.fobLocalCurrency ? `${record.currency}- ${record.fobLocalCurrency} ` : '-'}
             </>
           )
         }
@@ -314,11 +358,11 @@ const getSeasonCode = () => {
         filters: [
           {
             text: 'Active',
-            value: true,
+            value: 1,
           },
           {
             text: 'InActive',
-            value: false,
+            value: 0,
           },
         ],
         filterMultiple: false,
@@ -385,15 +429,28 @@ const getSeasonCode = () => {
     extra={<Link to='/masters/pricelist/price-list-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
-     
+      <Row gutter={40}>
+        {/* <Col>
+          <Card title={'Total Liscenc Types: ' + style.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+        </Col> */}
+        <Col>
+          <Card title={'Created Style: ' + styCount} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#B1D5F8' }}></Card>
+        </Col>
+        <Col>
+          <Card title={'Created Destination: ' + Number(des)} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#B1F8E2' }}></Card>
+        </Col>
+        <Col>
+          <Card title={'Created Item: ' + item} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#CBB1F8  ' }}></Card>
+        </Col>
+      </Row><br></br>
         <Form form={form} style={{textAlign:'center'}}  layout='vertical' onFinish={getPriceList}>
         <Row gutter={24}>
           <Col xs={24} sm={12} md={8} lg={6} xl={4}  style={{ padding: '8px' }}>
-            <Form.Item name="style" label="Style">
+            <Form.Item name="sampleCode" label="Style">
               <Select placeholder="Select Style" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {style.map((e) => {
+                {style?.map((e) => {
                   return (
-                    <Option key={e.id} value={e.style}>{e.style}
+                    <Option key={e.id} value={e.sample_code}>{e.sample_code}
                     </Option>
                   );
                 })}
@@ -403,7 +460,7 @@ const getSeasonCode = () => {
           <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
             <Form.Item name="year" label="Year">
               <Select placeholder="Select Year" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {year.map((e) => {
+                {year?.map((e) => {
                   return (
                     <Option key={e.id} value={e.YEAR}>{e.YEAR}
                     </Option>
@@ -413,11 +470,11 @@ const getSeasonCode = () => {
             </Form.Item>
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
-            <Form.Item name="destination" label="Destination">
+            <Form.Item name="business" label="Destination">
               <Select placeholder="Select Destination" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {destination.map((e) => {
+                {destination?.map((e) => {
                   return (
-                    <Option key={e.id} value={e.destination}>{e.destination}
+                    <Option key={e.id} value={e.business}>{e.business}
                     </Option>
                   );
                 })}
@@ -427,9 +484,9 @@ const getSeasonCode = () => {
           <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
             <Form.Item name="seasonCode" label="Season Code">
               <Select placeholder="Select Destination" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {seasonCode.map((e) => {
+                {seasonCode?.map((e) => {
                   return (
-                    <Option key={e.id} value={e.season_code}>{e.season_code}
+                    <Option key={e.id} value={e.season}>{e.season}
                     </Option>
                   );
                 })}
@@ -468,11 +525,7 @@ const getSeasonCode = () => {
           dataSource={priceList}
           className="custom-table-wrapper"
 
-          pagination={{
-            onChange(current) {
-              setPage(current);
-            }
-          }}
+          pagination={pagination}
           scroll={{x:true}}
           onChange={onChange}
           bordered />

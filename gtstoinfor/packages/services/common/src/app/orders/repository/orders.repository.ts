@@ -5,7 +5,8 @@ import { OrdersEntity } from "../entities/orders.entity";
 import { OrdersDifferenceEntity } from "../orders-difference-info.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
-import { YearReq } from "@project-management-system/shared-models";
+import { CompareOrdersFilterReq, YearReq, orders } from "@project-management-system/shared-models";
+import { groupBy } from "rxjs";
 
 @Injectable()
 export class OrdersRepository extends Repository<OrdersEntity> {
@@ -14,18 +15,44 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         super(orderRepository.target, orderRepository.manager, orderRepository.queryRunner);
     }
 
-    async getOrdersData(): Promise<any[]> {
+    async getOrdersData(req: orders): Promise<any[]> {
         const query = this.createQueryBuilder('o')
             .select(`o.production_plan_id, o.planning_ssn_cd, o.department, o.planning_sum_code, o.planning_sum, o.item,o.vendor, o.sewing_factory, o.branchFactory, o.coeff, o.publish_date,o.order_plan_number,o.gwh,o.wh,o.raw_material_supplier,o.yarn_order_status,o.fbrc_order_status,o.color_order_status,o.trim_order_status,o.po_order_status,o.planned_exf,o.biz,o.fr_fabric,o.trnsp_mthd,prod_plan_type`)
-            .orderBy(` o.planning_ssn_cd`, 'ASC')
+            if (req.plannedFromDate !== undefined) {
+                query.andWhere(`Date(o.planned_exf) BETWEEN '${req.plannedFromDate}' AND '${req.plannedToDate}'`)
+            }
+            if(req.OrderPlanNumber){
+                query.andWhere(`o.order_plan_number = '${req.OrderPlanNumber}'`)
+            }
+            if(req?.PoOrderStatus){
+                query.andWhere(`o.po_order_status = '${req.PoOrderStatus}'`)
+            }
+            query.orderBy(` o.planning_ssn_cd`, 'ASC')
         return await query.getRawMany();
     }
 
-    async getQtyChangeData(): Promise<any[]> {
+    async getQtyChangeData(req:CompareOrdersFilterReq): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-        .select(`o.production_plan_id,o.item_cd,o.item,o.prod_plan_type,o.fr_fabric,o.created_at,od.old_val,od.new_val,(od.new_val - od.old_val) AS Diff,od.version`)
+        .select(`o.production_plan_id,o.item_cd,o.item,o.prod_plan_type,o.fr_fabric,o.created_at,REPLACE(od.old_val,',','') as old_val,REPLACE(od.new_val,',','') as new_val,(REPLACE(od.new_val,',','') - REPLACE(od.old_val,',','')) AS Diff,od.version,o.order_plan_number,o.wh,o.planned_exf,o.year`)
             .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
-            .where(` column_name='order_plan_qty' ORDER BY o.prod_plan_type ASC`)
+            .where(`column_name = 'order_plan_qty'`)
+        
+            if(req.orderNumber){
+                query.andWhere(`o.order_plan_number = '${req.orderNumber}'`)
+            }
+            if(req.itemCode){
+                query.andWhere(`o.item_cd = '${req.itemCode}'`)
+            }
+            if(req.itemName){
+                query.andWhere(`o.item = '${req.itemName}'`)
+            }
+            if(req.warehouseFromDate){
+                query.andWhere(`o.wh BETWEEN ${req.warehouseFromDate} AND ${req.warehouseToDate}`)
+            }
+            if(req.exFactoryFromDate){
+                query.andWhere(`o.planned_exf BETWEEN '${req.exFactoryFromDate}' AND '${req.exFactoryToDate}'`)
+            }
+            query.orderBy(`o.order_plan_number`)
         return await query.getRawMany();
     }
 
@@ -65,12 +92,74 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         await queryBuilder.delete().execute();
     }
 
-    async getExfactoryMonthData(year:number): Promise<any> {
-        const query = this.createQueryBuilder('o')
-            .select(`o.item,o.item_cd,o.planned_exf,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type, MONTH(planned_exf) AS ExfMonth`)
-            .where(`o.year ='${year}'`)
-            // .groupBy(`o.item_cd`)
-        return await query.getRawMany();
+    async getMonthWiseReportData(req: YearReq): Promise<any[]>{
+        const query = `SELECT item,item_cd,prod_plan_type,
+  SUM(janExfPcs) AS janPcsExf,SUM(febExfPcs) AS febPcsExf,SUM(marExfPcs) AS marPcsExf,SUM(aprExfPcs) AS aprPcsExf,SUM(mayExfPcs) AS mayPcsExf,SUM(junExfPcs) AS junPcsExf,SUM(julExfPcs) AS julPcsExf,SUM(augExfPcs) AS augPcsExf,SUM(sepExfPcs) AS sepPcsExf,SUM(octExfPcs) AS octPcsExf,SUM(novExfPcs) AS novPcsExf,SUM(decExfPcs) AS decPcsExf,
+  SUM(janWhPcs) AS janPcsWh,SUM(febWhPcs) AS febPcsWh,SUM(marWhPcs) AS marPcsWh,SUM(aprWhPcs) AS aprPcsWh,SUM(mayWhPcs) AS mayPcsWh,SUM(junWhPcs) AS junPcsWh,SUM(julWhPcs) AS julPcsWh,SUM(augWhPcs) AS augPcsWh,SUM(sepWhPcs) AS sepPcsWh,SUM(octWhPcs) AS octPcsWh,SUM(novWhPcs) AS novPcsWh,SUM(decWhPcs) AS decPcsWh,
+  SUM(janExfCoeff) AS janCoeffExf,SUM(febExfCoeff) AS febCoeffExf,SUM(marExfCoeff) AS marCoeffExf,SUM(aprExfCoeff) AS aprCoeffExf,SUM(mayExfCoeff) AS mayCoeffExf,SUM(junExfCoeff) AS junCoeffExf,SUM(julExfCoeff) AS julCoeffExf,SUM(augExfCoeff) AS augCoeffExf,SUM(sepExfCoeff) AS sepCoeffExf,SUM(octExfCoeff) AS octCoeffExf,SUM(novExfCoeff) AS novCoeffExf,SUM(decExfCoeff) AS decCoeffExf,
+  SUM(janWhCoeff) AS janCoeffWh,SUM(febWhCoeff) AS febCoeffWh,SUM(marWhCoeff) AS marCoeffWh,SUM(aprWhCoeff) AS aprCoeffWh,SUM(mayWhCoeff) AS mayCoeffWh,SUM(junWhCoeff) AS junCoeffWh,SUM(julWhCoeff) AS julCoeffWh,SUM(augWhCoeff) AS augCoeffWh,SUM(sepWhCoeff) AS sepCoeffWh,SUM(octWhCoeff) AS octCoeffWh,SUM(novWhCoeff) AS novCoeffWh,SUM(decWhCoeff) AS decCoeffWh,
+  SUM(janExfPcs + febExfPcs + aprExfPcs + marExfPcs + mayExfPcs + junExfPcs + julExfPcs + augExfPcs + sepExfPcs + octExfPcs + novExfPcs + decExfPcs) AS ExfPcsTotal,
+  SUM(janWhPcs + febWhPcs + aprWhPcs + marWhPcs + mayWhPcs + junWhPcs + julWhPcs + augWhPcs + sepWhPcs + octWhPcs + novWhPcs + decWhCoeff) AS WhPcsTotal,
+  SUM(janExfCoeff + febExfCoeff + aprExfCoeff + marExfCoeff + mayExfCoeff + junExfCoeff + julExfCoeff + augExfCoeff + sepExfCoeff + octExfCoeff + novExfCoeff + decExfCoeff) AS ExfCoeffTotal,
+  SUM(janWhCoeff + febWhCoeff + aprWhCoeff + marWhCoeff + mayWhCoeff + junWhCoeff + julWhCoeff + augWhCoeff + sepWhCoeff + octWhCoeff + novWhCoeff + decWhCoeff) AS WhCoeffTotal
+  FROM (        
+         SELECT item, YEAR, item_cd,prod_plan_type,
+          SUM(CASE WHEN MONTH(planned_exf) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS janExfPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS febExfPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS marExfPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS aprExfPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS mayExfPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS junExfPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS julExfPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS augExfPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS sepExfPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS octExfPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS novExfPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS decExfPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS janWhPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS febWhPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS marWhPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS aprWhPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS mayWhPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS junWhPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS julWhPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS augWhPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS sepWhPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS octWhPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS novWhPcs,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS decWhPcs,
+          SUM(CASE WHEN MONTH(planned_exf) = 1 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS janExfCoeff,
+          SUM(CASE WHEN MONTH(planned_exf) = 2 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS febExfCoeff,
+          SUM(CASE WHEN MONTH(planned_exf) = 3 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS marExfCoeff,
+          SUM(CASE WHEN MONTH(planned_exf) = 4 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS aprExfCoeff,
+          SUM(CASE WHEN MONTH(planned_exf) = 5 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS mayExfCoeff,
+          SUM(CASE WHEN MONTH(planned_exf) = 6 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS junExfCoeff,
+          SUM(CASE WHEN MONTH(planned_exf) = 7 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS julExfCoeff,
+          SUM(CASE WHEN MONTH(planned_exf) = 8 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS augExfCoeff,
+          SUM(CASE WHEN MONTH(planned_exf) = 9 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS sepExfCoeff,
+          SUM(CASE WHEN MONTH(planned_exf) = 10 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS octExfCoeff,
+          SUM(CASE WHEN MONTH(planned_exf) = 11 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS novExfCoeff,
+          SUM(CASE WHEN MONTH(planned_exf) = 12 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS decExfCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 1 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS janWhCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 2 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS febWhCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 3 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS marWhCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 4 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS aprWhCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 5 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS mayWhCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 6 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS junWhCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 7 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS julWhCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 8 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS augWhCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 9 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS sepWhCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 10 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS octWhCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 11 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS novWhCoeff,
+          SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 THEN REPLACE(order_plan_qty_coeff,',','') ELSE 0 END) AS decWhCoeff
+          FROM orders
+          WHERE planned_exf IS NOT NULL
+          GROUP BY prod_plan_type, item_cd, item
+        ) AS subquery
+        WHERE 1 = 1 AND YEAR ='${req.year}' AND prod_plan_type != 'STOP' 
+         GROUP BY prod_plan_type, item_cd, item ORDER BY item_cd`;
+        const result = await this.query(query);
+        return result;
     }
     async getExfactoryYearData(): Promise<any> {
         const query = this.createQueryBuilder('o')
@@ -108,10 +197,21 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
     async getWareHouseMonthData(year:number): Promise<any> {
         const query = this.createQueryBuilder('o')
-            .select(`o.item,o.item_cd,o.wh,o.month,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type`)
+            .select(`o.item,o.item_cd,o.wh,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type,
+            MONTH(STR_TO_DATE(wh, '%m/%d')) AS whMonth`)
             .where(`o.year ='${year}'`)
             // .groupBy(`o.item_cd`)
         return await query.getRawMany();
+    }
+
+    async getPhaseMonthData(year:number):Promise<any>{
+        const query =this.createQueryBuilder(`order`)
+        .select(`o.item,o.item_cd,o.wh,o.year,o.order_plan_qty_coeff,o.order_plan_qty,o.prod_plan_type,
+        MONTH(STR_TO_DATE(wh, '%m/%d')) AS whMonth`)
+        .where(`o.year ='${year}'`)
+       .groupBy(`order.prod_plan_type`)
+       return await query.getRawMany
+
     }
     async getWareHouseYearData(): Promise<any> {
         const query = this.createQueryBuilder('o')
@@ -202,4 +302,18 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         .orderBy(`item`)
         return await query.getRawMany()
     }
-}
+
+    async getOrdersStatus():Promise<any[]>{
+        const query = await this. createQueryBuilder('orders')
+        .select(`po_order_status`)
+        .where(`po_order_status is not null`)
+        .groupBy('po_order_status')
+        return await query.getRawMany();
+    }
+    async getOrderPlanNO():Promise<any[]>{
+        const query = await this. createQueryBuilder('orders')
+        .select(`order_plan_number`)
+        .groupBy('order_plan_number')
+        return await query.getRawMany();
+    }
+} 

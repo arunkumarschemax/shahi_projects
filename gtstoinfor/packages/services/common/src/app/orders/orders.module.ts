@@ -19,6 +19,8 @@ import { TrimOrdersChildEntity } from './entities/trim-orders-child.entity';
 import { TrimOrdersAdapter } from './adapters/trim-orders.adapter';
 import { TrimOrdersChildAdapter } from './adapters/trim-orders-child.adapter';
 import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
+import { CoLine } from './entities/co-line.entity';
+import { CoLineRepository } from './repository/co-line-repo';
 
 @Module({
   imports: [
@@ -28,9 +30,10 @@ import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
       OrdersDifferenceEntity,
       FileUploadEntity,
       TrimOrdersEntity,
-      TrimOrdersChildEntity
+      TrimOrdersChildEntity,
+      CoLine
     ])],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository,TrimOrdersRepository,TrimOrdersAdapter,TrimOrdersChildAdapter,TrimOrdersChildRepository]
+  providers: [OrdersService, OrdersAdapter, OrdersChildAdapter, OrdersRepository, OrdersChildRepository, OrderDifferenceRepository, ApplicationExceptionHandler,FileUploadRepository,TrimOrdersRepository,TrimOrdersAdapter,TrimOrdersChildAdapter,TrimOrdersChildRepository,CoLineRepository]
 })
 export class OrdersModule { }

@@ -19,4 +19,10 @@ export class TrimOrdersRepository extends Repository<TrimOrdersEntity> {
         queryBuilder.where(`file_id = '${req.fileId}' AND version = 1`);
         await queryBuilder.delete().execute();
     }
+    async getTrimOdersNo(): Promise<any[]> {
+        const query = this.createQueryBuilder('to')
+            .select('to.order_no')
+            .groupBy(`to.order_no`)
+        return await query.getRawMany();
+    }
 }

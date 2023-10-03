@@ -75,10 +75,14 @@ export const CommonHeader = (props: IProps) => {
         </Col>
         <Col span={4}></Col>
         <Col span={6}>
-          <span style={{ alignSelf: 'center', fontSize: 24, color: 'darkblue' }}><b>{'UNIQLO ORDERS MANGEMENT'}</b></span>
+          <span style={{ alignSelf: 'center', fontSize: 24, color: 'darkblue' }}><b>{'ORDER MANAGEMENT'}</b></span>
           {/* <Select  onSelect={(e) => {navigate('/'+e)}} className='header-search' showSearch  allowClear style={{width:'100%',marginBottom:'60px'}}  placeholder='search for forms and views' options={options} suffixIcon={<SearchOutlined style={{color:colorPrimary}}/>} /> */}
         </Col>
+        {/* <Col span={4} style={{ textAlign: 'right' }}>
+          <b>UNIQLO(Unit12)</b>
+        </Col> */}
         <Col span={7} style={{ textAlign: 'right' }}>
+        <b style={{marginRight:'20px'}}>UNIQLO(Unit12)</b>
           <Dropdown menu={{ items }}>
             <Avatar style={{ marginBottom: '20px', cursor: 'pointer' }} size={45} shape="circle" icon={<UserOutlined style={{ fontSize: '25px' }} />} />
           </Dropdown>

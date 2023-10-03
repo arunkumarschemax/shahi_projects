@@ -77,6 +77,18 @@ export function FileRevert() {
             dataIndex: 'fileName'
         },
         {
+            title: 'No of Records',
+            dataIndex: 'noofRecords',
+            align:'right',
+            render:(text,record) => {
+                return(
+                    <>
+                    {record.fileType === FileTypesEnum.PROJECTION_ORDERS ? record.projectionRecords : record.trimRecords}
+                    </>
+                )
+            }
+        },
+        {
             title: 'Upload Status',
             dataIndex: 'status'
         },
@@ -108,25 +120,10 @@ export function FileRevert() {
         }];
 
         const items: TabsProps['items'] = [
+           
             {
               key: '1',
-              label: 'Trim Order',
-              children:  <Table
-              columns={columns}
-              dataSource={trimData}
-              className="custom-table-wrapper"
-              scroll={{ x: 1000 }}
-              pagination={{
-                  onChange(current, pageSize) {
-                      setPage(current);
-                      setPageSize(pageSize);
-                  },
-              }}
-              bordered />,
-            },
-            {
-              key: '2',
-              label: 'Projection Order',
+              label: `Projection Order :${poData.length}`,
               children:   <Table
               columns={columns}
               dataSource={poData}
@@ -140,6 +137,22 @@ export function FileRevert() {
               }}
               bordered />,
             },
+            {
+                key: '2',
+                label: `Trim Order :${trimData.length}`,
+                children:  <Table
+                columns={columns}
+                dataSource={trimData}
+                className="custom-table-wrapper"
+                scroll={{ x: 1000 }}
+                pagination={{
+                    onChange(current, pageSize) {
+                        setPage(current);
+                        setPageSize(pageSize);
+                    },
+                }}
+                bordered />,
+              },
            
           ];
     return (

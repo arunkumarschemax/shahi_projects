@@ -5,7 +5,7 @@ import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
 import { OrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
-import { COLineRequest } from '@project-management-system/shared-models';
+import { COLineRequest, CoLineStatusReq } from '@project-management-system/shared-models';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
@@ -17,6 +17,8 @@ const TrimOrder= () => {
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
     const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
+    const [selectedEstimatedStartDate, setSelectedEstimatedDate] = useState(undefined);
+
     const service = new OrdersService();
     const [form] = Form.useForm();
     const { Option } = Select;
@@ -25,6 +27,8 @@ const TrimOrder= () => {
     const [searchText, setSearchText] = useState("");
     const searchInput = useRef<InputRef>(null);
     const [searchedColumn, setSearchedColumn] = useState("");
+    const [item, setItem] = useState<any[]>([]);
+
 const {Text}=Typography
 
     useEffect(() => {
@@ -40,19 +44,41 @@ const {Text}=Typography
         }).catch(err => {
             console.log(err.message)
         })
+        service.getTrimOrdersNo().then(res => {
+            if (res.status) {
+                setItem(res.data)
+            }
+        }).catch(err => {
+            console.log(err.message)
+        })
+        
     }
     const approveOrderStatus = (record) => {
         console.log(record)
-    const req = new COLineRequest();
-    req.itemNumber = record.itemNumber
-    req.orderNumber = record.order_no
-    service.createCOline(req).then((res) => {
-        if (res.status) {
-            getData()
-            message.success(res.internalMessage)
-        } else (
-            message.error(res.internalMessage)
-        )
+    const req = new COLineRequest(record.itemNumber,record.order_no,record.color_code,record.color,record.size_code,record.size,record.item_code,record.item,null,null,record.order_no,record.itemNumber,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,record.trim_order_id);
+    // req.itemNumber = record.itemNumber
+    // req.orderNumber = record.order_no
+    service.createCOLineInternal(req).then(coLineRes => {
+        if(coLineRes.status){
+            service.createCOline(req).then((res) => {
+                if (res.status) {
+                    const statusReq = new CoLineStatusReq()
+                    statusReq.coLineId = coLineRes?.data?.coLineId
+                    statusReq.status = 'Success'
+                    service.updateStatusAfterCoLineCreationInM3(statusReq)
+                    getData()
+                    message.success(res.internalMessage)
+                } else {
+                    const statusReq = new CoLineStatusReq()
+                    statusReq.coLineId = coLineRes?.data?.coLineId
+                    statusReq.status = 'Failed'
+                    service.updateStatusAfterCoLineCreationInM3(statusReq)
+                    message.error(res.internalMessage)
+                }
+            })
+        } else{
+            message.error(coLineRes.internalMessage)
+        }
     })
     }
     function convertToYYYYMMDD(inputDate) {
@@ -69,8 +95,8 @@ const {Text}=Typography
     }
     const getFilterdData = () => {
         let orderNo = form.getFieldValue('orderNo');
-        // let startDate = selectedEstimatedFromDate;
-        // let endDate = selectedEstimatedToDate;
+        let startDate = selectedEstimatedFromDate;
+        let endDate = selectedEstimatedStartDate;
         let selectedDate = selectedEstimatedFromDate;
 
         let filteredData = gridData;
@@ -190,21 +216,27 @@ const {Text}=Typography
     const columns: any = [
         {
             title: 'S No',
+            // fixed:'left',
             key: 'sno',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
       
         {
             title: 'Order No',
-            dataIndex: 'order_no',
-            width:200,
-            sorter: (a, b) => a.item_code.localeCompare(b.item_code),
-            sortDirections: ["descend", "ascend"],
+            // fixed:'left',
+          dataIndex: 'order_no',         
+          sorter: (a, b) => {
+            const aKey = a.order_no || "";
+            const bKey = b.order_no || "";
+            return aKey.localeCompare(bKey);
+          },
         },
+          
         {
             title: 'Item Code',
             dataIndex: 'item_code',
-            width:150,
+           
+            align:'right',
             ...getColumnSearchProps("item_code"),
             sorter: (a, b) => a.item_code.localeCompare(b.item_code),
             sortDirections: ["descend", "ascend"],
@@ -212,10 +244,10 @@ const {Text}=Typography
         {
             title: 'Item',
             dataIndex: 'item',
-            width:500,
+           
             ...getColumnSearchProps("item"),
-            sorter: (a, b) => a.item.localeCompare(b.item),
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => a.item.localeCompare(b.item),
+            // sortDirections: ["descend", "ascend"],
         },
         // {
         //     title: 'Item Brand',
@@ -233,7 +265,8 @@ const {Text}=Typography
         {
             title: 'Order Plan Number ',
             dataIndex: 'order_plan_number',
-            width:150,
+            align:'right',
+           
             ...getColumnSearchProps("order_plan_number"),
             sorter: (a, b) => a.item_code.localeCompare(b.order_plan_number),
             sortDirections: ["descend", "ascend"],
@@ -241,52 +274,59 @@ const {Text}=Typography
         {
             title: 'Color Code',
             dataIndex: 'color_code',
-            width:100,
-            ...getColumnSearchProps("color_code"),
+            align:'right',
+           
+            // ...getColumnSearchProps("color_code"),
             sorter: (a, b) => a.color_code.localeCompare(b.color_code),
             sortDirections: ["descend", "ascend"],
         },
         {
             title: 'Color',
             dataIndex: 'color',
-            width:100,
+           
+            align:'left',
             ...getColumnSearchProps("color"),
-            sorter: (a, b) => a.color.localeCompare(b.color),
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => a.color.localeCompare(b.color),
+            // sortDirections: ["descend", "ascend"],
         },
         {
             title: 'Size Code',
             dataIndex: 'size_code',
-            width:100,
-
-            ...getColumnSearchProps("size_code"),
+           
+            align:'right',
+            // ...getColumnSearchProps("size_code"),
             sorter: (a, b) => a.size_code.localeCompare(b.size_code),
             sortDirections: ["descend", "ascend"],
         },
         {
             title: 'Size',
             dataIndex: 'size',
-        width:100,
+       
+            align:'left',
             ...getColumnSearchProps("size"),
-            sorter: (a, b) => a.size.localeCompare(b.size),
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => a.size.localeCompare(b.size),
+            // sortDirections: ["descend", "ascend"],
         },
         {
             title: 'Trim Item No',
             dataIndex: 'trim_item_no',
-            width:200,
+            align:'right',
+
             ...getColumnSearchProps("trim_item_no"),
-            sorter: (a, b) => a.trim_item_no.localeCompare(b.trim_item_no),
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => a.trim_item_no.localeCompare(b.trim_item_no),
+            // sortDirections: ["descend", "ascend"],
+            render:(val,rec)=>{
+                return rec.trim_item_no? rec.trim_item_no:'-'
+            }
         },
            
         {
             title: 'Order Quantity Pcs',
             dataIndex: 'order_qty_pcs',
-            width:150,
-            ...getColumnSearchProps("order_qty_pcs"),
-            sorter: (a, b) => a.order_qty_pcs.localeCompare(b.order_qty_pcs),
-            sortDirections: ["descend", "ascend"],
+            align:'right',
+            // ...getColumnSearchProps("order_qty_pcs"),
+            // sorter: (a, b) => a.order_qty_pcs.localeCompare(b.order_qty_pcs),
+            // sortDirections: ["descend", "ascend"],
             render: (text, record) => {
                 return record.order_qty_pcs;
             },
@@ -298,7 +338,7 @@ const {Text}=Typography
                 return (
                     <Table.Summary.Row>
                         <Table.Summary.Cell colSpan={8} index={0}>Grand Total</Table.Summary.Cell>
-                        <Table.Summary.Cell index={8}>{total}</Table.Summary.Cell>
+                        <Table.Summary.Cell index={9}>{total}</Table.Summary.Cell>
                     </Table.Summary.Row>
                 );
             },
@@ -312,18 +352,50 @@ const {Text}=Typography
                 return record.approval_date? convertToYYYYMMDD(record.approval_date): "-"
               },
             },
-        {
+            {
+                title: 'Revised Date',
+                dataIndex: 'revised_date',
+                align:'right',
+                sorter: (a, b) => a.revised_date.localeCompare(b.revised_date),
+                sortDirections: ["descend", "ascend"],
+                render: (text, record) => {
+                    return record.revised_date? convertToYYYYMMDD(record.revised_date): "-"
+                  },
+                },
+                {
+                    title: "Aging",
+                    dataIndex: "approval_date",
+                    align:'right',
+                    // fixed:'right',
+                    sorter: (a, b) => (Math.floor((new Date(a.approval_date).getTime() - new Date(b.approval_date).getTime()) / (1000 * 60 * 60 * 24)) - Math.floor((new Date(b.approval_date).getTime() - new Date(b.approval_date).getTime()) / (1000 * 60 * 60 * 24)) + 0),
+                    sortDirections: ['descend', 'ascend'],
+                    // ...getColumnSearchProps('aging'),
+                    render(text, record) {
+                      const obj: any = {
+                        children: (<div style={{ textAlign: 'center' }}>{Math.floor((new Date(record.approval_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) + 1)}</div>),
+                        props: {
+                          style: {
+                            color: Math.floor((new Date(record.approval_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) + 1) >= 0 ?  '#00ff99' : "#ff4d4d" ,
+                            // color: Math.floor((new Date(record.approval_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) + 1) >= 0 ? "Black" : 'white'
+                          }
+                        },
+                      };
+                      return obj;
+                    }
+                  },
+            {
             title: 'Status',
             dataIndex: 'answered_status',
-            width:150,
+           align:'left',
             sorter: (a, b) => a.answered_status.localeCompare(b.answered_status),
             sortDirections: ["descend", "ascend"],
         },
         {
             title: "Item No",
             dataIndex: "itemNo",
-            width:200,
+            align:'left',
 
+width:200,
             render: (text, record) => {
                 if(record.answered_status != 'Accepted'){
 
@@ -346,8 +418,8 @@ const {Text}=Typography
         {
             title: "Action",
             dataIndex: "action",
-            width:'150'
-,            render: (value, record) => {
+            width:150,
+            render: (value, record) => {
                 // const isEnabled = isActionButtonEnabled(record);
                 if(record.answered_status != 'Accepted'){
 
@@ -387,14 +459,14 @@ const {Text}=Typography
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
             { title: 'S No', dataIndex: 'sno' },
-            { title: 'Trim Order Id', dataIndex: 'trim_order_id' },
+            // { title: 'Trim Order Id', dataIndex: 'trim_order_id' },
             { title: 'Order No', dataIndex: 'order_no' },
             { title: 'Year', dataIndex: 'year' },
             { title: 'Revision No', dataIndex: 'revision_no' },
             { title: 'Planning ssn', dataIndex: 'planning_ssn' },
             { title: 'Global Business Unit', dataIndex: 'global_business_unit' },
             { title: 'Business Unit', dataIndex: 'business_unit' },
-            { title: 'Item Brand', dataIndex: 'item_brand' },
+            // { title: 'Item Brand', dataIndex: 'item_brand' },
             { title: 'Department', dataIndex: 'department' },
             { title: 'Revised Date', dataIndex: 'revised_date' },
             { title: 'Document Status', dataIndex: 'document_status' },
@@ -410,8 +482,8 @@ const {Text}=Typography
             { title: 'Raw Material Code', dataIndex: 'raw_material_code' },
             { title: 'Supplier Raw Material Code', dataIndex: 'supplier_raw_material_code' },
             { title: 'Supplier Raw Material', dataIndex: 'supplier_raw_material' },
-            { title: 'Vendor Code', dataIndex: 'vendor_code' },
-            { title: 'Vendor ', dataIndex: 'vendor' },
+            // { title: 'Vendor Code', dataIndex: 'vendor_code' },
+            // { title: 'Vendor ', dataIndex: 'vendor' },
             { title: 'Management Factory Code  ', dataIndex: 'management_factory_code' },
             { title: 'Management Factory ', dataIndex: 'management_factory' },
             { title: 'Branch Factory Code ', dataIndex: 'branch_factory_code' },
@@ -472,7 +544,7 @@ const {Text}=Typography
                                         placeholder="Select Order Number"
                                         optionFilterProp="children"
                                         allowClear>
-                                            {gridData.map(e=>(
+                                            {item.map(e=>(
                                                 <Option key={e.order_no} value={e.order_no}>{e.order_no}</Option>
                                             ))}
                                         {/* <Option key='new' value="NEW">NEW</Option>
@@ -507,6 +579,7 @@ const {Text}=Typography
                     </Row>
                 </Form>
                 <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500 }} bordered
+                size='small'
                 summary={(pageData) => {
                     // Calculate the grand total on each page change
                     let total = 0;
@@ -517,8 +590,12 @@ const {Text}=Typography
             
                     return (
                         <Table.Summary.Row>
-                            <Table.Summary.Cell colSpan={10} index={0}>Grand Total</Table.Summary.Cell>
-                            <Table.Summary.Cell index={9}>{grandTotal}</Table.Summary.Cell>
+<Table.Summary.Cell colSpan={10} index={8} >
+<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+<span style={{ color: 'Red' }}>Grand Total:</span>
+</div>
+</Table.Summary.Cell>
+<Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>     
                         </Table.Summary.Row>
                     );
                 }}
@@ -527,5 +604,6 @@ const {Text}=Typography
         </div>
     )
 }
+
 
 export default TrimOrder;

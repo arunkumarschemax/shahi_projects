@@ -11,11 +11,11 @@ export class pricListRepository extends Repository<PriceListEntity> {
         super(userRepository.target, userRepository.manager, userRepository.queryRunner);
     }
 
-    async getStyle(): Promise<any[]> {
+    async getSampleCode(): Promise<any[]> {
         const query = await this.createQueryBuilder('o')
-            .select(`id,style`)
-             .where(`style is not null`)
-             .groupBy(`style`)
+            .select(`id,sample_code`)
+             .where(`sample_code is not null`)
+             .groupBy(`sample_code`)
             .getRawMany();
         return query
 
@@ -23,33 +23,33 @@ export class pricListRepository extends Repository<PriceListEntity> {
 
     async getPriceListData(req:NewFilterDto): Promise<any[]> {
         const query = await this.createQueryBuilder('o')
-            .select(`season_code,YEAR , style,price,currency,destination,item,id,version_flag,updated_user,is_active,created_user,created_at`)
-           .orderBy(`style`)
-            if (req.style !== undefined) {
-                query.andWhere(`style ='${req.style}'`)
+            .select(`season as seasonCode,year , sample_code as sampleCode,fob_local_currency as fobLocalCurrency,currency,business,item,id,version_flag,updated_user,is_active,created_user,created_at`)
+           .orderBy(`sample_code`)
+            if (req.sampleCode !== undefined) {
+                query.andWhere(`sample_code ='${req.sampleCode}'`)
             }
-            if (req.destination !== undefined) {
-                query.andWhere(`destination ='${req.destination}'`)
+            if (req.business !== undefined) {
+                query.andWhere(`business ='${req.business}'`)
             }
             if (req.year !== undefined) {
-                query.andWhere(`YEAR ='${req.year}'`)
+                query.andWhere(`year ='${req.year}'`)
             }
             if (req.currency !== undefined) {
                 query.andWhere(`currency ='${req.currency}'`)
             }
             if (req.seasonCode !== undefined) {
-                query.andWhere(`season_code ='${req.seasonCode}'`)
+                query.andWhere(`season ='${req.seasonCode}'`)
             }
            
             return await query.getRawMany();
 
     }
     
-    async getDestination(): Promise<any[]> {
+    async getBusiness(): Promise<any[]> {
         const query = await this.createQueryBuilder('o')
-            .select(`id,destination`)
-             .where(`destination is not null`)
-             .groupBy(`destination`)
+            .select(`id,business`)
+             .where(`business is not null`)
+             .groupBy(`business`)
             .getRawMany();
         return query
 
@@ -74,9 +74,26 @@ export class pricListRepository extends Repository<PriceListEntity> {
     }
     async getAllPriceListSeasonCode(): Promise<any[]> {
         const query = await this.createQueryBuilder('o')
-            .select(`id,season_code`)
-             .where(`season_code is not null`)
-             .groupBy(`season_code`)
+            .select(`id,season`)
+             .where(`season is not null`)
+             .groupBy(`season`)
+            .getRawMany();
+        return query
+
+    }
+
+    async getVersion(sampleCode: string,seasonCode:string): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`id,season,sample_code,version`)
+            .where(` order_no = '${sampleCode}' and size_code='${seasonCode}'`)
+            .orderBy(` version`, 'DESC')
+        return await query.getRawMany();
+    }
+    async getItem(): Promise<any[]> {
+        const query = await this.createQueryBuilder('o')
+            .select(`id,item`)
+             .where(`item is not null`)
+             .groupBy(`item`)
             .getRawMany();
         return query
 

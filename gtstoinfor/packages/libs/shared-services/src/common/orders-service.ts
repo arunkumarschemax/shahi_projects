@@ -1,4 +1,4 @@
-import { CommonResponseModel, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, YearReq } from "@project-management-system/shared-models"
+import { COLineRequest, CoLineStatusReq, CommonResponseModel, CompareOrdersFilterReq, FileIdReq, FileTypeDto, SaveOrderDto, SeasonWiseRequest, YearReq, orders } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
@@ -13,16 +13,16 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(url, data);
     }
 
-    async getOrdersData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getOrdersData")
+    async getOrdersData(req:orders): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getOrdersData",req)
     }
 
-    async getQtyChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getQtyChangeData")
+    async getQtyChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getQtyChangeData",req)
     }
 
-    async getQtyDifChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getQtyDifChangeData")
+    async getQtyDifChangeData(req:CompareOrdersFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getQtyDifChangeData",req)
     }
 
     async getContractDateChangeData(): Promise<CommonResponseModel> {
@@ -97,8 +97,8 @@ export class OrdersService extends CommonAxiosService {
     async createCOline(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/createCOline", req)
     }
-    async getAll(req:YearReq): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getExfactoryMonthData",req)
+    async getMonthWiseReportData(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getMonthWiseReportData",req)
     }
     async getExfactoryYearData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getExfactoryYear")
@@ -120,7 +120,6 @@ export class OrdersService extends CommonAxiosService {
     }
 
     async seasonWiseReport(req?:SeasonWiseRequest):Promise<CommonResponseModel>{
-        console.log(req,'hhhhhhhhhhhhh')
         return this.axiosPostCall(this.ordersController + "/seasonWiseReport",req)
     }
 
@@ -134,8 +133,8 @@ export class OrdersService extends CommonAxiosService {
     async getProdPlanCount(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getProdPlanCount")
     }
-    async getExfactoryWithComparision(req:YearReq): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.ordersController + "/getExfactoryComparisionData",req)
+    async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getMonthlyComparisionData",req)
     }
     async getWareHouseComparisionData(req:YearReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getWareHouseComparisionData",req)
@@ -166,5 +165,32 @@ export class OrdersService extends CommonAxiosService {
     }
     async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getQtyDifChangeItemCode")
+    }
+    async getTrimOrdersNo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getTrimOrdersNo")
+    }
+    async getOrdersStatus(req?:orders):Promise<CommonResponseModel>{
+        console.log(req,'okkkkkkk')
+        return this.axiosPostCall(this.ordersController + "/getOrdersStatus",req)
+    }
+    async getOrderPlanNo(req?:orders):Promise<CommonResponseModel>{
+        console.log(req,'okkkkkkk')
+        return this.axiosPostCall(this.ordersController + "/getOrderPlanNo",req)
+    }
+
+    async getOrderNumberDropDownInCompare(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getOrderNumberDropDownInCompare")
+    }
+
+    async createCOLineInternal(req:COLineRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/createCOLineInternal",req)
+    }
+
+    async updateStatusAfterCoLineCreationInM3(req:CoLineStatusReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/updateStatusAfterCoLineCreationInM3",req)
+    }
+ 
+    async getMonthlyComparisionDate(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getMonthlyComparisionDate",req)
     }
 }

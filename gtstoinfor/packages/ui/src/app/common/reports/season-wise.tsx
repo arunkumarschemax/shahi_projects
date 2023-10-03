@@ -28,6 +28,7 @@ const SeasonWiseReport = () => {
 
     const handleTabChange = (newTabKey) => {
       form.resetFields();
+      reportSS()
       setActiveTabKey(newTabKey)
   };
 
@@ -42,7 +43,6 @@ const SeasonWiseReport = () => {
         service.seasonWiseReport(req).then((res)=>{
           if(res.data){
             setData(res.data)
-            console.log(data?.[1],'hi ra mawa')
           }
         })
     }
@@ -270,42 +270,110 @@ const SeasonWiseReport = () => {
 
     const exportExcel = () => {
         const excel = new Excel();
+
+        const whMonthTotals = (data) => {
+          const monthTotals = {
+            itemName:0,
+            january: 0,
+            february: 0,
+            march: 0,
+            april: 0,
+            may: 0,
+            june: 0,
+            july: 0,
+            august: 0,
+            september: 0,
+            october: 0,
+            november: 0,
+            december: 0,
+            whTotal:0,
+          };
+          data.forEach((item) => {
+            for (const month in monthTotals) {
+              if (item[month]) {
+                monthTotals[month] += Number(item[month]);
+              }
+            }
+          });
+      
+          return {...monthTotals, itemName:"Grand Total", __style: { bold: true, fill: { type: 'pattern', patternType: 'solid', backgroundColor: 'd9e1f2' } } };
+        };
+
+        const exfMonthTotals = (data) => {
+          const monthTotals = {
+            itemName:0,
+            exfJan: 0,
+            exfFeb: 0,
+            exfMarch: 0,
+            exfApril: 0,
+            exfMay: 0,
+            exfJune: 0,
+            exfJuly: 0,
+            exfAug: 0,
+            exfSep: 0,
+            exfOct: 0,
+            exfNov: 0,
+            exfDec: 0,
+            exfTotal:0,
+          };
+          data.forEach((item) => {
+            for (const month in monthTotals) {
+              if (item[month]) {
+                monthTotals[month] += Number(item[month]);
+              }
+            }
+          });
+          return {...monthTotals, itemName:"Grand Total"};
+        };
+
+        
         if (data?.[0].length > 0) {
-            excel
-                .addSheet('23SS-WH')
-                .addColumns(excelColumnsWH)
-                .addDataSource(data?.[0], { str2num: true })
-                .addRow().Row
+          excel
+            .addSheet('23SS-WH')
+            .addColumns(excelColumnsWH)
+            .addDataSource(data?.[0], { str2num: true });
+            const monthTotals = whMonthTotals(data?.[0]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[0].length > 0) {
             excel
-                .addSheet('23SS-EXF')
-                .addColumns(excelColumnsEXf)
-                .addDataSource(data?.[0], { str2num: true })
+            .addSheet('23SS-EXF')
+            .addColumns(excelColumnsEXf)
+            .addDataSource(data?.[0], { str2num: true })
+            const monthTotals = exfMonthTotals(data?.[0]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[1].length > 0) {
             excel
-                .addSheet('23FW-WH')
-                .addColumns(excelColumnsWH)
-                .addDataSource(data?.[1], { str2num: true })
+            .addSheet('23FW-WH')
+            .addColumns(excelColumnsWH)
+            .addDataSource(data?.[1], { str2num: true })
+            const monthTotals = whMonthTotals(data?.[1]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[1].length > 0) {
             excel
-                .addSheet('23FW-EXF')
-                .addColumns(excelColumnsEXf)
-                .addDataSource(data?.[1], { str2num: true })
+            .addSheet('23FW-EXF')
+            .addColumns(excelColumnsEXf)
+            .addDataSource(data?.[1], { str2num: true })
+            const monthTotals = exfMonthTotals(data?.[1]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[2].length > 0) {
             excel
-                .addSheet('24SS-WH')
-                .addColumns(excelColumnsWH)
-                .addDataSource(data?.[2], { str2num: true })
+            .addSheet('24SS-WH')
+            .addColumns(excelColumnsWH)
+            .addDataSource(data?.[2], { str2num: true })
+            const monthTotals = whMonthTotals(data?.[2]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         if (data?.[2].length > 0) {
             excel
-                .addSheet('24SS-EXF')
-                .addColumns(excelColumnsEXf)
-                .addDataSource(data?.[2], { str2num: true })
+            .addSheet('24SS-EXF')
+            .addColumns(excelColumnsEXf)
+            .addDataSource(data?.[2], { str2num: true })
+            const monthTotals = exfMonthTotals(data?.[2]);
+            excel.addDataSource([monthTotals], { str2num: true });
         }
         excel.saveAs('SeasonWise.xlsx');
     }
@@ -350,214 +418,202 @@ const SeasonWiseReport = () => {
 
 
     const generateSummaryWH = (pageData) => {
-        let jan = 0;
-        let feb = 0
-        let mar = 0
-        let apr = 0
-        let may1 = 0
-        let jun= 0
-        let jul = 0
-        let aug = 0
-        let sep = 0
-        let oct = 0
-        let nov = 0
-        let dec = 0
-        let total = 0
-      
-        pageData.forEach(({january}) => {
-            if(Number(january)) {
-              jan += Number(january)
-            }
-          })
-        pageData.forEach(({february}) => {
-            if(Number(february)) {
-              feb += Number(february)
-            }
-          })
-        pageData.forEach(({march}) => {
-            if(Number(march)) {
-              mar += Number(march)
-            }
-          })
-        pageData.forEach(({april}) => {
-            if(Number(april)) {
-              apr += Number(april)
-            }
-          })
-        pageData.forEach(({may}) => {
-            if(Number(may)) {
-              may1 += Number(may)
-            }
-          })
-        pageData.forEach(({june}) => {
-            if(Number(june)) {
-              jun += Number(june)
-            }
-          })
-        pageData.forEach(({july}) => {
-            if(Number(july)) {
-              jul += Number(july)
-            }
-          })
-        pageData.forEach(({august}) => {
-            if(Number(august)) {
-              aug += Number(august)
-            }
-          })
-        pageData.forEach(({september}) => {
-            if(Number(september)) {
-              sep += Number(september)
-            }
-          })
-        pageData.forEach(({october}) => {
-            if(Number(october)) {
-              oct += Number(october)
-            }
-          })
-        pageData.forEach(({november}) => {
-            if(Number(november)) {
-              nov += Number(november)
-            }
-          })
-        pageData.forEach(({december}) => {
-            if(Number(december)) {
-              dec += Number(december)
-            }
-          })
-        pageData.forEach(({whTotal}) => {
-            if(Number(whTotal)) {
-              total += Number(whTotal)
-            }
-          })
-      
-          return (
-            <>
-              <Table.Summary.Row className='tableFooter'>
-              <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                <Table.Summary.Cell index={1}></Table.Summary.Cell>
-                <Table.Summary.Cell index={2}><Text type="danger">Grand Total</Text></Table.Summary.Cell>
-                <Table.Summary.Cell index={3}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jan).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={4}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(feb).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={5}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(mar).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={6}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(apr).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={7}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(may1).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={8}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jun).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={9}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jul).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={10}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(aug).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={11}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(sep).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={12}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(oct).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={13}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(nov).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={14}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(dec).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={15}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(total).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-              </Table.Summary.Row>
-            </>
-          );
-      };
+      const months = [
+        'january', 'february', 'march', 'april', 'may', 'june',
+        'july', 'august', 'september', 'october', 'november', 'december'
+      ];
+    
+      let total = 0;
+      const monthTotals = [];
+    
+      months.forEach((month) => {
+        monthTotals[month] = 0;
+        pageData.forEach((item) => {
+          if (Number(item[month])) {
+            monthTotals[month] += Number(item[month]);
+          }
+        });
+      });
+    
+      pageData.forEach(({ whTotal }) => {
+        if (Number(whTotal)) {
+          total += Number(whTotal);
+        }
+      });
+    
+      return (
+        <Table.Summary.Row className='tableFooter'>
+          <Table.Summary.Cell index={0}></Table.Summary.Cell>
+          <Table.Summary.Cell index={1}></Table.Summary.Cell>
+          <Table.Summary.Cell index={2}><Text type="danger">Grand Total</Text></Table.Summary.Cell>
+          {months.map((month, index) => (
+            <Table.Summary.Cell
+              key={index}
+              index={index + 3}
+            >
+              <div style={{ textAlign: 'right', fontWeight: 'bold' }}>
+                {Number(monthTotals[month]).toLocaleString('en-IN')}
+              </div>
+            </Table.Summary.Cell>
+          ))}
+          <Table.Summary.Cell index={months.length + 3}>
+            <div style={{ textAlign: 'right', fontWeight: 'bold' }}>
+              {Number(total).toLocaleString('en-IN')}
+            </div>
+          </Table.Summary.Cell>
+        </Table.Summary.Row>
+      );
+    };
 
-      const generateSummaryEXF = (pageData) => {
-        let jan = 0;
-        let feb = 0
-        let mar = 0
-        let apr = 0
-        let may1 = 0
-        let jun= 0
-        let jul = 0
-        let aug = 0
-        let sep = 0
-        let oct = 0
-        let nov = 0
-        let dec = 0
-        let total = 0
+    const generateSummaryEXF = (pageData) => {
+      const months = [
+        'exfJan', 'exfFeb', 'exfMarch', 'exfApril', 'exfMay', 'exfJune',
+        'exfJuly', 'exfAug', 'exfSep', 'exfOct', 'exfNov', 'exfDec'
+      ];
+    
+      const monthTotals = months.reduce((totals, month) => {
+        totals[month] = 0;
+        return totals;
+      }, { exfTotal: 0 });
+    
+      pageData.forEach((item) => {
+        months.forEach((month) => {
+          if (Number(item[month])) {
+            monthTotals[month] += Number(item[month]);
+          }
+        });
+      });
+    
+      return (
+        <>
+          <Table.Summary.Row className='tableFooter'>
+            <Table.Summary.Cell index={0}></Table.Summary.Cell>
+            <Table.Summary.Cell index={1}></Table.Summary.Cell>
+            <Table.Summary.Cell index={2}><Text type="danger">Grand Total</Text></Table.Summary.Cell>
+            {months.map((month, index) => (
+              <Table.Summary.Cell key={index} index={index + 3}>
+                <div style={{ textAlign: 'right', fontWeight: "bold" }}>
+                  {Number(monthTotals[month]).toLocaleString('en-IN')}
+                </div>
+              </Table.Summary.Cell>
+            ))}
+            <Table.Summary.Cell index={15}>
+              <div style={{ textAlign: 'right', fontWeight: "bold" }}>
+                {Number(monthTotals.exfTotal).toLocaleString('en-IN')}
+              </div>
+            </Table.Summary.Cell>
+          </Table.Summary.Row>
+        </>
+      );
+    };
+    
+    
+    
+
+      // const generateSummaryEXF = (pageData) => {
+      //   let jan = 0;
+      //   let feb = 0
+      //   let mar = 0
+      //   let apr = 0
+      //   let may1 = 0
+      //   let jun= 0
+      //   let jul = 0
+      //   let aug = 0
+      //   let sep = 0
+      //   let oct = 0
+      //   let nov = 0
+      //   let dec = 0
+      //   let total = 0
       
-        pageData.forEach(({exfJan}) => {
-            if(Number(exfJan)) {
-              jan += Number(exfJan)
-            }
-          })
-        pageData.forEach(({exfFeb}) => {
-            if(Number(exfFeb)) {
-              feb += Number(exfFeb)
-            }
-          })
-        pageData.forEach(({exfMarch}) => {
-            if(Number(exfMarch)) {
-              mar += Number(exfMarch)
-            }
-          })
-        pageData.forEach(({exfApril}) => {
-            if(Number(exfApril)) {
-              apr += Number(exfApril)
-            }
-          })
-        pageData.forEach(({exfMay}) => {
-            if(Number(exfMay)) {
-              may1 += Number(exfMay)
-            }
-          })
-        pageData.forEach(({exfJune}) => {
-            if(Number(exfJune)) {
-              jun += Number(exfJune)
-            }
-          })
-        pageData.forEach(({exfJuly}) => {
-            if(Number(exfJuly)) {
-              jul += Number(exfJuly)
-            }
-          })
-        pageData.forEach(({exfAug}) => {
-            if(Number(exfAug)) {
-              aug += Number(exfAug)
-            }
-          })
-        pageData.forEach(({exfSep}) => {
-            if(Number(exfSep)) {
-              sep += Number(exfSep)
-            }
-          })
-        pageData.forEach(({exfOct}) => {
-            if(Number(exfOct)) {
-              oct += Number(exfOct)
-            }
-          })
-        pageData.forEach(({exfNov}) => {
-            if(Number(exfNov)) {
-              nov += Number(exfNov)
-            }
-          })
-        pageData.forEach(({exfDec}) => {
-            if(Number(exfDec)) {
-              dec += Number(exfDec)
-            }
-          })
-        pageData.forEach(({exfTotal}) => {
-            if(Number(exfTotal)) {
-              total += Number(exfTotal)
-            }
-          })
+      //   pageData.forEach(({exfJan}) => {
+      //       if(Number(exfJan)) {
+      //         jan += Number(exfJan)
+      //       }
+      //     })
+      //   pageData.forEach(({exfFeb}) => {
+      //       if(Number(exfFeb)) {
+      //         feb += Number(exfFeb)
+      //       }
+      //     })
+      //   pageData.forEach(({exfMarch}) => {
+      //       if(Number(exfMarch)) {
+      //         mar += Number(exfMarch)
+      //       }
+      //     })
+      //   pageData.forEach(({exfApril}) => {
+      //       if(Number(exfApril)) {
+      //         apr += Number(exfApril)
+      //       }
+      //     })
+      //   pageData.forEach(({exfMay}) => {
+      //       if(Number(exfMay)) {
+      //         may1 += Number(exfMay)
+      //       }
+      //     })
+      //   pageData.forEach(({exfJune}) => {
+      //       if(Number(exfJune)) {
+      //         jun += Number(exfJune)
+      //       }
+      //     })
+      //   pageData.forEach(({exfJuly}) => {
+      //       if(Number(exfJuly)) {
+      //         jul += Number(exfJuly)
+      //       }
+      //     })
+      //   pageData.forEach(({exfAug}) => {
+      //       if(Number(exfAug)) {
+      //         aug += Number(exfAug)
+      //       }
+      //     })
+      //   pageData.forEach(({exfSep}) => {
+      //       if(Number(exfSep)) {
+      //         sep += Number(exfSep)
+      //       }
+      //     })
+      //   pageData.forEach(({exfOct}) => {
+      //       if(Number(exfOct)) {
+      //         oct += Number(exfOct)
+      //       }
+      //     })
+      //   pageData.forEach(({exfNov}) => {
+      //       if(Number(exfNov)) {
+      //         nov += Number(exfNov)
+      //       }
+      //     })
+      //   pageData.forEach(({exfDec}) => {
+      //       if(Number(exfDec)) {
+      //         dec += Number(exfDec)
+      //       }
+      //     })
+      //   pageData.forEach(({exfTotal}) => {
+      //       if(Number(exfTotal)) {
+      //         total += Number(exfTotal)
+      //       }
+      //     })
       
-          return (
-            <>
-              <Table.Summary.Row className='tableFooter'>
-              <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                <Table.Summary.Cell index={1}></Table.Summary.Cell>
-                <Table.Summary.Cell index={2}><Text type="danger">Grand Total</Text></Table.Summary.Cell>
-                <Table.Summary.Cell index={3}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jan).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={4}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(feb).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={5}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(mar).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={6}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(apr).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={7}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(may1).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={8}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jun).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={9}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jul).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={10}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(aug).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={11}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(sep).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={12}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(oct).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={13}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(nov).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={14}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(dec).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-                <Table.Summary.Cell index={15}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(total).toLocaleString('en-IN')}</div></Table.Summary.Cell>
-              </Table.Summary.Row>
-            </>
-          );
-      };
+      //     return (
+      //       <>
+      //         <Table.Summary.Row className='tableFooter'>
+      //         <Table.Summary.Cell index={0}></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={1}></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={2}><Text type="danger">Grand Total</Text></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={3}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jan).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={4}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(feb).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={5}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(mar).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={6}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(apr).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={7}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(may1).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={8}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jun).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={9}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(jul).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={10}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(aug).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={11}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(sep).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={12}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(oct).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={13}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(nov).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={14}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(dec).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //           <Table.Summary.Cell index={15}><div style={{textAlign:'right', fontWeight:"bold"}}>{Number(total).toLocaleString('en-IN')}</div></Table.Summary.Cell>
+      //         </Table.Summary.Row>
+      //       </>
+      //     );
+      // };
 
       const items = [
         {
@@ -571,6 +627,12 @@ const SeasonWiseReport = () => {
                 columns={columnsWH}
                 summary={generateSummaryWH}
                 className="custom-table-wrapper"
+                pagination={{
+                  onChange(current, pageSize) {
+                      setPage(current);
+                      setPageSize(pageSize);
+                  },
+              }}
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
@@ -588,6 +650,12 @@ const SeasonWiseReport = () => {
                 columns={columnsEXF}
                 summary={generateSummaryEXF}
                 className="custom-table-wrapper"
+                pagination={{
+                  onChange(current, pageSize) {
+                      setPage(current);
+                      setPageSize(pageSize);
+                  },
+              }}
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
@@ -605,6 +673,12 @@ const SeasonWiseReport = () => {
                 columns={columnsWH}
                 summary={generateSummaryWH}
                 className="custom-table-wrapper"
+                pagination={{
+                  onChange(current, pageSize) {
+                      setPage(current);
+                      setPageSize(pageSize);
+                  },
+              }}
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
@@ -622,6 +696,12 @@ const SeasonWiseReport = () => {
                 columns={columnsEXF}
                 summary={generateSummaryEXF}
                 className="custom-table-wrapper"
+                pagination={{
+                  onChange(current, pageSize) {
+                      setPage(current);
+                      setPageSize(pageSize);
+                  },
+              }}
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
@@ -639,6 +719,12 @@ const SeasonWiseReport = () => {
                 columns={columnsWH}
                 summary={generateSummaryWH}
                 className="custom-table-wrapper"
+                pagination={{
+                  onChange(current, pageSize) {
+                      setPage(current);
+                      setPageSize(pageSize);
+                  },
+              }}
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>
@@ -656,6 +742,12 @@ const SeasonWiseReport = () => {
                 columns={columnsEXF}
                 summary={generateSummaryEXF}
                 className="custom-table-wrapper"
+                pagination={{
+                  onChange(current, pageSize) {
+                      setPage(current);
+                      setPageSize(pageSize);
+                  },
+              }}
               />
             ) : (
               <Alert message="No data available" type="warning" showIcon style={{ width: "150px", margin: "auto" }}/>

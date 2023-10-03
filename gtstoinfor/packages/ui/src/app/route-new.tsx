@@ -25,6 +25,8 @@ import { PriceListDto } from "@project-management-system/shared-models"
 import ExFactoryReportWithComparision from "./common/reports/ex-factory-report-with-comparision"
 import SeasonWiseReport from "./common/reports/season-wise"
 import WareHouseComparision from "./common/reports/warehouse-comparision"
+import CombinedReport, { MonthWiseReport } from "./common/reports/month-wise-report"
+import MonthWiseComparisionReport from "./common/reports/comparision-reports"
 // import ExcelImport from "./excel-import/excel-import"
 
 
@@ -62,7 +64,8 @@ export const AppRoutesNew = () => {
               </Route>
               <Route>
               <Route  path='/ware-house-comparision' key='/ware-house-comparision'  element={<WareHouseComparision/>}/>
-
+              <Route path='/month-wise-report' key='/month-wise-report' element={<MonthWiseReport  />} />
+              <Route path='/month-wise-comparision-report' key='/month-wise-comparision-report' element={<MonthWiseComparisionReport  />} />
 
                 <Route path='/ware-house-report' key='/ware-house-report' element={<WarehouseReport  />} />
                     <Route path='/excel-import/trim-order' key='/excel-import/trim-order' element={<TrimOrder/>} />
