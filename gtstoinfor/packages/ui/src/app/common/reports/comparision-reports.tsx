@@ -1956,7 +1956,7 @@ export const MonthWiseComparisionReport = () =>{
                       backgroundColor: "#EBEBF1",
                     }}
                     size="small"
-                  ><span>Latest File uploaded Date: {dates?.[0]?.Date? moment(dates?.[0]?.Date).format("DD/MM hh:mm"): "-"}</span></Card>
+                  ><span>Latest File uploaded Date: {dates?.[0]?.Date? moment(dates?.[0]?.Date).format("DD/MM hh:mm:a"): "-"}</span></Card>
                 </Col>
                 <Col
                   xs={{ span: 24 }}
@@ -1976,7 +1976,7 @@ export const MonthWiseComparisionReport = () =>{
                       backgroundColor: "#EBEBF1",
                     }}
                     size="small"
-                  ><span>Previous File uploaded Date: {dates?.[1]?.Date? moment(dates?.[0]?.Date).format("DD/MM"): "-"}</span></Card>
+                  ><span>Previous File uploaded Date: {dates?.[1]?.Date? moment(dates?.[1]?.Date).format("DD/MM hh:mm:a"): "-"}</span></Card>
                 </Col>
               </Row>
           </Form>
