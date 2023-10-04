@@ -1,13 +1,14 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { MarketingModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import RangePicker from 'rc-picker/lib/RangePicker';
 import React, { useEffect, useRef, useState } from 'react'
+import CountUp from 'react-countup';
 import Highlighter from 'react-highlight-words';
 import { Link, useNavigate } from 'react-router-dom';
 const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
@@ -44,6 +45,10 @@ const PPMReport = () => {
   const [hideChildren, setHideChildren] = useState(false);
   let navigate = useNavigate()
   let poFilterData
+  const [tableLoading,setTableLoading] = useState<boolean>(false)
+  const formatter = (value: number) => <CountUp end={value} separator="," />;
+
+
 
   useEffect(() => {
     getProductCode();
@@ -197,11 +202,12 @@ const PPMReport = () => {
     if (form.getFieldValue('plant') !== undefined) {
       req.plant = form.getFieldValue('plant');
     }
-
+    setTableLoading(true)
     service.getPPMData(req)
       .then(res => {
         if (res.status) {
           setGridData(res.data);
+          // console.log(gridData)
           setFilterData(res.data);
           setFilteredData(res.data);
           Finish(res.data);
@@ -212,7 +218,8 @@ const PPMReport = () => {
         }
       })
       .catch(err => {
-        console.error(err);
+      }).finally(() => {
+          setTableLoading(false)
       });
   };
 
@@ -2091,6 +2098,7 @@ const PPMReport = () => {
     console.log(poFilterData)
     navigate('/Reports/po-detailed-view', { state: { data: poFilterData } })
   }
+ 
 
   return (
     <>
@@ -2328,34 +2336,32 @@ const PPMReport = () => {
               </Row></Col> */}
           </Row>
         </Form>
-        <Row gutter={80}>
-          <Col >
-            <Card title={'Total order Qty: ' + count} style={{ textAlign: 'left', width: 200, height: 40, backgroundColor: 'lightblue' }}></Card>
-          </Col>
-          <Col>
-            <Card title={'Total Shipped: ' + '0'} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
-          </Col>
-          <Col>
-            <Card title={'Balance to ship: ' + '0'} style={{ textAlign: 'left', width: 180, height: 40, backgroundColor: 'lightblue' }}></Card>
-          </Col>
-        </Row><br></br>
-        <Row gutter={80}>
-          <Col >
-            <Card title={'Total Po Count: ' + gridData.length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
-          </Col>
-          <Col>
-            <Card title={'Accepted Po Count: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Accepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
-          </Col>
-          <Col>
-            <Card title={'UnAccepted Po :' + gridData.filter(el => el.DPOMLineItemStatus == 'Unaccepted').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
-          </Col>
-          <Col>
-            <Card title={'Closed Po:' + gridData.filter(el => el.DPOMLineItemStatus == 'Closed').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
-          </Col>
-          <Col>
-            <Card title={'Cancelled Po: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
-          </Col>
-        </Row><br></br>
+        <Row gutter={24} justify={'space-evenly'}>
+                    <Col >
+                        <Statistic  loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} />
+                    </Col>
+                    <Col>
+                        <Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
+                    </Col>
+                    <Col>
+                        <Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
+                    </Col>
+                     <Col >
+                        <Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
+                    </Col>
+                    <Col>
+                        <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
+                    </Col>
+                    <Col>
+                        <Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />   
+                    </Col>
+                    <Col>
+                        <Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
+                    </Col>
+                    <Col>
+                        <Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
+                    </Col>
+                    </Row><br></br>
 
         {renderReport(filterData)}
       </Card>
