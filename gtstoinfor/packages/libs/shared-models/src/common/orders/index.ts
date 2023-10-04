@@ -20,3 +20,5 @@ export * from './request'
 export * from './season-wise-report-req'
 export * from './orders-request'
 export * from './compare-orders-filter-req'
+export * from './co-line-status.req';
+export * from './trim-order-req'
