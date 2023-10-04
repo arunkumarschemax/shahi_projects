@@ -46,12 +46,34 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return await query.getRawMany();
     }
 
-    async getVersionWiseQty(): Promise<any[]> {
-        const query = this.createQueryBuilder('oc')
-            .select('production_plan_id, prod_plan_type_name, item_code, itemName, file_id as version, created_at,order_qty_pcs')
-        return await query.getRawMany();
+    // async getVersionWiseQty(): Promise<any[]> {
+    //     const query = this.createQueryBuilder('oc')
+    //         .select('production_plan_id, prod_plan_type, item_cd, item, file_id as version, created_at,order_plan_qty')
+    //     return await query.getRawMany();
+    // }
+          
+    async getVersionWiseQty():Promise<any[]>{
+        const query =`WITH LatestFileIDs AS (
+            SELECT DISTINCT file_id
+            FROM orders_child
+            WHERE created_at IS NOT NULL
+            ORDER BY file_id DESC
+            LIMIT 5
+        )
+        SELECT
+            production_plan_id,
+            prod_plan_type,
+            item_cd,
+            item,
+            file_id AS VERSION,
+            created_at,
+            REPLACE(order_plan_qty, ',', '') AS order_plan_qty
+        FROM orders_child
+        WHERE file_id IN (SELECT file_id FROM LatestFileIDs)
+        ORDER BY file_id DESC, created_at DESC`
+        const result=await this.query(query);
+        return result;
     }
-
     async getItemQtyChangeData(fileId1: number, fileId2: number,req:CompareOrdersFilterReq): Promise<any[]> {
         const query = this.createQueryBuilder('o')
             .select(` item_cd, item , SUM(CASE WHEN file_id = ${fileId1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS old_qty_value, SUM(CASE WHEN file_id = ${fileId2} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS new_qty_value ,  SUM(CASE WHEN file_id = ${fileId2} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) - SUM(CASE WHEN file_id = ${fileId1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS diff,o.order_plan_number,o.wh,o.planned_exf,o.year,o.version`)
