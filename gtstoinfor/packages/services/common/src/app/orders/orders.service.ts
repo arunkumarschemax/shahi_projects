@@ -125,10 +125,11 @@ export class OrdersService {
                 await transactionManager.releaseTransaction()
                 return new CommonResponseModel(false,1110,'Columns does not match!')
             }
+
             for (const data of convertedData) {
 let dtoData;
 if(data.Order_Plan_Number !== null){
-    dtoData = new SaveOrderDto(null,data.Year,data.Planning_Ssn_Cd,data.Planning_Ssn,data.Tgt_Ssn_Cd,data.Tgt_Ssn,data.Biz_Cd,data.Biz,data.Planning_Region_Code,data.Planning_Region_Name,data.Channel_Code,data.Channel_Name,data.Department,data.Dept_Cd,data.Cls1_Cd,data.Cls2_Cd,data.G_Dept,data.Sub_Category1,data.Core_Category,data.Sub_Category2,data.Sub_Category3,data.Production_Category_Fabric,data.Production_Category_FabricProcessing,data.Production_Category_Sewing,data.Production_Category_SewingProcessing,data.Planning_Sum_Code,data.Planning_Sum,data.Local_NameGHQ,data.Item_Cd,data.Item,data.Orig_Price,data.Main_Sample_Code,data.FR_Fabric_Code,data.FR_Fabric,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Raw_Material_Supplier_Code,data.Raw_Material_Supplier,data.Vendor_Code,data.Vendor,data.Sewing_Factory_Code,data.Sewing_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Coeff,data.month,data.Item_Brunch_Number,data.Official_Plan_Std_Qty,data.Official_Plan_Fab_Prp_Pln_Qty,data.Official_Plan_PO_pr_Sls_Qty,data.Official_Plan_CO_Qty,data.Official_Plan_Stock_Qty,data.Sls_Start_Dy,data.Publish_Flag_for_Factory,data.Publish_Date,data.Allc_End_Dy,data.Sls_End_Dy,data.GWH,data.Order_Plan_Number,data.Order_Timing,data.Swng_Prd_Month,data.Swng_Prd_Week,data.Order_Plan_Qty,data.Order_Plan_QtyCoeff,data.Trnsp_Mthd,data.Prod_Plan_Type,data.Ph11st,data.WH,data.WH_Act,data.WHAuto,data.Yarn_DL_Requested,data.Yarn_DL_Answered,data.Yarn_DL_Auto,data.Yarn_Production_Due_Date_Auto,data.Yarn_Auto_Reflection_Date,data.Yarn_Act_Dy,data.Yarn_Act_Qty,data.Yarn_Order_Number,data.Yarn_Order_Status,data.Yarn_Delivery_Date,data.Fbrc_DL_Requested,data.Fbrc_DL_Answered,data.Fbrc_DL_Auto,data.Fbrc_Production_Due_Date_Auto,data.Fbrc_Auto_Reflection_Date,data.Fbrc_Act_Dy,data.Fbrc_Act_Qty,data.Fbrc_Order_Number,data.Fbrc_Order_Status,data.Fbrc_Delivery_Date,data.Color_DL_Requested,data.Color_DL_Answered,data.Color_DL_Auto,data.Color_Production_Due_Date_Auto,data.Color_Auto_Reflection_Date,data.Color_Act_Dy,data.Color_Act_Qty,data.Color_Order_Number,data.Color_Order_Status,data.Color_Delivery_Date,data.Trim_DL_Requested,data.Trim_DL_Answered,data.Trim_DL_Auto,data.Trim_Production_Due_Date_Auto,data.Trim_Auto_Reflection_Date,data.Trim_Act_Dy,data.Trim_Act_Qty,data.Trim_Order_Number,data.Trim_Order_Status,data.Trim_Delivery_Date,data.PO_DL_Requested,data.PO_DL_Answered,data.PO_DL_Auto,data.PO_Production_Due_Date_Auto,data.PO_Auto_Reflection_Date,data.PO_Act_Dy,data.PO_Act_Qty,data.PO_Order_Number,data.PO_Order_Status,data.Assort1,data.Assort2,data.NX_Assort,data.Solid,data.Order_Plan_QtySTOP,data.Fix_Flag,data.Alternative_Flag,data.Express_Line_Flag,data.Factory_Comment,data.Planned_EXF,data.EXF_ETD,data.ETD_WH,data.Sewing_Country_Region,data.Raw_Material_Original_Country_Region,data.Item_Drop,moment(data.Create_Date).format('YYYY-MM-DD HH:mm'),data.Create_User_ID,data.Create_User_Name,data.Create_Function,moment(data.Update_Date).format('YYYY-MM-DD HH:mm'),data.Update_User_ID,data.Update_User_Name,data.Update_Function,data.CountY,data.Sample,data.EXF,data.BDDL,data.BDDLpast_Past,data.LTBD_EXF,data.New_BDDL,data.new_LTBD_EXF,data.LTPO_EXF,data.Qty_LTBD_EXF,data.Qty_LTPO_EXF,data.County2Y,data.PHASE,id,null,'bidhun')
+    dtoData = new SaveOrderDto(null,data.Year,data.Planning_Ssn_Cd,data.Planning_Ssn,data.Tgt_Ssn_Cd,data.Tgt_Ssn,data.Biz_Cd,data.Biz,data.Planning_Region_Code,data.Planning_Region_Name,data.Channel_Code,data.Channel_Name,data.Department,data.Dept_Cd,data.Cls1_Cd,data.Cls2_Cd,data.G_Dept,data.Sub_Category1,data.Core_Category,data.Sub_Category2,data.Sub_Category3,data.Production_Category_Fabric,data.Production_Category_FabricProcessing,data.Production_Category_Sewing,data.Production_Category_SewingProcessing,data.Planning_Sum_Code,data.Planning_Sum,data.Local_NameGHQ,data.Item_Cd,data.Item,data.Orig_Price,data.Main_Sample_Code,data.FR_Fabric_Code,data.FR_Fabric,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Raw_Material_Supplier_Code,data.Raw_Material_Supplier,data.Vendor_Code,data.Vendor,data.Sewing_Factory_Code,data.Sewing_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Coeff,data.month,data.Item_Brunch_Number,(data.Official_Plan_Std_Qty).toString().replace(/,/g,''),(data.Official_Plan_Fab_Prp_Pln_Qty).toString().replace(/,/g,''),(data.Official_Plan_PO_pr_Sls_Qty).toString().replace(/,/g,''),(data.Official_Plan_CO_Qty).toString().replace(/,/g,''),(data.Official_Plan_Stock_Qty).toString().replace(/,/g,''),moment(data.Sls_Start_Dy).format('MM-DD'),data.Publish_Flag_for_Factory,data.Publish_Date,moment(data.Allc_End_Dy).format('MM-DD'),moment(data.Sls_End_Dy).format('MM-DD'),moment(data.GWH).format('MM-DD'),data.Order_Plan_Number,data.Order_Timing,moment(data.Swng_Prd_Month).format('YYYY-MM'),moment(data.Swng_Prd_Week).format('YYYY-MM-DD'),data.Order_Plan_Qty,data.Order_Plan_QtyCoeff,data.Trnsp_Mthd,data.Prod_Plan_Type,data.Ph11st,moment(data.WH).format('YYYY-MM-DD'),data.WH_Act,moment(data.WHAuto).format('MM-DD'),data.Yarn_DL_Requested,data.Yarn_DL_Answered,data.Yarn_DL_Auto,data.Yarn_Production_Due_Date_Auto,moment(data.Yarn_Auto_Reflection_Date).format('MM-DD'),data.Yarn_Act_Dy,data.Yarn_Act_Qty,data.Yarn_Order_Number,data.Yarn_Order_Status,data.Yarn_Delivery_Date,moment(data.Fbrc_DL_Requested).format('MM-DD'),moment(data.Fbrc_DL_Answered).format('YYYY-MM-DD'),moment(data.Fbrc_DL_Auto).format('MM-DD'),data.Fbrc_Production_Due_Date_Auto,moment(data.Fbrc_Auto_Reflection_Date).format('MM-DD'),data.Fbrc_Act_Dy,data.Fbrc_Act_Qty,data.Fbrc_Order_Number,data.Fbrc_Order_Status,moment(data.Fbrc_Delivery_Date).format('MM-DD'),data.Color_DL_Requested,data.Color_DL_Answered,data.Color_DL_Auto,data.Color_Production_Due_Date_Auto,moment(data.Color_Auto_Reflection_Date).format('MM-DD'),data.Color_Act_Dy,data.Color_Act_Qty,data.Color_Order_Number,data.Color_Order_Status,data.Color_Delivery_Date,moment(data.Trim_DL_Requested).format('MM-DD'),moment(data.Trim_DL_Answered).format('YYYY-MM-DD'),moment(data.Trim_DL_Auto).format('MM-DD'),data.Trim_Production_Due_Date_Auto,moment(data.Trim_Auto_Reflection_Date).format('MM-DD'),data.Trim_Act_Dy,data.Trim_Act_Qty,data.Trim_Order_Number,data.Trim_Order_Status,data.Trim_Delivery_Date,moment(data.PO_DL_Requested).format('MM-DD'),moment(data.PO_DL_Answered).format('YYYY-MM-DD'),moment(data.PO_DL_Auto).format('MM-DD'),data.PO_Production_Due_Date_Auto,moment(data.PO_Auto_Reflection_Date).format('MM-DD'),data.PO_Act_Dy,data.PO_Act_Qty,data.PO_Order_Number,data.PO_Order_Status,data.Assort1,data.Assort2,data.NX_Assort,data.Solid,data.Order_Plan_QtySTOP,data.Fix_Flag,data.Alternative_Flag,data.Express_Line_Flag,data.Factory_Comment,moment(data.Planned_EXF).format('YYYY-MM-DD'),data.EXF_ETD,data.ETD_WH,data.Sewing_Country_Region,data.Raw_Material_Original_Country_Region,data.Item_Drop,moment(data.Create_Date).format('YYYY-MM-DD HH:mm'),data.Create_User_ID,data.Create_User_Name,data.Create_Function,moment(data.Update_Date).format('YYYY-MM-DD HH:mm'),data.Update_User_ID,data.Update_User_Name,data.Update_Function,data.CountY,data.Sample,moment(data.EXF).format('MM-DD'),moment(data.BDDL).format('MM-DD'),data.BDDLpast_Past,data.LTBD_EXF,data.New_BDDL,data.new_LTBD_EXF,data.LTPO_EXF,data.Qty_LTBD_EXF,data.Qty_LTPO_EXF,data.County2Y,data.PHASE,id,null,'bidhun')
     } else{
         break
     }
@@ -274,7 +275,7 @@ if(data.Order_Plan_Number !== null){
             for (const data of convertedData) {
                 let dtoData
                 if(data.Order_No != null){
-                    dtoData = new TrimOrderDto(null,data.Order_No,data.Year,data.Revision_No,data.Planning_Ssn,data.Global_Business_Unit,data.Business_Unit,data.Item_Brand,data.Department,data.Revised_Date,data.Document_Status,data.Answered_Status,data.Vendor_Person_in_Charge,data.Decision_Date,data.Payment_Terms,data.Contracted_ETD,data.ETA_WH,data.Approver,data.Approval_Date,data.Order_Conditions,data.Remark,data.Raw_Material_CodeFR,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Vendor_Code,data.Vendor,data.Management_Factory_Code,data.Management_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Order_Plan_Number,data.Item_Code,data.Item,data.Representative_Sample_Code,data.Sample_Code,data.Color_Code,data.Color,data.Pattern_Dimension_Code,data.Size_Code,data.Size,(data.Order_Qtypcs).toString().replace(/,/g,''),data.Arrangement_By,data.Trim_Description,data.Trim_Item_No,data.Trim_Supplier,'bidhun',null,null,null,null,id,month)
+                    dtoData = new TrimOrderDto(null,data.Order_No,data.Year,data.Revision_No,data.Planning_Ssn,data.Global_Business_Unit,data.Business_Unit,data.Item_Brand,data.Department,moment(data.Revised_Date).format('YYYY-MM-DD'),data.Document_Status,data.Answered_Status,data.Vendor_Person_in_Charge,moment(data.Decision_Date).format('YYYY-MM-DD'),data.Payment_Terms,moment(data.Contracted_ETD).format('YYYY-MM-DD'),moment(data.ETA_WH).format('YYYY-MM-DD'),data.Approver,moment(data.Approval_Date).format('YYYY-MM-DD'),data.Order_Conditions,data.Remark,data.Raw_Material_CodeFR,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Vendor_Code,data.Vendor,data.Management_Factory_Code,data.Management_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Order_Plan_Number,data.Item_Code,data.Item,data.Representative_Sample_Code,data.Sample_Code,data.Color_Code,data.Color,data.Pattern_Dimension_Code,data.Size_Code,data.Size,(data.Order_Qtypcs).toString().replace(/,/g,''),data.Arrangement_By,data.Trim_Description,data.Trim_Item_No,data.Trim_Supplier,'bidhun',null,null,null,null,id,month)
                 }else{
                     break;
                 }
@@ -659,9 +660,9 @@ if(data.Order_Plan_Number !== null){
         }
         for (const record of records) {
             if (!versionDataMap.has(record.production_plan_id)) {
-                versionDataMap.set(record.production_plan_id, new VersionDataModel(record.production_plan_id, record.prod_plan_type_name, record.item_code, record.itemName, []));
+                versionDataMap.set(record.production_plan_id, new VersionDataModel(record.production_plan_id, record.prod_plan_type, record.item_cd, record.item, []));
             }
-            versionDataMap.get(record.production_plan_id).versionWiseData.push(new VersionAndQtyModel(record.version, record.order_qty_pcs));
+            versionDataMap.get(record.production_plan_id).versionWiseData.push(new VersionAndQtyModel(record.VERSION, record.order_plan_qty));
         }
         const versionDataModelArray: VersionDataModel[] = [];
         versionDataMap.forEach(version => versionDataModelArray.push(version));
@@ -1016,30 +1017,30 @@ if(data.Order_Plan_Number !== null){
         SUM(exfJan + exfFeb + exfMarch + exfApril + exfMay + exfJune + exfJuly + exfAug + exfSep + exfOct + exfNov + exfDec) AS exfTotal
       FROM (
         SELECT planning_ssn, year, item_cd, item,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS january,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS february,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS march,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 4 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS april,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS may,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS june,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS july,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS august,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 9 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS september,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 10 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS october,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS november,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS december,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJan,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfFeb,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMarch,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 4 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfApril,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMay,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJune,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJuly,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfAug,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 9 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfSep,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 10 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfOct,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfNov,
-        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfDec
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 1 OR MONTH(wh)= 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS january,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 2 OR MONTH(wh)= 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS february,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 3 OR MONTH(wh)= 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS march,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 4 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 4 OR MONTH(wh)= 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS april,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 5 OR MONTH(wh)= 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS may,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 6 OR MONTH(wh)= 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS june,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 7 OR MONTH(wh)= 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS july,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 8 OR MONTH(wh)= 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS august,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 9 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 9 OR MONTH(wh)= 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS september,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 10 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 10 OR MONTH(wh)= 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS october,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 11 OR MONTH(wh)= 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS november,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(wh, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(wh, '%m-%d')) = 12 OR MONTH(wh)= 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS december,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 1 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 1 OR MONTH(exf)= 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJan,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 2 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 2 OR MONTH(exf)= 2 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfFeb,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 3 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 3 OR MONTH(exf)= 3 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMarch,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 4 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 4 OR MONTH(exf)= 4 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfApril,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 5 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 5 OR MONTH(exf)= 5 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfMay,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 6 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 6 OR MONTH(exf)= 6 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJune,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 7 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 7 OR MONTH(exf)= 7 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfJuly,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 8 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 8 OR MONTH(exf)= 8 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfAug,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 9 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 9 OR MONTH(exf)= 9 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfSep,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 10 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 10 OR MONTH(exf)= 10 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfOct,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 11 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 11 OR MONTH(exf)= 11 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfNov,
+        SUM(CASE WHEN MONTH(STR_TO_DATE(exf, '%m/%d')) = 12 OR MONTH(STR_TO_DATE(exf, '%m-%d')) = 12 OR MONTH(exf)= 12 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS exfDec
         FROM orders
         GROUP BY planning_ssn, item_cd, item
       ) AS subquery
@@ -1731,6 +1732,7 @@ async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
             novCoeff: rec.novExfLat,
             decCoeff: rec.decExfLat,
           })
+        
     const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,rec.totalExfPre,rec.totalExfLat,rec.order_plan_number);
             monthData.push(monthWiseInstance); 
         }
@@ -1995,11 +1997,105 @@ async updateStatusAfterCoLineCreationInM3(req:CoLineStatusReq):Promise<CommonRes
         throw(err)
     }
 }
-
+async getPhaseMonthData(req): Promise<CommonResponseModel> {
+    try {
+    const data = await this.ordersRepository.getdata(req);
+    const DateMap = new Map<string, MonthWiseDto>();
+    
+    for (const rec of data) {
+    if (!DateMap.has(rec.prod_plan_type)) {
+        DateMap.set(
+          rec.prod_plan_type,
+          new MonthWiseDto(rec.prod_plan_type, [], [], 0, 0)
+        );
+      }
+      const monthWiseInstance = DateMap.get(rec.prod_plan_type);
+    
+    if(req.tabName === 'ExFactory'){
+    
+    monthWiseInstance.pcsData.push({
+    name: 'In Pcs',
+    janPcs: rec.janPcsExf,
+    febPcs: rec.febPcsExf,
+    marPcs: rec.marPcsExf,
+    aprPcs: rec.aprPcsExf,
+    mayPcs: rec.mayPcsExf,
+    junPcs: rec.junPcsExf,
+    julPcs: rec.julPcsExf,
+    augPcs: rec.augPcsExf,
+    sepPcs: rec.sepPcsExf,
+    octPcs: rec.octPcsExf,
+    novPcs: rec.novPcsExf,
+    decPcs: rec.decPcsExf,
+    });
+    
+    monthWiseInstance.coeffData.push({
+    name: 'In Coeff',
+    janCoeff: rec.janExfCoeff,
+    febCoeff: rec.febExfCoeff,
+    marCoeff: rec.marExfCoeff,
+    aprCoeff: rec.aprExfCoeff,
+    mayCoeff: rec.mayExfCoeff,
+    junCoeff: rec.julExfCoeff,
+    julCoeff: rec.julExfCoeff,
+    augCoeff: rec.augExfCoeff,
+    sepCoeff: rec.sepExfCoeff,
+    octCoeff: rec.octExfCoeff,
+    novCoeff: rec.novExfCoeff,
+    decCoeff: rec.decExfCoeff,
+    });
+    monthWiseInstance.totalPcs = rec.totalExfPre;
+    monthWiseInstance.totalCoeff = rec.totalExfLat;
+    }
+    if(req.tabName ==='WareHouse'){
+    
+    monthWiseInstance.pcsData.push({
+    name: 'In Pcs',
+    janPcs: rec.janPcsWh,
+    febPcs: rec.febPcsWh,
+    marPcs: rec.marPcsWh,
+    aprPcs: rec.aprPcsWh,
+    mayPcs: rec.mayPcsWh,
+    junPcs: rec.junPcsWh,
+    julPcs: rec.julPcsWh,
+    augPcs: rec.augPcsWh,
+    sepPcs: rec.sepPcsWh,
+    octPcs: rec.octPcsWh,
+    novPcs: rec.novPcsWh,
+    decPcs: rec.decPcsWh,
+    });
+    
+    monthWiseInstance.coeffData.push({
+    name: 'In Coeff',
+    janCoeff: rec.janWhCoeff,
+    febCoeff: rec.febWhCoeff,
+    marCoeff: rec.marWhCoeff,
+    aprCoeff: rec.aprWhCoeff,
+    mayCoeff: rec.mayWhCoeff,
+    junCoeff: rec.junWhCoeff,
+    julCoeff: rec.julWhCoeff,
+    augCoeff: rec.augWhCoeff,
+    sepCoeff: rec.sepWhCoeff,
+    octCoeff: rec.octWhCoeff,
+    novCoeff: rec.novWhCoeff,
+    decCoeff: rec.decWhCoeff,
+    });
+    
+    monthWiseInstance.totalPcs = rec.totalWhPre;
+    monthWiseInstance.totalCoeff = rec.totalWhLat;
+    }
+    }
+    const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());   
+    return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
+    } catch (error) {
+    // Handle errors appropriately
+    console.error(error);
+    return new CommonResponseModel(false, 0, 'error occurred', null);
+    }
+    }
 async getComparisionphaseData(req:YearReq):Promise<CommonResponseModel>{
     const data = await this.ordersChildRepo.getComparisionphaseData(req);
     const DateMap = new Map<string, MonthWiseDto>();
-
     for (const rec of data) {
         if (!DateMap.has(rec.prod_plan_type)) {
             DateMap.set(
@@ -2085,112 +2181,32 @@ if(req.tabName ==='WareHouse'){
  }
     const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());   
     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
-
-} catch(error){
-    console.error(error);
-    return new CommonResponseModel(false, 0, 'error occurred', null);
-
 }
+async getPhaseMonthExcelData(req:YearReq):Promise<CommonResponseModel>{
+    try{
+        const data = await this.ordersRepository.getdata(req)
+        if(data){
+            return new CommonResponseModel(true,1,'Data retrieved',data)
+        } else{
+            return new CommonResponseModel(false,1,'No data found')
+        }
 
-
-async getPhaseMonthData(req): Promise<CommonResponseModel> {
-try {
-const data = await this.ordersRepository.getdata(req);
-const DateMap = new Map<string, MonthWiseDto>();
-
-for (const rec of data) {
-if (!DateMap.has(rec.prod_plan_type)) {
-    DateMap.set(
-      rec.prod_plan_type,
-      new MonthWiseDto(rec.prod_plan_type, [], [], 0, 0)
-    );
-  }
-  const monthWiseInstance = DateMap.get(rec.prod_plan_type);
-
-if(req.tabName === 'ExFactory'){
-
-monthWiseInstance.pcsData.push({
-name: 'In Pcs',
-janPcs: rec.janPcsExf,
-febPcs: rec.febPcsExf,
-marPcs: rec.marPcsExf,
-aprPcs: rec.aprPcsExf,
-mayPcs: rec.mayPcsExf,
-junPcs: rec.junPcsExf,
-julPcs: rec.julPcsExf,
-augPcs: rec.augPcsExf,
-sepPcs: rec.sepPcsExf,
-octPcs: rec.octPcsExf,
-novPcs: rec.novPcsExf,
-decPcs: rec.decPcsExf,
-});
-
-monthWiseInstance.coeffData.push({
-name: 'In Coeff',
-janCoeff: rec.janExfCoeff,
-febCoeff: rec.febExfCoeff,
-marCoeff: rec.marExfCoeff,
-aprCoeff: rec.aprExfCoeff,
-mayCoeff: rec.mayExfCoeff,
-junCoeff: rec.julExfCoeff,
-julCoeff: rec.julExfCoeff,
-augCoeff: rec.augExfCoeff,
-sepCoeff: rec.sepExfCoeff,
-octCoeff: rec.octExfCoeff,
-novCoeff: rec.novExfCoeff,
-decCoeff: rec.decExfCoeff,
-});
-monthWiseInstance.totalPcs = rec.totalExfPre;
-monthWiseInstance.totalCoeff = rec.totalExfLat;
+    } catch(err){
+        throw err
+    }
 }
-if(req.tabName ==='WareHouse'){
+async getComparisionphaseExcelData(req:YearReq):Promise<CommonResponseModel>{
+    try{
+        const data = await this.ordersChildRepo.getComparisionphaseData(req)
+        if(data){
+            return new CommonResponseModel(true,1,'Data retrieved',data)
+        } else{
+            return new CommonResponseModel(false,1,'No data found')
+        }
 
-monthWiseInstance.pcsData.push({
-name: 'In Pcs',
-janPcs: rec.janWhPre,
-febPcs: rec.febWhPre,
-marPcs: rec.marWhPre,
-aprPcs: rec.aprWhPre,
-mayPcs: rec.mayWhPre,
-junPcs: rec.junWhPre,
-julPcs: rec.julWhPre,
-augPcs: rec.augWhPre,
-sepPcs: rec.sepWhPre,
-octPcs: rec.octWhPre,
-novPcs: rec.novWhPre,
-decPcs: rec.decWhPre,
-});
-
-monthWiseInstance.coeffData.push({
-name: 'In Coeff',
-janCoeff: rec.janWhLat,
-febCoeff: rec.febWhLat,
-marCoeff: rec.marWhLat,
-aprCoeff: rec.aprWhLat,
-mayCoeff: rec.mayWhLat,
-junCoeff: rec.junWhLat,
-julCoeff: rec.julWhLat,
-augCoeff: rec.augWhLat,
-sepCoeff: rec.sepWhLat,
-octCoeff: rec.octWhLat,
-novCoeff: rec.novWhLat,
-decCoeff: rec.decWhLat,
-});
-
-monthWiseInstance.totalPcs = rec.totalWhPre;
-monthWiseInstance.totalCoeff = rec.totalWhLat;
+    } catch(err){
+        throw err
+    }
 }
 }
-const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());   
-return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
-} catch (error) {
-// Handle errors appropriately
-console.error(error);
-return new CommonResponseModel(false, 0, 'error occurred', null);
-}
-}
-
-
-}
-
   

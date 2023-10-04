@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Form, Input, InputRef, Popconfirm, Row, Select, Space, Table, Tag, Typography, message } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, InputRef, Popconfirm, Row, Select, Space, Table, Tag, Tooltip, Typography, message } from 'antd';
 import { useEffect, useRef, useState, } from 'react';
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
@@ -9,6 +9,7 @@ import { COLineRequest, CoLineStatusReq, TrimOrdersReq } from '@project-manageme
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
+import { useNavigate } from 'react-router-dom';
 
 
 const TrimOrder= () => {
@@ -28,6 +29,7 @@ const TrimOrder= () => {
     const searchInput = useRef<InputRef>(null);
     const [searchedColumn, setSearchedColumn] = useState("");
     const [item, setItem] = useState<any[]>([]);
+    let navigate = useNavigate()
 
 const {Text}=Typography
 
@@ -69,6 +71,13 @@ const {Text}=Typography
         })
         
     }
+
+    const DetailedView = (record: any) => {
+        const poFilterData = filteredData.filter(item => item.order_no == record)
+        navigate('/excel-import/trim-order-detail-view', { state: { data: poFilterData } })
+      }
+
+
     const approveOrderStatus = (record) => {
         console.log(record)
     const req = new COLineRequest(record.itemNumber,record.order_no,record.color_code,record.color,record.size_code,record.size,record.item_code,record.item,null,null,record.order_no,record.itemNumber,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,record.trim_order_id);
@@ -229,12 +238,22 @@ const {Text}=Typography
         {
             title: 'Order No',
             // fixed:'left',
-          dataIndex: 'order_no',         
+          dataIndex: 'order_no',
+          width:"140px",
           sorter: (a, b) => {
             const aKey = a.order_no || "";
             const bKey = b.order_no || "";
             return aKey.localeCompare(bKey);
           },
+          render: (text, record) => {
+            return (
+              <Tooltip title="Click for Detail View">
+                <Button type='link' onClick={() => DetailedView(record.order_no)}>
+                  {record.order_no}
+                </Button>
+              </Tooltip>
+            );
+          }
         },
           
         {

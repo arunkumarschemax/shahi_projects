@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, Descriptions } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,12 +7,12 @@ import { PriceListService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import {  ColumnProps, ColumnsType } from 'antd/es/table';
 import PriceListForm from './price-list-form';
-import { NewFilterDto, PriceListActivateDeactivateDto, PriceListDto } from '@project-management-system/shared-models';
+import { HistoryRequest, NewFilterDto, PriceListActivateDeactivateDto, PriceListDto } from '@project-management-system/shared-models';
 
 
 export interface PriceListView { }
 
-export const PriceListGrid = (props: PriceListView) => {
+export const PriceListHistory = (props: PriceListView) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -31,9 +31,6 @@ export const PriceListGrid = (props: PriceListView) => {
   const [year,setYear] = useState<any[]>([]); 
   const [currency,setCurrency] = useState<any[]>([]);
   const [seasonCode,setSeasonCode] = useState<any[]>([]);
-  const [item,setItem] = useState<any[]>([]);
-  const[des,setDes] = useState<any[]>([]);
-  const[styCount,setStyCount] = useState<any[]>([]);
 
 
 
@@ -44,7 +41,7 @@ export const PriceListGrid = (props: PriceListView) => {
     getYear();
     getCurrency();
     getSeasonCode();
-    getAllItems();
+
   },[])
 
   const pagination = {
@@ -63,123 +60,66 @@ export const PriceListGrid = (props: PriceListView) => {
     },
   };
   const getStyle = () => {
-    priceService.getAllPriceListStyles().then(res => {
+    priceService.getAllStyles().then(res => {
       setStyle(res.data)
-      setStyCount(res.data.length)
     })
 
 }
 
 const getDestination = () => {
-  priceService.getAllPriceListDestination().then(res => {
+  priceService.getAllDestination().then(res => {
     setDestination(res.data)
-    setDes(res.data.length)
-    console.log(des, "all items");
-
   })
 
 }
 const getYear = () => {
-  priceService.getAllPriceListYear().then(res => {
+  priceService.getAllYear().then(res => {
     setYear(res.data)
   })
 
 }
 const getCurrency = () => {
-  priceService.getAllPriceListCurrency().then(res => {
+  priceService.getAllCurrency().then(res => {
     setCurrency(res.data)
   })
 
 }
 const getSeasonCode = () => {
-  priceService.getAllPriceListSeasonCode().then(res => {
+  priceService.getAllSeasonCode().then(res => {
     setSeasonCode(res.data)
   })
 
 }
 
-const getAllItems = () => {
-  priceService.getAllPriceListItem().then(res => {
-    setItem(res.data.length)
-    console.log()
-  });
-};
-
-
   const getPriceList= () => {
-    const req = new NewFilterDto();
-     if (form.getFieldValue("sampleCode") !== undefined) {
-     req.sampleCode = form.getFieldValue("sampleCode");}
-            if (form.getFieldValue("business") !== undefined) {
-         req.business = form.getFieldValue("business"); }
-         if (form.getFieldValue("currency") !== undefined) {
-          req.currency = form.getFieldValue("currency"); }
-          if (form.getFieldValue("year") !== undefined) {
-            req.year = form.getFieldValue("year"); }
-            if (form.getFieldValue("seasonCode") !== undefined) {
-              req.seasonCode = form.getFieldValue("seasonCode"); }
-    priceService.getAllPriceList(req).then(res => {
+    const req = new HistoryRequest();
+    if (form.getFieldValue("sampleCode") !== undefined) {
+      req.sampleCode = form.getFieldValue("sampleCode")
+    }
+    if (form.getFieldValue("business") !== undefined) {
+      req.business = form.getFieldValue("business") 
+    }
+    if (form.getFieldValue("currency") !== undefined) {
+      req.currency = form.getFieldValue("currency") 
+    }
+    if (form.getFieldValue("year") !== undefined) {
+      req.year = form.getFieldValue("year")
+    }
+    if (form.getFieldValue("seasonCode") !== undefined) {
+      req.seasonCode = form.getFieldValue("seasonCode") 
+    }
+    priceService.getPriceHistory(req).then(res => {
+      console.log(req,'')
       if (res.status) {
         setPriceList(res.data);
-      } else
-       {
+      } else {
         setPriceList([])
-          AlertMessages.getErrorMessage(res.internalMessage);
+        AlertMessages.getErrorMessage(res.internalMessage);
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);
       setPriceList([]);
     })
-  }
- 
-  const deletePriceList = (values: PriceListDto) => {
-    values.isActive = values.isActive? false : true;
-    const req = new PriceListActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
-    priceService.ActivateOrDeactivatePriceList(req).then(res => {
-      getPriceList()
-    if(res.status){
-      message.success(res.internalMessage)
-      getPriceList();
-      AlertMessages.getErrorMessage(res.internalMessage);
-
-    }else {
-      // message.error("Status Not Changed")
-    }
-    }).catch(err => {
-      AlertMessages.getErrorMessage(err.message);
-    })
-  }
-
-
- 
-  const updatePriceList = (req: PriceListDto) => {
-    req.updatedUser = JSON.parse(localStorage.getItem('username'));
-    priceService.updatePriceList(req)
-      .then(res => {
-        if (res.status) {
-          // console.log(res,' after sucessesfully updateed daata')
-          AlertMessages.getSuccessMessage('Updated Successfully');
-          setDrawerVisible(false);
-          getPriceList();
-        } else {
-          // AlertMessages.getErrorMessage(res.internalMessage);
-          message.error("Already this Style & Destination Combination Exist,Please check it once")
-        }
-      })
-      .catch(err => {
-        AlertMessages.getErrorMessage(err.message);
-      });
-  }
-  
-  //drawer related
-  const closeDrawer = () => {
-    setDrawerVisible(false);
-  }
-  const openFormWithData=(viewData: PriceListDto)=>{
-    setDrawerVisible(true);
-    setSelectedPriceListeData(viewData);
-    // console.log(selectedPriceListData)
-    // console.log('selectedOperation')
   }
   
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -275,9 +215,9 @@ const getAllItems = () => {
         },
         {
             title: "Style",
-            dataIndex: "sampleCode",
+            dataIndex: "sample_code",
             align:"center",
-            sorter: (a, b) => a.sampleCode.localeCompare(b.sampleCode),
+            sorter: (a, b) => a.sample_code.localeCompare(b.sample_code),
             sortDirections: ["descend", "ascend"],
             // ...getColumnSearchProps("style"),
           },
@@ -301,9 +241,9 @@ const getAllItems = () => {
       },
       {
         title: "Season Code",
-        dataIndex: "seasonCode",
+        dataIndex: "season",
         align:"center",
-        sorter: (a, b) => a.seasonCode.localeCompare(b.seasonCode),
+        sorter: (a, b) => a.season.localeCompare(b.season),
         sortDirections: [ "ascend","descend"],
         // ...getColumnSearchProps("seasonCode"),
 
@@ -311,103 +251,48 @@ const getAllItems = () => {
       },
       {
         title: "Price",
-        dataIndex: "fobLocalCurrency",
-        align:"center",
-        sorter: (a, b) => a.fobLocalCurrency.localeCompare(b.fobLocalCurrency),
-        sortDirections: [ "ascend","descend"],
-         ...getColumnSearchProps("currency"),
-       
-        // filters: [
-        //   {
-        //     text: 'INR',
-        //     value: true,
-        //   },
-        //   {
-        //     text: 'InActive',
-        //     value: false,
-        //   },
-        // ],
-        // filterMultiple: false,
-        // onFilter: (value, record) => {
-        //   // === is not work
-        //   return record.isActive === value;
-        // },
-        render:(text,record) => {
-          return(
-            <>
-            {record.fobLocalCurrency ? `${record.currency}- ${record.fobLocalCurrency} ` : '-'}
-            </>
-          )
-        }
-        // ...getColumnSearchProps("currency"),
-
-       
-       
-      },
-      {
-        title: 'Status',
-        dataIndex: 'isActive',
-        align:"center",
-         // width:'80px',
-        render: (isActive, rowData) => (
-          <>
-            {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-          </>
-        ),
-        filters: [
-          {
-            text: 'Active',
-            value: 1,
-          },
-          {
-            text: 'InActive',
-            value: 0,
-          },
-        ],
-        filterMultiple: false,
-        onFilter: (value, record) => {
-          // === is not work
-          return record.isActive === value;
-        },
-  
-      },
-      
-      {
-        title:`Action`,
-        dataIndex: 'action',
-        align:"center",
-        render: (text, rowData) => (
-          <span>         
-              <EditOutlined  className={'editSamplTypeIcon'}  type="edit" 
-                onClick={() => {
-                  if (rowData.isActive) {
-                    openFormWithData(rowData);
-                    console.log(rowData,"rowdata")
-                  } else {
-                    AlertMessages.getErrorMessage('You Cannot Edit Deactivated PriceList');
+        children:[
+            {
+                title:"Previous",
+                dataIndex:"previous_price",
+                align:"right",
+                render:(text,record) => {
+                  return(
+                    <>
+                    {record.previous_price ? `${record.currency}- ${record.previous_price} ` : '-'}
+                    </>
+                  )
+                }
+            },
+            {
+                title:"Latest",
+                dataIndex:"current_price",
+                align:"right",
+                render:(text,record) => {
+                    return(
+                      <>
+                      {record.current_price ? `${record.currency}- ${record.current_price} ` : '-'}
+                      </>
+                    )
                   }
-                }}
-                style={{ color: '#1890ff', fontSize: '14px' }}
-              />
-            
-            <Divider type="vertical" />
-              <Popconfirm onConfirm={e =>{deletePriceList(rowData);}}
-              title={
-                rowData.isActive
-                  ? 'Are you sure to Deactivate PriceList ?'
-                  :  'Are you sure to Activate PriceList ?'
-              }
-            >
-              <Switch  size="default"
-                  className={ rowData.isActive ? 'toggle-activated' : 'toggle-deactivated' }
-                  checkedChildren={<RightSquareOutlined type="check" />}
-                  unCheckedChildren={<RightSquareOutlined type="close" />}
-                  checked={rowData.isActive}
-                />
-              
-            </Popconfirm>
-          </span>
-        )
+            },
+        ],
+      },
+      {
+        title: "Variance",
+        dataIndex: "price_variance",
+        align: "right",
+        render: (text) => {
+          if (text === undefined || text === null) {
+            return "-";
+          } else if (text > 0) {
+            return <span style={{ color: "green" }}>{text}</span>;
+          } else if (text < 0) {
+            return <span style={{ color: "orange" }}>{text}</span>;
+          } else {
+            return text;
+          }
+        },
       }
      
    
@@ -428,20 +313,7 @@ const getAllItems = () => {
     extra={<Link to='/masters/pricelist/price-list-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
-      <Row gutter={40}>
-        {/* <Col>
-          <Card title={'Total Liscenc Types: ' + style.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
-        </Col> */}
-        <Col>
-          <Card title={'Created Style: ' + styCount} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#B1D5F8' }}></Card>
-        </Col>
-        <Col>
-          <Card title={'Created Destination: ' + Number(des)} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#B1F8E2' }}></Card>
-        </Col>
-        <Col>
-          <Card title={'Created Item: ' + item} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#CBB1F8  ' }}></Card>
-        </Col>
-      </Row><br></br>
+     
         <Form form={form} style={{textAlign:'center'}}  layout='vertical' onFinish={getPriceList}>
         <Row gutter={24}>
           <Col xs={24} sm={12} md={8} lg={6} xl={4}  style={{ padding: '8px' }}>
@@ -492,60 +364,40 @@ const getAllItems = () => {
               </Select>
             </Form.Item>
           </Col>
-         
-          {/* <Col xs={24} sm={12} md={8} lg={6} xl={4} style={{ padding: '8px' }}>
-            <Form.Item name="currency" label="Currency">
-              <Select placeholder="Select Currency" dropdownMatchSelectWidth={false} showSearch allowClear optionFilterProp="children">
-                {currency.map((e) => {
-                  return (
-                    <Option key={e.id} value={e.currency}>{e.currency}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col> */}
 
           <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 20 }}  >
-                            <Form.Item>
-                                <Button htmlType="submit" icon={<SearchOutlined />}style={{backgroundColor:'green'}}type="primary">SEARCH</Button>
-                                    <Button danger
-                                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, position: "relative" }} onClick={onReset}>RESET
-                                </Button>
-                            </Form.Item>
-                        </Col>
+            <Form.Item>
+              <Button htmlType="submit" icon={<SearchOutlined />}style={{backgroundColor:'green'}}type="primary">
+                Search
+              </Button>
+              <Button danger htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, position: "relative" }} onClick={onReset}>
+                Reset
+              </Button>
+            </Form.Item>
+          </Col>
         </Row>
       </Form>
+      {/* <Form layout='vertical'>
+         <Descriptions  style={{ alignItems: 'right' }} column={2}>
+        <Descriptions.Item label={'Previous'}>{}</Descriptions.Item>
+        <Descriptions.Item label={`Order Qty Pc's`}>{} </Descriptions.Item>
+      </Descriptions>
+      </Form> */}
      
-      
-        <Table
-        rowKey={record => record}
-          columns={columns}
-          dataSource={priceList}
-          className="custom-table-wrapper"
-
-          pagination={pagination}
-          scroll={{x:true}}
-          onChange={onChange}
-          bordered />
-          
-    
-      <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
-        onClose={closeDrawer} visible={drawerVisible} closable={true}>
-        <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
-          <PriceListForm key={Date.now()}
-            updateData={updatePriceList}
-            isUpdate={true}
-            Data={selectedPriceListData}
-            closeForm={closeDrawer} />
-        </Card>
-      </Drawer>
-     
-      </Card> </>
+      <Table
+      rowKey={record => record}
+      columns={columns}
+      dataSource={priceList}
+      className="custom-table-wrapper"
+      pagination={pagination}
+      scroll={{x:true}}
+      onChange={onChange}
+      bordered />
+    </Card> </>
       
   );
 }
 
 
-export default PriceListGrid
+export default PriceListHistory
 
