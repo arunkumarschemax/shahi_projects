@@ -2,6 +2,7 @@ import { Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UploadPriceListEntity } from "../entities/upload-price-list-entity";
+import { PriceListChildEntity } from "../entities/price-list-child-entity";
 
 @Injectable()
 export class UploadPriceListRepository extends Repository<UploadPriceListEntity> {
