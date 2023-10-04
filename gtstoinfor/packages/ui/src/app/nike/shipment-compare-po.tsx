@@ -347,7 +347,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'document_date',
-            render: (text) => moment(text).format('DD/MM/YYYY')
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item',
@@ -368,11 +368,13 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Change from OGAC',
-            dataIndex: 'change_from_ogac'
+            dataIndex: 'change_from_ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Change to OGAC',
-            dataIndex: 'change_to_ogac'
+            dataIndex: 'change_to_ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Change from GAC',
@@ -428,11 +430,13 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac'
+            dataIndex: 'ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'GAC',
-            dataIndex: 'gac'
+            dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Mode of Transportation Code in DPOM',
@@ -806,7 +810,8 @@ const ShipmentChangesCompareGrid = () => {
             </Form> */}
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
-            </> : <></>}
+            </> : <><Table className="custom-table-wrapper" bordered  scroll={{ x: 'max-content' }}
+            /> </>}
 
         </Card>
     );

@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, Input, Row, Select, Table } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { NikeService } from "@project-management-system/shared-services";
 import React from "react";
@@ -6,6 +6,8 @@ import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
 import PoPdfTable from "./po-pdf-table";
+import moment from "moment";
+import ChangeComparision from "./change-detail-view";
 
 
 export function POPDFInfoGrid() {
@@ -18,13 +20,17 @@ export function POPDFInfoGrid() {
     const [pageSize, setPageSize] = useState(1);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
+    const [poNumber, setPoNumber] = useState('');
     const [form] = Form.useForm();
     const { Option } = Select;
+    const [isModalOpen1, setIsModalOpen1] = useState(false);
 
-    useEffect(()=> {
+
+    useEffect(() => {
         getPdfFileInfo()
         getPoLine()
-    },[])
+    }, [])
+
     const getPdfFileInfo = () => {
         service.getPdfFileInfo().then(res => {
             setPdfData(res.data)
@@ -34,7 +40,7 @@ export function POPDFInfoGrid() {
         form.resetFields()
         getPdfFileInfo()
     }
-    
+
     const getPoLine = () => {
         service.getPpmPoLineForOrderCreation().then(res => {
             setPoLine(res.data)
@@ -48,6 +54,18 @@ export function POPDFInfoGrid() {
     const handleReset = (clearFilters) => {
         clearFilters();
         setSearchText('');
+    };
+
+
+    const showModal1 = (record) => {
+        setPoNumber(record)
+        setIsModalOpen1(true);
+    };
+
+
+    const cancelHandle = () => {
+        setIsModalOpen1(false);
+
     };
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -105,11 +123,13 @@ export function POPDFInfoGrid() {
             )
                 : null
     })
+
     const setMoreData = (record) => {
         console.log(record.file_data)
-        navigate('/nike/po-pdf-table',{ state: { data: record.file_data} })
+        navigate('/nike/po-pdf-table', { state: { data: record.file_data } })
 
     }
+
     const columns: any = [
         {
             title: "S.No",
@@ -137,21 +157,32 @@ export function POPDFInfoGrid() {
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
+            title: 'Uploaded Date',
+            dataIndex: 'created_at',
+            align: 'center',
+            render: (text, record) => {
+                return record.created_at ? moment(record.created_at).format('MM/DD/YYYY') : '-'
+            }
+            // ...getColumnSearchProps('purchaseOrderNumber')
+        },
+        {
             title: 'Action',
             dataIndex: 'action',
-            render: (value, record) => {
-                return (
-                        <Button onClick={e=>setMoreData(record)}>More Info</Button>
-                );
-            }
-
+            align: 'center',
+            render: (value, record) => (
+                <>
+                    <Button onClick={() => setMoreData(record)}>More Info</Button>
+                    <Button onClick={() => showModal1(record.po_number)} style={{ margin: 5 }}>Changes Comparision</Button>
+                </>
+            ),
         }
+
     ]
-    
+
     return (
         <>
-        <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>
-        {/* <Form
+            <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>
+                {/* <Form
             // onFinish={getOrderAcceptanceData}
             form={form}
             layout='vertical'>
@@ -185,20 +216,36 @@ export function POPDFInfoGrid() {
                 </Col>
             </Row>
         </Form> */}
-        <Table
-            columns={columns}
-            dataSource={pdfData}
-            bordered
-            className="custom-table-wrapper"
-            pagination={{
-                onChange(current, pageSize) {
-                    setPage(current);
-                    setPageSize(pageSize);
-                },
-            }}
-        >
-        </Table>
-        </Card>
+                <Table
+                    columns={columns}
+                    dataSource={pdfData}
+                    bordered
+                    className="custom-table-wrapper"
+                    pagination={{
+                        onChange(current, pageSize) {
+                            setPage(current);
+                            setPageSize(pageSize);
+                        },
+                    }}
+                >
+                </Table>
+                <Modal
+                    className='print-docket-modal'
+                    key={'modal1' + Date.now()}
+                    width={'900%'}
+                    style={{ top: 30, alignContent: 'center' }}
+                    visible={isModalOpen1}
+                    title={<React.Fragment>
+                    </React.Fragment>}
+                    onCancel={cancelHandle}
+                    footer={[
+
+                    ]}
+                >
+                    {isModalOpen1 && <ChangeComparision data={{ poNumber }} />}
+                    <Button onClick={cancelHandle} style={{ color: "red", flexDirection: 'column-reverse' }} > Close</Button>
+                </Modal>
+            </Card>
         </>
     )
 }

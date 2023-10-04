@@ -6,7 +6,7 @@ import moment from 'moment';
 import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
-import { nikeFilterRequest } from '@project-management-system/shared-models';
+import { TotalQuantityChangeModel, nikeFilterRequest } from '@project-management-system/shared-models';
 
 const OrdersCompareGrid = () => {
 
@@ -29,6 +29,8 @@ const OrdersCompareGrid = () => {
     const [priceChaneData, setPriseChangeData] = useState([])
     const [productCodeChaneData, setProductCodeChangeData] = useState([])
     const [itemTextChaneData, setItemTextChangeData] = useState([])
+    const [filterData, setFilterData] = useState<any>([])
+
 
     const [modeOTransportChaneData, setmodeOfTransportChangeData] = useState([])
     const [poLine, setPoLine] = useState<any>([]);
@@ -59,6 +61,7 @@ const OrdersCompareGrid = () => {
         service.getTotalItemQtyChangeData(req).then((res) => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
+            setFilterData(res.data)
         })
     }
 
@@ -375,166 +378,7 @@ const OrdersCompareGrid = () => {
     })
 
 
-    const columns: any = [
-        {
-            title: 'S No',
-            key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-        },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
-        },
-        {
-            title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number',
-            align:'center',
-            ...getColumnSearchProps('schedule_line_item_number')
-        },
-        {
-            title: 'Report Generate Date',
-            dataIndex: 'created_at',
-            render: (text) => moment(text).format('MM/DD/YYYY'),
-        },
-        {
-            title: 'Item',
-            dataIndex: 'item'
-        },
-        {
-            title: 'Factory',
-            dataIndex: 'factory'
-        },
-        // {
-        //     title: 'Document Date',
-        //     dataIndex: 'document_date',
-        //     render: (text) => moment(text).format('MM/DD/YYYY')
-        // },
-        {
-            title: 'Style Number',
-            dataIndex: 'styleNumber'
-        },
-        {
-            title: 'Product Code',
-            dataIndex: 'productCode'
-        },
-        {
-            title: 'Color Description',
-            dataIndex: 'color_desc'
-        },
-        {
-            title: 'OGAC',
-            dataIndex: 'OGAC'
-        },
-        {
-            title: 'GAC',
-            dataIndex: 'GAC'
-        },
-        {
-            title: 'Destination Country',
-            dataIndex: 'desCtry',
-            align:'center',
-        },
-        {
-            title: 'Item Text',
-            dataIndex: 'item_text'
-        },
-        // {
-        //     title: 'Schedule Line Item No',
-        //     dataIndex: 'schedule_line_item_number',
-        //     ...getColumnSearchProps('schedule_line_item_number')
-        // },
-        // {
-        //     title: 'Previous Order Quantity Pieces',
-        //     dataIndex: 'old_val',
-        //     align: 'right',
-        // },
-        // {
-        //     title: 'Revised Order Quantity Pieces',
-        //     dataIndex: 'new_val',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         <span  {...record.new_val}>
-        //             <>
-        //                 {Number(record.old_val) === Number(record.new_val) ? <span style={{ color: '' }}>{Number(record.new_val).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //                 {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{Number(record.new_val).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //                 {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{Number(record.new_val).toLocaleString('en-IN', {
-        //                     maximumFractionDigits: 0
-        //                 })}</span> : ''}
-        //             </>
-        //         </span>
-        //     )
-        // },
-        {
-            title: 'Difference',
-            dataIndex: 'Diff',
-            align: 'right',
-            render: (text, record) => (
-                < >
-                    {Number(record.Diff) === 0 ? '-' : ''}
-                    {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
-                    {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
-                </>
-            )
-        },
-        // {
-        //     title: 'Version',
-        //     dataIndex: 'version',
-        //     sorter: (a, b) => a.version - b.version,
-        //     sortDirections: ['descend', 'ascend'],
-        // },
-        // {
-        //     title: 'Order Status',
-        //     dataIndex: 'dpom_item_line_status',
-        //     // render: (value) => <Tag color={value == 'ACCEPTED' ? 'green' : 'green-inverse'} >{value}</Tag>
-        // },
-        {
-            title: 'Size Description',
-            dataIndex: 'size_description',
-            align:'center',
-        },
-        // {
-        //     title: 'S',
-        //     dataIndex: 's'
-        // },
-        // {
-        //     title: 'M',
-        //     dataIndex: 'm'
-        // },
-        // {
-        //     title: 'L',
-        //     dataIndex: 'l'
-        // },
-        // {
-        //     title: 'XL',
-        //     dataIndex: 'xl'
-        // },
-        // {
-        //     title: 'XXL',
-        //     dataIndex: 'xxl'
-        // },
-        {
-            title: 'Total Quantity',
-            align: 'right',
-            dataIndex: 'total_item_qty',
-            render: (text) => (
-              <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
-            ),
-          },
-    ];
+  
 
     const columns1: any = [
         {
@@ -690,21 +534,33 @@ const OrdersCompareGrid = () => {
         {
             title: 'Change From Gross Price',
             dataIndex: 'old_val',
+            align:'right',
+
             // ...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Gross Price currency code',
             dataIndex: '',
+            align:'right',
+
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Gross Price',
             dataIndex: 'new_val',
+            align:'right',
+            render: (text, record) => {
+                const formattedAmount = record.new_val ? parseFloat(record.new_val).toFixed(2) : "-";
+                return <>{formattedAmount}</>;
+              }
+
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Gross Price currency code',
             dataIndex: '',
+            align:'right',
+
             //...getColumnSearchProps('po_number')
         },
         {
@@ -1370,6 +1226,8 @@ const OrdersCompareGrid = () => {
 
     ];
 
+
+   
     const EstimatedETDDate = (value) => {
         if (value) {
             const fromDate = value[0];
@@ -1405,11 +1263,272 @@ const OrdersCompareGrid = () => {
         }
     }
 
+    const getSizeWiseHeaders = (data: TotalQuantityChangeModel[]) => {
+        const sizeHeaders = new Set<string>();
+        data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
+          sizeHeaders.add('' + version.sizeDescription);
+        }))
+        return Array.from(sizeHeaders);
+      };
+      const getMap = (data: TotalQuantityChangeModel[]) => {
+        const sizeWiseMap = new Map<string, Map<string, number>>();
+        data?.forEach(rec => {
+          if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
+            sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
+          }
+          rec.sizeWiseData?.forEach(version => {
+            sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.oldQuantity);
+          })
+        });
+        return sizeWiseMap;
+      }
+
+
+  const renderReport = (data: TotalQuantityChangeModel[]) => {
+    const sizeHeaders = getSizeWiseHeaders(data);
+    const sizeWiseMap = getMap(data);
+      const columns: any = [
+        {
+            title: 'S No',
+            key: 'sno',
+            width: '60px',
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+        },
+        {
+            title: 'PO Number',
+            dataIndex: 'purchaseOrderNumber',
+            ...getColumnSearchProps('purchaseOrderNumber')
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'poLineItemNumber'
+        },
+        {
+            title: 'Schedule Line Item No',
+            dataIndex: 'scheduleLineItemNumber',
+            align: 'center',
+            ...getColumnSearchProps('scheduleLineItemNumber')
+        },
+        {
+            title: 'Report Generate Date',
+            dataIndex: 'created_at',
+            render: (text) => moment(text).format('MM/DD/YYYY'),
+        },
+        {
+            title: 'Item',
+            dataIndex: 'item',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              },
+        },
+        {
+            title: 'Factory',
+            dataIndex: 'factory',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              },
+        },
+     
+        {
+            title: 'Style Number',
+            dataIndex: 'styleNumber'
+        },
+        {
+            title: 'Product Code',
+            dataIndex: 'productCode'
+        },
+        {
+            title: 'Color Description',
+            dataIndex: 'colorDesc'
+        },
+        {
+            title: 'OGAC',
+            dataIndex: 'OGAC'
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'GAC'
+        },
+        {
+            title: 'Destination Country',
+            dataIndex: 'destinationCountry',
+            align: 'center',
+        },
+        {
+            title: 'Item Text',
+            dataIndex: 'itemText',
+            width:220,
+            align:'center',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                  return '-';
+                } else {
+                  return text;
+                }
+              },
+        },
+     
+        // {
+        //     title: 'Difference',
+        //     dataIndex: 'Diff',
+        //     align: 'right',
+        //     render: (text, record) => (
+        //         < >
+        //             {Number(record.Diff) === 0 ? '-' : ''}
+        //             {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
+        //                 maximumFractionDigits: 0
+        //             })} </span> : ''}
+        //             {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
+        //                 maximumFractionDigits: 0
+        //             })} </span> : ''}
+        //         </>
+        //     )
+        // },
+    
+        // {
+        //     title: 'Total Quantity',
+        //     align: 'right',
+        //     dataIndex: 'totalQuantity',
+        //     render: (text) => (
+        //         <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+        //     ),
+        // },
+    ];
+
+    sizeHeaders?.forEach(version => {
+        columns.push({
+          title: version,
+          dataIndex: version,
+          key: version,
+          width: 130,
+          align: 'center',
+          
+          children: [
+            {
+              title: 'Old Quantity',
+              dataIndex: '',
+              key: '',
+              align:'right',
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                if (sizeData) {
+                  if (sizeData.oldQuantity !== null) {
+                    const formattedQty = Number(sizeData.oldQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+
+                    return (
+                      formattedQty
+                    );
+                  } else {
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+          
+            {
+                title: 'New Quantity',
+                dataIndex: 'newQuantity',
+                align:'right',
+
+                render: (text, record) => {
+                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                    if (sizeData) {
+                      if (sizeData.newQuantity !== null) {
+                        const formattedQty = Number(sizeData.newQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    
+                        return (
+                          formattedQty
+                        );
+                      } else {
+                        return (
+                          '-'
+                        );
+                      }
+                    } else {
+                      return '-';
+                    }
+                  }
+              },
+              
+              {
+                title: 'Difference',
+                dataIndex: 'difference',
+                align:'right',
+
+                render: (text, record) => {
+                  const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                  if (sizeData) {
+                    if (sizeData.difference !== null) {
+                      const difference = Number(sizeData.difference);
+                      const formattedQty = difference.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+              
+                      if (difference < 0) {
+                        return <span style={{ color: 'red' }}>{formattedQty}</span>;
+                      } else {
+                        return <span style={{ color: 'green' }}>{formattedQty}</span>;
+                      }
+                    } else {
+                      return '-';
+                    }
+                  } else {
+                    return '-';
+                  }
+                }
+              }
+              
+              
+ 
+  
+          ],
+          render: (text, record) => {
+            return record.sizeWiseData.find(item => item.sizeDescription === version);
+          }
+        });
+  
+      
+      });
+      return (
+        <>
+  
+          {filterData.length > 0 ? (
+            <Table
+              columns={columns}
+              dataSource={filterData}
+              size='large'
+              pagination={{
+                onChange(current, pageSize) {
+                  setPage(current);
+                  setPageSize(pageSize);
+                }
+              }}
+              scroll={{ x: 'max-content' }}
+              className="custom-table-wrapper"
+              bordered
+            />
+          ) : (<Table size='large' />
+          )}
+        </>
+      );
+
+}
+
     const items: TabsProps['items'] = [
         {
             key: '1',
             label: <b style={{ color: '#25CB2D' }}>Order Qty Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
+            children:   [renderReport(filterData)] ,
         },
         {
             key: '2',

@@ -18,6 +18,13 @@ export * from './legal-po-item-variant-details';
 export * from './legal-po-details';
 export * from './nike-order-filter.req';
 export * from './fob-price-Diff.req';
-
+export * from './marketing-ppm-report.model';
+export * from './marketing-report-size.model';
+export * from './total-quantity-po-change';
+export * from './pochange-qty.model';
+export * from './change.rreq';
+export * from './change-ord-sizes.req'
+export * from './changeponumber.req';
+export * from './coLine.req';
 export * from './nike-order-filter.req';
 export * from './fob-price-Diff.req';

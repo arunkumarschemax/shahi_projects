@@ -83,6 +83,8 @@ export class DpomSaveDto {
     @ApiProperty()
     launchCode: string;
     @ApiProperty()
+    geoCode: string;
+    @ApiProperty()
     DPOMLineItemStatus: string;
     @ApiProperty()
     modeOfTransportationCode: string;
@@ -149,7 +151,7 @@ export class DpomSaveDto {
     @ApiProperty()
     truckOutDate: string;
     @ApiProperty()
-    actualShippedQty: string;
+    actualShippedQty: number;
     @ApiProperty()
     coPrice: number;
     @ApiProperty()
@@ -187,7 +189,7 @@ export class DpomSaveDto {
     @ApiProperty()
     id?: number;
 
-    constructor(documentDate: string, purchaseOrderNumber: string, poLineItemNumber: number, scheduleLineItemNumber: string, categoryCode: string, categoryDesc: string, vendorCode: string, gccFocusCode: string, gccFocusDesc: string, genderAgeCode: string, genderAgeDesc: string, styleNumber: string, productCode: string, colorDesc: string, destinationCountryCode: string, destinationCountry: string, plant: string, plantName: string, tradingCoPoNumber: string, UPC: string, directShipSONumber: string, directShipSOItemNumber: string, customerPO: string, shipToCustomerNumber: string, shipToCustomerName: string, planningSeasonCode: string, planningSeasonYear: string, docTypeCode: string, docTypeDesc: string, MRGAC: string, OGAC: string, GAC: string, originReceiptDate: string, factoryDeliveryActDate: string, GACReasonCode: string, GACReasonDesc: string, shippingType: string, planningPriorityCode: string, planningPriorityDesc: string, launchCode: string, DPOMLineItemStatus: string, modeOfTransportationCode: string, inCoTerms: string, inventorySegmentCode: string, purchaseGroupCode: string, purchaseGroupName: string, totalItemQty: string, originReceiptQty: string, VASSize: string, itemVasText: string, itemText: string, grossPriceFOB: string, FOBCurrencyCode: string, netIncludingDisc: string, netIncludingDiscCurrencyCode: string, trCoNetIncludingDisc: string, trCoNetIncludingDiscCurrencyCode: string, sizeQuantity: number, sizeDescription: string, shipToAddressLegalPO: string, quantity: number, price: number, itemVasPDF: string, shipToAddressDIA: string, CABCode: string, item: string, factory: string, customerOrder: string, coFinalApprovalDate: string, planNo: string, truckOutDate: string, actualShippedQty: string, coPrice: number, shipToAddress: string, paymentTerm: string, styleDesc: string, fabricContent: string, fabricSource: string, commission: string, PCD: string, hanger: string, poAndLine: string, lastModifiedDate: string, leadTime: string, recordDate: string, divertedToPos: string[], userName?: string, odVersion?: number, id?: number
+    constructor(documentDate: string, purchaseOrderNumber: string, poLineItemNumber: number, scheduleLineItemNumber: string, categoryCode: string, categoryDesc: string, vendorCode: string, gccFocusCode: string, gccFocusDesc: string, genderAgeCode: string, genderAgeDesc: string, styleNumber: string, productCode: string, colorDesc: string, destinationCountryCode: string, destinationCountry: string, plant: string, plantName: string, tradingCoPoNumber: string, UPC: string, directShipSONumber: string, directShipSOItemNumber: string, customerPO: string, shipToCustomerNumber: string, shipToCustomerName: string, planningSeasonCode: string, planningSeasonYear: string, docTypeCode: string, docTypeDesc: string, MRGAC: string, OGAC: string, GAC: string, originReceiptDate: string, factoryDeliveryActDate: string, GACReasonCode: string, GACReasonDesc: string, shippingType: string, planningPriorityCode: string, planningPriorityDesc: string, launchCode: string, geoCode: string, DPOMLineItemStatus: string, modeOfTransportationCode: string, inCoTerms: string, inventorySegmentCode: string, purchaseGroupCode: string, purchaseGroupName: string, totalItemQty: string, originReceiptQty: string, VASSize: string, itemVasText: string, itemText: string, grossPriceFOB: string, FOBCurrencyCode: string, netIncludingDisc: string, netIncludingDiscCurrencyCode: string, trCoNetIncludingDisc: string, trCoNetIncludingDiscCurrencyCode: string, sizeQuantity: number, sizeDescription: string, shipToAddressLegalPO: string, quantity: number, price: number, itemVasPDF: string, shipToAddressDIA: string, CABCode: string, item: string, factory: string, customerOrder: string, coFinalApprovalDate: string, planNo: string, truckOutDate: string, actualShippedQty: number, coPrice: number, shipToAddress: string, paymentTerm: string, styleDesc: string, fabricContent: string, fabricSource: string, commission: string, PCD: string, hanger: string, poAndLine: string, lastModifiedDate: string, leadTime: string, recordDate: string, divertedToPos: string[], userName?: string, odVersion?: number, id?: number
     ) {
         this.documentDate = documentDate
         this.purchaseOrderNumber = purchaseOrderNumber
@@ -229,6 +231,7 @@ export class DpomSaveDto {
         this.planningPriorityCode = planningPriorityCode
         this.planningPriorityDesc = planningPriorityDesc
         this.launchCode = launchCode
+        this.geoCode = geoCode
         this.DPOMLineItemStatus = DPOMLineItemStatus
         this.modeOfTransportationCode = modeOfTransportationCode
         this.inCoTerms = inCoTerms

@@ -9,11 +9,11 @@ import moment from 'moment';
 import RangePicker from 'rc-picker/lib/RangePicker';
 import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
+import { Link, useNavigate } from 'react-router-dom';
 const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 
 
 const PPMReport = () => {
-  const [ppm, setPPM] = useState([]);
   const [form] = Form.useForm();
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState('');
@@ -28,27 +28,39 @@ const PPMReport = () => {
   const { RangePicker } = DatePicker;
   const { Option } = Select;
   const [poLine, setPoLine] = useState<any>([]);
-  const [colorDesc, setColorDesc] = useState<any>([]);
-  const [categoryDesc, setCategoryDesc] = useState<any>([]);
   const [countryDestination, setCountryDestination] = useState<any>([]);
   const [plantCode, setPlantCode] = useState<any>([]);
   const [item, setItem] = useState<any>([]);
   const [factory, setFactory] = useState<any>([]);
   const [poNumber, setPoNumber] = useState<any>([]);
-
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [docType, setDocType] = useState<any>([]);
+  const [poLineItemNumber, setPoLineItemNumber] = useState<any>([]);
+  const [styleNumber, setStyleNumber] = useState<any>([]);
+  const [planSesCode, setPlanSesCode] = useState<any>([]);
+  const [planSesYear, setPlanSesYear] = useState<any>([]);
+  const [geoCode, setGeoCode] = useState<any>([]);
+  const [hideChildren, setHideChildren] = useState(false);
+  let navigate = useNavigate()
+  let poFilterData
 
   useEffect(() => {
     getProductCode();
     getPoLine();
-    getColorDesc();
-    getcategoryDesc();
     getcountrydestination();
     getplantCode();
     getItem();
     getFactory();
     getData();
     getPonumber();
+    getDocType();
+    getPpmPoLineForMarketing();
+    getStyleNumber();
+    getSesonCode();
+    getSesonYear();
+    getGeoCode();
+
   }, [])
 
 
@@ -61,18 +73,6 @@ const PPMReport = () => {
   const getPoLine = () => {
     service.getPpmPoLineForMarketing().then(res => {
       setPoLine(res.data)
-    })
-  }
-
-  const getColorDesc = () => {
-    service.getPpmColorDescForMarketing().then(res => {
-      setColorDesc(res.data)
-    })
-  }
-
-  const getcategoryDesc = () => {
-    service.getPpmCategoryDescForMarketing().then(res => {
-      setCategoryDesc(res.data)
     })
   }
 
@@ -104,6 +104,37 @@ const PPMReport = () => {
       setPoNumber(res.data)
     })
   }
+  const getDocType = () => {
+    service.getPpmDocTypeMarketing().then(res => {
+      setDocType(res.data)
+    })
+  }
+  const getPpmPoLineForMarketing = () => {
+    service.getPpmPoLineForMarketing().then(res => {
+      setPoLineItemNumber(res.data)
+    })
+  }
+  const getStyleNumber = () => {
+    service.getPpmStyleNumberMarketing().then(res => {
+      setStyleNumber(res.data)
+    })
+  }
+  const getSesonCode = () => {
+    service.getPpmPlanningSeasonCodeMarketing().then(res => {
+      setPlanSesCode(res.data)
+    })
+  }
+  const getSesonYear = () => {
+    service.getPpmPlanningSeasonYearMarketing().then(res => {
+      setPlanSesYear(res.data)
+    })
+  }
+  const getGeoCode = () => {
+    service.getPpmdesGeoCodeMarketing().then(res => {
+      setGeoCode(res.data)
+    })
+  }
+
 
   const getData = () => {
     const req = new PpmDateFilterRequest();
@@ -127,12 +158,6 @@ const PPMReport = () => {
     if (form.getFieldValue('poNumber') !== undefined) {
       req.poNumber = form.getFieldValue('poNumber');
     }
-    if (form.getFieldValue('colorDesc') !== undefined) {
-      req.colorDesc = form.getFieldValue('colorDesc');
-    }
-    if (form.getFieldValue('categoryDesc') !== undefined) {
-      req.categoryDesc = form.getFieldValue('categoryDesc');
-    }
     if (form.getFieldValue('destinationCountry') !== undefined) {
       req.destinationCountry = form.getFieldValue('destinationCountry');
     }
@@ -142,17 +167,37 @@ const PPMReport = () => {
     if (form.getFieldValue('item') !== undefined) {
       req.item = form.getFieldValue('item');
     }
-    if (form.getFieldValue('factory') !== undefined) {
-      req.factory = form.getFieldValue('factory');
-    }
     if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
       req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
     }
     if (selectedLineItemStatus && selectedLineItemStatus.length > 0) {
       req.DPOMLineItemStatus = selectedLineItemStatus;
     }
+    if (form.getFieldValue('docType') !== undefined) {
+      req.docTypeCode = form.getFieldValue('docType');
+    }
+    if (form.getFieldValue('poLineItemNumber') !== undefined) {
+      req.poLineItemNumber = form.getFieldValue('poLineItemNumber');
+    }
+    if (form.getFieldValue('factory') !== undefined) {
+      req.factory = form.getFieldValue('factory');
+    }
+    if (form.getFieldValue('styleNumber') !== undefined) {
+      req.styleNumber = form.getFieldValue('styleNumber');
+    }
+    if (form.getFieldValue('planningSeasonCode') !== undefined) {
+      req.planningSeasonCode = form.getFieldValue('planningSeasonCode');
+    }
+    if (form.getFieldValue('planningSeasonYear') !== undefined) {
+      req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
+    }
+    if (form.getFieldValue('geoCode') !== undefined) {
+      req.geoCode = form.getFieldValue('geoCode');
+    }
+    if (form.getFieldValue('plant') !== undefined) {
+      req.plant = form.getFieldValue('plant');
+    }
 
-    console.log(req, "reqppm")
     service.getPPMData(req)
       .then(res => {
         if (res.status) {
@@ -201,7 +246,9 @@ const PPMReport = () => {
     getData()
   }
 
-
+  const toggleHideChildren = () => {
+    setHideChildren(!hideChildren);
+  };
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -269,6 +316,13 @@ const PPMReport = () => {
     setSearchText('');
   };
 
+  const getFactoryCellStyle = (text) => {
+    if (!text || text.trim() === '') {
+      return { backgroundColor: '' };
+    }
+    return {};
+  };
+
   const getSizeWiseHeaders = (data: MarketingModel[]) => {
     const sizeHeaders = new Set<string>();
     data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
@@ -296,13 +350,27 @@ const PPMReport = () => {
     exportingColumns = [
       { title: 'Po+Line ', dataIndex: 'purchaseOrderNumber-poLineItemNumber', render: (text, record) => `${record.purchaseOrderNumber}-${record.poLineItemNumber}` },
       { title: 'Last Modified Date', dataIndex: 'lastModifiedDate', render: (text) => moment(text).format('MM/DD/YYYY') },
-      { title: 'Item', dataIndex: 'Item' },
-      { title: 'Factory', dataIndex: 'Factory',render: (text, record) => {
-        if (!text || text.trim() === '') {
+      {
+        title: 'Item',
+        dataIndex: 'item',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
             return '-';
-        } else {
+          } else {
+            const firstFourDigits = text.substring(0, 4);
+            return firstFourDigits;
+          }
+        },
+      },
+      {
+        title: 'Factory', dataIndex: 'Factory', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
             return text;
-        }} },
+          }
+        }
+      },
       { title: 'PCD', dataIndex: 'PCD' },
       { title: 'Document Date', dataIndex: 'documentDate', render: (text) => moment(text).format('MM/DD/YYYY') },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
@@ -331,9 +399,9 @@ const PPMReport = () => {
       { title: 'Gender Age Description', dataIndex: 'genderAgeDesc' },
       { title: 'Destination Country Code', dataIndex: 'destinationCountryCode' },
       { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
-      { title: 'Geo Code', dataIndex: '' },
+      { title: 'Geo Code', dataIndex: 'geoCode' },
       { title: 'Plant Code', dataIndex: 'plant' },
-      { title: 'plant Name', dataIndex: 'plantName' },     
+      { title: 'plant Name', dataIndex: 'plantName' },
       { title: 'UPC', dataIndex: 'UPC' },
       { title: 'Sales Order Number', dataIndex: 'directShipSONumber' },
       { title: 'Sales Order Item Number', dataIndex: 'directShipSOItemNumber' },
@@ -342,14 +410,41 @@ const PPMReport = () => {
       { title: 'Ship To Customer Name', dataIndex: 'shipToCustomerName' },
       { title: 'Ship to Address Legal PO', dataIndex: 'shipToAddressLegalPO' },
       { title: 'Ship to Address DIA', dataIndex: 'shipToAddressDIA' },
-      { title: 'Diff of Ship to Address', dataIndex: '' },
-      { title: 'CAB Code', dataIndex: 'CABcode' },
+      {
+        title: 'Diff of Ship to Address', dataIndex: '',
+        render: (text, record) => {
+          const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text1 = lines1.join('');
+
+          const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text2 = lines2.join('');
+
+          const dmp = new DiffMatchPatch();
+          const diff = dmp.diff_main(text1, text2);
+          dmp.diff_cleanupSemantic(diff);
+
+          let output = '';
+          for (const [op, text] of diff) {
+            if (op === DiffMatchPatch.DIFF_INSERT) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            } else if (op === DiffMatchPatch.DIFF_DELETE) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            }
+          }
+          return output.trim()
+        },
+      },
+      { title: 'CAB Code', dataIndex: 'CABCode' },
       { title: 'Final Destination', dataIndex: '' },
       { title: 'MRGAC', dataIndex: 'MRGAC', render: (text, record) => { return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-' } },
       { title: 'OGAC', dataIndex: 'OGAC', render: (text, record) => { return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-' } },
       { title: 'GAC', dataIndex: 'GAC', render: (text, record) => { return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-' } },
       { title: 'GAC Reason Code', dataIndex: 'GACReasonCode' },
-      { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' }, 
+      { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
       { title: 'Truck Out Date', dataIndex: 'truckOutDate' },
       { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate' },
       { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate' },
@@ -363,36 +458,6 @@ const PPMReport = () => {
       { title: 'Purchase Group', dataIndex: 'purchaseGroupCode' },
       { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
       { title: 'Total Item Quantity', dataIndex: 'totalItemQty' },
-      { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
-      { title: 'Gross Price/FOB ', dataIndex: 'grossPriceFOB' },
-      { title: 'Gross Price/FOB currency code', dataIndex: 'fobCurrCode' },
-      { title: 'Buyer Confirmed Gross Price/FOB', dataIndex: '' },
-      { title: 'Buyer Confirmed Gross Price/FOB Currency Code', dataIndex: '' },
-      { title: 'Diff of Price', dataIndex: '' },
-      { title: 'Diff of Price Currency', dataIndex: '' },
-      { title: 'Net including discounts', dataIndex: 'netIncludingDisc' },
-      { title: 'Net including discounts currency code', dataIndex: 'netIncDisCurrency' },
-      { title: 'Trading Co Net including discounts', dataIndex: 'trCoNetIncludingDisc' },
-      { title: 'Trading Co Net including discounts currency code', dataIndex: 'tradingNetCurrencyCode' },
-      { title: 'Legal PO Price', dataIndex: 'price' },
-      { title: 'Legal PO Price currency', dataIndex: '' },
-      { title: 'CO Price', dataIndex: 'coPrice' },
-      { title: 'CO Price currency', dataIndex: '' },
-      { title: 'Diff of Price', dataIndex: '' },
-      { title: 'Diff of Price currency', dataIndex: '' },
-      { title: 'CRM CO QTY', dataIndex: '' },
-      { title: 'Legal PO QTY', dataIndex: 'quantity' },
-      { title: 'Diff of Quantity', dataIndex: '' },
-      { title: 'Allowed Excess Ship Qty', dataIndex: '' },
-      { title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty' },
-      { title: 'Actual Ship %', dataIndex: '' },
-      { title: 'VAS - Size', dataIndex: 'VASSize' },
-      { title: 'Item Vas Text', dataIndex: 'itemVasText' },
-      { title: 'Item Vas Text in PDF PO', dataIndex: '' },
-      { title: 'Diff of Item Vas Text', dataIndex: '' },
-      { title: 'Item Text', dataIndex: 'itemText' },
-      { title: 'Hanger PO', dataIndex: 'hanger' },
-      { title: 'Change Register', dataIndex: 'displayName', align: 'center', },
     ]
 
     const columns: ColumnsType<any> = [
@@ -403,7 +468,14 @@ const PPMReport = () => {
       {
         title: "Po+Line",
         dataIndex: 'Po+Line', fixed: 'left',
-        render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`,
+        // render: (text, record) => `${record.purchaseOrderNumber} - ${record.poLineItemNumber}`,
+
+        render: (text, record) => {
+          return <>
+            <Button type='link' onClick={e => { DetailedView(record.poAndLine) }}>{record.purchaseOrderNumber} - {record.poLineItemNumber}</Button>
+          </>
+        }
+
       },
       {
         title: 'Last Modified Date',
@@ -417,31 +489,49 @@ const PPMReport = () => {
           if (!text || text.trim() === '') {
             return '-';
           } else {
-            return text;
+            const firstFourDigits = text.substring(0, 4);
+            return firstFourDigits;
           }
         },
       },
       {
         title: 'Factory',
         dataIndex: 'factory',
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-              return '-';
-          } else {
-              return text;
-          }}
+        align: 'center',
+        render: (text, record) => (
+          <span style={getFactoryCellStyle(text)}>
+            {!text || text.trim() === '' ? '-' : text}
+          </span>
+        ),
       },
       {
         title: 'PCD',
         dataIndex: 'pcd',
-        render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }}
-        // ...getColumnSearch('factory'),
-    },
+        render: (text: string, record: any) => {
+          if (!text || text.trim() === '' || text.length !== 8) {
+            return '-';
+          } else {
+            const year = parseInt(text.slice(0, 4), 10);
+            const month = parseInt(text.slice(4, 6), 10);
+            const day = parseInt(text.slice(6, 8), 10);
+
+            if (isNaN(year) || isNaN(month) || isNaN(day)) {
+              return 'Invalid Date';
+            }
+
+            const date = new Date(year, month - 1, day);
+
+            if (isNaN(date.getTime())) {
+              return 'Invalid Date';
+            }
+
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            const yyyy = date.getFullYear();
+            return `${mm}/${dd}/${yyyy}`;
+          }
+        }
+      },
       {
         title: 'Document Date',
         dataIndex: 'documentDate',
@@ -459,13 +549,13 @@ const PPMReport = () => {
         title: 'Trading Co PO Number',
         dataIndex: 'tradingCoPoNumber',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }}
-        
-    },
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        }
+      },
       {
         title: 'DPOM Line Item Status',
         dataIndex: 'DPOMLineItemStatus'
@@ -473,11 +563,11 @@ const PPMReport = () => {
       {
         title: 'Doc Type',
         dataIndex: 'docTypeCode',
-    },
-    {
+      },
+      {
         title: 'Doc Type Description',
         dataIndex: 'docTypeDesc',
-    },
+      },
       {
         title: 'Style Number',
         dataIndex: 'styleNumber',
@@ -502,105 +592,106 @@ const PPMReport = () => {
         title: 'Planning Season Code',
         dataIndex: 'planningSeasonCode',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }}
-       
-    },
-    {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        }
+      },
+      {
         title: 'Planning Season Year',
         dataIndex: 'planningSeasonYear',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }}
-       
-    },
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        }
 
-    {
+      },
+      {
         title: 'CO',
         dataIndex: 'customerOrder',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }}
-    },
-    {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        }
+      },
+      {
         title: 'CO Final Approval Date',
         dataIndex: 'coFinalApprovalDate',
         className: "right-column",
         render: (text, record) => {
-            return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
+          return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
         }
-    },
-    {
+      },
+      {
         title: 'Plan No',
         dataIndex: 'planNo',
         render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
+            return '-';
           } else {
-              return text;
-          }}
-    },
-    {
+            return text;
+          }
+        }
+      },
+      {
         title: 'Lead Time',
         dataIndex: 'leadTime',
         render: (text) => {
-            if (!isNaN(parseFloat(text))) {
-                // If it's a valid number, render it
-                return parseFloat(text).toFixed(2); // You can format it as needed
-            } else {
-                // If it's not a valid number, render a placeholder or an empty string
-                return 'N/A'; // Or any other desired text
-            }
+          if (!isNaN(parseFloat(text))) {
+            // If it's a valid number, render it
+            return parseFloat(text).toFixed(2); // You can format it as needed
+          } else {
+            // If it's not a valid number, render a placeholder or an empty string
+            return 'N/A'; // Or any other desired text
+          }
         }
-    },
-    {
+      },
+      {
         title: 'Category',
         dataIndex: 'categoryCode',
-    },
+      },
       {
         title: 'Category Description',
         dataIndex: 'categoryDesc'
       },
-       {
+      {
         title: 'Vendor Code',
         dataIndex: 'vendorCode',
-    },
-    {
+      },
+      {
         title: 'Global Category Core Focus',
         dataIndex: 'gccFocusCode',
-    },
-    {
+      },
+      {
         title: 'Global Category Core Focus Description',
         dataIndex: 'gccFocusDesc',
-    },
-    {
+      },
+      {
         title: 'Gender Age',
         dataIndex: 'genderAgeCode',
         className: 'centered-column',
-    },
-    {
-      title: 'Gender Age Description',
-      dataIndex: 'genderAgeDesc',
-     },
-     {
-      title: "Destination Country Code",
-      dataIndex: 'destinationCountryCode'
-    },
-     {
-      title: "Destination Country Name ",
-      dataIndex: 'destinationCountry'
-    },
-      
-      { title: 'Geo Code', dataIndex: '' },
+      },
+      {
+        title: 'Gender Age Description',
+        dataIndex: 'genderAgeDesc',
+      },
+      {
+        title: "Destination Country Code",
+        dataIndex: 'destinationCountryCode'
+      },
+      {
+        title: "Destination Country Name ",
+        dataIndex: 'destinationCountry'
+      },
+      { title: 'Geo Code', dataIndex: 'geoCode' },
       {
         title: "Plant Code",
         dataIndex: 'plant'
@@ -608,95 +699,124 @@ const PPMReport = () => {
       {
         title: "Plant Name",
         dataIndex: 'plantName'
-      }, 
-    {
+      },
+      {
         title: 'UPC',
         dataIndex: 'UPC',
-    },
-    {
+      },
+      {
         title: 'Sales Order Number',
         dataIndex: '',
-    },
-    {
+      },
+      {
         title: 'Sales Order Item Number',
         dataIndex: '',
-    },
-    {
+      },
+      {
         title: 'Customer PO',
         dataIndex: 'customerPO',
-    },
-    {
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
         title: 'Ship To Customer Number',
         dataIndex: 'shipToCustomerNumber',
         align: 'center',
-    },
-    {
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
         title: 'Ship To Customer Name',
         dataIndex: 'shipToCustomerName',
         align: 'center',
-    },
-    {
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
         title: 'Ship to Address Legal PO',
         dataIndex: 'shipToAddressLegalPO',
         align: 'center',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
         },
-    },
-    {
+      },
+      {
         title: 'Ship to Address DIA',
         dataIndex: 'shipToAddressDIA',
         align: 'center',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
         },
-    },
-    
-    {
+      },
+      {
         title: 'Diff of Ship to Address',
         dataIndex: '',
         align: 'center',
         render: (text, record) => {
-            const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-            const text1 = lines1.join('');
-    
-            const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-            const text2 = lines2.join('');
-    
-            const dmp = new DiffMatchPatch();
-            const diff = dmp.diff_main(text1, text2);
-            dmp.diff_cleanupSemantic(diff);
-    
-            let output = '';
-            for (const [op, text] of diff) {
-                if (op === DiffMatchPatch.DIFF_INSERT) {
-                    if (text.trim() !== '') {
-                        output += `${text} `;
-                    }
-                } else if (op === DiffMatchPatch.DIFF_DELETE) {
-                    if (text.trim() !== '') {
-                        output += `${text} `;
-                    }
-                }
+          const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text1 = lines1.join('');
+
+          const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text2 = lines2.join('');
+
+          const dmp = new DiffMatchPatch();
+          const diff = dmp.diff_main(text1, text2);
+          dmp.diff_cleanupSemantic(diff);
+
+          let output = '';
+          for (const [op, text] of diff) {
+            if (op === DiffMatchPatch.DIFF_INSERT) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            } else if (op === DiffMatchPatch.DIFF_DELETE) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
             }
-            return output.trim()
+          }
+          return output.trim()
         },
-    },
-    { title:"CAB Code",
-      dataIndex:'CABCode',},
-      {
-        title:'Final Destination',
-        dataIndex:'',
       },
-      
+      {
+        title: "CAB Code",
+        dataIndex: 'CABCode',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Final Destination',
+        dataIndex: '',
+      },
+
       {
         title: "MRGAC",
         dataIndex: 'MRGAC', render: (text, record) => {
@@ -713,52 +833,94 @@ const PPMReport = () => {
           return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
         },
       },
-    {
-      title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
+      {
+        title: 'GAC Reason Code', dataIndex: 'GACReasonCode', render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
+            return '-';
           } else {
-              return text;
+            return text;
           }
+        },
       },
-  },
-    
-    { title: 'GAC Reason Description', dataIndex: 'GACReasonDesc' },
-    { title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", },
-    { title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", },
-    { title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", },
-    
-    { title: 'Shipping Type', dataIndex: 'shippingType' },
-    { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', },
-    { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', render: (text, record) => {
-      if (!text || text.trim() === '') {
-        return '-';
-      } else {
-        return text;
-      }
-    }, },
-    
-     
-    {
-      title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
+
+      {
+        title: 'GAC Reason Description', dataIndex: 'GACReasonDesc', render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
+            return '-';
           } else {
-              return text;
+            return text;
           }
+        },
       },
-  },
-  { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
-  { title: 'In Co Terms', dataIndex: 'inCoTerms' },
-  { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
-  {
-      title: 'Purchase Group',
-      dataIndex: 'purchaseGroupCode',
-      className: 'centered-column',
-  },
-  { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
-  
-     
+      {
+        title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Shipping Type',
+        dataIndex: 'shippingType',
+        render: (text) => {
+          // Replace underscores (_) with spaces
+          const transformedText = text ? text.replace(/_/g, ' ') : '-';
+
+          return transformedText;
+        },
+      },
+      {
+        title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
+      { title: 'In Co Terms', dataIndex: 'inCoTerms' },
+      { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
+      { title: 'Purchase Group', dataIndex: 'purchaseGroupCode', className: 'centered-column', },
+      { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
       {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty',
@@ -767,10 +929,9 @@ const PPMReport = () => {
           if (!text || text.trim() === '') {
             return '-';
           } else {
-            return <strong>{text}</strong>;
+            return <strong>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong>;
           }
         },
-
       },
     ]
 
@@ -786,6 +947,7 @@ const PPMReport = () => {
             title: 'Quantity',
             dataIndex: '',
             key: '',
+            align:'right',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
               if (sizeData) {
@@ -805,16 +967,225 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Legal PO Price',
-            dataIndex: '',
-            key: '',
+            title: 'Gross Price/FOB',
+            dataIndex: 'grossFobPrice',
+            align:'right',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
               if (sizeData) {
                 if (sizeData.sizeQty !== null) {
                   return (
-                    sizeData.price
+                    sizeData.grossFobPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Gross Price/FOB currency code',
+            dataIndex: 'grossFobCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.grossFobCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Buyer Confirmed Gross Price/FOB',
+            dataIndex: 'buyerGrossFobPrice',
+            align:'right',
+
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.buyerGrossFobPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Buyer Confirmed Gross Price/FOB Currency Code',
+            dataIndex: 'buyerGrossFobCurrencyCode',
+            align:'right',
+
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.buyerGrossFobCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Price',
+            dataIndex: '',
+            align:'right',
+
+          },
+          {
+            title: 'Diff of Price Currency',
+            dataIndex: '',
+          },
+          {
+            title: 'Net including discounts',
+            dataIndex: 'netIncludingDisc',
+            align:'right',
+
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.netIncludingDisc
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Net including discounts currency code',
+            dataIndex: 'netIncludingDiscCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.netIncludingDiscCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Trading Co Net including discounts',
+            dataIndex: 'trConetIncludingDisc',
+            align:'right',
+
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.trConetIncludingDisc
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Trading Co Net including discounts currency code',
+            dataIndex: 'trConetIncludingDiscCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.trConetIncludingDiscCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO Price',
+            dataIndex: 'legalPoPrice',
+            align:'right',
+
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.legalPoPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO Price currency',
+            dataIndex: 'legalPoCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.legalPoCurrencyCode
                   );
                 } else {
                   return (
@@ -828,8 +1199,9 @@ const PPMReport = () => {
           },
           {
             title: 'CO Price',
-            dataIndex: '',
-            key: '',
+            dataIndex: 'coPrice',
+            align:'right',
+
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -849,17 +1221,155 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Price Variation',
-            dataIndex: '',
-            key: '',
+            title: 'CO Price currency',
+            dataIndex: 'coPriceCurrencyCode',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
               if (sizeData) {
                 if (sizeData.sizeQty !== null) {
-                  const priceVariation = sizeData.price - sizeData.coPrice;
                   return (
-                    priceVariation
+                    sizeData.coPriceCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Price',
+            dataIndex: '',
+            align:'right',
+
+
+          },
+          {
+            title: 'Diff of Price currency',
+            dataIndex: '',
+            align:'right',
+
+
+          },
+          {
+            title: 'CRM CO QTY',
+            dataIndex: 'CRMCoQty',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.CRMCoQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO QTY',
+            dataIndex: 'legalPoQty',
+            align:'right',
+
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.legalPoQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Quantity',
+            dataIndex: '',
+            align:'right',
+
+          },
+          {
+            title: 'Allowed Excess Ship Qty',
+            dataIndex: '',
+            align:'right',
+
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  if (record.shippingType === 'DIRECT') {
+                    return (
+                      '0'
+                    );
+                  } else {
+                    const sizeQty = sizeData.sizeQty;
+                    const result = 0.03 * sizeQty;
+                    return (
+                      result.toFixed(3)
+                    );
+                  }
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Actual Shipped Qty',
+            dataIndex: 'actualShippedQty',
+            align:'right',
+
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.actualShippedQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Actual Ship %',
+            align:'right',
+
+            dataIndex: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.grossFobPrice
                   );
                 } else {
                   return (
@@ -886,6 +1396,7 @@ const PPMReport = () => {
           {
             title: 'Quantity',
             dataIndex: '',
+            align:'right',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
               if (sizeData) {
@@ -905,15 +1416,212 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Legal PO Price',
-            dataIndex: '',
+            title: 'Gross Price/FOB',
+            dataIndex: 'grossFobPrice',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
               if (sizeData) {
                 if (sizeData.sizeQty !== null) {
                   return (
-                    sizeData.price
+                    sizeData.grossFobPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Gross Price/FOB currency code',
+            dataIndex: 'grossFobCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.grossFobCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Buyer Confirmed Gross Price/FOB',
+            dataIndex: 'buyerGrossFobPrice',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.buyerGrossFobPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Buyer Confirmed Gross Price/FOB Currency Code',
+            dataIndex: 'buyerGrossFobCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.buyerGrossFobCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Price',
+            dataIndex: '',
+          },
+          {
+            title: 'Diff of Price Currency',
+            dataIndex: '',
+          },
+          {
+            title: 'Net including discounts',
+            dataIndex: 'netIncludingDisc',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.netIncludingDisc
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Net including discounts currency code',
+            dataIndex: 'netIncludingDiscCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.netIncludingDiscCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Trading Co Net including discounts',
+            dataIndex: 'trConetIncludingDisc',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.trConetIncludingDisc
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Trading Co Net including discounts currency code',
+            dataIndex: 'trConetIncludingDiscCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.trConetIncludingDiscCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO Price',
+            dataIndex: 'legalPoPrice',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.legalPoPrice
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO Price currency',
+            dataIndex: 'legalPoCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.legalPoCurrencyCode
                   );
                 } else {
                   return (
@@ -927,7 +1635,7 @@ const PPMReport = () => {
           },
           {
             title: 'CO Price',
-            dataIndex: '',
+            dataIndex: 'coPrice',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -947,16 +1655,142 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Price Variation',
+            title: 'CO Price currency',
+            dataIndex: 'coPriceCurrencyCode',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.coPriceCurrencyCode
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Price',
+            dataIndex: '',
+
+          },
+          {
+            title: 'Diff of Price currency',
+            dataIndex: '',
+
+          },
+          {
+            title: 'CRM CO QTY',
+            dataIndex: 'CRMCoQty',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.CRMCoQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Legal PO QTY',
+            dataIndex: 'legalPoQty',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.legalPoQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Diff of Quantity',
+            dataIndex: '',
+          },
+          {
+            title: 'Allowed Excess Ship Qty',
             dataIndex: '',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
               if (sizeData) {
                 if (sizeData.sizeQty !== null) {
-                  const priceVariation = sizeData.price - sizeData.coPrice;
+                  if (record.shippingType === 'DIRECT') {
+                    return (
+                      '0'
+                    );
+                  } else {
+                    const sizeQty = sizeData.sizeQty;
+                    const result = 0.03 * sizeQty;
+                    return (
+                      result.toFixed(3)
+                    );
+                  }
+                } else {
                   return (
-                    priceVariation
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Actual Shipped Qty',
+            dataIndex: 'actualShippedQty',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.actualShippedQty
+                  );
+                } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Actual Ship %',
+            dataIndex: '',
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+
+              if (sizeData) {
+                if (sizeData.sizeQty !== null) {
+                  return (
+                    sizeData.grossFobPrice
                   );
                 } else {
                   return (
@@ -975,468 +1809,257 @@ const PPMReport = () => {
       });
     });
 
-    columns.push
-
+    // if (hideChildren) {
+    //   // If hideChildren is true, show only the first child column
+    //   exportingColumns[0].children = exportingColumns[0].children.slice(0, 1);
+    // }
 
     const getRowClassName = (record) => {
+      let classNames = '';
+
       if (record.displayName) {
-        return 'colored-row';
+        classNames += 'colored-row ';
       }
-      return '';
+
+      if (!record.factory || !record.item) {
+        classNames += 'colored-factory-empty-row ';
+      } else if (record.factory.includes("_")) {
+        classNames += 'colored-row-withUnderscore ';
+      }
+
+      return classNames.trim();
     };
+
+
+    // const getRowClassName2 = (record) => {
+    //   if (record.factory) {
+    //     if (record.factory.includes("_")) {
+    //       return 'colored-row-withUnderscore';
+    //     } else {
+    //       return 'colored-factory-empty-row';
+    //     }
+    //   }
+    //   return '';
+    // };
+
     columns.push(
-    
+
       {
         title: 'Trading Co PO Number',
         dataIndex: 'tradingCoPoNumber',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
-        },
-    },
-    {
-      title: 'Gross Price/FOB',
-      dataIndex: 'grossPriceFOB',
-      render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
-          } else {
-              return text;
-          }
-      },
-  },
-  {
-    title: 'Gross Price/FOB currency code',
-    dataIndex: 'fobCurrCode',
-    render: (text, record) => {
-        if (!text || text.trim() === '') {
             return '-';
-        } else {
+          } else {
             return text;
-        }
-    },
-},
-{
-  title: 'Buyer Confirmed Gross Price/FOB',
-  dataIndex: '',
-  // render: (text, record) => {
-  //     if (!text || text.trim() === '') {
-  //         return '-';
-  //     } else {
-  //         return text;
-  //     }
-  // },
-},
-{
-  title: 'Buyer Confirmed Gross Price/FOB Currency Code',
-  dataIndex: '',
- 
-},{
-  title: 'Diff of Price',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price Currency',
-  dataIndex: '',
-  
-},{
-  title: 'Net including discounts',
-  dataIndex: 'netIncludingDisc',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Net including discounts currency code',
-  dataIndex: 'netIncDisCurrency',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Trading Co Net including discounts',
-  dataIndex: 'trCoNetIncludingDisc',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Trading Co Net including discounts currency code',
-  dataIndex: 'tradingNetCurrencyCode',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Legal PO Price',
-  dataIndex: 'price',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Legal PO Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'CO Price',
-  dataIndex: 'coPrice',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},{
-  title: 'CO Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'CRM CO QTY',
-  dataIndex: '',
-  
-},{
-  title: 'Legal PO QTY',
-  dataIndex: 'quantity',
-  
-},
-{
-  title: 'Diff of Quantity',
-  dataIndex: '',
-  
-},
-{
-  title: 'Allowed Excess Ship Qty',
-  dataIndex: '',
-  
-},
-{
-  title: 'Actual Shipped Qty',
-  dataIndex: 'actualShippedQty',
-  
-},
-{
-  title: 'Actual Ship %',
-  dataIndex: '',
-  
-},
-{
-  title: 'VAS - Size',
-  dataIndex: 'VASSize',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Item Vas Text',
-  dataIndex: 'itemVasText',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Item Vas Text in PDF PO',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Item Vas Text',
-  dataIndex: '',
-  
-},
-{
-  title: 'Item Text',
-  dataIndex: 'itemText',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Hanger PO',
-  dataIndex: 'hanger',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Change Register',
-  dataIndex: 'displayName',
-  align: 'center',
-},
+          }
+        },
+      },
+      {
+        title: 'VAS - Size',
+        dataIndex: 'VASSize',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Item Vas Text',
+        dataIndex: 'itemVasText',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Item Vas Text in PDF PO',
+        dataIndex: 'itemVasTextPDF',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Diff of Item Vas Text',
+        dataIndex: '',
+        render: (text, record) => {
+          if (record.itemVasText == null || record.itemVasTextPDF == null) {
+            return '-';
+          } else {
+            const lines1 = (record.itemVasText).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+            const text1 = lines1.join('');
 
+            const lines2 = (record.itemVasTextPDF).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+            const text2 = lines2.join('');
+
+            const dmp = new DiffMatchPatch();
+            const diff = dmp.diff_main(text1, text2);
+            dmp.diff_cleanupSemantic(diff);
+
+            let output = '';
+            for (const [op, text] of diff) {
+              if (op === DiffMatchPatch.DIFF_INSERT) {
+                if (text.trim() !== '') {
+                  output += `${text} `;
+                }
+              } else if (op === DiffMatchPatch.DIFF_DELETE) {
+                if (text.trim() !== '') {
+                  output += `${text} `;
+                }
+              }
+            }
+            return output.trim()
+          }
+        },
+      },
+      {
+        title: 'Item Text',
+        dataIndex: 'itemText',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Hanger PO',
+        dataIndex: 'hanger',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Change Register',
+        dataIndex: 'displayName',
+        align: 'center',
+      },
     )
+
     exportingColumns.push(
-    
       {
         title: 'Trading Co PO Number',
         dataIndex: 'tradingCoPoNumber',
         render: (text, record) => {
-            if (!text || text.trim() === '') {
-                return '-';
-            } else {
-                return text;
-            }
-        },
-    },
-    {
-      title: 'Gross Price/FOB',
-      dataIndex: 'grossPriceFOB',
-      render: (text, record) => {
           if (!text || text.trim() === '') {
-              return '-';
-          } else {
-              return text;
-          }
-      },
-  },
-  {
-    title: 'Gross Price/FOB currency code',
-    dataIndex: 'fobCurrCode',
-    render: (text, record) => {
-        if (!text || text.trim() === '') {
             return '-';
-        } else {
+          } else {
             return text;
-        }
-    },
-},
-{
-  title: 'Buyer Confirmed Gross Price/FOB',
-  dataIndex: '',
-  // render: (text, record) => {
-  //     if (!text || text.trim() === '') {
-  //         return '-';
-  //     } else {
-  //         return text;
-  //     }
-  // },
-},
-{
-  title: 'Buyer Confirmed Gross Price/FOB Currency Code',
-  dataIndex: '',
- 
-},{
-  title: 'Diff of Price',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price Currency',
-  dataIndex: '',
-  
-},{
-  title: 'Net including discounts',
-  dataIndex: 'netIncludingDisc',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Net including discounts currency code',
-  dataIndex: 'netIncDisCurrency',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Trading Co Net including discounts',
-  dataIndex: 'trCoNetIncludingDisc',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Trading Co Net including discounts currency code',
-  dataIndex: 'tradingNetCurrencyCode',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Legal PO Price',
-  dataIndex: 'price',
-  render: (text, record) => {
-    if (!text || text.trim() === '') {
-        return '-';
-    } else {
-        return text;
-    }
-},
-  
-},
-{
-  title: 'Legal PO Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'CO Price',
-  dataIndex: '',
-  
-},{
-  title: 'CO Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Price currency',
-  dataIndex: '',
-  
-},
-{
-  title: 'CRM CO QTY',
-  dataIndex: '',
-  
-},{
-  title: 'Legal PO QTY',
-  dataIndex: 'quantity',
-  
-},
-{
-  title: 'Diff of Quantity',
-  dataIndex: '',
-  
-},
-{
-  title: 'Allowed Excess Ship Qty',
-  dataIndex: '',
-  
-},
-{
-  title: 'Actual Shipped Qty',
-  dataIndex: 'actual_shipped_qty',
-  
-},
-{
-  title: 'Actual Ship %',
-  dataIndex: '',
-  
-},
-{
-  title: 'VAS - Size',
-  dataIndex: 'VASSize',
-  
-},
-{
-  title: 'Item Vas Text',
-  dataIndex: 'itemVasText',
-  
-},
-{
-  title: 'Item Vas Text in PDF PO',
-  dataIndex: '',
-  
-},
-{
-  title: 'Diff of Item Vas Text',
-  dataIndex: '',
-  
-},
-{
-  title: 'Item Text',
-  dataIndex: 'itemText',
-  
-},
-{
-  title: 'Hanger PO',
-  dataIndex: 'hanger',
-  
-},
-{
-  title: 'Change Register',
-  dataIndex: 'displayName',
-  align: 'center',
-},
+          }
+        },
+      },
+      {
+        title: 'VAS - Size',
+        dataIndex: 'VASSize',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Item Vas Text',
+        dataIndex: 'itemVasText',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Item Vas Text in PDF PO',
+        dataIndex: 'itemVasTextPDF',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Diff of Item Vas Text',
+        dataIndex: '',
+        render: (text, record) => {
+          const lines1 = (record.itemVasText).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text1 = lines1.join('');
 
+          const lines2 = (record.itemVasTextPDF).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text2 = lines2.join('');
+
+          const dmp = new DiffMatchPatch();
+          const diff = dmp.diff_main(text1, text2);
+          dmp.diff_cleanupSemantic(diff);
+
+          let output = '';
+          for (const [op, text] of diff) {
+            if (op === DiffMatchPatch.DIFF_INSERT) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            } else if (op === DiffMatchPatch.DIFF_DELETE) {
+              if (text.trim() !== '') {
+                output += `${text} `;
+              }
+            }
+          }
+          return output.trim()
+        },
+      },
+      {
+        title: 'Item Text',
+        dataIndex: 'itemText',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Hanger PO',
+        dataIndex: 'hanger',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
+      {
+        title: 'Change Register',
+        dataIndex: 'displayName',
+        align: 'center',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
+      },
     )
+
     return (
       <>
 
@@ -1459,9 +2082,14 @@ const PPMReport = () => {
       </>
     );
 
-
-
   }
+
+  const DetailedView = (record: any) => {
+    poFilterData = filterData.filter(item => item.poAndLine == record)
+    console.log(poFilterData)
+    navigate('/Reports/po-detailed-view', { state: { data: poFilterData } })
+  }
+
   return (
     <>
       <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}
@@ -1480,10 +2108,111 @@ const PPMReport = () => {
                 <RangePicker />
               </Form.Item>
             </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }} style={{ padding: '20px' }}>
+              <Form.Item name="DPOMLineItemStatus" label="DPOM Line Item Status">
+                <Select
+                  showSearch
+                  placeholder="Select Line Status"
+                  optionFilterProp="children"
+                  allowClear mode='multiple'>
+                  <Option value="Accepted">ACCEPTED</Option>
+                  <Option value="Unaccepted">UNACCEPTED</Option>
+                  <Option value="Cancelled">CANCELLED</Option>
+                  <Option value="Closed">CLOSED</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='docType' label='Doc Type' >
+                <Select
+                  showSearch
+                  placeholder="Select Doc Type"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {docType.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.doc_type_code}>{inc.doc_type_code}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='item' label='Item' >
+                <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear>
+                  {item.map((inc: any) => {
+                    const firstFourDigits = inc.item.substring(0, 4);
+                    return <Option key={inc.id} value={inc.item}>{firstFourDigits}</Option>
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='factory' label='Factory' >
+                <Select
+                  showSearch
+                  placeholder="Select Factory"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {factory.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >
               <Form.Item label="Document Date" name="documentDate">
                 <RangePicker />
 
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
+              <Form.Item name='poNumber' label='Purchase Order Number' >
+                <Select
+                  showSearch
+                  placeholder="Select Po Number"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {poNumber.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='poLineItemNumber' label='Po Line Item Number' >
+                <Select
+                  showSearch
+                  placeholder="Select poLineItemNumber"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {poLineItemNumber.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='styleNumber' label='Style Number' >
+                <Select
+                  showSearch
+                  placeholder="Select Style Number"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {styleNumber.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
+                  })
+                  }
+                </Select>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
@@ -1501,52 +2230,37 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-              <Form.Item name='poNumber' label='Po Number' >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='planningSeasonCode' label='Planning Season Code' >
                 <Select
                   showSearch
-                  placeholder="Select Po Number"
+                  placeholder="Select Planning Season Code"
                   optionFilterProp="children"
                   allowClear
                 >
-                  {poNumber.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
+                  {planSesCode.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='planningSeasonYear' label='Planning Season Year' >
+                <Select
+                  showSearch
+                  placeholder="Select Planning Season Year"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {planSesYear.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
                   })
                   }
                 </Select>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
-              <Form.Item name='colorDesc' label='Color Description' >
-                <Select
-                  showSearch
-                  placeholder="Select Color Description"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {colorDesc.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.color_desc}>{inc.color_desc}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-              <Form.Item name='categoryDesc' label='Category Description' >
-                <Select
-                  showSearch
-                  placeholder="Select Category Description"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {categoryDesc.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.category_desc}>{inc.category_desc}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
               <Form.Item name='destinationCountry' label='Destination Country' >
                 <Select
                   showSearch
@@ -1561,7 +2275,22 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+              <Form.Item name='geoCode' label='Geo Code' >
+                <Select
+                  showSearch
+                  placeholder="Select Geo Code"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {geoCode.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='plant' label='Plant Code' >
                 <Select
                   showSearch
@@ -1573,50 +2302,6 @@ const PPMReport = () => {
                     return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
                   })
                   }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-              <Form.Item name='item' label='Item' >
-                <Select
-                  showSearch
-                  placeholder="Select Item"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {item.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-              <Form.Item name='factory' label='Factory' >
-                <Select
-                  showSearch
-                  placeholder="Select Factory"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {factory.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }} >
-              <Form.Item name="DPOMLineItemStatus" label="PPM Status">
-                <Select
-                  showSearch
-                  placeholder="Select PPM Status"
-                  optionFilterProp="children"
-                  allowClear mode='multiple'>
-                  <Option value="Accepted">ACCEPTED</Option>
-                  <Option value="Unaccepted">UNACCEPTED</Option>
-                  <Option value="Cancelled">CANCELLED</Option>
-                  <Option value="Closed">CLOSED</Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -1633,6 +2318,12 @@ const PPMReport = () => {
                 </Button>
               </Form.Item>
             </Col>
+            {/* <Col>
+              <Row>
+                <Form.Item>
+                  <Button onClick={toggleHideChildren}>Toggle Hide</Button>
+                </Form.Item>
+              </Row></Col> */}
           </Row>
         </Form>
         <Row gutter={80}>
@@ -1663,13 +2354,7 @@ const PPMReport = () => {
             <Card title={'Cancelled Po: ' + gridData.filter(el => el.DPOMLineItemStatus == 'Cancelled').length} style={{ textAlign: 'left', width: 190, height: 40, backgroundColor: 'lightblue' }}></Card>
           </Col>
         </Row><br></br>
-        <div>
-          {/* <Table columns={Columns} 
-          // dataSource={gridData}
-           dataSource={filterData}
-            bordered
-          /> */}
-        </div>
+
         {renderReport(filterData)}
       </Card>
     </>

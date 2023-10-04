@@ -20,6 +20,7 @@ export function OrderAcceptance() {
     const { RangePicker } = DatePicker;
     const [productCode, setProductCode] = useState<any>([]);
     const [poLine, setPoLine] = useState<any>([]);
+    const [itemNoValues, setItemNoValues] = useState({});
 
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -105,6 +106,17 @@ export function OrderAcceptance() {
                 : null
     })
 
+    const handleItemNoChange = (value, record) => {
+        setItemNoValues((prevValues) => ({
+            ...prevValues,
+            [record.key]: value,
+        }));
+    };
+
+    const isActionButtonEnabled = (record) => {
+        return itemNoValues[record.key] && itemNoValues[record.key].trim() !== "";
+    };
+
     const ClearData = () => {
         form.resetFields();
     }
@@ -143,8 +155,8 @@ export function OrderAcceptance() {
         if (form.getFieldValue('productCode') !== undefined) {
             req.productCode = form.getFieldValue('productCode');
         }
-        if (form.getFieldValue('poandLine') !== undefined) {
-            req.poandLine = form.getFieldValue('poandLine');
+        if (form.getFieldValue('purchaseOrder') !== undefined) {
+            req.poandLine = form.getFieldValue('purchaseOrder');
         }
         if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
             req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
@@ -162,9 +174,15 @@ export function OrderAcceptance() {
 
     const approveDpomLineItemStatus = (record) => {
         const req = new DpomApproveRequest();
-        req.poLineItemNumber = record.poLineItemNumber
-        req.purchaseOrderNumber = record.purchaseOrderNumber
-        req.scheduleLineItemNumber = record.scheduleLineItemNumber
+        req.poLineItemNumber = record.po_line_item_number
+        req.purchaseOrderNumber = record.po_number
+        req.scheduleLineItemNumber = record.schedule_line_item_number
+        req.itemNo = itemNoValues[record.key]
+        req.itemDesc = ''
+        req.orderQty = record.size_qty
+        req.size = record.size_description
+        req.price = record.gross_price_fob
+        req.currency = record.fob_currency_code
         service.createCOline(req).then((res) => {
             if (res.status) {
                 getOrderAcceptanceData()
@@ -174,8 +192,6 @@ export function OrderAcceptance() {
             )
         })
     }
-
-
 
     const columns: any = [
         {
@@ -207,6 +223,33 @@ export function OrderAcceptance() {
             render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
+            title: 'Aging',
+            dataIndex: '',
+            render: (text, record) => {
+                const documentDate = moment(record.document_date);
+
+                const today = moment();
+                const aging = today.diff(documentDate, 'days');
+                return aging;
+            },
+            sorter: (a, b) => {
+                const aAging = moment(a['document_date']);
+                const bAging = moment(b['document_date']);
+
+                if (!aAging.isValid() && !bAging.isValid()) {
+                    return 0;
+                } else if (!aAging.isValid()) {
+                    return 1;
+                } else if (!bAging.isValid()) {
+                    return -1;
+                }
+
+                return aAging.diff(bAging, 'days');
+            },
+
+            // sortOrder: null
+        }
+        , {
             title: 'Plant Name',
             dataIndex: 'plant_name'
         },
@@ -224,11 +267,29 @@ export function OrderAcceptance() {
         },
         {
             title: 'Size',
-            dataIndex: 'size_description'
+            dataIndex: 'size_description',
+            render: (text, record) => {
+                if (typeof text === 'string' && text.trim() === '') {
+                    return '-';
+                } else if (typeof text === 'undefined' || text === null) {
+                    return '-';
+                } else {
+                    return text;
+                }
+            },
         },
         {
             title: 'Order Quantity',
-            dataIndex: 'size_qty'
+            dataIndex: 'size_qty',
+            render: (text, record) => {
+                if (typeof text === 'string' && text.trim() === '') {
+                    return '-';
+                } else if (typeof text === 'undefined' || text === null) {
+                    return '-';
+                } else {
+                    return text;
+                }
+            },
         },
         {
             title: 'Total Order Quantity',
@@ -316,22 +377,59 @@ export function OrderAcceptance() {
             filterMultiple: false,
             onFilter: (value, record) => { return record.dpom_item_line_status === value }
         },
-        {
-            title: 'Action',
-            dataIndex: 'action',
-            render: (value, record) => {
-                if (record.dpom_item_line_status === 'Unaccepted') {
-                    return (
-                        <Popconfirm title="Are you sure to approve" onConfirm={() => approveDpomLineItemStatus(record)}>
-                            <Button>Accept</Button>
-                        </Popconfirm>
-                    );
-                } else {
-                    return null;
-                }
-            }
+        // {
+        //     title: 'Item No',
+        //     dataIndex: '',
+        // },
+        // {
+        //     title: 'Action',
+        //     dataIndex: 'action',
+        //     render: (value, record) => {
+        //         if (record.dpom_item_line_status === 'Unaccepted') {
+        //             return (
+        //                 <Popconfirm title="Are you sure to approve" onConfirm={() => approveDpomLineItemStatus(record)}>
+        //                     <Button>Accept</Button>
+        //                 </Popconfirm>
+        //             );
+        //         } else {
+        //             return null;
+        //         }
+        //     }
 
-        }
+        // }
+        {
+            title: "Item No",
+            dataIndex: "itemNo",
+            render: (text, record) => {
+                return (
+                    <Form>
+                        <Form.Item>
+                            <Input
+                                placeholder="Enter Item No"
+                                onChange={(e) => handleItemNoChange(e.target.value, record)}
+                            />
+                        </Form.Item>
+                    </Form>
+                );
+            },
+        },
+        {
+            title: "Action",
+            dataIndex: "action",
+            render: (value, record) => {
+                const isEnabled = isActionButtonEnabled(record);
+
+                return (
+                    <Popconfirm
+                        title="Are you sure to approve"
+                        onConfirm={() => approveDpomLineItemStatus(record)}
+                        disabled={!isEnabled}
+                    >
+                        <Button disabled={!isEnabled}>Accept</Button>
+                    </Popconfirm>
+                );
+            },
+        },
     ]
 
     return (
@@ -348,15 +446,15 @@ export function OrderAcceptance() {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-                            <Form.Item name='poandLine' label='Po+Line' >
+                            <Form.Item name='purchaseOrder' label='Purchase Order' >
                                 <Select
                                     showSearch
-                                    placeholder="Select Po+Line"
+                                    placeholder="Select PO"
                                     optionFilterProp="children"
                                     allowClear
                                 >
                                     {poLine.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
+                                        return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                     })
                                     }
                                 </Select>
@@ -389,13 +487,14 @@ export function OrderAcceptance() {
                     </Row>
                 </Form>
                 {/* <Table
-                    columns={columns}
-                    dataSource={data}
-                    bordered
-                >
-                </Table> */}
+                        columns={columns}
+                        dataSource={data}
+                        bordered
+                    >
+                    </Table> */}
 
                 <Table
+                    rowKey={record => record.id}
                     columns={columns}
                     dataSource={filterData.length > 0 ? filterData : data}
                     bordered
@@ -409,6 +508,9 @@ export function OrderAcceptance() {
                     scroll={{ x: 'max-content' }}
                 >
                 </Table>
+
+
+
             </Card>
         </>
     )

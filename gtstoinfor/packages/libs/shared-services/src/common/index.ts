@@ -4,3 +4,4 @@ export * from './users-service';
 export * from './nike-service';
 export * from './nike-service';
 export * from './adobe-acrobat-api.service'
+export * from './fob-service';

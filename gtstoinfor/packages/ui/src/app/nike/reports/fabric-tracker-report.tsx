@@ -222,93 +222,111 @@ export function FabricTrackerReport() {
 
   });
 
-  const columns: any = [
-    {
-      title: "SL",
-      render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
+    const columns: any = [
+        {
+            title: "SL",
+            render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
+      
+          },
+          {
+            title: 'Item',
+            dataIndex: 'item',
+           
+          },
+          {
+            title: 'Factory',
+            dataIndex: 'factory',   
+      
+          },
+          {
+            title: 'Document Date',
+            dataIndex: 'documentDate',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
+            // render: (text, record) => {
+            //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
+            // }
+          },
+          {
+            title: 'Purchase Order Number',
+            dataIndex: 'purchaseOrderNumber',
+          },
+          {
+            title: 'PO Line Item Number',
+            dataIndex: 'poLineItemNumber'
+          },
+      
+          {
+      
+            title: "Planning Season Code",
+            dataIndex: 'planningSeasonCode',  
+          },
+          {
+            title:"Planning Season Year",
+            dataIndex:'planningSeasonYear'
+          },
+          {
+            title: 'Style Number',
+            dataIndex: 'styleNumber',
+      
+          },
+          {
+            title: 'Product Code',
+            dataIndex: 'productCode',
+            sorter: (a, b) => a.productCode.length - b.productCode.length,
+            sortDirections: ['descend', 'ascend'],
+            ...getColumnSearchProps('productCode'),
+      
+      
+          },
+          {
+            title: 'Colour Description',
+            dataIndex: 'colorDesc'
+          },
+          {
+            title:"MRGAC",
+            dataIndex:'MRGAC',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
+            // render: (text, record) => {
+            //   if (!text || text.trim() === '') {
+            //     return '-';
+            //   } else {
+            //     return text;
+            //   }
+            //},
 
-    },
-    {
-      title: 'Item',
-      dataIndex: 'item',
+          },
+          {
+            title:"OGAC",
+            dataIndex:'OGAC',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
 
-    },
-    {
-      title: 'PO Line Item Number',
-      dataIndex: 'poLine'
-    },
-    {
-      title: 'Style Number',
-      dataIndex: 'styleNumber',
-
-    },
-    {
-      title: 'Product Code',
-      dataIndex: 'productCode',
-      sorter: (a, b) => a.productCode.length - b.productCode.length,
-      sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('productCode'),
-
-    },
-    {
-      title: 'Total Item Qty',
-      dataIndex: 'totalIemQty'
-    },
-    {
-      title: 'Factory',
-      dataIndex: 'factory',
-
-    },
-    {
-      title: 'Document Date',
-      dataIndex: 'DocumentDate',
-      // render: (text, record) => {
-      //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
-      // }
-    },
-    {
-      title: 'Purchase Order Number',
-      dataIndex: 'poNumber',
-    },
-    {
-
-      title: "Planning Season Code",
-      dataIndex: 'planningSeasonCode',
-    },
-    {
-      title: "Planning Season Year",
-      dataIndex: 'planningSeasonYear'
-    },
-
-    {
-      title: 'Colour Description',
-      dataIndex: 'colorDesc'
-    },
-    {
-      title: "MRGAC",
-      dataIndex: 'mrgac'
-
-    },
-    {
-      title: "OGAC",
-      dataIndex: 'ogac'
-
-    },
-    {
-      title: "GAC",
-      dataIndex: 'gac'
+          },
+          {
+            title:"GAC",
+            dataIndex:'GAC',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
 
     },
     {
       title: "Shipping Type",
       dataIndex: 'shipmentType'
 
-    },
-    {
-      title: 'MRP plan Required Inhouse QTY',
-      dataIndex: 'mrpPlanRequiredInhouseQty',
-    },
-  ]
+          },
+          {
+            title: 'Total Item Qty',
+            dataIndex: 'totalItemQty',
+            align:'right',
+            render:(text, record) =>
+              <span>{Number(record.totalItemQty).toLocaleString()}</span>
+            
+          },
+
+
+          {
+            title: 'MRP plan Required Inhouse QTY',
+            dataIndex: 'mrpPlanRequiredInhouseQty', 
+          }, 
+    ]
 
   return (
     <>

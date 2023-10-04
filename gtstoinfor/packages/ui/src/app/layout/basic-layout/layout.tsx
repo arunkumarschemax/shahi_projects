@@ -106,7 +106,7 @@ export default function BasicLayout() {
                         position: 'fixed',
                         left: 0,
                         background: '#fff',
-                        marginTop: '83px',
+                        marginTop: '45px',
                         borderRadius: '5px'
                     }}
                 >
@@ -114,7 +114,7 @@ export default function BasicLayout() {
                         theme="light"
                         mode="inline"
                         // defaultSelectedKeys={['1']}
-                        // style={{ marginTop: '20px' }}
+                        style={{ marginTop: '10px' }}
                         // 230
                         selectedKeys={[]}
                     // style={{ backgroundColor: '#000', width: '75%', height: '61%', marginLeft: '160px', marginTop: '-3.8%',color:'white' }}
@@ -130,7 +130,7 @@ export default function BasicLayout() {
                 <Content
                     className="site-layout-background"
                     style={{
-                        marginTop: '70px',
+                        marginTop: '50px',
                         padding: 14,
                         height: '100%',
                         marginLeft: 198

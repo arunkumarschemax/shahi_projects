@@ -33,7 +33,7 @@ const DivertReport = () => {
 
     useEffect(() => {
         getData();
-        getCount();
+       // getCount();
     }, [])
 
     const handleCheckboxChange = (id: string) => {

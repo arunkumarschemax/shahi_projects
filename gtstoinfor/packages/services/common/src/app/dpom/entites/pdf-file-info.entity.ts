@@ -2,36 +2,41 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 import { DpomChildEntity } from "./dpom-child.entity";
 import { FileTypeEnum } from "@project-management-system/shared-models";
 
-@Entity('pdf_file_info')
+@Entity('pdf_file_data')
 export class PDFFileInfoEntity {
     @PrimaryGeneratedColumn('increment', {
         name: "id",
     })
     id: number;
+
     @Column('varchar', {
         name: "pdf_file_name",
         length: 50,
-        nullable:false
+        nullable: false
     })
     pdfFileName: string;
+
     @Column('varchar', {
         name: "po_number",
         length: 50,
-        nullable:false
+        nullable: false
     })
     poNumber: string;
+
     @Column({
         type: 'enum',
         nullable: false,
         enum: FileTypeEnum,
         name: "file_type"
-      })
-      fileType: FileTypeEnum;
+    })
+    fileType: FileTypeEnum;
+
     @Column("text", {
         nullable: false,
         name: "file_data"
-        })
+    })
     fileData: string;
+
     @CreateDateColumn({
         name: "created_at",
     })
