@@ -497,23 +497,40 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
-    // @Post('/getPhaseMonthData')
-    // @ApiBody({type:YearReq})
-    // async getPhaseMonthData(@Body() req:any): Promise<CommonResponseModel> {
-    //     try {
-    //         return this.ordersService.getPhaseMonthData(req);
-    //     } catch (err) {
-    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-    //     }
-    // }
-    // @Post('/getComparisionphaseData')
-    // @ApiBody({type:YearReq})
-    // async getComparisionphaseData(@Body() req:any): Promise<CommonResponseModel> {
-    //     try {
-    //         return this.ordersService.getComparisionphaseData(req);
-    //     } catch (err) {
-    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-    //     }
-    // }
-    
+    @Post('/getPhaseMonthData')
+    @ApiBody({type:YearReq})
+    async getPhaseMonthData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getPhaseMonthData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getComparisionphaseData')
+    @ApiBody({type:YearReq})
+    async getComparisionphaseData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getComparisionphaseData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getComparisionphaseExcelData')
+    @ApiBody({type:YearReq})
+    async getComparisionphasExceleData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getComparisionphaseExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getPhaseMonthExcelData')
+    @ApiBody({type:YearReq})
+    async getPhaseMonthExcelData(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getPhaseMonthExcelData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
