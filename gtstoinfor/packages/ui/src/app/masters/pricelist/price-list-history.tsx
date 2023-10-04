@@ -377,12 +377,12 @@ const getSeasonCode = () => {
           </Col>
         </Row>
       </Form>
-      <Form layout='vertical'>
+      {/* <Form layout='vertical'>
          <Descriptions  style={{ alignItems: 'right' }} column={2}>
         <Descriptions.Item label={'Previous'}>{}</Descriptions.Item>
         <Descriptions.Item label={`Order Qty Pc's`}>{} </Descriptions.Item>
       </Descriptions>
-      </Form>
+      </Form> */}
      
       <Table
       rowKey={record => record}
