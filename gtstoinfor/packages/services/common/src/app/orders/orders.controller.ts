@@ -439,7 +439,7 @@ export class OrdersController {
     @Post('/readCell')
     async readCell(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            const pathval = './upload-files/pro_order_sep3.xlsx'
+            const pathval = './upload-files/pro_orders_1.xlsx'
              this.ordersService.readCell(pathval,pathval);
             } catch (err) {
                 return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
