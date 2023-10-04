@@ -494,25 +494,15 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getFabricTrackerReport(req: PpmDateFilterRequest) {
         let query = this.createQueryBuilder('dpom')
           .select(`item,
-            po_line_item_number AS poLine,
-            style_number AS styleNumber,
-            product_code AS productCode,
-            total_item_qty AS totalIemQty,
-            factory,
-            document_date AS DocumentDate,
+            po_line_item_number AS poLine,style_number AS styleNumber,
+            product_code AS productCode, total_item_qty AS totalIemQty, factory,document_date AS DocumentDate,
             planning_season_code AS planningSeasonCode,
-            planning_season_year AS planningSeasonYear,
-            color_desc AS colorDesc,
-            ogac,
-            gac,
-            mrgac,
-            shipping_type AS shipmentType,
-            po_number AS poNumber`)
+            planning_season_year AS planningSeasonYear,color_desc AS colorDesc,ogac,gac, mrgac,shipping_type AS shipmentType, po_number AS poNumber`)
           .where(`dpom.id > 0`);
       
         if (req.productCode) {
           query = query.andWhere(`dpom.product_code = :productCode`, { productCode: req.productCode });
-        }
+        } 
       
         if (req.item) {
           query = query.andWhere(`dpom.item = :item`, { item: req.item });
@@ -529,8 +519,8 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.styleNumber) {
           query = query.andWhere(`dpom.style_number = :styleNumber`, { styleNumber: req.styleNumber });
         }  
-        const data = await query.getRawMany();
-        return data;
+        return  await query.getRawMany();
+        
       }
       
     ///-------------------------------------------------------------------------------------------------------------->ppm marketing

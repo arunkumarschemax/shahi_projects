@@ -744,17 +744,24 @@ export class DpomService {
         } else {
             return new CommonResponseModel(false, 0, 'data not found')
         }
-    }
+    } 
 
-    async getFabricTrackerReport(): Promise<CommonResponseModel> {
-        const details = await this.dpomRepository.find();
-        if (details.length > 0) {
-            return new CommonResponseModel(true, 1, 'data retrived', details)
-        } else {
-            return new CommonResponseModel(false, 0, 'data not found', undefined)
+    async getFabricTrackerReport(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
+        try {
+          const data = await this.dpomRepository.getFabricTrackerReport(req);
+    
+          if (data.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data retrieved', data);
+          } else {
+            return new CommonResponseModel(false, 0, 'No data found');
+          }
+        } catch (error) {
+          // Handle errors, log them, and return an error response if needed
+          console.error('Error in getFabricTrackerReport:', error);
+          return new CommonResponseModel(false, 0, 'An error occurred');
         }
-    }
-
+      } 
+      
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPlantCount()
         if (data.length > 0)
@@ -1305,6 +1312,43 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+    ///----------------------------------------------------------------------------------------->fabric tracker 
+    async getFabricTrackerForFactory(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getFabricTrackerForFactory()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getFabricTrackerForItem(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getFabricTrackerForItem()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getFabricTrackerForProductCode(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getFabricTrackerForProductCode()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getFabricTrackerForStyleNumber(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getFabricTrackerForStyleNumber()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+    async getFabricTrackerForColorDesc(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getFabricTrackerForColorDesc()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
 
     //-----------------------------------------------------------------------------marketing
     async getPpmPoLineForMarketing(): Promise<CommonResponseModel> {
