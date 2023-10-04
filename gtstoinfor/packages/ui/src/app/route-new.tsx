@@ -69,6 +69,7 @@ export const AppRoutesNew = () => {
 
                 <Route path='/ware-house-report' key='/ware-house-report' element={<WarehouseReport  />} />
                     <Route path='/excel-import/trim-order' key='/excel-import/trim-order' element={<TrimOrder/>} />
+                    <Route path='order-history-report' key='/order-history-report' element={<VersionChanges />} />
 
               </Route>
               <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
