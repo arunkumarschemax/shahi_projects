@@ -10,6 +10,8 @@ import {
 import './header.css';
 import Search from 'antd/es/input/Search';
 import { useNavigate } from 'react-router-dom';
+import xpperal from './xpparel-logo.jpeg'
+
 const { Header } = Layout;
 const { useToken } = theme
 
@@ -73,7 +75,9 @@ export const CommonHeader = (props: IProps) => {
       <Row justify='space-between' align='middle'>
         <Col span={4}>
           <div className="logo" >
-            <span style={{ color: colorPrimary, fontSize: 45, paddingLeft: '10px' }}><b>{'SHAHI'}</b></span>
+            {/* <span style={{ color: colorPrimary, fontSize: 45, paddingLeft: '10px' }}><b>{'SHAHI'}</b></span> */}
+                        <img src={xpperal} width={120} height={55} style={{marginLeft:'20px'}}></img>
+
           </div>
         </Col>
         <Col span={1} >

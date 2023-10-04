@@ -499,22 +499,34 @@ const OrdersCompareGrid = () => {
         {
             title: 'Change From Gross Price',
             dataIndex: 'old_val',
+            align:'right',
+
             // ...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Gross Price currency code',
             dataIndex: '',
+            align:'right',
+
             //...getColumnSearchProps('po_number')
             render: (text, record) => ('USD')
         },
         {
             title: 'Change to Gross Price',
             dataIndex: 'new_val',
+            align:'right',
+            render: (text, record) => {
+                const formattedAmount = record.new_val ? parseFloat(record.new_val).toFixed(2) : "-";
+                return <>{formattedAmount}</>;
+              }
+
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Gross Price currency code',
             dataIndex: '',
+            align:'right',
+
             //...getColumnSearchProps('po_number')
             render: (text, record) => ('USD')
         },
@@ -1245,6 +1257,7 @@ const OrdersCompareGrid = () => {
               title: 'Old Quantity',
               dataIndex: '',
               key: '',
+              align:'right',
               render: (text, record) => {
                 const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
                 if (sizeData) {
@@ -1268,6 +1281,8 @@ const OrdersCompareGrid = () => {
             {
                 title: 'New Quantity',
                 dataIndex: 'newQuantity',
+                align:'right',
+
                 render: (text, record) => {
                     const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
                     if (sizeData) {
@@ -1291,6 +1306,8 @@ const OrdersCompareGrid = () => {
               {
                 title: 'Difference',
                 dataIndex: 'difference',
+                align:'right',
+
                 render: (text, record) => {
                   const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
                   if (sizeData) {
@@ -1299,9 +1316,9 @@ const OrdersCompareGrid = () => {
                       const formattedQty = difference.toLocaleString('en-IN', { maximumFractionDigits: 0 });
               
                       if (difference < 0) {
-                        return <span style={{ color: 'green' }}>{formattedQty}</span>;
-                      } else {
                         return <span style={{ color: 'red' }}>{formattedQty}</span>;
+                      } else {
+                        return <span style={{ color: 'green' }}>{formattedQty}</span>;
                       }
                     } else {
                       return '-';

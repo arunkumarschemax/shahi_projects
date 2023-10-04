@@ -180,6 +180,7 @@ export function FabricTrackerReport() {
           {
             title: 'Document Date',
             dataIndex: 'documentDate',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
             // render: (text, record) => {
             //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
             // }
@@ -223,23 +224,26 @@ export function FabricTrackerReport() {
           {
             title:"MRGAC",
             dataIndex:'MRGAC',
-            render: (text, record) => {
-              if (!text || text.trim() === '') {
-                return '-';
-              } else {
-                return text;
-              }
-            },
+            render: (text) => moment(text).format('MM/DD/YYYY') 
+            // render: (text, record) => {
+            //   if (!text || text.trim() === '') {
+            //     return '-';
+            //   } else {
+            //     return text;
+            //   }
+            //},
 
           },
           {
             title:"OGAC",
-            dataIndex:'OGAC'
+            dataIndex:'OGAC',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
 
           },
           {
             title:"GAC",
-            dataIndex:'GAC'
+            dataIndex:'GAC',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
 
           },
           {
@@ -249,7 +253,11 @@ export function FabricTrackerReport() {
           },
           {
             title: 'Total Item Qty',
-            dataIndex: 'totalItemQty'
+            dataIndex: 'totalItemQty',
+            align:'right',
+            render:(text, record) =>
+              <span>{Number(record.totalItemQty).toLocaleString()}</span>
+            
           },
 
 

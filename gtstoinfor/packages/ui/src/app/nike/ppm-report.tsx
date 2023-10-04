@@ -947,6 +947,7 @@ const PPMReport = () => {
             title: 'Quantity',
             dataIndex: '',
             key: '',
+            align:'right',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
               if (sizeData) {
@@ -968,6 +969,7 @@ const PPMReport = () => {
           {
             title: 'Gross Price/FOB',
             dataIndex: 'grossFobPrice',
+            align:'right',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1010,6 +1012,8 @@ const PPMReport = () => {
           {
             title: 'Buyer Confirmed Gross Price/FOB',
             dataIndex: 'buyerGrossFobPrice',
+            align:'right',
+
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1031,6 +1035,8 @@ const PPMReport = () => {
           {
             title: 'Buyer Confirmed Gross Price/FOB Currency Code',
             dataIndex: 'buyerGrossFobCurrencyCode',
+            align:'right',
+
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1052,6 +1058,8 @@ const PPMReport = () => {
           {
             title: 'Diff of Price',
             dataIndex: '',
+            align:'right',
+
           },
           {
             title: 'Diff of Price Currency',
@@ -1060,6 +1068,8 @@ const PPMReport = () => {
           {
             title: 'Net including discounts',
             dataIndex: 'netIncludingDisc',
+            align:'right',
+
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1102,6 +1112,8 @@ const PPMReport = () => {
           {
             title: 'Trading Co Net including discounts',
             dataIndex: 'trConetIncludingDisc',
+            align:'right',
+
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1144,6 +1156,8 @@ const PPMReport = () => {
           {
             title: 'Legal PO Price',
             dataIndex: 'legalPoPrice',
+            align:'right',
+
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1186,6 +1200,8 @@ const PPMReport = () => {
           {
             title: 'CO Price',
             dataIndex: 'coPrice',
+            align:'right',
+
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1228,11 +1244,15 @@ const PPMReport = () => {
           {
             title: 'Diff of Price',
             dataIndex: '',
+            align:'right',
+
 
           },
           {
             title: 'Diff of Price currency',
             dataIndex: '',
+            align:'right',
+
 
           },
           {
@@ -1259,6 +1279,8 @@ const PPMReport = () => {
           {
             title: 'Legal PO QTY',
             dataIndex: 'legalPoQty',
+            align:'right',
+
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1280,10 +1302,14 @@ const PPMReport = () => {
           {
             title: 'Diff of Quantity',
             dataIndex: '',
+            align:'right',
+
           },
           {
             title: 'Allowed Excess Ship Qty',
             dataIndex: '',
+            align:'right',
+
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
               if (sizeData) {
@@ -1312,6 +1338,8 @@ const PPMReport = () => {
           {
             title: 'Actual Shipped Qty',
             dataIndex: 'actualShippedQty',
+            align:'right',
+
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1332,6 +1360,8 @@ const PPMReport = () => {
           },
           {
             title: 'Actual Ship %',
+            align:'right',
+
             dataIndex: '',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1366,6 +1396,7 @@ const PPMReport = () => {
           {
             title: 'Quantity',
             dataIndex: '',
+            align:'right',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
               if (sizeData) {

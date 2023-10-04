@@ -6,6 +6,7 @@ import Highlighter from 'react-highlight-words';
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
+import moment from 'moment';
 
 function ShipmentTrackerReport() {
 
@@ -267,16 +268,22 @@ function ShipmentTrackerReport() {
         {
             title: 'OGAC',
             dataIndex: 'OGAC',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
+
 
         },
         {
             title: 'GAC',
             dataIndex: 'GAC',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
+
 
         },
         {
             title: 'MRGAC',
             dataIndex: 'MRGAC',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
+
 
         },
         {
@@ -326,6 +333,10 @@ function ShipmentTrackerReport() {
         {
             title: 'Total Item Quantity',
             dataIndex: 'totalItemQty',
+            align:'right',
+            render:(text, record) =>
+            <span>{Number(record.totalItemQty).toLocaleString()}</span>
+          
 
         },
         {
@@ -348,11 +359,23 @@ function ShipmentTrackerReport() {
             dataIndex: 'DPOMLineItemStatus',
 
         },
+       
         {
             title: 'GAC-OGAC',
             dataIndex: '',
-
-        },
+            render: (text, record) => {
+              const ogac = moment(record.OGAC);
+              const gac = moment(record.GAC);
+              const differenceInDays = gac.diff(ogac, 'days');
+              return `${differenceInDays} days`;
+            },
+          }
+          
+          
+          
+          
+          
+          
 
 
     ];
@@ -389,10 +412,12 @@ function ShipmentTrackerReport() {
                     </Form><br></br>
                     <Table
                         columns={columns}
-
                         dataSource={gridData}
                         // dataSource={filterData}
-                        scroll={{ x: 1000 }}
+                        scroll={{ x: 'max-content' }}
+                        className="custom-table-wrapper"
+
+
                     />
                 </Card>
             </Card>

@@ -105,7 +105,7 @@ export const FOBPriceVariationReport = () => {
             render: (text, record) => {
                 return (
                     <>
-                        {record.grossPriceFob ? `${record.grossPriceFob} ${record.fobCurrencyCode}` : '-'}
+                        {record.grossPriceFob ? ` ${record.fobCurrencyCode}${' --- '}${record.grossPriceFob}` : '-'}
                     </>
                 )
             }
@@ -117,7 +117,7 @@ export const FOBPriceVariationReport = () => {
             render: (text, record) => {
                 return (
                     <>
-                        {record.shahiConfirmedgrossPrice ? `${record.shahiConfirmedgrossPrice} ${record.shahiCurrencyCode}` : '-'}
+                        {record.shahiConfirmedgrossPrice ? `${record.shahiCurrencyCode}${' --- '} ${record.shahiConfirmedgrossPrice} ` : '-'}
                     </>
                 )
             }

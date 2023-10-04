@@ -170,7 +170,8 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'FOB',
-            dataIndex: 'fob'
+            dataIndex: 'fob',
+            align:'right'
         },
         {
             title: 'CO',
@@ -196,10 +197,14 @@ const ShipmentPlanningChart = () => {
         {
             title: 'OGAC',
             dataIndex: 'ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
+
         },
         {
             title: 'GAC',
             dataIndex: 'gac',
+            render: (text) => moment(text).format('MM/DD/YYYY') 
+
         },
         {
             title: 'EX FACTORY',
@@ -208,6 +213,9 @@ const ShipmentPlanningChart = () => {
         {
             title: 'Total Item Quantity',
             dataIndex: 'totalItemQuantity',
+            align:'right',
+            render:(text, record) =>
+            <span>{Number(record.totalItemQuantity).toLocaleString()}</span>
         }, {
             title: 'Mode of Transportation',
             dataIndex: 'modeofTransport',
