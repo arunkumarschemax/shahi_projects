@@ -116,6 +116,7 @@ const VersionChanges = () => {
         return versionWiseMap;
     }
 
+      
     const downloadExcel = () => {
         const excel = new Excel();
         excel
@@ -145,11 +146,11 @@ const VersionChanges = () => {
                 key: 'sno',
                 render: (text, object, index) => (page - 1) * pageSize + (index + 1)
             },
-            {
-                title: 'Production Plan Id',
-                dataIndex: 'productionPlanId',
-                ...getColumnSearchProps('productionPlanId')
-            },
+            // {
+            //     title: 'Production Plan Id',
+            //     dataIndex: 'productionPlanId',
+            //     ...getColumnSearchProps('productionPlanId')
+            // },
             {
                 title: 'Production Plan Type Name',
                 dataIndex: 'prodPlanTypeName',
@@ -212,7 +213,7 @@ const VersionChanges = () => {
 
     return (
         <>
-            <Card title="Version Wise Order Quantity Pieces" extra={versionData ? (<Button
+            <Card title="Orders History Report" extra={versionData ? (<Button
                 type="default"
                 style={{ color: 'green' }}
                 onClick={downloadExcel}
