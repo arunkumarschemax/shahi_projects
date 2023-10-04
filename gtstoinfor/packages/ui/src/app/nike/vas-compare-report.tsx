@@ -155,10 +155,10 @@ const VASChangesCompareGrid = () => {
             title: 'Requested Warehouse Date',
             dataIndex: 'requested_wh_date',
         },
-        {
-            title: 'Order Status',
-            dataIndex: 'order_status'
-        }
+        // {
+        //     title: 'Order Status',
+        //     dataIndex: 'order_status'
+        // }
     ]
 
     const data2 = [
