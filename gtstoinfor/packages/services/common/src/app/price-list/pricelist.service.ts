@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { FactoryResponseModel } from 'packages/libs/shared-models/src/common/factory/factory-response-objects';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object'
 import { DataSource, EntityManager, Not } from 'typeorm';
-import { AllFactoriesResponseModel, CommonResponseModel, FactoryActivateDeactivateDto, FileStatusReq, FileTypeDto, FactoryDto as NewFactoriesDto, NewFilterDto, PriceListColumns, PriceListDto, PriceListModel, PriceListResponseModel, TrimOrderColumns } from '@project-management-system/shared-models';
+import { AllFactoriesResponseModel, CommonResponseModel, FactoryActivateDeactivateDto, FileStatusReq, FileTypeDto, HistoryRequest, FactoryDto as NewFactoriesDto, NewFilterDto, PriceListColumns, PriceListDto, PriceListModel, PriceListResponseModel, TrimOrderColumns } from '@project-management-system/shared-models';
 import { PriceListAdapter } from './adapters/pricelist.adapter';
 import { pricListRepository } from './repository/pricelist.repositiry';
 import { PriceListEntity } from './entities/pricelist.entity';
@@ -545,9 +545,10 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
             }
         }
 
-        async getPriceHistory(): Promise<CommonResponseModel> {
+        async getPriceHistory(req : HistoryRequest): Promise<CommonResponseModel> {
             try {
-                const data = await this.priceListChildRepo.getPriceHistory();
+                console.log(req,'service')
+                const data = await this.priceListChildRepo.getPriceHistory(req);
                 if (data.length > 0) {
                     return new CommonResponseModel(true, 1, 'Data retrieved successfully', data);
                 } else {
@@ -560,6 +561,58 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
         
         async getAllPriceListItem(): Promise<CommonResponseModel> {
             const details = await this.priceRepository.getItem();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
+
+        async getAllStyles(): Promise<CommonResponseModel> {
+            const details = await this.priceListChildRepo.getSampleCode();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
+        async getAllDestination(): Promise<CommonResponseModel> {
+            const details = await this.priceListChildRepo.getBusiness();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
+        async getAllYear(): Promise<CommonResponseModel> {
+            const details = await this.priceListChildRepo.getYear();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
+        async getAllCurrency(): Promise<CommonResponseModel> {
+            const details = await this.priceListChildRepo.getCurrency();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
+
+        async getAllSeasonCode(): Promise<CommonResponseModel> {
+            const details = await this.priceListChildRepo.getAllPriceListSeasonCode();
            
             if (details.length > 0) {
                 

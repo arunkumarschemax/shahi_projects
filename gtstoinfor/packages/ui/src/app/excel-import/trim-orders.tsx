@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Form, Input, InputRef, Popconfirm, Row, Select, Space, Table, Tag, Typography, message } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, InputRef, Popconfirm, Row, Select, Space, Table, Tag, Tooltip, Typography, message } from 'antd';
 import { useEffect, useRef, useState, } from 'react';
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
@@ -75,7 +75,6 @@ const {Text}=Typography
     const DetailedView = (record: any) => {
         const poFilterData = filteredData.filter(item => item.order_no == record)
         navigate('/excel-import/trim-order-detail-view', { state: { data: poFilterData } })
-        console.log(poFilterData,'kkkkkkkkkkkkkkkkkkkkkkkkk')
       }
 
 
@@ -239,16 +238,21 @@ const {Text}=Typography
         {
             title: 'Order No',
             // fixed:'left',
-          dataIndex: 'order_no',         
+          dataIndex: 'order_no',
+          width:"140px",
           sorter: (a, b) => {
             const aKey = a.order_no || "";
             const bKey = b.order_no || "";
             return aKey.localeCompare(bKey);
           },
           render: (text, record) => {
-            return <>
-              <Button type='link' onClick={e => { DetailedView(record.order_no) }}>{record.order_no}</Button>
-            </>
+            return (
+              <Tooltip title="Click for Detail View">
+                <Button type='link' onClick={() => DetailedView(record.order_no)}>
+                  {record.order_no}
+                </Button>
+              </Tooltip>
+            );
           }
         },
           

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, Descriptions } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { PriceListService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import {  ColumnProps, ColumnsType } from 'antd/es/table';
 import PriceListForm from './price-list-form';
-import { NewFilterDto, PriceListActivateDeactivateDto, PriceListDto } from '@project-management-system/shared-models';
+import { HistoryRequest, NewFilterDto, PriceListActivateDeactivateDto, PriceListDto } from '@project-management-system/shared-models';
 
 
 export interface PriceListView { }
@@ -60,72 +60,66 @@ export const PriceListHistory = (props: PriceListView) => {
     },
   };
   const getStyle = () => {
-    priceService.getAllPriceListStyles().then(res => {
+    priceService.getAllStyles().then(res => {
       setStyle(res.data)
     })
 
 }
 
 const getDestination = () => {
-  priceService.getAllPriceListDestination().then(res => {
+  priceService.getAllDestination().then(res => {
     setDestination(res.data)
   })
 
 }
 const getYear = () => {
-  priceService.getAllPriceListYear().then(res => {
+  priceService.getAllYear().then(res => {
     setYear(res.data)
   })
 
 }
 const getCurrency = () => {
-  priceService.getAllPriceListCurrency().then(res => {
+  priceService.getAllCurrency().then(res => {
     setCurrency(res.data)
   })
 
 }
 const getSeasonCode = () => {
-  priceService.getAllPriceListSeasonCode().then(res => {
+  priceService.getAllSeasonCode().then(res => {
     setSeasonCode(res.data)
   })
 
 }
 
   const getPriceList= () => {
-    const req = new NewFilterDto();
-     if (form.getFieldValue("sampleCode") !== undefined) {
-     req.sampleCode = form.getFieldValue("sampleCode");}
-            if (form.getFieldValue("business") !== undefined) {
-         req.business = form.getFieldValue("business"); }
-         if (form.getFieldValue("currency") !== undefined) {
-          req.currency = form.getFieldValue("currency"); }
-          if (form.getFieldValue("year") !== undefined) {
-            req.year = form.getFieldValue("year"); }
-            if (form.getFieldValue("seasonCode") !== undefined) {
-              req.seasonCode = form.getFieldValue("seasonCode"); }
-    priceService.getPriceHistory().then(res => {
+    const req = new HistoryRequest();
+    if (form.getFieldValue("sampleCode") !== undefined) {
+      req.sampleCode = form.getFieldValue("sampleCode")
+    }
+    if (form.getFieldValue("business") !== undefined) {
+      req.business = form.getFieldValue("business") 
+    }
+    if (form.getFieldValue("currency") !== undefined) {
+      req.currency = form.getFieldValue("currency") 
+    }
+    if (form.getFieldValue("year") !== undefined) {
+      req.year = form.getFieldValue("year")
+    }
+    if (form.getFieldValue("seasonCode") !== undefined) {
+      req.seasonCode = form.getFieldValue("seasonCode") 
+    }
+    priceService.getPriceHistory(req).then(res => {
+      console.log(req,'')
       if (res.status) {
         setPriceList(res.data);
-      } else
-       {
+      } else {
         setPriceList([])
-          AlertMessages.getErrorMessage(res.internalMessage);
+        AlertMessages.getErrorMessage(res.internalMessage);
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);
       setPriceList([]);
     })
-  }
-  
-  //drawer related
-  const closeDrawer = () => {
-    setDrawerVisible(false);
-  }
-  const openFormWithData=(viewData: PriceListDto)=>{
-    setDrawerVisible(true);
-    setSelectedPriceListeData(viewData);
-    // console.log(selectedPriceListData)
-    // console.log('selectedOperation')
   }
   
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -372,29 +366,34 @@ const getSeasonCode = () => {
           </Col>
 
           <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 20 }}  >
-                            <Form.Item>
-                                <Button htmlType="submit" icon={<SearchOutlined />}style={{backgroundColor:'green'}}type="primary">Search</Button>
-                                    <Button danger
-                                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, position: "relative" }} onClick={onReset}>Reset
-                                </Button>
-                            </Form.Item>
-                        </Col>
+            <Form.Item>
+              <Button htmlType="submit" icon={<SearchOutlined />}style={{backgroundColor:'green'}}type="primary">
+                Search
+              </Button>
+              <Button danger htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, position: "relative" }} onClick={onReset}>
+                Reset
+              </Button>
+            </Form.Item>
+          </Col>
         </Row>
       </Form>
+      <Form layout='vertical'>
+         <Descriptions  style={{ alignItems: 'right' }} column={2}>
+        <Descriptions.Item label={'Previous'}>{}</Descriptions.Item>
+        <Descriptions.Item label={`Order Qty Pc's`}>{} </Descriptions.Item>
+      </Descriptions>
+      </Form>
      
-      
-        <Table
-        rowKey={record => record}
-          columns={columns}
-          dataSource={priceList}
-          className="custom-table-wrapper"
-
-          pagination={pagination}
-          scroll={{x:true}}
-          onChange={onChange}
-          bordered />
-     
-      </Card> </>
+      <Table
+      rowKey={record => record}
+      columns={columns}
+      dataSource={priceList}
+      className="custom-table-wrapper"
+      pagination={pagination}
+      scroll={{x:true}}
+      onChange={onChange}
+      bordered />
+    </Card> </>
       
   );
 }

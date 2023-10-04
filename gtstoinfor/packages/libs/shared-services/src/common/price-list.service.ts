@@ -1,5 +1,5 @@
 
-import { CommonResponseModel, PriceListDto, PriceListResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, HistoryRequest, NewFilterDto, PriceListDto, PriceListResponseModel } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -61,11 +61,28 @@ export class PriceListService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/getUploadFilesData")
     }
 
-    async getPriceHistory(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + "/getPriceHistory")
+    async getPriceHistory(req: HistoryRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getPriceHistory",req)
     }
     
     async getAllPriceListItem(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllPriceListItem")
+    }
+
+    async getAllStyles(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllStyles")
+    }
+
+    async getAllDestination(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllDestination")
+    }
+    async getAllYear(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllYear")
+    }  
+     async getAllCurrency(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllCurrency")
+    }
+    async getAllSeasonCode(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllSeasonCode")
     }
 }

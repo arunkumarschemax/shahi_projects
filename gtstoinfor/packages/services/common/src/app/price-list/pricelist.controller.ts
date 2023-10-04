@@ -1,6 +1,6 @@
 import { Body, Controller, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
-import { AllFactoriesResponseModel, CommonResponseModel, NewFilterDto, PriceListDto, PriceListResponseModel } from '@project-management-system/shared-models';
+import { AllFactoriesResponseModel, CommonResponseModel, HistoryRequest, NewFilterDto, PriceListDto, PriceListResponseModel } from '@project-management-system/shared-models';
 import { priceListService } from './pricelist.service';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { priceListDto } from './dto/pricelist.dto';
@@ -180,11 +180,55 @@ export class PriceListController {
     }
 
     @Post('/getPriceHistory')
-    async getPriceHistory(): Promise<CommonResponseModel> {
+    @ApiBody({type: HistoryRequest})
+    async getPriceHistory(@Body() req : any): Promise<CommonResponseModel> {
+        console.log(req,'controller')
         try {
-            return this.priceService.getPriceHistory();
+            return this.priceService.getPriceHistory(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getAllStyles')
+    async getAllStyles(): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getAllStyles();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+
+    @Post('/getAllDestination')
+    async getAllDestination(): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getAllDestination();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+    @Post('/getAllYear')
+    async getAllYear(): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getAllYear();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+    @Post('/getAllCurrency')
+    async getAllCurrency(): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getAllCurrency();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+    @Post('/getAllSeasonCode')
+    async getAllSeasonCode(): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getAllSeasonCode();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
         }
     }
 
