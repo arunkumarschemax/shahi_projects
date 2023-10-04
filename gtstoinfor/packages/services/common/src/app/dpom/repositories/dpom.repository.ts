@@ -492,6 +492,34 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
+    async getFabricTrackerReport(req: PpmDateFilterRequest) {
+        let query = this.createQueryBuilder('dpom')
+          .select(`item,
+            po_line_item_number AS poLine,style_number AS styleNumber,
+            product_code AS productCode, total_item_qty AS totalItemQty, factory,document_date AS DocumentDate,
+            planning_season_code AS planningSeasonCode,
+            planning_season_year AS planningSeasonYear,color_desc AS colorDesc,ogac,gac, mrgac,shipping_type AS shipmentType, po_number AS poNumber, po_line_item_number AS poLineItemNumber`)
+          
+        if (req.productCode !== undefined) {
+            query.andWhere(`product_code ='${req.productCode}'`)
+        }
+        if (req.item !== undefined) {
+            query.andWhere(`item ='${req.item}'`)
+        }
+        if (req.factory !== undefined) {
+            query.andWhere(`factory ='${req.factory}'`)
+        }
+        if (req.colorDesc !== undefined) {
+            query.andWhere(`color_desc ='${req.colorDesc}'`)
+        }
+        if (req.styleNumber !== undefined) {
+            query.andWhere(`style_number ='${req.styleNumber}'`)
+        }
+        
+        return  await query.getRawMany();
+        
+      }
+
     ///-------------------------------------------------------------------------------------------------------------->ppm marketing
     async getMarketingPpmData(req: PpmDateFilterRequest): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
@@ -594,7 +622,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .addOrderBy(' d.schedule_line_item_number', 'ASC')
             .groupBy(` d.po_number, d.po_line_item_number, d.schedule_line_item_number`)
         return await query.getRawMany();
-    }
+    } 
 
     async getPpmProductCodeForOrderCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')

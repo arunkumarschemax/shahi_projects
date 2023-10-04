@@ -21,7 +21,7 @@ export class PpmDateFilterRequest {
     geoCode?:string;
 
 
-    styleNumber?:string;
+    
 
     constructor(
         lastModifedStartDate?: any ,lastModifedEndtDate?: any ,documentStartDate?: any,
@@ -32,7 +32,7 @@ export class PpmDateFilterRequest {
         styleNumber?:string,    planningSeasonCode?:string,
         planningSeasonYear?:string,
         geoCode?:string,
-,styleNumber?:string,
+
     ) {
         this.lastModifedStartDate = lastModifedStartDate;
         this.lastModifedEndtDate = lastModifedEndtDate;
@@ -52,9 +52,10 @@ export class PpmDateFilterRequest {
         this.docTypeCode = docTypeCode;
         this.poLineItemNumber = poLineItemNumber
         this.styleNumber = styleNumber;
-        this.planningSeasonCode = planningSeasonCode
-        this.planningSeasonYear = planningSeasonYear
-        this.geoCode= geoCode
+        this.planningSeasonCode = planningSeasonCode;
+        this.planningSeasonYear = planningSeasonYear;
+        this.geoCode= geoCode;
+        
 
     }
 }

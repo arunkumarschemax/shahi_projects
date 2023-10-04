@@ -184,9 +184,10 @@ export class DpomController {
     }
 
     @Post('/getFabricTrackerReport')
-    async getFabricTrackerReport(): Promise<CommonResponseModel> {
+    @ApiBody({ type: PpmDateFilterRequest })
+    async getFabricTrackerReport( @Body() req:any): Promise<CommonResponseModel> {
         try {
-            return await this.dpomService.getFabricTrackerReport();
+            return await this.dpomService.getFabricTrackerReport(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

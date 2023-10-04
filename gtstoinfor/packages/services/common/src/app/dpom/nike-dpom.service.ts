@@ -506,10 +506,11 @@ export class DpomService {
             req.poNumber = req.poNumber.replace(/\s+/g, "");
             await transactionManager.startTransaction()
             const orderDetails = await this.dpomRepository.find({ where: { purchaseOrderNumber: req.poNumber } })
-            if (orderDetails.length > 0) {
+            if (orderDetails) {
                 for (const item of req.poItemDetails) {
                     const itemText = item.itemVasText ? item.itemVasText : null;
                     const matches = [];
+                    let hanger = '-';
                     if (itemText != null) {
                         const pattern = /diverted to.*?Purchase Order (\d+ \/ \d+)/g;
 
@@ -566,7 +567,7 @@ export class DpomService {
                 return new CommonResponseModel(true, 1, 'Data retrived successfully')
             } else {
                 await transactionManager.releaseTransaction();
-                return new CommonResponseModel(false, 0, 'No POs found')
+                return new CommonResponseModel(false, 0, 'No POs data found relavent to PDF uploaded')
             }
         } catch (error) {
             await transactionManager.releaseTransaction()
