@@ -263,11 +263,11 @@ const getAllItems = () => {
 
   const columns : any [] = [
     {
-      title: "S.No",
-      key: "sno",
-      responsive: ["sm"],
-      render: (text, record, index) => getStartIndex() + index,
-    },
+      title: 'S.No',
+      key: 'sno',
+      responsive: ['sm'],
+      render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+  },
       {
           title: "Item",
           dataIndex: "item",
@@ -527,7 +527,14 @@ const getAllItems = () => {
           dataSource={priceList}
           className="custom-table-wrapper"
 
-          pagination={pagination}
+          pagination={{
+           // pageSize:50,
+            onChange(current, pageSize) {
+                
+                setPage(current);
+                setPageSize(pageSize)
+            }
+        }}
           scroll={{x:true}}
           onChange={onChange}
           bordered />
