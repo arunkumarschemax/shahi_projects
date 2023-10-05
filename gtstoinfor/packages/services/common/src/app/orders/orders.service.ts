@@ -33,7 +33,7 @@ import * as base64 from 'base64-stream';
 import * as winston from 'winston';
 import { resolve } from 'path';
 import { isNumberObject } from 'util/types';
-import { FormatDates } from '../../../../../libs/shared-models/src/enum';
+import { monthOrderDtoKeys, yearOrderDtoKeys } from '../../../../../libs/shared-models/src/enum';
 const xlsxFile = require('read-excel-file/node');
 const csv = require('csv-parser');
 const Excel = require('exceljs');
@@ -81,8 +81,8 @@ export class OrdersService {
             await transactionManager.startTransaction()
             const flag = new Set()
             const columnArray = [];
-            console.log(formData,'formdaaaahh')
-            console.log(id,'fileiddd')
+            // console.log(formData,'formdaaaahh')
+            // console.log(id,'fileiddd')
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
@@ -119,7 +119,6 @@ export class OrdersService {
                 }
                 return updatedObj;
             });
-            // console.log(convertedData,'updatedObjmm')
             const difference = columnArray.filter((element) => !ProductionOrderColumns.includes(element));
             if(difference.length > 0){
                 await transactionManager.releaseTransaction()
@@ -160,8 +159,8 @@ if(data.Order_Plan_Number !== null){
                     for (const existingDataKey of existingDataKeys) {
                         if (details[existingDataKey] != dtoData[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month' && existingDataKey != 'productionPlanId') {
                             const orderDiffObj = new OrdersDifferenceEntity();
-                            // if (existingDataKey === 'publishDate' || existingDataKey === 'yarnProductionDueDateAuto' || existingDataKey === 'yarnAutoReflectionDate' || existingDataKey === 'EXF' || existingDataKey === 'yarnDeliveryDate' || existingDataKey === 'fbrcProductionDueDateAuto'|| existingDataKey === 'fbrcAutoReflectionDate'|| existingDataKey === 'fbrcDeliveryDate'|| existingDataKey === 'colorProductionDueDateAuto'|| existingDataKey === 'colorAutoReflectionDate'|| existingDataKey === 'colorDeliveryDate' || existingDataKey === 'trimProductionDueDateAuto'|| existingDataKey === 'trimAutoReflectionDate'|| existingDataKey === 'trimDeliveryDate'|| existingDataKey === 'poProductionDueDateAuto'|| existingDataKey === 'poAutoReflectionDate') {
-                                if (existingDataKey === 'createDate' || existingDataKey === 'updateDate' || existingDataKey === 'publishDate' || existingDataKey === 'fbrcDlAnswered' || existingDataKey === 'plannedEXF' || existingDataKey === 'ltPoExf') {
+                                // if (existingDataKey == 'createDate' || existingDataKey == 'updateDate' || existingDataKey == 'publishDate' || existingDataKey == 'fbrcDlAnswered' || existingDataKey == 'plannedEXF' || existingDataKey == 'ltPoExf') {
+                                    if(yearOrderDtoKeys.includes(existingDataKey)){
 
                                 const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY','YYYY/MM/DD','YYYY-MM-DD HH:mm:ss']).format('YYYY-MM-DD');
                                 const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY','YYYY/MM/DD','YYYY-MM-DD']).format('YYYY-MM-DD');
@@ -183,7 +182,29 @@ if(data.Order_Plan_Number !== null){
                                 } else {
                                     continue;
                                 }
-                            } else {
+                            }else if(monthOrderDtoKeys.includes(existingDataKey)){
+                                const oldValue = moment(details[existingDataKey]).format('MM-DD');
+                                const newValue = moment(dtoData[existingDataKey]).format('MM-DD');
+                                orderDiffObj.oldValue = oldValue
+                                orderDiffObj.newValue = newValue
+                                orderDiffObj.columnName = orderColumnValues[existingDataKey]
+                                orderDiffObj.displayName = existingDataKey
+                                orderDiffObj.productionPlanId = details.productionPlanId
+                                orderDiffObj.version = dtoData.version
+                                orderDiffObj.fileId = Number(id)
+                                orderDiffObj.orderPlanNumber = dtoData.orderPlanNumber
+                                if (oldValue != newValue) {
+                                    const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
+                                    if (!orderDiffSave) {
+                                        flag.add(false)
+                                        await transactionManager.releaseTransaction();
+                                        break;
+                                    }
+                                } else {
+                                    continue;
+                                }
+                            } 
+                            else {
                                 orderDiffObj.oldValue = details[existingDataKey]
                                 orderDiffObj.newValue = dtoData[existingDataKey]
                                 orderDiffObj.columnName = orderColumnValues[existingDataKey]
@@ -1324,6 +1345,7 @@ async getWareHouseComparisionExcelData(req:YearReq): Promise<CommonResponseModel
 async processEmails() {
     // Set the environment variable to allow TLS
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    let filesArray = []
 
     // Define your email configuration
     const imap = new Imap({
@@ -1340,34 +1362,43 @@ async processEmails() {
       return thing && thing.toUpperCase ? thing.toUpperCase() : thing;
     }
 
+
     const buildAttMessageFunction = (attachment) => {
       if (!attachment || !attachment.params || !attachment.params.name) {
         const logMessage = 'No valid attachment found.';
         this.logger.warn(logMessage);
-        console.log(logMessage);
         return;
-      }
+        // console.log(logMessage);
+    }
 
       const filename = attachment.params.name;
       const encoding = attachment.encoding;
+      //   this.readCell(filesArray)
+    //   const test = getFilesArray(attachment)
+    //   filesArray.push(attachment.params.name)
+
+
+
 
       return (msg, seqno) => {
         const prefix = `(Message #${seqno}) `;
         msg.on('body', (stream, info) => {
           const logMessage = `${prefix}Streaming attachment to file: ${filename}, ${info}`;
           this.logger.info(logMessage);
-          console.log(logMessage);
+        //   console.log(logMessage);
 
           const writeStream = fs.createWriteStream(savePath + filename);
-          console.log(writeStream,'www')
-          console.log(savePath + filename+'iiiiii')
+          
+
+        //   console.log(writeStream,'www')
+        //   console.log(savePath + filename+'iiiiii')
           writeStream.on('finish', () => {
             const finishLogMessage = `${prefix}Done writing to file: ${filename}`;
             this.logger.info(finishLogMessage);
-            console.log(finishLogMessage);
-            console.log(finishLogMessage);
+            // console.log(finishLogMessage);
+            // console.log(finishLogMessage);
             // './upload-files/007Q2_Shahi_0807.csv
-            this.readCell(savePath + filename,filename)
+            // this.readCell(savePath + filename,filename)
           });
 
           if (toUpper(encoding) === 'BASE64') {
@@ -1378,13 +1409,14 @@ async processEmails() {
         });
       };
     };
+    console.log('filesssssnwwggg',filesArray)
 
     imap.once('ready', () => {
       imap.openBox('INBOX', true, (err, box) => {
         if (err) {
           const logMessage = `Error opening mailbox: ${err}`;
           this.logger.error(logMessage);
-          console.error(logMessage);
+        //   console.error(logMessage);
           throw err;
         }
 
@@ -1394,7 +1426,7 @@ async processEmails() {
           if (err) {
             const logMessage = `Error searching emails: ${err}`;
             this.logger.error(logMessage);
-            console.error(logMessage);
+            // console.error(logMessage);
             throw err;
           }
 
@@ -1409,37 +1441,38 @@ async processEmails() {
               const attachments = findAttachmentParts(attrs.struct);
               const logMessage = `${prefix}Has attachments: ${attachments.length}`;
               this.logger.info(logMessage);
-              console.log(logMessage);
+            //   console.log(logMessage);
 
-              attachments.forEach((attachment) => {
+              attachments.forEach(async(attachment) => {
                 if (attachment.params && attachment.params.name) {
                   const logMessage = `${prefix}Fetching attachment: ${attachment.params.name}`;
                   this.logger.info(logMessage);
-                  console.log(logMessage);
+                //   console.log(logMessage);
                   const f = imap.fetch(attrs.uid, {
                     bodies: [attachment.partID],
                   });
                   f.on('message', buildAttMessageFunction(attachment));
+                //   await this.readCell(savePath + attachment.params.name,attachment.params.name)
                 }
               });
             });
             msg.once('end', () => {
               const logMessage = `${prefix}Finished email`;
               this.logger.info(logMessage);
-              console.log(logMessage);
+            //   console.log(logMessage);
             });
           });
 
           fetch.once('error', (err) => {
             const logMessage = `Fetch error: ${err}`;
             this.logger.error(logMessage);
-            console.error(logMessage);
+            // console.error(logMessage);
           });
 
           fetch.once('end', () => {
             const logMessage = 'Done fetching all messages!';
             this.logger.info(logMessage);
-            console.log(logMessage);
+            // console.log(logMessage);
             imap.end();
           });
         });
@@ -1449,13 +1482,13 @@ async processEmails() {
     imap.once('error', (err) => {
       const logMessage = `IMAP error: ${err}`;
       this.logger.error(logMessage);
-      console.error(logMessage);
+    //   console.error(logMessage);
     });
 
     imap.once('end', () => {
       const logMessage = 'IMAP Connection ended';
       this.logger.info(logMessage);
-      console.log(logMessage);
+    //   console.log(logMessage);
     });
 
     imap.connect();
@@ -1478,209 +1511,105 @@ async processEmails() {
             const fileExtension = filename.split('.').pop().toLowerCase();
             if (allowedExtensions.includes('.' + fileExtension)) {
               attachments.push(struct[i]);
+              
             }
           }
         }
       }
       return attachments;
     };
+
+    console.log(filesArray)
+            // this.readCell(savePath + filename,filename)
+
   }
+
+//   async getFiles 
   async readCell(filepath,filename):Promise<CommonResponseModel> {
-    // console.log(filepath,'filepathhh')
-    // console.log(filename,'filenamehh')
-    // // return new Promise((resolve, reject) => {
-    //     let workBook = new Excel.Workbook();
-    //     workBook.xlsx.readFile(filename).then(() => {
-            
-    //         let sheet = workBook.getWorkSheet('Sheet1');
-    //         console.log('sheetllll',sheet)
-    //         let cellValue = sheet.getRow(2).getCell(1).value;
-    //         // resolve(cellValue);
-    //         console.log(cellValue,'cellvallll')
-    //     }).catch(err => /* Do some error handling here if you want to */ console.log(err));
-    // // });
-    // working-----------
-//     var workbook = new Excel.Workbook(); 
-// workbook.xlsx.readFile('./upload-files/007Q_Shahi_0807_latest.xlsx')
-//     .then(function() {
-//         var worksheet = workbook.getWorksheet('Production Plan Rawdata Export');
-// //         const c2 = worksheet.getRow(1);
-// //    c2.eachCell(c => {
-// //       console.log(c.value,'iiii');
-// //    });
-//         console.log(worksheet,'woooo')
-//         worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) {
+    // console.log(req,'filesdataaaa')
+    const fs = require('fs');
+    const files = fs.readdirSync('./upload-files/');
+    console.log(files,'filesssss')
+    // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
+    for(const filerec of files){
+        const filename = filerec
+        const filepath = './upload-files/'+filerec
 
-//           console.log("Row " + rowNumber + " = " + JSON.stringify(row.values));
-//         });
-//     });
-
-// xlsxFile('./upload-files/007Q_Shahi_0807_latest.xlsx')
-//   .then((rows) => {
-//     rows.forEach((row) => {
-//       row.forEach((cell) => {
-//         console.log(cell);
-//       });
-//     });
-//   });
-filename = 'pro_orders_1.xlsx';
-    console.log(filename.split('.').pop(),'extension')
-    console.log(filename,'filename')
-    const promise = () => new Promise((resolve, reject) => {
-        if(filename.split('.').pop() == 'csv'){
-            const dataArray = []
-            fs.createReadStream(filepath)
-                .on('error', () => {
-                    // handle error
-                })
-
-                .pipe(csv())
-                .on('data', (row) => {
-                    dataArray.push(Object(row))
-                })
-
-                .on('end', () => {
-                    resolve(dataArray)
-                })
-        }else if(filename.split('.').pop() == 'xlsx'){
-            console.log('uuuuooo')
-            xlsxFile(filepath)
-              .then((rows) => {
-                const dataArray = []
-                const columnNames = rows.shift(); // Separate first row with column names
-                rows.map((row) => { // Map the rest of the rows into objects
-                  const obj = {}; // Create object literal for current row
-                  row.forEach((cell, i) => {
-                    // if(cell == null){
-                    //     obj[columnNames[i]] = "";
-                    // }
-                    // if(typeof cell == 'number'){
-                    //     obj[columnNames[i]] = cell.toString(); // Use index from current cell to get column name, add current cell to new object
-                    // }else{
-                        obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
-
-                    // }
-                    // console.log(columnNames[i],'4444444')
-                    
-                    // if(FormatDates.includes(columnNames[i].replace(/\s/g, '')) &&  cell != null){
-                    //     obj[columnNames[i]] = moment(cell).format('YYYY-MM-DD').toString()
-                    //     // console.log(obj[columnNames[i]],'99999999999')
-
-                    // }
-                        // obj[columnNames[i]] = ""; // Use index from current cell to get column name, add current cell to new object
-                        // obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
-
-
-                    // }
-                  });
-                //   console.log(obj)
-                  dataArray.push(Object(obj));
-                  resolve(dataArray)
-                //   console.log(objs); // Display the array of objects on the console
-                //   return obj;
-                });
-              });
-        }else{
-            
-        }
-    })
-    const dataArray = await promise();
-
-//   console.log(dataArray,'datajjjj')
-
-// -----------
-// filepath = './upload-files/007Q2_Shahi_0807.csv'
-// filename = '007Q2_Shahi_0807.csv'
-// const promise = () => new Promise((resolve, reject) => {
-//     const dataArray = []
-// fs.createReadStream(filepath)
-//     .on('error', () => {
-//         // handle error
-//     })
-
-     
-
-//     .pipe(csv())
-//     .on('data', (row) => {
-//         // const nwrow = JSON.stringify(row)
-//         // row = JSON.parse(nwrow)
-//         // const keysval = Object.keys(row)
-//         // const updatedObj = {};
-
-//         // for(const eachkey of keysval){
-//         //     const updatedKey = eachkey.replace(/'/g,'')
-//         // console.log(updatedKey,'updatedKey')
-
-//         //     updatedObj[updatedKey] = row[eachkey]
-//         // }
-//         // console.log(updatedObj,'updatedObj')
-//         dataArray.push(Object(row))
-//     })
-
-//     .on('end', () => {
-//             resolve(dataArray)
-//     })
-// })
-// const dataArray = await promise();
-
-// console.log(dataArray)
-// console.log('newdataaaafileenlllttt')
-    if(dataArray){
-        // console.log('dataArraymmmm',dataArray)
+        // filename = 'pro_orders_1.xlsx';
+            console.log(filename.split('.').pop(),'extension')
+            console.log(filename,'filename')
+            const promise = () => new Promise((resolve, reject) => {
+                if(filename.split('.').pop() == 'csv'){
+                    const dataArray = []
+                    fs.createReadStream(filepath)
+                        .on('error', () => {
+                            // handle error
+                        })
         
-        const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS)
-        console.log(saveFilePath,'jjjjj')
-        // console.log('saveFilePathhhhh')
-        if(saveFilePath.status){
-            const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
-            let req = new FileStatusReq();
-            req.fileId = saveFilePath.data.id;
-            req.userName = 'Bidhun'
-            if(saveProjOrders.status){
-                req.status = 'Success';
+                        .pipe(csv())
+                        .on('data', (row) => {
+                            dataArray.push(Object(row))
+                        })
+        
+                        .on('end', () => {
+                            resolve(dataArray)
+                        })
+                }else if(filename.split('.').pop() == 'xlsx'){
+                    xlsxFile(filepath)
+                      .then((rows) => {
+                        const dataArray = []
+                        const columnNames = rows.shift(); // Separate first row with column names
+                        rows.map((row) => { // Map the rest of the rows into objects
+                          const obj = {}; // Create object literal for current row
+                          row.forEach((cell, i) => {
+                                obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
+                          });
+                        //   console.log(obj)
+                          dataArray.push(Object(obj));
+                          resolve(dataArray)
+                        //   console.log(objs); // Display the array of objects on the console
+                        //   return obj;
+                        });
+                      });
+                }else{
+                    
+                }
+            })
+            const dataArray = await promise();
+        
+            if(dataArray){
+                // console.log('dataArraymmmm',dataArray)
+                
+                const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS)
+                console.log(filepath,'jjjjj')
+                console.log(filename,'jjjjj')
+                // console.log('saveFilePathhhhh')
+                if(saveFilePath.status){
+                    // console.log(dataArray,'------------------------------------')
+                    const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
+                    let req = new FileStatusReq();
+                    req.fileId = saveFilePath.data.id;
+                    req.userName = 'Bidhun'
+                    if(saveProjOrders.status){
+                        req.status = 'Success';
+                    }else{
+                        req.status = 'Failed';
+                    }
+                    const updateFileStatus = await this.updateFileStatus(req)
+                }else{
+                    // return false
+                }
+                // return dataArray
             }else{
-                req.status = 'Failed';
+                // return dataArray
             }
-            const updateFileStatus = await this.updateFileStatus(req)
-        }
-        // return dataArray
-    }else{
-        // return dataArray
     }
+
+    
     return 
     
     }
 
-//   async readCell(filename) {
-//     // // return new Promise((resolve, reject) => {
-//     //     let workBook = new Excel.Workbook();
-//     //     workBook.xlsx.readFile(filename).then(() => {
-            
-//     //         let sheet = workBook.getWorkSheet('Sheet1');
-//     //         console.log('sheetllll',sheet)
-//     //         let cellValue = sheet.getRow(2).getCell(1).value;
-//     //         // resolve(cellValue);
-//     //         console.log(cellValue,'cellvallll')
-//     //     }).catch(err => /* Do some error handling here if you want to */ console.log(err));
-//     // // });
-//     // working-----------
-// //     var workbook = new Excel.Workbook(); 
-// // workbook.xlsx.readFile(filename)
-// //     .then(function() {
-// //         var worksheet = workbook.getWorksheet('Sheet1');
-// //         worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) {
-// //           console.log("Row " + rowNumber + " = " + JSON.stringify(row.values));
-// //         });
-// //     });
-
-// // -----------
-// const filepath = './upload-files/projection-orders/007Q_Shahi_0807.csv'
-// fs.createReadStream(filepath)
-//   .pipe(csv())
-//   .on('headers', (headers) => {
-//     console.log(headers)
-//   })
-//     }
 
 async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
     const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
