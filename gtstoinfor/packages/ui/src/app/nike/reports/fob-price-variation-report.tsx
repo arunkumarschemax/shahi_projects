@@ -12,6 +12,7 @@ export const FOBPriceVariationReport = () => {
     const [pageSize, setPageSize] = useState<number>(1);
     const service = new NikeService()
     const [data, setData] = useState<any[]>([]);
+    const [poAndLine,setPoAndLine] = useState<any>([]); 
     const [poNumber, setPoNumber] = useState<any>([]);
     const [styleNumber, setStyleNumber] = useState<any>([]);
     const [size, setSize] = useState<any>([]);
@@ -25,11 +26,23 @@ export const FOBPriceVariationReport = () => {
         getData()
         PoandLine()
         getSize()
-        StyleNumber()
+        StyleNumber ()
+        getSize()
     }, [])
 
+    
 
 
+
+    
+    const getSize = ()=>{
+        service.getPriceDiffSizeDescription().then(res => {
+            if(res.status){
+                setSize(res.data)
+            }
+        })
+    }
+    
     const PoandLine = () => {
         service.getPriceDiffPoLinedd().then(res => {
             if (res.status) {
@@ -37,13 +50,7 @@ export const FOBPriceVariationReport = () => {
             }
         })
     }
-    const getSize = () => {
-        service.getPriceDiffSizeDescription().then(res => {
-            if (res.status) {
-                setSize(res.data)
-            }
-        })
-    }
+    
     const StyleNumber = () => {
         service.getPriceDiffStyleNumber().then(res => {
             if (res.status) {
@@ -54,22 +61,27 @@ export const FOBPriceVariationReport = () => {
     const getData = () => {
         const req = new FobPriceDiffRequest();
 
+        if (form.getFieldValue('poandLine') !== undefined) {
+            req.poAndLine = form.getFieldValue('poandLine');
+          }
+          if (form.getFieldValue('styleNumber') !== undefined) {
+            req.styleNumber = form.getFieldValue('styleNumber');
+          }
+          if (form.getFieldValue('sizeDescription') !== undefined) {
+            req.sizeDescription = form.getFieldValue('sizeDescription');
+          } 
         if (form.getFieldValue('poNumber') !== undefined) {
             req.poNumber = form.getFieldValue('poNumber');
         }
-        if (form.getFieldValue('styleNumber') !== undefined) {
-            req.styleNumber = form.getFieldValue('styleNumber');
-        }
-        if (form.getFieldValue('sizeDescription') !== undefined) {
-            req.sizeDescription = form.getFieldValue('sizeDescription');
-        }
+         
         service.getPriceDifferenceReport(req).then(res => {
             if (res.status) {
                 setData(res.data)
             }
-            else {
+            else{
                 setData([])
             }
+            
         })
     }
     const resetHandler = () => {
@@ -86,8 +98,8 @@ export const FOBPriceVariationReport = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'PO Number',
-            dataIndex: 'poNumber'
+            title: 'PO And Line',
+            dataIndex: 'poAndLine'
         },
 
         {
@@ -153,6 +165,7 @@ export const FOBPriceVariationReport = () => {
                     <>
                         {record.grossPriceFob ? Number(diff).toLocaleString('en-IN') : '-'}
                         {/* return diff !== 0 ? Number(diff).toLocaleString('en-IN') : ''; */}
+                    {/* return diff !== 0 ? Number(diff).toLocaleString('en-IN') : ''; */}
                     </>
                 )
             }
@@ -161,7 +174,7 @@ export const FOBPriceVariationReport = () => {
     ]
 
     return (
-        <Card title='FOB Price Variation' >
+        <Card title='FOB Price Variation'  >
             <Form onFinish={getData} form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >

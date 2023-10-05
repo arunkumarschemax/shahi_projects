@@ -21,6 +21,7 @@ export class PpmDateFilterRequest {
     geoCode?:string;
 
 
+    
 
     constructor(
         lastModifedStartDate?: any ,lastModifedEndtDate?: any ,documentStartDate?: any,
@@ -47,12 +48,14 @@ export class PpmDateFilterRequest {
         this.factory = factory;
         this.DPOMLineItemStatus = DPOMLineItemStatus;
         this.poNumber = poNumber;
+        this.styleNumber=styleNumber;
         this.docTypeCode = docTypeCode;
         this.poLineItemNumber = poLineItemNumber
         this.styleNumber = styleNumber;
-        this.planningSeasonCode = planningSeasonCode
-        this.planningSeasonYear = planningSeasonYear
-        this.geoCode= geoCode
+        this.planningSeasonCode = planningSeasonCode;
+        this.planningSeasonYear = planningSeasonYear;
+        this.geoCode= geoCode;
+        
 
     }
 }

@@ -2082,8 +2082,6 @@ const PPMReport = () => {
               }
             }}
             scroll={{ x: 'max-content' }}
-            className="custom-table-wrapper"
-            rowClassName={getRowClassName}
             bordered
           />
         ) : (<Table size='large' />
