@@ -20,4 +20,13 @@ export class UploadPriceListRepository extends Repository<UploadPriceListEntity>
 
         return await query.getRawMany();
     }
+
+    async getUploadedTime(): Promise<any[]> {
+        const query = this.createQueryBuilder()
+            .select(`file_name AS fileName, DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') AS createdAt`)
+            .where(`status = 'Success'`)
+            .orderBy(`created_at`, 'DESC')
+            .limit(2)
+        return await query.getRawMany();
+    }
 }

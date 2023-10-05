@@ -85,4 +85,8 @@ export class PriceListService extends CommonAxiosService {
     async getAllSeasonCode(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllSeasonCode")
     }
+
+    async getUploadedTime(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getUploadedTime")
+    }
 }
