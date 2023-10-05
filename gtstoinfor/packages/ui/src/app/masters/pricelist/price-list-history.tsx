@@ -31,6 +31,7 @@ export const PriceListHistory = (props: PriceListView) => {
   const [year,setYear] = useState<any[]>([]); 
   const [currency,setCurrency] = useState<any[]>([]);
   const [seasonCode,setSeasonCode] = useState<any[]>([]);
+  const [fileData, setFileData] = useState<any[]>([])
 
 
 
@@ -41,7 +42,7 @@ export const PriceListHistory = (props: PriceListView) => {
     getYear();
     getCurrency();
     getSeasonCode();
-
+    getUploadedTime()
   },[])
 
   const pagination = {
@@ -89,6 +90,12 @@ const getSeasonCode = () => {
     setSeasonCode(res.data)
   })
 
+}
+
+const getUploadedTime = () => {
+  priceService.getUploadedTime().then(res => {
+    setFileData(res.data)
+  })
 }
 
   const getPriceList= () => {
@@ -308,7 +315,7 @@ const getSeasonCode = () => {
 
   return (
       <>
-      <Card title={<span >Price List</span>}
+      <Card title={<span >Price List History</span>}
     //  headStyle={{ border: 0 }} 
     extra={<Link to='/masters/pricelist/price-list-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
@@ -377,13 +384,14 @@ const getSeasonCode = () => {
           </Col>
         </Row>
       </Form>
-      {/* <Form layout='vertical'>
-         <Descriptions  style={{ alignItems: 'right' }} column={2}>
-        <Descriptions.Item label={'Previous'}>{}</Descriptions.Item>
-        <Descriptions.Item label={`Order Qty Pc's`}>{} </Descriptions.Item>
+      <Descriptions>
+        <Descriptions.Item label="Uploaded On">
+          <Descriptions>
+            <Descriptions.Item label="Previous">{fileData[1]?.createdAt}</Descriptions.Item>
+            <Descriptions.Item label="Latest">{fileData[0]?.createdAt}</Descriptions.Item>
+          </Descriptions>
+        </Descriptions.Item>
       </Descriptions>
-      </Form> */}
-     
       <Table
       rowKey={record => record}
       columns={columns}
@@ -400,4 +408,3 @@ const getSeasonCode = () => {
 
 
 export default PriceListHistory
-

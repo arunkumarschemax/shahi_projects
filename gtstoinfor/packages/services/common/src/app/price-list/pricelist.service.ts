@@ -622,4 +622,15 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
             }
         }
 
+        async getUploadedTime(): Promise<CommonResponseModel> {
+            const details = await this.uploadPriceRepo.getUploadedTime();
+           
+            if (details.length > 0) {
+                
+                return new CommonResponseModel(true, 1, 'data retrived', details)
+            } else {
+                return new CommonResponseModel(false, 0, 'data not found')
+            }
+        }
+
 }
