@@ -154,9 +154,9 @@ export const PriceListForm = (props: PriceListFormProps) => {
                 <Form.Item name='fobLocalCurrency' label='Price ' 
                  rules={[
                   {
-                    pattern: /^[0-9]+$/,
-                    message: `Enter Numbers Only`
-                  }
+                    pattern: /^\d+(\.\d{1,5})?$/, 
+                    message: 'Enter a valid number look like this 123.1234',
+                  },
                 ]}
                 >
                   <Input placeholder='Enter Price'/>

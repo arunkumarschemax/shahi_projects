@@ -199,4 +199,10 @@ export class OrdersService extends CommonAxiosService {
     async getComparisionPhaseData(req:YearReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getComparisionPhaseData",req)
     }
+    async getComparisionPhaseExcelData(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getComparisionPhaseExcelData",req)
+    }
+    async getPhaseMonthExcelData(req:YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getPhaseMonthExcelData",req)
+    }
 }

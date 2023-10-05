@@ -1523,7 +1523,7 @@ async processEmails() {
 //       });
 //     });
 //   });
-// filename = 'pro_order_sep3.xlsx';
+filename = 'pro_orders_1.xlsx';
     console.log(filename.split('.').pop(),'extension')
     console.log(filename,'filename')
     const promise = () => new Promise((resolve, reject) => {
@@ -1732,6 +1732,7 @@ async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
             novCoeff: rec.novExfLat,
             decCoeff: rec.decExfLat,
           })
+        
     const monthWiseInstance = new MonthWiseDto(rec.prod_plan_type, pcs, coeff,rec.totalExfPre,rec.totalExfLat,rec.order_plan_number);
             monthData.push(monthWiseInstance); 
         }
@@ -1996,11 +1997,105 @@ async updateStatusAfterCoLineCreationInM3(req:CoLineStatusReq):Promise<CommonRes
         throw(err)
     }
 }
-
+async getPhaseMonthData(req): Promise<CommonResponseModel> {
+    try {
+    const data = await this.ordersRepository.getdata(req);
+    const DateMap = new Map<string, MonthWiseDto>();
+    
+    for (const rec of data) {
+    if (!DateMap.has(rec.prod_plan_type)) {
+        DateMap.set(
+          rec.prod_plan_type,
+          new MonthWiseDto(rec.prod_plan_type, [], [], 0, 0)
+        );
+      }
+      const monthWiseInstance = DateMap.get(rec.prod_plan_type);
+    
+    if(req.tabName === 'ExFactory'){
+    
+    monthWiseInstance.pcsData.push({
+    name: 'In Pcs',
+    janPcs: rec.janPcsExf,
+    febPcs: rec.febPcsExf,
+    marPcs: rec.marPcsExf,
+    aprPcs: rec.aprPcsExf,
+    mayPcs: rec.mayPcsExf,
+    junPcs: rec.junPcsExf,
+    julPcs: rec.julPcsExf,
+    augPcs: rec.augPcsExf,
+    sepPcs: rec.sepPcsExf,
+    octPcs: rec.octPcsExf,
+    novPcs: rec.novPcsExf,
+    decPcs: rec.decPcsExf,
+    });
+    
+    monthWiseInstance.coeffData.push({
+    name: 'In Coeff',
+    janCoeff: rec.janExfCoeff,
+    febCoeff: rec.febExfCoeff,
+    marCoeff: rec.marExfCoeff,
+    aprCoeff: rec.aprExfCoeff,
+    mayCoeff: rec.mayExfCoeff,
+    junCoeff: rec.julExfCoeff,
+    julCoeff: rec.julExfCoeff,
+    augCoeff: rec.augExfCoeff,
+    sepCoeff: rec.sepExfCoeff,
+    octCoeff: rec.octExfCoeff,
+    novCoeff: rec.novExfCoeff,
+    decCoeff: rec.decExfCoeff,
+    });
+    monthWiseInstance.totalPcs = rec.totalExfPre;
+    monthWiseInstance.totalCoeff = rec.totalExfLat;
+    }
+    if(req.tabName ==='WareHouse'){
+    
+    monthWiseInstance.pcsData.push({
+    name: 'In Pcs',
+    janPcs: rec.janPcsWh,
+    febPcs: rec.febPcsWh,
+    marPcs: rec.marPcsWh,
+    aprPcs: rec.aprPcsWh,
+    mayPcs: rec.mayPcsWh,
+    junPcs: rec.junPcsWh,
+    julPcs: rec.julPcsWh,
+    augPcs: rec.augPcsWh,
+    sepPcs: rec.sepPcsWh,
+    octPcs: rec.octPcsWh,
+    novPcs: rec.novPcsWh,
+    decPcs: rec.decPcsWh,
+    });
+    
+    monthWiseInstance.coeffData.push({
+    name: 'In Coeff',
+    janCoeff: rec.janWhCoeff,
+    febCoeff: rec.febWhCoeff,
+    marCoeff: rec.marWhCoeff,
+    aprCoeff: rec.aprWhCoeff,
+    mayCoeff: rec.mayWhCoeff,
+    junCoeff: rec.junWhCoeff,
+    julCoeff: rec.julWhCoeff,
+    augCoeff: rec.augWhCoeff,
+    sepCoeff: rec.sepWhCoeff,
+    octCoeff: rec.octWhCoeff,
+    novCoeff: rec.novWhCoeff,
+    decCoeff: rec.decWhCoeff,
+    });
+    
+    monthWiseInstance.totalPcs = rec.totalWhPre;
+    monthWiseInstance.totalCoeff = rec.totalWhLat;
+    }
+    }
+    const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());   
+    return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
+    } catch (error) {
+    // Handle errors appropriately
+    console.error(error);
+    return new CommonResponseModel(false, 0, 'error occurred', null);
+    }
+    }
 async getComparisionphaseData(req:YearReq):Promise<CommonResponseModel>{
     const data = await this.ordersChildRepo.getComparisionphaseData(req);
     const DateMap = new Map<string, MonthWiseDto>();
-
     for (const rec of data) {
         if (!DateMap.has(rec.prod_plan_type)) {
             DateMap.set(
@@ -2086,112 +2181,32 @@ if(req.tabName ==='WareHouse'){
  }
     const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());   
     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
-
-} catch(error){
-    console.error(error);
-    return new CommonResponseModel(false, 0, 'error occurred', null);
-
 }
+async getPhaseMonthExcelData(req:YearReq):Promise<CommonResponseModel>{
+    try{
+        const data = await this.ordersRepository.getdata(req)
+        if(data){
+            return new CommonResponseModel(true,1,'Data retrieved',data)
+        } else{
+            return new CommonResponseModel(false,1,'No data found')
+        }
 
-
-async getPhaseMonthData(req): Promise<CommonResponseModel> {
-try {
-const data = await this.ordersRepository.getdata(req);
-const DateMap = new Map<string, MonthWiseDto>();
-
-for (const rec of data) {
-if (!DateMap.has(rec.prod_plan_type)) {
-    DateMap.set(
-      rec.prod_plan_type,
-      new MonthWiseDto(rec.prod_plan_type, [], [], 0, 0)
-    );
-  }
-  const monthWiseInstance = DateMap.get(rec.prod_plan_type);
-
-if(req.tabName === 'ExFactory'){
-
-monthWiseInstance.pcsData.push({
-name: 'In Pcs',
-janPcs: rec.janPcsExf,
-febPcs: rec.febPcsExf,
-marPcs: rec.marPcsExf,
-aprPcs: rec.aprPcsExf,
-mayPcs: rec.mayPcsExf,
-junPcs: rec.junPcsExf,
-julPcs: rec.julPcsExf,
-augPcs: rec.augPcsExf,
-sepPcs: rec.sepPcsExf,
-octPcs: rec.octPcsExf,
-novPcs: rec.novPcsExf,
-decPcs: rec.decPcsExf,
-});
-
-monthWiseInstance.coeffData.push({
-name: 'In Coeff',
-janCoeff: rec.janExfCoeff,
-febCoeff: rec.febExfCoeff,
-marCoeff: rec.marExfCoeff,
-aprCoeff: rec.aprExfCoeff,
-mayCoeff: rec.mayExfCoeff,
-junCoeff: rec.julExfCoeff,
-julCoeff: rec.julExfCoeff,
-augCoeff: rec.augExfCoeff,
-sepCoeff: rec.sepExfCoeff,
-octCoeff: rec.octExfCoeff,
-novCoeff: rec.novExfCoeff,
-decCoeff: rec.decExfCoeff,
-});
-monthWiseInstance.totalPcs = rec.totalExfPre;
-monthWiseInstance.totalCoeff = rec.totalExfLat;
+    } catch(err){
+        throw err
+    }
 }
-if(req.tabName ==='WareHouse'){
+async getComparisionphaseExcelData(req:YearReq):Promise<CommonResponseModel>{
+    try{
+        const data = await this.ordersChildRepo.getComparisionphaseData(req)
+        if(data){
+            return new CommonResponseModel(true,1,'Data retrieved',data)
+        } else{
+            return new CommonResponseModel(false,1,'No data found')
+        }
 
-monthWiseInstance.pcsData.push({
-name: 'In Pcs',
-janPcs: rec.janWhPre,
-febPcs: rec.febWhPre,
-marPcs: rec.marWhPre,
-aprPcs: rec.aprWhPre,
-mayPcs: rec.mayWhPre,
-junPcs: rec.junWhPre,
-julPcs: rec.julWhPre,
-augPcs: rec.augWhPre,
-sepPcs: rec.sepWhPre,
-octPcs: rec.octWhPre,
-novPcs: rec.novWhPre,
-decPcs: rec.decWhPre,
-});
-
-monthWiseInstance.coeffData.push({
-name: 'In Coeff',
-janCoeff: rec.janWhLat,
-febCoeff: rec.febWhLat,
-marCoeff: rec.marWhLat,
-aprCoeff: rec.aprWhLat,
-mayCoeff: rec.mayWhLat,
-junCoeff: rec.junWhLat,
-julCoeff: rec.julWhLat,
-augCoeff: rec.augWhLat,
-sepCoeff: rec.sepWhLat,
-octCoeff: rec.octWhLat,
-novCoeff: rec.novWhLat,
-decCoeff: rec.decWhLat,
-});
-
-monthWiseInstance.totalPcs = rec.totalWhPre;
-monthWiseInstance.totalCoeff = rec.totalWhLat;
+    } catch(err){
+        throw err
+    }
 }
 }
-const dataModelArray: MonthWiseDto[] = Array.from(DateMap.values());   
-return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);  
-} catch (error) {
-// Handle errors appropriately
-console.error(error);
-return new CommonResponseModel(false, 0, 'error occurred', null);
-}
-}
-
-
-}
-
   
