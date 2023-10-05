@@ -63,6 +63,7 @@ export const MonthWiseReport = () =>{
       }
     });
     service.getPhaseMonthData(req).then((res)=>{
+      console.log(res,"*********")
       if(res.status){
         setPhase(res.data)
       }else{
@@ -1017,17 +1018,24 @@ const pagination2 = {
       {
         title:'In Pcs',
     dataIndex: "janPcs",
-    render: (text: any, record: any) => <span>{record.pcsData[0].janPcs}</span>,
+    render: (text: any, record: any) => {
+      return record.pcsData.map(
+        (item: any) => <span>{item.janPcs.toLocaleString()}</span> || "-"
+
+      )}
+    // }<span>{record.pcsData.janPcs}</span>,
 
       },
       {
         title:'In Coeff',
     dataIndex: "janCoeff",
-    render: (text: any, record: any) => <span>{record.coeffData[0].janCoeff}</span>,
+    render: (text: any, record: any) => {
+      return record.coeffData.map(
+        (item: any) => <span>{item.janCoeff.toLocaleString()}</span> || "-"
 
+      )}
       }
     ],
-    style: { backgroundColor: "lightblue" },
   },
   {
     title: "", 
@@ -1039,14 +1047,20 @@ const pagination2 = {
     {
       title:'In Pcs',
   dataIndex: "febPcs",
-  render: (text: any, record: any) => <span >{record.pcsData[0].febPcs}</span>,
+  render: (text: any, record: any) => {
+    return record.pcsData.map(
+      (item: any) => <span>{item.febPcs.toLocaleString()}</span> || "-"
 
+    )}
     },
     {
       title:'In Coeff',
   dataIndex: "febCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].febCoeff}</span>,
+  render: (text: any, record: any) => {
+    return record.coeffData.map(
+      (item: any) => <span>{item.febCoeff.toLocaleString()}</span> || "-"
 
+    )}
     }
   ]
 },
@@ -1060,14 +1074,20 @@ const pagination2 = {
     {
       title:'In Pcs',
   dataIndex: "marPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].marPcs}</span>,
+  render: (text: any, record: any) => {
+    return record.pcsData.map(
+      (item: any) => <span>{item.marPcs.toLocaleString()}</span> || "-"
 
+    )}
     },
     {
       title:'In Coeff',
   dataIndex: "marCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].marCoeff}</span>,
+  render: (text: any, record: any) => {
+    return record.coeffData.map(
+      (item: any) => <span>{item.marCoeff.toLocaleString()}</span> || "-"
 
+    )}
     }
   ]
 },
@@ -1081,14 +1101,20 @@ const pagination2 = {
     {
       title:'In Pcs',
   dataIndex: "aprPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].aprPcs}</span>,
+  render: (text: any, record: any) => {
+    return record.pcsData.map(
+      (item: any) => <span>{item.aprPcs.toLocaleString()}</span> || "-"
 
+    )}
     },
     {
       title:'In Coeff',
   dataIndex: "aprCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].aprCoeff}</span>,
+  render: (text: any, record: any) => {
+    return record.coeffData.map(
+      (item: any) => <span>{item.aprCoeff.toLocaleString()}</span> || "-"
 
+    )}
     }
   ]
 },
@@ -1102,14 +1128,20 @@ const pagination2 = {
     {
       title:'In Pcs',
   dataIndex: "mayPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].mayPcs}</span>,
+  render: (text: any, record: any) => {
+    return record.pcsData.map(
+      (item: any) => <span>{item.mayPcs.toLocaleString()}</span> || "-"
 
+    )}
     },
     {
       title:'In Coeff',
   dataIndex: "mayCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].mayCoeff}</span>,
+  render: (text: any, record: any) => {
+    return record.coeffData.map(
+      (item: any) => <span>{item.mayCoeff.toLocaleString()}</span> || "-"
 
+    )}
     }
   ]
 },
@@ -1123,14 +1155,20 @@ const pagination2 = {
     {
       title:'In Pcs',
   dataIndex: "junPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].junPcs}</span>,
+  render: (text: any, record: any) => {
+    return record.pcsData.map(
+      (item: any) => <span>{item.junPcs.toLocaleString()}</span> || "-"
 
+    )}
     },
     {
       title:'In Coeff',
   dataIndex: "junCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].junCoeff}</span>,
+  render: (text: any, record: any) => {
+    return record.coeffData.map(
+      (item: any) => <span>{item.junCoeff.toLocaleString()}</span> || "-"
 
+    )}
     }
   ]
 },
@@ -1144,14 +1182,20 @@ const pagination2 = {
     {
       title:'In Pcs',
   dataIndex: "julPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].julPcs}</span>,
+  render: (text: any, record: any) => {
+    return record.pcsData.map(
+      (item: any) => <span>{item.julPcs.toLocaleString()}</span> || "-"
 
+    )}
     },
     {
       title:'In Coeff',
   dataIndex: "julCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].julCoeff}</span>,
+  render: (text: any, record: any) => {
+    return record.coeffData.map(
+      (item: any) => <span>{item.julCoeff.toLocaleString()}</span> || "-"
 
+    )}
     }
   ]
 },
@@ -1165,14 +1209,20 @@ const pagination2 = {
     {
       title:'In Pcs',
   dataIndex: "augPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].augPcs}</span>,
+  render: (text: any, record: any) => {
+    return record.pcsData.map(
+      (item: any) => <span>{item.augPcs.toLocaleString()}</span> || "-"
 
+    )}
     },
     {
       title:'In Coeff',
   dataIndex: "augCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].augCoeff}</span>,
+  render: (text: any, record: any) => {
+    return record.coeffData.map(
+      (item: any) => <span>{item.augCoeff.toLocaleString()}</span> || "-"
 
+    )}
     }
   ]
 },
@@ -1186,14 +1236,20 @@ const pagination2 = {
     {
       title:'In Pcs',
   dataIndex: "sepPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].sepPcs}</span>,
+  render: (text: any, record: any) => {
+    return record.pcsData.map(
+      (item: any) => <span>{item.sepPcs.toLocaleString()}</span> || "-"
 
+    )}
     },
     {
       title:'In Coeff',
   dataIndex: "sepCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].sepCoeff}</span>,
+  render: (text: any, record: any) => {
+    return record.coeffData.map(
+      (item: any) => <span>{item.sepCoeff.toLocaleString()}</span> || "-"
 
+    )}
     }
   ]
 },
@@ -1207,14 +1263,20 @@ const pagination2 = {
     {
       title:'In Pcs',
   dataIndex: "octPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].octPcs}</span>,
+  render: (text: any, record: any) => {
+    return record.pcsData.map(
+      (item: any) => <span>{item.octPcs.toLocaleString()}</span> || "-"
 
+    )}
     },
     {
       title:'In Coeff',
   dataIndex: "octCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].octCoeff}</span>,
+  render: (text: any, record: any) => {
+    return record.coeffData.map(
+      (item: any) => <span>{item.octCoeff.toLocaleString()}</span> || "-"
 
+    )}
     }
   ]
 },
@@ -1228,14 +1290,20 @@ const pagination2 = {
     {
       title:'In Pcs',
   dataIndex: "novPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].novPcs}</span>,
+  render: (text: any, record: any) => {
+    return record.pcsData.map(
+      (item: any) => <span>{item.novPcs.toLocaleString()}</span> || "-"
 
+    )}
     },
     {
       title:'In Coeff',
   dataIndex: "novCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].novCoeff}</span>,
+  render: (text: any, record: any) => {
+    return record.coeffData.map(
+      (item: any) => <span>{item.novCoeff.toLocaleString()}</span> || "-"
 
+    )}
     }
   ]
 },
@@ -1249,14 +1317,20 @@ const pagination2 = {
     {
       title:'In Pcs',
   dataIndex: "decPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].decPcs}</span>,
+  render: (text: any, record: any) => {
+    return record.pcsData.map(
+      (item: any) => <span>{item.decPcs.toLocaleString()}</span> || "-"
 
+    )}
     },
     {
       title:'In Coeff',
   dataIndex: "decCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].decCoeff}</span>,
+  render: (text: any, record: any) => {
+    return record.coeffData.map(
+      (item: any) => <span>{item.decCoeff.toLocaleString()}</span> || "-"
 
+    )}
     }
   ]
 },
@@ -1333,7 +1407,6 @@ render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_q
     
 
     let exportingColumns: IExcelColumn[] = [];
-    // console.log(selected,'exfactory');
 
     if(selected =='ExFactory'){
         console.log('exfactory');
@@ -1638,241 +1711,6 @@ if(selected === 'WareHouse'){
   
   )
 }
-//     const secondTableColumns = 
-//      [
-     
-      
-//       {title:'Production Plan Type',
-//       dataIndex: "phasetype",
-//       // render: (text: any, record: any) => <span>{record.phasetype}</span>,
-//     },
-//     // {title:'January',
-//     //   dataIndex: "phasetype",
-//     //   children:[
-//       {
-//         title: 'In Pcs',
-//         dataIndex: "janPcs",
-       
-//       },
-      
-      
-      
-      
-//         {
-//           title:'In Coeff',
-//       dataIndex: "janCoeff",
-      
-//     },
-    
-//     // {title:'February',
-//     // dataIndex: "phasetype",
-//     // children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "febPcs",
-//     // render: (text: any, record: any) => <span >{record.pcsData[0].febPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "febCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].febCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
-
-//   // {title:'March',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "marPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].marPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "marCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].marCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
-  
-//   // {title:'April',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "aprPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].aprPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "aprCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].aprCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'May',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "mayPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].mayPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "mayCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].mayCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
-  
-//   // {title:'June',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "junPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].junPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "junCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].junCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'July',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "julPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].julPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "julCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].julCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'August',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "augPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].augPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "augCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].augCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'September',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "sepPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].sepPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "sepCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].sepCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'October',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "octPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].octPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "octCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].octCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'November',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "novPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].novPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "novCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].novCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'December',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "decPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].decPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "decCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].decCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   {title:"Total Pcs",
-//   dataIndex:"total_order_plan_qty",
-//   // render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty}</span>,
-//   },
-  
- 
-//   {title:"Total Coeff",
-//   dataIndex:"total_order_plan_qty_coeff",
-//   // render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty_coeff}</span>,
-//   },
-// ];
 
   excel.addColumns(secondTableColumns);
   excel.addDataSource(phaseExcel)
