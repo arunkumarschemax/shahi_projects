@@ -158,12 +158,7 @@ export class DpomService {
                         {
                             "fieldName": "poHeader.documentDate",
                             "operator": ">",
-                            "fieldValue": "2023-09-01"
-                        },
-                        {
-                            "fieldName": "poHeader.documentDate",
-                            "operator": "<",
-                            "fieldValue": "2023-09-23"
+                            "fieldValue": formattedDate
                         }
                     ],
 
@@ -1739,7 +1734,7 @@ export class DpomService {
         const dataModelArray: ChangePoandLineModel[] = Array.from(poAndLineMap.values());
         return new CommonResponseModel(true, dataModelArray.length, 'Data retrieved', dataModelArray);
     }
-    async getCoLine(req?:coLineRequest): Promise<CommonResponseModel> {
+    async getCoLine(req?: coLineRequest): Promise<CommonResponseModel> {
         const data = await this.coLineRepository.getCoLineData(req)
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
@@ -1769,5 +1764,5 @@ export class DpomService {
     }
 }
 
-    
+
 
