@@ -82,6 +82,6 @@ export const dpomOrderColumnsName = {
     fabricContent:'fabric_content',
     fabricSource:'fabric_source',
     commission:'commission',
-    PCD:'pcd'
+    PCD:'pcd',
 
 }
