@@ -78,84 +78,7 @@ export const MonthWiseReport = () =>{
       }
     });
   };
-//       const Header = () => {
-           
-//       return (
-//         <div>
-// <table>
-//   <tr >
-//   {/* <th style={{position: 'relative',paddingRight: '1200px'}}>Production Plan Type Name</th> */}
-//   <th colSpan={2} style={{ position: 'relative', right: '-150px' , borderRight: '1px solid black',}}>January</th>
-//     <th colSpan={2} style={{ position: 'relative', right: '-210px',borderRight: '1px solid black', }}>February</th><br/>
-//     <th colSpan={2}style={{ position: 'relative', right: '-290px' ,borderRight: '1px solid black', }}>March</th><br/>
-//     <th colSpan={2} style={{ position: 'relative', right: '-340px', borderRight: '1px solid black', }}>April</th><br/>
-//     <th colSpan={2}style={{ position: 'relative', right: '-390px', borderRight: '1px solid black', }}>May</th><br/>
-//     <th colSpan={2}style={{ position: 'relative', right: '-440px', borderRight: '1px solid black', }}>June</th><br/>
-//     <th colSpan={2}style={{ position: 'relative', right: '-510px' ,borderRight: '1px solid black', }}>July</th><br/>
-//     <th colSpan={2}style={{ position: 'relative', right: '-600px' ,borderRight: '1px solid black', }}>August</th><br/>
-//     <th colSpan={2}style={{ position: 'relative', right: '-660px' ,borderRight: '1px solid black'}}>September</th><br/>
-//     <th colSpan={2}style={{ position: 'relative', right: '-690px', borderRight: '1px solid black' }}>October</th><br/>
-//     <th colSpan={2}style={{ position: 'relative', right: '-760px',borderRight: '1px solid black', }}>November</th><br/>
-//     <th colSpan={2}style={{ position: 'relative', right: '-790px', }}>December</th><br/>
-//     <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
-//     <th colSpan={2}style={{ position: 'relative', right: '500px',  }}></th><br/>
 
-//   </tr>
-//   <tr>
-//   <td colSpan={150} style={{ borderBottom: '1px solid black' }}></td>
-  
-// </tr>
-//   <tr>
-// <td style={{paddingLeft:'10px',position:'relative',}}>Production Plan Type Name</td>
-//     <td style={{right: '-50px',position: 'relative', }}>(Coeff)</td>
-//     <td style={{position: 'relative',right: '-100px' }} >(Coeff)</td>
-
-//     <td  style={{position: 'relative',right: '-140px', }} >(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-180px',}} >(Coeff)</td>
-
-//     <td  style={{position: 'relative',right: '-240px'}} >(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-290px'}} >(Coeff)</td>
-
-//     <td  style={{position: 'relative',right: '-330px'}} >(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-370px'}} >(Coeff)</td>
-
-//     <td  style={{position: 'relative',right: '-390px'}} >(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-430px'}} >(Coeff)</td>
-
-//     <td  style={{position: 'relative',right: '-480px'}} >(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-500px'}} >(Coeff)</td>
-
-//     <td  style={{position: 'relative',right: '-590px'}} >(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-600px'}} >(Coeff)</td>
-
-//     <td  style={{position: 'relative',right: '-700px'}} >(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-760px'}} >(Coeff)</td>
-
-//     <td  style={{position: 'relative',right: '-800px'}} >(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-850px'}} >(Coeff)</td>
-
-//     <td  style={{position: 'relative',right: '-890px'}} >(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-930px'}} >(Coeff)</td>
-
-//     <td  style={{position: 'relative',right: '-960px'}} >(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-990px'}} >(Coeff)</td>
-
-//     <td  style={{position: 'relative',right: '-1020px'}} >(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-1070px'}} >(Coeff)</td>
-//     <td  style={{position: 'relative',right: '-1100px'}} >Total(Pcs)</td>
-//     <td  style={{position: 'relative',right: '-1200px'}} >Total(Coeff)</td>
-    
-//   </tr>
-
-//   <tr>
-    
-// </tr>
-// </table>
-        
-//         </div>
-//       );
-//     };
-  
 const pagination = {
   current: page,
   pageSize: pageSize,
@@ -168,7 +91,7 @@ const pagination = {
   
   showSizeChanger: true,
   onShowSizeChange: (current, size) => {
-    setPage(1); // Reset the page to 1 when changing page size
+    setPage(1); 
     setPageSize(size);
   },
 };
@@ -184,7 +107,7 @@ const pagination2 = {
   
   showSizeChanger: true,
   onShowSizeChange: (current, size) => {
-    setPage(1); // Reset the page to 1 when changing page size
+    setPage(1); 
     setPageSize(size);
   },
 };
@@ -192,10 +115,9 @@ const pagination2 = {
     return (
       <div>
        
-<table>
+{/* <table>
   <tr >
-  {/* <th style={{position: 'relative',paddingRight: '1200px'}}>Production Plan Type Name</th> */}
-  <th colSpan={2} style={{ position: 'relative', right: '-150px', borderLeft: '1px solid black', backgroundColor: 'lightblue', width: '100px' }}>January</th>
+  <th colSpan={2} style={{ position: 'relative', right: '-150px', borderLeft: '1px solid black', backgroundColor: 'lightblue', }}>January</th>
 <th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderLeft: '1px solid black', borderRight: '1px solid black' }}>February</th>
 <th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightblue', width: '100px', borderRight: '1px solid black' }}>March</th>
 <th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderRight: '1px solid black' }}>April</th>
@@ -257,7 +179,280 @@ const pagination2 = {
   <tr>
     
 </tr>
+</table> */}
+
+<table>
+  <td>
+  <table  >
+      <th style={{width:80,textAlign:'center'}}>product plan type</th>
+    </table>
+    </td>
+    <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>January</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>
+    <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>January</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>March</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>April</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>May</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>June</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>July</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>August</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>September</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>October</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>November</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd',borderRight: '1px solid #ddd'}}>December</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse',borderRight: '1px solid #ddd'}}>In Coeff</td>
+      </tr>
+    </table>
+    {/* </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>January</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>January</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>
+    <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>February</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
+      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
+      </tr>
+    </table>
+    </td>
+    
+    <td>
+    <table style={{textAlign:'center'}}>
+      <tr>
+      <th colSpan={2} style={{border:'1px black'}}>March</th>
+      </tr>
+      <tr>
+      <td>In Pcs</td>
+      <td>In Coeff</td>
+      </tr>
+    </table>
+    </td><td>
+    <table style={{textAlign:'center'}}>
+      <tr>
+      <th colSpan={2} style={{border:'1px black'}}>April</th>
+      </tr>
+      <tr>
+      <td>In Pcs</td>
+      <td>In Coeff</td>
+      </tr>
+    </table>
+    </td><td>
+    <table style={{textAlign:'center'}}>
+      <tr>
+      <th colSpan={2} style={{border:'1px black'}}>May</th>
+      </tr>
+      <tr>
+      <td>In Pcs</td>
+      <td>In Coeff</td>
+      </tr>
+    </table>
+    </td><td>
+    <table style={{textAlign:'center'}}>
+      <tr>
+      <th colSpan={2} style={{border:'1px black'}}>June</th>
+      </tr>
+      <tr>
+      <td>In Pcs</td>
+      <td>In Coeff</td>
+      </tr>
+    </table>
+    </td><td>
+    <table style={{textAlign:'center'}}>
+      <tr>
+      <th colSpan={2} style={{border:'1px black'}}>July</th>
+      </tr>
+      <tr>
+      <td>In Pcs</td>
+      <td>In Coeff</td>
+      </tr>
+    </table>
+    </td><td>
+    <table style={{textAlign:'center'}}>
+      <tr>
+      <th colSpan={2} style={{border:'1px black'}}>August</th>
+      </tr>
+      <tr>
+      <td>In Pcs</td>
+      <td>In Coeff</td>
+      </tr>
+    </table>
+    </td><td>
+    <table style={{textAlign:'center'}}>
+      <tr>
+      <th colSpan={2} style={{border:'1px black'}}>September</th>
+      </tr>
+      <tr>
+      <td>In Pcs</td>
+      <td>In Coeff</td>
+      </tr>
+    </table>
+    </td><td>
+    <table style={{textAlign:'center'}}>
+      <tr>
+      <th colSpan={2} style={{border:'1px black'}}>October</th>
+      </tr>
+      <tr>
+      <td>In Pcs</td>
+      <td>In Coeff</td>
+      </tr>
+    </table>
+    </td><td>
+    <table style={{textAlign:'center'}}>
+      <tr>
+      <th colSpan={2} style={{border:'1px black'}}>November</th>
+      </tr>
+      <tr>
+      <td>In Pcs</td>
+      <td>In Coeff</td>
+      </tr>
+    </table>
+    </td><td>
+    <table style={{textAlign:'center'}}>
+      <tr>
+      <th colSpan={2} style={{border:'1px black'}}>December</th>
+      </tr>
+      <tr>
+      <td>In Pcs</td>
+      <td>In Coeff</td>
+      </tr>
+    </table> */}
+    </td>
+    <td>
+  <table  >
+      <th style={{width:50,textAlign:'center'}}>Total(In Pcs)</th>
+    </table>
+    </td> <td>
+  <table  >
+      <th style={{width:50,textAlign:'center'}}>Total(In Coeff)</th>
+    </table>
+    </td>
 </table>
+  
       </div>
     );
   };
@@ -265,7 +460,7 @@ const pagination2 = {
     {
       // title: "Production Plan Type Name",
       dataIndex: "phasetype",
-      width: 100,
+      width:80,
     },
     {
       // title: `In PCs`,
@@ -503,15 +698,8 @@ const pagination2 = {
         );
       },
     },
-    //   ],
-    // },
-    // {
-    // title: "October",
-    //   dataIndex: "oldOrderQtyPcs10",
-    //   key: "oldOrderQtyPcs10",
-    //   children: [
+    
     {
-      // title: `In PCs`,
       dataIndex: "octPcs",
       width: 50,
       align: "right",
@@ -522,7 +710,6 @@ const pagination2 = {
       },
     },
     {
-      // title: `In Coeff`,
       dataIndex: "octCoeff",
       width: 50,
       align: "right",
@@ -532,15 +719,8 @@ const pagination2 = {
         );
       },
     },
-    //   ],
-    // },
-    // {
-    // title: "November",
-    //   dataIndex: "oldOrderQtyPcs11",
-    //   key: "oldOrderQtyPcs11",
-    //   children: [
+
     {
-      // title: `In PCs`,
       dataIndex: "novPcs",
       width: 50,
       align: "right",
@@ -551,7 +731,6 @@ const pagination2 = {
       },
     },
     {
-      // title: `In Coeff`,
       dataIndex: "novCoeff",
       width: 50,
       align: "right",
@@ -561,15 +740,8 @@ const pagination2 = {
         );
       },
     },
-    //   ],
-    // },
-    // {
-    // title: "December",
-    //   dataIndex: "oldOrderQtyPcs12",
-    //   key: "oldOrderQtyPcs12",
-    //   children: [
+  
     {
-      // title: `In PCs`,
       dataIndex: "decPcs",
       width: 50,
       align: "right",
@@ -580,7 +752,6 @@ const pagination2 = {
       },
     },
     {
-      // title: `In Coeff`,
       dataIndex: "decCoeff",
       width: 50,
       align: "right",
@@ -590,10 +761,8 @@ const pagination2 = {
         );
       },
     },
-    //   ],
-    // },
+   
     {
-      // title: "Total In PCs",
       dataIndex: "totalPcs",
       align: "right",
       width: 70,
@@ -602,7 +771,6 @@ const pagination2 = {
       },
     },
     {
-      // title: "Total In Coeff",
       dataIndex: "totalCoeff",
       align: "right",
       width: 70,
@@ -614,13 +782,13 @@ const pagination2 = {
   ];
   const childColumns2: any = [
     {
-      // title: "Production Plan Type Name",
+// title: "Production Plan Type Name",
       dataIndex: "prod_plan_type",
       width:100
 
     },
     {
-          // title: `In PCs`,
+// title: `In PCs`,
           dataIndex: "janPcsCoeff",
           width:40,
           align:"right",
@@ -631,7 +799,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "janPcsCoeff",
           width:40,
           align:"right",
@@ -645,7 +812,6 @@ const pagination2 = {
     
       
         {
-          // title: `In PCs`,
           dataIndex: "febPcsWh",
           width:50,
           align:"right",
@@ -658,7 +824,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "febPcsCoeff",
           width:40,
           align:"right",
@@ -669,11 +834,7 @@ const pagination2 = {
           },
         },
       
-  
-    {
-
-        
-          // title: `In PCs`,
+        {
           dataIndex: "marPcsWh",
           width:40,
           align:"right",
@@ -684,7 +845,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "marPcsCoeff",
           width:40,
           align:"right",
@@ -696,7 +856,6 @@ const pagination2 = {
         },
       
         {
-          // title: `In PCs`,
           dataIndex: "aprPcsWh",
           width:40,
           align:"right",
@@ -707,7 +866,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "aprPcsCoeff",
           width:40,
           align:"right",
@@ -717,15 +875,8 @@ const pagination2 = {
             );
           },
         },
-    //   ],
-    // },
-    // {
-      // title: "May",
-    //   dataIndex: "oldOrderQtyPcs5",
-    //   key: "oldOrderQtyPcs5",
-    //   children: [
+   
         {
-          // title: `In PCs`,
           dataIndex: "mayPcsWh",
           width:40,
           align:"right",
@@ -736,7 +887,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "mayPcsCoeff",
           width:40,
           align:"right",
@@ -746,15 +896,8 @@ const pagination2 = {
             );
           },
         },
-    //   ],
-    // },
-    // {
-      // title: "June",
-    //   dataIndex: "oldOrderQtyPcs6",
-    //   key: "oldOrderQtyPcs6",
-    //   children: [
+    
         {
-          // title: `In PCs`,
           dataIndex: "junPcsWh",
           width:40,
           align:"right",
@@ -765,7 +908,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "junPcsCoeff",
           width:40,
           align:"right",
@@ -775,15 +917,8 @@ const pagination2 = {
             );
           },
         },
-    //   ],
-    // },
-    // {
-      // title: "July",
-    //   dataIndex: "oldOrderQtyPcs7",
-    //   key: "oldOrderQtyPcs7",
-    //   children: [
+    
         {
-          // title: `In PCs`,
           dataIndex: "julPcsWh",
           width:50,
           align:"right",
@@ -794,7 +929,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "julPcsCoeff",
           width:40,
           align:"right",
@@ -804,15 +938,8 @@ const pagination2 = {
             );
           },
         },
-    //   ],
-    // },
-    // {
-      // title: "August",
-    //   dataIndex: "oldOrderQtyPcs8",
-    //   key: "oldOrderQtyPcs8",
-    //   children: [
+    
         {
-          // title: `In PCs`,
           dataIndex: "augPcsWh",
           width:40,
           align:"right",
@@ -823,7 +950,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "augPcsCoeff",
           width:30,
           align:"right",
@@ -833,15 +959,8 @@ const pagination2 = {
             );
           },
         },
-    //   ],
-    // },
-    // {
-      // title: "September",
-    //   dataIndex: "oldOrderQtyPcs9",
-    //   key: "oldOrderQtyPcs9",
-    //   children: [
+    
         {
-          // title: `In PCs`,
           dataIndex: "sepPcsWh",
           width:40,
           align:"right",
@@ -852,7 +971,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "sepPcsCoeff",
           width:40,
           align:"right",
@@ -862,15 +980,8 @@ const pagination2 = {
             );
           },
         },
-    //   ],
-    // },
-    // {
-      // title: "October",
-    //   dataIndex: "oldOrderQtyPcs10",
-    //   key: "oldOrderQtyPcs10",
-    //   children: [
+    
         {
-          // title: `In PCs`,
           dataIndex: "octPcsWh",
           width:40,
           align:"right",
@@ -881,7 +992,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "octPcsCoeff",
           width:40,
           align:"right",
@@ -891,15 +1001,8 @@ const pagination2 = {
             );
           },
         },
-    //   ],
-    // },
-    // {
-      // title: "November",
-    //   dataIndex: "oldOrderQtyPcs11",
-    //   key: "oldOrderQtyPcs11",
-    //   children: [
+    
         {
-          // title: `In PCs`,
           dataIndex: "novPcsWh",
           width:40,
           align:"right",
@@ -910,7 +1013,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "novPcsCoeff",
           width:40,
           align:"right",
@@ -920,15 +1022,8 @@ const pagination2 = {
             );
           },
         },
-    //   ],
-    // },
-    // {
-      // title: "December",
-    //   dataIndex: "oldOrderQtyPcs12",
-    //   key: "oldOrderQtyPcs12",
-    //   children: [
+    
         {
-          // title: `In PCs`,
           dataIndex: "decPcsWh",
           width:60,
           align:"right",
@@ -939,7 +1034,6 @@ const pagination2 = {
           },
         },
         {
-          // title: `In Coeff`,
           dataIndex: "decPcsCoeff",
           width:60,
           align:"right",
@@ -1909,7 +2003,6 @@ if(selected === 'WareHouse'){
   };
 
   const getTableSummary = (pageData) => {
-    console.log("okk");
     let janPre = 0;
     let janLat = 0;
     let febPre = 0;
@@ -1942,10 +2035,14 @@ if(selected === 'WareHouse'){
         if (rec.pcsData[0].janPcs) {
           const jan = [rec.pcsData[0].janPcs];
           janPre += Number(jan);
+          console.log(janPre,'jan');
+
         }
         if (rec.pcsData[0].febPcs) {
           const feb = [rec.pcsData[0].febPcs];
           febPre += Number(feb);
+          console.log(febPre,'feb');
+          
         }
         if (rec.pcsData[0].marPcs) {
           const mar = [rec.pcsData[0].marPcs];
@@ -1987,13 +2084,18 @@ if(selected === 'WareHouse'){
           const dec = [rec.pcsData[0].decPcs];
           decPre += Number(dec);
         }
-        if (rec.pcsData[0].jancoeff) {
+        if (rec.coeffData[0].janCoeff) {
           const jan = [rec.coeffData[0].janCoeff];
           janLat += Number(jan);
+          console.log(janLat,'--------------------');
+          
         }
+        
         if (rec.coeffData[0].febCoeff) {
           const feb = [rec.coeffData[0].febCoeff];
           febLat += Number(feb);
+          console.log(febLat,'===========');
+          
         }
         if (rec.coeffData[0].marCoeff) {
           const mar = [rec.coeffData[0].marCoeff];
