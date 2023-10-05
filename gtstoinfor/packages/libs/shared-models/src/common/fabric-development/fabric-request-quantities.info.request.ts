@@ -41,6 +41,7 @@ export class FabricQuantitiesInfo {
          this.FilePath = FilePath
          this.remarks = remarks
          this.status = status
+         this.itemsinfo = itemsinfo
          this.fabricRequestQualityInfoId = fabricRequestQualityInfoId
 
     }
