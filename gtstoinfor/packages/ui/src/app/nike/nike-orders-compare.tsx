@@ -498,25 +498,27 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Change From Gross Price',
-            dataIndex: 'old_val',
+            dataIndex: 'grossPriceFobOld',
             align:'right',
+            render: (text, record) => (record.grossPriceFobOld ? record.grossPriceFobOld : '-'),
+
 
             // ...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Gross Price currency code',
             dataIndex: '',
-            align:'right',
+            align:'center',
 
             //...getColumnSearchProps('po_number')
             render: (text, record) => ('USD')
         },
         {
             title: 'Change to Gross Price',
-            dataIndex: 'new_val',
+            dataIndex: 'grossPriceFobNew',
             align:'right',
             render: (text, record) => {
-                const formattedAmount = record.new_val ? parseFloat(record.new_val).toFixed(2) : "-";
+                const formattedAmount = record.grossPriceFobNew ? parseFloat(record.grossPriceFobNew).toFixed(2) : "-";
                 return <>{formattedAmount}</>;
               }
 
@@ -532,79 +534,117 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Shahi Offered Price from Master File  ',
-            dataIndex: '',
+            dataIndex: 'shahiOfferedPrice',
+            align:'center',
+            render: (text, record) => (record.shahiOfferedPrice ? record.shahiOfferedPrice : '-'),
+
+
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Shahi Offered Price currency from Master File ',
-            dataIndex: '',
+            dataIndex: 'shahiOfferedPricecurrency',
+            render: (text, record) => (record.shahiOfferedPricecurrency ? record.shahiOfferedPricecurrency : '-'),
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Trading Co Net including discounts',
-            dataIndex: '',
+            dataIndex: 'trCoNetIncludingDiscFrom',
+            align:'right',
+            render:(text,record)=>
+             (record.trCoNetIncludingDiscFrom ? record.trCoNetIncludingDiscFrom: '-')
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Trading Co Net including discounts currency code',
-            dataIndex: '',
+            dataIndex: 'trCoNetIncludingDiscCurrencyCodeFrom',
+            render:(text,record)=>
+             (record.trCoNetIncludingDiscCurrencyCodeFrom ? record.trCoNetIncludingDiscCurrencyCodeFrom: '-' )
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Trading Co Net including discounts',
-            dataIndex: '',
+            dataIndex: 'trCoNetIncludingDiscNew',
+            render:(text,record)=>
+             (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew: '-' )
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Trading Co Net including discounts currency code',
             dataIndex: '',
+
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Net including discounts',
-            dataIndex: '',
+            dataIndex: 'trCoNetIncludingDiscFrom',
+            render:(text,record)=>
+             (record.trCoNetIncludingDiscFrom ? record.trCoNetIncludingDiscFrom: '-' )
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change from Net including discounts currency code',
-            dataIndex: '',
+            dataIndex: 'trCoNetIncludingDiscCurrencyCodeFrom',
+            render:(text,record)=>
+             (record.trCoNetIncludingDiscCurrencyCodeFrom ? record.trCoNetIncludingDiscCurrencyCodeFrom: '-' )
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change to Net including discounts',
-            dataIndex: '',
+            dataIndex: 'trCoNetIncludingDiscNew',
+            render:(text,record)=>
+             (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew :'-') 
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'change to Net including discounts currency code',
-            dataIndex: '',
+            dataIndex: 'trCoNetIncludingDiscCurrencyCodeTo',
+            render:(text,record)=>
+             (record.trCoNetIncludingDiscCurrencyCodeTo ? record.trCoNetIncludingDiscCurrencyCodeTo: '-' )
             //...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Legal PDF PO Price',
-            dataIndex: '',
-            // ...getColumnSearchProps('schedule_line_item_number')
-        },
+            dataIndex: 'legalPoPrice',
+            render: (text, record) => (record.legalPoPrice ? record.legalPoPrice : '-'),
+            align: 'right'
+          }
+          ,
         {
             title: 'Legal PDF PO Price Currency',
-            dataIndex: '',
+            dataIndex: 'legalPoCurrency',
+            render: (text, record) => (record.legalPoCurrency ? record.legalPoCurrency : '-'),
+
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'CRM CO Price',
-            dataIndex: '',
-            ...getColumnSearchProps('schedule_line_item_number')
+            dataIndex: 'crmCoPrice',
+            align:'right',
+            render: (text, record) => (record.crmCoPrice ? record.crmCoPrice : '-'),
+
+
         },
         {
             title: 'CRM CO Price Currency',
-            dataIndex: '',
+            dataIndex: 'coPriceCurrency',
+            render: (text, record) => (record.coPriceCurrency ? record.coPriceCurrency : '-'),
+
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'comparission of CRM CO Price to Legal PDF PO Price',
             dataIndex: '',
+            align:'right',
+            render:(text,record)=>{
+                const diff = Number(record.crmCoPrice) - Number(record.legalPoPrice)
+                return (
+                    Number(diff).toFixed(2)
+                )
+            }
             // ...getColumnSearchProps('schedule_line_item_number')
         }
+          
     ];
 
     const columns3: any = [

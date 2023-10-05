@@ -118,12 +118,34 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
+  
     async getFOBPriceChangeData(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
             .select(`o.po_number, o.item, o.factory,o.document_date,o.style_number,o.product_code,o.color_desc,o.destination_country,o.ogac,o.gac,o.item_text,
-            o.size_description,o.customer_order, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
-            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
-            .where(` od.column_name = 'gross_price_fob'`)
+            o.size_description,o.customer_order, o.po_line_item_number,o.ne_inc_disc, o.schedule_line_item_number, o.total_item_qty,
+             o.dpom_item_line_status, od.created_at, od.od_version, fm.shahi_confirmed_gross_price AS shahiOfferedPrice, 
+             o.co_price AS crmCoPrice,o.co_price_currency AS coPriceCurrency,
+             fm.shahi_confirmed_gross_price_currency_code AS shahiOfferedPricecurrency ,
+       (CASE WHEN od.display_name = 'grossPriceFOB' THEN od.old_val ELSE NULL END) AS grossPriceFobOld,
+       (CASE WHEN od.display_name = 'grossPriceFOB' THEN od.new_val ELSE NULL END) AS grossPriceFobNew,
+       (CASE WHEN od.display_name = 'trCoNetIncludingDisc' THEN od.old_val ELSE NULL END) AS trCoNetIncludingDiscOld,
+       (CASE WHEN od.display_name = 'shahiOfferedPricefromMasterFile' THEN od.old_val ELSE NULL END) AS shahiOfferedPricefromMasterFileFrom,
+       (CASE WHEN od.display_name = 'shahiOfferedPricefromMasterFile' THEN od.new_val ELSE NULL END) AS shahiOfferedPricefromMasterFileTo,
+       (CASE WHEN od.display_name = 'shahicurrencyCodeMasterFile' THEN od.old_val ELSE NULL END) AS shahicurrencyCodeMasterFileFrom,
+       (CASE WHEN od.display_name = 'shahicurrencyCodeMasterFile' THEN od.new_val ELSE NULL END) AS shahicurrencyCodeMasterFileTo,
+       (CASE WHEN od.display_name = 'trCoNetIncludingDisc' THEN od.new_val ELSE NULL END) AS trCoNetIncludingDiscFrom,
+     (CASE WHEN od.display_name = 'trCoNetIncludingDisc' THEN od.new_val ELSE NULL END) AS trCoNetIncludingDiscNew,
+     (CASE WHEN od.display_name = 'trCoNetIncludingDiscCurrencyCode ' THEN od.old_val ELSE NULL END) AS trCoNetIncludingDiscCurrencyCodeFrom,
+       (CASE WHEN od.display_name = 'trCoNetIncludingDiscCurrencyCode ' THEN od.new_val ELSE NULL END) AS trCoNetIncludingDiscCurrencyCodeTo,
+            (CASE WHEN od.display_name = 'legalPoPrice ' THEN od.old_val ELSE NULL END) AS legalPoPrice,
+            (CASE WHEN od.display_name = 'legalPoCurrency ' THEN od.new_val ELSE NULL END) AS legalPoCurrency `)
+            .leftJoin(DpomDifferenceEntity, 'od' , `od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND
+            od.schedule_line_item_number = o.schedule_line_item_number `)
+            .leftJoin(FobEntity, 'fm' , `fm.style_number = o.style_number AND fm.color_code = SUBSTRING_INDEX(o.product_code, '-', -1) AND fm.size_description = o.size_description`)
+            
+            .where(` od.display_name IN ('grossPriceFOB','trCoNetIncludingDisc','trCoNetIncludingDiscCurrencyCode',
+            'shahiOfferedPricefromMasterFile','shahicurrencyCodeMasterFile','legalPoPrice','legalPoCurrency')`)
+
         // if (req.poandLine !== undefined) {
         //     query.andWhere(`o.po_and_line ='${req.poandLine}'`)
         // }
