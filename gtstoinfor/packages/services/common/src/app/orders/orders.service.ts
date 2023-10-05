@@ -1523,7 +1523,7 @@ async processEmails() {
 //       });
 //     });
 //   });
-// filename = 'pro_order_sep3.xlsx';
+filename = 'pro_orders_1.xlsx';
     console.log(filename.split('.').pop(),'extension')
     console.log(filename,'filename')
     const promise = () => new Promise((resolve, reject) => {
@@ -2185,7 +2185,7 @@ if(req.tabName ==='WareHouse'){
 async getPhaseMonthExcelData(req:YearReq):Promise<CommonResponseModel>{
     try{
         const data = await this.ordersRepository.getdata(req)
-        if(data){
+        if(data.length >0){
             return new CommonResponseModel(true,1,'Data retrieved',data)
         } else{
             return new CommonResponseModel(false,1,'No data found')
@@ -2198,7 +2198,7 @@ async getPhaseMonthExcelData(req:YearReq):Promise<CommonResponseModel>{
 async getComparisionphaseExcelData(req:YearReq):Promise<CommonResponseModel>{
     try{
         const data = await this.ordersChildRepo.getComparisionphaseData(req)
-        if(data){
+        if(data.length >0){
             return new CommonResponseModel(true,1,'Data retrieved',data)
         } else{
             return new CommonResponseModel(false,1,'No data found')

@@ -16,6 +16,7 @@ export const MonthWiseComparisionReport = () =>{
     const [selected, setSelected] = useState('ExFactory')
     const [data, setData] = useState<any[]>([]);
     const [phase, setPhase] = useState<any[]>([]);
+    const [phaseExcel, setPhaseExcel] = useState<any[]>([]);
     const [year, setYear] = useState<any[]>([]);
     const [tab, setTab] = useState<number>(2023);
     const service = new OrdersService();
@@ -90,6 +91,13 @@ export const MonthWiseComparisionReport = () =>{
             setPhase(res.data)
           }else{
             setPhase([]);
+          }
+        })
+        service.getComparisionPhaseExcelData(req).then((res)=>{
+          if(res.status){
+            setPhaseExcel(res.data)
+          }else{
+            setPhaseExcel([]);
           }
         })
       };
@@ -1469,11 +1477,88 @@ export const MonthWiseComparisionReport = () =>{
   if(selected == 'WareHouse'){
     excelsData.push(totalsCoeffRow)
   }
+  
 
-        excel.addColumns(exportingColumns);
-        excel.addDataSource(excelsData);
-        excel.saveAs(`Ex-Factory-report-${currentDate}.xlsx`);
        
+        let secondTableColumns: IExcelColumn[] = [];
+    
+        if(selected =='ExFactory'){
+            
+          secondTableColumns.push(
+            { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
+            {title: `Jan Pre`,dataIndex: "janExfPre",},
+            {title: `Jan Lat`,dataIndex: "janExfLat",},
+            {title: `Feb Pre`,dataIndex: "febExfPre",},
+            {title: `Feb Lat`,dataIndex: "febExfLat",},
+            {title: `Mar Pre`,dataIndex: "marExfPre",},
+            {title: `Mar Lat`,dataIndex: "marExfLat",},
+            {title: `Apr Pre`,dataIndex: "aprExfPre",},
+            {title: `Apr Lat`,dataIndex: "aprExfLat",},
+            {title: `May Pre`,dataIndex: "mayExfPre",},
+            {title: `May Lat`,dataIndex: "mayExfLat",},
+            {title: `Jun Pre`,dataIndex: "junExfPre",},
+            {title: `Jun Lat`,dataIndex: "junExfLat",},
+            {title: `Jul Pre`,dataIndex: "julExfPre",},
+            {title: `Jul Lat`,dataIndex: "julExfLat",},
+            {title: `Aug Pre`,dataIndex: "augExfPre",},
+            {title: `Aug Lat`,dataIndex: "augExfLat",},
+            {title: `Sep Pre`,dataIndex: "sepExfPre",},
+            {title: `Sep Lat`,dataIndex: "sepExfLat",},
+            {title: `Oct Pre`,dataIndex: "octExfPre",},
+            {title: `Oct Lat`,dataIndex: "octExfLat",},
+            {title: `Nov Pre`,dataIndex: "novExfPre",},
+            {title: `Nov Lat`,dataIndex: "novExfLat",},
+            {title: `Dec Pre`,dataIndex: "decExfPre",},
+            {title: `Dec Lat`,dataIndex: "decExfLat",},
+            {title: `Total Pre`,dataIndex: "totalExfPre",},
+            {title: `Total Lat`,dataIndex: "totalExfLat",}
+          
+        )
+    }
+    if(selected === 'WareHouse'){
+      secondTableColumns.push(
+          { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
+          {title: `Jan Pre`,dataIndex: "janWhPre",},
+          {title: `Jan Lat`,dataIndex: "janWhLat",},
+          {title: `Feb Pre`,dataIndex: "febWhPre",},
+          {title: `Feb Lat`,dataIndex: "febWhLat",},
+          {title: `Mar Pre`,dataIndex: "marWhPre",},
+          {title: `Mar Lat`,dataIndex: "marWhLat",},
+          {title: `Apr Pre`,dataIndex: "aprWhPre",},
+          {title: `Apr Lat`,dataIndex: "aprWhLat",},
+          {title: `May Pre`,dataIndex: "mayWhPre",},
+          {title: `May Lat`,dataIndex: "mayWhLat",},
+          {title: `Jun Pre`,dataIndex: "junWhPre",},
+          {title: `Jun Lat`,dataIndex: "junWhLat",},
+          {title: `Jul Pre`,dataIndex: "julWhPre",},
+          {title: `Jul Lat`,dataIndex: "julWhLat",},
+          {title: `Aug Pre`,dataIndex: "augWhPre",},
+          {title: `Aug Lat`,dataIndex: "augWhLat",},
+          {title: `Sep Pre`,dataIndex: "sepWhPre",},
+          {title: `Sep Lat`,dataIndex: "sepWhLat",},
+          {title: `Oct Pre`,dataIndex: "octWhPre",},
+          {title: `Oct Lat`,dataIndex: "octWhLat",},
+          {title: `Nov Pre`,dataIndex: "novWhPre",},
+          {title: `Nov Lat`,dataIndex: "novWhLat",},
+          {title: `Dec Pre`,dataIndex: "decWhPre",},
+          {title: `Dec Lat`,dataIndex: "decWhLat",},
+          {title: `Total Pre`,dataIndex: "totalWhPre",},
+          {title: `Total Lat`,dataIndex: "totalWhLat",}
+          
+        )
+    }
+    excel.addColumns(exportingColumns);
+    excel.addDataSource(excelsData);
+        excel.addColumns(secondTableColumns);
+        excel.addDataSource(phaseExcel)
+        excel.addRow();
+        if(selected =='ExFactory'){ 
+            excel.saveAs(`Ex-Factory-comparision-report-${currentDate}.xlsx`);
+        }
+        if(selected == 'WareHouse'){
+          excel.saveAs(`Ware-House-comparision-report-${currentDate}.xlsx`);
+        }
+      
       };
       const handleTabChange = (selectedYear: string) => {
         setTab(Number(selectedYear));

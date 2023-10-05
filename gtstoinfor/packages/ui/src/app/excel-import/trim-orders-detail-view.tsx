@@ -11,8 +11,6 @@ export function TrimOrderDetailView() {
     let location = useLocation();
     const stateData = location.state;
 
-
-    console.log(stateData,'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj')
     const columns: ColumnsType<any> = [
     {
       title: "S.No",
@@ -108,9 +106,9 @@ export function TrimOrderDetailView() {
               <Descriptions.Item><span style={{fontWeight:"bold", fontSize:"15px"}}>Order Details</span></Descriptions.Item>
               </Descriptions> */}
               <Descriptions  style={{ alignItems: 'right' }} column={4}>
-                <Descriptions.Item label={'Order Plan No'}>{stateData.data[0].order_plan_number}</Descriptions.Item>
-                <Descriptions.Item label={`Order Qty Pc's`}>{stateData.data[0].order_qty_pcs} </Descriptions.Item>
-                <Descriptions.Item label={'Month'}>{stateData.data[0].month}</Descriptions.Item>
+                <Descriptions.Item label={'Order Plan No'}>{stateData.data[0]?.order_plan_number}</Descriptions.Item>
+                <Descriptions.Item label={`Order Qty Pc's`}>{stateData.data[0]?.order_qty_pcs} </Descriptions.Item>
+                <Descriptions.Item label={'Month'}>{stateData.data[0]?.month}</Descriptions.Item>
                 <Descriptions.Item label={'Revision No'}>{stateData?.data[0]?.revision_no?stateData?.data[0]?.revision_no:'-'}</Descriptions.Item>
                 <Descriptions.Item label={'Planned Season'}>{stateData?.data[0]?.planning_ssn?stateData?.data[0]?.planning_ssn:'-'}</Descriptions.Item>
                 <Descriptions.Item label={'Global Business Unit'}>{stateData?.data[0]?.global_business_unit?stateData?.data[0]?.global_business_unit:'-'}</Descriptions.Item>
@@ -153,7 +151,7 @@ export function TrimOrderDetailView() {
                 <Descriptions.Item label={'Branch Factory Code'}>{stateData?.data[0]?.branch_factory_code?stateData?.data[0]?.branch_factory_code:'-'}</Descriptions.Item>
                 <Descriptions.Item label={'Branch Factory'}>{stateData?.data[0]?.branch_factory?stateData?.data[0]?.branch_factory:'-'}</Descriptions.Item>
               </Descriptions>
-            <Card>
+            {/* <Card> */}
      {/* <Table columns={columns} 
       className="custom-table-wrapper"
      dataSource={stateData.data[0].sizeWiseData} 
@@ -167,7 +165,7 @@ export function TrimOrderDetailView() {
       }}
       scroll={{ x: 'max-content' }}
        /> */}
-            </Card>
+            {/* </Card> */}
 
         </Card>
     )
