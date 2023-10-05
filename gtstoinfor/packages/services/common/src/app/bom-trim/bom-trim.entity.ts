@@ -3,21 +3,37 @@ import { CommonColumns } from "./common-columns.entity";
 
 
 @Entity('bom_trim')
-export class BomTrimCreationEntity  {
+export class BomTrimEntity  {
     @PrimaryGeneratedColumn('increment',{
-        name:'bom_trim_id'
+        name:'id'
     })
-    bomTrimId : number;
+    id : number;
+
+    @Column('varchar',{
+        name:'items_id'
+    })
+    itemsId : number;
+
+    @Column('varchar',{
+        name:'pch_id'
+    })
+    pchId : number;
+
+    @Column('varchar',{
+        name:'facility_id'
+    })
+    facilityId : number;
+
 
     @Column('varchar',{
         name:'trim_code'
     })
     trimCode : string;
 
-    @Column('varchar',{
-        name:'trim'
+    @Column('int',{
+        name:'trim_id'
     })
-    trim : string;
+    trimId : number;
 
     @Column('varchar',{
         name:'generic_code'
@@ -25,22 +41,22 @@ export class BomTrimCreationEntity  {
     genericCode : string;
 
     
-    @Column('varchar',{
-        name:'type'
+    @Column('int',{
+        name:'type_id'
     })
-    type : string;
+    typeId : number;
 
     
-    @Column('varchar',{
-        name:'group'
+    @Column('int',{
+        name:'group_id'
     })
-    group: string;
+    groupId: number;
 
     
-    @Column('varchar',{
-        name:'use_in_operation'
+    @Column('int',{
+        name:'use_in_operation_id'
     })
-    useInOperation : string;
+    useInOperationId : number;
 
     @Column('varchar',{
         name:'description'
@@ -57,15 +73,15 @@ export class BomTrimCreationEntity  {
     })
     developmentResponsible : string;
 
-    @Column('varchar',{
-        name:'basic_uom'
+    @Column('int',{
+        name:'basic_uom_id'
     })
-    basicUom : string;
+    basicUomId : number;
 
-    @Column('varchar',{
-        name:'alternate_uom'
+    @Column('int',{
+        name:'alternate_uom_id'
     })
-    alternateUom : string;
+    alternateUomId : number;
 
     @Column('varchar',{
         name:'factor'
@@ -88,21 +104,21 @@ export class BomTrimCreationEntity  {
     })
     orderMultipleAuom : string;
 
-    @Column('varchar',{
-        name:'currency'
+    @Column('int',{
+        name:'currency_id'
     })
-    currency : string;
+    currencyId : number;
 
-    @Column('varchar',{
+    @Column('int',{
         name:'price'
     })
-      price : string;
+      price : number;
     
 
-    @Column('varchar',{
+    @Column('int',{
         name:'purchase_price_quantity'
     })
-     purchasePriceQuantity : string;
+     purchasePriceQuantity : number;
    
     
       @Column('varchar',{
@@ -116,10 +132,10 @@ export class BomTrimCreationEntity  {
     })
       exciseDuty : string;  
 
-      @Column('varchar',{
-        name:'licence'
+      @Column('int',{
+        name:'licence_id'
     })
-      licence : string;
+      licenceId : number;
 
       @Column('varchar',{
         name:'property'
@@ -132,15 +148,15 @@ export class BomTrimCreationEntity  {
       isSaleItem : string;
 
 
-      @Column('varchar',{
+      @Column('int',{
         name:'consumption'
     })
-      consumption : string;
+      consumption : number;
 
-      @Column('varchar',{
+      @Column('int',{
         name:'wastage_percentage'
     })
-      wastagePercentage : string;
+      wastagePercentage : number;
 
       @Column('varchar',{
         name:'cost_group'
@@ -158,7 +174,7 @@ export class BomTrimCreationEntity  {
        @CreateDateColumn({
         name: 'created_at'
     })
-    createdAt: string;
+     createdAt: string;
 
     @Column('varchar', {
         nullable: true,
@@ -185,11 +201,6 @@ export class BomTrimCreationEntity  {
     })
     versionFlag: number;
 
-    @Column('boolean', {
-        nullable: false,
-        name: 'is_active',
-        default: true
-    })
-    isActive: boolean;
+
 
 }

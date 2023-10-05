@@ -1,108 +1,102 @@
 
 export class BomRequest {
     
-    bomTrimId:number;
+    itemsId : number;
+    pchId : number;
+    facilityId : number;
     trimCode :string;
-    trim :string;
+    trimId : number;
     genericCode: string;
-    type: string;
-    group:string;
-    useInOperation :string;
+    typeId : number;
+    groupId: number;
+    useInOperationId : number;
     description : string;
     responsible : string;
     developmentResponsible:string;
-    basicUom: string;
-    alternateUom: string;
+    basicUomId : number;
+    alternateUomId : number;
     factor : string;
     orderMultipleBuom: string;
     moq: string;
     orderMultipleAuom: string;
-    currency : string;
-    price : string;
-    purchasePriceQuantity : string;
+    currencyId : number;
+    price : number;
+    purchasePriceQuantity : number;
     salesTax : string;
     exciseDuty : string;
-    licence : string;
+    licenceId : number;
     property : string;
     isSaleItem : string;
-    consumption : string;
-    wastagePercentage : string;
+    consumption : number;
+    wastagePercentage : number;
     costGroup : string;
     usageRemarks: string;
-    isActive: boolean;
-    createdAt : Date;
-    createdUser : string;
-    updatedAt : Date;
-    updatedUser : string;
-    versionFlag : number;
+  
 
-    constructor(bomTrimId:number,
+    constructor(
+        itemsId : number,
+         pchId : number,
+        facilityId : number,
         trimCode :string,
-        trim :string,
+        trimId : number,
         genericCode: string,
-        type: string,
-        group:string,
-        useInOperation :string,
+        typeId : number,
+        groupId: number,
+        useInOperationId : number,
         description : string,
         responsible : string,
         developmentResponsible:string,
-        basicUom: string,
-        alternateUom: string,
+        basicUomId : number,
+        alternateUomId : number,
         factor : string,
         orderMultipleBuom: string,
         moq: string,
         orderMultipleAuom: string,
-        currency : string,
-        price : string,
-        purchasePriceQuantity : string,
+        currencyId : number,
+        price : number,
+        purchasePriceQuantity : number,
         salesTax : string,
         exciseDuty : string,
-        licence : string,
+        licenceId : number,
         property : string,
         isSaleItem : string,
-        consumption : string,
-        wastagePercentage : string,
+        consumption : number,
+        wastagePercentage : number,
         costGroup : string,
         usageRemarks: string,
-        isActive: boolean,
-        createdAt : Date,
-        createdUser : string,
-        updatedAt : Date,
-        updatedUser : string,
-        versionFlag : number){
+       ){  
+           this.itemsId = itemsId
+           this.pchId = pchId
+           this.facilityId = facilityId
            this.trimCode = trimCode
-           this.trim = trim
+           this.trimId = trimId
            this.genericCode = genericCode
-           this.type = type
-           this.group = group
-           this.useInOperation = useInOperation
+           this.typeId = typeId
+           this.groupId = groupId
+           this.useInOperationId = useInOperationId
            this.description = description
            this.responsible = responsible
            this.developmentResponsible = developmentResponsible
-           this.basicUom = basicUom
-           this.alternateUom =   alternateUom
+           this.basicUomId = basicUomId
+           this.alternateUomId =   alternateUomId
            this.factor = factor
            this.orderMultipleBuom = orderMultipleBuom
            this.moq = moq
            this.orderMultipleAuom = orderMultipleAuom
-           this.currency = currency
+           this.currencyId = currencyId
            this.price = price
            this.purchasePriceQuantity = purchasePriceQuantity
            this.salesTax = salesTax
            this.exciseDuty = exciseDuty
-           this.licence = licence
+           this.licenceId = licenceId
            this.property = property
            this.isSaleItem = isSaleItem
            this.consumption = consumption,
            this.wastagePercentage = wastagePercentage,
            this.costGroup = costGroup,
            this.usageRemarks = usageRemarks
-           this.isActive = isActive
-           this.createdAt = createdAt
-           this.createdUser = createdUser
-           this.updatedAt = updatedAt
-           this.updatedUser = updatedUser
-           this.versionFlag = versionFlag
+        
+          
 
     }
 
