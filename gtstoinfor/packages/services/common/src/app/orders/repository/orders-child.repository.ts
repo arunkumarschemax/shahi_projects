@@ -456,9 +456,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
                 WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
                 ELSE prod_plan_type
             END ,order_plan_number, VERSION
-        ORDER BY  VERSION DESC;
-        
-        `;
+        ORDER BY  VERSION DESC;`;
         const result =await this.query(query);
         return result;
         

@@ -232,5 +232,14 @@ export class PriceListController {
         }
     }
 
+    @Post('/getUploadedTime')
+    async getUploadedTime(): Promise<CommonResponseModel> {
+        try {
+            return await this.priceService.getUploadedTime();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+
     
 }

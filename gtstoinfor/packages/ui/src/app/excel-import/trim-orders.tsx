@@ -73,7 +73,7 @@ const {Text}=Typography
     }
 
     const DetailedView = (record: any) => {
-        const poFilterData = filteredData.filter(item => item.order_no == record)
+        const poFilterData = filteredData.filter(order_no => order_no.trim_order_id == record)
         navigate('/excel-import/trim-order-detail-view', { state: { data: poFilterData } })
       }
 
@@ -248,7 +248,7 @@ const {Text}=Typography
           render: (text, record) => {
             return (
               <Tooltip title="Click for Detail View">
-                <Button type='link' onClick={() => DetailedView(record.order_no)}>
+                <Button type='link' onClick={() => DetailedView(record.trim_order_id)}>
                   {record.order_no}
                 </Button>
               </Tooltip>

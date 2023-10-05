@@ -137,9 +137,12 @@ const getAllItems = () => {
     const req = new PriceListActivateDeactivateDto(values.id, values.isActive, values.versionFlag,)
     priceService.ActivateOrDeactivatePriceList(req).then(res => {
       getPriceList()
+      message.success(res.internalMessage)
+
     if(res.status){
       message.success(res.internalMessage)
       getPriceList();
+      
       AlertMessages.getErrorMessage(res.internalMessage);
 
     }else {

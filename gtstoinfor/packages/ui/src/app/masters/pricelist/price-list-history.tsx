@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Form, Select, Descriptions } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { PriceListService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
@@ -31,6 +31,7 @@ export const PriceListHistory = (props: PriceListView) => {
   const [year,setYear] = useState<any[]>([]); 
   const [currency,setCurrency] = useState<any[]>([]);
   const [seasonCode,setSeasonCode] = useState<any[]>([]);
+  const [fileData, setFileData] = useState<any[]>([])
 
 
 
@@ -41,7 +42,7 @@ export const PriceListHistory = (props: PriceListView) => {
     getYear();
     getCurrency();
     getSeasonCode();
-
+    getUploadedTime()
   },[])
 
   const pagination = {
@@ -89,6 +90,12 @@ const getSeasonCode = () => {
     setSeasonCode(res.data)
   })
 
+}
+
+const getUploadedTime = () => {
+  priceService.getUploadedTime().then(res => {
+    setFileData(res.data)
+  })
 }
 
   const getPriceList= () => {
@@ -259,7 +266,7 @@ const getSeasonCode = () => {
                 render:(text,record) => {
                   return(
                     <>
-                    {record.previous_price ? `${record.currency}- ${record.previous_price} ` : '-'}
+                    {record.previous_price ? `${record.currency} - ${record.previous_price} ` : '-'}
                     </>
                   )
                 }
@@ -271,7 +278,7 @@ const getSeasonCode = () => {
                 render:(text,record) => {
                     return(
                       <>
-                      {record.current_price ? `${record.currency}- ${record.current_price} ` : '-'}
+                      {record.current_price ? `${record.currency} - ${record.current_price} ` : '-'}
                       </>
                     )
                   }
@@ -286,14 +293,23 @@ const getSeasonCode = () => {
           if (text === undefined || text === null) {
             return "-";
           } else if (text > 0) {
-            return <span style={{ color: "green" }}>{text}</span>;
+            return (
+              <span style={{ color: "green" }}>
+                {text} <ArrowUpOutlined style={{ color: "green" }} />
+              </span>
+            );
           } else if (text < 0) {
-            return <span style={{ color: "orange" }}>{text}</span>;
+            return (
+              <span style={{ color: "red" }}>
+                {Math.abs(text)} <ArrowDownOutlined style={{ color: "red" }} />
+              </span>
+            );
           } else {
             return text;
           }
         },
       }
+      
      
    
    
@@ -308,7 +324,7 @@ const getSeasonCode = () => {
 
   return (
       <>
-      <Card title={<span >Price List</span>}
+      <Card title={<span >Price List History</span>}
     //  headStyle={{ border: 0 }} 
     extra={<Link to='/masters/pricelist/price-list-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
@@ -377,13 +393,16 @@ const getSeasonCode = () => {
           </Col>
         </Row>
       </Form>
-      {/* <Form layout='vertical'>
-         <Descriptions  style={{ alignItems: 'right' }} column={2}>
-        <Descriptions.Item label={'Previous'}>{}</Descriptions.Item>
-        <Descriptions.Item label={`Order Qty Pc's`}>{} </Descriptions.Item>
+      <Descriptions>
+        <Descriptions.Item label="Uploaded Details">
+          <Descriptions column={2}>
+            <Descriptions.Item label="Previous File Name">{fileData[1]?.fileName}</Descriptions.Item>
+            <Descriptions.Item label="Latest File Name">{fileData[0]?.fileName}</Descriptions.Item>
+            <Descriptions.Item label="Previous Date">{fileData[1]?.createdAt}</Descriptions.Item>
+            <Descriptions.Item label="Latest Date">{fileData[0]?.createdAt}</Descriptions.Item>
+          </Descriptions>
+        </Descriptions.Item>
       </Descriptions>
-      </Form> */}
-     
       <Table
       rowKey={record => record}
       columns={columns}
@@ -400,4 +419,3 @@ const getSeasonCode = () => {
 
 
 export default PriceListHistory
-
