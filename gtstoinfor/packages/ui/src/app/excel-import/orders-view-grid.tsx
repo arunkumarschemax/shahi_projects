@@ -16,6 +16,8 @@ const AllOrdersGridView = () => {
     const [page, setPage] = useState<number>(1)
     const [datas, setDatas] = useState<any>([]);
     const [ordersStatus, setOrdersStatus] = useState<any[]>([])
+    const [ordersNo, setOrdersNo] = useState<any[]>([])
+
     const [pageSize, setPageSize] = useState<number>(10)
     const [gridData, setGridData] = useState<any[]>([]);
     const [filteredData, setFilteredData] = useState<any[]>([])
@@ -61,18 +63,30 @@ const AllOrdersGridView = () => {
         }).catch(err => {
             console.log(err.message)
         })
-    }
-// const order=()=>{
-//     service.getOrdersStatus().then((res)=>{
-//         if(res.status){
-//             setDatas(res?.data === undefined? []:res.data);
+        service.getOrdersStatus().then(res=>{
+            if(res.status){
+                setOrdersStatus(res.data)
+                setFilteredData(res.data)
 
-//         }else{
-//             setDatas([]);
-//             message.info(res.internalMessage)
-//         }
-//     })
-// }
+            }else{
+                setFilteredData([])
+                setOrdersStatus([])
+            }
+        }).catch(err => {
+            console.log(err.message)
+        })
+        service.getOrderPlanNo(req).then(res=>{
+            if(res.status){
+                setOrdersNo(res.data)
+                setFilteredData(res.data)
+
+            }else{
+                setFilteredData([])
+                setOrdersNo([])
+            }
+        })
+    }
+
 
 const orderStatus=()=>{
     service.getOrdersStatus().then((res)=>{
@@ -637,13 +651,15 @@ const Number=()=>{
                                  placeholder="Select Plan Order Number"
                                  optionFilterProp="children"
                                  allowClear>
-                                {datas.map((res:any)=>{
-                                    return(
-                                        <Option key={res.order_plan_number} value={res.order_plan_number}>
-                                            {res.order_plan_number}
-                                        </Option>
-                                    )
-                                })}
+                                {/* {ordersNo.map(res=>{
+                                        <Option key={res.order_plan_number} value={res.order_plan_number}>{res.order_plan_number} </Option>
+                                // })} */}
+
+                                {ordersNo.map(i=>(
+                                    <Option key={i.order_plan_number} value={i.order_plan_number}>{i.order_plan_number}
+
+                                    </Option>
+                                ))}
                                 </Select>
                             </Form.Item>
                        </Col>
