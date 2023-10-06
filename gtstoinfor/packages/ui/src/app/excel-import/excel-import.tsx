@@ -163,9 +163,9 @@ export default function ExcelImport() {
         let csvData1: any = reader.result;
         csvData = importExcel(csvData1);
         // let headersRow = getHeaderArray(csvData[0][3]);
-        // csvData[0].shift()
-        // csvData[0].shift()
-        // csvData[0].shift()
+        csvData[0].shift()
+        csvData[0].shift()
+        csvData[0].shift()
         console.log(csvData)
         const filteredNestedData = csvData.filter(innerData => innerData.some(row => row.length > 0));
 
@@ -198,9 +198,11 @@ export default function ExcelImport() {
     var wb = XLSX.read(data, { type: 'array', cellDates: true });
     let sheet: any[] = [];
     for (const Sheet in wb.Sheets) {
+      if(Sheet === 'Production Plan Rawdata Export' || Sheet === 'RawData' || Sheet === 'Rawdata'){
         if (wb.Sheets.hasOwnProperty(Sheet)) {
             sheet.push(XLSX.utils.sheet_to_json(wb.Sheets[Sheet], { raw: true, header: 1 }));
         }
+      }
     }
     return sheet;
 }
