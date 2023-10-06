@@ -2,10 +2,10 @@ import { ItemSKusReq, SKUGenerationReq, SKUGenerationResponseModel } from "@proj
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class SKUGenerationService extends CommonAxiosService{
-    URL ="/skumapping";
+    URL ="/itemSkus";
 
     async skuGeneration(req: ItemSKusReq): Promise<SKUGenerationResponseModel> {
-        return this.axiosPostCall(this.URL + "/skuGeneration", req)
+        return this.axiosPostCall(this.URL + "/createItemSku", req)
     } 
 
 }
