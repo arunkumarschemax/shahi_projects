@@ -2091,6 +2091,7 @@ const PPMReport = () => {
           <Table
             columns={columns}
             dataSource={filterData}
+            className="custom-table-wrapper"
             size='large'
             pagination={{
               onChange(current, pageSize) {
