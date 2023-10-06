@@ -261,6 +261,15 @@ const UploadFileGrid = () =>{
               //   <a href={`#/document-management/document-file-upload?text=${encodeURIComponent(text)}`}>{text}</a>
               // ),
         },
+        
+        {   
+          title: 'Destination',
+          dataIndex: 'destination',
+          width:'180px',
+          align:'center',
+            ...getColumnSearchProps('destination'),
+
+        },
         {   
           title: 'STATUS',
           dataIndex: 'orderPoStatus',
@@ -332,7 +341,7 @@ const UploadFileGrid = () =>{
           if(res.status){
             setItemData(res.data);
             const headerColumns = Object?.keys(res?.data[0])
-            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url' && header !== 'poStatus' && header !== 'orderPoStatus')
+            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url' && header !== 'poStatus' && header !== 'orderPoStatus' && header != 'destination')
             .map(header => ({           
                 title: header.toUpperCase(),
                 dataIndex: header,
