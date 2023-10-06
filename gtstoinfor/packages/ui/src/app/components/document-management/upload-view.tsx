@@ -293,12 +293,12 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     beforeUpload: (file: any) => {
 
       console.log(documentName);
-      if(documentName != undefined && documentName === "Mass Balance Sheet" && (!file.name.match(/\.(xlsx)$/) && !file.name.match(/\.(pdf)$/)))
+      if(documentName != undefined && documentName === "Mass Balance Sheet" && (!file.name.match(/\.(xlsx)$/) && !file.name.match(/\.(pdf)$/) && !file.name.match(/\.(PDF)$/)))
         {
             message.error("Only pdf & xlsx files are allowed!");
             return true;
         }
-      else if(documentName != "Mass Balance Sheet" && !file.name.match(/\.(pdf)$/))
+      else if(documentName != "Mass Balance Sheet" && !file.name.match(/\.(pdf)$/) && !file.name.match(/\.(PDF)$/))
         {
             message.error("Only pdf files are allowed!");
             return true;
