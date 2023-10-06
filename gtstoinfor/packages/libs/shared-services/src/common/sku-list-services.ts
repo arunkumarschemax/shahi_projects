@@ -190,7 +190,7 @@ async getAllitemsCode():Promise<any>{
 
 
 async getAllMapItems(req?: SKUlistFilterRequest): Promise<any> {
-    const dummyMapItemsNo = [
+    const  dummyMapItemsNo = [
         {
             itemsNo:'IT001',
             itemNoId:1,
