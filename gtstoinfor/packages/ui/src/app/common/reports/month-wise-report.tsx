@@ -75,7 +75,7 @@ export const MonthWiseReport = () =>{
       if (res.status) {
         setPhaseExcel(res.data);
       } else {
-        setData([]);
+        setPhaseExcel([]);
       }
     });
   };
@@ -954,7 +954,11 @@ const pagination = {
       {title: <span style={{ background: 'lightblue' }}> Dec In PCs</span>,dataIndex: "decPcsExf",align:"right"},
       {title: <span style={{ background: 'lightblue' }}> Dec In Coeff</span>,dataIndex: "decExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
-
+      {title:  <span style={{ background: 'lightblue' }}> Total In Pcs</span>,dataIndex: "totalExfPcs",align:"right"},
+      {title:  <span style={{ background: 'lightgreen' }}> Total In Coeff</span>,dataIndex: "totalExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
+    
    )
 
 }
@@ -1021,6 +1025,10 @@ if(selected === 'WareHouse'){
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
+    {title:  <span style={{ background: 'lightblue' }}> Total In Pcs</span>,dataIndex: "totalWhPcs",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Total In Coeff</span>,dataIndex: "totalWhCoeff",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
   
   )
 }
@@ -1347,38 +1355,40 @@ let totalJanExfPre = 0;
       {title: `Nov In PCs`,dataIndex: "novPcsExf",},
       {title: `Nov In Coeff`,dataIndex: "novExfCoeff",},
       {title: `Dec In PCs`,dataIndex: "decPcsExf",},
-      {title: `Dec In Coeff`,dataIndex: "decExfCoeff",}
-    
+      {title: `Dec In Coeff`,dataIndex: "decExfCoeff",},
+      {title: `Total In Pcs`,dataIndex: "totalExfPcs"},
+      {title:  `Total In Coeff`,dataIndex: "totalExfCoeff"},
   )
 }
 if(selected === 'WareHouse'){
   secondTableColumns.push(
     { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
     {title: `Jan In PCs`,dataIndex: "janPcsWh",},
-    {title: `Jan In Coeff`,dataIndex: "janCoeffWh",},
+    {title: `Jan In Coeff`,dataIndex: "janWhCoeff",},
     {title: `Feb In PCs`,dataIndex: "febPcsWh",},
-    {title: `Feb In Coeff`,dataIndex: "febCoeffWh",},
+    {title: `Feb In Coeff`,dataIndex: "febWhCoeff",},
     {title: `Mar In PCs`,dataIndex: "marPcsWh",},
-    {title: `Mar In Coeff`,dataIndex: "marCoeffWh",},
+    {title: `Mar In Coeff`,dataIndex: "marWhCoeff",},
     {title: `Apr In PCs`,dataIndex: "aprPcsWh",},
-    {title: `Apr In Coeff`,dataIndex: "aprCoeffWh",},
+    {title: `Apr In Coeff`,dataIndex: "aprWhCoeff",},
     {title: `May In PCs`,dataIndex: "mayPcsWh",},
-    {title: `May In Coeff`,dataIndex: "mayCoeffWh",},
+    {title: `May In Coeff`,dataIndex: "mayWhCoeff",},
     {title: `Jun In PCs`,dataIndex: "junPcsWh",},
-    {title: `Jun In Coeff`,dataIndex: "junCoeffWh",},
+    {title: `Jun In Coeff`,dataIndex: "junWhCoeff",},
     {title: `Jul In PCs`,dataIndex: "julPcsWh",},
-    {title: `Jul In Coeff`,dataIndex: "julCoeffWh",},
+    {title: `Jul In Coeff`,dataIndex: "julWhCoeff",},
     {title: `Aug In PCs`,dataIndex: "augPcsWh",},
-    {title: `Aug In Coeff`,dataIndex: "augCoeffWh",},
+    {title: `Aug In Coeff`,dataIndex: "augWhCoeff",},
     {title: `Sep In PCs`,dataIndex: "sepPcsWh",},
-    {title: `Sep In Coeff`,dataIndex: "sepCoeffWh",},
+    {title: `Sep In Coeff`,dataIndex: "sepWhCoeff",},
     {title: `Oct In PCs`,dataIndex: "octPcsWh",},
-    {title: `Oct In Coeff`,dataIndex: "octCoeffWh",},
+    {title: `Oct In Coeff`,dataIndex: "octWhCoeff",},
     {title: `Nov In PCs`,dataIndex: "novPcsWh",},
-    {title: `Nov In Coeff`,dataIndex: "novCoeffWh",},
+    {title: `Nov In Coeff`,dataIndex: "novWhCoeff",},
     {title: `Dec In PCs`,dataIndex: "decPcsWh",},
-    {title: `Dec In Coeff`,dataIndex: "decCoeffWh",},
-  
+    {title: `Dec In Coeff`,dataIndex: "decWhCoeff",},
+    {title: `Total In Pcs`,dataIndex: "totalWhPcs"},
+    {title:  `Total In Coeff`,dataIndex: "totalWhcoeff"},
   )
 }
 

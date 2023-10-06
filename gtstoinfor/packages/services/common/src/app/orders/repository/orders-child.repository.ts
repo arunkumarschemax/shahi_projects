@@ -253,7 +253,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             AND YEAR = '${req.year}'
             AND prod_plan_type != 'STOP'
             AND planned_exf IS NOT NULL AND wh IS NOT NULL
-             GROUP BY YEAR,  item, item_cd, prod_plan_type, STATUS
+             GROUP BY YEAR,  item, item_cd, prod_plan_type
         ORDER BY  item ASC`;
         const result = await this.query(query);
         return result;
@@ -352,7 +352,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     
 
     async getComparisionphaseData(req: YearReq):Promise<any[]>{
-        const query = ` SELECT
+        const query = `SELECT
         YEAR,
         VERSION,
         CASE
@@ -365,6 +365,11 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             WHEN version_rank = 1 THEN 'latest'
             ELSE 'previous'
         END AS STATUS,
+                           CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS totalExfPre,
+                           CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS totalExfLat,
+                           CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS totalWhPre,
+
+                           CONCAT(ROUND(SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2)) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS totalWhLat,
         CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '')AS DECIMAL(10, 2)) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%') AS janExfPre,
                 CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '')AS DECIMAL(10, 2)) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS febExfPre,
                 CONCAT(ROUND(SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '')AS DECIMAL(10, 2)) ELSE 0 END) / NULLIF(SUM(CAST(REPLACE(order_plan_qty, ',', '') AS DECIMAL(10, 2))), 0) * 100, 0), '%')  AS marExfPre,
@@ -434,8 +439,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
             ELSE prod_plan_type
         END,
-        YEAR,
-        STATUS`
+        YEAR`
         const result = await this.query(query);
         return result;
     }
@@ -454,6 +458,11 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             WHEN version_rank = 1 THEN 'latest'
             ELSE 'previous'
         END AS STATUS,
+       SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalExfPre,
+       SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalExfLat,
+                          
+   SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalWhPre,
+  SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalWhLat,
                SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS janExfPre,
                 SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febExfPre,
                 SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marExfPre,
@@ -523,8 +532,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
             ELSE prod_plan_type
         END,
-        YEAR,
-        STATUS`
+        YEAR`
         
         
         const result = await this.query(query);
