@@ -65,6 +65,9 @@ const {Text}=Typography
         service.getTrimOrdersNo().then(res => {
             if (res.status) {
                 setItem(res.data)
+            }else{
+                setFilteredData([])
+                setItem([])
             }
         }).catch(err => {
             console.log(err.message)
@@ -613,22 +616,31 @@ const {Text}=Typography
                 <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500 }} bordered
                 size='small'
                 summary={(pageData) => {
-                    // Calculate the grand total on each page change
                     let total = 0;
                     pageData.forEach((record) => {
                         total += parseFloat(record.order_qty_pcs);
                     });
-                    setGrandTotal(total); // Update the grand total in state
+                    setGrandTotal(total); 
             
                     return (
                         <Table.Summary.Row>
-<Table.Summary.Cell colSpan={10} index={8} >
-<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-<span style={{ color: 'Red' }}>Grand Total:</span>
-</div>
-</Table.Summary.Cell>
-<Table.Summary.Cell index={9} align='right'>{grandTotal}</Table.Summary.Cell>     
-                        </Table.Summary.Row>
+                        {/* Empty cells for columns 1 through 9 */}
+                        {Array.from({ length: 9 }, (_, index) => (
+                          <Table.Summary.Cell key={index} index={index}></Table.Summary.Cell>
+                        ))}
+                      
+                        {/* Cell for the "Grand Total" text in the desired column */}
+                        <Table.Summary.Cell index={0} colSpan={1} className="grand-total-cell">
+                        <span style={{ color: 'red' }}>Grand Total:</span>
+                        </Table.Summary.Cell>
+                      
+                        {/* Cell for the grandTotal value in the desired column */}
+                        <Table.Summary.Cell index={0}  colSpan={1} className="grand-total-cell">
+                        <span style={{textAlign:'right' }}>{grandTotal}</span>
+                        </Table.Summary.Cell>
+                      </Table.Summary.Row>
+                      
+
                     );
                 }}
                 />
