@@ -2156,7 +2156,7 @@ const PPMReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {docType.map((inc: any) => {
+                  {docType?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.doc_type_code}>{inc.doc_type_code}</Option>
                   })
                   }
@@ -2167,7 +2167,7 @@ const PPMReport = () => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
               <Form.Item name='item' label='Item' >
                 <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear>
-                  {item.map((inc: any) => {
+                  {item?.map((inc: any) => {
                     const firstFourDigits = inc.item.substring(0, 4);
                     return <Option key={inc.id} value={inc.item}>{firstFourDigits}</Option>
                   })}
@@ -2183,7 +2183,7 @@ const PPMReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {factory.map((inc: any) => {
+                  {factory?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
                   })
                   }
@@ -2204,7 +2204,7 @@ const PPMReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {poNumber.map((inc: any) => {
+                  {poNumber?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                   })
                   }
@@ -2219,7 +2219,7 @@ const PPMReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {poLineItemNumber.map((inc: any) => {
+                  {poLineItemNumber?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>
                   })
                   }
@@ -2234,7 +2234,7 @@ const PPMReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {styleNumber.map((inc: any) => {
+                  {styleNumber?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
                   })
                   }
@@ -2249,7 +2249,7 @@ const PPMReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {productCode.map((inc: any) => {
+                  {productCode?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
                   })
                   }
@@ -2264,7 +2264,7 @@ const PPMReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {planSesCode.map((inc: any) => {
+                  {planSesCode?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
                   })
                   }
@@ -2279,7 +2279,7 @@ const PPMReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {planSesYear.map((inc: any) => {
+                  {planSesYear?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
                   })
                   }
@@ -2294,7 +2294,7 @@ const PPMReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {countryDestination.map((inc: any) => {
+                  {countryDestination?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.destination_country}>{inc.destination_country}</Option>
                   })
                   }
@@ -2309,7 +2309,7 @@ const PPMReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {geoCode.map((inc: any) => {
+                  {geoCode?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
                   })
                   }
@@ -2324,7 +2324,7 @@ const PPMReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {plantCode.map((inc: any) => {
+                  {plantCode?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
                   })
                   }

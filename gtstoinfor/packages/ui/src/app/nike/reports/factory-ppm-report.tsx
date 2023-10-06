@@ -1326,7 +1326,7 @@ const FactoryPPMReport = () => {
                                     optionFilterProp="children"
                                     allowClear
                                 >
-                                    {productCode.map((inc: any) => {
+                                    {productCode?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
                                     })
                                     }
@@ -1342,7 +1342,7 @@ const FactoryPPMReport = () => {
                                     allowClear
 
                                 >
-                                    {poNumber.map((inc: any) => {
+                                    {poNumber?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                     })
                                     }
@@ -1357,7 +1357,7 @@ const FactoryPPMReport = () => {
                                     optionFilterProp="children"
                                     allowClear
                                 >
-                                    {colorDesc.map((inc: any) => {
+                                    {colorDesc?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.color_desc}>{inc.color_desc}</Option>
                                     })
                                     }
@@ -1387,7 +1387,7 @@ const FactoryPPMReport = () => {
                                     optionFilterProp="children"
                                     allowClear
                                 >
-                                    {countryDestination.map((inc: any) => {
+                                    {countryDestination?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.destination_country}>{inc.destination_country}</Option>
                                     })
                                     }
@@ -1402,7 +1402,7 @@ const FactoryPPMReport = () => {
                                     optionFilterProp="children"
                                     allowClear
                                 >
-                                    {plantCode.map((inc: any) => {
+                                    {plantCode?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
                                     })
                                     }
@@ -1417,7 +1417,7 @@ const FactoryPPMReport = () => {
                                     optionFilterProp="children"
                                     allowClear
                                 >
-                                    {item.map((inc: any) => {
+                                    {item?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
                                     })
                                     }
@@ -1432,7 +1432,7 @@ const FactoryPPMReport = () => {
                                     optionFilterProp="children"
                                     allowClear
                                 >
-                                    {factory.map((inc: any) => {
+                                    {factory?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
                                     })
                                     }

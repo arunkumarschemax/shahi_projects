@@ -186,7 +186,7 @@ export const FOBPriceVariationReport = () => {
                                 allowClear
                             >
                                 {
-                                    poNumber.map((inc: any) => {
+                                    poNumber?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.poNumber}>{inc.poNumber}</Option>
                                     })
                                 }
@@ -202,7 +202,7 @@ export const FOBPriceVariationReport = () => {
                                 allowClear
                             >
                                 {
-                                    styleNumber.map((inc: any) => {
+                                    styleNumber?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.styleNumber}>{inc.styleNumber}</Option>
                                     })
                                 }
@@ -218,7 +218,7 @@ export const FOBPriceVariationReport = () => {
                                 allowClear
                             >
                                 {
-                                    size.map((inc: any) => {
+                                    size?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.sizeDescription}>{inc.sizeDescription}</Option>
                                     })
                                 }
