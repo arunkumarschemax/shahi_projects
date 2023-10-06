@@ -1,18 +1,73 @@
-import { InjectRepository } from "@nestjs/typeorm";
-import { BomTrimCreationEntity } from "./bom-trim.entity";
-import { Repository } from "typeorm";
-import { BomTrimAdapter } from "./dto/bom-trim.adaptor";
 
-export class BomService{
+import { Injectable } from "@nestjs/common";
+import { BomTrimRepository } from "./repository/bom-trim.repository";
+import { BomRequest, BomTrimResponseModel } from "@project-management-system/shared-models";
+import { BomTrimEntity } from "./bom-trim.entity";
+import { BomTrimDto } from "./dto/bom-trim.dto";
 
-    constructor(
-        @InjectRepository(BomTrimCreationEntity)
-        private bomRepository: Repository<BomTrimCreationEntity>,
-        private bomAdapter: BomTrimAdapter,
+
+@Injectable()
+export class BomService {
+    constructor (
+         private TrimRepo: BomTrimRepository,
+         
     ){}
-     
+
+    async createBomTrim(req: BomTrimDto, isUpdate: boolean): Promise<BomTrimResponseModel> {
+        console.log(req,"service")
+        try {
+          
+            const entity = new BomTrimEntity()
+            entity.itemsId = req.itemsId
+            entity.pchId = req.pchId
+            entity.facilityId = req.facilityId
+            entity.trimCode = req.trimCode
+            entity.trimId = req.trimId
+            entity.genericCode = req.genericCode
+            entity.typeId = req.typeId
+            entity.groupId = req.groupId
+            entity.useInOperationId = req.useInOperationId
+            entity.description = req.description
+            entity.responsible = req.responsible
+            entity.developmentResponsible = req.developmentResponsible
+            entity.basicUomId = req.basicUomId
+            entity.alternateUomId = req.alternateUomId
+            entity.factor = req.factor
+            entity.orderMultipleBuom = req.orderMultipleBuom
+            entity.moq = req.moq
+            entity.orderMultipleAuom = req.orderMultipleAuom
+            entity.currencyId = req.currencyId
+            entity.price = req.price
+            entity.purchasePriceQuantity = req.purchasePriceQuantity
+            entity.salesTax = req.salesTax
+            entity.exciseDuty = req.exciseDuty
+            entity.consumption = req.consumption
+            entity.wastagePercentage = req.wastagePercentage
+            entity.costGroup = req.costGroup
+            entity.usageRemarks = req.usageRemarks
+            entity.licenceId = req.licenceId
+            entity.property = req.property
+            entity.isSaleItem = req.isSaleItem
+             
+        const save = await this.TrimRepo.save(entity);
+          
+      
+          if (save){
+              
+         return new BomTrimResponseModel(true, 0, "Trim Created successfully");
+          } else {
+
+         return new BomTrimResponseModel(false, 0, "Something went Wrong");
+
+          }
+      
+          } catch (err) {
+            throw err;
+          }
+        }
+
 
     
-    
+      
 
 }

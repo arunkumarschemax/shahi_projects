@@ -493,7 +493,7 @@ export const AppRoutes = () => {
                 <Route path='sku-mapping' element={<SKUGeneration/>}/>
                 <Route path='item-creation' element={<ItemCreation/>}/>
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
-                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
+                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
 
 
                 </Route>
