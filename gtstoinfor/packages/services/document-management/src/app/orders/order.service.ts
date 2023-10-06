@@ -91,7 +91,7 @@ export class OrdersService {
                     dtoData.version = 1
 
                     let checkChallanExist = await transactionManager.getRepository(OrdersEntity).findOne({where:{
-                       poNo:dtoData.poNo
+                       poNo:dtoData.poNo, dest:dtoData.dest
                     }})
                   if(!checkChallanExist){
                         const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
