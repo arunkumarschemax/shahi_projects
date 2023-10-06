@@ -746,11 +746,11 @@ const ChangesGrid = () => {
                     </Col>
                     </Row>
                     <Row gutter={8} justify={'end'}>
-                    <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
+                    <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 5 }} lg={{ span: 4 }} xl={{ span: 4 }}  >
                             <Form.Item>
-                                <Button htmlType="submit" icon={<SearchOutlined />}style={{backgroundColor:'green'}}type="primary">SEARCH</Button>
+                                <Button htmlType="submit" icon={<SearchOutlined />}style={{backgroundColor:'green', margin:5}}type="primary">SEARCH</Button>
                                     <Button danger
-                                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, position: "relative" }} onClick={onReset}>RESET
+                                    htmlType='button' icon={<UndoOutlined />}  onClick={onReset}>RESET
                                 </Button>
                             </Form.Item>
                         </Col>
