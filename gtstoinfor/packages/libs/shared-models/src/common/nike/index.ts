@@ -26,3 +26,5 @@ export * from './change.rreq';
 export * from './change-ord-sizes.req'
 export * from './changeponumber.req';
 export * from './coLine.req';
+export * from './nike-order-filter.req';
+export * from './fob-price-Diff.req';

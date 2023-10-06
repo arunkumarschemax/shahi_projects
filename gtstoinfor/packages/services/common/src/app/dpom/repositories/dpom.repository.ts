@@ -1,6 +1,6 @@
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
@@ -75,7 +75,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
-    async getTotalItemQtyChangeData(req: nikeFilterRequest): Promise<any[]> {
+    async getTotalItemQtyChangeData(req: any): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(`dpom.po_number,dpom.created_at,dpom.item,dpom.factory,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.style_number AS styleNumber,dpom.destination_country AS desCtry,dpom.color_desc,dpom.size_description,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty,dpom.item_text,dpom.po_and_line ,dpom.po_line_item_number, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
@@ -436,6 +436,37 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.destinationCountry`)
         return await query.getRawMany();
     }
+    ///----------------------------------------------------------------------------------------------------------------->fabric tracker 
+    async getFabricTrackerForFactory(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.factory,dpom.id`)
+            .groupBy(`dpom.factory`)
+        return await query.getRawMany();
+    }
+    async getFabricTrackerForItem(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.item,dpom.id`)
+            .groupBy(`dpom.item`)
+        return await query.getRawMany();
+    }
+    async getFabricTrackerForProductCode(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.productCode,dpom.id`)
+            .groupBy(`dpom.productCode`)
+        return await query.getRawMany();
+    }
+    async getFabricTrackerForStyleNumber(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.styleNumber,dpom.id`)
+            .groupBy(`dpom.styleNumber`)
+        return await query.getRawMany();
+    }
+    async getFabricTrackerForColorDesc(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.colorDesc,dpom.id`)
+            .groupBy(`dpom.colorDesc`)
+        return await query.getRawMany();
+    }
 
     ///-------------------------------------------------------------------->factory
     async getFactoryPpmData(req: PpmDateFilterRequest): Promise<any[]> {
@@ -482,6 +513,34 @@ export class DpomRepository extends Repository<DpomEntity> {
 
         return await query.getRawMany();
     }
+
+    async getFabricTrackerReport(req: PpmDateFilterRequest) {
+        let query = this.createQueryBuilder('dpom')
+          .select(`item,
+            po_line_item_number AS poLine,style_number AS styleNumber,
+            product_code AS productCode, total_item_qty AS totalItemQty, factory,document_date AS DocumentDate,
+            planning_season_code AS planningSeasonCode,
+            planning_season_year AS planningSeasonYear,color_desc AS colorDesc,ogac,gac, mrgac,shipping_type AS shipmentType, po_number AS poNumber, po_line_item_number AS poLineItemNumber`)
+          
+        if (req.productCode !== undefined) {
+            query.andWhere(`product_code ='${req.productCode}'`)
+        }
+        if (req.item !== undefined) {
+            query.andWhere(`item ='${req.item}'`)
+        }
+        if (req.factory !== undefined) {
+            query.andWhere(`factory ='${req.factory}'`)
+        }
+        if (req.colorDesc !== undefined) {
+            query.andWhere(`color_desc ='${req.colorDesc}'`)
+        }
+        if (req.styleNumber !== undefined) {
+            query.andWhere(`style_number ='${req.styleNumber}'`)
+        }
+        
+        return  await query.getRawMany();
+        
+      }
 
     ///-------------------------------------------------------------------------------------------------------------->ppm marketing
     async getMarketingPpmData(req: PpmDateFilterRequest): Promise<any[]> {
@@ -587,7 +646,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .addOrderBy(' d.schedule_line_item_number', 'ASC')
             .groupBy(` d.po_number, d.po_line_item_number, d.schedule_line_item_number`)
         return await query.getRawMany();
-    }
+    } 
 
     async getPpmProductCodeForOrderCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')

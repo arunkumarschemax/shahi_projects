@@ -45,7 +45,7 @@ const PPMReport = () => {
   const [hideChildren, setHideChildren] = useState(false);
   let navigate = useNavigate()
   let poFilterData
-  const [tableLoading,setTableLoading] = useState<boolean>(false)
+  const [tableLoading, setTableLoading] = useState<boolean>(false)
   const formatter = (value: number) => <CountUp end={value} separator="," />;
 
 
@@ -220,7 +220,7 @@ const PPMReport = () => {
       })
       .catch(err => {
       }).finally(() => {
-          setTableLoading(false)
+        setTableLoading(false)
       });
   };
 
@@ -421,29 +421,32 @@ const PPMReport = () => {
       {
         title: 'Diff of Ship to Address', dataIndex: '',
         render: (text, record) => {
-          const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-          const text1 = lines1.join('');
+          const lines1 = (record.shipToAddressLegalPO)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text1 = lines1?.join('');
 
-          const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-          const text2 = lines2.join('');
+          const lines2 = (record.shipToAddressDIA)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text2 = lines2?.join('');
+          if (text1 == null && text2 == null) {
+            return '-'
+          } else {
+            const dmp = new DiffMatchPatch();
+            const diff = dmp.diff_main(text1, text2);
+            dmp.diff_cleanupSemantic(diff);
 
-          const dmp = new DiffMatchPatch();
-          const diff = dmp.diff_main(text1, text2);
-          dmp.diff_cleanupSemantic(diff);
-
-          let output = '';
-          for (const [op, text] of diff) {
-            if (op === DiffMatchPatch.DIFF_INSERT) {
-              if (text.trim() !== '') {
-                output += `${text} `;
-              }
-            } else if (op === DiffMatchPatch.DIFF_DELETE) {
-              if (text.trim() !== '') {
-                output += `${text} `;
+            let output = '';
+            for (const [op, text] of diff) {
+              if (op === DiffMatchPatch.DIFF_INSERT) {
+                if (text.trim() !== '') {
+                  output += `${text} `;
+                }
+              } else if (op === DiffMatchPatch.DIFF_DELETE) {
+                if (text.trim() !== '') {
+                  output += `${text} `;
+                }
               }
             }
+            return output.trim()
           }
-          return output.trim()
         },
       },
       { title: 'CAB Code', dataIndex: 'CABCode' },
@@ -784,29 +787,32 @@ const PPMReport = () => {
         dataIndex: '',
         align: 'center',
         render: (text, record) => {
-          const lines1 = (record.shipToAddressLegalPO).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-          const text1 = lines1.join('');
+          const lines1 = (record.shipToAddressLegalPO)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text1 = lines1?.join('');
 
-          const lines2 = (record.shipToAddressDIA).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-          const text2 = lines2.join('');
+          const lines2 = (record.shipToAddressDIA)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text2 = lines2?.join('');
+          if (text1 == null && text2 == null) {
+            return '-'
+          } else {
+            const dmp = new DiffMatchPatch();
+            const diff = dmp.diff_main(text1, text2);
+            dmp.diff_cleanupSemantic(diff);
 
-          const dmp = new DiffMatchPatch();
-          const diff = dmp.diff_main(text1, text2);
-          dmp.diff_cleanupSemantic(diff);
-
-          let output = '';
-          for (const [op, text] of diff) {
-            if (op === DiffMatchPatch.DIFF_INSERT) {
-              if (text.trim() !== '') {
-                output += `${text} `;
-              }
-            } else if (op === DiffMatchPatch.DIFF_DELETE) {
-              if (text.trim() !== '') {
-                output += `${text} `;
+            let output = '';
+            for (const [op, text] of diff) {
+              if (op === DiffMatchPatch.DIFF_INSERT) {
+                if (text.trim() !== '') {
+                  output += `${text} `;
+                }
+              } else if (op === DiffMatchPatch.DIFF_DELETE) {
+                if (text.trim() !== '') {
+                  output += `${text} `;
+                }
               }
             }
+            return output.trim()
           }
-          return output.trim()
         },
       },
       {
@@ -955,7 +961,7 @@ const PPMReport = () => {
             title: 'Quantity',
             dataIndex: '',
             key: '',
-            align:'right',
+            align: 'right',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
               if (sizeData) {
@@ -977,7 +983,7 @@ const PPMReport = () => {
           {
             title: 'Gross Price/FOB',
             dataIndex: 'grossFobPrice',
-            align:'right',
+            align: 'right',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1020,7 +1026,7 @@ const PPMReport = () => {
           {
             title: 'Buyer Confirmed Gross Price/FOB',
             dataIndex: 'buyerGrossFobPrice',
-            align:'right',
+            align: 'right',
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1043,7 +1049,7 @@ const PPMReport = () => {
           {
             title: 'Buyer Confirmed Gross Price/FOB Currency Code',
             dataIndex: 'buyerGrossFobCurrencyCode',
-            align:'right',
+            align: 'right',
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1066,7 +1072,7 @@ const PPMReport = () => {
           {
             title: 'Diff of Price',
             dataIndex: '',
-            align:'right',
+            align: 'right',
 
           },
           {
@@ -1076,7 +1082,7 @@ const PPMReport = () => {
           {
             title: 'Net including discounts',
             dataIndex: 'netIncludingDisc',
-            align:'right',
+            align: 'right',
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1120,7 +1126,7 @@ const PPMReport = () => {
           {
             title: 'Trading Co Net including discounts',
             dataIndex: 'trConetIncludingDisc',
-            align:'right',
+            align: 'right',
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1164,7 +1170,7 @@ const PPMReport = () => {
           {
             title: 'Legal PO Price',
             dataIndex: 'legalPoPrice',
-            align:'right',
+            align: 'right',
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1208,7 +1214,7 @@ const PPMReport = () => {
           {
             title: 'CO Price',
             dataIndex: 'coPrice',
-            align:'right',
+            align: 'right',
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1252,14 +1258,14 @@ const PPMReport = () => {
           {
             title: 'Diff of Price',
             dataIndex: '',
-            align:'right',
+            align: 'right',
 
 
           },
           {
             title: 'Diff of Price currency',
             dataIndex: '',
-            align:'right',
+            align: 'right',
 
 
           },
@@ -1287,7 +1293,7 @@ const PPMReport = () => {
           {
             title: 'Legal PO QTY',
             dataIndex: 'legalPoQty',
-            align:'right',
+            align: 'right',
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1310,13 +1316,13 @@ const PPMReport = () => {
           {
             title: 'Diff of Quantity',
             dataIndex: '',
-            align:'right',
+            align: 'right',
 
           },
           {
             title: 'Allowed Excess Ship Qty',
             dataIndex: '',
-            align:'right',
+            align: 'right',
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1346,7 +1352,7 @@ const PPMReport = () => {
           {
             title: 'Actual Shipped Qty',
             dataIndex: 'actualShippedQty',
-            align:'right',
+            align: 'right',
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1368,7 +1374,7 @@ const PPMReport = () => {
           },
           {
             title: 'Actual Ship %',
-            align:'right',
+            align: 'right',
 
             dataIndex: '',
             render: (text, record) => {
@@ -1404,7 +1410,7 @@ const PPMReport = () => {
           {
             title: 'Quantity',
             dataIndex: '',
-            align:'right',
+            align: 'right',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
               if (sizeData) {
@@ -1903,29 +1909,32 @@ const PPMReport = () => {
           if (record.itemVasText == null || record.itemVasTextPDF == null) {
             return '-';
           } else {
-            const lines1 = (record.itemVasText).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-            const text1 = lines1.join('');
+            const lines1 = (record.itemVasText)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+            const text1 = lines1?.join('');
 
-            const lines2 = (record.itemVasTextPDF).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-            const text2 = lines2.join('');
+            const lines2 = (record.itemVasTextPDF)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+            const text2 = lines2?.join('');
+            if (text1 == null && text2 == null) {
+              return '-'
+            } else {
+              const dmp = new DiffMatchPatch();
+              const diff = dmp.diff_main(text1, text2);
+              dmp.diff_cleanupSemantic(diff);
 
-            const dmp = new DiffMatchPatch();
-            const diff = dmp.diff_main(text1, text2);
-            dmp.diff_cleanupSemantic(diff);
-
-            let output = '';
-            for (const [op, text] of diff) {
-              if (op === DiffMatchPatch.DIFF_INSERT) {
-                if (text.trim() !== '') {
-                  output += `${text} `;
-                }
-              } else if (op === DiffMatchPatch.DIFF_DELETE) {
-                if (text.trim() !== '') {
-                  output += `${text} `;
+              let output = '';
+              for (const [op, text] of diff) {
+                if (op === DiffMatchPatch.DIFF_INSERT) {
+                  if (text.trim() !== '') {
+                    output += `${text} `;
+                  }
+                } else if (op === DiffMatchPatch.DIFF_DELETE) {
+                  if (text.trim() !== '') {
+                    output += `${text} `;
+                  }
                 }
               }
+              return output.trim()
             }
-            return output.trim()
           }
         },
       },
@@ -2007,29 +2016,36 @@ const PPMReport = () => {
         title: 'Diff of Item Vas Text',
         dataIndex: '',
         render: (text, record) => {
-          const lines1 = (record.itemVasText).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-          const text1 = lines1.join('');
+          const lines1 = (record.itemVasText)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text1 = lines1?.join('');
 
-          const lines2 = (record.itemVasTextPDF).trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
-          const text2 = lines2.join('');
+          const lines2 = (record.itemVasTextPDF)?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+          const text2 = lines2?.join('');
+          if (text1 == null && text2 == null) {
+            return '-'
+          } else if (text1 == null) {
+            return text2;
+          } else if (text2 == null) {
+            return text1;
+          } else {
+            const dmp = new DiffMatchPatch();
+            const diff = dmp.diff_main(text1, text2);
+            dmp.diff_cleanupSemantic(diff);
 
-          const dmp = new DiffMatchPatch();
-          const diff = dmp.diff_main(text1, text2);
-          dmp.diff_cleanupSemantic(diff);
-
-          let output = '';
-          for (const [op, text] of diff) {
-            if (op === DiffMatchPatch.DIFF_INSERT) {
-              if (text.trim() !== '') {
-                output += `${text} `;
-              }
-            } else if (op === DiffMatchPatch.DIFF_DELETE) {
-              if (text.trim() !== '') {
-                output += `${text} `;
+            let output = '';
+            for (const [op, text] of diff) {
+              if (op === DiffMatchPatch.DIFF_INSERT) {
+                if (text.trim() !== '') {
+                  output += `${text} `;
+                }
+              } else if (op === DiffMatchPatch.DIFF_DELETE) {
+                if (text.trim() !== '') {
+                  output += `${text} `;
+                }
               }
             }
+            return output.trim()
           }
-          return output.trim()
         },
       },
       {
@@ -2083,8 +2099,6 @@ const PPMReport = () => {
               }
             }}
             scroll={{ x: 'max-content' }}
-            className="custom-table-wrapper"
-            rowClassName={getRowClassName}
             bordered
           />
         ) : (<Table size='large' />
@@ -2099,7 +2113,7 @@ const PPMReport = () => {
     console.log(poFilterData)
     navigate('/Reports/po-detailed-view', { state: { data: poFilterData } })
   }
- 
+
 
   return (
     <>
@@ -2338,31 +2352,31 @@ const PPMReport = () => {
           </Row>
         </Form>
         <Row gutter={24} justify={'space-evenly'}>
-                    <Col >
-                        <Statistic  loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} />
-                    </Col>
-                    <Col>
-                        <Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
-                    </Col>
-                    <Col>
-                        <Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
-                    </Col>
-                     <Col >
-                        <Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
-                    </Col>
-                    <Col>
-                        <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
-                    </Col>
-                    <Col>
-                        <Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />   
-                    </Col>
-                    <Col>
-                        <Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
-                    </Col>
-                    <Col>
-                        <Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
-                    </Col>
-                    </Row><br></br>
+          <Col >
+            <Statistic loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} />
+          </Col>
+          <Col>
+            <Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
+          </Col>
+          <Col>
+            <Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
+          </Col>
+          <Col >
+            <Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
+          </Col>
+          <Col>
+            <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
+          </Col>
+          <Col>
+            <Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
+          </Col>
+          <Col>
+            <Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
+          </Col>
+          <Col>
+            <Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
+          </Col>
+        </Row><br></br>
 
         {renderReport(filterData)}
       </Card>

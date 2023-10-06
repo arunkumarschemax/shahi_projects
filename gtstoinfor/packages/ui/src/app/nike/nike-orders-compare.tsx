@@ -378,7 +378,7 @@ const OrdersCompareGrid = () => {
     })
 
 
-  
+
 
     const columns1: any = [
         {
@@ -442,9 +442,44 @@ const OrdersCompareGrid = () => {
         {
             title: 'Change to Item Number',
             dataIndex: 'change_to_item_number'
-        }
+        },
+        // {
+        //     title: 'Schedule Line Item No',
+        //     dataIndex: 'schedule_line_item_number',
+        //     ...getColumnSearchProps('schedule_line_item_number')
+        // },
+        // {
+        //     title: 'Previous Item',
+        //     dataIndex: 'old_val',
+        // },
+        // {
+        //     title: 'Revised Item',
+        //     dataIndex: 'new_val',
+        //     // width :'190px',
+        // },
+        // {
+        //     title: 'Order Quantity Pieces',
+        //     dataIndex: 'total_item_qty',
+        //     align: 'right',
+        //     render: (text, record) => (
+        //         <>
+        //             {Number(record.total_item_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+        //         </>
+        //     )
+        // },
+        // {
+        //     title: 'Order Revised Date',
+        //     dataIndex: 'last_update_date',
+        //     render: (text, record) => {
+        //         return record.last_update_date ? convertToYYYYMMDD(record.last_update_date) : '-'
+        //     }
+        // },
+        // {
+        //     title: 'Order Status',
+        //     dataIndex: 'order_status',
+        //     render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
+        // }
     ];
-
     const columns2: any = [
         {
             title: 'S No',
@@ -499,7 +534,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Change From Gross Price',
             dataIndex: 'grossPriceFobOld',
-            align:'right',
+            align: 'right',
             render: (text, record) => (record.grossPriceFobOld ? record.grossPriceFobOld : '-'),
 
 
@@ -508,34 +543,32 @@ const OrdersCompareGrid = () => {
         {
             title: 'Change from Gross Price currency code',
             dataIndex: '',
-            align:'center',
+            align: 'center',
 
             //...getColumnSearchProps('po_number')
-            render: (text, record) => ('USD')
         },
         {
             title: 'Change to Gross Price',
             dataIndex: 'grossPriceFobNew',
-            align:'right',
+            align: 'right',
             render: (text, record) => {
                 const formattedAmount = record.grossPriceFobNew ? parseFloat(record.grossPriceFobNew).toFixed(2) : "-";
                 return <>{formattedAmount}</>;
-              }
+            }
 
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Gross Price currency code',
             dataIndex: '',
-            align:'right',
+            align: 'right',
 
             //...getColumnSearchProps('po_number')
-            render: (text, record) => ('USD')
         },
         {
             title: 'Shahi Offered Price from Master File  ',
             dataIndex: 'shahiOfferedPrice',
-            align:'center',
+            align: 'center',
             render: (text, record) => (record.shahiOfferedPrice ? record.shahiOfferedPrice : '-'),
 
 
@@ -550,23 +583,23 @@ const OrdersCompareGrid = () => {
         {
             title: 'Change from Trading Co Net including discounts',
             dataIndex: 'trCoNetIncludingDiscFrom',
-            align:'right',
-            render:(text,record)=>
-             (record.trCoNetIncludingDiscFrom ? record.trCoNetIncludingDiscFrom: '-')
+            align: 'right',
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscFrom ? record.trCoNetIncludingDiscFrom : '-')
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change from Trading Co Net including discounts currency code',
             dataIndex: 'trCoNetIncludingDiscCurrencyCodeFrom',
-            render:(text,record)=>
-             (record.trCoNetIncludingDiscCurrencyCodeFrom ? record.trCoNetIncludingDiscCurrencyCodeFrom: '-' )
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscCurrencyCodeFrom ? record.trCoNetIncludingDiscCurrencyCodeFrom : '-')
             //...getColumnSearchProps('po_number')
         },
         {
             title: 'Change to Trading Co Net including discounts',
             dataIndex: 'trCoNetIncludingDiscNew',
-            render:(text,record)=>
-             (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew: '-' )
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew : '-')
             //...getColumnSearchProps('po_number')
         },
         {
@@ -578,29 +611,29 @@ const OrdersCompareGrid = () => {
         {
             title: 'Change from Net including discounts',
             dataIndex: 'trCoNetIncludingDiscFrom',
-            render:(text,record)=>
-             (record.trCoNetIncludingDiscFrom ? record.trCoNetIncludingDiscFrom: '-' )
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscFrom ? record.trCoNetIncludingDiscFrom : '-')
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change from Net including discounts currency code',
             dataIndex: 'trCoNetIncludingDiscCurrencyCodeFrom',
-            render:(text,record)=>
-             (record.trCoNetIncludingDiscCurrencyCodeFrom ? record.trCoNetIncludingDiscCurrencyCodeFrom: '-' )
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscCurrencyCodeFrom ? record.trCoNetIncludingDiscCurrencyCodeFrom : '-')
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change to Net including discounts',
             dataIndex: 'trCoNetIncludingDiscNew',
-            render:(text,record)=>
-             (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew :'-') 
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew : '-')
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'change to Net including discounts currency code',
             dataIndex: 'trCoNetIncludingDiscCurrencyCodeTo',
-            render:(text,record)=>
-             (record.trCoNetIncludingDiscCurrencyCodeTo ? record.trCoNetIncludingDiscCurrencyCodeTo: '-' )
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscCurrencyCodeTo ? record.trCoNetIncludingDiscCurrencyCodeTo : '-')
             //...getColumnSearchProps('schedule_line_item_number')
         },
         {
@@ -608,8 +641,8 @@ const OrdersCompareGrid = () => {
             dataIndex: 'legalPoPrice',
             render: (text, record) => (record.legalPoPrice ? record.legalPoPrice : '-'),
             align: 'right'
-          }
-          ,
+        }
+        ,
         {
             title: 'Legal PDF PO Price Currency',
             dataIndex: 'legalPoCurrency',
@@ -620,7 +653,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'CRM CO Price',
             dataIndex: 'crmCoPrice',
-            align:'right',
+            align: 'right',
             render: (text, record) => (record.crmCoPrice ? record.crmCoPrice : '-'),
 
 
@@ -773,14 +806,28 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'From Factory',
-            dataIndex: 'old_val'
+            dataIndex: 'from_factory'
         },
         {
             title: 'Change to Factory',
-            dataIndex: 'new_val'
-        }
-    ];
+            dataIndex: 'change_to_factory'
+        },
+        {
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+            //  ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'Previous Unit',
+            dataIndex: 'old_val',
+        },
+        {
+            title: 'Revised Unit',
+            dataIndex: 'new_val',
+            // width :'190px',
+        },
 
+    ];
     const columns5: any = [
         {
             title: 'S No',
@@ -1086,6 +1133,93 @@ const OrdersCompareGrid = () => {
             dataIndex: 'size_description',
             // ...getColumnSearchProps('size_description')
         },
+
+        {
+            title: 'Change from Gross Price currency code',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+
+        {
+            title: 'Change to Gross Price currency code',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Shahi Offered Price from Master File  ',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Shahi Offered Price currency from Master File ',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Change from Trading Co Net including discounts',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Change from Trading Co Net including discounts currency code',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Change to Trading Co Net including discounts',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Change to Trading Co Net including discounts currency code',
+            dataIndex: '',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Change from Net including discounts',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'Change From Net including discounts currency code',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'Change to Net including discounts',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'change to Net including discounts currency code',
+            dataIndex: '',
+            //...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'Legal PDF PO Price',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        {
+            title: 'Legal PDF PO Price Currency',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
+        // {
+        //     title: 'CRM CO Price',
+        //     dataIndex: '',
+        //     ...getColumnSearchProps('schedule_line_item_number')
+        // },
+        // {
+        //     title: 'CRM CO Price Currency',
+        //     dataIndex: '',
+        //     // ...getColumnSearchProps('schedule_line_item_number')
+        // },
+        {
+            title: 'comparission of CRM CO Price to Legal PDF PO Price',
+            dataIndex: '',
+            // ...getColumnSearchProps('schedule_line_item_number')
+        },
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
@@ -1115,7 +1249,7 @@ const OrdersCompareGrid = () => {
     ];
 
 
-   
+
     const EstimatedETDDate = (value) => {
         if (value) {
             const fromDate = value[0];
@@ -1154,269 +1288,269 @@ const OrdersCompareGrid = () => {
     const getSizeWiseHeaders = (data: TotalQuantityChangeModel[]) => {
         const sizeHeaders = new Set<string>();
         data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
-          sizeHeaders.add('' + version.sizeDescription);
+            sizeHeaders.add('' + version.sizeDescription);
         }))
         return Array.from(sizeHeaders);
-      };
-      const getMap = (data: TotalQuantityChangeModel[]) => {
+    };
+    const getMap = (data: TotalQuantityChangeModel[]) => {
         const sizeWiseMap = new Map<string, Map<string, number>>();
         data?.forEach(rec => {
-          if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
-            sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
-          }
-          rec.sizeWiseData?.forEach(version => {
-            sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.oldQuantity);
-          })
+            if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
+                sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
+            }
+            rec.sizeWiseData?.forEach(version => {
+                sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.oldQuantity);
+            })
         });
         return sizeWiseMap;
-      }
+    }
 
 
-  const renderReport = (data: TotalQuantityChangeModel[]) => {
-    const sizeHeaders = getSizeWiseHeaders(data);
-    const sizeWiseMap = getMap(data);
-      const columns: any = [
-        {
-            title: 'S No',
-            key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-        },
-        {
-            title: 'PO Number',
-            dataIndex: 'purchaseOrderNumber',
-            ...getColumnSearchProps('purchaseOrderNumber')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'poLineItemNumber'
-        },
-        {
-            title: 'Schedule Line Item No',
-            dataIndex: 'scheduleLineItemNumber',
-            align: 'center',
-            ...getColumnSearchProps('scheduleLineItemNumber')
-        },
-        {
-            title: 'Report Generate Date',
-            dataIndex: 'created_at',
-            render: (text) => moment(text).format('MM/DD/YYYY'),
-        },
-        {
-            title: 'Item',
-            dataIndex: 'item',
-            render: (text, record) => {
-                if (!text || text.trim() === '') {
-                  return '-';
-                } else {
-                  return text;
-                }
-              },
-        },
-        {
-            title: 'Factory',
-            dataIndex: 'factory',
-            render: (text, record) => {
-                if (!text || text.trim() === '') {
-                  return '-';
-                } else {
-                  return text;
-                }
-              },
-        },
-     
-        {
-            title: 'Style Number',
-            dataIndex: 'styleNumber'
-        },
-        {
-            title: 'Product Code',
-            dataIndex: 'productCode'
-        },
-        {
-            title: 'Color Description',
-            dataIndex: 'colorDesc'
-        },
-        {
-            title: 'OGAC',
-            dataIndex: 'OGAC'
-        },
-        {
-            title: 'GAC',
-            dataIndex: 'GAC'
-        },
-        {
-            title: 'Destination Country',
-            dataIndex: 'destinationCountry',
-            align: 'center',
-        },
-        {
-            title: 'Item Text',
-            dataIndex: 'itemText',
-            width:220,
-            align:'center',
-            render: (text, record) => {
-                if (!text || text.trim() === '') {
-                  return '-';
-                } else {
-                  return text;
-                }
-              },
-        },
-     
-        // {
-        //     title: 'Difference',
-        //     dataIndex: 'Diff',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         < >
-        //             {Number(record.Diff) === 0 ? '-' : ''}
-        //             {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-        //             {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-        //         </>
-        //     )
-        // },
-    
-        // {
-        //     title: 'Total Quantity',
-        //     align: 'right',
-        //     dataIndex: 'totalQuantity',
-        //     render: (text) => (
-        //         <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
-        //     ),
-        // },
-    ];
-
-    sizeHeaders?.forEach(version => {
-        columns.push({
-          title: version,
-          dataIndex: version,
-          key: version,
-          width: 130,
-          align: 'center',
-          
-          children: [
+    const renderReport = (data: TotalQuantityChangeModel[]) => {
+        const sizeHeaders = getSizeWiseHeaders(data);
+        const sizeWiseMap = getMap(data);
+        const columns: any = [
             {
-              title: 'Old Quantity',
-              dataIndex: '',
-              key: '',
-              align:'right',
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-                if (sizeData) {
-                  if (sizeData.oldQuantity !== null) {
-                    const formattedQty = Number(sizeData.oldQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-
-                    return (
-                      formattedQty
-                    );
-                  } else {
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
+                title: 'S No',
+                key: 'sno',
+                width: '60px',
+                render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             },
-          
             {
-                title: 'New Quantity',
-                dataIndex: 'newQuantity',
-                align:'right',
-
+                title: 'PO Number',
+                dataIndex: 'purchaseOrderNumber',
+                ...getColumnSearchProps('purchaseOrderNumber')
+            },
+            {
+                title: 'PO Line Item No',
+                dataIndex: 'poLineItemNumber'
+            },
+            {
+                title: 'Schedule Line Item No',
+                dataIndex: 'scheduleLineItemNumber',
+                align: 'center',
+                ...getColumnSearchProps('scheduleLineItemNumber')
+            },
+            {
+                title: 'Report Generate Date',
+                dataIndex: 'created_at',
+                render: (text) => moment(text).format('MM/DD/YYYY'),
+            },
+            {
+                title: 'Item',
+                dataIndex: 'item',
                 render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-                    if (sizeData) {
-                      if (sizeData.newQuantity !== null) {
-                        const formattedQty = Number(sizeData.newQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-    
-                        return (
-                          formattedQty
-                        );
-                      } else {
-                        return (
-                          '-'
-                        );
-                      }
+                    if (!text || text.trim() === '') {
+                        return '-';
                     } else {
-                      return '-';
+                        return text;
                     }
-                  }
-              },
-              
-              {
-                title: 'Difference',
-                dataIndex: 'difference',
-                align:'right',
-
+                },
+            },
+            {
+                title: 'Factory',
+                dataIndex: 'factory',
                 render: (text, record) => {
-                  const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-                  if (sizeData) {
-                    if (sizeData.difference !== null) {
-                      const difference = Number(sizeData.difference);
-                      const formattedQty = difference.toLocaleString('en-IN', { maximumFractionDigits: 0 });
-              
-                      if (difference < 0) {
-                        return <span style={{ color: 'red' }}>{formattedQty}</span>;
-                      } else {
-                        return <span style={{ color: 'green' }}>{formattedQty}</span>;
-                      }
+                    if (!text || text.trim() === '') {
+                        return '-';
                     } else {
-                      return '-';
+                        return text;
                     }
-                  } else {
-                    return '-';
-                  }
+                },
+            },
+
+            {
+                title: 'Style Number',
+                dataIndex: 'styleNumber'
+            },
+            {
+                title: 'Product Code',
+                dataIndex: 'productCode'
+            },
+            {
+                title: 'Color Description',
+                dataIndex: 'colorDesc'
+            },
+            {
+                title: 'OGAC',
+                dataIndex: 'OGAC'
+            },
+            {
+                title: 'GAC',
+                dataIndex: 'GAC'
+            },
+            {
+                title: 'Destination Country',
+                dataIndex: 'destinationCountry',
+                align: 'center',
+            },
+            {
+                title: 'Item Text',
+                dataIndex: 'itemText',
+                width: 220,
+                align: 'center',
+                render: (text, record) => {
+                    if (!text || text.trim() === '') {
+                        return '-';
+                    } else {
+                        return text;
+                    }
+                },
+            },
+
+            // {
+            //     title: 'Difference',
+            //     dataIndex: 'Diff',
+            //     align: 'right',
+            //     render: (text, record) => (
+            //         < >
+            //             {Number(record.Diff) === 0 ? '-' : ''}
+            //             {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
+            //                 maximumFractionDigits: 0
+            //             })} </span> : ''}
+            //             {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
+            //                 maximumFractionDigits: 0
+            //             })} </span> : ''}
+            //         </>
+            //     )
+            // },
+
+            // {
+            //     title: 'Total Quantity',
+            //     align: 'right',
+            //     dataIndex: 'totalQuantity',
+            //     render: (text) => (
+            //         <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+            //     ),
+            // },
+        ];
+
+        sizeHeaders?.forEach(version => {
+            columns.push({
+                title: version,
+                dataIndex: version,
+                key: version,
+                width: 130,
+                align: 'center',
+
+                children: [
+                    {
+                        title: 'Old Quantity',
+                        dataIndex: '',
+                        key: '',
+                        align: 'right',
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                            if (sizeData) {
+                                if (sizeData.oldQuantity !== null) {
+                                    const formattedQty = Number(sizeData.oldQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+
+                                    return (
+                                        formattedQty
+                                    );
+                                } else {
+                                    return (
+                                        '-'
+                                    );
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    },
+
+                    {
+                        title: 'New Quantity',
+                        dataIndex: 'newQuantity',
+                        align: 'right',
+
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                            if (sizeData) {
+                                if (sizeData.newQuantity !== null) {
+                                    const formattedQty = Number(sizeData.newQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+
+                                    return (
+                                        formattedQty
+                                    );
+                                } else {
+                                    return (
+                                        '-'
+                                    );
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    },
+
+                    {
+                        title: 'Difference',
+                        dataIndex: 'difference',
+                        align: 'right',
+
+                        render: (text, record) => {
+                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                            if (sizeData) {
+                                if (sizeData.difference !== null) {
+                                    const difference = Number(sizeData.difference);
+                                    const formattedQty = difference.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+
+                                    if (difference < 0) {
+                                        return <span style={{ color: 'red' }}>{formattedQty}</span>;
+                                    } else {
+                                        return <span style={{ color: 'green' }}>{formattedQty}</span>;
+                                    }
+                                } else {
+                                    return '-';
+                                }
+                            } else {
+                                return '-';
+                            }
+                        }
+                    }
+
+
+
+
+                ],
+                render: (text, record) => {
+                    return record.sizeWiseData.find(item => item.sizeDescription === version);
                 }
-              }
-              
-              
- 
-  
-          ],
-          render: (text, record) => {
-            return record.sizeWiseData.find(item => item.sizeDescription === version);
-          }
+            });
+
+
         });
-  
-      
-      });
-      return (
-        <>
-  
-          {filterData.length > 0 ? (
-            <Table
-              columns={columns}
-              dataSource={filterData}
-              size='large'
-              pagination={{
-                onChange(current, pageSize) {
-                  setPage(current);
-                  setPageSize(pageSize);
-                }
-              }}
-              scroll={{ x: 'max-content' }}
-              className="custom-table-wrapper"
-              bordered
-            />
-          ) : (<Table size='large' />
-          )}
-        </>
-      );
+        return (
+            <>
 
-}
+                {filterData.length > 0 ? (
+                    <Table
+                        columns={columns}
+                        dataSource={filterData}
+                        size='large'
+                        pagination={{
+                            onChange(current, pageSize) {
+                                setPage(current);
+                                setPageSize(pageSize);
+                            }
+                        }}
+                        scroll={{ x: 'max-content' }}
+                        className="custom-table-wrapper"
+                        bordered
+                    />
+                ) : (<Table size='large' />
+                )}
+            </>
+        );
+
+    }
 
     const items: TabsProps['items'] = [
         {
             key: '1',
             label: <b style={{ color: '#25CB2D' }}>Order Qty Revised PO's : {filteredQtyData?.length} </b>,
-            children:   [renderReport(filterData)] ,
+            children: [renderReport(filterData)],
         },
         {
             key: '2',
@@ -1440,7 +1574,7 @@ const OrdersCompareGrid = () => {
         },
         {
             key: '6',
-            label: <b>Product Code Revised : {productCodeChaneData?.length}</b>,
+            label: <b>Plant Code revised : {productCodeChaneData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} scroll={{ x: 'max-content' }} />,
         },
         {
@@ -1459,7 +1593,9 @@ const OrdersCompareGrid = () => {
         form.resetFields();
         setSelectedEstimatedFromDate(undefined);
         setSelectedEstimatedToDate(undefined);
+        // getContractDateChangeData()
         getQtyChangeData()
+        // getWharehouseDateChangeData()
     }
 
     return (
@@ -1468,7 +1604,7 @@ const OrdersCompareGrid = () => {
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
-            {/* <Form form={form} layout={"vertical"} >
+            <Form form={form} layout={"vertical"} >
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
                         <Form.Item name='poandLine' label='Po+Line' >
@@ -1505,7 +1641,7 @@ const OrdersCompareGrid = () => {
                     </Col>
 
                 </Row>
-            </Form> */}
+            </Form>
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
             </> : <></>}

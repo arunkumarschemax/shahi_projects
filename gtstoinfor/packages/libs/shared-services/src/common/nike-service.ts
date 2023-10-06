@@ -101,13 +101,13 @@ export class NikeService extends CommonAxiosService {
 
     async getPPMData(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPPMData", req)
-    }
+    } 
 
     async getPlanShipmentWiseData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPlanShipmentWiseData")
     }
-    async getFabricTrackerReport(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getFabricTrackerReport")
+    async getFabricTrackerReport(req:PpmDateFilterRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getFabricTrackerReport",req)
     }
 
     async getItemChangeData(): Promise<CommonResponseModel> {
@@ -213,6 +213,9 @@ export class NikeService extends CommonAxiosService {
     async getPpmFactoryForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmFactoryForFactory")
     }
+    async getPpmPoNumberForFactory(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPpmPoNumberForFactory")
+    }
 
     //-------------------------------------------------------------------------------------------->ppm marketing
     async updateFactoryStatusColumns(req?: any): Promise<CommonResponseModel> {
@@ -233,6 +236,9 @@ export class NikeService extends CommonAxiosService {
 
     async getPpmColorDescForMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmColorDescForMarketing")
+    }
+    async getPppoNumberForMarketing(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getPppoNumberForMarketing")
     }
 
     async getPpmCategoryDescForMarketing(): Promise<CommonResponseModel> {
@@ -267,6 +273,7 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/getPpmPoLineForOrderCreation")
     }
 
+
     async getPpmPoLineForNikeOrder(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmPoLineForNikeOrder")
     }
@@ -281,13 +288,24 @@ export class NikeService extends CommonAxiosService {
     }
     async getPdfFileInfo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPdfFileInfo")
+    } 
+    //--------------------------------------------------------------------------------------->fabric tracker
+    async getFabricTrackerForFactory(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getFabricTrackerForFactory")
     }
-    async getPpmPoNumberForFactory(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getPpmPoNumberForFactory")
+    async getFabricTrackerForItem(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getFabricTrackerForItem")
     }
-    async getPppoNumberForMarketing(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getPppoNumberForMarketing")
+    async getFabricTrackerForProductCode(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getFabricTrackerForProductCode")
     }
+    async getFabricTrackerForStyleNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getFabricTrackerForStyleNumber")
+    }
+    async getFabricTrackerForColorDesc(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getFabricTrackerForColorDesc")
+}
+
     async getPpmDocTypeMarketing(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmDocTypeMarketing")
     }
@@ -328,3 +346,4 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/getColineOrderNo")
     }
 }
+
