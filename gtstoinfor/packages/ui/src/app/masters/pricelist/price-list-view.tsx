@@ -65,7 +65,7 @@ export const PriceListGrid = (props: PriceListView) => {
   const getStyle = () => {
     priceService.getAllPriceListStyles().then(res => {
       setStyle(res.data)
-      setStyCount(res.data.length)
+      setStyCount(res.data?.length)
     })
 
 }
@@ -73,7 +73,7 @@ export const PriceListGrid = (props: PriceListView) => {
 const getDestination = () => {
   priceService.getAllPriceListDestination().then(res => {
     setDestination(res.data)
-    setDes(res.data.length)
+    setDes(res.data?.length)
     console.log(des, "all items");
 
   })
@@ -100,7 +100,7 @@ const getSeasonCode = () => {
 
 const getAllItems = () => {
   priceService.getAllPriceListItem().then(res => {
-    setItem(res.data.length)
+    setItem(res.data?.length)
     console.log()
   });
 };

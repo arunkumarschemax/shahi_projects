@@ -545,18 +545,62 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
             }
         }
 
+        // async getPriceHistory(req : HistoryRequest): Promise<CommonResponseModel> {
+        //     try {
+        //         const data = await this.priceListChildRepo.getPriceHistory(req);
+        //         if (data.length > 0) {
+        //             return new CommonResponseModel(true, 1, 'Data retrieved successfully', data);
+        //         } else {
+        //             return new CommonResponseModel(false, 0, 'No data found', data);
+        //         }
+        //     } catch (error) {
+        //         return new CommonResponseModel(false, 0, 'An error occurred while retrieving data', null);
+        //     }
+        // }
+
         async getPriceHistory(req : HistoryRequest): Promise<CommonResponseModel> {
-            try {
-                console.log(req,'service')
-                const data = await this.priceListChildRepo.getPriceHistory(req);
+            let query =`SELECT p1.item,p1.season,p1.sample_code,p1.year,p1.currency,p1.business,REPLACE(p1.fob_local_currency, ',', '') AS current_price,REPLACE(p2.fob_local_currency, ',', '') AS previous_price,
+            (CAST(REPLACE(p1.fob_local_currency, ',', '') AS DECIMAL(10, 2)) - CAST(REPLACE(p2.fob_local_currency, ',', '') AS DECIMAL(10, 2))) AS price_variance,
+                p1.created_at AS latestDate,
+                p2.created_at AS previousDate
+            FROM (
+                SELECT sample_code,business,MAX(created_at) AS p1_created_at
+                FROM price_list_child
+                GROUP BY sample_code,business
+            ) AS latest_dates
+            LEFT JOIN price_list_child AS p1
+            ON latest_dates.sample_code = p1.sample_code AND latest_dates.business = p1.business AND latest_dates.p1_created_at = p1.created_at
+            LEFT JOIN price_list_child AS p2
+            ON p1.sample_code = p2.sample_code AND p1.business = p2.business AND p1.created_at > p2.created_at
+            AND NOT EXISTS (
+            SELECT 1
+            FROM price_list_child AS p
+            WHERE p.sample_code = p1.sample_code AND p.business = p1.business AND p.created_at > p2.created_at AND p.created_at < p1.created_at
+            )
+            ORDER BY p1.sample_code,p1.business,p1.created_at DESC`
+            if (req) {
+                if (req.sampleCode !== undefined) {
+                    query = query +`p1.sample_code ='${req.sampleCode}'`
+                }
+                if (req.business !== undefined) {
+                    query = query +`p1.business ='${req.business}'`
+                }
+                if (req.year !== undefined) {
+                    query = query +`p1.year ='${req.year}'`
+                }
+                if (req.currency !== undefined) {
+                    query = query +`p1.currency ='${req.currency}'`
+                }
+                if (req.seasonCode !== undefined) {
+                    query = query +`p1.season ='${req.seasonCode}'`
+                }
+            }
+            const data = await this.dataSource.query(query);
                 if (data.length > 0) {
                     return new CommonResponseModel(true, 1, 'Data retrieved successfully', data);
                 } else {
                     return new CommonResponseModel(false, 0, 'No data found', data);
                 }
-            } catch (error) {
-                return new CommonResponseModel(false, 0, 'An error occurred while retrieving data', null);
-            }
         }
         
         async getAllPriceListItem(): Promise<CommonResponseModel> {

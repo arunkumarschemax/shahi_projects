@@ -31,7 +31,7 @@ export const PriceListHistory = (props: PriceListView) => {
   const [year,setYear] = useState<any[]>([]); 
   const [currency,setCurrency] = useState<any[]>([]);
   const [seasonCode,setSeasonCode] = useState<any[]>([]);
-  const [fileData, setFileData] = useState<any[]>([])
+  const [fileData, setFileData] = useState<any>([])
 
 
 
@@ -44,6 +44,11 @@ export const PriceListHistory = (props: PriceListView) => {
     getSeasonCode();
     getUploadedTime()
   },[])
+
+  useEffect(() => {
+    console.log(fileData,'---------filedat')
+
+  },[fileData])
 
   const pagination = {
     current: page,
@@ -259,30 +264,30 @@ const getUploadedTime = () => {
       {
         title: "Price",
         children:[
-            {
-                title:"Previous",
-                dataIndex:"previous_price",
-                align:"right",
-                render:(text,record) => {
-                  return(
-                    <>
-                    {record.previous_price ? `${record.currency} - ${record.previous_price} ` : '-'}
-                    </>
-                  )
-                }
-            },
-            {
-                title:"Latest",
-                dataIndex:"current_price",
-                align:"right",
-                render:(text,record) => {
-                    return(
-                      <>
-                      {record.current_price ? `${record.currency} - ${record.current_price} ` : '-'}
-                      </>
-                    )
-                  }
-            },
+          {
+            title: "Previous",
+            dataIndex: "previous_price",
+            align: "right",
+            render: (text, record) => {
+              return (
+                <>
+                  {record.previous_price ? `${record.currency} - ${parseFloat(record.previous_price).toLocaleString()} ` : '-'}
+                </>
+              );
+            }
+          },
+          {
+            title: "Latest",
+            dataIndex: "current_price",
+            align: "right",
+            render: (text, record) => {
+              return (
+                <>
+                  {record.current_price ? `${record.currency} - ${parseFloat(record.current_price).toLocaleString()} ` : '-'}
+                </>
+              );
+            }
+          },          
         ],
       },
       {
@@ -309,10 +314,6 @@ const getUploadedTime = () => {
           }
         },
       }
-      
-     
-   
-   
   ];
 
   const onChange = (pagination, filters, sorter, extra) => {
@@ -396,10 +397,10 @@ const getUploadedTime = () => {
       <Descriptions>
         <Descriptions.Item label="Uploaded Details">
           <Descriptions column={2}>
-            <Descriptions.Item label="Previous File Name">{fileData[1]?.fileName}</Descriptions.Item>
-            <Descriptions.Item label="Latest File Name">{fileData[0]?.fileName}</Descriptions.Item>
-            <Descriptions.Item label="Previous Date">{fileData[1]?.createdAt}</Descriptions.Item>
-            <Descriptions.Item label="Latest Date">{fileData[0]?.createdAt}</Descriptions.Item>
+            <Descriptions.Item label="Previous File Name">{fileData != undefined ? fileData[1]?.fileName: '-'}</Descriptions.Item>
+            <Descriptions.Item label="Latest File Name">{fileData != undefined ? fileData[0]?.fileName: '-'}</Descriptions.Item>
+            <Descriptions.Item label="Previous Date">{fileData != undefined ? fileData[1]?.createdAt: '-'}</Descriptions.Item>
+            <Descriptions.Item label="Latest Date">{fileData != undefined ? fileData[0]?.createdAt: '-'}</Descriptions.Item>
           </Descriptions>
         </Descriptions.Item>
       </Descriptions>
