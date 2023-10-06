@@ -12,7 +12,7 @@ export function PoDetailedview() {
     const stateData = location.state;
 
 
-    console.log(sizeData)
+  //  console.log(sizeData)
     const columns: ColumnsType<any> = [
     {
       title: "S.No",

@@ -211,6 +211,7 @@ const PPMReport = () => {
           setFilterData(res.data);
           setFilteredData(res.data);
           Finish(res.data);
+          // console.log(filterData[0],"filterData")
         } else {
           setGridData([]);
           setFilterData([]);

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, TabsProps, Tag, Typography } from 'antd';
 import { NikeService } from '@project-management-system/shared-services';
-import { ArrowDownOutlined, ArrowUpOutlined, FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, DownOutlined, FileExcelFilled, SearchOutlined, UndoOutlined, UpOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
@@ -632,18 +632,25 @@ const OrdersCompareGrid = () => {
 
             // ...getColumnSearchProps('schedule_line_item_number')
         },
-        {
-            title: 'comparission of CRM CO Price to Legal PDF PO Price',
-            dataIndex: '',
-            align:'right',
-            render:(text,record)=>{
-                const diff = Number(record.crmCoPrice) - Number(record.legalPoPrice)
-                return (
-                    Number(diff).toFixed(2)
-                )
-            }
-            // ...getColumnSearchProps('schedule_line_item_number')
-        }
+       
+
+{
+    title: 'Comparison of CRM CO Price to Legal PDF PO Price',
+    dataIndex: '',
+    align: 'right',
+    render: (text, record) => {
+      const diff = Number(record.crmCoPrice) - Number(record.legalPoPrice);
+      const color = diff < 0 ? 'red' : diff > 0 ? 'green' : 'black';
+      const arrowIcon = diff < 0 ? <DownOutlined /> : diff > 0 ? <UpOutlined /> : null;
+  
+      return (
+        <span style={{ color }}>
+          {arrowIcon} {Number(diff).toFixed(2)}
+        </span>
+      );
+    }
+  }
+          
           
     ];
 
