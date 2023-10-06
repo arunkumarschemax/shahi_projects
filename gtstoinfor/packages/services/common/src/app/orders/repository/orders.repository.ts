@@ -35,7 +35,7 @@ export class OrdersRepository extends Repository<OrdersEntity> {
         const query = this.createQueryBuilder('o')
         .select(`o.production_plan_id,o.item_cd,o.item,o.prod_plan_type,o.fr_fabric,o.created_at,REPLACE(od.old_val,',','') as old_val,REPLACE(od.new_val,',','') as new_val,(REPLACE(od.new_val,',','') - REPLACE(od.old_val,',','')) AS Diff,od.version,o.order_plan_number,o.wh,o.planned_exf,o.year`)
             .leftJoin(OrdersDifferenceEntity, 'od', 'od.prod_plan_id = o.production_plan_id')
-            .where(`column_name = 'order_plan_qty'`)
+            .where(`column_name = 'order_plan_qty' AND o.version = od.version`)
         
             if(req.orderNumber){
                 query.andWhere(`o.order_plan_number = '${req.orderNumber}'`)
