@@ -75,7 +75,7 @@ export const MonthWiseReport = () =>{
       if (res.status) {
         setPhaseExcel(res.data);
       } else {
-        setData([]);
+        setPhaseExcel([]);
       }
     });
   };
@@ -954,7 +954,11 @@ const pagination = {
       {title: <span style={{ background: 'lightblue' }}> Dec In PCs</span>,dataIndex: "decPcsExf",align:"right"},
       {title: <span style={{ background: 'lightblue' }}> Dec In Coeff</span>,dataIndex: "decExfCoeff",align:"right"},
       {title: ``,dataIndex: "",},
-
+      {title:  <span style={{ background: 'lightblue' }}> Total In Pcs</span>,dataIndex: "totalExfPcs",align:"right"},
+      {title:  <span style={{ background: 'lightgreen' }}> Total In Coeff</span>,dataIndex: "totalExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
+    
    )
 
 }
@@ -1021,6 +1025,10 @@ if(selected === 'WareHouse'){
     {title: ``,dataIndex: "",},
     {title: ``,dataIndex: "",},
 
+    {title:  <span style={{ background: 'lightblue' }}> Total In Pcs</span>,dataIndex: "totalWhPcs",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Total In Coeff</span>,dataIndex: "totalWhCoeff",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
   
   )
 }

@@ -1329,9 +1329,12 @@ export const MonthWiseComparisionReport = () =>{
           {title: ``,dataIndex: "",},
           {title: ``,dataIndex: "",},
           {title:<span style={{ background: 'lightblue' }}>Dec In Pre</span>,dataIndex: "decExfPre",},
-          {title: <span style={{ background: 'lightblue' }}>Dec In Lat</span>,dataIndex: "decExfLat",}
+          {title: <span style={{ background: 'lightblue' }}>Dec In Lat</span>,dataIndex: "decExfLat",},
         
-        
+          {title:  <span style={{ background: 'lightblue' }}> Total In Pcs</span>,dataIndex: "totalExfPre",align:"right"},
+      {title:  <span style={{ background: 'lightgreen' }}> Total In Coeff</span>,dataIndex: "totalExfLat",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
         )
       }
       if(selected === 'WareHouse'){
@@ -1385,7 +1388,12 @@ export const MonthWiseComparisionReport = () =>{
           {title: ``,dataIndex: "",},
           {title: <span style={{ background: 'lightblue' }}>Dec In Pre</span>,dataIndex: "decWhPre",},
           {title: <span style={{ background: 'lightblue' }}>Dec In Lat</span>,dataIndex: "decWhLat",},
-          
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+    {title:  <span style={{ background: 'lightblue' }}> Total In Pcs</span>,dataIndex: "totalWhPre",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Total In Coeff</span>,dataIndex: "totalWhLat",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
           
         )
     }
