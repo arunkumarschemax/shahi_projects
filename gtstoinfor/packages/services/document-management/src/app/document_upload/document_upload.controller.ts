@@ -7,7 +7,7 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express'
 import { diskStorage, File } from 'multer'; 
 import { extname } from 'path';
 import { DocumentFileUploadResponse } from "packages/libs/shared-models/src/document-management/document-file-upload-response";
-import { DocumentUploadDto } from "./requests/document-upload-dto";
+import { DocumentUploadDto, UploadedFileid } from "./requests/document-upload-dto";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { DocumentService } from './document.service';
 import { DocumentDto } from './dto/document.dto';
@@ -265,5 +265,10 @@ export class DocumentUploadController {
     @Post('/getFilesAgainstPoandDocument')
     async getFilesAgainstPoandDocument(@Body() req: getFileReq ): Promise<CommonResponseModel> {
       return await this.uploadDocservice.getFilesAgainstPoandDocument(req);
+    }
+
+    @Post('/deleteUploadedFile')
+    async deleteUploadedFile(@Body() req: UploadedFileid ): Promise<CommonResponseModel> {
+      return await this.uploadDocservice.deleteUploadedFile(req);
     }
 }

@@ -1,4 +1,5 @@
 import { DocumentDownloadEnum } from "./document-download-enum";
+import { UploadedFileid } from "./po-role.request";
 
 export class UploadDocumentListDto{
     documentsListId: number;
@@ -18,6 +19,7 @@ export class UploadDocumentListDto{
     documentsPath?: any[];
     docStatus?:string
     documentName?:string
+    uploadFileId?:number
     constructor(
     documentsListId: number,
     documentCategoryId: number,
@@ -35,7 +37,9 @@ export class UploadDocumentListDto{
     versionFlag: number,
     documentsPath: any[],
     docStatus?:string,
-    documentName?:string
+    documentName?:string,
+    uploadFileId?:number
+
     ){
         this.documentsListId=documentsListId
         this.documentCategoryId=documentCategoryId
@@ -54,6 +58,7 @@ export class UploadDocumentListDto{
         this.documentsPath=documentsPath
         this.docStatus=docStatus
         this.documentName=documentName
+        this.uploadFileId=uploadFileId
 
     }
 }
@@ -87,7 +92,12 @@ export class docRequest{
     url:string;
     documentName:string;
     downloadStatus:DocumentDownloadEnum | string;
-    constructor(uid: string,name:string,status:string,type:string,url:string,documentName:string, downloadStatus:DocumentDownloadEnum | string){
+    uploadFileId?:number
+    documentListId?:number
+    constructor(uid: string,name:string,status:string,type:string,url:string,documentName:string, downloadStatus:DocumentDownloadEnum | string,
+        uploadFileId?:number,
+        documentListId?:number
+        ){
         this.uid = uid;
         this.name = name;
         this.status = status;
@@ -95,5 +105,7 @@ export class docRequest{
         this.url = url;
         this.documentName = documentName;
         this.downloadStatus = downloadStatus;
+        this.uploadFileId=uploadFileId
+        this.documentListId=documentListId
     }
 }

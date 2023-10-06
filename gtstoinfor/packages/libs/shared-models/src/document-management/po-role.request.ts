@@ -59,3 +59,15 @@ export class getFileReq{
         this.document=document
     }
 }
+
+export class UploadedFileid{
+    uploadFileId:number
+    documentListId:number
+    constructor(
+    uploadFileId:number,
+    documentListId:number
+    ){
+        this.uploadFileId=uploadFileId
+        this.documentListId=documentListId
+    }
+}

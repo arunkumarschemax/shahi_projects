@@ -84,6 +84,7 @@ export default function DocumentListupload() {
     })
   }
   const getDocData =()=>{
+    console.log("hhhhhhh")
     let invoiceNo = form.getFieldValue("invoice")
     let challan = form.getFieldValue("challan")
     let po = form.getFieldValue("customerPo")
@@ -461,7 +462,7 @@ export default function DocumentListupload() {
             {docData?.length > 0 ? (
               docData?.map((response) => (
                 <UploadView form={form} docData={response} formData={onFinish} fileList={setFilelist} urls ={urls} 
-                setStatus={setStatus}
+                setStatus={setStatus} getDocuments={getDocData}
                 />
               ))
             ) : (
