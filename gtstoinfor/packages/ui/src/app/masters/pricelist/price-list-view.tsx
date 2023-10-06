@@ -140,10 +140,10 @@ const getAllItems = () => {
       message.success(res.internalMessage)
 
     if(res.status){
-      message.success(res.internalMessage)
+   //   message.success(res.internalMessage)
       getPriceList();
       
-      AlertMessages.getErrorMessage(res.internalMessage);
+     // AlertMessages.getErrorMessage(res.internalMessage);
 
     }else {
       // message.error("Status Not Changed")
@@ -272,16 +272,16 @@ const getAllItems = () => {
           title: "Item",
           dataIndex: "item",
           align:"center",
-          sorter: (a, b) => a.item.localeCompare(b.item),
-          sortDirections: ["descend", "ascend"],
-          // ...getColumnSearchProps("style"),
+          // sorter: (a, b) => a.item.localeCompare(b.item),
+          // sortDirections: ["descend", "ascend"],
+           ...getColumnSearchProps("item"),
         },
         {
             title: "Style",
             dataIndex: "sampleCode",
             align:"center",
-            sorter: (a, b) => a.sampleCode.localeCompare(b.sampleCode),
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => a.sampleCode.localeCompare(b.sampleCode),
+            // sortDirections: ["descend", "ascend"],
             // ...getColumnSearchProps("style"),
           },
       
@@ -289,16 +289,16 @@ const getAllItems = () => {
         title: "Destination",
         dataIndex: "business",
         align:"center",
-        sorter: (a, b) => a.business.localeCompare(b.business),
-        sortDirections: [ "ascend","descend"],
+        // sorter: (a, b) => a.business.localeCompare(b.business),
+        // sortDirections: [ "ascend","descend"],
         // ...getColumnSearchProps("destination"),
         
       },{
         title: "Year",
         dataIndex: "year",
         align:"right",
-        sorter: (a, b) => a.year - b.year,
-        sortDirections: ["descend", "ascend"],
+        // sorter: (a, b) => a.year - b.year,
+        // sortDirections: ["descend", "ascend"],
         // ...getColumnSearchProps("year"),
        
       },
@@ -306,8 +306,8 @@ const getAllItems = () => {
         title: "Season Code",
         dataIndex: "seasonCode",
         align:"center",
-        sorter: (a, b) => a.seasonCode.localeCompare(b.seasonCode),
-        sortDirections: [ "ascend","descend"],
+        // sorter: (a, b) => a.seasonCode.localeCompare(b.seasonCode),
+        // sortDirections: [ "ascend","descend"],
         // ...getColumnSearchProps("seasonCode"),
 
        
@@ -509,7 +509,7 @@ const getAllItems = () => {
             </Form.Item>
           </Col> */}
 
-          <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }} style={{ marginTop: 20 }}  >
+          <Col xs={{ span: 24 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }} style={{ marginTop: 20 }}  >
                             <Form.Item>
                                 <Button htmlType="submit" icon={<SearchOutlined />}style={{backgroundColor:'green'}}type="primary">SEARCH</Button>
                                     <Button danger

@@ -134,14 +134,29 @@ export const PriceListForm = (props: PriceListFormProps) => {
                 </Form.Item>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-                <Form.Item name='seasonCode' label='Season Code'>
+                <Form.Item name='seasonCode' label='Season Code'
+                 rules={[{
+                  required: true,
+                  message: 'Season Code is Required',
+  
+                },
+                {
+                  pattern: /^[A-Z]$/, 
+                  message: 'Invalid Season Code all letters must be captial only'
+                }
+                  
+                ]}>
                   <Input placeholder='Enter Season Code'/>
                 </Form.Item>
               </Col>
              
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                 <Form.Item name='year' label='Year'
-                rules={[
+                rules={[{
+                  required: true,
+                  message: 'Year is Required',
+  
+                },
                   {
                     pattern: /^[0-9]+$/,
                     message: `Enter Numbers Only`
@@ -152,7 +167,11 @@ export const PriceListForm = (props: PriceListFormProps) => {
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                 <Form.Item name='fobLocalCurrency' label='Price ' 
-                 rules={[
+                 rules={[ {
+                  required: true,
+                  message: 'Price is Required',
+  
+                },
                   {
                     pattern: /^\d+(\.\d{1,5})?$/, 
                     message: 'Enter a valid number look like this 123.1234',
@@ -166,11 +185,15 @@ export const PriceListForm = (props: PriceListFormProps) => {
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                 <Form.Item name='currency' label='Currency 
                  '
-                 rules={[
+                 rules={[{
+                    required: true,
+                    message: 'Currency is Required',
+    
+                  },
                   
                   {
                     pattern: /^[A-Z]{1,5}$/, 
-                    message: 'Invalid Currency A;; letters must be captial'
+                    message: 'Invalid Currency all letters must be captial only'
                   }
     
                   
