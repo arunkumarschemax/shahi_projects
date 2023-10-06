@@ -79,8 +79,8 @@ export class DocumentUploadController {
         },
       }),
       fileFilter: (req, file, callback) => {
-        if (!file.originalname.match(/\.(xls|pdf|jpg|png|jpeg|doc)$/)) {
-          return callback(new Error('Only xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
+        if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc)$/)) {
+          return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
         }
         callback(null, true);
       },

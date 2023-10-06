@@ -33,6 +33,8 @@ const UploadView = (props: UploadViewProps) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const defaultValue = "option1";
   const [selectedValue, setSelectedValue] = useState(defaultValue);
+  const [documentName, setDocumentName] = useState<string>(undefined);
+
   const [form] = Form.useForm()
 const handleRemoveFile = (fileToRemove) => {
   const updatedFileList = fileList.filter(file => file.uid !== fileToRemove.uid);
@@ -268,7 +270,15 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     },
     // onDownload: handleFileDownload,
     beforeUpload: (file: any) => {
-        if (!file.name.match(/\.(pdf)$/)) {
+
+      console.log(documentName);
+      if(documentName != undefined && documentName === "Mass Balance Sheet" && (!file.name.match(/\.(xlsx)$/) && !file.name.match(/\.(pdf)$/)))
+        {
+            message.error("Only pdf & xlsx files are allowed!");
+            return true;
+        }
+      else if(documentName != "Mass Balance Sheet" && !file.name.match(/\.(pdf)$/))
+        {
             message.error("Only pdf files are allowed!");
             return true;
         }
@@ -321,7 +331,11 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
   };
 
 
-  const handleUpload = (documentsListId, info) => {
+  const handleUpload = (documentsListId, info, docName) => {
+    console.log(documentsListId);
+    console.log(info);
+    console.log(docName);
+    setDocumentName(docName);
     // Handle the file upload for the specific documentListId
     // You can use the 'documentListId' to identify which row is being interacted with
   };
@@ -356,9 +370,9 @@ console.log(props.docData)
             <Upload
               key={props.docData.documentsListId}
               name={`uploadFile${props.docData.documentsListId}`}
+              accept=".jpeg,.pdf,.png,.jpg,.xlsx"
+              onChange={(info) => handleUpload(props.docData.documentsListId, info, props.docData.documentName)}
               {...gstUploadFieldProps}
-              accept=".jpeg,.pdf,.png,.jpg"
-              onChange={(info) => handleUpload(props.docData.documentsListId, info)}
 
             >
               <Button
@@ -372,7 +386,9 @@ console.log(props.docData)
               </Button>
               <br />
               <Typography.Text type="secondary">
-                (Supports Only Pdf Format)
+                {props.docData?.documentName === "Mass Balance Sheet" ? 
+                "(Supports xlsx & Pdf Formats)":"(Supports Only Pdf Format)"
+                }
               </Typography.Text>
             </Upload>
           </Form.Item>
