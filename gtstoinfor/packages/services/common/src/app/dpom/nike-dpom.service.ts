@@ -191,34 +191,48 @@ export class DpomService {
         }
     }
 
-    async getCRMOrderDetails1(): Promise<any> {
-        const buyerPO = 'DV3934'
-        const data = await AppDataSource1.query(`select * from movex.nike_co_view where byuer_po = '${buyerPO}'`)
-        if (data.length > 0) {
-            return { status: true, data: data };
-        } else {
-            return { status: false, error: 'No results found' };
+    async getCRMOrderDetails1(buyerPO: string): Promise<any> {
+        const headers = { 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
+        try {
+            const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeCoDetails?poNo=${buyerPO}`, { headers });
+
+            // Extract the relevant data from the response and return it
+            const responseData = response.data;
+            return responseData;
+            // if (data.length > 0) {
+            //     return { status: true, data: data };
+            // } else {
+            //     return { status: false, error: 'No results found' };
+            // }
+        } catch (error) {
+            // Handle any errors that may occur during the HTTP request
+            console.error('Error:', error);
+            throw error; // You can choose to re-throw the error or handle it differently
         }
     }
 
-    async getCRMOrderDetails2(): Promise<any> {
-        const coNumber = '2000593977'
-        const data = await AppDataSource2.query(`select * from exports.nike_inv_view where CO_NUMB = '${coNumber}'`)
-        if (data.length > 0) {
-            return { status: true, data: data };
-        } else {
-            return { status: false, error: 'No results found' };
-        }
+    async getCRMOrderDetails2(coNumber: string): Promise<any> {
+        // const coNumber = '2000593977'
+        const headers = { 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
+        const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeInvDetails?coNo=${coNumber}`, { headers })
+        return response
+        // if (data.length > 0) {
+        //     return { status: true, data: data };
+        // } else {
+        //     return { status: false, error: 'No results found' };
+        // }
     }
 
-    async getCRMOrderDetails3(): Promise<any> {
-        const styleCode = '476F'
-        const data = await AppDataSource1.query(`select * from movex.nike_fab_view where stylecode = '${styleCode}'`)
-        if (data.length > 0) {
-            return { status: true, data: data };
-        } else {
-            return { status: false, error: 'No results found' };
-        }
+    async getCRMOrderDetails3(styleCode: string): Promise<any> {
+        // const styleCode = '476F'
+        const headers = { 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
+        const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeFabricDetails?styleCode=${styleCode}`, { headers })
+        return response
+        // if (data.length > 0) {
+        //     return { status: true, data: data };
+        // } else {
+        //     return { status: false, error: 'No results found' };
+        // }
     }
 
     // async createCOline(req: any): Promise<CommonResponseModel> {
@@ -299,53 +313,44 @@ export class DpomService {
             await transactionManager.startTransaction()
             const flag = new Set();
             const orderDetails = await this.getDPOMOrderDetails();
-            // const getCRMData = this.getCRMOrderDetails();
-            const CRMData1 = await this.getCRMOrderDetails1();
-            const CRMData2 = await this.getCRMOrderDetails2();
-            const CRMData3 = await this.getCRMOrderDetails3();
+            if (!orderDetails.status) return new CommonResponseModel(false, 0, orderDetails.error)
 
-            if (CRMData1.status && CRMData2.status) {
-                const data1 = CRMData1?.data[0];
-                const data2 = CRMData2?.data[0];
-                const data3 = CRMData3?.data[0];
+            const date = new Date();
+            const todayDate = date.getFullYear() + '-' + Number(date.getMonth() + 1) + '-' + date.getDate()
+            const entity = new NikeFileUploadEntity()
+            entity.fileName = 'DPOM Api';
+            entity.filePath = 'DPOM Api';
+            entity.status = 'Success';
+            entity.createdUser = 'API sync'
+            const save = await transactionManager.getRepository(NikeFileUploadEntity).save(entity);
+            for (const orderDetail of orderDetails.data) {
+                const CRMData1 = await this.getCRMOrderDetails1(orderDetail.poHeader.poNumber);
+                const CRMData2 = await this.getCRMOrderDetails2(CRMData1?.data[0]?.ORDNO);
+                const CRMData3 = await this.getCRMOrderDetails3(orderDetail.product.styleNumber);
 
-                if (!orderDetails.status) return new CommonResponseModel(false, 0, orderDetails.error)
-                const pdfData = {
-                    shipToAddressLegalPO: '',
-                    quantity: 0,
-                    price: 0,
-                    itemVasPDF: '',
-                    shipToAddressDIA: '',
-                    CABCode: ''
-                }
+                if (CRMData1.status && CRMData2.status) {
+                    const data1 = CRMData1?.data[0];
+                    const data2 = CRMData2?.data[0];
+                    const data3 = CRMData3?.data[0];
 
-                const crmData = {
-                    item: data1?.ITEMNO,
-                    factory: data2?.PLAN_UNIT,
-                    customerOrder: data1?.ORDNO,
-                    coFinalApprovalDate: data1?.CO_FINAL_APP_DATE,
-                    planNo: data2?.PLAN_NUMB,
-                    truckOutDate: '',
-                    actualShippedQty: 0,
-                    coPrice: data1?.PRICE,
-                    shipToAddress: '',
-                    paymentTerm: data2?.PAY_TERM_DESC,
-                    styleDesc: '',
-                    fabricContent: '',
-                    fabricSource: '',
-                    commission: data1?.COMMISION,
-                    PCD: data1?.PCD
-                }
+                    const crmData = {
+                        item: data1?.ITEMNO,
+                        factory: data2?.PLAN_UNIT,
+                        customerOrder: data1?.ORDNO,
+                        coFinalApprovalDate: data1?.CO_FINAL_APP_DATE,
+                        planNo: data2?.PLAN_NUMB,
+                        truckOutDate: '',
+                        actualShippedQty: 0,
+                        coPrice: data1?.PRICE,
+                        shipToAddress: '',
+                        paymentTerm: data2?.PAY_TERM_DESC,
+                        styleDesc: '',
+                        fabricContent: '',
+                        fabricSource: '',
+                        commission: data1?.COMMISION,
+                        PCD: data1?.PCD
+                    }
 
-                const date = new Date();
-                const todayDate = date.getFullYear() + '-' + Number(date.getMonth() + 1) + '-' + date.getDate()
-                const entity = new NikeFileUploadEntity()
-                entity.fileName = 'DPOM Api';
-                entity.filePath = 'DPOM Api';
-                entity.status = 'Success';
-                entity.createdUser = 'API sync'
-                const save = await transactionManager.getRepository(NikeFileUploadEntity).save(entity);
-                for (const orderDetail of orderDetails.data) {
                     // Parse dates using moment
                     const date3 = moment(orderDetail.sizes.sizePo.goodsAtConsolidatorDate, 'MM/DD/YYYY');
                     const date4 = moment(orderDetail.poHeader.documentDate, 'MM/DD/YYYY');
@@ -381,7 +386,7 @@ export class DpomService {
                         orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonDescription,
                         orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.geographyCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, orderDetail.sizes.sizePo.inventorySegmentCode, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity,
                         orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVasDetail ? orderDetail.poLine.itemVasDetail[0]?.textDetails : null, orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails.join(',') : null, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
-                        orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, orderDetail.sizes.sizePo.sizeQuantity, orderDetail.sizes.sizePo.sizeDescription, pdfData.shipToAddressLegalPO, pdfData.quantity, pdfData.price, pdfData.itemVasPDF, pdfData.shipToAddressDIA, pdfData.CABCode, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
+                        orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, orderDetail.sizes.sizePo.sizeQuantity, orderDetail.sizes.sizePo.sizeDescription, '', 0, 0, '', '', '', crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
                         crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, hanger, orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, matches ? matches : null, 'username')
                     const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
                     const versionDetails = await this.dpomChildRepo.getVersion(dtoData.purchaseOrderNumber, dtoData.poLineItemNumber, dtoData.scheduleLineItemNumber)
@@ -392,7 +397,7 @@ export class DpomService {
                     dtoData.odVersion = version
                     if (details) {
                         const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber }, {
-                            documentDate: dtoData.documentDate, categoryCode: dtoData.categoryCode, categoryDesc: dtoData.categoryDesc, vendorCode: dtoData.vendorCode, gccFocusCode: dtoData.gccFocusCode, gccFocusDesc: dtoData.gccFocusDesc, genderAgeCode: dtoData.genderAgeCode, genderAgeDesc: dtoData.genderAgeDesc, styleNumber: dtoData.styleNumber, productCode: dtoData.productCode, colorDesc: dtoData.colorDesc, destinationCountryCode: dtoData.destinationCountryCode, destinationCountry: dtoData.destinationCountry, plant: dtoData.plant, plantName: dtoData.plantName, tradingCoPoNumber: dtoData.tradingCoPoNumber, UPC: dtoData.UPC, directShipSONumber: dtoData.directShipSONumber, directShipSOItemNumber: dtoData.directShipSOItemNumber, customerPO: dtoData.customerPO, shipToCustomerNumber: dtoData.shipToCustomerNumber, shipToCustomerName: dtoData.shipToCustomerName, planningSeasonCode: dtoData.planningSeasonCode, planningSeasonYear: dtoData.planningSeasonYear, docTypeCode: dtoData.docTypeCode, docTypeDesc: dtoData.docTypeDesc, MRGAC: dtoData.MRGAC, OGAC: dtoData.OGAC, GAC: dtoData.GAC, originReceiptDate: dtoData.originReceiptDate, factoryDeliveryActDate: dtoData.factoryDeliveryActDate, GACReasonCode: dtoData.GACReasonCode, GACReasonDesc: dtoData.GACReasonDesc, shippingType: dtoData.shippingType, planningPriorityCode: dtoData.planningPriorityCode, planningPriorityDesc: dtoData.planningPriorityDesc, launchCode: dtoData.launchCode, geoCode: dtoData.geoCode, DPOMLineItemStatus: dtoData.DPOMLineItemStatus, modeOfTransportationCode: dtoData.modeOfTransportationCode, inCoTerms: dtoData.inCoTerms, inventorySegmentCode: dtoData.inventorySegmentCode, purchaseGroupCode: dtoData.purchaseGroupCode, purchaseGroupName: dtoData.purchaseGroupName, totalItemQty: dtoData.totalItemQty, originReceiptQty: dtoData.originReceiptQty, VASSize: dtoData.VASSize, itemVasText: dtoData.itemVasText, itemText: dtoData.itemText, grossPriceFOB: dtoData.grossPriceFOB, FOBCurrencyCode: dtoData.FOBCurrencyCode, netIncludingDisc: dtoData.netIncludingDisc, netIncludingDiscCurrencyCode: dtoData.netIncludingDiscCurrencyCode, trCoNetIncludingDisc: dtoData.trCoNetIncludingDisc, trCoNetIncludingDiscCurrencyCode: dtoData.trCoNetIncludingDiscCurrencyCode, sizeQuantity: dtoData.sizeQuantity, sizeDescription: dtoData.sizeDescription, shipToAddressLegalPO: pdfData.shipToAddressLegalPO, legalPoQty: pdfData.quantity, legalPoPrice: pdfData.price, itemVasPDF: pdfData.itemVasPDF, shipToAddressDIA: pdfData.shipToAddressDIA, CABCode: pdfData.CABCode, item: crmData.item, factory: crmData.factory, customerOrder: crmData.customerOrder, coFinalApprovalDate: crmData.coFinalApprovalDate, planNo: crmData.planNo, truckOutDate: crmData.truckOutDate, actualShippedQty: crmData.actualShippedQty, coPrice: crmData.coPrice, shipToAddress: crmData.shipToAddress, paymentTerm: crmData.paymentTerm, styleDesc: crmData.styleDesc, fabricContent: crmData.fabricContent, fabricSource: crmData.fabricSource, commission: crmData.commission, PCD: crmData.PCD, odVersion: dtoData.odVersion, divertedToPos: dtoData.divertedToPos.join(',')
+                            documentDate: dtoData.documentDate, categoryCode: dtoData.categoryCode, categoryDesc: dtoData.categoryDesc, vendorCode: dtoData.vendorCode, gccFocusCode: dtoData.gccFocusCode, gccFocusDesc: dtoData.gccFocusDesc, genderAgeCode: dtoData.genderAgeCode, genderAgeDesc: dtoData.genderAgeDesc, styleNumber: dtoData.styleNumber, productCode: dtoData.productCode, colorDesc: dtoData.colorDesc, destinationCountryCode: dtoData.destinationCountryCode, destinationCountry: dtoData.destinationCountry, plant: dtoData.plant, plantName: dtoData.plantName, tradingCoPoNumber: dtoData.tradingCoPoNumber, UPC: dtoData.UPC, directShipSONumber: dtoData.directShipSONumber, directShipSOItemNumber: dtoData.directShipSOItemNumber, customerPO: dtoData.customerPO, shipToCustomerNumber: dtoData.shipToCustomerNumber, shipToCustomerName: dtoData.shipToCustomerName, planningSeasonCode: dtoData.planningSeasonCode, planningSeasonYear: dtoData.planningSeasonYear, docTypeCode: dtoData.docTypeCode, docTypeDesc: dtoData.docTypeDesc, MRGAC: dtoData.MRGAC, OGAC: dtoData.OGAC, GAC: dtoData.GAC, originReceiptDate: dtoData.originReceiptDate, factoryDeliveryActDate: dtoData.factoryDeliveryActDate, GACReasonCode: dtoData.GACReasonCode, GACReasonDesc: dtoData.GACReasonDesc, shippingType: dtoData.shippingType, planningPriorityCode: dtoData.planningPriorityCode, planningPriorityDesc: dtoData.planningPriorityDesc, launchCode: dtoData.launchCode, geoCode: dtoData.geoCode, DPOMLineItemStatus: dtoData.DPOMLineItemStatus, modeOfTransportationCode: dtoData.modeOfTransportationCode, inCoTerms: dtoData.inCoTerms, inventorySegmentCode: dtoData.inventorySegmentCode, purchaseGroupCode: dtoData.purchaseGroupCode, purchaseGroupName: dtoData.purchaseGroupName, totalItemQty: dtoData.totalItemQty, originReceiptQty: dtoData.originReceiptQty, VASSize: dtoData.VASSize, itemVasText: dtoData.itemVasText, itemText: dtoData.itemText, grossPriceFOB: dtoData.grossPriceFOB, FOBCurrencyCode: dtoData.FOBCurrencyCode, netIncludingDisc: dtoData.netIncludingDisc, netIncludingDiscCurrencyCode: dtoData.netIncludingDiscCurrencyCode, trCoNetIncludingDisc: dtoData.trCoNetIncludingDisc, trCoNetIncludingDiscCurrencyCode: dtoData.trCoNetIncludingDiscCurrencyCode, sizeQuantity: dtoData.sizeQuantity, sizeDescription: dtoData.sizeDescription, item: crmData.item, factory: crmData.factory, customerOrder: crmData.customerOrder, coFinalApprovalDate: crmData.coFinalApprovalDate, planNo: crmData.planNo, truckOutDate: crmData.truckOutDate, actualShippedQty: crmData.actualShippedQty, coPrice: crmData.coPrice, shipToAddress: crmData.shipToAddress, paymentTerm: crmData.paymentTerm, styleDesc: crmData.styleDesc, fabricContent: crmData.fabricContent, fabricSource: crmData.fabricSource, commission: crmData.commission, PCD: crmData.PCD, odVersion: dtoData.odVersion, divertedToPos: dtoData.divertedToPos.join(',')
                         })
                         if (!updateOrder.affected) {
                             await transactionManager.releaseTransaction();
