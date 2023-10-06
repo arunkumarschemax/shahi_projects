@@ -22,8 +22,8 @@ export interface UploadViewProps {
     fileList: (value: any[]) => void;
     urls: any[];
     setStatus:(status:any) => void;
+    getDocuments:(value:any) => void;
 }
-
 const UploadView = (props: UploadViewProps) => {
 
   const [activePreviewIndex, setActivePreviewIndex] = useState<number | null>(null);
@@ -33,8 +33,12 @@ const UploadView = (props: UploadViewProps) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const defaultValue = "option1";
   const [selectedValue, setSelectedValue] = useState(defaultValue);
+  const [documentName, setDocumentName] = useState<string>(undefined);
+
   const [form] = Form.useForm()
-const handleRemoveFile = (fileToRemove) => {
+
+  const uploadDocService = new UploadDocumentService()
+ const handleRemoveFile = (fileToRemove) => {
   const updatedFileList = fileList.filter(file => file.uid !== fileToRemove.uid);
   setFileList(updatedFileList);
 };
@@ -68,6 +72,21 @@ const handleDownload = (url) => {
 
   }
 }
+
+console.log(props.docData)
+
+const ondelte = (file) =>{
+  console.log(file)
+    uploadDocService.deleteUploadedFile({uploadFileId:file.uploadFileId,documentListId:file.documentListId}).then(res =>{
+    if(res.status){
+      message.success(res.internalMessage)
+      props.getDocuments(0);
+    }else{
+      message.error(res.internalMessage)
+    }
+  })
+}
+
 const renderFileNames = () => {
   if (Array.isArray(fileList) && fileList.length > 0) {
     console.log(fileList)
@@ -76,15 +95,17 @@ const renderFileNames = () => {
         <ul>
           {fileList.map((file, index) => (
             <li key={index}>
-              <a
+              
+              {/* <a
                 href={URL.createObjectURL(new Blob([file.originFileObj]))}
                 onClick={() => handleDownload(file.url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ cursor: 'pointer', textDecoration: 'underline' }}
               >
-                {file.name}
-              </a>
+                {file.name} 
+              </a> */}
+              <span style={{fontSize:'14px'}}>{file.name}{<Tooltip title='Click To Delete this File'><DeleteOutlined onClick={e =>ondelte(file)} style={{color:'red', marginRight:'3px',fontSize:'18px'}}/></Tooltip>}</span>
               {/* {activePreviewIndex === index && (
                 <div>
                   <h3>File {index + 1} Preview</h3>
@@ -109,7 +130,9 @@ const renderFileNames = () => {
                 </div>
               )} */}
             </li>
-          ))}
+
+          )
+          )}
         </ul>
       </div>
     );
@@ -117,13 +140,13 @@ const renderFileNames = () => {
     return <p>No files selected.</p>;
   }
 };
-const CustomUploadList = ({ fileList, handleRemoveFile }) => {
-  console.log(fileList)
+const CustomUploadList = ({ fileList}) => {
+  console.log(fileList.documentsPath)
   return (
       <div>
           <h5>Uploaded Files:</h5>
           <ul>
-          {fileList?.length > 0 ? (
+          {fileList?.documentsPath?.length > 0 ? (
                    renderFileNames()
                 ) : (
                     <h6>No files uploaded yet.</h6>
@@ -268,7 +291,15 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
     },
     // onDownload: handleFileDownload,
     beforeUpload: (file: any) => {
-        if (!file.name.match(/\.(pdf)$/)) {
+
+      console.log(documentName);
+      if(documentName != undefined && documentName === "Mass Balance Sheet" && (!file.name.match(/\.(xlsx)$/) && !file.name.match(/\.(pdf)$/) && !file.name.match(/\.(PDF)$/)))
+        {
+            message.error("Only pdf & xlsx files are allowed!");
+            return true;
+        }
+      else if(documentName != "Mass Balance Sheet" && !file.name.match(/\.(pdf)$/) && !file.name.match(/\.(PDF)$/))
+        {
             message.error("Only pdf files are allowed!");
             return true;
         }
@@ -321,7 +352,11 @@ const mergeAndDownloadPDFs = async (pathsData:any[]) => {
   };
 
 
-  const handleUpload = (documentsListId, info) => {
+  const handleUpload = (documentsListId, info, docName) => {
+    console.log(documentsListId);
+    console.log(info);
+    console.log(docName);
+    setDocumentName(docName);
     // Handle the file upload for the specific documentListId
     // You can use the 'documentListId' to identify which row is being interacted with
   };
@@ -356,9 +391,9 @@ console.log(props.docData)
             <Upload
               key={props.docData.documentsListId}
               name={`uploadFile${props.docData.documentsListId}`}
+              accept=".jpeg,.pdf,.png,.jpg,.xlsx"
+              onChange={(info) => handleUpload(props.docData.documentsListId, info, props.docData.documentName)}
               {...gstUploadFieldProps}
-              accept=".jpeg,.pdf,.png,.jpg"
-              onChange={(info) => handleUpload(props.docData.documentsListId, info)}
 
             >
               <Button
@@ -372,7 +407,9 @@ console.log(props.docData)
               </Button>
               <br />
               <Typography.Text type="secondary">
-                (Supports Only Pdf Format)
+                {props.docData?.documentName === "Mass Balance Sheet" ? 
+                "(Supports xlsx & Pdf Formats)":"(Supports Only Pdf Format)"
+                }
               </Typography.Text>
             </Upload>
           </Form.Item>
@@ -401,7 +438,7 @@ console.log(props.docData)
           </Button>
         </Text>
         <Text strong style={{ fontSize: '18px', color: '#333', marginBottom: '10px' }}>
-          <CustomUploadList fileList={props.docData.documentsPath} handleRemoveFile={handleRemoveFile} />
+          <CustomUploadList fileList={props.docData} />
         </Text>
       
         {/* <br /> */}

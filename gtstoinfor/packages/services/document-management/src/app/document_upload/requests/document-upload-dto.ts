@@ -20,3 +20,16 @@ export class DocumentUploadDto {
     file: FilesDto[];
 }
 
+export class UploadedFileid{
+    @ApiProperty()
+    uploadFileId:number
+    @ApiProperty()
+    documentListId:number
+    constructor(
+    uploadFileId:number,
+    documentListId:number
+    ){
+        this.uploadFileId=uploadFileId
+        this.documentListId=documentListId
+    }
+}

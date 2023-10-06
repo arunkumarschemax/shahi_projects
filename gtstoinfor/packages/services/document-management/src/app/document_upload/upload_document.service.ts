@@ -12,7 +12,7 @@ import { PoReq, docreq,req } from "./requests/importedPoReq";
 import { DocumentRepository } from "./repository/documents.repository";
 import { DataSource } from "typeorm";
 import { ChallanReq, CommonResponseModel, DocumentIdreq, InvoiceReq, PoRoleRequest, UploadDocumentListDto, docRequest, getFileReq, poReq } from "@project-management-system/shared-models";
-import { DocumentUploadDto } from "./requests/document-upload-dto";
+import { DocumentUploadDto, UploadedFileid } from "./requests/document-upload-dto";
 import { UploadFilesRepository } from "./repository/upload-files.repository";
 import { UploadFileDto } from "./models/upload-file.dto";
 import { UploadFilesEntity } from "./entities/upload-files.entity";
@@ -20,7 +20,7 @@ import { config } from 'packages/libs/shared-services/config';
 import { GenericTransactionManager } from "packages/services/common/src/typeorm-transactions/generic-transaction-manager";
 import { OrdersEntity } from "../orders/entities/order.entity";
 import { throwError } from "rxjs";
-import { PoStatusEnum } from "packages/libs/shared-models/src/common/whatsapp/doc-list-enum";
+import { DoclListEnum, PoStatusEnum } from "packages/libs/shared-models/src/common/whatsapp/doc-list-enum";
 import { OrdersRepository } from "../orders/repositories/order.repository";
 @Injectable()
 export class DocumentsListService {
@@ -88,7 +88,22 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
 
 
 
+async getDataDataToUpdatePoStatusAgainstOrderid(orderId:number):Promise<UploadDocumentListResponseModel>{
+    try{
+        const query =' SELECT document_list_id,id FROM upload_files u LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id WHERE u.is_active=1 AND dl.is_uploaded =1 and dl.order_id='+orderId+' GROUP BY document_category_id '
+        const result=await this.documentsListRepository.query(query)
+        if(result){
+            return new UploadDocumentListResponseModel(true,1,'Data',result)
+        }else{
+            return new UploadDocumentListResponseModel(false,0,'Data',[])
 
+        }
+
+    }catch(err){
+        throw err
+    }
+
+}
 
 
 
@@ -169,7 +184,7 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
 
     async getDocumentDetailsByPO(req:PoRoleRequest):Promise<UploadDocumentListResponseModel>{
         try{
-            const sqlQuery = "Select dl.status,is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"'and role_name ='"+req.role+"' Group by dl.documents_list_id";
+            const sqlQuery = "Select uf.id as uploadFileId,dl.status,is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"'and role_name ='"+req.role+"' Group by dl.documents_list_id";
             // and order_id = "+req.orderId+" 
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
             console.log(result)
@@ -178,7 +193,7 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
             let urls:any[] = [];
             if(result.length >0){
             for (const res of result){
-                const doctlistQuery = 'SELECT d.is_download AS downloadStatus, uid,u.file_name AS name, concat("'+config.download_path+'/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where u.document_list_id ='+res.documentsListId;
+                const doctlistQuery = 'SELECT u.document_list_id as documentListId,u.id as uploadFileId,d.is_download AS downloadStatus, uid,u.file_name AS name, concat("'+config.download_path+'/PO-",dl.customer_po,"/",u.file_name) AS url, "application/pdf" AS "type", d.document_name AS documentName FROM upload_files u  LEFT JOIN documents_list dl ON u.document_list_id=dl.documents_list_id left join document d on d.id = dl.document_category_id where u.is_active=1 and u.document_list_id ='+res.documentsListId;
                 const docres = await this.uploadFilesRepository.query(doctlistQuery)
 
                 const docReq:docRequest[] =[];
@@ -187,14 +202,11 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
                     if(res1.downloadStatus === "Yes"){
                         urls.push(res1.url);
                     }
-                    let data = new docRequest(res1.uid,res1.name,res1.status,res1.type,res1.url,res1.documentName,res1.downloadStatus);
+                    let data = new docRequest(res1.uid,res1.name,res1.status,res1.type,res1.url,res1.documentName,res1.downloadStatus,res1.uploadFileId,res1.documentListId);
                     docReq.push(data);
                 }
-                // console.log(docReq,'docReq')
-                // console.log(res.status,'resssssssssssssssssssssssssssss')
-                docinfo.push(new UploadDocumentListDto(res.documentsListId,res.documentCategoryId,res.role_id,res.poNumber,1,res.documentName,res.dlFilePath,res.uploadStatus,res.isActive,'','','','',1,docReq,res.status,res.documentName) )
+                docinfo.push(new UploadDocumentListDto(res.documentsListId,res.documentCategoryId,res.role_id,res.poNumber,1,res.documentName,res.dlFilePath,res.uploadStatus,res.isActive,'','','','',1,docReq,res.status,res.documentName,res.uploadFileId) )
                 // result.documentsPath = docReq;
-                // console.log( docinfo,' result.documentsPath')
             }
                 return new UploadDocumentListResponseModel(true,1,'data retrived sucessfully..',docinfo,urls)
             }else{
@@ -346,7 +358,7 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
 
     async getFilesAgainstPoandDocument(req: getFileReq): Promise<CommonResponseModel>{
         try{
-            const sqlQuery = 'SELECT u.id,document_list_id,dl.document_category_id,customer_po AS poNo,u.file_name AS fileName,u.file_path AS filePath  FROM `upload_files` u LEFT JOIN `documents_list` dl ON dl.documents_list_id=u.document_list_id  LEFT JOIN `document` d ON d.id=dl.document_category_id           WHERE dl.customer_po="'+req.poNo+'" AND d.document_name="'+req.document+'"';
+            const sqlQuery = 'SELECT u.id,document_list_id,dl.document_category_id,customer_po AS poNo,u.file_name AS fileName,u.file_path AS filePath  FROM `upload_files` u LEFT JOIN `documents_list` dl ON dl.documents_list_id=u.document_list_id  LEFT JOIN `document` d ON d.id=dl.document_category_id   WHERE u.is_active =1 AND dl.customer_po="'+req.poNo+'" AND d.document_name="'+req.document+'"';
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
             if(result.length >0){
                 return new CommonResponseModel(true,1,'data retrived sucessfully..',result)
@@ -358,6 +370,37 @@ async getDataDataToUpdatePoStatus(poNumber:string):Promise<UploadDocumentListRes
             throw error
         }
 
+    }
+
+
+    async deleteUploadedFile(req:UploadedFileid):Promise<CommonResponseModel>{
+        console.log(req)
+        try{
+             const updateStatus = await this.uploadFilesRepository.update({id:req.uploadFileId},{isActive:false})  
+
+             if(updateStatus.affected){
+                const query =' SELECT dl.order_id as orderId,id,document_list_id as documentListId,u.is_active FROM upload_files u left join documents_list dl on u.document_list_id=dl.documents_list_id where u.is_active=1 AND u.document_list_id='+req.documentListId+''
+                const result = await this.uploadFilesRepository.query(query)
+
+                const orderid ='select order_id as orderId from documents_list where documents_list_id='+req.documentListId+''
+                const resultOrderId = await this.uploadFilesRepository.query(orderid)
+
+                const postatusData = await this.getDataDataToUpdatePoStatusAgainstOrderid(resultOrderId[0].orderId)
+
+                if(result.length == 0){
+                const updatedocumentListStatus = await this.documentsListRepository.update({documentsListId:req.documentListId},{status:null,isUploaded:false})
+                }
+                if(postatusData.data.length == 0){
+                    const updatePostatus = await this.ordersRepository.update({id:resultOrderId[0].orderId},{orderPoStatus:PoStatusEnum.Open})
+                }
+                return new CommonResponseModel(true,1,'File Deleted Sucessfully')
+             }   else{
+                return new CommonResponseModel(false,0,'something went wrong')
+             }      
+        }
+        catch(err){
+            throw err
+        }
     }
 
 
