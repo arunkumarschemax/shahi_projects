@@ -10,6 +10,14 @@ export class BomTrimRepository extends Repository<BomTrimEntity> {
     ) {
         super(TrimRepo.target, TrimRepo.manager, TrimRepo.queryRunner);
     }
- 
+   
+
+    async getAllCount(): Promise<any> {
+        const query =  this.createQueryBuilder('bom_trim')
+            .select(`MAX(id) as id`)
+            .orderBy(` created_at`, 'DESC')
+        return await query.getRawOne()
+
+    }
 
 }

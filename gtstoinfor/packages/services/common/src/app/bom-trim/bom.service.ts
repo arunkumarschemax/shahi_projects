@@ -15,14 +15,19 @@ export class BomService {
 
     async createBomTrim(req: BomTrimDto, isUpdate: boolean): Promise<BomTrimResponseModel> {
         console.log(req,"service")
+
+         const data = await this.TrimRepo.getAllCount();
+         const maxId = data.id
+         console.log(data,"data")
+
         try {
           
             const entity = new BomTrimEntity()
             entity.itemsId = req.itemsId
             entity.pchId = req.pchId
             entity.facilityId = req.facilityId
-            entity.trimCode = req.trimCode
-            entity.trimId = req.trimId
+            entity.trimCode = "TRIM"+"00"+(maxId+1)
+            entity.trim = req.trim
             entity.genericCode = req.genericCode
             entity.typeId = req.typeId
             entity.groupId = req.groupId
@@ -38,6 +43,8 @@ export class BomService {
             entity.orderMultipleAuom = req.orderMultipleAuom
             entity.currencyId = req.currencyId
             entity.price = req.price
+            entity.taxPercentage = req.taxPercentage
+            entity.totalPrice = req.totalPrice
             entity.purchasePriceQuantity = req.purchasePriceQuantity
             entity.salesTax = req.salesTax
             entity.exciseDuty = req.exciseDuty

@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
+import { ItemSkus } from "../sku-generation/sku-generation.entity";
 @Entity('destination')
 export class Destination {
 
@@ -58,5 +59,8 @@ export class Destination {
 
     @OneToMany(type=>BuyersDestionations, vendor=>vendor.buyerDesInfo,{cascade: true})
     destinationInfo:BuyersDestionations[];
+
+    @OneToMany(type=>ItemSkus, item=>item.destinationInfo,{cascade: true})
+    itemSkuInfo:ItemSkus;
 
 }

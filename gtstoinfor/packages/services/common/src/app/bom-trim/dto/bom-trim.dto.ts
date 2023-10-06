@@ -16,7 +16,7 @@ export class BomTrimDto {
     trimCode :string;
 
     @ApiProperty()
-    trimId : number;
+    trim : string;
 
     @ApiProperty()
     genericCode: string;
@@ -63,6 +63,14 @@ export class BomTrimDto {
 
     @ApiProperty()
     price : number;
+
+    @ApiProperty()
+    taxPercentage : number;
+
+
+    @ApiProperty()
+    totalPrice : number;
+
 
     @ApiProperty()
     purchasePriceQuantity : number;

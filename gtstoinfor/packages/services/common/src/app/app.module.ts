@@ -60,6 +60,9 @@ import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module'
 import { OperationSequenceModule } from './operation-sequence/operation-sequence.module';
 import { FabricWeaveModule } from './fabric weave/fabric-weave.module';
 import { FabricDevelopmentModule } from './fabric-development-request/fabric-development.module';
+import { ItemSkus } from './sku-generation/sku-generation.entity';
+import { SkuGenerationModule } from './sku-generation/sku-generation.module';
+import { SampleDevReqModule } from './sample-dev-request/sample-dev-request.module';
 
 
 @Module({
@@ -115,7 +118,7 @@ import { FabricDevelopmentModule } from './fabric-development-request/fabric-dev
   ColourModule,
   BuyersDestinationModule,
   BomModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule],
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule],
   controllers: [AppController],
   providers: [AppService],
 })
