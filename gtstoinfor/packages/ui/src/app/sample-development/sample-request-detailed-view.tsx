@@ -3,28 +3,17 @@ import { SettingsService } from "@project-management-system/shared-services"
 import { Button, Card, Descriptions } from "antd"
 import DescriptionsItem from "antd/es/descriptions/Item"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 export const SampleDevDetail = () => {
 
     const navigate = useNavigate()
     const service = new SettingsService()
     const [data,setData] = useState<any[]>([])
+    let location = useLocation();
+    const stateData = location.state;
+    console.log(stateData,'--------------------')
 
-
-    useEffect(() => {
-        getAllInfo()
-
-    },[])
-
-    const getAllInfo = () => {
-        const req = new SettingsIdReq()
-        service.getAllSettingsInfo(req).then(res => {
-            if(res.status){
-                setData(res.data)
-            }
-        })
-    }
     
 
     const onUpdate = () => {

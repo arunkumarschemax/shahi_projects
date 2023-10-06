@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { ComponentMappingEntity } from "../../components-mapping/component-mapping.entity";
 import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
+import { SampleRequest } from "../../sample-dev-request/sample-dev-request.entity";
 
 @Entity('style')
 export class Style {
@@ -93,5 +94,8 @@ export class Style {
 
   @OneToMany(type => OperationSequence,os => os.styleInfo,{cascade:true})
   itemsequenceInfo : OperationSequence;
+
+  @OneToMany(()=>SampleRequest, sampleReq => sampleReq.style, {cascade: true})
+  sampleReq : SampleRequest[]
 
 }
