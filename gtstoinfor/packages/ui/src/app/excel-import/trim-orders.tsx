@@ -412,6 +412,7 @@ const {Text}=Typography
             title: 'Status',
             dataIndex: 'answered_status',
            align:'left',
+           ...getColumnSearchProps,
             sorter: (a, b) => a.answered_status.localeCompare(b.answered_status),
             sortDirections: ["descend", "ascend"],
         },
