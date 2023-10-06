@@ -33,7 +33,7 @@ import * as base64 from 'base64-stream';
 import * as winston from 'winston';
 import { resolve } from 'path';
 import { isNumberObject } from 'util/types';
-import { FormatDates } from '../../../../../libs/shared-models/src/enum';
+import { monthOrderDtoKeys, yearOrderDtoKeys } from '../../../../../libs/shared-models/src/enum';
 const xlsxFile = require('read-excel-file/node');
 const csv = require('csv-parser');
 const Excel = require('exceljs');
@@ -81,8 +81,8 @@ export class OrdersService {
             await transactionManager.startTransaction()
             const flag = new Set()
             const columnArray = [];
-            console.log(formData,'formdaaaahh')
-            console.log(id,'fileiddd')
+            // console.log(formData,'formdaaaahh')
+            // console.log(id,'fileiddd')
             const updatedArray = formData.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
@@ -119,7 +119,6 @@ export class OrdersService {
                 }
                 return updatedObj;
             });
-            // console.log(convertedData,'updatedObjmm')
             const difference = columnArray.filter((element) => !ProductionOrderColumns.includes(element));
             if(difference.length > 0){
                 await transactionManager.releaseTransaction()
@@ -129,7 +128,7 @@ export class OrdersService {
             for (const data of convertedData) {
 let dtoData;
 if(data.Order_Plan_Number !== null){
-    dtoData = new SaveOrderDto(null,data.Year,data.Planning_Ssn_Cd,data.Planning_Ssn,data.Tgt_Ssn_Cd,data.Tgt_Ssn,data.Biz_Cd,data.Biz,data.Planning_Region_Code,data.Planning_Region_Name,data.Channel_Code,data.Channel_Name,data.Department,data.Dept_Cd,data.Cls1_Cd,data.Cls2_Cd,data.G_Dept,data.Sub_Category1,data.Core_Category,data.Sub_Category2,data.Sub_Category3,data.Production_Category_Fabric,data.Production_Category_FabricProcessing,data.Production_Category_Sewing,data.Production_Category_SewingProcessing,data.Planning_Sum_Code,data.Planning_Sum,data.Local_NameGHQ,data.Item_Cd,data.Item,data.Orig_Price,data.Main_Sample_Code,data.FR_Fabric_Code,data.FR_Fabric,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Raw_Material_Supplier_Code,data.Raw_Material_Supplier,data.Vendor_Code,data.Vendor,data.Sewing_Factory_Code,data.Sewing_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Coeff,data.month,data.Item_Brunch_Number,(data.Official_Plan_Std_Qty).toString().replace(/,/g,''),(data.Official_Plan_Fab_Prp_Pln_Qty).toString().replace(/,/g,''),(data.Official_Plan_PO_pr_Sls_Qty).toString().replace(/,/g,''),(data.Official_Plan_CO_Qty).toString().replace(/,/g,''),(data.Official_Plan_Stock_Qty).toString().replace(/,/g,''),moment(data.Sls_Start_Dy).format('MM-DD'),data.Publish_Flag_for_Factory,data.Publish_Date,moment(data.Allc_End_Dy).format('MM-DD'),moment(data.Sls_End_Dy).format('MM-DD'),moment(data.GWH).format('MM-DD'),data.Order_Plan_Number,data.Order_Timing,moment(data.Swng_Prd_Month).format('YYYY-MM'),moment(data.Swng_Prd_Week).format('YYYY-MM-DD'),data.Order_Plan_Qty,data.Order_Plan_QtyCoeff,data.Trnsp_Mthd,data.Prod_Plan_Type,data.Ph11st,moment(data.WH).format('YYYY-MM-DD'),data.WH_Act,moment(data.WHAuto).format('MM-DD'),data.Yarn_DL_Requested,data.Yarn_DL_Answered,data.Yarn_DL_Auto,data.Yarn_Production_Due_Date_Auto,moment(data.Yarn_Auto_Reflection_Date).format('MM-DD'),data.Yarn_Act_Dy,data.Yarn_Act_Qty,data.Yarn_Order_Number,data.Yarn_Order_Status,data.Yarn_Delivery_Date,moment(data.Fbrc_DL_Requested).format('MM-DD'),moment(data.Fbrc_DL_Answered).format('YYYY-MM-DD'),moment(data.Fbrc_DL_Auto).format('MM-DD'),data.Fbrc_Production_Due_Date_Auto,moment(data.Fbrc_Auto_Reflection_Date).format('MM-DD'),data.Fbrc_Act_Dy,data.Fbrc_Act_Qty,data.Fbrc_Order_Number,data.Fbrc_Order_Status,moment(data.Fbrc_Delivery_Date).format('MM-DD'),data.Color_DL_Requested,data.Color_DL_Answered,data.Color_DL_Auto,data.Color_Production_Due_Date_Auto,moment(data.Color_Auto_Reflection_Date).format('MM-DD'),data.Color_Act_Dy,data.Color_Act_Qty,data.Color_Order_Number,data.Color_Order_Status,data.Color_Delivery_Date,moment(data.Trim_DL_Requested).format('MM-DD'),moment(data.Trim_DL_Answered).format('YYYY-MM-DD'),moment(data.Trim_DL_Auto).format('MM-DD'),data.Trim_Production_Due_Date_Auto,moment(data.Trim_Auto_Reflection_Date).format('MM-DD'),data.Trim_Act_Dy,data.Trim_Act_Qty,data.Trim_Order_Number,data.Trim_Order_Status,data.Trim_Delivery_Date,moment(data.PO_DL_Requested).format('MM-DD'),moment(data.PO_DL_Answered).format('YYYY-MM-DD'),moment(data.PO_DL_Auto).format('MM-DD'),data.PO_Production_Due_Date_Auto,moment(data.PO_Auto_Reflection_Date).format('MM-DD'),data.PO_Act_Dy,data.PO_Act_Qty,data.PO_Order_Number,data.PO_Order_Status,data.Assort1,data.Assort2,data.NX_Assort,data.Solid,data.Order_Plan_QtySTOP,data.Fix_Flag,data.Alternative_Flag,data.Express_Line_Flag,data.Factory_Comment,moment(data.Planned_EXF).format('YYYY-MM-DD'),data.EXF_ETD,data.ETD_WH,data.Sewing_Country_Region,data.Raw_Material_Original_Country_Region,data.Item_Drop,moment(data.Create_Date).format('YYYY-MM-DD HH:mm'),data.Create_User_ID,data.Create_User_Name,data.Create_Function,moment(data.Update_Date).format('YYYY-MM-DD HH:mm'),data.Update_User_ID,data.Update_User_Name,data.Update_Function,data.CountY,data.Sample,moment(data.EXF).format('MM-DD'),moment(data.BDDL).format('MM-DD'),data.BDDLpast_Past,data.LTBD_EXF,data.New_BDDL,data.new_LTBD_EXF,data.LTPO_EXF,data.Qty_LTBD_EXF,data.Qty_LTPO_EXF,data.County2Y,data.PHASE,id,null,'bidhun')
+    dtoData = new SaveOrderDto(null,data.Year,data.Planning_Ssn_Cd,data.Planning_Ssn,data.Tgt_Ssn_Cd,data.Tgt_Ssn,data.Biz_Cd,data.Biz,data.Planning_Region_Code,data.Planning_Region_Name,data.Channel_Code,data.Channel_Name,data.Department,data.Dept_Cd,data.Cls1_Cd,data.Cls2_Cd,data.G_Dept,data.Sub_Category1,data.Core_Category,data.Sub_Category2,data.Sub_Category3,data.Production_Category_Fabric,data.Production_Category_FabricProcessing,data.Production_Category_Sewing,data.Production_Category_SewingProcessing,data.Planning_Sum_Code,data.Planning_Sum,data.Local_NameGHQ,data.Item_Cd,data.Item,data.Orig_Price,data.Main_Sample_Code,data.FR_Fabric_Code,data.FR_Fabric,data.Supplier_Raw_Material_Code,data.Supplier_Raw_Material,data.Raw_Material_Supplier_Code,data.Raw_Material_Supplier,data.Vendor_Code,data.Vendor,data.Sewing_Factory_Code,data.Sewing_Factory,data.Branch_Factory_Code,data.Branch_Factory,data.Coeff,data.month,data.Item_Brunch_Number,(data.Official_Plan_Std_Qty).toString().replace(/,/g,''),(data.Official_Plan_Fab_Prp_Pln_Qty).toString().replace(/,/g,''),(data.Official_Plan_PO_pr_Sls_Qty).toString().replace(/,/g,''),(data.Official_Plan_CO_Qty).toString().replace(/,/g,''),(data.Official_Plan_Stock_Qty).toString().replace(/,/g,''),data.Sls_Start_Dy ? moment(data.Sls_Start_Dy).format('MM-DD') : null,data.Publish_Flag_for_Factory,data.Publish_Date,data.Allc_End_Dy ? moment(data.Allc_End_Dy).format('MM-DD') : null,data.Sls_End_Dy ? moment(data.Sls_End_Dy).format('MM-DD') : null,data.GWH ? moment(data.GWH).format('MM-DD'): null,data.Order_Plan_Number,data.Order_Timing,data.Swng_Prd_Month ? moment(data.Swng_Prd_Month).format('YYYY-MM') : null,data.Swng_Prd_Week ? moment(data.Swng_Prd_Week).format('YYYY-MM-DD') : null,(data.Order_Plan_Qty).toString().replace(/,/g,''),(data.Order_Plan_QtyCoeff).toString().replace(/,/g,''),data.Trnsp_Mthd,data.Prod_Plan_Type,data.Ph11st,data.WH ? moment(data.WH).format('YYYY-MM-DD') : null,data.WH_Act,data.WHAuto ? moment(data.WHAuto).format('MM-DD') : null,data.Yarn_DL_Requested,data.Yarn_DL_Answered,data.Yarn_DL_Auto,data.Yarn_Production_Due_Date_Auto,data.Yarn_Auto_Reflection_Date ? moment(data.Yarn_Auto_Reflection_Date).format('MM-DD') : null,data.Yarn_Act_Dy,data.Yarn_Act_Qty,data.Yarn_Order_Number,data.Yarn_Order_Status,data.Yarn_Delivery_Date, data.Fbrc_DL_Requested ? moment(data.Fbrc_DL_Requested).format('MM-DD') : null,data.Fbrc_DL_Answered ? moment(data.Fbrc_DL_Answered).format('YYYY-MM-DD') : null,data.Fbrc_DL_Auto ? moment(data.Fbrc_DL_Auto).format('MM-DD') : null,data.Fbrc_Production_Due_Date_Auto,data.Fbrc_Auto_Reflection_Date ? moment(data.Fbrc_Auto_Reflection_Date).format('MM-DD') : null,data.Fbrc_Act_Dy,data.Fbrc_Act_Qty,data.Fbrc_Order_Number,data.Fbrc_Order_Status,data.Fbrc_Delivery_Date ? moment(data.Fbrc_Delivery_Date).format('MM-DD') : null,data.Color_DL_Requested,data.Color_DL_Answered,data.Color_DL_Auto,data.Color_Production_Due_Date_Auto,data.Color_Auto_Reflection_Date ? moment(data.Color_Auto_Reflection_Date).format('MM-DD') : null,data.Color_Act_Dy,data.Color_Act_Qty,data.Color_Order_Number,data.Color_Order_Status,data.Color_Delivery_Date,data.Trim_DL_Requested ? moment(data.Trim_DL_Requested).format('MM-DD') : null,data.Trim_DL_Answered ? moment(data.Trim_DL_Answered).format('YYYY-MM-DD') : null,data.Trim_DL_Auto ? moment(data.Trim_DL_Auto).format('MM-DD'): null,data.Trim_Production_Due_Date_Auto,data.Trim_Auto_Reflection_Date ? moment(data.Trim_Auto_Reflection_Date).format('MM-DD'):null,data.Trim_Act_Dy,data.Trim_Act_Qty,data.Trim_Order_Number,data.Trim_Order_Status,data.Trim_Delivery_Date,data.PO_DL_Requested ? moment(data.PO_DL_Requested).format('MM-DD') : null,data.PO_DL_Answered ? moment(data.PO_DL_Answered).format('YYYY-MM-DD') : null,data.PO_DL_Auto ? moment(data.PO_DL_Auto).format('MM-DD') : null,data.PO_Production_Due_Date_Auto,data.PO_Auto_Reflection_Date ? moment(data.PO_Auto_Reflection_Date).format('MM-DD') : null,data.PO_Act_Dy,data.PO_Act_Qty,data.PO_Order_Number,data.PO_Order_Status,data.Assort1,data.Assort2,data.NX_Assort,data.Solid,data.Order_Plan_QtySTOP,data.Fix_Flag,data.Alternative_Flag,data.Express_Line_Flag,data.Factory_Comment,data.Planned_EXF ? moment(data.Planned_EXF).format('YYYY-MM-DD') : null,data.EXF_ETD,data.ETD_WH,data.Sewing_Country_Region,data.Raw_Material_Original_Country_Region,data.Item_Drop,data.Create_Date ? moment(data.Create_Date).format('YYYY-MM-DD HH:mm') : null,data.Create_User_ID,data.Create_User_Name,data.Create_Function,data.Update_Date ? moment(data.Update_Date).format('YYYY-MM-DD HH:mm'): null,data.Update_User_ID,data.Update_User_Name,data.Update_Function,data.CountY,data.Sample,data.EXF ? moment(data.EXF).format('MM-DD'): null,data.BDDL ? moment(data.BDDL).format('MM-DD') : null,data.BDDLpast_Past,data.LTBD_EXF,data.New_BDDL,data.new_LTBD_EXF,data.LTPO_EXF,data.Qty_LTBD_EXF,data.Qty_LTPO_EXF,data.County2Y,data.PHASE,id,null,'bidhun')
     } else{
         break
     }
@@ -158,10 +157,11 @@ if(data.Order_Plan_Number !== null){
                     const existingDataKeys = Object.keys(details)
                     const currentDataKeys = Object.keys(dtoData)
                     for (const existingDataKey of existingDataKeys) {
+                        // console.log(typeof(details[existingDataKey]),(details[existingDataKey]),'----------------',typeof(dtoData[existingDataKey]),dtoData[existingDataKey])
                         if (details[existingDataKey] != dtoData[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month' && existingDataKey != 'productionPlanId') {
                             const orderDiffObj = new OrdersDifferenceEntity();
-                            // if (existingDataKey === 'publishDate' || existingDataKey === 'yarnProductionDueDateAuto' || existingDataKey === 'yarnAutoReflectionDate' || existingDataKey === 'EXF' || existingDataKey === 'yarnDeliveryDate' || existingDataKey === 'fbrcProductionDueDateAuto'|| existingDataKey === 'fbrcAutoReflectionDate'|| existingDataKey === 'fbrcDeliveryDate'|| existingDataKey === 'colorProductionDueDateAuto'|| existingDataKey === 'colorAutoReflectionDate'|| existingDataKey === 'colorDeliveryDate' || existingDataKey === 'trimProductionDueDateAuto'|| existingDataKey === 'trimAutoReflectionDate'|| existingDataKey === 'trimDeliveryDate'|| existingDataKey === 'poProductionDueDateAuto'|| existingDataKey === 'poAutoReflectionDate') {
-                                if (existingDataKey === 'createDate' || existingDataKey === 'updateDate' || existingDataKey === 'publishDate' || existingDataKey === 'fbrcDlAnswered' || existingDataKey === 'plannedEXF' || existingDataKey === 'ltPoExf') {
+                                // if (existingDataKey == 'createDate' || existingDataKey == 'updateDate' || existingDataKey == 'publishDate' || existingDataKey == 'fbrcDlAnswered' || existingDataKey == 'plannedEXF' || existingDataKey == 'ltPoExf') {
+                                    if(yearOrderDtoKeys.includes(existingDataKey)){
 
                                 const oldValue = moment(details[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY','YYYY/MM/DD','YYYY-MM-DD HH:mm:ss']).format('YYYY-MM-DD');
                                 const newValue = moment(dtoData[existingDataKey], ['DD-MM-YYYY', 'MM/DD/YYYY','YYYY/MM/DD','YYYY-MM-DD']).format('YYYY-MM-DD');
@@ -183,7 +183,29 @@ if(data.Order_Plan_Number !== null){
                                 } else {
                                     continue;
                                 }
-                            } else {
+                            }else if(monthOrderDtoKeys.includes(existingDataKey)){
+                                const oldValue = moment(details[existingDataKey]).format('MM-DD');
+                                const newValue = moment(dtoData[existingDataKey]).format('MM-DD');
+                                orderDiffObj.oldValue = oldValue
+                                orderDiffObj.newValue = newValue
+                                orderDiffObj.columnName = orderColumnValues[existingDataKey]
+                                orderDiffObj.displayName = existingDataKey
+                                orderDiffObj.productionPlanId = details.productionPlanId
+                                orderDiffObj.version = dtoData.version
+                                orderDiffObj.fileId = Number(id)
+                                orderDiffObj.orderPlanNumber = dtoData.orderPlanNumber
+                                if (oldValue != newValue) {
+                                    const orderDiffSave = await transactionManager.getRepository(OrdersDifferenceEntity).save(orderDiffObj);
+                                    if (!orderDiffSave) {
+                                        flag.add(false)
+                                        await transactionManager.releaseTransaction();
+                                        break;
+                                    }
+                                } else {
+                                    continue;
+                                }
+                            } 
+                            else {
                                 orderDiffObj.oldValue = details[existingDataKey]
                                 orderDiffObj.newValue = dtoData[existingDataKey]
                                 orderDiffObj.columnName = orderColumnValues[existingDataKey]
@@ -1324,6 +1346,7 @@ async getWareHouseComparisionExcelData(req:YearReq): Promise<CommonResponseModel
 async processEmails() {
     // Set the environment variable to allow TLS
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    let filesArray = []
 
     // Define your email configuration
     const imap = new Imap({
@@ -1340,34 +1363,43 @@ async processEmails() {
       return thing && thing.toUpperCase ? thing.toUpperCase() : thing;
     }
 
+
     const buildAttMessageFunction = (attachment) => {
       if (!attachment || !attachment.params || !attachment.params.name) {
         const logMessage = 'No valid attachment found.';
         this.logger.warn(logMessage);
-        console.log(logMessage);
         return;
-      }
+        // console.log(logMessage);
+    }
 
       const filename = attachment.params.name;
       const encoding = attachment.encoding;
+      //   this.readCell(filesArray)
+    //   const test = getFilesArray(attachment)
+    //   filesArray.push(attachment.params.name)
+
+
+
 
       return (msg, seqno) => {
         const prefix = `(Message #${seqno}) `;
         msg.on('body', (stream, info) => {
           const logMessage = `${prefix}Streaming attachment to file: ${filename}, ${info}`;
           this.logger.info(logMessage);
-          console.log(logMessage);
+        //   console.log(logMessage);
 
           const writeStream = fs.createWriteStream(savePath + filename);
-          console.log(writeStream,'www')
-          console.log(savePath + filename+'iiiiii')
+          
+
+        //   console.log(writeStream,'www')
+        //   console.log(savePath + filename+'iiiiii')
           writeStream.on('finish', () => {
             const finishLogMessage = `${prefix}Done writing to file: ${filename}`;
             this.logger.info(finishLogMessage);
-            console.log(finishLogMessage);
-            console.log(finishLogMessage);
+            // console.log(finishLogMessage);
+            // console.log(finishLogMessage);
             // './upload-files/007Q2_Shahi_0807.csv
-            this.readCell(savePath + filename,filename)
+            // this.readCell(savePath + filename,filename)
           });
 
           if (toUpper(encoding) === 'BASE64') {
@@ -1378,13 +1410,14 @@ async processEmails() {
         });
       };
     };
+    console.log('filesssssnwwggg',filesArray)
 
     imap.once('ready', () => {
       imap.openBox('INBOX', true, (err, box) => {
         if (err) {
           const logMessage = `Error opening mailbox: ${err}`;
           this.logger.error(logMessage);
-          console.error(logMessage);
+        //   console.error(logMessage);
           throw err;
         }
 
@@ -1394,7 +1427,7 @@ async processEmails() {
           if (err) {
             const logMessage = `Error searching emails: ${err}`;
             this.logger.error(logMessage);
-            console.error(logMessage);
+            // console.error(logMessage);
             throw err;
           }
 
@@ -1409,37 +1442,38 @@ async processEmails() {
               const attachments = findAttachmentParts(attrs.struct);
               const logMessage = `${prefix}Has attachments: ${attachments.length}`;
               this.logger.info(logMessage);
-              console.log(logMessage);
+            //   console.log(logMessage);
 
-              attachments.forEach((attachment) => {
+              attachments.forEach(async(attachment) => {
                 if (attachment.params && attachment.params.name) {
                   const logMessage = `${prefix}Fetching attachment: ${attachment.params.name}`;
                   this.logger.info(logMessage);
-                  console.log(logMessage);
+                //   console.log(logMessage);
                   const f = imap.fetch(attrs.uid, {
                     bodies: [attachment.partID],
                   });
                   f.on('message', buildAttMessageFunction(attachment));
+                //   await this.readCell(savePath + attachment.params.name,attachment.params.name)
                 }
               });
             });
             msg.once('end', () => {
               const logMessage = `${prefix}Finished email`;
               this.logger.info(logMessage);
-              console.log(logMessage);
+            //   console.log(logMessage);
             });
           });
 
           fetch.once('error', (err) => {
             const logMessage = `Fetch error: ${err}`;
             this.logger.error(logMessage);
-            console.error(logMessage);
+            // console.error(logMessage);
           });
 
           fetch.once('end', () => {
             const logMessage = 'Done fetching all messages!';
             this.logger.info(logMessage);
-            console.log(logMessage);
+            // console.log(logMessage);
             imap.end();
           });
         });
@@ -1449,13 +1483,13 @@ async processEmails() {
     imap.once('error', (err) => {
       const logMessage = `IMAP error: ${err}`;
       this.logger.error(logMessage);
-      console.error(logMessage);
+    //   console.error(logMessage);
     });
 
     imap.once('end', () => {
       const logMessage = 'IMAP Connection ended';
       this.logger.info(logMessage);
-      console.log(logMessage);
+    //   console.log(logMessage);
     });
 
     imap.connect();
@@ -1478,209 +1512,105 @@ async processEmails() {
             const fileExtension = filename.split('.').pop().toLowerCase();
             if (allowedExtensions.includes('.' + fileExtension)) {
               attachments.push(struct[i]);
+              
             }
           }
         }
       }
       return attachments;
     };
+
+    console.log(filesArray)
+            // this.readCell(savePath + filename,filename)
+
   }
+
+//   async getFiles 
   async readCell(filepath,filename):Promise<CommonResponseModel> {
-    // console.log(filepath,'filepathhh')
-    // console.log(filename,'filenamehh')
-    // // return new Promise((resolve, reject) => {
-    //     let workBook = new Excel.Workbook();
-    //     workBook.xlsx.readFile(filename).then(() => {
-            
-    //         let sheet = workBook.getWorkSheet('Sheet1');
-    //         console.log('sheetllll',sheet)
-    //         let cellValue = sheet.getRow(2).getCell(1).value;
-    //         // resolve(cellValue);
-    //         console.log(cellValue,'cellvallll')
-    //     }).catch(err => /* Do some error handling here if you want to */ console.log(err));
-    // // });
-    // working-----------
-//     var workbook = new Excel.Workbook(); 
-// workbook.xlsx.readFile('./upload-files/007Q_Shahi_0807_latest.xlsx')
-//     .then(function() {
-//         var worksheet = workbook.getWorksheet('Production Plan Rawdata Export');
-// //         const c2 = worksheet.getRow(1);
-// //    c2.eachCell(c => {
-// //       console.log(c.value,'iiii');
-// //    });
-//         console.log(worksheet,'woooo')
-//         worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) {
+    // console.log(req,'filesdataaaa')
+    const fs = require('fs');
+    const files = fs.readdirSync('./upload-files/');
+    console.log(files,'filesssss')
+    // const req = [{filePath:'./upload-files/pro_orders_1.xlsx',fileName:'pro_orders_1.xlsx'},{filePath:'./upload-files/projection_orders_1.xlsx',fileName:'projection_orders_1.xlsx'}]
+    for(const filerec of files){
+        const filename = filerec
+        const filepath = './upload-files/'+filerec
 
-//           console.log("Row " + rowNumber + " = " + JSON.stringify(row.values));
-//         });
-//     });
-
-// xlsxFile('./upload-files/007Q_Shahi_0807_latest.xlsx')
-//   .then((rows) => {
-//     rows.forEach((row) => {
-//       row.forEach((cell) => {
-//         console.log(cell);
-//       });
-//     });
-//   });
-// filename = 'pro_order_sep3.xlsx';
-    console.log(filename.split('.').pop(),'extension')
-    console.log(filename,'filename')
-    const promise = () => new Promise((resolve, reject) => {
-        if(filename.split('.').pop() == 'csv'){
-            const dataArray = []
-            fs.createReadStream(filepath)
-                .on('error', () => {
-                    // handle error
-                })
-
-                .pipe(csv())
-                .on('data', (row) => {
-                    dataArray.push(Object(row))
-                })
-
-                .on('end', () => {
-                    resolve(dataArray)
-                })
-        }else if(filename.split('.').pop() == 'xlsx'){
-            console.log('uuuuooo')
-            xlsxFile(filepath)
-              .then((rows) => {
-                const dataArray = []
-                const columnNames = rows.shift(); // Separate first row with column names
-                rows.map((row) => { // Map the rest of the rows into objects
-                  const obj = {}; // Create object literal for current row
-                  row.forEach((cell, i) => {
-                    // if(cell == null){
-                    //     obj[columnNames[i]] = "";
-                    // }
-                    // if(typeof cell == 'number'){
-                    //     obj[columnNames[i]] = cell.toString(); // Use index from current cell to get column name, add current cell to new object
-                    // }else{
-                        obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
-
-                    // }
-                    // console.log(columnNames[i],'4444444')
-                    
-                    // if(FormatDates.includes(columnNames[i].replace(/\s/g, '')) &&  cell != null){
-                    //     obj[columnNames[i]] = moment(cell).format('YYYY-MM-DD').toString()
-                    //     // console.log(obj[columnNames[i]],'99999999999')
-
-                    // }
-                        // obj[columnNames[i]] = ""; // Use index from current cell to get column name, add current cell to new object
-                        // obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
-
-
-                    // }
-                  });
-                //   console.log(obj)
-                  dataArray.push(Object(obj));
-                  resolve(dataArray)
-                //   console.log(objs); // Display the array of objects on the console
-                //   return obj;
-                });
-              });
-        }else{
-            
-        }
-    })
-    const dataArray = await promise();
-
-//   console.log(dataArray,'datajjjj')
-
-// -----------
-// filepath = './upload-files/007Q2_Shahi_0807.csv'
-// filename = '007Q2_Shahi_0807.csv'
-// const promise = () => new Promise((resolve, reject) => {
-//     const dataArray = []
-// fs.createReadStream(filepath)
-//     .on('error', () => {
-//         // handle error
-//     })
-
-     
-
-//     .pipe(csv())
-//     .on('data', (row) => {
-//         // const nwrow = JSON.stringify(row)
-//         // row = JSON.parse(nwrow)
-//         // const keysval = Object.keys(row)
-//         // const updatedObj = {};
-
-//         // for(const eachkey of keysval){
-//         //     const updatedKey = eachkey.replace(/'/g,'')
-//         // console.log(updatedKey,'updatedKey')
-
-//         //     updatedObj[updatedKey] = row[eachkey]
-//         // }
-//         // console.log(updatedObj,'updatedObj')
-//         dataArray.push(Object(row))
-//     })
-
-//     .on('end', () => {
-//             resolve(dataArray)
-//     })
-// })
-// const dataArray = await promise();
-
-// console.log(dataArray)
-// console.log('newdataaaafileenlllttt')
-    if(dataArray){
-        // console.log('dataArraymmmm',dataArray)
+        // // filename = 'pro_order_sep3.xlsx';
+            console.log(filename.split('.').pop(),'extension')
+            console.log(filename,'filename')
+            const promise = () => new Promise((resolve, reject) => {
+                if(filename.split('.').pop() == 'csv'){
+                    const dataArray = []
+                    fs.createReadStream(filepath)
+                        .on('error', () => {
+                            // handle error
+                        })
         
-        const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS)
-        console.log(saveFilePath,'jjjjj')
-        // console.log('saveFilePathhhhh')
-        if(saveFilePath.status){
-            const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
-            let req = new FileStatusReq();
-            req.fileId = saveFilePath.data.id;
-            req.userName = 'Bidhun'
-            if(saveProjOrders.status){
-                req.status = 'Success';
+                        .pipe(csv())
+                        .on('data', (row) => {
+                            dataArray.push(Object(row))
+                        })
+        
+                        .on('end', () => {
+                            resolve(dataArray)
+                        })
+                }else if(filename.split('.').pop() == 'xlsx'){
+                    xlsxFile(filepath)
+                      .then((rows) => {
+                        const dataArray = []
+                        const columnNames = rows.shift(); // Separate first row with column names
+                        rows.map((row) => { // Map the rest of the rows into objects
+                          const obj = {}; // Create object literal for current row
+                          row.forEach((cell, i) => {
+                                obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
+                          });
+                        //   console.log(obj)
+                          dataArray.push(Object(obj));
+                          resolve(dataArray)
+                        //   console.log(objs); // Display the array of objects on the console
+                        //   return obj;
+                        });
+                      });
+                }else{
+                    
+                }
+            })
+            const dataArray = await promise();
+        
+            if(dataArray){
+                // console.log('dataArraymmmm',dataArray)
+                
+                const saveFilePath = await this.updatePath(filepath,filename,null,FileTypesEnum.PROJECTION_ORDERS)
+                console.log(filepath,'jjjjj')
+                console.log(filename,'jjjjj')
+                // console.log('saveFilePathhhhh')
+                if(saveFilePath.status){
+                    // console.log(dataArray,'------------------------------------')
+                    const saveProjOrders = await this.saveOrdersData(dataArray,saveFilePath.data.id,9)
+                    let req = new FileStatusReq();
+                    req.fileId = saveFilePath.data.id;
+                    req.userName = 'Bidhun'
+                    if(saveProjOrders.status){
+                        req.status = 'Success';
+                    }else{
+                        req.status = 'Failed';
+                    }
+                    const updateFileStatus = await this.updateFileStatus(req)
+                }else{
+                    // return false
+                }
+                // return dataArray
             }else{
-                req.status = 'Failed';
+                // return dataArray
             }
-            const updateFileStatus = await this.updateFileStatus(req)
-        }
-        // return dataArray
-    }else{
-        // return dataArray
     }
+
+    
     return 
     
     }
 
-//   async readCell(filename) {
-//     // // return new Promise((resolve, reject) => {
-//     //     let workBook = new Excel.Workbook();
-//     //     workBook.xlsx.readFile(filename).then(() => {
-            
-//     //         let sheet = workBook.getWorkSheet('Sheet1');
-//     //         console.log('sheetllll',sheet)
-//     //         let cellValue = sheet.getRow(2).getCell(1).value;
-//     //         // resolve(cellValue);
-//     //         console.log(cellValue,'cellvallll')
-//     //     }).catch(err => /* Do some error handling here if you want to */ console.log(err));
-//     // // });
-//     // working-----------
-// //     var workbook = new Excel.Workbook(); 
-// // workbook.xlsx.readFile(filename)
-// //     .then(function() {
-// //         var worksheet = workbook.getWorksheet('Sheet1');
-// //         worksheet.eachRow({ includeEmpty: false }, function(row, rowNumber) {
-// //           console.log("Row " + rowNumber + " = " + JSON.stringify(row.values));
-// //         });
-// //     });
-
-// // -----------
-// const filepath = './upload-files/projection-orders/007Q_Shahi_0807.csv'
-// fs.createReadStream(filepath)
-//   .pipe(csv())
-//   .on('headers', (headers) => {
-//     console.log(headers)
-//   })
-//     }
 
 async getMonthlyComparisionData(req:YearReq): Promise<CommonResponseModel> {
     const data = await this.ordersChildRepo.getMonthlyComparisionData(req);

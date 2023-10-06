@@ -163,9 +163,9 @@ export default function ExcelImport() {
         let csvData1: any = reader.result;
         csvData = importExcel(csvData1);
         // let headersRow = getHeaderArray(csvData[0][3]);
-        csvData[0].shift()
-        csvData[0].shift()
-        csvData[0].shift()
+        // csvData[0].shift()
+        // csvData[0].shift()
+        // csvData[0].shift()
         console.log(csvData)
         const filteredNestedData = csvData.filter(innerData => innerData.some(row => row.length > 0));
 
