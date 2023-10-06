@@ -1,16 +1,32 @@
+
+import { Body, Controller, Post } from "@nestjs/common";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { BomService } from "./bom.service";
-import { ApiTags } from "@nestjs/swagger";
-import { Controller } from "@nestjs/common";
+import { BomRequest, BomTrimResponseModel } from "@project-management-system/shared-models";
+import { BomTrimDto } from "./dto/bom-trim.dto";
+ 
 
-
-
-@ApiTags('bom')
-@Controller('bom')
+@ApiTags('bomTrim')
+@Controller('bomTrim')
 export class BomController {
     constructor(
-        private bomService: BomService,
-        private readonly applicationExceptionHandler: ApplicationExceptionHandler
-  
-      ){}
-}
+      private readonly bomServie: BomService,
+      private readonly applicationExceptionHandler: ApplicationExceptionHandler
+      ) {}
+
+      @ApiBody({type:BomTrimDto})   
+    @Post('/createBomTrim')
+    async createBomTrim(@Body() req:any): Promise<BomTrimResponseModel> {
+        console.log(req)
+        try {
+            return await this.bomServie.createBomTrim(req, false)
+        } catch (error) {
+            return (this.applicationExceptionHandler.returnException(BomTrimResponseModel, error));
+        }
+    }
+
+
+
+
+    }

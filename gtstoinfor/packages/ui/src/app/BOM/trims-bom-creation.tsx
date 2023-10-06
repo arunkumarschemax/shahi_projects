@@ -1,16 +1,23 @@
-import { Button, Card, Col, Form, Input, Row, Select } from "antd";
+import { Button, Card, Col, Form, FormInstance, Input, Row, Select, message } from "antd";
 import { UndoOutlined } from "@ant-design/icons";
 import Commonscreen from "./common-screen";
-import { CurrencyService, LiscenceTypeService, TaxesService, UomService } from "@project-management-system/shared-services";
+import { CurrencyService, LiscenceTypeService, ProfitControlHeadService, TaxesService, UomService, bomTrimService } from "@project-management-system/shared-services";
 import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
+import { BomRequest } from "@project-management-system/shared-models";
 
-export const TrimsBomCreation = () => {
+export interface TrimsBomCreationProps {}
+
+
+export const TrimsBomCreation = (props:TrimsBomCreationProps) => {
   const [form] = Form.useForm();
   const currencyServices = new CurrencyService();
   const licenseservice = new LiscenceTypeService();
   const uomservice = new UomService();
   const taxService = new TaxesService
+  const Pchservice =new ProfitControlHeadService();
+  const bomservice = new bomTrimService()
+
 
 
 
@@ -18,6 +25,13 @@ export const TrimsBomCreation = () => {
   const [licenseTypeData,setLicenseTypeData] = useState([])
   const [uomData,setUomData] = useState([])
   const [tax,setTax] = useState([])
+  const [pchData,setPchData] = useState<any>([])
+  const [taxvalue,setTaxValues] = useState<any>("")
+  const [calData,setCalData] = useState<number>(0);
+
+
+
+
 
 
 
@@ -27,7 +41,17 @@ export const TrimsBomCreation = () => {
     getAllActiveLiscenceTypes();
     getAllUoms();
     getTax();
+  getAllActiveProfitControlHead();
+
   },[])
+
+  useEffect(() => {
+    if (taxvalue) {
+      const taxcal = Number((taxvalue)/100)
+      const cal:any = Number(form.getFieldValue('price'))+ (taxcal)
+      form.setFieldsValue({totalPrice:cal})
+    }
+  }, [taxvalue]);
 
 
   const getAllCurrencies=() =>{
@@ -83,13 +107,58 @@ const getTax = () =>{
 
 
 
+const getAllActiveProfitControlHead=() =>{
+  Pchservice.getAllActiveProfitControlHead().then(res =>{
+  if (res.status){
+    setPchData(res.data);
+     
+  } else{
+    AlertMessages.getErrorMessage(res.internalMessage);
+     }
+}).catch(err => {
+  setPchData([]);
+   AlertMessages.getErrorMessage(err.message);
+ })
+
+}
+
+
+
   const onReset = () => {
     form.resetFields();
   };
+  
+
+  const handleTaxChange =(value) =>{
+    console.log(value,"tax")
+      setTaxValues(value)
+  }
+ 
+  const changeHandlerPrice = (value) =>{
+      console.log(value.price)
+  }
+   
+  
 
   const onFinish = (values: any) => {
-    console.log(values,"values")
-  };
+    console.log(values.trimCode,"values")
+    const req = new BomRequest (values.itemsId,values.pchId,values.facilityId,"",values.trim,values.genericCode,values.typeId,values.groupId,values.useInOperationId,values.description,values.responsible,values.developmentResponsible,values.basicUomId,values.alternateUomId,values.factor,values.orderMultipleBuom,values.moq,values.orderMultipleAuom,values.currencyId,values.price,values.purchasePriceQuantity,values.salesTax,values.exciseDuty,values.licenceId,values.property,values.isSaleItem,values.consumption,values.wastagePercentage,values.costGroup,values.usageRemarks,values.tax,values.totalPrice)
+
+    bomservice.createBomTrim(req).then((res)=>{
+       if (res.status){
+        onReset();
+        message.success(res.internalMessage);
+       
+    } else{
+
+      AlertMessages.getErrorMessage(res.internalMessage);
+       }
+  }).catch(err => {
+
+     AlertMessages.getErrorMessage(err.message);
+   })
+  
+  }
 
   return (
     <>
@@ -102,26 +171,71 @@ const getTax = () =>{
         >
           <Row gutter={16}>
           
-            <div >
+            {/* <div >
             < Commonscreen />
-            </div>
+            </div> */}
+            
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
+           <Form.Item name="itemsId" label = "Item No">
+           <Select placeholder="Items No" allowClear>
+                  
+                <option value={1}> item001</option>
+                 <option value={2}> item002</option> 
+                 <option value={3}> item003</option> 
+
+  
+                  </Select>
+           </Form.Item>
+        </Col>
+
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 8 }} xl={{ span: 5}}>
+        <Form.Item
+                label="PCH"
+                name="pchId"
+                rules={[{ required: true, message: "PCH" }]}
+              >
+                <Select placeholder="PCH" allowClear>
+                  
+                {pchData.map((rec) => (
+                  <option key={rec.profitControlHeadId} value={rec.profitControlHeadId}>
+                    {rec.profitControlHead}
+                   </option>
+                       ))}
+                       
+
+                </Select>
+              </Form.Item>
+        </Col>
+
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 8 }} xl={{ span: 5}}>
+            <Form.Item name="facilityId" label = "Facility">
+            <Select placeholder="facility" allowClear>
+                 <option value={1}> facility1</option>
+                 <option value={2}> facility2</option> 
+                 <option value={3}> facility3</option> 
+
+                
+  
+                  </Select>
+            </Form.Item>
+        </Col>
            
            
-            {/* <Col
+             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
               lg={{ span: 6 }}
               xl={{ span: 12 }}
-            > */}
-              <Card size="small" bordered={false} style={{width:"100%"}}>
+            > 
+              {/* <Card size="small" bordered={false} style={{width:"100%"}}> */}
                 <h1
                   style={{ color: "grey", fontSize: "15px", textAlign: "left" }}
                 >
                   Trim Details
                 </h1>
                 <Row gutter={8}>
-                  <Col
+                  {/*== <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
@@ -130,30 +244,25 @@ const getTax = () =>{
                   >
                     <Form.Item
                       label="Trim Code"
-                      name="TrimCode"
+                      name="trimCode"
                       rules={[{ required: true, message: "Enter Trim Code" }]}
                     >
                       <Input placeholder="Trim code" allowClear/>
                     </Form.Item>
-                  </Col>
-                  <Col
+                  </Col> */}
+                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4}}
-                    xl={{ span: 4}}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
                     <Form.Item
                       label="Trim"
-                      name="Trim"
+                      name="trim"
                       rules={[{ required: true, message: "Enter Trim" }]}
                     >
-                      <Select placeholder="Select Trim" allowClear>
-                        <option value="Rivets">Rivets</option>
-                        <option value="Overriders">Overriders</option>
-                        <option value="Swing Tags">Swing Tags</option>
-
-                      </Select>
+                   <Input  placeholder="Trim "/>
                     </Form.Item>
                   </Col>
 
@@ -161,10 +270,10 @@ const getTax = () =>{
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4 }}
-                    xl={{ span: 4 }}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
-                    <Form.Item label="Generic Code" name="Generic Code">
+                    <Form.Item label="Generic Code" name="genericCode">
                       <Input placeholder="Generic Code" allowClear/>
                     </Form.Item>
                   </Col>
@@ -172,36 +281,36 @@ const getTax = () =>{
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4 }}
-                    xl={{ span: 4 }}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
                     <Form.Item
                       label="Type"
-                      name="Type"
+                      name="typeId"
                       rules={[{ required: true, message: "Enter Type" }]}
                     >
                       <Select placeholder=" Select Type" allowClear>
-                      <option value="Type1">Type1</option>
+                      <option value="1">Type1</option>
                        
                       </Select>
                     </Form.Item>
                   </Col>
                   {/* </Row>
                           <Row gutter={8}> */}
-                  <Col
+                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4 }}
-                    xl={{ span: 4 }}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
                     <Form.Item
                       label="Group"
-                      name="group"
+                      name="groupId"
                       rules={[{ required: true, message: "Enter Group" }]}
                     >
                       <Select placeholder="Select Group" allowClear>
-                      <option value="group1">Group1</option>
+                      <option value="1">Group1</option>
 
                       </Select>
                     </Form.Item>
@@ -210,18 +319,18 @@ const getTax = () =>{
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4 }}
-                    xl={{ span: 4 }}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
                     <Form.Item
                       label="Use In Operation"
-                      name="useinoperation"
+                      name="useInOperationId"
                       rules={[
                         { required: true, message: "Enter Use In Operation" },
                       ]}
                     >
                       <Select placeholder="Select Use in Operation" allowClear>
-                      <option value="Operation1">Operation1</option>
+                      <option value="1">Operation1</option>
 
                       </Select>
                     </Form.Item>
@@ -230,8 +339,8 @@ const getTax = () =>{
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4 }}
-                    xl={{ span: 4 }}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
                     <Form.Item label="Description" name="description">
                       <Input.TextArea
@@ -242,9 +351,9 @@ const getTax = () =>{
                     </Form.Item>
                   </Col>
                 </Row>
-              </Card>
-            {/* </Col> */}
-
+              {/* </Card> */}
+             </Col> 
+           
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -254,11 +363,11 @@ const getTax = () =>{
             >
               {/* <Card size="small" bordered={false} style={{width:"100%"}}> */}
                 <h1
-                  style={{ color: "grey", fontSize: "15px", textAlign: "left" }}
+                  style={{ color: "grey", fontSize: "15px", textAlign: "left", marginTop:30,marginLeft:40}}
                 >
                   Performance Responsible Team
                 </h1>
-                <Row gutter={36}>
+                <Row gutter={36} style={{marginLeft:25}}>
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
@@ -270,6 +379,7 @@ const getTax = () =>{
                       name="responsible"
                       label="Responsible"
                       rules={[{ required: true, message: "Enter Responsible" }]}
+                      style={{marginTop:30}}
                     >
                       <Input placeholder="Responsible" allowClear />
                     </Form.Item>
@@ -284,8 +394,10 @@ const getTax = () =>{
                     xl={{ span: 10}}
                   >
                     <Form.Item
-                      name="developmentresponsible"
+                      name="developmentResponsible"
                       label="Development Responsible"
+                      style={{marginTop:30}}
+
                     >
                       <Select
                         placeholder="Select Development Responsible"
@@ -320,7 +432,7 @@ const getTax = () =>{
                 >
                   <Form.Item
                     label="Basic UOM"
-                    name="Basicuom"
+                    name="basicUomId"
                     rules={[{ required: true, message: "Enter Basic UOM" }]}
                   >
                     <Select placeholder="Select Basic UOM" allowClear>
@@ -342,7 +454,7 @@ const getTax = () =>{
                   lg={{ span: 4 }}
                   xl={{ span: 4 }}
                 >
-                  <Form.Item label="Alternate UOM" name="Alternateuom">
+                  <Form.Item label="Alternate UOM" name="alternateUomId">
                     
                     <Select placeholder="Alternate UOM" allowClear>
                     {uomData.map((rec) => (
@@ -374,7 +486,7 @@ const getTax = () =>{
                   lg={{ span: 4 }}
                   xl={{ span: 4 }}
                 >
-                  <Form.Item label="Order Multiple (BUOM)" name="ordermultiple">
+                  <Form.Item label="Order Multiple (BUOM)" name="orderMultipleBuom">
                     <Input placeholder="Order Multple" allowClear />
                   </Form.Item>
                 </Col>
@@ -396,7 +508,7 @@ const getTax = () =>{
                   lg={{ span: 4 }}
                   xl={{ span: 4 }}
                 >
-                  <Form.Item label="Order Multiple (AUOM)" name="OrderMultiple">
+                  <Form.Item label="Order Multiple (AUOM)" name="orderMultipleAuom">
                     <Input placeholder="Order Multiple" allowClear/>
                   </Form.Item>
                 </Col>
@@ -411,7 +523,7 @@ const getTax = () =>{
                 >
                   <Form.Item
                     label="Currency"
-                    name="currency"
+                    name="currencyId"
                     rules={[{ required: true, message: "Select the Currency" }]}
               
                   >
@@ -431,29 +543,29 @@ const getTax = () =>{
                 <Col
                   xs={{ span: 24 }}
                   sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 4 }}
+                  md={{ span: 2 }}
+                  lg={{ span: 2 }}
+                  xl={{ span: 2 }}
                 >
                   <Form.Item
                     label="Price"
                     name="price"
                     rules={[{ required: true, message: "Enter Price" }]}
                   >
-                    <Input placeholder="Price" allowClear/>
+                    <Input placeholder="Price" allowClear onChange={changeHandlerPrice}/>
                   </Form.Item>
                 </Col>
                 <span style={{ fontSize: "24px", lineHeight: "70px" }}>+</span>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }}>
                     <Form.Item label="Tax" name="tax">
                         <Select
                         placeholder="Select Tax"
-                        // onChange={handleTaxChange}
+                        onChange={handleTaxChange}
                         defaultValue="0"
                         allowClear
                         >
                             {tax.map((e)=>(
-                                <option key={e.taxId} value={e.taxId}>
+                                <option key={e.taxId} value={e.taxPercentage}>
                                     {e.taxPercentage}
                                 </option>
                             ))}
@@ -461,10 +573,10 @@ const getTax = () =>{
                     </Form.Item>
                 </Col>
                 <span style={{ fontSize: "24px", lineHeight: "70px" }}>=</span>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                    <Form.Item label="Total" name="total">
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }} >
+                    <Form.Item label="Total Price" name="totalPrice">
                         <Input disabled 
-                        // value={calculateTotal()}
+                         
                          />
                     </Form.Item>
                 </Col>
@@ -477,7 +589,7 @@ const getTax = () =>{
                 >
                   <Form.Item
                     label="Purchase Price Quantity"
-                    name="purchaseorderquantity"
+                    name="purchasePriceQuantity"
                   >
                     <Input placeholder="Purchase Price Quantity" allowClear  />
                   </Form.Item>
@@ -507,7 +619,7 @@ const getTax = () =>{
                   lg={{ span: 4 }}
                   xl={{ span: 4 }}
                 >
-                  <Form.Item label="Excise Duty" name="Exciseduty">
+                  <Form.Item label="Excise Duty" name="exciseDuty">
                     <Input placeholder="Excise Duty" allowClear />
                   </Form.Item>
                 </Col>
@@ -518,7 +630,7 @@ const getTax = () =>{
                   lg={{ span: 4 }}
                   xl={{ span: 4 }}
                 >
-                  <Form.Item label="Licence" name="licence">
+                  <Form.Item label="Licence" name="licenceId">
                     <Select placeholder="Select Licence" allowClear>
                     {licenseTypeData.map((rec) => (
                     <option key={rec.liscenceTypeId} value={rec.liscenceTypeId}>
@@ -568,10 +680,10 @@ const getTax = () =>{
                     lg={{ span: 8 }}
                     xl={{ span: 8 }}
                   >
-                    <Form.Item name="Issaleitem" label=" Is sale Item">
+                    <Form.Item name="isSaleItem" label=" Is sale Item">
                       <Select placeholder ="SaleItem" allowClear>
-                        <option key={1}>Not Sale Item</option>
-                        <option key={2}>Sale Item</option>
+                        <option key={1} value="Not Sale Item">Not Sale Item</option>
+                        <option key={2} value="Sale Item">Sale Item</option>
 
                       </Select>
                     </Form.Item>
@@ -586,6 +698,7 @@ const getTax = () =>{
               md={{ span: 4 }}
               lg={{ span: 6 }}
               xl={{ span: 12 }}
+              // style={{marginLeft:}}
             >
               {/* <Card size="small" bordered={false}> */}
                 <h1
@@ -612,7 +725,7 @@ const getTax = () =>{
                     lg={{ span: 6 }}
                     xl={{ span: 8 }}
                   >
-                    <Form.Item label="Wastage %" name="wastage">
+                    <Form.Item label="Wastage %" name="wastagePercentage">
                       <Input placeholder="Wastage %" allowClear />
                     </Form.Item>
                   </Col>
@@ -623,7 +736,7 @@ const getTax = () =>{
                     lg={{ span: 6 }}
                     xl={{ span: 8 }}
                   >
-                    <Form.Item label="Cost Group" name="costgroup">
+                    <Form.Item label="Cost Group" name="costGroup">
                       <Input placeholder="Cost Group" allowClear />
                     </Form.Item>
                   </Col>
@@ -638,7 +751,7 @@ const getTax = () =>{
                   >
                     <Form.Item
                       label="Placement/Usage Remarks"
-                      name="placementremarks"
+                      name="usageRemarks"
                     >
                       <Input placeholder="Remarks" allowClear/>
                     </Form.Item>

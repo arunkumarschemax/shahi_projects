@@ -1,18 +1,18 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { BomTrimCreationEntity } from "./bom-trim.entity";
 import { BomService } from "./bom.service";
-import { BomTrimAdapter } from "./dto/bom-trim.adaptor";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { BomController } from "./bom.controller";
+import { BomTrimEntity } from "./bom-trim.entity";
+import { BomTrimRepository } from "./repository/bom-trim.repository";
 
-@Module({
+
+
+  @Module({
     imports: [
-      
-      TypeOrmModule.forFeature([BomTrimCreationEntity]),
+    TypeOrmModule.forFeature([BomTrimEntity]),
     ],
     controllers: [BomController],
-    providers: [BomService,BomTrimAdapter,ApplicationExceptionHandler],
-    exports: [BomService],
-  })
+    providers: [BomService,BomTrimRepository,ApplicationExceptionHandler]
+  }) 
   export class BomModule {}

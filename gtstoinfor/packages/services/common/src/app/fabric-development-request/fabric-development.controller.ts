@@ -3,7 +3,7 @@ import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 // import { FabricDevelopmentService } from "@project-management-system/shared-services";
 import { FabricRequestQualitiesDto } from "./dto/fabric-request-qualities.dto";
-import { FabricDevelopmentRequestResponse } from "@project-management-system/shared-models";
+import { CommonResponseModel, FabricDevelopmentRequestResponse } from "@project-management-system/shared-models";
 import { FabricDevelopmentService } from "./fabric-development.services";
 import { FabricRequestDto } from "./dto/fabric-request.dto";
  
@@ -26,5 +26,12 @@ export class FabricDevelopmentController {
             return (this.applicationExceptionHandler.returnException(FabricDevelopmentRequestResponse, error));
         }
     }
-
+    @Post('/getFabricDevReqData')
+    async getFabricDevReqData(): Promise<CommonResponseModel> {
+        try {
+            return await this.fabricDevelopmentService.getFabricDevReqData()
+        } catch (error) {
+            return (this.applicationExceptionHandler.returnException(CommonResponseModel, error));
+        }
+    }
     }

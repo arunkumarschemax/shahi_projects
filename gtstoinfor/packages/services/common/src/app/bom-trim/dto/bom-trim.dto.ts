@@ -2,26 +2,33 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional, Matches, MaxLength } from "class-validator";
 
 export class BomTrimDto {
+
     @ApiProperty()
-    bomTrimId:number;
+    itemsId : number;
+
+    @ApiProperty()
+    pchId : number;
+     
+    @ApiProperty()
+    facilityId : number;
 
     @ApiProperty()
     trimCode :string;
 
     @ApiProperty()
-    trim :string;
+    trim : string;
 
     @ApiProperty()
     genericCode: string;
 
     @ApiProperty()
-    type: string;
+    typeId : number;
 
     @ApiProperty()
-    group:string;
+    groupId: number;
 
     @ApiProperty()
-    useInOperation :string;
+    useInOperationId : number;
 
     @ApiProperty()
     description : string;
@@ -33,10 +40,10 @@ export class BomTrimDto {
     developmentResponsible:string;
 
     @ApiProperty()
-    basicUom: string;
+    basicUomId : number;
 
     @ApiProperty()
-    alternateUom: string;
+    alternateUomId : number;
 
     @ApiProperty()
     factor : string;
@@ -51,13 +58,22 @@ export class BomTrimDto {
     orderMultipleAuom: string;
 
     @ApiProperty()
-    currency : string;
+    currencyId : number;
+
 
     @ApiProperty()
-    price : string;
+    price : number;
 
     @ApiProperty()
-    purchasePriceQuantity : string;
+    taxPercentage : number;
+
+
+    @ApiProperty()
+    totalPrice : number;
+
+
+    @ApiProperty()
+    purchasePriceQuantity : number;
     
     @ApiProperty()
     salesTax : string;
@@ -66,7 +82,7 @@ export class BomTrimDto {
     exciseDuty : string;
 
     @ApiProperty()
-    licence : string;
+    licenceId : number;
 
     @ApiProperty()
     property : string;
@@ -75,10 +91,10 @@ export class BomTrimDto {
     isSaleItem : string;
 
     @ApiProperty()
-    consumption : string;
+    consumption : number;
 
     @ApiProperty()
-    wastagePercentage : string;
+    wastagePercentage : number;
 
     @ApiProperty()
     costGroup : string;
@@ -86,26 +102,5 @@ export class BomTrimDto {
     @ApiProperty()
     usageRemarks: string;
 
-    @ApiProperty()
-    isActive: boolean;
-
-    createdAt : Date;
-
-  @ApiProperty()
-  @IsOptional()
-  @MaxLength(40, { message: "Created User allows maximum 40 characters" })
-  @Matches(new RegExp("^(?:[a-zA-Z\\s]|)+$"),{ message: "created user should be only numbers" })
-  createdUser : string;
-
-  updatedAt : Date;
-  @ApiProperty()
-  @IsOptional()
-  @MaxLength(40, { message: "Updated User allows maximum 40 characters"})
-  @Matches(new RegExp("^(?:[a-zA-Z\\s]|)+$"),{ message: "updated user should be only numbers" })
-  updatedUser : string;
-
-  @ApiProperty()
-  versionFlag : number;
-
-
+  
 }

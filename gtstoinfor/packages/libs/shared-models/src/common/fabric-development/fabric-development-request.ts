@@ -6,7 +6,7 @@ export class FabricDevelopmentRequest{
     styleId: number;
     pchId: number;
     buyerId: number;
-    fabricTypeId: number;
+    type: string;
     sampleTypeId: number;
     remarks: string;
     fabricResponsible: number;
@@ -27,7 +27,7 @@ export class FabricDevelopmentRequest{
         styleId: number,
         pchId: number,
         buyerId: number,
-        fabricTypeId: number,
+        type: string,
         sampleTypeId: number,
         remarks: string,
         fabricResponsible: number,
@@ -46,7 +46,7 @@ export class FabricDevelopmentRequest{
         this.styleId = styleId
         this.pchId = pchId
         this.buyerId = buyerId
-        this.fabricTypeId = fabricTypeId
+        this.type = type
         this.sampleTypeId = sampleTypeId
         this.remarks = remarks
         this.fabricResponsible = fabricResponsible

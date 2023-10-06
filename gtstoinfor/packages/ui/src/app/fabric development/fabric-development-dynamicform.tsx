@@ -4,12 +4,18 @@ import M3Items from './m3-model'
 import { DeleteOutlined, EditOutlined, UndoOutlined, UploadOutlined } from '@ant-design/icons'
 import { ColourService, UomService } from '@project-management-system/shared-services'
 import AlertMessages from '../common/common-functions/alert-messages'
+import { FabricItemInfoRequest, FabricQuantitiesInfo } from '@project-management-system/shared-models'
 
 export interface FabricDevelopmentDynamicFormProps {
   
   form:FormInstance<any>
   itemsData:(itemsInfo:any[])=>void
   dynamicformData: (dynamicInfo: any[]) => void;
+ 
+
+
+  
+
 
   
 }
@@ -29,6 +35,56 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
   const [consumptionData,setConsumptionData] = useState<any>()
   const [wastageData,setWastageData] = useState<any>()
   const [pollutionFilelist,setPollutionFilelist] = useState<any[]>([]);
+
+
+//  const itemsinfo = [];
+
+//  itemsData.forEach((itemInfo: any) => {
+//   const record = new FabricItemInfoRequest(
+//     itemInfo.itemsCode,itemInfo.description
+//   )
+//   itemsinfo.push(record)
+  
+//  })
+
+
+//  const FabricQuantitiesInfo = []
+//  formData.forEach((rec:any) ) => {
+//   const records = new FabricQuantitiesInfo (
+//     rec.styleId,rec.colorId,rec.garmentQuantity,rec.consumption,rec.wastage,rec.fabricQuantity,rec.uomId,"","",remarks,itemsinfo
+//   )
+//  }
+
+// const itemsinfo = [];
+// const FabricQuantities = [];
+
+// itemsData.forEach((itemInfo) => {
+//   const record = new FabricItemInfoRequest(
+//     itemInfo.itemsCode, itemInfo.description
+//   );
+//   itemsinfo.push(record);
+
+//  console.log(itemsinfo,'llll')
+
+
+
+
+// formData.forEach((rec) => {
+//   const records:any = new FabricQuantitiesInfo(
+//     rec.styleId, rec.colorId, rec.garmentQuantity, rec.consumption, rec.wastage, rec.fabricQuantity, rec.uomId, "", "", rec.remarks,itemsinfo
+//   );
+//   FabricQuantities.push(records); 
+  
+
+// });
+// });
+
+// console.log(FabricQuantities,"request"); 
+
+
+
+
+
 
 
 
@@ -54,6 +110,7 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
           // uploadFileList([...filelist, file]);
 
           return false;
+          
         }
       };
 
@@ -70,7 +127,7 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
     },
     fileList: pollutionFilelist
   };
-  console.log(pollutionFilelist,'-----------AAAAAA')
+  console.log(pollutionFilelist,'FILEUPLOAD')
 
 
 
@@ -117,9 +174,9 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
   }, [garmentQuantity, consumptionData, wastageData]);
 
 
-   console.log(garmentQuantity,"0000")
-   console.log(consumptionData,"9898897")
-   console.log(wastageData,"121212")
+  //  console.log(garmentQuantity,"0000")
+  //  console.log(consumptionData,"9898897")
+  //  console.log(wastageData,"121212")
 
 
 
@@ -132,7 +189,7 @@ export const FabricDevelopmentDynamicForm = (props:FabricDevelopmentDynamicFormP
   },[])
 
   const itemList = (data) =>{
-    console.log(data,"itemdata")
+    // console.log(data,"itemdata")
     setItemsData(data)
     props.itemsData(data)
   
@@ -183,7 +240,7 @@ const getAllUoms = () => {
     
        const addData = () => {
         props.form.validateFields().then((values) => {
-          console.log(values, '555');
+          // console.log(values, '555');
       
 
           if (editingIndex !== 1) {
@@ -194,6 +251,8 @@ const getAllUoms = () => {
           } else {
             setFormData([...formData, values]);
             props.dynamicformData([...formData, values])
+            // props.requestmodel(FabricQuantities)
+
 
           }
           props.form.resetFields();
@@ -238,8 +297,8 @@ const getAllUoms = () => {
               <Tooltip placement="top" title='edit'>
                 <EditOutlined className={'editSamplTypeIcon'} type="edit"
                   onClick={() => {
-                    console.log(rowData,"rowdata")
-                    console.log(index,"index")
+                    // console.log(rowData,"rowdata")
+                    // console.log(index,"index")
     
                     if (rowData) {
                     setEditForm(rowData, index);
@@ -447,8 +506,9 @@ const getAllUoms = () => {
               xl={{ span: 4 }}
             >
           <Form.Item  style={{marginTop:50}} >
-              <Button  type='primary'  
+              <Button  type="primary"  
                onClick={addData } 
+               
             >
               {BtnDisable ? 'UPDATE' : 'ADD'}
             </Button>
