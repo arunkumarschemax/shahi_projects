@@ -117,7 +117,7 @@ export function DocView() {
   };
 
   const handleViewClick = (record: Item) => {
-    viewchange(record); // Call your viewchange function with the record data
+    viewchange(record); 
   };
 
   const handleSearch = (

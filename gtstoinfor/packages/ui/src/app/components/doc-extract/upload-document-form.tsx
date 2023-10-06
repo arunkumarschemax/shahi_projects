@@ -167,7 +167,7 @@ export function DocumentUploadForm() {
     services.getVendorCodeByVendorName(req).then((res) => {
       if (res.status) {
         setVendorCod(res.data?.vendorCode
-          );
+        );
       } else {
         setVendorCod([]);
       }
@@ -305,7 +305,7 @@ export function DocumentUploadForm() {
     const extractedInvoiceamount = match ? match[0] : "";
     return extractedInvoiceamount;
   };
-  
+
   const extractCgst = (text) => {
     const CgstRegex = /^\d+\.\d{2}$/;
     const match = text.match(CgstRegex);
@@ -1300,9 +1300,7 @@ export function DocumentUploadForm() {
     }
 
     console.log("Structured HSN Lines (JSON):", JSON.stringify(structuredHSNLines, null, 2));
-
     setExtractedData(structuredHSNLines);
-
     const result = {
       "Entire Data": allLines,
     };
@@ -1341,166 +1339,166 @@ export function DocumentUploadForm() {
 
   const handleUploadDocument = () => {
     if (file && !buttonClicked) {
-      // if (file.name.match(/\.(pdf)$/)) {
-      // } else {
-      //   setButtonClicked(true);
-      //   const reader = new FileReader();
-      //   reader.onload = (e) => {
-      //     setSelectedImage(e.target.result);
-      //   };
-      //   reader.readAsDataURL(file);
-      //   setIsLoading(true);
+      if (file.name.match(/\.(pdf)$/)) {
+      } else {
+        setButtonClicked(true);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setSelectedImage(e.target.result);
+        };
+        reader.readAsDataURL(file);
+        setIsLoading(true);
 
-      //   console.log("Uploading file:", file);
+        console.log("Uploading file:", file);
 
-      //   Tesseract.recognize(file, "eng", { logger: (m) => console.log(m) }).then(
-      //     ({ data: { text } }) => {
-      //       setIsLoading(false);
+        Tesseract.recognize(file, "eng", { logger: (m) => console.log(m) }).then(
+          ({ data: { text } }) => {
+            setIsLoading(false);
 
-      //       const parsedData = parseExtractedText(text);
-      //       console.log(parsedData, 'ALL CONSOLE');
+            const parsedData = parseExtractedText(text);
+            console.log(parsedData, 'ALL CONSOLE');
 
-      //       const extractedInvoiceNumber = extractInvoiceNumber(parsedData);
-      //       setInnvoicenum(extractedInvoiceNumber);
+            const extractedInvoiceNumber = extractInvoiceNumber(parsedData);
+            setInnvoicenum(extractedInvoiceNumber);
 
-      //       const extractedvendorname = extractVendorname(parsedData);
-      //       setVendor(extractedvendorname);
+            const extractedvendorname = extractVendorname(parsedData);
+            setVendor(extractedvendorname);
 
-      //       const extractedInvoiceAmount = extractInvoiceAmount(parsedData);
-      //       setInnvoiceamount(extractedInvoiceAmount);
+            const extractedInvoiceAmount = extractInvoiceAmount(parsedData);
+            setInnvoiceamount(extractedInvoiceAmount);
 
-      //       const extractedIGST = extractIGST(parsedData);
-      //       setIgst(extractedIGST);
+            const extractedIGST = extractIGST(parsedData);
+            setIgst(extractedIGST);
 
-      //       // const extractedCGST = extractCGST(parsedData);
-      //       // setCgst(extractedCGST);
-
-
-      //       const extractedGstNumbers = extractGstNumbers(text);
-      //       const extractedvendor = extractVendor(text);
-      //       const extractedInvoiceDate = extractInvoiceDate(text);
-      //       // const extractedInnvoicenum = extractInnvoiceNum(text);
-      //       // const extractedInnvoiceamount = extractInnvoiceamount(text);
-      //       const extractedInnvoicecurrency = extractInnvoicecurrency(text);
-      //       // const extractedIgst = extractIgst(text);
-      //       const extractedFinancialyear = extractFinancialyear(text);
-      //       const extractedCgst = extractCgst(text);
-      //       const extractedSgst = extractSgst(text);
-      //       const extractvendorname = extractVendor(text);
+            // const extractedCGST = extractCGST(parsedData);
+            // setCgst(extractedCGST);
 
 
-      //       setGstNumbers(extractedGstNumbers);
-      //       // setInnvoiceamount(extractedInnvoiceamount);
-      //       setInnvoicecurrency(extractedInnvoicecurrency);
-      //       setInvoiceDate(extractedInvoiceDate);
-      //       setVendor(extractedvendor);
-      //       // setInnvoicenum(extractedInnvoicenum);
-      //       // setIgst(extractedIgst);
-      //       setCgst(extractedCgst);
-      //       setSgst(extractedSgst);
-      //       setFinancialyear(extractedFinancialyear);
-      //       setVendor(extractedvendorname);
+            const extractedGstNumbers = extractGstNumbers(text);
+            const extractedvendor = extractVendor(text);
+            const extractedInvoiceDate = extractInvoiceDate(text);
+            // const extractedInnvoicenum = extractInnvoiceNum(text);
+            // const extractedInnvoiceamount = extractInnvoiceamount(text);
+            const extractedInnvoicecurrency = extractInnvoicecurrency(text);
+            // const extractedIgst = extractIgst(text);
+            const extractedFinancialyear = extractFinancialyear(text);
+            const extractedCgst = extractCgst(text);
+            const extractedSgst = extractSgst(text);
+            const extractvendorname = extractVendor(text);
+
+
+            setGstNumbers(extractedGstNumbers);
+            // setInnvoiceamount(extractedInnvoiceamount);
+            setInnvoicecurrency(extractedInnvoicecurrency);
+            setInvoiceDate(extractedInvoiceDate);
+            setVendor(extractedvendor);
+            // setInnvoicenum(extractedInnvoicenum);
+            // setIgst(extractedIgst);
+            setCgst(extractedCgst);
+            setSgst(extractedSgst);
+            setFinancialyear(extractedFinancialyear);
+            setVendor(extractedvendorname);
 
 
 
-      //       const lines = text.split("\n");
+            const lines = text.split("\n");
 
-      //       const allLines = lines.map((line, index) => ({
-      //         id: index + 1,
-      //         content: line.trim(),
-      //       }));
+            const allLines = lines.map((line, index) => ({
+              id: index + 1,
+              content: line.trim(),
+            }));
 
-      //       const structuredHSNLines = [];
-      //       let currentHSN = null;
+            const structuredHSNLines = [];
+            let currentHSN = null;
 
-      //       for (const line of allLines) {
-      //         if (line.content.includes("HSN") || line.content.match(/^\d{6}$/)) {
-      //           if (currentHSN) {
-      //             currentHSN.variance = currentHSN.chargeINR - currentHSN.quotation;
-      //             structuredHSNLines.push(currentHSN);
-      //           }
-      //           currentHSN = {
-      //             HSN: line.content.includes("HSN")
-      //               ? line.content.match(/\d+/)
-      //               : line.content.trim(),
-      //             Taxtype: line.content.match(/IGST|CGST|SGST|GST/),
-      //             Taxamount: null,
-      //             description: null,
-      //             chargeINR: null,
-      //             quotation: null,
-      //             unitPrice: null,
-      //           };
+            for (const line of allLines) {
+              if (line.content.includes("HSN") || line.content.match(/^\d{6}$/)) {
+                if (currentHSN) {
+                  currentHSN.variance = currentHSN.chargeINR - currentHSN.quotation;
+                  structuredHSNLines.push(currentHSN);
+                }
+                currentHSN = {
+                  HSN: line.content.includes("HSN")
+                    ? line.content.match(/\d+/)
+                    : line.content.trim(),
+                  Taxtype: line.content.match(/IGST|CGST|SGST|GST/),
+                  Taxamount: null,
+                  description: null,
+                  chargeINR: null,
+                  quotation: null,
+                  unitPrice: null,
+                };
 
-      //           const taxAmountMatch = line.content.match(
-      //             /(\d+(\.\d{0,2})?)%=(\d+(\.\d{0,2})?)/
-      //           );
-      //           if (taxAmountMatch) {
-      //             currentHSN.Taxamount = {
-      //               Taxpercentage: parseFloat(taxAmountMatch[1]),
-      //               Taxamount: parseFloat(taxAmountMatch[3]),
-      //             };
-      //           }
-      //         } else if (line.content.includes("IGST|CGST|GSTS|GST")) {
-      //           currentHSN.Taxtype = "IGST";
-      //         }
-      //         if (line.content.includes("chargeINR")) {
-      //           const chargeValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?$/);
-      //           if (chargeValueMatch) {
-      //             currentHSN.chargeINR = parseFloat(
-      //               chargeValueMatch[1].replace(/,/g, "")
-      //             );
-      //           }
-      //         }
+                const taxAmountMatch = line.content.match(
+                  /(\d+(\.\d{0,2})?)%=(\d+(\.\d{0,2})?)/
+                );
+                if (taxAmountMatch) {
+                  currentHSN.Taxamount = {
+                    Taxpercentage: parseFloat(taxAmountMatch[1]),
+                    Taxamount: parseFloat(taxAmountMatch[3]),
+                  };
+                }
+              } else if (line.content.includes("IGST|CGST|GSTS|GST")) {
+                currentHSN.Taxtype = "IGST";
+              }
+              if (line.content.includes("chargeINR")) {
+                const chargeValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?$/);
+                if (chargeValueMatch) {
+                  currentHSN.chargeINR = parseFloat(
+                    chargeValueMatch[1].replace(/,/g, "")
+                  );
+                }
+              }
 
-      //         if (line.content.includes("quotation")) {
-      //           const quotationValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?$/);
-      //           if (quotationValueMatch) {
-      //             currentHSN.quotation = parseFloat(
-      //               quotationValueMatch[1].replace(/,/g, "")
-      //             );
-      //           }
-      //         }
+              if (line.content.includes("quotation")) {
+                const quotationValueMatch = line.content.match(/^\d{1,3}(,\d{3})*(\.\d{2})?$/);
+                if (quotationValueMatch) {
+                  currentHSN.quotation = parseFloat(
+                    quotationValueMatch[1].replace(/,/g, "")
+                  );
+                }
+              }
 
-      //         if (currentHSN && !currentHSN.description) {
-      //           currentHSN.description = line.content.trim();
-      //         }
-      //       }
-      //       structuredHSNLines.forEach((line) => {
-      //         if (line.Taxamount) {
-      //           line.Taxpercentage = line.Taxamount.Taxpercentage;
-      //           line.Taxamount = line.Taxamount.Taxamount;
-      //         }
-      //       });
-      //       console.log(
-      //         "Structured HSN Lines (JSON):",
-      //         JSON.stringify(structuredHSNLines, null, 2)
-      //       );
+              if (currentHSN && !currentHSN.description) {
+                currentHSN.description = line.content.trim();
+              }
+            }
+            structuredHSNLines.forEach((line) => {
+              if (line.Taxamount) {
+                line.Taxpercentage = line.Taxamount.Taxpercentage;
+                line.Taxamount = line.Taxamount.Taxamount;
+              }
+            });
+            console.log(
+              "Structured HSN Lines (JSON):",
+              JSON.stringify(structuredHSNLines, null, 2)
+            );
 
-      //       setExtractedData(structuredHSNLines);
+            setExtractedData(structuredHSNLines);
 
-      //       const result = {
-      //         "Entire Data": allLines,
-      //       };
+            const result = {
+              "Entire Data": allLines,
+            };
 
 
-      //       const currentFinancialYear = getCurrentFinancialYear();
-      //       setFinancialyear(currentFinancialYear);
+            const currentFinancialYear = getCurrentFinancialYear();
+            setFinancialyear(currentFinancialYear);
 
-      //       const currentDate = new Date();
-      //       const formattedDate = currentDate.toLocaleString();
-      //       setTimecreated(formattedDate);
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleString();
+            setTimecreated(formattedDate);
 
-      //       setTimeout(() => {
-      //         setIsLoading(false);
-      //         setExtractionCompleted(true);
-      //         setShowCancelButton(true);
-      //       }, 2000);
+            setTimeout(() => {
+              setIsLoading(false);
+              setExtractionCompleted(true);
+              setShowCancelButton(true);
+            }, 2000);
 
-      //       console.log("Result (JSON):", JSON.stringify(result, null, 2));
-      //     }
-      //   );
+            console.log("Result (JSON):", JSON.stringify(result, null, 2));
+          }
+        );
 
-      // }
+      }
     }
   };
 

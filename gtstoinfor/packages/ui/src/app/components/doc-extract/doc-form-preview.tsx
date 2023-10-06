@@ -343,16 +343,16 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                 </div>
             ),
         },
-        {
-            title: "Amount",
-            dataIndex: "amount",
-            key: "amount",
-            render: (amount) => (
-                <div style={{ textAlign: "right" }}>
-                    {amount !== undefined && amount !== null ? `${amount}` : "0"}
-                </div>
-            ),
-        },
+        // {
+        //     title: "Amount",
+        //     dataIndex: "amount",
+        //     key: "amount",
+        //     render: (amount) => (
+        //         <div style={{ textAlign: "right" }}>
+        //             {amount !== undefined && amount !== null ? `${amount}` : "0"}
+        //         </div>
+        //     ),
+        // },
         {
             title: "Quotation",
             dataIndex: "quotation",
@@ -865,7 +865,14 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                     Submit
                 </Button>
             </Row>
-            <Table dataSource={props.hsnData} columns={columns} size="small" />
+            
+            <Row>
+                <Card size='small'>
+                    <Col span={12}>
+                        <Table dataSource={props.hsnData} columns={columns} size="small" />
+                    </Col>
+                </Card>
+            </Row>
         </>
     )
 }
