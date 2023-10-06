@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, M
 import { ItemCategory } from "../item-categories/item-categories.entity";
 import { ItemSubCategory } from "../item-sub-categories/item-sub-category.entity";
 import { OperationSequence } from "../operation-sequence/operation-sequence.entity";
+import { ItemSkus } from "../sku-generation/sku-generation.entity";
 
 @Entity('items')
 export class Item {
@@ -102,6 +103,9 @@ export class Item {
 
   // @OneToMany(type=>OperationSequence, operation=>operation.itemInfo,{cascade: true})
   // itemsequenceInfo:OperationSequence;
+
+  @OneToMany(type=>ItemSkus, item=>item.itemInfo,{cascade: true})
+  itemSkuInfo:ItemSkus;
 
 
 }

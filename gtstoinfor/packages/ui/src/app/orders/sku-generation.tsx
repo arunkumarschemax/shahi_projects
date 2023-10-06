@@ -1,7 +1,7 @@
 import { Button, Card, Col, Descriptions, Form, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { ColourService, DestinationService, SKUGenerationService, SizeService } from '@project-management-system/shared-services';
-import { SKUGenerationReq } from '@project-management-system/shared-models';
+import { ItemSKusReq, SKUGenerationReq, SkuStatusEnum } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 
 const { Option } = Select;
@@ -32,7 +32,8 @@ export const SKUGeneration = () => {
     },[])
 
     const generateSKU = () => {
-      const req = new SKUGenerationReq(form.getFieldValue('itemCode'),selectedColors,selectedSizes,selectedDestinations,'admin','')
+      // const req = new SKUGenerationReq(form.getFieldValue('itemCode'),selectedColors,selectedSizes,selectedDestinations,'admin','')
+      const req = new ItemSKusReq(null,form.getFieldValue('itemCode'),SkuStatusEnum.OPEN,selectedColors,selectedSizes,selectedDestinations,'admin')
       skuService.skuGeneration(req).then(res => {
         if(res.status){
           AlertMessages.getSuccessMessage(res.internalMessage)

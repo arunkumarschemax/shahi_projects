@@ -1,5 +1,6 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { BuyersColor } from "../buyers-destination/byers-colors.entity";
+import { ItemSkus } from "../sku-generation/sku-generation.entity";
 
 @Entity('colour')
 export class Colour{
@@ -54,4 +55,7 @@ versionFlag: number;
 
 @OneToMany(type=>BuyersColor, buyers=>buyers.colorInfo,{cascade: true})
 colorsInfo?:BuyersColor;
+
+@OneToMany(type=>ItemSkus, item=>item.colorInfo,{cascade: true})
+itemSkuInfo?:ItemSkus;
 }

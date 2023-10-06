@@ -1,8 +1,8 @@
 import { GlobalResponseObject } from '../global-response-object';
-import { SKUGenerationModel } from './sku-generation.model';
+import { ItemSKusModel } from './sku-generation.model';
 
 export class SKUGenerationResponseModel extends GlobalResponseObject{
-    data?: SKUGenerationModel[];
+    data?: ItemSKusModel[];
     /**
      * 
      * @param status 
@@ -10,7 +10,7 @@ export class SKUGenerationResponseModel extends GlobalResponseObject{
      * @param internalMessage 
      * @param data 
      */
-     constructor(status: boolean, errorCode: number, internalMessage: string, data?: SKUGenerationModel[]) {
+     constructor(status: boolean, errorCode: number, internalMessage: string, data?: ItemSKusModel[]) {
         super(status, errorCode, internalMessage);
         this.data = data;
     }
