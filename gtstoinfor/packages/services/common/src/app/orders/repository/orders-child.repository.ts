@@ -253,7 +253,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             AND YEAR = '${req.year}'
             AND prod_plan_type != 'STOP'
             AND planned_exf IS NOT NULL AND wh IS NOT NULL
-             GROUP BY YEAR,  item, item_cd, prod_plan_type, STATUS
+             GROUP BY YEAR,  item, item_cd, prod_plan_type
         ORDER BY  item ASC`;
         const result = await this.query(query);
         return result;
@@ -439,8 +439,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
             ELSE prod_plan_type
         END,
-        YEAR,
-        STATUS`
+        YEAR`
         const result = await this.query(query);
         return result;
     }
@@ -524,7 +523,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         FROM orders_child
         ) AS RankedVersions
         WHERE version_rank <= 2
-        AND YEAR = '2023'
+        AND YEAR = '${req.year}'
         AND prod_plan_type != 'STOP'
         GROUP BY
         CASE
@@ -533,8 +532,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
             ELSE prod_plan_type
         END,
-        YEAR,
-        STATUS`
+        YEAR`
         
         
         const result = await this.query(query);
