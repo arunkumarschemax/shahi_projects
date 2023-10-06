@@ -37,43 +37,35 @@ export const FabricDevelopmentView = () =>{
         {
           title: "Location",
           dataIndex: "location",
-
         },
         {
           title: "PCH",
           dataIndex: "PCH",
-         
         },
         {
           title: "Buyer",
           dataIndex: "buyer",
-       
         },
         {
           title: `Fabric Type`,
           dataIndex: "fabricType",
-         
         },
         {
             title: `Fabric Responsible`,
             dataIndex: "fabricResponsible",
-           
           },
           {
             title: 'Mapped',
             render: (text, val) => (
               <>
-                
                 <Button onClick={() => Info(val)}>More Info</Button>
-             
               </>
             ),
           },
       ];
     return(
-        <Card title='Fabric Development reuest view'  extra={
+        <Card title='Fabric Development request view'  extra={
             <Link to="/fabricdevelopment/FabricDevelopmentrequest/Fabric-Development-Request">
-    
             <span>
               <Button type={"primary"}>New </Button>{" "}
             </span>
