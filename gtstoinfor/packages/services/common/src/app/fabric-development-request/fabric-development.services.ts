@@ -1,17 +1,18 @@
 import { FabricRequestEntity } from "./fabric-request.entity";
 import { Injectable } from "@nestjs/common";
 import { FabricRequestRepository } from "./repository/fabric-request.repository";
-import { FabricDevelopmentRequestResponse, StatusEnum } from "@project-management-system/shared-models";
+import { CommonResponseModel, FabricDevelopmentRequest, FabricDevelopmentRequestResponse, StatusEnum } from "@project-management-system/shared-models";
 import { FabricRequestDto } from "./dto/fabric-request.dto";
 import { FabricRequestQualitiesInfoEntity } from "./fabric-request-quality-info.entity";
 import { FabricRequestItemsEntity } from "./fabric-request-items.entity";
 import { FabricRequestQualitiesEntity } from "./fabric-request-qualities.entity";
+import { FabricRequestQualitiesRepository } from "./repository/fabric-request-qualities.repository";
 
 @Injectable()
 export class FabricDevelopmentService {
     constructor (
          private FabricRepo: FabricRequestRepository,
-         
+         private qualityrepo: FabricRequestQualitiesRepository
     ){}
 
 
@@ -103,6 +104,31 @@ export class FabricDevelopmentService {
         }
       }
 
-      
+   async getFabricDevReqData(): Promise<CommonResponseModel> {
+      try {
+     const data = await this.FabricRepo.find({
+      relations:["fabricQuantityEntity","fabricQuantityEntity.fabricEntity","fabricQuantityEntity.fabricEntity.fabricItemsEntity"]
+     })
+     console.log(data,'-----------');
+    //  const qualityData = await this.qualityrepo.find()
+    //  console.log(qualityData,'quality');
+    //  let DataMap = new Map<number,FabricDevelopmentRequest>()
+
+    //  for(const res of data){
+    //   if(!DataMap.has(res.fabricRequestId)){
+    //     DataMap.set(
+    //       res.fabricRequestId,
+    //       new FabricDevelopmentRequest(res.locationId,res.styleId,res.pchId,res.buyerId,res.type,res.sampleTypeId,res.remarks,res.fabricResponsible,res.facilityId,res.lightSourcePrimary,res.lightSourceSecondary,res.lightSourceTertiary,res.fileName,res.filePath,[],res.status,res.requestNo,res.fabricRequestId)
+    //     )
+    //   }
+    //   const Quality
+    //   const data1 = new FabricDevelopmentRequest(res.locationId,res.styleId,res.pchId,res.buyerId,res.type,res.sampleTypeId,res.remarks,res.fabricResponsible,res.facilityId,res.lightSourcePrimary,res.lightSourceSecondary,res.lightSourceTertiary,res.fileName,res.filePath,[],res.status,res.requestNo,res.fabricRequestId)
+    //  }
+     return new CommonResponseModel(true, 0, "Fabric Development Request successfully", data);
+
+        } catch (err) {
+          throw err;
+        }
+      }    
 
 }
