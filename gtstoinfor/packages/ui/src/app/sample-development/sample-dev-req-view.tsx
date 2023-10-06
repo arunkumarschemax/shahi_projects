@@ -42,52 +42,45 @@ export const SampleDevView = (props: BuyingHouseProps) => {
   const [searchedColumn, setSearchedColumn] = useState("");
 
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [buyingHouseData, setBuyingHouseData] = useState<any[]>([]);
+  const [sampleData, setSampleData] = useState<any[]>([]);
   const [selectedBuyingHouse, setSelectedBuyingHouse] =
     useState<any>(undefined);
-  const Service = new SampleDevelopmentService();
+  const service = new SampleDevelopmentService();
   let navigate = useNavigate();
   const [reqNo, setReqNo] = useState<any>([]);
   const [form] = Form.useForm();
 
 
   useEffect(() => {
-    getAllSampleDevelopment();
+    getAllSampleDevData();
     // getReqNo();
   }, []);
 
-  // const getReqNo = () => {
-  //   Service.getReqNo().then((res) => {
-  //       console.log(res,'nnnnnnnnnnn');
-  //     setReqNo(res);
-  //     console.log(res,'mmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
-  //   });
-  // };
-
-  const getAllSampleDevelopment = () => {
+  const getAllSampleDevData = () => {
     const req = new SampleFilterRequest()
     if (form.getFieldValue('reqNo') !== undefined) {
       req.reqNo = form.getFieldValue('reqNo')
     }
-    Service.getAllSampleDevelopment().then((res) => {
-      if (res) {
-        setBuyingHouseData(res);
+    service.getAllSampleDevData().then((res) => {
+      console.log(res,'ok')
+      if (res.data) {
+        setSampleData(res.data);
       }
     });
   };
 
   const onFinish = () => {
-    getAllSampleDevelopment();
+    getAllSampleDevData();
   };
 
   const onReset = () => {
     form.resetFields();
-    getAllSampleDevelopment();
+    getAllSampleDevData();
   };
 
-  const DetailView = (val: any) => {
-    console.log("ok", val);
-    return navigate(`/sample-development/sample-development-detail`, { state: { id: val } });
+  const DetailView = (SampleRequestId) => {
+    console.log(SampleRequestId,'ooooooooooooooooooooo')
+    return navigate(`/sample-development/sample-development-detail`, { state: { id: SampleRequestId } });
   };
 
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -207,17 +200,17 @@ export const SampleDevView = (props: BuyingHouseProps) => {
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("requestNo"),
     },
-    {
-      title: "Date",
-      dataIndex: "date",
-      // responsive: ['lg'],
-      sorter: (a, b) => a.date.localeCompare(b.date),
-      sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("date"),
-    },
+    // {
+    //   title: "Date",
+    //   dataIndex: "date",
+    //   // responsive: ['lg'],
+    //   sorter: (a, b) => a.date.localeCompare(b.date),
+    //   sortDirections: ["descend", "ascend"],
+    //   ...getColumnSearchProps("date"),
+    // },
     {
       title: "Location",
-      dataIndex: "location",
+      dataIndex: "locationName",
       // responsive: ['lg'],
       sorter: (a, b) => a.location.localeCompare(b.location),
       sortDirections: ["descend", "ascend"],
@@ -225,7 +218,7 @@ export const SampleDevView = (props: BuyingHouseProps) => {
     },
     {
       title: "PCH",
-      dataIndex: "pch",
+      dataIndex: "profitControlHead",
       // responsive: ['lg'],
       sorter: (a, b) => a.pch.localeCompare(b.pch),
       sortDirections: ["descend", "ascend"],
@@ -241,7 +234,7 @@ export const SampleDevView = (props: BuyingHouseProps) => {
     },
     {
       title: "Buyer",
-      dataIndex: "buyer",
+      dataIndex: "buyerName",
       // responsive: ['lg'],
       sorter: (a, b) => a.buyer.localeCompare(b.buyer),
       sortDirections: ["descend", "ascend"],
@@ -249,7 +242,7 @@ export const SampleDevView = (props: BuyingHouseProps) => {
     },
     {
       title: "Style No",
-      dataIndex: "styleNo",
+      dataIndex: "m3StyleNo",
       // responsive: ['lg'],
       sorter: (a, b) => a.styleNo.localeCompare(b.styleNo),
       sortDirections: ["descend", "ascend"],
@@ -263,7 +256,7 @@ export const SampleDevView = (props: BuyingHouseProps) => {
           {" "}
           <Tooltip placement="top" title="Detail View">
             <EyeOutlined
-              onClick={() => DetailView(rowData.id)}
+              onClick={() => DetailView(rowData.SampleRequestId)}
               style={{ color: "blue", fontSize: 20 }}
               size={30}
             />
@@ -345,7 +338,7 @@ export const SampleDevView = (props: BuyingHouseProps) => {
         size="small"
         rowKey={(record) => record.buyingHouseId}
         columns={columnsSkelton}
-        dataSource={buyingHouseData}
+        dataSource={sampleData}
         scroll={{ x: true }}
         pagination={{
           onChange(current) {

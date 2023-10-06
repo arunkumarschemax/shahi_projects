@@ -5,7 +5,7 @@ export class BomRequest {
     pchId : number;
     facilityId : number;
     trimCode :string;
-    trimId : number;
+    trim : string;
     genericCode: string;
     typeId : number;
     groupId: number;
@@ -31,6 +31,8 @@ export class BomRequest {
     wastagePercentage : number;
     costGroup : string;
     usageRemarks: string;
+    taxPercentage:number;
+    totalPrice:number
   
 
     constructor(
@@ -38,7 +40,7 @@ export class BomRequest {
          pchId : number,
         facilityId : number,
         trimCode :string,
-        trimId : number,
+        trim : string,
         genericCode: string,
         typeId : number,
         groupId: number,
@@ -64,12 +66,14 @@ export class BomRequest {
         wastagePercentage : number,
         costGroup : string,
         usageRemarks: string,
+        taxPercentage:number,
+        totalPrice : number
        ){  
            this.itemsId = itemsId
            this.pchId = pchId
            this.facilityId = facilityId
            this.trimCode = trimCode
-           this.trimId = trimId
+           this.trim = trim
            this.genericCode = genericCode
            this.typeId = typeId
            this.groupId = groupId
@@ -95,6 +99,8 @@ export class BomRequest {
            this.wastagePercentage = wastagePercentage,
            this.costGroup = costGroup,
            this.usageRemarks = usageRemarks
+           this.taxPercentage  = taxPercentage
+           this.totalPrice = totalPrice
         
           
 

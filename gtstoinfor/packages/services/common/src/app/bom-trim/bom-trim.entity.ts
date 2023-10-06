@@ -30,10 +30,10 @@ export class BomTrimEntity  {
     })
     trimCode : string;
 
-    @Column('int',{
-        name:'trim_id'
+    @Column('varchar',{
+        name:'trim'
     })
-    trimId : number;
+    trim : string;
 
     @Column('varchar',{
         name:'generic_code'
@@ -113,6 +113,18 @@ export class BomTrimEntity  {
         name:'price'
     })
       price : number;
+
+      @Column('int',{
+        name:'tax_percentage'
+    })
+      taxPercentage : number;
+
+      @Column('decimal',{
+        name:'total_price',
+        precision: 5, 
+        scale: 2,
+    })
+      totalPrice : number;
     
 
     @Column('int',{

@@ -26,6 +26,10 @@ export const TrimsBomCreation = (props:TrimsBomCreationProps) => {
   const [uomData,setUomData] = useState([])
   const [tax,setTax] = useState([])
   const [pchData,setPchData] = useState<any>([])
+  const [taxvalue,setTaxValues] = useState<any>("")
+  const [calData,setCalData] = useState<number>(0);
+
+
 
 
 
@@ -40,6 +44,14 @@ export const TrimsBomCreation = (props:TrimsBomCreationProps) => {
   getAllActiveProfitControlHead();
 
   },[])
+
+  useEffect(() => {
+    if (taxvalue) {
+      const taxcal = Number((taxvalue)/100)
+      const cal:any = Number(form.getFieldValue('price'))+ (taxcal)
+      form.setFieldsValue({totalPrice:cal})
+    }
+  }, [taxvalue]);
 
 
   const getAllCurrencies=() =>{
@@ -115,16 +127,26 @@ const getAllActiveProfitControlHead=() =>{
   const onReset = () => {
     form.resetFields();
   };
+  
 
+  const handleTaxChange =(value) =>{
+    console.log(value,"tax")
+      setTaxValues(value)
+  }
+ 
+  const changeHandlerPrice = (value) =>{
+      console.log(value.price)
+  }
+   
   
 
   const onFinish = (values: any) => {
     console.log(values.trimCode,"values")
-    const req = new BomRequest (values.itemsId,values.pchId,values.facilityId,values.trimCode,values.trimId,values.genericCode,values.typeId,values.groupId,values.useInOperationId,values.description,values.responsible,values.developmentResponsible,values.basicUomId,values.alternateUomId,values.factor,values.orderMultipleBuom,values.moq,values.orderMultipleAuom,values.currencyId,values.price,values.purchasePriceQuantity,values.salesTax,values.exciseDuty,values.licenceId,values.property,values.isSaleItem,values.consumption,values.wastagePercentage,values.costGroup,values.usageRemarks)
+    const req = new BomRequest (values.itemsId,values.pchId,values.facilityId,"",values.trim,values.genericCode,values.typeId,values.groupId,values.useInOperationId,values.description,values.responsible,values.developmentResponsible,values.basicUomId,values.alternateUomId,values.factor,values.orderMultipleBuom,values.moq,values.orderMultipleAuom,values.currencyId,values.price,values.purchasePriceQuantity,values.salesTax,values.exciseDuty,values.licenceId,values.property,values.isSaleItem,values.consumption,values.wastagePercentage,values.costGroup,values.usageRemarks,values.tax,values.totalPrice)
 
     bomservice.createBomTrim(req).then((res)=>{
        if (res.status){
-        // onReset();
+        onReset();
         message.success(res.internalMessage);
        
     } else{
@@ -153,7 +175,7 @@ const getAllActiveProfitControlHead=() =>{
             < Commonscreen />
             </div> */}
             
-            <Col xs={{ span: 48 }} sm={{ span: 48 }} md={{ span: 4 }} lg={{ span: 8 }} xl={{ span: 5}}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 5}}>
            <Form.Item name="itemsId" label = "Item No">
            <Select placeholder="Items No" allowClear>
                   
@@ -166,7 +188,7 @@ const getAllActiveProfitControlHead=() =>{
            </Form.Item>
         </Col>
 
-        <Col xs={{ span: 48 }} sm={{ span: 48 }} md={{ span: 4 }} lg={{ span: 8 }} xl={{ span: 5}}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 8 }} xl={{ span: 5}}>
         <Form.Item
                 label="PCH"
                 name="pchId"
@@ -185,7 +207,7 @@ const getAllActiveProfitControlHead=() =>{
               </Form.Item>
         </Col>
 
-        <Col xs={{ span: 48 }} sm={{ span: 48 }} md={{ span: 4 }} lg={{ span: 8 }} xl={{ span: 5}}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 8 }} xl={{ span: 5}}>
             <Form.Item name="facilityId" label = "Facility">
             <Select placeholder="facility" allowClear>
                  <option value={1}> facility1</option>
@@ -199,21 +221,21 @@ const getAllActiveProfitControlHead=() =>{
         </Col>
            
            
-            {/* <Col
+             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
               md={{ span: 4 }}
               lg={{ span: 6 }}
               xl={{ span: 12 }}
-            > */}
-              <Card size="small" bordered={false} style={{width:"100%"}}>
+            > 
+              {/* <Card size="small" bordered={false} style={{width:"100%"}}> */}
                 <h1
                   style={{ color: "grey", fontSize: "15px", textAlign: "left" }}
                 >
                   Trim Details
                 </h1>
                 <Row gutter={8}>
-                  <Col
+                  {/*== <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
@@ -227,25 +249,20 @@ const getAllActiveProfitControlHead=() =>{
                     >
                       <Input placeholder="Trim code" allowClear/>
                     </Form.Item>
-                  </Col>
-                  <Col
+                  </Col> */}
+                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4}}
-                    xl={{ span: 4}}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
                     <Form.Item
                       label="Trim"
-                      name="trimId"
+                      name="trim"
                       rules={[{ required: true, message: "Enter Trim" }]}
                     >
-                      <Select placeholder="Select Trim" allowClear>
-                        <option value="1">Rivets</option>
-                        <option value="2">Overriders</option>
-                        <option value="3">Swing Tags</option>
-
-                      </Select>
+                   <Input  placeholder="Trim "/>
                     </Form.Item>
                   </Col>
 
@@ -253,8 +270,8 @@ const getAllActiveProfitControlHead=() =>{
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4 }}
-                    xl={{ span: 4 }}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
                     <Form.Item label="Generic Code" name="genericCode">
                       <Input placeholder="Generic Code" allowClear/>
@@ -264,8 +281,8 @@ const getAllActiveProfitControlHead=() =>{
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4 }}
-                    xl={{ span: 4 }}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
                     <Form.Item
                       label="Type"
@@ -280,12 +297,12 @@ const getAllActiveProfitControlHead=() =>{
                   </Col>
                   {/* </Row>
                           <Row gutter={8}> */}
-                  <Col
+                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4 }}
-                    xl={{ span: 4 }}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
                     <Form.Item
                       label="Group"
@@ -302,8 +319,8 @@ const getAllActiveProfitControlHead=() =>{
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4 }}
-                    xl={{ span: 4 }}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
                     <Form.Item
                       label="Use In Operation"
@@ -322,8 +339,8 @@ const getAllActiveProfitControlHead=() =>{
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
                     md={{ span: 4 }}
-                    lg={{ span: 4 }}
-                    xl={{ span: 4 }}
+                    lg={{ span: 6 }}
+                    xl={{ span: 8 }}
                   >
                     <Form.Item label="Description" name="description">
                       <Input.TextArea
@@ -334,9 +351,9 @@ const getAllActiveProfitControlHead=() =>{
                     </Form.Item>
                   </Col>
                 </Row>
-              </Card>
-            {/* </Col> */}
-
+              {/* </Card> */}
+             </Col> 
+           
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -346,11 +363,11 @@ const getAllActiveProfitControlHead=() =>{
             >
               {/* <Card size="small" bordered={false} style={{width:"100%"}}> */}
                 <h1
-                  style={{ color: "grey", fontSize: "15px", textAlign: "left" }}
+                  style={{ color: "grey", fontSize: "15px", textAlign: "left", marginTop:30,marginLeft:40}}
                 >
                   Performance Responsible Team
                 </h1>
-                <Row gutter={36}>
+                <Row gutter={36} style={{marginLeft:25}}>
                   <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
@@ -362,6 +379,7 @@ const getAllActiveProfitControlHead=() =>{
                       name="responsible"
                       label="Responsible"
                       rules={[{ required: true, message: "Enter Responsible" }]}
+                      style={{marginTop:30}}
                     >
                       <Input placeholder="Responsible" allowClear />
                     </Form.Item>
@@ -378,6 +396,8 @@ const getAllActiveProfitControlHead=() =>{
                     <Form.Item
                       name="developmentResponsible"
                       label="Development Responsible"
+                      style={{marginTop:30}}
+
                     >
                       <Select
                         placeholder="Select Development Responsible"
@@ -523,29 +543,29 @@ const getAllActiveProfitControlHead=() =>{
                 <Col
                   xs={{ span: 24 }}
                   sm={{ span: 24 }}
-                  md={{ span: 4 }}
-                  lg={{ span: 4 }}
-                  xl={{ span: 4 }}
+                  md={{ span: 2 }}
+                  lg={{ span: 2 }}
+                  xl={{ span: 2 }}
                 >
                   <Form.Item
                     label="Price"
                     name="price"
                     rules={[{ required: true, message: "Enter Price" }]}
                   >
-                    <Input placeholder="Price" allowClear/>
+                    <Input placeholder="Price" allowClear onChange={changeHandlerPrice}/>
                   </Form.Item>
                 </Col>
                 <span style={{ fontSize: "24px", lineHeight: "70px" }}>+</span>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }}>
                     <Form.Item label="Tax" name="tax">
                         <Select
                         placeholder="Select Tax"
-                        // onChange={handleTaxChange}
+                        onChange={handleTaxChange}
                         defaultValue="0"
                         allowClear
                         >
                             {tax.map((e)=>(
-                                <option key={e.taxId} value={e.taxId}>
+                                <option key={e.taxId} value={e.taxPercentage}>
                                     {e.taxPercentage}
                                 </option>
                             ))}
@@ -553,10 +573,10 @@ const getAllActiveProfitControlHead=() =>{
                     </Form.Item>
                 </Col>
                 <span style={{ fontSize: "24px", lineHeight: "70px" }}>=</span>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                    <Form.Item label="Total" name="total">
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }} >
+                    <Form.Item label="Total Price" name="totalPrice">
                         <Input disabled 
-                        // value={calculateTotal()}
+                         
                          />
                     </Form.Item>
                 </Col>
@@ -678,6 +698,7 @@ const getAllActiveProfitControlHead=() =>{
               md={{ span: 4 }}
               lg={{ span: 6 }}
               xl={{ span: 12 }}
+              // style={{marginLeft:}}
             >
               {/* <Card size="small" bordered={false}> */}
                 <h1
