@@ -3,7 +3,7 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DocumentsList } from "./entities/upload-document-entity";
 import { DocumentsListRepository } from "./repository/documents-list.repository";
 import { UploadDocumentListAdapter } from "./repository/upload-document-adapter";
-import { DocumentsListRequest } from "./requests/document-list.request";
+import { DocumentsListRequest, customerPoReq } from "./requests/document-list.request";
 import { ErrorResponse } from "../../../../../libs/shared-models/src/common/whatsapp/error-response-object";
 import { config } from 'packages/libs/shared-services/config';
 import {UploadDocumentListResponseModel} from '../../../../../libs/shared-models/src/document-management/upload-document-list-response-model';
@@ -19,7 +19,6 @@ import { UploadFileDto } from "./models/upload-file.dto";
 import { UploadFilesEntity } from "./entities/upload-files.entity";
 import { OrdersEntity } from "../orders/entities/order.entity";
 import { GenericTransactionManager } from "packages/services/common/src/typeorm-transactions/generic-transaction-manager";
-import { throwError } from "rxjs";
 import { DoclListEnum, PoStatusEnum } from "packages/libs/shared-models/src/common/whatsapp/doc-list-enum";
 import { OrdersRepository } from "../orders/repositories/order.repository";
 @Injectable()
@@ -403,5 +402,31 @@ async getDataDataToUpdatePoStatusAgainstOrderid(orderId:number):Promise<UploadDo
         }
     }
 
+
+    async deleteDocsAgainstPo(req:customerPoReq):Promise<CommonResponseModel>{
+        try{
+            const query ='select documents_list_id as docListId from documents_list where customer_po="'+req.customerPo+'"'
+            const result = await this.documentsListRepository.query(query)
+            const docListId = result.map(id =>id.docListId)
+            const updateUploadFiles = await this.uploadFilesRepository.createQueryBuilder()
+            .update(UploadFilesEntity)
+            .set({isActive:false})
+            .where('document_list_id IN ('+docListId+')')
+            .execute();
+            if(updateUploadFiles.affected){
+                const updatedocumentList = await this.documentsListRepository.update({customerPo:req.customerPo},{isUploaded:false,status:null})
+                if(updatedocumentList.affected){
+                    const updatePostatus = await this.ordersRepository.update({poNo:req.customerPo},{orderPoStatus:PoStatusEnum.Open})
+                }
+             return new CommonResponseModel(true,1,'Documents Against This Po Are Deleted Sucessfully')
+            }
+           else{
+            return new CommonResponseModel(false,0,'Something Went Wrong')
+           }
+
+        }catch(err){
+            throw err
+        }
+    }
 
 }

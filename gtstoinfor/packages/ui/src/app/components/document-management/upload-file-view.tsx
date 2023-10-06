@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import {  Button, Card, Form, Input, Table, Space, InputRef, Modal, Tooltip } from 'antd';
-import {  DownloadOutlined, SearchOutlined,  } from '@ant-design/icons';
+import {  Button, Card, Form, Input, Table, Space, InputRef, Modal, Tooltip, Popconfirm, message } from 'antd';
+import {  DeleteOutlined, DownloadOutlined, SearchOutlined,  } from '@ant-design/icons';
 import { AlertMessages, } from '@project-management-system/shared-models';
 import { ColumnType } from 'antd/lib/table';
 import { OrdersService, UploadDocumentService } from '@project-management-system/shared-services';
@@ -225,6 +225,17 @@ const UploadFileGrid = () =>{
         navigate('/document-management/document-file-upload', { state: { data: PO } })
       }
 
+      const deletePo = (po) =>{
+        console.log(po)
+      uploadDcoService.deleteDocsAgainstPo({customerPo:po}).then(res =>{
+        if(res.status){
+          message.success(res.internalMessage)
+        }else{
+          message.error(res.internalMessage)
+        }
+      }) 
+      }
+
     const pocolumn = [
       {
         title: "S.No",
@@ -259,52 +270,9 @@ const UploadFileGrid = () =>{
             ...getColumnSearchProps('orderPoStatus'),
 
         }
-// {
-        //   title: 'INVOICE NO',
-        //   dataIndex: 'invoiceNo',
-        //   fixed: 'left',
-        //   align:'center',
-        //     ...getColumnSearchProps('invoiceNo'),
-        // },
-        // {
-        //   title: 'CHALLAN NO',
-        //   dataIndex: 'challanNo',
-        //   fixed: 'left',
-        //   align:'center',
-        //     ...getColumnSearchProps('challanNo'),
-        // },
       ];
 
       const downloadcomun = [
-        // {
-        //   title:'PO STATUS',
-        //   dataIndex:'poStatus',
-        //   align:'center',
-          // render:(text: string, rowData: any, index: number) =>{
-          //   let hasNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value === 'No');
-          //   let hasYes = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('Yes'));
-          //   let hasSingleNo = Object.values(rowData).some((value: any) => typeof value === 'string' && value.includes('No'));
-
-          //   if(hasNo){
-          //     return text;
-          //   }else if(hasYes && hasSingleNo ){
-          //     return 'Partially Uploaded'
-
-          //   }else{
-          //     return 'Fully Uploaded'
-          //   }
-
-          //   // if (!hasYes) {
-          //   //   return 'Pending';
-          //   // }
-          //   // else if (hasNo) {
-          //   //   return text;
-          //   // }
-          //   //  else {
-          //   //   return 'Fully Uploaded';
-          //   // }
-          // }
-        // },
         {
           title: 'DOWNLOAD',
           dataIndex: 'documentName',
@@ -317,6 +285,24 @@ const UploadFileGrid = () =>{
                 onClick={() => mergeAndDownloadPDFs(rowData.url, rowData.PO)}>
               <DownloadOutlined/>
               </Button>
+               </Form.Item>   
+               </div>     
+                )
+          }
+        },
+        {
+          title: 'Delete Po',
+          render :(text, rowData, index) =>{
+            console.log(rowData)
+            return (<div style={{alignContent:'center'}}>
+               <Form.Item  name={rowData.PO+1} style={{alignItems: 'center'}}>
+                <Popconfirm title={'Are you sure want to delete'} onConfirm={e =>deletePo(rowData.PO)}>
+                <Button 
+                disabled ={rowData.orderPoStatus == 'In Progress' || rowData.orderPoStatus == 'Closed' ? false:true}
+               >
+              <DeleteOutlined style={{color:'red'}}/>
+              </Button>
+                </Popconfirm>
                </Form.Item>   
                </div>     
                 )

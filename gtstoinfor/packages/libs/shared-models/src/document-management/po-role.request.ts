@@ -71,3 +71,10 @@ export class UploadedFileid{
         this.documentListId=documentListId
     }
 }
+
+export class customerPoReq{
+    customerPo:string
+    constructor(customerPo:string){
+        this.customerPo=customerPo
+    }
+}
