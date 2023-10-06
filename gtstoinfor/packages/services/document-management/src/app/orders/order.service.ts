@@ -86,7 +86,7 @@ export class OrdersService {
                 if(data.po_no != null)
 
                 {
-                    dtoData = new SaveOrderDto(data.id, data.buyer, data.challa_no, data.invoice_no, data.style, data.po_no, data.date, data.dest, data.tc_status, data.ship_qty, data.ctns, data.created_user, data.updated_user, data.created_at, data.updated_at, 1, id)
+                    dtoData = new SaveOrderDto(data.id, data.buyer, data.challa_no, data.invoice_no, data.item_no, data.po_no, data.date, data.dest, data.tc_status, data.ship_qty, data.ctns, data.created_user, data.updated_user, data.created_at, data.updated_at, 1, id)
                     console.log(dtoData)
                     dtoData.version = 1
 
