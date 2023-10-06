@@ -2150,7 +2150,7 @@ async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
 
         if (data && data1) {
            
-            const mergedData = [...data, ...data1];
+            const mergedData = [...data1, ...data];
 
               
 
