@@ -63,6 +63,7 @@ export const MonthWiseReport = () =>{
       }
     });
     service.getPhaseMonthData(req).then((res)=>{
+      console.log(res,"*********")
       if(res.status){
         setPhase(res.data)
       }else{
@@ -95,92 +96,13 @@ const pagination = {
     setPageSize(size);
   },
 };
-const pagination2 = {
-  current: page,
-  pageSize: pageSize,
-  total: phase.length,
-  showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-  onChange: (current, pageSize) => {
-    setPage(current);
-    setPageSize(pageSize);
-  },
+
   
-  showSizeChanger: true,
-  onShowSizeChange: (current, size) => {
-    setPage(1); 
-    setPageSize(size);
-  },
-};
+  
   const CustomTitle = () => {
     return (
       <div>
        
-{/* <table>
-  <tr >
-  <th colSpan={2} style={{ position: 'relative', right: '-150px', borderLeft: '1px solid black', backgroundColor: 'lightblue', }}>January</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderLeft: '1px solid black', borderRight: '1px solid black' }}>February</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightblue', width: '100px', borderRight: '1px solid black' }}>March</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderRight: '1px solid black' }}>April</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightblue', width: '100px', borderRight: '1px solid black' }}>May</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderRight: '1px solid black' }}>June</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightblue', width: '100px', borderRight: '1px solid black' }}>July</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderRight: '1px solid black' }}>August</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightblue', width: '100px', borderRight: '1px solid black' }}>September</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderRight: '1px solid black' }}>October</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightblue', width: '100px', borderRight: '1px solid black' }}>November</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px',borderRight: '1px solid black' }}>December</th>
-<th colSpan={2} style={{ position: 'relative',right: '-100px', width: '100px',borderRight: '1px solid black' }}>Total(Pcs)</th>
-<th colSpan={2} style={{position: 'relative', right: '-100px', width: '100px', }}>Total(Coeff)</th>
-
-
-  </tr>
-  <tr>
-  <td colSpan={26} style={{ borderBottom: '1px solid black' }}></td>
-</tr>
-  <tr>
-<td style={{paddingLeft:'30px',position:'relative',}}>Production Plan Type Name</td>
-    <td style={{right: '70px',position: 'relative', }}>In Pcs</td>
-    <td style={{position: 'relative',right: '30px' }} >In Coeff</td>
-
-    <td  style={{position: 'relative',right: '20px', }} >In Pcs</td>
-    <td  style={{position: 'relative',right: '25px',}} >In Coeff</td>
-
-    <td  style={{position: 'relative',right: '20px'}} >In Pcs</td>
-    <td  style={{position: 'relative',right: '20px'}} >In Coeff</td>
-
-    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
-    <td  style={{position: 'relative',right: '20px'}} >In Coeff</td>
-
-    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
-    <td  style={{position: 'relative',right: '10px'}} >In Coeff</td>
-
-    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
-    <td  style={{position: 'relative',right: '-10px'}} >In Coeff</td>
-
-    <td  style={{position: 'relative',right: '15px'}} >In Pcs</td>
-    <td  style={{position: 'relative',right: '-10px'}} >In Coeff</td>
-
-    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
-    <td  style={{position: 'relative',right: '-10px'}} >In Coeff</td>
-
-    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
-    <td  style={{position: 'relative',right: '-20px'}} >In Coeff</td>
-    <td  style={{position: 'relative',right: '10px'}} >In Pcs</td>
-    <td  style={{position: 'relative',right: '-10px'}} >In Coeff</td>
-    <td  style={{position: 'relative',right: '-10px'}} >In Pcs</td>
-    <td  style={{position: 'relative',right: '-20px'}} >In Coeff</td>
-    <td  style={{position: 'relative',right: '-5px'}} >In Pcs</td>
-    <td  style={{position: 'relative',right: '-20px'}} >In Coeff</td>
-    <td  style={{position: 'relative',right: '-310px'}} ><span></span></td>
-    <td  style={{position: 'relative',right: '-410px'}} ><span></span></td>
-    
-  </tr>
-
-  <tr>
-    
-</tr>
-</table> */}
-
 <table>
   <td>
   <table  >
@@ -190,7 +112,7 @@ const pagination2 = {
     <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>January</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightgreen',borderLeft: '1px solid #ddd'}}>January</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
@@ -201,7 +123,7 @@ const pagination2 = {
     <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>January</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightblue',borderLeft: '1px solid #ddd'}}>February</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
@@ -211,7 +133,7 @@ const pagination2 = {
     </td>   <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>March</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>March</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
@@ -221,7 +143,7 @@ const pagination2 = {
     </td>   <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>April</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>April</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
@@ -231,7 +153,7 @@ const pagination2 = {
     </td>   <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>May</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>May</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
@@ -241,7 +163,7 @@ const pagination2 = {
     </td>   <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>June</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>June</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
@@ -251,7 +173,7 @@ const pagination2 = {
     </td>   <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>July</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>July</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
@@ -261,7 +183,7 @@ const pagination2 = {
     </td>   <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>August</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>August</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
@@ -271,7 +193,7 @@ const pagination2 = {
     </td>   <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>September</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>September</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
@@ -281,7 +203,7 @@ const pagination2 = {
     </td>   <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>October</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>October</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
@@ -291,7 +213,7 @@ const pagination2 = {
     </td>   <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>November</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>November</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
@@ -301,146 +223,13 @@ const pagination2 = {
     </td>   <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd',borderRight: '1px solid #ddd'}}>December</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd',borderRight: '1px solid #ddd'}}>December</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
       <td style={{borderCollapse: 'collapse',borderRight: '1px solid #ddd'}}>In Coeff</td>
       </tr>
     </table>
-    {/* </td>   <td>
-    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
-      <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>January</th>
-      </tr>
-      <tr>
-      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
-      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
-      </tr>
-    </table>
-    </td>   <td>
-    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
-      <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>January</th>
-      </tr>
-      <tr>
-      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
-      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
-      </tr>
-    </table>
-    </td>
-    <td>
-    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
-      <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>February</th>
-      </tr>
-      <tr>
-      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>In Pcs</td>
-      <td style={{borderCollapse: 'collapse'}}>In Coeff</td>
-      </tr>
-    </table>
-    </td>
-    
-    <td>
-    <table style={{textAlign:'center'}}>
-      <tr>
-      <th colSpan={2} style={{border:'1px black'}}>March</th>
-      </tr>
-      <tr>
-      <td>In Pcs</td>
-      <td>In Coeff</td>
-      </tr>
-    </table>
-    </td><td>
-    <table style={{textAlign:'center'}}>
-      <tr>
-      <th colSpan={2} style={{border:'1px black'}}>April</th>
-      </tr>
-      <tr>
-      <td>In Pcs</td>
-      <td>In Coeff</td>
-      </tr>
-    </table>
-    </td><td>
-    <table style={{textAlign:'center'}}>
-      <tr>
-      <th colSpan={2} style={{border:'1px black'}}>May</th>
-      </tr>
-      <tr>
-      <td>In Pcs</td>
-      <td>In Coeff</td>
-      </tr>
-    </table>
-    </td><td>
-    <table style={{textAlign:'center'}}>
-      <tr>
-      <th colSpan={2} style={{border:'1px black'}}>June</th>
-      </tr>
-      <tr>
-      <td>In Pcs</td>
-      <td>In Coeff</td>
-      </tr>
-    </table>
-    </td><td>
-    <table style={{textAlign:'center'}}>
-      <tr>
-      <th colSpan={2} style={{border:'1px black'}}>July</th>
-      </tr>
-      <tr>
-      <td>In Pcs</td>
-      <td>In Coeff</td>
-      </tr>
-    </table>
-    </td><td>
-    <table style={{textAlign:'center'}}>
-      <tr>
-      <th colSpan={2} style={{border:'1px black'}}>August</th>
-      </tr>
-      <tr>
-      <td>In Pcs</td>
-      <td>In Coeff</td>
-      </tr>
-    </table>
-    </td><td>
-    <table style={{textAlign:'center'}}>
-      <tr>
-      <th colSpan={2} style={{border:'1px black'}}>September</th>
-      </tr>
-      <tr>
-      <td>In Pcs</td>
-      <td>In Coeff</td>
-      </tr>
-    </table>
-    </td><td>
-    <table style={{textAlign:'center'}}>
-      <tr>
-      <th colSpan={2} style={{border:'1px black'}}>October</th>
-      </tr>
-      <tr>
-      <td>In Pcs</td>
-      <td>In Coeff</td>
-      </tr>
-    </table>
-    </td><td>
-    <table style={{textAlign:'center'}}>
-      <tr>
-      <th colSpan={2} style={{border:'1px black'}}>November</th>
-      </tr>
-      <tr>
-      <td>In Pcs</td>
-      <td>In Coeff</td>
-      </tr>
-    </table>
-    </td><td>
-    <table style={{textAlign:'center'}}>
-      <tr>
-      <th colSpan={2} style={{border:'1px black'}}>December</th>
-      </tr>
-      <tr>
-      <td>In Pcs</td>
-      <td>In Coeff</td>
-      </tr>
-    </table> */}
     </td>
     <td>
   <table  >
@@ -1094,287 +883,148 @@ const pagination2 = {
       ),
     },
   ];
-  const columns10: any = [
+  let columns:any[]=[];
+  if (selected =='ExFactory'){
+    columns.push( 
     {
       title: "S No",
       key: "sno",
       render: (text, object, index) => (page - 1) * pageSize + (index + 1),
     },
     
-    {title:'Production Plan Type',
-    dataIndex: "phasetype",
-    render: (text: any, record: any) => <span>{record.phasetype}</span>,
-  },
-  {title:'January',
-    dataIndex: "phasetype",
-    children:[
-      {
-        title:'In Pcs',
-    dataIndex: "janPcs",
-    render: (text: any, record: any) => <span>{record.pcsData[0].janPcs}</span>,
+    { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-      },
-      {
-        title:'In Coeff',
-    dataIndex: "janCoeff",
-    render: (text: any, record: any) => <span>{record.coeffData[0].janCoeff}</span>,
+    {title:<span style={{ background: 'lightgreen' }}>Jan In PCs</span>, dataIndex: "janPcsExf", align: "right"},
+    {title: <span style={{ background: 'lightgreen' }}>Jan In Coeff</span>,dataIndex: "janExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
 
-      }
-    ],
-    style: { backgroundColor: "lightblue" },
-  },
-  {
-    title: "", 
-    width: 20, 
-    },
-  {title:'February',
-  dataIndex: "phasetype",
-  children:[
-    {
-      title:'In Pcs',
-  dataIndex: "febPcs",
-  render: (text: any, record: any) => <span >{record.pcsData[0].febPcs}</span>,
+      {title: <span style={{ background: 'lightblue' }}>Feb In PCs</span>,dataIndex: "febPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightblue' }}>Feb In Coeff</span>,dataIndex: "febExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
 
-    },
-    {
-      title:'In Coeff',
-  dataIndex: "febCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].febCoeff}</span>,
+      {title: <span style={{ background: 'lightgreen' }}>Mar In PCs</span>,dataIndex: "marPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightgreen' }}>Mar In Coeff</span>,dataIndex: "marExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
 
-    }
-  ]
-},
-{
-  title: "", 
-  width: 20, 
-},
-{title:'March',
-  dataIndex: "phasetype",
-  children:[
-    {
-      title:'In Pcs',
-  dataIndex: "marPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].marPcs}</span>,
+      {title: <span style={{ background: 'lightblue' }}>Apr In PCs</span>,dataIndex: "aprPcsExf",align:"right"},
+      {title:<span style={{ background: 'lightblue' }}>Apr In Coeff</span>,dataIndex: "aprExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
 
-    },
-    {
-      title:'In Coeff',
-  dataIndex: "marCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].marCoeff}</span>,
+      {title: <span style={{ background: 'lightgreen' }}> May In PCs</span>,dataIndex: "mayPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightgreen' }}> May In Coeff</span>,dataIndex: "mayExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
 
-    }
-  ]
-},
-{
-  title: "", 
-  width: 20, 
-},
-{title:'April',
-  dataIndex: "phasetype",
-  children:[
-    {
-      title:'In Pcs',
-  dataIndex: "aprPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].aprPcs}</span>,
+      {title:<span style={{ background: 'lightblue' }}>Jun In PCs</span>,dataIndex: "junPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightblue' }}>Jun In Coeff</span>,dataIndex: "junExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
 
-    },
-    {
-      title:'In Coeff',
-  dataIndex: "aprCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].aprCoeff}</span>,
+      {title: <span style={{ background: 'lightgreen' }}> Jul In PCs</span>,dataIndex: "julPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightgreen' }}> Jul In Coeff</span>,dataIndex: "julExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
 
-    }
-  ]
-},
-{
-  title: "", 
-  width: 20, 
-},
-{title:'May',
-  dataIndex: "phasetype",
-  children:[
-    {
-      title:'In Pcs',
-  dataIndex: "mayPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].mayPcs}</span>,
+      {title: <span style={{ background: 'lightblue' }}>Aug In PCs</span>,dataIndex: "augPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightblue' }}>Aug In Coeff</span>,dataIndex: "augExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
 
-    },
-    {
-      title:'In Coeff',
-  dataIndex: "mayCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].mayCoeff}</span>,
+      {title: <span style={{ background: 'lightgreen' }}> Sep In PCs</span>,dataIndex: "sepPcsExf",align:"right"},
+      {title:<span style={{ background: 'lightgreen' }}> Sep In Coeff</span>,dataIndex: "sepExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
 
-    }
-  ]
-},
-{
-  title: "", 
-  width: 20, 
-},
-{title:'June',
-  dataIndex: "phasetype",
-  children:[
-    {
-      title:'In Pcs',
-  dataIndex: "junPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].junPcs}</span>,
+      {title: <span style={{ background: 'lightblue' }}>Oct In PCs</span>,dataIndex: "octPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightblue' }}>Oct In Coeff</span>,dataIndex: "octExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
 
-    },
-    {
-      title:'In Coeff',
-  dataIndex: "junCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].junCoeff}</span>,
+      {title: <span style={{ background: 'lightgreen' }}> Nov In PCs</span>,dataIndex: "novPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightgreen' }}> Nov In Coeff</span>,dataIndex: "novExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
+      {title: ``,dataIndex: "",},
 
-    }
-  ]
-},
-{
-  title: "", 
-  width: 20, 
-},
-{title:'July',
-  dataIndex: "phasetype",
-  children:[
-    {
-      title:'In Pcs',
-  dataIndex: "julPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].julPcs}</span>,
+      {title: <span style={{ background: 'lightblue' }}> Dec In PCs</span>,dataIndex: "decPcsExf",align:"right"},
+      {title: <span style={{ background: 'lightblue' }}> Dec In Coeff</span>,dataIndex: "decExfCoeff",align:"right"},
+      {title: ``,dataIndex: "",},
 
-    },
-    {
-      title:'In Coeff',
-  dataIndex: "julCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].julCoeff}</span>,
+   )
 
-    }
-  ]
-},
-{
-  title: "", 
-  width: 20, 
-},
-{title:'August',
-  dataIndex: "phasetype",
-  children:[
-    {
-      title:'In Pcs',
-  dataIndex: "augPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].augPcs}</span>,
+}
+if(selected === 'WareHouse'){
+  columns.push(
+    { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
+    {title: <span style={{ background: 'lightblue' }}> Jan In PCs</span>,dataIndex: "janPcsWh",align:"right"},
+    {title: <span style={{ background: 'lightblue' }}> Jan In Coeff</span>,dataIndex: "janCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-    },
-    {
-      title:'In Coeff',
-  dataIndex: "augCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].augCoeff}</span>,
+    {title: <span style={{ background: 'lightgreen' }}> Feb In PCs</span>,dataIndex: "febPcsWh",align:"right"},
+    {title: <span style={{ background: 'lightgreen' }}> Feb In Coeff</span>,dataIndex: "febCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-    }
-  ]
-},
-{
-  title: "", 
-  width: 20, 
-},
-{title:'September',
-  dataIndex: "phasetype",
-  children:[
-    {
-      title:'In Pcs',
-  dataIndex: "sepPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].sepPcs}</span>,
+    {title: <span style={{ background: 'lightblue' }}> Mar In PCs</span>,dataIndex: "marPcsWh",align:"right"},
+    {title: <span style={{ background: 'lightblue' }}> Mar In Coeff</span>,dataIndex: "marCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-    },
-    {
-      title:'In Coeff',
-  dataIndex: "sepCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].sepCoeff}</span>,
+    {title: <span style={{ background: 'lightgreen' }}> Apr In PCs</span>,dataIndex: "aprPcsWh",align:"right"},
+    {title: <span style={{ background: 'lightgreen' }}> Apr In Coeff</span>,dataIndex: "aprCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-    }
-  ]
-},
-{
-  title: "", 
-  width: 20, 
-},
-{title:'October',
-  dataIndex: "phasetype",
-  children:[
-    {
-      title:'In Pcs',
-  dataIndex: "octPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].octPcs}</span>,
+    {title: <span style={{ background: 'lightblue' }}> May In PCs</span>,dataIndex: "mayPcsWh",align:"right"},
+    {title: <span style={{ background: 'lightblue' }}> May In Coeff</span>,dataIndex: "mayCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-    },
-    {
-      title:'In Coeff',
-  dataIndex: "octCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].octCoeff}</span>,
+    {title:  <span style={{ background: 'lightgreen' }}> Jun In PCs</span>,dataIndex: "junPcsWh",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Jun In Coeff</span>,dataIndex: "junCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-    }
-  ]
-},
-{
-  title: "", 
-  width: 20, 
-},
-{title:'November',
-  dataIndex: "phasetype",
-  children:[
-    {
-      title:'In Pcs',
-  dataIndex: "novPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].novPcs}</span>,
+    {title:  <span style={{ background: 'lightblue' }}> Jul In PCs</span>,dataIndex: "julPcsWh",align:"right"},
+    {title:  <span style={{ background: 'lightblue' }}> Jul In Coeff</span>,dataIndex: "julCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-    },
-    {
-      title:'In Coeff',
-  dataIndex: "novCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].novCoeff}</span>,
+    {title:  <span style={{ background: 'lightgreen' }}> Aug In PCs</span>,dataIndex: "augPcsWh",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Aug In Coeff</span>,dataIndex: "augCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-    }
-  ]
-},
-{
-  title: "", 
-  width: 20, 
-},
-{title:'December',
-  dataIndex: "phasetype",
-  children:[
-    {
-      title:'In Pcs',
-  dataIndex: "decPcs",
-  render: (text: any, record: any) => <span>{record.pcsData[0].decPcs}</span>,
+    {title:  <span style={{ background: 'lightblue' }}> Sep In PCs</span>,dataIndex: "sepPcsWh",align:"right"},
+    {title:  <span style={{ background: 'lightblue' }}> Sep In Coeff</span>,dataIndex: "sepCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-    },
-    {
-      title:'In Coeff',
-  dataIndex: "decCoeff",
-  render: (text: any, record: any) => <span>{record.coeffData[0].decCoeff}</span>,
+    {title: <span style={{ background: 'lightgreen' }}> Oct In PCs</span>,dataIndex: "octPcsWh",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Oct In Coeff</span>,dataIndex: "octCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-    }
-  ]
-},
-{
-  title: "", 
-  width: 20, 
-},
-{title:"Total Pcs",
-dataIndex:"total_order_plan_qty",
-render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty}</span>,
-},
+    {title:  <span style={{ background: 'lightblue' }}> Nov In PCs</span>,dataIndex: "novPcsWh",align:"right"},
+    {title:  <span style={{ background: 'lightblue' }}> Nov In Coeff</span>,dataIndex: "novCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-{
-  title: "", 
-  width: 20, 
-},
-{title:"Total Coeff",
-dataIndex:"total_order_plan_qty_coeff",
-render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty_coeff}</span>,
-},
+    {title:  <span style={{ background: 'lightgreen' }}> Dec In PCs</span>,dataIndex: "decPcsWh",align:"right"},
+    {title:  <span style={{ background: 'lightgreen' }}> Dec In Coeff</span>,dataIndex: "decCoeffWh",align:"right"},
+    {title: ``,dataIndex: "",},
+    {title: ``,dataIndex: "",},
 
-,
-        
-  ];
+  
+  )
+}
+
   const getColumnBackgroundColor = (title) => {
     if (title === "January") {
       return "lightblue"; 
@@ -1405,7 +1055,7 @@ render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_q
     }
   };
 
-  const columnsWithBackground = columns10.map((column) => ({
+  const columnsWithBackground = columns.map((column) => ({
     ...column,
     title: (
       <div style={{ backgroundColor: getColumnBackgroundColor(column.title) }}>
@@ -1427,7 +1077,6 @@ render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_q
     
 
     let exportingColumns: IExcelColumn[] = [];
-    // console.log(selected,'exfactory');
 
     if(selected =='ExFactory'){
         console.log('exfactory');
@@ -1732,241 +1381,6 @@ if(selected === 'WareHouse'){
   
   )
 }
-//     const secondTableColumns = 
-//      [
-     
-      
-//       {title:'Production Plan Type',
-//       dataIndex: "phasetype",
-//       // render: (text: any, record: any) => <span>{record.phasetype}</span>,
-//     },
-//     // {title:'January',
-//     //   dataIndex: "phasetype",
-//     //   children:[
-//       {
-//         title: 'In Pcs',
-//         dataIndex: "janPcs",
-       
-//       },
-      
-      
-      
-      
-//         {
-//           title:'In Coeff',
-//       dataIndex: "janCoeff",
-      
-//     },
-    
-//     // {title:'February',
-//     // dataIndex: "phasetype",
-//     // children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "febPcs",
-//     // render: (text: any, record: any) => <span >{record.pcsData[0].febPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "febCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].febCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
-
-//   // {title:'March',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "marPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].marPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "marCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].marCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
-  
-//   // {title:'April',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "aprPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].aprPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "aprCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].aprCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'May',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "mayPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].mayPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "mayCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].mayCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
-  
-//   // {title:'June',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "junPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].junPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "junCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].junCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'July',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "julPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].julPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "julCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].julCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'August',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "augPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].augPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "augCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].augCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'September',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "sepPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].sepPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "sepCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].sepCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'October',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "octPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].octPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "octCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].octCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'November',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "novPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].novPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "novCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].novCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   // {title:'December',
-//   //   dataIndex: "phasetype",
-//   //   children:[
-//       {
-//         title:'In Pcs',
-//     dataIndex: "decPcs",
-//     // render: (text: any, record: any) => <span>{record.pcsData[0].decPcs}</span>,
-  
-//       },
-//       {
-//         title:'In Coeff',
-//     dataIndex: "decCoeff",
-//     // render: (text: any, record: any) => <span>{record.coeffData[0].decCoeff}</span>,
-  
-//     //   }
-//     // ]
-//   },
- 
-//   {title:"Total Pcs",
-//   dataIndex:"total_order_plan_qty",
-//   // render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty}</span>,
-//   },
-  
- 
-//   {title:"Total Coeff",
-//   dataIndex:"total_order_plan_qty_coeff",
-//   // render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty_coeff}</span>,
-//   },
-// ];
 
   excel.addColumns(secondTableColumns);
   excel.addDataSource(phaseExcel)
@@ -2585,6 +1999,7 @@ if(selected === 'WareHouse'){
               </Row>
             </Form>
             <Table
+                      bordered={false}
               dataSource={filteredData}
               columns={columns5}
               size="small"
@@ -2594,8 +2009,8 @@ if(selected === 'WareHouse'){
 
             />
                <Table
-         columns={columnsWithBackground} 
-         dataSource={phase}
+         columns={columns} 
+         dataSource={phaseExcel}
             size="small"
         scroll={{ x: "max-content" }}
         pagination={false}/>

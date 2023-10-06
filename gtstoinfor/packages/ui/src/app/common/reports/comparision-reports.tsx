@@ -9,10 +9,14 @@ import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons
 import { Excel } from "antd-table-saveas-excel"
 import { IExcelColumn } from "antd-table-saveas-excel/app"
 import moment from "moment"
+import { Pagination } from 'antd';
+
 
 export const MonthWiseComparisionReport = () =>{
     const [form] = Form.useForm();
     const { Option } = Select;
+    const [page, setPage] = useState<number>(1);
+
     const [selected, setSelected] = useState('ExFactory')
     const [data, setData] = useState<any[]>([]);
     const [phase, setPhase] = useState<any[]>([]);
@@ -24,29 +28,20 @@ export const MonthWiseComparisionReport = () =>{
     const [excelsData, setExcelData] = useState<any[]>([]);
     const [dates, setDates] = useState<any[]>([]);
     const { Text } = Typography;
-    const [page, setPage] = useState<number>(1);
-    const [pageSize, setPageSize] = useState<number>(10);
+    const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
         getData(selected);
         getTabs();
       }, []);
-     
-      const pagination = {
-        current: page,
-        pageSize: pageSize,
-        total: filteredData.length,
-        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-        onChange: (current, pageSize) => {
-          setPage(current);
-          setPageSize(pageSize);
-        },
-        showSizeChanger: true,
-        onShowSizeChange: (current, size) => {
-          setPage(1); // Reset the page to 1 when changing page size
-          setPageSize(size);
-        },
+      const startIndex = (page - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      const currentPageData = data.slice(startIndex, endIndex);
+      const handlePageChange = (newPage, newPageSize) => {
+        setPage(newPage);
+        setPageSize(newPageSize);
       };
+      
       const getTabs = () => {
         service.getExfactoryYearData().then((res) => {
           if (res.status) {
@@ -101,407 +96,464 @@ export const MonthWiseComparisionReport = () =>{
           }
         })
       };
+
+      const onChange = (pagination, filters, sorter, extra) => {
+        console.log('params', pagination, filters, sorter, extra);
+      }
       const CustomTitle = () => {
         return (
-          <div>
-          
-    
-    <table>
-    <tr >
-  {/* <th style={{position: 'relative',paddingRight: '1200px'}}>Production Plan Type Name</th> */}
-  <th colSpan={2} style={{ position: 'relative', right: '-150px', borderLeft: '1px solid black', backgroundColor: 'lightblue', width: '100px' }}>January</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderLeft: '1px solid black', borderRight: '1px solid black' }}>February</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightblue', width: '100px', borderRight: '1px solid black' }}>March</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderRight: '1px solid black' }}>April</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightblue', width: '100px', borderRight: '1px solid black' }}>May</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderRight: '1px solid black' }}>June</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightblue', width: '100px', borderRight: '1px solid black' }}>July</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderRight: '1px solid black' }}>August</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightblue', width: '100px', borderRight: '1px solid black' }}>September</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px', borderRight: '1px solid black' }}>October</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightblue', width: '100px', borderRight: '1px solid black' }}>November</th>
-<th colSpan={2} style={{ position: 'relative', right: '-100px', backgroundColor: 'lightgreen', width: '100px',borderRight: '1px solid black' }}>December</th>
-<th colSpan={2} style={{ position: 'relative',right: '-100px', width: '100px',borderRight: '1px solid black' }}>Total(Pcs)</th>
-<th colSpan={2} style={{position: 'relative', right: '-100px', width: '100px', }}>Total(Coeff)</th>
 
-
-  </tr>
-      <tr>
-      <td colSpan={26} style={{ borderBottom: '1px solid black' }}></td>
-    </tr>
-    <tr>
-<td style={{paddingLeft:'30px',position:'relative',}}>Production Plan Type Name</td>
-    <td style={{right: '70px',position: 'relative', }}>In Previous</td>
-    <td style={{position: 'relative',right: '30px' }} >In Latest</td>
-
-    <td  style={{position: 'relative',right: '20px', }} >In Previous</td>
-    <td  style={{position: 'relative',right: '25px',}} >In Latest</td>
-
-    <td  style={{position: 'relative',right: '20px'}} >In Previous</td>
-    <td  style={{position: 'relative',right: '20px'}} >In Latest</td>
-
-    <td  style={{position: 'relative',right: '10px'}} >In Previous</td>
-    <td  style={{position: 'relative',right: '20px'}} >In Latest</td>
-
-    <td  style={{position: 'relative',right: '10px'}} >In Previous</td>
-    <td  style={{position: 'relative',right: '10px'}} >In Latest</td>
-
-    <td  style={{position: 'relative',right: '10px'}} >In Previous</td>
-    <td  style={{position: 'relative',right: '-10px'}} >In Latest</td>
-
-    <td  style={{position: 'relative',right: '15px'}} >In Previous</td>
-    <td  style={{position: 'relative',right: '-10px'}} >In Latest</td>
-
-    <td  style={{position: 'relative',right: '10px'}} >In Previous</td>
-    <td  style={{position: 'relative',right: '-10px'}} >In Latest</td>
-
-    <td  style={{position: 'relative',right: '10px'}} >In Previous</td>
-    <td  style={{position: 'relative',right: '-20px'}} >In Latest</td>
-    <td  style={{position: 'relative',right: '10px'}} >In Previous</td>
-    <td  style={{position: 'relative',right: '-10px'}} >In Latest</td>
-    <td  style={{position: 'relative',right: '-10px'}} >In Previous</td>
-    <td  style={{position: 'relative',right: '-20px'}} >In Latest</td>
-    <td  style={{position: 'relative',right: '-5px'}} >In Previous</td>
-    <td  style={{position: 'relative',right: '-20px'}} >In Latest</td>
-    <td  style={{position: 'relative',right: '-410px'}} ><span></span></td>
-    <td  style={{position: 'relative',right: '-410px'}} ><span></span></td>
-    
-  </tr>
-    
-      <tr>
-        
-    </tr>
+<div>
+<table>
+  <td>
+  <table  >
+      <th style={{width:80,textAlign:'center'}}>product plan type</th>
     </table>
-    
-          {/* <Space size={"large"}>
-            <span/>
-           <span>Jan(previous)</span><br/><span><span></span>Jan(latest)</span>
-           <span>Feb(previous)</span><br/><span>Feb(latest)</span>
-            <span>Mar(previous)</span><br/><span>Mar(latest)</span>
-            <span>Apr(previous)</span><span>Apr(latest)</span>
-            <span>May(previous)</span><br/><span>May(latest)</span>
-            <span>Jun(previous)</span><br/><span>Jun(latest)</span>
-            <span>Jul(previous)</span><br/><span>Jul(latest)</span>
-            <span>Aug(previous)</span><br/><span>Aug(latest)</span>
-            <span>Sep(previous)</span><br/><span>Sep(latest)</span>
-            <span>Oct(previous)</span><br/><span>Oct(latest)</span>
-            <span>Nov(previous)</span><span>Nov(latest)</span>
-            <span>Dec(previous)</span><br/><span>Dec(latest)</span>
-            <span>Total(previous)</span><br/><span>Total(latest)</span>
-            <span></span><span></span>
-    </Space> */}
-          
-          </div>
+    </td>
+    <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse' ,backgroundColor: 'lightgreen',borderLeft: '1px solid #ddd'}}>January</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse'}}>Previous</td>
+      </tr>
+    </table>
+    </td>
+    <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightblue',borderLeft: '1px solid #ddd'}}>February</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse'}}>Previous</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightgreen',borderLeft: '1px solid #ddd'}}>March</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse'}}>Previous</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightblue',borderLeft: '1px solid #ddd'}}>April</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse'}}>Previous</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightgreen',borderLeft: '1px solid #ddd'}}>May</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse'}}>Previous</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>June</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse'}}>Previous</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightgreen',borderLeft: '1px solid #ddd'}}>July</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse'}}>Previous</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightblue',borderLeft: '1px solid #ddd'}}>August</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse'}}>Previous</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightgreen',borderLeft: '1px solid #ddd'}}>September</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse'}}>Previous</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightblue',borderLeft: '1px solid #ddd'}}>October</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse'}}>Previous</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightgreen',borderLeft: '1px solid #ddd'}}>November</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse'}}>Previous</td>
+      </tr>
+    </table>
+    </td>   <td>
+    <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+      <tr>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightblue',borderLeft: '1px solid #ddd',borderRight: '1px solid #ddd'}}>December</th>
+      </tr>
+      <tr>
+      <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
+      <td style={{borderCollapse: 'collapse',borderRight: '1px solid #ddd'}}>Previous</td>
+      </tr>
+    </table>
+  
+    </td>
+    <td>
+  <table  >
+      <th style={{width:50,textAlign:'center'}}>Total(Latest)</th>
+    </table>
+    </td> <td>
+  <table  >
+      <th style={{width:50,textAlign:'center'}}>Total(Previous)</th>
+    </table>
+    </td>
+</table>
+</div>
         );
       };
-      const columns10: any = [
-        {
-          title: "S No",
-          key: "sno",
-          render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-        },
-        // {
-        //   title: "Item code",
-        //   dataIndex: "itemCode",
-        //   // ...getColumnSearchProps('itemCode')
-        // },
-        // {
-        //   title: "Item Name",
-        //   dataIndex: "itemName",
-        //   width:200,
-        //   render: (text: any, record: any) => (
-        //   <span>{record.itemName}</span>
-        //   ),
-        //   // ...getColumnSearchProps('itemName')
-        // },
-        {title:'Production Plan Type',
-        dataIndex: "phasetype",
-        render: (text: any, record: any) => <span>{record.phasetype}</span>,
-      },
-      {title:'January',
-        dataIndex: "phasetype",
-        children:[
-          {
-            title:'Previous',
-        dataIndex: "janPcs",
-        render: (text: any, record: any) => <span>{record.pcsData[0].janPcs}</span>,
+    //   const columns10: any = [
+    //     {
+    //       title: "S No",
+    //       key: "sno",
+    //       render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+    //     },
+    //     // {
+    //     //   title: "Item code",
+    //     //   dataIndex: "itemCode",
+    //     //   // ...getColumnSearchProps('itemCode')
+    //     // },
+    //     // {
+    //     //   title: "Item Name",
+    //     //   dataIndex: "itemName",
+    //     //   width:200,
+    //     //   render: (text: any, record: any) => (
+    //     //   <span>{record.itemName}</span>
+    //     //   ),
+    //     //   // ...getColumnSearchProps('itemName')
+    //     // },
+    //     {title:'Production Plan Type',
+    //     dataIndex: "phasetype",
+    //     render: (text: any, record: any) => <span>{record.phasetype}</span>,
+    //   },
+    //   {title:'January',
+    //     dataIndex: "phasetype",
+    //     children:[
+    //       {
+    //         title:'Previous',
+    //     dataIndex: "janPcs",
+    //     render: (text: any, record: any) => <span>{record.pcsData[0].janPcs}</span>,
     
-          },
-          {
-            title:'Latest',
-        dataIndex: "janCoeff",
-        render: (text: any, record: any) => <span>{record.coeffData[0].janCoeff}</span>,
+    //       },
+    //       {
+    //         title:'Latest',
+    //     dataIndex: "janCoeff",
+    //     render: (text: any, record: any) => <span>{record.coeffData[0].janCoeff}</span>,
     
-          }
-        ],
-        style: { backgroundColor: "lightblue" },
-      },
-      {
-        title: "", 
-        width: 20, 
-        },
-      {title:'February',
-      dataIndex: "phasetype",
-      children:[
-        {
-          title:'Previous',
-      dataIndex: "febPcs",
-      render: (text: any, record: any) => <span >{record.pcsData[0].febPcs}</span>,
+    //       }
+    //     ],
+    //     style: { backgroundColor: "lightblue" },
+    //   },
+    //   {
+    //     title: "", 
+    //     width: 20, 
+    //     },
+    //   {title:'February',
+    //   dataIndex: "phasetype",
+    //   children:[
+    //     {
+    //       title:'Previous',
+    //   dataIndex: "febPcs",
+    //   render: (text: any, record: any) => <span >{record.pcsData[0].febPcs}</span>,
     
-        },
-        {
-          title:'Latest',
-      dataIndex: "febCoeff",
-      render: (text: any, record: any) => <span>{record.coeffData[0].febCoeff}</span>,
+    //     },
+    //     {
+    //       title:'Latest',
+    //   dataIndex: "febCoeff",
+    //   render: (text: any, record: any) => <span>{record.coeffData[0].febCoeff}</span>,
     
-        }
-      ]
-    },
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:'March',
-      dataIndex: "phasetype",
-      children:[
-        {
-          title:'Previous',
-      dataIndex: "marPcs",
-      render: (text: any, record: any) => <span>{record.pcsData[0].marPcs}</span>,
+    //     }
+    //   ]
+    // },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:'March',
+    //   dataIndex: "phasetype",
+    //   children:[
+    //     {
+    //       title:'Previous',
+    //   dataIndex: "marPcs",
+    //   render: (text: any, record: any) => <span>{record.pcsData[0].marPcs}</span>,
     
-        },
-        {
-          title:'Latest',
-      dataIndex: "marCoeff",
-      render: (text: any, record: any) => <span>{record.coeffData[0].marCoeff}</span>,
+    //     },
+    //     {
+    //       title:'Latest',
+    //   dataIndex: "marCoeff",
+    //   render: (text: any, record: any) => <span>{record.coeffData[0].marCoeff}</span>,
     
-        }
-      ]
-    },
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:'April',
-      dataIndex: "phasetype",
-      children:[
-        {
-          title:'Previous',
-      dataIndex: "aprPcs",
-      render: (text: any, record: any) => <span>{record.pcsData[0].aprPcs}</span>,
+    //     }
+    //   ]
+    // },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:'April',
+    //   dataIndex: "phasetype",
+    //   children:[
+    //     {
+    //       title:'Previous',
+    //   dataIndex: "aprPcs",
+    //   render: (text: any, record: any) => <span>{record.pcsData[0].aprPcs}</span>,
     
-        },
-        {
-          title:'Latest',
-      dataIndex: "aprCoeff",
-      render: (text: any, record: any) => <span>{record.coeffData[0].aprCoeff}</span>,
+    //     },
+    //     {
+    //       title:'Latest',
+    //   dataIndex: "aprCoeff",
+    //   render: (text: any, record: any) => <span>{record.coeffData[0].aprCoeff}</span>,
     
-        }
-      ]
-    },
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:'May',
-      dataIndex: "phasetype",
-      children:[
-        {
-          title:'Previous',
-      dataIndex: "mayPcs",
-      render: (text: any, record: any) => <span>{record.pcsData[0].mayPcs}</span>,
+    //     }
+    //   ]
+    // },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:'May',
+    //   dataIndex: "phasetype",
+    //   children:[
+    //     {
+    //       title:'Previous',
+    //   dataIndex: "mayPcs",
+    //   render: (text: any, record: any) => <span>{record.pcsData[0].mayPcs}</span>,
     
-        },
-        {
-          title:'Latest',
-      dataIndex: "mayCoeff",
-      render: (text: any, record: any) => <span>{record.coeffData[0].mayCoeff}</span>,
+    //     },
+    //     {
+    //       title:'Latest',
+    //   dataIndex: "mayCoeff",
+    //   render: (text: any, record: any) => <span>{record.coeffData[0].mayCoeff}</span>,
     
-        }
-      ]
-    },
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:'June',
-      dataIndex: "phasetype",
-      children:[
-        {
-          title:'Previous',
-      dataIndex: "junPcs",
-      render: (text: any, record: any) => <span>{record.pcsData[0].junPcs}</span>,
+    //     }
+    //   ]
+    // },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:'June',
+    //   dataIndex: "phasetype",
+    //   children:[
+    //     {
+    //       title:'Previous',
+    //   dataIndex: "junPcs",
+    //   render: (text: any, record: any) => <span>{record.pcsData[0].junPcs}</span>,
     
-        },
-        {
-          title:'Latest',
-      dataIndex: "junCoeff",
-      render: (text: any, record: any) => <span>{record.coeffData[0].junCoeff}</span>,
+    //     },
+    //     {
+    //       title:'Latest',
+    //   dataIndex: "junCoeff",
+    //   render: (text: any, record: any) => <span>{record.coeffData[0].junCoeff}</span>,
     
-        }
-      ]
-    },
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:'July',
-      dataIndex: "phasetype",
-      children:[
-        {
-          title:'Previous',
-      dataIndex: "julPcs",
-      render: (text: any, record: any) => <span>{record.pcsData[0].julPcs}</span>,
+    //     }
+    //   ]
+    // },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:'July',
+    //   dataIndex: "phasetype",
+    //   children:[
+    //     {
+    //       title:'Previous',
+    //   dataIndex: "julPcs",
+    //   render: (text: any, record: any) => <span>{record.pcsData[0].julPcs}</span>,
     
-        },
-        {
-          title:'Latest',
-      dataIndex: "julCoeff",
-      render: (text: any, record: any) => <span>{record.coeffData[0].julCoeff}</span>,
+    //     },
+    //     {
+    //       title:'Latest',
+    //   dataIndex: "julCoeff",
+    //   render: (text: any, record: any) => <span>{record.coeffData[0].julCoeff}</span>,
     
-        }
-      ]
-    },
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:'August',
-      dataIndex: "phasetype",
-      children:[
-        {
-          title:'Previous',
-      dataIndex: "augPcs",
-      render: (text: any, record: any) => <span>{record.pcsData[0].augPcs}</span>,
+    //     }
+    //   ]
+    // },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:'August',
+    //   dataIndex: "phasetype",
+    //   children:[
+    //     {
+    //       title:'Previous',
+    //   dataIndex: "augPcs",
+    //   render: (text: any, record: any) => <span>{record.pcsData[0].augPcs}</span>,
     
-        },
-        {
-          title:'Latest',
-      dataIndex: "augCoeff",
-      render: (text: any, record: any) => <span>{record.coeffData[0].augCoeff}</span>,
+    //     },
+    //     {
+    //       title:'Latest',
+    //   dataIndex: "augCoeff",
+    //   render: (text: any, record: any) => <span>{record.coeffData[0].augCoeff}</span>,
     
-        }
-      ]
-    },
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:'September',
-      dataIndex: "phasetype",
-      children:[
-        {
-          title:'Previous',
-      dataIndex: "sepPcs",
-      render: (text: any, record: any) => <span>{record.pcsData[0].sepPcs}</span>,
+    //     }
+    //   ]
+    // },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:'September',
+    //   dataIndex: "phasetype",
+    //   children:[
+    //     {
+    //       title:'Previous',
+    //   dataIndex: "sepPcs",
+    //   render: (text: any, record: any) => <span>{record.pcsData[0].sepPcs}</span>,
     
-        },
-        {
-          title:'Latest',
-      dataIndex: "sepCoeff",
-      render: (text: any, record: any) => <span>{record.coeffData[0].sepCoeff}</span>,
+    //     },
+    //     {
+    //       title:'Latest',
+    //   dataIndex: "sepCoeff",
+    //   render: (text: any, record: any) => <span>{record.coeffData[0].sepCoeff}</span>,
     
-        }
-      ]
-    },
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:'October',
-      dataIndex: "phasetype",
-      children:[
-        {
-          title:'Previous',
-      dataIndex: "octPcs",
-      render: (text: any, record: any) => <span>{record.pcsData[0].octPcs}</span>,
+    //     }
+    //   ]
+    // },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:'October',
+    //   dataIndex: "phasetype",
+    //   children:[
+    //     {
+    //       title:'Previous',
+    //   dataIndex: "octPcs",
+    //   render: (text: any, record: any) => <span>{record.pcsData[0].octPcs}</span>,
     
-        },
-        {
-          title:'Latest',
-      dataIndex: "octCoeff",
-      render: (text: any, record: any) => <span>{record.coeffData[0].octCoeff}</span>,
+    //     },
+    //     {
+    //       title:'Latest',
+    //   dataIndex: "octCoeff",
+    //   render: (text: any, record: any) => <span>{record.coeffData[0].octCoeff}</span>,
     
-        }
-      ]
-    },
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:'November',
-      dataIndex: "phasetype",
-      children:[
-        {
-          title:'Previous',
-      dataIndex: "novPcs",
-      render: (text: any, record: any) => <span>{record.pcsData[0].novPcs}</span>,
+    //     }
+    //   ]
+    // },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:'November',
+    //   dataIndex: "phasetype",
+    //   children:[
+    //     {
+    //       title:'Previous',
+    //   dataIndex: "novPcs",
+    //   render: (text: any, record: any) => <span>{record.pcsData[0].novPcs}</span>,
     
-        },
-        {
-          title:'Latest',
-      dataIndex: "novCoeff",
-      render: (text: any, record: any) => <span>{record.coeffData[0].novCoeff}</span>,
+    //     },
+    //     {
+    //       title:'Latest',
+    //   dataIndex: "novCoeff",
+    //   render: (text: any, record: any) => <span>{record.coeffData[0].novCoeff}</span>,
     
-        }
-      ]
-    },
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:'December',
-      dataIndex: "phasetype",
-      children:[
-        {
-          title:'Previous',
-      dataIndex: "decPcs",
-      render: (text: any, record: any) => <span>{record.pcsData[0].decPcs}</span>,
+    //     }
+    //   ]
+    // },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:'December',
+    //   dataIndex: "phasetype",
+    //   children:[
+    //     {
+    //       title:'Previous',
+    //   dataIndex: "decPcs",
+    //   render: (text: any, record: any) => <span>{record.pcsData[0].decPcs}</span>,
     
-        },
-        {
-          title:'Latest',
-      dataIndex: "decCoeff",
-      render: (text: any, record: any) => <span>{record.coeffData[0].decCoeff}</span>,
+    //     },
+    //     {
+    //       title:'Latest',
+    //   dataIndex: "decCoeff",
+    //   render: (text: any, record: any) => <span>{record.coeffData[0].decCoeff}</span>,
     
-        }
-      ]
-    },
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:"Total Pcs",
-    dataIndex:"total_order_plan_qty",
-    render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty}</span>,
-    },
+    //     }
+    //   ]
+    // },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:"Total Pcs",
+    // dataIndex:"total_order_plan_qty",
+    // render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty}</span>,
+    // },
     
-    {
-      title: "", 
-      width: 20, 
-    },
-    {title:"Total Coeff",
-    dataIndex:"total_order_plan_qty_coeff",
-    render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty_coeff}</span>,
-    },
+    // {
+    //   title: "", 
+    //   width: 20, 
+    // },
+    // {title:"Total Coeff",
+    // dataIndex:"total_order_plan_qty_coeff",
+    // render: (text: any, record: any) => <span >{record.pcsData[0].total_order_plan_qty_coeff}</span>,
+    // },
     
     
-        // // {
-        // //   title: <Header/>,
-        // //   dataIndex: "monthWiseData",
-        // //   align:'center',
-        // //   render: (text: any, record: any) => (
-        // //     <Table
-        // //       dataSource={record.monthWiseData}
-        // //       columns={childColumns2}
-        // //       pagination={false} // Hide pagination for child table
-        // //       rowKey={(record) => record.itemName}
+    //     // // {
+    //     // //   title: <Header/>,
+    //     // //   dataIndex: "monthWiseData",
+    //     // //   align:'center',
+    //     // //   render: (text: any, record: any) => (
+    //     // //     <Table
+    //     // //       dataSource={record.monthWiseData}
+    //     // //       columns={childColumns2}
+    //     // //       pagination={false} // Hide pagination for child table
+    //     // //       rowKey={(record) => record.itemName}
              
-        // //     />
-        //   ),
-        // },
+    //     // //     />
+    //     //   ),
+    //     // },
             
-      ];
+    //   ];
       const getColumnBackgroundColor = (title) => {
         if (title === "January") {
           return "lightblue"; 
@@ -532,14 +584,7 @@ export const MonthWiseComparisionReport = () =>{
         }
       };
     
-      const columnsWithBackground = columns10.map((column) => ({
-        ...column,
-        title: (
-          <div style={{ backgroundColor: getColumnBackgroundColor(column.title) }}>
-            {column.title}
-          </div>
-        ),
-      }));
+     
       // const childColumns1: any = [
       //   {
       //     // title: "Production Plan Type Name",
@@ -842,12 +887,12 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: "Production Plan Type Name",
           dataIndex: "phasetype",
-          width: 100,
+          width: 80,
         },
         {
           // title: `In PCs`,
           dataIndex: "janPcs",
-          width: 50,
+          width:40,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -858,7 +903,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "janCoeff",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -881,7 +926,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "febCoeff",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -893,7 +938,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In PCs`,
           dataIndex: "marPcs",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -904,7 +949,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "marCoeff",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -916,7 +961,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In PCs`,
           dataIndex: "aprPcs",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -927,7 +972,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "aprCoeff",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -945,7 +990,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In PCs`,
           dataIndex: "mayPcs",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -956,7 +1001,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "mayCoeff",
-          width:50,
+          width:40,
           align: "right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -974,7 +1019,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In PCs`,
           dataIndex: "junPcs",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -985,7 +1030,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "junCoeff",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -1003,7 +1048,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In PCs`,
           dataIndex: "julPcs",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -1014,7 +1059,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "julCoeff",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -1032,7 +1077,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In PCs`,
           dataIndex: "augPcs",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -1043,7 +1088,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "augCoeff",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -1072,7 +1117,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "sepCoeff",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -1090,7 +1135,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In PCs`,
           dataIndex: "octPcs",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -1101,7 +1146,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "octCoeff",
-          width: 50,
+          width: 40,
           align: "right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -1119,7 +1164,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In PCs`,
           dataIndex: "novPcs",
-          width: 50,
+          width: 60,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -1130,7 +1175,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "novCoeff",
-          width: 50,
+          width: 60,
           align: "right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -1173,7 +1218,7 @@ export const MonthWiseComparisionReport = () =>{
           // title: "Total In PCs",
           dataIndex: "totalPcs",
           align: "right",
-          width: 70,
+          width: 80,
           render: (text: any, record: any) => {
             return record.totalPcs ? record.totalPcs.toLocaleString() : 0;
           },
@@ -1182,7 +1227,7 @@ export const MonthWiseComparisionReport = () =>{
           // title: "Total In Coeff",
           dataIndex: "totalCoeff",
           align: "right",
-          width: 70,
+          width: 80,
     
           render: (text: any, record: any) => {
             return record.totalCoeff ? record.totalCoeff.toLocaleString() : 0;
@@ -1194,7 +1239,7 @@ export const MonthWiseComparisionReport = () =>{
           title: 'S.No',
           key: 'sno',
           responsive: ['sm'],
-          render: (text, object, index) => (page - 1) + (index + 1)
+          render: (text, object, index) => (page - 1) * 10 + (index + 1)
 
       },
         // {
@@ -1225,6 +1270,125 @@ export const MonthWiseComparisionReport = () =>{
           ),
         },
       ];
+
+      let columnsphase:any[]=[];
+      if(selected == 'ExFactory'){
+        columnsphase.push(
+          {
+            
+              title: "S No",
+              key: "sno",
+              render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            
+          },
+          { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightgreen' }}>Jan In Pre</span>,dataIndex: "janExfPre",},
+          {title: <span style={{ background: 'lightgreen' }}>Jan In Lat</span>,dataIndex: "janExfLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightblue' }}>Feb In Pre</span>,dataIndex: "febExfPre",},
+          {title: <span style={{ background: 'lightblue' }}>Feb In Lat</span>,dataIndex: "febExfLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightgreen' }}>Mar In Pre</span>,dataIndex: "marExfPre",},
+          {title: <span style={{ background: 'lightgreen' }}>Mar In Lat</span>,dataIndex: "marExfLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title:<span style={{ background: 'lightblue' }}>Apr In Pre</span>,dataIndex: "aprExfPre",},
+          {title:<span style={{ background: 'lightblue' }}>Apr In Lat</span>,dataIndex: "aprExfLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightgreen' }}>May In Pre</span>,dataIndex: "mayExfPre",},
+          {title: <span style={{ background: 'lightgreen' }}>May In Lat</span>,dataIndex: "mayExfLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightblue' }}>Jun In Pre</span>,dataIndex: "junExfPre",},
+          {title:<span style={{ background: 'lightblue' }}>Jun In Lat</span>,dataIndex: "junExfLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightgreen' }}>Jul In Pre</span>,dataIndex: "julExfPre",},
+          {title: <span style={{ background: 'lightgreen' }}>Jul In Lat</span>,dataIndex: "julExfLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightblue' }}>Aug In Pre</span>,dataIndex: "augExfPre",},
+          {title:<span style={{ background: 'lightblue' }}>Aug In Lat</span>,dataIndex: "augExfLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightgreen' }}>Sep In Pre</span>,dataIndex: "sepExfPre",},
+          {title:<span style={{ background: 'lightgreen' }}>Sep In Lat</span>,dataIndex: "sepExfLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightblue' }}>Oct In Pre</span>,dataIndex: "octExfPre",},
+          {title: <span style={{ background: 'lightblue' }}>Oct In Lat</span>,dataIndex: "octExfLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightgreen' }}>Nov In Pre</span>,dataIndex: "novExfPre",},
+          {title: <span style={{ background: 'lightgreen' }}>Nov In Lat</span>,dataIndex: "novExfLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title:<span style={{ background: 'lightblue' }}>Dec In Pre</span>,dataIndex: "decExfPre",},
+          {title: <span style={{ background: 'lightblue' }}>Dec In Lat</span>,dataIndex: "decExfLat",}
+        
+        
+        )
+      }
+      if(selected === 'WareHouse'){
+        columnsphase.push(
+          { title: "Item Name", dataIndex: "item" },
+          { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
+          {title: ``,dataIndex: "",},
+          {title:<span style={{ background: 'lightgreen' }}>Jan In Pre</span>,dataIndex: "janWhPre",},
+          {title: <span style={{ background: 'lightgreen' }}>Jan In Pre</span>,dataIndex: "janWhLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightblue' }}>Feb In Pre</span>,dataIndex: "febWhPre",},
+          {title:<span style={{ background: 'lightblue' }}>Feb In Lat</span>,dataIndex: "febWhLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightgreen' }}>Mar In Pre</span>,dataIndex: "marWhPre",},
+          {title: <span style={{ background: 'lightgreen' }}>Mar In Lat</span>,dataIndex: "marWhLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightblue' }}>APr In Pre</span>,dataIndex: "aprWhPre",},
+          {title:<span style={{ background: 'lightblue' }}>APr In Lat</span>,dataIndex: "aprWhLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightgreen' }}>May In Pre</span>,dataIndex: "mayWhPre",},
+          {title: <span style={{ background: 'lightgreen' }}>May In Lat</span>,dataIndex: "mayWhLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title:<span style={{ background: 'lightblue' }}>Jun In Pre</span>,dataIndex: "junWhPre",},
+          {title: <span style={{ background: 'lightblue' }}>Jun In Lat</span>,dataIndex: "junWhLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightgreen' }}>Jul In Pre</span>,dataIndex: "julWhPre",},
+          {title:<span style={{ background: 'lightgreen' }}>Jul In Lat</span>,dataIndex: "julWhLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightblue' }}>Aug In Pre</span>,dataIndex: "augWhPre",},
+          {title: <span style={{ background: 'lightblue' }}>Aug In Lat</span>,dataIndex: "augWhLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title:<span style={{ background: 'lightgreen' }}>Sep In Pre</span>,dataIndex: "sepWhPre",},
+          {title: <span style={{ background: 'lightgreen' }}>Sep In Lat</span>,dataIndex: "sepWhLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightblue' }}>Oct In Pre</span>,dataIndex: "octWhPre",},
+          {title: <span style={{ background: 'lightblue' }}>Oct In Lat</span>,dataIndex: "octWhLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightgreen' }}>Nov In Pre</span>,dataIndex: "novWhPre",},
+          {title:<span style={{ background: 'lightgreen' }}>Nov In Lat</span>,dataIndex: "novWhLat",},
+          {title: ``,dataIndex: "",},
+          {title: ``,dataIndex: "",},
+          {title: <span style={{ background: 'lightblue' }}>Dec In Pre</span>,dataIndex: "decWhPre",},
+          {title: <span style={{ background: 'lightblue' }}>Dec In Lat</span>,dataIndex: "decWhLat",},
+          
+          
+        )
+    }
       const handleExport = (e: any) => {
         e.preventDefault(); 
         const currentDate = new Date()
@@ -1477,88 +1641,11 @@ export const MonthWiseComparisionReport = () =>{
   if(selected == 'WareHouse'){
     excelsData.push(totalsCoeffRow)
   }
-  
 
+        excel.addColumns(exportingColumns);
+        excel.addDataSource(excelsData);
+        excel.saveAs(`Ex-Factory & ware-House Report-${currentDate}.xlsx`);
        
-        let secondTableColumns: IExcelColumn[] = [];
-    
-        if(selected =='ExFactory'){
-            
-          secondTableColumns.push(
-            { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
-            {title: `Jan Pre`,dataIndex: "janExfPre",},
-            {title: `Jan Lat`,dataIndex: "janExfLat",},
-            {title: `Feb Pre`,dataIndex: "febExfPre",},
-            {title: `Feb Lat`,dataIndex: "febExfLat",},
-            {title: `Mar Pre`,dataIndex: "marExfPre",},
-            {title: `Mar Lat`,dataIndex: "marExfLat",},
-            {title: `Apr Pre`,dataIndex: "aprExfPre",},
-            {title: `Apr Lat`,dataIndex: "aprExfLat",},
-            {title: `May Pre`,dataIndex: "mayExfPre",},
-            {title: `May Lat`,dataIndex: "mayExfLat",},
-            {title: `Jun Pre`,dataIndex: "junExfPre",},
-            {title: `Jun Lat`,dataIndex: "junExfLat",},
-            {title: `Jul Pre`,dataIndex: "julExfPre",},
-            {title: `Jul Lat`,dataIndex: "julExfLat",},
-            {title: `Aug Pre`,dataIndex: "augExfPre",},
-            {title: `Aug Lat`,dataIndex: "augExfLat",},
-            {title: `Sep Pre`,dataIndex: "sepExfPre",},
-            {title: `Sep Lat`,dataIndex: "sepExfLat",},
-            {title: `Oct Pre`,dataIndex: "octExfPre",},
-            {title: `Oct Lat`,dataIndex: "octExfLat",},
-            {title: `Nov Pre`,dataIndex: "novExfPre",},
-            {title: `Nov Lat`,dataIndex: "novExfLat",},
-            {title: `Dec Pre`,dataIndex: "decExfPre",},
-            {title: `Dec Lat`,dataIndex: "decExfLat",},
-            {title: `Total Pre`,dataIndex: "totalExfPre",},
-            {title: `Total Lat`,dataIndex: "totalExfLat",}
-          
-        )
-    }
-    if(selected === 'WareHouse'){
-      secondTableColumns.push(
-          { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
-          {title: `Jan Pre`,dataIndex: "janWhPre",},
-          {title: `Jan Lat`,dataIndex: "janWhLat",},
-          {title: `Feb Pre`,dataIndex: "febWhPre",},
-          {title: `Feb Lat`,dataIndex: "febWhLat",},
-          {title: `Mar Pre`,dataIndex: "marWhPre",},
-          {title: `Mar Lat`,dataIndex: "marWhLat",},
-          {title: `Apr Pre`,dataIndex: "aprWhPre",},
-          {title: `Apr Lat`,dataIndex: "aprWhLat",},
-          {title: `May Pre`,dataIndex: "mayWhPre",},
-          {title: `May Lat`,dataIndex: "mayWhLat",},
-          {title: `Jun Pre`,dataIndex: "junWhPre",},
-          {title: `Jun Lat`,dataIndex: "junWhLat",},
-          {title: `Jul Pre`,dataIndex: "julWhPre",},
-          {title: `Jul Lat`,dataIndex: "julWhLat",},
-          {title: `Aug Pre`,dataIndex: "augWhPre",},
-          {title: `Aug Lat`,dataIndex: "augWhLat",},
-          {title: `Sep Pre`,dataIndex: "sepWhPre",},
-          {title: `Sep Lat`,dataIndex: "sepWhLat",},
-          {title: `Oct Pre`,dataIndex: "octWhPre",},
-          {title: `Oct Lat`,dataIndex: "octWhLat",},
-          {title: `Nov Pre`,dataIndex: "novWhPre",},
-          {title: `Nov Lat`,dataIndex: "novWhLat",},
-          {title: `Dec Pre`,dataIndex: "decWhPre",},
-          {title: `Dec Lat`,dataIndex: "decWhLat",},
-          {title: `Total Pre`,dataIndex: "totalWhPre",},
-          {title: `Total Lat`,dataIndex: "totalWhLat",}
-          
-        )
-    }
-    excel.addColumns(exportingColumns);
-    excel.addDataSource(excelsData);
-        excel.addColumns(secondTableColumns);
-        excel.addDataSource(phaseExcel)
-        excel.addRow();
-        if(selected =='ExFactory'){ 
-            excel.saveAs(`Ex-Factory-comparision-report-${currentDate}.xlsx`);
-        }
-        if(selected == 'WareHouse'){
-          excel.saveAs(`Ware-House-comparision-report-${currentDate}.xlsx`);
-        }
-      
       };
       const handleTabChange = (selectedYear: string) => {
         setTab(Number(selectedYear));
@@ -2158,12 +2245,17 @@ export const MonthWiseComparisionReport = () =>{
             size="small"
             scroll={{ x: "max-content" }}
             summary={getTableSummary}
-            pagination={pagination}
+            pagination={{
+              onChange(current) {
+                setPage(current);
+              }
+            }}
+          
 
           />
           <Table
-         columns={columnsWithBackground} 
-         dataSource={phase}
+         columns={columnsphase} 
+         dataSource={phaseExcel}
             size="small"
         scroll={{ x: "max-content" }}/>
           
