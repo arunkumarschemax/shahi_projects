@@ -434,6 +434,7 @@ export function FabricTrackerReport() {
         <Table
           columns={columns}
           dataSource={gridData}
+          className="custom-table-wrapper"
           scroll={{ x: 'max-content' }}
           bordered
         ></Table>
