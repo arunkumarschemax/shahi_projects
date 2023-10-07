@@ -1,6 +1,7 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { Vendors } from "../vendors/vendors.entity";
 import { Settings } from "../settings/settings.entity";
+import { StyleOrder } from "../style-order/style-order.entity";
 
 @Entity('currencies')
 export class Currencies {
@@ -65,5 +66,8 @@ updatedUser: string | null;
 
   @OneToMany(type => Settings, settings => settings.currencyInfo,{cascade: true})
   settingsInfo : Settings
+
+  @OneToMany(type=>StyleOrder, currency=>currency.currenciesInfo,{cascade: true})
+  styleOrderInfo:StyleOrder;
 
 }

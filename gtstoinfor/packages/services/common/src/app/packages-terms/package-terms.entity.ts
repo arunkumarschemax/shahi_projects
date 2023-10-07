@@ -1,5 +1,6 @@
 import {Column,Entity,Index,PrimaryGeneratedColumn,VersionColumn, UpdateDateColumn, CreateDateColumn, OneToMany} from "typeorm";
 import { Settings } from "../settings/settings.entity";
+import { StyleOrder } from "../style-order/style-order.entity";
 @Entity('package_terms')
 export class PackageTerms {
 
@@ -57,4 +58,7 @@ export class PackageTerms {
 
   @OneToMany(type => Settings, settings => settings.packageTermsInfo,{cascade: true})
   settingsInfo : Settings
+
+  @OneToMany(type=>StyleOrder, PackageTerms=>PackageTerms.packageTermsInfo,{cascade: true})
+  styleOrderInfo:StyleOrder;
 }

@@ -1,6 +1,7 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { Buyers } from "../buyers/buyers.entity";
 import { Settings } from "../settings/settings.entity";
+import { StyleOrder } from "../style-order/style-order.entity";
 
 
 @Entity('payment_method')
@@ -57,5 +58,8 @@ export class PaymentMethod{
 
     @OneToMany(type => Settings, settings => settings.paymentMethodInfo,{cascade: true})
     settingsInfo : Settings
+
+    @OneToMany(type=>StyleOrder, payment=>payment.paymentMethodInfo,{cascade: true})
+  styleOrderInfo:StyleOrder;
 
 }
