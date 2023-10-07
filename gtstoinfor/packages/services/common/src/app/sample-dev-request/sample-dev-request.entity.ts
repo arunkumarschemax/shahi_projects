@@ -10,6 +10,11 @@ import { SampleSubTypes } from '../sample-sub-types/sample-sub-types.entity';
 import { Brands } from '../master-brands/master-brands.entity';
 import { SampleDevelopmentStatusEnum } from '@project-management-system/shared-models';
 import { EmplyeeDetails } from '../employee-details/dto/employee-details-entity';
+import { type } from 'os';
+import { SampleReqSizeEntity } from './entities/sample-requset-size-info-entity';
+import { SampleReqFabricinfoEntity } from './entities/sample-request-fabric-info-entity';
+import { SampleRequestTriminfoEntity } from './entities/sample-request-trim-info-entity';
+import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
 
 @Entity('sample_request')
 export class SampleRequest {
@@ -52,7 +57,7 @@ export class SampleRequest {
 
   @ManyToOne(()=>Brands,brands => brands.sampleReq, {nullable:false})
   @JoinColumn({name:'brand_id'})
-  brand : Brands;
+  brand: Brands;
 
   @Column("varchar", {
     nullable: false,
@@ -88,18 +93,10 @@ export class SampleRequest {
 
   @ManyToOne(()=>EmplyeeDetails,employee => employee.sampleReq, {nullable:false})
   @JoinColumn({name:'dmm_id'})
-  // @Column("varchar",{
-  //   nullable:false,
-  //   name:"dmm_id"
-  // })
   dmm : EmplyeeDetails;
 
   @ManyToOne(()=>EmplyeeDetails,employee => employee.sampleRequest, {nullable:false})
   @JoinColumn({name:'technician_id'})
-  // @Column("varchar",{
-  //   nullable:false,
-  //   name:"technician_id"
-  // })
   technician : EmplyeeDetails;
 
   @Column("varchar",{
@@ -138,4 +135,17 @@ export class SampleRequest {
     enum: SampleDevelopmentStatusEnum
   })
   status: SampleDevelopmentStatusEnum;
+
+  @OneToMany(type =>SampleReqSizeEntity, samplereqsize=>samplereqsize.samplerReqEntity,{cascade:true})
+  samplereqsizeinfo:SampleReqSizeEntity[]
+
+  
+  @OneToMany(type =>SampleReqFabricinfoEntity, sampleReqFabric=>sampleReqFabric.samplerReqFabricEntity,{cascade:true})
+  samplereqfabricinfo:SampleReqFabricinfoEntity[]
+
+  @OneToMany(type =>SampleRequestTriminfoEntity,samplereqTriminfo =>samplereqTriminfo.sapleDevReqInfo,{cascade:true})
+  sampleTrimInfo:SampleRequestTriminfoEntity[]
+
+  @OneToMany(type =>SampleRequestProcessInfoEntity,samplereqTrim =>samplereqTrim.sampleReq,{cascade:true})
+  sampleProcessInfo:SampleRequestProcessInfoEntity[]
 }
