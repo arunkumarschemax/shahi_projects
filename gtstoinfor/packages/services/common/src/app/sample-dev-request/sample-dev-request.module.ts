@@ -5,12 +5,27 @@ import { SampleDevReqController } from './sample-dev-request.controller';
 import { SampleDevReqService } from './sample-dev-request.service';
 import { SampleDevAdapter } from './dto/sample-dev-request.adapter';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
+import { SampleReqSizeEntity } from './entities/sample-requset-size-info-entity';
+import { SampleReqFabricinfoEntity } from './entities/sample-request-fabric-info-entity';
+import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
+import { SampleRequestTriminfoEntity } from './entities/sample-request-trim-info-entity';
+import { SampleRequestRepository } from './sample-dev-req-repo';
+import { SampleSizeRepo } from './repo/sample-dev-size-repo';
+import { SampleFabricRepo } from './repo/sample-dev-fabric-repo';
+import { SampleTrimRepo } from './repo/sample-dev-trim-repo';
+import { SampleProcessRepo } from './repo/sample-dev-process-repo';
 
 @Module({
   imports: [
-  TypeOrmModule.forFeature([SampleRequest]),
+  TypeOrmModule.forFeature([
+    SampleRequest,
+    SampleReqSizeEntity,
+    SampleReqFabricinfoEntity,
+    SampleRequestTriminfoEntity,
+    SampleRequestProcessInfoEntity
+  ]),
   ],
   controllers: [SampleDevReqController],
-  providers: [SampleDevReqService,SampleDevAdapter,ApplicationExceptionHandler]
+  providers: [SampleDevReqService,SampleDevAdapter,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo]
 })
 export class SampleDevReqModule {}
