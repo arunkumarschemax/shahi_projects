@@ -38,6 +38,7 @@ const UploadView = (props: UploadViewProps) => {
   const [form] = Form.useForm()
 
   const uploadDocService = new UploadDocumentService()
+
  const handleRemoveFile = (fileToRemove) => {
   const updatedFileList = fileList.filter(file => file.uid !== fileToRemove.uid);
   setFileList(updatedFileList);
@@ -73,7 +74,6 @@ const handleDownload = (url) => {
   }
 }
 
-console.log(props.docData)
 
 const ondelte = (file) =>{
   console.log(file)

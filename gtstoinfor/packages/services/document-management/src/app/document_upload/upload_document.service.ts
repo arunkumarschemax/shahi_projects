@@ -3,7 +3,7 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DocumentsList } from "./entities/upload-document-entity";
 import { DocumentsListRepository } from "./repository/documents-list.repository";
 import { UploadDocumentListAdapter } from "./repository/upload-document-adapter";
-import { DocumentsListRequest } from "./requests/document-list.request";
+import { DocumentsListRequest, customerPoReq } from "./requests/document-list.request";
 import { ErrorResponse } from "../../../../../libs/shared-models/src/common/whatsapp/error-response-object";
 import {UploadDocumentListResponseModel} from '../../../../../libs/shared-models/src/document-management/upload-document-list-response-model';
 import {DocumentFileUploadResponse} from '../../../../../libs/shared-models/src/document-management/document-file-upload-response'
@@ -184,7 +184,7 @@ async getDataDataToUpdatePoStatusAgainstOrderid(orderId:number):Promise<UploadDo
 
     async getDocumentDetailsByPO(req:PoRoleRequest):Promise<UploadDocumentListResponseModel>{
         try{
-            const sqlQuery = "Select uf.id as uploadFileId,dl.status,is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"'and role_name ='"+req.role+"' Group by dl.documents_list_id";
+            const sqlQuery = "Select uf.id as uploadFileId,dl.status,is_uploaded AS uploadStatus,GROUP_CONCAT(uf.file_path) AS documentsPath, d.document_name AS documentName,dl.customer_po AS poNumber,d.id as documentCategoryId,dl.documents_list_id AS documentsListId from documents_list dl left join upload_files uf on uf.document_list_id = dl.documents_list_id left join document d on d.id = dl.document_category_id where dl.customer_po = '"+req.customerPo+"'and dl.role_name ='"+req.role+"' and dl.order_id = "+req.orderId+"  Group by dl.documents_list_id";
             // and order_id = "+req.orderId+" 
             const result = await this.documentRoleMappingRepo.query(sqlQuery)
             console.log(result)
@@ -340,6 +340,23 @@ async getDataDataToUpdatePoStatusAgainstOrderid(orderId:number):Promise<UploadDo
 
     }
 
+    async getDestinationsByPO(req: InvoiceReq): Promise<UploadDocumentListResponseModel> {
+        try{
+            console.log(req);
+            const sqlQuery = "select id AS orderId, dest AS destination from orders where po_no = '"+req.customerPo+"' group by po_no,dest order by dest ASC";
+            const result = await this.documentRoleMappingRepo.query(sqlQuery)
+            if(result.length >0){
+                return new CommonResponseModel(true,1,'data retrived sucessfully..',result)
+            }else{
+            return new CommonResponseModel(false,0,'no data found..',[])
+
+            }
+        }catch(error){
+            throw error
+        }
+
+    }
+
     async getChallanByPOandInvoice(req: ChallanReq): Promise<CommonResponseModel>{
         try{
             const sqlQuery = "select id AS orderId , challan_no AS challan from orders where po_no = '"+req.customerPo+"' and invoice_no = '"+req.invoice+"' group by po_no order by po_no ASC";
@@ -403,5 +420,31 @@ async getDataDataToUpdatePoStatusAgainstOrderid(orderId:number):Promise<UploadDo
         }
     }
 
+
+    async deleteDocsAgainstPo(req:customerPoReq):Promise<CommonResponseModel>{
+        try{
+            const query ='select documents_list_id as docListId from documents_list where customer_po="'+req.customerPo+'"'
+            const result = await this.documentsListRepository.query(query)
+            const docListId = result.map(id =>id.docListId)
+            const updateUploadFiles = await this.uploadFilesRepository.createQueryBuilder()
+            .update(UploadFilesEntity)
+            .set({isActive:false})
+            .where('document_list_id IN ('+docListId+')')
+            .execute();
+            if(updateUploadFiles.affected){
+                const updatedocumentList = await this.documentsListRepository.update({customerPo:req.customerPo},{isUploaded:false,status:null})
+                if(updatedocumentList.affected){
+                    const updatePostatus = await this.ordersRepository.update({poNo:req.customerPo},{orderPoStatus:PoStatusEnum.Open})
+                }
+             return new CommonResponseModel(true,1,'Documents Against This Po Are Deleted Sucessfully')
+            }
+           else{
+            return new CommonResponseModel(false,0,'Something Went Wrong')
+           }
+
+        }catch(err){
+            throw err
+        }
+    }
 
 }

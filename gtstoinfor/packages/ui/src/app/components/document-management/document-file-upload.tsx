@@ -20,6 +20,7 @@ const { Title, Text } = Typography;
 
 export default function DocumentListupload() {
   const [poNumber,setPoNumber] = useState<any[]>([])
+  const [destinations,setDestinations] = useState<any[]>([])
   const [invoiceNumber,setInvoiceNumber] = useState<any[]>([])
   const [challanNumber,setChallanNumber] = useState<any[]>([])
   const [orderId,setOrderId] = useState<number>(0)
@@ -52,7 +53,7 @@ export default function DocumentListupload() {
   }
 
   const getInvoiceNumber =(value)=>{
-    setBtnDisable(false)
+    // setBtnDisable(false)
 
     // let po
     // form.resetFields(['invoice','challan'])
@@ -83,16 +84,41 @@ export default function DocumentListupload() {
       }
     })
   }
+  const destinationChange = () => {
+    let dest = form.getFieldValue("destination");
+    console.log(destinations.find((rec) => rec.destination === dest).orderId);
+    form.setFieldValue("orderId", destinations.find((rec) => rec.destination === dest).orderId)
+  }
+  const getDestinations =(value)=>{
+    console.log("IIIIIIIIIIIIIIIIIIIIIIII")
+    // setBtnDisable(false)
+    form.resetFields(['challan'])
+    let po = form.getFieldValue("customerPo")
+    service.getDestinationsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po}).then(res=>{
+      console.log(res);
+      if(res.status){
+        console.log(res.data)
+        setDestinations(res.data)
+        // setBtnDisable(true)
+      }else{
+        setDestinations([])
+      }
+    })
+  }
   const getDocData =()=>{
     console.log("hhhhhhh")
     let invoiceNo = form.getFieldValue("invoice")
     let challan = form.getFieldValue("challan")
     let po = form.getFieldValue("customerPo")
+    let oderId = form.getFieldValue("orderId")
+
     // console.log(invoiceNo)
     // console.log(challan)
     // console.log(po)
+    console.log(oderId)
 
-    service.getDocumentDetailsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po}).then(res=>{
+
+    service.getDocumentDetailsByPO({role:JSON.parse(localStorage.getItem('currentUser')).user.roles,customerPo:po,challan:"",invoice:"",orderId:oderId}).then(res=>{
       if(res.status){
         setDocData(res.data)
         setUrls(res.dataa);
@@ -109,9 +135,13 @@ export default function DocumentListupload() {
 
  useEffect(() =>{
   if(statePoNumber){
+    console.log(statePoNumber)
     form.setFieldsValue({customerPo:statePoNumber.data})
-    getInvoiceNumber(statePoNumber.data)
-    console.log(invoiceNumber)
+    getDestinations(statePoNumber.data)
+    form.setFieldsValue({destination:statePoNumber.dest})
+    form.setFieldsValue({orderId:statePoNumber.orderId})
+
+    // getInvoiceNumber(statePoNumber.data)
     // if(invoiceNumber.length == 1){
     //   form.setFieldsValue({invoice:})
     // }
@@ -359,12 +389,16 @@ export default function DocumentListupload() {
     setStatusVal(value)
   }
   const challanaOnchange=() =>{
-    setBtnDisable(false)
+    // setBtnDisable(false)
   }
   return(
     <Card title="Document management" headStyle={{ backgroundColor: '#77dfec', border: 0 }} extra={<span><Button onClick={() => navigate('/document-management/upload-file-view')} type={'primary'}>View Documents Status</Button></span>}>
       <Form form={form}  layout='vertical' name="control-hooks" >
        <Row gutter={24}>
+       <Form.Item name='orderId' style={{display:'none'}}>
+             <Input name='orderId' />
+           </Form.Item>
+       
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
            <Form.Item name='customerPo' label='Po Number'
              rules={[
@@ -375,9 +409,26 @@ export default function DocumentListupload() {
                }
              ]}
            >
-             <Select placeholder='Select PoNumber' onChange={getInvoiceNumber} showSearch allowClear>
+             <Select placeholder='Select PoNumber' onChange={getDestinations} showSearch allowClear>
              {poNumber?.map(obj =>{
                        return <Option key={obj.poNumber} value={obj.poNumber}>{obj.poNumber}</Option>
+                     })}
+             </Select>
+           </Form.Item>
+         </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+           <Form.Item name='destination' label='Destination'
+             rules={[
+               {
+                 required: true,
+                 message: 'Select Destination',
+
+               }
+             ]}
+           >
+             <Select placeholder='Select Destination' onChange={destinationChange} showSearch allowClear>
+             {destinations?.map(obj =>{
+                       return <Option key={obj.destination} value={obj.destination}>{obj.destination}</Option>
                      })}
              </Select>
            </Form.Item>
@@ -423,7 +474,7 @@ export default function DocumentListupload() {
                     backgroundColor: 'green',
                     width: '110%',
                   }}
-                  disabled={btndisable}
+                  // disabled={btndisable}
                   icon={<DownloadOutlined />}
                 >
                   Get Documents

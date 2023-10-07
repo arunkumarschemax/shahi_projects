@@ -86,12 +86,12 @@ export class OrdersService {
                 if(data.po_no != null)
 
                 {
-                    dtoData = new SaveOrderDto(data.id, data.buyer, data.challa_no, data.invoice_no, data.style, data.po_no, data.date, data.dest, data.tc_status, data.ship_qty, data.ctns, data.created_user, data.updated_user, data.created_at, data.updated_at, 1, id)
+                    dtoData = new SaveOrderDto(data.id, data.buyer, data.challa_no, data.invoice_no, data.item_no, data.po_no, data.date, data.dest, data.tc_status, data.ship_qty, data.ctns, data.created_user, data.updated_user, data.created_at, data.updated_at, 1, id)
                     console.log(dtoData)
                     dtoData.version = 1
 
                     let checkChallanExist = await transactionManager.getRepository(OrdersEntity).findOne({where:{
-                       poNo:dtoData.poNo
+                       poNo:dtoData.poNo, dest:dtoData.dest
                     }})
                   if(!checkChallanExist){
                         const convertedExcelEntity: Partial<OrdersEntity> = this.ordersAdapter.convertDtoToEntity(dtoData, id);
@@ -411,14 +411,14 @@ export class OrdersService {
             query=query+' and dl.role_name="'+req.role+'"  order by priority ASC'
          }
         const documentNames = await this.dataSource.query(query)
-        const dynamicSQL = `SELECT o.challan_no AS challanNo, o.invoice_no AS invoiceNo,"" AS url, dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END ELSE '-' END) AS '${name.document_name}'
+        const dynamicSQL = `SELECT dl.order_id As orderId, o.dest as destination,o.challan_no AS challanNo, o.invoice_no AS invoiceNo,"" AS url, dl.customer_po AS PO , ${documentNames.map(name => `MAX(CASE WHEN dl.document_category_id = d.id AND d.document_name = '${name.document_name}' THEN CASE WHEN dl.is_uploaded = 1 THEN 'Yes' ELSE 'No' END ELSE '-' END) AS '${name.document_name}'
         `).join(',')},dl.documents_list_id as docListId,dl.file_path as filePath,dl.status,dl.po_status as poStatus,o.order_po_status as orderPoStatus
       FROM
         documents_list dl
       LEFT JOIN
         document d ON d.id = dl.document_category_id
         LEFT JOIN orders o on o.id = dl.order_id
-        GROUP BY  dl.customer_po ORDER BY o.po_no,o.invoice_no,o.challan_no ASC
+        GROUP BY  dl.customer_po,dl.order_id ORDER BY o.po_no,o.invoice_no,o.challan_no ASC
     `;
         const data = await this.dataSource.query(dynamicSQL)
         let urls:any[] = [];

@@ -1,7 +1,7 @@
 import { Body, Controller, Post,UploadedFile, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { DocumentsListService } from "./upload_document.service";
-import { DocumentsListRequest } from "./requests/document-list.request";
+import { DocumentsListRequest, customerPoReq } from "./requests/document-list.request";
 import { UploadDocumentListResponseModel } from "packages/libs/shared-models/src/document-management/upload-document-list-response-model";
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express'
 import { diskStorage, File } from 'multer'; 
@@ -273,4 +273,16 @@ export class DocumentUploadController {
     async deleteUploadedFile(@Body() req: UploadedFileid ): Promise<CommonResponseModel> {
       return await this.uploadDocservice.deleteUploadedFile(req);
     }
+
+    @Post('/deleteDocsAgainstPo')
+    async deleteDocsAgainstPo(@Body() req: customerPoReq ): Promise<CommonResponseModel> {
+      return await this.uploadDocservice.deleteDocsAgainstPo(req);
+    }
+
+    @Post('/getDestinationsByPO')
+    async getDestinationsByPO(@Body() req: InvoiceReq): Promise<UploadDocumentListResponseModel> {
+      return await this.uploadDocservice.getDestinationsByPO(req);
+    }
+
+
 }

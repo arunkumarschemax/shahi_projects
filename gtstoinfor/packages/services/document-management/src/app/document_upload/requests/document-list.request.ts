@@ -36,3 +36,11 @@ export class DocumentsListRequest{
         this.createdUser=createdUser
     }
 }
+
+export class customerPoReq{
+    @ApiProperty()
+    customerPo:string
+    constructor(customerPo:string){
+        this.customerPo=customerPo
+    }
+}
