@@ -182,82 +182,79 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
 
         SELECT
             YEAR,
+            VERSION,
+            planned_exf,
+            wh,
             
-             CASE
-                WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
-                WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
-                WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
-                ELSE prod_plan_type
-            END AS prod_plan_type,
-           SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN order_plan_qty ELSE 0 END)  AS totalExfPcs,
-   SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN order_plan_qty ELSE 0 END)AS totalExfCoeff,
-      SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN order_plan_qty ELSE 0 END) AS totalWhPcs,
-     SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank = 1 THEN order_plan_qty ELSE 0 END) AS totalWhCoeff,
-         
-            SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank != 1 THEN CAST(   order_plan_qty  AS INT) ELSE 0 END) AS janExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank != 1 THEN CAST(   order_plan_qty  AS INT) ELSE 0 END) AS febExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS marExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS aprExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS mayExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS junExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS julExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS augExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS sepExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS octExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS novExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS decExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS totalExfPre,
-            SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS janExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS febExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS marExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS aprExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS mayExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS junExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS julExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS augExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS sepExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS octExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS novExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS decExfLat,
-            SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS totalExfLat,
-        SUM(CASE WHEN  MONTH(  wh) = 1  AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',','') AS INT) ELSE 0 END) AS janWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  = 2 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS febWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  = 3 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS marWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  = 4 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS aprWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  = 5 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS mayWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  = 6 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS junWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  = 7 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS julWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  = 8 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS augWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  = 9 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS sepWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  =10 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS octWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  =11 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS novWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  =12 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS decWhPre,
-            SUM(CASE WHEN  MONTH(  wh)  BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS totalWhPre,
-            SUM(CASE WHEN  MONTH(  wh) = 1  AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS janWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  = 2 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS febWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  = 3 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS marWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  = 4 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS aprWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  = 5 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS mayWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  = 6 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS junWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  = 7 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS julWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  = 8 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS augWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  = 9 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS sepWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  =10 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS octWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  =11 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS novWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  = 12 AND version_rank  = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS decWhLat,
-            SUM(CASE WHEN  MONTH(  wh)  BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS totalWhLat
+            item,
+            item_cd,
+            prod_plan_type,
+            MONTH(planned_exf) AS ExfMonth,
+            MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) AS WhMonth,
+            CASE
+                WHEN version_rank = 1 THEN 'latest'
+                ELSE 'previous'
+            END AS STATUS,
+            SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS janExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS aprExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS mayExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS junExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS julExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS augExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS sepExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT)ELSE 0 END) AS janExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT)ELSE 0 END) AS febExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT)ELSE 0 END) AS marExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT)ELSE 0 END) AS aprExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT)ELSE 0 END) AS mayExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT)ELSE 0 END) AS junExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT)ELSE 0 END) AS julExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT)ELSE 0 END) AS augExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT)ELSE 0 END) AS sepExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalExfLat,
+        SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 1  AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',','') AS INT) ELSE 0 END) AS janWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 2 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 3 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 4 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS aprWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 5 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS mayWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 6 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS junWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 7 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS julWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 8 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS augWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 9 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS sepWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  =10 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  =11 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  =12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalWhPre,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d')) = 1  AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS janWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 2 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 3 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 4 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS aprWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 5 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS mayWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 6 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS junWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 7 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS julWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 8 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS augWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 9 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS sepWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  =10 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  =11 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  = 12 AND version_rank  = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decWhLat,
+            SUM(CASE WHEN  MONTH(STR_TO_DATE(wh, '%Y-%m-%d'))  BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalWhLat
 
         FROM RankedVersions
         WHERE version_rank <= 2
             AND YEAR = '${req.year}'
             AND prod_plan_type != 'STOP'
             AND planned_exf IS NOT NULL AND wh IS NOT NULL
-              GROUP BY  CASE
-                WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
-                WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
-                WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
-                ELSE prod_plan_type
-            END`;
+             GROUP BY YEAR,  item, item_cd, prod_plan_type
+        ORDER BY  item ASC`;
         const result = await this.query(query);
         return result;
     }
@@ -449,91 +446,99 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     }
    
     async getComparisionphaseData1(req: YearReq):Promise<any[]>{
-        const query =`SELECT
-        YEAR,
-        
-        CASE
-            WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
-            WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
-            WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
-            ELSE prod_plan_type
-        END AS prod_plan_type,
-        
-       SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalExfPre,
-       SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalExfLat,
-                          
-   SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalWhPre,
-  SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS totalWhLat,
-               SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS janExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS aprExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS mayExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS junExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS julExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS augExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS sepExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decExfPre,
-                SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS janExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS aprExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS mayExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS junExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS julExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS augExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS sepExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novExfLat,
-                SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decExfLat,
-                SUM(CASE WHEN MONTH(wh) = 1  AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS janWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 2 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 3 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 4 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS aprWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 5 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS mayWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 6 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS junWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 7 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS julWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 8 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS augWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 9 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS sepWhPre,
-                SUM(CASE WHEN MONTH(wh)  =10 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octWhPre,
-                SUM(CASE WHEN MONTH(wh)  =11 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novWhPre,
-                SUM(CASE WHEN MONTH(wh)  = 12 AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decWhPre,
-                SUM(CASE WHEN MONTH(wh) = 1  AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS janWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 2 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS febWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 3 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS marWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 4 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS aprWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 5 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS mayWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 6 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS junWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 7 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS julWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 8 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS augWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 9 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS sepWhLat,
-                SUM(CASE WHEN MONTH(wh)  =10 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS octWhLat,
-                SUM(CASE WHEN MONTH(wh)  =11 AND version_rank = 1  THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS novWhLat,
-                SUM(CASE WHEN MONTH(wh)  = 12 AND version_rank  = 1 THEN CAST(REPLACE(order_plan_qty, ',', '') AS INT) ELSE 0 END) AS decWhLat
-        FROM (
+        const query =`WITH RankedVersions AS (
+            SELECT
+                YEAR,
+                VERSION,
+                planned_exf,
+                wh,
+                
+                order_plan_qty,
+                item,
+                item_cd,
+                prod_plan_type,
+                ROW_NUMBER() OVER (PARTITION BY order_plan_number, item, prod_plan_type ORDER BY VERSION DESC) AS version_rank
+            FROM orders_child
+        )
+
         SELECT
             YEAR,
-            VERSION,
-            prod_plan_type,
-            planned_exf,
-            wh,
-            order_plan_qty,
-            ROW_NUMBER() OVER (PARTITION BY prod_plan_type ORDER BY VERSION DESC) AS version_rank
-        FROM orders_child
-        ) AS RankedVersions
+            
+             CASE
+                WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
+                WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
+                WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
+                ELSE prod_plan_type
+            END AS prod_plan_type,
+           SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN order_plan_qty ELSE 0 END)  AS totalExfPcs,
+   SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN order_plan_qty ELSE 0 END)AS totalExfCoeff,
+      SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank != 1 THEN order_plan_qty ELSE 0 END) AS totalWhPcs,
+     SUM(CASE WHEN MONTH(wh) BETWEEN 1 AND 12 AND version_rank = 1 THEN order_plan_qty ELSE 0 END) AS totalWhCoeff,
+         
+            SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank != 1 THEN CAST(   order_plan_qty  AS INT) ELSE 0 END) AS janExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank != 1 THEN CAST(   order_plan_qty  AS INT) ELSE 0 END) AS febExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS marExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS aprExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS mayExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS junExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS julExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS augExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS sepExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS octExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS novExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS decExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS totalExfPre,
+            SUM(CASE WHEN MONTH(planned_exf) = 1 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS janExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 2 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS febExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 3 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS marExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 4 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS aprExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 5 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS mayExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 6 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS junExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 7 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS julExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 8 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS augExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 9 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT)ELSE 0 END) AS sepExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 10 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS octExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS novExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS decExfLat,
+            SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS totalExfLat,
+        SUM(CASE WHEN  MONTH(  wh) = 1  AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',','') AS INT) ELSE 0 END) AS janWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  = 2 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS febWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  = 3 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS marWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  = 4 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS aprWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  = 5 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS mayWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  = 6 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS junWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  = 7 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS julWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  = 8 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS augWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  = 9 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS sepWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  =10 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS octWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  =11 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS novWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  =12 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS decWhPre,
+            SUM(CASE WHEN  MONTH(  wh)  BETWEEN 1 AND 12 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS totalWhPre,
+            SUM(CASE WHEN  MONTH(  wh) = 1  AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS janWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  = 2 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS febWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  = 3 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS marWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  = 4 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS aprWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  = 5 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS mayWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  = 6 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS junWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  = 7 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS julWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  = 8 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS augWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  = 9 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS sepWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  =10 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS octWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  =11 AND version_rank = 1  THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS novWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  = 12 AND version_rank  = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS decWhLat,
+            SUM(CASE WHEN  MONTH(  wh)  BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS totalWhLat
+
+        FROM RankedVersions
         WHERE version_rank <= 2
-        AND YEAR = '${req.year}'
-        AND prod_plan_type != 'STOP'
-        GROUP BY
-        CASE
-            WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
-            WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
-            WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
-            ELSE prod_plan_type
-        END,
-        YEAR`
+            AND YEAR = '${req.year}'
+            AND prod_plan_type != 'STOP'
+            AND planned_exf IS NOT NULL AND wh IS NOT NULL
+              GROUP BY  CASE
+                WHEN prod_plan_type LIKE '%Ph3%' THEN 'Ph3'
+                WHEN prod_plan_type LIKE '%Ph2%' THEN 'Ph2'
+                WHEN prod_plan_type LIKE '%Ph1%' THEN 'Ph1'
+                ELSE prod_plan_type
+            END`
         
         
         const result = await this.query(query);
