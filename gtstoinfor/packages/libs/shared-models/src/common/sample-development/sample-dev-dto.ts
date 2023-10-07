@@ -1,104 +1,92 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SampleDevelopmentStatusEnum, StatusEnum } from '@project-management-system/shared-models';
+import { SampleDevelopmentStatusEnum } from '@project-management-system/shared-models';
+import { SampleSizeReq } from './sample-req-size-req';
+import { SamplefabricReq } from './sample-dev-fabric-info-req';
+import { SampleTrimReq } from './sample-dev-trim-req';
+import { SampleProcessInfoReq } from './sample-dev-process-info-req';
 
 export class SampleDevDto {
-  SampleRequestId: number;
-  locationId: number;
-  locationName: string;
+  SampleRequestId:number;
+  locationId : number;
   requestNo: string;
-  styleId : number
-  style : string
-  pchId : number
-  profitControlHead : string
-  buyerId : number
-  buyerName : string
-  sampleTypeId : number
-  sampleType: string
-  sampleSubTypeId : number
-  sampleSubType : string
-  brandId : number
-  brandName : string
+  styleId : number;
+  pchId : number;
+  buyerId : number;
+  sampleTypeId : number;
+  sampleSubTypeId : number;
+  brandId: number;
   costRef: string;
   m3StyleNo: string;
   contact:string;
-  extension: string
-  samValue : number
-  dmmId : number
-  dmmEmployee : string
-  technicianId : number
-  techEmployee : string
-  product : string
-  type : string
-  conversion : string
-  madeIn : string
-  facilityId : number;
+  extension:string;
+  samValue:number;
+  dmmId : number;
+  technicianId : number;
+  product:string;
+  type:string;
+  conversion:string;
+  madeIn:string;
+  facilityId: number;
   status: SampleDevelopmentStatusEnum;
+  samplereqsizeinfo:SampleSizeReq[];
+  samplereqfabricinfo:SamplefabricReq[]
+  sampleTrimInfo:SampleTrimReq[]
+  sampleProcessInfo:SampleProcessInfoReq[]
 
   constructor(
-    SampleRequestId: number,
-  locationId: number,
-  locationName: string,
+  SampleRequestId:number,
+  locationId : number,
   requestNo: string,
   styleId : number,
-  style : string,
   pchId : number,
-  profitControlHead : string,
   buyerId : number,
-  buyerName : string,
   sampleTypeId : number,
-  sampleType: string,
   sampleSubTypeId : number,
-  sampleSubType : string,
-  brandId : number,
-  brandName : string,
+  brandId: number,
   costRef: string,
   m3StyleNo: string,
   contact:string,
-  extension: string,
-  samValue : number,
+  extension:string,
+  samValue:number,
   dmmId : number,
-  dmmEmployee : string,
   technicianId : number,
-  techEmployee : string,
-  product : string,
-  type : string,
-  conversion : string,
-  madeIn : string,
-  facilityId : number,
+  product:string,
+  type:string,
+  conversion:string,
+  madeIn:string,
+  facilityId: number,
   status: SampleDevelopmentStatusEnum,
+  samplereqsizeinfo:SampleSizeReq[],
+  samplereqfabricinfo:SamplefabricReq[],
+  sampleTrimInfo:SampleTrimReq[],
+  sampleProcessInfo:SampleProcessInfoReq[]
   ){
-    this.SampleRequestId = SampleRequestId
-    this.locationId = locationId
-    this.locationName = locationName
-    this.requestNo = requestNo
-    this.styleId = styleId
-    this.style = style
-    this.pchId = pchId
-    this.profitControlHead = profitControlHead
-    this.buyerId = buyerId
-    this.buyerName = buyerName
-    this.sampleTypeId = sampleTypeId
-    this.sampleType = sampleType
-    this.sampleSubTypeId = sampleSubTypeId
-    this.sampleSubType = sampleSubType
-    this.brandId = brandId
-    this.brandName = brandName
-    this.costRef = costRef
-    this.m3StyleNo = m3StyleNo
-    this.contact = contact
-    this.extension = extension
-    this.samValue = samValue
-    this.dmmId = dmmId
-    this.dmmEmployee = dmmEmployee
-    this.technicianId = technicianId
-    this.techEmployee = techEmployee
-    this.product = product
-    this.type = type
-    this.conversion = conversion
-    this.madeIn = madeIn
-    this.facilityId = facilityId
-    this.status = status
+    this.SampleRequestId=SampleRequestId
+    this.locationId=locationId
+    this.requestNo=requestNo
+    this.styleId=styleId
+    this.pchId=pchId
+    this.buyerId=buyerId
+    this.sampleTypeId=sampleTypeId
+    this.sampleSubTypeId=sampleSubTypeId
+    this.brandId=brandId
+    this.costRef=costRef
+    this.m3StyleNo=m3StyleNo
+    this.contact=contact
+    this.extension=extension
+    this.samValue=samValue
+    this.dmmId=dmmId
+    this.technicianId=technicianId
+    this.product=product
+    this.type=type
+    this.conversion=conversion
+    this.madeIn=madeIn
+    this.facilityId=facilityId
+    this.status=status
+    this.samplereqsizeinfo=samplereqsizeinfo
+    this.samplereqfabricinfo=samplereqfabricinfo
+    this.sampleTrimInfo=sampleTrimInfo
+    this.sampleProcessInfo=sampleProcessInfo
+
   }
-
 }
-
