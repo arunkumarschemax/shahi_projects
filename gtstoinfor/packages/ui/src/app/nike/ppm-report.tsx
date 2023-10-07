@@ -57,7 +57,7 @@ const PPMReport = () => {
     getplantCode();
     getItem();
     getFactory();
-    getData();
+  //  getData();
     getPonumber();
     getDocType();
     getPpmPoLineForMarketing();

@@ -52,7 +52,7 @@ const FactoryPPMReport = () => {
 
 
     useEffect(() => {
-        getData();
+       // getData();
         getProductCode();
         getPoLine();
         getColorDesc();
