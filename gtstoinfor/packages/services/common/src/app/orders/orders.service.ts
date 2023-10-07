@@ -2143,26 +2143,13 @@ async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
     try {
         const data = await this.ordersChildRepo.getComparisionphaseData(req);
         const data1 = await this.ordersChildRepo.getComparisionphaseData1(req);
-
-        // Log the retrieved data for debugging
-        console.log('Data from getComparisionphaseData:', data);
-        console.log('Data from getComparisionphaseData1:', data1);
-
-        if (data && data1) {
-           
+    if (data && data1) {
             const mergedData = [...data1, ...data];
-
-              
-
-            // Log the merged data for debugging
-            console.log('Merged Data:', mergedData);
-
             return new CommonResponseModel(true, 1, 'Data retrieved', mergedData);
         } else {
             return new CommonResponseModel(false, 1, 'No data found');
         }
     } catch (err) {
-        // Log any errors for debugging
         console.error('Error in getComparisionphaseExcelData:', err);
         throw err;
     }
