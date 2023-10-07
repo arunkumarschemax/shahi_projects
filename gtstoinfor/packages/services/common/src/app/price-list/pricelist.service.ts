@@ -576,25 +576,26 @@ async getAllActivePriceList(): Promise<PriceListResponseModel> {
             SELECT 1
             FROM price_list_child AS p
             WHERE p.sample_code = p1.sample_code AND p.business = p1.business AND p.created_at > p2.created_at AND p.created_at < p1.created_at
-            )
-            ORDER BY p1.sample_code,p1.business,p1.created_at DESC`
+            ) 
+            WHERE 1=1 `
             if (req) {
                 if (req.sampleCode !== undefined) {
-                    query = query +`p1.sample_code ='${req.sampleCode}'`
+                    query = query +`AND p1.sample_code ='${req.sampleCode}'`
                 }
                 if (req.business !== undefined) {
-                    query = query +`p1.business ='${req.business}'`
+                    query = query +`AND p1.business ='${req.business}'`
                 }
                 if (req.year !== undefined) {
-                    query = query +`p1.year ='${req.year}'`
+                    query = query +`AND p1.year ='${req.year}'`
                 }
                 if (req.currency !== undefined) {
-                    query = query +`p1.currency ='${req.currency}'`
+                    query = query +`AND p1.currency ='${req.currency}'`
                 }
                 if (req.seasonCode !== undefined) {
-                    query = query +`p1.season ='${req.seasonCode}'`
+                    query = query +`AND p1.season ='${req.seasonCode}'`
                 }
             }
+            `ORDER BY p1.sample_code,p1.business,p1.created_at DESC`
             const data = await this.dataSource.query(query);
                 if (data.length > 0) {
                     return new CommonResponseModel(true, 1, 'Data retrieved successfully', data);
