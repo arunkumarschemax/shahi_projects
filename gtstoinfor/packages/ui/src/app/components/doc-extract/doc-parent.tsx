@@ -15,11 +15,11 @@ export const DocParent = () => {
 
 
   const getData = (val) => {
-    console.log(val);
+    // console.log(val);
     setData(val)
   }
   const getHsnData = (val) => {
-    console.log(val);
+    // console.log(val);
     setHsnData(val)
   }
     

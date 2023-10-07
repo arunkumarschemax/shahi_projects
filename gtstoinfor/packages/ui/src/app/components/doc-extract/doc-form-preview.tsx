@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 export interface DocFormPreviewProps {
     form: FormInstance<any>;
     formData: any;
-    hsnData: any[];
+    hsnData: any;
 }
 
 
@@ -26,6 +26,7 @@ interface Item {
 export const DocFormPreview = (props: DocFormPreviewProps) => {
 
     const [buttonText, setButtonText] = useState("Add");
+    const { Option } = Select;
 
     const [file, setFile] = useState<any | null>(null);
     const [pdfData, setPdfData] = useState(null);
@@ -53,10 +54,10 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
 
     const [venName, setVenName] = useState("");
     const [venCod, setVenCode] = useState("");
-    const [gstNumbers, setgstNumbers] = useState("");
+    const [gstNumber, setGstNumber] = useState("");
     const [invoiceDate, setInvoiceDate] = useState("");
     const [invoiceNumber, setInvoiceNumber] = useState("");
-    const [invoiceamount, setInvoiceAmount] = useState("");
+    const [invoiceAmount, setInvoiceAmount] = useState("");
     const [igst, setIgst] = useState("");
     const [cgst, setCgst] = useState("");
     const [sgst, setSgst] = useState("");
@@ -78,15 +79,30 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
 
         if (props?.formData != undefined) {
             props?.form.setFieldsValue({
-                venName: props.formData.venName, gstnumber: props.formData.gstnumber,
+                venName: props.formData.venName, gstNumber: props.formData.gstNumber,
                 invoiceDate: props.formData.invoiceDate, invoiceNumber: props.formData.invoiceNumber,
                 invoiceCurrency: props.formData.invoiceCurrency, financialYear: props.formData.financialYear,
-                invoiceamount: props.formData.invoiceamount, igst: props.formData.igst, sgst: props.formData.sgst,
+                invoiceAmount: props.formData.invoiceAmount, igst: props.formData.igst, sgst: props.formData.sgst,
                 cgst: props.formData.cgst,
             })
             props.form.setFieldValue('vendorCode', props?.formData.vendorCode);
         }
     }, [props?.formData]);
+
+
+    useEffect(() => {
+        console.log(props?.hsnData)
+        console.log(props?.form)
+        if (props?.hsnData != undefined) {
+            props?.form.setFieldsValue({
+                HSN: props.hsnData.HSN, description: props.hsnData.description,
+                unitQuantity: props.hsnData.unitQuantity, unitPrice: props.hsnData.unitPrice,
+                taxType: props.hsnData.taxType, taxPercentage: props.hsnData.taxPercentage,
+                charge: props.hsnData.charge, taxAmount: props.hsnData.taxAmount, quotation: props.hsnData.quotation,
+                variance: props.hsnData.variance,
+            })
+        }
+    }, [props?.hsnData]);
 
 
     useEffect(() => {
@@ -158,6 +174,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             }
         }
     }, [price, extractedData, extractionCompleted])
+
     const handleAddToTable = () => {
         if (
             !HSN &&
@@ -188,7 +205,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             variance,
         };
         if (isEditing) {
-            const updatedTableData = extractedData.map((item) =>
+            const updatedTableData = props.hsnData.map((item) =>
                 item === editingItem ? { ...newItem } : item
             );
             setExtractedData(updatedTableData);
@@ -196,7 +213,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             setEditingItem(null);
             setButtonText('Add');
         } else {
-            setExtractedData([...extractedData, newItem]);
+            setExtractedData([...props.hsnData, newItem]);
         }
 
         setHSN("");
@@ -243,7 +260,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
     };
 
     const handleDelete = (item) => {
-        const updatedTableData = extractedData.filter((data) => data !== item);
+        const updatedTableData = props.hsnData.filter((data) => data !== item);
         setExtractedData(updatedTableData);
     };
 
@@ -394,7 +411,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                     />
                     <Divider type="vertical" />
                     <Popconfirm
-                        title="Are you sure to delete this item?"
+                        title="Are You Sure to Delete ?"
                         onConfirm={() => handleDelete(item)}
                         okText="Yes"
                         cancelText="No"
@@ -446,13 +463,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             <Card >
                 <Form layout='vertical' form={props.form} initialValues={props?.formData} name="control-hooks">
                     <Row gutter={12}>
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
                             <Form.Item
                                 label="Vendor Name"
                                 name="venName"
@@ -465,12 +476,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                         </Col>
 
                         <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
+                            xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
                             <Form.Item
                                 label="Vendor Code"
                                 name="venCod"
@@ -482,32 +488,18 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             </Form.Item>
                         </Col>
 
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
-                            <Form.Item
-                                label="GST NUMBER"
-                                name="gstnumber"
-                                rules={[{ required: true, message: "Field Is Required" }]}
-                            >
-                                <Input placeholder="GST NUMBER"
-                                    onChange={(e) => setgstNumbers(e.target.value)} />
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                            <Form.Item label="GST NUMBER" name="gstNumber" rules={[{ required: true, message: "Field Is Required" }]} >
+                                <Input
+                                    placeholder="GST NUMBER"
+                                    onChange={(e) => setGstNumber(e.target.value)}
+                                />
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Row gutter={12}>
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }}md={{ span: 8 }}lg={{ span: 8 }} xl={{ span: 8 }} >
                             <Form.Item
                                 label="Invoice Date"
                                 name="invoiceDate"
@@ -518,13 +510,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             </Form.Item>
                         </Col>
 
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
                             <Form.Item
                                 label="Invoice Number"
                                 name="invoiceNumber"
@@ -536,15 +522,11 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                         </Col>
 
                         <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
+                            xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}
                         >
                             <Form.Item
                                 label="Invoice Amount"
-                                name="invoiceamount"
+                                name="invoiceAmount"
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Amount"
@@ -554,13 +536,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                     </Row>
 
                     <Row gutter={12}>
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
                             <Form.Item
                                 label="IGST"
                                 name="igst"
@@ -571,13 +547,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             </Form.Item>
                         </Col>
 
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
                             <Form.Item
                                 label="CGST"
                                 name="cgst"
@@ -607,13 +577,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                     </Row>
 
                     <Row gutter={12}>
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
                             <Form.Item
                                 label="Invoice Currency"
                                 name="invoiceCurrency"
@@ -624,14 +588,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             </Form.Item>
                         </Col>
 
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
-                            <Form.Item
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >                            <Form.Item
                                 label="Financial Year"
                                 name="financialYear"
                                 rules={[{ required: true, message: "Field Is Required" }]}
@@ -672,112 +629,64 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                 <Form layout="vertical">
                     <Row gutter={12}>
                         <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
-                            <label>
-                                HSN CODE
-                            </label>
-
-                            <Input placeholder="HSN Code"
-                                name="HSN"
-                                value={HSN}
-                                onChange={(e) => setHSN(e.target.value)} />
+                            xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                            <Form.Item label="HSN Code">
+                                <Input placeholder="HSN Code"
+                                    name="HSN"
+                                    value={HSN}
+                                    onChange={(e) => setHSN(e.target.value)} />
+                            </Form.Item>
                         </Col>
 
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
-                            <Form.Item
-                                label="Tax Type"
-                                name="taxType"
-                            >
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                            <Form.Item label="Tax Type">
                                 <Select
-                                    id="taxType"
+                                    style={{ width: '100%' }}
                                     value={taxType}
                                     onChange={(value) => setTaxType(value)}
-                                    placeholder="Tax Type"
                                 >
-                                    <option value="IGST">IGST</option>
-                                    <option value="CSGT & SGST">CSGT & SGST</option>
-                                    <option value="No Tax">No Tax</option>
+                                    <Option value="IGST">IGST</Option>
+                                    <Option value="CGST & SGST">CGST & SGST</Option>
+                                    <Option value="No Taxtype">No Taxtype</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
 
                         <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
-                            <label>
-                                Tax Percentage
-                            </label>
+                            xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
+                            <Form.Item label="Tax Percentage">
+                                <Input placeholder="Tax Percentage"
+                                    name="taxPercentage"
+                                    value={taxPercentage}
+                                    onChange={handleTaxpercentageChange} />
+                            </Form.Item>
 
-                            <Input placeholder="Tax Percentage"
-                                name="taxPercentage"
-                                value={taxPercentage}
-                                onChange={handleTaxpercentageChange} />
+                        </Col>
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
+                            <Form.Item label="Tax Amount">
+                                <Input placeholder="Tax Amount"
+                                    name="taxAmount"
+                                    value={taxAmount}
+                                    onChange={handleTaxamountChange} />
+                            </Form.Item>
                         </Col>
 
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
-                            <label>
-                                Tax Amount
-                            </label>
-
-                            <Input placeholder="Tax Amount"
-                                name="taxAmount"
-                                value={taxAmount}
-                                onChange={handleTaxamountChange} />
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                            <Form.Item label="Unit Quantity">
+                                <Input placeholder="Unit Quantity"
+                                    name="unitQuantity"
+                                    value={unitQuantity}
+                                    onChange={(e) => setUnitQuantity(e.target.value)} />
+                            </Form.Item>
                         </Col>
 
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
-                            <label>
-                                Unit Quantity
-                            </label>
-
-                            <Input placeholder="Unit Quantity"
-                                name="unitQuantity"
-                                value={unitQuantity}
-                                onChange={(e) => setUnitQuantity(e.target.value)} />
-                        </Col>
-
-                        <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
-                            <label>
-                                Description
-                            </label>
-
-                            <Input placeholder="Description"
-                                name="description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)} />
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+                            <Form.Item label="Description">
+                                <Input placeholder="Description"
+                                    name="description"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)} />
+                            </Form.Item>
                         </Col>
                     </Row>
 
@@ -790,47 +699,31 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             lg={{ span: 8 }}
                             xl={{ span: 8 }}
                         >
-                            <label>
-                                Quotation
-                            </label>
-
+                         <Form.Item label="Quotation">
                             <Input placeholder="Quotation"
                                 name="quotation"
                                 value={quotation}
                                 onChange={(e) => setQuotation(e.target.value)} />
+                                </Form.Item>
                         </Col> */}
 
-                        {/* <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
-                            <label>
-                                Variance
-                            </label>
-
+                        {/* <Col xs={{ span: 8 }}sm={{ span: 8 }}md={{ span: 8 }}lg={{ span: 8 }}xl={{ span: 8 }}>
+                         <Form.Item label="Variance">
                             <Input placeholder="Variance"
                                 name="variance"
                                 value={variance}
                                 onChange={(e) => setVariance(e.target.value)} />
+                                </Form.Item>
                         </Col> */}
-                        {/* <Col
-                            xs={{ span: 8 }}
-                            sm={{ span: 8 }}
-                            md={{ span: 8 }}
-                            lg={{ span: 8 }}
-                            xl={{ span: 8 }}
-                        >
-                            <label>
-                                Status
-                            </label>
 
+                        {/* <Col
+                            xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
+                         <Form.Item label="Status">
                             <Input placeholder="Status"
                                 name="status"
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)} />
+                                </Form.Item>
                         </Col> */}
                     </Row>
                 </Form>
@@ -865,7 +758,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                     Submit
                 </Button>
             </Row>
-            
+
             <Row>
                 <Card size='small'>
                     <Col span={12}>

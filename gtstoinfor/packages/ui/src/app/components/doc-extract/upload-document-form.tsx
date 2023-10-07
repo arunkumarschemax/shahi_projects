@@ -1735,8 +1735,8 @@ export function DocumentUploadForm() {
               <iframe
                 src={pdfData}
                 title="PDF Viewer"
-                width="600px"
-                height="600px"
+                width="100%"
+                height="400px"
                 frameBorder="0"
               />
             </div>
