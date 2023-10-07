@@ -418,7 +418,7 @@ export class OrdersService {
       LEFT JOIN
         document d ON d.id = dl.document_category_id
         LEFT JOIN orders o on o.id = dl.order_id
-        GROUP BY  dl.customer_po ORDER BY o.po_no,o.invoice_no,o.challan_no ASC
+        GROUP BY  dl.customer_po,dl.order_id ORDER BY o.po_no,o.invoice_no,o.challan_no ASC
     `;
         const data = await this.dataSource.query(dynamicSQL)
         let urls:any[] = [];

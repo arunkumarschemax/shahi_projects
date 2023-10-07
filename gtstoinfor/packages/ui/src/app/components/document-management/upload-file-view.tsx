@@ -341,7 +341,7 @@ const UploadFileGrid = () =>{
           if(res.status){
             setItemData(res.data);
             const headerColumns = Object?.keys(res?.data[0])
-            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url' && header !== 'poStatus' && header !== 'orderPoStatus' && header != 'destination')
+            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url' && header !== 'poStatus' && header !== 'orderPoStatus' && header != 'destination' && header != 'orderId')
             .map(header => ({           
                 title: header.toUpperCase(),
                 dataIndex: header,
