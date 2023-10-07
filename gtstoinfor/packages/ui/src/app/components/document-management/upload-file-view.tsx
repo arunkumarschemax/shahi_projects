@@ -220,9 +220,9 @@ const UploadFileGrid = () =>{
         }
       }
       
-      const goToFileUpload=(PO:string)=>{
+      const goToFileUpload=(PO:string, dest:string, orderId:string)=>{
         setPo(PO)
-        navigate('/document-management/document-file-upload', { state: { data: PO } })
+        navigate('/document-management/document-file-upload', { state: { data: PO, dest:dest, orderId:orderId } })
       }
 
       const deletePo = (po) =>{
@@ -253,7 +253,7 @@ const UploadFileGrid = () =>{
               render: (text, record) => {
                 return <>
                   {JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" ?
-                  <Link onClick={e => goToFileUpload(record.PO)}>{record.PO}</Link> : <span>{record.PO}</span>}
+                  <Link onClick={e => goToFileUpload(record.PO, record.destination, record.orderId)}>{record.PO}</Link> : <span>{record.PO}</span>}
                 </>
               },
 

@@ -56,4 +56,12 @@ export class UploadDocumentService extends CommonAxiosService {
     async deleteDocsAgainstPo(req: customerPoReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.url + "/deleteDocsAgainstPo",req)
     }
+    async getDestinationsByPO(req: InvoiceReq): Promise<UploadDocumentListResponseModel> {
+        return this.axiosPostCall(this.url + '/getDestinationsByPO', req)
+            .then(res => {
+                return res
+            }).catch(error => {
+                return error;
+            })
+    }
 }
