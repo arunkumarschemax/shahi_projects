@@ -13,26 +13,15 @@ async createSampleDev(req: SampleDevelopmentRequest):Promise<any>{
 
         
 async getAllSampleDevData(req? : SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
-    return this.axiosPostCall(this.URL + "/getAllSampleDevData")
+    return this.axiosPostCall(this.URL + "/getAllSampleDevData",req)
 }
 
-async getReqNo():Promise<any>{
-    const reqData = [
-        {
-            reqNo:"REQ001"
-        },
-        {
-            reqNo:"REQ002"
-        },
-        {
-            reqNo:"REQ003"
-        },
-        {
-            reqNo:"REQ004"
-        }
-    ]
-    return reqData
-    // return this.axiosPostCall(this.URL + "/getAllSampleDevelopment")
+async getAllSampleReqNo():Promise<AllSampleDevReqResponseModel>{
+    return this.axiosPostCall(this.URL + "/getAllSampleReqNo")
+}
+
+async cancelSampleReqById(req : SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
+    return this.axiosPostCall(this.URL + "/cancelSampleReqById",req)
 }
         
 

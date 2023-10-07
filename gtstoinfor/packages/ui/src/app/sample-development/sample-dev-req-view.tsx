@@ -24,6 +24,7 @@ import {
   EditOutlined,
   SearchOutlined,
   UndoOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { ColumnProps } from "antd/lib/table";
@@ -33,18 +34,16 @@ import { useNavigate } from "react-router-dom";
 import form from "antd/es/form";
 import { SampleFilterRequest } from "@project-management-system/shared-models";
 
-export interface BuyingHouseProps {}
 
-export const SampleDevView = (props: BuyingHouseProps) => {
+export const SampleDevView = () => {
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [sampleData, setSampleData] = useState<any[]>([]);
-  const [selectedBuyingHouse, setSelectedBuyingHouse] =
-    useState<any>(undefined);
+  const [filterData, setFilterData] = useState<any[]>([]);
+  const [hideCancelButton, setHideCancelButton] = useState(false);
   const service = new SampleDevelopmentService();
   let navigate = useNavigate();
   const [reqNo, setReqNo] = useState<any>([]);
@@ -53,7 +52,7 @@ export const SampleDevView = (props: BuyingHouseProps) => {
 
   useEffect(() => {
     getAllSampleDevData();
-    // getReqNo();
+    getAllSampleReqNo()
   }, []);
 
   const getAllSampleDevData = () => {
@@ -61,10 +60,18 @@ export const SampleDevView = (props: BuyingHouseProps) => {
     if (form.getFieldValue('reqNo') !== undefined) {
       req.reqNo = form.getFieldValue('reqNo')
     }
-    service.getAllSampleDevData().then((res) => {
-      console.log(res,'ok')
+    service.getAllSampleDevData(req).then((res) => {
       if (res.data) {
         setSampleData(res.data);
+        setFilterData(res.data)
+      }
+    });
+  };
+
+  const getAllSampleReqNo = () => {
+    service.getAllSampleReqNo().then((res) => {
+      if (res.data) {
+        setReqNo(res.data)
       }
     });
   };
@@ -78,9 +85,10 @@ export const SampleDevView = (props: BuyingHouseProps) => {
     getAllSampleDevData();
   };
 
-  const DetailView = (SampleRequestId) => {
-    console.log(SampleRequestId,'ooooooooooooooooooooo')
-    return navigate(`/sample-development/sample-development-detail`, { state: { id: SampleRequestId } });
+
+  const DetailView = (rowData,cancel) => {
+    const navigateData = filterData.filter(req => req.SampleRequestId === rowData)
+    return navigate(`/sample-development/sample-development-detail`, { state: { data: navigateData,cancelVisible : cancel } });
   };
 
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -178,11 +186,6 @@ export const SampleDevView = (props: BuyingHouseProps) => {
     setDrawerVisible(false);
   };
 
-  //TO open the form for updation
-  const openFormWithData = (viewData: any) => {
-    setDrawerVisible(true);
-    setSelectedBuyingHouse(viewData);
-  };
 
   const columnsSkelton: any = [
     {
@@ -195,23 +198,12 @@ export const SampleDevView = (props: BuyingHouseProps) => {
     {
       title: "Request No",
       dataIndex: "requestNo",
-      // responsive: ['lg'],
       sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("requestNo"),
-    },
-    // {
-    //   title: "Date",
-    //   dataIndex: "date",
-    //   // responsive: ['lg'],
-    //   sorter: (a, b) => a.date.localeCompare(b.date),
-    //   sortDirections: ["descend", "ascend"],
-    //   ...getColumnSearchProps("date"),
-    // },
-    {
+    },    {
       title: "Location",
       dataIndex: "locationName",
-      // responsive: ['lg'],
       sorter: (a, b) => a.location.localeCompare(b.location),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("location"),
@@ -219,7 +211,6 @@ export const SampleDevView = (props: BuyingHouseProps) => {
     {
       title: "PCH",
       dataIndex: "profitControlHead",
-      // responsive: ['lg'],
       sorter: (a, b) => a.pch.localeCompare(b.pch),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("pch"),
@@ -227,7 +218,6 @@ export const SampleDevView = (props: BuyingHouseProps) => {
     {
       title: "Type",
       dataIndex: "type",
-      // responsive: ['lg'],
       sorter: (a, b) => a.type.localeCompare(b.type),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("type"),
@@ -235,7 +225,6 @@ export const SampleDevView = (props: BuyingHouseProps) => {
     {
       title: "Buyer",
       dataIndex: "buyerName",
-      // responsive: ['lg'],
       sorter: (a, b) => a.buyer.localeCompare(b.buyer),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("buyer"),
@@ -243,24 +232,43 @@ export const SampleDevView = (props: BuyingHouseProps) => {
     {
       title: "Style No",
       dataIndex: "m3StyleNo",
-      // responsive: ['lg'],
       sorter: (a, b) => a.styleNo.localeCompare(b.styleNo),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("styleNo"),
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      sorter: (a, b) => a.status.localeCompare(b.status),
+      sortDirections: ["descend", "ascend"],
+    },
+    {
       title: `Action`,
       dataIndex: "action",
+      align:"center",
       render: (text, rowData, index) => (
         <span>
-          {" "}
           <Tooltip placement="top" title="Detail View">
             <EyeOutlined
-              onClick={() => DetailView(rowData.SampleRequestId)}
+              onClick={() => {
+                setHideCancelButton(false);
+                DetailView(rowData.SampleRequestId,false);
+              }}
               style={{ color: "blue", fontSize: 20 }}
-              size={30}
             />
           </Tooltip>
+          <Divider type="vertical"/>
+          {rowData.status !== 'CANCELLED' ? (
+          <Tooltip placement="top" title="Cancel Sample Request">
+            <CloseOutlined 
+              style={{ color: 'red', fontSize: 20 }}
+              onClick={() => {
+                setHideCancelButton(true);
+                DetailView(rowData.SampleRequestId,true);
+              }}
+            />
+          </Tooltip>
+    ): null}
         </span>
       ),
     },
@@ -301,8 +309,8 @@ export const SampleDevView = (props: BuyingHouseProps) => {
                 allowClear
               >
                 {reqNo.map((qc: any) => (
-                  <Select.Option key={qc.reqNo} value={qc.reqNo}>
-                    {qc.reqNo}
+                  <Select.Option key={qc.requestNo} value={qc.requestNo}>
+                    {qc.requestNo}
                   </Select.Option>
                 ))}
               </Select>

@@ -15,18 +15,29 @@ export class SampleDevReqController {
 
 
   @Post('/getAllSampleDevData')
-  async getAllSampleDevData(): Promise<AllSampleDevReqResponseModel> {
+  async getAllSampleDevData(@Body() req?:SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
     try {
-      return await this.sampleService.getAllSampleDevData();
+      return await this.sampleService.getAllSampleDevData(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
     }
   }
 
   @Post('/getAllSampleReqNo')
-  async getAllSampleReqNo(@Body() req : SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
+  async getAllSampleReqNo(): Promise<AllSampleDevReqResponseModel> {
     try {
-      return await this.sampleService.getAllSampleReqNo(req);
+      return await this.sampleService.getAllSampleReqNo();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+
+  @Post('/cancelSampleReqById')
+  @ApiBody({type: SampleFilterRequest})
+  async cancelSampleReqById(@Body() req : any): Promise<AllSampleDevReqResponseModel> {
+    try {
+      console.log(req,'controller')
+      return await this.sampleService.cancelSampleReqById(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
     }

@@ -1,19 +1,32 @@
-import { SettingsIdReq, SettingsModel } from "@project-management-system/shared-models"
-import { SettingsService } from "@project-management-system/shared-services"
-import { Button, Card, Descriptions } from "antd"
+import { SampleFilterRequest } from "@project-management-system/shared-models"
+import { SampleDevelopmentService } from "@project-management-system/shared-services"
+import { Button, Card, Col, Descriptions, message } from "antd"
 import DescriptionsItem from "antd/es/descriptions/Item"
+import Form from "antd/lib/form"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 export const SampleDevDetail = () => {
 
     const navigate = useNavigate()
-    const service = new SettingsService()
     const [data,setData] = useState<any[]>([])
     let location = useLocation();
-    const stateData = location.state;
-    console.log(stateData,'--------------------')
+    const service = new SampleDevelopmentService()
 
+    const stateData = location.state;
+    const cancelVisible = location.state.cancelVisible
+
+    const cancelSampleReq = (id: number) => {
+        const req = new SampleFilterRequest(null,null,null,null,id);
+        service.cancelSampleReqById(req).then((res: any) => {
+            if (res.status) {
+                navigate("/sample-development/sample-development-view");
+                message.success(res.internalMessage)
+            } else {
+                message.error(res.internalMessage);
+            }
+        });
+    };
     
 
     const onUpdate = () => {
@@ -21,39 +34,45 @@ export const SampleDevDetail = () => {
     }
 
     return(
-        <Card title='Request No' size='small'   extra={<Button onClick={onUpdate} type={'primary'}>Change</Button>}>
+        <Card title={<span style={{ color: 'black' }}>Request No : <span style={{color:'black'}}>{stateData?.data[0]?.requestNo?stateData?.data[0]?.requestNo:''
+    }</span></span>} size='small'   extra={<Button onClick={onUpdate} type={'primary'}>Change</Button>}>
              <Descriptions size='small'>
-                <DescriptionsItem label='Location'>{data[0]?.accountControlName}</DescriptionsItem>
-                <DescriptionsItem label='PCH'>{data[0]?.profitControlHead}</DescriptionsItem>
-                <DescriptionsItem label='User'>{data[0]?.companyName}</DescriptionsItem>
-                <DescriptionsItem label='Buyer'>{data[0]?.name}</DescriptionsItem>
-                <DescriptionsItem label='Sample Type'>{data[0]?.divisionName}</DescriptionsItem>
-                <DescriptionsItem label='Sample Sub Type'>{data[0]?.warehouseName}</DescriptionsItem>
-                <DescriptionsItem label='Style'>{}</DescriptionsItem>
-            {/* </Descriptions> */}
-            {/* <Descriptions title='TEAM DETAILS' size='small'> */}
-                <DescriptionsItem label='Description'>{data[0]?.salesPerson}</DescriptionsItem>
-                <DescriptionsItem label='Brand'>{data[0]?.fabricResponsible}</DescriptionsItem>
-                <DescriptionsItem label='Cost Ref'>{data[0]?.itemResponsible}</DescriptionsItem>
-                <DescriptionsItem label='M3 Style No'>{data[0]?.trimRespondsible}</DescriptionsItem>
-            {/* </Descriptions> */}
-            {/* <Descriptions title='PRODUCT DETAILS' size='small'> */}
-                <DescriptionsItem label='Contact No'>{data[0]?.currencyName}</DescriptionsItem>
-                <DescriptionsItem label='Extn'>{data[0]?.liscenceType}</DescriptionsItem>
-            {/* </Descriptions> */}
-            {/* <Descriptions title='CUSTOMER DETAILS' size='small'> */}
-                <DescriptionsItem label='SAM'>{data[0]?.address}</DescriptionsItem>
-                <DescriptionsItem label='DMM'>{data[0]?.buyerName}</DescriptionsItem>
-                <DescriptionsItem label='Technician'>{data[0]?.buyerGroup}</DescriptionsItem>
-                <DescriptionsItem label='Product'>{data[0]?.agentName}</DescriptionsItem>
-                <DescriptionsItem label='Type'>{data[0]?.packageTermsName}</DescriptionsItem>
-                <DescriptionsItem label='Conversion'>{data[0]?.paymentMethod}</DescriptionsItem>
-                <DescriptionsItem label='Made In'>{data[0]?.paymentTermsName}</DescriptionsItem>
-                <DescriptionsItem label='Remarks'>{data[0]?.deliveryMethod}</DescriptionsItem>
-                {/* <DescriptionsItem label='Delivery Terms'>{data[0]?.deliveryTermsName}</DescriptionsItem> */}
-            {/* <DescriptionsItem label={<b>Discount(%)</b>}>{data[0]?.discount}</DescriptionsItem> */}
+                <DescriptionsItem label='Location'>{stateData?.data[0]?.locationName}</DescriptionsItem>
+                <DescriptionsItem label='PCH'>{stateData?.data[0]?.profitControlHead}</DescriptionsItem>
+                <DescriptionsItem label='User'>{stateData?.data[0]?.companyName}</DescriptionsItem>
+                <DescriptionsItem label='Buyer'>{stateData?.data[0]?.buyerName}</DescriptionsItem>
+                <DescriptionsItem label='Sample Type'>{stateData?.data[0]?.sampleType}</DescriptionsItem>
+                <DescriptionsItem label='Sample Sub Type'>{stateData?.data[0]?.sampleSubType}</DescriptionsItem>
+                <DescriptionsItem label='Style'>{stateData?.data[0]?.style}</DescriptionsItem>
+                <DescriptionsItem label='Description'>{stateData?.data[0]?.salesPerson}</DescriptionsItem>
+                <DescriptionsItem label='Brand'>{stateData?.data[0]?.brandName}</DescriptionsItem>
+                <DescriptionsItem label='Cost Ref'>{stateData?.data[0]?.costRef}</DescriptionsItem>
+                <DescriptionsItem label='M3 Style No'>{stateData?.data[0]?.m3StyleNo}</DescriptionsItem>
+                <DescriptionsItem label='Contact No'>{stateData?.data[0]?.contact}</DescriptionsItem>
+                <DescriptionsItem label='Extn'>{stateData?.data[0]?.extension}</DescriptionsItem>
+                <DescriptionsItem label='SAM'>{stateData?.data[0]?.samValue}</DescriptionsItem>
+                <DescriptionsItem label='DMM'>{stateData?.data[0]?.dmmEmployee}</DescriptionsItem>
+                <DescriptionsItem label='Technician'>{stateData?.data[0]?.techEmployee}</DescriptionsItem>
+                <DescriptionsItem label='Product'>{stateData?.data[0]?.product}</DescriptionsItem>
+                <DescriptionsItem label='Type'>{stateData?.data[0]?.type}</DescriptionsItem>
+                <DescriptionsItem label='Conversion'>{stateData?.data[0]?.conversion}</DescriptionsItem>
+                <DescriptionsItem label='Made In'>{stateData?.data[0]?.madeIn}</DescriptionsItem>
+                <DescriptionsItem label='Remarks'>{stateData?.data[0]?.deliveryMethod}</DescriptionsItem>
             </Descriptions>
-
+            {cancelVisible && (
+            <Col xs={12} sm={6} md={4} lg={3} xl={2}>
+            <Form.Item>
+              <Button
+                type="primary"
+                style={{ background: "green", width: "100%" }}
+                onClick={value => { cancelSampleReq(stateData?.data[0]?.SampleRequestId) }}
+                // disabled={cancelVisible}
+              >
+                Cancel Request
+              </Button>
+            </Form.Item>
+          </Col>
+    )}
         </Card>
     )
 

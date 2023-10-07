@@ -79,6 +79,7 @@ export class SampleDevDto {
     this.buyerName = buyerName
     this.sampleTypeId = sampleTypeId
     this.sampleType = sampleType
+    this.sampleSubTypeId = sampleSubTypeId
     this.sampleSubType = sampleSubType
     this.brandId = brandId
     this.brandName = brandName

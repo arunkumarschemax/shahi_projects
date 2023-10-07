@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ItemSkus } from "./sku-generation.entity";
 import { DataSource, Repository } from "typeorm";
-import { CommonResponseModel, ItemSKusReq, SKUGenerationResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, ItemSKusReq, SKUGenerationResponseModel, SkuStatusEnum } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { Destination } from "../destination/destination.entity";
 import { Size } from "../sizes/sizes-entity";
@@ -89,4 +89,21 @@ export class ItemSkuService{
             throw err
         }
       }
+
+      async cancelSKUById(req : ItemSKusReq): Promise<SKUGenerationResponseModel> {
+        try {
+          const sampleReq = await this.itemSkuRepo.findOne({ where: { itemSkuId: req.itemId  } })
+          if (sampleReq) {
+            const updateResult = await this.itemSkuRepo.update({ itemSkuId: req.itemId }, { status: SkuStatusEnum.CLOSED })
+            if (updateResult) {
+              return new SKUGenerationResponseModel(true, 1, 'SKU cancelled successfully', undefined)
+            }
+          } else {
+            return new SKUGenerationResponseModel(false, 0, 'No SKU Record found', [])
+          }
+        } catch (err) {
+          throw err;
+        }
+      }
+
 }
