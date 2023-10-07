@@ -248,25 +248,25 @@ export const FOBPriceVariationReport = () => {
                     
                         className="custom-table-wrapper" pagination={false}
                         scroll={{ x: 'max-content', y: 600}}
-                        summary={(pageData) => {
-                            let totalDifference = 0;
+                        // summary={(pageData) => {
+                        //     let totalDifference = 0;
 
-                            pageData.forEach(({ difference }) => {
-                                if (Number(difference)) {
-                                    totalDifference += Number(difference)
-                                }
-                            })
+                        //     pageData.forEach(({ difference }) => {
+                        //         if (Number(difference)) {
+                        //             totalDifference += Number(difference)
+                        //         }
+                        //     })
 
-                            return (
-                                <>
-                                    <Table.Summary.Row className="tableFooter">
-                                        <Table.Summary.Cell index={14} colSpan={6}><Text>Total</Text></Table.Summary.Cell>
-                                        <Table.Summary.Cell index={15} colSpan={1}></Table.Summary.Cell>
-                                        <Table.Summary.Cell index={15} colSpan={1}>{totalDifference}</Table.Summary.Cell>
-                                    </Table.Summary.Row>
-                                </>
-                            )
-                        }}
+                        //     return (
+                        //         <>
+                        //             <Table.Summary.Row className="tableFooter">
+                        //                 <Table.Summary.Cell index={14} colSpan={6}><Text>Total</Text></Table.Summary.Cell>
+                        //                 <Table.Summary.Cell index={15} colSpan={1}></Table.Summary.Cell>
+                        //                 <Table.Summary.Cell index={15} colSpan={1}>{totalDifference}</Table.Summary.Cell>
+                        //             </Table.Summary.Row>
+                        //         </>
+                        //     )
+                        // }}
                     />)
                     : (<Table size='large' />)}
             </>

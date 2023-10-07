@@ -22,7 +22,8 @@ interface IProps {
 export const CommonHeader = (props: IProps) => {
   const navigate = useNavigate();
   const { token: { colorPrimary } } = useToken()
-
+  const authdata = JSON.parse(localStorage.getItem('currentUser'))
+  const loginUser = authdata?.user?.userName
 
   const logoutHandler = async () => {
     localStorage.clear()
@@ -43,23 +44,23 @@ export const CommonHeader = (props: IProps) => {
   const items: MenuProps['items'] = [
     {
       key: '1',
-      label: 'Username'
+      label: `User Name : ${loginUser}`
+
     },
+    // {
+    //   key: '2',
+    //   label: 'Role:'
+    // },
+    // {
+    //   key: '3',
+    //   label: 'Plant:'
+    // },
     {
       key: '2',
-      label: 'Role:'
-    },
-    {
-      key: '3',
-      label: 'Plant:'
-    },
-    {
-      key: '4',
       label: (
         <>
-          <Divider type='horizontal' />
           <Button type='primary' onClick={() => logoutHandler()} >
-            logout
+            Log Out
           </Button>
         </>
       )
@@ -95,7 +96,7 @@ export const CommonHeader = (props: IProps) => {
         </Col>
         <Col span={7} style={{ textAlign: 'right' }}>
           <Dropdown menu={{ items }}>
-            <Avatar style={{ marginBottom: '5px', cursor: 'pointer' }} size={45} shape="circle" icon={<UserOutlined style={{ fontSize: '25px' }} />} />
+            <Avatar style={{ marginBottom: '8px', cursor: 'pointer' }} size={42} shape="circle" icon={<UserOutlined style={{ fontSize: '25px' }} />} />
           </Dropdown>
         </Col>
         <Col></Col>

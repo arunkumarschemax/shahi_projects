@@ -979,7 +979,7 @@ const PPMReport = () => {
             title: 'Quantity',
             dataIndex: '',
             key: '',
-            width:70,
+            width:60,
             align: 'right',
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1070,7 +1070,7 @@ const PPMReport = () => {
           {
             title: 'Buyer Confirmed Gross/FOB Currency',
             dataIndex: 'buyerGrossFobCurrencyCode',
-            align: 'right',            width:70,
+            align: 'right',            width:90,
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
 
@@ -1100,7 +1100,7 @@ const PPMReport = () => {
           {
             title: 'Diff of Currency',
             dataIndex: '',
-            width:70,
+            width:90,
 
           },
           {
@@ -1271,7 +1271,7 @@ const PPMReport = () => {
           {
             title: 'CO currency',
             dataIndex: 'coPriceCurrencyCode',
-            width:40,
+            width:65,
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1303,7 +1303,7 @@ const PPMReport = () => {
             title: 'Diff of currency',
             dataIndex: '',
             align: 'right',
-            width:40,
+            width:70,
 
 
           },
@@ -1367,7 +1367,7 @@ const PPMReport = () => {
             title: 'Allowed Excess Ship Qty',
             dataIndex: '',
             align: 'right',
-            width:100,
+            width:70,
 
 
             render: (text, record) => {
@@ -1399,7 +1399,7 @@ const PPMReport = () => {
             title: 'Actual Shipped Qty',
             dataIndex: 'actualShippedQty',
             align: 'right',
-            width:100,
+            width:70,
 
 
             render: (text, record) => {
@@ -1423,7 +1423,7 @@ const PPMReport = () => {
           {
             title: 'Actual Ship %',
             align: 'right',
-            width:80,
+            width:70,
 
             dataIndex: '',
             render: (text, record) => {

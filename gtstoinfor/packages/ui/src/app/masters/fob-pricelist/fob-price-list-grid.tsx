@@ -160,6 +160,7 @@ const FobPriceListGrid = () => {
     {
         title: 'Planning Season Code',
         dataIndex: 'planningSeasonCode',
+        width:100,
         // sorter: (a, b) => a.planningSeasonCode.length - b.planningSeasonCode.length,
         // sortDirections: ['descend', 'ascend'],
         // ...getColumnSearchProps('planningSeasonCode'),
@@ -209,7 +210,7 @@ const FobPriceListGrid = () => {
       },
     {
       title: "Status",
-      dataIndex: "isActive",
+      dataIndex: "isActive",width:80,
 
       render: (isActive, rowData) => (
         <>
@@ -234,7 +235,7 @@ const FobPriceListGrid = () => {
 
     },
     {
-      title: "Actions",
+      title: "Actions",width:80,
       render: (text, rowData, index: number) => {
         return <>
           <Tooltip title="Edit">

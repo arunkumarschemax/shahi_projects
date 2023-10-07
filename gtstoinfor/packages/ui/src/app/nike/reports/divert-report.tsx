@@ -456,11 +456,11 @@ const DivertReport = () => {
                 },
                 {
                     title: 'Price-Net Includding Discount Tally-Check',
-                    dataIndex: '',width:70,
+                    dataIndex: '',width:100,
                 },
                 {
-                    title: 'Price-Trading Co Net Includding Discount Tally-Check',
-                    dataIndex: '',width:70,
+                    title: 'Price-Trading Co Net Including Discount Tally-Check',
+                    dataIndex: '',width:100,
                 },
                 {
                     title: 'CO-update',width:70,
