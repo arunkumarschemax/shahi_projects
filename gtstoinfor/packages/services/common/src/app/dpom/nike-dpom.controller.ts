@@ -38,10 +38,10 @@ export class DpomController {
         }
     }
 
-    @Post('/getCRMOrderDetails1')
-    async getCRMOrderDetails1() {
+    @Post('/getCRMOrderDetails2')
+    async getCRMOrderDetails2() {
         try {
-            return await this.dpomService.getCRMOrderDetails1('DV3934')
+            return await this.dpomService.getCRMOrderDetails2('2000593977')
         } catch (error) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
@@ -185,7 +185,7 @@ export class DpomController {
 
     @Post('/getFabricTrackerReport')
     @ApiBody({ type: PpmDateFilterRequest })
-    async getFabricTrackerReport( @Body() req:any): Promise<CommonResponseModel> {
+    async getFabricTrackerReport(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return await this.dpomService.getFabricTrackerReport(req);
         } catch (err) {

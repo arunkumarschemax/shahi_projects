@@ -198,12 +198,11 @@ export class DpomService {
 
             // Extract the relevant data from the response and return it
             const responseData = response.data;
-            return responseData;
-            // if (data.length > 0) {
-            //     return { status: true, data: data };
-            // } else {
-            //     return { status: false, error: 'No results found' };
-            // }
+            if (responseData.length > 0) {
+                return { status: true, data: responseData };
+            } else {
+                return { status: false, error: 'No results found' };
+            }
         } catch (error) {
             // Handle any errors that may occur during the HTTP request
             console.error('Error:', error);
@@ -214,25 +213,41 @@ export class DpomService {
     async getCRMOrderDetails2(coNumber: string): Promise<any> {
         // const coNumber = '2000593977'
         const headers = { 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
-        const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeInvDetails?coNo=${coNumber}`, { headers })
-        return response
-        // if (data.length > 0) {
-        //     return { status: true, data: data };
-        // } else {
-        //     return { status: false, error: 'No results found' };
-        // }
+        try {
+            const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeInvDetails?coNo=${coNumber}`, { headers });
+
+            // Extract the relevant data from the response and return it
+            const responseData = response.data;
+            if (responseData.length > 0) {
+                return { status: true, data: responseData };
+            } else {
+                return { status: false, error: 'No results found' };
+            }
+        } catch (error) {
+            // Handle any errors that may occur during the HTTP request
+            console.error('Error:', error);
+            throw error; // You can choose to re-throw the error or handle it differently
+        }
     }
 
     async getCRMOrderDetails3(styleCode: string): Promise<any> {
         // const styleCode = '476F'
         const headers = { 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
-        const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeFabricDetails?styleCode=${styleCode}`, { headers })
-        return response
-        // if (data.length > 0) {
-        //     return { status: true, data: data };
-        // } else {
-        //     return { status: false, error: 'No results found' };
-        // }
+        try {
+            const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeFabricDetails?styleCode=${styleCode}`, { headers });
+
+            // Extract the relevant data from the response and return it
+            const responseData = response.data;
+            if (responseData.length > 0) {
+                return { status: true, data: responseData };
+            } else {
+                return { status: false, error: 'No results found' };
+            }
+        } catch (error) {
+            // Handle any errors that may occur during the HTTP request
+            console.error('Error:', error);
+            throw error; // You can choose to re-throw the error or handle it differently
+        }
     }
 
     // async createCOline(req: any): Promise<CommonResponseModel> {
@@ -335,15 +350,15 @@ export class DpomService {
 
                     const crmData = {
                         item: data1?.ITEMNO,
-                        factory: data2?.PLAN_UNIT,
+                        factory: data2?.plan_UNIT,
                         customerOrder: data1?.ORDNO,
                         coFinalApprovalDate: data1?.CO_FINAL_APP_DATE,
-                        planNo: data2?.PLAN_NUMB,
+                        planNo: data2?.plan_NUMB,
                         truckOutDate: '',
                         actualShippedQty: 0,
                         coPrice: data1?.PRICE,
                         shipToAddress: '',
-                        paymentTerm: data2?.PAY_TERM_DESC,
+                        paymentTerm: data2?.pay_TERM_DESC,
                         styleDesc: '',
                         fabricContent: '',
                         fabricSource: '',
@@ -851,24 +866,24 @@ export class DpomService {
         } else {
             return new CommonResponseModel(false, 0, 'data not found')
         }
-    } 
+    }
 
     async getFabricTrackerReport(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
         try {
-          const data = await this.dpomRepository.getFabricTrackerReport(req);
-    
-          if (data.length > 0) {
-            return new CommonResponseModel(true, 1, 'Data retrieved', data);
-          } else {
-            return new CommonResponseModel(false, 0, 'No data found');
-          }
+            const data = await this.dpomRepository.getFabricTrackerReport(req);
+
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 1, 'Data retrieved', data);
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found');
+            }
         } catch (error) {
-          // Handle errors, log them, and return an error response if needed
-          console.error('Error in getFabricTrackerReport:', error);
-          return new CommonResponseModel(false, 0, 'An error occurred');
+            // Handle errors, log them, and return an error response if needed
+            console.error('Error in getFabricTrackerReport:', error);
+            return new CommonResponseModel(false, 0, 'An error occurred');
         }
-      } 
-      
+    }
+
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPlantCount()
         if (data.length > 0)
@@ -1115,7 +1130,7 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'failed', e);
         }
     }
-    
+
 
     async getDifferentialData(): Promise<any> {
 
@@ -1649,9 +1664,9 @@ export class DpomService {
         const manager = this.dataSource
         const pdfInfoQry = `select * from pdf_file_data`;
         const pdfInfo = await manager.query(pdfInfoQry)
-        if(pdfInfo.length > 0){
+        if (pdfInfo.length > 0) {
             return new CommonResponseModel(true, 1, 'data retrived', pdfInfo)
-        }else{
+        } else {
             return new CommonResponseModel(false, 0, 'No data')
         }
     }

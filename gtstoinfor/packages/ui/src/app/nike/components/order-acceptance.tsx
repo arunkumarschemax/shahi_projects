@@ -453,7 +453,7 @@ export function OrderAcceptance() {
                                     optionFilterProp="children"
                                     allowClear
                                 >
-                                    {poLine.map((inc: any) => {
+                                    {poLine?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                     })
                                     }
@@ -468,7 +468,7 @@ export function OrderAcceptance() {
                                     optionFilterProp="children"
                                     allowClear
                                 >
-                                    {productCode.map((inc: any) => {
+                                    {productCode?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
                                     })
                                     }
