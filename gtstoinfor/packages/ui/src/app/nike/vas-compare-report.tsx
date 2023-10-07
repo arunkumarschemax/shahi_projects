@@ -450,16 +450,16 @@ const VASChangesCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'document_date',
+            dataIndex: 'document_date',width:70,
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item',
-            dataIndex: 'item'
+            dataIndex: 'item',width:70,
         },
         {
             title: 'Factory',
-            dataIndex: 'factory'
+            dataIndex: 'factory',width:70,
         },
         // {
         //     title: 'Document Date',
@@ -467,57 +467,57 @@ const VASChangesCompareGrid = () => {
         // },
         {
             title: 'PO Number',
-            dataIndex: 'po_number',
+            dataIndex: 'po_number',width:70,
             ...getColumnSearchProps('po_number')
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
+            dataIndex: 'po_line_item_number',width:70,
         },
         {
             title: 'Total Item Quantity',
-            dataIndex: 'totalItemQty'
+            dataIndex: 'totalItemQty',width:70,
         },
         {
             title: 'Product Code',
-            dataIndex: 'productCode'
+            dataIndex: 'productCode',width:70,
         },
         {
-            title: 'OGAC',
+            title: 'OGAC',width:70,
             dataIndex: 'OGAC', render: (text) => moment(text).format('MM/DD/YYYY')
 
         },
         {
-            title: 'GAC',
+            title: 'GAC',width:70,
             dataIndex: 'GAC', render: (text) => moment(text).format('MM/DD/YYYY')
 
         },
         {
-            title: 'Change from Direct Ship Sales Order Number',
+            title: 'Change from Direct Ship Sales Order Number',width:80,
             dataIndex: 'change_from_direct_ship_sales_order_number'
         },
         {
-            title: 'Change from Direct Ship Sales Order Item',
+            title: 'Change from Direct Ship Sales Order Item',width:80,
             dataIndex: 'change_from_direct_ship_sales_order_item'
         },
         {
-            title: 'Change to Direct Ship Sales Order Number',
+            title: 'Change to Direct Ship Sales Order Number',width:80,
             dataIndex: 'change_to_direct_ship_sales_order_number'
         },
         {
-            title: 'Change to Direct Ship Sales Order Item',
+            title: 'Change to Direct Ship Sales Order Item',width:80,
             dataIndex: 'change_to_direct_ship_sales_order_item'
         },
         {
-            title: 'Change from Item Vas Text',
+            title: 'Change from Item Vas Text',width:80,
             dataIndex: 'change_from_item_vas_text'
         },
         {
-            title: 'Change to Item Vas Text',
+            title: 'Change to Item Vas Text',width:80,
             dataIndex: 'change_to_item_vas_text'
         },
         {
-            title: 'Item VAS PDF PO',
+            title: 'Item VAS PDF PO',width:80,
             dataIndex: 'item_vas_pdf_po'
         },
         {
@@ -534,17 +534,17 @@ const VASChangesCompareGrid = () => {
         // },
         {
             title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number',
+            dataIndex: 'schedule_line_item_number',width:80,
             ...getColumnSearchProps('schedule_line_item_number')
         },
         {
-            title: 'Previous Order Quantity Pieces',
+            title: 'Previous Order Quantity Pieces',width:80,
             dataIndex: 'old_val',
             align: 'right',
         },
         {
             title: 'Revised Order Quantity Pieces',
-            dataIndex: 'new_val',
+            dataIndex: 'new_val',width:80,
             align: 'right',
             render: (text, record) => (
                 <span  {...record.new_val}>
@@ -565,7 +565,7 @@ const VASChangesCompareGrid = () => {
         {
             title: 'Difference',
             dataIndex: 'Diff',
-            align: 'right',
+            align: 'right',width:80,
             render: (text, record) => (
                 < >
                     {Number(record.Diff) === 0 ? '-' : ''}
@@ -585,7 +585,7 @@ const VASChangesCompareGrid = () => {
         //     sortDirections: ['descend', 'ascend'],
         // },
         {
-            title: 'Order Status',
+            title: 'Order Status',width:80,
             dataIndex: 'dpom_item_line_status',
             // render: (value) => <Tag color={value == 'ACCEPTED' ? 'green' : 'green-inverse'} >{value}</Tag>
         }
@@ -982,7 +982,7 @@ const VASChangesCompareGrid = () => {
         {
             key: '1',
             label: <b style={{ color: '#25CB2D' }}>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} pagination={false} scroll={{ x: 'max-content', y: 600}} />,
         },
         // {
         //     key: '2',
@@ -1007,7 +1007,7 @@ const VASChangesCompareGrid = () => {
         {
             key: '2',
             label: <b>Product Code Revised : {productCodeChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} scroll={{ x: 'max-content' }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 'max-content', y: 600}} />,
         },
     ];
 

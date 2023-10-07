@@ -637,90 +637,90 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Report Genarate Date',
-            dataIndex: '',
+            dataIndex: '',width:70,
             ...getColumnSearchProps('po_number')
         },
         {
             title: 'Item',
-            dataIndex: 'item',
+            dataIndex: 'item',width:70,
             ...getColumnSearchProps('item')
         },
         {
             title: 'Factory',
-            dataIndex: 'factory',
+            dataIndex: 'factory',width:70,
             ...getColumnSearchProps('factory')
         },
         {
             title: 'Document Date',
-            dataIndex: '',
+            dataIndex: '',width:70,
             //  ...getColumnSearchProps('factory')
         },
         {
             title: 'PO Number',
-            dataIndex: 'po_number',
+            dataIndex: 'po_number',width:70,
             ...getColumnSearchProps('po_number')
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number'
+            dataIndex: 'po_line_item_number',width:70,
         },
         {
             title: 'PRODUCT CODE',
-            dataIndex: ''
+            dataIndex: '',width:70,
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac',
+            dataIndex: 'ogac',width:70,
             ...getColumnSearchProps('ogac')
         },
         {
             title: 'GAC',
-            dataIndex: 'gac',
+            dataIndex: 'gac',width:80,
             ...getColumnSearchProps('gac')
         },
         {
             title: 'Change from Inventory Segment Code',
-            dataIndex: '',
+            dataIndex: '',width:80,
             // ...getColumnSearchProps('')
         },
         {
             title: 'Change To Inventory Segment Code',
-            dataIndex: '',
+            dataIndex: '',width:80,
             // ...getColumnSearchProps('')
         },
         {
             title: 'Change from Destination Country Name',
-            dataIndex: '',
+            dataIndex: '',width:80,
             // ...getColumnSearchProps('')
         },
         {
             title: 'Change To Destination Country Name',
-            dataIndex: '',
+            dataIndex: '',width:80,
             // ...getColumnSearchProps('')
         },
         {
             title: 'Change from Ship To Customer Number',
-            dataIndex: '',
+            dataIndex: '',width:80,
             // ...getColumnSearchProps('')
         },
         {
             title: 'Change to Ship To Customer Number',
-            dataIndex: '',
+            dataIndex: '',width:80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Ship To Customer Number in DIA',
-            dataIndex: '',
+            dataIndex: '',width:80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change from Plant Code',
-            dataIndex: '',
+            dataIndex: '',width:80,
             // ...getColumnSearchProps('schedule_line_item_number')
         },
         {
             title: 'Change to Plant Code',
-            dataIndex: '',
+            dataIndex: '',width:80,
             // ...getColumnSearchProps('schedule_line_item_number')
         }
     ];
@@ -738,25 +738,25 @@ const ShipmentChangesCompareGrid = () => {
         {
             key: '1',
             label: <b style={{ color: '#B229DE' }}>GAC Revised PO's : {filteredQtyData?.length} </b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} scroll={{ x: 'max-content' }}
+            children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} pagination={false} scroll={{ x: 'max-content', y: 600}}
             />,
         },
         {
             key: '2',
             label: <b>MRGAC Revised PO's : {unitChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} scroll={{ x: 'max-content' }}
+            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} pagination={false} scroll={{ x: 'max-content', y: 600}}
             />,
         },
         {
             key: '3',
             label: <b style={{ color: '#29D6DE' }} >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns3} scroll={{ x: 'max-content' }}
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns3}pagination={false} scroll={{ x: 'max-content', y: 600}}
             />,
         },
         {
             key: '4',
             label: <b>Plant Code Revised PO's : {poStatusData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns5} scroll={{ x: 'max-content' }}
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns5} pagination={false} scroll={{ x: 'max-content', y: 600}}
             />,
         }
     ];

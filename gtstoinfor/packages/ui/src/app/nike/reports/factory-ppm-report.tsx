@@ -528,6 +528,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Factory',
                 dataIndex: 'factory',
+                width:70,
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
@@ -539,7 +540,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Edit Unit Allocation',
-                dataIndex: '',
+                dataIndex: '',width:70,
                 align: "center",
                 render: (text, rowData) => (
                     <span>
@@ -553,8 +554,8 @@ const FactoryPPMReport = () => {
                 ),
             },
             {
-                title: '',
-                align: 'center',
+                title: 'Text Area',
+                align: 'center',width:70,
                 render: (text, rowData) => (
                     <div>
                         {expandedActualUnit[rowData.poAndLine] && (
@@ -588,6 +589,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Actual Unit',
                 dataIndex: 'actualUnit',
+                width:70,
                 align: 'center',
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
@@ -601,6 +603,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Document Date',
                 dataIndex: 'documentDate',
+                width:70,
                 className: "right-column",
                 render: (text, record) => {
                     return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-';
@@ -608,11 +611,11 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Purchase Order Number',
-                dataIndex: 'purchaseOrderNumber', align: 'center'
+                dataIndex: 'purchaseOrderNumber', align: 'center',width:70,
             },
             {
                 title: 'PO Line Item Number',
-                dataIndex: 'poLineItemNumber',
+                dataIndex: 'poLineItemNumber',width:70,
                 className: 'centered-column', align: 'center'
             },
             // {
@@ -628,22 +631,22 @@ const FactoryPPMReport = () => {
             // },
             {
                 title: 'DPOM Line Item Status',
-                dataIndex: 'DPOMLineItemStatus',
+                dataIndex: 'DPOMLineItemStatus',width:70,
             },
 
             {
                 title: 'Style Number',
-                dataIndex: 'styleNumber',
+                dataIndex: 'styleNumber',width:70,
                 // ...getColumnSearch('styleNumber'),
             },
             {
                 title: 'Product Code',
-                dataIndex: 'productCode',
+                dataIndex: 'productCode',width:70,
                 // ...getColumnSearch('productCode'),
             },
             {
                 title: 'Colour Description',
-                dataIndex: 'colorDesc',
+                dataIndex: 'colorDesc',width:70,
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
@@ -655,7 +658,7 @@ const FactoryPPMReport = () => {
 
 
             {
-                title: 'CO',
+                title: 'CO',width:70,
                 dataIndex: 'customerOrder',
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
@@ -667,7 +670,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'CO Final Approval Date',
-                dataIndex: 'coFinalApprovalDate',
+                dataIndex: 'coFinalApprovalDate',width:70,
                 className: "right-column",
                 render: (text, record) => {
                     return record.documentDate ? moment(record.documentDate).format('MM/DD/YYYY') : '-'
@@ -675,7 +678,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Plan No',
-                dataIndex: 'planNo',
+                dataIndex: 'planNo',width:70,
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
@@ -686,7 +689,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Lead Time',
-                dataIndex: 'leadTime',
+                dataIndex: 'leadTime',width:70,
                 render: (text) => {
                     if (!isNaN(parseFloat(text))) {
                         // If it's a valid number, render it
@@ -699,57 +702,57 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Category',
-                dataIndex: 'categoryCode',
+                dataIndex: 'categoryCode',width:70,
             },
             {
                 title: 'Category Description',
-                dataIndex: 'categoryDesc',
+                dataIndex: 'categoryDesc',width:70,
             },
             {
                 title: 'Vendor Code',
-                dataIndex: 'vendorCode',
+                dataIndex: 'vendorCode',width:70,
             },
             {
                 title: 'Global Category Core Focus',
-                dataIndex: 'gccFocusCode',
+                dataIndex: 'gccFocusCode',width:70,
             },
             {
                 title: 'Global Category Core Focus Description',
-                dataIndex: 'gccFocusDesc',
+                dataIndex: 'gccFocusDesc',width:70,
             },
             {
                 title: 'Gender Age',
                 dataIndex: 'genderAgeCode',
-                className: 'centered-column',
+                className: 'centered-column',width:70,
             },
             {
                 title: 'Gender Age Description',
-                dataIndex: 'genderAgeDesc',
+                dataIndex: 'genderAgeDesc',width:70,
             },
             {
                 title: 'Destination Country Code',
-                dataIndex: 'destinationCountryCode',
+                dataIndex: 'destinationCountryCode',width:70,
             },
             {
                 title: 'Destination country Name',
-                dataIndex: 'destinationCountry',
+                dataIndex: 'destinationCountry',width:70,
             },
             {
                 title: 'Geo Code',
-                dataIndex: '',
+                dataIndex: '',width:70,
             },
             {
                 title: 'Plant Code',
-                dataIndex: 'plant',
+                dataIndex: 'plant',width:70,
                 align: 'center'
             },
             {
                 title: 'Plant Name',
-                dataIndex: 'plantName',
+                dataIndex: 'plantName',width:70,
             },
             {
                 title: 'Trading Co PO Number',
-                dataIndex: 'tradingCoPoNumber',
+                dataIndex: 'tradingCoPoNumber',width:70,
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
@@ -760,19 +763,19 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'UPC',
-                dataIndex: 'UPC',
+                dataIndex: 'UPC',width:70,
             },
             {
                 title: 'Sales Order Number',
-                dataIndex: '',
+                dataIndex: '',width:70,
             },
             {
                 title: 'Sales Order Item Number',
-                dataIndex: '',
+                dataIndex: '',width:70,
             },
             {
                 title: 'Customer PO',
-                dataIndex: 'customerPO',
+                dataIndex: 'customerPO',width:70,
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
@@ -783,7 +786,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Ship To Customer Number',
-                dataIndex: 'shipToCustomerNumber',
+                dataIndex: 'shipToCustomerNumber',width:70,
                 align: 'center',
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
@@ -795,7 +798,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Ship To Customer Name',
-                dataIndex: 'shipToCustomerName',
+                dataIndex: 'shipToCustomerName',width:70,
                 align: 'center',
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
@@ -864,37 +867,37 @@ const FactoryPPMReport = () => {
                 title: 'Planning Season Code',
                 dataIndex: 'planningSeasonCode',
                 align: 'center',
-                className: 'centered-column',
+                className: 'centered-column',width:70,
             },
             {
                 title: 'Planning Season Year',
-                dataIndex: 'planningSeasonYear',
+                dataIndex: 'planningSeasonYear',width:70,
                 align: 'center',
             },
             {
                 title: 'Doc Type',
-                dataIndex: 'docTypeCode',
+                dataIndex: 'docTypeCode',width:70,
                 align: 'center',
             },
-            { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center' },
+            { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center',width:70, },
             {
-                title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column", render: (text, record) => {
+                title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column",width:70, render: (text, record) => {
                     return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
                 },
             },
             {
-                title: 'OGAC', dataIndex: 'OGAC', className: "right-column", render: (text, record) => {
+                title: 'OGAC', dataIndex: 'OGAC', className: "right-column",width:70, render: (text, record) => {
                     return record.OGAC ? moment(record.OGAC).format('MM/DD/YYYY') : '-';
                 },
             },
             {
-                title: 'GAC', dataIndex: 'GAC', className: "right-column", render: (text, record) => {
+                title: 'GAC', dataIndex: 'GAC', className: "right-column",width:70, render: (text, record) => {
                     return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
                 },
             },
 
             {
-                title: 'Truck Out Date', dataIndex: 'truckOutDate', className: "right-column", render: (text, record) => {
+                title: 'Truck Out Date', dataIndex: 'truckOutDate', width:70,className: "right-column", render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -903,7 +906,7 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', className: "right-column", render: (text, record) => {
+                title: 'Origin Receipt Date', dataIndex: 'originReceiptDate',width:70, className: "right-column", render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -912,7 +915,7 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', className: "right-column", render: (text, record) => {
+                title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate',width:70, className: "right-column", render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -921,7 +924,7 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'GAC Reason Code', dataIndex: 'GACReasonCode', align: 'right', render: (text, record) => {
+                title: 'GAC Reason Code', dataIndex: 'GACReasonCode', align: 'right',width:70, render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -930,7 +933,7 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'GAC Reason Description', dataIndex: 'GACReasonDesc', render: (text, record) => {
+                title: 'GAC Reason Description', dataIndex: 'GACReasonDesc', width:70,render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -940,7 +943,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Shipping Type',
-                dataIndex: 'shippingType',
+                dataIndex: 'shippingType',width:70,
                 render: (text) => {
                   // Replace underscores (_) with spaces
                   const transformedText = text ? text.replace(/_/g, ' ') : '-';
@@ -949,10 +952,10 @@ const FactoryPPMReport = () => {
                 },
               },
                    
-              { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode', className: 'centered-column', },
+              { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode',width:70, className: 'centered-column', },
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
             {
-                title: 'Launch Code', dataIndex: 'launchCode', render: (text, record) => {
+                title: 'Launch Code', dataIndex: 'launchCode', width:70,render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -960,19 +963,19 @@ const FactoryPPMReport = () => {
                     }
                 },
             },
-            { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode' },
-            { title: 'In Co Terms', dataIndex: 'inCoTerms' },
-            { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode' },
+            { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode',width:70, },
+            { title: 'In Co Terms', dataIndex: 'inCoTerms',width:70, },
+            { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode',width:70, },
             {
-                title: 'Purchase Group',
+                title: 'Purchase Group',width:70,
                 dataIndex: 'purchaseGroupCode',
                 className: 'centered-column',
             },
-            { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName' },
+            { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName',width:70, },
 
             {
                 title: 'Quantity Allocation',
-                align: 'center',
+                align: 'center',width:70,
                 render: (text, rowData) => (
                     <span>
                         <Form.Item>
@@ -985,8 +988,8 @@ const FactoryPPMReport = () => {
                 ),
             },
             {
-
-                dataIndex: 'id',
+                title:'Text Area',
+                dataIndex: 'id',width:70,
                 align: 'center',
                 render: (text, rowData) => (
                     <div>
@@ -1020,7 +1023,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Reallocated Quantity',
-                dataIndex: 'allocatedQuantity',
+                dataIndex: 'allocatedQuantity',width:70,
                 align: 'center',
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
@@ -1032,7 +1035,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Total Item Qty',
-                dataIndex: 'totalItemQty',
+                dataIndex: 'totalItemQty',width:70,
                 align: 'center',
                 className: 'centered-column',
                 render: (text) => <strong>{text}</strong>
@@ -1044,13 +1047,14 @@ const FactoryPPMReport = () => {
                 title: version,
                 dataIndex: version,
                 key: version,
-                width: 130,
+                width: 70,
                 align: 'center',
                 children: [
                     {
                         title: 'Quantity',
                         dataIndex: '',
                         key: '',
+                        width:70,
                         className: 'centered-column',
                         render: (text, record) => {
                             const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1079,7 +1083,7 @@ const FactoryPPMReport = () => {
             exportingColumns.push({
                 title: version,
                 dataIndex: '',
-                width: 130,
+                width: 70,
                 align: 'center',
                 children: [
                     {
@@ -1113,7 +1117,7 @@ const FactoryPPMReport = () => {
 
             {
                 title: 'Change Register',
-                dataIndex: 'displayName',
+                dataIndex: 'displayName',width:70,
                 align: 'center',
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
@@ -1126,11 +1130,11 @@ const FactoryPPMReport = () => {
             {
                 title: 'Allowed Excess Ship Qty',
                 dataIndex: '',
-                align: 'center',
+                align: 'center',width:70,
 
             },
             {
-                title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', render: (text, record) => {
+                title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty',width:70, render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -1140,12 +1144,12 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Actual Ship %',
-                dataIndex: '',
+                dataIndex: '',width:70,
                 align: 'center',
 
             },
             {
-                title: 'VAS-Size', dataIndex: 'VASSize', render: (text, record) => {
+                title: 'VAS-Size', dataIndex: 'VASSize',width:70, render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -1154,7 +1158,7 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'Item Vas Text', dataIndex: 'itemVasText', render: (text, record) => {
+                title: 'Item Vas Text', dataIndex: 'itemVasText',width:70, render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -1163,7 +1167,7 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'Item Text', dataIndex: 'itemText', render: (text, record) => {
+                title: 'Item Text', dataIndex: 'itemText',width:70, render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -1172,7 +1176,7 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'Hanger Po',
+                title: 'Hanger Po',width:70,
                 dataIndex: 'hanger', render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
@@ -1273,14 +1277,17 @@ const FactoryPPMReport = () => {
                         columns={columns}
                         dataSource={filterData}
                         size='small'
+                        // pagination={false}
+
                         pagination={{
+                            pageSize:50,
                             onChange(current, pageSize) {
                                 setPage(current);
                                 setPageSize(pageSize);
                             }
                         }}
                         className="custom-table-wrapper"
-                        scroll={{ x: 'max-content' }}
+                        scroll={{ x: 'max-content', y: 600}}
                         rowClassName={getRowClassName}
                         bordered
                     />
@@ -1305,20 +1312,20 @@ const FactoryPPMReport = () => {
                     form={form}
                     layout='vertical'>
                     <Row gutter={24}>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
                             <Form.Item label="Last Modified Date" name="lastModifiedDate">
                                 <RangePicker />
 
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '20px' }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
                             <Form.Item label="Document Date" name="documentDate">
                                 <RangePicker />
 
                             </Form.Item>
                         </Col>
 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
                             <Form.Item name='productCode' label='Product Code' >
                                 <Select
                                     showSearch
@@ -1333,7 +1340,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
                             <Form.Item name='poNumber' label='Po Number' >
                                 <Select
                                     showSearch
@@ -1349,7 +1356,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
                             <Form.Item name='colorDesc' label='Color Description' >
                                 <Select
                                     showSearch
@@ -1364,7 +1371,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                             <Form.Item name='categoryDesc' label='Category Description' >
                                 <Select
                                     showSearch
@@ -1379,7 +1386,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }}>
                             <Form.Item name='destinationCountry' label='Destination Country' >
                                 <Select
                                     showSearch
@@ -1394,7 +1401,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
                             <Form.Item name='plant' label='Plant Code' >
                                 <Select
                                     showSearch
@@ -1409,7 +1416,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
                             <Form.Item name='item' label='Item' >
                                 <Select
                                     showSearch
@@ -1424,7 +1431,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
                             <Form.Item name='factory' label='Factory' >
                                 <Select
                                     showSearch
@@ -1439,7 +1446,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
                             <Form.Item name="DPOMLineItemStatus" label="DPOM Line Item Status">
                                 <Select
                                     showSearch

@@ -244,19 +244,20 @@ const DivertReport = () => {
                 {
                     title: "From Item",
                     dataIndex: "",
+                    width:70,
                 },
                 {
                     title: "Unit",
-                    dataIndex: "",
+                    dataIndex: "",width:70,
                 },
                 {
                     title: "Plant",
-                    dataIndex: ['oldPo', 'Plant'],
+                    dataIndex: ['oldPo', 'Plant'],width:70,
                 },
 
                 {
                     title: "Line Status",
-                    dataIndex: ['oldPo', 'LineStatus'],
+                    dataIndex: ['oldPo', 'LineStatus'],width:70,
                     // ...getColumnSearchProps("lineStatus"),
                 },
                 // {
@@ -270,63 +271,63 @@ const DivertReport = () => {
                     title: 'Old Po',
                     dataIndex: ['oldPo', 'poNumber'],
                     sorter: (a, b) => a.oldPo.poNumber?.localeCompare(b.oldPo.poNumber),
-                    sortDirections: ["descend", "ascend"],
+                    sortDirections: ["descend", "ascend"],width:70,
                 },
                 {
                     title: 'Old Po Line',
                     dataIndex: ['oldPo', 'poLine'],
                     sorter: (a, b) => a.oldPo.poLine - b.oldPo.poLine,
-                    sortDirections: ["descend", "ascend"],
+                    sortDirections: ["descend", "ascend"],width:70,
                 },
                 {
                     title: 'Old Qantity',
                     //from yesterdays ppm
                     dataIndex: ['oldPo', 'Quantity'],
                     sorter: (a, b) => a.oldPo.Quantity.localeCompare(b.oldPo.Quantity),
-                    sortDirections: ["descend", "ascend"],
+                    sortDirections: ["descend", "ascend"],width:70,
                 },
                 {
                     title: 'Balance Qty',
                     // from dpom
                     dataIndex: ['oldPo', 'Quantity'],
                     sorter: (a, b) => a.oquantity.localeCompare(b.oquantity),
-                    sortDirections: ["descend", "ascend"],
+                    sortDirections: ["descend", "ascend"],width:70,
                 },
                 {
                     title: 'Destination',
                     dataIndex: ['oldPo', 'destination'],
                     sorter: (a, b) => a.oldPo.destination.localeCompare(b.oldPo.destination),
-                    sortDirections: ["descend", "ascend"],
+                    sortDirections: ["descend", "ascend"],width:70,
                 },
                 {
                     title: 'Shipment Type',
                     dataIndex: ['oldPo', 'shipmentType'],
                     sorter: (a, b) => a.oldPo.shipmentType.localeCompare(b.oldPo.shipmentType),
-                    sortDirections: ["descend", "ascend"],
+                    sortDirections: ["descend", "ascend"],width:70,
                 },
                 {
                     title: 'OLD OGAC',
-                    dataIndex: ['oldPo', 'ogac'],
+                    dataIndex: ['oldPo', 'ogac'],width:70,
                     render: (text, record) => {
                         return record.oldPo.ogac ? moment(record.oldPo.ogac).format('MM/DD/YYYY') : "-";
                     }
                 },
                 {
                     title: 'OLD GAC',
-                    dataIndex: ['oldPo', 'gac'],
+                    dataIndex: ['oldPo', 'gac'],width:70,
                     render: (text, record) => {
                         return record.oldPo.gac ? moment(record.oldPo.gac).format('MM/DD/YYYY') : "-";
                     }
                 },
                 {
                     title: 'Inventory Segment Code',
-                    dataIndex: ['oldPo', 'inventorySegmentCode'],
+                    dataIndex: ['oldPo', 'inventorySegmentCode'],width:70,
                     sorter: (a, b) => a.oldPo.inventorySegmentCode.localeCompare(b.oldPo.inventorySegmentCode),
                     sortDirections: ["descend", "ascend"],
                 },
                 {
                     title: 'GAC Difference',
-                    dataIndex: '',
+                    dataIndex: '',width:70,
                     render: (text, record) => {
                         if (record.oldPo.ogac && record.newpo.nogac) {
                             const ogacDate = moment(record.oldPo.ogac, 'YYYY-MM-DD');
@@ -341,7 +342,7 @@ const DivertReport = () => {
                     sortDirections: ["descend", "ascend"],
                 },
                 {
-                    title: 'Item Vas',
+                    title: 'Item Vas',width:70,
                     dataIndex: ['oldPo', 'itemVasText'],
                 },
             ] as unknown as null,
@@ -355,21 +356,21 @@ const DivertReport = () => {
             children: [
                 {
                     title: 'OGAC Date',
-                    dataIndex: ['newpo', 'nogac'],
+                    dataIndex: ['newpo', 'nogac'],width:70,
                     render: (text, record) => {
                         return record.newpo.nogac ? moment(record.newpo.nogac).format('MM/DD/YYYY') : "-";
                     }
                 },
                 {
                     title: 'GAC Date',
-                    dataIndex: ['newpo', 'ngac'],
+                    dataIndex: ['newpo', 'ngac'],width:70,
                     render: (text, record) => {
                         return record.newpo.ngac ? moment(record.newpo.ngac).format('MM/DD/YYYY') : "-";
                     }
                 },
                 {
                     title: "No of Days to GAC",
-                    align: 'center',
+                    align: 'center',width:70,
                     render: (text, record) => {
                         if (record.oldPo.dpomCreatedDates && record.newpo.nogac) {
                             const dpomCreatedDate = moment(record.oldPo.dpomCreatedDates);
@@ -383,90 +384,90 @@ const DivertReport = () => {
                 },
                 {
                     title: "To item",
-                    align: 'center',
+                    align: 'center',width:70,
                     dataIndex: ['newpo', 'item'],
                 },
                 {
                     title: "Unit",
-                    dataIndex: "",
+                    dataIndex: "",width:70,
                 },
 
                 {
                     title: "Plant",
-                    dataIndex: ['newpo', 'nPlant'],
+                    dataIndex: ['newpo', 'nPlant'],width:70,
                 },
                 {
                     title: "Product Code",
                     dataIndex: ['newpo', 'nproductCode'],
                     sorter: (a, b) => a.newpo.nproductCode.localeCompare(b.newpo.nproductCode),
-                    sortDirections: ["descend", "ascend"],
+                    sortDirections: ["descend", "ascend"],width:70,
                 },
                 {
                     title: "Line Status",
-                    dataIndex: ['newpo', 'nLineStatus']
+                    dataIndex: ['newpo', 'nLineStatus'],width:70,
                 },
                 {
                     title: 'Document Date',
-                    dataIndex: ['newpo', 'nDocumentDate'],
+                    dataIndex: ['newpo', 'nDocumentDate'],width:70,
                     render: (text, record) => {
                         return record.newpo.nDocumentDate ? moment(record.newpo.nDocumentDate).format("MM/DD/YYYY") : "-";
                     }
                 },
                 {
-                    title: 'New Po',
+                    title: 'New Po',width:70,
                     dataIndex: ['newpo', 'npoNumber'],
                 },
                 {
-                    title: 'New Po Line',
+                    title: 'New Po Line',width:70,
                     dataIndex: ['newpo', 'npoLine'],
                 },
                 {
-                    title: 'Quantity',
+                    title: 'Quantity',width:70,
                     dataIndex: ['newpo', 'nQuantity'],
                 },
                 {
-                    title: 'Destination',
+                    title: 'Destination',width:70,
                     dataIndex: ['newpo', 'ndestination'],
                 },
                 {
-                    title: 'Inventory Segment Code',
+                    title: 'Inventory Segment Code',width:70,
                     dataIndex: 'ninventorySegmentCode',
                 },
                 {
-                    title: 'Item Vas',
+                    title: 'Item Vas',width:70,
                     dataIndex: ['newpo', 'nitemVasText'],
                 },
 
                 {
-                    title: 'Shipment Type',
+                    title: 'Shipment Type',width:70,
                     dataIndex: ['newpo', 'nshipmentType'],
                 },
                 {
-                    title: 'Item Vas Diff Check',
+                    title: 'Item Vas Diff Check',width:70,
                     dataIndex: '',
                 },
                 {
-                    title: 'Qty Tally-Check',
+                    title: 'Qty Tally-Check',width:70,
                     dataIndex: '',
                 },
                 {
                     title: 'Price-Fob Tally-Check',
-                    dataIndex: '',
+                    dataIndex: '',width:70,
                 },
                 {
                     title: 'Price-Net Includding Discount Tally-Check',
-                    dataIndex: '',
+                    dataIndex: '',width:70,
                 },
                 {
                     title: 'Price-Trading Co Net Includding Discount Tally-Check',
-                    dataIndex: '',
+                    dataIndex: '',width:70,
                 },
                 {
-                    title: 'CO-update',
+                    title: 'CO-update',width:70,
                     children: [
                         {
                             title: 'Approve',
-                            dataIndex: '',
+                            dataIndex: '',width:70,
                             render: (text, rowData) => (
                                 <span>
 
@@ -481,7 +482,7 @@ const DivertReport = () => {
                         },
                         {
                             title: 'Edit',
-                            dataIndex: 'id',
+                            dataIndex: 'id',width:70,
                             render: (text, rowData) => (
                                 <span>
                                     <Form.Item>
@@ -495,7 +496,7 @@ const DivertReport = () => {
                         },
                         {
                             title: 'Manual Type Item',
-                            dataIndex: 'id',
+                            dataIndex: 'id',width:70,
                             render: (text, rowData) => (
                                 <div>
                                     {expandedRows[rowData.id] ? (
@@ -563,13 +564,14 @@ const DivertReport = () => {
                         columns={columns}
                         className="custom-table-wrapper"
                         dataSource={items}
-                        pagination={{
-                            onChange(current, pageSize) {
-                                setPage(current);
-                                setPageSize(pageSize)
-                            },
-                        }}
-                        scroll={{ x: 'max-content' }}
+                        // pagination={{
+                        //     onChange(current, pageSize) {
+                        //         setPage(current);
+                        //         setPageSize(pageSize)
+                        //     },
+                        // }}
+                        pagination = {false}
+                        scroll={{ x: 'max-content', y: 600}}
                         bordered
                         size='small'
                     // expandedRowRender={(record) => record.additionalData} 

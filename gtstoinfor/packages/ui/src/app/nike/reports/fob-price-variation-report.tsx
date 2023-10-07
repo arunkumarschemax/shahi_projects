@@ -99,16 +99,19 @@ export const FOBPriceVariationReport = () => {
         },
         {
             title: 'PO And Line',
-            dataIndex: 'poAndLine'
+            dataIndex: 'poAndLine',            align:'center'
+
         },
 
         {
             title: 'Style Number',
-            dataIndex: 'styleNumber'
+            dataIndex: 'styleNumber',
+            align:'center'
         },
         {
             title: 'Size Description',
-            dataIndex: 'sizeDescription'
+            dataIndex: 'sizeDescription',            align:'center'
+
         },
         {
             title: 'Gross Price',
@@ -242,13 +245,9 @@ export const FOBPriceVariationReport = () => {
             <>
                 {data.length > 0 ? (
                     <Table columns={columns} dataSource={data}
-                        className="custom-table-wrapper" pagination={{
-                            onChange(current, pageSize) {
-                                setPage(current);
-                                setPageSize(pageSize)
-
-                            },
-                        }}
+                    
+                        className="custom-table-wrapper" pagination={false}
+                        scroll={{ x: 'max-content', y: 600}}
                         summary={(pageData) => {
                             let totalDifference = 0;
 

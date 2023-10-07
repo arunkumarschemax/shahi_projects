@@ -5,6 +5,7 @@ import { Button, Card, Col, Form, Input, Row, Select, Table } from "antd";
 import { Excel } from "antd-table-saveas-excel";
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import moment from "moment";
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 
@@ -22,6 +23,8 @@ export function FabricTrackerReport() {
   const [styleNumber,setStyleNumber]=useState<any>([]);
   const [productCode, setProductCode]=useState<any>([]);
   const { Option } = Select;
+  const [pageSize, setPageSize] = useState<number>(null);
+  const [page, setPage] = React.useState(1);
 
 
 
@@ -231,16 +234,18 @@ export function FabricTrackerReport() {
           {
             title: 'Item',
             dataIndex: 'item',
+            width:70
            
           },
           {
             title: 'Factory',
             dataIndex: 'factory',   
+            width:70
       
           },
           {
             title: 'Document Date',
-            dataIndex: 'documentDate',
+            dataIndex: 'documentDate',            width:70,
             render: (text) => moment(text).format('MM/DD/YYYY') 
             // render: (text, record) => {
             //     return record.contracted_date ? convertToYYYYMMDD(record.contracted_date) : '-'
@@ -248,30 +253,30 @@ export function FabricTrackerReport() {
           },
           {
             title: 'Purchase Order Number',
-            dataIndex: 'poNumber',
+            dataIndex: 'poNumber',width:70,
           },
           {
             title: 'PO Line Item Number',
-            dataIndex: 'poLineItemNumber'
+            dataIndex: 'poLineItemNumber',width:70,
           },
       
           {
       
             title: "Planning Season Code",
-            dataIndex: 'planningSeasonCode',  
+            dataIndex: 'planningSeasonCode', width:70, 
           },
           {
             title:"Planning Season Year",
-            dataIndex:'planningSeasonYear'
+            dataIndex:'planningSeasonYear',width:70,
           },
           {
             title: 'Style Number',
-            dataIndex: 'styleNumber',
+            dataIndex: 'styleNumber',width:70,
       
           },
           {
             title: 'Product Code',
-            dataIndex: 'productCode',
+            dataIndex: 'productCode',width:70,
             sorter: (a, b) => a.productCode.length - b.productCode.length,
             sortDirections: ['descend', 'ascend'],
             ...getColumnSearchProps('productCode'),
@@ -280,11 +285,11 @@ export function FabricTrackerReport() {
           },
           {
             title: 'Colour Description',
-            dataIndex: 'colorDesc'
+            dataIndex: 'colorDesc',width:60,
           },
           {
             title:"MRGAC",
-            dataIndex:'MRGAC',
+            dataIndex:'MRGAC',width:70,
             render: (text) => moment(text).format('MM/DD/YYYY') 
             // render: (text, record) => {
             //   if (!text || text.trim() === '') {
@@ -297,24 +302,24 @@ export function FabricTrackerReport() {
           },
           {
             title:"OGAC",
-            dataIndex:'OGAC',
+            dataIndex:'OGAC',width:70,
             render: (text) => moment(text).format('MM/DD/YYYY') 
 
           },
           {
             title:"GAC",
-            dataIndex:'GAC',
+            dataIndex:'GAC',width:70,
             render: (text) => moment(text).format('MM/DD/YYYY') 
 
     },
     {
       title: "Shipping Type",
-      dataIndex: 'shipmentType'
+      dataIndex: 'shipmentType',width:70,
 
           },
           {
             title: 'Total Item Qty',
-            dataIndex: 'totalItemQty',
+            dataIndex: 'totalItemQty',width:70,
             align:'right',
             render:(text, record) =>
               <span>{Number(record.totalItemQty).toLocaleString()}</span>
@@ -325,6 +330,7 @@ export function FabricTrackerReport() {
           {
             title: 'MRP plan Required Inhouse QTY',
             dataIndex: 'mrpPlanRequiredInhouseQty', 
+            width:120,
           }, 
     ]
 
@@ -434,8 +440,16 @@ export function FabricTrackerReport() {
         <Table
           columns={columns}
           dataSource={gridData}
+          pagination={{
+            pageSize:50,
+
+            onChange(current, pageSize) {
+              setPage(current);
+              setPageSize(pageSize);
+            }
+          }}
           className="custom-table-wrapper"
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'max-content' ,y:600 }}
           bordered
         ></Table>
       </Card>

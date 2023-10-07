@@ -113,11 +113,11 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'PO+Line',
-            dataIndex: "poLine"
+            dataIndex: "poLine",width:70,
         },
         {
             title: 'Item',
-            dataIndex: 'item',
+            dataIndex: 'item',width:70,
             render: (text, record) => {
                 if (!text || text.trim() === '') {
                   return '-';
@@ -128,105 +128,105 @@ const ShipmentPlanningChart = () => {
         },
         {
             title: 'Factory',
-            dataIndex: 'factory'
+            dataIndex: 'factory',width:70,
         },
         {
             title: 'Plan',
-            dataIndex: 'plan'
+            dataIndex: 'plan',width:70,
 
         },
         {
             title: 'Purchase Order Number',
-            dataIndex: 'purchaseOrderNumber'
+            dataIndex: 'purchaseOrderNumber',width:70,
 
         },
         {
             title: 'PO Line Item Number',
             dataIndex: 'poLineItemNumber',
-            align: 'center'
+            align: 'center',width:70,
 
 
         },
         {
             title: 'Style Number',
-            dataIndex: 'styleNumber',
+            dataIndex: 'styleNumber',width:70,
         },
         {
             title: 'Destination Country Name',
-            dataIndex: 'destinationCountryName',
+            dataIndex: 'destinationCountryName',width:70,
         },
         {
             title: 'SHIP TO ADDRESS(lpo)',
-            dataIndex: 'shipToAddressToLegalPo',
+            dataIndex: 'shipToAddressToLegalPo',width:70,
 
         }, {
             title: 'SHIP TO ADDRESS(DIA)',
-            dataIndex: 'shipToAddressDia',
+            dataIndex: 'shipToAddressDia',width:70,
 
         }, {
             title: 'Hanger',
-            dataIndex: 'hanger',
+            dataIndex: 'hanger',width:70,
 
         },
         {
             title: 'FOB',
             dataIndex: 'fob',
-            align:'right'
+            align:'right',width:70,
         },
         {
             title: 'CO',
-            dataIndex: 'co'
+            dataIndex: 'co',width:70,
         },
         {
             title: 'Prooduct Code',
-            dataIndex: 'productCode',
+            dataIndex: 'productCode',width:70,
         },
         {
             title: 'Color Description',
-            dataIndex: 'colorDescription',
+            dataIndex: 'colorDescription',width:70,
         },
         {
             title: 'Planning Season Code',
             dataIndex: 'planningSeasonCode',
-            align: "center"
+            align: "center",width:70,
         },
         {
             title: 'Plant Serason Year',
-            dataIndex: 'planningSeasonYear',
+            dataIndex: 'planningSeasonYear',width:70,
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac',
+            dataIndex: 'ogac',width:70,
             render: (text) => moment(text).format('MM/DD/YYYY') 
 
         },
         {
             title: 'GAC',
-            dataIndex: 'gac',
+            dataIndex: 'gac',width:70,
             render: (text) => moment(text).format('MM/DD/YYYY') 
 
         },
         {
             title: 'EX FACTORY',
-            dataIndex: '',
+            dataIndex: '',width:70,
         },
         {
             title: 'Total Item Quantity',
             dataIndex: 'totalItemQuantity',
-            align:'right',
+            align:'right',width:70,
             render:(text, record) =>
             <span>{Number(record.totalItemQuantity).toLocaleString()}</span>
         }, {
             title: 'Mode of Transportation',
-            dataIndex: 'modeofTransport',
+            dataIndex: 'modeofTransport',width:70,
         },
         {
             title: 'PAYMENT TERMS LC/TT/TC',
-            dataIndex: 'paymentTerm',
+            dataIndex: 'paymentTerm',width:100,
         },
         {
             title: 'DESCRIPTION WITH FABRIC CONTENT',
-            dataIndex: 'desFabricContent',
+            dataIndex: 'desFabricContent',width:100,
         },
         {
             title: 'Gender Age Description',
@@ -236,35 +236,35 @@ const ShipmentPlanningChart = () => {
                 } else {
                   return text;
                 }
-              },
+              },width:100,
         },
         {
             title: 'Fabric Content as per washcare label',
-            dataIndex: '',
+            dataIndex: '',width:100,
         },
         {
             title: 'FABRIC IMPORTED/DOMESTIC',
-            dataIndex: 'fabricLocation',
+            dataIndex: 'fabricLocation',width:85,
         },
         {
             title: 'COMMISSION(IF ANY)',
-            dataIndex: 'commission',
+            dataIndex: 'commission',width:70,
         },
         {
             title: 'Shipping Type',
-            dataIndex: 'shippingType',
+            dataIndex: 'shippingType',width:70,
         },
         {
             title: 'Doc Type Description',
-            dataIndex: 'docTypeDescription',
+            dataIndex: 'docTypeDescription',width:70,
         },
         {
             title: 'Purchase Group Name',
-            dataIndex: 'purchaseGroupName',
+            dataIndex: 'purchaseGroupName',width:70,
         },
         {
             title: 'CAB CODE',
-            dataIndex: 'cabCode',
+            dataIndex: 'cabCode',width:70,
         },
 
     ]
@@ -376,7 +376,7 @@ const ShipmentPlanningChart = () => {
             },
             {
                 title: 'DESCRIPTION WITH FABRIC CONTENT',
-                dataIndex: 'desFabricContent',
+                dataIndex: 'desFabricContent',width:100
             },
             {
                 title: 'Gender Age Description',
@@ -435,12 +435,13 @@ const ShipmentPlanningChart = () => {
                         className="custom-table-wrapper"
                         dataSource={shipmentData}
                         pagination={{
+                            pageSize:50,
                             onChange(current, pageSize) {
                                 setPage(current);
                                 setPageSize(pageSize)
                             },
                         }}
-                        scroll={{ x: 'max-content' }}
+                        scroll={{ x: 'max-content',y:600 }}
                         bordered
                     />
                 </Card>
