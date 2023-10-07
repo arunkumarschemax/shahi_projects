@@ -81,9 +81,12 @@ export class LocationController {
       }
   }
     @Post('/getlocationById')
-    async getlocationById(@Body() locationReq: LocationRequest): Promise<LocationResponseModel> {
+    @ApiBody({type:LocationRequest})
+    async getlocationById(@Body() req: any): Promise<LocationResponseModel> {
         try {
-            return await this.locationService.getActiveLocationById(locationReq);
+            console.log(req,'reqqqqqqqqqqqqq');
+            
+            return await this.locationService.getActiveLocationById(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(LocationResponseModel, err);
         }

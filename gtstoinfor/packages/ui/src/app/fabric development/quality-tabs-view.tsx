@@ -1,4 +1,4 @@
-import { FabricDevelopmentService } from "@project-management-system/shared-services";
+import { ColourService, FabricDevelopmentService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Descriptions, Modal, Segmented, Table } from "antd"
 import { log } from "console";
 import { setOptions } from "highcharts";
@@ -8,19 +8,40 @@ import { __values } from "tslib";
 
 export const QualityTabsView = () =>{
     const [page, setPage] = React.useState(1);
-    const service = new FabricDevelopmentService();
+    const styleService = new StyleService();
+    const colorService = new ColourService();
     const [data,setData] = useState([])
     const [itemsData,setItemsData] = useState([])
     const [options,setOption] = useState([])
+    const [style,setStyle] = useState([])
+    const [color,setColor] = useState([])
+
     const location = useLocation()
   const [selectedQuality,setSelectedQuality] = useState<any>('Quality1')
   const [isModalVisible, setIsModalVisible] = useState(false);
 
     const record = location.state;
-    const qualityOptions = record.rowData.qualities || [];
-    const optionLabels = qualityOptions.map((quality) => quality.qualityName);
+    const qualityOptions = record.rowData.fabricQuantityEntity || [];
+    const optionLabels = qualityOptions.map((quality) => quality.quality);
+    console.log(qualityOptions,'fabricQuantityEntity');
     
-
+useEffect(()=>{getData()},[])
+const getData = () => {
+ styleService.getAllActiveStyle().then(res=>{
+  if(res.data){
+    setStyle(res.data)
+  }else{
+    setStyle([])
+  }
+})
+colorService.getAllActiveColour().then(res=>{
+  if(res.data){
+    setColor(res.data)
+  }else{
+    setColor([])
+  }
+})
+}
 
     const columnsSkelton: any = [
         {
@@ -32,17 +53,23 @@ export const QualityTabsView = () =>{
         },
         {
           title: "Style",
-          dataIndex: "style",
-
+          dataIndex: "styleId",
+          render: (data) => {
+            const styleId = style.find((res) => res.styleId === data);
+            return styleId? styleId.style : "N/A";
+          }
         },
         {
           title: "Color",
-          dataIndex: "color",
-         
+          dataIndex: "colorId",
+          render: (data) => {
+            const colorId = color.find((res) => res.colourId === data);
+            return colorId? colorId.colour : "N/A";
+          }
         },
         {
           title: "Garment",
-          dataIndex: "garmentQty",
+          dataIndex: "garmentQuantity",
        
         },
        
@@ -71,17 +98,17 @@ export const QualityTabsView = () =>{
       
       ];
       const mappedModal =(val,data) =>{
-        console.log(val.items,'--------');
+        console.log(val.fabricItemsEntity,'--------');
         // console.log(data,'--------*********');
         setIsModalVisible(true)
-        setItemsData(val.items)
+        setItemsData(val.fabricItemsEntity)
       }
       const handleModalClose = () => {
         setIsModalVisible(false);
       };
       
-      const filterData = qualityOptions.filter(e =>e.qualityName === selectedQuality)
-      const tableData = filterData?.[0]?.fabInfo
+      const filterData = qualityOptions.filter(e =>e.quality === selectedQuality)
+      const tableData = filterData?.[0]?.fabricEntity
       
     return(
         <Card>

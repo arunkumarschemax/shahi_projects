@@ -109,21 +109,7 @@ export class FabricDevelopmentService {
      const data = await this.FabricRepo.find({
       relations:["fabricQuantityEntity","fabricQuantityEntity.fabricEntity","fabricQuantityEntity.fabricEntity.fabricItemsEntity"]
      })
-     console.log(data,'-----------');
-    //  const qualityData = await this.qualityrepo.find()
-    //  console.log(qualityData,'quality');
-    //  let DataMap = new Map<number,FabricDevelopmentRequest>()
-
-    //  for(const res of data){
-    //   if(!DataMap.has(res.fabricRequestId)){
-    //     DataMap.set(
-    //       res.fabricRequestId,
-    //       new FabricDevelopmentRequest(res.locationId,res.styleId,res.pchId,res.buyerId,res.type,res.sampleTypeId,res.remarks,res.fabricResponsible,res.facilityId,res.lightSourcePrimary,res.lightSourceSecondary,res.lightSourceTertiary,res.fileName,res.filePath,[],res.status,res.requestNo,res.fabricRequestId)
-    //     )
-    //   }
-    //   const Quality
-    //   const data1 = new FabricDevelopmentRequest(res.locationId,res.styleId,res.pchId,res.buyerId,res.type,res.sampleTypeId,res.remarks,res.fabricResponsible,res.facilityId,res.lightSourcePrimary,res.lightSourceSecondary,res.lightSourceTertiary,res.fileName,res.filePath,[],res.status,res.requestNo,res.fabricRequestId)
-    //  }
+     console.log(data,'-----------')
      return new CommonResponseModel(true, 0, "Fabric Development Request successfully", data);
 
         } catch (err) {

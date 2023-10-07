@@ -5,11 +5,13 @@ export class SampleFilterRequest{
     pch?: string
     style?: string
     status?: SampleDevelopmentStatusEnum
+    sampleId?: number
     
-    constructor(reqNo?:string,pch?: string, style?: string, status?: SampleDevelopmentStatusEnum){
+    constructor( reqNo?:string,pch?: string, style?: string, status?: SampleDevelopmentStatusEnum, sampleId?: number){
         this.reqNo = reqNo;
         this.pch = pch
         this.style = style
         this.status = status
+        this.sampleId = sampleId
     }
 }

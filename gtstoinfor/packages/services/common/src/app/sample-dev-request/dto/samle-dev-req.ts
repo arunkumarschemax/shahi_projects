@@ -5,32 +5,57 @@ import { SamplefabricReq } from './sample-dev-fabric-info-req';
 import { SampleTrimReq } from './sample-dev-trim-req';
 import { SampleProcessInfoReq } from './sample-dev-process-info-req';
 
-export class SampleDevDto {
+export class SampleRequest {
+  @ApiProperty()
   SampleRequestId:number;
+  @ApiProperty()
   locationId : number;
+  @ApiProperty()
   requestNo: string;
+  @ApiProperty()
   styleId : number;
+  @ApiProperty()
   pchId : number;
+  @ApiProperty()
   buyerId : number;
+  @ApiProperty()
   sampleTypeId : number;
+  @ApiProperty()
   sampleSubTypeId : number;
+  @ApiProperty()
   brandId: number;
+  @ApiProperty()
   costRef: string;
+  @ApiProperty()
   m3StyleNo: string;
+  @ApiProperty()
   contact:string;
+  @ApiProperty()
   extension:string;
+  @ApiProperty()
   samValue:number;
+  @ApiProperty()
   dmmId : number;
+  @ApiProperty()
   technicianId : number;
+  @ApiProperty()
   product:string;
+  @ApiProperty()
   type:string;
+  @ApiProperty()
   conversion:string;
+  @ApiProperty()
   madeIn:string;
+  @ApiProperty()
   facilityId: number;
+  @ApiProperty()
   status: SampleDevelopmentStatusEnum;
   samplereqsizeinfo:SampleSizeReq[];
+  @ApiProperty({type:[SamplefabricReq]})
   samplereqfabricinfo:SamplefabricReq[]
+  @ApiProperty({type:[SampleTrimReq]})
   sampleTrimInfo:SampleTrimReq[]
+  @ApiProperty({type:[SampleProcessInfoReq]})
   sampleProcessInfo:SampleProcessInfoReq[]
 
   constructor(
