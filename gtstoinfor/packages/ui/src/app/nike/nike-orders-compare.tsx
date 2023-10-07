@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, TabsProps, Tag, Typography } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Table, Tabs, TabsProps, Tag, Tooltip, Typography } from 'antd';
 import { NikeService } from '@project-management-system/shared-services';
 import { ArrowDownOutlined, ArrowUpOutlined, DownOutlined, FileExcelFilled, SearchOutlined, UndoOutlined, UpOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -31,7 +31,8 @@ const OrdersCompareGrid = () => {
     const [itemTextChaneData, setItemTextChangeData] = useState([])
     const [filterData, setFilterData] = useState<any>([])
 
-
+    const [remarkModal,setRemarkModal] = useState<boolean>(false)
+    const [itemText,setRemarks] = useState<string>('')
     const [modeOTransportChaneData, setmodeOfTransportChangeData] = useState([])
     const [poLine, setPoLine] = useState<any>([]);
 
@@ -1308,7 +1309,13 @@ const OrdersCompareGrid = () => {
         return sizeWiseMap;
     }
 
-
+    const handleTextClick = (remarks) => {
+        setRemarks(remarks)
+        setRemarkModal(true)
+    }
+    const onRemarksModalOk = () => {
+        setRemarkModal(false)
+    }
     const renderReport = (data: TotalQuantityChangeModel[]) => {
         const sizeHeaders = getSizeWiseHeaders(data);
         const sizeWiseMap = getMap(data);
@@ -1393,13 +1400,15 @@ const OrdersCompareGrid = () => {
                 dataIndex: 'itemText',
                 width: 220,
                 align: 'center',
-                render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                },
+                render:(text,record) => {
+                    return(
+                        <>
+                        {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+                                    {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
+                                </span></p></Tooltip></>) : (<>{record.itemText}</>)}
+                        </>
+                    )
+                }
             },
 
             // {
@@ -1650,6 +1659,11 @@ const OrdersCompareGrid = () => {
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
             </> : <></>}
+            <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{itemText}</p>
+                </Card>
+            </Modal>
 
         </Card>
     );

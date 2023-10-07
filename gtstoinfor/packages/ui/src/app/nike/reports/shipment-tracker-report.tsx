@@ -17,6 +17,8 @@ function ShipmentTrackerReport() {
     const searchInput = useRef<any>(null);
     const [searchText, setSearchText] = useState<any>([]);
     const [searchedColumn, setSearchedColumn] = useState<any>([]);
+    const [pageSize, setPageSize] = useState<number>(null);
+    const [page, setPage] = React.useState(1);
 
     useEffect(() => {
         getData();
@@ -174,13 +176,13 @@ function ShipmentTrackerReport() {
         },
         {
             title: 'Unit',
-            dataIndex: '',
+            dataIndex: '',width:70,
 
         },
 
         {
             title: 'Item',
-            dataIndex: 'item',
+            dataIndex: 'item',width:70,
             ...getColumnSearch('item'),
             render: (text, record) => {
                 if (!text || text.trim() === '') {
@@ -193,62 +195,62 @@ function ShipmentTrackerReport() {
         },
         {
             title: 'Plan#',
-            dataIndex: '',
+            dataIndex: '',width:70,
 
         },
         {
             title: 'Purchase Order Number',
             dataIndex: 'purchaseOrderNumber',
-            ...getColumnSearch('purchaseOrderNumber'),
+            ...getColumnSearch('purchaseOrderNumber'),width:70,
 
         },
         {
             title: 'PO Line Item Number',
-            dataIndex: 'poLineItemNumber',
+            dataIndex: 'poLineItemNumber',width:70,align:'center'
 
         },
         {
             title: 'Doc Type Description',
-            dataIndex: 'docTypeDesc',
+            dataIndex: 'docTypeDesc',width:70,
 
         },
         {
             title: 'Style Number',
             dataIndex: 'styleNumber',
-            ...getColumnSearch('styleNumber'),
+            ...getColumnSearch('styleNumber'),width:70,
 
         },
         {
             title: 'Product Code',
             dataIndex: 'productCode',
-            ...getColumnSearch('productCode'),
+            ...getColumnSearch('productCode'),width:70,
 
         },
         {
             title: 'Colour Description',
-            dataIndex: 'colorDesc',
+            dataIndex: 'colorDesc',width:70,
 
         },
         {
             title: 'Plant Code',
             dataIndex: 'plant',
-            ...getColumnSearch('plantCode'),
+            ...getColumnSearch('plantCode'),width:70,
 
         },
         {
             title: 'Planning Season Code',
-            dataIndex: 'planningSeasonCode',
+            dataIndex: 'planningSeasonCode',width:70,
 
         },
         {
             title: 'Planning Season Year',
             dataIndex: 'planningSeasonYear',
-            ...getColumnSearch('planningSeasonYear'),
+            ...getColumnSearch('planningSeasonYear'),width:70,
 
         },
         {
             title: 'General Age Description',
-            dataIndex: 'gender_age_desc',
+            dataIndex: 'gender_age_desc',width:70,
             render: (text, record) => {
                 if (!text || text.trim() === '') {
                   return '-';
@@ -261,34 +263,34 @@ function ShipmentTrackerReport() {
 
         {
             title: 'Destination Country Name',
-            dataIndex: 'destinationCountry',
+            dataIndex: 'destinationCountry',width:70,
             ...getColumnSearch('destinationCountry'),
 
         },
         {
             title: 'OGAC',
-            dataIndex: 'OGAC',
+            dataIndex: 'OGAC',width:70,
             render: (text) => moment(text).format('MM/DD/YYYY') 
 
 
         },
         {
             title: 'GAC',
-            dataIndex: 'GAC',
+            dataIndex: 'GAC',width:70,
             render: (text) => moment(text).format('MM/DD/YYYY') 
 
 
         },
         {
             title: 'MRGAC',
-            dataIndex: 'MRGAC',
+            dataIndex: 'MRGAC',width:70,
             render: (text) => moment(text).format('MM/DD/YYYY') 
 
 
         },
         {
             title: 'GAC reason Code',
-            dataIndex: 'GACReasonCode', render: (text, record) => {
+            dataIndex: 'GACReasonCode',width:70, render: (text, record) => {
                 if (!text || text.trim() === '') {
                   return '-';
                 } else {
@@ -299,40 +301,40 @@ function ShipmentTrackerReport() {
         },
         {
             title: 'GAC reason Description',
-            dataIndex: 'generalagedescription',
+            dataIndex: 'generalagedescription',width:70,
 
         },
         {
             title: 'Shipping Type',
-            dataIndex: 'shippingType',
+            dataIndex: 'shippingType',width:70,
             ...getColumnSearch('shippingType'),
 
         },
         {
             title: 'Truckout Date',
-            dataIndex: 'truckoutdate',
+            dataIndex: 'truckoutdate',width:70,
 
         },
         {
             title: 'Origin Receipt date',
-            dataIndex: 'originReceiptDate',
+            dataIndex: 'originReceiptDate',width:70,
 
         },
         {
             title: 'Factory Delivery Actual date',
-            dataIndex: 'factoryDeliveryActDate',
+            dataIndex: 'factoryDeliveryActDate',width:70,
             ...getColumnSearch('factoryDeliveryActDate'),
 
         }, ,
 
         {
             title: 'Mode of Transportation',
-            dataIndex: 'modeOfTransportationCode',
+            dataIndex: 'modeOfTransportationCode',width:70,
 
         },
         {
             title: 'Total Item Quantity',
-            dataIndex: 'totalItemQty',
+            dataIndex: 'totalItemQty',width:70,
             align:'right',
             render:(text, record) =>
             <span>{Number(record.totalItemQty).toLocaleString()}</span>
@@ -341,28 +343,28 @@ function ShipmentTrackerReport() {
         },
         {
             title: 'ACTUAL SHIPPED QTY',
-            dataIndex: '',
+            dataIndex: '',width:70,
 
         },
         {
             title: 'ACTUAL SHIPPED %',
-            dataIndex: '',
+            dataIndex: '',width:70,
 
         },
         {
             title: 'SHIPPED VALUE $',
-            dataIndex: '',
+            dataIndex: '',width:70,
 
         },
         {
             title: 'DPOM Line Item Status',
-            dataIndex: 'DPOMLineItemStatus',
+            dataIndex: 'DPOMLineItemStatus',width:70,
 
         },
        
         {
             title: 'GAC-OGAC',
-            dataIndex: '',
+            dataIndex: '',width:70,
             render: (text, record) => {
               const ogac = moment(record.OGAC);
               const gac = moment(record.GAC);
@@ -414,8 +416,15 @@ function ShipmentTrackerReport() {
                         columns={columns}
                         dataSource={gridData}
                         // dataSource={filterData}
-                        scroll={{ x: 'max-content' }}
-                        className="custom-table-wrapper"
+                        scroll={{ x: 'max-content',y:600 }}
+                        className="custom-table-wrapper" pagination={{
+                            pageSize:50,
+              
+                            onChange(current, pageSize) {
+                              setPage(current);
+                              setPageSize(pageSize);
+                            }
+                          }}
 
 
                     />
