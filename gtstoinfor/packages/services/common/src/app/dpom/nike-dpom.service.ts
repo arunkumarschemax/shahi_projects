@@ -1316,36 +1316,70 @@ export class DpomService {
         }
     }
 
+    // async getDivertReportData(): Promise<CommonResponseModel> {
+    //     const reports = await this.dpomRepository.getDivertReport();
+    //     // let model:OldDivertModel[];
+    //     let divertedPos = []
+    //     let divertModelData: DivertModel[] = [];
+    //     let po;
+    //     let line;
+    //     let divertModel = []
+    //     for (const report of reports) {
+    //         divertedPos = report.diverted_to_pos.split(',');
+
+    //         if (report.diverted_to_pos) {
+    //             for (const Po of divertedPos) {
+    //                 const [po, line] = Po.split('/');
+    //                 const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line])
+
+    //                 for (const newpoDivert of newPoData) {
+    //                     const model = new DivertModel(report, newpoDivert)
+    //                     divertModel.push(model)
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     if (reports.length > 0) {
+    //         return new CommonResponseModel(true, 1, 'Data Retrived Successfully', divertModel);
+    //     } else {
+    //         return new CommonResponseModel(false, 0, 'No Data Found', []);
+    //     }
+    // }  
+    // this is old code return data multiple times
     async getDivertReportData(): Promise<CommonResponseModel> {
         const reports = await this.dpomRepository.getDivertReport();
-        // let model:OldDivertModel[];
-        let divertedPos = []
-        let divertModelData: DivertModel[] = [];
-        let po;
-        let line;
-        let divertModel = []
+        const divertModelData: DivertModel[] = [];
+        const processedPoLineSet = new Set<string>(); 
+    
         for (const report of reports) {
-            divertedPos = report.diverted_to_pos.split(',');
-
+            const divertedPos = report.diverted_to_pos.split(',');
+    
             if (report.diverted_to_pos) {
-                for (const Po of divertedPos) {
-                    const [po, line] = Po.split('/');
-                    const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line])
-
-                    for (const newpoDivert of newPoData) {
-                        const model = new DivertModel(report, newpoDivert)
-                        divertModel.push(model)
+                for (const PoLine of divertedPos) {
+                    const [po, line] = PoLine.split('/');
+    
+                if (!processedPoLineSet.has(PoLine)) {  {/* Check if this Po/line combination has already been processed*/ }
+                        const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line]);
+    
+                        for (const newpoDivert of newPoData) {
+                            const model = new DivertModel(report, newpoDivert);
+                            divertModelData.push(model);
+                        }
+    
+                        // Mark this Po/line combination as processed
+                        processedPoLineSet.add(PoLine);
                     }
                 }
             }
         }
-        if (reports.length > 0) {
-            return new CommonResponseModel(true, 1, 'Data Retrived Successfully', divertModel);
+    
+        if (divertModelData.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
         } else {
             return new CommonResponseModel(false, 0, 'No Data Found', []);
         }
     }
-
+    
     ///////////////////--------------------------------------------------------------------------------factory
     async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPoLineforfactory()
