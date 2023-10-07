@@ -23,7 +23,7 @@ const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 import { PoAndQtyReq } from './dto/po-qty.req';
 import { PoQty } from './dto/poqty.req';
 import { FactoryUpdate } from './dto/factory-update.req';
-import { AppDataSource1, AppDataSource2 } from '../app-datasource';
+// import { AppDataSource1, AppDataSource2 } from '../app-datasource';
 import { appConfig } from 'packages/services/common/config';
 import { construnctDataFromM3Result } from '@project-management-system/backend-utils';
 import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
@@ -198,12 +198,11 @@ export class DpomService {
 
             // Extract the relevant data from the response and return it
             const responseData = response.data;
-            return responseData;
-            // if (data.length > 0) {
-            //     return { status: true, data: data };
-            // } else {
-            //     return { status: false, error: 'No results found' };
-            // }
+            if (responseData.length > 0) {
+                return { status: true, data: responseData };
+            } else {
+                return { status: false, error: 'No results found' };
+            }
         } catch (error) {
             // Handle any errors that may occur during the HTTP request
             console.error('Error:', error);
@@ -214,25 +213,41 @@ export class DpomService {
     async getCRMOrderDetails2(coNumber: string): Promise<any> {
         // const coNumber = '2000593977'
         const headers = { 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
-        const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeInvDetails?coNo=${coNumber}`, { headers })
-        return response
-        // if (data.length > 0) {
-        //     return { status: true, data: data };
-        // } else {
-        //     return { status: false, error: 'No results found' };
-        // }
+        try {
+            const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeInvDetails?coNo=${coNumber}`, { headers });
+
+            // Extract the relevant data from the response and return it
+            const responseData = response.data;
+            if (responseData.length > 0) {
+                return { status: true, data: responseData };
+            } else {
+                return { status: false, error: 'No results found' };
+            }
+        } catch (error) {
+            // Handle any errors that may occur during the HTTP request
+            console.error('Error:', error);
+            throw error; // You can choose to re-throw the error or handle it differently
+        }
     }
 
     async getCRMOrderDetails3(styleCode: string): Promise<any> {
         // const styleCode = '476F'
         const headers = { 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
-        const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeFabricDetails?styleCode=${styleCode}`, { headers })
-        return response
-        // if (data.length > 0) {
-        //     return { status: true, data: data };
-        // } else {
-        //     return { status: false, error: 'No results found' };
-        // }
+        try {
+            const response = await axios.post(`https://businesscard.shahi.co.in/ShahiApiGate/nikeCo/getNikeFabricDetails?styleCode=${styleCode}`, { headers });
+
+            // Extract the relevant data from the response and return it
+            const responseData = response.data;
+            if (responseData.length > 0) {
+                return { status: true, data: responseData };
+            } else {
+                return { status: false, error: 'No results found' };
+            }
+        } catch (error) {
+            // Handle any errors that may occur during the HTTP request
+            console.error('Error:', error);
+            throw error; // You can choose to re-throw the error or handle it differently
+        }
     }
 
     // async createCOline(req: any): Promise<CommonResponseModel> {
@@ -335,15 +350,15 @@ export class DpomService {
 
                     const crmData = {
                         item: data1?.ITEMNO,
-                        factory: data2?.PLAN_UNIT,
+                        factory: data2?.plan_UNIT,
                         customerOrder: data1?.ORDNO,
                         coFinalApprovalDate: data1?.CO_FINAL_APP_DATE,
-                        planNo: data2?.PLAN_NUMB,
+                        planNo: data2?.plan_NUMB,
                         truckOutDate: '',
                         actualShippedQty: 0,
                         coPrice: data1?.PRICE,
                         shipToAddress: '',
-                        paymentTerm: data2?.PAY_TERM_DESC,
+                        paymentTerm: data2?.pay_TERM_DESC,
                         styleDesc: '',
                         fabricContent: '',
                         fabricSource: '',
@@ -851,24 +866,24 @@ export class DpomService {
         } else {
             return new CommonResponseModel(false, 0, 'data not found')
         }
-    } 
+    }
 
     async getFabricTrackerReport(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
         try {
-          const data = await this.dpomRepository.getFabricTrackerReport(req);
-    
-          if (data.length > 0) {
-            return new CommonResponseModel(true, 1, 'Data retrieved', data);
-          } else {
-            return new CommonResponseModel(false, 0, 'No data found');
-          }
+            const data = await this.dpomRepository.getFabricTrackerReport(req);
+
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 1, 'Data retrieved', data);
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found');
+            }
         } catch (error) {
-          // Handle errors, log them, and return an error response if needed
-          console.error('Error in getFabricTrackerReport:', error);
-          return new CommonResponseModel(false, 0, 'An error occurred');
+            // Handle errors, log them, and return an error response if needed
+            console.error('Error in getFabricTrackerReport:', error);
+            return new CommonResponseModel(false, 0, 'An error occurred');
         }
-      } 
-      
+    }
+
     async getPlantWisePoOrders(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPlantCount()
         if (data.length > 0)
@@ -1115,7 +1130,7 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'failed', e);
         }
     }
-    
+
 
     async getDifferentialData(): Promise<any> {
 
@@ -1168,7 +1183,7 @@ export class DpomService {
         }
         const sizeDateMap = new Map<string, MarketingReportModel>();
         for (const rec of details) {
-            
+
             if (!sizeDateMap.has(rec.po_and_line)) {
                 sizeDateMap.set(
                     rec.po_and_line, new MarketingReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_vas_pdf, rec.item_text, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, [])
@@ -1349,37 +1364,38 @@ export class DpomService {
     async getDivertReportData(): Promise<CommonResponseModel> {
         const reports = await this.dpomRepository.getDivertReport();
         const divertModelData: DivertModel[] = [];
-        const processedPoLineSet = new Set<string>(); 
-    
+        const processedPoLineSet = new Set<string>();
+
         for (const report of reports) {
             const divertedPos = report.diverted_to_pos.split(',');
-    
+
             if (report.diverted_to_pos) {
                 for (const PoLine of divertedPos) {
                     const [po, line] = PoLine.split('/');
-    
-                if (!processedPoLineSet.has(PoLine)) {  {/* Check if this Po/line combination has already been processed*/ }
+
+                    if (!processedPoLineSet.has(PoLine)) {
+                        {/* Check if this Po/line combination has already been processed*/ }
                         const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line]);
-    
+
                         for (const newpoDivert of newPoData) {
                             const model = new DivertModel(report, newpoDivert);
                             divertModelData.push(model);
                         }
-    
+
                         // Mark this Po/line combination as processed
                         processedPoLineSet.add(PoLine);
                     }
                 }
             }
         }
-    
+
         if (divertModelData.length > 0) {
             return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
         } else {
             return new CommonResponseModel(false, 0, 'No Data Found', []);
         }
     }
-    
+
     ///////////////////--------------------------------------------------------------------------------factory
     async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPoLineforfactory()
@@ -1685,9 +1701,9 @@ export class DpomService {
         const manager = this.dataSource
         const pdfInfoQry = `select * from pdf_file_data`;
         const pdfInfo = await manager.query(pdfInfoQry)
-        if(pdfInfo.length > 0){
+        if (pdfInfo.length > 0) {
             return new CommonResponseModel(true, 1, 'data retrived', pdfInfo)
-        }else{
+        } else {
             return new CommonResponseModel(false, 0, 'No data')
         }
     }

@@ -12,7 +12,7 @@ import { DpomModule } from './dpom/nike-dpom.module';
 import { SupplierModule } from './supplier/supplier.module';
 import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.module';
 import { DataSource } from 'typeorm';
-import { AppDataSource, AppDataSource1, AppDataSource2 } from './app-datasource';
+import { AppDataSource } from './app-datasource';
 import { FobModule } from './fob-price-list/fob.module';
 
 
@@ -37,7 +37,7 @@ import { FobModule } from './fob-price-list/fob.module';
     FactoriesModule,
     SupplierModule,
     UsersModule,
-    AuthModule, JwtModule, DpomModule,AdobeAcrobatApiModule,FobModule],
+    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
@@ -49,20 +49,20 @@ import { FobModule } from './fob-price-list/fob.module';
         .catch((err) => {
           console.error('Error during Data Source initialization', err);
         });
-      await AppDataSource1.initialize()
-        .then(() => {
-          console.log('Data Source has been initialized!');
-        })
-        .catch((err) => {
-          console.error('Error during Data Source initialization', err);
-        });
-      await AppDataSource2.initialize()
-        .then(() => {
-          console.log('Data Source has been initialized!');
-        })
-        .catch((err) => {
-          console.error('Error during Data Source initialization', err);
-        });
+      // await AppDataSource1.initialize()
+      //   .then(() => {
+      //     console.log('Data Source has been initialized!');
+      //   })
+      //   .catch((err) => {
+      //     console.error('Error during Data Source initialization', err);
+      //   });
+      // await AppDataSource2.initialize()
+      //   .then(() => {
+      //     console.log('Data Source has been initialized!');
+      //   })
+      //   .catch((err) => {
+      //     console.error('Error during Data Source initialization', err);
+      //   });
     }
   }],
 })
