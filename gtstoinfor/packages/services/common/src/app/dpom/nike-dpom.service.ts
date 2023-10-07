@@ -23,7 +23,7 @@ const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 import { PoAndQtyReq } from './dto/po-qty.req';
 import { PoQty } from './dto/poqty.req';
 import { FactoryUpdate } from './dto/factory-update.req';
-import { AppDataSource1, AppDataSource2 } from '../app-datasource';
+// import { AppDataSource1, AppDataSource2 } from '../app-datasource';
 import { appConfig } from 'packages/services/common/config';
 import { construnctDataFromM3Result } from '@project-management-system/backend-utils';
 import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
@@ -1183,7 +1183,7 @@ export class DpomService {
         }
         const sizeDateMap = new Map<string, MarketingReportModel>();
         for (const rec of details) {
-            
+
             if (!sizeDateMap.has(rec.po_and_line)) {
                 sizeDateMap.set(
                     rec.po_and_line, new MarketingReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_vas_pdf, rec.item_text, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, [])
@@ -1364,37 +1364,38 @@ export class DpomService {
     async getDivertReportData(): Promise<CommonResponseModel> {
         const reports = await this.dpomRepository.getDivertReport();
         const divertModelData: DivertModel[] = [];
-        const processedPoLineSet = new Set<string>(); 
-    
+        const processedPoLineSet = new Set<string>();
+
         for (const report of reports) {
             const divertedPos = report.diverted_to_pos.split(',');
-    
+
             if (report.diverted_to_pos) {
                 for (const PoLine of divertedPos) {
                     const [po, line] = PoLine.split('/');
-    
-                if (!processedPoLineSet.has(PoLine)) {  {/* Check if this Po/line combination has already been processed*/ }
+
+                    if (!processedPoLineSet.has(PoLine)) {
+                        {/* Check if this Po/line combination has already been processed*/ }
                         const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line]);
-    
+
                         for (const newpoDivert of newPoData) {
                             const model = new DivertModel(report, newpoDivert);
                             divertModelData.push(model);
                         }
-    
+
                         // Mark this Po/line combination as processed
                         processedPoLineSet.add(PoLine);
                     }
                 }
             }
         }
-    
+
         if (divertModelData.length > 0) {
             return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
         } else {
             return new CommonResponseModel(false, 0, 'No Data Found', []);
         }
     }
-    
+
     ///////////////////--------------------------------------------------------------------------------factory
     async getPpmPoLineForFactory(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPoLineforfactory()

@@ -16,32 +16,32 @@ export const AppDataSource = new DataSource({
   }
 })
 
-export const AppDataSource1 = new DataSource({
-  type: 'oracle',
-  host: '172.16.1.155',
-  port: 1521,
-  username: 'shahiweb',
-  password: 'shahiwebitip1',
-  database: 'shahiweb',
-  synchronize: false,
-  sid: 'reportdb',
-  extra: {
-    validateConnection: true,
-    trustServerCertificate: true,
-  },
-})
+// export const AppDataSource1 = new DataSource({
+//   type: 'oracle',
+//   host: '172.16.1.155',
+//   port: 1521,
+//   username: 'shahiweb',
+//   password: 'shahiwebitip1',
+//   database: 'shahiweb',
+//   synchronize: false,
+//   sid: 'reportdb',
+//   extra: {
+//     validateConnection: true,
+//     trustServerCertificate: true,
+//   },
+// })
 
-export const AppDataSource2 = new DataSource({
-  type: 'oracle',
-  host: '172.16.1.155',
-  port: 1521,
-  username: 'shahiweb',
-  password: 'shahiwebitip1',
-  database: 'shahiweb-shahi',
-  synchronize: false,
-  sid: 'shahi',
-  extra: {
-    validateConnection: true,
-    trustServerCertificate: true,
-  },
-})
+// export const AppDataSource2 = new DataSource({
+//   type: 'oracle',
+//   host: '172.16.1.155',
+//   port: 1521,
+//   username: 'shahiweb',
+//   password: 'shahiwebitip1',
+//   database: 'shahiweb-shahi',
+//   synchronize: false,
+//   sid: 'shahi',
+//   extra: {
+//     validateConnection: true,
+//     trustServerCertificate: true,
+//   },
+// })
