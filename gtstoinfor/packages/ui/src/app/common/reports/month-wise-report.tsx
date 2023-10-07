@@ -22,31 +22,41 @@ export const MonthWiseReport = () =>{
   const [data, setData] = useState<any[]>([]);
   const [year, setYear] = useState<any[]>([]);
   const [tab, setTab] = useState<number>(2023);
-  const service = new OrdersService();
+    const service = new OrdersService();
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [excelsData, setExcelData] = useState<any[]>([]);
   const { Text } = Typography;
   useEffect(() => {
-    getData(selected);
+    getData(selected,tab);
     getTabs();
   }, []);
+  useEffect(() => {
+    if (year.length > 0) {
+      setTab(year[0].year); // Set the default tab to the first year in the array
+    }
+  }, [year]);
   const handleChange = (val) =>{
     setSelected(val)
-    getData(val)
-    console.log(val,'-----onchangevalue-');
+    getData(val,tab)
   }
   const getTabs = () => {
     service.getExfactoryYearData().then((res) => {
       if (res.status) {
         setYear(res.data);
-      }
+        console.log(res.data[0].year);
+        setTab(res.data[0].year)
+        if (!selected && res.data.length > 0) {
+          setTab(res.data[0].year);
+        }
+        
+          }
     });
   };
- 
-  const getData = (val) => {
-    const req = new YearReq(tab,val);
+  console.log(tab,'555555555555');
+
+  const getData = (val,tabName) => {
+    const req = new YearReq(tabName,val);
     service.getMonthWiseReportData(req).then((res) => {
-      console.log(res, "res==========");
       if (res.status) {
         setData(res.data);
         setFilteredData(res.data);
@@ -55,7 +65,6 @@ export const MonthWiseReport = () =>{
       }
     });
     service.getExfactoryMonthExcel(req).then((res) => {
-      console.log(res, "res==========");
       if (res.status) {
         setExcelData(res.data);
       } else {
@@ -63,7 +72,6 @@ export const MonthWiseReport = () =>{
       }
     });
     service.getPhaseMonthData(req).then((res)=>{
-      console.log(res,"*********")
       if(res.status){
         setPhase(res.data)
       }else{
@@ -71,7 +79,6 @@ export const MonthWiseReport = () =>{
       }
     })
     service.getPhaseMonthExcelData(req).then((res) => {
-      console.log(res, "res==========");
       if (res.status) {
         setPhaseExcel(res.data);
       } else {
@@ -1087,8 +1094,8 @@ if(selected === 'WareHouse'){
     let exportingColumns: IExcelColumn[] = [];
 
     if(selected =='ExFactory'){
-        console.log('exfactory');
-        
+
+      
     exportingColumns.push(
         { title: "Item Name", dataIndex: "item" },
         { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
@@ -1328,7 +1335,7 @@ let totalJanExfPre = 0;
     excel.addDataSource(excelsData);
     let secondTableColumns: IExcelColumn[] = [];
     if(selected =='ExFactory'){
-      console.log('exfactory');
+
       
       secondTableColumns.push(
       { title: "Production Plan Type Name",dataIndex: "prod_plan_type",},
@@ -1404,7 +1411,9 @@ if(selected === 'WareHouse'){
   };
   const handleTabChange = (selectedYear: any) => {
     setTab(Number(selectedYear));
-    getData(selected);
+    console.log(selectedYear,'year');
+    
+    getData(selected,selectedYear);
   };
   const getFilterdData = () => {
     let ItemName = form.getFieldValue("ItemName");
@@ -1423,7 +1432,7 @@ if(selected === 'WareHouse'){
   };
   const onReset = () => {
     form.resetFields();
-    getData(selected);
+    getData(selected,tab);
   };
 
   const getTableSummary = (pageData) => {
@@ -1459,13 +1468,11 @@ if(selected === 'WareHouse'){
         if (rec.pcsData[0].janPcs) {
           const jan = [rec.pcsData[0].janPcs];
           janPre += Number(jan);
-          console.log(janPre,'jan');
 
         }
         if (rec.pcsData[0].febPcs) {
           const feb = [rec.pcsData[0].febPcs];
           febPre += Number(feb);
-          console.log(febPre,'feb');
           
         }
         if (rec.pcsData[0].marPcs) {
@@ -1511,14 +1518,12 @@ if(selected === 'WareHouse'){
         if (rec.coeffData[0].janCoeff) {
           const jan = [rec.coeffData[0].janCoeff];
           janLat += Number(jan);
-          console.log(janLat,'--------------------');
           
         }
         
         if (rec.coeffData[0].febCoeff) {
           const feb = [rec.coeffData[0].febCoeff];
           febLat += Number(feb);
-          console.log(febLat,'===========');
           
         }
         if (rec.coeffData[0].marCoeff) {
@@ -1912,9 +1917,9 @@ if(selected === 'WareHouse'){
           </Form>
           {selected && data.length > 0 ?(
             
-                 <Tabs type="card" onChange={handleTabChange} aria-disabled>
+                 <Tabs type="card" onChange={handleTabChange} >
         {year.map((item) => (
-          <Tabs.TabPane key={item.year} tab={item.year}>
+          <Tabs.TabPane key={item.year} tab={item.year} >
             <Form form={form} layout={"vertical"}>
               <Row gutter={24}>
                 <Col
