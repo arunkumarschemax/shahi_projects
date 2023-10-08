@@ -143,7 +143,7 @@ export class SampleRequest {
   @OneToMany(type =>SampleReqFabricinfoEntity, sampleReqFabric=>sampleReqFabric.samplerReqFabricEntity,{cascade:true})
   samplereqfabricinfo:SampleReqFabricinfoEntity[]
 
-  @OneToMany(type =>SampleRequestTriminfoEntity,samplereqTriminfo =>samplereqTriminfo.sapleDevReqInfo,{cascade:true})
+  @OneToMany(type =>SampleRequestTriminfoEntity,samplereqTriminfo =>samplereqTriminfo.sampleDevReqInfo,{cascade:true})
   sampleTrimInfo:SampleRequestTriminfoEntity[]
 
   @OneToMany(type =>SampleRequestProcessInfoEntity,samplereqTrim =>samplereqTrim.sampleReq,{cascade:true})
