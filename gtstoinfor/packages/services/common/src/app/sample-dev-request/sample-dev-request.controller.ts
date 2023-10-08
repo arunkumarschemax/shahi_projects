@@ -3,7 +3,8 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
 import { SampleRequestService } from './sample-dev-request.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, ROSLGroupsResponseModel, SampleFilterRequest, SampleReqResponseModel } from '@project-management-system/shared-models';
+import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel } from '@project-management-system/shared-models';
+import { SampleRequestDto } from './dto/samle-dev-req';
 
 
 @ApiTags('sample-request')
@@ -41,6 +42,17 @@ export class SampleDevReqController {
       return await this.sampleService.cancelSampleReqById(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+
+  @Post('/createSmapleDevlopmentRequest')
+  @ApiBody({type: SampleRequestDto})
+  async createSmapleDevlopmentRequest(@Body() req:any):Promise<AllSampleDevReqResponseModel>{
+    try{
+    return await this.sampleService.createSmapleDevlopmentRequest(req)
+    }
+    catch(err){
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, err);
     }
   }
 

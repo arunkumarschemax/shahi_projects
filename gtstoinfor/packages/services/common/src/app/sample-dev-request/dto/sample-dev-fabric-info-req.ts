@@ -4,7 +4,7 @@ export class SamplefabricReq{
     @ApiProperty()
     fabricCode:string
     @ApiProperty()
-    description:number
+    description:string
     @ApiProperty()
     colourId:number
     @ApiProperty()
@@ -15,7 +15,7 @@ export class SamplefabricReq{
     fabricInfoId:number;
     constructor(
         fabricCode:string,
-        description:number,
+        description:String,
         colourId:number,
         consumption:number,
         remarks : string,
