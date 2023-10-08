@@ -1,5 +1,6 @@
 import {Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { Settings } from "../settings/settings.entity";
+import { StyleOrder } from "../style-order/style-order.entity";
 
 
 @Entity('warehouse')
@@ -70,5 +71,8 @@ updatedUser: string | null;
 
   @OneToMany(type => Settings, settings => settings.wareHouseInfo,{cascade: true})
   settingsInfo : Settings
+
+  @OneToMany(type=>StyleOrder, warehouse=>warehouse.warehouseInfo,{cascade: true})
+  styleOrderInfo:StyleOrder;
 
 }

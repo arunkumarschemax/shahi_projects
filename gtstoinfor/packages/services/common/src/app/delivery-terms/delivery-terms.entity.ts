@@ -1,5 +1,6 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { Settings } from "../settings/settings.entity";
+import { StyleOrder } from "../style-order/style-order.entity";
 
 @Entity('delivery_terms')
 export class DeliveryTerms {
@@ -57,5 +58,8 @@ export class DeliveryTerms {
 
   @OneToMany(type => Settings, settings => settings.deliveryTermsInfo ,{cascade: true})
   settingsInfo : Settings
+
+  @OneToMany(type=>StyleOrder, delivery=>delivery.deliveryTermsInfo,{cascade: true})
+  styleOrderInfo:StyleOrder;
  
 }
