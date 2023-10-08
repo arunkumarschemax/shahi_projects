@@ -10,5 +10,12 @@ export class SampleFabricRepo extends Repository<SampleReqFabricinfoEntity> {
     ) {
         super(repo.target, repo.manager, repo.queryRunner);
     }
+    async getAllRoutesData():Promise<any>{
+        const query = await this.createQueryBuilder('routes')
+        .select(`now()`)
+        .getRawMany();
+        console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
+        return query
+    }
    
 }

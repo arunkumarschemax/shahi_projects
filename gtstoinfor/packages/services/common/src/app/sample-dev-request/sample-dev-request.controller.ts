@@ -23,23 +23,32 @@ export class SampleDevReqController {
     }
   }
 
-  @Post('/getAllSampleReqNo')
-  async getAllSampleReqNo(): Promise<AllSampleDevReqResponseModel> {
-    try {
-      return await this.sampleService.getAllSampleReqNo();
-    } catch (error) {
-      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
-    }
-  }
+  // @Post('/getAllSampleReqNo')
+  // async getAllSampleReqNo(): Promise<AllSampleDevReqResponseModel> {
+  //   try {
+  //     return await this.sampleService.getAllSampleReqNo();
+  //   } catch (error) {
+  //     return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+  //   }
+  // }
 
-  @Post('/cancelSampleReqById')
-  @ApiBody({type: SampleFilterRequest})
-  async cancelSampleReqById(@Body() req : any): Promise<AllSampleDevReqResponseModel> {
-    try {
-      console.log(req,'controller')
-      return await this.sampleService.cancelSampleReqById(req);
-    } catch (error) {
-      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+  // @Post('/cancelSampleReqById')
+  // @ApiBody({type: SampleFilterRequest})
+  // async cancelSampleReqById(@Body() req : any): Promise<AllSampleDevReqResponseModel> {
+  //   try {
+  //     console.log(req,'controller')
+  //     return await this.sampleService.cancelSampleReqById(req);
+  //   } catch (error) {
+  //     return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+  //   }
+  // }
+  @Post('/createSmapleDevlopmentRequest')
+  async createSmapleDevlopmentRequest(@Body() req:any):Promise<AllSampleDevReqResponseModel>{
+    try{
+    return await this.sampleService.createSmapleDevlopmentRequest(req)
+    }
+    catch(err){
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, err);
     }
   }
 }
