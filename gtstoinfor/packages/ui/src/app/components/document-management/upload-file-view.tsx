@@ -229,6 +229,7 @@ const UploadFileGrid = () =>{
         console.log(po)
       uploadDcoService.deleteDocsAgainstPo({customerPo:po}).then(res =>{
         if(res.status){
+          getDocumentData();
           message.success(res.internalMessage)
         }else{
           message.error(res.internalMessage)
