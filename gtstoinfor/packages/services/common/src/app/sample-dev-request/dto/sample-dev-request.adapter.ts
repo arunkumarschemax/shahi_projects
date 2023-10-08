@@ -1,4 +1,4 @@
-import { SampleRequest } from "../sample-dev-request.entity";
+import { SampleRequest } from "../entities/sample-dev-request.entity";
 import { SampleDevReqDto } from "./sample-dev-dto";
 
 

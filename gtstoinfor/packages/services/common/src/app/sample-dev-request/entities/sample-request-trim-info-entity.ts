@@ -1,7 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { SampleRequest } from "../sample-dev-request.entity";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { SampleRequest } from "./sample-dev-request.entity";
 
-@Entity('sample_requset_trim_info')
+@Entity('sample_request_trim_info')
 export class SampleRequestTriminfoEntity{
     @PrimaryGeneratedColumn('increment',{
         name:'trim_info_id'
@@ -26,7 +26,7 @@ export class SampleRequestTriminfoEntity{
     })
     remarks:string
 
-    @ManyToMany(type =>SampleRequest,sampledevReq =>sampledevReq.sampleTrimInfo)
+    @ManyToOne(() =>SampleRequest,sampleDevReq =>sampleDevReq.sampleTrimInfo)
     @JoinColumn({name:'sample_request_id'})
-    sapleDevReqInfo:SampleRequest
+    sampleDevReqInfo:SampleRequest
 }

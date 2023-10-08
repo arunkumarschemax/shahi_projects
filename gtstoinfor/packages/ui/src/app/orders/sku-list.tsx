@@ -1,5 +1,5 @@
-import { Button, Card, Checkbox, Col, DatePicker, Descriptions, Form, Input, Modal, Row, Segmented, Select, Space, Table, Tabs, Tag } from "antd";
-import { CreditCardOutlined, HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { Button, Card, Checkbox, Col, DatePicker, Descriptions, Form, Input, Modal, Popconfirm, Row, Segmented, Select, Space, Table, Tabs, Tag, Tooltip, message } from "antd";
+import { CloseOutlined, CreditCardOutlined, EditOutlined, EyeOutlined, HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { AppstoreOutlined } from "@ant-design/icons";
 
 import { useEffect, useRef, useState } from "react";
@@ -7,7 +7,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 import { Link } from "react-router-dom";
 import FormItem from "antd/es/form/FormItem";
 import { SKUlistService } from "@project-management-system/shared-services";
-import { SKUlistFilterRequest } from "@project-management-system/shared-models";
+import { ItemSKusReq, SKUlistFilterRequest } from "@project-management-system/shared-models";
 import Highlighter from "react-highlight-words";
 
 
@@ -43,6 +43,17 @@ import Highlighter from "react-highlight-words";
               } else {
                       }
              };
+
+             const cancelSKU = (id: number) => {
+              const req = new ItemSKusReq(id,'',null,null,null,null,'');
+              service.cancelSKUById(req).then((res: any) => {
+                  if (res.status) {
+                      message.success(res.internalMessage)
+                  } else {
+                      message.error(res.internalMessage);
+                  }
+              });
+          };
   
               
               const Sku = (val,data) => {
@@ -204,6 +215,21 @@ import Highlighter from "react-highlight-words";
                     ),
                     
                   },
+                  {
+                    title : "Action",
+                    dataIndex: "action",
+                    align:"center",
+                    render: (text, rowData, index) => (
+                      <span>
+                        {rowData.status !== "CANCELLED" ?(<Tooltip placement='top' title='Cancel SKU'>
+                            <Popconfirm onConfirm={vale => { cancelSKU(rowData.id) }} title={"Are you sure to Cancel ?"}>
+                              <CloseOutlined style={{ color: 'red', fontSize: '20'}} />
+                            </Popconfirm>
+                          </Tooltip>
+                        ) : null}
+                      </span>
+                    ),
+                  }
                
         
             ]
