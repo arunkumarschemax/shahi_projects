@@ -1,25 +1,25 @@
 import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
-import { SampleDevReqService } from './sample-dev-request.service';
+import { SampleRequestService } from './sample-dev-request.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, ROSLGroupsResponseModel, SampleFilterRequest } from '@project-management-system/shared-models';
+import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, ROSLGroupsResponseModel, SampleFilterRequest, SampleReqResponseModel } from '@project-management-system/shared-models';
 
 
 @ApiTags('sample-request')
 @Controller('sample-request')
 export class SampleDevReqController {
-    constructor(private sampleService: SampleDevReqService,
+    constructor(private sampleService: SampleRequestService,
       private readonly applicationExceptionHandler: ApplicationExceptionHandler
       ) {}
 
 
   @Post('/getAllSampleDevData')
-  async getAllSampleDevData(@Body() req?:SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
+  async getAllSampleDevData(@Body() req?:SampleFilterRequest): Promise<SampleReqResponseModel> {
     try {
       return await this.sampleService.getAllSampleDevData(req);
     } catch (error) {
-      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+      return this.applicationExceptionHandler.returnException(SampleReqResponseModel, error);
     }
   }
 

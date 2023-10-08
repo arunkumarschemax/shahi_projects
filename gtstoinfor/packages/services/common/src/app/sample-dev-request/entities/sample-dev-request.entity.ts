@@ -1,20 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, ValidateIf } from 'class-validator';
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
-import { Style } from '../style/dto/style-entity';
-import { Location } from '../locations/location.entity';
-import { ProfitControlHead } from '../profit-control-head/profit-control-head-entity';
-import { Buyers } from '../buyers/buyers.entity';
-import { SampleTypes } from '../sample Types/sample-types.entity';
-import { SampleSubTypes } from '../sample-sub-types/sample-sub-types.entity';
-import { Brands } from '../master-brands/master-brands.entity';
+import { Style } from '../../style/dto/style-entity';
+import { Location } from '../../locations/location.entity';
+import { ProfitControlHead } from '../../profit-control-head/profit-control-head-entity';
+import { Buyers } from '../../buyers/buyers.entity';
+import { SampleTypes } from '../../sample Types/sample-types.entity';
+import { SampleSubTypes } from '../../sample-sub-types/sample-sub-types.entity';
+import { Brands } from '../../master-brands/master-brands.entity';
 import { SampleDevelopmentStatusEnum } from '@project-management-system/shared-models';
-import { EmplyeeDetails } from '../employee-details/dto/employee-details-entity';
+import { EmplyeeDetails } from '../../employee-details/dto/employee-details-entity';
 import { type } from 'os';
-import { SampleReqSizeEntity } from './entities/sample-requset-size-info-entity';
-import { SampleReqFabricinfoEntity } from './entities/sample-request-fabric-info-entity';
-import { SampleRequestTriminfoEntity } from './entities/sample-request-trim-info-entity';
-import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
+import { SampleReqSizeEntity } from './sample-requset-size-info-entity';
+import { SampleReqFabricinfoEntity } from './sample-request-fabric-info-entity';
+import { SampleRequestTriminfoEntity } from './sample-request-trim-info-entity';
+import { SampleRequestProcessInfoEntity } from './sample-request-process-info-entity';
 
 @Entity('sample_request')
 export class SampleRequest {

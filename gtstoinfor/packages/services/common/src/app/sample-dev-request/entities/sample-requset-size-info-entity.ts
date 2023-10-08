@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
-import { SampleRequest } from "../sample-dev-request.entity";
+import { SampleRequest } from "./sample-dev-request.entity";
 
 @Entity('sample_requset_size_info')
 export class SampleReqSizeEntity{

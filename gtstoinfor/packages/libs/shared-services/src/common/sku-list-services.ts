@@ -1,10 +1,12 @@
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { SKUlistFilterRequest } from "@project-management-system/shared-models";
+import { ItemSKusReq, SKUlistFilterRequest } from "@project-management-system/shared-models";
 
 export class SKUlistService extends CommonAxiosService{
 URL = '/sku-list';
 
-
+async cancelSKUById(req :ItemSKusReq): Promise<any>{
+    return this.axiosPostCall(this.URL + '/cancelSKUById')
+}
 
 async getAllitemsCode():Promise<any>{
     const mockItemData=[

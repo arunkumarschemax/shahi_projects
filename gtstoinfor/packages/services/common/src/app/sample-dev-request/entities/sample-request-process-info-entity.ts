@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { SampleRequest } from "../sample-dev-request.entity";
+import { SampleRequest } from "./sample-dev-request.entity";
 
 @Entity('sample_requset_process_info')
 export class SampleRequestProcessInfoEntity{

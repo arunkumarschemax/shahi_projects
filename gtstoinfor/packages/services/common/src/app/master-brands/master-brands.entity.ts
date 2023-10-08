@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
-import { SampleRequest } from "../sample-dev-request/sample-dev-request.entity";
+import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
 
 @Entity('brands')
 export class Brands {
