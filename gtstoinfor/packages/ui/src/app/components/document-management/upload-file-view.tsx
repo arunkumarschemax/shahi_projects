@@ -299,6 +299,27 @@ const UploadFileGrid = () =>{
                 )
           }
         },
+        // {
+        //   title: 'Delete Po',
+        //   render :(text, rowData, index) =>{
+        //     console.log(rowData)
+        //     return (<div style={{alignContent:'center'}}>
+        //        <Form.Item  name={rowData.PO+1} style={{alignItems: 'center'}}>
+        //         <Popconfirm title={'Are you sure want to delete'} onConfirm={e =>deletePo(rowData.PO)}>
+        //         <Button 
+        //         disabled ={JSON.parse(localStorage.getItem('currentUser')).user.roles != 'Admin' || rowData.orderPoStatus == 'In Progress' || rowData.orderPoStatus == 'Closed' ? false:true}
+        //        >
+        //       <DeleteOutlined style={{color:'red'}}/>
+        //       </Button>
+        //         </Popconfirm>
+        //        </Form.Item>   
+        //        </div>     
+        //         )
+        //   }
+        // },
+      ];
+      
+      const DeleteColumn = [  
         {
           title: 'Delete Po',
           render :(text, rowData, index) =>{
@@ -359,9 +380,13 @@ const UploadFileGrid = () =>{
 
                 }
             }));
-            if(JSON.parse(localStorage.getItem('currentUser')).user.roles === 'Admin' || JSON.parse(localStorage.getItem('currentUser')).user.roles === 'consolidator'){
+            if(JSON.parse(localStorage.getItem('currentUser')).user.roles === 'Admin'){
+              setColumns([...pocolumn,...headerColumns,...downloadcomun,...DeleteColumn]);
+            }else if(JSON.parse(localStorage.getItem('currentUser')).user.roles === 'Admin' || JSON.parse(localStorage.getItem('currentUser')).user.roles === 'consolidator'){
               setColumns([...pocolumn,...headerColumns,...downloadcomun]);
-            }else{
+
+            }
+            else{
               setColumns([...pocolumn,...headerColumns]);
             }
             }
