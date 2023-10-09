@@ -312,9 +312,9 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             dataIndex: "unitPrice",
             key: "unitPrice",
             render: (unitPrice, record) => {
-                const taxAmount = parseFloat(record.taxAmount) || 0;
+                const amount = parseFloat(record.amount) || 0;
                 const unitQuantity = parseFloat(record.unitQuantity) || 1; 
-                const calculatedUnitPrice = (taxAmount / unitQuantity).toFixed(2);
+                const calculatedUnitPrice = (amount / unitQuantity).toFixed(2);
         
                 return (
                     <div style={{ textAlign: "right" }}>
@@ -399,7 +399,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             render: (text, record) => {
                 const unitPrice = parseFloat(record.unitPrice) || 0;
                 const quotation = parseFloat(record.quotation) || 0;
-                const variance = (unitPrice - quotation).toFixed(2); // Ensure two decimal places
+                const variance = (unitPrice - quotation).toFixed(2); 
         
                 const overallVariance = calculateOverallVariance(variance);
                 setStatus(overallVariance);

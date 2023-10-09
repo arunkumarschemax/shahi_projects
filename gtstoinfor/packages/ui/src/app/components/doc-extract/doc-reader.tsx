@@ -144,7 +144,7 @@ export const DocReader = (props: DocReaderProps) => {
                     charge: extractedData[hsnId - 10].content,
                     taxPercentage: taxPercentage,
                     taxAmount: extractedData[hsnId - 6].content,
-                    amount: extractedData[hsnId - 10].content,
+                    amount: extractedData[hsnId - 4].content,
                 };
             }
             linesId += 1;
@@ -275,6 +275,7 @@ export const DocReader = (props: DocReaderProps) => {
                     quotation: null,
                     unitPrice: null,
                     unitQuantity: null,
+                    amount:null,
                     description: [],
                 };
             } else if (currentHSN && !currentHSN.taxType) {
@@ -329,8 +330,10 @@ export const DocReader = (props: DocReaderProps) => {
                         if (!isNaN(taxAmountFloat) && !isNaN(taxPercentageFloat) && taxPercentageFloat !== 0) {
                             const equivalentFor100Percent = (taxAmountFloat * 100) / taxPercentageFloat;
                             currentHSN.charge = equivalentFor100Percent.toFixed(2);
+                            currentHSN.amount = equivalentFor100Percent.toFixed(2);
                         } else {
                             currentHSN.charge = "0";
+                            currentHSN.amount = "0";
                         }
                     }
                 }
@@ -614,23 +617,49 @@ export const DocReader = (props: DocReaderProps) => {
 
         const structuredHSNLines = [];
         let currentHSN = null;
-
+        
+        // Define a function to calculate the charge and amount based on tax amount and tax percentage
+        const calculateChargeAndAmountForItem = (item) => {
+            const taxAmountFloat = parseFloat(item.taxAmount);
+            const taxPercentageFloat = parseFloat(item.taxPercentage);
+            if (!isNaN(taxAmountFloat) && !isNaN(taxPercentageFloat) && taxPercentageFloat !== 0) {
+                const equivalentFor100Percent = (taxAmountFloat * 100) / taxPercentageFloat;
+                const charge = equivalentFor100Percent.toFixed(2);
+                const amount = calculateAmountForItem(charge, item.unitQuantity);
+                return { charge, amount };
+            } else {
+                return { charge: "0.00", amount: "0.00" };
+            }
+        };
+        
+        const calculateAmountForItem = (charge, unitQuantity) => {
+            if (!isNaN(charge) && !isNaN(unitQuantity) && unitQuantity !== 0) {
+                const unitPrice = (charge / unitQuantity).toFixed(2);
+                const amount = (unitQuantity * parseFloat(unitPrice)).toFixed(2);
+                return amount;
+            } else {
+                return "0.00";
+            }
+        };
+        
         for (const line of allLines) {
             if (line.content.includes("996") || line.content.match(/^\d{6}$/)) {
                 if (currentHSN) {
                     structuredHSNLines.push(currentHSN);
                 }
-
+        
                 currentHSN = {
                     HSN: line.content.includes("HSN")
                         ? line.content.match(/\d+/)
                         : line.content.replace(/\]/g, '').trim(),
                     taxType: null,
                     taxAmount: null,
+                    taxPercentage: null, // Added taxPercentage property
                     charge: null,
                     quotation: null,
                     unitPrice: null,
                     unitQuantity: null,
+                    amount: null, // Initialize amount property to null
                     description: [],
                 };
             } else if (currentHSN && !currentHSN.taxType) {
@@ -643,6 +672,7 @@ export const DocReader = (props: DocReaderProps) => {
                     }
                 }
             }
+
             if (currentHSN && currentHSN.HSN && !currentHSN.taxType) {
                 if (!line.content.includes("996")) {
                     const wholeNumberMatch = line.content.match(/\b(\d+)\b/);
@@ -691,6 +721,13 @@ export const DocReader = (props: DocReaderProps) => {
                 if (taxAmountMatch) {
                     currentHSN.taxAmount = parseFloat(taxAmountMatch[1]);
                 }
+            }
+        
+            // Calculate the charge and amount for the current item
+            if (currentHSN) {
+                const { charge, amount } = calculateChargeAndAmountForItem(currentHSN);
+                currentHSN.charge = charge;
+                currentHSN.amount = amount;
             }
         }
 
@@ -1007,7 +1044,7 @@ export const DocReader = (props: DocReaderProps) => {
                     charge: extractedData[hsnId - 8].content,
                     taxPercentage: taxPercentage,
                     taxAmount: parseFloat(extractedData[hsnId - 11].content) || 0,
-                    amount: extractedData[hsnId + 2].content,
+                    amount: extractedData[hsnId - 16].content,
                     unitPrice: parseFloat(extractedData[hsnId + 2].content.replace(/,/g, '')).toFixed(2), // Trim commas here
                     taxType: taxType,
                     igst: igst,
@@ -1096,6 +1133,8 @@ export const DocReader = (props: DocReaderProps) => {
         props.extractedHsnData(structuredHSNLines);
         return extractedData;
     }
+
+   
     
 
     const handlePdfToJSON = async (pdfDataUrl) => {
@@ -1110,13 +1149,13 @@ export const DocReader = (props: DocReaderProps) => {
             // setJsonData(extractedDhl);
             // console.log('PDF DATA DHL:', extractedDhl);
 
-            // const extractedDart = await extractDart(pdfBuffer);
-            // setJsonData(extractedDart);
-            // console.log('PDF DATA DART:', extractedDart);
+            const extractedDart = await extractDart(pdfBuffer);
+            setJsonData(extractedDart);
+            console.log('PDF DATA DART:', extractedDart);
 
-            const extractedExpeditors = await extractExpeditors(pdfBuffer);
-            setJsonData(extractedExpeditors);
-            console.log('PDF DATA EXPEDITORS:', extractedExpeditors);
+            // const extractedExpeditors = await extractExpeditors(pdfBuffer);
+            // setJsonData(extractedExpeditors);
+            // console.log('PDF DATA EXPEDITORS:', extractedExpeditors);
 
             // const extractedEfl = await extractEfl(pdfBuffer);
             // setJsonData(extractedEfl);
