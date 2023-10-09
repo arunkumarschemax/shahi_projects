@@ -426,15 +426,20 @@ const getAllItems = () => {
 
   return (
       <>
-      <Card title={<span >Price List</span>}
+      <Card title={<><span>Price List</span>
+      <span style={{marginLeft:'20%'}}>{'Created Styles: ' + styCount}</span>
+      <span style={{marginLeft:'20%'}}>{'Created Destination: ' + Number(des)}</span>
+      <span style={{marginLeft:'20%'}}>{'Created Item: ' + item}</span>
+      </>}
     //  headStyle={{ border: 0 }} 
     extra={<Link to='/masters/pricelist/price-list-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
       </Link>} >
-      <Row gutter={40}>
-        {/* <Col>
+        
+      {/* <Row gutter={40}>
+        <Col>
           <Card title={'Total Liscenc Types: ' + style.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
-        </Col> */}
+        </Col>
         <Col>
           <Card title={'Created Style: ' + styCount} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#B1D5F8' }}></Card>
         </Col>
@@ -444,7 +449,8 @@ const getAllItems = () => {
         <Col>
           <Card title={'Created Item: ' + item} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#CBB1F8  ' }}></Card>
         </Col>
-      </Row><br></br>
+      </Row>
+      <br></br> */}
         <Form form={form} style={{textAlign:'center'}}  layout='vertical' onFinish={getPriceList}>
         <Row gutter={24}>
           <Col xs={24} sm={12} md={8} lg={6} xl={4}  style={{ padding: '8px' }}>
