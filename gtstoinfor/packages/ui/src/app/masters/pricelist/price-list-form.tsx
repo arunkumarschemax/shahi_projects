@@ -141,8 +141,8 @@ export const PriceListForm = (props: PriceListFormProps) => {
   
                 },
                 {
-                  pattern: /^[A-Z]$/, 
-                  message: 'Invalid Season Code all letters must be captial only'
+                  pattern: /^[A-Z]+$/, 
+                  message: 'Invalid Season Code all letters must be in capital only'
                 }
                   
                 ]}>
