@@ -480,6 +480,7 @@ export class DpomService {
     async saveDIAPDFData(req: DiaPDFDto): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
+            await transactionManager.startTransaction()
             const orderDetails = await this.dpomRepository.find({ where: { purchaseOrderNumber: req.poNumber, poLineItemNumber: req.lineNo } })
             if (orderDetails.length > 0) {
                 for (const detail of orderDetails) {
@@ -509,8 +510,6 @@ export class DpomService {
             }
         } catch (error) {
             await transactionManager.releaseTransaction()
-            // console.log(transactionManager.releaseTransaction,"ew request")
-
             return new CommonResponseModel(false, 0, error)
         }
     }
