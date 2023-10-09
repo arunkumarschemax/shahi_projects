@@ -161,6 +161,12 @@ const OrdersCompareGrid = () => {
                 .addColumns(data3)
                 .addDataSource(poStatusData, { str2num: true });
         }
+        if (priceChaneData && priceChaneData.length > 0) {
+            excel
+                .addSheet('Price & currency change in FOB')
+                .addColumns(data5)
+                .addDataSource(priceChaneData, { str2num: true });
+        }
 
         excel.saveAs('revisedPOs.xlsx');
     };
@@ -310,38 +316,137 @@ const OrdersCompareGrid = () => {
     ];
 
     const data3 = [
+       
         {
-            title: 'Production Plan Id',
-            dataIndex: 'production_plan_id'
+            title: 'Report Generate Date',
+            dataIndex: 'created_at',
+           render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
-            title: 'Item code',
-            dataIndex: 'item_code'
+            title: 'Item',
+            dataIndex: 'item', 
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName'
+            title: 'Factory',
+            dataIndex: 'factory',
         },
         {
-            title: 'Contracted Date',
-            dataIndex: 'new_val',
+            title: 'PO Number',
+            dataIndex: 'po_number',
         },
         {
-            title: 'Order Revised Date',
-            dataIndex: 'last_update_date',
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number'
+        },
+        {
+            title: 'Product Code',
+            dataIndex: 'product_code'
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'gac'
+        },
+        {
+            title: 'CO Number',
+            dataIndex: 'customer_order',
+        },
+        {
+            title: 'Size Description',
+            dataIndex: 'size_description',
+        },
+
+        {
+            title: 'Change from Gross Price currency',
+            dataIndex: '',
+        },
+
+        {
+            title: 'Change to Gross Price currency',
+            dataIndex: '',
+        },
+        {
+            title: 'Shahi Offered Price from Master File  ',
+            dataIndex: '',
+        },
+        {
+            title: 'Shahi Offered Price currency from Master File ',
+            dataIndex: ''
+        },
+        {
+            title: 'Change from Trading Co Net including discounts',
+            dataIndex: '',
+        },
+        {
+            title: 'Change from Trading Co Net including discounts currency',
+            dataIndex: '',
+        },
+        {
+            title: 'Change to Trading Co Net including discounts',
+            dataIndex: '',
+        },
+        {
+            title: 'Change to Trading Co Net including discounts currency',
+            dataIndex: '',
+        },
+        {
+            title: 'Change from Net including discounts',
+            dataIndex: '',
+        },
+        {
+            title: 'Change From Net including discounts currency',
+            dataIndex: ''
+        },
+        {
+            title: 'Change to Net including discounts',
+            dataIndex: '',
+        },
+        {
+            title: 'change to Net including discounts currency',
+            dataIndex: '',
+        },
+        {
+            title: 'Legal PDF PO Price',
+            dataIndex: ''
+        },
+        {
+            title: 'Legal PDF PO Price Currency',
+            dataIndex: ''
+        },
+        // {
+        //     title: 'CRM CO Price',
+        //     dataIndex: '',
+        //     ...getColumnSearchProps('schedule_line_item_number')
+        // },
+        // {
+        //     title: 'CRM CO Price Currency',
+        //     dataIndex: '',
+        //     // ...getColumnSearchProps('schedule_line_item_number')
+        // },
+        {
+            title: 'comparission of CRM CO Price to Legal PDF PO Price',
+            dataIndex: '',
+        },
+        {
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
+        },
+        {
+            title: 'Previous Line Item Status',
+            dataIndex: 'old_val'
+        },
+        {
+            title: 'Revised Line Item Status',
+            dataIndex: 'new_val'
         },
         {
             title: 'Order Quantity Pieces',
-            dataIndex: 'order_qty_pcs',
+            dataIndex: 'total_item_qty',
+            render: (text, record) => (
+                <>
+                    {Number(record.total_item_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                </>
+            )
         },
-        {
-            title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date'
-        },
-        {
-            title: 'Order Status',
-            dataIndex: 'order_status'
-        }
     ];
 
     const data4 = [
@@ -367,7 +472,167 @@ const OrdersCompareGrid = () => {
         },
 
     ];
+    const data5 = [
+       
+        {
+            title: 'Report Generate Date',
+            dataIndex: 'created_at',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        },
+        {
+            title: 'Item',
+            dataIndex: 'item',
+        },
+        {
+            title: 'Factory',
+            dataIndex: 'factory',
+        },
+        {
+            title: 'PO Number',
+            dataIndex: 'po_number',
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number'
+        },
+        {
+            title: 'Product Code',
+            dataIndex: 'product_code',
+            //...getColumnSearchProps('')
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'gac',
+        },
+        {
+            title: 'CO Number',
+            dataIndex: 'customer_order',
+            //...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'Size Description',
+            dataIndex: 'size_description',
+            // ...getColumnSearchProps('size_description')
+        },
+        {
+            title: 'Change From Gross Price',
+            dataIndex: 'grossPriceFobOld',
+        },
+        {
+            title: 'Change from Gross Price currency',
+            dataIndex: '',
+        },
+        {
+            title: 'Change to Gross Price',
+            dataIndex: 'grossPriceFobNew',
+            render: (text, record) => {
+                const formattedAmount = record.grossPriceFobNew ? parseFloat(record.grossPriceFobNew).toFixed(2) : "-";
+                return <>{formattedAmount}</>;
+            }
+        },
+        {
+            title: 'Change to Gross Price currency',
+            dataIndex: '',
+        },
+        {
+            title: 'Shahi Offered Price from Master File  ',
+            dataIndex: 'shahiOfferedPrice',
+            render: (text, record) => (record.shahiOfferedPrice ? record.shahiOfferedPrice : '-'),
+        },
+        {
+            title: 'Shahi Offered Price currency from Master File ',
+            dataIndex: 'shahiOfferedPricecurrency',width:90,
+            render: (text, record) => (record.shahiOfferedPricecurrency ? record.shahiOfferedPricecurrency : '-'),
+        },
+        {
+            title: 'Change from Trading Co Net including discounts',
+            dataIndex: 'trCoNetIncludingDiscFrom',
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscFrom ? record.trCoNetIncludingDiscFrom : '-')
+        },
+        {
+            title: 'Change from Trading Co Net including discounts currency',
+            dataIndex: 'trCoNetIncludingDiscCurrencyCodeFrom',
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscCurrencyCodeFrom ? record.trCoNetIncludingDiscCurrencyCodeFrom : '-')
+        },
+        {
+            title: 'Change to Trading Co Net including discounts',
+            dataIndex: 'trCoNetIncludingDiscNew',
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew : '-')
+        },
+        {
+            title: 'Change to Trading Co Net including discounts currency',
+            dataIndex: '',
+        },
+        {
+            title: 'Change from Net including discounts',
+            dataIndex: 'trCoNetIncludingDiscFrom',
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscFrom ? record.trCoNetIncludingDiscFrom : '-')
+        },
+        {
+            title: 'Change from Net including discounts currency',
+            dataIndex: 'trCoNetIncludingDiscCurrencyCodeFrom',
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscCurrencyCodeFrom ? record.trCoNetIncludingDiscCurrencyCodeFrom : '-')
+        },
+        {
+            title: 'Change to Net including discounts',
+            dataIndex: 'trCoNetIncludingDiscNew',
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew : '-')
+        },
+        {
+            title: 'change to Net including discounts currency',
+            dataIndex: 'trCoNetIncludingDiscCurrencyCodeTo',
+            render: (text, record) =>
+                (record.trCoNetIncludingDiscCurrencyCodeTo ? record.trCoNetIncludingDiscCurrencyCodeTo : '-')
+        },
+        {
+            title: 'Legal PDF PO Price',
+            dataIndex: 'legalPoPrice',
+            render: (text, record) => (record.legalPoPrice ? record.legalPoPrice : '-'),
+        }
+        ,
+        {
+            title: 'Legal PDF PO Price Currency',
+            dataIndex: 'legalPoCurrency',
+            render: (text, record) => (record.legalPoCurrency ? record.legalPoCurrency : '-'),
+        },
+        {
+            title: 'CRM CO Price',
+            dataIndex: 'crmCoPrice',
+            render: (text, record) => (record.crmCoPrice ? record.crmCoPrice : '-'),
 
+
+        },
+        {
+            title: 'CRM CO Price Currency',
+            dataIndex: 'coPriceCurrency',
+            render: (text, record) => (record.coPriceCurrency ? record.coPriceCurrency : '-'),
+        },
+       
+
+{
+    title: 'Comparison of CRM CO Price to Legal PDF PO Price',
+    dataIndex: '',
+    
+    render: (text, record) => {
+      const diff = Number(record.crmCoPrice) - Number(record.legalPoPrice);
+      const color = diff < 0 ? 'red' : diff > 0 ? 'green' : 'black';
+      const arrowIcon = diff < 0 ? <DownOutlined /> : diff > 0 ? <UpOutlined /> : null;
+  
+      return (
+        <span style={{ color }}>
+          {arrowIcon} {Number(diff).toFixed(2)}
+        </span>
+      );
+    }
+  }
+
+    ];
     let exportingColumns: IExcelColumn[] = []
 
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -1157,13 +1422,13 @@ const OrdersCompareGrid = () => {
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            width: '70px',
+           
 
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item',
-            dataIndex: 'item',            width: '70px',
+            dataIndex: 'item',           
 
             // ...getColumnSearchProps('item')
         },
