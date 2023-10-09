@@ -374,7 +374,7 @@ export default function ExcelImport() {
 
   return (
     <>
-      <Card title="Add Orders">
+      <Card title="Add Order">
         <span>
           <Descriptions style={{ alignItems: 'right' }}>
             <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item>
@@ -382,7 +382,7 @@ export default function ExcelImport() {
               {filesData[0]?.fileName}
             </Descriptions.Item>
             <Descriptions.Item label={<b>Uploaded Date</b>}>
-              {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).format('YYYY-MM-DD HH:mm:ss') : '-'}
+              {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).format('YYYY-MM-DD HH:mm:ss a') : '-'}
             </Descriptions.Item>
             <Descriptions.Item label={<b>Uploaded User</b>}>
               {filesData[0]?.createdUser}

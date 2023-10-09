@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { OrdersChildEntity } from "../entities/orders-child.entity";
 import { AppDataSource } from "../../app-datasource";
 import { FileIdReq } from "../models/file-id.req";
-import { CompareOrdersFilterReq, YearReq } from "@project-management-system/shared-models";
+import { CompareOrdersFilterReq, VersionDataModel, YearReq } from "@project-management-system/shared-models";
 
 @Injectable()
 export class OrdersChildRepository extends Repository<OrdersChildEntity> {
@@ -52,25 +52,17 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
     //     return await query.getRawMany();
     // }
           
-    async getVersionWiseQty():Promise<any[]>{
-        const query =`WITH LatestFileIDs AS (
-            SELECT DISTINCT file_id
+    async getVersionWiseQty(req:VersionDataModel):Promise<any[]>{
+        const query =`SELECT  oc.production_plan_id, oc.order_plan_qty, oc.prod_plan_type, oc.item_cd, oc.item, oc.created_at, oc.version
+        FROM orders_child oc
+        JOIN (
+            SELECT file_id, MAX(VERSION) AS max_version
             FROM orders_child
-            WHERE created_at IS NOT NULL
-            ORDER BY file_id DESC
-            LIMIT 5
-        )
-        SELECT
-            production_plan_id,
-            prod_plan_type,
-            item_cd,
-            item,
-            file_id AS VERSION,
-            created_at,
-            REPLACE(order_plan_qty, ',', '') AS order_plan_qty
-        FROM orders_child
-        WHERE file_id IN (SELECT file_id FROM LatestFileIDs)
-        ORDER BY file_id DESC, created_at DESC`
+            WHERE file_id = file_id -- Replace 'your_file_id' with the specific file_id you want to filter by
+            GROUP BY file_id
+        ) subquery
+        ON oc.file_id = subquery.file_id AND oc.version >= subquery.max_version - 4 AND oc.version <= subquery.max_version
+        ORDER BY oc.file_id, oc.version DESC;`
         const result=await this.query(query);
         return result;
     }

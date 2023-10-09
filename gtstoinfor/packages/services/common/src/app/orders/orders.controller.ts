@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest, CompareOrdersFilterReq, orders, COLineRequest, TrimOrdersReq } from '@project-management-system/shared-models';
+import { CommonResponseModel, FileStatusReq, YearReq, FileTypeDto, SeasonWiseRequest, CompareOrdersFilterReq, orders, COLineRequest, TrimOrdersReq, ordersPlanNo } from '@project-management-system/shared-models';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterFile } from 'multer';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -30,6 +30,7 @@ export class OrdersController {
     }
 
     @Post('/getOrdersData')
+    @ApiBody({type:orders})
     async getOrdersData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getOrdersData(req);
@@ -163,15 +164,27 @@ export class OrdersController {
         }
     }
 
-    @Post('/getVersionWiseData')
-    async getVersionWiseData(): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.getVersionWiseData();
-        } catch (err) {
+    // @Post('/getVersionWiseData')
+    // async getVersionWiseData(): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.getVersionWiseData();
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
+
+    @Post('/getversion')
+    @ApiBody({type:ordersPlanNo})
+    async getversion(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            console.log(req,"OOOOOOOOOOOO")
+            return this.ordersService.getversion(req);
+
+        }catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    
         }
     }
-
     @Post('/getPhaseWiseData')
     async getPhaseWiseData(): Promise<CommonResponseModel> {
         try {

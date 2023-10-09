@@ -69,7 +69,7 @@ const SeasonWiseReport = () => {
         {
             title: "S No",
             key: "sno",
-            render: (text, object,index) => (page - 1) * pageSize + (index + 1),
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
         },
         {
             title: 'Item code',
@@ -170,7 +170,7 @@ const SeasonWiseReport = () => {
         {
             title: "S No",
             key: "sno",
-            render: (text, object,index) => (page - 1) * pageSize + (index + 1),
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
         },
         {
             title: 'Item code',
@@ -627,11 +627,15 @@ const SeasonWiseReport = () => {
                 columns={columnsWH}
                 summary={generateSummaryWH}
                 className="custom-table-wrapper"
+                scroll={{x:1000,y:500}}
                 pagination={{
+                  pageSize: 100, 
                   onChange(current, pageSize) {
                       setPage(current);
                       setPageSize(pageSize);
-                  },
+                  }
+              
+
               }}
               />
             ) : (
@@ -743,10 +747,13 @@ const SeasonWiseReport = () => {
                 summary={generateSummaryEXF}
                 className="custom-table-wrapper"
                 pagination={{
+                  pageSize: 100, 
                   onChange(current, pageSize) {
                       setPage(current);
                       setPageSize(pageSize);
-                  },
+                  }
+              
+
               }}
               />
             ) : (

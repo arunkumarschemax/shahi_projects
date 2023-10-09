@@ -8,7 +8,7 @@ import { FileIdReq, FileTypesEnum } from '@project-management-system/shared-mode
 
 export function FileRevert() {
     const [page, setPage] = React.useState(1);
-    const [pageSize, setPageSize] = useState(1);
+    const [pageSize, setPageSize] = useState(100);
     const service = new OrdersService()
     const [data, setData] = useState<any[]>([])
     const [trimData, setTrimData] = useState<any[]>([])
@@ -128,7 +128,7 @@ export function FileRevert() {
               columns={columns}
               dataSource={poData}
               className="custom-table-wrapper"
-              scroll={{ x: 1000 }}
+              scroll={{ x: 1000,y:500 }}
               pagination={{
                   onChange(current, pageSize) {
                       setPage(current);
@@ -144,7 +144,7 @@ export function FileRevert() {
                 columns={columns}
                 dataSource={trimData}
                 className="custom-table-wrapper"
-                scroll={{ x: 1000 }}
+                scroll={{ x: 1000,y:500 }}
                 pagination={{
                     onChange(current, pageSize) {
                         setPage(current);

@@ -47,21 +47,22 @@ export const PriceListGrid = (props: PriceListView) => {
     getAllItems();
   },[])
 
-  const pagination = {
-    current: page,
-    pageSize: pageSize,
-    total: priceList.length,
-    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-    onChange: (current, pageSize) => {
-      setPage(current);
-      setPageSize(pageSize);
-    },
-    showSizeChanger: true,
-    onShowSizeChange: (current, size) => {
-      setPage(1); // Reset the page to 1 when changing page size
-      setPageSize(size);
-    },
+    const pagination = {
+      current: page,
+      pageSize: 100, // Set the page size to 100 records per page
+      total: priceList.length,
+      showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+      onChange: (current, pageSize) => {
+        setPage(current);
+        setPageSize(pageSize);
+      },
+      showSizeChanger: true,
+      onShowSizeChange: (current, size) => {
+        setPage(1); // Reset the page to 1 when changing page size
+        setPageSize(size);
+      }
   };
+  
   const getStyle = () => {
     priceService.getAllPriceListStyles().then(res => {
       setStyle(res.data)
@@ -263,11 +264,12 @@ const getAllItems = () => {
 
   const columns : any [] = [
     {
-      title: 'S.No',
+      title: '#',
       key: 'sno',
       responsive: ['sm'],
-      render: (text, object, index) => (page - 1) * pageSize + (index + 1)
-  },
+      render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1))
+    },
+    
       {
           title: "Item",
           dataIndex: "item",
@@ -312,40 +314,40 @@ const getAllItems = () => {
 
        
       },
-      {
-        title: "Price",
-        dataIndex: "fobLocalCurrency",
-        align:"center",
-        sorter: (a, b) => a.fobLocalCurrency.localeCompare(b.fobLocalCurrency),
-        sortDirections: [ "ascend","descend"],
-         ...getColumnSearchProps("currency"),
-       
-        // filters: [
-        //   {
-        //     text: 'INR',
-        //     value: true,
-        //   },
-        //   {
-        //     text: 'InActive',
-        //     value: false,
-        //   },
-        // ],
-        // filterMultiple: false,
-        // onFilter: (value, record) => {
-        //   // === is not work
-        //   return record.isActive === value;
-        // },
-        render:(text,record) => {
-          return(
-            <>
-            {record.fobLocalCurrency ? `${record.currency}- ${record.fobLocalCurrency} ` : '-'}
-            </>
-          )
-        }
-        // ...getColumnSearchProps("currency"),
+      // {
+      //   title: "Price",
+      //   dataIndex: "fobLocalCurrency",
+      //   align:"right",
+      //   sorter: (a, b) => a.fobLocalCurrency.localeCompare(b.fobLocalCurrency),
+      //   sortDirections: [ "ascend","descend"],
+      //    ...getColumnSearchProps("currency"),
+      //   render:(text,record) => {
+      //     return(
+      //       <>
+      //       {record.fobLocalCurrency ? `${record.currency}- ${record.fobLocalCurrency} ` : '-'}
+      //       </>
+      //     )
+      //   }
+      //   // ...getColumnSearchProps("currency"),
 
        
        
+      // },
+      {
+        title:"Price",
+        dataIndex:"fobLocalCurrency",
+        align:"right",
+        sorter: (a, b) => a.fobLocalCurrency.localeCompare(b.fobLocalCurrency),
+        sortDirections: [ "ascend","descend"],
+         ...getColumnSearchProps("fobLocalCurrency"),
+      },
+      {
+        title:"Currency",
+        dataIndex:"currency",
+        align:"right",
+        sorter: (a, b) => a.currency.localeCompare(b.currency),
+        sortDirections: [ "ascend","descend"],
+         ...getColumnSearchProps("currency"),
       },
       {
         title: 'Status',
@@ -436,13 +438,13 @@ const getAllItems = () => {
           <Card title={'Total Liscenc Types: ' + style.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col> */}
         <Col>
-          <Card title={'Created Style: ' + styCount} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#B1D5F8' }}></Card>
+          <Card title={' No of Style: ' + styCount} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#B1D5F8' }}></Card>
         </Col>
         <Col>
-          <Card title={'Created Destination: ' + Number(des)} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#B1F8E2' }}></Card>
+          <Card title={'No of Destination: ' + Number(des)} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#B1F8E2' }}></Card>
         </Col>
         <Col>
-          <Card title={'Created Item: ' + item} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#CBB1F8  ' }}></Card>
+          <Card title={' No ofItem: ' + item} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#CBB1F8  ' }}></Card>
         </Col>
       </Row><br></br>
         <Form form={form} style={{textAlign:'center'}}  layout='vertical' onFinish={getPriceList}>
@@ -528,14 +530,14 @@ const getAllItems = () => {
           className="custom-table-wrapper"
 
           pagination={{
-           // pageSize:50,
+            pageSize: 100, // Set the page size to 100 records per page
             onChange(current, pageSize) {
-                
                 setPage(current);
-                setPageSize(pageSize)
+                setPageSize(pageSize);
             }
         }}
-          scroll={{x:true}}
+        
+          scroll={{x:'max-content'}}
           onChange={onChange}
           bordered />
           

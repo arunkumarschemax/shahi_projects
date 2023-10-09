@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Form, Input, InputRef, Row, Select, Space, Table, Tag, message } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, InputRef, Row, Select, Space, Table, Tag, Tooltip, message } from 'antd';
 import { useEffect, useRef, useState, } from 'react';
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
@@ -10,6 +10,7 @@ import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import { orders } from '@project-management-system/shared-models';
+import { useNavigate } from 'react-router-dom';
 
 
 const AllOrdersGridView = () => {
@@ -32,12 +33,14 @@ const AllOrdersGridView = () => {
     const [selectedFromDate, setSelectedFromDate] =useState<null | moment.Moment>(null);
     const [selectedToDate, setSelectedToDate] = useState<null | moment.Moment>(null);
     const { RangePicker } = DatePicker;
+    let navigate = useNavigate()
 
 
     useEffect(() => {
         getData();
         orderStatus();
         Number();
+        orderPlannedNumber();
     }, [])
 
     const getData = () => {
@@ -48,14 +51,15 @@ const AllOrdersGridView = () => {
         if (form.getFieldValue('planned_exf') !== undefined) {
         req.plannedToDate = (form.getFieldValue('planned_exf')[1]).format('YYYY-MM-DD')
         }
-        if(form.getFieldValue('PoOrderStatus') ! == undefined){
+        if(form.getFieldValue('PoOrderStatus') !== undefined){
         req.PoOrderStatus=form.getFieldValue('PoOrderStatus')
-    }
-    if(form.getFieldValue('OrderPlanNumber') ! == undefined){
-        req.OrderPlanNumber=form.getFieldValue('OrderPlanNumber')
+        }
+    if(form.getFieldValue('OrderPlanNumber') !== undefined){
+        req.OrderPlanNum=form.getFieldValue('OrderPlanNumber')
     }
         service.getOrdersData(req).then(res => {
-            console.log(req,'oooooooooooooooooo')
+            
+            console.log( req.OrderPlanNum,'oooooooooooooooooo')
             if (res.status) {
                 setGridData(res.data)
                 setFilteredData(res.data)
@@ -63,31 +67,34 @@ const AllOrdersGridView = () => {
         }).catch(err => {
             console.log(err.message)
         })
-        service.getOrdersStatus().then(res=>{
-            if(res.status){
-                setOrdersStatus(res.data)
-                setFilteredData(res.data)
+        // service.getOrdersStatus().then(res=>{
+        //     if(res.status){
+        //         setOrdersStatus(res.data)
+        //         setFilteredData(res.data)
 
-            }else{
-                setFilteredData([])
-                setOrdersStatus([])
-            }
-        }).catch(err => {
-            console.log(err.message)
-        })
-        service.getOrderPlanNo(req).then(res=>{
-            if(res.status){
-                setOrdersNo(res.data)
-                setFilteredData(res.data)
+        //     }else{
+        //         setFilteredData([])
+        //         setOrdersStatus([])
+        //     }
+        // }).catch(err => {
+        //     console.log(err.message)
+        // })
+        // service.getOrderPlanNo(req).then(res=>{
+        //     if(res.status){
+        //         setOrdersNo(res.data)
+        //         setFilteredData(res.data)
 
-            }else{
-                setFilteredData([])
-                setOrdersNo([])
-            }
-        })
+        //     }else{
+        //         setFilteredData([])
+        //         setOrdersNo([])
+        //     }
+        // })
     }
 
-
+ const DetailView =(record:any)=>{
+    const VersionData=filteredData.filter(order_plan_number=>order_plan_number.order_plan_number == record)
+    navigate('/order-history-report',{state:{VersionData}})
+ }
 const orderStatus=()=>{
     service.getOrdersStatus().then((res)=>{
         if(res.status){
@@ -98,6 +105,18 @@ const orderStatus=()=>{
 }
 
 
+const orderPlannedNumber=()=>{
+     service.getOrderPlanNo().then(res=>{
+            if(res.status){
+                setOrdersNo(res.data)
+                setFilteredData(res.data)
+
+            }else{
+                setFilteredData([])
+                setOrdersNo([])
+            }
+        })
+}
 const Number=()=>{
     service.getOrderPlanNo().then((res)=>{
         if(res.status){
@@ -117,62 +136,7 @@ const Number=()=>{
             
         }
     }
-
-
-//     const filter=()=>{
-// service.getOrdersStatus(req).then((res)=>{
-//     if(res.data){
-//         setDatas(res.data)
-//     }
-// })
-//     }
-
-    // const getFilterdData = () => {
-    //     let poOrderStatus = form.getFieldValue('poOrderStatus');
-    //     let selectedDate = selectedEstimatedFromDate;
-    //     let orderNo = form.getFieldValue('orderNo')
-    //     const [startDate, endDate] = dateRange;
-
-    //      let filteredData = gridData;
-    //     if (poOrderStatus) {
-    //         filteredData = filteredData.filter(record => record.po_order_status === poOrderStatus);
-    //         if (filteredData.length === 0) {
-    //             message.error("No Data Found")
-    //         }
-    //         setFilteredData(filteredData);
-    //     }
-    //     if(orderNo){
-    //         filteredData=filteredData.filter(record=>record.order_plan_number === orderNo);
-    //         if(filteredData.length === 0){
-    //             message.error("No Data Found")
-    //         }
-    //         setFilteredData(filteredData)
-    //     }
-    //     // if (selectedDate) {
-    //     //     selectedDate = moment(selectedDate).format('YYYY/MM/DD');
-    //     //     setFilteredData(filteredData);
-    //     //     filteredData = filteredData.filter(record => {
-    //     //         const dateInData = moment(record.planned_exf).format('YYYY/MM/DD');
-    //     //         return dateInData === selectedDate;
-    //     //     });
-    
-    //     //   }
-    //     // 
-    //     if (startDate && endDate) {
-    //         const startDateFormatted = moment(startDate).format('YYYY/MM/DD');
-    //         const endDateFormatted = moment(endDate).format('YYYY/MM/DD');
-      
-    //         filteredData = filteredData.filter(record => {
-    //           const dateInData = moment(record.planned_exf).format('YYYY/MM/DD');
-    //           return dateInData >= startDateFormatted && dateInData <= endDateFormatted;
-    //         });
-    //       }
-    //       setFilteredData(filteredData);
-
-    // if (filteredData.length === 0) {
-    //   message.error("No Data Found");
-    // }
-    // };
+  
 
     const handleReset = (clearFilters: () => void) => {
         clearFilters();
@@ -270,40 +234,47 @@ const Number=()=>{
     }
 
     const columns: any = [
-        
-        // {
-        //     title: 'Production Plan Id',
-        //     dataIndex: 'production_plan_id',
-        //     render: (text) => (text ? text : '-')
-
-            
-        // },
+    
         {
-            title: 'S.No',
+            title: '#',
             key: 'sno',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-            width: 150,
+            width:50,
+            align:'left',
+            fixed:'left',
+
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
+        
+
 
         },
         // {
         //     title: ' Planning Ssn Cd',
         //     dataIndex: 'planning_ssn_cd',
         //     render: (text) => (text ? text : '-'),
-        //     // width: '9%',
+            // width: '9%',
         // },
         {
             title:'Order Plan Number',
             dataIndex:'order_plan_number',
-            // width: '9%',
-            width: 150,
-
-            render: (text) => (text ? text : '-'),
+            width: 90,
+            align:'right',
+            fixed:'left',
             ...getColumnSearchProps("order_plan_number"),
             sorter: (a, b) => {
                 const aKey = a.order_plan_number || "";
                 const bKey = b.order_plan_number || "";
                 return aKey.localeCompare(bKey);
               },
+              render: (text,record) =>{
+            return(
+               <Tooltip title="Click for Detail View">
+                <Button type='link' onClick={() => DetailView(record.order_plan_number)}>
+                  {record.order_plan_number}
+                </Button>
+              </Tooltip>
+                  )
+              },
+
          },
         {
             title: 'Biz',
@@ -312,7 +283,7 @@ const Number=()=>{
 
             render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 150,
+            width: 80,
             sorter: (a, b) => {
                 const aKey = a.biz || "";
                 const bKey = b.biz || "";
@@ -324,7 +295,7 @@ const Number=()=>{
             dataIndex: 'department',
             render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 200,
+            width: 90,
 
       ...getColumnSearchProps("department"),
       sorter: (a, b) => {
@@ -338,7 +309,7 @@ const Number=()=>{
         title:'Planning Sum Code',
         dataIndex:'planning_sum_code',
         render: (text) => (text ? text : '-'),
-        width: 200,
+        width: 100,
 
         ...getColumnSearchProps("planning_sum_code"),
         sorter: (a, b) => {
@@ -353,7 +324,7 @@ const Number=()=>{
             dataIndex: 'planning_sum',
             render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 200,
+            width: 100,
 
             ...getColumnSearchProps("planning_sum"),
             sorter: (a, b) => {
@@ -367,7 +338,7 @@ const Number=()=>{
             dataIndex: 'item',
             render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 250,
+            width: 100,
 
             ...getColumnSearchProps("item"),
             sorter: (a, b) => {
@@ -387,7 +358,7 @@ const Number=()=>{
             dataIndex: 'fr_fabric',
             render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 250,
+            width: 100,
 
             ...getColumnSearchProps("fr_fabric"),
             sorter: (a, b) => {
@@ -409,8 +380,8 @@ const Number=()=>{
             dataIndex: 'coeff',
             render: (text) => (text ? text : '-'),
             // width: '9%',
-            width: 100,
-
+            width: 60,
+            align:'right',
             sorter: (a, b) => {
                 const aKey = a.coeff || "";
                 const bKey = b.coeff || "";
@@ -422,7 +393,7 @@ const Number=()=>{
             title: 'Publish Date',
             dataIndex: 'publish_date',
             // width: '9%',
-            width: 100,
+            width: 90,
 
             render: (text, record) => {
                 return record.publish_date ? convertToYYYYMMDD(record.publish_date) : '-'
@@ -434,7 +405,8 @@ const Number=()=>{
             title: 'GWH',
             dataIndex: 'gwh',
             // width: '9%',
-            width: 100,
+            width: 80,
+            align:'right',
 
             render: (text) => (text ? text : '-'),
             ...getColumnSearchProps("gwh"),
@@ -445,7 +417,7 @@ const Number=()=>{
             title: 'WH',
             dataIndex: 'wh',
             // width: '9%',
-            width: 100,
+            width: 90,
 
             render: (text) => (text ? text : '-'),
             sorter: (a, b) => {
@@ -458,7 +430,7 @@ const Number=()=>{
             title: 'Transport Method',
             dataIndex: 'trnsp_mthd',
             // width: '9%',
-            width: 150,
+            width: 100,
 
             render: (text) => (text ? text : '-'),
 
@@ -471,7 +443,7 @@ const Number=()=>{
             render: (text) => (text ? text : '-'),
             ...getColumnSearchProps("raw_material_supplier"),
 
-            width: 250,
+            width: 100,
 
             sorter: (a, b) => {
                 const aKey = a.raw_material_supplier || "";
@@ -482,10 +454,10 @@ const Number=()=>{
         {
             title: 'Yarn Order Status',
             dataIndex: 'yarn_order_status',
-            // width: '9%',
+            width: 100,
             render: (text) => {
                 return text !== undefined && text !== "" ? text : "-";
-              },            width: 250,
+              },           
             ...getColumnSearchProps("yarn_order_status"),
             // sorter: (a, b) => {
             //     const aKey = a.yarn_order_status || "";
@@ -500,7 +472,7 @@ const Number=()=>{
             dataIndex: 'fbrc_order_status',
             // width: '9%',
             render: (text) => (text ? text : '-'),
-            width: 250,
+            width: 100,
             ...getColumnSearchProps("fbrc_order_status"),
 
         },
@@ -509,7 +481,7 @@ const Number=()=>{
             dataIndex: 'color_order_status',
             // width: '9%',
             render: (text) => (text ? text : '-'),
-            width: 250,
+            width: 100,
             ...getColumnSearchProps("color_order_status"),
             // sorter: (a, b) => {
             //     const aKey = a.color_order_status || "";
@@ -522,7 +494,7 @@ const Number=()=>{
             dataIndex: 'trim_order_status',
             // width: '9%',
             render: (text) => (text ? text : '-'),
-            width: 250,
+            width: 100,
             ...getColumnSearchProps("trim_order_status"),
             // sorter: (a, b) => {
             //     const aKey = a.trim_order_status || "";
@@ -535,7 +507,7 @@ const Number=()=>{
             dataIndex: 'po_order_status',
             // width: '9%',
             render: (text) => (text ? text : '-'),
-            width: 150,
+            width: 100,
             ...getColumnSearchProps("po_order_status"),
             // sorter: (a, b) => {
             //     const aKey = a.color_order_status || "";
@@ -549,7 +521,7 @@ const Number=()=>{
             // width: '9%',
             render: (text) => (text ? text : '-'),
             ...getColumnSearchProps("prod_plan_type"),
-            width: 150,
+            width: 90,
             sorter: (a, b) => {
                 const aKey = a.prod_plan_type || "";
                 const bKey = b.prod_plan_type || "";
@@ -561,7 +533,7 @@ const Number=()=>{
             dataIndex: 'planned_exf',
             // width: '9%',
             render: (text) => (text ? text : '-'),
-            width: 150,
+            width: 90,
             sorter: (a, b) => {
                 const aKey = a.planned_exf || "";
                 const bKey = b.planned_exf || "";
@@ -588,7 +560,7 @@ const Number=()=>{
             // { title: 'Production Plan Id', dataIndex: 'production_plan_id' },
             // { title: ' Planning Ssn Cd', dataIndex: 'planning_ssn_cd' },
            
-            { title: 'S.No', dataIndex: 'sno' },
+            { title: '#', dataIndex: 'sno' },
             { title: 'Order Plan Number', dataIndex: 'order_plan_number' },
             { title: 'Biz', dataIndex: 'biz' },
             { title: 'Department', dataIndex: 'department' },
@@ -639,11 +611,7 @@ const Number=()=>{
                 <Form form={form} layout={'vertical'} onFinish={getData}>
 
                     <Row gutter={24}>
-                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
-                            <Form.Item label="Planned EXF Date" name="planned_exf">
-                                <RangePicker onChange={EstimatedETDDate} />
-                            </Form.Item>
-                        </Col> */}
+                       
                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
                             <Form.Item label="Plan Order Number" name='OrderPlanNumber'>
                                 <Select 
@@ -651,10 +619,6 @@ const Number=()=>{
                                  placeholder="Select Plan Order Number"
                                  optionFilterProp="children"
                                  allowClear>
-                                {/* {ordersNo.map(res=>{
-                                        <Option key={res.order_plan_number} value={res.order_plan_number}>{res.order_plan_number} </Option>
-                                // })} */}
-
                                 {ordersNo.map(i=>(
                                     <Option key={i.order_plan_number} value={i.order_plan_number}>{i.order_plan_number}
 
@@ -686,22 +650,6 @@ const Number=()=>{
                         <RangePicker/>
                         </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
-                            <div>
-                                {/* <label>Order Status</label>
-                                <Form.Item name="orderStatus">
-                                    <Select
-                                        showSearch
-                                        placeholder="Select Project Status"
-                                        optionFilterProp="children"
-                                        allowClear>
-                                        <Option key='new' value="NEW">NEW</Option>
-                                        <Option key='unaccepted' value="UNACCEPTED">UNACCEPTED</Option>
-                                    </Select>
-                                </Form.Item> */}
-                            </div>
-                        </Col>
-
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 6 }} style={{ marginTop: 17 }} >
                             <Button
                                 type="primary"
@@ -717,11 +665,15 @@ const Number=()=>{
                         </Col>
                     </Row>
                 </Form>
-                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500,y:500 }}
-                 pagination={{
-                    onChange(current) {
+                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1000,y:500    }} className="custom-table-wrapper"
+
+                  pagination={{
+                    pageSize: 100, 
+                    onChange(current, pageSize) {
                         setPage(current);
+                        setPageSize(pageSize);
                     }
+                
 
                 }} onChange={onChange} bordered />
             </Card>

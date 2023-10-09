@@ -592,7 +592,8 @@ const ChangesGrid = () => {
             key: '1',
             label: <b>Order Wise Quantity : {qtyData?.length} </b>,
             children: <Table className="custom-table-wrapper"
-            bordered dataSource={qtyData} columns={orderWisecolumns} 
+            bordered dataSource={qtyData} columns={orderWisecolumns}scroll={{x:1000,y:500}}
+
             summary={(qtyData) => {
                 let totalLastQty = 0;
                 let totalRecQty = 0;
@@ -642,6 +643,7 @@ const ChangesGrid = () => {
             label: <b>Item Wise Quantity  : {differenceQtyData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered
             dataSource={differenceQtyData} columns={ItemWisecolumns} pagination={false}
+            scroll={{x:1000,y:500}}
                 summary={(differenceQtyData) => {
                     let totalLastQty = 0;
                     let totalRecQty = 0;
@@ -691,7 +693,7 @@ const ChangesGrid = () => {
     }
 
     return (
-        <Card title='Orders Comparision' extra={qtyData || differenceQtyData ? (<Button
+        <Card title='Projection Orders Comparision' extra={qtyData || differenceQtyData ? (<Button
             type="default"
             style={{ color: 'green' }}
             onClick={exportExcel}

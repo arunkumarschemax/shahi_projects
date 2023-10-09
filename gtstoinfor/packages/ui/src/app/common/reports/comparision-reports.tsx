@@ -113,7 +113,7 @@ export const MonthWiseComparisionReport = () =>{
     <td>
     <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
       <tr>
-      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse' ,backgroundColor: 'lightgreen',borderLeft: '1px solid #ddd'}}>January</th>
+      <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightgreen',borderLeft: '1px solid #ddd'}}>January</th>
       </tr>
       <tr>
       <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse'}}>Latest</td>
@@ -892,7 +892,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In PCs`,
           dataIndex: "janPcs",
-          width:40,
+          width:30,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -1048,7 +1048,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In PCs`,
           dataIndex: "julPcs",
-          width: 40,
+          width: 50,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -1164,7 +1164,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In PCs`,
           dataIndex: "novPcs",
-          width: 60,
+          width: 50,
           align: "right",
           render: (text: any, record: any) => {
             return record.pcsData.map(
@@ -1175,7 +1175,7 @@ export const MonthWiseComparisionReport = () =>{
         {
           // title: `In Coeff`,
           dataIndex: "novCoeff",
-          width: 60,
+          width: 50,
           align: "right",
           render: (text: any, record: any) => {
             return record.coeffData.map(
@@ -1722,8 +1722,12 @@ if(selected === 'WareHouse'){
   excel.addColumns(secondTableColumns);
   excel.addDataSource(phaseExcel)
   excel.addRow();
-        excel.saveAs(`Ex-Factory & ware-House Report-${currentDate}.xlsx`);
-       
+  if(selected =='ExFactory'){ 
+    excel.saveAs(`Ex-Factory-comparision-report-${currentDate}.xlsx`);
+}
+if(selected == 'WareHouse'){
+  excel.saveAs(`Ware-House-comparision-report-${currentDate}.xlsx`);
+}       
       };
       const handleTabChange = (selectedYear: string) => {
         setTab(Number(selectedYear));
@@ -1899,6 +1903,22 @@ if(selected === 'WareHouse'){
                 <div>
                   <Space></Space>
                   <Space>
+                    <span /> 
+                    <span /><span /> 
+                    <span />
+                    <span /> 
+                    <span />
+                    <span /> 
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span /> 
+                    <span />
+                    <span /> 
+                    <span />
+                    <span /> 
+                    <span />
                     <span /> <span />
                     <span />
                     <span />
@@ -1912,13 +1932,7 @@ if(selected === 'WareHouse'){
                     <span /> <span />
                     <span />
                     <span />
-                    <span />
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
+                   
                     {janPre.toLocaleString()}
                     <span />
                     <span /> <span />
@@ -1948,23 +1962,27 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
-                    <span />
+                   
                     {marPre.toLocaleString()}
                     <span />
-                    <span /> <span />
+                    <span /> 
                     <span />
                     <span />
                     <span />
                     <span />
-                    <span />
-                    <span />
+                   
+
                     {marLat.toLocaleString()}
-                    {/* <span />
+                    <span />
                     <span /> <span />
                     <span />
                     <span />
-                    <span /> */}
+                    <span />
+                   
                     
+                    
+
+
                     {aprPre.toLocaleString()}
                     <span />
                     <span /> <span />
@@ -1972,14 +1990,9 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
-                    <span />
-                    <span />
-                    <span /> {aprLat.toLocaleString()}
+                    {aprLat.toLocaleString()}
                     <span />
                     <span /> <span />
-                    <span />
-                    <span />
-                    <span />
                     <span />
                     <span />
                     <span />
@@ -1990,15 +2003,12 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
-                    <span /> {mayLat.toLocaleString()}
+                    {mayLat.toLocaleString()}
                     <span />
                     <span /> <span />
                     <span />
                     <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
+                  
                     {junPre.toLocaleString()}
                     <span />
                     <span /> <span />
@@ -2007,8 +2017,7 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
-                    <span />
-                    <span />
+                    
                     {julLat.toLocaleString()}
                     <span />
                     <span /> <span />
@@ -2016,9 +2025,7 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
-                    <span />
-                    <span />
-                    <span />
+                    
                     {julPre.toLocaleString()}
                     <span />
                     <span /> <span />
@@ -2085,6 +2092,9 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
+                    <span />
+                    <span />
+
                     {octLat.toLocaleString()}
                     <span />
                     <span /> <span />
@@ -2095,6 +2105,10 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
+                    <span />
+                    <span />
+                    <span />
+
                     {novPre.toLocaleString()}
                     <span />
                     <span /> <span />
@@ -2105,6 +2119,12 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    
+
                     {novLat.toLocaleString()}
                     <span />
                     <span /> <span />
@@ -2115,6 +2135,10 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
+                    <span />
+                    <span />
+                    <span />
+
                     {decPre.toLocaleString()}
                     <span />
                     <span /> <span />
@@ -2125,6 +2149,9 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
+                  
+                    <span />
+
                     {decLat.toLocaleString()}
                     <span />
                     <span />
@@ -2139,6 +2166,14 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+
+
                     {totalPre.toLocaleString()}
                     <span />
                     <span /> <span />
@@ -2148,7 +2183,11 @@ if(selected === 'WareHouse'){
                     <span />
                     <span />
                     <span />
+                    <span /><span />
                     <span />
+                    <span />
+                    <span />
+
                     {totalLat.toLocaleString()}
                   </Space>
                 </div>

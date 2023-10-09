@@ -21,8 +21,8 @@ export class OrdersRepository extends Repository<OrdersEntity> {
             if (req.plannedFromDate !== undefined) {
                 query.andWhere(`Date(o.planned_exf) BETWEEN '${req.plannedFromDate}' AND '${req.plannedToDate}'`)
             }
-            if(req.OrderPlanNumber){
-                query.andWhere(`o.order_plan_number = '${req.OrderPlanNumber}'`)
+            if(req.OrderPlanNum){
+                query.andWhere(`o.order_plan_number = '${req.OrderPlanNum}'`)
             }
             if(req?.PoOrderStatus){
                 query.andWhere(`o.po_order_status = '${req.PoOrderStatus}'`)

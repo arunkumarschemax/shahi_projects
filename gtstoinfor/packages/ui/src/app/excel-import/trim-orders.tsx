@@ -232,16 +232,20 @@ const {Text}=Typography
 
     const columns: any = [
         {
-            title: 'S No',
+            title: '#',
             // fixed:'left',
             key: 'sno',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            fixed:'left',
+            width:50,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1)),
         },
       
         {
             title: 'Order No',
             // fixed:'left',
           dataIndex: 'order_no',
+          fixed:'left',
+
           width:"140px",
           sorter: (a, b) => {
             const aKey = a.order_no || "";
@@ -262,7 +266,8 @@ const {Text}=Typography
         {
             title: 'Item Code',
             dataIndex: 'item_code',
-           
+            width:50,
+
             align:'right',
             ...getColumnSearchProps("item_code"),
             sorter: (a, b) => a.item_code.localeCompare(b.item_code),
@@ -302,7 +307,8 @@ const {Text}=Typography
             title: 'Color Code',
             dataIndex: 'color_code',
             align:'right',
-           
+            width:50,
+
             // ...getColumnSearchProps("color_code"),
             sorter: (a, b) => a.color_code.localeCompare(b.color_code),
             sortDirections: ["descend", "ascend"],
@@ -310,7 +316,8 @@ const {Text}=Typography
         {
             title: 'Color',
             dataIndex: 'color',
-           
+            width:50,
+
             align:'left',
             ...getColumnSearchProps("color"),
             // sorter: (a, b) => a.color.localeCompare(b.color),
@@ -319,7 +326,8 @@ const {Text}=Typography
         {
             title: 'Size Code',
             dataIndex: 'size_code',
-           
+            width:50,
+
             align:'right',
             // ...getColumnSearchProps("size_code"),
             sorter: (a, b) => a.size_code.localeCompare(b.size_code),
@@ -328,7 +336,7 @@ const {Text}=Typography
         {
             title: 'Size',
             dataIndex: 'size',
-       
+       width:50,
             align:'left',
             ...getColumnSearchProps("size"),
             // sorter: (a, b) => a.size.localeCompare(b.size),
@@ -422,8 +430,6 @@ const {Text}=Typography
         {
             title: "Item No",
             dataIndex: "itemNo",
-            align:'left',
-            fixed:'right',
             width:150,
             render: (text, record) => {
                 if(record.answered_status != 'Accepted'){
@@ -490,8 +496,12 @@ const {Text}=Typography
             .join("/");
 
         let exportingColumns: IExcelColumn[] = []
+           let i = 1;
+
         exportingColumns = [
-            { title: 'S No', dataIndex: 'sno' },
+            // { title: '#', dataIndex: 'id' ,render: (value, record, index) => {
+            //     return index + 1; 
+            //   }},
             // { title: 'Trim Order Id', dataIndex: 'trim_order_id' },
             { title: 'Order No', dataIndex: 'order_no' },
             { title: 'Year', dataIndex: 'year' },
@@ -613,7 +623,7 @@ const {Text}=Typography
                         </Col>
                     </Row>
                 </Form>
-                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500 }} bordered
+                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500,y:500 }} bordered
                 size='small'
                 summary={(pageData) => {
                     let total = 0;

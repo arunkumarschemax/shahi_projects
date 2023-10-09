@@ -46,7 +46,7 @@ export const MonthWiseReport = () =>{
   const getData = (val) => {
     const req = new YearReq(tab,val);
     service.getMonthWiseReportData(req).then((res) => {
-      console.log(res, "res==========");
+      // console.log(res, "res==========");
       if (res.status) {
         setData(res.data);
         setFilteredData(res.data);
@@ -55,7 +55,7 @@ export const MonthWiseReport = () =>{
       }
     });
     service.getExfactoryMonthExcel(req).then((res) => {
-      console.log(res, "res==========");
+      // console.log(res, "res==========");
       if (res.status) {
         setExcelData(res.data);
       } else {
@@ -63,7 +63,7 @@ export const MonthWiseReport = () =>{
       }
     });
     service.getPhaseMonthData(req).then((res)=>{
-      console.log(res,"*********")
+      // console.log(res,"*********")
       if(res.status){
         setPhase(res.data)
       }else{
@@ -71,7 +71,7 @@ export const MonthWiseReport = () =>{
       }
     })
     service.getPhaseMonthExcelData(req).then((res) => {
-      console.log(res, "res==========");
+      // console.log(res, "res==========");
       if (res.status) {
         setPhaseExcel(res.data);
       } else {
