@@ -8,13 +8,15 @@ import { Destination } from "../destination/destination.entity";
 import { Size } from "../sizes/sizes-entity";
 import { Colour } from "../colours/colour.entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
+import { ItemSkuRepository } from "./sku-generation-repo";
 
 @Injectable()
 export class ItemSkuService{
     constructor(
-        @InjectRepository(ItemSkus)
-        private itemSkuRepo: Repository<ItemSkus>,
+        // @InjectRepository(ItemSkus)
+        // private itemSkuRepo: Repository<ItemSkus>,
         private readonly dataSource: DataSource,
+        private itemSkuRepo: ItemSkuRepository
 
     ){}
 
@@ -107,16 +109,28 @@ export class ItemSkuService{
     }
 
     async getDestinationsByItem(req:ItemCodeReq): Promise<CommonResponseModel>{
-      console.log(req,'---------req')
       try{
-        const getData = await this.itemSkuRepo.find({select:['destination','destinationInfo'],where:{itemCode: req.itemCode}})
-        console.log(getData,'-------------')
+        // const getData = await this.itemSkuRepo.find({select:['destination','destinationInfo'],where:{itemCode: req.itemCode}})
+        const getData = await this.itemSkuRepo.getDestinationsByItem(req.itemCode)
         if(getData.length > 0){
           return new CommonResponseModel(true,1,'Data retreived',getData)
         } else{
           return new CommonResponseModel(false,0,'No data found')
         }
 
+      } catch(err){
+        throw err
+      }
+    }
+
+    async getDataByDestinationAgainstItem(req:ItemCodeReq):Promise<CommonResponseModel>{
+      try{
+        const getData = await this.itemSkuRepo.find({relations:['destinationInfo','colorInfo','sizeInfo'],where:{itemCode:req.itemCode,destinationInfo:{destinationId:req.destinationId}}})
+        if(getData.length > 0){
+          return new CommonResponseModel(true,1,'Data retreived',getData)
+        } else{
+          return new CommonResponseModel(false,0,'No data found')
+        }
       } catch(err){
         throw err
       }
