@@ -2564,28 +2564,28 @@ const PPMReport = () => {
           </Row>
         </Form>
         <Row gutter={24} justify={'space-evenly'}>
-          <Col span={3}> <Card bordered >
+          <Col span={3}> <Card bordered style={{backgroundColor:'aqua'}} >
             <Statistic loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} /></Card>
           </Col>
-          <Col span={3}> <Card bordered>
+          <Col span={3}> <Card bordered style={{backgroundColor:'#CBADF7'}}>
             <Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
             </Card></Col>
-          <Col span={3}> <Card bordered >
+          <Col span={3}> <Card bordered style={{backgroundColor:'#A1EBB5'}} >
             <Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
             </Card></Col>
-          <Col span={3}> <Card bordered>
+          <Col span={3}> <Card bordered style={{backgroundColor:'#E1F5A5'}}>
             <Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
             </Card> </Col>
-          <Col span={3}> <Card bordered >
+          <Col span={3}> <Card bordered style={{backgroundColor:'#A5F5D7'}}>
             <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
             </Card></Col>
-          <Col span={3}> <Card bordered>
+          <Col span={3}> <Card bordered style={{backgroundColor:'#F5BCB1'}}>
             <Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
             </Card> </Col>
-          <Col span={3}><Card bordered >
+          <Col span={3}><Card bordered style={{backgroundColor:'#B1BDF5'}}>
             <Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
             </Card> </Col>
-          <Col span={3}> <Card bordered>
+          <Col span={3}> <Card bordered style={{backgroundColor:'#F1776A'}}>
             <Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
             </Card></Col>
         </Row><br></br>
