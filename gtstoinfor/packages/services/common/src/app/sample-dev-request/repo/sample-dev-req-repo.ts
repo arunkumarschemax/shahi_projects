@@ -4,6 +4,16 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { groupBy } from "rxjs";
 import { SampleRequest } from "../entities/sample-dev-request.entity";
 import { SampleFilterRequest } from "@project-management-system/shared-models";
+import { Location } from "../../locations/location.entity";
+import { Style } from "../../style/dto/style-entity";
+import { ProfitControlHead } from '../../profit-control-head/profit-control-head-entity';
+import { Buyers } from "../../buyers/buyers.entity";
+import { SampleTypes } from "../../sample Types/sample-types.entity";
+import { SampleSubTypes } from "../../sample-sub-types/sample-sub-types.entity";
+import { Brands } from "../../master-brands/master-brands.entity";
+import { EmplyeeDetails } from '../../employee-details/dto/employee-details-entity';
+
+
 
 @Injectable()
 export class SampleRequestRepository extends Repository<SampleRequest> {
@@ -13,21 +23,32 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
     }
 
     async getAllSampleDevData(req?: SampleFilterRequest): Promise<any[]> {
-        const query =  this.createQueryBuilder()
-            .select(`sample_request_id,request_no,cost_ref,m3_style_no,contact,extension,sam_value,product,type,conversion,made_in,facility_id,status,location_id,style_id,
-            profit_control_head_id,buyer_id,sample_type_id,sample_sub_type_id,brand_id,dmm_id,technician_id`)
-            .where(`request_no > 0`)
+        const query =  this.createQueryBuilder('sr')
+            .select(`sr.sample_request_id,sr.request_no as requestNo,sr.cost_ref as costRef, sr.m3_style_no as m3StyleNo, sr.contact,sr.extension,
+            sr.sam_value as samValue,sr.product,sr.type,sr.conversion,sr.made_in as madeIn, sr.facility_id,sr.status,sr.location_id,
+            l.location_name AS locationName,sr.style_id,s.style,sr.profit_control_head_id,pch.profit_control_head AS pch,sr.buyer_id,
+            b.buyer_name AS buyerName, b.buyer_code AS buyerCode,sr.sample_type_id,st.sample_type AS sampleType,sr.sample_sub_type_id,
+            sst.sample_sub_type AS sampleSubType,sr.brand_id, br.brand_name AS brandName,sr.dmm_id, ed.first_name AS dmmName,
+            sr.technician_id, ed.first_name AS techName`)
+            .leftJoin(Location,'l','l.location_id = l.location_id')
+            .leftJoin(Style,'s','s.style_id = sr.style_id')
+            .leftJoin(ProfitControlHead,'pch','pch.profit_control_head_id = sr.profit_control_head_id')
+            .leftJoin(Buyers,'b','b.buyer_id = sr.buyer_id')
+            .leftJoin(SampleTypes,'st','st.sample_type_id = sr.sample_type_id')
+            .leftJoin(SampleSubTypes,'sst','sst.sample_sub_type_id = sr.sample_sub_type_id')
+            .leftJoin(Brands,'br','br.brand_id = sr.brand_id')
+            .leftJoin(EmplyeeDetails,'ed','ed.employee_id = sr.dmm_id AND sr.technician_id')
             if (req.reqNo !== undefined) {
-                query.andWhere(`request_no ='${req.reqNo}'`)
+                query.andWhere(`sr.request_no ='${req.reqNo}'`)
             }
             if (req.pch !== undefined) {
-                query.andWhere(`profit_control_head_id ='${req.pch}'`)
+                query.andWhere(`pch.profit_control_head ='${req.pch}'`)
             }
-            if (req.style !== undefined) {
-                query.andWhere(`style_id ='${req.style}'`)
+            if (req.styleNo !== undefined) {
+                query.andWhere(`sr.m3_style_no ='${req.styleNo}'`)
             }
             if (req.status !== undefined) {
-                query.andWhere(`status ='${req.status}'`)
+                query.andWhere(`sr.status ='${req.status}'`)
             }
             query.orderBy(`sample_request_id`)
         return await query.getRawMany()
@@ -38,8 +59,24 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .select(`request_no`)
             .where(`request_no is not null`)
             .orderBy(`request_no`)
-            // .getRawMany()
-            console.log(query,'[[[[[[[[[[[[[[[[[[[[[[[')
+        return query.getRawMany()
+    }
+
+    async getAllPCH(): Promise<any> {
+        const query = await this.createQueryBuilder('sr')
+            .select(`sr.profit_control_head_id,pch.profit_control_head AS pch`)
+            .leftJoin(ProfitControlHead,'pch','pch.profit_control_head_id = sr.profit_control_head_id')
+            .where(`pch.profit_control_head is not null`)
+            .orderBy(`pch.profit_control_head`)
+            .groupBy(`pch.profit_control_head`)
+        return query.getRawMany()
+    }
+    
+    async getAllStyleNo(): Promise<any> {
+        const query = await this.createQueryBuilder()
+            .select(`m3_style_no as m3StyleNo`)
+            .where(`m3_style_no is not null`)
+            .orderBy(`m3_style_no`)
         return query.getRawMany()
     }
     
