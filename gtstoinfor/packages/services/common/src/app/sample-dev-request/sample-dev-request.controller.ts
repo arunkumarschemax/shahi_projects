@@ -1,21 +1,23 @@
 import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
-import { SampleDevReqService } from './sample-dev-request.service';
+import { SampleRequestService } from './sample-dev-request.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, ROSLGroupsResponseModel, SampleFilterRequest } from '@project-management-system/shared-models';
+import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel } from '@project-management-system/shared-models';
+import { SampleRequestDto } from './dto/samle-dev-req';
 
 
 @ApiTags('sample-request')
 @Controller('sample-request')
 export class SampleDevReqController {
-    constructor(private sampleService: SampleDevReqService,
+    constructor(private sampleService: SampleRequestService,
       private readonly applicationExceptionHandler: ApplicationExceptionHandler
       ) {}
 
 
   @Post('/getAllSampleDevData')
-  async getAllSampleDevData(@Body() req?:SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
+  @ApiBody({type: SampleFilterRequest})
+  async getAllSampleDevData(@Body() req?:any): Promise<AllSampleDevReqResponseModel> {
     try {
       return await this.sampleService.getAllSampleDevData(req);
     } catch (error) {
@@ -40,6 +42,35 @@ export class SampleDevReqController {
       return await this.sampleService.cancelSampleReqById(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+
+  @Post('/createSmapleDevlopmentRequest')
+  @ApiBody({type: SampleRequestDto})
+  async createSmapleDevlopmentRequest(@Body() req:any):Promise<AllSampleDevReqResponseModel>{
+    try{
+    return await this.sampleService.createSmapleDevlopmentRequest(req)
+    }
+    catch(err){
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, err);
+    }
+  }
+
+  @Post('/getAllPCH')
+  async getAllPCH(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAllPCH();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
+  @Post('/getAllStyleNo')
+  async getAllStyleNo(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAllStyleNo();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
 }

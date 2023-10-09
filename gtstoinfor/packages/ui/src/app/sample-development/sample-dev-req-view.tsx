@@ -32,7 +32,7 @@ import { Link } from "react-router-dom";
 import { SampleDevelopmentService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import form from "antd/es/form";
-import { SampleFilterRequest } from "@project-management-system/shared-models";
+import { SampleDevelopmentStatusDisplay, SampleDevelopmentStatusEnum, SampleFilterRequest } from "@project-management-system/shared-models";
 
 
 export const SampleDevView = () => {
@@ -47,12 +47,17 @@ export const SampleDevView = () => {
   const service = new SampleDevelopmentService();
   let navigate = useNavigate();
   const [reqNo, setReqNo] = useState<any>([]);
+  const [pch, setPCH] = useState<any[]>([])
+  const [styleNo,setStyleNo] = useState<any[]>([])
   const [form] = Form.useForm();
+  const { Option } = Select;
 
 
   useEffect(() => {
     getAllSampleDevData();
     getAllSampleReqNo()
+    getAllPCH()
+    getAllStyleNo()
   }, []);
 
   const getAllSampleDevData = () => {
@@ -60,7 +65,17 @@ export const SampleDevView = () => {
     if (form.getFieldValue('reqNo') !== undefined) {
       req.reqNo = form.getFieldValue('reqNo')
     }
+    if (form.getFieldValue('pch') !== undefined) {
+      req.pch = form.getFieldValue('pch')
+    }
+    if (form.getFieldValue('styleNo') !== undefined) {
+      req.styleNo = form.getFieldValue('styleNo')
+    }
+    if (form.getFieldValue('status') !== undefined) {
+      req.status = form.getFieldValue('status')
+    }
     service.getAllSampleDevData(req).then((res) => {
+      console.log(req,'77777777777777')
       if (res.data) {
         setSampleData(res.data);
         setFilterData(res.data)
@@ -72,6 +87,22 @@ export const SampleDevView = () => {
     service.getAllSampleReqNo().then((res) => {
       if (res.data) {
         setReqNo(res.data)
+      }
+    });
+  };
+
+  const getAllPCH = () => {
+    service.getAllPCH().then((res) => {
+      if (res.data) {
+        setPCH(res.data)
+      }
+    });
+  };
+
+  const getAllStyleNo = () => {
+    service.getAllStyleNo().then((res) => {
+      if (res.data) {
+        setStyleNo(res.data)
       }
     });
   };
@@ -204,13 +235,13 @@ export const SampleDevView = () => {
     },    {
       title: "Location",
       dataIndex: "locationName",
-      sorter: (a, b) => a.location.localeCompare(b.location),
+      sorter: (a, b) => a.locationName.localeCompare(b.locationName),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("location"),
+      ...getColumnSearchProps("locationName"),
     },
     {
       title: "PCH",
-      dataIndex: "profitControlHead",
+      dataIndex: "pch",
       sorter: (a, b) => a.pch.localeCompare(b.pch),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("pch"),
@@ -225,16 +256,16 @@ export const SampleDevView = () => {
     {
       title: "Buyer",
       dataIndex: "buyerName",
-      sorter: (a, b) => a.buyer.localeCompare(b.buyer),
+      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("buyer"),
+      ...getColumnSearchProps("buyerName"),
     },
     {
       title: "Style No",
       dataIndex: "m3StyleNo",
-      sorter: (a, b) => a.styleNo.localeCompare(b.styleNo),
+      sorter: (a, b) => a.m3StyleNo.localeCompare(b.m3StyleNo),
       sortDirections: ["descend", "ascend"],
-      ...getColumnSearchProps("styleNo"),
+      ...getColumnSearchProps("m3StyleNo"),
     },
     {
       title: "Status",
@@ -309,10 +340,56 @@ export const SampleDevView = () => {
                 allowClear
               >
                 {reqNo.map((qc: any) => (
-                  <Select.Option key={qc.requestNo} value={qc.requestNo}>
-                    {qc.requestNo}
+                  <Select.Option key={qc.request_no} value={qc.request_no}>
+                    {qc.request_no}
                   </Select.Option>
                 ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+            <Form.Item name="pch" label="PCH">
+              <Select
+                showSearch
+                placeholder="Select PCH"
+                optionFilterProp="children"
+                allowClear
+              >
+                {pch.map((qc: any) => (
+                  <Select.Option key={qc.pch} value={qc.pch}>
+                    {qc.pch}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+            <Form.Item name="styleNo" label="Style No">
+              <Select
+                showSearch
+                placeholder="Select Style No"
+                optionFilterProp="children"
+                allowClear
+              >
+                {styleNo.map((qc: any) => (
+                  <Select.Option key={qc.m3StyleNo} value={qc.m3StyleNo}>
+                    {qc.m3StyleNo}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+            <Form.Item name="status" label="Status">
+              <Select
+                showSearch
+                placeholder="Select Status"
+                optionFilterProp="children"
+                allowClear
+              >
+                {Object.values(SampleDevelopmentStatusEnum).map((val) => {
+                  return <Option key={val} value={val}>{SampleDevelopmentStatusDisplay.find((e)=>e.name == val)?.displayVal}</Option>
+                })}
               </Select>
             </Form.Item>
           </Col>

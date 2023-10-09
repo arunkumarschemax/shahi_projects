@@ -1,8 +1,8 @@
 import { type } from "os";
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { SampleRequest } from "../sample-dev-request.entity";
+import { SampleRequest } from "./sample-dev-request.entity";
 
-@Entity('sample_requset_fabric_info')
+@Entity('sample_request_fabric_info')
 export class SampleReqFabricinfoEntity{
     @PrimaryGeneratedColumn("increment",{
         name:'fabric_info_id'

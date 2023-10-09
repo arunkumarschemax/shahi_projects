@@ -5,7 +5,7 @@ import { SamplefabricReq } from './sample-dev-fabric-info-req';
 import { SampleTrimReq } from './sample-dev-trim-req';
 import { SampleProcessInfoReq } from './sample-dev-process-info-req';
 
-export class SampleRequest {
+export class SampleRequestDto {
   @ApiProperty()
   SampleRequestId:number;
   @ApiProperty()
