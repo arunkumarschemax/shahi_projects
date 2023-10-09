@@ -220,15 +220,16 @@ const UploadFileGrid = () =>{
         }
       }
       
-      const goToFileUpload=(PO:string)=>{
+      const goToFileUpload=(PO:string, dest:string, orderId:string)=>{
         setPo(PO)
-        navigate('/document-management/document-file-upload', { state: { data: PO } })
+        navigate('/document-management/document-file-upload', { state: { data: PO, dest:dest, orderId:orderId } })
       }
 
       const deletePo = (po) =>{
         console.log(po)
       uploadDcoService.deleteDocsAgainstPo({customerPo:po}).then(res =>{
         if(res.status){
+          getDocumentData();
           message.success(res.internalMessage)
         }else{
           message.error(res.internalMessage)
@@ -253,7 +254,7 @@ const UploadFileGrid = () =>{
               render: (text, record) => {
                 return <>
                   {JSON.parse(localStorage.getItem('currentUser')).user.roles != "Admin" ?
-                  <Link onClick={e => goToFileUpload(record.PO)}>{record.PO}</Link> : <span>{record.PO}</span>}
+                  <Link onClick={e => goToFileUpload(record.PO, record.destination, record.orderId)}>{record.PO}</Link> : <span>{record.PO}</span>}
                 </>
               },
 
@@ -362,7 +363,7 @@ const UploadFileGrid = () =>{
           if(res.status){
             setItemData(res.data);
             const headerColumns = Object?.keys(res?.data[0])
-            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url' && header !== 'poStatus' && header !== 'orderPoStatus' && header != 'destination')
+            .filter(header => header !== 'challanNo' && header !== 'invoiceNo' && header !== 'docListId' && header !== 'PO' && header !== 'filePath' && header !== 'status' && header !== 'url' && header !== 'poStatus' && header !== 'orderPoStatus' && header != 'destination' && header != 'orderId')
             .map(header => ({           
                 title: header.toUpperCase(),
                 dataIndex: header,

@@ -276,4 +276,11 @@ export class DocumentUploadController {
     async deleteDocsAgainstPo(@Body() req: customerPoReq ): Promise<CommonResponseModel> {
       return await this.uploadDocservice.deleteDocsAgainstPo(req);
     }
+
+    @Post('/getDestinationsByPO')
+    async getDestinationsByPO(@Body() req: InvoiceReq): Promise<UploadDocumentListResponseModel> {
+      return await this.uploadDocservice.getDestinationsByPO(req);
+    }
+
+
 }
