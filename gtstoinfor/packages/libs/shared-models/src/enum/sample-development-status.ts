@@ -7,9 +7,9 @@ export enum SampleDevelopmentStatusEnum{
 }
 
 export const SampleDevelopmentStatusDisplay = [
-    {name : 'OPEN', displayValue:'Open' },
-    {name : 'IN_PROGRESS', displayValue:'In Progress' },
-    {name : 'CANCELLED', displayValue:'Cancelled' },
-    {name : 'CLOSED', displayValue:'Closed' },
-    {name : 'APPROVED', displayValue:'Approved' }
+    { name: "OPEN", displayVal:'OPEN'},
+    { name:'IN_PROGRESS', displayVal:'IN PROGRESS'},
+    { name:'CANCELLED', displayVal:'CANCELLED'},
+    { name:'CLOSED', displayVal:'CLOSED'},
+    { name:'APPROVED', displayVal:'APPROVED'}
 ]

@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { SampleTypes } from "../sample Types/sample-types.entity";
+import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
 
 @Entity('sample_sub_types')
 export class SampleSubTypes {
@@ -60,5 +61,7 @@ export class SampleSubTypes {
   @JoinColumn({ name:"sample_type_id"})
   sampleSubTypes: SampleTypes;
   
+  @OneToMany(()=>SampleRequest, sampleReq => sampleReq.sampleSubType, {cascade: true})
+  sampleReq : SampleRequest[]
 
 }

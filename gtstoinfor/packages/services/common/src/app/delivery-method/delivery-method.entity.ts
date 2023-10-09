@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, ValidateIf } from 'class-validator';
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { Settings } from '../settings/settings.entity';
+import { StyleOrder } from '../style-order/style-order.entity';
 // import { Customers } from '../customers/customers.entity';
 
 @Entity('delivery_method')
@@ -64,4 +65,7 @@ export class DeliveryMethod {
 
   @OneToMany(type => Settings, settings => settings.deliveryMethodInfo,{cascade: true})
   settingsInfo : Settings
-  }
+
+  @OneToMany(type=>StyleOrder, delivery=>delivery.deliveryMethodInfo,{cascade: true})
+  styleOrderInfo:StyleOrder;
+}

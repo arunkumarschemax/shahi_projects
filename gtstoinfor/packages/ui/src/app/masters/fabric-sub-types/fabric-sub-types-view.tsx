@@ -264,7 +264,7 @@ export function FabricSubTypeGrid(
 
   return (
     <Card title={<span >Fabric Sub-Type</span>}
-    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/fabric-sub-type/fabric-sub-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+    style={{textAlign:'center'}} headStyle={{ border: 0 }} extra={<Link to = "/masters/fabric-sub-type-form/fabric-sub-type-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
      <br></br>
       <Row gutter={40}>
       <Col>

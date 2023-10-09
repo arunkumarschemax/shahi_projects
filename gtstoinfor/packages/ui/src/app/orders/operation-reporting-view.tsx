@@ -162,7 +162,7 @@ export const OperationReportingView = () => {
             render:(text,record) => {
                 return(
                     <>
-                    {<Button onClick={ () => onJobCompleted(record)}>Yes</Button>}
+                    {<Button onClick={ () => onJobCompleted(record)} type='primary' shape="round">Yes</Button>}
                     </>
                 )
             }

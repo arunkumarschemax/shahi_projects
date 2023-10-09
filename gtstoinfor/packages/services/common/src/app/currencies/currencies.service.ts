@@ -54,10 +54,8 @@ export class CurrenciesService {
             }
           }
           const convertedCurrencyEntity: Currencies = this.currenciesAdapter.convertDtoToEntity(currenciesDto,isUpdate);
-          const savedCurrencyEntity: Currencies = await this.currenciesRepository.save(
-            convertedCurrencyEntity
-          );
-          const savedCurrencyDto: CurrenciesDTO = this.currenciesAdapter.convertEntityToDto(convertedCurrencyEntity);
+          const savedCurrencyEntity: Currencies = await this.currenciesRepository.save( convertedCurrencyEntity);
+          const savedCurrencyDto: CurrenciesDTO = this.currenciesAdapter.convertEntityToDto(savedCurrencyEntity);
             // console.log(savedStateDto);
           if (savedCurrencyDto) {
             const presentValue = savedCurrencyDto.currencyName;

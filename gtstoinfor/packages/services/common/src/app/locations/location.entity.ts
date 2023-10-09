@@ -1,4 +1,5 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
 
 @Entity('location')
 export class Location {
@@ -62,4 +63,6 @@ export class Location {
   })
   versionFlag: number;
  
+  @OneToMany(()=>SampleRequest, (SampleRequest) => SampleRequest.location, {cascade: true})
+  sampleReq : SampleRequest[]
 }

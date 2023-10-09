@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Tooltip, theme } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
-import { UserOutlined, DashboardOutlined, PicCenterOutlined, LogoutOutlined, FileExcelOutlined } from '@ant-design/icons'
+import { UserOutlined, DashboardOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Link, Outlet, HashRouter as Router, useNavigate } from 'react-router-dom';
 import { ProBreadcrumb, ProConfigProvider } from '@ant-design/pro-components';
 import logo from './logo.png'
@@ -10,7 +10,7 @@ import { treeRouter } from '../../utils/common';
 import { DarkModeIcon } from '../../icons/darkmode.icon';
 import { LightModeIcon } from '../../icons/lightmode.icon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faShirt} from '@fortawesome/free-solid-svg-icons';
+import { faGears, faGlobe, faHatCowboy, faLayerGroup, faPeopleRoof, faShirt, faShoppingCart} from '@fortawesome/free-solid-svg-icons';
 
 const { useToken } = theme
 
@@ -65,6 +65,36 @@ export const baseMRouterList = [
                 key: "profit-control-head",
                 path: "profit-control-head/profit-control-head-view",
                 filepath: "profit-control-head/profit-control-head-view",
+            },
+            {
+                label: "ROSL Groups",
+                key: "rosl-groups",
+                path: "rosl-groups/rosl-groups-view",
+                filepath: "rosl-groups/rosl-groups-view",
+            },
+            {
+                label: "Sample Types",
+                key: "sampleTypes",
+                path: "sampleTypes/sampleTypes-grid",
+                filepath: "sampleTypes/sampleTypes-grid",
+            },
+            {
+                label: "Sample Sub Types",
+                key: "sampleSubTypes",
+                path: "sampleSubTypes/sampleSubTypes-grid",
+                filepath: "sampleSubTypes/sampleSubTypes-grid",
+            },
+            {
+                label: "Fabric Type",
+                key: "fabricType",
+                path: "fabricType/fabric-type-view",
+                filepath: "fabricType/fabric-type-view",
+            },
+            {
+                label: "Fabric Sub-Type",
+                key: "fabricSubType",
+                path: "fabric-sub-type-view/fabric-sub-type-view",
+                filepath: "fabric-sub-type-view/fabric-sub-type-view",
             },
             {
                 label: "Size",
@@ -185,6 +215,7 @@ export const baseRouterList = [
                 path: "operationgroups/operationgroups-view",
                 filepath: "operationgroups/operationgroups-view",
             },
+          
             {
                 label: "Operations",
                 key: "operations",

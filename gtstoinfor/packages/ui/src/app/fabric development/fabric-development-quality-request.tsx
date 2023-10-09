@@ -3,58 +3,89 @@ import {  Card, Col, Form, Input, Row, Select } from 'antd'
 
 import FabricDevelopmentDynamicForm from './fabric-development-dynamicform'
 import { useEffect, useState } from 'react';
-import { FabricInfo, ItemInfo } from '@project-management-system/shared-models';
+import { FabricItemInfoRequest, FabricQuantitiesInfo, QualitiesEnum } from '@project-management-system/shared-models';
+import { FabricRequestQualitiesRequest } from 'packages/libs/shared-models/src/common/fabric-development/fabric-request-qualities.request';
 
 export interface ReqProps {
   
   itemsInfo: (ItemsData: any[]) => void;
+  
 }
 
-const dynamicformData = (data) =>{
-  console.log(data,"dynamicformData")
- 
 
-}
 
 export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
   const [formData,setFormData] = useState<any>([])
   const [itemData,setItemData] = useState<any>([])
+  const [dynamicData,setDynamicData] = useState<any>([])
+  const [placementForm] = Form.useForm();
+  const [dynamicForm] = Form.useForm();
 
 
+  
 
 
   const onChange = () =>{
     placementForm.validateFields().then((values) => {
       console.log(values, 'onchange');
-      setFormData(values) 
+      setFormData(values)
+
     })
     
    }
-
-   console.log(formData,"form")
   
-  const [placementForm] = Form.useForm();
-  const [dynamicForm] = Form.useForm();
 
+ 
   const itemsData = (data) => {
     console.log(data,"m3data")
     setItemData(data)
     props.itemsInfo(data)
   }
    
-  console.log(itemData,"8585")
-    
-  // let itemsInfo:ItemInfo[] = []
-  // const rec = new ItemInfo(itemData[0].itemsCode,itemData[0].description)
-  // itemsInfo.push (rec)
-  // console.log(rec,"00000")
-  //  const fabic = new FabricInfo(1,1,1,1,1,1,1,1,1)
-   
-   
-  //  let items:ItemInfo[] = itemData
-  //   console.log(items,"969696969")
+  // console.log(itemData,"8585")
 
-    
+  const dynamicformData = (data) =>{
+    console.log(data,'dynamicformData')
+    setDynamicData(data)
+  }
+  // console.log(dynamicData,"1234")
+
+  
+
+const itemsinfo = [];
+const FabricQuantities = [];
+
+itemData.forEach((itemInfo) => {
+  const record = new FabricItemInfoRequest(
+    itemInfo.itemsCode, itemInfo.description
+  );
+  itemsinfo.push(record);
+
+ console.log(itemsinfo,'[itemsinfo]')
+
+
+
+
+ dynamicData.forEach((rec) => {
+  const records:any = new FabricQuantitiesInfo(
+    rec.styleId, rec.colorId, rec.garmentQuantity, rec.consumption, rec.wastage, rec.fabricQuantity, rec.uomId, "", "", rec.remarks,itemsinfo
+  );
+  FabricQuantities.push(records); 
+   
+
+});
+});
+console.log(FabricQuantities,"[FabricQuantities]");
+
+
+const finalDto = []
+const qualitiesarray = new FabricRequestQualitiesRequest(placementForm.getFieldValue('quality'),placementForm.getFieldValue('placement'),placementForm.getFieldValue('width'),placementForm.getFieldValue('fabricDescription'),placementForm.getFieldValue('description'),FabricQuantities)
+finalDto.push(qualitiesarray)
+
+console.log(finalDto,"pppp")
+
+
+     
   
   return (
     
@@ -62,7 +93,6 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
       style={{ fontSize: "10px" }}
       layout="vertical"
       form={placementForm}
-      // onValuesChange={onChange}
       onChange={onChange}
     >
       <Row gutter={12}>
@@ -79,26 +109,10 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
                 rules={[{ required: true, message: "Location" }]}
               >
                 <Select placeholder="Select Qualities" allowClear>
-                  <option key="1" value="Quality1">Quality1</option>
-                  <option key="2" value="Quality2">Quality2</option>
-                  <option key="3" value="Quality3">Quality3</option>
-                  <option key="4" value="Quality4">Quality4</option>
-                  <option key="5" value="Quality5">Quality5</option>
-                  <option key="6" value="Quality6">Quality6</option>
-                  <option key="7" value="Quality7">Quality7</option>
-                  <option key="8" value="Quality8">Quality8</option>
-                  <option key="9" value="Quality9">Quality9</option>
-                  <option key="10" value="Quality10">Quality10</option>
-                  <option key="11" value="Quality11">Quality11</option>
-                  <option key="12" value="Quality12">Quality12</option>
-
-
-                  {/* {locationData.map((rec) => (
-                    <option key={rec.locationId} value={rec.locationId}>
-                      {rec.locationName}
-                     </option>
-                         ))}
-                          */}
+        
+                   {Object.values(QualitiesEnum).map((val) => {
+                       return <option key={val} value={val}>{val}</option>
+                     })}
   
                   </Select>
               </Form.Item>
@@ -142,7 +156,7 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
         >
           <Form.Item
             label="Fabric Description"
-            name="fabricdescription"
+            name="fabricDescription"
           >
             <Input placeholder="Fabric Description" allowClear />
           </Form.Item>
@@ -180,9 +194,9 @@ export const  FabricDevelopmentRequestQuality = (props:ReqProps) => {
 
 
       </Row>
-    </Form>
+     </Form>
       <Card>
-        <FabricDevelopmentDynamicForm form={dynamicForm} itemsData = {itemsData}  dynamicformData={dynamicformData}/>
+        <FabricDevelopmentDynamicForm form={dynamicForm} itemsData={itemsData} dynamicformData={dynamicformData} />
       </Card>
       </>
        

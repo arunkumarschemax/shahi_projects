@@ -7,6 +7,3 @@ export * from './phase-wise-data.model';
 export * from './phase-wise-qty.model';
 export * from './file-status.request';
 export * from './phase-wise-excel-data.model'
-export * from './sku-generation.req'
-export * from './sku-generation.model'
-export * from './sku-generation-response-model'

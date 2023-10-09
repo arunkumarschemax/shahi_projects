@@ -158,26 +158,21 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
        <h1 style={{color:"grey",fontSize:"15px" }}>
         Item Details
        </h1>
-       <Row gutter ={24}>
-       <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 4 }}
-                    lg={{ span: 7}}
-                    xl={{ span: 7 }}
-                  >
-                    <Form.Item
-                    label="Item No"
-                    name="trim">
-                <Select
+       <Col>
+                <Form.Item 
+                name="trim" style={{display:'none'}}>
+                {/* <Select
                  placeholder="Select Item No" allowClear>
                  <option value="item9001"> item9001</option>
                  <option value="item9002"> item9002</option>
                  <option value="item9003"> item9003</option>
-                 </Select>
+                 </Select> */}
+                 <Input disabled/>
                     </Form.Item>
                     </Col>
                     
+       <Row gutter ={24}>
+       
                     <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
@@ -226,8 +221,8 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                  </Select>
                     </Form.Item>
                     </Col>
-                    </Row>
-                    <Row gutter={24}>
+                    {/* </Row>
+                    <Row gutter={24}> */}
                     <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
@@ -304,8 +299,8 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                  </Select>
                     </Form.Item>
                     </Col>
-                    </Row>
-                 <Row gutter={24}>
+                    {/* </Row>
+                 <Row gutter={24}> */}
                     <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
@@ -893,7 +888,7 @@ import { BuyingHouseService, CurrencyService, CustomGroupsService, ItemCategoryS
                 <Row gutter={24} justify="end">
                 <Space size={16}>
                   <Button type="primary" >
-                  ➡️ Submit
+                   Submit
                   </Button>
                   {/* <Link to="">
                     <Button type="primary" icon={<HomeOutlined />}>

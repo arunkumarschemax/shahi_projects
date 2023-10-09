@@ -2,7 +2,7 @@ import { GlobalResponseObject } from "../global-response-object";
 import { BomRequest } from "./bom-request";
 
 
-export class CompanyResponseModel extends GlobalResponseObject{
+export class BomTrimResponseModel extends GlobalResponseObject{
     data?: BomRequest;
     /**
      * 

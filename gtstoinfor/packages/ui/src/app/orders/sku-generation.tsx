@@ -1,7 +1,7 @@
 import { Button, Card, Col, Descriptions, Form, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import { ColourService, DestinationService, SKUGenerationService, SizeService } from '@project-management-system/shared-services';
-import { SKUGenerationReq } from '@project-management-system/shared-models';
+import { ColourService, DestinationService, ItemsService, SKUGenerationService, SizeService } from '@project-management-system/shared-services';
+import { ItemSKusReq, SKUGenerationReq, SkuStatusEnum } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 
 const { Option } = Select;
@@ -15,26 +15,30 @@ export const SKUGeneration = () => {
     const [size,setSize] = useState<any[]>([])
     const destinationService = new DestinationService()
     const [destination,setDestination] = useState<any[]>([])
-
+    const itemService = new ItemsService()
+    const [itemcodes,setItemcodes] = useState<any[]>([])
     const [selectedColors, setSelectedColors] = useState<any[]>([]);
     const [selectedSizes, setSelectedSizes] = useState<any[]>([]);
     const [selectedDestinations, setSelectedDestinations] = useState<any[]>([]);
     const selectedColorObject =[]
     const selectedSizeObject =[]
     const selectedDestinationObject =[]
+    const [itemId,setitemId] = useState<number>(0)
 
 
     useEffect(() => {
         getAllColors()
         getAllSizes()
         getAllDestinations()
-
+        getAllItemCodes()
     },[])
 
     const generateSKU = () => {
-      const req = new SKUGenerationReq(form.getFieldValue('itemCode'),selectedColors,selectedSizes,selectedDestinations,'admin','')
+      // const req = new SKUGenerationReq(form.getFieldValue('itemCode'),selectedColors,selectedSizes,selectedDestinations,'admin','')
+      const req = new ItemSKusReq(itemId,form.getFieldValue('itemCode'),SkuStatusEnum.OPEN,selectedColors,selectedSizes,selectedDestinations,'admin')
       skuService.skuGeneration(req).then(res => {
         if(res.status){
+          resetHandler()
           AlertMessages.getSuccessMessage(res.internalMessage)
         } else {
           AlertMessages.getErrorMessage(res.internalMessage)
@@ -66,6 +70,14 @@ export const SKUGeneration = () => {
             }
         })
     }
+
+    const getAllItemCodes = () => {
+      itemService.getAllItems().then(res => {
+          if(res.status){
+              setItemcodes(res.data)
+          }
+      })
+  }
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -139,6 +151,19 @@ export const SKUGeneration = () => {
     
   }
 
+  const onItemCodeChange = (key,option) => {
+    console.log(option)
+    setitemId(option?.itemId)
+  }
+
+  const resetHandler = () => {
+    form.resetFields()
+    setSelectedColors([])
+    setSelectedDestinations([])
+    setSelectedSizes([])
+
+  }
+
 
 
   return (
@@ -147,15 +172,15 @@ export const SKUGeneration = () => {
       <Row gutter={24}>
         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 5 }}>
             <Form.Item label='Item' name='itemCode' rules={[{required:true,message:'Item is required'}]}>
-                <Select showSearch allowClear placeholder='Select Item'>
-                    <Option key='itemcode' value='itemcode'>Item Codes </Option>
-                    {/* {
-                        color.map((e)=>{
+                <Select showSearch allowClear placeholder='Select Item' onChange={onItemCodeChange}>
+                    {/* <Option key='itemcode' value='itemcode' itemId='itemId'>Item Codes </Option> */}
+                    {
+                        itemcodes.map((e)=>{
                             return(
-                                <Option key={e.colourId} value={e.colourId}>{e.colourId}</Option>
+                                <Option key={e.itemCode} value={e.itemCode} itemId ={e.itemId}>{e.itemCode}-{e.itemName}</Option>
                             )
                         })
-                    } */}
+                    }
                 </Select>
             </Form.Item>
         </Col>

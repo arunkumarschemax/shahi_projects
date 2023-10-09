@@ -8,6 +8,8 @@ import { Address } from "./address.entity";
 import { BuyersDestionations } from "../buyers-destination/buyers-destination.entity";
 import { BuyersSize } from "../buyers-destination/buyers-sizes.entity";
 import { BuyersColor } from "../buyers-destination/byers-colors.entity";
+import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
+import { StyleOrder } from "../style-order/style-order.entity";
 // import { PaymentMode } from "../payment-mode/payment-mode.entity";
 // import { ShippingTerms } from "../shipping-terms/shipping-terms.entity";
 
@@ -228,4 +230,10 @@ export class Buyers {
 
     @OneToMany(type => BuyersColor, attribute => attribute.buyerInfo,{cascade: true})
     buyerColorsInfo : BuyersColor
+
+    @OneToMany(()=>SampleRequest, sampleReq => sampleReq.buyer, {cascade: true})
+  sampleReq : SampleRequest[]
+
+  @OneToMany(type=>StyleOrder, buyer=>buyer.buyerInfo,{cascade: true})
+  styleOrderInfo:StyleOrder;
 }

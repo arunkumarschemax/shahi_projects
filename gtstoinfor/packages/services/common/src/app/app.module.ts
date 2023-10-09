@@ -33,7 +33,8 @@ import { AttributeModule } from './attributes/attribute.module';
 import { ComponentsModule } from './components/components.module';
 import { GarmentCategoriesModule } from './garment-category/garment-category.module';
 import { ComponentMappingModule } from './components-mapping/component-mapping.module';
-import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';import { TaxesModule } from './taxes/taxes.module';
+import { ProfitControlHeadModule } from './profit-control-head/profit-control-head-module';
+import { TaxesModule } from './taxes/taxes.module';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { DestinationModule } from './destination/destination.module';
 import { FabricTypeModule } from './fabric-types/fabric-type.module';
@@ -59,6 +60,11 @@ import { SampleSubTypesModule } from './sample-sub-types/sample-sub-type.module'
 import { OperationSequenceModule } from './operation-sequence/operation-sequence.module';
 import { FabricWeaveModule } from './fabric weave/fabric-weave.module';
 import { M3MastersModule } from './m3-masters/m3-masters-module';
+import { FabricDevelopmentModule } from './fabric-development-request/fabric-development.module';
+import { ItemSkus } from './sku-generation/sku-generation.entity';
+import { SkuGenerationModule } from './sku-generation/sku-generation.module';
+import { SampleDevReqModule } from './sample-dev-request/sample-dev-request.module';
+import { StyleOrderModule } from './style-order/style-order.module';
 
 
 @Module({
@@ -108,13 +114,13 @@ import { M3MastersModule } from './m3-masters/m3-masters-module';
     DepartmentsModule,
     FabricStructuresModule,
     FabricFinishTypesModule,
-  SizeModule,
-  FabricsModule,
-  BuyersModule,
-  ColourModule,
-  BuyersDestinationModule,
-  BomModule,
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule],
+    SizeModule,
+    FabricsModule,
+    BuyersModule,
+    ColourModule,
+    BuyersDestinationModule,
+    BomModule,
+    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule],
   controllers: [AppController],
   providers: [AppService],
 })

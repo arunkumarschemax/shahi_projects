@@ -1,4 +1,4 @@
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Controller, Post, Body, Logger, Get, UseGuards,Req} from '@nestjs/common';
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
 import { CompanyDTO } from './dto/company.dto';
@@ -15,9 +15,10 @@ export class CompanyController {
         private readonly applicationExceptionHandler: ApplicationExceptionHandler
     ){}
     @Post('/createCompany')
-    async createCompany(@Body() companyDto:CompanyDTO,isUpdate:boolean=false): Promise<CompanyResponseModel> {
+    @ApiBody({type:CompanyDTO})
+    async createCompany(@Body() companyDto:any,isUpdate:boolean=false,@Req() request:CompanyRequest): Promise<CompanyResponseModel> {
     try {
-      console.log('createCompany',companyDto)
+      // console.log('createCompany',companyDto)
         return await this.companyService.createCompany(companyDto, false);
       } catch (error) {
         return this.applicationExceptionHandler.returnException(CompanyResponseModel, error);
@@ -51,27 +52,28 @@ export class CompanyController {
       }
   }
   @Post('/activateOrDeactivateCompany')
-  async activateOrDeactivateCompany(@Body() companyreq: CompanyRequest): Promise<CompanyResponseModel> {
+  @ApiBody({type:CompanyRequest})
+  async activateOrDeactivateCompany(@Body() companyreq: any): Promise<CompanyResponseModel> {
       try {
           return await this.companyService.activateOrDeactivateCompany(companyreq);
-      } catch (err) {
-          return this.applicationExceptionHandler.returnException(CompanyResponseModel, err);
+      } catch (error) {
+          return this.applicationExceptionHandler.returnException(CompanyResponseModel,error);
       }
   }
   @Post('/getCompanyById')
   async getCompanyById(@Body() companyreq: CompanyRequest): Promise<CompanyResponseModel> {
       try {
           return await this.companyService.getActiveCompanyById(companyreq);
-      } catch (err) {
-          return this.applicationExceptionHandler.returnException(CompanyResponseModel, err);
+      } catch (error) {
+          return this.applicationExceptionHandler.returnException(CompanyResponseModel, error);
       }
   }
   @Get()
   async getCompanyDataFromM3() {
     try {
         return await this.companyService.getCompanyDataFromM3();
-    } catch (err) {
-        return this.applicationExceptionHandler.returnException(CompanyResponseModel, err);
+    } catch (error) {
+        return this.applicationExceptionHandler.returnException(CompanyResponseModel, error);
     }
 }
 }

@@ -105,8 +105,8 @@ import DepartmentForm from "./masters/departments/department-form"
 import AccountControlObjectGrid from "./masters/account-control-objects/account-control-objects-view"
 import AccountControlObjectForm from "./masters/account-control-objects/account-control-objects-form"
 import ItemCreation from "./orders/item-creation"
-import SampleRequestView, { SampleDevView } from "./sample-development/sample-management-view"
-import SampleDevForm from "./sample-development/sample-management-form"
+import SampleRequestView, { SampleDevView } from "./sample-development/sample-dev-req-view"
+import SampleDevForm from "./sample-development/sample-dev-req-form"
 import FabricsGrid from "./masters/fabrics/fabrics-view"
 import { FabricsForm } from "./masters/fabrics/fabrics-form"
 import SettingsView from "./masters/settings/settings-view"
@@ -114,6 +114,8 @@ import TrimsBomCreation from "./BOM/trims-bom-creation"
 import SkuList from "./orders/sku-list"
 import SKUGeneration from "./orders/sku-generation"
 import UomGrid from "./masters/uom/uom-grid"
+import FabricDevelopmentView from "./fabric development/fabric-development-view"
+import { QualityTabsView } from "./fabric development/quality-tabs-view"
 import SampleDevDetail from "./sample-development/sample-request-detailed-view"
 import FabricBomCreation from "./BOM/fabric-creation"
 import FabricWeaveForm from "./masters/fabric-weave/fabric-weave-form"
@@ -140,6 +142,7 @@ import MaterialIssueView from "./sample-development/material-issue"
 import MarketIssueDetail from "./sample-development/market-detail"
 import IssueScreen from "./operation-tracking/issue"
 import { InventoryView } from "./operation-tracking/inventory"
+import StyleOrderCreation from "./style-orders/style-order-form"
 
 
 export const AppRoutes = () => {
@@ -336,8 +339,8 @@ export const AppRoutes = () => {
                     isUpdate={false}
                     closeForm={() => { }}
                     updateItem={(undefined) => { }}/>} />
-                    <Route path='fabricSubType/fabric-sub-type-view' element={<FabricSubTypeGrid/>} />
-                    <Route path='fabric-sub-type/fabric-sub-type-form' key ='fabric-sub-type/fabric-sub-type-form' element={<FabricSubTypeForm  fabricsubtypeData={undefined}
+                    <Route path='fabric-sub-type-view/fabric-sub-type-view' element={<FabricSubTypeGrid/>} />
+                    <Route path='fabric-sub-type-form/fabric-sub-type-form' key ='fabric-sub-type-form/fabric-sub-type-form' element={<FabricSubTypeForm  fabricsubtypeData={undefined}
 
                     isUpdate={false}
                     closeForm={() => { }}
@@ -494,6 +497,8 @@ export const AppRoutes = () => {
                         </Route>
                 <Route path='fabricdevelopment'>
                 <Route path='FabricDevelopmentrequest/Fabric-Development-Request' element={<FabricDevelopmentRequest/>}/>
+                <Route path='fabric-development-request/fabric-development-request-view' element={<FabricDevelopmentView/>}/>
+                <Route path='fabric-development-request-quality/fabric-development-request-quality-view' element={<QualityTabsView/>}/>
 
                 </Route>
                 {/* <Route path='settings'> */}
@@ -523,7 +528,8 @@ export const AppRoutes = () => {
                 <Route path='sku-mapping' element={<SKUGeneration/>}/>
                 <Route path='item-creation' element={<ItemCreation/>}/>
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
-                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation/>} />
+                <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
+                <Route path='style-order-creation' element={<StyleOrderCreation />} />
 
 
                 </Route>
@@ -561,6 +567,7 @@ export const AppRoutes = () => {
                         <Route path='grid-view' element={<AllOrdersGridView />} />
                         <Route path='revert-orders' element={<FileRevert />} />
                         <Route path='version-grid' element={<VersionChanges />} />
+
 
                         {/* <Route path='phase-wise-grid' element={<PhaseWiseData />} /> */}
 

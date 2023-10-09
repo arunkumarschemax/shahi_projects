@@ -106,8 +106,8 @@ onFinish={saveData}>
               message:' FabricsCode Is Required'
             },
             {
-              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-              message: `FabricsCode Should contain only alphabets.`
+              pattern: /^[a-zA-Z0-9]*$/,
+              message: `FabricsCode Should contain only alphabets & numbers.`
             }
           ]}
         >

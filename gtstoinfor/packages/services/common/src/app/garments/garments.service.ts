@@ -62,7 +62,6 @@ export class GarmentsService {
     async getAllGarments(): Promise<AllGarmentsResponse> {
         try {
             const garmentDto: GarmentDto[] = [];
-            console.log(garmentDto,"nnnnnnnnnnnnnn")
             const garmentEntities: Garments[] = await this.garmentsRepository.find({
                 order: { garmentName: "ASC" },
                 relations: ['garmentCategory']
@@ -72,7 +71,6 @@ export class GarmentsService {
                     const convertedGarmentDto: GarmentDto = this.garmentsAdapter.convertEntityToDto(garmentEntity);
                     garmentDto.push(convertedGarmentDto);
                 });
-                console.log(garmentDto);
                 const response = new AllGarmentsResponse(true, 11208, "Garments retrieved successfully", garmentDto);
                 return response;
             } else {
