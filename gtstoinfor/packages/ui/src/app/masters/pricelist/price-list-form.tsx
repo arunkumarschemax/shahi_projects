@@ -140,10 +140,10 @@ export const PriceListForm = (props: PriceListFormProps) => {
                   message: 'Season Code is Required',
   
                 },
-                {
-                  pattern: /^[A-Z]$/, 
-                  message: 'Invalid Season Code all letters must be captial only'
-                }
+                // {
+                //   pattern: /^[A-Z]$/, 
+                //   message: 'Invalid Season Code all letters must be captial only'
+                // }
                   
                 ]}>
                   <Input placeholder='Enter Season Code'/>
