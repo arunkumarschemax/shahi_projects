@@ -1475,27 +1475,27 @@ const FactoryPPMReport = () => {
                     </Row>
                 </Form>
                 <Row gutter={24} justify={'space-evenly'}>
-                    <Col >
+                    <Col span={3}> <Card>
                         <Statistic  loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} />
-                    </Col>
-                    <Col>
+                        </Card></Col>
+                    <Col span={3}><Card>
                         <Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
-                    </Col>
-                    <Col>
+                        </Card></Col>
+                    <Col span={3}><Card>
                         <Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
-                    </Col>
-                    <Col >
+                        </Card> </Col>
+                    <Col span={3}><Card>
                         <Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
-                    </Col>
-                    <Col>
+                        </Card> </Col>
+                    <Col span={3}><Card>
                         <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
-                    </Col>
-                    <Col>
+                        </Card> </Col>
+                    <Col span={3}><Card>
                         <Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
-                    </Col>
-                    <Col>
+                        </Card></Col>
+                    <Col span={3}><Card>
                         <Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
-                    </Col>
+                        </Card> </Col>
                     {/* <Col>
                         <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
                     </Col> */}

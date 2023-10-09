@@ -350,9 +350,11 @@ const PPMReport = () => {
     });
     return sizeWiseMap;
   }
+  let isOdd = false;
 
   // function generateClassName(index) {
-  //   return index % 2 === 0 ? 'even-version' : 'odd-version';
+  //   isOdd = !isOdd; 
+  //   return isOdd ? 'odd-version' : 'even-version';
   // }
 
   const renderReport = (data: MarketingModel[]) => {
@@ -965,15 +967,31 @@ const PPMReport = () => {
     ]
 
     sizeHeaders?.forEach(version => {
-      // const sizeClass = generateClassName(version);
+      isOdd = !isOdd; 
+      const sizeClass = isOdd ? 'odd-version' : 'even-version';
       // console.log(sizeClass,"sizeClass")
       columns.push({
-        title: version,
+        title: (
+          <div
+            style={{
+              background: sizeClass === 'odd-version' ? '#D83CC2  ' : '#3C8CD8 ', 
+              borderRadius: '2px',
+              display: 'flex',
+              alignItems: 'center',
+              height: 40,
+              justifyContent: 'center',
+              padding: '1px',
+              color: 'white', 
+            }}
+          >
+            {version}
+          </div>
+        ),
         dataIndex: version,
         key: version,
         // width: 130,
         align: 'center',
-        // className: sizeClass,
+         className: sizeClass,
         children: [
           {
             title: 'Quantity',
@@ -2415,30 +2433,30 @@ const PPMReport = () => {
           </Row>
         </Form>
         <Row gutter={24} justify={'space-evenly'}>
-          <Col >
-            <Statistic loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} />
+          <Col span={3}> <Card bordered>
+            <Statistic loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} /></Card>
           </Col>
-          <Col>
+          <Col span={3}> <Card bordered>
             <Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
-          </Col>
-          <Col>
+            </Card></Col>
+          <Col span={3}> <Card bordered >
             <Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
-          </Col>
-          <Col >
+            </Card></Col>
+          <Col span={3}> <Card bordered>
             <Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
-          </Col>
-          <Col>
+            </Card> </Col>
+          <Col span={3}> <Card bordered >
             <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
-          </Col>
-          <Col>
+            </Card></Col>
+          <Col span={3}> <Card bordered>
             <Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
-          </Col>
-          <Col>
+            </Card> </Col>
+          <Col span={3}><Card bordered >
             <Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
-          </Col>
-          <Col>
+            </Card> </Col>
+          <Col span={3}> <Card bordered>
             <Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
-          </Col>
+            </Card></Col>
         </Row><br></br>
 
         {renderReport(filterData)}
