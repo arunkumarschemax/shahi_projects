@@ -389,14 +389,13 @@ const PPMReport = () => {
       { title: 'Document Date', dataIndex: 'documentDate', render: (text) => moment(text).format('MM/DD/YYYY') },
       { title: 'Purchase Order Number', dataIndex: 'purchase Order Number' },
       { title: 'PO Line Item Number', dataIndex: 'poLineItemNumber' },
-      { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
       { title: 'DPOM Line Item Status', dataIndex: 'DPOMLineItemStatus' },
       { title: 'DocType', dataIndex: 'docTypeCode' },
       { title: 'DocType Description', dataIndex: 'docTypeDesc' },
       { title: 'Style Number', dataIndex: 'styleNumber' },
       { title: 'Product Code', dataIndex: 'productCode' },
       { title: 'Colour Description', dataIndex: 'colorDesc' },
-      { title: 'DESCRIPTION WITH FABRIC CONTENT', dataIndex: '' },
+      { title: 'Description With Fabric Content', dataIndex: '' },
       { title: 'Fabric Content as Per Washcare Label', dataIndex: '' },
       { title: 'Planning Season Code', dataIndex: 'planningSeasonCode' },
       { title: 'Planning Season Year', dataIndex: 'planningSeasonYear' },
@@ -569,18 +568,6 @@ const PPMReport = () => {
         width:80,
       },
       {
-        title: 'Trading Co PO Number',
-        dataIndex: 'tradingCoPoNumber',        width:80,
-
-        render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
-        }
-      },
-      {
         title: 'DPOM Line Item Status',
         dataIndex: 'DPOMLineItemStatus',        width:80,
 
@@ -608,7 +595,7 @@ const PPMReport = () => {
         dataIndex: 'colorDesc',width:80,
       },
       {
-        title: 'DESCRIPTION WITH FABRIC CONTENT',
+        title: 'Description With Fabric Content',
         dataIndex: '',width:85,
       },
       {
@@ -1250,7 +1237,7 @@ const PPMReport = () => {
                 style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
                 height:130,justifyContent: 'center',color: 'Black', 
                 }}
-              >Trading Co Net including discounts currency</div>
+              >Trading Co Net incl.disc currency</div>
             ),
             dataIndex: 'trConetIncludingDiscCurrencyCode',
             className: sizeClass ? 'odd-version' : 'even-version',
@@ -1415,7 +1402,7 @@ const PPMReport = () => {
               >Diff of currency</div>
             ),
             dataIndex: '',
-            align: 'right',
+            align: 'center',
             width:70,
 
 
@@ -2062,6 +2049,7 @@ const PPMReport = () => {
       {
         title: 'Trading Co PO Number',
         dataIndex: 'tradingCoPoNumber',
+        width:80,
         render: (text, record) => {
           if (!text || text.trim() === '') {
             return '-';
@@ -2565,29 +2553,29 @@ const PPMReport = () => {
         </Form>
         <Row gutter={24} justify={'space-evenly'}>
           <Col span={3}> <Card bordered style={{backgroundColor:'aqua'}} >
-            <Statistic loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} /></Card>
+           <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{color:'white'}} value={count} formatter={formatter} /></b></Card>
           </Col>
           <Col span={3}> <Card bordered style={{backgroundColor:'#CBADF7'}}>
-            <Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
-            </Card></Col>
+            <b><Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
+            </b></Card></Col>
           <Col span={3}> <Card bordered style={{backgroundColor:'#A1EBB5'}} >
-            <Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
-            </Card></Col>
+            <b><Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
+            </b></Card></Col>
           <Col span={3}> <Card bordered style={{backgroundColor:'#E1F5A5'}}>
-            <Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
-            </Card> </Col>
+            <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
+            </b> </Card> </Col>
           <Col span={3}> <Card bordered style={{backgroundColor:'#A5F5D7'}}>
-            <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
-            </Card></Col>
+            <b><Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
+            </b></Card></Col>
           <Col span={3}> <Card bordered style={{backgroundColor:'#F5BCB1'}}>
-            <Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
-            </Card> </Col>
+            <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
+            </b></Card> </Col>
           <Col span={3}><Card bordered style={{backgroundColor:'#B1BDF5'}}>
-            <Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
-            </Card> </Col>
+            <b><Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
+            </b> </Card> </Col>
           <Col span={3}> <Card bordered style={{backgroundColor:'#F1776A'}}>
-            <Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
-            </Card></Col>
+            <b><Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
+            </b></Card></Col>
         </Row><br></br>
 
         {renderReport(filterData)}

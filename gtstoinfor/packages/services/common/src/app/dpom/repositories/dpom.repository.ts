@@ -397,13 +397,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
-    async getPpmPlantForMarketing(): Promise<any[]> {
-        const query = this.createQueryBuilder('dpom')
-            .select(` dpom.plant,dpom.id`)
-            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
-            .groupBy(`dpom.plant`)
-        return await query.getRawMany();
-    }
+    
 
     async getPpmProductCodeForMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
@@ -594,6 +588,8 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
         if (req.planningSeasonYear !== undefined) {
             query.andWhere(`dpom.planning_season_year ='${req.planningSeasonYear}'`)
+        }if (req.geoCode !== undefined) {
+            query.andWhere(`dpom.geo_code ='${req.geoCode}'`)
         }
         if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length > 0) {
             query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
@@ -742,7 +738,9 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPpmGeoCodeMarketing(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.geo_code, dpom.id`)
+            .where(`dpom.geo_code IS NOT Null`)
             .groupBy(`dpom.geo_code`)
+
         return await query.getRawMany();
     }
     async getChangeSData(poNumber: number): Promise<any[]> {
@@ -752,6 +750,14 @@ export class DpomRepository extends Repository<DpomEntity> {
             `)
             .where(`o.po_number = ${poNumber}`)
         //  .andWhere(`o.dpom_item_line_status = 'Unaccepted'`)     
+        return await query.getRawMany();
+    }
+
+    async getPpmPlantForMarketing(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.plant,dpom.id`)
+            .where('dpom.doc_type_code != :docType', { docType: 'ZP26' })
+            .groupBy(`dpom.plant`)
         return await query.getRawMany();
     }
 
