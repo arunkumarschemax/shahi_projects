@@ -1,8 +1,9 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { PriceListRequestModel } from '@xpparel/shared-models';
+import { AllScanDto, HsnDto, PriceListRequestModel } from '@xpparel/shared-models';
 import { PricesService, SharedService, VendorNamereq, VendorService } from '@xpparel/shared-services';
-import { Button, Card, Form, Col, Row, Select, Input, Divider, Popconfirm, Table, FormInstance } from 'antd';
+import { Button, Card, Form, Col, Row, Select, Input, Divider, Popconfirm, Table, FormInstance, message } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export interface DocFormPreviewProps {
     form: FormInstance<any>;
@@ -27,6 +28,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
 
     const [buttonText, setButtonText] = useState("Add");
     const { Option } = Select;
+    const navigate = useNavigate();
 
     const [file, setFile] = useState<any | null>(null);
     const [pdfData, setPdfData] = useState(null);
@@ -175,6 +177,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
         }
     }, [price, extractedData, extractionCompleted])
 
+    
+
     const handleAddToTable = () => {
         if (
             !HSN &&
@@ -201,7 +205,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             quotation: isEditing ? originalQuotation : quotation,
             taxPercentage: taxPercentage,
             unitQuantity,
-            unitPrice: isEditing ? originalUnitPrice : unitPrice,
+            unitPrice,
             variance,
         };
         if (isEditing) {
@@ -307,10 +311,19 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             title: "Unit Price",
             dataIndex: "unitPrice",
             key: "unitPrice",
-            render: (unitPrice) =>
-                <div style={{ textAlign: "right" }}>
-                    {unitPrice !== undefined && unitPrice !== null ? unitPrice : "0"}
-                </div>
+            render: (unitPrice, record) => {
+                const taxAmount = parseFloat(record.taxAmount) || 0;
+                const unitQuantity = parseFloat(record.unitQuantity) || 1; 
+                const calculatedUnitPrice = (taxAmount / unitQuantity).toFixed(2);
+        
+                return (
+                    <div style={{ textAlign: "right" }}>
+                        {calculatedUnitPrice !== undefined && calculatedUnitPrice !== null
+                            ? `${calculatedUnitPrice}`
+                            : "0"}
+                    </div>
+                );
+            },
         },
         {
             title: "Tax Type",
@@ -384,15 +397,15 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             dataIndex: "variance",
             key: "variance",
             render: (text, record) => {
-                const unitPrice = record.unitPrice || 0;
-                const quotation = record.quotation || 0;
-                const variance = unitPrice - quotation;
-
+                const unitPrice = parseFloat(record.unitPrice) || 0;
+                const quotation = parseFloat(record.quotation) || 0;
+                const variance = (unitPrice - quotation).toFixed(2); // Ensure two decimal places
+        
                 const overallVariance = calculateOverallVariance(variance);
                 setStatus(overallVariance);
-
+        
                 return (
-                    <div style={{ textAlign: variance === 0 ? "center" : "right" }}>
+                    <div style={{ textAlign: variance === "0.00" ? "center" : "right" }}>
                         {variance !== undefined && variance !== null ? `${variance}` : "-"}
                     </div>
                 );
@@ -458,22 +471,46 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
         calculateCharge();
     };
 
+    // const onSumbit = () => {
+    //     const req1 = new HsnDto(HSN,taxType,taxAmount,taxPercentage,charge,unitQuantity,description,quotation,unitPrice,variance)
+    //     const req = new AllScanDto(gstNumber,venName, venCod,invoiceDate,invoiceNumber,invoiceAmount,igst,cgst,sgst,invoiceCurrency,
+    //         financialYear, status,"",req1)
+    //     //   JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData,"");
+    //     console.log(req, "submit");
+    //     service
+    //       .postdata(req)
+    //       .then((res) => {
+    //         if (res.status) {
+    //           message.success("Success");
+    //           navigate("/scan-document");
+    //         } else {
+    //           message.error("Fill All Fields");
+    //         }
+    //       })
+    //       .catch((err: { message: any }) => {
+    //         console.log(err.message, "err message");
+    //       });
+    //   };
+
+
     return (
         <>
             <Card >
                 <Form layout='vertical' form={props.form} initialValues={props?.formData} name="control-hooks">
                     <Row gutter={12}>
-                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
+                        <Col xs={8} sm={8} md={8} lg={8} xl={8}>
                             <Form.Item
                                 label="Vendor Name"
                                 name="venName"
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
-                                <Input placeholder="Vendor Name"
-                                    value={venName}
-                                    onChange={(e) => setVenName(e.target.value)} />
+                                <Input
+                                    placeholder="Vendor Name"
+                                    onChange={(e) => setVenName(e.target.value)}
+                                />
                             </Form.Item>
                         </Col>
+
 
                         <Col
                             xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
@@ -483,7 +520,6 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Vendor Code"
-                                    value={vendorCod}
                                     onChange={(e) => setVenCode(e.target.value)} />
                             </Form.Item>
                         </Col>
@@ -499,7 +535,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                     </Row>
 
                     <Row gutter={12}>
-                        <Col xs={{ span: 8 }} sm={{ span: 8 }}md={{ span: 8 }}lg={{ span: 8 }} xl={{ span: 8 }} >
+                        <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
                             <Form.Item
                                 label="Invoice Date"
                                 name="invoiceDate"
@@ -589,13 +625,13 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                         </Col>
 
                         <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >                            <Form.Item
-                                label="Financial Year"
-                                name="financialYear"
-                                rules={[{ required: true, message: "Field Is Required" }]}
-                            >
-                                <Input placeholder="Financial Year"
-                                    onChange={(e) => setFinancialyear(e.target.value)} />
-                            </Form.Item>
+                            label="Financial Year"
+                            name="financialYear"
+                            rules={[{ required: true, message: "Field Is Required" }]}
+                        >
+                            <Input placeholder="Financial Year"
+                                onChange={(e) => setFinancialyear(e.target.value)} />
+                        </Form.Item>
                         </Col>
 
                         {/* <Col
@@ -754,6 +790,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                     type="primary"
                     htmlType="submit"
                     style={{ position: "relative", left: "10pX" }}
+                // onClick={onSumbit}
                 >
                     Submit
                 </Button>
@@ -762,7 +799,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             <Row>
                 <Card size='small'>
                     <Col span={12}>
-                        <Table dataSource={props.hsnData} columns={columns} size="small" />
+                        <Table dataSource={props.hsnData} columns={columns} size="small" pagination={false} />
                     </Col>
                 </Card>
             </Row>

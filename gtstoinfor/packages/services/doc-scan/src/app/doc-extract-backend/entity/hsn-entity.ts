@@ -29,19 +29,19 @@ export class HSNEntity {
     length: 50,
     name: "tax_type",
   })
-  Taxtype: string;
+  taxType: string;
 
   @Column("varchar", {
     length: 50,
     name: "tax_amount",
   })
-  Taxamount: string;
+  taxAmount: string;
 
   @Column("varchar", {
     length: 50,
     name: "tax_percentage",
   })
-  Taxpercentage: string;
+  taxPercentage: string;
 
   @Column("varchar", {
     length: 50,
@@ -53,7 +53,7 @@ export class HSNEntity {
     length: 50,
     name: "charge",
   })
-  Charge: string;
+  charge: string;
 
   @Column("varchar", {
     length: 50,
@@ -61,13 +61,12 @@ export class HSNEntity {
   })
   unitPrice:string;
 
-
   @Column("varchar", {
     nullable:true,
     length: 50,
     name: "unit_quantity",
   })
-  unitquantity: string;
+  unitQuantity: string;
 
   // @Column("varchar", {
   //   length: 50,

@@ -1529,25 +1529,25 @@ export function DocumentUploadForm() {
     },
   };
 
-  const onSumbit = () => {
-    const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount,
-      Innvoicecurrency, financialyear, status,
-      JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData, "");
-    console.log(req, "submit");
-    service
-      .postdata(req)
-      .then((res) => {
-        if (res.status) {
-          message.success("Success");
-          navigate("/scan-document");
-        } else {
-          message.error("Fill All Fields");
-        }
-      })
-      .catch((err: { message: any }) => {
-        console.log(err.message, "err message");
-      });
-  };
+  // const onSumbit = () => {
+  //   const req = new AllScanDto(gstNumbers, vendor, invoiceDate, Cgst, Igst, Sgst, Innvoicenum, Innvoiceamount,
+  //     Innvoicecurrency, financialyear, status,
+  //     JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData, "");
+  //   console.log(req, "submit");
+  //   service
+  //     .postdata(req)
+  //     .then((res) => {
+  //       if (res.status) {
+  //         message.success("Success");
+  //         navigate("/scan-document");
+  //       } else {
+  //         message.error("Fill All Fields");
+  //       }
+  //     })
+  //     .catch((err: { message: any }) => {
+  //       console.log(err.message, "err message");
+  //     });
+  // };
 
   const handleCancel = () => {
     setButtonClicked(true);
@@ -2303,7 +2303,7 @@ export function DocumentUploadForm() {
               type="primary"
               htmlType="submit"
               style={{ position: "relative", top: "10px", left: "10PX" }}
-              onClick={onSumbit}
+              // onClick={onSumbit}
             >
               Submit
             </Button>

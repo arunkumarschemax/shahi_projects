@@ -8,52 +8,51 @@ import { HSNEntity } from "../entity/hsn-entity";
 export class ScanAdapter {
     convertEntityToDto(entity: ScanEntity): ScanDto {
         const dto = new ScanDto();
-        dto.GST = entity.GST;
-        dto.Vendor = entity.Vendor;
+        dto.gstNumber = entity.gstNumber;
+        dto.venName = entity.venName;
+        dto.venCod = entity.venCod;
         dto.invoiceDate = entity.invoiceDate;
-        dto.Cgst = entity.Cgst;
-        dto.IGST = entity.IGST;
-        dto.Sgst = entity.Sgst;
-        dto.InnvoiceNumber = entity.InnvoiceNumber;
-        dto.InnvoiceAmount = entity.InnvoiceAmount;
-        dto.InnvoiceCurrency = entity.InnvoiceCurrency;
-        dto. Financialyear=entity.Financialyear;
+        dto.cgst = entity.cgst;
+        dto.igst = entity.igst;
+        dto.sgst = entity.sgst;
+        dto.invoiceNumber = entity.invoiceNumber;
+        dto.invoiceAmount = entity.invoiceAmount;
+        dto.invoiceCurrency = entity.invoiceCurrency;
+        dto. financialYear=entity.financialYear;
         dto. status=entity.status;
         dto.createdUser=entity.createdUser;
-
-        
-        
         return dto;
     }
 
     convertDtoToEntity(dto: ScanDto): ScanEntity {
         console.log(dto,'----')
         const entity = new ScanEntity();
-        entity.GST = dto.GST;
-        entity.Vendor = dto.Vendor;
+        entity.gstNumber = dto.gstNumber;
+        entity.venName = dto.venName;
+        entity.venCod = dto.venCod;
         entity.invoiceDate = dto.invoiceDate;
-        entity.Cgst = dto.Cgst;
-        entity.IGST = dto.IGST;
-        entity.Sgst = dto.Sgst;
-        entity.InnvoiceNumber = dto.InnvoiceNumber;
-        entity.InnvoiceAmount = dto.InnvoiceAmount;
-        entity.InnvoiceCurrency = dto.InnvoiceCurrency;
-        entity. Financialyear=dto.Financialyear;
+        entity.cgst = dto.cgst;
+        entity.igst = dto.igst;
+        entity.sgst = dto.sgst;
+        entity.invoiceNumber = dto.invoiceNumber;
+        entity.invoiceAmount = dto.invoiceAmount;
+        entity.invoiceCurrency = dto.invoiceCurrency;
+        entity. financialYear=dto.financialYear;
         entity. status=dto.status;
         entity.createdUser=dto.createdUser;
         const hsnDetails: HSNEntity[] = []
         for (const record of dto.Hsninfo  ){
                 const entity2 = new HSNEntity()
-                entity2.Charge = record. Charge
-                entity2.Taxamount = record.Taxamount
-                entity2.Taxpercentage = record.Taxpercentage
-                entity2.Taxtype = record.Taxtype
+                entity2.charge = record. charge
+                entity2.taxAmount = record.taxAmount
+                entity2.taxPercentage = record.taxPercentage
+                entity2.taxType = record.taxType
                 entity2.HSN = record.HSN
                 entity2.variance = record.variance
                 entity2.unitPrice = record.unitPrice
                 entity2.quotation = record.quotation
                 // entity2.status = record.status;
-                entity2.unitquantity = record.unitquantity;
+                entity2.unitQuantity = record.unitQuantity;
                 entity2.description = record.description;
                 entity2.createdUser = dto.createdUser;
                 hsnDetails.push(entity2)

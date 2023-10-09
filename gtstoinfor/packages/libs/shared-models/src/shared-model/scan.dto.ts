@@ -1,17 +1,17 @@
 import { HsnDto } from "./hsn.dto";
 
 export class AllScanDto {
-    GST: string;
-    Vendor: string;
+    gstNumber: string;
+    venName: string;
+    venCod:string;
     invoiceDate: string;
-    Cgst: string;
-    IGST: string;
-    Sgst: string;
-    InnvoiceNumber: string;
-    InnvoiceAmount: string;
-    InnvoiceCurrency: string;
-    unitPrice: string;
-    Financialyear: string;
+    invoiceNumber: string;
+    invoiceAmount: string;
+    igst: string;
+    cgst: string;
+    sgst: string;
+    invoiceCurrency: string;
+    financialYear: string;
     status: string;
     createdUser: string;
     Hsninfo: HsnDto[]
@@ -19,16 +19,17 @@ export class AllScanDto {
 
 
     constructor(
-        GST: string,
-        Vendor: string,
+        gstNumber: string,
+        venName: string,
+        venCod:string,
         invoiceDate: string,
-        Cgst: string,
-        IGST: string,
-        Sgst: string,
-        InnvoiceNumber: string,
-        InnvoiceAmount: string,
-        InnvoiceCurrency: string,
-        Financialyear: string,
+        invoiceNumber: string,
+        invoiceAmount: string,
+        igst: string,
+        cgst: string,
+        sgst: string,
+        invoiceCurrency: string,
+        financialYear: string,
         status: string,
         createdUser: string,
         Hsninfo: HsnDto[],
@@ -37,16 +38,17 @@ export class AllScanDto {
 
     ) {
 
-        this.GST = GST;
-        this.Vendor = Vendor;
+        this.gstNumber = gstNumber;
+        this.venName = venName;
+        this.venCod=venCod;
         this.invoiceDate = invoiceDate;
-        this.Cgst = Cgst;
-        this.IGST = IGST;
-        this.Sgst = Sgst;
-        this.InnvoiceNumber = InnvoiceNumber;
-        this.InnvoiceAmount = InnvoiceAmount;
-        this.InnvoiceCurrency = InnvoiceCurrency;
-        this.Financialyear = Financialyear;
+        this.invoiceNumber = invoiceNumber;
+        this.invoiceAmount = invoiceAmount;
+        this.cgst = cgst;
+        this.igst = igst;
+        this.sgst = sgst;
+        this.invoiceCurrency = invoiceCurrency;
+        this.financialYear = financialYear;
         this.status = status;
         this.createdUser = createdUser;
         this.Hsninfo = Hsninfo;
