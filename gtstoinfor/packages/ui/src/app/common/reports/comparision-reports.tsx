@@ -29,19 +29,17 @@ export const MonthWiseComparisionReport = () =>{
     const [dates, setDates] = useState<any[]>([]);
     const { Text } = Typography;
     const [pageSize, setPageSize] = useState(10);
-
-    useEffect(() => {
-        getData(selected);
-        getTabs();
-      }, []);
-      const startIndex = (page - 1) * pageSize;
+const startIndex = (page - 1) * pageSize;
       const endIndex = startIndex + pageSize;
       const currentPageData = data.slice(startIndex, endIndex);
       const handlePageChange = (newPage, newPageSize) => {
         setPage(newPage);
         setPageSize(newPageSize);
       };
-      
+      useEffect(() => {
+        getData(selected,tab);
+        getTabs();
+      }, []);
       const getTabs = () => {
         service.getExfactoryYearData().then((res) => {
           if (res.status) {
@@ -52,10 +50,10 @@ export const MonthWiseComparisionReport = () =>{
       
     const handleChange = (val) =>{
         setSelected(val)
-        getData(val)
+        getData(val,tab)
       }
-      const getData = (val) => {
-        const req = new YearReq(tab,val);
+      const getData =(val,tabName) => {
+        const req = new YearReq(tabName,val);
         service.getMonthlyComparisionData(req).then((res) => {
          if (res.status) {
             setData(res.data);
@@ -1731,7 +1729,7 @@ if(selected == 'WareHouse'){
       };
       const handleTabChange = (selectedYear: string) => {
         setTab(Number(selectedYear));
-        getData(selected);
+        getData(selected,selectedYear);
       };
       const getFilterdData = () => {
         let ItemName = form.getFieldValue("ItemName");
@@ -1750,7 +1748,7 @@ if(selected == 'WareHouse'){
       };
       const onReset = () => {
         form.resetFields();
-        getData(selected);
+        getData(selected,tab);
       };
     
       const getTableSummary = (pageData) => {
