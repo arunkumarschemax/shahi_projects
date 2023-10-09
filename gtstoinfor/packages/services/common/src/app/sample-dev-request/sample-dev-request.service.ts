@@ -166,6 +166,7 @@ export class SampleRequestService {
         sizeentity.sizeId=size.sizeId
         sizeentity.quantity=size.quantity
         sampleSizeInfo.push(sizeentity)
+        console.log(sampleSizeInfo)
       }
       samplereqEntity.samplereqsizeinfo=sampleSizeInfo
       for(const fabricObj of req.samplereqfabricinfo){
@@ -193,7 +194,6 @@ export class SampleRequestService {
         sampleProcessInfo.push(processEntity)
       }
       samplereqEntity.sampleProcessInfo=sampleProcessInfo
-
       const save = await this.sampleRepo.save(samplereqEntity)
       if(save){
         return new AllSampleDevReqResponseModel(true,1,'SampleDevelopmentRequest created sucessfullyy',[])
