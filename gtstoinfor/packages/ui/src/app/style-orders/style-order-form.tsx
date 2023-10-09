@@ -1,5 +1,5 @@
-import { BuyerIdReq } from "@project-management-system/shared-models";
-import { BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, EmployeeDetailsService, FactoryService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, WarehouseService } from "@project-management-system/shared-services"
+import { BuyerIdReq, ItemCodeReq } from "@project-management-system/shared-models";
+import { BuyersService, CurrencyService, DeliveryMethodService, DeliveryTermsService, EmployeeDetailsService, FactoryService, ItemsService, PackageTermsService, PaymentMethodService, PaymentTermsService, SKUGenerationService, WarehouseService } from "@project-management-system/shared-services"
 import { Card, Col, DatePicker, Form, Input, Row, Select } from "antd"
 import TextArea from "antd/es/input/TextArea";
 import { useEffect, useState } from "react"
@@ -31,6 +31,9 @@ export const StyleOrderCreation = () => {
     const payMethService = new PaymentMethodService()
     const [currency,setCurrency] = useState<any[]>([])
     const currencyService = new CurrencyService()
+    const [destinations,setDestinations] = useState<any[]>([])
+    const skuService = new SKUGenerationService()
+    const [form] = Form.useForm()
 
 
 
@@ -47,6 +50,7 @@ export const StyleOrderCreation = () => {
         getPaymentMethodInfo()
         getPaymentTermsInfo()
         getCurrencyInfo()
+        
     },[])
 
     const getItemCodes = () => {
@@ -146,12 +150,25 @@ export const StyleOrderCreation = () => {
         })
     }
 
+    const getDestinationsByItem = () =>{
+        const req = new ItemCodeReq(form.getFieldValue('itemCode'))
+        skuService.getDestinationsByItem(req).then(res =>{
+            if(res.status){
+                setDestinations(res.data)
+            }
+        })
+    }
+
     const onBuyerChange = (e,option) => {
         getBuyersAddressInfo(option?.key)
     }
+
+    const onItemCodeChange = (e,option) => {
+        getDestinationsByItem()
+    }
     return(
         <Card title='Style Order Creation' size='small'>
-            <Form layout="vertical">
+            <Form layout="vertical" form={form}>
                <Row gutter={[8,4]}>
                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 12}}>
                <Card size='small' bordered={false}>
@@ -160,7 +177,7 @@ export const StyleOrderCreation = () => {
                 <Row gutter={[8,8]}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                 <Form.Item name='itemCode' label='Item'>
-                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Item'>
+                    <Select showSearch allowClear optionFilterProp="children" placeholder='Select Item' onChange={onItemCodeChange}>
                         {
                             itemCodes.map((e) => {
                                 return(
