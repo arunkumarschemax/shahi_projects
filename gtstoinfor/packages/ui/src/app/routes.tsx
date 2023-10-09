@@ -33,8 +33,8 @@ export const AppRoutes = () => {
                     <Route path="doc-extract-view" key='/doc-extract-view' element={<View />} />
                 </Route>
                 <Route path="scan-document" element={<View />} />
-                <Route path="/doc-extract-form" element={<DocumentUploadForm />} />
-                <Route path="/doc-parent" element={<DocParent />} />
+                <Route path="/doc-extract-form" element={<DocParent />} />
+                {/* <Route path="/doc-parent" element={<DocParent />} /> */}
                 <Route path="/vendors" element={<VendorGrid />} />
                 <Route path="/invoices" />
                 <Route path="/pending-approvals" />

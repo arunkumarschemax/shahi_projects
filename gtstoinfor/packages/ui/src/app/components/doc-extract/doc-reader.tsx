@@ -24,8 +24,6 @@ export const DocReader = (props: DocReaderProps) => {
     const maxZoomLevel = 3;
     const minZoomLevel = 0.5;
 
-
-
     const [hsnData, setHsnData] = useState([]);
     const [GstForm] = Form.useForm();
     const [uploadForm] = Form.useForm();
@@ -44,6 +42,7 @@ export const DocReader = (props: DocReaderProps) => {
     const [pdfData, setPdfData] = useState(null);
     const [jsonData, setJsonData] = useState(null);
 
+    pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
     const parseExtractedText = (text) => {
         const lines = text.split('\n');
@@ -756,17 +755,17 @@ export const DocReader = (props: DocReaderProps) => {
             const response = await fetch(pdfDataUrl);
             const pdfBuffer = await response.arrayBuffer();
 
-            const extractedDhl = await extractDhl(pdfBuffer);
-            setJsonData(extractedDhl);
-            console.log('PDF DATA DHL:', extractedDhl);
+            // const extractedDhl = await extractDhl(pdfBuffer);
+            // setJsonData(extractedDhl);
+            // console.log('PDF DATA DHL:', extractedDhl);
 
             // const extractedDart = await extractDart(pdfBuffer);
             // setJsonData(extractedDart);
             // console.log('PDF DATA DART:', extractedDart);
 
-            // const extractedExpeditors = await extractExpeditors(pdfBuffer);
-            // setJsonData(extractedExpeditors);
-            // console.log('PDF DATA EXPEDITORS:', extractedExpeditors);
+            const extractedExpeditors = await extractExpeditors(pdfBuffer);
+            setJsonData(extractedExpeditors);
+            console.log('PDF DATA EXPEDITORS:', extractedExpeditors);
 
             // const extractedEfl = await extractEfl(pdfBuffer);
             // setJsonData(extractedEfl);
