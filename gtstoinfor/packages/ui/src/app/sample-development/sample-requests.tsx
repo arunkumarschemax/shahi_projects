@@ -39,11 +39,11 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     if (form.getFieldValue('reqNo') !== undefined) {
       req.reqNo = form.getFieldValue('reqNo')
     }
-    Service.getAllSampleDevelopment().then((res) => {
-      if (res) {
+    Service.getAllSampleDevData().then((res) => {
+      if (res.data) {
         console.table(res)
-        setBuyingHouseData(res);
-        setReqNo(res)
+        setBuyingHouseData(res.data);
+        setReqNo(res.data)
       }
     });
   };

@@ -67,24 +67,6 @@ export const baseMRouterList = [
                 filepath: "profit-control-head/profit-control-head-view",
             },
             {
-                label: "ROSL Groups",
-                key: "rosl-groups",
-                path: "rosl-groups/rosl-groups-view",
-                filepath: "rosl-groups/rosl-groups-view",
-            },
-            {
-                label: "Sample Types",
-                key: "sampleTypes",
-                path: "sampleTypes/sampleTypes-grid",
-                filepath: "sampleTypes/sampleTypes-grid",
-            },
-            {
-                label: "Sample Sub Types",
-                key: "sampleSubTypes",
-                path: "sampleSubTypes/sampleSubTypes-grid",
-                filepath: "sampleSubTypes/sampleSubTypes-grid",
-            },
-            {
                 label: "Fabric Type",
                 key: "fabricType",
                 path: "fabricType/fabric-type-view",

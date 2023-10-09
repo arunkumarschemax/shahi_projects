@@ -38,10 +38,10 @@ export const SourceSampleReq = (props: BuyingHouseProps) => {
     if (form.getFieldValue('reqNo') !== undefined) {
       req.reqNo = form.getFieldValue('reqNo')
     }
-    Service.getAllSampleDevelopment().then((res) => {
+    Service.getAllSampleDevData().then((res) => {
       if (res) {
         console.table(res)
-        setBuyingHouseData(res);
+        setBuyingHouseData(res.data);
         setReqNo(res)
       }
     });
