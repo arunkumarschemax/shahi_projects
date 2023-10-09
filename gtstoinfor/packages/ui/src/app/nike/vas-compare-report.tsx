@@ -524,7 +524,7 @@ const VASChangesCompareGrid = () => {
             title: 'DIFFERENCE IN ITEM VAS TEXT ',
             // ( between DPOM to DPOM)( Highlight Color: If any wording Newly Added should be highlighted Green Color/ If removed Red Color)',
             dataIndex: 'item_vas_pdf_po',
-            width: '300px',
+            width: 140,
         },
         // {
         //     title: 'DIFFERENCE IN ITEM VAS TEXT ',
@@ -849,16 +849,20 @@ const VASChangesCompareGrid = () => {
         {
             title: 'Change from Inventory Segment Code',
             dataIndex: '',
-            // ...getColumnSearchProps('')
+            width:120,  
+                      // ...getColumnSearchProps('')
         },
         {
             title: 'Change To Inventory Segment Code',
             dataIndex: '',
+            width:90,  
+
             // ...getColumnSearchProps('')
         },
         {
             title: 'Change from Destination Country Name',
             dataIndex: '',
+            width:90,  
             // ...getColumnSearchProps('')
         },
         {

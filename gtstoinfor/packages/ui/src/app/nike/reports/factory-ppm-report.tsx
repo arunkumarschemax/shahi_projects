@@ -718,7 +718,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Global Category Core Focus Description',
-                dataIndex: 'gccFocusDesc',width:70,
+                dataIndex: 'gccFocusDesc',width:75,
             },
             {
                 title: 'Gender Age',
@@ -727,15 +727,15 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Gender Age Description',
-                dataIndex: 'genderAgeDesc',width:70,
+                dataIndex: 'genderAgeDesc',width:75,
             },
             {
                 title: 'Destination Country Code',
-                dataIndex: 'destinationCountryCode',width:70,
+                dataIndex: 'destinationCountryCode',width:75,
             },
             {
                 title: 'Destination country Name',
-                dataIndex: 'destinationCountry',width:70,
+                dataIndex: 'destinationCountry',width:75,
             },
             {
                 title: 'Geo Code',
@@ -879,7 +879,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'docTypeCode',width:70,
                 align: 'center',
             },
-            { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center',width:70, },
+            { title: 'Doc Type Description', dataIndex: 'docTypeDesc', align: 'center',width:75, },
             {
                 title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column",width:70, render: (text, record) => {
                     return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
@@ -933,7 +933,7 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'GAC Reason Description', dataIndex: 'GACReasonDesc', width:70,render: (text, record) => {
+                title: 'GAC Reason Description', dataIndex: 'GACReasonDesc', width:75,render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
@@ -953,7 +953,7 @@ const FactoryPPMReport = () => {
               },
                    
               { title: 'Planning Priority Number', dataIndex: 'planningPriorityCode',width:70, className: 'centered-column', },
-            { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc' },
+            { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc',width:75 },
             {
                 title: 'Launch Code', dataIndex: 'launchCode', width:70,render: (text, record) => {
                     if (!text || text.trim() === '') {
@@ -963,7 +963,7 @@ const FactoryPPMReport = () => {
                     }
                 },
             },
-            { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode',width:70, },
+            { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode',width:90, },
             { title: 'In Co Terms', dataIndex: 'inCoTerms',width:70, },
             { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode',width:70, },
             {
@@ -1023,7 +1023,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Reallocated Quantity',
-                dataIndex: 'allocatedQuantity',width:70,
+                dataIndex: 'allocatedQuantity',width:75,
                 align: 'center',
                 render: (text, record) => {
                     if (!text || text.trim() === '') {

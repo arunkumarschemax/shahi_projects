@@ -607,7 +607,7 @@ const PPMReport = () => {
       },
       {
         title: 'DESCRIPTION WITH FABRIC CONTENT',
-        dataIndex: '',width:80,
+        dataIndex: '',width:85,
       },
       {
         title: 'Fabric Content as Per Washcare Label',
@@ -945,7 +945,7 @@ const PPMReport = () => {
           }
         },
       },
-      { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode',width:80, },
+      { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode',width:90, },
       { title: 'In Co Terms', dataIndex: 'inCoTerms',width:80, },
       { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode',width:80, },
       { title: 'Purchase Group', dataIndex: 'purchaseGroupCode', className: 'centered-column',width:80, },
