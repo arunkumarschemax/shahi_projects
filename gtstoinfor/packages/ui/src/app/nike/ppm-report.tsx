@@ -969,19 +969,11 @@ const PPMReport = () => {
     sizeHeaders?.forEach(version => {
       isOdd = !isOdd; 
       const sizeClass = isOdd ? 'odd-version' : 'even-version';
-      // console.log(sizeClass,"sizeClass")
       columns.push({
         title: (
           <div
-            style={{
-              background: sizeClass === 'odd-version' ? '#D83CC2  ' : '#3C8CD8 ', 
-              borderRadius: '2px',
-              display: 'flex',
-              alignItems: 'center',
-              height: 40,
-              justifyContent: 'center',
-              padding: '1px',
-              color: 'white', 
+            style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+            height: 40,justifyContent: 'center',padding: '1px',color: 'white', 
             }}
           >
             {version}
@@ -994,7 +986,13 @@ const PPMReport = () => {
          className: sizeClass,
         children: [
           {
-            title: 'Quantity',
+            title: (
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Quantity</div>
+            ),
             dataIndex: '',
             key: '',
             width:60,
@@ -1018,7 +1016,13 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Gross FOB or Price',
+            title: (
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Gross FOB or Price</div>
+            ),
             dataIndex: 'grossFobPrice',
             width:70,
             align: 'right',
@@ -1041,7 +1045,13 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Gross/FOB Currency ',
+            title: (
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Gross/FOB Currency </div>
+            ),
             dataIndex: 'grossFobCurrencyCode',
             width:70,
             render: (text, record) => {
@@ -1063,7 +1073,13 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Buyer Confirmed Gross/FOB Price',
+            title: (
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Buyer Confirmed Gross/FOB Price </div>
+            ),
             dataIndex: 'buyerGrossFobPrice',
             align: 'right',
             width:70,
@@ -1086,7 +1102,13 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Buyer Confirmed Gross/FOB Currency',
+            title: (
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Buyer Confirmed Gross/FOB Currency </div>
+            ),
             dataIndex: 'buyerGrossFobCurrencyCode',
             align: 'right',            width:90,
             render: (text, record) => {
@@ -1108,21 +1130,39 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Diff of Price',
+            title:(
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '1px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Diff of Price</div>
+            ),
             dataIndex: '',
-            align: 'right',
-            width:40,
+            align: 'center',
+            width:50,
 
 
           },
           {
-            title: 'Diff of Currency',
+            title:(
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Diff of Currency</div>
+            ),
             dataIndex: '',
             width:90,
 
           },
           {
-            title: 'Net including discounts',
+            title: (
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Net including discounts</div>
+            ),
             dataIndex: 'netIncludingDisc',
             align: 'center',
             width:70,
@@ -1147,7 +1187,13 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Net including discounts currency',
+            title:(
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Net including discounts currency</div>
+            ),
             dataIndex: 'netIncludingDiscCurrencyCode',
             width:70,
 
@@ -1170,7 +1216,13 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Trading Co Net including discounts',
+            title:(
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Trading Co Net including discounts</div>
+            ),
             dataIndex: 'trConetIncludingDisc',
             align: 'right',
             width:70,
@@ -1194,8 +1246,14 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Trading Co Net including discounts currency',
+            title: (<div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Trading Co Net including discounts currency</div>
+            ),
             dataIndex: 'trConetIncludingDiscCurrencyCode',
+            className: sizeClass ? 'odd-version' : 'even-version',
             width:70,
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1216,7 +1274,14 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Legal PO Price',
+            title:(
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',
+                display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Legal PO Price</div>
+            ),
             dataIndex: 'legalPoPrice',
             align: 'right',
             width:60,
@@ -1240,7 +1305,13 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Legal PO currency',
+            title:(
+              <div
+                style={{background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Legal PO currency</div>
+            ),
             dataIndex: 'legalPoCurrencyCode',
             width:60,
 
@@ -1263,10 +1334,16 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'CO Price',
+            title:(
+              <div
+                style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >CO Price</div>
+            ),
             dataIndex: 'coPrice',
             // align: 'right',
-            width:40,
+            width:60,
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1287,7 +1364,13 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'CO currency',
+            title:(
+              <div
+                style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >CO currency</div>
+            ),
             dataIndex: 'coPriceCurrencyCode',
             width:65,
 
@@ -1309,16 +1392,28 @@ const PPMReport = () => {
               }
             }
           },
-          {
-            title: 'Diff of Price',
-            dataIndex: '',
-            align: 'right',
-            width:40,
+          // {
+          //   title:(
+          //     <div
+          //       style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+          //       height:130,justifyContent: 'center',color: 'Black', 
+          //       }}
+          //     >Diff of Price</div>
+          //   ),
+          //   dataIndex: '',
+          //   align: 'right',
+          //   width:40,
 
 
-          },
+          // },repeated multiple times 
           {
-            title: 'Diff of currency',
+            title: (
+              <div
+                style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Diff of currency</div>
+            ),
             dataIndex: '',
             align: 'right',
             width:70,
@@ -1326,7 +1421,13 @@ const PPMReport = () => {
 
           },
           {
-            title: 'CRM CO QTY',
+            title:(
+              <div
+                style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >CRM CO QTY</div>
+            ),
             dataIndex: 'CRMCoQty',
             width:60,
 
@@ -1349,7 +1450,13 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Legal PO QTY',
+            title: (
+              <div
+                style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Legal PO QTY</div>
+            ),
             dataIndex: 'legalPoQty',
             align: 'right',
             width:60,
@@ -1374,7 +1481,13 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Diff of Quantity',
+            title:(
+              <div
+                style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Diff of Quantity</div>
+            ),
             dataIndex: '',
             align: 'right',
             width:60,
@@ -1382,11 +1495,16 @@ const PPMReport = () => {
 
           },
           {
-            title: 'Allowed Excess Ship Qty',
+            title:(
+              <div
+                style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Allowed Excess Ship Qty</div>
+            ),
             dataIndex: '',
             align: 'right',
             width:70,
-
 
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
@@ -1414,7 +1532,13 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Actual Shipped Qty',
+            title: (
+              <div
+                style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Actual Shipped Qty</div>
+            ),
             dataIndex: 'actualShippedQty',
             align: 'right',
             width:70,
@@ -1439,7 +1563,14 @@ const PPMReport = () => {
             }
           },
           {
-            title: 'Actual Ship %',
+            title: (
+              <div
+                style={{backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ',
+                 borderRadius: '2px',display: 'flex',alignItems: 'center',
+                height:130,justifyContent: 'center',color: 'Black', 
+                }}
+              >Actual Ship %</div>
+            ),
             align: 'right',
             width:70,
 
@@ -2433,7 +2564,7 @@ const PPMReport = () => {
           </Row>
         </Form>
         <Row gutter={24} justify={'space-evenly'}>
-          <Col span={3}> <Card bordered>
+          <Col span={3}> <Card bordered >
             <Statistic loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} /></Card>
           </Col>
           <Col span={3}> <Card bordered>
