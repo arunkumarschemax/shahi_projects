@@ -227,9 +227,9 @@ export function FabricTrackerReport() {
 
     const columns: any = [
         {
-            title: "SL",
-            render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
-      
+            title: "S no",
+            render: (_text: any, record: any, index: number) => <span>{index + 1}</span>,
+            align:'center',width:50
           },
           {
             title: 'Item',
