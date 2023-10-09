@@ -138,7 +138,7 @@ const OrdersCompareGrid = () => {
             excel
                 .addSheet('Quantity changes')
                 .addColumns(data1)
-                .addDataSource(filteredQtyData, { str2num: true });
+                .addDataSource(filterData, { str2num: true });
         }
 
         if (unitChangeData && unitChangeData.length > 0) {
@@ -169,37 +169,109 @@ const OrdersCompareGrid = () => {
 
     const data1 = [
         {
-            title: 'Production Plan Id',
-            dataIndex: 'production_plan_id'
+            title: 'PO Number',
+            dataIndex: 'purchaseOrderNumber',
+            
         },
         {
-            title: 'Item code',
-            dataIndex: 'item_code'
+            title: 'PO Line Item No',
+            dataIndex: 'poLineItemNumber',
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName'
+            title: 'Schedule Line Item No',
+            dataIndex: 'scheduleLineItemNumber',
         },
         {
-            title: 'Order Quantity Pieces',
-            dataIndex: 'new_val',
+            title: 'Report Generate Date',
+            dataIndex: 'created_at',
+            render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
-            title: 'Contracted Date',
-            dataIndex: 'contracted_date',
+            title: 'Item',
+            dataIndex: 'item',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            },
         },
         {
-            title: 'Order Revised Date',
-            dataIndex: 'last_update_date',
+            title: 'Factory',
+            dataIndex: 'factory',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    return text;
+                }
+            },
+        },
+
+        {
+            title: 'Style Number',
+            dataIndex: 'styleNumber',
         },
         {
-            title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date',
+            title: 'Product Code',
+            dataIndex: 'productCode',
         },
         {
-            title: 'Order Status',
-            dataIndex: 'order_status'
-        }
+            title: 'Color Description',
+            dataIndex: 'colorDesc',
+        },
+        {
+            title: 'OGAC',
+            dataIndex: 'OGAC',
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'GAC',
+        },
+        {
+            title: 'Destination Country',
+            dataIndex: 'destinationCountry',
+        },
+        {
+            title: 'Item Text',
+            dataIndex: 'itemText',
+            // render:(text,record) => {
+            //     return(
+            //         <>
+            //         {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+            //                     {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
+            //                 </span></p></Tooltip></>) : (<>{record.itemText}</>)}
+            //         </>
+            //     )
+            // }
+        },
+
+        // {
+        //     title: 'Difference',
+        //     dataIndex: 'Diff',
+        //     align: 'right',
+        //     render: (text, record) => (
+        //         < >
+        //             {Number(record.Diff) === 0 ? '-' : ''}
+        //             {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
+        //                 maximumFractionDigits: 0
+        //             })} </span> : ''}
+        //             {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
+        //                 maximumFractionDigits: 0
+        //             })} </span> : ''}
+        //         </>
+        //     )
+        // },
+
+        // {
+        //     title: 'Total Quantity',
+        //     align: 'right',
+        //     dataIndex: 'totalQuantity',
+        //     render: (text) => (
+        //         <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+        //     ),
+        // },
     ]
 
     const data2 = [
@@ -297,14 +369,6 @@ const OrdersCompareGrid = () => {
     ];
 
     let exportingColumns: IExcelColumn[] = []
-    exportingColumns = [
-        { title: 'Item code', dataIndex: 'itemCode' },
-        { title: 'Item Name', dataIndex: 'itemName' },
-        { title: 'Production Plan Type Name', dataIndex: 'prodPlanTypeName' },
-        { title: 'Sum of Ord Qty last week', dataIndex: 'oldOrderQtyPcs' },
-        { title: 'Sum of Ord Qty this week', dataIndex: 'newOrderQtyPcs' },
-        { title: 'Difference Qty', dataIndex: 'difference' }
-    ]
 
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
