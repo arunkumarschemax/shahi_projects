@@ -44,7 +44,7 @@ export class ScanEntity extends BaseEntity {
 
   @Column('varchar', {
     length: 50,
-    name: 'innvoice_number',
+    name: 'invoice_number',
   })
   invoiceNumber: string;
 
@@ -68,13 +68,13 @@ export class ScanEntity extends BaseEntity {
 
   @Column('varchar', {
     length: 50,
-    name: 'innvoice_amount',
+    name: 'invoice_amount',
   })
   invoiceAmount: string;
 
   @Column('varchar', {
     length: 50,
-    name: 'innvoice_currency',
+    name: 'invoice_currency',
   })
   invoiceCurrency: string;
 

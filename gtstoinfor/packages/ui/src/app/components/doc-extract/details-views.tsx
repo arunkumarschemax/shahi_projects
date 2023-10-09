@@ -291,22 +291,22 @@ function ScanDetailView() {
     },
     {
       title: "Tax Type",
-      dataIndex: "Taxtype",
-      key: "Taxtype",
-      ...getColumnSearchProps("Taxtype"),
-      sorter: (a, b) => a.Taxtype.localeCompare(b.Taxtype),
-      render: (_, record) => record?.Taxtype || "-",
+      dataIndex: "taxType",
+      key: "taxType",
+      ...getColumnSearchProps("taxType"),
+      sorter: (a, b) => a.taxType.localeCompare(b.taxType),
+      render: (_, record) => record?.taxType || "-",
     },
 
     {
       title: "Tax Percentage",
-      dataIndex: "Taxpercentage",
-      key: "Taxpercentage",
-      ...getColumnSearchProps("Taxpercentage"),
-      sorter: (a, b) => a.Taxpercentage.localeCompare(b.Taxpercentage),
-      // render: (_, record) => (record?.Taxpercentage || "-"),
+      dataIndex: "taxPercentage",
+      key: "taxPercentage",
+      ...getColumnSearchProps("taxPercentage"),
+      sorter: (a, b) => a.taxPercentage.localeCompare(b.taxPercentage),
+      // render: (_, record) => (record?.taxPercentage || "-"),
       render: (text, record) => {
-        return <span>{record.Taxpercentage ? record.Taxpercentage : "-"}</span>;
+        return <span>{record.taxPercentage ? record.taxPercentage : "-"}</span>;
       },
     },
 
@@ -323,14 +323,14 @@ function ScanDetailView() {
 
     {
       title: "Unit Quantity",
-      dataIndex: "unitquantity",
-      key: "unitquantity",
-      ...getColumnSearchProps("unitquantity"),
-      sorter: (a, b) => a.unitquantity.localeCompare(b.unitquantity),
+      dataIndex: "unitQuantity",
+      key: "unitQuantity",
+      ...getColumnSearchProps("unitQuantity"),
+      sorter: (a, b) => a.unitQuantity.localeCompare(b.unitQuantity),
       // render: (_, record) =>
-      //   record?.unitquantity || "-",
+      //   record?.unitQuantity || "-",
       render: (text, record) => {
-        return <span>{record.unitquantity ? record.unitquantity : "-"}</span>;
+        return <span>{record.unitQuantity ? record.unitQuantity : "-"}</span>;
       },
     },
     {
@@ -343,7 +343,7 @@ function ScanDetailView() {
         return (
           <span>
             {record.unitPrice
-              ? (record.unitPrice * record.unitquantity).toFixed(2)
+              ? (record.unitPrice * record.unitQuantity).toFixed(2)
               : "-"}
           </span>
         );
@@ -351,16 +351,16 @@ function ScanDetailView() {
     },
     {
       title: "Tax Amount",
-      dataIndex: "Taxamount",
-      key: "Taxamount",
-      ...getColumnSearchProps("Taxamount"),
-      sorter: (a, b) => a.Taxamount.localeCompare(b.Taxamount),
+      dataIndex: "taxAmount",
+      key: "taxAmount",
+      ...getColumnSearchProps("taxAmount"),
+      sorter: (a, b) => a.taxAmount.localeCompare(b.taxAmount),
       // render: (_, record) =>
-      //   record?.Taxamount || "-",
+      //   record?.taxAmount || "-",
       render: (text, record) => {
         return (
           <span>
-            {record.Taxamount ? parseFloat(record.Taxamount).toFixed(2) : "-"}
+            {record.taxAmount ? parseFloat(record.taxAmount).toFixed(2) : "-"}
           </span>
         );
       },
@@ -369,16 +369,16 @@ function ScanDetailView() {
     {
       title: "Total Amount",
       dataIndex: "unitPrice",
-      key: "unitquantity",
+      key: "unitQuantity",
       // ...getColumnSearchProps("unitquantity"),
-      sorter: (a, b) => a.unitquantity.localeCompare(b.unitquantity),
+      sorter: (a, b) => a.unitQuantity.localeCompare(b.unitQuantity),
       render: (text, record, index) => {
         return (
           <span>
             {record.unitPrice
               ? (
-                Number(record.unitPrice * record.unitquantity) +
-                Number(record.Taxamount)
+                Number(record.unitPrice * record.unitQuantity) +
+                Number(record.taxAmount)
               ).toFixed(2)
               : "-"}
           </span>
@@ -428,13 +428,13 @@ function ScanDetailView() {
           label="Vendor Name"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.Vendor ? rowData.state.rowData.Vendor : "--"}
+          {rowData.state.rowData.venName ? rowData.state.rowData.venName : "--"}
         </Descriptions.Item>
         <Descriptions.Item
           label="GST NUMBER"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.GST ? rowData.state.rowData.GST : "--"}
+          {rowData.state.rowData.gstNumber ? rowData.state.rowData.gstNumber : "--"}
         </Descriptions.Item>
 
         <Descriptions.Item
@@ -450,8 +450,8 @@ function ScanDetailView() {
           label="Invoice Number"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.InnvoiceNumber
-            ? rowData.state.rowData.InnvoiceNumber
+          {rowData.state.rowData.invoiceNumber
+            ? rowData.state.rowData.invoiceNumber
             : "--"}
         </Descriptions.Item>
 
@@ -459,29 +459,29 @@ function ScanDetailView() {
           label="IGST"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.IGST ? rowData.state.rowData.IGST : "--"}
+          {rowData.state.rowData.igst ? rowData.state.rowData.igst : "--"}
         </Descriptions.Item>
 
         <Descriptions.Item
           label="CGST"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.Cgst ? rowData.state.rowData.Cgst : "--"}
+          {rowData.state.rowData.cgst ? rowData.state.rowData.cgst : "--"}
         </Descriptions.Item>
 
         <Descriptions.Item
           label="SGST"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.Sgst ? rowData.state.rowData.Sgst : "--"}
+          {rowData.state.rowData.sgst ? rowData.state.rowData.sgst : "--"}
         </Descriptions.Item>
 
         <Descriptions.Item
           label="Invoice Amount"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.InnvoiceAmount
-            ? parseFloat(rowData.state.rowData.InnvoiceAmount).toFixed(2)
+          {rowData.state.rowData.invoiceAmount
+            ? parseFloat(rowData.state.rowData.invoiceAmount).toFixed(2)
             : "--"}
         </Descriptions.Item>
 
@@ -489,8 +489,8 @@ function ScanDetailView() {
           label="Invoice Currency"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.InnvoiceCurrency
-            ? rowData.state.rowData.InnvoiceCurrency
+          {rowData.state.rowData.invoiceCurrency
+            ? rowData.state.rowData.invoiceCurrency
             : "--"}
         </Descriptions.Item>
 
@@ -498,8 +498,8 @@ function ScanDetailView() {
           label="Financial year"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
-          {rowData.state.rowData.Financialyear
-            ? rowData.state.rowData.Financialyear
+          {rowData.state.rowData.financialYear
+            ? rowData.state.rowData.financialYear
             : "--"}
         </Descriptions.Item>
         <Descriptions.Item
@@ -526,22 +526,22 @@ function ScanDetailView() {
             pagination={false}
             summary={(pageData) => {
               let totalCost: number = 0;
-              let taxamount: number = 0
+              let taxAmount: number = 0
               let Subjectamount: number = 0
 
-              pageData.forEach(({ Taxamount }) => {
-                if (Number(Taxamount)) {
-                  taxamount += Number(Taxamount)
+              pageData.forEach(({ taxAmount }) => {
+                if (Number(taxAmount)) {
+                  taxAmount += Number(taxAmount)
                 }
               })
 
               pageData.forEach((record) => {
                 if (
                   Number(record.unitPrice) &&
-                  Number(record.unitquantity)
+                  Number(record.unitQuantity)
                 ) {
                   Subjectamount +=
-                    Number(record.unitPrice * record.unitquantity)
+                    Number(record.unitPrice * record.unitQuantity)
 
                 }
               });
@@ -551,12 +551,12 @@ function ScanDetailView() {
               pageData.forEach((record) => {
                 if (
                   Number(record.unitPrice) &&
-                  Number(record.unitquantity) &&
-                  Number(record.Taxamount)
+                  Number(record.unitQuantity) &&
+                  Number(record.taxAmount)
                 ) {
                   totalCost +=
-                    Number(record.unitPrice * record.unitquantity) +
-                    Number(record.Taxamount);
+                    Number(record.unitPrice * record.unitQuantity) +
+                    Number(record.taxAmount);
                   setTotalAmount(totalCost);
                 }
               });
@@ -574,7 +574,7 @@ function ScanDetailView() {
                       <b>
                         <span style={{ marginRight: 10 }}>
                           {" "}
-                          ({rowData.state.rowData.InnvoiceCurrency}) :
+                          ({rowData.state.rowData.invoiceCurrency}) :
                         </span>
                       </b>
                     </Table.Summary.Cell>
@@ -585,7 +585,7 @@ function ScanDetailView() {
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={1} colSpan={1}>
                       <span>
-                        <b>{Number(taxamount).toFixed(2)}</b>
+                        <b>{Number(taxAmount).toFixed(2)}</b>
                       </span>
                     </Table.Summary.Cell>
 

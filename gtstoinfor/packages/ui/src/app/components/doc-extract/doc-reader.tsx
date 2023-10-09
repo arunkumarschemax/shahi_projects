@@ -1114,9 +1114,9 @@ export const DocReader = (props: DocReaderProps) => {
             // setJsonData(extractedDart);
             // console.log('PDF DATA DART:', extractedDart);
 
-            // const extractedExpeditors = await extractExpeditors(pdfBuffer);
-            // setJsonData(extractedExpeditors);
-            // console.log('PDF DATA EXPEDITORS:', extractedExpeditors);
+            const extractedExpeditors = await extractExpeditors(pdfBuffer);
+            setJsonData(extractedExpeditors);
+            console.log('PDF DATA EXPEDITORS:', extractedExpeditors);
 
             // const extractedEfl = await extractEfl(pdfBuffer);
             // setJsonData(extractedEfl);
@@ -1124,11 +1124,11 @@ export const DocReader = (props: DocReaderProps) => {
 
             // const extractedOocl = await extractOocl(pdfBuffer);
             // setJsonData(extractedOocl);
-            // console.log('PDF DATA DHL:', extractedOocl);
+            // console.log('PDF DATA OOCL:', extractedOocl);
 
-            const extractedNagel = await extractNagel(pdfBuffer);
-            setJsonData(extractedNagel);
-            console.log('PDF DATA DHL:', extractedNagel);
+            // const extractedNagel = await extractNagel(pdfBuffer);
+            // setJsonData(extractedNagel);
+            // console.log('PDF DATA Nagel:', extractedNagel);
 
             const extractionTime = new Date().toLocaleString();
             setTimeout(() => {

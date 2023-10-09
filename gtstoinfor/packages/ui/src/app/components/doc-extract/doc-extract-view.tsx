@@ -224,13 +224,13 @@ export function DocView() {
 
     {
       title: "Vendor Name",
-      dataIndex: "Vendor",
-      key: "Vendor",
+      dataIndex: "venName",
+      key: "venName",
       // ...getColumnSearchProps("Vendor"),
       align: "center",
-      sorter: (a, b) => a.Vendor.localeCompare(b.Vendor),
-      render: (text: any, record: { Vendor: any }) => {
-        return <> {record.Vendor ? record.Vendor : "-"} </>;
+      sorter: (a, b) => a.venName.localeCompare(b.venName),
+      render: (text: any, record: { venName: any }) => {
+        return <> {record.venName ? record.venName : "-"} </>;
       },
     },
     // {
@@ -246,48 +246,48 @@ export function DocView() {
     // },
     {
       title: "GST NUMBER",
-      dataIndex: "GST",
-      key: "GST",
-      ...getColumnSearchProps("GST"),
+      dataIndex: "gstNumber",
+      key: "gstNumber",
+      ...getColumnSearchProps("gstNumber"),
       align: "center",
-      sorter: (a, b) => a.GST.localeCompare(b.GST),
-      render: (text: any, record: { GST: any }) => {
-        return <> {record.GST ? record.GST : "-"} </>;
+      sorter: (a, b) => a.gstNumber.localeCompare(b.gstNumber),
+      render: (text: any, record: { gstNumber: any }) => {
+        return <> {record.gstNumber ? record.gstNumber : "-"} </>;
       },
     },
 
     {
       title: "Invoice Number",
-      dataIndex: "InnvoiceNumber",
-      key: "InnvoiceNumber",
-      ...getColumnSearchProps("InnvoiceNumber"),
-      sorter: (a, b) => a.InnvoiceNumber.localeCompare(b.InnvoiceNumber),
+      dataIndex: "invoiceNumber",
+      key: "invoiceNumber",
+      ...getColumnSearchProps("invoiceNumber"),
+      sorter: (a, b) => a.invoiceNumber.localeCompare(b.invoiceNumber),
       align: "center",
-      render: (text: any, record: { InnvoiceNumber: any }) => {
-        return <> {record.InnvoiceNumber ? record.InnvoiceNumber : "-"} </>;
+      render: (text: any, record: { invoiceNumber: any }) => {
+        return <> {record.invoiceNumber ? record.invoiceNumber : "-"} </>;
       },
     },
     {
       title: "Invoice Amount",
-      dataIndex: "InnvoiceAmount",
-      key: "InnvoiceAmount",
-      ...getColumnSearchProps("InnvoiceAmount"),
-      sorter: (a, b) => a.InnvoiceAmount.localeCompare(b.InnvoiceAmount),
+      dataIndex: "invoiceAmount",
+      key: "invoiceAmount",
+      ...getColumnSearchProps("invoiceAmount"),
+      sorter: (a, b) => a.invoiceAmount.localeCompare(b.invoiceAmount),
       align: "center",
       render: (text, record) => {
-        const formattedAmount = record.InnvoiceAmount ? parseFloat(record.InnvoiceAmount).toFixed(2) : "-";
+        const formattedAmount = record.invoiceAmount ? parseFloat(record.invoiceAmount).toFixed(2) : "-";
         return <>{formattedAmount}</>;
       },
     },
     {
       title: "Invoice Currency",
-      dataIndex: "InnvoiceCurrency",
-      key: "InnvoiceCurrency",
-      ...getColumnSearchProps("InnvoiceCurrency"),
-      sorter: (a, b) => a.InnvoiceCurrency.localeCompare(b.InnvoiceCurrency),
+      dataIndex: "invoiceCurrency",
+      key: "invoiceCurrency",
+      ...getColumnSearchProps("invoiceCurrency"),
+      sorter: (a, b) => a.invoiceCurrency.localeCompare(b.invoiceCurrency),
       align: "center",
-      render: (text: any, record: { InnvoiceCurrency: any }) => {
-        return <> {record.InnvoiceCurrency ? record.InnvoiceCurrency : "-"} </>;
+      render: (text: any, record: { invoiceCurrency: any }) => {
+        return <> {record.invoiceCurrency ? record.invoiceCurrency : "-"} </>;
       },
     },
     {
