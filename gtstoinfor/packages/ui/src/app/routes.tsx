@@ -125,6 +125,7 @@ import OperationSequenceForm from "./orders/operations-squence-form"
 import OperationReportingView from "./orders/operation-reporting-view"
 import IssueScreen from "./operation-tracking/issue"
 import StyleOrderCreation from "./style-orders/style-order-form"
+import StyleOrderGrid from "./style-orders/style-order-grid"
 
 
 export const AppRoutes = () => {
@@ -496,7 +497,7 @@ export const AppRoutes = () => {
                 <Route path="fabric-bom-creation" element={<FabricBomCreation/>}/>
                 <Route path='bomtrimcreation/bom-trim-creation' element={<TrimsBomCreation />} />
                 <Route path='style-order-creation' element={<StyleOrderCreation />} />
-
+                <Route path='style-order-view' element={<StyleOrderGrid />} />
 
                 </Route>
                 <Route path='/operation-tracking'>

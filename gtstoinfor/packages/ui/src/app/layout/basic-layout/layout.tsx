@@ -490,6 +490,12 @@ export const baseRouterList = [
                 path: "style-order-creation",
                 filepath: "style-order-creation",
             },
+            {
+                label: "Style Order Grid",
+                key: "style-order-view",
+                path: "style-order-view",
+                filepath: "style-order-view",
+            },
            
         ]
     },
