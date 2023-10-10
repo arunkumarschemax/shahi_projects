@@ -266,18 +266,19 @@ export const DocReader = (props: DocReaderProps) => {
                 }
 
                 currentHSN = {
+                    description: [],
                     HSN: line.content.includes("SAC")
                         ? line.content.match(/\d+/)
                         : line.content.replace(/\]/g, '').trim(),
-                    taxType: null,
-                    taxAmount: null,
-                    charge: null,
-                    quotation: null,
-                    unitPrice: null,
                     unitQuantity: null,
-                    amount:null,
-                    description: [],
+                    unitPrice: null,
+                    taxType: null,
+                    charge: null,
+                    taxAmount: null,
+                    amount: null,
+                    quotation: null,
                 };
+
             } else if (currentHSN && !currentHSN.taxType) {
                 const taxtypeMatch = line.content.match(/IGST|CGST|SGST|GST/);
                 if (taxtypeMatch) {
@@ -331,6 +332,14 @@ export const DocReader = (props: DocReaderProps) => {
                             const equivalentFor100Percent = (taxAmountFloat * 100) / taxPercentageFloat;
                             currentHSN.charge = equivalentFor100Percent.toFixed(2);
                             currentHSN.amount = equivalentFor100Percent.toFixed(2);
+
+                            const unitQuantity = parseFloat(currentHSN.unitQuantity);
+                            if (!isNaN(unitQuantity) && unitQuantity !== 0) {
+                                currentHSN.unitPrice = (equivalentFor100Percent / unitQuantity).toFixed(2);
+                            } else {
+                                currentHSN.unitQuantity = 1;
+                                currentHSN.unitPrice = equivalentFor100Percent.toFixed(2);
+                            }
                         } else {
                             currentHSN.charge = "0";
                             currentHSN.amount = "0";
@@ -343,6 +352,7 @@ export const DocReader = (props: DocReaderProps) => {
         if (currentHSN) {
             structuredHSNLines.push(currentHSN);
         }
+
 
         const InvoiceLines = [];
         let currentInvoice = null;
@@ -480,21 +490,22 @@ export const DocReader = (props: DocReaderProps) => {
                     taxType = "CGST & SGST";
                 }
 
+                const unitQuantityContent = extractedData[hsnId + 1].content;
+                
                 currentHSN = {
                     description: extractedData[hsnId - 2].content,
                     HSN: line.content.includes("HSN") ? line.content.match(/\d+/) : line.content.trim(),
-                    unitQuantity: extractedData[hsnId + 1].content,
+                    unitQuantity: unitQuantityContent || "1",
+                    unitPrice: parseFloat(extractedData[hsnId + 2].content).toFixed(2),
+                    taxType: taxType,
                     charge: extractedData[hsnId + 2].content,
                     taxPercentage: taxPercentage,
                     taxAmount: parseFloat(extractedData[hsnId + 6].content) || 0,
                     amount: extractedData[hsnId + 2].content,
-                    unitPrice: parseFloat(extractedData[hsnId + 2].content.replace(/,/g, '')).toFixed(2), // Trim commas here
-                    taxType: taxType,
                     igst: igst,
                     cgst: cgst,
                     sgst: sgst,
                 };
-
             }
             linesId += 1;
         }
@@ -617,8 +628,7 @@ export const DocReader = (props: DocReaderProps) => {
 
         const structuredHSNLines = [];
         let currentHSN = null;
-        
-        // Define a function to calculate the charge and amount based on tax amount and tax percentage
+
         const calculateChargeAndAmountForItem = (item) => {
             const taxAmountFloat = parseFloat(item.taxAmount);
             const taxPercentageFloat = parseFloat(item.taxPercentage);
@@ -631,7 +641,7 @@ export const DocReader = (props: DocReaderProps) => {
                 return { charge: "0.00", amount: "0.00" };
             }
         };
-        
+
         const calculateAmountForItem = (charge, unitQuantity) => {
             if (!isNaN(charge) && !isNaN(unitQuantity) && unitQuantity !== 0) {
                 const unitPrice = (charge / unitQuantity).toFixed(2);
@@ -641,25 +651,25 @@ export const DocReader = (props: DocReaderProps) => {
                 return "0.00";
             }
         };
-        
+
         for (const line of allLines) {
             if (line.content.includes("996") || line.content.match(/^\d{6}$/)) {
                 if (currentHSN) {
                     structuredHSNLines.push(currentHSN);
                 }
-        
+
                 currentHSN = {
                     HSN: line.content.includes("HSN")
                         ? line.content.match(/\d+/)
                         : line.content.replace(/\]/g, '').trim(),
                     taxType: null,
                     taxAmount: null,
-                    taxPercentage: null, // Added taxPercentage property
+                    taxPercentage: null,
                     charge: null,
                     quotation: null,
                     unitPrice: null,
                     unitQuantity: null,
-                    amount: null, // Initialize amount property to null
+                    amount: null,
                     description: [],
                 };
             } else if (currentHSN && !currentHSN.taxType) {
@@ -722,8 +732,7 @@ export const DocReader = (props: DocReaderProps) => {
                     currentHSN.taxAmount = parseFloat(taxAmountMatch[1]);
                 }
             }
-        
-            // Calculate the charge and amount for the current item
+
             if (currentHSN) {
                 const { charge, amount } = calculateChargeAndAmountForItem(currentHSN);
                 currentHSN.charge = charge;
@@ -875,16 +884,22 @@ export const DocReader = (props: DocReaderProps) => {
                 const taxAmountContent = extractedData[hsnId + 14].content.replace(/,/g, '');
                 const taxAmount = parseFloat(taxAmountContent).toFixed(2);
 
+                const unitQuantityContent = extractedData[hsnId + 1].content;
+                const unitQuantity = parseFloat(unitQuantityContent) || 1;
+
+                const charge = parseFloat(extractedData[hsnId + 2].content.replace(/,/g, ''));
+                const unitPrice = (charge / unitQuantity).toFixed(2);
+
                 currentHSN = {
                     description: extractedData[hsnId - 2].content,
                     HSN: line.content.includes("996") ? line.content.match(/\d+/) : line.content.trim(),
-                    unitQuantity: extractedData[hsnId + 1].content,
-                    charge: extractedData[hsnId + 2].content,
+                    unitQuantity: unitQuantity,
+                    unitPrice: unitPrice,
+                    taxType: taxType,
+                    charge: charge,
                     taxPercentage: taxPercentage,
                     taxAmount: taxAmount,
-                    amount: extractedData[hsnId + 2].content,
-                    unitPrice: parseFloat(extractedData[hsnId + 2].content.replace(/,/g, '')).toFixed(2),
-                    taxType: taxType,
+                    amount: charge,
                     igst: igst,
                     cgst: cgst,
                     sgst: sgst,
@@ -1012,22 +1027,22 @@ export const DocReader = (props: DocReaderProps) => {
         let currentHSN = null;
         let hsnId = null;
         let linesId = 0;
-
+        
         for (const line of extractedData) {
             if (line.content.match(/^\d{8}$/)) {
                 hsnId = linesId;
                 if (currentHSN) {
                     structuredHSNLines.push(currentHSN);
                 }
-
+        
                 const taxPercentageContent = extractedData[hsnId - 3].content;
                 const taxPercentage = parseFloat(taxPercentageContent.replace('%', ''));
-
+        
                 let igst = 0;
                 let cgst = 0;
                 let sgst = 0;
                 let taxType = "No Tax";
-
+        
                 if (taxPercentage === 18) {
                     igst = parseFloat(extractedData[hsnId + 6].content) || 0;
                     taxType = "IGST";
@@ -1036,17 +1051,22 @@ export const DocReader = (props: DocReaderProps) => {
                     sgst = parseFloat(extractedData[hsnId + 6].content) || 0;
                     taxType = "CGST & SGST";
                 }
-
+        
+                const amount = parseFloat(extractedData[hsnId - 16].content);
+                const charge = parseFloat(extractedData[hsnId - 8].content);
+                const unitQuantity = parseFloat(extractedData[hsnId + 1].content) || 1; 
+                const unitPrice = (amount / unitQuantity).toFixed(2);
+        
                 currentHSN = {
                     description: extractedData[hsnId - 17].content,
                     HSN: line.content.includes("HSN") ? line.content.match(/\d+/) : line.content.trim(),
-                    unitQuantity: extractedData[hsnId + 1].content,
-                    charge: extractedData[hsnId - 8].content,
+                    unitQuantity: unitQuantity,
+                    unitPrice: unitPrice,
+                    taxType: taxType,
+                    charge: charge,
                     taxPercentage: taxPercentage,
                     taxAmount: parseFloat(extractedData[hsnId - 11].content) || 0,
-                    amount: extractedData[hsnId - 16].content,
-                    unitPrice: parseFloat(extractedData[hsnId + 2].content.replace(/,/g, '')).toFixed(2), // Trim commas here
-                    taxType: taxType,
+                    amount: amount,
                     igst: igst,
                     cgst: cgst,
                     sgst: sgst,
@@ -1054,10 +1074,11 @@ export const DocReader = (props: DocReaderProps) => {
             }
             linesId += 1;
         }
-
+        
         if (currentHSN) {
             structuredHSNLines.push(currentHSN);
         }
+        
 
 
         const InvoiceLines = [];
@@ -1090,7 +1111,7 @@ export const DocReader = (props: DocReaderProps) => {
                     const invoiceAmount = structuredHSNLines.reduce((add, hsnLine) => {
                         const charge = parseFloat(hsnLine.charge) || 0;
                         const taxAmount = parseFloat(hsnLine.taxAmount) || 0;
-                        return add + charge + taxAmount;
+                        return add + charge;
                     }, 0).toFixed(2);
 
                     const igst = structuredHSNLines.reduce((acc, hsnLine) => {
@@ -1134,8 +1155,7 @@ export const DocReader = (props: DocReaderProps) => {
         return extractedData;
     }
 
-   
-    
+
 
     const handlePdfToJSON = async (pdfDataUrl) => {
         setButtonClicked(true);
@@ -1149,9 +1169,9 @@ export const DocReader = (props: DocReaderProps) => {
             // setJsonData(extractedDhl);
             // console.log('PDF DATA DHL:', extractedDhl);
 
-            const extractedDart = await extractDart(pdfBuffer);
-            setJsonData(extractedDart);
-            console.log('PDF DATA DART:', extractedDart);
+            // const extractedDart = await extractDart(pdfBuffer);
+            // setJsonData(extractedDart);
+            // console.log('PDF DATA DART:', extractedDart);
 
             // const extractedExpeditors = await extractExpeditors(pdfBuffer);
             // setJsonData(extractedExpeditors);
@@ -1161,9 +1181,9 @@ export const DocReader = (props: DocReaderProps) => {
             // setJsonData(extractedEfl);
             // console.log('PDF DATA EFL:', extractedEfl);
 
-            // const extractedOocl = await extractOocl(pdfBuffer);
-            // setJsonData(extractedOocl);
-            // console.log('PDF DATA OOCL:', extractedOocl);
+            const extractedOocl = await extractOocl(pdfBuffer);
+            setJsonData(extractedOocl);
+            console.log('PDF DATA OOCL:', extractedOocl);
 
             // const extractedNagel = await extractNagel(pdfBuffer);
             // setJsonData(extractedNagel);
