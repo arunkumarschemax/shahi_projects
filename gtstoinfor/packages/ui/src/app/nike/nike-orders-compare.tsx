@@ -1964,17 +1964,17 @@ const OrdersCompareGrid = () => {
         {
             key: '2',
             label: <b>Unit changed PO's : {unitChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} pagination={false} scroll={{ x: 'max-content', y: 450 }} />,
         },
         {
             key: '3',
             label: <b style={{ color: '#29D6DE' }}>Item Changed PO's : {itemChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns1} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns1} pagination={false} scroll={{ x: 'max-content', y: 450 }} />,
         },
         {
             key: '4',
             label: <b>PO Line Item Status Revised PO's : {poStatusData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns7} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
+            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns7} pagination={false} scroll={{ x: 'max-content', y: 450 }} />,
         },
         {
             key: '5',
@@ -2019,7 +2019,7 @@ const OrdersCompareGrid = () => {
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
-            <Form form={form} layout={"vertical"} >
+            {/* <Form form={form} layout={"vertical"} >
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 3 }} xl={{ span: 4 }} >
                         <Form.Item name='poandLine' label='Po+Line' >
@@ -2056,7 +2056,7 @@ const OrdersCompareGrid = () => {
                     </Col>
 
                 </Row>
-            </Form>
+            </Form> */}
             {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
                 <Tabs type='card' items={items} />
             </> : <></>}
