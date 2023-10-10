@@ -633,25 +633,22 @@ const OrdersCompareGrid = () => {
                 : null
     })
 
-
-
-
     const columns1: any = [
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
+            width: 60,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-            fixed:'left'
-        },   {
+            fixed: 'left'
+        }, {
             title: 'PO Number',
             dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number'),            fixed:'left'
+            ...getColumnSearchProps('po_number'), fixed: 'left'
 
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',fixed:'left'
+            dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
             title: 'Report Generate Date',
@@ -662,7 +659,7 @@ const OrdersCompareGrid = () => {
             title: 'Factory',
             dataIndex: 'factory'
         },
-     
+
         {
             title: 'Document Date',
             dataIndex: 'document_date',
@@ -742,16 +739,16 @@ const OrdersCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
-        },{
+            width: 60,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
+        }, {
             title: 'PO Number',
             dataIndex: 'po_number', width: 70,
-            ...getColumnSearchProps('po_number'),fixed:'left'
+            ...getColumnSearchProps('po_number'), fixed: 'left'
         },
         {
             title: 'PO Line Item No', width: 70,
-            dataIndex: 'po_line_item_number',fixed:'left'
+            dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
             title: 'Report Generate Date',
@@ -768,7 +765,7 @@ const OrdersCompareGrid = () => {
             dataIndex: 'factory', width: 70,
             ...getColumnSearchProps('factory')
         },
-        
+
         {
             title: 'Product Code',
             dataIndex: 'product_code', width: 70,
@@ -949,16 +946,16 @@ const OrdersCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
+            width: 60,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
         }, {
             title: 'PO Number',
             dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number'),fixed:'left'
+            ...getColumnSearchProps('po_number'), fixed: 'left'
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',fixed:'left'
+            dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
             title: 'Report Generate Date',
@@ -980,7 +977,7 @@ const OrdersCompareGrid = () => {
             dataIndex: 'documentDate',
             //...getColumnSearchProps('factory')
         },
-       
+
         {
             title: 'CO Number',
             dataIndex: '',
@@ -1013,17 +1010,17 @@ const OrdersCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-            fixed:'left'
+            fixed: 'left'
         },
         {
             title: 'PO Number',
             dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number'),fixed:'left'
+            ...getColumnSearchProps('po_number'), fixed: 'left'
 
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',fixed:'left'
+            dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
             title: 'Report Generate Date',
@@ -1034,7 +1031,7 @@ const OrdersCompareGrid = () => {
             title: 'Item No',
             dataIndex: 'item'
         },
-      
+
         {
             title: 'Document Date',
             dataIndex: 'document_date',
@@ -1093,37 +1090,41 @@ const OrdersCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
+            width: 60,
+            fixed: 'left',
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+        },
+        {
+            title: 'PO Number',
+            dataIndex: 'po_number',
+            fixed: 'left',
+            width: 80,
+            ...getColumnSearchProps('po_number')
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number',
+            fixed: 'left',
+            width: 80,
         },
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('MM/DD/YYYY'), width: 80,
+            render: (text) => moment(text).format('MM/DD/YYYY'),
+            width: 80,
         },
         {
             title: 'Item',
             dataIndex: 'item', width: 80,
-            // ...getColumnSearchProps('item')
         },
         {
             title: 'Factory',
             dataIndex: 'factory', width: 80,
-            ...getColumnSearchProps('factory')
         },
         {
             title: 'Document Date',
-            dataIndex: 'documentDate', width: 80,
-            //...getColumnSearchProps('factory')
-        },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number', width: 80,
-            ...getColumnSearchProps('po_number'),fixed:'left'
-        },
-        {
-            title: 'PO Line Item No', width: 80,
-            dataIndex: 'po_line_item_number',fixed:'left'
+            dataIndex: 'documentDate',
+            width: 80,
         },
         {
             title: 'Total Iten Quantity',
@@ -1145,7 +1146,6 @@ const OrdersCompareGrid = () => {
             dataIndex: 'gac', width: 80,
             ...getColumnSearchProps('gac')
         },
-
         {
             title: 'Change from Direct Ship Sales Order Number',
             dataIndex: '', width: 80,
@@ -1201,17 +1201,17 @@ const OrdersCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
+            width: 60,
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
         },
         {
             title: 'PO Number',
             dataIndex: 'po_number',
-            ...getColumnSearchProps('po_number'),fixed:'left'
+            ...getColumnSearchProps('po_number'), fixed: 'left'
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',fixed:'left'
+            dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
             title: 'Report Generate Date',
@@ -1233,7 +1233,7 @@ const OrdersCompareGrid = () => {
             render: (text) => moment(text).format('MM/DD/YYYY')
 
         },
-       
+
         {
             title: 'Product Code',
             dataIndex: 'product_code'
@@ -1349,22 +1349,22 @@ const OrdersCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
         },
         {
             title: 'PO Number',
             dataIndex: 'po_number', width: '70px',
-            ...getColumnSearchProps('po_number'),fixed:'left'
+            ...getColumnSearchProps('po_number'), fixed: 'left'
         },
         {
             title: 'PO Line Item No', width: '70px',
-            dataIndex: 'po_line_item_number',fixed:'left'
+            dataIndex: 'po_line_item_number', fixed: 'left'
         },
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('MM/DD/YYYY'),fixed:'left'
-        }, 
+            render: (text) => moment(text).format('MM/DD/YYYY'), fixed: 'left'
+        },
         {
             title: 'Item',
             dataIndex: 'item',
@@ -1376,7 +1376,7 @@ const OrdersCompareGrid = () => {
             dataIndex: 'factory', width: '70px',
             ...getColumnSearchProps('factory')
         },
-       
+
         {
             title: 'Product Code',
             dataIndex: 'product_code', width: '70px',
@@ -1690,16 +1690,16 @@ const OrdersCompareGrid = () => {
                 key: 'sno',
                 width: '60px',
                 render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-                fixed:'left'
+                fixed: 'left'
             },
             {
                 title: 'PO Number',
                 dataIndex: 'purchaseOrderNumber',
-                width: 70,     fixed:'left',
+                width: 70, fixed: 'left',
                 ...getColumnSearchProps('purchaseOrderNumber')
             },
             {
-                title: 'PO Line Item No', width: 70,     fixed:'left',
+                title: 'PO Line Item No', width: 70, fixed: 'left',
                 dataIndex: 'poLineItemNumber', align: 'center'
             },
             {
@@ -1984,9 +1984,9 @@ const OrdersCompareGrid = () => {
                         columns={columns}
                         dataSource={filterData}
                         size='large'
-                       // pagination={false}
+                        // pagination={false}
                         pagination={{
-                            pageSize:50,
+                            pageSize: 50,
                             onChange(current, pageSize) {
                                 setPage(current);
                                 setPageSize(pageSize);
