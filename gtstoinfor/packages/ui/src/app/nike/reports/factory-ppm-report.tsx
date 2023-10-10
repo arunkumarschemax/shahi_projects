@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Table, Row, Input, Col, Form, DatePicker, Select, Button, Checkbox, message, Statistic } from 'antd';
+import { Card, Table, Row, Input, Col, Form, DatePicker,Modal, Select, Button, Checkbox, message, Statistic, Tooltip } from 'antd';
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { NikeService } from '@project-management-system/shared-services';
@@ -48,7 +48,9 @@ const FactoryPPMReport = () => {
     const [productCode, setProductCode] = useState<any>([]);
     const [poNumber, setPoNumber] = useState<any>([]);
     const formatter = (value: number) => <CountUp end={value} separator="," />;
-    const [tableLoading,setTableLoading] = useState<boolean>(false)
+    const [tableLoading,setTableLoading] = useState<boolean>(false);
+    const [remarkModal, setRemarkModal] = useState<boolean>(false)
+    const [itemText, setRemarks] = useState<string>('')
 
 
     useEffect(() => {
@@ -336,6 +338,14 @@ const FactoryPPMReport = () => {
 
     }
 
+    const handleTextClick = (remarks) => {
+        setRemarks(remarks)
+        setRemarkModal(true)
+    }
+    const onRemarksModalOk = () => {
+        setRemarkModal(false)
+    }
+
     let exportingColumns: IExcelColumn[] = []
 
 
@@ -515,7 +525,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Item',
-                dataIndex: 'item',
+                dataIndex: 'item',align:'center',width:70,
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
                       return '-';
@@ -528,6 +538,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Factory',
                 dataIndex: 'factory',
+                align:'center',
                 width:70,
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
@@ -714,7 +725,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Global Category Core Focus',
-                dataIndex: 'gccFocusCode',width:70,
+                dataIndex: 'gccFocusCode',width:70,align:'center'
             },
             {
                 title: 'Global Category Core Focus Description',
@@ -763,7 +774,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'UPC',
-                dataIndex: 'UPC',width:70,
+                dataIndex: 'UPC',width:70,align:'center'
             },
             {
                 title: 'Sales Order Number',
@@ -911,7 +922,7 @@ const FactoryPPMReport = () => {
             },
             { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode',width:90, },
             { title: 'In Co Terms', dataIndex: 'inCoTerms',width:70, },
-            { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode',width:70, },
+            { title: 'Inventory Segment Code', dataIndex: 'inventorySegmentCode',width:70,align:'center' },
             {
                 title: 'Purchase Group',width:70,
                 dataIndex: 'purchaseGroupCode',
@@ -982,7 +993,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Total Item Qty',
                 dataIndex: 'totalItemQty',width:70,
-                align: 'center',
+                align: 'right',
                 className: 'centered-column',
                 render: (text) => <strong>{text}</strong>
             }
@@ -1104,22 +1115,26 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'Item Vas Text', dataIndex: 'itemVasText',width:70, render: (text, record) => {
+                title: 'Item Vas Text', dataIndex: 'itemVasText', width: 70,
+                align: 'center', render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
                     } else {
                         return text;
                     }
                 },
+               
             },
             {
-                title: 'Item Text', dataIndex: 'itemText',width:70, render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                },
+                title: 'Item Text', dataIndex: 'itemText',width:220,  render: (text, record) => {
+                    return (
+                        <>
+                            {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+                                {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
+                            </span></p></Tooltip></>) : (<>{record.itemText}</>)}
+                        </>
+                    )
+                }
             },
             {
                 title: 'Hanger Po',width:70,
@@ -1454,7 +1469,13 @@ const FactoryPPMReport = () => {
                         scroll={{ x: 1000 }}
                         bordered /> */}
                     {renderReport(filterData)}
+                    
                 </Card>
+                <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{itemText}</p>
+                </Card>
+            </Modal>
             </Card>
         </>
     )
