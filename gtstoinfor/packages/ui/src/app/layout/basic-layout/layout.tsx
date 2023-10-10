@@ -1,101 +1,176 @@
-import { Button, Layout, Menu, Tooltip, theme } from 'antd';
-import Icon, { SolutionOutlined, LogoutOutlined, EnvironmentOutlined, AppstoreOutlined, UserOutlined, NodeIndexOutlined, CarOutlined, TeamOutlined, FullscreenOutlined, InfoCircleOutlined, ProjectOutlined, FormOutlined, CheckSquareOutlined, FileProtectOutlined, HddOutlined } from '@ant-design/icons';
-import { Link, Outlet, Route, Routes } from 'react-router-dom';
-import { SubMenu } from 'rc-menu';
-import * as antdIcons from '@ant-design/icons';
-import schemaxlogo from './xpparel-logo.jpeg'
+import Icon, * as antdIcons from '@ant-design/icons';
+import { Avatar, Button, Col, Dropdown, Layout, Menu, MenuProps, Row, Tooltip } from 'antd';
+import React, { useState } from 'react';
+import { Link, Route, Routes } from 'react-router-dom';
 import { logout, useIAMClientState } from '../../common';
-// const icons = {
-//     TDSIcon: TDSIcon,
-//     ApprovalIcon: ApprovalIcon
-// }
-// import { VendorGrid } from '@transport-management-system/ui/components/vendor-management';
-const { Header, Content, Footer, Sider } = Layout;
-const BasicLayout = () => {
-    const { IAMClientAuthContext, dispatch } = useIAMClientState();
-    const userData = JSON.parse(localStorage.getItem('currentUser'))
-    const loginUser = userData.user.userName
-    const loginUserRole = userData.user.roles
-    // console.log(userData.user.userName)
+import { ExceptionComponent } from '../../common/exception-handling';
+import { IconType } from '../../common/iam-client-react/constants/icon-type';
+import { DocParent, VendorBranchInfoGrid } from '../../components';
+import { OnlineStatus } from '../header';
+import { components } from './all-components';
+import { svgIcons } from './all-svg-icons';
+import './common.css';
+import logoLight from './xpparel-logo.jpeg';
 
-    function renderIcon(iconType, iconName) {
-        // if (iconType === "antd") { 
-        // const SpecificIcon = antdIcons["SolutionOutlined"]; 
-        // return <SpecificIcon /> 
-        // }
-        // else {
-        //     const SpecificIcon = icons[iconName];
-        //     return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
+const { Header, Content } = Layout;
+
+
+
+function renderIcon(iconType, iconName) {
+    if (iconType === IconType.SYS_LIB) {
         const SpecificIcon = antdIcons[iconName];
-        console.log(SpecificIcon)
-        return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
-        // }
+        return <SpecificIcon />
     }
-    const getSubMenu = (route) => {
+    else {
+        const SpecificIcon = svgIcons[iconName];
+        return <Icon component={SpecificIcon} style={{ fontSize: '20px' }} />
+    }
+}
 
-        if (route && route.subMenuData && route.subMenuData.length) {
-            return (
-                <SubMenu key={route.menuId} title={<span> {renderIcon(route.iconType, route.iconName)} <span>{route.menuName}</span> </span>}  >
-                    <div style={{ backgroundColor: 'white', color: 'white' }}>
+const totalMenus = [];
 
-                        {route.subMenuData.map(item => getSubMenu(item))}
-                    </div>
-                </SubMenu>
-            )
-        } else {
-            return (
-                <div style={{ backgroundColor: 'white', color: 'white' }}>
-                    {route.subMenuName !== 'Vehicle Inspection Track' ? (<Menu.Item key={route.subMenuId} ><Link to={route.path}><span><span> {route.icon} <span>{route.subMenuName}</span> </span></span></Link> </Menu.Item>) : (<></>)}
-                </div>
-
-            )
+const getSubMenu = (route) => {
+    if (route && route.subMenuData && route.subMenuData.length) {
+        return {
+            key: `${route.menuName}`,
+            icon: renderIcon(route.menuIconType, route.menuIconName),
+            label: route.menuName,
+            children: route.subMenuData.map(item => getSubMenu(item))
         }
+    } else {
+        return {
+            key: `${route.menuName}$@${route.subMenuName}`,
+            icon: renderIcon(route.subMenuIconType, route.subMenuIconName),
+            label: (<Link to={`${route.path}`}><span>{route.subMenuName}</span></Link>),
+        }
+    }
+}
+
+const getRoute = (route) => {
+    if (route && route.subMenuData && route.subMenuData.length) {
+        return route.subMenuData.map(item => getRoute(item))
+    } else {
+        return <Route key={`${route.key}`} path={`/${route.path}`} element={components[route.component]} />
+    }
+}
+
+export const BasicLayout: React.FC = () => {
+    const { IAMClientAuthContext, dispatch } = useIAMClientState();
+    const [collapsed, setCollapsed] = useState<boolean>(true);
+
+    const getAllRoutes = () => {
+        const subMenus: any[] = [];
+        const menus = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : totalMenus;
+        menus.forEach(eachRoutes => {
+            const abc = getRoute(eachRoutes);
+            subMenus.push(abc);
+        });
+        console.log(subMenus)
+        return subMenus;
     }
 
     const getAllSubMenus = () => {
-        console.log(localStorage.getItem("currentUser"));
-        const subMenus = [];
-        const menu = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : [];
-        console.log(menu)
-        // const menuAccess = localStorage.getItem("currentUser")? JSON.parse(localStorage.getItem("currentUser"))["menuAccessObject"]:[];
-        menu?.forEach(eachRoutes => {
+        const subMenus: MenuProps['items'] = [];
+        const menus = IAMClientAuthContext.menuAccessObject ? IAMClientAuthContext.menuAccessObject : totalMenus;
+        menus.forEach(eachRoutes => {
             subMenus.push(getSubMenu(eachRoutes));
         });
         return subMenus;
     }
-    const logOut = () => {
+
+    const logoutHandler = () => {
         logout(dispatch);
     }
-
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
-    return (
-        <Layout className="layout" style={{ marginTop: '-8px', width: "100%" }}>
-            <Header style={{ alignItems: 'center', backgroundColor: '#001529', minHeight: "85px", }}>
-                <div style={{ float: 'left', marginTop: '2px', marginLeft: '-46px' }}>
-                    <img src={schemaxlogo} width={150} height={80}></img>
-                </div>
-                <h1 style={{ color: '#f3bf13', textAlign: 'center', marginTop: '0.2px' }}>Schemax-AI-DocX</h1>
-                <Tooltip title='Logout'><Button type="default" icon={<LogoutOutlined />} style={{ float: 'right', marginTop: '-5.4%' }} onClick={logOut}>{'Hi ' + loginUser}<div style={{ color: '#f3bf13', marginTop: '10px', fontStyle: 'italic' }}>{loginUserRole}</div></Button></Tooltip>
-                {/* <>{userData.user.roles}</> */}
-                <Menu
-                    theme="light"
-                    mode="horizontal"
-                    selectedKeys={[]}
-                    style={{ backgroundColor: '#001529', width: '75%', height: '61%', marginLeft: '110px', marginTop: '-3.8%', color: 'white' }}
+    const uitems: MenuProps['items'] = [
+        {
+            key: '1',
+            label: (
+                <>
+                    Name: <b>{IAMClientAuthContext.user.userName}</b>
+                </>
+            ),
+        },
+        {
+            key: '2',
+            label: (
+                <>
+                    Roles: <b>{IAMClientAuthContext.user.roles}</b>
+                </>
+            ),
+        },
+        {
+            key: '3',
+            label: (
+                <Button
+                    onClick={() => logoutHandler()}
                 >
+                    logout
+                </Button>
+            ),
+        },
+    ];
 
-                    {getAllSubMenus()}
-                </Menu>
 
+
+    return (
+        <Layout>
+            <Header className='top-header' style={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 1,
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                height: '55px',
+                background: '#FFFFFF',
+                paddingInlineStart: '10px',
+                paddingInlineEnd: '20px'
+            }}>
+                <Col flex={'auto'}>
+                    <div className="logo" ><img src={logoLight} /><p style={{ color: '#ff00c8', fontSize: '25px', fontWeight: '700' }}>Schemax-AI-DocX</p></div>
+                </Col>
+                <Col flex={'auto'}>
+                    <Menu theme="light" mode="horizontal" style={{ width: '100%', lineHeight: '3.1' }} defaultSelectedKeys={['3']} items={getAllSubMenus()} />
+                </Col>
+                <Row >
+                    <Col></Col>
+                    <Col>
+
+                        <Dropdown menu={{ items: uitems }} placement="bottomLeft" arrow>
+                            <div>
+                                <OnlineStatus >
+                                    <Tooltip title={IAMClientAuthContext.user.userName}>
+                                        <Avatar style={{ backgroundColor: '#f56a00', verticalAlign: 'middle' }} size="small" onClick={() => setCollapsed(!collapsed)}> {IAMClientAuthContext.user.userName.charAt(0)} </Avatar>
+                                    </Tooltip>
+                                </OnlineStatus>
+                            </div>
+                        </Dropdown>
+                    </Col>
+                </Row>
             </Header>
-            <Content style={{ padding: '0 50px', minHeight: '555px', backgroundColor: 'white' }}>
-                <br />
-                {/* <IndentDashboard/> */}
-                <Outlet />
-            </Content >
-            <Footer style={{ textAlign: 'center' }}>ⓒ2023 Design and Developed by SchemaX Tech</Footer>
+            <Layout style={{ minHeight: '100vh' }}>
+                <Layout >
+
+                    <Content
+                        style={{
+                            padding: 10,
+                            margin: 0,
+                            minHeight: 300,
+                            backgroundColor: 'white'
+                            //   background: colorBgContainer,
+                        }}
+                    >
+
+                        <Routes>
+                            {getAllRoutes().map(rec => rec)}
+                            <Route path="/VendorBranchInfoGrid" element={<VendorBranchInfoGrid />} />
+                            <Route path="/doc-extract-form" element={<DocParent />} />
+                            <Route path='/*' element={<ExceptionComponent statusCode={404} statusMessage='Sorry, the page you visited does not exist.' />} />
+                            <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
+                        </Routes>
+                    </Content>
+                </Layout>
+            </Layout>
         </Layout >
     );
 };

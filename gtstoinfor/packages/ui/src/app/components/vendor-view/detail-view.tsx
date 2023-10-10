@@ -20,7 +20,7 @@ const getBranchViewData = async (vendorId: number) => {
 
 
 
-const VendorBranchInfoGrid = () => {
+export const VendorBranchInfoGrid = () => {
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();

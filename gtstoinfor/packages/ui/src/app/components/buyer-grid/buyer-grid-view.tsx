@@ -5,7 +5,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { ColumnType } from 'antd/es/table';
 import { BuyersService } from '@xpparel/shared-services';
 
-const BuyersView = () => {
+export const BuyersView = () => {
   const buyerService = new BuyersService();
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');

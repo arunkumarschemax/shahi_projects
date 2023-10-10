@@ -177,7 +177,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
         }
     }, [price, extractedData, extractionCompleted])
 
-    
+
 
     const handleAddToTable = () => {
         if (
@@ -313,9 +313,9 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             key: "unitPrice",
             render: (unitPrice, record) => {
                 const amount = parseFloat(record.amount) || 0;
-                const unitQuantity = parseFloat(record.unitQuantity) || 1; 
+                const unitQuantity = parseFloat(record.unitQuantity) || 1;
                 const calculatedUnitPrice = (amount / unitQuantity).toFixed(2);
-        
+
                 return (
                     <div style={{ textAlign: "right" }}>
                         {calculatedUnitPrice !== undefined && calculatedUnitPrice !== null
@@ -399,11 +399,11 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             render: (text, record) => {
                 const unitPrice = parseFloat(record.unitPrice) || 0;
                 const quotation = parseFloat(record.quotation) || 0;
-                const variance = (unitPrice - quotation).toFixed(2); 
-        
+                const variance = (unitPrice - quotation).toFixed(2);
+
                 const overallVariance = calculateOverallVariance(variance);
                 setStatus(overallVariance);
-        
+
                 return (
                     <div style={{ textAlign: variance === "0.00" ? "center" : "right" }}>
                         {variance !== undefined && variance !== null ? `${variance}` : "-"}
@@ -497,7 +497,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
         <>
             <Card >
                 <Form layout='vertical' form={props.form} initialValues={props?.formData} name="control-hooks">
-                    <Row gutter={12}>
+                    <Row gutter={16}>
                         <Col xs={8} sm={8} md={8} lg={8} xl={8}>
                             <Form.Item
                                 label="Vendor Name"
@@ -796,12 +796,10 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                 </Button>
             </Row>
 
-            <Row>
-                <Card size='small'>
-                    <Col span={12}>
-                        <Table dataSource={props.hsnData} columns={columns} size="small" pagination={false} />
-                    </Col>
-                </Card>
+            <Row gutter={16}>
+                <div style={{ overflowX: 'auto' }}>
+                    <Table dataSource={props.hsnData} columns={columns} size="small" pagination={false} />
+                </div>
             </Row>
         </>
     )

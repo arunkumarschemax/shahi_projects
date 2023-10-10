@@ -18,7 +18,7 @@ import { ColumnType, ColumnsType, SortOrder } from "antd/es/table/interface";
 import { useNavigate, useParams } from "react-router-dom";
 import Highlighter from "react-highlight-words";
 
-const VendorGrid = () => {
+export const VendorGrid = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [nameOptions, setNameOptions] = useState([]);
