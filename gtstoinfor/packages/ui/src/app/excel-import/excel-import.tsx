@@ -340,7 +340,7 @@ export default function ExcelImport() {
     },
     beforeUpload: (file: any) => {
       if (!file.name.match(/\.(csv)$/)) {
-        AlertMessages.getErrorMessage("Only excel & csv formats are allowed!");
+        AlertMessages.getErrorMessage("Only excel & csv files are allowed!");
         return true;
       }
       var reader = new FileReader();
@@ -651,7 +651,7 @@ export default function ExcelImport() {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item label = "">
               <input type="file" accept=".csv, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleFileChange} />
-              <label style={{color:'blue'}} >Only excel & csv formats are allowed</label>
+              <label style={{color:'blue'}} >Only excel & csv files are allowed</label>
             </Form.Item>
             </Col>
           </Row>

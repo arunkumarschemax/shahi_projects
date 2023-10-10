@@ -199,7 +199,7 @@ const PriceListUpload = () => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label = "">
                 <input type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleFileChange} />
-                <label style={{color:'blue'}} >Only csv & excel formats are allowed</label>
+                <label style={{color:'blue'}} >Only csv & excel files are allowed</label>
               </Form.Item>
             </Col>
           </Row>
