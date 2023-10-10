@@ -1,8 +1,8 @@
 import { ItemCreation } from "../item_creation.entity";
-import { AttributeDto } from "./attribute.dto";
+import { ItemCreationDto } from "./item-creation.dto";
 
 export class ItemCreationAdapter {
-    convertDtoToEntity(dtoObj: AttributeDto,  isUpdate: boolean = false ): ItemCreation{
+    convertDtoToEntity(dtoObj: ItemCreationDto,  isUpdate: boolean = false ): ItemCreation{
         try {
             const entityObj = new ItemCreation();
             // entityObj.createdUser = dtoObj.createdUser;
@@ -19,8 +19,8 @@ export class ItemCreationAdapter {
         }
     }
 
-    public convertEntityToDto(attribute : ItemCreation): AttributeDto {
-        const attributesDto = new AttributeDto;
+    public convertEntityToDto(attribute : ItemCreation): ItemCreationDto {
+        const attributesDto = new ItemCreationDto;
         // attributesDto.attributeId = attribute.attributeId;
         // attributesDto.attributeName = attribute.attributeName;
         // attributesDto.isActive = attribute.isActive;
