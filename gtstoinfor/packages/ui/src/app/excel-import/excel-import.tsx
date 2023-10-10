@@ -5,9 +5,11 @@ import Papa from 'papaparse'
 import AlertMessages from '../common/common-functions/alert-messages';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { UndoOutlined } from '@ant-design/icons';
+import { FileExcelFilled, UndoOutlined } from '@ant-design/icons';
 import { FileStatusReq, FileTypeDto, FileTypesEnum } from '@project-management-system/shared-models';
 import * as XLSX from 'xlsx';
+import { Excel } from 'antd-table-saveas-excel';
+import { IExcelColumn } from 'antd-table-saveas-excel/app';
 
 export default function ExcelImport() {
   const [loading, setLoading] = useState(false);
@@ -91,7 +93,7 @@ export default function ExcelImport() {
           // error: (err) => {
           //   setError(err.message);
           // },
-          skipEmptyLines: true, // Optional: Skip empty lines
+          skipEmptyLines: true,
         });
       };
       reader.readAsText(file);
@@ -338,7 +340,7 @@ export default function ExcelImport() {
     },
     beforeUpload: (file: any) => {
       if (!file.name.match(/\.(csv)$/)) {
-        AlertMessages.getErrorMessage("Only excel & csv formats are allowed!");
+        AlertMessages.getErrorMessage("Only excel & csv files are allowed!");
         return true;
       }
       var reader = new FileReader();
@@ -372,14 +374,251 @@ export default function ExcelImport() {
     getUploadFilesData()
   }
 
+  let projectiontemplate: IExcelColumn[] = []
+  projectiontemplate = [
+        { title : 'year' , dataIndex:''},
+        { title : 'planningSsnCd' , dataIndex:''},
+        { title : 'planningSsn' , dataIndex:''},
+        { title : 'tgtSsnCd' , dataIndex:''},
+        { title : 'tgtSsn' , dataIndex:''},
+        { title : 'bizCd' , dataIndex:''},
+        { title : 'biz' , dataIndex:''},
+        { title : 'planningRegionCode' , dataIndex:''},
+        { title : 'planningRegionName' , dataIndex:''},
+        { title : 'channelCode' , dataIndex:''},
+        { title : 'channelName' , dataIndex:''},
+        { title : 'department' , dataIndex:''},
+        { title : 'deptCd' , dataIndex:''},
+        { title : 'Cls1_cd' , dataIndex:''},
+        { title : 'Cls2_cd' , dataIndex:''},
+        { title : 'gDept' , dataIndex:''},
+        { title : 'subCategory1' , dataIndex:''},
+        { title : 'coreCategory' , dataIndex:''},
+        { title : 'subCategory2' , dataIndex:''},
+        { title : 'subCategory3' , dataIndex:''},
+        { title : 'productionCategoryFabric' , dataIndex:''},
+        { title : 'productionCategoryFabricProcessing' , dataIndex:''},
+        { title : 'productionCategorySewing' , dataIndex:''},
+        { title : 'productionCategorySewingProcessing' , dataIndex:''},
+        { title : 'planningSumCode' , dataIndex:''},
+        { title : 'planningSum' , dataIndex:''},
+        { title : 'localNameGhq' , dataIndex:''},
+        { title : 'itemCd' , dataIndex:''},
+        { title : 'item' , dataIndex:''},
+        { title : 'origPrice' , dataIndex:''},
+        { title : 'mainSampleCode' , dataIndex:''},
+        { title : 'frFabricCode' , dataIndex:''},
+        { title : 'frFabric' , dataIndex:''},
+        { title : 'supplierRawMaterialCode' , dataIndex:''},
+        { title : 'supplierRawMaterial' , dataIndex:''},
+        { title : 'rawMaterialSupplierCode' , dataIndex:''},
+        { title : 'rawMaterialSupplier' , dataIndex:''},
+        { title : 'vendorCoode' , dataIndex:''},
+        { title : 'vendor' , dataIndex:''},
+        { title : 'sewingFactoryCode' , dataIndex:''},
+        { title : 'sewingFactory' , dataIndex:''},
+        { title : 'branchFactoryCode' , dataIndex:''},
+        { title : 'branchFactory' , dataIndex:''},
+        { title : 'coeff' , dataIndex:''},
+        { title : 'month' , dataIndex:''},
+        { title : 'itemBranchNumber',dataIndex:''},
+        { title : 'officialPlanStdQty',dataIndex:''},
+        { title : 'OfficialPlanFabPrpPlnQty',dataIndex:''},
+        { title : 'OfficialPlanPoPrSlsQty' , dataIndex:''},
+        { title : 'officalPlanCoQty' , dataIndex:''},
+        { title : 'officalPlanStockQty' , dataIndex:''},
+        { title : 'slsStartDy' , dataIndex:''},
+        { title : 'publishFlagForFactory' , dataIndex:''},
+        { title : 'publishDate' , dataIndex:''},
+        { title : 'allcEndDy' , dataIndex:''},
+        { title : 'slsEndDy' , dataIndex:''},
+        { title : 'GWH' , dataIndex:''},
+        { title : 'orderPlanNumber' , dataIndex:''},
+        { title : 'orderTiming' , dataIndex:''},
+        { title : 'swngPrdMonth' , dataIndex:''},
+        { title : 'swngPrdWeek' , dataIndex:''},
+        { title : 'orderPlanQty' , dataIndex:''},
+        { title : 'orderPlanQtyCoeff' , dataIndex:''},
+        { title : 'trnspMthd' , dataIndex:''},
+        { title : 'prodPlanType' , dataIndex:''},
+        { title : 'ph1St' , dataIndex:''},
+        { title : 'wh' , dataIndex:''},
+        { title : 'whAct' , dataIndex:''},
+        { title : 'whAuto' , dataIndex:''},
+        { title : 'yarnDlRequested' , dataIndex:''},
+        { title : 'yarnDlAnswered' , dataIndex:''},
+        { title : 'yarnDlAuto' , dataIndex:''},
+        { title : 'yarnProductionDueDateAuto' , dataIndex:''},
+        { title : 'yarnAutoReflectionDate' , dataIndex:''},
+        { title : 'yarnActDy' , dataIndex:''},
+        { title : 'yarnActQty' , dataIndex:''},
+        { title : 'yarnOrderNumber' , dataIndex:''},
+        { title : 'yarnOrderStatus' , dataIndex:''},
+        { title : 'yarnDeliveryDate' , dataIndex:''},
+        { title : 'fbrcDlRequested' , dataIndex:''},
+        { title : 'fbrcDlAnswered' , dataIndex:''},
+        { title : 'fbrcDlAuto' , dataIndex:''},
+        { title : 'fbrcProductionDueDateAuto' , dataIndex:''},
+        { title : 'fbrcAutoReflectionDate' , dataIndex:''},
+        { title : 'fbrcActDy' , dataIndex:''},
+        { title : 'fbrcActQty' , dataIndex:''},
+        { title : 'fbrcOrderNumber' , dataIndex:''},
+        { title : 'fbrcOrderStatus' , dataIndex:''},
+        { title : 'fbrcDeliveryDate' , dataIndex:''},
+        { title : 'colorDlRequested' , dataIndex:''},
+        { title : 'colorDlAnswered' , dataIndex:''},
+        { title : 'colorDlAuto' , dataIndex:''},
+        { title : 'colorProductionDueDateAuto' , dataIndex:''},
+        { title : 'colorAutoReflectionDate' , dataIndex:''},
+        { title : 'colorActDy' , dataIndex:''},
+        { title : 'colorActQty' , dataIndex:''},
+        { title : 'colorOrderNumber' , dataIndex:''},
+        { title : 'colorOrderStatus' , dataIndex:''},
+        { title : 'colorDeliveryDate' , dataIndex:''},
+        { title : 'trimDlRequested' , dataIndex:''},
+        { title : 'trimDlAnswered' , dataIndex:''},
+        { title : 'trimDlAuto' , dataIndex:''},
+        { title : 'trimProductionDueDateAuto' , dataIndex:''},
+        { title : 'trimAutoReflectionDate' , dataIndex:''},
+        { title : 'trimActDy' , dataIndex:''},
+        { title : 'trimActQty' , dataIndex:''},
+        { title : 'trimOrderNumber' , dataIndex:''},
+        { title : 'trimOrderStatus' , dataIndex:''},
+        { title : 'trimDeliveryDate' , dataIndex:''},
+        { title : 'poDlRequested' , dataIndex:''},
+        { title : 'poDlAnswered' , dataIndex:''},
+        { title : 'poDlAuto' , dataIndex:''},
+        { title : 'poProductionDueDateAuto' , dataIndex:''},
+        { title : 'poAutoReflectionDate' , dataIndex:''},
+        { title : 'poActDy' , dataIndex:''},
+        { title : 'poActQty' , dataIndex:''},
+        { title : 'poOrderNumber' , dataIndex:''},
+        { title : 'poOrderStatus' , dataIndex:''},
+        { title : 'assort1' , dataIndex:''},
+        { title : 'assort2' , dataIndex:''},
+        { title : 'nxAssort' , dataIndex:''},
+        { title : 'solid' , dataIndex:''},
+        { title : 'orderPlanQtyStop' , dataIndex:''},
+        { title : 'fixFlag' , dataIndex:''},
+        { title : 'alternativeFlag' , dataIndex:''},
+        { title : 'expressLineFlag', dataIndex:''},
+        { title : 'factoryComment' , dataIndex:''},
+        { title : 'plannedEXF' , dataIndex:''},
+        { title : 'exfEtd' , dataIndex:''},
+        { title : 'exfWh' , dataIndex:''},
+        { title : 'sweingCountryRegion' , dataIndex:''},
+        { title : 'rewMaterialOriginal' , dataIndex:''},
+        { title : 'itemDrop' , dataIndex:''},
+        { title : 'createDate',dataIndex:''},
+        { title : 'createUserId ' , dataIndex:''},
+        { title : 'createUserName' , dataIndex:''},
+        { title : 'createFunction ' , dataIndex:''},
+        { title : 'updateDate',dataIndex:''},
+        { title : 'updateUserId ' , dataIndex:''},
+        { title : 'updateUserName' , dataIndex:''},
+        { title : 'updateFunction ' , dataIndex:''},
+        { title : 'countY' , dataIndex:''},
+        { title : 'sample' , dataIndex:''},
+        { title : 'exf' , dataIndex:''},
+        { title : 'bddl' , dataIndex:''},
+        { title : 'bddlPast' , dataIndex:''},
+        { title : 'ltBdExf' , dataIndex:''},
+        { title : 'newBddl' , dataIndex:''},
+        { title : 'newLtBdExf' , dataIndex:''},
+        { title : 'ltPoExf' , dataIndex:''},
+        { title : 'qtyLtBdExf' , dataIndex:''},
+        { title : 'qtyLtPoExf' , dataIndex:''},
+        { title : 'country2Y' , dataIndex:''},
+        { title : 'phase' , dataIndex:''},
+  ]
+
+  let trimTemplate: IExcelColumn[] = []
+  trimTemplate = [
+        {title: 'orderNo' , dataIndex:''},
+        {title: 'year' , dataIndex:''},
+        {title: 'revisionNo' , dataIndex:''},
+        {title: 'planningSsn' , dataIndex:''},
+        {title: 'globalBusinessUnit' , dataIndex:''},
+        {title: 'businessUnit' , dataIndex:''},
+        {title: 'itemBrand' , dataIndex:''},
+        {title: 'Department' , dataIndex:''},
+        {title: 'revisedDate' , dataIndex:''},
+        {title: 'DocumentStatus' , dataIndex:''},
+        {title: 'answeredStatus' , dataIndex:''},
+        {title: 'vendorPersoninCharge' , dataIndex:''},
+        {title: 'decisionDate' , dataIndex:''},
+        {title: 'paymentTerms' , dataIndex:''},
+        {title: 'contractedETD' , dataIndex:''},
+        {title: 'ETAWH' , dataIndex:''},
+        {title: 'approver' , dataIndex:''},
+        {title: 'approvalDate' , dataIndex:''},
+        {title: 'orderConditions' , dataIndex:''},
+        {title: 'remark' , dataIndex:''},
+        {title: 'rawMaterialCode' , dataIndex:''},
+        {title: 'supplierRawMaterialCode' , dataIndex:''},
+        {title: 'supplierRawMaterial' , dataIndex:''},
+        {title: 'vendorCode' , dataIndex:''},
+        {title: 'vendor' , dataIndex:''},
+        {title: 'managementFactoryCode' , dataIndex:''},
+        {title: 'managementFactory' , dataIndex:''},
+        {title: 'branchFactoryCode' , dataIndex:''},
+        {title: 'branchFactory' , dataIndex:''},
+        {title: 'orderPlanNumber' , dataIndex:''},
+        {title: 'itemCode' , dataIndex:''},
+        {title: 'item' , dataIndex:''},
+        {title: 'representativeSampleCode' , dataIndex:''},
+        {title: 'sampleCode' , dataIndex:''},
+        {title: 'colorCode' , dataIndex:''},
+        {title: 'color' , dataIndex:''},
+        {title: 'patternDimensionCode' , dataIndex:''},
+        {title: 'sizeCode' , dataIndex:''},
+        {title: 'size' , dataIndex:''},
+        {title: 'orderQtyPc' , dataIndex:''},
+        {title: 'arrangementBy' , dataIndex:''},
+        {title: 'trimDescription' , dataIndex:''},
+        {title: 'trimItemNo' , dataIndex:''},
+        {title: 'trimSupplier' , dataIndex:''},
+  ]
+  
+
+  const exportExcel = () => {
+    const excel = new Excel();
+    if(form.getFieldValue('fileType') === FileTypesEnum.PROJECTION_ORDERS){
+      excel
+        .addSheet('Projection Order')
+        .addColumns(projectiontemplate)
+        .addDataSource([])
+        .saveAs('Projection Order Template.xlsx');
+    } else{
+      excel
+      .addSheet('Trim Order')
+      .addColumns(trimTemplate)
+      .addDataSource([])
+      .saveAs('Trim Order Template.xlsx');
+    }
+  }
+
+
   return (
     <>
-      <Card title="Add Order">
+      <Card title="Add Order" extra={<span> <Button className='panel_button' icon={<FileExcelFilled />} style={{ color: 'green' }} onClick={() => exportExcel()}>Sample Excel</Button></span>}>
+      <b>Last Uploaded File Details</b>
+      <br/>
+      <br/>
         <span>
           <Descriptions style={{ alignItems: 'right' }}>
-            <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item>
+            {/* <Descriptions.Item>{<b>Last Uploaded File Details</b>}</Descriptions.Item> */}
+            <Descriptions.Item label={<b>File Type</b>}>
+              {form.getFieldValue('fileType') === FileTypesEnum.PROJECTION_ORDERS ?  'Projection Order' : 'Trim Order'}
+            </Descriptions.Item>
             <Descriptions.Item label={<b>File Name</b>}>
               {filesData[0]?.fileName}
+            </Descriptions.Item>
+            <Descriptions.Item label={<b>No of Records</b>}>
+              {form.getFieldValue('fileType') === FileTypesEnum.PROJECTION_ORDERS ?  `${filesData[0]?.projectionRecords ? (filesData[0]?.projectionRecords).toLocaleString('en-IN') : 0}` : `${filesData[0]?.trimRecords ? (filesData[0]?.trimRecords).toLocaleString('en-IN') : 0}`}
+            </Descriptions.Item>
+            <Descriptions.Item label={<b>Total Order Quantity</b>}>
+              {form.getFieldValue('fileType') === FileTypesEnum.PROJECTION_ORDERS ?  `${filesData[0]?.proorderqty ? (filesData[0]?.proorderqty).toLocaleString('en-IN') : 0}` : `${filesData[0]?.trimorderqty ? (filesData[0]?.trimorderqty).toLocaleString('en-IN') : 0}`}
             </Descriptions.Item>
             <Descriptions.Item label={<b>Uploaded Date</b>}>
               {filesData[0]?.uploadedDate ? moment(filesData[0]?.uploadedDate).format('YYYY-MM-DD HH:mm:ss a') : '-'}
@@ -387,9 +626,8 @@ export default function ExcelImport() {
             <Descriptions.Item label={<b>Uploaded User</b>}>
               {filesData[0]?.createdUser}
             </Descriptions.Item>
-            <Descriptions.Item label={<b>No of Records</b>}>
-              {form.getFieldValue('fileType') === FileTypesEnum.PROJECTION_ORDERS ?  filesData[0]?.projectionRecords : filesData[0]?.trimRecords}
-            </Descriptions.Item>
+            
+            
           </Descriptions>
         </span>
         <Divider></Divider>
@@ -413,7 +651,7 @@ export default function ExcelImport() {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item label = "">
               <input type="file" accept=".csv, application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleFileChange} />
-              <label style={{color:'blue'}} >Only excel & csv formats are allowed</label>
+              <label style={{color:'blue'}} >Only excel & csv files are allowed</label>
             </Form.Item>
             </Col>
           </Row>

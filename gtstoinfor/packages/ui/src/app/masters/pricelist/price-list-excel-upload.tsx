@@ -188,9 +188,9 @@ const PriceListUpload = () => {
           <br/>
           <br/>
           <Descriptions.Item label={<b>File Name</b>}>{filesData[0]?.fileName}</Descriptions.Item>
+          <Descriptions.Item label={<b>No of Records</b>}>{filesData[0]?.records}</Descriptions.Item>
           <Descriptions.Item label={<b>Uploaded Date</b>}>{filesData[0]?.uploadedDate}</Descriptions.Item>
           <Descriptions.Item label={<b>Uploaded User</b>}>{filesData[0]?.createdUser}</Descriptions.Item>
-          <Descriptions.Item label={<b>No of Records</b>}>{filesData[0]?.records}</Descriptions.Item>
         </Descriptions>
         ) : ([])}
         <Divider></Divider>
@@ -199,7 +199,7 @@ const PriceListUpload = () => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label = "">
                 <input type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={handleFileChange} />
-                <label style={{color:'blue'}} >Only csv & excel formats are allowed</label>
+                <label style={{color:'blue'}} >Only csv & excel files are allowed</label>
               </Form.Item>
             </Col>
           </Row>
