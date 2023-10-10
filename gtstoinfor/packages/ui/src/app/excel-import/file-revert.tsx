@@ -83,7 +83,19 @@ export function FileRevert() {
             render:(text,record) => {
                 return(
                     <>
-                    {record.fileType === FileTypesEnum.PROJECTION_ORDERS ? record.projectionRecords : record.trimRecords}
+                    {record.fileType === FileTypesEnum.PROJECTION_ORDERS ? `${record.projectionRecords ? (record.projectionRecords).toLocaleString('en-IN') : 0}` : `${record.trimRecords ? (record.trimRecords).toLocaleString('en-IN') : 0}`}
+                    </>
+                )
+            }
+        },
+        {
+            title: 'Total Order Quantity',
+            dataIndex: 'orderqty',
+            align:'right',
+            render:(text,record) => {
+                return(
+                    <>
+                    {record.fileType === FileTypesEnum.PROJECTION_ORDERS ? `${record.proorderqty ? (record.proorderqty).toLocaleString('en-IN') : 0}` : `${record.trimorderqty ? (record.trimorderqty).toLocaleString('en-IN') : 0}`}
                     </>
                 )
             }

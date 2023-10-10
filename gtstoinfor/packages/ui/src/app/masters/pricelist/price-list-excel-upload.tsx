@@ -188,9 +188,9 @@ const PriceListUpload = () => {
           <br/>
           <br/>
           <Descriptions.Item label={<b>File Name</b>}>{filesData[0]?.fileName}</Descriptions.Item>
+          <Descriptions.Item label={<b>No of Records</b>}>{filesData[0]?.records}</Descriptions.Item>
           <Descriptions.Item label={<b>Uploaded Date</b>}>{filesData[0]?.uploadedDate}</Descriptions.Item>
           <Descriptions.Item label={<b>Uploaded User</b>}>{filesData[0]?.createdUser}</Descriptions.Item>
-          <Descriptions.Item label={<b>No of Records</b>}>{filesData[0]?.records}</Descriptions.Item>
         </Descriptions>
         ) : ([])}
         <Divider></Divider>
