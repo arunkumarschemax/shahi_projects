@@ -4,7 +4,7 @@ import ExFactoryReportWithComparision from "./ex-factory-report-with-comparision
 import WareHouseComparision from "./warehouse-comparision"
 import { OrdersService } from "@project-management-system/shared-services"
 import React, { useEffect, useState } from "react"
-import { YearReq } from "@project-management-system/shared-models"
+import {  YearReq } from "@project-management-system/shared-models"
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons"
 import { Excel } from "antd-table-saveas-excel"
 import { IExcelColumn } from "antd-table-saveas-excel/app"
@@ -32,6 +32,8 @@ export const MonthWiseComparisionReport = () =>{
 const startIndex = (page - 1) * pageSize;
       const endIndex = startIndex + pageSize;
       const currentPageData = data.slice(startIndex, endIndex);
+      const [items, setItems] = useState<any[]>([]);
+
       const handlePageChange = (newPage, newPageSize) => {
         setPage(newPage);
         setPageSize(newPageSize);
@@ -39,6 +41,7 @@ const startIndex = (page - 1) * pageSize;
       useEffect(() => {
         getData(selected,tab);
         getTabs();
+        getPhase()
       }, []);
       const getTabs = () => {
         service.getExfactoryYearData().then((res) => {
@@ -51,9 +54,54 @@ const startIndex = (page - 1) * pageSize;
     const handleChange = (val) =>{
         setSelected(val)
         getData(val,tab)
+        
       }
+      const getPhase=()=>{
+        const req = new YearReq(tab,selected);
+       service.getPhaseItems().then(res =>{
+        if(res.status){
+          setItems(res.data)
+        }
+       })
+       service.getExfactoryWithComparisionExcel(req).then((res) => {
+        if (res.status) {
+          setExcelData(res.data);
+        } else {
+          setData([]);
+        }
+      });
+      service.getMonthlyComparisionDate(req).then((res)=>{
+        if (res.status) {
+            setDates(res.data);
+            console.log(res.data[0].Date);
+
+            
+          } else {
+            setDates([]);
+          }
+    })
+    service.getComparisionPhaseData(req).then((res)=>{
+      if(res.status){
+        setPhase(res.data)
+      }else{
+        setPhase([]);
+      }
+    })
+    service.getComparisionPhaseExcelData(req).then((res)=>{
+      if(res.status){
+        setPhaseExcel(res.data)
+      }else{
+        setPhaseExcel([]);
+      }
+    })
+      }
+      
       const getData =(val,tabName) => {
         const req = new YearReq(tabName,val);
+       
+        if(form.getFieldValue('ItemName') !== undefined){
+            req.itemName = form.getFieldValue('ItemName')
+        }
         service.getMonthlyComparisionData(req).then((res) => {
          if (res.status) {
             setData(res.data);
@@ -62,37 +110,8 @@ const startIndex = (page - 1) * pageSize;
             setData([]);
           }
         });
-        service.getExfactoryWithComparisionExcel(req).then((res) => {
-          if (res.status) {
-            setExcelData(res.data);
-          } else {
-            setData([]);
-          }
-        });
-        service.getMonthlyComparisionDate(req).then((res)=>{
-            if (res.status) {
-                setDates(res.data);
-                console.log(res.data[0].Date);
-
-                
-              } else {
-                setDates([]);
-              }
-        })
-        service.getComparisionPhaseData(req).then((res)=>{
-          if(res.status){
-            setPhase(res.data)
-          }else{
-            setPhase([]);
-          }
-        })
-        service.getComparisionPhaseExcelData(req).then((res)=>{
-          if(res.status){
-            setPhaseExcel(res.data)
-          }else{
-            setPhaseExcel([]);
-          }
-        })
+       
+      
       };
 
       const onChange = (pagination, filters, sorter, extra) => {
@@ -1898,297 +1917,149 @@ if(selected == 'WareHouse'){
               <Table.Summary.Cell index={0}></Table.Summary.Cell>
               <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
               <Table.Summary.Cell index={3}>
-                <div>
-                  <Space></Space>
-                  <Space>
-                    <span /> 
-                    <span /><span /> 
-                    <span />
-                    <span /> 
-                    <span />
-                    <span /> 
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span /> 
-                    <span />
-                    <span /> 
-                    <span />
-                    <span /> 
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                   
-                    {janPre.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span /> {janLat.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    {febPre.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    {febLat.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                   
-                    {marPre.toLocaleString()}
-                    <span />
-                    <span /> 
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                   
-
-                    {marLat.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                   
-                    
-                    
-
-
-                    {aprPre.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    {aprLat.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    {mayPre.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    {mayLat.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                  
-                    {junPre.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    
-                    {julLat.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    
-                    {julPre.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span /> {julLat.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    {augPre.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    {augLat.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    {sepPre.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    {sepLat.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    {octPre.toLocaleString()}
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-
-                    {octLat.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-
-                    {novPre.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    
-
-                    {novLat.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-
-                    {decPre.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                  
-                    <span />
-
-                    {decLat.toLocaleString()}
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-
-
-                    {totalPre.toLocaleString()}
-                    <span />
-                    <span /> <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span /><span />
-                    <span />
-                    <span />
-                    <span />
-
-                    {totalLat.toLocaleString()}
-                  </Space>
-                </div>
+              <div>
+       
+       <table>
+         <td>
+         <table  >
+             <th style={{width:80,textAlign:'center'}}></th>
+           </table>
+           </td>
+           <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightgreen',borderLeft: '1px solid #ddd'}}>January</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{janPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{janLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>
+           <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',borderCollapse: 'collapse',backgroundColor: 'lightblue',borderLeft: '1px solid #ddd'}}>February</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{febPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{febLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>March</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{marPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{marLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>April</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{aprPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{aprLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>May</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{mayLat.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{mayPre.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>June</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{junPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{junLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>  
+            <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>July</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{julPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{julLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>August</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{augLat.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{augLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>September</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{sepPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse'}}>{sepLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>October</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{octPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{octLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightgreen',borderCollapse: 'collapse',borderLeft: '1px solid #ddd'}}>November</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{novLat.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',width:40,textAlign:'right'}}>{novPre.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>   <td>
+           <table style={{textAlign:'center',borderCollapse: 'collapse'}}>
+             {/* <tr>
+             <th colSpan={2} style={{borderBottom: '1px solid #ddd',backgroundColor: 'lightblue',borderCollapse: 'collapse',borderLeft: '1px solid #ddd',borderRight: '1px solid #ddd'}}>December</th>
+             </tr> */}
+             <tr>
+             <td style={{borderRight: '1px solid #ddd',borderLeft: '1px solid #ddd',borderCollapse: 'collapse',width:40,textAlign:'right'}}>{decPre.toLocaleString()}</td>
+             <td style={{borderCollapse: 'collapse',borderRight: '1px solid #ddd',width:40,textAlign:'right'}}>{decLat.toLocaleString()}</td>
+             </tr>
+           </table>
+           </td>
+           <td>
+         <table  >
+             <th style={{width:50,textAlign:'center'}}>{totalPre.toLocaleString()}</th>
+           </table>
+           </td> <td>
+         <table  >
+             <th style={{width:50,textAlign:'center'}}>{totalLat.toLocaleString()}</th>
+           </table>
+           </td>
+       </table>
+         
+             </div>
               </Table.Summary.Cell>
             </Table.Summary.Row>
           </>
@@ -2197,7 +2068,7 @@ if(selected == 'WareHouse'){
     return(
        
         <Card>
-              <Form form={form} layout={"vertical"}>
+              <Form form={form} layout={"vertical"} onFinish={()=>getData(tab,selected)}>
         <Row gutter={24}>
           <Col
             xs={{ span: 24 }}
@@ -2289,9 +2160,9 @@ if(selected == 'WareHouse'){
                           optionFilterProp="children"
                           allowClear
                         >
-                          {data.map((e) => (
-                            <Option key={e.itemName} value={e.itemName}>
-                              {e.itemName}
+                          {items.map((e) => (
+                            <Option key={e.i_item} value={e.i_item}>
+                              {e.i_item}
                             </Option>
                           ))}
                         </Select>
@@ -2304,8 +2175,8 @@ if(selected == 'WareHouse'){
                                   type="primary"
                                   icon={<SearchOutlined />}
                                   style={{ marginRight: 50, width: 80 }}
-                                  htmlType="button"
-                                  onClick={getFilterdData}>Search</Button>
+                                  htmlType="submit"
+                                  >Search</Button>
                               <Button
                                   type="primary"
                                   icon={<UndoOutlined />}

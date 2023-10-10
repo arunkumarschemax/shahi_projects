@@ -210,4 +210,11 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/getversion",req)
       
     }
+
+    async getItemsMonthly():Promise<CommonResponseModel>{
+   return this.axiosPostCall(this.ordersController + "/getItemsMonthly")
+    }
+    async getPhaseItems():Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.ordersController + "/getPhaseItems")
+    }
 }

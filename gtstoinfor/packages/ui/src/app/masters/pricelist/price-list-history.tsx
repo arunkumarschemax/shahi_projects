@@ -399,7 +399,7 @@ const getUploadedTime = () => {
           <Descriptions column={2}>
             <Descriptions.Item label="Previous File Name">{fileData != undefined ? fileData[1]?.fileName: '-'}</Descriptions.Item>
             <Descriptions.Item label="Latest File Name">{fileData != undefined ? fileData[0]?.fileName: '-'}</Descriptions.Item>
-            <Descriptions.Item label="Previous File Date">{fileData != undefined ? fileData[1]?.createdAt: '-'}</Descriptions.Item>
+            <Descriptions.Item label="File Date">{fileData != undefined ? fileData[1]?.createdAt: '-'}</Descriptions.Item>
             <Descriptions.Item label="Latest File Date">{fileData != undefined ? fileData[0]?.createdAt: '-'}</Descriptions.Item>
           </Descriptions>
         </Descriptions.Item>

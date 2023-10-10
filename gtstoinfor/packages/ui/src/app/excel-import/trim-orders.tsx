@@ -623,7 +623,8 @@ const {Text}=Typography
                         </Col>
                     </Row>
                 </Form>
-                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500,y:500 }} bordered
+                <Table columns={columns} dataSource={filteredData} scroll={{ x: 1500,y:500 }}   className="custom-table-wrapper"
+ bordered
                 size='small'
                 summary={(pageData) => {
                     let total = 0;

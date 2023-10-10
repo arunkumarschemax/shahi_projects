@@ -342,7 +342,6 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         return await query.getRawMany()
     }
     
-
     async getComparisionphaseData(req: YearReq):Promise<any[]>{
         const query = `WITH RankedVersions AS (
             SELECT
@@ -493,7 +492,7 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
             SUM(CASE WHEN MONTH(planned_exf) = 11 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS novExfLat,
             SUM(CASE WHEN MONTH(planned_exf) = 12 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS decExfLat,
             SUM(CASE WHEN MONTH(planned_exf) BETWEEN 1 AND 12 AND version_rank = 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS totalExfLat,
-        SUM(CASE WHEN  MONTH(  wh) = 1  AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',','') AS INT) ELSE 0 END) AS janWhPre,
+            SUM(CASE WHEN  MONTH(  wh) = 1  AND version_rank != 1 THEN CAST(REPLACE(order_plan_qty, ',','') AS INT) ELSE 0 END) AS janWhPre,
             SUM(CASE WHEN  MONTH(  wh)  = 2 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS febWhPre,
             SUM(CASE WHEN  MONTH(  wh)  = 3 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS marWhPre,
             SUM(CASE WHEN  MONTH(  wh)  = 4 AND version_rank != 1 THEN CAST(  order_plan_qty  AS INT) ELSE 0 END) AS aprWhPre,
@@ -536,4 +535,12 @@ export class OrdersChildRepository extends Repository<OrdersChildEntity> {
         const result = await this.query(query);
         return result
             }
+    
+            async getPhaseItems():Promise<any[]>{
+                const query = this.createQueryBuilder('i')
+                .select(`i.item`)
+                .groupBy(`i.item`)
+                .orderBy(`i.item`)
+                return await query.getRawMany()
+              }
 }

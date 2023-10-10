@@ -546,4 +546,20 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/getPhaseItems')
+    async getPhaseItems(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getPhaseItems();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getItemsMonthly')
+    async getItemsMonthly(): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getItemsMonthly();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }

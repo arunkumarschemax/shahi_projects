@@ -401,20 +401,20 @@ const Number=()=>{
         },
 
        
-        {
-            title: 'GWH',
-            dataIndex: 'gwh',
-            // width: '9%',
-            width: 80,
-            align:'right',
+        // {
+        //     title: 'GWH()',
+        //     dataIndex: 'gwh',
+        //     // width: '9%',
+        //     width: 80,
+        //     align:'right',
 
-            render: (text) => (text ? text : '-'),
-            ...getColumnSearchProps("gwh"),
+        //     render: (text) => (text ? text : '-'),
+        //     ...getColumnSearchProps("gwh"),
 
            
-        },
+        // },
         {
-            title: 'WH',
+            title: 'WH(yy-mm-dd)',
             dataIndex: 'wh',
             // width: '9%',
             width: 90,
@@ -529,7 +529,7 @@ const Number=()=>{
               },
         },
         {
-            title: 'Planned EXF',
+            title: 'Planned EXF(yy-mm-dd)',
             dataIndex: 'planned_exf',
             // width: '9%',
             render: (text) => (text ? text : '-'),
