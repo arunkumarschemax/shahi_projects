@@ -101,158 +101,229 @@ const ShipmentChangesCompareGrid = () => {
         const excel = new Excel();
         if (filteredQtyData?.length > 0) {
             excel
-                .addSheet('Quantity changes')
+                .addSheet('GAC Revised PO')
                 .addColumns(data1)
                 .addDataSource(filteredQtyData, { str2num: true })
         }
         if (unitChangeData?.length > 0) {
             excel
-                .addSheet('Unit changes')
+                .addSheet('MRGAC Revised PO changes')
                 .addColumns(data4)
                 .addDataSource(unitChangeData, { str2num: true })
         }
         if (itemChangeData?.length > 0) {
             excel
-                .addSheet('Item changes')
+                .addSheet('Mode of Transportation Revised PO')
                 .addColumns(data2)
                 .addDataSource(itemChangeData, { str2num: true })
         }
         if (poStatusData?.length > 0) {
             excel
-                .addSheet('PO Line Item Status Change')
+                .addSheet('Plant Code Revised PO')
                 .addColumns(data3)
                 .addDataSource(poStatusData, { str2num: true })
         }
         excel.saveAs('revisedPOs.xlsx');
     }
 
-    const data1 = [
+    const data1 =[
+        
         {
-            title: 'Production Plan Id',
-            dataIndex: 'production_plan_id'
+            title: 'Report Generate Date',
+            dataIndex: 'document_date',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
-            title: 'Item code',
-            dataIndex: 'item_code'
+            title: 'Item',
+            dataIndex: 'item'
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName'
+            title: 'Unit',
+            dataIndex: 'factory'
         },
         {
-            title: 'Order Quantity Pieces',
+            title: 'PO Number',
+            dataIndex: 'po_number',
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number'
+        },
+        {
+            title: 'Change from OGAC',
+            dataIndex: 'change_from_ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        },
+        {
+            title: 'Change to OGAC',
+            dataIndex: 'change_to_ogac',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        },
+        {
+            title: 'Change from GAC',
+            dataIndex: 'old_val',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        },
+        {
+            title: 'Change to GAC',
             dataIndex: 'new_val',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
-            title: 'Contracted Date',
-            dataIndex: 'contracted_date',
-        },
-        {
-            title: 'Order Revised Date',
-            dataIndex: 'last_update_date',
-        },
-        {
-            title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date',
-        },
-        {
-            title: 'Order Status',
-            dataIndex: 'order_status'
+            title: 'RC Code',
+            dataIndex: 'rc_code'
         }
     ]
 
     const data2 = [
+        
         {
-            title: 'Production Plan Id',
-            dataIndex: 'production_plan_id'
+            title: 'Report Genarate Date',
+            dataIndex: 'created_at',
         },
         {
-            title: 'Item code',
-            dataIndex: 'item_code'
+            title: 'Item',
+            dataIndex: 'item',
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName'
+            title: 'Factory',
+            dataIndex: 'factory',
         },
         {
-            title: 'Requested Warehouse Date',
-            dataIndex: 'new_val',
+            title: 'Document Date',
+            dataIndex: 'documentDate',
         },
         {
-            title: 'Order Quantity Pieces',
-            dataIndex: 'order_qty_pcs'
+            title: 'PO Number',
+            dataIndex: 'po_number',
         },
         {
-            title: 'Contracted Date',
-            dataIndex: 'contracted_date'
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number'
         },
         {
-            title: 'Order Revised Date',
-            dataIndex: 'last_update_date',
+            title: 'CO Number',
+            dataIndex: '',
         },
         {
-            title: 'Order Status',
-            dataIndex: 'order_status'
-        }
+            title: 'OGAC',
+            dataIndex: 'ogac',
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'gac',
+        },
+        {
+            title: 'Mode of Transportation Code in DPOM',
+            dataIndex: '',
+        },
+        {
+            title: 'Mode of Transportation Code in CRM CO',
+            dataIndex: '',
+        },
+
     ];
 
-    const data3 = [
+    const data3 =[
+       
         {
-            title: 'Production Plan Id',
-            dataIndex: 'production_plan_id'
+            title: 'Report Genarate Date',
+            dataIndex: '',
         },
         {
-            title: 'Item code',
-            dataIndex: 'item_code'
+            title: 'Item',
+            dataIndex: 'item',
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName'
+            title: 'Factory',
+            dataIndex: 'factory',
         },
         {
-            title: 'Contracted Date',
-            dataIndex: 'new_val',
+            title: 'Document Date',
+            dataIndex: '',
         },
         {
-            title: 'Order Revised Date',
-            dataIndex: 'last_update_date',
+            title: 'PO Number',
+            dataIndex: 'po_number',
         },
         {
-            title: 'Order Quantity Pieces',
-            dataIndex: 'order_qty_pcs',
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number',
         },
         {
-            title: 'Requested Warehouse Date',
-            dataIndex: 'requested_wh_date'
+            title: 'PRODUCT CODE',
+            dataIndex: '',
         },
         {
-            title: 'Order Status',
-            dataIndex: 'order_status'
+            title: 'OGAC',
+            dataIndex: 'ogac',
+        },
+        {
+            title: 'GAC',
+            dataIndex: 'gac',
+        },
+        {
+            title: 'Change from Inventory Segment Code',
+            dataIndex: '',
+        },
+        {
+            title: 'Change To Inventory Segment Code',
+            dataIndex: '',
+        },
+        {
+            title: 'Change from Destination Country Name',
+            dataIndex: '',
+        },
+        {
+            title: 'Change To Destination Country Name',
+            dataIndex: '',
+        },
+        {
+            title: 'Change from Ship To Customer Number',
+            dataIndex: '',
+        },
+        {
+            title: 'Change to Ship To Customer Number',
+            dataIndex: '',
+        },
+        {
+            title: 'Ship To Customer Number in DIA',
+            dataIndex: '',
+        },
+        {
+            title: 'Change from Plant Code',
+            dataIndex: '',
+        },
+        {
+            title: 'Change to Plant Code',
+            dataIndex: '',
         }
     ];
 
     const data4 = [
+        
+        // {
+        //     title: 'PO Number',
+        //     dataIndex: 'po_number',
+        // },
         {
-            title: 'Item code',
-            dataIndex: 'item_code'
+            title: 'PO And Line ',
+            dataIndex: 'po_and_line', 
         },
         {
-            title: 'Item Name',
-            dataIndex: 'itemName'
+            title: 'Schedule Line Item No',
+            dataIndex: 'schedule_line_item_number',
         },
         {
-            title: ' sum Of Qrd Qty last Week',
-            dataIndex: 'old_qty_value',
+            title: 'Previous MRGAC',
+            dataIndex: 'old_val',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
-            title: 'Sum Of Qrd Qty this Week',
-            dataIndex: 'new_qty_value',
-        },
-        {
-            title: 'Difference Ord Qty Revised',
-            dataIndex: 'diff'
-        },
-
+            title: 'Revised MRGAC',
+            dataIndex: 'new_val',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        }
     ];
 
     let exportingColumns: IExcelColumn[] = []
@@ -608,7 +679,6 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'PO And Line ',
             dataIndex: 'po_and_line', align: 'center',
-            ...getColumnSearchProps('po_and_line')
         },
         {
             title: 'Schedule Line Item No',
@@ -638,7 +708,6 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'Report Genarate Date',
             dataIndex: '',width:70,
-            ...getColumnSearchProps('po_number')
         },
         {
             title: 'Item',
