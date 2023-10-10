@@ -371,7 +371,7 @@ const PPMReport = () => {
           if (!text || text.trim() === '') {
             return '-';
           } else {
-            const firstFourDigits = text.substring(0, 4);
+            const firstFourDigits = text.substring(0, 3);
             return firstFourDigits;
           }
         },
@@ -2321,7 +2321,7 @@ const PPMReport = () => {
                 setPageSize(pageSize);
               }
             }}
-            scroll={{ x: 'max-content', y: 600 }}
+            scroll={{ x: 'max-content', y: 450 }}
             bordered
           />
         ) : (<Table size='large' />
@@ -2575,28 +2575,28 @@ const PPMReport = () => {
           </Row>
         </Form>
         <Row gutter={24} justify={'space-evenly'}>
-          <Col span={3}> <Card bordered style={{ backgroundColor: 'aqua' }} >
+          <Col span={3}> <Card bordered style={{ backgroundColor: 'aqua', height:120,alignItems:'center' }}  >
             <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{ color: 'white' }} value={count} formatter={formatter} /></b></Card>
           </Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#CBADF7' }}>
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#CBADF7', height:120,alignItems:'center' }}>
             <b><Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
             </b></Card></Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#A1EBB5' }} >
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#A1EBB5' , height:120,alignItems:'center'}} >
             <b><Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
             </b></Card></Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#E1F5A5' }}>
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height:120,alignItems:'center' }}>
             <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
             </b> </Card> </Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#A5F5D7' }}>
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#A5F5D7', height:120,alignItems:'center' }}>
             <b><Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
             </b></Card></Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#F5BCB1' }}>
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#F5BCB1', height:120,alignItems:'center' }}>
             <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
             </b></Card> </Col>
-          <Col span={3}><Card bordered style={{ backgroundColor: '#B1BDF5' }}>
+          <Col span={3}><Card bordered style={{ backgroundColor: '#B1BDF5', height:120,alignItems:'center' }}>
             <b><Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
             </b> </Card> </Col>
-          <Col span={3}> <Card bordered style={{ backgroundColor: '#F1776A' }}>
+          <Col span={3}> <Card bordered style={{ backgroundColor: '#F1776A', height:120,alignItems:'center' }}>
             <b><Statistic loading={tableLoading} title="Cancelled PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} formatter={formatter} />
             </b></Card></Col>
         </Row><br></br>

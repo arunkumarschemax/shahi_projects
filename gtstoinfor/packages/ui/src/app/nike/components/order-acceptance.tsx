@@ -196,7 +196,7 @@ export function OrderAcceptance() {
     const columns: any = [
         {
             title: "S.No",
-            key: "sno",
+            key: "sno",width:50,
             responsive: ["sm"],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             fixed: 'left'
@@ -205,26 +205,27 @@ export function OrderAcceptance() {
             title: 'PO Number',
             dataIndex: 'po_number',
             fixed: 'left',
+            width:80,
             ...getColumnSearchProps('po_number')
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',
+            dataIndex: 'po_line_item_number',width:80,
             fixed: 'left',
         },
         {
             title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number',
+            dataIndex: 'schedule_line_item_number',width:80,
             fixed: 'left',
         },
         {
             title: 'Document Date',
-            dataIndex: 'document_date',
+            dataIndex: 'document_date',width:80,
             render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
             title: 'Aging',
-            dataIndex: '',
+            dataIndex: '',width:80,
             render: (text, record) => {
                 const documentDate = moment(record.document_date);
 
@@ -251,23 +252,23 @@ export function OrderAcceptance() {
         }
         , {
             title: 'Plant Name',
-            dataIndex: 'plant_name'
+            dataIndex: 'plant_name',width:80,
         },
         {
             title: 'Purchase Group Name',
-            dataIndex: 'purchase_group_name'
+            dataIndex: 'purchase_group_name',width:80,
         },
         {
             title: 'Product Code',
-            dataIndex: 'product_code'
+            dataIndex: 'product_code',width:80,
         },
         {
             title: 'Category',
-            dataIndex: 'category_desc'
+            dataIndex: 'category_desc',width:80,
         },
         {
             title: 'Size',
-            dataIndex: 'size_description',
+            dataIndex: 'size_description',width:80,
             render: (text, record) => {
                 if (typeof text === 'string' && text.trim() === '') {
                     return '-';
@@ -280,7 +281,7 @@ export function OrderAcceptance() {
         },
         {
             title: 'Order Quantity',
-            dataIndex: 'size_qty',
+            dataIndex: 'size_qty',width:80,
             render: (text, record) => {
                 if (typeof text === 'string' && text.trim() === '') {
                     return '-';
@@ -293,7 +294,7 @@ export function OrderAcceptance() {
         },
         {
             title: 'Total Order Quantity',
-            dataIndex: 'total_item_qty',
+            dataIndex: 'total_item_qty',width:80,
             render: (text, record) => {
                 return (record.totalItemQty_OLD ?
                     (
@@ -310,7 +311,7 @@ export function OrderAcceptance() {
         },
         {
             title: 'MRGAC',
-            dataIndex: 'mrgac',
+            dataIndex: 'mrgac',width:80,
             render: (text, record) => {
                 return (record.MRGAC_OLD ?
                     (
@@ -327,7 +328,7 @@ export function OrderAcceptance() {
         },
         {
             title: 'GAC',
-            dataIndex: 'gac',
+            dataIndex: 'gac',width:80,
             render: (text, record) => {
                 return (record.GAC_OLD ?
                     (
@@ -344,7 +345,7 @@ export function OrderAcceptance() {
         },
         {
             title: 'Gross Price',
-            dataIndex: 'gross_price_fob',
+            dataIndex: 'gross_price_fob',width:80,
             render: (text, record) => {
                 return (record.grossPriceFOB_OLD ?
                     (
@@ -361,15 +362,15 @@ export function OrderAcceptance() {
         },
         {
             title: 'Gross Price Currency',
-            dataIndex: 'fob_currency_code'
+            dataIndex: 'fob_currency_code',width:80,
         },
         {
             title: 'Shipping Type',
-            dataIndex: 'shipping_type'
+            dataIndex: 'shipping_type',width:80,
         },
         {
             title: 'DPOM Line Item Status',
-            dataIndex: 'dpom_item_line_status',
+            dataIndex: 'dpom_item_line_status',width:80,
             filters: [
                 { text: 'Accepted', value: 'Accepted' },
                 { text: 'Unaccepted', value: 'Unaccepted' },
@@ -399,7 +400,7 @@ export function OrderAcceptance() {
         // }
         {
             title: "Item No",
-            dataIndex: "itemNo",
+            dataIndex: "itemNo",width:80,
             render: (text, record) => {
                 return (
                     <Form>
@@ -415,7 +416,7 @@ export function OrderAcceptance() {
         },
         {
             title: "Action",
-            dataIndex: "action",
+            dataIndex: "action",width:80,
             render: (value, record) => {
                 const isEnabled = isActionButtonEnabled(record);
 
@@ -500,12 +501,14 @@ export function OrderAcceptance() {
                     bordered
                     className="custom-table-wrapper"
                     pagination={{
+                        pageSize:50,
                         onChange(current, pageSize) {
                             setPage(current);
                             setPageSize(pageSize);
                         },
+                        
                     }}
-                    scroll={{ x: 'max-content' }}
+                    scroll={{ x: 'max-content',y:500 }}
                 >
                 </Table>
 

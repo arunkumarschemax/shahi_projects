@@ -280,15 +280,15 @@ const FobPriceListGrid = () => {
             dataSource={fob}
             className="custom-table-wrapper"
             bordered
-          //   pagination={{
-
-          //     onChange(current, pageSize) {
-          //         setPage(current);
-          //         setPageSize(pageSize);
-          //     },
-          // }}
-          pagination={false}
-         scroll={{ x: 'max-content', y: 600}}
+            pagination={{
+              pageSize:50,
+              onChange(current, pageSize) {
+                  setPage(current);
+                  setPageSize(pageSize);
+              },
+          }}
+          // pagination={false}
+         scroll={{ x: 'max-content', y: 500}}
 
           />
         </Card>

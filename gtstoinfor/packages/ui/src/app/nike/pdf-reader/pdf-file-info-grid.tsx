@@ -222,11 +222,13 @@ export function POPDFInfoGrid() {
                     bordered
                     className="custom-table-wrapper"
                     pagination={{
+                        pageSize:50,
                         onChange(current, pageSize) {
                             setPage(current);
                             setPageSize(pageSize);
                         },
                     }}
+                    scroll={{ x: 'max-content', y: 450 }}
                 >
                 </Table>
                 <Modal

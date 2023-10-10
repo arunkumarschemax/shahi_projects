@@ -99,9 +99,11 @@ export function NikeFileRevert() {
                 <Table
                     columns={columns}
                     dataSource={data}
+                    
                     className="custom-table-wrapper"
-                    scroll={{ x: 1000 }}
+                    scroll={{ x: 'max-content', y: 450 }}
                     pagination={{
+                        pageSize: 50,
                         onChange(current, pageSize) {
                             setPage(current);
                             setPageSize(pageSize);

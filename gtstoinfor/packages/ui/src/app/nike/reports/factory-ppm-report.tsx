@@ -1287,7 +1287,7 @@ const FactoryPPMReport = () => {
                             }
                         }}
                         className="custom-table-wrapper"
-                        scroll={{ x: 'max-content', y: 600}}
+                        scroll={{ x: 'max-content', y: 450}}
                         rowClassName={getRowClassName}
                         bordered
                     />
@@ -1475,25 +1475,25 @@ const FactoryPPMReport = () => {
                     </Row>
                 </Form>
                 <Row gutter={24} justify={'space-evenly'}>
-                    <Col span={3}> <Card style={{ backgroundColor: 'aqua' }} >
+                    <Col span={3}> <Card style={{ backgroundColor: 'aqua',height:120,alignItems:'center' }} >
                        <b> <Statistic  loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} />
                        </b></Card></Col>
-                    <Col span={3}><Card style={{ backgroundColor: '#CBADF7' }}>
+                    <Col span={3}><Card style={{ backgroundColor: '#CBADF7' ,height:120,alignItems:'center'}}>
                         <b><Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
                         </b></Card></Col>
-                    <Col span={3}><Card style={{ backgroundColor: '#A1EBB5' }}>
+                    <Col span={3}><Card style={{ backgroundColor: '#A1EBB5' ,height:120,alignItems:'center'}}>
                         <b><Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
                         </b></Card> </Col>
-                    <Col span={3}><Card style={{ backgroundColor: '#E1F5A5' }}>
+                    <Col span={3}><Card style={{ backgroundColor: '#E1F5A5',height:120,alignItems:'center' }}>
                         <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
                         </b> </Card> </Col>
-                    <Col span={3}><Card style={{ backgroundColor: '#A5F5D7' }}>
+                    <Col span={3}><Card style={{ backgroundColor: '#A5F5D7',height:120,alignItems:'center' }}>
                        <b> <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
                        </b></Card> </Col>
-                    <Col span={3}><Card style={{ backgroundColor: '#F5BCB1' }}>
+                    <Col span={3}><Card style={{ backgroundColor: '#F5BCB1',height:120,alignItems:'center' }}>
                         <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
                         </b></Card></Col>
-                    <Col span={3}><Card style={{ backgroundColor: '#B1BDF5' }}>
+                    <Col span={3}><Card style={{ backgroundColor: '#B1BDF5',height:120,alignItems:'center' }}>
                         <b><Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
                         </b> </Card> </Col>
                     {/* <Col>
