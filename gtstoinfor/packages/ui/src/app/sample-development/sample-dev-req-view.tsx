@@ -75,7 +75,6 @@ export const SampleDevView = () => {
       req.status = form.getFieldValue('status')
     }
     service.getAllSampleDevData(req).then((res) => {
-      console.log(req,'77777777777777')
       if (res.data) {
         setSampleData(res.data);
         setFilterData(res.data)
