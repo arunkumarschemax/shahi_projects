@@ -5,6 +5,7 @@ import { StyleOrder } from './style-order.entity';
 import { StyleOrderService } from './style-order.service';
 import { StyleOrderController } from './style-order.controller';
 import { CoLine } from './co-line.entity';
+import { StyleOrderRepository } from './style-order-repo';
 
 
 @Module({
@@ -12,7 +13,7 @@ import { CoLine } from './co-line.entity';
         TypeOrmModule.forFeature([StyleOrder,CoLine
         ]),
       ],
-      providers: [ApplicationExceptionHandler,StyleOrderService],
+      providers: [ApplicationExceptionHandler,StyleOrderService,StyleOrderRepository],
       controllers: [StyleOrderController],
       exports: []
 })
