@@ -518,12 +518,12 @@ const FactoryPPMReport = () => {
                 dataIndex: 'item',
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
-                        return '-';
+                      return '-';
                     } else {
-                        return text;
+                      const firstFourDigits = text.substring(0, 4);
+                      return firstFourDigits;
                     }
-                }
-                // ...getColumnSearch('item'),
+                  },
             },
             {
                 title: 'Factory',

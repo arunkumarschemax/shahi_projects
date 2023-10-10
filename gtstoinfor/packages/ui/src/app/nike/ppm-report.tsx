@@ -2478,7 +2478,7 @@ const PPMReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
               <Form.Item name='planningSeasonCode' label='Planning Season Code' >
                 <Select
                   showSearch
