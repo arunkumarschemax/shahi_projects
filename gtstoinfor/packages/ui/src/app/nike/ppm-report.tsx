@@ -476,7 +476,7 @@ const PPMReport = () => {
       { title: 'Total Item Quantity', dataIndex: 'totalItemQty' },
     ]
 
-    const columns: ColumnsType<any> = [
+    const columns: any = [
       // {
       //   title: "S.No",
       //   render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
@@ -559,8 +559,8 @@ const PPMReport = () => {
       },
       {
         title: 'Purchase Order Number',
-        dataIndex: 'purchaseOrderNumber',        width:80,
-
+        dataIndex: 'purchaseOrderNumber',width:80,            
+        ...getColumnSearchProps('purchaseOrderNumber')
       },
       {
         title: 'PO Line Item Number',
