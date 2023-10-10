@@ -99,7 +99,7 @@ export class ItemSkuService{
               return new SKUGenerationResponseModel(true, 1, 'SKU cancelled successfully', undefined)
             }
           } else {
-            return new SKUGenerationResponseModel(false, 0, 'No SKU Record found', [])
+            return new SKUGenerationResponseModel(false, 0, 'No SKU found', [])
           }
         } catch (err) {
           throw err;

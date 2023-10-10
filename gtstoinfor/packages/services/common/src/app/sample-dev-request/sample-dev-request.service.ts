@@ -41,6 +41,10 @@ export class SampleRequestService {
     async getAllSampleDevData(request? : SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
       try{
           const details = await this.sampleRepo.getAllSampleDevData(request)
+          // for(const data of details){
+          //   data.samplereqsizeinfo = await this.sizerepo.getAllSizeData(data.sampleId)
+          //   data.samplereqfabricinfo = await this.fabricRepo.getAllFabricData(data.sampleId)
+          // }
           if(details.length > 0){
               return new AllSampleDevReqResponseModel(true,0,'All Sample Requests retrieved successfully',details)
           } else {
@@ -178,10 +182,10 @@ async createSmapleDevlopmentRequest(req:SampleRequestDto):Promise<AllSampleDevRe
 
     const save = await this.sampleRepo.save(samplereqEntity)
     if(save){
-      return new AllSampleDevReqResponseModel(true,1,'SampleDevelopmentRequest created sucessfullyy',[])
+      return new AllSampleDevReqResponseModel(true,1,'Sample Request created successfullyy',[])
 
     }else{
-      return new AllSampleDevReqResponseModel(false,0,'SampleDevelopmentRequest creatation Failed',[])
+      return new AllSampleDevReqResponseModel(false,0,'Sample Request creation Failed',[])
     }
   }
   catch(err){
