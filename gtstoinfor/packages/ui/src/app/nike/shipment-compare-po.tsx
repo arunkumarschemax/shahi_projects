@@ -611,7 +611,7 @@ const ShipmentChangesCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
         },
         {
             title: 'PO Number',
@@ -676,7 +676,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1)
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
         },
         // {
         //     title: 'PO Number',
@@ -684,7 +684,7 @@ const ShipmentChangesCompareGrid = () => {
         // },
         {
             title: 'PO And Line ',
-            dataIndex: 'po_and_line', align: 'center',
+            dataIndex: 'po_and_line', align: 'center', fixed:'left'
         },
         {
             title: 'Schedule Line Item No',
@@ -694,12 +694,13 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Previous MRGAC',
-            dataIndex: 'old_val',
+            dataIndex: 'old_val',align: 'center',
+
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Revised MRGAC',
-            dataIndex: 'new_val',
+            dataIndex: 'new_val',align: 'center',
             render: (text) => moment(text).format('MM/DD/YYYY')
         }
     ];
@@ -709,7 +710,16 @@ const ShipmentChangesCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: '60px',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
+        },
+        {
+            title: 'PO Number',
+            dataIndex: 'po_number', width: 70,
+            ...getColumnSearchProps('po_number'),fixed:'left'
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'po_line_item_number', width: 70,fixed:'left'
         },
         {
             title: 'Report Genarate Date',
@@ -730,15 +740,7 @@ const ShipmentChangesCompareGrid = () => {
             dataIndex: '', width: 70,
             //  ...getColumnSearchProps('factory')
         },
-        {
-            title: 'PO Number',
-            dataIndex: 'po_number', width: 70,
-            ...getColumnSearchProps('po_number')
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number', width: 70,
-        },
+        
         {
             title: 'PRODUCT CODE',
             dataIndex: '', width: 70,

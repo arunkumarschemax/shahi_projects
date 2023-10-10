@@ -440,7 +440,7 @@ const FactoryPPMReport = () => {
             { title: 'Gender Age Description', dataIndex: ' ' },
             { title: 'Destination Country Code ', dataIndex: 'destinationCountryCode' },
             { title: 'Destination Country Name', dataIndex: 'destinationCountry' },
-            { title: 'Geo Code', dataIndex: '' },
+            { title: 'Geo Code', dataIndex: 'geoCode' },
             { title: 'Plant Code', dataIndex: 'plant', align: 'center' },
             { title: 'Plant Name', dataIndex: 'plantName' },
 
@@ -739,7 +739,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Geo Code',
-                dataIndex: '',width:70,
+                dataIndex: 'geoCode',width:70,
             },
             {
                 title: 'Plant Code',
@@ -1475,27 +1475,27 @@ const FactoryPPMReport = () => {
                     </Row>
                 </Form>
                 <Row gutter={24} justify={'space-evenly'}>
-                    <Col span={3}> <Card>
-                        <Statistic  loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} />
-                        </Card></Col>
-                    <Col span={3}><Card>
-                        <Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
-                        </Card></Col>
-                    <Col span={3}><Card>
-                        <Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
-                        </Card> </Col>
-                    <Col span={3}><Card>
-                        <Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
-                        </Card> </Col>
-                    <Col span={3}><Card>
-                        <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
-                        </Card> </Col>
-                    <Col span={3}><Card>
-                        <Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
-                        </Card></Col>
-                    <Col span={3}><Card>
-                        <Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
-                        </Card> </Col>
+                    <Col span={3}> <Card style={{ backgroundColor: 'aqua' }} >
+                       <b> <Statistic  loading={tableLoading} title="Total Order Qty:" value={count} formatter={formatter} />
+                       </b></Card></Col>
+                    <Col span={3}><Card style={{ backgroundColor: '#CBADF7' }}>
+                        <b><Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
+                        </b></Card></Col>
+                    <Col span={3}><Card style={{ backgroundColor: '#A1EBB5' }}>
+                        <b><Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
+                        </b></Card> </Col>
+                    <Col span={3}><Card style={{ backgroundColor: '#E1F5A5' }}>
+                        <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
+                        </b> </Card> </Col>
+                    <Col span={3}><Card style={{ backgroundColor: '#A5F5D7' }}>
+                       <b> <Statistic loading={tableLoading} title="Accepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
+                       </b></Card> </Col>
+                    <Col span={3}><Card style={{ backgroundColor: '#F5BCB1' }}>
+                        <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
+                        </b></Card></Col>
+                    <Col span={3}><Card style={{ backgroundColor: '#B1BDF5' }}>
+                        <b><Statistic loading={tableLoading} title="Closed PO's:" value={gridData.filter(el => el.DPOMLineItemStatus === "Closed").length} formatter={formatter} />
+                        </b> </Card> </Col>
                     {/* <Col>
                         <Card title={'Cancelled PO : ' + gridData.filter(el => el.DPOMLineItemStatus === "Cancelled").length} style={{ textAlign: 'left', width: 180, height: 38 }}></Card>
                     </Col> */}

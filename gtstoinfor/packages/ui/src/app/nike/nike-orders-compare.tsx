@@ -1878,13 +1878,14 @@ const OrdersCompareGrid = () => {
                         columns={columns}
                         dataSource={filterData}
                         size='large'
-                        pagination={false}
-                        // pagination={{
-                        //     onChange(current, pageSize) {
-                        //         setPage(current);
-                        //         setPageSize(pageSize);
-                        //     }
-                        // }}
+                       // pagination={false}
+                        pagination={{
+                            pageSize:50,
+                            onChange(current, pageSize) {
+                                setPage(current);
+                                setPageSize(pageSize);
+                            }
+                        }}
                         scroll={{ x: 'max-content', y: 600 }}
                         className="custom-table-wrapper"
                         bordered
